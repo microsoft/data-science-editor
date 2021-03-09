@@ -1,0 +1,83 @@
+{
+  "@type": "Interface",
+  "@id": "dtmi:jacdac:services:x1d90e1c5;1",
+  "displayName": "Sensor Aggregator",
+  "description": "Aggregate data from multiple sensors into a single stream\n(often used as input to machine learning models on the same device, see model runner service).",
+  "contents": [
+    {
+      "@type": "Telemetry",
+      "name": "num_samples",
+      "@id": "dtmi:jacdac:x1d90e1c5:ro:numsamples;1",
+      "description": "Number of input samples collected so far.",
+      "schema": "integer"
+    },
+    {
+      "@type": "Telemetry",
+      "name": "sample_size",
+      "@id": "dtmi:jacdac:x1d90e1c5:ro:samplesize;1",
+      "description": "Size of a single sample.",
+      "schema": "integer"
+    },
+    {
+      "@type": "Property",
+      "name": "streaming_samples",
+      "@id": "dtmi:jacdac:x1d90e1c5:rw:streamingsamples;1",
+      "description": "When set to `N`, will stream `N` samples as `current_sample` reading.",
+      "schema": "integer",
+      "writable": true
+    }
+  ],
+  "extends": [
+    "dtmi:jacdac:services:x1ffffff3;1"
+  ],
+  "schemas": [
+    {
+      "@id": "dtmi:jacdac:x1d90e1c5:event;1",
+      "@type": "Object",
+      "fields": [
+        {
+          "name": "count",
+          "schema": "integer"
+        }
+      ]
+    },
+    {
+      "@type": "Enum",
+      "@id": "dtmi:jacdac:x1d90e1c5:sampletype;1",
+      "valueSchema": "integer",
+      "enumValues": [
+        {
+          "name": "u8",
+          "displayName": "U8",
+          "enumValue": 8
+        },
+        {
+          "name": "i8",
+          "displayName": "I8",
+          "enumValue": 136
+        },
+        {
+          "name": "u16",
+          "displayName": "U16",
+          "enumValue": 16
+        },
+        {
+          "name": "i16",
+          "displayName": "I16",
+          "enumValue": 144
+        },
+        {
+          "name": "u32",
+          "displayName": "U32",
+          "enumValue": 32
+        },
+        {
+          "name": "i32",
+          "displayName": "I32",
+          "enumValue": 160
+        }
+      ]
+    }
+  ],
+  "@context": "dtmi:dtdl:context;2"
+}

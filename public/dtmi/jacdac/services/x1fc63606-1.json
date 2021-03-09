@@ -1,0 +1,46 @@
+{
+  "@type": "Interface",
+  "@id": "dtmi:jacdac:services:x1fc63606;1",
+  "displayName": "Arcade sound",
+  "description": "A sound playing device.\n\nThis is typically run over an SPI connection, not regular single-wire JACDAC.",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "sample_rate",
+      "@id": "dtmi:jacdac:x1fc63606:rw:samplerate;1",
+      "description": "Get or set playback sample rate (in samples per second).\nIf you set it, read it back, as the value may be rounded up or down.",
+      "schema": "float",
+      "writable": true
+    },
+    {
+      "@type": "Property",
+      "name": "buffer_size",
+      "@id": "dtmi:jacdac:x1fc63606:const:buffersize;1",
+      "description": "The size of the internal audio buffer.",
+      "schema": "integer"
+    },
+    {
+      "@type": "Telemetry",
+      "name": "buffer_pending",
+      "@id": "dtmi:jacdac:x1fc63606:ro:bufferpending;1",
+      "description": "How much data is still left in the buffer to play.\nClients should not send more data than `buffer_size - buffer_pending`,\nbut can keep the `buffer_pending` as low as they want to ensure low latency\nof audio playback.",
+      "schema": "integer"
+    }
+  ],
+  "extends": [
+    "dtmi:jacdac:services:x1ffffff3;1"
+  ],
+  "schemas": [
+    {
+      "@id": "dtmi:jacdac:x1fc63606:event;1",
+      "@type": "Object",
+      "fields": [
+        {
+          "name": "count",
+          "schema": "integer"
+        }
+      ]
+    }
+  ],
+  "@context": "dtmi:dtdl:context;2"
+}

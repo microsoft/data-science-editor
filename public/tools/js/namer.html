@@ -1,0 +1,112 @@
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: monospace;
+        }
+
+        .device {
+            margin: 0.5rem;
+        }
+
+        button:not(.active) {
+            opacity: 0.7;
+        }
+
+        button.active {
+            font-weight: bold;
+        }
+    </style>
+    <script>
+        var process = {
+            env: {}
+        }
+    </script>
+
+</head>
+
+<body>
+    <h1>JACDAC/Namer</h1>
+    <div>
+        <button id="connect">connect</button>
+        <button id="disconnect">disconnect</button>
+    </div>
+    <div id="devices">
+    </div>
+
+    <script src="/dist/jacdac-jdom.umd.js"></script>
+    <script>
+        const devicesDiv = document.getElementById("devices");
+        const log = console.log;
+        jacdac = jacdacJdom;
+        const jd = jacdac.createUSBBus()
+
+        jd.on(jacdac.DEVICE_ANNOUNCE, render)
+        jd.on(jacdac.ERROR, (evt) => log(`${evt.context} ${evt.exception.message}`))
+
+        async function scan() {
+            log('starting')
+            await jd.disconnectAsync();
+            await jd.connectAsync();
+            render()
+            log('started')
+        }
+
+        let namer = null
+
+        function render() {
+            if (!namer) {
+                const devicesDiv = document.getElementById("devices");
+                namer = jacdac.DeviceNamerClient.create(jd)
+                if (namer)
+                    namer.on(jacdac.CHANGE, (devs) => {
+                        devicesDiv.innerHTML = ""
+                        for (const d of devs) {
+                            const div = document.createElement("div")
+                            devicesDiv.appendChild(div)
+                            div.innerText = d.name + (d.boundTo ? " -> " + d.boundTo.shortId : "")
+                            for (const c of d.candidates) {
+                                const btn = document.createElement("button")
+                                div.appendChild(btn)
+                                btn.innerText = c.shortId
+                                btn.onclick = () => {
+                                    d.select(c)
+                                }
+                            }
+                            if (d.boundTo) {
+                                const btn = document.createElement("button")
+                                div.appendChild(btn)
+                                btn.innerText = "Clear"
+                                btn.onclick = () => {
+                                    namer.setName(d.boundTo, null)
+                                }
+                            }
+                        }
+                    })
+            }
+        }
+
+        const connect = document.getElementById("connect");
+        connect.onclick = scan;
+        const disconnect = document.getElementById("disconnect");
+        disconnect.onclick = () => jd.disconnectAsync()
+
+        function updateConnectionState() {
+            connect.classList.remove('active');
+            disconnect.classList.remove('active');
+            switch (jd.connectionState) {
+                case jacdac.BusState.Connected:
+                    disconnect.classList.add('active');
+                    break;
+                case jacdac.BusState.Disconnected:
+                    connect.classList.add('active');
+                    break;
+            }
+        }
+        jd.on(jacdac.CONNECTION_STATE, updateConnectionState)
+        updateConnectionState()
+    </script>
+</body>
+
+</html>

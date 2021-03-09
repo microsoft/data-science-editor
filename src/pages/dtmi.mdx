@@ -1,0 +1,33 @@
+---
+hideToc: true
+title: IoT Plug And Play Models
+---
+
+# IoT Plug And Play Models
+
+This route hosts [DTDL](https://github.com/Azure/opendigitaltwins-dtdl/blob/master/DTDL/v2/dtdlv2.md) models 
+for each [service](/services), similar to https://devicemodels.azure.com/.
+
+The [DTMI](https://github.com/Azure/digital-twin-model-identifier) of each services is formatted based on the class identifier:
+
+    dtmi:jacdac:services:x{id};1
+
+where ``{id}`` is the class identifer rendered as a hex number. 
+The route is generated following the conventions from [iot-plugandplay-models](https://github.com/Azure/iot-plugandplay-models#consuming)
+where the ``:`` are replaced by ``/``, and ``;`` with ``-``.
+
+    /dtmi/jacdac/services/x{id}-1.json
+
+
+For example, [/dtmi/jacdac/services/x0-1.json](/dtmi/jacdac/services/x0-1.json).
+
+To download all service models, go use [/dtmi/jacdac/services.json](/dtmi/jacdac/services.json)
+
+## Device Twin Designer
+
+You can compose devices from services using the [Azure Device Twin Designer](/tools/azure-device-twin-designer).
+
+## Azure IoT Explorer
+
+In the [Azure IoT Explorer](https://docs.microsoft.com/en-us/azure/iot-pnp/howto-use-iot-explorer), 
+add ``https://microbit.github.io/jacdac-docs/dtmi``in the **IoT Hub Settings**.

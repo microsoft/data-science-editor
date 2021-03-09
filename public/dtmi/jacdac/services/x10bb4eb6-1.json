@@ -1,0 +1,39 @@
+{
+  "@type": "Interface",
+  "@id": "dtmi:jacdac:services:x10bb4eb6;1",
+  "displayName": "Pulse Oximeter",
+  "description": "A sensor approximating the oxygen level. \n\n**Jacdac is not suitable for medical devices and should NOT be used in any kind of device to diagnose or treat any medical conditions.**",
+  "contents": [
+    {
+      "@type": "Telemetry",
+      "name": "oxygen",
+      "@id": "dtmi:jacdac:x10bb4eb6:ro:oxygen;1",
+      "description": "The estimated oxygen level in blood.",
+      "schema": "float"
+    },
+    {
+      "@type": "Telemetry",
+      "name": "oxygen_error",
+      "@id": "dtmi:jacdac:x10bb4eb6:ro:oxygenerror;1",
+      "description": "The estimated error on the reported sensor data.",
+      "schema": "float"
+    }
+  ],
+  "extends": [
+    "dtmi:jacdac:services:x1ffffff3;1",
+    "dtmi:jacdac:services:x1ffffff2;1"
+  ],
+  "schemas": [
+    {
+      "@id": "dtmi:jacdac:x10bb4eb6:event;1",
+      "@type": "Object",
+      "fields": [
+        {
+          "name": "count",
+          "schema": "integer"
+        }
+      ]
+    }
+  ],
+  "@context": "dtmi:dtdl:context;2"
+}

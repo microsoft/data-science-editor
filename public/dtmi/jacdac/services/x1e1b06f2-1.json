@@ -1,0 +1,63 @@
+{
+  "@type": "Interface",
+  "@id": "dtmi:jacdac:services:x1e1b06f2;1",
+  "displayName": "Gyroscope",
+  "description": "A 3-axis gyroscope.",
+  "contents": [
+    {
+      "@type": "Telemetry",
+      "name": "rotation_rates",
+      "@id": "dtmi:jacdac:x1e1b06f2:ro:rotationrates;1",
+      "description": "Indicates the current forces acting on accelerometer.",
+      "schema": {
+        "@type": "Object",
+        "fields": [
+          {
+            "name": "x",
+            "schema": "float"
+          },
+          {
+            "name": "y",
+            "schema": "float"
+          },
+          {
+            "name": "z",
+            "schema": "float"
+          }
+        ]
+      }
+    },
+    {
+      "@type": "Telemetry",
+      "name": "rotation_rates_error",
+      "@id": "dtmi:jacdac:x1e1b06f2:ro:rotationrateserror;1",
+      "description": "Error on the reading value.",
+      "schema": "float"
+    },
+    {
+      "@type": "Property",
+      "name": "max_rate",
+      "@id": "dtmi:jacdac:x1e1b06f2:rw:maxrate;1",
+      "description": "Configures the range of range of rotation rates.",
+      "schema": "float",
+      "writable": true
+    }
+  ],
+  "extends": [
+    "dtmi:jacdac:services:x1ffffff3;1",
+    "dtmi:jacdac:services:x1ffffff2;1"
+  ],
+  "schemas": [
+    {
+      "@id": "dtmi:jacdac:x1e1b06f2:event;1",
+      "@type": "Object",
+      "fields": [
+        {
+          "name": "count",
+          "schema": "integer"
+        }
+      ]
+    }
+  ],
+  "@context": "dtmi:dtdl:context;2"
+}

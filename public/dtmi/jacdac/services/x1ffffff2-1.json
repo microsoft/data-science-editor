@@ -1,0 +1,36 @@
+{
+  "@type": "Interface",
+  "@id": "dtmi:jacdac:services:x1ffffff2;1",
+  "displayName": "Sensor",
+  "description": "Base class for sensors.",
+  "contents": [
+    {
+      "@type": [
+        "Property",
+        "TimeSpan"
+      ],
+      "name": "streaming_interval",
+      "@id": "dtmi:jacdac:x1ffffff2:rw:streaminginterval;1",
+      "description": "Period between packets of data when streaming in milliseconds.",
+      "unit": "millisecond",
+      "schema": "integer",
+      "writable": true
+    }
+  ],
+  "extends": [
+    "dtmi:jacdac:services:x1ffffff3;1"
+  ],
+  "schemas": [
+    {
+      "@id": "dtmi:jacdac:x1ffffff2:event;1",
+      "@type": "Object",
+      "fields": [
+        {
+          "name": "count",
+          "schema": "integer"
+        }
+      ]
+    }
+  ],
+  "@context": "dtmi:dtdl:context;2"
+}

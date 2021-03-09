@@ -1,0 +1,191 @@
+{
+  "@type": "Interface",
+  "@id": "dtmi:jacdac:services:x1f140409;1",
+  "displayName": "Accelerometer",
+  "description": "A 3-axis accelerometer.",
+  "contents": [
+    {
+      "@type": "Telemetry",
+      "name": "forces",
+      "@id": "dtmi:jacdac:x1f140409:ro:forces;1",
+      "description": "Indicates the current forces acting on accelerometer.",
+      "schema": {
+        "@type": "Object",
+        "fields": [
+          {
+            "name": "x",
+            "schema": "float"
+          },
+          {
+            "name": "y",
+            "schema": "float"
+          },
+          {
+            "name": "z",
+            "schema": "float"
+          }
+        ]
+      }
+    },
+    {
+      "@type": [
+        "Telemetry",
+        "Acceleration"
+      ],
+      "name": "forces_error",
+      "@id": "dtmi:jacdac:x1f140409:ro:forceserror;1",
+      "description": "Error on the reading value.",
+      "unit": "gForce",
+      "schema": "float"
+    },
+    {
+      "@type": [
+        "Property",
+        "Acceleration"
+      ],
+      "name": "max_force",
+      "@id": "dtmi:jacdac:x1f140409:rw:maxforce;1",
+      "description": "Configures the range forces detected.\nRead-back after setting to get current value.",
+      "unit": "gForce",
+      "schema": "float",
+      "writable": true
+    },
+    {
+      "@type": [
+        "Telemetry",
+        "Event"
+      ],
+      "name": "tilt_up",
+      "@id": "dtmi:jacdac:x1f140409:event:tiltup;1",
+      "description": "Emitted when accelerometer is tilted in the given direction.",
+      "schema": "dtmi:jacdac:x1f140409:event;1"
+    },
+    {
+      "@type": [
+        "Telemetry",
+        "Event"
+      ],
+      "name": "tilt_down",
+      "@id": "dtmi:jacdac:x1f140409:event:tiltdown;1",
+      "description": "Emitted when accelerometer is tilted in the given direction.",
+      "schema": "dtmi:jacdac:x1f140409:event;1"
+    },
+    {
+      "@type": [
+        "Telemetry",
+        "Event"
+      ],
+      "name": "tilt_left",
+      "@id": "dtmi:jacdac:x1f140409:event:tiltleft;1",
+      "description": "Emitted when accelerometer is tilted in the given direction.",
+      "schema": "dtmi:jacdac:x1f140409:event;1"
+    },
+    {
+      "@type": [
+        "Telemetry",
+        "Event"
+      ],
+      "name": "tilt_right",
+      "@id": "dtmi:jacdac:x1f140409:event:tiltright;1",
+      "description": "Emitted when accelerometer is tilted in the given direction.",
+      "schema": "dtmi:jacdac:x1f140409:event;1"
+    },
+    {
+      "@type": [
+        "Telemetry",
+        "Event"
+      ],
+      "name": "face_up",
+      "@id": "dtmi:jacdac:x1f140409:event:faceup;1",
+      "description": "Emitted when accelerometer is laying flat in the given direction.",
+      "schema": "dtmi:jacdac:x1f140409:event;1"
+    },
+    {
+      "@type": [
+        "Telemetry",
+        "Event"
+      ],
+      "name": "face_down",
+      "@id": "dtmi:jacdac:x1f140409:event:facedown;1",
+      "description": "Emitted when accelerometer is laying flat in the given direction.",
+      "schema": "dtmi:jacdac:x1f140409:event;1"
+    },
+    {
+      "@type": [
+        "Telemetry",
+        "Event"
+      ],
+      "name": "freefall",
+      "@id": "dtmi:jacdac:x1f140409:event:freefall;1",
+      "description": "Emitted when total force acting on accelerometer is much less than 1g.",
+      "schema": "dtmi:jacdac:x1f140409:event;1"
+    },
+    {
+      "@type": [
+        "Telemetry",
+        "Event"
+      ],
+      "name": "shake",
+      "@id": "dtmi:jacdac:x1f140409:event:shake;1",
+      "description": "Emitted when forces change violently a few times.",
+      "schema": "dtmi:jacdac:x1f140409:event;1"
+    },
+    {
+      "@type": [
+        "Telemetry",
+        "Event"
+      ],
+      "name": "force_2g",
+      "@id": "dtmi:jacdac:x1f140409:event:force2g;1",
+      "description": "Emitted when force in any direction exceeds given threshold.",
+      "schema": "dtmi:jacdac:x1f140409:event;1"
+    },
+    {
+      "@type": [
+        "Telemetry",
+        "Event"
+      ],
+      "name": "force_3g",
+      "@id": "dtmi:jacdac:x1f140409:event:force3g;1",
+      "description": "Emitted when force in any direction exceeds given threshold.",
+      "schema": "dtmi:jacdac:x1f140409:event;1"
+    },
+    {
+      "@type": [
+        "Telemetry",
+        "Event"
+      ],
+      "name": "force_6g",
+      "@id": "dtmi:jacdac:x1f140409:event:force6g;1",
+      "description": "Emitted when force in any direction exceeds given threshold.",
+      "schema": "dtmi:jacdac:x1f140409:event;1"
+    },
+    {
+      "@type": [
+        "Telemetry",
+        "Event"
+      ],
+      "name": "force_8g",
+      "@id": "dtmi:jacdac:x1f140409:event:force8g;1",
+      "description": "Emitted when force in any direction exceeds given threshold.",
+      "schema": "dtmi:jacdac:x1f140409:event;1"
+    }
+  ],
+  "extends": [
+    "dtmi:jacdac:services:x1ffffff3;1",
+    "dtmi:jacdac:services:x1ffffff2;1"
+  ],
+  "schemas": [
+    {
+      "@id": "dtmi:jacdac:x1f140409:event;1",
+      "@type": "Object",
+      "fields": [
+        {
+          "name": "count",
+          "schema": "integer"
+        }
+      ]
+    }
+  ],
+  "@context": "dtmi:dtdl:context;2"
+}

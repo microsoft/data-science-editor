@@ -1,0 +1,40 @@
+{
+  "@type": "Interface",
+  "@id": "dtmi:jacdac:services:x1b43b70b;1",
+  "displayName": "TCP",
+  "description": "Data transfer over TCP/IP and TLS stream sockets.",
+  "contents": [],
+  "extends": [
+    "dtmi:jacdac:services:x1ffffff3;1"
+  ],
+  "schemas": [
+    {
+      "@id": "dtmi:jacdac:x1b43b70b:event;1",
+      "@type": "Object",
+      "fields": [
+        {
+          "name": "count",
+          "schema": "integer"
+        }
+      ]
+    },
+    {
+      "@type": "Enum",
+      "@id": "dtmi:jacdac:x1b43b70b:tcperror;1",
+      "valueSchema": "integer",
+      "enumValues": [
+        {
+          "name": "invalidCommand",
+          "displayName": "InvalidCommand",
+          "enumValue": 1
+        },
+        {
+          "name": "invalidCommandPayload",
+          "displayName": "InvalidCommandPayload",
+          "enumValue": 2
+        }
+      ]
+    }
+  ],
+  "@context": "dtmi:dtdl:context;2"
+}

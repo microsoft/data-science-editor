@@ -1,0 +1,48 @@
+---
+hideToc: true
+---
+
+# JDOM
+
+The JDOM module is a dependency-free JavaScript object model 
+that reflects the state of the Jacdac elements:
+
+- A **[bus](/clients/web/jdom/bus/)** is made of connected devices.
+- A **[device](/clients/web/jdom/device/)** may host **services**.
+- A **[service](/clients/web/jdom/service/)** has **[registers](/clients/web/jdom/register/)** and **[events](/clients/web/jdom/event/)**, accepts **commands**,
+and may return **acks**. 
+- A **[register](/clients/web/jdom/register/)** is an addressed data location, organized in [fields](/clients/web/jdom/field/),
+, that may be get, set or streamed. 
+
+All the above elements are [nodes](/clients/web/jdom/node/) in the [JDOM](/clients/web/jdom/). All elements implement a event emitter and observable pattern to
+easily data-bind them in a variety of UI frameworks.
+
+## Setup
+
+Install the ``jacdac-ts`` npm package (see full [setup instructions](/clients/web/setup)/).
+
+```
+npm install --save jacdac-ts
+```
+
+## JavaScript/TypeScript ES6
+
+If you are using JavaScript/TypeScript ES6, import all APIs 
+
+```javascript
+import { createUSBBus, CHANGE } from "jacdac-ts"
+
+const bus = createUSBBus();
+await bus.connectAsync();
+bus.on(CHANGE, () => console.log(bus.devices()
+    .map(device => device.toString())
+    .join(", "))
+    )
+```
+
+## Vanilla JavaScript
+
+If you wish to use the library from a CDN or directly from a test web page, you can use the precompiled
+``jacdac.umd.ts`` file. All exported symbols are imported into the ``jacdac`` name.
+
+See [tools](/tools/) for example of vanilla HTML/JavaScript pages using the library.

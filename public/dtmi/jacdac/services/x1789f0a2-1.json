@@ -1,0 +1,53 @@
+{
+  "@type": "Interface",
+  "@id": "dtmi:jacdac:services:x1789f0a2;1",
+  "displayName": "Random Number Generator",
+  "description": "Generates random numbers using entropy sourced from physical processes.\n\nThis typically uses a cryptographical pseudo-random number generator (for example [Fortuna](https://en.wikipedia.org/wiki/Fortuna_(PRNG))),\nwhich is periodically re-seeded with entropy coming from some hardware source.",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "variant",
+      "@id": "dtmi:jacdac:x1789f0a2:const:variant;1",
+      "description": "The type of algorithm/technique used to generate the number.\n`Quantum` refers to dedicated hardware device generating random noise due to quantum effects.\n`ADCNoise` is the noise from quick readings of analog-digital converter, which reads temperature of the MCU or some floating pin.\n`WebCrypto` refers is used in simulators, where the source of randomness comes from an advanced operating system.",
+      "schema": "dtmi:jacdac:x1789f0a2:variant;1"
+    }
+  ],
+  "extends": [
+    "dtmi:jacdac:services:x1ffffff3;1"
+  ],
+  "schemas": [
+    {
+      "@id": "dtmi:jacdac:x1789f0a2:event;1",
+      "@type": "Object",
+      "fields": [
+        {
+          "name": "count",
+          "schema": "integer"
+        }
+      ]
+    },
+    {
+      "@type": "Enum",
+      "@id": "dtmi:jacdac:x1789f0a2:variant;1",
+      "valueSchema": "integer",
+      "enumValues": [
+        {
+          "name": "quantum",
+          "displayName": "Quantum",
+          "enumValue": 1
+        },
+        {
+          "name": "aDCNoise",
+          "displayName": "ADCNoise",
+          "enumValue": 2
+        },
+        {
+          "name": "webCrypto",
+          "displayName": "WebCrypto",
+          "enumValue": 3
+        }
+      ]
+    }
+  ],
+  "@context": "dtmi:dtdl:context;2"
+}

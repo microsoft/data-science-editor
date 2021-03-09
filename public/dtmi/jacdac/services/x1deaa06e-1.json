@@ -1,0 +1,96 @@
+{
+  "@type": "Interface",
+  "@id": "dtmi:jacdac:services:x1deaa06e;1",
+  "displayName": "Arcade Gamepad",
+  "description": "A gamepad with direction and action buttons for one player.\nIf a device has multiple controllers, it should have multiple gamepad services, using consecutive service identifiers.",
+  "contents": [
+    {
+      "@type": "Telemetry",
+      "name": "down",
+      "@id": "dtmi:jacdac:x1deaa06e:event:down;1",
+      "description": "Emitted when button goes from inactive to active.",
+      "schema": "dtmi:jacdac:x1deaa06e:button;1"
+    },
+    {
+      "@type": "Telemetry",
+      "name": "up",
+      "@id": "dtmi:jacdac:x1deaa06e:event:up;1",
+      "description": "Emitted when button goes from active to inactive.",
+      "schema": "dtmi:jacdac:x1deaa06e:button;1"
+    }
+  ],
+  "extends": [
+    "dtmi:jacdac:services:x1ffffff3;1",
+    "dtmi:jacdac:services:x1ffffff2;1"
+  ],
+  "schemas": [
+    {
+      "@id": "dtmi:jacdac:x1deaa06e:event;1",
+      "@type": "Object",
+      "fields": [
+        {
+          "name": "count",
+          "schema": "integer"
+        }
+      ]
+    },
+    {
+      "@type": "Enum",
+      "@id": "dtmi:jacdac:x1deaa06e:button;1",
+      "valueSchema": "integer",
+      "enumValues": [
+        {
+          "name": "left",
+          "displayName": "Left",
+          "enumValue": 1
+        },
+        {
+          "name": "up",
+          "displayName": "Up",
+          "enumValue": 2
+        },
+        {
+          "name": "right",
+          "displayName": "Right",
+          "enumValue": 3
+        },
+        {
+          "name": "down",
+          "displayName": "Down",
+          "enumValue": 4
+        },
+        {
+          "name": "a",
+          "displayName": "A",
+          "enumValue": 5
+        },
+        {
+          "name": "b",
+          "displayName": "B",
+          "enumValue": 6
+        },
+        {
+          "name": "menu",
+          "displayName": "Menu",
+          "enumValue": 7
+        },
+        {
+          "name": "select",
+          "displayName": "Select",
+          "enumValue": 8
+        },
+        {
+          "name": "reset",
+          "displayName": "Reset",
+          "enumValue": 9
+        },
+        {
+          "name": "exit",
+          "displayName": "Exit",
+          "enumValue": 10
+        }
+      ]
+    }
+  ],
+  "@context": "dtmi:dtdl:context;2"
+}

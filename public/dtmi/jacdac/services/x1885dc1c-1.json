@@ -1,0 +1,72 @@
+{
+  "@type": "Interface",
+  "@id": "dtmi:jacdac:services:x1885dc1c;1",
+  "displayName": "HID Mouse",
+  "description": "Controls a HID mouse. \n\nThis service cannot be simulated.",
+  "contents": [],
+  "extends": [
+    "dtmi:jacdac:services:x1ffffff3;1"
+  ],
+  "schemas": [
+    {
+      "@id": "dtmi:jacdac:x1885dc1c:event;1",
+      "@type": "Object",
+      "fields": [
+        {
+          "name": "count",
+          "schema": "integer"
+        }
+      ]
+    },
+    {
+      "@type": "Enum",
+      "@id": "dtmi:jacdac:x1885dc1c:button;1",
+      "valueSchema": "integer",
+      "enumValues": [
+        {
+          "name": "right",
+          "displayName": "Right",
+          "enumValue": 1
+        },
+        {
+          "name": "middle",
+          "displayName": "Middle",
+          "enumValue": 4
+        },
+        {
+          "name": "left",
+          "displayName": "Left",
+          "enumValue": 2
+        }
+      ]
+    },
+    {
+      "@type": "Enum",
+      "@id": "dtmi:jacdac:x1885dc1c:buttonevent;1",
+      "valueSchema": "integer",
+      "enumValues": [
+        {
+          "name": "up",
+          "displayName": "Up",
+          "enumValue": 1
+        },
+        {
+          "name": "down",
+          "displayName": "Down",
+          "enumValue": 2
+        },
+        {
+          "name": "click",
+          "displayName": "Click",
+          "enumValue": 3
+        },
+        {
+          "name": "doubleClick",
+          "displayName": "DoubleClick",
+          "enumValue": 4
+        }
+      ]
+    }
+  ],
+  "@context": "dtmi:dtdl:context;2"
+}

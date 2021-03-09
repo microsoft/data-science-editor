@@ -1,0 +1,55 @@
+{
+  "@type": "Interface",
+  "@id": "dtmi:jacdac:services:x1ffa9948;1",
+  "displayName": "Bootloader",
+  "description": "Allows flashing (reprogramming) devices over Jacdac.",
+  "contents": [],
+  "extends": [
+    "dtmi:jacdac:services:x1ffffff3;1"
+  ],
+  "schemas": [
+    {
+      "@id": "dtmi:jacdac:x1ffa9948:event;1",
+      "@type": "Object",
+      "fields": [
+        {
+          "name": "count",
+          "schema": "integer"
+        }
+      ]
+    },
+    {
+      "@type": "Enum",
+      "@id": "dtmi:jacdac:x1ffa9948:error;1",
+      "valueSchema": "integer",
+      "enumValues": [
+        {
+          "name": "noError",
+          "displayName": "NoError",
+          "enumValue": 0
+        },
+        {
+          "name": "packetTooSmall",
+          "displayName": "PacketTooSmall",
+          "enumValue": 1
+        },
+        {
+          "name": "outOfFlashableRange",
+          "displayName": "OutOfFlashableRange",
+          "enumValue": 2
+        },
+        {
+          "name": "invalidPageOffset",
+          "displayName": "InvalidPageOffset",
+          "enumValue": 3
+        },
+        {
+          "name": "notPageAligned",
+          "displayName": "NotPageAligned",
+          "enumValue": 4
+        }
+      ]
+    }
+  ],
+  "@context": "dtmi:dtdl:context;2"
+}

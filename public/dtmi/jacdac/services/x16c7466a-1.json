@@ -1,0 +1,262 @@
+{
+  "@type": "Interface",
+  "@id": "dtmi:jacdac:services:x16c7466a;1",
+  "displayName": "Protocol Test",
+  "description": "This is test service to validate the protocol packet transmissions between the browser and a MCU.\nUse this page if you are porting Jacdac to a new platform.",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "rw_bool",
+      "@id": "dtmi:jacdac:x16c7466a:rw:rwbool;1",
+      "description": "A read write bool register.",
+      "schema": "boolean",
+      "writable": true
+    },
+    {
+      "@type": "Telemetry",
+      "name": "ro_bool",
+      "@id": "dtmi:jacdac:x16c7466a:ro:robool;1",
+      "description": "A read only bool register. Mirrors rw_bool.",
+      "schema": "boolean"
+    },
+    {
+      "@type": "Property",
+      "name": "rw_u32",
+      "@id": "dtmi:jacdac:x16c7466a:rw:rwu32;1",
+      "description": "A read write u32 register.",
+      "schema": "integer",
+      "writable": true
+    },
+    {
+      "@type": "Telemetry",
+      "name": "ro_u32",
+      "@id": "dtmi:jacdac:x16c7466a:ro:rou32;1",
+      "description": "A read only u32 register.. Mirrors rw_u32.",
+      "schema": "integer"
+    },
+    {
+      "@type": "Property",
+      "name": "rw_i32",
+      "@id": "dtmi:jacdac:x16c7466a:rw:rwi32;1",
+      "description": "A read write i32 register.",
+      "schema": "integer",
+      "writable": true
+    },
+    {
+      "@type": "Telemetry",
+      "name": "ro_i32",
+      "@id": "dtmi:jacdac:x16c7466a:ro:roi32;1",
+      "description": "A read only i32 register.. Mirrors rw_i32.",
+      "schema": "integer"
+    },
+    {
+      "@type": "Property",
+      "name": "rw_string",
+      "@id": "dtmi:jacdac:x16c7466a:rw:rwstring;1",
+      "description": "A read write string register.",
+      "schema": "string",
+      "writable": true
+    },
+    {
+      "@type": "Telemetry",
+      "name": "ro_string",
+      "@id": "dtmi:jacdac:x16c7466a:ro:rostring;1",
+      "description": "A read only string register. Mirrors rw_string.",
+      "schema": "string"
+    },
+    {
+      "@type": "Property",
+      "name": "rw_i8_u8_u16_i32",
+      "@id": "dtmi:jacdac:x16c7466a:rw:rwi8u8u16i32;1",
+      "description": "A read write i8, u8, u16, i32 register.",
+      "schema": {
+        "@type": "Object",
+        "fields": [
+          {
+            "name": "i8",
+            "schema": "integer"
+          },
+          {
+            "name": "u8",
+            "schema": "integer"
+          },
+          {
+            "name": "u16",
+            "schema": "integer"
+          },
+          {
+            "name": "i32",
+            "schema": "integer"
+          }
+        ]
+      },
+      "writable": true
+    },
+    {
+      "@type": "Telemetry",
+      "name": "ro_i8_u8_u16_i32",
+      "@id": "dtmi:jacdac:x16c7466a:ro:roi8u8u16i32;1",
+      "description": "A read only i8, u8, u16, i32 register.. Mirrors rw_i8_u8_u16_i32.",
+      "schema": {
+        "@type": "Object",
+        "fields": [
+          {
+            "name": "i8",
+            "schema": "integer"
+          },
+          {
+            "name": "u8",
+            "schema": "integer"
+          },
+          {
+            "name": "u16",
+            "schema": "integer"
+          },
+          {
+            "name": "i32",
+            "schema": "integer"
+          }
+        ]
+      }
+    },
+    {
+      "@type": "Property",
+      "name": "rw_u8_string",
+      "@id": "dtmi:jacdac:x16c7466a:rw:rwu8string;1",
+      "description": "A read write u8, string register.",
+      "schema": {
+        "@type": "Object",
+        "fields": [
+          {
+            "name": "u8",
+            "schema": "integer"
+          },
+          {
+            "name": "string",
+            "schema": "string"
+          }
+        ]
+      },
+      "writable": true
+    },
+    {
+      "@type": "Telemetry",
+      "name": "ro_u8_string",
+      "@id": "dtmi:jacdac:x16c7466a:ro:rou8string;1",
+      "description": "A read only u8, string register.. Mirrors rw_u8_string.",
+      "schema": {
+        "@type": "Object",
+        "fields": [
+          {
+            "name": "u8",
+            "schema": "integer"
+          },
+          {
+            "name": "string",
+            "schema": "string"
+          }
+        ]
+      }
+    },
+    {
+      "@type": "Telemetry",
+      "name": "e_bool",
+      "@id": "dtmi:jacdac:x16c7466a:event:ebool;1",
+      "description": "An event raised when rw_bool is modified",
+      "schema": "boolean"
+    },
+    {
+      "@type": "Telemetry",
+      "name": "e_u32",
+      "@id": "dtmi:jacdac:x16c7466a:event:eu32;1",
+      "description": "An event raised when rw_u32 is modified",
+      "schema": "integer"
+    },
+    {
+      "@type": "Telemetry",
+      "name": "e_i32",
+      "@id": "dtmi:jacdac:x16c7466a:event:ei32;1",
+      "description": "An event raised when rw_i32 is modified",
+      "schema": "integer"
+    },
+    {
+      "@type": "Telemetry",
+      "name": "e_string",
+      "@id": "dtmi:jacdac:x16c7466a:event:estring;1",
+      "description": "An event raised when rw_string is modified",
+      "schema": "string"
+    },
+    {
+      "@type": [
+        "Telemetry",
+        "Event"
+      ],
+      "name": "e_bytes",
+      "@id": "dtmi:jacdac:x16c7466a:event:ebytes;1",
+      "description": "An event raised when rw_bytes is modified",
+      "schema": "dtmi:jacdac:x16c7466a:event;1"
+    },
+    {
+      "@type": "Telemetry",
+      "name": "e_i8_u8_u16_i32",
+      "@id": "dtmi:jacdac:x16c7466a:event:ei8u8u16i32;1",
+      "description": "An event raised when rw_i8_u8_u16_i32 is modified",
+      "schema": {
+        "@type": "Object",
+        "fields": [
+          {
+            "name": "i8",
+            "schema": "integer"
+          },
+          {
+            "name": "u8",
+            "schema": "integer"
+          },
+          {
+            "name": "u16",
+            "schema": "integer"
+          },
+          {
+            "name": "i32",
+            "schema": "integer"
+          }
+        ]
+      }
+    },
+    {
+      "@type": "Telemetry",
+      "name": "e_u8_string",
+      "@id": "dtmi:jacdac:x16c7466a:event:eu8string;1",
+      "description": "An event raised when rw_u8_string is modified",
+      "schema": {
+        "@type": "Object",
+        "fields": [
+          {
+            "name": "u8",
+            "schema": "integer"
+          },
+          {
+            "name": "string",
+            "schema": "string"
+          }
+        ]
+      }
+    }
+  ],
+  "extends": [
+    "dtmi:jacdac:services:x1ffffff3;1"
+  ],
+  "schemas": [
+    {
+      "@id": "dtmi:jacdac:x16c7466a:event;1",
+      "@type": "Object",
+      "fields": [
+        {
+          "name": "count",
+          "schema": "integer"
+        }
+      ]
+    }
+  ],
+  "@context": "dtmi:dtdl:context;2"
+}

@@ -1,0 +1,92 @@
+{
+  "@type": "Interface",
+  "@id": "dtmi:jacdac:services:x141a6b8a;1",
+  "displayName": "Distance",
+  "description": "A sensor that determines the distance of an object without any physical contact involved.",
+  "contents": [
+    {
+      "@type": [
+        "Telemetry",
+        "Length"
+      ],
+      "name": "distance",
+      "@id": "dtmi:jacdac:x141a6b8a:ro:distance;1",
+      "description": "Current distance from the object",
+      "unit": "metre",
+      "schema": "float"
+    },
+    {
+      "@type": [
+        "Property",
+        "Length"
+      ],
+      "name": "min_range",
+      "@id": "dtmi:jacdac:x141a6b8a:const:minrange;1",
+      "description": "Minimum measurable distance",
+      "unit": "metre",
+      "schema": "float"
+    },
+    {
+      "@type": [
+        "Property",
+        "Length"
+      ],
+      "name": "max_range",
+      "@id": "dtmi:jacdac:x141a6b8a:const:maxrange;1",
+      "description": "Maximum measurable distance",
+      "unit": "metre",
+      "schema": "float"
+    },
+    {
+      "@type": "Property",
+      "name": "variant",
+      "@id": "dtmi:jacdac:x141a6b8a:const:variant;1",
+      "description": "Determines the type of sensor used.",
+      "schema": "dtmi:jacdac:x141a6b8a:variant;1"
+    }
+  ],
+  "extends": [
+    "dtmi:jacdac:services:x1ffffff3;1",
+    "dtmi:jacdac:services:x1ffffff2;1"
+  ],
+  "schemas": [
+    {
+      "@id": "dtmi:jacdac:x141a6b8a:event;1",
+      "@type": "Object",
+      "fields": [
+        {
+          "name": "count",
+          "schema": "integer"
+        }
+      ]
+    },
+    {
+      "@type": "Enum",
+      "@id": "dtmi:jacdac:x141a6b8a:variant;1",
+      "valueSchema": "integer",
+      "enumValues": [
+        {
+          "name": "ultrasonic",
+          "displayName": "Ultrasonic",
+          "enumValue": 1
+        },
+        {
+          "name": "infrared",
+          "displayName": "Infrared",
+          "enumValue": 2
+        },
+        {
+          "name": "liDAR",
+          "displayName": "LiDAR",
+          "enumValue": 3
+        },
+        {
+          "name": "laser",
+          "displayName": "Laser",
+          "enumValue": 4
+        }
+      ]
+    }
+  ],
+  "@context": "dtmi:dtdl:context;2"
+}

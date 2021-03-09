@@ -1,0 +1,32 @@
+{
+  "@type": "Interface",
+  "@id": "dtmi:jacdac:services:x1b57b1d7;1",
+  "displayName": "Buzzer",
+  "description": "A simple buzzer.",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "volume",
+      "@id": "dtmi:jacdac:x1b57b1d7:rw:volume;1",
+      "description": "The volume (duty cycle) of the buzzer.",
+      "schema": "float",
+      "writable": true
+    }
+  ],
+  "extends": [
+    "dtmi:jacdac:services:x1ffffff3;1"
+  ],
+  "schemas": [
+    {
+      "@id": "dtmi:jacdac:x1b57b1d7:event;1",
+      "@type": "Object",
+      "fields": [
+        {
+          "name": "count",
+          "schema": "integer"
+        }
+      ]
+    }
+  ],
+  "@context": "dtmi:dtdl:context;2"
+}

@@ -1,0 +1,123 @@
+{
+  "@type": "Interface",
+  "@id": "dtmi:jacdac:services:x1c739e6c;1",
+  "displayName": "Barcode reader",
+  "description": "A device that reads various barcodes, like QR codes. For the web, see [BarcodeDetector](https://developer.mozilla.org/en-US/docs/Web/API/BarcodeDetector).",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "enabled",
+      "@id": "dtmi:jacdac:x1c739e6c:rw:enabled;1",
+      "description": "Turns on or off the detection of barcodes.",
+      "schema": "boolean",
+      "writable": true
+    },
+    {
+      "@type": "Telemetry",
+      "name": "detect",
+      "@id": "dtmi:jacdac:x1c739e6c:event:detect;1",
+      "description": "Raised when a bar code is detected and decoded. If the reader detects multiple codes, it will issue multiple events.\nIn case of numeric barcodes, the `data` field should contain the ASCII (which is the same as UTF8 in that case) representation of the number.",
+      "schema": {
+        "@type": "Object",
+        "fields": [
+          {
+            "name": "format",
+            "schema": "dtmi:jacdac:x1c739e6c:format;1"
+          },
+          {
+            "name": "data",
+            "schema": "string"
+          }
+        ]
+      }
+    }
+  ],
+  "extends": [
+    "dtmi:jacdac:services:x1ffffff3;1"
+  ],
+  "schemas": [
+    {
+      "@id": "dtmi:jacdac:x1c739e6c:event;1",
+      "@type": "Object",
+      "fields": [
+        {
+          "name": "count",
+          "schema": "integer"
+        }
+      ]
+    },
+    {
+      "@type": "Enum",
+      "@id": "dtmi:jacdac:x1c739e6c:format;1",
+      "valueSchema": "integer",
+      "enumValues": [
+        {
+          "name": "aztec",
+          "displayName": "Aztec",
+          "enumValue": 1
+        },
+        {
+          "name": "code128",
+          "displayName": "Code128",
+          "enumValue": 2
+        },
+        {
+          "name": "code39",
+          "displayName": "Code39",
+          "enumValue": 3
+        },
+        {
+          "name": "code93",
+          "displayName": "Code93",
+          "enumValue": 4
+        },
+        {
+          "name": "codabar",
+          "displayName": "Codabar",
+          "enumValue": 5
+        },
+        {
+          "name": "dataMatrix",
+          "displayName": "DataMatrix",
+          "enumValue": 6
+        },
+        {
+          "name": "ean13",
+          "displayName": "Ean13",
+          "enumValue": 8
+        },
+        {
+          "name": "ean8",
+          "displayName": "Ean8",
+          "enumValue": 9
+        },
+        {
+          "name": "iTF",
+          "displayName": "ITF",
+          "enumValue": 10
+        },
+        {
+          "name": "pdf417",
+          "displayName": "Pdf417",
+          "enumValue": 11
+        },
+        {
+          "name": "qrCode",
+          "displayName": "QrCode",
+          "enumValue": 12
+        },
+        {
+          "name": "upcA",
+          "displayName": "UpcA",
+          "enumValue": 13
+        },
+        {
+          "name": "upcE",
+          "displayName": "UpcE",
+          "enumValue": 14
+        }
+      ]
+    }
+  ],
+  "@context": "dtmi:dtdl:context;2"
+}

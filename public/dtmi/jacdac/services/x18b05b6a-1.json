@@ -1,0 +1,92 @@
+{
+  "@type": "Interface",
+  "@id": "dtmi:jacdac:services:x18b05b6a;1",
+  "displayName": "HID Keyboard",
+  "description": "Control a HID keyboard. \n\nThis service cannot be simulated.\n\nThe codes for the key (selectors) is defined in the [HID Keyboard\nspecification](https://usb.org/sites/default/files/hut1_21.pdf), chapter 10 Keyboard/Keypad Page, page 81.\n\nThe device keeps tracks of the key state and is able to clear it all with the clear command.",
+  "contents": [],
+  "extends": [
+    "dtmi:jacdac:services:x1ffffff3;1"
+  ],
+  "schemas": [
+    {
+      "@id": "dtmi:jacdac:x18b05b6a:event;1",
+      "@type": "Object",
+      "fields": [
+        {
+          "name": "count",
+          "schema": "integer"
+        }
+      ]
+    },
+    {
+      "@type": "Enum",
+      "@id": "dtmi:jacdac:x18b05b6a:modifiers;1",
+      "valueSchema": "integer",
+      "enumValues": [
+        {
+          "name": "leftControl",
+          "displayName": "LeftControl",
+          "enumValue": 224
+        },
+        {
+          "name": "leftShift",
+          "displayName": "LeftShift",
+          "enumValue": 225
+        },
+        {
+          "name": "leftAlt",
+          "displayName": "LeftAlt",
+          "enumValue": 226
+        },
+        {
+          "name": "leftGUID",
+          "displayName": "LeftGUID",
+          "enumValue": 227
+        },
+        {
+          "name": "rightControl",
+          "displayName": "RightControl",
+          "enumValue": 228
+        },
+        {
+          "name": "rightShift",
+          "displayName": "RightShift",
+          "enumValue": 229
+        },
+        {
+          "name": "rightAlt",
+          "displayName": "RightAlt",
+          "enumValue": 230
+        },
+        {
+          "name": "rightGUID",
+          "displayName": "RightGUID",
+          "enumValue": 231
+        }
+      ]
+    },
+    {
+      "@type": "Enum",
+      "@id": "dtmi:jacdac:x18b05b6a:action;1",
+      "valueSchema": "integer",
+      "enumValues": [
+        {
+          "name": "press",
+          "displayName": "Press",
+          "enumValue": 0
+        },
+        {
+          "name": "up",
+          "displayName": "Up",
+          "enumValue": 1
+        },
+        {
+          "name": "down",
+          "displayName": "Down",
+          "enumValue": 2
+        }
+      ]
+    }
+  ],
+  "@context": "dtmi:dtdl:context;2"
+}

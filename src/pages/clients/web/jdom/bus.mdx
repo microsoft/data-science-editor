@@ -1,0 +1,106 @@
+---
+hideToc: true
+---
+
+# JDBus
+
+> A **bus** is the top-level [JDOM](/clients/web/jdom/) [node](/clients/web/jdom/node/).
+It processes the incoming and outcoming packets, 
+handles the connection to the underlying communiction transport
+and maintains a set of active [devices](/clients/web/jdom/device/) nodes.
+
+## WebUSB bus
+
+The most common use is to create a bus that uses WebUSB to
+communicate to a physical Jacdac device. This is done with ``createUSBBus``.
+
+```javascript
+const bus = createUSBBus();
+```
+
+## Connection and disconnection
+
+By default, the WebUSB bus will try to reconnect 
+to any known connected physical device. The Jacdac physical device hasn't been paired yet,
+you can initiate the connection from a user interaction handler (security measure as the user must manually pick the device).
+
+```javascript
+await bus.connectAsync();
+```
+
+The bus will detect that the physical device is disconnected automatically. If you wish to disconnect manually, use
+
+```javascript
+await bus.disconnectAsync();
+```
+
+You can query the status of the connection using ``bus.connectionState``. The connection has 4 states:
+
+* connected: connected to a physical device over WebUSB and receiving packets
+* connection: connection in progress (for example, user is selecting the device)
+* disconnected: no active connection to a physical device
+* disconnecting: closing the connection to the physical device
+
+Using the ``CONNECTION_STATE`` event, you can track changes of the state.
+
+```javascript
+// am i in connected state?
+const connected = bus.connected
+bus.on(CONNECTION_STATE, state => console.log(state))
+```
+
+<Widget>
+<ConnectButton full={true} />
+</Widget>
+
+## Methods
+
+### Devices
+
+You can query the bus at any to receive a snapshot of the [devices](./device) JDOM.
+
+```javascript
+const devices = bus.devices()
+for(const device of devices)
+    console.log(device)
+```
+
+## Events
+
+All bus state mutation are advertised by events. You can listen or subscribe to those events.
+
+### ``CHANGE``
+
+Catch all event raised when some change happened to the bus, whether it is a connection change or a change in the list of services
+or the error state changed.
+
+```javascript
+bus.on(CHANGE, () => console.log('bus changed!'))
+```
+
+### ``CONNECTION_STATE``
+
+Raised when the connection state of the bus has changed.
+
+```javascript
+bus.on(CONNECTION_STATE, state => console.log(`bus connection state: ${state}`))
+```
+
+### ``CONNECT``, ``CONNECTING``, ``DISCONNECTING``, ``DISCONNECT``
+
+Raised on each connection state changes.
+
+```javascript
+bus.on(CONNECT, state => console.log(`bus connected`))
+bus.on(CONNECTING, state => console.log(`bus connecting`))
+bus.on(DISCONNECTING, state => console.log(`bus disconnecting`))
+bus.on(DISCONNECT, state => console.log(`bus disconnected`))
+```
+
+### ``ERROR``
+
+An error occured.
+
+```javascript
+bus.on(ERROR, { context, exception } => console.error(`bus error: ${context}`, exception))
+```

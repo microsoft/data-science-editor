@@ -1,0 +1,58 @@
+---
+title: Tools
+---
+
+## Web Tools
+
+The console and packet sniffer are accessible in all pages by clicking the history icon in the menu bar.
+
+### Data 
+
+* [dashboard](/dashboard/), see and interact with all connected devices
+* [packet inspector](/tools/packet-inspector/), inspect packets transmitted on the bus
+* [collector](/tools/collector/), collect sensor data to files
+* [packet player](/tools/player/), record traces in your logic analyser and replay them to test your services
+
+### Device naming and update
+
+* [role manager](/tools/role-manager/), assign names to devices using the [device namer service](/services/rolemanager/)
+* [settings manager](/tools/settings-manager/), create or update settings in devices
+* [updater](/tools/updater/), allows to flash Jacdac module with new firmware
+
+### Miscellaneous
+
+* [model uploader](/tools/model-uploader/), deploy Machine Learning models (like TensorFlow Lite)
+* [LED Animation Designer](/tools/led-animation-designer/), design LED animation patterns for LED strips or module status light.
+* The [jacdac multitool](https://github.com/microsoft/jacdac-multitool) allows you to explore and monitor the Jacdac bus from a [MakeCode Arcade](https://arcade.makecode.com) 
+  [hardware console](https://arcade.makecode.com/hardware)
+
+## Integration points
+
+* [Azure device twin designer](/tools/azure-device-twin-designer/), interface interface to design a device or digital twins
+* [Edge Impulse](/tools/edge-impulse/), use Jacdac to inject data and download models into https://studio.edgeimpulse.com
+* [JupyterLab](/tools/jupyterlab/), an extension in JupyterLab, Jupyter's next-generation notebook interface.
+* [MakeCode](/tools/makecode/)
+  * [MakeCode Editor Extension](/tools/makecode-editor-extension/)
+  * [MakeCode Simulator](/tools/makecode-sim/)
+
+## Testing and compliance
+
+* [service editor](/tools/service-editor/), interactive service specification editor
+* [service test editor](/tools/service-test-editor/), interactive service test editor
+* [protocol test](/tools/prototest/), a low level protocol tester
+
+## Device catalog
+
+* [device registration](/tools/device-registration/), interactive interface to design and register a new device
+
+## Vanilla JavaScript
+
+A list of sample using plain HTML/JavaScript to operate on Jacdac devices, built with this library.
+
+* [packets](./js/packets), sniff all packets on the bus
+* [devices](./js/devices), list of connected devices
+* [speed test](./js/devices?speed=1), test end-to-end speed of WebUSB-Jacdac connection
+* [console](./js/console), turns on verbose console and display messages
+* [streaming](./js/streaming), live streaming of sensor data into range widgets
+* [streaming-rickshaw](./js/streaming-rickshaw), live streaming of sensor data into graphs
+* [flashing](./js/flashing), flash new firmware onto a device

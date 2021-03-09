@@ -1,0 +1,56 @@
+{
+  "@type": "Interface",
+  "@id": "dtmi:jacdac:services:x1f274746;1",
+  "displayName": "Potentiometer",
+  "description": "A slider or rotary potentiometer.",
+  "contents": [
+    {
+      "@type": "Telemetry",
+      "name": "position",
+      "@id": "dtmi:jacdac:x1f274746:ro:position;1",
+      "description": "The relative position of the slider between `0` and `1`.",
+      "schema": "float"
+    },
+    {
+      "@type": "Property",
+      "name": "variant",
+      "@id": "dtmi:jacdac:x1f274746:const:variant;1",
+      "description": "Specifies the physical layout of the potentiometer.",
+      "schema": "dtmi:jacdac:x1f274746:variant;1"
+    }
+  ],
+  "extends": [
+    "dtmi:jacdac:services:x1ffffff3;1",
+    "dtmi:jacdac:services:x1ffffff2;1"
+  ],
+  "schemas": [
+    {
+      "@id": "dtmi:jacdac:x1f274746:event;1",
+      "@type": "Object",
+      "fields": [
+        {
+          "name": "count",
+          "schema": "integer"
+        }
+      ]
+    },
+    {
+      "@type": "Enum",
+      "@id": "dtmi:jacdac:x1f274746:variant;1",
+      "valueSchema": "integer",
+      "enumValues": [
+        {
+          "name": "slider",
+          "displayName": "Slider",
+          "enumValue": 1
+        },
+        {
+          "name": "rotary",
+          "displayName": "Rotary",
+          "enumValue": 2
+        }
+      ]
+    }
+  ],
+  "@context": "dtmi:dtdl:context;2"
+}

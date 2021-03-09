@@ -1,0 +1,3 @@
+[submodule "jacdac-ts"]
+	path = jacdac-ts
+	url = https://github.com/microsoft/jacdac-ts

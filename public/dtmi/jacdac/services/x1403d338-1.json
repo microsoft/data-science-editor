@@ -1,0 +1,32 @@
+{
+  "@type": "Interface",
+  "@id": "dtmi:jacdac:services:x1403d338;1",
+  "displayName": "Sound player",
+  "description": "A device that can play various sounds stored locally. This service is typically paired with a ``storage`` service for storing sounds.",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "volume",
+      "@id": "dtmi:jacdac:x1403d338:rw:volume;1",
+      "description": "Global volume of the output. ``0`` means completely off. This volume is mixed with each play volumes.",
+      "schema": "float",
+      "writable": true
+    }
+  ],
+  "extends": [
+    "dtmi:jacdac:services:x1ffffff3;1"
+  ],
+  "schemas": [
+    {
+      "@id": "dtmi:jacdac:x1403d338:event;1",
+      "@type": "Object",
+      "fields": [
+        {
+          "name": "count",
+          "schema": "integer"
+        }
+      ]
+    }
+  ],
+  "@context": "dtmi:dtdl:context;2"
+}

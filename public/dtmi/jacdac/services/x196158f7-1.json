@@ -1,0 +1,54 @@
+{
+  "@type": "Interface",
+  "@id": "dtmi:jacdac:services:x196158f7;1",
+  "displayName": "7-segment display",
+  "description": "A 7-segment numeric display, with one or more digits.",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "brightness",
+      "@id": "dtmi:jacdac:x196158f7:rw:brightness;1",
+      "description": "Controls the brightness of the LEDs. ``0`` means off.",
+      "schema": "float",
+      "writable": true
+    },
+    {
+      "@type": "Property",
+      "name": "double_dots",
+      "@id": "dtmi:jacdac:x196158f7:rw:doubledots;1",
+      "description": "Turn on or off the column LEDs (separating minutes from hours, etc.) in of the segment.\nIf the column LEDs is not supported, the value remains false.",
+      "schema": "boolean",
+      "writable": true
+    },
+    {
+      "@type": "Property",
+      "name": "digit_count",
+      "@id": "dtmi:jacdac:x196158f7:const:digitcount;1",
+      "description": "The number of digits available on the display.",
+      "schema": "integer"
+    },
+    {
+      "@type": "Property",
+      "name": "decimal_point",
+      "@id": "dtmi:jacdac:x196158f7:const:decimalpoint;1",
+      "description": "True if decimal points are available (on all digits).",
+      "schema": "boolean"
+    }
+  ],
+  "extends": [
+    "dtmi:jacdac:services:x1ffffff3;1"
+  ],
+  "schemas": [
+    {
+      "@id": "dtmi:jacdac:x196158f7:event;1",
+      "@type": "Object",
+      "fields": [
+        {
+          "name": "count",
+          "schema": "integer"
+        }
+      ]
+    }
+  ],
+  "@context": "dtmi:dtdl:context;2"
+}

@@ -1,0 +1,28 @@
+---
+hideToc: true
+title: LED Animation Designer
+---
+
+import LedAnimationDesigner from "../../components/tools/LedAnimationDesigner"
+
+# LED Animation Designer
+
+Design LED animation patterns for LED strips or module status light.
+
+```
+{
+    repetitions: u16
+repeats:
+    hue: u8
+    saturation: u8
+    value: u8
+    duration8: u8 8ms
+}
+```
+
+* ``repetitions`` determines the number of runs of the animation, ``0`` is interpreted as infinite.
+* each animation frame is a color (in Hue Saturation Value format) and a duration
+* the module will interpolate between each animation frame
+* for the status light, specify up to **8** animation frame
+
+<LedAnimationDesigner />

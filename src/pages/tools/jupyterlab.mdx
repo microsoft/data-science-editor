@@ -1,0 +1,38 @@
+---
+hideToc: true
+title: JupyterLab 2.0
+---
+
+# JupyterLab 2.0
+
+* Try it in [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/microsoft/jupyter-jacdac/main?urlpath=lab)
+
+Jacdac is available as an extension in [JupyterLab](https://jupyter.org/),
+Jupyter's next-generation notebook interface.
+
+The extension provides the same functionalities as this web site and integrates seamlessly with the notebook file system. 
+(This extension is using the [IFrame](/clients/web/iframe/) client)
+
+* recorded data is saved as files into the notebook
+* import models and deploy them to devices
+* alignment of the dark mode theme
+
+## Installation
+
+In JupyterLab 2.0 or above, 
+* click on the Extension manager in the left gutter. 
+* If needed, enable extensions,
+* search for ``jacdac``.
+* Select the ``jupyter-jacdac`` extension and install it.
+
+After installation, you will see menu items under ``View`` to collect data 
+and deplay models.
+
+## Sources
+
+The extension sources are availabe on GitHub at https://github.com/microsoft/jupyter-jacdac .
+
+## How does it work?
+
+The extension loads this web site and communicates with JupyterLab via IFrame messages.
+It is a showcase of integrating Jacdac using the [IFrame protocol](/clients/web/iframe/).

@@ -1,0 +1,48 @@
+{
+  "@type": "Interface",
+  "@id": "dtmi:jacdac:services:x15c38d9b;1",
+  "displayName": "Traffic Light",
+  "description": "Controls a mini traffic with a red, orange and green LED.",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "red",
+      "@id": "dtmi:jacdac:x15c38d9b:rw:red;1",
+      "description": "The on/off state of the red light.",
+      "schema": "boolean",
+      "writable": true
+    },
+    {
+      "@type": "Property",
+      "name": "orange",
+      "@id": "dtmi:jacdac:x15c38d9b:rw:orange;1",
+      "description": "The on/off state of the red light.",
+      "schema": "boolean",
+      "writable": true
+    },
+    {
+      "@type": "Property",
+      "name": "green",
+      "@id": "dtmi:jacdac:x15c38d9b:rw:green;1",
+      "description": "The on/off state of the red light.",
+      "schema": "boolean",
+      "writable": true
+    }
+  ],
+  "extends": [
+    "dtmi:jacdac:services:x1ffffff3;1"
+  ],
+  "schemas": [
+    {
+      "@id": "dtmi:jacdac:x15c38d9b:event;1",
+      "@type": "Object",
+      "fields": [
+        {
+          "name": "count",
+          "schema": "integer"
+        }
+      ]
+    }
+  ],
+  "@context": "dtmi:dtdl:context;2"
+}

@@ -1,0 +1,151 @@
+{
+  "@type": "Interface",
+  "@id": "dtmi:jacdac:services:x126f00e0;1",
+  "displayName": "LED Pixel",
+  "description": "A controller for strips of individually controlled RGB LEDs.",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "brightness",
+      "@id": "dtmi:jacdac:x126f00e0:rw:brightness;1",
+      "description": "Set the luminosity of the strip.\nAt `0` the power to the strip is completely shut down.",
+      "schema": "float",
+      "writable": true
+    },
+    {
+      "@type": "Telemetry",
+      "name": "actual_brightness",
+      "@id": "dtmi:jacdac:x126f00e0:ro:actualbrightness;1",
+      "description": "This is the luminosity actually applied to the strip.\nMay be lower than `brightness` if power-limited by the `max_power` register.\nIt will rise slowly (few seconds) back to `brightness` is limits are no longer required.",
+      "schema": "float"
+    },
+    {
+      "@type": "Property",
+      "name": "light_type",
+      "@id": "dtmi:jacdac:x126f00e0:rw:lighttype;1",
+      "description": "Specifies the type of light strip connected to controller.\nControllers which are sold with lights should default to the correct type\nand could not allow change.",
+      "schema": "dtmi:jacdac:x126f00e0:lighttype;1",
+      "writable": true
+    },
+    {
+      "@type": "Property",
+      "name": "num_pixels",
+      "@id": "dtmi:jacdac:x126f00e0:rw:numpixels;1",
+      "description": "Specifies the number of pixels in the strip.\nControllers which are sold with lights should default to the correct length\nand could not allow change. Increasing length at runtime leads to ineffective use of memory and may lead to controller reboot.",
+      "schema": "integer",
+      "writable": true
+    },
+    {
+      "@type": "Property",
+      "name": "num_columns",
+      "@id": "dtmi:jacdac:x126f00e0:rw:numcolumns;1",
+      "description": "If the LED pixel strip is a matrix, specifies the number of columns. Otherwise, a square shape is assumed. Controllers which are sold with lights should default to the correct length\nand could not allow change. Increasing length at runtime leads to ineffective use of memory and may lead to controller reboot.",
+      "schema": "integer",
+      "writable": true
+    },
+    {
+      "@type": [
+        "Property",
+        "Current"
+      ],
+      "name": "max_power",
+      "@id": "dtmi:jacdac:x126f00e0:rw:maxpower;1",
+      "description": "Limit the power drawn by the light-strip (and controller).",
+      "unit": "milliampere",
+      "schema": "integer",
+      "writable": true
+    },
+    {
+      "@type": "Property",
+      "name": "max_pixels",
+      "@id": "dtmi:jacdac:x126f00e0:const:maxpixels;1",
+      "description": "The maximum supported number of pixels.\nAll writes to `num_pixels` are clamped to `max_pixels`.",
+      "schema": "integer"
+    },
+    {
+      "@type": "Property",
+      "name": "num_repeats",
+      "@id": "dtmi:jacdac:x126f00e0:rw:numrepeats;1",
+      "description": "How many times to repeat the program passed in `run` command.\nShould be set before the `run` command.\nSetting to `0` means to repeat forever.",
+      "schema": "integer",
+      "writable": true
+    },
+    {
+      "@type": "Property",
+      "name": "variant",
+      "@id": "dtmi:jacdac:x126f00e0:const:variant;1",
+      "description": "Specifies the shape of the light strip.",
+      "schema": "dtmi:jacdac:x126f00e0:variant;1"
+    }
+  ],
+  "extends": [
+    "dtmi:jacdac:services:x1ffffff3;1"
+  ],
+  "schemas": [
+    {
+      "@id": "dtmi:jacdac:x126f00e0:event;1",
+      "@type": "Object",
+      "fields": [
+        {
+          "name": "count",
+          "schema": "integer"
+        }
+      ]
+    },
+    {
+      "@type": "Enum",
+      "@id": "dtmi:jacdac:x126f00e0:lighttype;1",
+      "valueSchema": "integer",
+      "enumValues": [
+        {
+          "name": "wS2812B_GRB",
+          "displayName": "WS2812B_GRB",
+          "enumValue": 0
+        },
+        {
+          "name": "aPA102",
+          "displayName": "APA102",
+          "enumValue": 16
+        },
+        {
+          "name": "sK9822",
+          "displayName": "SK9822",
+          "enumValue": 17
+        }
+      ]
+    },
+    {
+      "@type": "Enum",
+      "@id": "dtmi:jacdac:x126f00e0:variant;1",
+      "valueSchema": "integer",
+      "enumValues": [
+        {
+          "name": "strip",
+          "displayName": "Strip",
+          "enumValue": 1
+        },
+        {
+          "name": "ring",
+          "displayName": "Ring",
+          "enumValue": 2
+        },
+        {
+          "name": "stick",
+          "displayName": "Stick",
+          "enumValue": 3
+        },
+        {
+          "name": "jewel",
+          "displayName": "Jewel",
+          "enumValue": 4
+        },
+        {
+          "name": "matrix",
+          "displayName": "Matrix",
+          "enumValue": 5
+        }
+      ]
+    }
+  ],
+  "@context": "dtmi:dtdl:context;2"
+}

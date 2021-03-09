@@ -1,0 +1,127 @@
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: monospace;
+        }
+
+        #streams {
+            margin-top: 1rem;
+        }
+
+        .stream input {
+            margin-left: 1rem;
+        }
+
+        #log {
+            margin-top: 1rem;
+        }
+
+        #log>div {
+            margin: 0.25rem;
+        }
+        button:not(.active) {
+            opacity: 0.7;
+        }
+        button.active {
+            font-weight: bold;
+        }
+    </style>
+    <script>
+        var process = {
+            env: {}
+        }   
+    </script>
+</head>
+
+<body>
+    <h1>JACDAC/Streaming</h1>
+    <div>
+        <button id="connect">connect</button>
+        <button id="disconnect">disconnect</button>
+    </div>
+    <div id="devices" class="segment"></div>
+    <div id="streams" class="segment"></div>
+
+    <script src="/dist/jacdac-jdom.umd.js"></script>
+    <script>
+        const devicesDiv = document.getElementById("devices");
+        const jd = jacdac.createUSBBus()
+        jd.on(jacdac.DEVICE_ANNOUNCE, d => {
+            for (let i = 1; i < d.serviceLength; ++i) {
+                const service = d.service(i)
+                console.log(`start streaming ${service}`)
+                jacdac.setStreamingAsync(service, true);
+            }
+        })
+        jd.on(jacdac.PACKET_SEND, pkt => {
+            console.log(jacdac.printPacket(pkt));
+        })
+        jd.on(jacdac.PACKET_RECEIVE, pkt => {
+            const decoded = jacdac.decodePacketData(pkt);
+            if (decoded)
+                slider(pkt)
+        })
+        jd.on(jacdac.ERROR, (evt) => {
+            console.error(evt)
+            log(`${evt.context} ${evt.exception.message}`)
+        })
+
+        async function sniff() {
+            console.log('starting')
+            await jd.disconnectAsync();
+            await jd.connectAsync();
+            console.log('started')
+        }
+
+        const connect = document.getElementById("connect");
+        connect.onclick = sniff;
+        const disconnect = document.getElementById("disconnect");
+        disconnect.onclick = () => jd.disconnectAsync()
+
+        function slider(pkt) {
+            const id = pkt.device_identifier + ":" + pkt.service_index;
+            let el = document.getElementById(id);
+            if (!el) {
+                const div = document.createElement("div")
+                div.className = "stream"
+                el = document.createElement("input");
+                el.id = id
+                el.type = "range"
+                el.min = 0
+                el.max = 1
+                el.readonly = true
+                const label = document.createElement("label")
+                label.id = el.id + ":label"
+                label.for = el.id
+                div.append(label)
+                div.append(el)
+                const streams = document.getElementById("streams")
+                streams.append(div)
+            }
+
+            const v = jacdac.intOfBuffer(pkt.data);
+            el.max = Math.max(parseInt(el.max), v)
+            el.value = v;
+
+            const lbl = document.getElementById(el.id + ":label");
+            lbl.innerText = `${jacdac.deviceServiceName(pkt)}: ${v}`;
+        }
+
+        function updateConnectionState() {
+            connect.classList.remove('active');
+            disconnect.classList.remove('active');
+            switch (jd.connectionState) {
+                case jacdac.BusState.Connected:
+                    disconnect.classList.add('active'); break;
+                case jacdac.BusState.Disconnected:
+                    connect.classList.add('active'); break;
+            }
+        }        
+        jd.on(jacdac.CONNECTION_STATE, updateConnectionState)
+        updateConnectionState()
+    </script>
+</body>
+
+</html>

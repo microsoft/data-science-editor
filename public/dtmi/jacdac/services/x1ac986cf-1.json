@@ -1,0 +1,149 @@
+{
+  "@type": "Interface",
+  "@id": "dtmi:jacdac:services:x1ac986cf;1",
+  "displayName": "bit:radio",
+  "description": "Support for sending and receiving packets using the [Bit Radio protocol](https://github.com/microsoft/pxt-common-packages/blob/master/libs/radio/docs/reference/radio.md), typically used between micro:bit devices.",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "enabled",
+      "@id": "dtmi:jacdac:x1ac986cf:rw:enabled;1",
+      "description": "Turns on/off the radio antenna.",
+      "schema": "boolean",
+      "writable": true
+    },
+    {
+      "@type": "Property",
+      "name": "group",
+      "@id": "dtmi:jacdac:x1ac986cf:rw:group;1",
+      "description": "Group used to filter packets",
+      "schema": "integer",
+      "writable": true
+    },
+    {
+      "@type": "Property",
+      "name": "transmission_power",
+      "@id": "dtmi:jacdac:x1ac986cf:rw:transmissionpower;1",
+      "description": "Antenna power to increase or decrease range.",
+      "schema": "integer",
+      "writable": true
+    },
+    {
+      "@type": "Property",
+      "name": "frequency_band",
+      "@id": "dtmi:jacdac:x1ac986cf:rw:frequencyband;1",
+      "description": "Change the transmission and reception band of the radio to the given channel.",
+      "schema": "integer",
+      "writable": true
+    },
+    {
+      "@type": "Telemetry",
+      "name": "string_received",
+      "@id": "dtmi:jacdac:x1ac986cf:event:stringreceived;1",
+      "description": "Raised when a string packet is received",
+      "schema": {
+        "@type": "Object",
+        "fields": [
+          {
+            "name": "time",
+            "schema": "integer"
+          },
+          {
+            "name": "device_serial_number",
+            "schema": "integer"
+          },
+          {
+            "name": "rssi",
+            "schema": "integer"
+          },
+          {
+            "name": "padding"
+          },
+          {
+            "name": "message",
+            "schema": "string"
+          }
+        ]
+      }
+    },
+    {
+      "@type": "Telemetry",
+      "name": "number_received",
+      "@id": "dtmi:jacdac:x1ac986cf:event:numberreceived;1",
+      "description": "Raised when a number packet is received",
+      "schema": {
+        "@type": "Object",
+        "fields": [
+          {
+            "name": "time",
+            "schema": "integer"
+          },
+          {
+            "name": "device_serial_number",
+            "schema": "integer"
+          },
+          {
+            "name": "rssi",
+            "schema": "integer"
+          },
+          {
+            "name": "padding"
+          },
+          {
+            "name": "value",
+            "schema": "float"
+          },
+          {
+            "name": "name",
+            "schema": "string"
+          }
+        ]
+      }
+    },
+    {
+      "@type": "Telemetry",
+      "name": "buffer_received",
+      "@id": "dtmi:jacdac:x1ac986cf:event:bufferreceived;1",
+      "description": "Raised when a buffer packet is received",
+      "schema": {
+        "@type": "Object",
+        "fields": [
+          {
+            "name": "time",
+            "schema": "integer"
+          },
+          {
+            "name": "device_serial_number",
+            "schema": "integer"
+          },
+          {
+            "name": "rssi",
+            "schema": "integer"
+          },
+          {
+            "name": "padding"
+          },
+          {
+            "name": "data"
+          }
+        ]
+      }
+    }
+  ],
+  "extends": [
+    "dtmi:jacdac:services:x1ffffff3;1"
+  ],
+  "schemas": [
+    {
+      "@id": "dtmi:jacdac:x1ac986cf:event;1",
+      "@type": "Object",
+      "fields": [
+        {
+          "name": "count",
+          "schema": "integer"
+        }
+      ]
+    }
+  ],
+  "@context": "dtmi:dtdl:context;2"
+}

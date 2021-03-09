@@ -1,0 +1,39 @@
+{
+  "@type": "Interface",
+  "@id": "dtmi:jacdac:services:x1e117cea;1",
+  "displayName": "Barometer",
+  "description": "A sensor measuring air pressure of outside environment.",
+  "contents": [
+    {
+      "@type": "Telemetry",
+      "name": "pressure",
+      "@id": "dtmi:jacdac:x1e117cea:ro:pressure;1",
+      "description": "The air pressure.",
+      "schema": "float"
+    },
+    {
+      "@type": "Telemetry",
+      "name": "pressure_error",
+      "@id": "dtmi:jacdac:x1e117cea:ro:pressureerror;1",
+      "description": "The real pressure is between `pressure - pressure_error` and `pressure + pressure_error`.",
+      "schema": "float"
+    }
+  ],
+  "extends": [
+    "dtmi:jacdac:services:x1ffffff3;1",
+    "dtmi:jacdac:services:x1ffffff2;1"
+  ],
+  "schemas": [
+    {
+      "@id": "dtmi:jacdac:x1e117cea:event;1",
+      "@type": "Object",
+      "fields": [
+        {
+          "name": "count",
+          "schema": "integer"
+        }
+      ]
+    }
+  ],
+  "@context": "dtmi:dtdl:context;2"
+}

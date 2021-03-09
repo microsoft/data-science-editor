@@ -1,0 +1,50 @@
+---
+hideToc: true
+---
+
+# JDEvent
+
+> An **event** is a [JDOM](/clients/web/jdom/) [node](/clients/web/jdom/node/) that represents an addressed event
+on a [service](/clients/web/jdom/service/). 
+
+This object inherits methods and properties from [node](/clients/web/jdom/node/).
+
+## Methods
+
+### ``data``
+
+Returns last event raw data state as a ``Uint8Array``.
+
+```typescript
+const data = event.data;
+```
+
+### ``count``
+
+Returns the number of event packets that were observed by this instance.
+
+```typescript
+const count = event.count;
+```
+
+## Events
+
+### ``EVENT``
+
+Raised after an packet for this event was received.
+
+```typescript
+register.on(EVENT, ev => console.log(ev))
+```
+
+### ``CHANGE``
+
+Raised when the event changed.
+
+```typescript
+register.on(CHANGE, () => console.log(this))
+```
+
+### See Also
+
+[Device](/clients/web/jdom/device/), [Service](/clients/web/jdom/service/), [Register](/clients/web/jdom/register/)

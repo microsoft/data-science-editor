@@ -1,0 +1,66 @@
+{
+  "@type": "Interface",
+  "@id": "dtmi:jacdac:services:x1ffffff3;1",
+  "displayName": "Base service",
+  "description": "Base class for all services.",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "instance_name",
+      "@id": "dtmi:jacdac:x1ffffff3:const:instancename;1",
+      "description": "A friendly name that describes the role of this service instance in the device.\nIt often corresponds to what's printed on the device:\nfor example, `A` for button A, or `S0` for servo channel 0.\nWords like `left` should be avoided because of localization issues (unless they are printed on the device).",
+      "schema": "string"
+    },
+    {
+      "@type": "Telemetry",
+      "name": "status_code",
+      "@id": "dtmi:jacdac:x1ffffff3:ro:statuscode;1",
+      "description": "Reports the current state or error status of the device. ``code`` is a standardized value from \nthe Jacdac status/error codes. ``vendor_code`` is any vendor specific error code describing the device\nstate. This report is typically not queried, when a device has an error, it will typically\nadd this report in frame along with the announce packet. If a service implements this register,\nit should also support the ``status_code_changed`` event defined below.",
+      "schema": {
+        "@type": "Object",
+        "fields": [
+          {
+            "name": "code",
+            "schema": "integer"
+          },
+          {
+            "name": "vendor_code",
+            "schema": "integer"
+          }
+        ]
+      }
+    },
+    {
+      "@type": "Telemetry",
+      "name": "status_code_changed",
+      "@id": "dtmi:jacdac:x1ffffff3:event:statuscodechanged;1",
+      "description": "Notifies that the status code of the service changed.",
+      "schema": {
+        "@type": "Object",
+        "fields": [
+          {
+            "name": "code",
+            "schema": "integer"
+          },
+          {
+            "name": "vendor_code",
+            "schema": "integer"
+          }
+        ]
+      }
+    }
+  ],
+  "schemas": [
+    {
+      "@id": "dtmi:jacdac:x1ffffff3:event;1",
+      "@type": "Object",
+      "fields": [
+        {
+          "name": "count",
+          "schema": "integer"
+        }
+      ]
+    }
+  ],
+  "@context": "dtmi:dtdl:context;2"
+}

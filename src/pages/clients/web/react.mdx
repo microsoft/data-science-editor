@@ -1,0 +1,51 @@
+---
+hideToc: true
+---
+
+# React
+
+Jacdac is compatible with React 16+ and hooks
+
+## JacdacContext
+
+The ``JacdacContext`` provides access to the bus, and connection/disconnection functionalies from your hooks or components.
+
+```tsx
+import { JacdacContext } from "jacdac-ts";
+
+function myComponent() {
+    const { bus, connectionState, connectAsync, disconnectAsync } = useContext(JacdacContext)
+
+    return <div>
+            <span>{bus.devices().length} devices</span>
+            <span>{connectionState}</span>
+            <button onClick={connectAsync}>connect</button>
+            <button onClick={disconnectAsync}>disconnect</button>
+        </div>
+}
+export default MyComponent;
+```
+
+You can also use the react syntax to use this context.
+
+```tsx
+<JacdacContext.Consumer>
+{({bus, connectionState, connectAsync, disconnectAsync}) => ...}
+</JacdacContext.Consumer>
+```
+
+## useChange
+
+This hook subscribes to the ``CHANGE`` event of a [JDOM](/clients/web/jdom/) node to automatically refresh the view.
+
+```tsx
+import { JacdacContext, useChange } from "jacdac-ts";
+
+const DeviceList = () => {
+    const { bus } = useContext(JacdacContext)
+    // useChange will automatically re-render 
+    // when bus emits a ``CHANGE`` event
+    const devices = useChange(bus, n => n.devices(}))
+    ...
+}
+```

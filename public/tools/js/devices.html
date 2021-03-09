@@ -1,0 +1,131 @@
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: monospace;
+        }
+
+        .device {
+            margin: 0.5rem;
+        }
+
+        button:not(.active) {
+            opacity: 0.7;
+        }
+
+        button.active {
+            font-weight: bold;
+        }
+    </style>
+    <script>
+        var process = {
+            env: {}
+        }
+    </script>
+
+</head>
+
+<body>
+    <h1>JACDAC/Devices</h1>
+    <div>
+        <button id="connect">connect</button>
+        <button id="disconnect">disconnect</button>
+    </div>
+    <div id="devices">
+    </div>
+
+    <script src="/dist/jacdac-jdom.umd.js"></script>
+    <script>
+        const devicesDiv = document.getElementById("devices");
+        const log = console.log;
+        jacdac = jacdacJdom;
+        const jd = jacdac.createUSBBus()
+        const speedTest = /speed/.test(document.location.search)
+        jd.on(jacdac.DEVICE_CONNECT, dev => {
+            console.log(`connect ${dev}`)
+            connectDevice(dev)
+        })
+        jd.on(jacdac.DEVICE_DISCONNECT, dev => disconnectDevice(dev))
+        jd.on(jacdac.DEVICE_ANNOUNCE, render)
+        jd.on(jacdac.ERROR, (evt) => log(`${evt.context} ${evt.exception.message}`))
+
+        async function scan() {
+            log('starting')
+            await jd.disconnectAsync();
+            await jd.connectAsync();
+            render()
+            log('started')
+        }
+
+
+        function printServices(device) {
+            let srv = ""
+            const n = device.serviceLength;
+            for (let i = 0; i < n; ++i) {
+                const id = device.serviceClassAt(i);
+                const name = `${i}:${serviceName(id)}`;
+                if (i) srv += ", "
+                srv += name;
+            }
+            return srv;
+        }
+
+        function connectDevice(device) {
+            let div = document.getElementById(device.deviceId);
+            if (!div) {
+                div = document.createElement("div");
+                div.id = device.deviceId;
+                div.className = "device";
+                devicesDiv.append(div);
+            }
+            div.innerText = `${device.toString()} - ${device.deviceId}: ${printServices(device)}`;
+            if (speedTest) {
+                const speedRes = document.createElement("div")
+                const speedBtn = document.createElement("button")
+                speedBtn.innerText = "Speed test"
+                speedBtn.onclick = async () => {
+                    speedRes.innerText = "Testing..."
+                    const res = await jacdac.packetSpeedTest(device)
+                    speedRes.innerText += res.msg
+                }
+                div.appendChild(speedRes)
+                div.appendChild(speedBtn)
+            }
+        }
+
+        function disconnectDevice(device) {
+            console.log(`disconnect ${device}`)
+            let div = document.getElementById(device.deviceId);
+            if (div)
+                div.remove();
+        }
+
+        function render() {
+            const devices = jd.devices();
+            devices.forEach(device => connect(device));
+        }
+
+        const connect = document.getElementById("connect");
+        connect.onclick = scan;
+        const disconnect = document.getElementById("disconnect");
+        disconnect.onclick = () => jd.disconnectAsync()
+
+        function updateConnectionState() {
+            connect.classList.remove('active');
+            disconnect.classList.remove('active');
+            switch (jd.connectionState) {
+                case jacdac.BusState.Connected:
+                    disconnect.classList.add('active'); break;
+                case jacdac.BusState.Disconnected:
+                    connect.classList.add('active'); break;
+            }
+        }
+        jd.on(jacdac.CONNECTION_STATE, updateConnectionState)
+        updateConnectionState()
+
+        
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,61 @@
+{
+  "@type": "Interface",
+  "@id": "dtmi:jacdac:services:x171723ca;1",
+  "displayName": "Solenoid",
+  "description": "A push-pull solenoid is a type of relay that pulls a coil when activated.",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "pulled",
+      "@id": "dtmi:jacdac:x171723ca:rw:pulled;1",
+      "description": "Indicates whether the solenoid is energized and pulled (on) or pushed (off).",
+      "schema": "boolean",
+      "writable": true
+    },
+    {
+      "@type": "Property",
+      "name": "variant",
+      "@id": "dtmi:jacdac:x171723ca:const:variant;1",
+      "description": "Describes the type of solenoid used.",
+      "schema": "dtmi:jacdac:x171723ca:variant;1"
+    }
+  ],
+  "extends": [
+    "dtmi:jacdac:services:x1ffffff3;1"
+  ],
+  "schemas": [
+    {
+      "@id": "dtmi:jacdac:x171723ca:event;1",
+      "@type": "Object",
+      "fields": [
+        {
+          "name": "count",
+          "schema": "integer"
+        }
+      ]
+    },
+    {
+      "@type": "Enum",
+      "@id": "dtmi:jacdac:x171723ca:variant;1",
+      "valueSchema": "integer",
+      "enumValues": [
+        {
+          "name": "pushPull",
+          "displayName": "PushPull",
+          "enumValue": 1
+        },
+        {
+          "name": "valve",
+          "displayName": "Valve",
+          "enumValue": 2
+        },
+        {
+          "name": "latch",
+          "displayName": "Latch",
+          "enumValue": 3
+        }
+      ]
+    }
+  ],
+  "@context": "dtmi:dtdl:context;2"
+}

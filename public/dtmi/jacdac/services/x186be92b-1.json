@@ -1,0 +1,46 @@
+{
+  "@type": "Interface",
+  "@id": "dtmi:jacdac:services:x186be92b;1",
+  "displayName": "Wind direction",
+  "description": "A sensor that measures wind direction.",
+  "contents": [
+    {
+      "@type": "Telemetry",
+      "name": "wind_direction",
+      "@id": "dtmi:jacdac:x186be92b:ro:winddirection;1",
+      "description": "The direction of the wind.",
+      "schema": "integer"
+    },
+    {
+      "@type": "Telemetry",
+      "name": "wind_direction_error",
+      "@id": "dtmi:jacdac:x186be92b:ro:winddirectionerror;1",
+      "description": "Error on the wind direction reading",
+      "schema": "integer"
+    },
+    {
+      "@type": "Telemetry",
+      "name": "wind_direction_offset",
+      "@id": "dtmi:jacdac:x186be92b:ro:winddirectionoffset;1",
+      "description": "Offset added to direction to account for sensor calibration.",
+      "schema": "integer"
+    }
+  ],
+  "extends": [
+    "dtmi:jacdac:services:x1ffffff3;1",
+    "dtmi:jacdac:services:x1ffffff2;1"
+  ],
+  "schemas": [
+    {
+      "@id": "dtmi:jacdac:x186be92b:event;1",
+      "@type": "Object",
+      "fields": [
+        {
+          "name": "count",
+          "schema": "integer"
+        }
+      ]
+    }
+  ],
+  "@context": "dtmi:dtdl:context;2"
+}

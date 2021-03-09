@@ -1,0 +1,39 @@
+---
+hideToc: true
+---
+
+# Distributions
+
+There are various ways to integrate Jacdac into your web projects.
+
+## NPM
+
+Add the [jacdac-ts npm package](https://www.npmjs.com/package/jacdac-ts) module 
+to your project
+
+```
+npm install --save-dev jacdac-ts
+```
+
+then import components as needed using ES6 import syntax
+
+```javascript
+import { createUSBBus } -ts
+const jd = createUSBBus()
+```
+
+## CDN / UMD
+
+You can also use CDN services to import ``jacdac`` into your html page directly.
+This will load the library as a [UMD](https://github.com/umdjs/umd) mode.
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/jacdac-ts@VERSION"></script>
+```
+
+where ``@VERSION`` is the desired version. 
+All exports are defined under the ``jacdac`` namespace.
+
+```javascript
+const jd = jacdac.createUSBBus()
+```

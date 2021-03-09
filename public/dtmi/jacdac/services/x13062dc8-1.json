@@ -1,0 +1,101 @@
+{
+  "@type": "Interface",
+  "@id": "dtmi:jacdac:services:x13062dc8;1",
+  "displayName": "Matrix Keypad",
+  "description": "A matrix of buttons connected as a keypad",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "rows",
+      "@id": "dtmi:jacdac:x13062dc8:const:rows;1",
+      "description": "Number of rows in the matrix",
+      "schema": "integer"
+    },
+    {
+      "@type": "Property",
+      "name": "columns",
+      "@id": "dtmi:jacdac:x13062dc8:const:columns;1",
+      "description": "Number of columns in the matrix",
+      "schema": "integer"
+    },
+    {
+      "@type": "Property",
+      "name": "variant",
+      "@id": "dtmi:jacdac:x13062dc8:const:variant;1",
+      "description": "The type of physical keypad. If the variant is ``ElastomerLEDPixel``\nand the next service on the device is a ``LEDPixel`` service, it is considered\nas the service controlling the LED pixel on the keypad.",
+      "schema": "dtmi:jacdac:x13062dc8:variant;1"
+    },
+    {
+      "@type": "Telemetry",
+      "name": "down",
+      "@id": "dtmi:jacdac:x13062dc8:event:down;1",
+      "description": "Emitted when a key, at the given index, goes from inactive (`pressed == 0`) to active.",
+      "schema": "integer"
+    },
+    {
+      "@type": "Telemetry",
+      "name": "up",
+      "@id": "dtmi:jacdac:x13062dc8:event:up;1",
+      "description": "Emitted when a key, at the given index, goes from active (`pressed == 1`) to inactive.",
+      "schema": "integer"
+    },
+    {
+      "@type": "Telemetry",
+      "name": "click",
+      "@id": "dtmi:jacdac:x13062dc8:event:click;1",
+      "description": "Emitted together with `up` when the press time was not longer than 500ms.",
+      "schema": "integer"
+    },
+    {
+      "@type": "Telemetry",
+      "name": "long_click",
+      "@id": "dtmi:jacdac:x13062dc8:event:longclick;1",
+      "description": "Emitted together with `up` when the press time was more than 500ms.",
+      "schema": "integer"
+    }
+  ],
+  "extends": [
+    "dtmi:jacdac:services:x1ffffff3;1",
+    "dtmi:jacdac:services:x1ffffff2;1"
+  ],
+  "schemas": [
+    {
+      "@id": "dtmi:jacdac:x13062dc8:event;1",
+      "@type": "Object",
+      "fields": [
+        {
+          "name": "count",
+          "schema": "integer"
+        }
+      ]
+    },
+    {
+      "@type": "Enum",
+      "@id": "dtmi:jacdac:x13062dc8:variant;1",
+      "valueSchema": "integer",
+      "enumValues": [
+        {
+          "name": "membrane",
+          "displayName": "Membrane",
+          "enumValue": 1
+        },
+        {
+          "name": "keyboard",
+          "displayName": "Keyboard",
+          "enumValue": 2
+        },
+        {
+          "name": "elastomer",
+          "displayName": "Elastomer",
+          "enumValue": 3
+        },
+        {
+          "name": "elastomerLEDPixel",
+          "displayName": "ElastomerLEDPixel",
+          "enumValue": 4
+        }
+      ]
+    }
+  ],
+  "@context": "dtmi:dtdl:context;2"
+}

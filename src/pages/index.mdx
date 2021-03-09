@@ -1,0 +1,68 @@
+---
+path: /
+title: Jacdac
+---
+
+# Jacdac - plug-and-play for microcontrollers
+
+**Jacdac** is a bus-based plug-and-play hardware/software stack 
+for **microcontrollers** and their peripherals (sensors/actuators), 
+with applications to rapid prototyping, making, and physical computing. 
+Jacdac includes:
+
+* a novel 3-wire cable and PCB edge connector
+* hot-plug device discovery
+* standardized service specifications
+* full stack from 8-bit MCU firmware to web simulators and debuggers
+
+* **Try the [dashboard](/dashboard/)** to simulate devices or visualize sensor data.
+
+## Service specifications
+
+Jacdac services are specified to abstract the hardware device from the software implementation.
+The services are comprised of registers, commands and events, along with precise data layout information
+for each packet.
+
+* Browse the [service catalog](/services/)
+* Learn more about [service specifications](/reference/service-specification/)
+
+## Device catalog & Firmware Updates
+
+The device catalog lists the registered Jacdac devices that can be automatically detected on the bus. 
+The catalog information provides vendor information, the services supported by a device, 
+firmware, and pictures. This information is also used to automtically detect, download and flash
+firmware onto devices.
+
+* Browse the [device catalog](/devices/)
+* [Update](/tools/updater/) your firmware
+* Learn more about [device definitions](/reference/device-definition/)
+
+## Protocol overview
+
+Jacdac devices communicate using *packets* over a *bus*, where each *device* can advertise itself 
+and the set of *services* it provides. 
+A *service* provides *registers*, *events* and *commands* to communicate with other devices.
+Jacdac packets are sent serially among physical devices on the Jacdac bus
+and may also be sent over WebUSB/WebBLE, 
+providing connectivity to web-based tooling and services running in the web browser
+(see the connect icon at the top of this page).
+
+* Learn more about the [protocol specification](/reference/protocol/)
+
+## Web-based simulators and tools
+
+We've implemented Jacdac over **WebUSB**, which allows the Jacdac bus to reach into
+the web browser without any driver or program installation. 
+
+* use the [dashboard](/dashboard/) to display
+both physical and simulated Jacdac devices
+* explorer our set of [tools](/tools/)
+
+## Community
+
+Jacdac is open source and 
+most of the commmunication happens through our GitHub project.
+
+* [start a discussion](https://github.com/microsoft/jacdac/discussions).
+* [file an issue](https://github.com/microsoft/jacdac/issues).
+* [GitHub repositories](/github/)

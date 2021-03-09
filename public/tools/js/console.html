@@ -1,0 +1,102 @@
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: monospace;
+        }
+
+        .segment {
+            padding: 0.5rem;
+            margin: 0.5rem;
+        }
+
+        #log {
+            margin-top: 1rem;
+        }
+
+        #log>div {
+            margin: 0.25rem;
+        }
+        button:not(.active) {
+            opacity: 0.7;
+        }
+        button.active {
+            font-weight: bold;
+        }
+
+    </style>
+    <script>
+        var process = {
+            env: {}
+        }   
+    </script>
+
+</head>
+
+<body>
+    <h1>JACDAC/Console</h1>
+    <div>
+        <button id="connect">connect</button>
+        <button id="disconnect">disconnect</button>
+    </div>
+    <div id="devices" class="segment"></div>
+    <div id="log" class="segment">
+        <div>waiting for message...</div>
+    </div>
+
+    <script src="/dist/jacdac-jdom.umd.js"></script>
+    <script>
+        const devicesDiv = document.getElementById("devices");
+        const jd = jacdac.createUSBBus()
+        jd.on(jacdac.ERROR, (evt) => log(`${evt.context} ${evt.exception.message}`))
+        jd.minConsolePriority = jacdac.ConsolePriority.Debug;
+        jd.on(jacdac.DEVICE_CHANGE, d => {
+            devicesDiv.innerText = jd.devices().map(d => d.toString()).join(', ')
+        });
+        jd.on(jacdac.PACKET_RECEIVE, pkt => {
+            const decoded = jacdac.decodePacketData(pkt);
+            console.debug(jacdac.printPacket(pkt))
+            if (decoded)
+                log(`${jacdac.deviceServiceName(pkt)}: ${decoded.description}`)
+        })
+
+        async function sniff() {
+            log('starting')
+            await jd.disconnectAsync();
+            await jd.connectAsync();
+            log('started')
+        }
+
+        const connect = document.getElementById("connect");
+        connect.onclick = sniff;
+        const disconnect = document.getElementById("disconnect");
+        disconnect.onclick = () => jd.disconnectAsync()
+
+        function log(msg) {
+            const logDiv = document.getElementById("log");
+            const line = document.createElement("div");
+            if (/LOGGER:.: warn /.test(msg))
+                line.style = "background-color: yellow";
+            line.innerText = "" + msg;
+            logDiv.insertBefore(line, logDiv.firstElementChild);
+            if (logDiv.childElementCount > 100)
+                logDiv.lastElementChild.remove();
+        }
+
+        function updateConnectionState() {
+            connect.classList.remove('active');
+            disconnect.classList.remove('active');
+            switch (jd.connectionState) {
+                case jacdac.BusState.Connected:
+                    disconnect.classList.add('active'); break;
+                case jacdac.BusState.Disconnected:
+                    connect.classList.add('active'); break;
+            }
+        }        
+        jd.on(jacdac.CONNECTION_STATE, updateConnectionState)
+        updateConnectionState()
+    </script>
+</body>
+
+</html>

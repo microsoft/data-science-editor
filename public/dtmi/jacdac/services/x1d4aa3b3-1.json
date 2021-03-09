@@ -1,0 +1,56 @@
+{
+  "@type": "Interface",
+  "@id": "dtmi:jacdac:services:x1d4aa3b3;1",
+  "displayName": "Soil moisture",
+  "description": "A soil moisture sensor.",
+  "contents": [
+    {
+      "@type": "Telemetry",
+      "name": "moisture",
+      "@id": "dtmi:jacdac:x1d4aa3b3:ro:moisture;1",
+      "description": "Indicates the wetness of the soil, from ``dry`` to ``wet``.",
+      "schema": "float"
+    },
+    {
+      "@type": "Property",
+      "name": "variant",
+      "@id": "dtmi:jacdac:x1d4aa3b3:const:variant;1",
+      "description": "Describe the type of physical sensor.",
+      "schema": "dtmi:jacdac:x1d4aa3b3:variant;1"
+    }
+  ],
+  "extends": [
+    "dtmi:jacdac:services:x1ffffff3;1",
+    "dtmi:jacdac:services:x1ffffff2;1"
+  ],
+  "schemas": [
+    {
+      "@id": "dtmi:jacdac:x1d4aa3b3:event;1",
+      "@type": "Object",
+      "fields": [
+        {
+          "name": "count",
+          "schema": "integer"
+        }
+      ]
+    },
+    {
+      "@type": "Enum",
+      "@id": "dtmi:jacdac:x1d4aa3b3:variant;1",
+      "valueSchema": "integer",
+      "enumValues": [
+        {
+          "name": "resistive",
+          "displayName": "Resistive",
+          "enumValue": 1
+        },
+        {
+          "name": "capacitive",
+          "displayName": "Capacitive",
+          "enumValue": 2
+        }
+      ]
+    }
+  ],
+  "@context": "dtmi:dtdl:context;2"
+}
