@@ -53,6 +53,7 @@
     "howler": "^2.2.1",
     "material-ui-dropzone": "^3.5.0",
     "notistack": "^1.0.3",
+    "nprogress": "^0.2.0",
     "octokit-plugin-create-pull-request": "^3.9.3",
     "prettier": "2.2.1",
     "prism-react-renderer": "^1.2.0",

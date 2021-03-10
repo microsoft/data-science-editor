@@ -84,7 +84,7 @@ export default function AppDrawer(props: {
     >
         <div className={classes.drawerHeader}>
             {toc && <div className={classes.fluid}>
-                <Suspense hideFallback={true}>
+                <Suspense>
                     <DrawerSearchInput />
                 </Suspense></div>}
             {!toc && <><PacketRecorder />
@@ -96,12 +96,12 @@ export default function AppDrawer(props: {
             </IconButton>
         </div>
         <Divider />
-        {showSearchResults && <Suspense hideFallback={true}><DrawerSearchResults /></Suspense>}
-        {!showSearchResults && drawerType === DrawerType.Toc && <Suspense hideFallback={true}>
+        {showSearchResults && <Suspense><DrawerSearchResults /></Suspense>}
+        {!showSearchResults && drawerType === DrawerType.Toc && <Suspense>
             <Toc pagePath={pagePath} />
         </Suspense>}
         {!showSearchResults && drawerType === DrawerType.Packets
-            ? <Suspense hideFallback={true}><PacketView showTime={true} /></Suspense>
-            : drawerType === DrawerType.Dom ? <Suspense hideFallback={true}><JDomTreeView /></Suspense> : undefined}
+            ? <Suspense><PacketView showTime={true} /></Suspense>
+            : drawerType === DrawerType.Dom ? <Suspense><JDomTreeView /></Suspense> : undefined}
     </Drawer>
 }

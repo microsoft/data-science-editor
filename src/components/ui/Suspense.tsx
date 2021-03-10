@@ -1,11 +1,19 @@
 import { NoSsr } from "@material-ui/core";
-import React, { ReactNode, Suspense as ReactSuspense } from "react";
-import LoadingProgress from "./LoadingProgress";
+import React, { ReactNode, Suspense as ReactSuspense, useEffect } from "react";
+import { start, done } from "nprogress"
 
-export default function Suspense(props: { children: ReactNode, fallback?: ReactNode, hideFallback?: boolean }) {
-    const { children, fallback, hideFallback } = props;
+function Fallback() {
+    useEffect(() => {
+        start();
+        return () => done();
+    }, []);
+    return <span></span>
+}
+
+export default function Suspense(props: { children: ReactNode }) {
+    const { children } = props;
     return <NoSsr>
-        <ReactSuspense fallback={hideFallback ? <span></span> : fallback || <LoadingProgress />}>
+        <ReactSuspense fallback={<Fallback />}>
             {children}
         </ReactSuspense>
     </NoSsr>

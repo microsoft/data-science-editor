@@ -355,8 +355,8 @@ function LayoutWithContext(props: LayoutProps) {
             {!hideMainMenu && (
                 <nav>
                     <MainAppBar {...props} />
-                    {drawerType !== DrawerType.None && <Suspense hideFallback={true}><AppDrawer pagePath={path} /></Suspense>}
-                    {toolsMenu && <Suspense hideFallback={true}><ToolsDrawer /></Suspense>}
+                    {drawerType !== DrawerType.None && <Suspense><AppDrawer pagePath={path} /></Suspense>}
+                    {toolsMenu && <Suspense><ToolsDrawer /></Suspense>}
                 </nav>
             )}
             {container ? (

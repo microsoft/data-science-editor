@@ -118,7 +118,7 @@ export const AppProvider = ({ children }) => {
             toggleShowDeviceHostsDialog,
         }}>
             {children}
-            {showDeviceHostsDialog && <Suspense hideFallback={true}><StartSimulatorDialog open={showDeviceHostsDialog} onClose={toggleShowDeviceHostsDialog} /></Suspense>}
+            {showDeviceHostsDialog && <Suspense><StartSimulatorDialog open={showDeviceHostsDialog} onClose={toggleShowDeviceHostsDialog} /></Suspense>}
         </AppContext.Provider>
     )
 }
