@@ -83,6 +83,7 @@ export default function Toc(props: { pagePath: string }) {
           frontmatter {
             title
             order
+            hideToc
           }
           excerpt
           fields {

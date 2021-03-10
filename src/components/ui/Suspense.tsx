@@ -5,7 +5,7 @@ import LoadingProgress from "./LoadingProgress";
 export default function Suspense(props: { children: ReactNode, fallback?: ReactNode, hideFallback?: boolean }) {
     const { children, fallback, hideFallback } = props;
     return <NoSsr>
-        <ReactSuspense fallback={hideFallback ? undefined : fallback || <LoadingProgress />}>
+        <ReactSuspense fallback={hideFallback ? <span></span> : fallback || <LoadingProgress />}>
             {children}
         </ReactSuspense>
     </NoSsr>
