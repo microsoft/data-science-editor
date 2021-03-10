@@ -4,6 +4,7 @@ import { Link } from 'gatsby-theme-material-ui';
 // tslint:disable-next-line: no-submodule-imports
 import ListItemText from '@material-ui/core/ListItemText';
 import AppContext, { DrawerType } from "./AppContext"
+import { graphql, useStaticQuery } from "gatsby";
 
 interface TocNode {
   name: string;
@@ -70,19 +71,9 @@ export default function Toc(props: { pagePath: string }) {
   const { setDrawerType } = useContext(AppContext)
   const theme = useTheme();
   const classes = useStyles();
-  /*
+
   const data = useStaticQuery(graphql`
   query {
-    site {
-      siteMetadata {
-        title
-      }
-    }
-
-  }
-`)
-*/
-/**
      allMdx {
       edges {
         node {
@@ -107,19 +98,28 @@ export default function Toc(props: { pagePath: string }) {
         }
       }
     }
-  allServicesJson {
-      nodes {
-        name
-        shortId
-      }
-    } 
-  allDevicesJson {
-      nodes {
-        id
-        name
-      }
+  }`);
+
+  /*
+      site {
+        siteMetadata {
+          title
+        }
     }
- */
+  
+    allServicesJson {
+        nodes {
+          name
+          shortId
+        }
+      } 
+    allDevicesJson {
+        nodes {
+          id
+          name
+        }
+      }
+   */
 
   const handleClick = () => {
     setDrawerType(DrawerType.None)
@@ -157,9 +157,9 @@ export default function Toc(props: { pagePath: string }) {
       order: 5
     }]
 
-    /*
     data.allMdx.edges.map(node => node.node)
-      .filter(node => !!node.frontmatter?.title || (!!node.headings.length && !/404/.test(node.headings[0].value)))
+      .filter(node => !!node.frontmatter?.title
+        || (!!node.headings.length && !/404/.test(node.headings[0].value)))
       .filter(node => !node.frontmatter?.hideToc)
       .map(node => {
         const r = {
@@ -170,7 +170,6 @@ export default function Toc(props: { pagePath: string }) {
         return r;
       })
       .forEach(node => toc.push(node))
-      */
 
     /*
     data.allServicesJson.nodes.map(node => {
