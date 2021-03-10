@@ -1,4 +1,4 @@
-import React, { lazy, ReactNode, useContext } from 'react'
+import React, { lazy, useContext } from 'react'
 import Highlight, { defaultProps, Language, PrismTheme } from 'prism-react-renderer'
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import LIGHT_THEME from 'prism-react-renderer/themes/github';

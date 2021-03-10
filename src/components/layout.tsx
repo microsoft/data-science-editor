@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React, { lazy, useContext } from "react"
 import clsx from "clsx"
 import {
     makeStyles,
@@ -41,11 +41,13 @@ import useMdxComponents from "./useMdxComponents"
 import Footer from "./ui/Footer"
 import DrawerToolsButtonGroup from "./DrawerToolsButtonGroup"
 import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
-import WebDiagnostics from "./WebDiagnostics"
 import Flags from "../../jacdac-ts/src/jdom/flags"
 import ThemedLayout from "./ui/ThemedLayout"
 import OpenDashboardButton from "./buttons/OpenDashboardButton"
 import PacketStats from "./PacketStats"
+import Suspense from "./ui/Suspense"
+
+const WebDiagnostics = lazy(() => import("./WebDiagnostics"));
 
 export const TOC_DRAWER_WIDTH = 18
 export const DRAWER_WIDTH = 40
@@ -336,7 +338,7 @@ function LayoutWithContext(props: LayoutProps) {
                         Jacdac.
                     </Alert>
                 )}
-                {Flags.diagnostics && <WebDiagnostics />}
+                {Flags.diagnostics && <Suspense><WebDiagnostics /></Suspense>}
                 <Typography className={"markdown"} component="span">
                     {container ? <Container>{element}</Container> : element}
                 </Typography>

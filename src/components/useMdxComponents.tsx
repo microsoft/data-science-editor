@@ -1,22 +1,24 @@
-import React, { useMemo } from "react";
+import React, { lazy, useMemo } from "react";
 import { Link } from "gatsby-theme-material-ui";
-import CodeBlock from './CodeBlock';
 import { Box, Paper, Table, TableBody, TableContainer, TableHead, TableRow, useTheme } from "@material-ui/core";
-import RandomGenerator from "./RandomGenerator"
-import DeviceSpecificationList from "./DeviceSpecificationList"
-import TraceList from "./TraceList";
-import SpecificationUnitList from "./SpecificationUnitList";
-import StatusLEDAnimation from "./StatusLEDAnimation";
+
+import Suspense from "./ui/Suspense"
+const CodeBlock = lazy(() => import('./CodeBlock'));
+const RandomGenerator = lazy(() => import("./RandomGenerator"))
+const DeviceSpecificationList = lazy(() => import("./DeviceSpecificationList"))
+const TraceList = lazy(() => import("./TraceList"));
+const SpecificationUnitList = lazy(() => import("./SpecificationUnitList"));
+const StatusLEDAnimation = lazy(() => import("./StatusLEDAnimation"));
 
 export default function useMdxComponents() {
   const theme = useTheme();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const mdxComponents: any = useMemo(() => ({
-    Link: (props: any) => <Link color="textPrimary" {...props} />,
+    Link: props => <Link color="textPrimary" {...props} />,
     a: (props: { href: string }) => <Link color="textPrimary" {...props} rel="noopener noreferrer" />,
     pre: props => <Box mb={theme.spacing(0.5)}><Paper>
       <div {...props} />
     </Paper></Box>,
-    code: CodeBlock,
     table: props => <Box mb={theme.spacing(0.5)}><TableContainer component={Paper}>
       <Box m={theme.spacing(0.5)}>
         <Table size="small" {...props} />
@@ -25,11 +27,13 @@ export default function useMdxComponents() {
     thead: props => <TableHead {...props} />,
     tbody: props => <TableBody {...props} />,
     tr: props => <TableRow {...props} />,
-    RandomGenerator: props => <Box displayPrint="none"><RandomGenerator {...props} /></Box>,
-    DeviceSpecificationList: props => <DeviceSpecificationList {...props} />,
-    TraceList: props => <TraceList {...props} />,
-    SpecificationUnitList: props => <SpecificationUnitList {...props} />,
-    StatusLEDAnimation: props => <StatusLEDAnimation {...props} />,
+
+    code: props => <Suspense><CodeBlock {...props} /></Suspense>,
+    RandomGenerator: props => <Suspense><Box displayPrint="none"><RandomGenerator {...props} /></Box></Suspense>,
+    DeviceSpecificationList: props => <Suspense><DeviceSpecificationList {...props} /></Suspense>,
+    TraceList: props => <Suspense><TraceList {...props} /></Suspense>,
+    SpecificationUnitList: props => <Suspense><SpecificationUnitList {...props} /></Suspense>,
+    StatusLEDAnimation: props => <Suspense><StatusLEDAnimation {...props} /></Suspense>,
   }), []);
 
   return mdxComponents;
