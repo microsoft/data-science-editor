@@ -4,8 +4,6 @@ import CodeBlock from './CodeBlock';
 import { Box, Paper, Table, TableBody, TableContainer, TableHead, TableRow, useTheme } from "@material-ui/core";
 import RandomGenerator from "./RandomGenerator"
 import DeviceSpecificationList from "./DeviceSpecificationList"
-import FilteredDeviceSpecificationList from "./FilteredDeviceSpecificationList"
-import Widget from "../jacdac/Widget";
 import TraceList from "./TraceList";
 import GithubRepositoryList from "./GithubRespositoryList";
 import SpecificationUnitList from "./SpecificationUnitList";
@@ -29,9 +27,7 @@ export default function useMdxComponents() {
     tbody: props => <TableBody {...props} />,
     tr: props => <TableRow {...props} />,
     RandomGenerator: props => <Box displayPrint="none"><RandomGenerator {...props} /></Box>,
-    FilteredDeviceSpecificationList: props => <FilteredDeviceSpecificationList {...props} />,
     DeviceSpecificationList: props => <DeviceSpecificationList {...props} />,
-    Widget: props => <Widget {...props} />,
     TraceList: props => <TraceList {...props} />,
     GithubRepositoryList: props => <GithubRepositoryList {...props} />,
     SpecificationUnitList: props => <SpecificationUnitList {...props} />,
