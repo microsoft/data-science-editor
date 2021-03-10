@@ -5,7 +5,6 @@ import MakeCodeEditorExtension from "../../components/makecode/MakeCodeEditorExt
 import { makeStyles } from '@material-ui/core';
 import PaperBox from "../../components/ui/PaperBox";
 import Flags from "../../../jacdac-ts/src/jdom/flags";
-import RoleManager from "../../components/tools/RoleManager";
 import DarkModeContext from "../ui/DarkModeContext";
 
 const useStyles = makeStyles((theme) => createStyles({
@@ -48,7 +47,6 @@ export default function MakeCodeEditorExtensionPage() {
             <PaperBox>
                 <MakeCodeEditorExtension />
             </PaperBox>
-            <RoleManager />
         </div>
     </ThemedLayout>
 }
