@@ -1,5 +1,5 @@
 const maxImageWidth = 800
-const siteUrl = 'https://microsoft.github.io';
+const siteUrl = 'https://microsoft.github.io/jacdac-docs';
 const pathPrefix = "/jacdac-docs"
 
 module.exports = {
