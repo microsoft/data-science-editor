@@ -4,14 +4,11 @@ import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import {
     Grid,
     Button,
-    Step,
-    StepContent,
-    StepLabel,
-    Stepper,
     List,
     ListItemText,
     ListItem,
     ListItemIcon,
+    ListItemSecondaryAction,
     Typography,
     Card,
     CardContent,
@@ -32,8 +29,14 @@ import {
 } from "../../jacdac-ts/src/hosts/hosts"
 import Flags from "../../jacdac-ts/src/jdom/flags"
 import { JDService } from "../../jacdac-ts/src/jdom/service"
-import { serviceTestFromServiceSpec } from "../../jacdac-ts/src/jdom/spec"
-import { cmdToPrompt, JDServiceTestRunner, JDTestRunner, JDTestStatus } from "../../jacdac-ts/src/test/testrunner"
+import { serviceTestFromServiceSpec } from "../../jacdac-ts/src/jdom/test"
+import {
+    JDServiceTestRunner, 
+    JDTestRunner, 
+    JDTestStatus,
+    JDCommandRunner,
+    JDCommandStatus,
+} from "../../jacdac-ts/src/test/testrunner"
 import SelectService from "./SelectService"
 import ErrorIcon from '@material-ui/icons/Error';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
@@ -67,6 +70,7 @@ function TestStatusIcon(props: { test: JDTestRunner }) {
     const status = useChange(test, t => t.status);
 
     switch (status) {
+        case JDTestStatus.ReadyToRun: return <PlayCircleFilledIcon color="action" />
         case JDTestStatus.Active: return <PlayCircleFilledIcon color="action" />
         case JDTestStatus.Failed: return <ErrorIcon color="error" />
         case JDTestStatus.Passed: return <CheckCircleIcon color="primary" />
@@ -76,8 +80,7 @@ function TestStatusIcon(props: { test: JDTestRunner }) {
 
 function TestListItem(props: { test: JDTestRunner }) {
     const { test } = props;
-    const { specification } = test;
-    const { description } = specification;
+    const description = useChange(test, t => t.description);
 
     return <ListItem>
         <ListItemIcon>
@@ -100,45 +103,75 @@ function TestList(props: { testRunner: JDServiceTestRunner }) {
     </Card>
 }
 
-function TestStepper(props: { test: JDTestRunner }) {
-    const { test } = props
-    const { specification } = test;
-    const { commands } = specification;
-    const [activeCommand, setActiveCommand] = useState(0);
-    const handleNext = () => {
-        setActiveCommand((prev) => prev + 1);
-    };
-    const handleClose = (status: JDTestStatus) => () => test.finish(status)
-    return <Stepper activeStep={activeCommand} orientation="vertical">
-        {commands.map((cmd, index) => <Step key={index}>
-            <StepLabel>{cmdToPrompt(cmd) || "no prompt"}</StepLabel>
-            <StepContent>
-                <Grid container spacing={1} direction="row">
-                    <Grid item>
-                        <Button variant="outlined" onClick={handleNext}>Next</Button>
-                    </Grid>
-                    <Grid item>
-                        <Button variant="outlined" onClick={handleClose(JDTestStatus.Passed)}>Yes</Button>
-                    </Grid>
-                    <Grid item>
-                        <Button variant="outlined" onClick={handleClose(JDTestStatus.Failed)}>No</Button>
-                    </Grid>
-                </Grid>
-            </StepContent>
-        </Step>)
+function CommandStatusIcon(props: { command: JDCommandRunner }) {
+    const { command } = props;
+    const status = useChange(command, c => c.status);
+
+    switch (status) {
+        case JDCommandStatus.Active: 
+        case JDCommandStatus.RequiresUserInput: 
+            return <PlayCircleFilledIcon color="action" />
+        case JDCommandStatus.Failed: return <ErrorIcon color="error" />
+        case JDCommandStatus.Passed: return <CheckCircleIcon color="primary" />
+        default: return <HourglassEmptyIcon color="disabled" />
+    }
+}
+
+function CommandListItem(props: { command: JDCommandRunner }) {
+    const { command } = props;
+    const { message, progress } = useChange(command, c => c.output);
+    const status = useChange(command, c => c.status);
+    const handleAnswer = (status: JDCommandStatus) => () => command.finish(status)
+    return <ListItem>
+        <ListItemIcon>
+            <CommandStatusIcon command={command} />
+        </ListItemIcon>
+        <ListItemText primary={message} secondary={!progress ? "" : progress.toString()} />
+        {status === JDCommandStatus.RequiresUserInput &&
+            <ListItemSecondaryAction>
+                <Button variant="outlined" onClick={handleAnswer(JDCommandStatus.Passed)}>Yes</Button>
+                <Button variant="outlined" onClick={handleAnswer(JDCommandStatus.Failed)}>No</Button>
+            </ListItemSecondaryAction>
         }
-    </Stepper>;
+    </ListItem>
+}
+
+// TODO: end of test
+function CommandList(props: { test: JDTestRunner }) {
+    const { test } = props;
+    const { commands } = test;
+    const status = useChange(test, t => t.status);
+    const handleRun = () => test.start();
+    const handleReset = () => { test.reset(); test.ready(); }
+    const handleCancel = () => { test.cancel() }
+    return <Card>
+        <CardContent>
+            {status === JDTestStatus.ReadyToRun &&
+                <Button variant="outlined" onClick={handleRun}>Run</Button>
+            }
+            {status === JDTestStatus.Active &&
+                <Button variant="outlined" onClick={handleReset}>Reset</Button>
+            }
+            {status === JDTestStatus.Active &&
+                <Button variant="outlined" onClick={handleCancel}>Cancel</Button>
+            }
+            {status === JDTestStatus.Active &&
+                <List dense={false}>
+                    {commands.map((cmd, i) => <CommandListItem key={i} command={cmd} />)}
+                </List>
+            }
+        </CardContent>
+    </Card>
 }
 
 function ActiveTest(props: { test: JDTestRunner }) {
     const { test } = props;
-    const { specification } = test;
-    const { description } = specification;
+    const description = useChange(test, t => t.description);
 
     return <Card>
         <CardContent>
             <Typography variant="h5" component="h2">{description}</Typography>
-            <TestStepper
+            <CommandList
                 test={test}
             />
         </CardContent>
