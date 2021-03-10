@@ -38,11 +38,11 @@ async function createServicePages(graphql, actions, reporter) {
     }
 
     // Create image post pages.
-    const serviceTemplate = path.resolve(`src/templates/service.mdx`)
+    const serviceTemplate = path.resolve(`src/templates/service.tsx`)
     const servicePlaygroundTemplate = path.resolve(
-        `src/templates/service-playground.mdx`
+        `src/templates/service-playground.tsx`
     )
-    const serviceTestTemplate = path.resolve(`src/templates/service-test.mdx`)
+    const serviceTestTemplate = path.resolve(`src/templates/service-test.tsx`)
     result.data.allServicesJson.nodes.map(node => {
         const { classIdentifier, shortId } = node
         const p = `/services/${shortId}/`
@@ -105,8 +105,8 @@ async function createDevicePages(graphql, actions, reporter) {
     }
 
     // Create image post pages.
-    const deviceTemplate = path.resolve(`src/templates/device.mdx`)
-    const companyTemplate = path.resolve(`src/templates/device-company.mdx`)
+    const deviceTemplate = path.resolve(`src/templates/device.tsx`)
+    const companyTemplate = path.resolve(`src/templates/device-company.tsx`)
     // We want to create a detailed page for each
     // Instagram post. Since the scraped Instagram data
     // already includes an ID field, we just use that for
