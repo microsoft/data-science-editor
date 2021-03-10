@@ -1,12 +1,10 @@
-import { makeStyles, Theme, createStyles, CircularProgress, List, ListItem, ListItemText, Typography } from '@material-ui/core';
-import React, { useContext, useState } from 'react';
+import { makeStyles, Theme, createStyles, List, ListItem, ListItemText, Typography } from '@material-ui/core';
+import React, { lazy, useContext, useState } from 'react';
 import { SRV_SENSOR_AGGREGATOR, SRV_MODEL_RUNNER, ModelRunnerReg } from '../../../jacdac-ts/src/jdom/constants';
 import { JDService } from '../../../jacdac-ts/src/jdom/service';
 import ServiceList from '../ServiceList';
 import ConnectAlert from '../alert/ConnectAlert'
 import { useDbJSON, useDbUint8Array } from '../useDb'
-import ImportButton from '../ImportButton';
-// tslint:disable-next-line: no-submodule-imports
 import Alert from "../ui/Alert";
 import { Button } from 'gatsby-theme-material-ui';
 import { ModelRunnerClient } from '../../../jacdac-ts/src/jdom/modelrunner'
@@ -21,6 +19,9 @@ import { prettySize } from '../../../jacdac-ts/src/jdom/pretty';
 import RegisterTrend from '../RegisterTrend';
 import { useRegisterIntValue, useRegisterStringValue } from '../../jacdac/useRegisterValue';
 import useCall from '../useCall';
+
+import Suspense from "../ui/Suspense"
+const ImportButton = lazy(() => import("../ImportButton"))
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     root: {
@@ -154,7 +155,7 @@ export default function ModelUploader() {
         <p>Machine learning models are typically stored in a <code>.tflite</code> file.</p>
         {model && <Alert severity={'success'}>Model loaded ({prettySize(model.byteLength)})</Alert>}
         {model && <p />}
-        <ImportButton disabled={importing} text={"Import model"} onFilesUploaded={handleTfmodelFiles} />
+        <Suspense><ImportButton disabled={importing} text={"Import model"} onFilesUploaded={handleTfmodelFiles} /></Suspense>
         <Button aria-label="clear model" disabled={importing} onClick={handleClearModel}>clear model</Button>
         {models?.length && <List>
             {models.map(model => <ListItem key={model.path} button onClick={handleLoadModel(model)}>
@@ -166,7 +167,7 @@ export default function ModelUploader() {
         {sensorConfig && <Alert severity={'success'}>Sensor configuration loaded</Alert>}
         {sensorConfig && <SensorAggregatorConfigView config={sensorConfig} />}
         {sensorConfig && <p />}
-        <ImportButton disabled={importing} text={"Import configuration"} onFilesUploaded={handleSensorConfigFiles} />
+        <Suspense><ImportButton disabled={importing} text={"Import configuration"} onFilesUploaded={handleSensorConfigFiles} /></Suspense>
         <Button aria-label="clear configuration" disabled={importing} onClick={handleClearConfiguration}>clear configuration</Button>
         {inputConfigurations?.length && <List>
             {inputConfigurations.map(iconfig => <ListItem key={iconfig.path} button onClick={handleLoadInputConfiguration(iconfig)}>

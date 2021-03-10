@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { lazy, useMemo, useState } from 'react';
 import { Grid } from '@material-ui/core';
 import useLocalStorage from '../useLocalStorage';
 import { clone, unique } from '../../../jacdac-ts/src/jdom/utils';
@@ -13,7 +13,6 @@ import AddIcon from '@material-ui/icons/Add';
 import CreateIcon from '@material-ui/icons/Create';
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import { parseRepoUrl } from '../github'
-import GithubPullRequestButton from '../GithubPullRequestButton'
 import { DEVICE_IMAGE_HEIGHT, DEVICE_IMAGE_WIDTH, escapeDeviceIdentifier, escapeDeviceNameIdentifier, normalizeDeviceSpecification } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import ImportImageCanvas from '../ImageImportCanvas';
 import FirmwareCard from "../firmware/FirmwareCard"
@@ -23,6 +22,9 @@ import { useFirmwareBlob } from '../firmware/useFirmwareBlobs';
 import { FirmwareBlob } from '../../../jacdac-ts/src/jdom/flashing';
 import { useId } from "react-use-id-hook"
 import AddServiceIconButton from "../AddServiceIconButton";
+
+import Suspense from "../ui/Suspense";
+const GithubPullRequestButton = lazy(() => import('../GithubPullRequestButton'));
 
 function CompanySelect(props: { error?: string, value?: string, onValueChange?: (name: string) => void }) {
     const { onValueChange, value, error } = props;
@@ -313,19 +315,21 @@ export default function DeviceRegistration() {
             </PaperBox>
         </Grid>
         <Grid item xs={12}>
-            <GithubPullRequestButton
-                label={"register device"}
-                title={`Device: ${device.name}`}
-                head={`devices/${device.id}`}
-                description={`This pull request registers a new device for Jacdac.`}
-                files={modulePath && {
-                    [modulePath]: JSON.stringify(normalizeDeviceSpecification(device), null, 2),
-                    [imagePath]: {
-                        content: imageBase64,
-                        encoding: "base64"
-                    }
-                }}
-            />
+            <Suspense>
+                <GithubPullRequestButton
+                    label={"register device"}
+                    title={`Device: ${device.name}`}
+                    head={`devices/${device.id}`}
+                    description={`This pull request registers a new device for Jacdac.`}
+                    files={modulePath && {
+                        [modulePath]: JSON.stringify(normalizeDeviceSpecification(device), null, 2),
+                        [imagePath]: {
+                            content: imageBase64,
+                            encoding: "base64"
+                        }
+                    }}
+                />
+            </Suspense>
         </Grid>
     </Grid>
 }

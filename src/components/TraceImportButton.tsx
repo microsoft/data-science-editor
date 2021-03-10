@@ -1,11 +1,13 @@
-import React, { useState, useContext } from "react"
-import ImportButton from "./ImportButton"
+import React, { useState, useContext, lazy } from "react"
 import { parseLogicLog, parseTrace } from "../../jacdac-ts/src/jdom/logparser"
 import PacketsContext from "./PacketsContext"
 import Packet from "../../jacdac-ts/src/jdom/packet";
 import { arrayConcatMany } from "../../jacdac-ts/src/jdom/utils";
 import AppContext from "./AppContext"
 import Trace from "../../jacdac-ts/src/jdom/trace";
+
+import Suspense from "./ui/Suspense"
+const ImportButton = lazy(() => import("./ImportButton"))
 
 export default function TraceImportButton(props: { icon?: boolean, disabled?: boolean }) {
     const { icon, disabled } = props;
@@ -53,8 +55,10 @@ export default function TraceImportButton(props: { icon?: boolean, disabled?: bo
         }
     }
 
-    return <ImportButton icon={icon}
-        disabled={importing || recording || disabled}
-        text="Import Trace File"
-        onFilesUploaded={handleFiles} />
+    return <Suspense>
+        <ImportButton icon={icon}
+            disabled={importing || recording || disabled}
+            text="Import Trace File"
+            onFilesUploaded={handleFiles} />
+    </Suspense>
 }

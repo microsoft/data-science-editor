@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/jsx-key */
-import React, { useContext, useRef } from "react"
+import React, { useContext, useRef, lazy } from "react"
 import Highlight, {
     defaultProps,
     Language,
@@ -14,7 +14,8 @@ import DarkModeContext from "./DarkModeContext"
 import { useEditable } from "use-editable"
 import { Alert } from "@material-ui/lab"
 import { Grid, Tooltip, withStyles } from "@material-ui/core"
-import GithubPullRequestButton from "../GithubPullRequestButton"
+import Suspense from "../ui/Suspense";
+const GithubPullRequestButton = lazy(() => import('../GithubPullRequestButton'));
 
 const AnnotationTooltip = withStyles(theme => ({
     arrow: {
@@ -112,8 +113,8 @@ export default function HighlightTextField(props: {
                                         {el}
                                     </AnnotationTooltip>
                                 ) : (
-                                        el
-                                    )
+                                    el
+                                )
                             })}
                         </pre>
                     )}
@@ -134,14 +135,16 @@ export default function HighlightTextField(props: {
             )}
             {pullRequestTitle && pullRequestPath && (
                 <Grid item>
-                    <GithubPullRequestButton
-                        title={pullRequestTitle}
-                        head={pullRequestPath}
-                        description={pullRequestDescription}
-                        files={{
-                            [pullRequestPath + ".md"]: code,
-                        }}
-                    />
+                    <Suspense>
+                        <GithubPullRequestButton
+                            title={pullRequestTitle}
+                            head={pullRequestPath}
+                            description={pullRequestDescription}
+                            files={{
+                                [pullRequestPath + ".md"]: code,
+                            }}
+                        />
+                    </Suspense>
                 </Grid>
             )}
         </Grid>

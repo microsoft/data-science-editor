@@ -1,8 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Box, createStyles, makeStyles, Paper, useTheme } from '@material-ui/core';
-import ImportButton from './ImportButton';
+import React, { lazy, useEffect, useMemo, useState } from 'react';
+import { Box, createStyles, makeStyles } from '@material-ui/core';
 import { Skeleton } from "@material-ui/lab";
 import useBlobCanvas from "./useBlobCanvas"
+
+import Suspense from "./ui/Suspense"
+const ImportButton = lazy(() => import("./ImportButton"))
 
 const useStyles = makeStyles((theme) => createStyles({
     root: {
@@ -43,11 +45,13 @@ export default function ImportImageCanvas(props: { width: number, height: number
             {canvasUrl && <img alt="the imported image" src={canvasUrl} width={"100%"} height={"100%"} />}
         </div>
         <Box className={classes.btn}>
-            <ImportButton
-                icon={true}
-                text="Import 4:3 image"
-                onFilesUploaded={handleFilesUploaded}
-                acceptedFiles={["image/jpeg", "image/png"]} />
+            <Suspense>
+                <ImportButton
+                    icon={true}
+                    text="Import 4:3 image"
+                    onFilesUploaded={handleFilesUploaded}
+                    acceptedFiles={["image/jpeg", "image/png"]} />
+            </Suspense>
         </Box>
     </div>
 }

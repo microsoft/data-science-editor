@@ -1,8 +1,9 @@
-import React, { useState } from "react"
+import React, { lazy, useState } from "react"
 import { Button, Card, CardHeader, CardActions, CardContent, ListItem, List, ListItemText, Typography } from "@material-ui/core";
 import { useFirmwareBlob } from "./useFirmwareBlobs";
 import Alert from "../ui/Alert";
-import ImportButton from "../ImportButton";
+import Suspense from "../ui/Suspense"
+const ImportButton = lazy(() => import("../ImportButton"))
 
 const LOCAL_FILE_SLUG = "local file";
 
@@ -50,7 +51,7 @@ export default function LocalFileFirmwareCard() {
             </List>}
         </CardContent>
         <CardActions>
-            {!downloading && <ImportButton text={"Import UF2 file"} onFilesUploaded={handleFiles} />}
+            {!downloading && <Suspense><ImportButton text={"Import UF2 file"} onFilesUploaded={handleFiles} /></Suspense>}
             {!downloading && firmwareBlobs?.length && <Button disabled={disabled} variant="text" arial-label={"Clear"} onClick={handleClear}>
                 Clear
             </Button>}

@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react"
 import { Octokit } from "@octokit/core";
 import { createPullRequest } from "octokit-plugin-create-pull-request";
 import { Button, Link } from "gatsby-theme-material-ui";
-import { CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, TextField, Typography } from "@material-ui/core";
+import { Dialog, DialogActions, DialogContent, DialogContentText, Grid, TextField, Typography } from "@material-ui/core";
 import AppContext from "./AppContext";
 import { GITHUB_API_KEY } from "./github";
 import useDbValue from "./useDbValue";
