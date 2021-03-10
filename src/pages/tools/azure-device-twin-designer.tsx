@@ -1,21 +1,22 @@
 import { Grid, TextField } from "@material-ui/core"
 import React, { ChangeEvent, useMemo } from "react"
 import { clone, uniqueName } from "../../../jacdac-ts/src/jdom/utils"
-import useLocalStorage from "../useLocalStorage"
+import useLocalStorage from "../../components/useLocalStorage"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import DeleteIcon from "@material-ui/icons/Delete"
 import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec"
-import AddServiceIconButton from "../AddServiceIconButton"
-import ServiceSpecificationSelect from "../ServiceSpecificationSelect"
+import AddServiceIconButton from "../../components/AddServiceIconButton"
+import ServiceSpecificationSelect from "../../components/ServiceSpecificationSelect"
 import {
     DTDL_CONTEXT,
     escapeName,
     serviceSpecificationToComponent,
 } from "../../../jacdac-ts/src/azure-iot/dtdl"
-import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
-import Snippet from "../ui/Snippet"
-import PaperBox from "../ui/PaperBox"
+import IconButtonWithTooltip from "../../components/ui/IconButtonWithTooltip"
+import Snippet from "../../components/ui/Snippet"
+import PaperBox from "../../components/ui/PaperBox"
 import { useId } from "react-use-id-hook"
+import { Link } from "gatsby-theme-material-ui"
 
 interface DigitalTwinComponent {
     name: string
@@ -53,7 +54,14 @@ function ComponentRow(props: {
         twin.components.splice(twin.components.indexOf(component), 1)
         onUpdate()
     }
-    return (
+    return <>
+        <h1>Azure Device Twin Designer</h1>
+        <p>
+
+            An <Link href="https://github.com/Azure/opendigitaltwins-dtdl/">device twin</Link> is to be used in IoT solutions such as with Azure IoT Hubs,
+            Azure IoT Plug And Play.
+            The repository of <Link to="/dtmi/">Azure IoT Plug And Play models</Link> for services can be used to resolve models.
+        </p>
         <Grid item xs={12}>
             <Grid container spacing={2}>
                 <Grid item xs={6}>
@@ -87,7 +95,7 @@ function ComponentRow(props: {
                 </Grid>
             </Grid>
         </Grid>
-    )
+    </>
 }
 
 function validateTwinComponent(

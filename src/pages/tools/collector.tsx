@@ -11,23 +11,23 @@ import StopIcon from '@material-ui/icons/Stop';
 import SaveIcon from '@material-ui/icons/Save';
 import useChange from '../../jacdac/useChange';
 import { JDBus } from '../../../jacdac-ts/src/jdom/bus'
-import FieldDataSet from '../FieldDataSet';
-import Trend from '../Trend';
+import FieldDataSet from '../../components/FieldDataSet';
+import Trend from '../../components/Trend';
 // tslint:disable-next-line: no-submodule-imports
-import Alert from "../ui/Alert";
-import EventSelect from '../EventSelect';
+import Alert from "../../components/ui/Alert";
+import EventSelect from '../../components/EventSelect';
 import { JDEvent } from '../../../jacdac-ts/src/jdom/event';
 import { EVENT, REPORT_UPDATE, SRV_SENSOR_AGGREGATOR } from '../../../jacdac-ts/src/jdom/constants';
 import { arrayConcatMany, throttle } from '../../../jacdac-ts/src/jdom/utils';
-import DataSetGrid from '../DataSetGrid';
+import DataSetGrid from '../../components/DataSetGrid';
 import { JDRegister } from '../../../jacdac-ts/src/jdom/register';
-import ReadingFieldGrid from '../ReadingFieldGrid';
-import DeviceCardHeader from '../DeviceCardHeader';
+import ReadingFieldGrid from '../../components/ReadingFieldGrid';
+import DeviceCardHeader from '../../components/DeviceCardHeader';
 import { SensorAggregatorClient } from '../../../jacdac-ts/src/jdom/sensoraggregatorclient';
 import { Link } from 'gatsby-theme-material-ui';
 import { JDService } from '../../../jacdac-ts/src/jdom/service';
-import ServiceManagerContext from '../ServiceManagerContext';
-import useChartPalette from '../useChartPalette';
+import ServiceManagerContext from '../../components/ServiceManagerContext';
+import useChartPalette from '../../components/useChartPalette';
 import { isSensor } from '../../../jacdac-ts/src/jdom/spec';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -248,7 +248,11 @@ export default function Collector() {
         return () => { }
     }, [recording, liveDataSet, registerIdsChecked, aggregator])
 
-    return (<div className={classes.root}>
+    return <div className={classes.root}>
+        <h1>Data Collector</h1>
+        <p>
+            Use this page to collect streaming data from Jacdac devices into various output formats.
+        </p>
         {!!aggregators.length && <div key="aggregators">
             <h3>(Optional) Choose a data aggregator</h3>
             <p>A <Link to="/services/aggregator">data aggregator</Link> service collects collects sensor data on the bus and returns an aggregated at regular intervals.</p>
@@ -330,15 +334,14 @@ export default function Collector() {
                 <EventSelect className={classes.field} eventId={triggerEventId} onChange={handleTriggerChange} label={"Start Event"} />
             </div>
         </div>
-        { liveDataSet && <Trend key="trends" height={12} dataSet={liveDataSet} horizon={LIVE_HORIZON} dot={true} gradient={true} />}
+        {liveDataSet && <Trend key="trends" height={12} dataSet={liveDataSet} horizon={LIVE_HORIZON} dot={true} gradient={true} />}
         {
             !!tables.length && <div key="recordings">
                 <h3>Recordings</h3>
                 <DataSetGrid tables={tables} handleDeleteTable={handleDeleteTable} />
             </div>
         }
-    </div >
-    )
+    </div >;
 
     //{liveDataSet && <DataSetTable key="datasettable" className={classes.segment} dataSet={liveDataSet} maxRows={3} minRows={3} />}
 

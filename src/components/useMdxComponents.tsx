@@ -10,7 +10,6 @@ import TraceList from "./TraceList";
 import GithubRepositoryList from "./GithubRespositoryList";
 import SpecificationUnitList from "./SpecificationUnitList";
 import StatusLEDAnimation from "./StatusLEDAnimation";
-import ServiceCatalog from "./ServiceCatalog";
 
 export default function useMdxComponents() {
   const theme = useTheme();
@@ -31,7 +30,6 @@ export default function useMdxComponents() {
     tr: props => <TableRow {...props} />,
     RandomGenerator: props => <Box displayPrint="none"><RandomGenerator {...props} /></Box>,
     FilteredDeviceSpecificationList: props => <FilteredDeviceSpecificationList {...props} />,
-    ServiceCatalog: props => <ServiceCatalog {...props} />,
     DeviceSpecificationList: props => <DeviceSpecificationList {...props} />,
     Widget: props => <Widget {...props} />,
     TraceList: props => <TraceList {...props} />,
