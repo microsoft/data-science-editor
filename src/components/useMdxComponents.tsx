@@ -5,7 +5,6 @@ import { Box, Paper, Table, TableBody, TableContainer, TableHead, TableRow, useT
 import RandomGenerator from "./RandomGenerator"
 import DeviceSpecificationList from "./DeviceSpecificationList"
 import TraceList from "./TraceList";
-import GithubRepositoryList from "./GithubRespositoryList";
 import SpecificationUnitList from "./SpecificationUnitList";
 import StatusLEDAnimation from "./StatusLEDAnimation";
 
@@ -29,7 +28,6 @@ export default function useMdxComponents() {
     RandomGenerator: props => <Box displayPrint="none"><RandomGenerator {...props} /></Box>,
     DeviceSpecificationList: props => <DeviceSpecificationList {...props} />,
     TraceList: props => <TraceList {...props} />,
-    GithubRepositoryList: props => <GithubRepositoryList {...props} />,
     SpecificationUnitList: props => <SpecificationUnitList {...props} />,
     StatusLEDAnimation: props => <StatusLEDAnimation {...props} />,
   }), []);
