@@ -1,33 +1,28 @@
-import { makeStyles, Theme, createStyles, List, ListItem, ListItemText, Typography } from '@material-ui/core';
+import { List, ListItem, ListItemText, Typography } from '@material-ui/core';
 import React, { lazy, useContext, useState } from 'react';
 import { SRV_SENSOR_AGGREGATOR, SRV_MODEL_RUNNER, ModelRunnerReg } from '../../../jacdac-ts/src/jdom/constants';
 import { JDService } from '../../../jacdac-ts/src/jdom/service';
-import ServiceList from '../ServiceList';
-import ConnectAlert from '../alert/ConnectAlert'
-import { useDbJSON, useDbUint8Array } from '../useDb'
-import Alert from "../ui/Alert";
+import ServiceList from '../../components/ServiceList';
+import ConnectAlert from '../../components/alert/ConnectAlert'
+import { useDbJSON, useDbUint8Array } from '../../components/useDb'
+import Alert from "../../components/ui/Alert";
 import { Button } from 'gatsby-theme-material-ui';
 import { ModelRunnerClient } from '../../../jacdac-ts/src/jdom/modelrunner'
-import RegisterInput from '../RegisterInput';
-import CircularProgressWithLabel from '../ui/CircularProgressWithLabel'
+import RegisterInput from '../../components/RegisterInput';
+import CircularProgressWithLabel from '../../components/ui/CircularProgressWithLabel'
 import { SensorAggregatorClient, SensorAggregatorConfig } from '../../../jacdac-ts/src/jdom/sensoraggregatorclient';
-import SensorAggregatorConfigView from '../SensorAggregatorConfigView';
-import ServiceManagerContext from '../ServiceManagerContext'
+import SensorAggregatorConfigView from '../../components/SensorAggregatorConfigView';
+import ServiceManagerContext from '../../components/ServiceManagerContext'
 import useChange from '../../jacdac/useChange';
 import { IFile } from '../../../jacdac-ts/src/embed/protocol';
 import { prettySize } from '../../../jacdac-ts/src/jdom/pretty';
-import RegisterTrend from '../RegisterTrend';
+import RegisterTrend from '../../components/RegisterTrend';
 import { useRegisterIntValue, useRegisterStringValue } from '../../jacdac/useRegisterValue';
-import useCall from '../useCall';
+import useCall from '../../components/useCall';
 
-import Suspense from "../ui/Suspense"
-const ImportButton = lazy(() => import("../ImportButton"))
-
-const useStyles = makeStyles((theme: Theme) => createStyles({
-    root: {
-        marginBottom: theme.spacing(1)
-    },
-}))
+import Suspense from "../../components/ui/Suspense"
+import { Link } from '@material-ui/icons';
+const ImportButton = lazy(() => import("../../components/ImportButton"))
 
 export function ModelContent(props: { service: JDService }) {
     const { service } = props
@@ -74,7 +69,6 @@ export function ModelActions(props: {
 }
 
 export default function ModelUploader() {
-    const classes = useStyles()
     const [importing, setImporting] = useState(false)
     const { data: model, setBlob: setModel } = useDbUint8Array("model.tflite")
     const { value: sensorConfig, setBlob: setSensorConfig } = useDbJSON<SensorAggregatorConfig>("sensor-input.json")
@@ -150,7 +144,11 @@ export default function ModelUploader() {
     const models = useChange(modelStore, _ => _?.models());
     const inputConfigurations = useChange(modelStore, _ => _?.inputConfigurations())
 
-    return <div className={classes.root}>
+    return <>
+        <h1>Model uploader</h1>
+        <p>
+            Upload Machine Learning Models (like TensorFlow Lite) into your <Link to="/services/model-runner/">ML module runners</Link>.
+        </p>
         <h3>Load a machine learning model</h3>
         <p>Machine learning models are typically stored in a <code>.tflite</code> file.</p>
         {model && <Alert severity={'success'}>Model loaded ({prettySize(model.byteLength)})</Alert>}
@@ -186,5 +184,5 @@ export default function ModelUploader() {
                 sensorInput={sensorConfig}
             />}
         />
-    </div>
+    </>
 }

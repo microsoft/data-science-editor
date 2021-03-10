@@ -18,7 +18,7 @@ import Trend from "../../components/Trend"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import GetAppIcon from '@material-ui/icons/GetApp';
 import ServiceList from "../../components/ServiceList";
-import { ModelActions, ModelContent } from "../../components/tools/ModelUploader";
+import { ModelActions, ModelContent } from "./model-uploader";
 import { readBlobToUint8Array } from "../../../jacdac-ts/src/jdom/utils";
 import useDeviceName from "../../components/useDeviceName";
 import { JDService } from "../../../jacdac-ts/src/jdom/service";

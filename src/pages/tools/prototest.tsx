@@ -7,22 +7,24 @@ import { ProtoTestCmd, ProtoTestReg, SRV_PROTO_TEST } from "../../../jacdac-ts/s
 import useChange from "../../jacdac/useChange"
 import { JDService } from "../../../jacdac-ts/src/jdom/service";
 import { JDRegister } from "../../../jacdac-ts/src/jdom/register";
-import ConnectAlert from "../alert/ConnectAlert";
+import ConnectAlert from "../../components/alert/ConnectAlert";
 import { JDField } from "../../../jacdac-ts/src/jdom/field";
-import { jdpack, jdpackEqual, jdunpack } from "../../../jacdac-ts/src/jdom/pack";
-import DeviceName from "../DeviceName";
-import DeviceActions from "../DeviceActions";
-import useEffectAsync from "../useEffectAsync";
-import TestCard from "../TestCard";
+import { jdpack, jdpackEqual, jdunpack, PackedValues } from "../../../jacdac-ts/src/jdom/pack";
+import DeviceName from "../../components/DeviceName";
+import DeviceActions from "../../components/DeviceActions";
+import useEffectAsync from "../../components/useEffectAsync";
+import TestCard from "../../components/TestCard";
 import Packet from "../../../jacdac-ts/src/jdom/packet";
 import { JDEvent } from "../../../jacdac-ts/src/jdom/event";
 import { AlertTitle } from "@material-ui/lab";
-import Alert from "../ui/Alert";
+import Alert from "../../components/ui/Alert";
 import JDDeviceHost from "../../../jacdac-ts/src/jdom/devicehost";
 import ProtocolTestServiceHost from "../../../jacdac-ts/src/jdom/protocoltestservicehost"
+import { Link } from "gatsby-theme-material-ui";
 
 function randomFieldPayload(field: JDField) {
     const { specification } = field;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let r: any = undefined;
     switch (specification.type) {
         case "bool":
@@ -64,7 +66,7 @@ function randomFieldPayload(field: JDField) {
     return r;
 }
 
-function randomPayload<T extends any[]>(packFormat: string, fields: JDField[]): T {
+function randomPayload<T extends PackedValues>(packFormat: string, fields: JDField[]): T {
     if (!packFormat)
         throw new Error("pack format unknown")
     const rs = fields.map(randomFieldPayload);
@@ -77,8 +79,6 @@ function RegisterProtocolTest(props: { rw: JDRegister, ro: JDRegister, ev: JDEve
     const { rw, ro, ev } = props;
     const { specification, fields } = rw;
     const name = specification.name.replace(/^rw_/, "")
-
-    const rxValue = (r: JDRegister) => jdunpack(r.data, specification.packFormat)
 
     // event code and command code are the same as rw register
     useEffectAsync(async () => {
@@ -231,19 +231,26 @@ export default function ProtocolTest() {
         return () => bus.removeDeviceHost(d);
     }, [host]);
 
-    return <Grid container direction="row" spacing={2}>
-        <Grid key="connect" item xs={12}>
-            <ConnectAlert serviceClass={SRV_PROTO_TEST} />
+    return <>
+        <h1>Protocol Test</h1>
+        <p>
+            A helper page to test the Jacdac protocol against a
+            <Link to="/services/prototest/">protocol test</Link> service.
+        </p>
+        <Grid container direction="row" spacing={2}>
+            <Grid key="connect" item xs={12}>
+                <ConnectAlert serviceClass={SRV_PROTO_TEST} />
+            </Grid>
+            {services?.map(service => <Grid key={service.id} item xs={12}>
+                <ServiceProtocolTest service={service} />
+            </Grid>)}
+            <Grid item xs={12}>
+                <Alert severity="info">
+                    <AlertTitle>Developer zone</AlertTitle>
+                    <Switch checked={host} onChange={toggleHost} />
+                    <label>Add simulator</label>
+                </Alert>
+            </Grid>
         </Grid>
-        {services?.map(service => <Grid key={service.id} item xs={12}>
-            <ServiceProtocolTest service={service} />
-        </Grid>)}
-        <Grid item xs={12}>
-            <Alert severity="info">
-                <AlertTitle>Developer zone</AlertTitle>
-                <Switch checked={host} onChange={toggleHost} />
-                <label>Add simulator</label>
-            </Alert>
-        </Grid>
-    </Grid>
+    </>
 }
