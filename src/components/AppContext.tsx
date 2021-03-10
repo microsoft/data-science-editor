@@ -1,10 +1,12 @@
 import { useSnackbar } from "notistack";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, lazy, useContext, useEffect, useState } from "react";
 import { BusState } from "../../jacdac-ts/src/jdom/bus";
 import { CONNECTION_STATE, ERROR } from "../../jacdac-ts/src/jdom/constants";
 import { isCancelError } from "../../jacdac-ts/src/jdom/utils";
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context";
-import StartSimulatorDialog from "./dialogs/StartSimulatorDialog";
+
+import Suspense from "./ui/Suspense"
+const StartSimulatorDialog = lazy(() => import("./dialogs/StartSimulatorDialog"));
 
 export enum DrawerType {
     None,
@@ -116,7 +118,7 @@ export const AppProvider = ({ children }) => {
             toggleShowDeviceHostsDialog,
         }}>
             {children}
-            {showDeviceHostsDialog && <StartSimulatorDialog open={showDeviceHostsDialog} onClose={toggleShowDeviceHostsDialog} />}
+            {showDeviceHostsDialog && <Suspense hideFallback={true}><StartSimulatorDialog open={showDeviceHostsDialog} onClose={toggleShowDeviceHostsDialog} /></Suspense>}
         </AppContext.Provider>
     )
 }
