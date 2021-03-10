@@ -83,8 +83,6 @@ export default function Toc(props: { pagePath: string }) {
           frontmatter {
             title
             order
-            hideToc
-            hideMainMenu
           }
           excerpt
           fields {
@@ -160,7 +158,6 @@ export default function Toc(props: { pagePath: string }) {
     data.allMdx.edges.map(node => node.node)
       .filter(node => !!node.frontmatter?.title
         || (!!node.headings.length && !/404/.test(node.headings[0].value)))
-      .filter(node => !node.frontmatter?.hideToc)
       .map(node => {
         const r = {
           name: node.frontmatter?.title || node.headings[0].value,

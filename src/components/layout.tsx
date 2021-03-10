@@ -181,9 +181,12 @@ export default function Layout(props: LayoutProps) {
 
 function LayoutWithDarkMode(props: LayoutProps) {
     const { element, props: pageProps } = props
-    const { pageContext } = pageProps
+    const { pageContext, path } = pageProps
     const { frontmatter } = pageContext || {}
-    const { fullScreen } = frontmatter || {}
+    const makeCodeTool = /tools\/makecode-/.test(path);
+    const { fullScreen } = frontmatter || {
+        fullScreen: makeCodeTool
+    }
     const { darkMode, darkModeMounted } = useContext(DarkModeContext)
     const isDark = darkMode === "dark"
     const themeDef: ThemeOptions = {
@@ -301,8 +304,12 @@ function LayoutWithContext(props: LayoutProps) {
     const { element, props: pageProps } = props
     const { pageContext, path } = pageProps
     const { frontmatter } = pageContext || {}
+    const makeCodeTool = /tools\/makecode-/.test(path);
     const { hideMainMenu = false, hideUnderConstruction = false } =
-        frontmatter || {}
+        frontmatter || {
+            hideMainMenu: makeCodeTool,
+            hideUnderConstruction: makeCodeTool
+        }
 
     const classes = useStyles()
 

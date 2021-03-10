@@ -43,10 +43,6 @@ async function createServicePages(graphql, actions, reporter) {
         `src/templates/service-playground.mdx`
     )
     const serviceTestTemplate = path.resolve(`src/templates/service-test.mdx`)
-    // We want to create a detailed page for each
-    // Instagram post. Since the scraped Instagram data
-    // already includes an ID field, we just use that for
-    // each page's path.
     result.data.allServicesJson.nodes.map(node => {
         const { classIdentifier, shortId } = node
         const p = `/services/${shortId}/`

@@ -16,9 +16,6 @@ export const pageQuery = graphql`
       body
       frontmatter {
         title
-        fullScreen
-        hideMainMenu
-        hideUnderConstruction
         hideToc
       }
     }
