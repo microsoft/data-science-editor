@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, IconButton } from '@material-ui/core';
+import { Dialog, DialogContent } from '@material-ui/core';
 import React, { useState } from 'react'
 import { CirclePicker } from "react-color"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
