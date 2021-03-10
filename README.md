@@ -4,8 +4,7 @@
 for **microcontrollers** and their peripherals (sensors/actuators), 
 with applications to rapid prototyping, making, and physical computing. 
 
-This repository contains a TypeScript/JavaScript client library for the [Jacdac](https://aka.ms/jacdac) protocol,
-as well as the source of https://aka.ms/jacdac under `/docs`.
+This repository contains sources of [Jacdac](https://aka.ms/jacdac).
 
 * [User Documentation](https://aka.ms/jacdac/)
 * Discussions at https://github.com/microsoft/jacdac/discussions
@@ -14,7 +13,6 @@ as well as the source of https://aka.ms/jacdac under `/docs`.
 The rest of this page is for developers of the jacdac-ts library.
 
 ## Developer setup
-
 ### Codespaces
 
 Edit this project directly from your browser using GitHub Codespaces. If you have access to them,
@@ -42,7 +40,6 @@ npm install -g yarn
 ```
 yarn setup
 ```
-
 ### VS Code
 
 You are welcome to use any editor you want! Visual Studio Code
@@ -65,7 +62,6 @@ run
 ```
 yarn buildspecs
 ```
-
 ### Docs build
 
 * run the docs web site locally
@@ -95,6 +91,25 @@ If the build fails after pulling, try
 yarn clean
 ```
 
+### Updating jacdac.github.io
+
+jacdac.github.io is the stable release of the jacdac web site. To integrate the changes,
+pull the changes in ``jacdac-docs/main`` into ``jacdac.github.io/main``.
+
+* create a local clone of ``jacdac.github.io``
+```
+git clone https://github.com/jacdac/jacdac.github.io
+cd jacdac.github.io
+git remote add jadcac-docs https://github.com/microsoft/jacdac-docs
+```
+
+* pull changes
+
+```
+git fetch jacdac-docs
+git merge jacdac-docs/main
+git push
+```
 ### Jacdac + MakeCode
 
 ### Local build

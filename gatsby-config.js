@@ -1,12 +1,15 @@
 const maxImageWidth = 800
+const siteUrl = 'https://jacdac.github.io';
+const pathPrefix = "/jacdac-docs"
+
 module.exports = {
     siteMetadata: {
         title: `Jacdac`,
         description: `plug-n-play for microcontrollers.`,
         author: `Microsoft`,
-        siteUrl: `https://microsoft.github.io/jacdac-docs`,
+        siteUrl: siteUrl,
     },
-    pathPrefix: "/jacdac-docs",
+    pathPrefix: pathPrefix,
     flags: {
         PRESERVE_FILE_DOWNLOAD_CACHE: true,
         PRESERVE_WEBPACK_CACHE: true,
