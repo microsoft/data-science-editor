@@ -5,7 +5,6 @@ import { Box, Paper, Table, TableBody, TableContainer, TableHead, TableRow, useT
 import Suspense from "./ui/Suspense"
 const CodeBlock = lazy(() => import('./CodeBlock'));
 const RandomGenerator = lazy(() => import("./RandomGenerator"))
-const DeviceSpecificationList = lazy(() => import("./DeviceSpecificationList"))
 const TraceList = lazy(() => import("./TraceList"));
 const SpecificationUnitList = lazy(() => import("./SpecificationUnitList"));
 const StatusLEDAnimation = lazy(() => import("./StatusLEDAnimation"));
@@ -30,7 +29,6 @@ export default function useMdxComponents() {
 
     code: props => <Suspense><CodeBlock {...props} /></Suspense>,
     RandomGenerator: props => <Suspense><Box displayPrint="none"><RandomGenerator {...props} /></Box></Suspense>,
-    DeviceSpecificationList: props => <Suspense><DeviceSpecificationList {...props} /></Suspense>,
     TraceList: props => <Suspense><TraceList {...props} /></Suspense>,
     SpecificationUnitList: props => <Suspense><SpecificationUnitList {...props} /></Suspense>,
     StatusLEDAnimation: props => <Suspense><StatusLEDAnimation {...props} /></Suspense>,
