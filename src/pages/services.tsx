@@ -25,6 +25,8 @@ import { VIRTUAL_DEVICE_NODE_NAME } from "../../jacdac-ts/src/jdom/constants"
 import { useId } from "react-use-id-hook"
 import { Link } from "gatsby-theme-material-ui"
 import { resolveMakecodeServiceFromClassIdentifier } from "../../jacdac-ts/src/jdom/makecode"
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import { serviceTestFromServiceSpec } from "../../jacdac-ts/src/jdom/test"
 
 interface ServiceFilter {
     query: string
@@ -33,6 +35,7 @@ interface ServiceFilter {
     makeCode?: boolean
     simulators?: boolean
     devices?: boolean
+    test?: boolean
 }
 
 function FilterChip(props: {
@@ -64,7 +67,7 @@ export default function ServiceCatalog() {
     })
     const [deboundedFilter] = useDebounce(filter, 200)
     const searchId = useId()
-    const { query, tag, makeCode, simulators, devices, sensors } = filter
+    const { query, tag, makeCode, simulators, devices, sensors, test } = filter
     const allTags = useMemo(
         () =>
             unique(
@@ -100,6 +103,10 @@ export default function ServiceCatalog() {
                     !!deviceSpecificationsForService(srv.classIdentifier)
                         ?.length
             )
+        if (test)
+            r = r.filter(
+                srv => !!serviceTestFromServiceSpec(srv)
+            )
         if (sensors) r = r.filter(srv => isSensor(srv))
         return r
     }, [deboundedFilter])
@@ -114,6 +121,8 @@ export default function ServiceCatalog() {
     }
     const handleMakeCodeClick = () =>
         setFilter({ ...filter, makeCode: !makeCode })
+    const handleTestClick = () =>
+        setFilter({ ...filter, test: !test })
     const handleSimulatorClick = () =>
         setFilter({ ...filter, simulators: !simulators })
     const handleDevicesClick = () => setFilter({ ...filter, devices: !devices })
@@ -175,6 +184,12 @@ export default function ServiceCatalog() {
                         icon={<MakeCodeIcon />}
                         value={makeCode}
                         onClick={handleMakeCodeClick}
+                    />
+                    <FilterChip
+                        label="Test"
+                        icon={<CheckCircleIcon />}
+                        value={test}
+                        onClick={handleTestClick}
                     />
                 </ChipList>
             </Grid>

@@ -1,14 +1,12 @@
 
 import React, { useContext } from 'react';
-import { Grid, makeStyles, Theme, createStyles, CardContent, Card, CardActions, Switch, Box } from '@material-ui/core';
-import ServiceCard from './ServiceCard';
+import { Grid, CardContent, Card, CardActions, Switch, Box } from '@material-ui/core';
 import useChange from '../jacdac/useChange';
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context";
 import useGridBreakpoints from './useGridBreakpoints';
 import DeviceCardHeader from './DeviceCardHeader';
 import { JDService } from '../../jacdac-ts/src/jdom/service';
 import { DeviceLostAlert } from './alert/DeviceLostAlert';
-import { JDDevice } from '../../jacdac-ts/src/jdom/device';
 import Alert from './ui/Alert';
 
 

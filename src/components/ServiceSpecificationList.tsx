@@ -1,6 +1,7 @@
 import { Chip, Grid, List, ListItem, ListItemText } from "@material-ui/core";
 import React, { useMemo } from "react";
 import { deviceSpecificationsForService, isInfrastructure } from "../../jacdac-ts/src/jdom/spec";
+import { serviceTestFromServiceSpec } from "../../jacdac-ts/src/jdom/test";
 import { arrayShuffle } from "../../jacdac-ts/src/jdom/utils";
 import GridHeader from "./ui/GridHeader"
 import { Link } from "gatsby-theme-material-ui";
@@ -11,6 +12,7 @@ import KindIcon from "./KindIcon"
 import ChipList from "./ui/ChipList"
 import JacdacIcon from "./icons/JacdacIcon";
 import Markdown from "./ui/Markdown";
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { resolveMakecodeServiceFromClassIdentifier } from "../../jacdac-ts/src/jdom/makecode";
 
 function ServiceSpecificatinListItem(props: { service: jdspec.ServiceSpec }) {
@@ -19,6 +21,7 @@ function ServiceSpecificatinListItem(props: { service: jdspec.ServiceSpec }) {
     const makecode = resolveMakecodeServiceFromClassIdentifier(classIdentifier);
     const simulator = hostDefinitionFromServiceClass(classIdentifier);
     const device = !!deviceSpecificationsForService(classIdentifier)?.length;
+    const test = serviceTestFromServiceSpec(service);
 
     return <Link to={`/services/${shortId}`} style={({ textDecoration: "none" })}>
         <ListItemText key={classIdentifier}
@@ -30,6 +33,7 @@ function ServiceSpecificatinListItem(props: { service: jdspec.ServiceSpec }) {
                     {simulator && <Chip icon={<KindIcon kind={VIRTUAL_DEVICE_NODE_NAME} />} size="small" label="simulator" />}
                     {device && <Chip icon={<JacdacIcon />} size="small" label="devices" />}
                     {makecode && <Chip icon={<MakeCodeIcon />} size="small" label="MakeCode" />}
+                    {test && <Chip icon={<CheckCircleIcon />} size="small" label="test" />}
                 </ChipList>
             )}
         />

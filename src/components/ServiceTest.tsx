@@ -238,7 +238,7 @@ export default function ServiceTest(props: {
         <>
             <h1>
                 {`${serviceSpec.name} tests`}
-                <IconButtonWithTooltip title="go to specifiction" to={`/services/${serviceSpec.shortId}/`}>
+                <IconButtonWithTooltip title="go to specification" to={`/services/${serviceSpec.shortId}/`}>
                     <InfoIcon />
                 </IconButtonWithTooltip>
             </h1>

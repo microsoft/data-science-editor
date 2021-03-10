@@ -3,7 +3,8 @@ import Markdown from "./ui/Markdown";
 import ServiceSpecificationStatusAlert from "./ServiceSpecificationStatusAlert"
 import { Button, Link } from "gatsby-theme-material-ui";
 import DeviceSpecificationList from "./DeviceSpecificationList";
-import { serviceSpecificationFromClassIdentifier, serviceTestFromServiceSpec } from "../../jacdac-ts/src/jdom/spec";
+import { serviceSpecificationFromClassIdentifier } from "../../jacdac-ts/src/jdom/spec";
+import { serviceTestFromServiceSpec } from "../../jacdac-ts/src/jdom/test"
 import { Grid } from "@material-ui/core";
 
 export default function ServiceMarkdown(props: {
@@ -14,7 +15,6 @@ export default function ServiceMarkdown(props: {
     const service = serviceSpecificationFromClassIdentifier(classIdentifier)
     const test = serviceTestFromServiceSpec(service)
     const { shortId } = service;
-
 
     return <>
         <ServiceSpecificationStatusAlert specification={service} />
