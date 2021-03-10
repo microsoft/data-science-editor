@@ -3,7 +3,8 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 export const onRouteUpdate = ({ location }, options) => {
-  window.analytics.page();
+  if (window.analytics)
+    window.analytics.page();
 }
 
 export const wrapPageElement = Layout
