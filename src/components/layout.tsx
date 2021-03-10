@@ -29,12 +29,10 @@ import {
     ThemeOptions,
 } from "@material-ui/core/styles"
 import AppContext, { DrawerType } from "./AppContext"
-import AppDrawer from "./AppDrawer"
 import useFirmwareBlobs from "./firmware/useFirmwareBlobs"
 import { MDXProvider } from "@mdx-js/react"
 import DarkModeProvider from "./ui/DarkModeProvider"
 import DarkModeContext from "./ui/DarkModeContext"
-import ToolsDrawer from "./ToolsDrawer"
 import Alert from "./ui/Alert"
 import GitHubButton from "./GitHubButton"
 import useMdxComponents from "./useMdxComponents"
@@ -45,9 +43,11 @@ import Flags from "../../jacdac-ts/src/jdom/flags"
 import ThemedLayout from "./ui/ThemedLayout"
 import OpenDashboardButton from "./buttons/OpenDashboardButton"
 import PacketStats from "./PacketStats"
-import Suspense from "./ui/Suspense"
 
+import Suspense from "./ui/Suspense"
 const WebDiagnostics = lazy(() => import("./WebDiagnostics"));
+const AppDrawer = lazy(() => import("./AppDrawer"));
+const ToolsDrawer = lazy(() => import("./ToolsDrawer"))
 
 export const TOC_DRAWER_WIDTH = 18
 export const DRAWER_WIDTH = 40
@@ -355,8 +355,8 @@ function LayoutWithContext(props: LayoutProps) {
             {!hideMainMenu && (
                 <nav>
                     <MainAppBar {...props} />
-                    <AppDrawer pagePath={path} />
-                    <ToolsDrawer />
+                    {drawerType !== DrawerType.None && <Suspense hideFallback={true}><AppDrawer pagePath={path} /></Suspense>}
+                    {toolsMenu && <Suspense hideFallback={true}><ToolsDrawer /></Suspense>}
                 </nav>
             )}
             {container ? (
