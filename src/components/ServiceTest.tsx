@@ -16,6 +16,7 @@ import {
     Box,
     LinearProgress,
     CardActions,
+    CardHeader,
 } from "@material-ui/core"
 // tslint:disable-next-line: no-submodule-imports
 import { AlertTitle } from "@material-ui/lab"
@@ -23,6 +24,7 @@ import { AlertTitle } from "@material-ui/lab"
 import InfoIcon from "@material-ui/icons/Info"
 import Alert from "./ui/Alert"
 import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
+import PauseCircleOutlineIcon from '@material-ui/icons/PauseCircleOutline';
 import {
     addHost,
     hostDefinitionFromServiceClass,
@@ -31,8 +33,8 @@ import Flags from "../../jacdac-ts/src/jdom/flags"
 import { JDService } from "../../jacdac-ts/src/jdom/service"
 import { serviceTestFromServiceSpec } from "../../jacdac-ts/src/jdom/test"
 import {
-    JDServiceTestRunner, 
-    JDTestRunner, 
+    JDServiceTestRunner,
+    JDTestRunner,
     JDTestStatus,
     JDCommandRunner,
     JDCommandStatus,
@@ -70,7 +72,7 @@ function TestStatusIcon(props: { test: JDTestRunner }) {
     const status = useChange(test, t => t.status);
 
     switch (status) {
-        case JDTestStatus.ReadyToRun: return <PlayCircleFilledIcon color="action" />
+        case JDTestStatus.ReadyToRun: return <PauseCircleOutlineIcon color="action" />
         case JDTestStatus.Active: return <PlayCircleFilledIcon color="action" />
         case JDTestStatus.Failed: return <ErrorIcon color="error" />
         case JDTestStatus.Passed: return <CheckCircleIcon color="primary" />
@@ -108,8 +110,8 @@ function CommandStatusIcon(props: { command: JDCommandRunner }) {
     const status = useChange(command, c => c.status);
 
     switch (status) {
-        case JDCommandStatus.Active: 
-        case JDCommandStatus.RequiresUserInput: 
+        case JDCommandStatus.Active:
+        case JDCommandStatus.RequiresUserInput:
             return <PlayCircleFilledIcon color="action" />
         case JDCommandStatus.Failed: return <ErrorIcon color="error" />
         case JDCommandStatus.Passed: return <CheckCircleIcon color="primary" />
@@ -136,45 +138,38 @@ function CommandListItem(props: { command: JDCommandRunner }) {
     </ListItem>
 }
 
-// TODO: end of test
-function CommandList(props: { test: JDTestRunner }) {
+function ActiveTest(props: { test: JDTestRunner }) {
     const { test } = props;
+    const description = useChange(test, t => t.description);
     const { commands } = test;
     const status = useChange(test, t => t.status);
     const handleRun = () => test.start();
     const handleReset = () => { test.reset(); test.ready(); }
     const handleCancel = () => { test.cancel() }
+    const showCommands = [JDTestStatus.Active, JDTestStatus.Failed, JDTestStatus.Passed].indexOf(status) > -1;
+
     return <Card>
+        <CardHeader title={<Typography variant="h5">{description}</Typography>} avatar={<TestStatusIcon test={test} />} />
         <CardContent>
-            {status === JDTestStatus.ReadyToRun &&
-                <Button variant="outlined" onClick={handleRun}>Run</Button>
-            }
-            {status === JDTestStatus.Active &&
-                <Button variant="outlined" onClick={handleReset}>Reset</Button>
-            }
-            {status === JDTestStatus.Active &&
-                <Button variant="outlined" onClick={handleCancel}>Cancel</Button>
-            }
-            {status === JDTestStatus.Active &&
+            {showCommands &&
                 <List dense={false}>
                     {commands.map((cmd, i) => <CommandListItem key={i} command={cmd} />)}
                 </List>
             }
         </CardContent>
-    </Card>
-}
-
-function ActiveTest(props: { test: JDTestRunner }) {
-    const { test } = props;
-    const description = useChange(test, t => t.description);
-
-    return <Card>
-        <CardContent>
-            <Typography variant="h5" component="h2">{description}</Typography>
-            <CommandList
-                test={test}
-            />
-        </CardContent>
+        <CardActions>
+            <Grid container spacing={1}>
+                {status === JDTestStatus.ReadyToRun &&
+                    <Grid item><Button variant="outlined" onClick={handleRun}>Run</Button></Grid>
+                }
+                {status === JDTestStatus.Active &&
+                    <Grid item><Button variant="outlined" onClick={handleReset}>Restart</Button></Grid>
+                }
+                {status === JDTestStatus.Active &&
+                    <Grid item><Button variant="outlined" onClick={handleCancel}>Cancel</Button></Grid>
+                }
+            </Grid>
+        </CardActions>
     </Card>
 }
 
