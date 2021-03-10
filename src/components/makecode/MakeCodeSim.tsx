@@ -3,7 +3,7 @@ import { Button, createMuiTheme, responsiveFontSizes } from "@material-ui/core";
 import ThemedLayout from "../../components/ui/ThemedLayout";
 import { Grid } from "@material-ui/core";
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device";
-import { isReading, isValueOrIntensity, resolveMakecodeServiceFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec";
+import { isReading, isValueOrIntensity } from "../../../jacdac-ts/src/jdom/spec";
 import { arrayConcatMany, strcmp, unique } from "../../../jacdac-ts/src/jdom/utils";
 import useDevices from "../hooks/useDevices";
 import { SRV_CONTROL, SRV_LOGGER, SRV_POWER, SRV_ROLE_MANAGER, SRV_SETTINGS } from "../../../jacdac-ts/src/jdom/constants";
@@ -14,6 +14,7 @@ import DarkModeContext from "../ui/DarkModeContext";
 import KindIcon from "../KindIcon";
 import AppContext from "../AppContext";
 import { VIRTUAL_DEVICE_NODE_NAME } from "../../../jacdac-ts/src/jdom/constants";
+import { resolveMakecodeServiceFromClassIdentifier } from "../../../jacdac-ts/src/jdom/makecode";
 
 function deviceSort(l: JDDevice, r: JDDevice): number {
     const srvScore = (srv: jdspec.ServiceSpec) => srv.packets

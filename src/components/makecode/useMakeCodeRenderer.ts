@@ -1,6 +1,6 @@
 import { useMemo, useContext } from "react";
 import { unique } from "../../../jacdac-ts/src/jdom/utils";
-import { makeCodeServices } from "../../../jacdac-ts/src/jdom/spec"
+import { makeCodeServices } from "../../../jacdac-ts/src/jdom/makecode"
 import useWindowEvent from "../hooks/useWindowEvent"
 import MakeCodeSnippetContext from "./MakeCodeSnippetContext";
 

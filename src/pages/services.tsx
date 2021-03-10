@@ -13,7 +13,6 @@ import ChipList from "../components/ui/ChipList"
 import {
     deviceSpecificationsForService,
     isSensor,
-    resolveMakecodeServiceFromClassIdentifier,
     serviceSpecifications,
 } from "../../jacdac-ts/src/jdom/spec"
 import { arrayConcatMany, unique } from "../../jacdac-ts/src/jdom/utils"
@@ -25,6 +24,7 @@ import SpeedIcon from "@material-ui/icons/Speed"
 import { VIRTUAL_DEVICE_NODE_NAME } from "../../jacdac-ts/src/jdom/constants"
 import { useId } from "react-use-id-hook"
 import { Link } from "gatsby-theme-material-ui"
+import { resolveMakecodeServiceFromClassIdentifier } from "../../jacdac-ts/src/jdom/makecode"
 
 interface ServiceFilter {
     query: string

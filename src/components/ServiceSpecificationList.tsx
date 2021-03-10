@@ -1,6 +1,6 @@
-import { Chip, Grid, List, ListItem, ListItemText, Typography } from "@material-ui/core";
+import { Chip, Grid, List, ListItem, ListItemText } from "@material-ui/core";
 import React, { useMemo } from "react";
-import { deviceSpecificationsForService, isInfrastructure, resolveMakecodeServiceFromClassIdentifier } from "../../jacdac-ts/src/jdom/spec";
+import { deviceSpecificationsForService, isInfrastructure } from "../../jacdac-ts/src/jdom/spec";
 import { arrayShuffle } from "../../jacdac-ts/src/jdom/utils";
 import GridHeader from "./ui/GridHeader"
 import { Link } from "gatsby-theme-material-ui";
@@ -11,6 +11,7 @@ import KindIcon from "./KindIcon"
 import ChipList from "./ui/ChipList"
 import JacdacIcon from "./icons/JacdacIcon";
 import Markdown from "./ui/Markdown";
+import { resolveMakecodeServiceFromClassIdentifier } from "../../jacdac-ts/src/jdom/makecode";
 
 function ServiceSpecificatinListItem(props: { service: jdspec.ServiceSpec }) {
     const { service } = props;

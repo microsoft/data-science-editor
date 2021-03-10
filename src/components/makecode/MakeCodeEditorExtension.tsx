@@ -10,8 +10,6 @@ import useChange from "../../jacdac/useChange"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import DeleteIcon from "@material-ui/icons/Delete"
 import {
-    resolveMakecodeService,
-    resolveMakecodeServiceFromClassIdentifier,
     serviceSpecifications,
 } from "../../../jacdac-ts/src/jdom/spec"
 import AddServiceIconButton from "../AddServiceIconButton"
@@ -27,6 +25,7 @@ import CmdButton from "../CmdButton"
 import SaveIcon from "@material-ui/icons/Save"
 import { camelize } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import { useId } from "react-use-id-hook"
+import { resolveMakecodeService, resolveMakecodeServiceFromClassIdentifier } from "../../../jacdac-ts/src/jdom/makecode"
 
 interface ClientRole {
     name: string
