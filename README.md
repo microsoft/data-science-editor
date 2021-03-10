@@ -103,12 +103,9 @@ cd jacdac.github.io
 git remote add jadcac-docs https://github.com/microsoft/jacdac-docs
 ```
 
-* pull changes
-
+* pull changes from jacdac-docs into jacdac.github.io
 ```
-git fetch jacdac-docs
-git merge jacdac-docs/main
-git push
+sh update.sh
 ```
 ### Jacdac + MakeCode
 
