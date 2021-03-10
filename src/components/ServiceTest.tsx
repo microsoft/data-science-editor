@@ -138,6 +138,14 @@ function CommandListItem(props: { command: JDCommandRunner }) {
     </ListItem>
 }
 
+function FirstCommand(props: { command: JDCommandRunner }) {
+    const { command } = props;
+    const { message } = useChange(command, c => c.output);
+    return <Alert severity="info">
+        <AlertTitle>{message}</AlertTitle>
+    </Alert>
+}
+
 function ActiveTest(props: { test: JDTestRunner }) {
     const { test } = props;
     const description = useChange(test, t => t.description);
@@ -148,13 +156,17 @@ function ActiveTest(props: { test: JDTestRunner }) {
     const handleCancel = () => { test.cancel() }
     const showCommands = [JDTestStatus.Active, JDTestStatus.Failed, JDTestStatus.Passed].indexOf(status) > -1;
 
+    const [firstCommand, ...restOfCommands] = commands;
+
     return <Card>
         <CardHeader title={<Typography variant="h5">{description}</Typography>} avatar={<TestStatusIcon test={test} />} />
         <CardContent>
-            {showCommands &&
+            {showCommands && <>
+                <FirstCommand command={firstCommand} />
                 <List dense={false}>
-                    {commands.map((cmd, i) => <CommandListItem key={i} command={cmd} />)}
+                    {restOfCommands.map((cmd, i) => <CommandListItem key={i} command={cmd} />)}
                 </List>
+            </>
             }
         </CardContent>
         <CardActions>
