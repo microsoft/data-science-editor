@@ -134,7 +134,7 @@ function CommandListItem(props: { command: JDCommandRunner }) {
             </ListItemIcon>
             <ListItemText
                 primary={message}
-                secondary={!progress ? "" : progress.toString()}
+                secondary={progress}
             />
             {status === JDCommandStatus.RequiresUserInput && (
                 <ListItemSecondaryAction>
@@ -239,7 +239,7 @@ export default function ServiceTestRunner(props: {
         return (
             <Alert severity="warning">
                 Sorry, there are no tests available for service{" "}
-                {service.friendlyName}.
+                {service.specification.name}.
             </Alert>
         )
 
