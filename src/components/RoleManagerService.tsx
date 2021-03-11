@@ -38,7 +38,7 @@ function RequestedRoleView(props: {
     const { name: role, serviceClass } = requestedRole
 
     const handleStartClick = () => {
-        addHost(bus, hostDefinition.services(), hostDefinition.name)
+        addHost(bus, hostDefinition.services())
     }
     const handleChange = async (ev: React.ChangeEvent<{ value: unknown }>) => {
         const value: string = ev.target.value as string

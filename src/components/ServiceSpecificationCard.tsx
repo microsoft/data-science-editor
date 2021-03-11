@@ -26,7 +26,7 @@ export default function ServiceSpecificationCard(props: {
     const srv = spec?.shortId || sc?.toString(16);
     const hostDefinition = hostDefinitionFromServiceClass(sc)
     const handleSimulatorClick = () => {
-        addHost(bus, hostDefinition.services(), hostDefinition.name)
+        addHost(bus, hostDefinition.services())
         navigate("/dashboard/")
     }
 

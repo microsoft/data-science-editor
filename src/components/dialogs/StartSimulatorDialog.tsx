@@ -25,7 +25,7 @@ export default function StartSimulatorDialog(props: { open: boolean, onClose: ()
     };
     const handleClick = () => {
         const host = hostDefinitions.find(h => h.name === selected);
-        addHost(bus, host.services(), host.name.split(/\s+\(/g, 1)[0]);
+        addHost(bus, host.services());
         enqueueSnackbar(`${host.name} started...`, { variant: "info" })
         onClose();
     }
@@ -41,7 +41,7 @@ export default function StartSimulatorDialog(props: { open: boolean, onClose: ()
         onClose();
         for (const host of allHostDefinitions) {
             await delay(100);
-            addHost(bus, host.services(), host.name.split(/\s+\(/g, 1)[0]);
+            addHost(bus, host.services());
         }
     }
 
