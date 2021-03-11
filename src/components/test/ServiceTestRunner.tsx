@@ -77,7 +77,7 @@ function TestList(props: {
 }) {
     const { testRunner, currentTest, onSelectTest } = props
     const { tests } = testRunner
-    const stats = useChange(testRunner, r => r.stats());
+    const stats = useChange(testRunner, r => r.stats())
 
     return (
         <Card>
@@ -247,31 +247,27 @@ export default function ServiceTestRunner(props: {
 
     return (
         <Grid container spacing={2}>
-            <Grid item xs={12}>
-                <Grid container spacing={2} direction="row">
-                    <Grid item xs={12} sm={3}>
-                        <TestList
-                            testRunner={testRunner}
-                            currentTest={currentTest}
-                            onSelectTest={handleSelectTest}
-                        />
-                    </Grid>
-                    {currentTest && (
-                        <Grid item xs={12} sm={6}>
-                            <ActiveTest test={currentTest} />
-                        </Grid>
-                    )}
-                    {service && (
-                        <Grid item xs={12} sm={3}>
-                            <DashboardDevice
-                                showAvatar={true}
-                                showHeader={true}
-                                device={service.device}
-                            />
-                        </Grid>
-                    )}
-                </Grid>
+            <Grid item xs>
+                <TestList
+                    testRunner={testRunner}
+                    currentTest={currentTest}
+                    onSelectTest={handleSelectTest}
+                />
             </Grid>
+            {currentTest && (
+                <Grid item xs>
+                    <ActiveTest test={currentTest} />
+                </Grid>
+            )}
+            {service && (
+                <Grid item xs>
+                    <DashboardDevice
+                        showAvatar={true}
+                        showHeader={true}
+                        device={service.device}
+                    />
+                </Grid>
+            )}
         </Grid>
     )
 }

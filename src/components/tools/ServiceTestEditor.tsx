@@ -69,7 +69,7 @@ export default function ServiceTestEditor() {
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} xl={6}>
                 <HighlightTextField
                     code={source}
                     language={"markdown"}
@@ -82,7 +82,7 @@ export default function ServiceTestEditor() {
                 />
             </Grid>
             {json && (
-                <Grid item xs={12}>
+                <Grid item xs={12} xl={6}>
                     <ServiceTest showStartSimulator={true} serviceSpec={serviceSpec} serviceTest={json} />
                 </Grid>
             )}
