@@ -1,11 +1,12 @@
+import { Typography } from "@material-ui/core"
 import React from "react"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
-import useServiceRole from "./useDeviceRole"
+import useServiceRole from "./useServiceRole"
 
 export default function ServiceRole(props: { service: JDService }) {
     const { service } = props
     const role = useServiceRole(service)
     const name = role?.name
 
-    return name ? <span>{name}</span> : null
+    return name ? <Typography variant="caption" component="div">{name}</Typography> : null
 }

@@ -20,7 +20,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import ExpandLessIcon from "@material-ui/icons/ExpandLess"
 import useDeviceSpecification from "../../jacdac/useDeviceSpecification"
 import DeviceAvatar from "../devices/DeviceAvatar"
-import DashboardServiceWidget from "./DashboardServiceWidget"
+import DashboardServiceWidgetItem from "./DashboardServiceWidgetItem"
 import DeviceActions from "../DeviceActions"
 import DashboardServiceDetails from "./DashboardServiceDetails"
 import { MOBILE_BREAKPOINT } from "../layout"
@@ -67,16 +67,15 @@ export default function DashboardDevice(
             alignItems="flex-end"
             alignContent="space-between"
         >
-            {services?.map(service => (
-                <Grid key={"widget" + service.serviceIndex} item>
-                    <DashboardServiceWidget
-                        service={service}
-                        expanded={expanded}
-                        services={services}
-                        variant={variant}
-                    />
-                </Grid>
-            ))}
+            {services?.map(service => 
+                <DashboardServiceWidgetItem
+                    key={service.id}
+                    service={service}
+                    expanded={expanded}
+                    services={services}
+                    variant={variant}
+                />
+            )}
         </Grid>
     )
 
