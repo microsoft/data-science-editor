@@ -100,7 +100,6 @@ export default function RoleManagerService(props: {
     service: JDService
     clearRoles?: boolean
 }) {
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { service, clearRoles } = props
     const client = useServiceClient(service, srv => new RoleManagerClient(srv))
     const requestedRoles = useChange(client, c => c?.requestedRoles)
