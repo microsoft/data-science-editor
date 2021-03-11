@@ -6,7 +6,7 @@ import useLocalStorage from "../useLocalStorage"
 import HighlightTextField from "../ui/HighlightTextField"
 import ServiceSpecificationSelect from "../ServiceSpecificationSelect"
 import { SRV_BUTTON } from "../../../jacdac-ts/src/jdom/constants"
-import ServiceTest from "../ServiceTest"
+import ServiceTest from "../test/ServiceTest"
 import { fetchText } from "../github"
 import AppContext from "../AppContext"
 

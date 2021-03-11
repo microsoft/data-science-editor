@@ -1,7 +1,7 @@
 import { Chip, Grid, List, ListItem, ListItemText } from "@material-ui/core";
 import React, { useMemo } from "react";
 import { deviceSpecificationsForService, isInfrastructure } from "../../jacdac-ts/src/jdom/spec";
-import { serviceTestFromServiceSpec } from "../../jacdac-ts/src/jdom/test";
+import { serviceTestFromServiceClass } from "../../jacdac-ts/src/jdom/test";
 import { arrayShuffle } from "../../jacdac-ts/src/jdom/utils";
 import GridHeader from "./ui/GridHeader"
 import { Link } from "gatsby-theme-material-ui";
@@ -21,7 +21,7 @@ function ServiceSpecificatinListItem(props: { service: jdspec.ServiceSpec }) {
     const makecode = resolveMakecodeServiceFromClassIdentifier(classIdentifier);
     const simulator = hostDefinitionFromServiceClass(classIdentifier);
     const device = !!deviceSpecificationsForService(classIdentifier)?.length;
-    const test = serviceTestFromServiceSpec(service);
+    const test = serviceTestFromServiceClass(classIdentifier);
 
     return <Link to={`/services/${shortId}`} style={({ textDecoration: "none" })}>
         <ListItemText key={classIdentifier}

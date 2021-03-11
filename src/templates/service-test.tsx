@@ -1,11 +1,12 @@
 import React from "react"
 import { Link } from 'gatsby-theme-material-ui';
 import { serviceSpecificationFromClassIdentifier } from "../../jacdac-ts/src/jdom/spec"
-import ServiceTest from "../components/ServiceTest"
+import ServiceTest from "../components/test/ServiceTest"
 
 export default function Page(props: { pageContext: { node: { classIdentifier: number } } }) {
+    const spec = serviceSpecificationFromClassIdentifier(props.pageContext.node.classIdentifier);
     return <>
-        <ServiceTest serviceSpec={serviceSpecificationFromClassIdentifier(props.pageContext.node.classIdentifier)} />
+        <ServiceTest serviceSpec={spec} />
         <h2>See Also</h2>
         < ul >
             <li><a href={`https://github.com/microsoft/jacdac/tree/main/services/${props.pageContext.node.shortId}.md`}>Edit specification source</a>.</li>

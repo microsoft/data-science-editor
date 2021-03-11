@@ -52,6 +52,7 @@ export default function ServiceCard(props: {
         commandIdentifier } = props;
     const { specification } = service;
     const [reports, setReports] = useState<DecodedPacket[]>(undefined);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [commandArgs, setCommandArgs] = useState<any[]>([]);
     const classes = useStyles();
     const hasCommandIdentifier = commandIdentifier !== undefined;

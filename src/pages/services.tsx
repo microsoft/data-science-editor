@@ -26,7 +26,7 @@ import { useId } from "react-use-id-hook"
 import { Link } from "gatsby-theme-material-ui"
 import { resolveMakecodeServiceFromClassIdentifier } from "../../jacdac-ts/src/jdom/makecode"
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import { serviceTestFromServiceSpec } from "../../jacdac-ts/src/jdom/test"
+import { serviceTestFromServiceClass } from "../../jacdac-ts/src/jdom/test"
 
 interface ServiceFilter {
     query: string
@@ -105,7 +105,7 @@ export default function ServiceCatalog() {
             )
         if (test)
             r = r.filter(
-                srv => !!serviceTestFromServiceSpec(srv)
+                srv => !!serviceTestFromServiceClass(srv.classIdentifier)
             )
         if (sensors) r = r.filter(srv => isSensor(srv))
         return r
