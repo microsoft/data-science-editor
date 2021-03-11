@@ -57,12 +57,16 @@ function TestStatusIcon(props: { test: JDTestRunner }) {
     }
 }
 
-function TestListItem(props: { test: JDTestRunner }) {
-    const { test } = props
+function TestListItem(props: {
+    test: JDTestRunner
+    currentTest: JDTestRunner
+}) {
+    const { test, currentTest } = props
     const description = useChange(test, t => t.description)
+    const selected = test === currentTest
 
     return (
-        <ListItem>
+        <ListItem selected={selected}>
             <ListItemIcon>
                 <TestStatusIcon test={test} />
             </ListItemIcon>
@@ -71,8 +75,11 @@ function TestListItem(props: { test: JDTestRunner }) {
     )
 }
 
-function TestList(props: { testRunner: JDServiceTestRunner }) {
-    const { testRunner } = props
+function TestList(props: {
+    testRunner: JDServiceTestRunner
+    currentTest: JDTestRunner
+}) {
+    const { testRunner, currentTest } = props
     const { tests } = testRunner
 
     return (
@@ -80,7 +87,11 @@ function TestList(props: { testRunner: JDServiceTestRunner }) {
             <CardContent>
                 <List dense={true}>
                     {tests?.map((test, i) => (
-                        <TestListItem key={i} test={test} />
+                        <TestListItem
+                            key={i}
+                            test={test}
+                            currentTest={currentTest}
+                        />
                     ))}
                 </List>
             </CardContent>
@@ -245,7 +256,7 @@ function TestProgress(props: { testRunner: JDServiceTestRunner }) {
     const { tests } = testRunner
     const total = tests.length
     const executed = useChange(testRunner, t =>
-        t.tests.reduce((v, t) => v + (t.indeterminate ? 1 : 0), 0)
+        t.tests.reduce((v, t) => v + (t.indeterminate ? 0 : 1), 1)
     )
     const label = testRunner.service.friendlyName
     return (
@@ -279,7 +290,8 @@ export default function ServiceTestRunner(props: {
     if (!serviceTest)
         return (
             <Alert severity="warning">
-                Sorry, there are no tests available for service {service.friendlyName}.
+                Sorry, there are no tests available for service{" "}
+                {service.friendlyName}.
             </Alert>
         )
 
@@ -293,7 +305,10 @@ export default function ServiceTestRunner(props: {
             <Grid item xs={12}>
                 <Grid container spacing={2} direction="row">
                     <Grid item xs={12} sm={3}>
-                        <TestList testRunner={testRunner} />
+                        <TestList
+                            testRunner={testRunner}
+                            currentTest={currentTest}
+                        />
                     </Grid>
                     {currentTest && (
                         <Grid item xs={12} sm={6}>
