@@ -67,7 +67,7 @@ export default function DashboardDevice(
             alignItems="flex-end"
             alignContent="space-between"
         >
-            {services?.map(service => 
+            {services?.map(service => (
                 <DashboardServiceWidgetItem
                     key={service.id}
                     service={service}
@@ -75,7 +75,7 @@ export default function DashboardDevice(
                     services={services}
                     variant={variant}
                 />
-            )}
+            ))}
         </Grid>
     )
 
@@ -89,6 +89,7 @@ export default function DashboardDevice(
     return (
         <Card aria-live="polite" aria-label={`device ${name} started`}>
             <CardHeader
+                style={{ paddingBottom: 0 }}
                 avatar={showAvatar && <DeviceAvatar device={device} />}
                 action={
                     <DeviceActions
@@ -122,7 +123,7 @@ export default function DashboardDevice(
                     </>
                 }
             />
-            <CardContent>
+            <CardContent style={{ paddingTop: 0 }}>
                 <ServiceWidgets />
                 {expanded && (
                     <Grid
