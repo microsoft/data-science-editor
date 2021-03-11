@@ -171,9 +171,8 @@ function ActiveTest(props: { test: JDTestRunner }) {
         test.reset()
         test.ready()
     }
-    const handleCancel = () => {
-        test.cancel()
-    }
+    const handleCancel = () => test.cancel()
+    const handleNext = () => test.next()
     const showCommands =
         [JDTestStatus.Active, JDTestStatus.Failed, JDTestStatus.Passed].indexOf(
             status
@@ -197,6 +196,12 @@ function ActiveTest(props: { test: JDTestRunner }) {
                             ))}
                         </List>
                     </>
+                )}
+                {status === JDTestStatus.Passed && (
+                    <Alert severity="success">Test passed</Alert>
+                )}
+                {status === JDTestStatus.Failed && (
+                    <Alert severity="success">Test passed</Alert>
                 )}
             </CardContent>
             <CardActions>
@@ -222,6 +227,14 @@ function ActiveTest(props: { test: JDTestRunner }) {
                             </Button>
                         </Grid>
                     )}
+                    {status === JDTestStatus.Failed ||
+                        (status === JDTestStatus.Passed && (
+                            <Grid item>
+                                <Button variant="outlined" onClick={handleNext}>
+                                    Next
+                                </Button>
+                            </Grid>
+                        ))}
                 </Grid>
             </CardActions>
         </Card>
