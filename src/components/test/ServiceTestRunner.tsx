@@ -12,13 +12,10 @@ import {
     Card,
     CardContent,
     LinearProgressProps,
-    Box,
     LinearProgress,
     CardActions,
-    CardHeader,
+    Box,
 } from "@material-ui/core"
-// tslint:disable-next-line: no-submodule-imports
-import { AlertTitle } from "@material-ui/lab"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import Alert from "../ui/Alert"
 import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline"
@@ -59,14 +56,16 @@ function TestStatusIcon(props: { test: JDTestRunner }) {
 
 function TestListItem(props: {
     test: JDTestRunner
-    currentTest: JDTestRunner
+    currentTest: JDTestRunner,
+    onSelectTest: (test: JDTestRunner) => void
 }) {
-    const { test, currentTest } = props
+    const { test, currentTest, onSelectTest } = props
     const description = useChange(test, t => t.description)
     const selected = test === currentTest
+    const handleSelectTest = () => onSelectTest(test)
 
     return (
-        <ListItem selected={selected}>
+        <ListItem selected={selected} button onClick={handleSelectTest}>
             <ListItemIcon>
                 <TestStatusIcon test={test} />
             </ListItemIcon>
@@ -77,9 +76,10 @@ function TestListItem(props: {
 
 function TestList(props: {
     testRunner: JDServiceTestRunner
-    currentTest: JDTestRunner
+    currentTest: JDTestRunner,
+    onSelectTest: (test: JDTestRunner) => void
 }) {
-    const { testRunner, currentTest } = props
+    const { testRunner, currentTest, onSelectTest } = props
     const { tests } = testRunner
 
     return (
@@ -91,6 +91,7 @@ function TestList(props: {
                             key={i}
                             test={test}
                             currentTest={currentTest}
+                            onSelectTest={onSelectTest}
                         />
                     ))}
                 </List>
@@ -123,7 +124,7 @@ function CommandListItem(props: { command: JDCommandRunner }) {
     const handleAnswer = (status: JDCommandStatus) => () =>
         command.finish(status)
     return (
-        <ListItem>
+        <ListItem selected={status === JDCommandStatus.Active}>
             <ListItemIcon>
                 <CommandStatusIcon command={command} />
             </ListItemIcon>
@@ -154,16 +155,13 @@ function CommandListItem(props: { command: JDCommandRunner }) {
 function FirstCommand(props: { command: JDCommandRunner }) {
     const { command } = props
     const { message } = useChange(command, c => c.output)
-    return (
-        <Alert severity="info">
-            <AlertTitle>{message}</AlertTitle>
-        </Alert>
-    )
+    return <Box m={2}>
+        <Typography variant="body1">{message}</Typography>
+    </Box>
 }
 
 function ActiveTest(props: { test: JDTestRunner }) {
     const { test } = props
-    const description = useChange(test, t => t.description)
     const { commands } = test
     const status = useChange(test, t => t.status)
     const handleRun = () => test.start()
@@ -171,7 +169,6 @@ function ActiveTest(props: { test: JDTestRunner }) {
         test.reset()
         test.ready()
     }
-    const handleCancel = () => test.cancel()
     const handleNext = () => test.next()
     const showCommands =
         [JDTestStatus.Active, JDTestStatus.Failed, JDTestStatus.Passed].indexOf(
@@ -180,29 +177,31 @@ function ActiveTest(props: { test: JDTestRunner }) {
 
     const [firstCommand, ...restOfCommands] = commands
 
-    return (
-        <Card>
-            <CardHeader
+    /**
+    const description = useChange(test, t => t.description)     
+    <CardHeader
                 title={<Typography variant="h5">{description}</Typography>}
                 avatar={<TestStatusIcon test={test} />}
             />
+     */
+
+    return (
+        <Card>
             <CardContent>
-                {showCommands && (
+                {showCommands &&
                     <>
+                        <Typography variant="h5">WHEN</Typography>
                         <FirstCommand command={firstCommand} />
+                        <Typography variant="h5">TEST</Typography>
                         <List dense={false}>
                             {restOfCommands.map((cmd, i) => (
                                 <CommandListItem key={i} command={cmd} />
                             ))}
                         </List>
                     </>
-                )}
-                {status === JDTestStatus.Passed && (
-                    <Alert severity="success">Test passed</Alert>
-                )}
-                {status === JDTestStatus.Failed && (
-                    <Alert severity="success">Test passed</Alert>
-                )}
+                }
+                {status === JDTestStatus.Passed && <Alert severity="success">Test passed</Alert>}
+                {status === JDTestStatus.Failed && <Alert severity="error">Test failed</Alert>}
             </CardContent>
             <CardActions>
                 <Grid container spacing={1}>
@@ -213,28 +212,20 @@ function ActiveTest(props: { test: JDTestRunner }) {
                             </Button>
                         </Grid>
                     )}
-                    {status === JDTestStatus.Active && (
+                    {(status === JDTestStatus.Active || status === JDTestStatus.Failed || status === JDTestStatus.Passed) && (
                         <Grid item>
                             <Button variant="outlined" onClick={handleReset}>
                                 Restart
                             </Button>
                         </Grid>
                     )}
-                    {status === JDTestStatus.Active && (
+                    {(status === JDTestStatus.Failed || status === JDTestStatus.Passed) && (
                         <Grid item>
-                            <Button variant="outlined" onClick={handleCancel}>
-                                Cancel
-                            </Button>
+                            <Button variant="outlined" onClick={handleNext}>
+                                Next
+                                </Button>
                         </Grid>
                     )}
-                    {status === JDTestStatus.Failed ||
-                        (status === JDTestStatus.Passed && (
-                            <Grid item>
-                                <Button variant="outlined" onClick={handleNext}>
-                                    Next
-                                </Button>
-                            </Grid>
-                        ))}
                 </Grid>
             </CardActions>
         </Card>
@@ -299,6 +290,10 @@ export default function ServiceTestRunner(props: {
     )
     const testRunner = useServiceClient(service, factory)
     const currentTest = useChange(testRunner, t => t?.currentTest)
+    const handleSelectTest = (test: JDTestRunner) => {
+        console.log({ test })
+        testRunner.currentTest = test
+    }
 
     if (!serviceTest)
         return (
@@ -321,6 +316,7 @@ export default function ServiceTestRunner(props: {
                         <TestList
                             testRunner={testRunner}
                             currentTest={currentTest}
+                            onSelectTest={handleSelectTest}
                         />
                     </Grid>
                     {currentTest && (
