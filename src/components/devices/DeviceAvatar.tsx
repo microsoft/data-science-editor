@@ -8,7 +8,7 @@ import useDeviceHost from "../hooks/useDeviceHost";
 import KindIcon from "../KindIcon"
 import useDeviceStatusLightStyle from "./useDeviceStatusLightStyle";
 import Helmet from "react-helmet"
-import useDeviceName from "../useDeviceName";
+import useDeviceName from "./useDeviceName";
 import useDeviceImage from "./useDeviceImage";
 
 const useStyles = makeStyles((theme: Theme) =>

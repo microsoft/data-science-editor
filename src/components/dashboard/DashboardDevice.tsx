@@ -24,7 +24,7 @@ import DashboardServiceWidget from "./DashboardServiceWidget"
 import DeviceActions from "../DeviceActions"
 import DashboardServiceDetails from "./DashboardServiceDetails"
 import { MOBILE_BREAKPOINT } from "../layout"
-import useDeviceName from "../useDeviceName"
+import useDeviceName from "../devices/useDeviceName"
 import { DashboardDeviceProps } from "./Dashboard"
 
 const ignoredServices = [SRV_CTRL, SRV_LOGGER]

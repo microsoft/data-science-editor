@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { NAME_CHANGE } from "../../jacdac-ts/src/jdom/constants";
-import { JDDevice } from "../../jacdac-ts/src/jdom/device";
+import { NAME_CHANGE } from "../../../jacdac-ts/src/jdom/constants";
+import { JDDevice } from "../../../jacdac-ts/src/jdom/device";
 
 export default function useDeviceName(device: JDDevice, includeShortId?: boolean) {
     const [name, setName] = useState(device.friendlyName)

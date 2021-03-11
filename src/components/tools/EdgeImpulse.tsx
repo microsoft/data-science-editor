@@ -20,7 +20,7 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 import ServiceList from "../ServiceList";
 import { ModelActions, ModelContent } from "./ModelUploader";
 import { readBlobToUint8Array } from "../../../jacdac-ts/src/jdom/utils";
-import useDeviceName from "../useDeviceName";
+import useDeviceName from "../devices/useDeviceName";
 import { JDService } from "../../../jacdac-ts/src/jdom/service";
 import ReadingFieldGrid from "../ReadingFieldGrid";
 import useChartPalette from '../useChartPalette';
