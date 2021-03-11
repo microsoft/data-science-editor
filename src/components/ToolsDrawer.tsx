@@ -29,6 +29,7 @@ import DarkModeContext from "./ui/DarkModeContext"
 import KindIcon from "./KindIcon"
 import MakeCodeIcon from "./icons/MakeCodeIcon"
 import JupyterIcon from "./icons/JupyterIcon"
+import JacdacIcon from "./icons/JacdacIcon"
 import {
     DEVICE_NODE_NAME,
     SERVICE_NODE_NAME,
@@ -66,7 +67,7 @@ function ToolsListItem(props: {
     text?: string
     url?: string
     icon?: JSX.Element
-    onClick?: () => void,
+    onClick?: () => void
     onClose: () => void
 }) {
     const { text, url, icon, onClick, onClose } = props
@@ -117,6 +118,12 @@ export default function ToolsDrawer() {
         toggleDarkMode()
     }
     const links = [
+        {
+            text: "Dashboard",
+            url: "/dashboard",
+            icon: <JacdacIcon />,
+        },
+        {},
         {
             text: "Role Manager",
             url: "/tools/role-manager",
