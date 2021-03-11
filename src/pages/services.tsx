@@ -25,8 +25,8 @@ import { VIRTUAL_DEVICE_NODE_NAME } from "../../jacdac-ts/src/jdom/constants"
 import { useId } from "react-use-id-hook"
 import { Link } from "gatsby-theme-material-ui"
 import { resolveMakecodeServiceFromClassIdentifier } from "../../jacdac-ts/src/jdom/makecode"
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import { serviceTestFromServiceClass } from "../../jacdac-ts/src/jdom/test"
+import CheckCircleIcon from "@material-ui/icons/CheckCircle"
+import { serviceTestFromServiceClass } from "../../jacdac-ts/src/test/testspec"
 
 interface ServiceFilter {
     query: string
@@ -71,8 +71,9 @@ export default function ServiceCatalog() {
     const allTags = useMemo(
         () =>
             unique(
-                arrayConcatMany(serviceSpecifications().map(srv => [srv.group, ...srv.tags]))
-                    .filter(t => !!t)
+                arrayConcatMany(
+                    serviceSpecifications().map(srv => [srv.group, ...srv.tags])
+                ).filter(t => !!t)
             ),
         []
     )
@@ -121,123 +122,137 @@ export default function ServiceCatalog() {
     }
     const handleMakeCodeClick = () =>
         setFilter({ ...filter, makeCode: !makeCode })
-    const handleTestClick = () =>
-        setFilter({ ...filter, test: !test })
+    const handleTestClick = () => setFilter({ ...filter, test: !test })
     const handleSimulatorClick = () =>
         setFilter({ ...filter, simulators: !simulators })
     const handleDevicesClick = () => setFilter({ ...filter, devices: !devices })
     const handleSensorsClick = () => setFilter({ ...filter, sensors: !sensors })
 
-    return <>
-        <Grid container spacing={1}>
-            <Grid item xs={12}>
-                <TextField
-                    id={searchId}
-                    margin="normal"
-                    type="search"
-                    variant="outlined"
-                    label="Search services"
-                    aria-label="Search services"
-                    fullWidth={true}
-                    value={query}
-                    onChange={handleChange}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <SearchIcon />
-                            </InputAdornment>
-                        ),
-                    }}
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <ChipList>
-                    {allTags.map(t => (
+    return (
+        <>
+            <Grid container spacing={1}>
+                <Grid item xs={12}>
+                    <TextField
+                        id={searchId}
+                        margin="normal"
+                        type="search"
+                        variant="outlined"
+                        label="Search services"
+                        aria-label="Search services"
+                        fullWidth={true}
+                        value={query}
+                        onChange={handleChange}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <SearchIcon />
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <ChipList>
+                        {allTags.map(t => (
+                            <FilterChip
+                                key={t}
+                                label={t}
+                                onClick={handleTagClick(t)}
+                                value={tag === t}
+                            />
+                        ))}
+                        <Divider orientation="vertical" flexItem />
                         <FilterChip
-                            key={t}
-                            label={t}
-                            onClick={handleTagClick(t)}
-                            value={tag === t}
+                            label="Sensors"
+                            icon={<SpeedIcon />}
+                            value={sensors}
+                            onClick={handleSensorsClick}
                         />
-                    ))}
-                    <Divider orientation="vertical" flexItem />
-                    <FilterChip
-                        label="Sensors"
-                        icon={<SpeedIcon />}
-                        value={sensors}
-                        onClick={handleSensorsClick}
+                        <FilterChip
+                            label="Simulator"
+                            icon={<KindIcon kind={VIRTUAL_DEVICE_NODE_NAME} />}
+                            value={simulators}
+                            onClick={handleSimulatorClick}
+                        />
+                        <FilterChip
+                            label="Devices"
+                            icon={<JacdacIcon />}
+                            onClick={handleDevicesClick}
+                            value={devices}
+                        />
+                        <FilterChip
+                            label="MakeCode"
+                            icon={<MakeCodeIcon />}
+                            value={makeCode}
+                            onClick={handleMakeCodeClick}
+                        />
+                        <FilterChip
+                            label="Test"
+                            icon={<CheckCircleIcon />}
+                            value={test}
+                            onClick={handleTestClick}
+                        />
+                    </ChipList>
+                </Grid>
+                {!services.length && (
+                    <Grid item>
+                        There are no services matching this request.
+                    </Grid>
+                )}
+                <Grid item xs={12}>
+                    <ServiceSpecificationList
+                        title="Stable"
+                        status={["stable"]}
+                        infrastructure={false}
+                        services={services}
                     />
-                    <FilterChip
-                        label="Simulator"
-                        icon={<KindIcon kind={VIRTUAL_DEVICE_NODE_NAME} />}
-                        value={simulators}
-                        onClick={handleSimulatorClick}
+                </Grid>
+                <Grid item xs={12}>
+                    <ServiceSpecificationList
+                        title="Experimental"
+                        status={["experimental"]}
+                        infrastructure={false}
+                        services={services}
                     />
-                    <FilterChip
-                        label="Devices"
-                        icon={<JacdacIcon />}
-                        onClick={handleDevicesClick}
-                        value={devices}
+                </Grid>
+                <Grid item xs={12}>
+                    <ServiceSpecificationList
+                        title="Jacdac"
+                        infrastructure={true}
+                        services={services}
                     />
-                    <FilterChip
-                        label="MakeCode"
-                        icon={<MakeCodeIcon />}
-                        value={makeCode}
-                        onClick={handleMakeCodeClick}
+                </Grid>
+                <Grid item xs={12}>
+                    <ServiceSpecificationList
+                        title="Deprecated"
+                        status={["deprecated"]}
+                        infrastructure={false}
+                        services={services}
                     />
-                    <FilterChip
-                        label="Test"
-                        icon={<CheckCircleIcon />}
-                        value={test}
-                        onClick={handleTestClick}
-                    />
-                </ChipList>
+                </Grid>
             </Grid>
-            {!services.length && (
-                <Grid item>There are no services matching this request.</Grid>
-            )}
-            <Grid item xs={12}>
-                <ServiceSpecificationList
-                    title="Stable"
-                    status={["stable"]}
-                    infrastructure={false}
-                    services={services}
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <ServiceSpecificationList
-                    title="Experimental"
-                    status={["experimental"]}
-                    infrastructure={false}
-                    services={services}
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <ServiceSpecificationList
-                    title="Jacdac"
-                    infrastructure={true}
-                    services={services}
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <ServiceSpecificationList
-                    title="Deprecated"
-                    status={["deprecated"]}
-                    infrastructure={false}
-                    services={services}
-                />
-            </Grid>
-        </Grid>
-        <h2>See also</h2>
-        <p>
-            Known services are specified in
-<Link href="https://github.com/microsoft/jacdac/tree/main/services">https://github.com/microsoft/jacdac/tree/main/services</Link>.
-Use the <Link href="/tools/service-editor/">Service Specification Editor</Link> and send us a pull request
-to register your own service.
-        </p>
-        <ul>
-            <li><Link to="/devices/">Devices</Link></li>
-            <li><Link to="/tools/service-editor/">Service Specification Editor</Link></li>
-        </ul>
-    </>
+            <h2>See also</h2>
+            <p>
+                Known services are specified in
+                <Link href="https://github.com/microsoft/jacdac/tree/main/services">
+                    https://github.com/microsoft/jacdac/tree/main/services
+                </Link>
+                . Use the{" "}
+                <Link href="/tools/service-editor/">
+                    Service Specification Editor
+                </Link>{" "}
+                and send us a pull request to register your own service.
+            </p>
+            <ul>
+                <li>
+                    <Link to="/devices/">Devices</Link>
+                </li>
+                <li>
+                    <Link to="/tools/service-editor/">
+                        Service Specification Editor
+                    </Link>
+                </li>
+            </ul>
+        </>
+    )
 }

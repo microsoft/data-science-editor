@@ -32,7 +32,7 @@ import PlayCircleFilledIcon from "@material-ui/icons/PlayCircleFilled"
 import useChange from "../../jacdac/useChange"
 import DashboardDevice from "../dashboard/DashboardDevice"
 import LoadingProgress from "../ui/LoadingProgress"
-import { serviceTestFromServiceClass } from "../../../jacdac-ts/src/jdom/test"
+import { serviceTestFromServiceClass } from "../../../jacdac-ts/src/test/testspec"
 
 function TestStatusIcon(props: { test: JDTestRunner }) {
     const { test } = props
