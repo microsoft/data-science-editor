@@ -4,7 +4,6 @@ import { ArcadeGamepadButton, ArcadeGamepadReg } from "../../../jacdac-ts/src/jd
 import { DashboardServiceProps } from "./DashboardServiceWidget";
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue";
 import SvgWidget from "../widgets/SvgWidget";
-import useWidgetSize from "../widgets/useWidgetSize";
 import useServiceHost from "../hooks/useServiceHost";
 import useWidgetTheme from "../widgets/useWidgetTheme";
 import ArcadeGamepadServiceHost from "../../../jacdac-ts/src/hosts/arcadegamepadservicehost";
@@ -12,10 +11,10 @@ import useSvgButtonProps from "../hooks/useSvgButtonProps";
 import LoadingProgress from "../ui/LoadingProgress";
 
 const buttonLabels = {
-    [ArcadeGamepadButton.Left]: "\u25C0",
+    [ArcadeGamepadButton.Left]: "\u25C4",
     [ArcadeGamepadButton.Up]: "\u25B2",
     [ArcadeGamepadButton.Down]: "\u25BC",
-    [ArcadeGamepadButton.Right]: "\u25B6",
+    [ArcadeGamepadButton.Right]: "\u25BA",
 }
 
 function ArcadeButton(props: {
@@ -59,7 +58,7 @@ function ArcadeButton(props: {
 }
 
 export default function DashboardArcadeGamepad(props: DashboardServiceProps) {
-    const { service, services, variant } = props;
+    const { service } = props;
     const [available] = useRegisterUnpackedValue<[[ArcadeGamepadButton][]]>(service.register(ArcadeGamepadReg.AvailableButtons))
     const pressedRegister = service.register(ArcadeGamepadReg.Buttons);
     const [pressed] = useRegisterUnpackedValue<[[ArcadeGamepadButton, number][]]>(pressedRegister);
