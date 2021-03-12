@@ -1,4 +1,5 @@
 import React from "react"
+import { Link } from "gatsby-theme-material-ui"
 import SettingsManager from "../../components/tools/SettingsManager"
 
 export default function Page() {
