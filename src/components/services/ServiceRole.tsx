@@ -1,11 +1,19 @@
-import { Typography } from "@material-ui/core"
+import { Button } from "@material-ui/core"
 import React from "react"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import useRoleManager from "./useRoleManager"
 import useServiceRole from "./useServiceRole"
 
 export default function ServiceRole(props: { service: JDService }) {
     const { service } = props
+    const roleManager = useRoleManager()
     const role = useServiceRole(service)
+    const handleClick = () => {
+        
+    }
 
-    return role ? <Typography variant="caption" component="div">{role}</Typography> : null
+    if (!roleManager)
+        return null; // nothing to do
+
+    return <Button size="small" onClick={handleClick}>{role || "..."}</Button>
 }
