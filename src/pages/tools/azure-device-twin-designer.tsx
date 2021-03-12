@@ -54,14 +54,7 @@ function ComponentRow(props: {
         twin.components.splice(twin.components.indexOf(component), 1)
         onUpdate()
     }
-    return <>
-        <h1>Azure Device Twin Designer</h1>
-        <p>
-
-            An <Link href="https://github.com/Azure/opendigitaltwins-dtdl/">device twin</Link> is to be used in IoT solutions such as with Azure IoT Hubs,
-            Azure IoT Plug And Play.
-            The repository of <Link to="/dtmi/">Azure IoT Plug And Play models</Link> for services can be used to resolve models.
-        </p>
+    return (
         <Grid item xs={12}>
             <Grid container spacing={2}>
                 <Grid item xs={6}>
@@ -95,7 +88,7 @@ function ComponentRow(props: {
                 </Grid>
             </Grid>
         </Grid>
-    </>
+    )
 }
 
 function validateTwinComponent(
@@ -149,34 +142,52 @@ export default function AzureDeviceTwinDesigner() {
     }
 
     return (
-        <Grid container direction="row" spacing={2}>
-            <Grid item xs={12}>
-                <TextField
-                    required
-                    fullWidth={true}
-                    label="Display name"
-                    placeholder="My device"
-                    value={twin.displayName || ""}
-                    onChange={handleDisplayNameChange}
-                    variant={variant}
-                />
+        <>
+            <h1>Azure Device Twin Designer</h1>
+            <p>
+                An{" "}
+                <Link href="https://github.com/Azure/opendigitaltwins-dtdl/">
+                    device twin
+                </Link>{" "}
+                is to be used in IoT solutions such as with Azure IoT Hubs,
+                Azure IoT Plug And Play. The repository of{" "}
+                <Link to="/dtmi/">Azure IoT Plug And Play models</Link> for
+                services can be used to resolve models.
+            </p>
+
+            <Grid container direction="row" spacing={2}>
+                <Grid item xs={12}>
+                    <TextField
+                        required
+                        fullWidth={true}
+                        label="Display name"
+                        placeholder="My device"
+                        value={twin.displayName || ""}
+                        onChange={handleDisplayNameChange}
+                        variant={variant}
+                    />
+                </Grid>
+                {twin.components.map((c, i) => (
+                    <ComponentRow
+                        key={i}
+                        twin={twin}
+                        component={c}
+                        onUpdate={update}
+                    />
+                ))}
+                <Grid item xs={12}>
+                    <AddServiceIconButton onAdd={handleAddService} />
+                </Grid>
+                <Grid item xs={12}>
+                    <PaperBox>
+                        <Snippet
+                            value={dtdlSource}
+                            mode="json"
+                            download="model"
+                        />
+                    </PaperBox>
+                </Grid>
             </Grid>
-            {twin.components.map((c, i) => (
-                <ComponentRow
-                    key={i}
-                    twin={twin}
-                    component={c}
-                    onUpdate={update}
-                />
-            ))}
-            <Grid item xs={12}>
-                <AddServiceIconButton onAdd={handleAddService} />
-            </Grid>
-            <Grid item xs={12}>
-                <PaperBox>
-                    <Snippet value={dtdlSource} mode="json" download="model" />
-                </PaperBox>
-            </Grid>
-        </Grid>
+        </>
     )
 }
