@@ -68,7 +68,7 @@ function Carousel() {
 
     return <Grid container alignItems="flex-start" spacing={1}>
         {devices.map(device => <DashboardDeviceItem key={device.id}
-            device={device} showAvatar={true} showHeader={true} />)}
+            device={device} showHeader={false} />)}
         <Grid item>
             <Grid container spacing={1} direction="row">
                 <Grid item>
