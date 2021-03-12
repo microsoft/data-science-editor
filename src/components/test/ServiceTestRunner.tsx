@@ -22,8 +22,8 @@ import {
     JDServiceTestRunner,
     JDTestRunner,
     JDTestStatus,
-    JDCommandRunner,
-    JDCommandStatus,
+    JDTestCommandRunner,
+    JDTestCommandStatus,
 } from "../../../jacdac-ts/src/test/testrunner"
 import ErrorIcon from "@material-ui/icons/Error"
 import CheckCircleIcon from "@material-ui/icons/CheckCircle"
@@ -104,31 +104,31 @@ function TestList(props: {
     )
 }
 
-function CommandStatusIcon(props: { command: JDCommandRunner }) {
+function CommandStatusIcon(props: { command: JDTestCommandRunner }) {
     const { command } = props
     const status = useChange(command, c => c.status)
 
     switch (status) {
-        case JDCommandStatus.Active:
-        case JDCommandStatus.RequiresUserInput:
+        case JDTestCommandStatus.Active:
+        case JDTestCommandStatus.RequiresUserInput:
             return <PlayCircleFilledIcon color="action" />
-        case JDCommandStatus.Failed:
+        case JDTestCommandStatus.Failed:
             return <ErrorIcon color="error" />
-        case JDCommandStatus.Passed:
+        case JDTestCommandStatus.Passed:
             return <CheckCircleIcon color="primary" />
         default:
             return <HourglassEmptyIcon color="disabled" />
     }
 }
 
-function CommandListItem(props: { command: JDCommandRunner }) {
+function CommandListItem(props: { command: JDTestCommandRunner }) {
     const { command } = props
     const { message, progress } = useChange(command, c => c.output)
     const status = useChange(command, c => c.status)
-    const handleAnswer = (status: JDCommandStatus) => () =>
+    const handleAnswer = (status: JDTestCommandStatus) => () =>
         command.finish(status)
     return (
-        <ListItem selected={status === JDCommandStatus.Active}>
+        <ListItem selected={status === JDTestCommandStatus.Active}>
             <ListItemIcon>
                 <CommandStatusIcon command={command} />
             </ListItemIcon>
@@ -136,17 +136,17 @@ function CommandListItem(props: { command: JDCommandRunner }) {
                 primary={message}
                 secondary={progress}
             />
-            {status === JDCommandStatus.RequiresUserInput && (
+            {status === JDTestCommandStatus.RequiresUserInput && (
                 <ListItemSecondaryAction>
                     <Button
                         variant="outlined"
-                        onClick={handleAnswer(JDCommandStatus.Passed)}
+                        onClick={handleAnswer(JDTestCommandStatus.Passed)}
                     >
                         Yes
                     </Button>
                     <Button
                         variant="outlined"
-                        onClick={handleAnswer(JDCommandStatus.Failed)}
+                        onClick={handleAnswer(JDTestCommandStatus.Failed)}
                     >
                         No
                     </Button>
@@ -156,7 +156,7 @@ function CommandListItem(props: { command: JDCommandRunner }) {
     )
 }
 
-function FirstCommand(props: { command: JDCommandRunner }) {
+function FirstCommand(props: { command: JDTestCommandRunner }) {
     const { command } = props
     const { message } = useChange(command, c => c.output)
     return (
