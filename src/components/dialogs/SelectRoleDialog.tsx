@@ -13,7 +13,6 @@ import useRoleManager from "../services/useRoleManager"
 import useChange from "../../jacdac/useChange"
 import { Role } from "../../../jacdac-ts/src/jdom/bus"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
-import { serviceName } from "../../../jacdac-ts/src/jdom/pretty"
 
 function RoleListItem(props: {
     role: Role
@@ -23,7 +22,7 @@ function RoleListItem(props: {
     const { role, currentRole, onClick } = props
     const { deviceId, serviceIndex, role: roleName } = role
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const bound = useChange(bus, b => b.device(deviceId), [deviceId])
+    const bound = useChange(bus, b => b.device(deviceId, true), [deviceId])
 
     return (
         <ListItem button selected={currentRole === roleName} onClick={onClick}>
@@ -42,7 +41,6 @@ export default function SelectRoleDialog(props: {
     onClose: () => void
 }) {
     const { service, onClose } = props
-    const { serviceClass } = service
     const open = !!service
     const dialogId = useId()
     const labelId = useId()
