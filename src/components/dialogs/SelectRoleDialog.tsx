@@ -4,7 +4,7 @@ import {
     DialogTitle,
     List,
     ListItem,
-    ListItemText
+    ListItemText,
 } from "@material-ui/core"
 import React, { useContext } from "react"
 import { useId } from "react-use-id-hook"
@@ -13,6 +13,7 @@ import useRoleManager from "../services/useRoleManager"
 import useChange from "../../jacdac/useChange"
 import { Role } from "../../../jacdac-ts/src/jdom/bus"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
+import { serviceName } from "../../../jacdac-ts/src/jdom/pretty"
 
 function RoleListItem(props: {
     role: Role
@@ -28,7 +29,9 @@ function RoleListItem(props: {
         <ListItem button selected={currentRole === roleName} onClick={onClick}>
             <ListItemText
                 primary={roleName}
-                secondary={bound && `bound to ${bound.friendlyName}[${serviceIndex}]`}
+                secondary={
+                    bound && `bound to ${bound.friendlyName}[${serviceIndex}]`
+                }
             />
         </ListItem>
     )
@@ -39,7 +42,7 @@ export default function SelectRoleDialog(props: {
     onClose: () => void
 }) {
     const { service, onClose } = props
-    const { friendlyName: serviceName } = service
+    const { serviceClass } = service
     const open = !!service
     const dialogId = useId()
     const labelId = useId()
@@ -61,7 +64,9 @@ export default function SelectRoleDialog(props: {
             open={open}
             onClose={onClose}
         >
-            <DialogTitle id={labelId}>Select a role this {serviceName}</DialogTitle>
+            <DialogTitle id={labelId}>
+                Select a role this {serviceName(serviceClass)}
+            </DialogTitle>
             <DialogContent>
                 <List>
                     {roles?.map((role, i) => (
