@@ -15,9 +15,9 @@ export default function DashboardRoleManager(props: DashboardServiceProps) {
             <CmdButton
                 onClick={handleAutoBind}
                 variant="outlined"
-                title="assign roles automatically"
+                title="bind roles to services automatically"
             >
-                Auto bind
+                Assign roles
             </CmdButton>
         </Grid>
     )
