@@ -1,5 +1,5 @@
 import { Typography } from "@material-ui/core"
-import React, { useRef } from "react"
+import React from "react"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import useDeviceName from "./useDeviceName"
 
