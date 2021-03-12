@@ -65,7 +65,7 @@ export default function SelectRoleDialog(props: {
             onClose={onClose}
         >
             <DialogTitle id={labelId}>
-                Select a role this {serviceName(serviceClass)}
+                Select a role
             </DialogTitle>
             <DialogContent>
                 <List>
