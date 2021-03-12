@@ -6,7 +6,6 @@ import useServiceRole from "./useServiceRole"
 export default function ServiceRole(props: { service: JDService }) {
     const { service } = props
     const role = useServiceRole(service)
-    const name = role?.name
 
-    return name ? <Typography variant="caption" component="div">{name}</Typography> : null
+    return role ? <Typography variant="caption" component="div">{role}</Typography> : null
 }
