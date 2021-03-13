@@ -18,7 +18,7 @@ import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord"
 import FieldDataSet from "./FieldDataSet"
 import useDeviceName from "./devices/useDeviceName"
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
     createStyles({
         vmiddle: {
             verticalAlign: "middle",

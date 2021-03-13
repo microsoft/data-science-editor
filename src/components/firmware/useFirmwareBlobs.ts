@@ -1,6 +1,9 @@
 import { useContext } from "react"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
-import { FirmwareBlob, parseFirmwareFile } from "../../../jacdac-ts/src/jdom/flashing"
+import {
+    FirmwareBlob,
+    parseFirmwareFile,
+} from "../../../jacdac-ts/src/jdom/flashing"
 import useEffectAsync from "../useEffectAsync"
 import DbContext, { DbContextProps } from "../DbContext"
 import { useChangeAsync } from "../../jacdac/useChange"
@@ -10,15 +13,11 @@ import { fetchLatestRelease, fetchReleaseBinary } from "../github"
 import { BusState } from "../../../jacdac-ts/src/jdom/bus"
 
 export default function useFirmwareBlobs() {
-    const { bus, connectionState } = useContext<JacdacContextProps>(
-        JacdacContext
-    )
+    const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { db } = useContext<DbContextProps>(DbContext)
     const firmwares = db?.firmwares
     // run once, go through known firmware repoes and load version
     useEffectAsync(async () => {
-        if (connectionState !== BusState.Connected) return
-
         console.log(`firmware: load`)
         const names = await firmwares?.list()
         if (!names) return
@@ -57,12 +56,11 @@ export default function useFirmwareBlobs() {
             // throttle github queries
             await delay(5000)
         }
-    }, [db, connectionState])
+    }, [db])
 
     useChangeAsync(
         firmwares,
         async fw => {
-            if (connectionState !== BusState.Connected) return
             console.log(`firmwares: change`)
             const names = await fw?.list()
             console.log(`import stored uf2`, names)
@@ -78,7 +76,7 @@ export default function useFirmwareBlobs() {
             }
             bus.firmwareBlobs = uf2s
         },
-        [connectionState]
+        []
     )
 
     return bus.firmwareBlobs

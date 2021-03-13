@@ -6,8 +6,7 @@ import React, {
     useEffect,
     useState,
 } from "react"
-import { BusState } from "../../jacdac-ts/src/jdom/bus"
-import { CONNECTION_STATE, ERROR } from "../../jacdac-ts/src/jdom/constants"
+import { ERROR } from "../../jacdac-ts/src/jdom/constants"
 import { JDService } from "../../jacdac-ts/src/jdom/service"
 import { isCancelError } from "../../jacdac-ts/src/jdom/utils"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
@@ -97,21 +96,6 @@ export const AppProvider = ({ children }) => {
             bus.subscribe(ERROR, (e: { exception: Error }) => {
                 if (isCancelError(e.exception)) return
                 setError(e.exception.message)
-            }),
-        []
-    )
-
-    useEffect(
-        () =>
-            bus.subscribe(CONNECTION_STATE, cs => {
-                switch (cs) {
-                    case BusState.Connected:
-                        if (bus.transport)
-                            enqueueSnackbar("connected...", {
-                                variant: "info",
-                            })
-                        break
-                }
             }),
         []
     )
