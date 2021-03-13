@@ -10,7 +10,7 @@ import useDeviceStatusLightStyle from "./useDeviceStatusLightStyle";
 import Helmet from "react-helmet"
 import useDeviceName from "./useDeviceName";
 import useDeviceImage from "./useDeviceImage";
-import JacdacIcon from "../icons/JacdacIcon";
+import TransportIcon from "../icons/TransportIcon";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -36,6 +36,7 @@ export default function DeviceAvatar(props: { device: JDDevice, size?: "small" |
   const classes = useStyles();
   const sizeClassName = size === "small" ? classes.small : size === "large" ? classes.large : undefined;
   const host = useDeviceHost(device);
+  const source = device.source;
   const {
     className: statusLEDClassName,
     helmetStyle: statusLEDHelmetStyle } = useDeviceStatusLightStyle(device)
@@ -49,7 +50,7 @@ export default function DeviceAvatar(props: { device: JDDevice, size?: "small" |
       title={`identify ${host ? "simulator" : "device"} ${name}`}
       onClick={handleIdentify}
       className={statusLEDClassName}
-      icon={host ? <KindIcon kind={VIRTUAL_DEVICE_NODE_NAME} /> : !imageUrl ? <JacdacIcon /> : <Avatar
+      icon={host ? <KindIcon kind={VIRTUAL_DEVICE_NODE_NAME} /> : !imageUrl ? <TransportIcon type={source} /> : <Avatar
         className={sizeClassName}
         alt={specification?.name || "Image of the device"}
         src={imageUrl}

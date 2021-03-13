@@ -33,7 +33,7 @@ export default function ConnectButton(props: {
     const onClick = showDisconnect ? () => transport.disconnect() : () => transport.connect()
     const icon = (
         <Badge color="primary" variant="dot" invisible={!showDisconnect}>
-            <TransportIcon transport={transport} />
+            <TransportIcon type={transport.type} />
         </Badge>
     )
     const label = showDisconnect
