@@ -156,34 +156,25 @@ function CommandListItem(props: { command: JDTestCommandRunner }) {
     )
 }
 
-function FirstCommand(props: { command: JDTestCommandRunner }) {
-    const { command } = props
-    const { message } = useChange(command, c => c.output)
-    return (
-        <Box m={2}>
-            <Typography variant="body1">{message}</Typography>
-        </Box>
-    )
-}
-
 function ActiveTest(props: { test: JDTestRunner }) {
     const { test } = props
     const { commands } = test
     const status = useChange(test, t => t.status)
     const handleRestart = () => test.start()
     const handleNext = () => test.next()
-    const [firstCommand, ...restOfCommands] = commands
     // auto start
     useEffect(() => test.start(), [test])
 
     return (
         <Card>
             <CardContent>
-                <Typography variant="h5">WHEN</Typography>
-                <FirstCommand command={firstCommand} />
+                <Typography variant="h5">DO</Typography>
+                <Box m={2}>
+                    <Typography variant="body1">{test.prompt}</Typography>
+                </Box>
                 <Typography variant="h5">TEST</Typography>
                 <List dense={false}>
-                    {restOfCommands.map((cmd, i) => (
+                    {commands.map((cmd, i) => (
                         <CommandListItem key={i} command={cmd} />
                     ))}
                 </List>
@@ -231,7 +222,6 @@ export default function ServiceTestRunner(props: {
     const testRunner = useServiceClient(service, factory)
     const currentTest = useChange(testRunner, t => t?.currentTest)
     const handleSelectTest = (test: JDTestRunner) => {
-        console.log({ test })
         testRunner.currentTest = test
     }
 
