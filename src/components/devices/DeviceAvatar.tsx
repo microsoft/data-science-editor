@@ -10,6 +10,7 @@ import useDeviceStatusLightStyle from "./useDeviceStatusLightStyle";
 import Helmet from "react-helmet"
 import useDeviceName from "./useDeviceName";
 import useDeviceImage from "./useDeviceImage";
+import JacdacIcon from "../icons/JacdacIcon";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,8 +28,8 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function DeviceAvatar(props: { device: JDDevice, showMissing?: boolean, size?: "small" | "large" }) {
-  const { device, showMissing, size } = props;
+export default function DeviceAvatar(props: { device: JDDevice, size?: "small" | "large" }) {
+  const { device, size } = props;
   const specification = useDeviceSpecification(device);
   const imageUrl = useDeviceImage(specification, "avatar")
   const name = useDeviceName(device);
@@ -39,8 +40,6 @@ export default function DeviceAvatar(props: { device: JDDevice, showMissing?: bo
     className: statusLEDClassName,
     helmetStyle: statusLEDHelmetStyle } = useDeviceStatusLightStyle(device)
 
-  if (!showMissing && (!host && !imageUrl))
-    return null;
   const handleIdentify = async () => await device.identify();
   return <>
     {statusLEDHelmetStyle && <Helmet><style>{statusLEDHelmetStyle}</style></Helmet>}
@@ -50,7 +49,7 @@ export default function DeviceAvatar(props: { device: JDDevice, showMissing?: bo
       title={`identify ${host ? "simulator" : "device"} ${name}`}
       onClick={handleIdentify}
       className={statusLEDClassName}
-      icon={host ? <KindIcon kind={VIRTUAL_DEVICE_NODE_NAME} /> : <Avatar
+      icon={host ? <KindIcon kind={VIRTUAL_DEVICE_NODE_NAME} /> : !imageUrl ? <JacdacIcon /> : <Avatar
         className={sizeClassName}
         alt={specification?.name || "Image of the device"}
         src={imageUrl}
