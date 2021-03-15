@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => createStyles({
 export default function Footer() {
   const classes = useStyles();
   return <footer role="contentinfo" className={classes.footer}>
-    <a href="https://makecode.com/privacy" target="_blank" rel="noopener noreferrer">Privacy &amp; Cookies</a>
+    <a href="https://go.microsoft.com/fwlink/?LinkId=521839" target="_blank" rel="noopener noreferrer">Privacy &amp; Cookies</a>
     <a href="https://makecode.com/termsofuse" target="_blank" rel="noopener noreferrer">Terms Of Use</a>
     <a href="https://makecode.com/trademarks" target="_blank" rel="noopener noreferrer">Trademarks</a>
     <Typography component="span" variant="inherit">
