@@ -65,7 +65,6 @@ export default function Page() {
     return (
         <>
             <h1>Flood Test</h1>
-            <ConnectAlert />
             <Card>
                 <CardHeader title="Configuration" />
                 <CardContent>
@@ -113,6 +112,7 @@ export default function Page() {
                     </Grid>
                 ))}
             </Grid>
+            <ConnectAlert />
         </>
     )
 }
