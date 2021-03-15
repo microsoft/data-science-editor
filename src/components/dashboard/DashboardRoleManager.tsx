@@ -1,24 +1,33 @@
-import { Grid } from "@material-ui/core"
+import { Grid, Switch } from "@material-ui/core"
 import React from "react"
 import { RoleManagerReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
-import CmdButton from "../CmdButton"
+import { useId } from "react-use-id-hook"
+import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
+import LoadingProgress from "../ui/LoadingProgress"
 
 export default function DashboardRoleManager(props: DashboardServiceProps) {
     const { service } = props
     const autoBindRegister = service.register(RoleManagerReg.AutoBind)
-    const handleAutoBind = async () =>
-        await autoBindRegister.sendSetBoolAsync(true, true)
+    const [autoBind] = useRegisterUnpackedValue<[boolean]>(autoBindRegister)
+    const handleChecked = async (ev, checked: boolean) => {
+        await autoBindRegister.sendSetBoolAsync(checked, true)
+    }
+    const switchId = useId()
+    const labelId = useId()
+
+    if (autoBind === undefined)
+        return <LoadingProgress />
 
     return (
         <Grid item xs={12}>
-            <CmdButton
-                onClick={handleAutoBind}
-                variant="outlined"
-                title="bind roles to services automatically"
-            >
-                Assign roles
-            </CmdButton>
+            <Switch
+                id={switchId}
+                checked={autoBind}
+                onChange={handleChecked}
+                aria-labelledby={labelId}
+            />
+            <label id={labelId}>auto assign roles</label>
         </Grid>
     )
 }
