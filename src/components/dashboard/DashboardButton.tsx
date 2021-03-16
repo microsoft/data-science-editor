@@ -27,7 +27,7 @@ export default function DashboardButton(props: DashboardServiceProps) {
     const label = `button ${pressed ? `down` : `up`}`
     const handleDown = () => host?.down();
     const handleUp = () => host?.up();
-    const widgetSize = `clamp(3rem, 10vw, 20vw)`
+    const widgetSize = `clamp(3rem, 10vw, 16vw)`
 
     if (pressed === undefined)
         return <LoadingProgress />;
