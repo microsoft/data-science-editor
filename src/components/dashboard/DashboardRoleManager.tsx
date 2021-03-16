@@ -3,13 +3,13 @@ import React from "react"
 import { RoleManagerReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useId } from "react-use-id-hook"
-import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
+import { useRegisterBoolValue } from "../../jacdac/useRegisterValue"
 import LoadingProgress from "../ui/LoadingProgress"
 
 export default function DashboardRoleManager(props: DashboardServiceProps) {
     const { service } = props
     const autoBindRegister = service.register(RoleManagerReg.AutoBind)
-    const [autoBind] = useRegisterUnpackedValue<[boolean]>(autoBindRegister)
+    const autoBind = useRegisterBoolValue(autoBindRegister)
     const handleChecked = async (ev, checked: boolean) => {
         await autoBindRegister.sendSetBoolAsync(checked, true)
     }

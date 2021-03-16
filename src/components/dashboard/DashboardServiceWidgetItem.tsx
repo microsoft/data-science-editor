@@ -1,18 +1,32 @@
-import { Grid } from "@material-ui/core"
+import { Grid, Typography } from "@material-ui/core"
 import React from "react"
 import DashboardServiceWidget, {
     DashboardServiceProps,
 } from "./DashboardServiceWidget"
 import ServiceRole from "../services/ServiceRole"
+import { useRegisterStringValue } from "../../jacdac/useRegisterValue"
+import { SystemReg } from "../../../jacdac-ts/src/jdom/constants"
 
 export default function DashboardServiceWidgetItem(
     props: React.Attributes & DashboardServiceProps
 ): JSX.Element {
     const { service } = props
+    const instanceName = useRegisterStringValue(
+        service.register(SystemReg.InstanceName)
+    )
 
     return (
         <Grid item>
             <ServiceRole service={service} />
+            {instanceName && (
+                <Typography
+                    variant="caption"
+                    component="span"
+                    style={{ float: "right" }}
+                >
+                    {instanceName}
+                </Typography>
+            )}
             <DashboardServiceWidget {...props} />
         </Grid>
     )
