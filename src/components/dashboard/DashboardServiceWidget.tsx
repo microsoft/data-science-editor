@@ -95,6 +95,7 @@ const serviceViews: {
     [SRV_ROTARY_ENCODER]: {
         component: DashboardRotaryEncoder,
         bundled: true,
+        weight: () => 2,
     },
     [SRV_BUTTON]: {
         component: DashboardButton,

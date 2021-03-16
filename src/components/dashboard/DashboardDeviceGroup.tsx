@@ -1,5 +1,6 @@
 import { Grid } from "@material-ui/core";
 import React, { } from "react";
+import { useId } from "react-use-id-hook";
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device";
 import GridHeader from "../ui/GridHeader"
 import { DashboardDeviceProps } from "./Dashboard";
@@ -15,8 +16,13 @@ export default function DeviceGroup(props: {
 } & DashboardDeviceProps) {
     const { title, action, devices, expanded, toggleExpanded, children, ...other } = props;
     const handleExpand = (device: JDDevice) => () => toggleExpanded(device)
-    return <section>
-        <Grid container spacing={2}>
+    const sectionId = useId()
+
+    if (!action && !children)
+        return null
+
+    return <section id={sectionId}>
+        <Grid container spacing={1}>
             <GridHeader title={title} action={action} />
             {devices?.map(device => <DashboardDeviceItem
                 key={device.id}

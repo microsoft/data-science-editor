@@ -16,7 +16,7 @@ import ClearIcon from "@material-ui/icons/Clear"
 import ConnectAlert from "../alert/ConnectAlert"
 import ConnectButtons from "../../jacdac/ConnectButtons"
 
-function deviceSort(l: JDDevice, r: JDDevice): number {
+function defaultDeviceSort(l: JDDevice, r: JDDevice): number {
     const srvScore = (srv: jdspec.ServiceSpec) =>
         srv.packets.reduce(
             (prev, pkt) =>
@@ -44,18 +44,31 @@ function deviceSort(l: JDDevice, r: JDDevice): number {
     return strcmp(l.deviceId, r.deviceId)
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function defaultDeviceFilter(d: JDDevice): boolean {
+    return true
+}
+
 export interface DashboardDeviceProps {
     showHeader?: boolean
     showAvatar?: boolean
+    showConnect?: boolean
+    deviceFilter?: (d: JDDevice) => boolean
+    deviceSort?: (l: JDDevice, r: JDDevice) => number
 }
 
 export default function Dashboard(props: DashboardDeviceProps) {
-    const { ...other } = props
+    const {
+        showConnect,
+        deviceSort = defaultDeviceSort,
+        deviceFilter = defaultDeviceFilter,
+        ...other
+    } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { toggleShowDeviceHostsDialog } = useContext(AppContext)
-    const devices = useDevices({ announced: true, ignoreSelf: true }).sort(
-        deviceSort
-    )
+    const devices = useDevices({ announced: true, ignoreSelf: true })
+        .filter(deviceFilter)
+        .sort(deviceSort)
     const theme = useTheme()
     const mobile = useMediaQuery(theme.breakpoints.down(MOBILE_BREAKPOINT))
     const { selected, toggleSelected } = useSelectedNodes(mobile)
@@ -95,13 +108,17 @@ export default function Dashboard(props: DashboardDeviceProps) {
             />
             <DashboardDeviceGroup
                 title="Devices"
-                action={<ConnectButtons full={false} transparent={true} />}
+                action={
+                    showConnect && (
+                        <ConnectButtons full={false} transparent={true} />
+                    )
+                }
                 devices={physicals}
                 expanded={selected}
                 toggleExpanded={toggleSelected}
                 {...other}
             >
-                {!physicals.length && (
+                {showConnect && !physicals.length && (
                     <Grid item xs={12}>
                         <ConnectAlert />
                     </Grid>

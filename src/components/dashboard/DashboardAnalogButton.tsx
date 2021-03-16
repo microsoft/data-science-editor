@@ -16,12 +16,12 @@ const ACTIVE_SPEED = 0.05
 const INACTIVE_SPEED = 0.1
 
 export default function DashboardAnalogButton(props: DashboardServiceProps) {
-    const { service, services, variant } = props;
+    const { service } = props;
     const pressureRegister = service.register(AnalogButtonReg.Pressure);
     const [pressure] = useRegisterUnpackedValue<[number]>(pressureRegister)
     const [activeThreshold] = useRegisterUnpackedValue<[number]>(service.register(AnalogButtonReg.ActiveThreshold))
     //const [buttonVariant] = useRegisterUnpackedValue<[AnalogButtonVariant]>(service.register(AnalogButtonReg.Variant));
-    const widgetSize = `clamp(5em, 25vw, 100%)`
+    const widgetSize = `clamp(3rem, 10vw, 20vw)`
     const host = useServiceHost<AnalogSensorServiceHost>(service);
     const [down, setDown] = useState(false)
     const color = host ? "secondary" : "primary";
@@ -65,7 +65,6 @@ export default function DashboardAnalogButton(props: DashboardServiceProps) {
     const r = w / 2;
     const cx = r;
     const cy = r;
-    const ro = r;
     const rp = r - mo;
     const ri = rp - mo;
     const ps = mo;

@@ -35,7 +35,7 @@ export default function InputSlider(props: {
     const inputId = useId()
     const labelId = useId()
 
-    const handleSliderChange = (event: any, newValue: number | number[]) => {
+    const handleSliderChange = (event: unknown, newValue: number | number[]) => {
         onChange(newValue as number)
     }
 

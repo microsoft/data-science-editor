@@ -1,7 +1,4 @@
-import { IconButtonProps, Theme, Tooltip as MaterialTooltip, withStyles } from "@material-ui/core";
-import { IconButton } from "gatsby-theme-material-ui";
-import React from "react";
-import Zoom from '@material-ui/core/Zoom';
+import { Theme, Tooltip as MaterialTooltip, withStyles } from "@material-ui/core";
 
 // fix for contrast issue
 const Tooltip = withStyles((theme: Theme) => ({
