@@ -8,6 +8,7 @@ import { Badge, useMediaQuery, useTheme } from "@material-ui/core"
 import IconButtonWithProgress from "../components/ui/IconButtonWithProgress"
 import { MOBILE_BREAKPOINT } from "../components/layout"
 import TransportIcon from "../components/icons/TransportIcon"
+import useChange from "./useChange"
 
 export default function ConnectButton(props: {
     full?: boolean
@@ -16,8 +17,9 @@ export default function ConnectButton(props: {
     transport: JDTransport
 }) {
     const { full, className, transparent, transport } = props
-    const { connectionState, type } = transport
+    const { type } = transport
     const theme = useTheme()
+    const connectionState = useChange(transport, t => t.connectionState);
     const showDisconnect =
         connectionState == ConnectionState.Connected ||
         connectionState == ConnectionState.Disconnecting
