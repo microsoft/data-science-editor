@@ -22,29 +22,29 @@ function NoSsrConnectAlert(props: { serviceClass?: number }) {
     const { serviceClass } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { transports } = bus
-    const devices = useChange(bus, b => b.devices({ serviceClass }))
+    const devices = useChange(bus, b => b.devices({ serviceClass, ignoreSelf: true }))
     const spec = serviceSpecificationFromClassIdentifier(serviceClass)
-    const disconnected = useChange(bus, t => t.disconnected)
 
-    if (!devices?.length && disconnected)
-        return (
-            <Box displayPrint="none">
-                <Alert severity="info" closeable={true}>
-                    {!spec && <span>Did you connect your device?</span>}
-                    {spec && <span>Did you connect a {spec.name} device?</span>}
-                    {transports.map(transport => (
-                        <ConnectButton
-                            key={transport.type}
-                            transport={transport}
-                            className={classes.button}
-                            full={true}
-                            transparent={true}
-                        />
-                    ))}
-                </Alert>
-            </Box>
-        )
-    return null
+    // don't show if no transport, some devices
+    if (!transports.length || devices?.length) return null
+
+    return (
+        <Box displayPrint="none">
+            <Alert severity="info" closeable={true}>
+                {!spec && <span>Did you connect your device?</span>}
+                {spec && <span>Did you connect a {spec.name} device?</span>}
+                {transports.map(transport => (
+                    <ConnectButton
+                        key={transport.type}
+                        transport={transport}
+                        className={classes.button}
+                        full={true}
+                        transparent={true}
+                    />
+                ))}
+            </Alert>
+        </Box>
+    )
 }
 
 export default function ConnectAlert(props: { serviceClass?: number }) {
