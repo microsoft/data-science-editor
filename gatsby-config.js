@@ -229,11 +229,11 @@ module.exports = {
         {
             resolve: `gatsby-plugin-manifest`,
             options: {
-                name: `Jacdac`,
+                name: `Jacdac - plug-n-play for microcontrollers`,
                 short_name: `Jacdac`,
                 start_url: `/`,
-                background_color: `#663399`,
-                theme_color: `#663399`,
+                background_color: `#ffc400`,
+                theme_color: `#ffc400`,
                 display: `minimal-ui`,
                 cache_busting_mode: "none",
                 icon: `src/images/favicon.svg`,
