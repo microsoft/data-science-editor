@@ -8,6 +8,7 @@ import { toHex } from "../../../jacdac-ts/src/jdom/utils"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import { RngReg } from "../../../jacdac-ts/src/jdom/constants"
 import { useId } from "react-use-id-hook"
+import LoadingProgress from "../ui/LoadingProgress"
 
 export default function DashboardRandomNumberGenerator(
     props: DashboardServiceProps
@@ -18,6 +19,9 @@ export default function DashboardRandomNumberGenerator(
     const textId = useId()
 
     const handleRefresh = () => randomRegister.refresh()
+
+    if (!rnd)
+        return <LoadingProgress />
 
     return (
         <Grid container spacing={2} direction="row">
