@@ -20,6 +20,7 @@ export default function DashboardServiceWidgetItem(
             <ServiceRole service={service} />
             {instanceName && (
                 <Typography
+                    className="no-pointer-events"
                     variant="caption"
                     component="span"
                     style={{ float: "right" }}
