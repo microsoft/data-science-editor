@@ -123,24 +123,16 @@ export default function ToolsDrawer() {
             url: "/dashboard",
             icon: <JacdacIcon />,
         },
-        {},
-        {
-            text: "Role Manager",
-            url: "/tools/role-manager",
-            icon: <EmojiObjectsIcon />,
-        },
-        {
-            text: "Firmware Update",
-            url: "/tools/updater",
-            icon: <SystemUpdateAltIcon />,
-        },
-        {
-            // separator
-        },
         {
             text: "Start simulator",
             action: toggleShowDeviceHostsDialog,
             icon: <KindIcon kind={VIRTUAL_DEVICE_NODE_NAME} />,
+        },
+        {},
+        {
+            text: "Firmware Update",
+            url: "/tools/updater",
+            icon: <SystemUpdateAltIcon />,
         },
         {
             // separator
