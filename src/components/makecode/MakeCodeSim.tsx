@@ -1,5 +1,10 @@
 import React from "react"
-import { Box, Button, createMuiTheme, responsiveFontSizes } from "@material-ui/core"
+import {
+    Box,
+    Button,
+    createMuiTheme,
+    responsiveFontSizes,
+} from "@material-ui/core"
 import ThemedLayout from "../../components/ui/ThemedLayout"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import { isReading, isValueOrIntensity } from "../../../jacdac-ts/src/jdom/spec"
@@ -57,7 +62,7 @@ const ignoredServices = [
     SRV_ROLE_MANAGER,
     SRV_POWER,
 ]
-const deviceFilter = device =>
+const deviceFilter = (device: JDDevice) =>
     !!device.serviceClasses.filter(sc => ignoredServices.indexOf(sc) < 0).length
 
 function Carousel() {

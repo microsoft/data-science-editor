@@ -45,7 +45,8 @@ function createBus(): JDBus {
             parentOrigin: args.parentOrigin,
         }
     )
-    b.setBackgroundFirmwareScans(true)
+    // parentOrigin: args.parentOrigin,
+    if (Flags.webUSB) b.setBackgroundFirmwareScans(true)
     GamepadHostManager.start(b)
 
     // tslint:disable-next-line: no-unused-expression
