@@ -1,9 +1,7 @@
 import React from "react"
 import { RotaryEncoderReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
-import {
-    useRegisterUnpackedValue,
-} from "../../jacdac/useRegisterValue"
+import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import SvgWidget from "../widgets/SvgWidget"
 import useServiceHost from "../hooks/useServiceHost"
 import RotaryEncoderServiceHost from "../../../jacdac-ts/src/hosts/rotaryencoderservicehost"
@@ -14,12 +12,17 @@ import useThrottledValue from "../hooks/useThrottledValue"
 export default function DashboardRotaryEncoder(props: DashboardServiceProps) {
     const { service } = props
     const positionRegister = service.register(RotaryEncoderReg.Position)
-    const [position = 0] = useRegisterUnpackedValue<[number]>(positionRegister)
+    const [position = 0] = useRegisterUnpackedValue<[number]>(
+        positionRegister,
+        props
+    )
     const clicksPerTurnRegister = service.register(
-        RotaryEncoderReg.ClicksPerTurn
+        RotaryEncoderReg.ClicksPerTurn,
+        props
     )
     const [clicksPerTurn = 12] = useRegisterUnpackedValue<[number]>(
-        clicksPerTurnRegister
+        clicksPerTurnRegister,
+        props
     )
     const host = useServiceHost<RotaryEncoderServiceHost>(service)
     const color = host ? "secondary" : "primary"

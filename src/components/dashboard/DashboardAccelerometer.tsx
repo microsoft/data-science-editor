@@ -19,9 +19,13 @@ const valueDisplay = (v: number) => roundWithPrecision(v, 1)
 function Sliders(props: {
     host: SensorServiceHost<[number, number, number]>
     register: JDRegister
+    visible?: boolean
 }) {
     const { host, register } = props
-    const forces = useRegisterUnpackedValue<[number, number, number]>(register)
+    const forces = useRegisterUnpackedValue<[number, number, number]>(
+        register,
+        props
+    )
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleChangeX: any = async (
         event: unknown,
@@ -35,14 +39,17 @@ function Sliders(props: {
         await register.sendGetAsync()
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleChangeY: any = async (event: unknown, newValue: number | number[]) => {
+    const handleChangeY: any = async (
+        event: unknown,
+        newValue: number | number[]
+    ) => {
         const [x] = host.reading.values()
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const n = (newValue as any) as number
         const nz = -Math.sqrt(1 - (x * x + n * n))
         host.reading.setValues([x, n, nz])
         await register.sendGetAsync()
-    };
+    }
 
     if (!forces?.length) return <LoadingProgress />
     const [x, y] = forces
@@ -99,7 +106,7 @@ function lerp(v0: number, v1: number, t: number) {
 }
 
 export default function DashboardAccelerometer(props: DashboardServiceProps) {
-    const { service } = props
+    const { service, visible } = props
     const register = service.register(AccelerometerReg.Forces)
     const host = useServiceHost<SensorServiceHost<[number, number, number]>>(
         service
@@ -136,7 +143,9 @@ export default function DashboardAccelerometer(props: DashboardServiceProps) {
                     </Suspense>
                 </NoSsr>
             </Grid>
-            {host && <Sliders host={host} register={register} />}
+            {host && (
+                <Sliders host={host} register={register} visible={visible} />
+            )}
         </Grid>
     )
 }

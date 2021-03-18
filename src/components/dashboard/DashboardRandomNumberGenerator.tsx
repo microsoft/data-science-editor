@@ -15,13 +15,12 @@ export default function DashboardRandomNumberGenerator(
 ) {
     const { service } = props
     const randomRegister = service.register(RngReg.Random)
-    const [rnd] = useRegisterUnpackedValue<[Uint8Array]>(randomRegister)
+    const [rnd] = useRegisterUnpackedValue<[Uint8Array]>(randomRegister, props)
     const textId = useId()
 
     const handleRefresh = () => randomRegister.refresh()
 
-    if (!rnd)
-        return <LoadingProgress />
+    if (!rnd) return <LoadingProgress />
 
     return (
         <Grid container spacing={2} direction="row">

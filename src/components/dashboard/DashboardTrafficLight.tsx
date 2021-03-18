@@ -33,9 +33,9 @@ export default function DashboardTrafficLight(props: DashboardServiceProps) {
     const { service, services, variant } = props;
 
     const widgetRef = useRef<SVGGElement>();
-    const [red] = useRegisterUnpackedValue<[boolean]>(service.register(TrafficLightReg.Red))
-    const [orange] = useRegisterUnpackedValue<[boolean]>(service.register(TrafficLightReg.Orange))
-    const [green] = useRegisterUnpackedValue<[boolean]>(service.register(TrafficLightReg.Green))
+    const [red] = useRegisterUnpackedValue<[boolean]>(service.register(TrafficLightReg.Red), props)
+    const [orange] = useRegisterUnpackedValue<[boolean]>(service.register(TrafficLightReg.Orange), props)
+    const [green] = useRegisterUnpackedValue<[boolean]>(service.register(TrafficLightReg.Green), props)
 
     const lightRegs = [TrafficLightReg.Red, TrafficLightReg.Orange, TrafficLightReg.Green]
     const lights = [red, orange, green]

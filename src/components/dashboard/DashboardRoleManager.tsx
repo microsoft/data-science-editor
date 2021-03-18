@@ -9,7 +9,7 @@ import LoadingProgress from "../ui/LoadingProgress"
 export default function DashboardRoleManager(props: DashboardServiceProps) {
     const { service } = props
     const autoBindRegister = service.register(RoleManagerReg.AutoBind)
-    const autoBind = useRegisterBoolValue(autoBindRegister)
+    const autoBind = useRegisterBoolValue(autoBindRegister, props)
     const handleChecked = async (ev, checked: boolean) => {
         await autoBindRegister.sendSetBoolAsync(checked, true)
     }

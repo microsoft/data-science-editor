@@ -7,15 +7,15 @@ import useServiceHost from "../hooks/useServiceHost";
 import LoadingProgress from "../ui/LoadingProgress"
 
 export default function DashboardButton(props: DashboardServiceProps) {
-    const { service } = props;
+    const { service, visible } = props;
     const [pressed, setPressed] = useState<boolean>(false)
     const pressedRegister = service.register(ButtonReg.Pressed);
     // track register
-    useEffect(() => pressedRegister?.subscribe(REPORT_UPDATE, () => {
+    useEffect(() => visible && pressedRegister?.subscribe(REPORT_UPDATE, () => {
         const [b] = pressedRegister?.unpackedValue || [];
         if (b !== undefined)
             setPressed(b)
-    }), [pressedRegister])
+    }), [pressedRegister, visible])
     // track event up/down events
     const downEvent = service.event(ButtonEvent.Down);
     useEffect(() => downEvent.subscribe(EVENT, () => setPressed(true)), [downEvent])

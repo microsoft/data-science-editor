@@ -12,7 +12,8 @@ export default function DashboardServiceWidgetItem(
 ): JSX.Element {
     const { service } = props
     const instanceName = useRegisterStringValue(
-        service.register(SystemReg.InstanceName)
+        service.register(SystemReg.InstanceName),
+        props
     )
 
     return (

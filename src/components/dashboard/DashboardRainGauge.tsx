@@ -1,4 +1,4 @@
-import React, {  } from "react"
+import React from "react"
 import { RainGaugeReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import SvgWidget from "../widgets/SvgWidget"
@@ -16,11 +16,12 @@ import LoadingProgress from "../ui/LoadingProgress"
 const TILT = 15
 
 export default function DashbaordRainGauge(props: DashboardServiceProps) {
-    const { service, services, variant } = props
+    const { service } = props
 
     const precipitationRegister = service.register(RainGaugeReg.Precipitation)
     const [precipitation] = useRegisterUnpackedValue<[number]>(
-        precipitationRegister
+        precipitationRegister,
+        props
     )
     const clipId = useId()
     const host = useServiceHost<RainGaugeServiceHost>(service)
@@ -29,12 +30,7 @@ export default function DashbaordRainGauge(props: DashboardServiceProps) {
     const tiltAngle =
         tiltCount !== undefined ? (tiltCount % 2 ? -TILT : TILT) : 0
     const color = host ? "secondary" : "primary"
-    const {
-        background,
-        controlBackground,
-        active,
-        textPrimary,
-    } = useWidgetTheme(color)
+    const { background, active, textPrimary } = useWidgetTheme(color)
     const a = useThrottledValue(tiltAngle, 45)
     const l = useThrottledValue(level !== undefined ? level : 0.5, 1)
     const clickeable = !!host

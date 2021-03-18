@@ -24,7 +24,7 @@ export default function DashboardBuzzer(props: DashboardServiceProps) {
     const host = useServiceHost<BuzzerServiceHost>(service);
     const color = host ? "secondary" : "primary";
     const volumeRegister = service.register(BuzzerReg.Volume);
-    const [volume] = useRegisterUnpackedValue<[number]>(volumeRegister)
+    const [volume] = useRegisterUnpackedValue<[number]>(volumeRegister, props)
     const keyboardProps = useKeyboardNavigationProps(gridRef.current)
     const { playTone, setVolume, onClickActivateAudioContext } = usePlayTone(volume);
 

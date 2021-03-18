@@ -10,11 +10,11 @@ import ButtonWidget from "../widgets/ButtonWidget";
 import LoadingProgress from "../ui/LoadingProgress";
 
 export default function DashboardSwitch(props: DashboardServiceProps) {
-    const { service, services, variant } = props;
+    const { service } = props;
 
     const labelId = useId();
-    const on = useRegisterBoolValue(service.register(SwitchReg.Active))
-    const [switchVariant] = useRegisterUnpackedValue<[SwitchVariant]>(service.register(SwitchReg.Variant));
+    const on = useRegisterBoolValue(service.register(SwitchReg.Active), props)
+    const [switchVariant] = useRegisterUnpackedValue<[SwitchVariant]>(service.register(SwitchReg.Variant), props);
     const host = useServiceHost<SwitchServiceHost>(service);
     const color = host ? "secondary" : "primary";
     const widgetSize = `clamp(5em, 25vw, 100%)`

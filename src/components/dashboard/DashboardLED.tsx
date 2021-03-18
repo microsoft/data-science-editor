@@ -19,19 +19,25 @@ import LoadingProgress from "../ui/LoadingProgress"
 
 export default function DashboardLED(props: DashboardServiceProps) {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const { service, services, variant } = props
+    const { service } = props
     const host = useServiceHost<LEDServiceHost>(service)
     const color = host ? "secondary" : "primary"
     const brightnessRegister = service.register(LedReg.Brightness)
-    const [brightness] = useRegisterUnpackedValue<[number]>(brightnessRegister)
+    const [brightness] = useRegisterUnpackedValue<[number]>(
+        brightnessRegister,
+        props
+    )
     const animationData = useRegisterUnpackedValue<LedAnimationData>(
-        service.register(LedReg.Animation)
+        service.register(LedReg.Animation),
+        props
     )
     const [waveLength] = useRegisterUnpackedValue<[number]>(
-        service.register(LedReg.WaveLength)
+        service.register(LedReg.WaveLength),
+        props
     )
     const [ledCount] = useRegisterUnpackedValue<[number]>(
-        service.register(LedReg.LedCount)
+        service.register(LedReg.LedCount),
+        props
     )
 
     // restart animation with steps

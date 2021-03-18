@@ -25,6 +25,7 @@ export default function RegisterInput(props: {
     variant?: RegisterInputVariant
     off?: boolean
     toggleOff?: () => void
+    visible?: boolean
 }) {
     const {
         register,
@@ -37,6 +38,7 @@ export default function RegisterInput(props: {
         variant,
         off,
         toggleOff,
+        visible,
     } = props
     const { service, specification } = register
     const { device } = service
@@ -50,24 +52,34 @@ export default function RegisterInput(props: {
         specification.kind === "rw" || (host && specification.kind !== "const")
     const hasData = !!register.data
     const color = hasSet ? "secondary" : "primary"
-    const minReading = useReadingAuxilliaryValue(register, SystemReg.MinReading)
-    const maxReading = useReadingAuxilliaryValue(register, SystemReg.MaxReading)
+    const minReading = useReadingAuxilliaryValue(
+        register,
+        SystemReg.MinReading,
+        { visible }
+    )
+    const maxReading = useReadingAuxilliaryValue(
+        register,
+        SystemReg.MaxReading,
+        { visible }
+    )
     const readingError = useReadingAuxilliaryValue(
         register,
-        SystemReg.ReadingError
+        SystemReg.ReadingError,
+        { visible }
     )
     const resolution = useReadingAuxilliaryValue(
         register,
-        SystemReg.ReadingResolution
+        SystemReg.ReadingResolution,
+        { visible }
     )
 
     useEffect(
         () =>
-            register.subscribe(REPORT_UPDATE, () => {
+            visible && register.subscribe(REPORT_UPDATE, () => {
                 const vs = register.unpackedValue
                 if (vs !== undefined) setArgs(vs)
             }),
-        [register]
+        [register, visible]
     )
     const handleRefresh = () => {
         register.refresh(true)

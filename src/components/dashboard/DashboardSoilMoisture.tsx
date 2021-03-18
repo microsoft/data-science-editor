@@ -13,7 +13,7 @@ import { Grid, Slider } from "@material-ui/core"
 export default function DashboardSoilMoisture(props: DashboardServiceProps) {
     const { service, services, variant } = props
     const moistureReg = service.register(SoilMoistureReg.Moisture)
-    const [value] = useRegisterUnpackedValue<[number]>(moistureReg)
+    const [value] = useRegisterUnpackedValue<[number]>(moistureReg, props)
     const widgetSize = useWidgetSize(variant, services.length)
     const host = useServiceHost<SensorServiceHost<[number]>>(service)
     const color = host ? "secondary" : "primary"

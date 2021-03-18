@@ -11,13 +11,13 @@ import PowerButton from "../widgets/PowerButton";
 import LoadingProgress from "../ui/LoadingProgress";
 
 export default function DashboardCompass(props: DashboardServiceProps) {
-    const { service, services, variant } = props;
+    const { service } = props;
 
     const headingRegister = service.register(CompassReg.Heading);
     const enabledRegister = service.register(CompassReg.Enabled);
-    const [heading] = useRegisterUnpackedValue<[number]>(headingRegister)
-    const [enabled] = useRegisterUnpackedValue<[boolean]>(enabledRegister)
-    const [status,] = useRegisterUnpackedValue<[SystemStatusCodes, number]>(service.statusCodeRegister);
+    const [heading] = useRegisterUnpackedValue<[number]>(headingRegister, props)
+    const [enabled] = useRegisterUnpackedValue<[boolean]>(enabledRegister, props)
+    const [status,] = useRegisterUnpackedValue<[SystemStatusCodes, number]>(service.statusCodeRegister, props);
     const off = !enabled;
 
     const host = useServiceHost<SensorServiceHost<[number]>>(service);

@@ -13,7 +13,7 @@ export default function DashbaordWaterLevel(props: DashboardServiceProps) {
     const { service, services, variant } = props
 
     const levelRegister = service.register(WaterLevelReg.Level)
-    const [value] = useRegisterUnpackedValue<[number]>(levelRegister)
+    const [value] = useRegisterUnpackedValue<[number]>(levelRegister, props)
     const host = useServiceHost<SensorServiceHost<[number]>>(service)
     const color = host ? "secondary" : "primary"
     const { background, controlBackground, active, textProps } = useWidgetTheme(

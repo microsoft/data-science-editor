@@ -8,7 +8,7 @@ import {
     useMediaQuery,
     useTheme,
 } from "@material-ui/core"
-import React from "react"
+import React, { useCallback, useRef } from "react"
 import { SRV_CTRL, SRV_LOGGER } from "../../../jacdac-ts/src/jdom/constants"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import useChange from "../../jacdac/useChange"
@@ -26,6 +26,7 @@ import DashboardServiceDetails from "./DashboardServiceDetails"
 import { MOBILE_BREAKPOINT } from "../layout"
 import useDeviceName from "../devices/useDeviceName"
 import { DashboardDeviceProps } from "./Dashboard"
+import useIntersectionObserver from "../hooks/useIntersectionObserver"
 
 const ignoredServices = [SRV_CTRL, SRV_LOGGER]
 
@@ -58,9 +59,14 @@ export default function DashboardDevice(
     const specification = useDeviceSpecification(device)
     const theme = useTheme()
     const mobile = useMediaQuery(theme.breakpoints.down(MOBILE_BREAKPOINT))
+    const serviceGridRef = useRef<HTMLDivElement>()
+    const intersection = useIntersectionObserver(serviceGridRef)
+    const visible = !!intersection?.isIntersecting
 
-    const ServiceWidgets = () => (
+    const ServiceWidgets = useCallback(() => (
         <Grid
+            ref={serviceGridRef}
+            component="div"
             container
             spacing={2}
             justify="center"
@@ -74,10 +80,11 @@ export default function DashboardDevice(
                     expanded={expanded}
                     services={services}
                     variant={variant}
+                    visible={visible}
                 />
             ))}
         </Grid>
-    )
+    ), [...services, expanded, variant, visible])
 
     if (!showHeader)
         return (

@@ -1,7 +1,5 @@
 import React, { useState } from "react"
-import {
-    AnalogButtonReg,
-} from "../../../jacdac-ts/src/jdom/constants"
+import { AnalogButtonReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import useServiceHost from "../hooks/useServiceHost"
@@ -19,9 +17,13 @@ const INACTIVE_SPEED = 0.1
 export default function DashboardAnalogButton(props: DashboardServiceProps) {
     const { service } = props
     const pressureRegister = service.register(AnalogButtonReg.Pressure)
-    const [pressure] = useRegisterUnpackedValue<[number]>(pressureRegister)
+    const [pressure] = useRegisterUnpackedValue<[number]>(
+        pressureRegister,
+        props
+    )
     const [activeThreshold] = useRegisterUnpackedValue<[number]>(
-        service.register(AnalogButtonReg.ActiveThreshold)
+        service.register(AnalogButtonReg.ActiveThreshold),
+        props
     )
     //const [buttonVariant] = useRegisterUnpackedValue<[AnalogButtonVariant]>(service.register(AnalogButtonReg.Variant));
     const widgetSize = `clamp(3rem, 10vw, 16vw)`
