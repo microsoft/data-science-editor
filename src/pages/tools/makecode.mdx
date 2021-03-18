@@ -18,14 +18,24 @@ Jacdac is available in the following editors:
 
 To turn on Editor Extensions, click on **About**, then **Experiments** and **Editor Extensions**.
 
-You can also code side-by-side using the multi editor https://makecode.com/multi?jacdac=1
+You can also code side-by-side using the multi editor https://makecode.com/multi?jacdac=1&beta=1
 
-### Configuring modules
+### Configuring your project
 
 Create a **new project**, click on **Extensions** in the settings project. 
 Search for ``jacdac`` and import **https://github.com/microsoft/pxt-jacdac**.
 
-After the project reload, you should see a **modules** toolbox.
+After the project reload, you should see the Jacdac frame under the regular simulator.
+Compile your project again and download it to your device to make sure that the Jacdac stack is running on hardware as well 
+(it is not builtin the default configuration of MakeCode).
+
+### Simulators
+
+To spin a device simulator, click on the ``+`` button near the a header called "Simulators". Select any of the simulator.
+Once you have a simulator (or hardware device) running, a ``Add blocks`` button will appear. Clicking this button will
+automatically import the blocs for those modules.
+
+### Configuring modules
 
 Open the **modules** toolbox, click on **Configure** which will open the Jacdac configuration
 dialog.
@@ -37,50 +47,7 @@ prepare your project for those modules when you click on **Save**.
 Once you are back in the editor, you will find new blocks to use those modules
 and you will also find the roles of those modules in the drop down of each block.
 
-### Simulator vs hardware
-
-As soon as your program uses Jacdac modules, a dedicated simulator pane will open
-and will allow you to test your code with or without hardware.
-
-If the simulator is running and a physical device is connected, 
-the simulator always takes precedence:
-If the the simulator is running, the physical device is paused.
-If the simulator is stopped, the physical device is unpaused and used as a Jacdac device.
-
-## Local Development
-
-This is a special section for the Jacdac/MakeCode team to debug the setup.
 
 ## TODO
 
 - [ ] ondemand virtual device
-- [ ] support for rendering makecode snippets
-
-```blocks
-let x = 0;
-```
-
-
-```blocks
-let y = 0
-```
-
-```blocks
-modules.accelerometer.onEvent(jacdac.AccelerometerEvent.TiltUp, function () {
-	
-})
-```
-
-```blocks
----
-
----
-namespace myModules {
-    //% fixedInstance block="foot"
-    export const foot = new modules.AccelerometerClient("foot");
-}
----
-myModules.foot.onEvent(jacdac.AccelerometerEvent.TiltUp, function() {
-    
-})
-```
