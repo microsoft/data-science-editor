@@ -37,7 +37,7 @@ function interpolate(frames: LedAnimationFrame[], time: number) {
 }
 
 export default function useLedAnimationStyle(animation: LedAnimationData, options?: LedAnimationProps) {
-    const [repetitions, frames] = animation;
+    const [repetitions, frames] = animation || [0, []];
     const { monochrome, cssProperty, step, interval } = options || {};
     // generate a CSS animation for the curren frames
     const { helmetStyle, className } = useMemo(() => {
