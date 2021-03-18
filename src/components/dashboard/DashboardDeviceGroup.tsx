@@ -18,7 +18,7 @@ export default function DeviceGroup(props: {
     const handleExpand = (device: JDDevice) => () => toggleExpanded(device)
     const sectionId = useId()
 
-    if (!action && !children)
+    if (!action && !devices?.length)
         return null
 
     return <section id={sectionId}>
