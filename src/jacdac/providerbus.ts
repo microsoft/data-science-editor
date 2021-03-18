@@ -20,10 +20,11 @@ function sniffQueryArguments() {
         }
 
     const params = new URLSearchParams(window.location.search)
+    const toolsMakecode = /\/tools\/makecode-/.test(window.location.href)
     return {
         diagnostics: params.get(`dbg`) === "1",
-        webUSB: isWebUSBSupported() && params.get(`webusb`) !== "0",
-        webBluetooth: isWebBluetoothSupported() && params.get(`webble`) !== "0",
+        webUSB: isWebUSBSupported() && params.get(`webusb`) !== "0" && !toolsMakecode,
+        webBluetooth: isWebBluetoothSupported() && params.get(`webble`) !== "0" && !toolsMakecode,
         parentOrigin: params.get("parentOrigin"),
         frameId: window.location.hash?.slice(1),
     }
