@@ -1,31 +1,25 @@
-import { useContext } from "react"
+import { useCallback, useContext, useEffect } from "react"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import {
     FirmwareBlob,
     parseFirmwareFile,
 } from "../../../jacdac-ts/src/jdom/flashing"
-import useEffectAsync from "../useEffectAsync"
 import DbContext, { DbContextProps } from "../DbContext"
 import { useChangeAsync } from "../../jacdac/useChange"
 import { deviceSpecifications } from "../../../jacdac-ts/src/jdom/spec"
 import { delay, unique } from "../../../jacdac-ts/src/jdom/utils"
 import { fetchLatestRelease, fetchReleaseBinary } from "../github"
-import { BusState } from "../../../jacdac-ts/src/jdom/bus"
+import useIdleCallback from "../hooks/useIdleCallback"
 
 export default function useFirmwareBlobs() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { db } = useContext<DbContextProps>(DbContext)
     const firmwares = db?.firmwares
-    // run once, go through known firmware repoes and load version
-    useEffectAsync(async () => {
+
+    const loadFirmwares = useCallback(async () => {
         console.log(`firmware: load`)
         const names = await firmwares?.list()
         if (!names) return
-
-        // wait for 2 minute
-        // before starting any download
-        console.log(`firmware: await 2 minutes before checking updates`)
-        await delay(120000)
 
         const missingSlugs = unique(
             deviceSpecifications()
@@ -45,7 +39,9 @@ export default function useFirmwareBlobs() {
                 return
             }
 
-            console.log(`db: fetch binary release ${slug}#${rel.tag_name}`)
+            console.log(
+                `db: fetch binary release ${slug}#${rel.tag_name}`
+            )
             const fw = await fetchReleaseBinary(slug, rel.tag_name)
             if (fw) {
                 console.log(
@@ -56,8 +52,8 @@ export default function useFirmwareBlobs() {
             // throttle github queries
             await delay(5000)
         }
-    }, [db])
-
+    }, [db, firmwares]);
+    useIdleCallback(loadFirmwares, 30000, [db, firmwares]);
     useChangeAsync(
         firmwares,
         async fw => {
