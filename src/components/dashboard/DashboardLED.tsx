@@ -8,7 +8,7 @@ import useChange from "../../jacdac/useChange"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import useAnimationFrame from "../hooks/useAnimationFrame"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
-import { Grid, Slider } from "@material-ui/core"
+import { Grid, rgbToHex, Slider } from "@material-ui/core"
 import LEDServiceHost, {
     LedAnimation,
     LedAnimationData,
@@ -22,15 +22,7 @@ export default function DashboardLED(props: DashboardServiceProps) {
     const { service } = props
     const host = useServiceHost<LEDServiceHost>(service)
     const color = host ? "secondary" : "primary"
-    const brightnessRegister = service.register(LedReg.Brightness)
-    const [brightness] = useRegisterUnpackedValue<[number]>(
-        brightnessRegister,
-        props
-    )
-    const animationData = useRegisterUnpackedValue<LedAnimationData>(
-        service.register(LedReg.Animation),
-        props
-    )
+    const [r, g, b] = useRegisterUnpackedValue<[number, number, number]>(service.register(LedReg.Color), props);
     const [waveLength] = useRegisterUnpackedValue<[number]>(
         service.register(LedReg.WaveLength),
         props
@@ -40,41 +32,23 @@ export default function DashboardLED(props: DashboardServiceProps) {
         props
     )
 
-    // restart animation with steps
+    /*
     const animation = useMemo(() => new LedAnimation(animationData), [
         animationData,
     ])
-    // animate
     useAnimationFrame(() => {
         animation.update(bus.timestamp)
         return true
     }, [animation])
 
     const hsv = useChange(animation, a => a?.hsv)
-
-    const handleBrightnessChange = async (
-        ev: unknown,
-        newValue: number | number[]
-    ) => {
-        await brightnessRegister.sendSetPackedAsync(
-            "u0.16",
-            [newValue as number],
-            true
-        )
-    }
+    */
 
     // nothing to see
-    if (hsv === undefined) return <LoadingProgress />
+    if (r === undefined) return <LoadingProgress />
 
-    const opacity = brightness
-    const fill = hsvToCss(
-        hsv[0],
-        hsv[1],
-        hsv[2],
-        brightness * 0xff,
-        waveLength !== undefined
-    )
-
+    const opacity = 1;
+    const fill = `rgb(${r}, ${g}, ${b})`
     const ln = Math.min(ledCount || 1, 5)
     const lw = 15.5
     const m = 1
@@ -152,19 +126,6 @@ export default function DashboardLED(props: DashboardServiceProps) {
                         ))}
                 </SvgWidget>
             </Grid>
-            {brightness !== undefined && (
-                <Grid item xs>
-                    <Slider
-                        min={0}
-                        max={1}
-                        step={0.01}
-                        color={color}
-                        valueLabelDisplay="off"
-                        value={brightness}
-                        onChange={handleBrightnessChange}
-                    />
-                </Grid>
-            )}
         </Grid>
     )
 }
