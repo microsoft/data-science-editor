@@ -67,8 +67,9 @@ export default function ServiceCatalog() {
     const allTags = useMemo(
         () =>
             unique(
-                arrayConcatMany(serviceSpecifications().map(srv => [srv.group, ...srv.tags]))
-                    .filter(t => !!t)
+                arrayConcatMany(
+                    serviceSpecifications().map(srv => [srv.group, ...srv.tags])
+                ).filter(t => !!t)
             ),
         []
     )

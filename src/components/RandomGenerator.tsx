@@ -5,15 +5,12 @@ import {
     serviceSpecificationFromClassIdentifier,
 } from "../../jacdac-ts/src/jdom/spec"
 import {
-    TextField,
-    Paper,
     Card,
     makeStyles,
     CardContent,
     CardActions,
     Typography,
     createStyles,
-    FormControl,
     Input,
 } from "@material-ui/core"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name

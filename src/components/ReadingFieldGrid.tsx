@@ -7,7 +7,6 @@ import {
     Grid,
     makeStyles,
     Switch,
-    Theme,
 } from "@material-ui/core"
 import React from "react"
 import { JDRegister } from "../../jacdac-ts/src/jdom/register"

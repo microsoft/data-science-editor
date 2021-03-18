@@ -45,8 +45,8 @@ import OpenDashboardButton from "./buttons/OpenDashboardButton"
 import PacketStats from "./PacketStats"
 
 import Suspense from "./ui/Suspense"
-const WebDiagnostics = lazy(() => import("./WebDiagnostics"));
-const AppDrawer = lazy(() => import("./AppDrawer"));
+const WebDiagnostics = lazy(() => import("./WebDiagnostics"))
+const AppDrawer = lazy(() => import("./AppDrawer"))
 const ToolsDrawer = lazy(() => import("./ToolsDrawer"))
 
 export const TOC_DRAWER_WIDTH = 18
@@ -185,9 +185,9 @@ function LayoutWithDarkMode(props: LayoutProps) {
     const { element, props: pageProps } = props
     const { pageContext, path } = pageProps
     const { frontmatter } = pageContext || {}
-    const makeCodeTool = /tools\/makecode-/.test(path);
+    const makeCodeTool = /tools\/makecode-/.test(path)
     const { fullScreen } = frontmatter || {
-        fullScreen: makeCodeTool
+        fullScreen: makeCodeTool,
     }
     const { darkMode, darkModeMounted } = useContext(DarkModeContext)
     const isDark = darkMode === "dark"
@@ -306,12 +306,14 @@ function LayoutWithContext(props: LayoutProps) {
     const { element, props: pageProps } = props
     const { pageContext, path } = pageProps
     const { frontmatter } = pageContext || {}
-    const makeCodeTool = /tools\/makecode-/.test(path);
-    const { hideMainMenu = false, hideUnderConstruction = false } =
-        frontmatter || {
-            hideMainMenu: makeCodeTool,
-            hideUnderConstruction: makeCodeTool
-        }
+    const makeCodeTool = /tools\/makecode-/.test(path)
+    const {
+        hideMainMenu = false,
+        hideUnderConstruction = false,
+    } = frontmatter || {
+        hideMainMenu: makeCodeTool,
+        hideUnderConstruction: makeCodeTool,
+    }
 
     const classes = useStyles()
 
@@ -338,7 +340,11 @@ function LayoutWithContext(props: LayoutProps) {
                         Jacdac.
                     </Alert>
                 )}
-                {Flags.diagnostics && <Suspense><WebDiagnostics /></Suspense>}
+                {Flags.diagnostics && (
+                    <Suspense>
+                        <WebDiagnostics />
+                    </Suspense>
+                )}
                 <Typography className={"markdown"} component="span">
                     {container ? <Container>{element}</Container> : element}
                 </Typography>
@@ -355,8 +361,16 @@ function LayoutWithContext(props: LayoutProps) {
             {!hideMainMenu && (
                 <nav>
                     <MainAppBar {...props} />
-                    {drawerType !== DrawerType.None && <Suspense><AppDrawer pagePath={path} /></Suspense>}
-                    {toolsMenu && <Suspense><ToolsDrawer /></Suspense>}
+                    {drawerType !== DrawerType.None && (
+                        <Suspense>
+                            <AppDrawer pagePath={path} />
+                        </Suspense>
+                    )}
+                    {toolsMenu && (
+                        <Suspense>
+                            <ToolsDrawer />
+                        </Suspense>
+                    )}
                 </nav>
             )}
             {container ? (
