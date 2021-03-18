@@ -52,10 +52,9 @@ function createBus(): JDBus {
     // always start bridge
     if (typeof window !== "undefined") {
         new IFrameBridgeClient(b, args.frameId)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ;(<any>window).__jacdacBus = b
     }
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (<any>window).__jacdacBus = b
 
     return b
 }
