@@ -60,7 +60,7 @@ export default function JacdacProvider(props: { children: ReactNode }) {
     useEffect(() => {
         if (!firstConnect) {
             setFirstConnect(true)
-            bus.transports.forEach(transport => transport.connect(true))
+            bus.connect(true)
         }
         return () => {}
     }, [])

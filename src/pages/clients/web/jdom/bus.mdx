@@ -25,13 +25,13 @@ to any known connected physical device. The Jacdac physical device hasn't been p
 you can initiate the connection from a user interaction handler (security measure as the user must manually pick the device).
 
 ```javascript
-await bus.connectAsync();
+await bus.connect();
 ```
 
 The bus will detect that the physical device is disconnected automatically. If you wish to disconnect manually, use
 
 ```javascript
-await bus.disconnectAsync();
+await bus.disconnect();
 ```
 
 You can query the status of the connection using ``bus.connectionState``. The connection has 4 states:

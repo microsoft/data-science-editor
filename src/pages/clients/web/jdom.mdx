@@ -33,7 +33,7 @@ If you are using JavaScript/TypeScript ES6, import all APIs
 import { createUSBBus, CHANGE } from "jacdac-ts"
 
 const bus = createUSBBus();
-await bus.connectAsync();
+await bus.connect();
 bus.on(CHANGE, () => console.log(bus.devices()
     .map(device => device.toString())
     .join(", "))
