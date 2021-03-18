@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import {
     useRegisterBoolValue,
@@ -6,7 +6,6 @@ import {
 } from "../../jacdac/useRegisterValue"
 import useServiceHost from "../hooks/useServiceHost"
 import { Grid, Slider } from "@material-ui/core"
-import RegisterTrend from "../RegisterTrend"
 import MicIcon from "@material-ui/icons/Mic"
 import { REFRESH, SoundLevelReg } from "../../../jacdac-ts/src/jdom/constants"
 import AnalogSensorServiceHost from "../../../jacdac-ts/src/hosts/analogsensorservicehost"
@@ -18,10 +17,10 @@ import LoadingProgress from "../ui/LoadingProgress"
 
 function HostMicrophoneButton(props: {
     service: JDService
-    host?: AnalogSensorServiceHost,
+    host?: AnalogSensorServiceHost
     visible: boolean
 }) {
-    const { host, service } = props
+    const { host, service, visible } = props
     const enabledRegister = service.register(SoundLevelReg.Enabled)
     const enabled = useRegisterBoolValue(enabledRegister, props)
     const [minDecibels] = useRegisterUnpackedValue<[number]>(
@@ -46,13 +45,14 @@ function HostMicrophoneButton(props: {
     // update volume on demand
     useEffect(
         () =>
+            visible &&
             host?.subscribe(REFRESH, () => {
                 const v = volume?.()
                 if (v !== undefined) {
                     host.reading.setValues([v])
                 }
             }),
-        [host, volume]
+        [host, volume, visible]
     )
 
     return (
@@ -70,7 +70,10 @@ function HostMicrophoneButton(props: {
 export default function DashboardSoundLevel(props: DashboardServiceProps) {
     const { visible, service } = props
     const soundLevelRegister = service.register(SoundLevelReg.SoundLevel)
-    const [soundLevel] = useRegisterUnpackedValue<[number]>(soundLevelRegister)
+    const [soundLevel] = useRegisterUnpackedValue<[number]>(
+        soundLevelRegister,
+        props
+    )
     const host = useServiceHost<AnalogSensorServiceHost>(service)
     const color = host ? "secondary" : "primary"
 
@@ -95,7 +98,11 @@ export default function DashboardSoundLevel(props: DashboardServiceProps) {
             <Grid item>
                 <Grid container spacing={2} alignItems="center">
                     <Grid item>
-                        <HostMicrophoneButton service={service} host={host} visible={visible} />
+                        <HostMicrophoneButton
+                            service={service}
+                            host={host}
+                            visible={visible}
+                        />
                     </Grid>
                     <Grid item xs>
                         <Slider

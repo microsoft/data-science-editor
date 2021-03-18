@@ -22,7 +22,7 @@ function HostMicrophoneButton(props: {
     host?: SensorServiceHost<[Uint8Array]>
     visible: boolean
 }) {
-    const { host, service } = props
+    const { host, service, visible } = props
     const enabledRegister = service.register(SoundSpectrumReg.Enabled)
     const enabled = useRegisterBoolValue(enabledRegister, props)
     const [minDecibels] = useRegisterUnpackedValue<[number]>(
@@ -42,15 +42,15 @@ function HostMicrophoneButton(props: {
         service.register(SoundSpectrumReg.SmoothingTimeConstant),
         props
     )
-    const {
-        spectrum,
-        onClickActivateMicrophone,
-    } = useMicrophoneSpectrum(enabled && !!host, {
-        fftSize,
-        smoothingTimeConstant,
-        minDecibels,
-        maxDecibels,
-    })
+    const { spectrum, onClickActivateMicrophone } = useMicrophoneSpectrum(
+        enabled && !!host,
+        {
+            fftSize,
+            smoothingTimeConstant,
+            minDecibels,
+            maxDecibels,
+        }
+    )
     const title = enabled ? "Stop microphone" : "Start microphone"
 
     const handleClick = async () => {
@@ -61,13 +61,15 @@ function HostMicrophoneButton(props: {
     // update volume on demand
     useEffect(
         () =>
+            visible &&
+            enabled &&
             host?.subscribe(REFRESH, () => {
                 const v = spectrum?.()
                 if (v !== undefined) {
-                    host.reading.setValues([v])
+                    host.reading.setValues([v], true)
                 }
             }),
-        [host, spectrum]
+        [host, spectrum, visible]
     )
 
     return (
@@ -92,7 +94,7 @@ export default function DashboardSoundSpectrum(props: DashboardServiceProps) {
     return (
         <Grid container direction="column">
             <Grid item>
-                <BytesBarGraphWidget register={frequencyBinsRegister} />
+                <BytesBarGraphWidget visible={visible} register={frequencyBinsRegister} />
             </Grid>
             <Grid item>
                 <HostMicrophoneButton
