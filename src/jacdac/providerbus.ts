@@ -34,20 +34,36 @@ Flags.diagnostics = args.diagnostics
 Flags.webUSB = args.webUSB
 Flags.webBluetooth = args.webBluetooth
 
-const bus = new JDBus(
-    [
-        Flags.webUSB && createUSBTransport(),
-        Flags.webBluetooth && createBluetoothTransport(),
-    ],
-    {
-        parentOrigin: args.parentOrigin,
+// defeat react fast-refresh
+function createBus(): JDBus {
+    const b = new JDBus(
+        [
+            Flags.webUSB && createUSBTransport(),
+            Flags.webBluetooth && createBluetoothTransport(),
+        ],
+        {
+            parentOrigin: args.parentOrigin,
+        }
+    )
+    b.setBackgroundFirmwareScans(true)
+    GamepadHostManager.start(b)
+
+    // tslint:disable-next-line: no-unused-expression
+    // always start bridge
+    if (typeof window !== "undefined") {
+        new IFrameBridgeClient(b, args.frameId)
     }
-)
-bus.setBackgroundFirmwareScans(true)
-GamepadHostManager.start(bus)
 
-// tslint:disable-next-line: no-unused-expression
-// always start bridge
-if (typeof window !== "undefined") new IFrameBridgeClient(bus, args.frameId) // start bridge
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (<any>window).__jacdacBus = b
 
-export default bus;
+    return b
+}
+
+function cachedBus(): JDBus {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return typeof Window !== "undefined" && (<any>window).__jacdacBus
+}
+
+const bus = cachedBus() || createBus()
+export default bus

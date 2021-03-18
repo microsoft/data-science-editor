@@ -8,6 +8,7 @@ export default function JacdacProvider(props: { children: ReactNode }) {
 
     // connect in background on first load.
     useEffect(() => {
+        // bus live accross hot-reloads
         if (!firstConnect) {
             setFirstConnect(true)
             bus.connect(true)
