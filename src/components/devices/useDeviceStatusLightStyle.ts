@@ -110,21 +110,21 @@ export default function useDeviceStatusLightStyle(
     device: JDDevice,
     options?: LedAnimationProps
 ) {
-    const register = useChange(device, d =>
-        d.service(0).register(ControlReg.StatusLight)
-    )
     const bootloader = useChange(device, d => d.hasService(SRV_BOOTLOADER))
     const identifying = useChange(device, d => d?.identifying)
+    /*
+    TODO
     const registerAnimation = useRegisterUnpackedValue<LedAnimationData>(
         register
     ) || [0, []]
+    */
 
     // pick animation step
     const animation: LedAnimationData = identifying
         ? identifyAnimation
         : bootloader
         ? bootloaderAnimation
-        : registerAnimation
+        : undefined
 
     return useLedAnimationStyle(animation, options)
 }
