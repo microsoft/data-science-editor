@@ -1,17 +1,9 @@
-import { LedAnimationData } from "../../../jacdac-ts/src/hosts/ledservicehost"
-import {
-    ControlReg,
-    SRV_BOOTLOADER,
-} from "../../../jacdac-ts/src/jdom/constants"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
-import useChange from "../../jacdac/useChange"
-import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
-import useLedAnimationStyle, {
-    LedAnimationProps,
-} from "../hooks/useLedAnimationStyle"
 
 const statusHue = 32
 const statusSaturation = 255
+
+type LedAnimationData = [number, number[][]]
 
 //Every 524ms it changes from 5.9% and 1.6% (i.e. 1 sec duty cycle)
 const bootloaderAnimation: LedAnimationData = [
@@ -110,14 +102,13 @@ export default function useDeviceStatusLightStyle(
     device: JDDevice,
     options?: LedAnimationProps
 ) {
+    /*
     const bootloader = useChange(device, d => d.hasService(SRV_BOOTLOADER))
     const identifying = useChange(device, d => d?.identifying)
-    /*
     TODO
     const registerAnimation = useRegisterUnpackedValue<LedAnimationData>(
         register
     ) || [0, []]
-    */
 
     // pick animation step
     const animation: LedAnimationData = identifying
@@ -125,6 +116,7 @@ export default function useDeviceStatusLightStyle(
         : bootloader
         ? bootloaderAnimation
         : undefined
+    */
 
-    return useLedAnimationStyle(animation, options)
+    return {}
 }
