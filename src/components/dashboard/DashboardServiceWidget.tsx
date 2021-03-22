@@ -116,6 +116,7 @@ const serviceViews: {
 } = {
     [SRV_ROLE_MANAGER]: {
         component: DashboardRoleManager,
+        weight: () => 2,
     },
     [SRV_BUZZER]: {
         component: DashboardBuzzer,
