@@ -17,6 +17,7 @@ import {
     SRV_CONTROL,
     SRV_LOGGER,
     SRV_POWER,
+    SRV_PROTO_TEST,
     SRV_ROLE_MANAGER,
     SRV_SETTINGS,
 } from "../../../jacdac-ts/src/jdom/constants"
@@ -61,6 +62,7 @@ const ignoredServices = [
     SRV_SETTINGS,
     SRV_ROLE_MANAGER,
     SRV_POWER,
+    SRV_PROTO_TEST
 ]
 const deviceFilter = (device: JDDevice) =>
     !!device.serviceClasses.filter(sc => ignoredServices.indexOf(sc) < 0).length
