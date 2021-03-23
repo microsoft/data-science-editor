@@ -86,7 +86,7 @@ export default function FirmwareCard(props: { slug: string }) {
                         >
                             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                                 <Typography variant="body2">
-                                    <code>v{version}</code>
+                                    <code>{version}</code>
                                     <span>
                                         {" "}
                                         ({firmwareBlobs.length} firmwares)

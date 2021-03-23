@@ -46,8 +46,7 @@ function contentToFirmwareRelease(
     // filter out non-file, non-uf2
     const version =
         content?.type === "file" &&
-        /^fw-v(\d+\.\d+.\d+)\.uf2$/.exec(content.name)?.[1]
-    console.log({ content, version })
+        /^fw-(\d+\.\d+.\d+)\.uf2$/.exec(content.name)?.[1]
     if (!version) return undefined
 
     return {
@@ -60,7 +59,6 @@ function contentToFirmwareRelease(
 }
 
 function contentsToFirmwareReleases(contents: GithubContent[]) {
-    console.log({ contents })
     return contents
         ?.map(contentToFirmwareRelease)
         .filter(r => !!r)
