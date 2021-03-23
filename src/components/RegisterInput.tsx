@@ -11,6 +11,7 @@ import RegisterTrend from "./RegisterTrend"
 import IconButtonWithProgress from "./ui/IconButtonWithProgress"
 import useRegisterHost from "./hooks/useRegisterHost"
 import useReadingAuxilliaryValue from "./hooks/useReadingAuxilliaryValue"
+import useChange from "../jacdac/useChange"
 
 export type RegisterInputVariant = "widget" | ""
 
@@ -50,7 +51,7 @@ export default function RegisterInput(props: {
     const host = useRegisterHost(register)
     const hasSet =
         specification.kind === "rw" || (host && specification.kind !== "const")
-    const hasData = !!register.data
+    const hasData = useChange(register, _ => !!_.data)
     const color = hasSet ? "secondary" : "primary"
     const minReading = useReadingAuxilliaryValue(
         register,
