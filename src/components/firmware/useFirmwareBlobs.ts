@@ -34,18 +34,18 @@ export default function useFirmwareBlobs() {
             const rel = await fetchLatestRelease(slug, {
                 ignoreThrottled: true,
             })
-            if (!rel?.tag_name) {
+            if (!rel?.version) {
                 console.warn(`release not found`)
                 return
             }
 
             console.log(
-                `db: fetch binary release ${slug}#${rel.tag_name}`
+                `db: fetch binary release ${slug} ${rel.version}`
             )
-            const fw = await fetchReleaseBinary(slug, rel.tag_name)
+            const fw = await fetchReleaseBinary(slug, rel.version)
             if (fw) {
                 console.log(
-                    `db: binary release ${slug}#${rel.tag_name} downloaded`
+                    `db: binary release ${slug} ${rel.version} downloaded`
                 )
                 firmwares.set(slug, fw)
             }

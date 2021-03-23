@@ -1,18 +1,24 @@
+import { semverCmp } from "./semver"
 import useFetch from "./useFetch"
 
 const ROOT = "https://api.github.com/"
 export const GITHUB_API_KEY = "githubtoken"
-export interface GithubRelease {
-    url: string
-    html_url: string
-    tag_name: string
+
+interface GithubContent {
     name: string
-    body: string
-    assets: {
-        url: string
-        browser_download_url: string
-        name: string
-    }[]
+    sha: string
+    size: number
+    html_url: string
+    download_url: string
+    type: "file" | "dir" | "symlink"
+}
+
+export interface GithubFirmwareRelease {
+    version: string
+    sha: string
+    size: number
+    html_url: string
+    download_url: string
 }
 
 export interface GithubUser {
@@ -34,6 +40,33 @@ export interface GithubRepository {
     html_url: string
 }
 
+function contentToFirmwareRelease(
+    content: GithubContent
+): GithubFirmwareRelease {
+    // filter out non-file, non-uf2
+    const version =
+        content?.type === "file" &&
+        /^fw-v(\d+\.\d+.\d+)\.uf2$/.exec(content.name)?.[1]
+    console.log({ content, version })
+    if (!version) return undefined
+
+    return {
+        version,
+        sha: content.sha,
+        size: content.size,
+        html_url: content.html_url,
+        download_url: content.download_url,
+    }
+}
+
+function contentsToFirmwareReleases(contents: GithubContent[]) {
+    console.log({ contents })
+    return contents
+        ?.map(contentToFirmwareRelease)
+        .filter(r => !!r)
+        .sort((l, r) => semverCmp(l.version, r.version))
+}
+
 export function normalizeSlug(slug: string): string {
     return slug.replace(/^https:\/\/github.com\//, "")
 }
@@ -53,15 +86,17 @@ export function parseRepoUrl(url: string): { owner: string; name: string } {
 export async function fetchLatestRelease(
     slug: string,
     options?: GitHubApiOptions
-): Promise<GithubRelease> {
-    const uri = `${ROOT}repos/${normalizeSlug(slug)}/releases/latest`
+): Promise<GithubFirmwareRelease> {
+    // https://api.github.com/repos/microsoft/jacdac-msr-modules/contents/dist
+    const uri = `${ROOT}repos/${normalizeSlug(slug)}/contents/dist`
     const resp = await fetch(uri)
     //    console.log(resp)
     switch (resp.status) {
         case 200:
         case 204: {
-            const release: GithubRelease = await resp.json()
-            return release
+            const contents: GithubContent[] = await resp.json()
+            const releases = contentsToFirmwareReleases(contents)
+            return releases[0]
         }
         case 404:
             // unknow repo or no access
@@ -76,12 +111,12 @@ export async function fetchLatestRelease(
 
 export async function fetchReleaseBinary(
     slug: string,
-    tag: string
+    version: string
 ): Promise<Blob> {
     // we are not using the release api because of CORS.
     const downloadUrl = `https://raw.githubusercontent.com/${normalizeSlug(
         slug
-    )}/${tag}/dist/firmware.uf2`
+    )}/main/dist/fw-v${version}.uf2`
     const req = await fetch(downloadUrl, {
         headers: { Accept: "application/octet-stream" },
     })
@@ -147,19 +182,11 @@ export function useRepository(slug: string) {
 }
 
 export function useLatestRelease(slug: string, options?: GitHubApiOptions) {
-    if (!slug)
-        return {
-            response: undefined,
-            loading: false,
-            error: undefined,
-            status: undefined,
-        }
-    const uri = `repos/${normalizeSlug(slug)}/releases/latest`
-    const res = useFetchApi<GithubRelease>(uri, {
-        ...(options || {}),
-        ignoreThrottled: true,
-    })
-    return res
+    const resp = useLatestReleases(slug, options)
+    return {
+        ...resp,
+        response: resp.response?.[0],
+    }
 }
 
 export function useLatestReleases(slug: string, options?: GitHubApiOptions) {
@@ -170,10 +197,13 @@ export function useLatestReleases(slug: string, options?: GitHubApiOptions) {
             error: undefined,
             status: undefined,
         }
-    const uri = `repos/${normalizeSlug(slug)}/releases`
-    const res = useFetchApi<GithubRelease[]>(uri, {
+    const uri = `repos/${normalizeSlug(slug)}/contents/dist`
+    const res = useFetchApi<GithubContent[]>(uri, {
         ...(options || {}),
         ignoreThrottled: true,
     })
-    return res
+    return {
+        ...res,
+        response: contentsToFirmwareReleases(res.response),
+    }
 }
