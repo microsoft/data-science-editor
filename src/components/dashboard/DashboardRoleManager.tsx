@@ -11,7 +11,7 @@ import useChange from "../../jacdac/useChange"
 import { RoleListItem } from "../services/RoleListItem"
 
 export default function DashboardRoleManager(props: DashboardServiceProps) {
-    const { service } = props
+    const { service, expanded } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const autoBindRegister = service.register(RoleManagerReg.AutoBind)
     const autoBind = useRegisterBoolValue(autoBindRegister, props)
@@ -29,7 +29,7 @@ export default function DashboardRoleManager(props: DashboardServiceProps) {
 
     return (
         <>
-            {!!roles?.length && (
+            {expanded && !!roles?.length && (
                 <Grid item xs={12}>
                     <List dense={true}>
                         {roles.map(role => (
@@ -38,15 +38,17 @@ export default function DashboardRoleManager(props: DashboardServiceProps) {
                     </List>
                 </Grid>
             )}
-            <Grid item xs={12}>
-                <Switch
-                    id={switchId}
-                    checked={autoBind}
-                    onChange={handleChecked}
-                    aria-labelledby={labelId}
-                />
-                <label id={labelId}>auto assign roles</label>
-            </Grid>
+            {expanded && (
+                <Grid item xs={12}>
+                    <Switch
+                        id={switchId}
+                        checked={autoBind}
+                        onChange={handleChecked}
+                        aria-labelledby={labelId}
+                    />
+                    <label id={labelId}>auto assign roles</label>
+                </Grid>
+            )}
             <Grid item xs={12}>
                 <Button
                     disabled={!roleManager}
