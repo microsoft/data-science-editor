@@ -21,7 +21,7 @@ export default function DashboardRoleManager(props: DashboardServiceProps) {
     const switchId = useId()
     const labelId = useId()
     const roleManager = useChange(bus, _ => _.roleManager)
-    const roles = useChange(roleManager, _ => _.roles)
+    const roles = useChange(roleManager, _ => _?.roles)
 
     const handleClick = () => roleManager?.startSimulators()
 
