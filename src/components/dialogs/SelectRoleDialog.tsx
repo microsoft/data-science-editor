@@ -20,6 +20,7 @@ export default function SelectRoleDialog(props: {
         service,
     ])
     const currentRole = useChange(service, srv => srv.role)
+    const hasRoles = !!roles?.length
 
     const handleClick = (role: Role) => async () => {
         await roleManager.setRole(service, role.name)
@@ -33,19 +34,23 @@ export default function SelectRoleDialog(props: {
             open={open}
             onClose={onClose}
         >
-            <DialogTitle id={labelId}>Select a role</DialogTitle>
-            <DialogContent>
-                <List>
-                    {roles?.map((role, i) => (
-                        <RoleListItem
-                            key={i}
-                            role={role}
-                            selected={currentRole === role}
-                            onClick={handleClick(role)}
-                        />
-                    ))}
-                </List>
-            </DialogContent>
+            <DialogTitle id={labelId}>
+                {hasRoles ? `Select a role` : `No role available`}
+            </DialogTitle>
+            {hasRoles && (
+                <DialogContent>
+                    <List>
+                        {roles?.map((role, i) => (
+                            <RoleListItem
+                                key={i}
+                                role={role}
+                                selected={currentRole === role.name}
+                                onClick={handleClick(role)}
+                            />
+                        ))}
+                    </List>
+                </DialogContent>
+            )}
         </Dialog>
     )
 }
