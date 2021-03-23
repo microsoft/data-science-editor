@@ -13,8 +13,11 @@ import DashboardDeviceGroup from "./DashboardDeviceGroup"
 import AddIcon from "@material-ui/icons/Add"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import ClearIcon from "@material-ui/icons/Clear"
+// tslint:disable-next-line: no-submodule-imports match-default-export-name
+import DevicesIcon from "@material-ui/icons/Devices"
 import ConnectAlert from "../alert/ConnectAlert"
 import ConnectButtons from "../../jacdac/ConnectButtons"
+import useRoleManager from "../services/useRoleManager"
 
 function defaultDeviceSort(l: JDDevice, r: JDDevice): number {
     const srvScore = (srv: jdspec.ServiceSpec) =>
@@ -52,14 +55,19 @@ function defaultDeviceFilter(d: JDDevice): boolean {
 export interface DashboardDeviceProps {
     showHeader?: boolean
     showAvatar?: boolean
+}
+
+export interface DashboardProps extends DashboardDeviceProps {
+    showStartSimulators?: boolean
     showConnect?: boolean
     deviceFilter?: (d: JDDevice) => boolean
     deviceSort?: (l: JDDevice, r: JDDevice) => number
 }
 
-export default function Dashboard(props: DashboardDeviceProps) {
+export default function Dashboard(props: DashboardProps) {
     const {
         showConnect,
+        showStartSimulators,
         deviceSort = defaultDeviceSort,
         deviceFilter = defaultDeviceFilter,
         ...other
@@ -76,10 +84,11 @@ export default function Dashboard(props: DashboardDeviceProps) {
         devices,
         d => !!bus.deviceHost(d.deviceId)
     )
-
+    const roleManager = useRoleManager()
     const handleClearSimulators = () => {
         bus.deviceHosts().forEach(dev => bus.removeDeviceHost(dev))
     }
+    const handleStartSimulators = () => roleManager?.startSimulators()
 
     return (
         <>
@@ -87,6 +96,14 @@ export default function Dashboard(props: DashboardDeviceProps) {
                 title="Simulators"
                 action={
                     <>
+                        {showStartSimulators && (
+                            <IconButtonWithTooltip
+                                title="start missing simulators"
+                                onClick={handleStartSimulators}
+                            >
+                                <DevicesIcon />
+                            </IconButtonWithTooltip>
+                        )}
                         <IconButtonWithTooltip
                             title="start simulator"
                             onClick={toggleShowDeviceHostsDialog}
