@@ -40,9 +40,9 @@ export default function SelectRoleDialog(props: {
             {hasRoles && (
                 <DialogContent>
                     <List>
-                        {roles?.map((role, i) => (
+                        {roles?.map(role => (
                             <RoleListItem
-                                key={i}
+                                key={role.name}
                                 role={role}
                                 selected={currentRole === role.name}
                                 onClick={handleClick(role)}

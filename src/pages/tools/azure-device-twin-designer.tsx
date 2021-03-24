@@ -169,7 +169,7 @@ export default function AzureDeviceTwinDesigner() {
                 </Grid>
                 {twin.components.map((c, i) => (
                     <ComponentRow
-                        key={i}
+                        key={c.name}
                         twin={twin}
                         component={c}
                         onUpdate={update}
