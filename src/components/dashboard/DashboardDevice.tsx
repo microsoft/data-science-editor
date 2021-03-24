@@ -27,6 +27,7 @@ import { MOBILE_BREAKPOINT } from "../layout"
 import useDeviceName from "../devices/useDeviceName"
 import { DashboardDeviceProps } from "./Dashboard"
 import useIntersectionObserver from "../hooks/useIntersectionObserver"
+import { dependencyId } from "../../../jacdac-ts/src/jdom/node"
 
 const ignoredServices = [SRV_CTRL, SRV_LOGGER]
 
@@ -84,7 +85,7 @@ export default function DashboardDevice(
                 />
             ))}
         </Grid>
-    ), [...services, expanded, variant, visible])
+    ), [dependencyId(services), expanded, variant, visible])
 
     if (!showHeader)
         return (
