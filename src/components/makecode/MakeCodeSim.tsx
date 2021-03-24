@@ -26,6 +26,7 @@ import Helmet from "react-helmet"
 import { resolveMakecodeServiceFromClassIdentifier } from "../../../jacdac-ts/src/jdom/makecode"
 import Dashboard from "../../components/dashboard/Dashboard"
 import useDevices from "../hooks/useDevices"
+import useRoleManager from "../services/useRoleManager"
 
 function deviceSort(l: JDDevice, r: JDDevice): number {
     const srvScore = (srv: jdspec.ServiceSpec) =>
@@ -71,6 +72,7 @@ function Carousel() {
     const devices = useDevices({ announced: true, ignoreSelf: true }).filter(
         deviceFilter
     )
+    const roleManager = useRoleManager()
     const extensions = unique(
         arrayConcatMany(
             devices.map(device =>
@@ -106,7 +108,7 @@ function Carousel() {
                 showHeader={false}
                 deviceSort={deviceSort}
                 deviceFilter={deviceFilter}
-                showStartSimulators={true}
+                showStartSimulators={!!roleManager}
             />
             {!!extensions?.length && (
                 <Box m={1}>
