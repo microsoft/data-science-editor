@@ -22,7 +22,7 @@ function Diagnostics(props: { serviceClass: number }) {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
 
     const hostDefinition = hostDefinitionFromServiceClass(serviceClass)
-    const handleStartSimulator = () => addHost(bus, hostDefinition.services())
+    const handleStartSimulator = () => addHost(bus, hostDefinition)
 
     if (!hostDefinition) return null
 

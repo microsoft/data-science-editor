@@ -14,7 +14,11 @@ import {
     memberValueToString,
     tryParseMemberValue,
 } from "../../../jacdac-ts/src/jdom/spec"
-import { isSet, pick, roundWithPrecision } from "../../../jacdac-ts/src/jdom/utils"
+import {
+    isSet,
+    pick,
+    roundWithPrecision,
+} from "../../../jacdac-ts/src/jdom/utils"
 import { RegisterInputVariant } from "../RegisterInput"
 import ButtonWidget from "../widgets/ButtonWidget"
 import GaugeWidget from "../widgets/GaugeWidget"
@@ -154,8 +158,7 @@ export default function MemberInput(props: {
 
     // value hasn't been loaded yet
     if (serviceMemberSpecification.kind !== "command" && value === undefined) {
-        if (showLoading)
-            return <LoadingProgress />
+        if (showLoading) return <LoadingProgress />
         else return null
     }
 

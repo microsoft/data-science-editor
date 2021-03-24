@@ -12,7 +12,10 @@ export default function DashboardPower(props: DashboardServiceProps) {
     const { service } = props
 
     const enabledRegister = service.register(PowerReg.Enabled)
-    const [enabled] = useRegisterUnpackedValue<[boolean]>(enabledRegister, props)
+    const [enabled] = useRegisterUnpackedValue<[boolean]>(
+        enabledRegister,
+        props
+    )
     const [overload] = useRegisterUnpackedValue<[boolean]>(
         service.register(PowerReg.Overload),
         props
@@ -24,9 +27,7 @@ export default function DashboardPower(props: DashboardServiceProps) {
 
     const host = useServiceHost<ReflectedLightServiceHost>(service)
     const color = host ? "secondary" : "primary"
-    const { background, active, textProps } = useWidgetTheme(
-        color
-    )
+    const { background, active, textProps } = useWidgetTheme(color)
 
     const w = 64
     const h = w
@@ -44,9 +45,10 @@ export default function DashboardPower(props: DashboardServiceProps) {
         await enabledRegister.sendSetBoolAsync(!enabled)
         enabledRegister.refresh()
     }
+    const widgetSize = `clamp(3rem, 10vw, 16vw)`
 
     return (
-        <SvgWidget width={w} height={h}>
+        <SvgWidget width={w} height={h} size={widgetSize}>
             <g>
                 <PowerButton
                     cx={w / 2}
