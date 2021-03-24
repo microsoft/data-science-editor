@@ -96,7 +96,7 @@ export default function Dashboard(props: DashboardProps) {
                 title="Simulators"
                 action={
                     <>
-                        {showStartSimulators && (
+                        {showStartSimulators && !!roleManager && (
                             <IconButtonWithTooltip
                                 title="start missing simulators"
                                 onClick={handleStartSimulators}
