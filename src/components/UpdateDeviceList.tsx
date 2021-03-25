@@ -1,6 +1,6 @@
 import { Button, Grid } from "@material-ui/core"
 import { Alert } from "@material-ui/lab"
-import React, { useContext, useEffect, useState } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
 import {
     DEVICE_CHANGE,
     FIRMWARE_BLOBS_CHANGE,
@@ -16,12 +16,10 @@ import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import CircularProgressWithLabel from "./ui/CircularProgressWithLabel"
 import DeviceCard from "./DeviceCard"
 import useGridBreakpoints from "./useGridBreakpoints"
-import { BusState } from "../../jacdac-ts/src/jdom/bus"
 import AppContext from "./AppContext"
 import useChange from "../jacdac/useChange"
 import useDevices from "./hooks/useDevices"
 import useFirmwareBlobs from "./firmware/useFirmwareBlobs"
-import ConnectAlert from "./alert/ConnectAlert"
 import useMounted from "./hooks/useMounted"
 
 function UpdateDeviceCard(props: { device: JDDevice }) {
@@ -38,6 +36,7 @@ function UpdateDeviceCard(props: { device: JDDevice }) {
         )
     const update = blob && firmwareInfo && updateApplicable(firmwareInfo, blob)
     const flashing = useChange(device, d => d.flashing)
+    const mounted = useMounted()
 
     const handleFlashing = async () => {
         if (device.flashing) return
@@ -45,13 +44,15 @@ function UpdateDeviceCard(props: { device: JDDevice }) {
             setProgress(0)
             device.flashing = true // don't refresh registers while flashing
             const updateCandidates = [firmwareInfo]
-            await flashFirmwareBlob(bus, blob, updateCandidates, prog =>
-                setProgress(prog)
-            )
+            await flashFirmwareBlob(bus, blob, updateCandidates, prog => {
+                if (mounted())
+                    setProgress(prog)
+            })
             // trigger info
             device.firmwareInfo = undefined
         } catch (e) {
-            setError(e)
+            if (mounted())
+                setError(e)
         } finally {
             device.flashing = false
         }
@@ -86,7 +87,7 @@ function UpdateDeviceCard(props: { device: JDDevice }) {
 
 export default function UpdateDeviceList() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const [scanning, setScanning] = useState(false)
+    const scanning = useRef(false)
     const gridBreakpoints = useGridBreakpoints()
     const safeBoot = useChange(bus, b => b.safeBoot)
     const devices = useDevices(
@@ -98,17 +99,16 @@ export default function UpdateDeviceList() {
         },
         [safeBoot]
     ).filter(dev => safeBoot || !dev.hasService(SRV_BOOTLOADER))
-    const isFlashing = devices.some(dev => dev.flashing)
+    const isFlashing = useChange(bus, () => devices.some(dev => dev.flashing))
     const blobs = useFirmwareBlobs()
-    const mounted = useMounted()
     async function scan() {
-        if (!blobs?.length || isFlashing || scanning) return
+        if (!blobs?.length || isFlashing || scanning.current) return
         console.log(`start scanning bus`)
         try {
-            setScanning(true)
+            scanning.current = true
             await scanFirmwares(bus)
         } finally {
-            if (mounted()) setScanning(false)
+            scanning.current = false
         }
     }
     // load indexed db file once

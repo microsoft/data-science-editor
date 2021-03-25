@@ -86,7 +86,7 @@ function DeviceTreeItem(
     const reading = useRegisterHumanValue(readingRegister)
 
     const alert = lost
-        ? `Lost device...`
+        ? `lost device...`
         : dropped > 2
         ? `${dropped} lost`
         : undefined
@@ -155,8 +155,6 @@ function ServiceTreeItem(
         ?.filter(isEvent)
         .map(info => service.event(info.identifier))
         .filter(ev => !eventFilter || eventFilter(ev))
-    const readingRegister = service.readingRegister
-    const reading = useRegisterHumanValue(readingRegister)
     const instanceName = useRegisterStringValue(
         service.register(BaseReg.InstanceName)
     )
@@ -174,7 +172,6 @@ function ServiceTreeItem(
         <StyledTreeItem
             nodeId={id}
             labelText={name}
-            labelInfo={reading}
             kind={"service"}
             checked={open}
             setChecked={
@@ -232,6 +229,7 @@ function RegisterTreeItem(
         optional ? "?" : ""
     }`
     const humanValue = useRegisterHumanValue(register)
+    const handleClick = () => register.sendGetAsync();
 
     useEffect(
         () =>
@@ -256,6 +254,7 @@ function RegisterTreeItem(
             kind={specification?.kind || "register"}
             alert={failedGet && !optional && humanValue === undefined && `???`}
             checked={checked?.indexOf(id) > -1}
+            onClick={handleClick}
             setChecked={
                 checkboxes?.indexOf("register") > -1 &&
                 setChecked &&

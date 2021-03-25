@@ -114,7 +114,7 @@ export async function fetchReleaseBinary(
     // we are not using the release api because of CORS.
     const downloadUrl = `https://raw.githubusercontent.com/${normalizeSlug(
         slug
-    )}/main/dist/fw-v${version}.uf2`
+    )}/main/dist/fw-${version}.uf2`
     const req = await fetch(downloadUrl, {
         headers: { Accept: "application/octet-stream" },
     })

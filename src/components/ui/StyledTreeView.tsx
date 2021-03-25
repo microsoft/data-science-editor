@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import KindIcon from "../KindIcon"
 import { Switch } from '@material-ui/core';
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import NotificationImportantIcon from '@material-ui/icons/NotificationImportant';
+import SignalCellularConnectedNoInternet0BarIcon from '@material-ui/icons/SignalCellularConnectedNoInternet0Bar';
 
 declare module 'csstype' {
     interface Properties {
@@ -109,9 +109,9 @@ export function StyledTreeItem(props: TreeItemProps & {
                     <Typography variant="body2" className={classes.labelText}>
                         {labelText}
                     </Typography>
-                    {alert && <NotificationImportantIcon />}
+                    {alert && <SignalCellularConnectedNoInternet0BarIcon />}
                     <Typography variant="caption" color="inherit">
-                        {alert && <Typography component="span">
+                        {alert && <Typography variant="caption" component="span">
                             {alert}
                         </Typography>}
                         {labelInfo}
