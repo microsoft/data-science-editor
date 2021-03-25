@@ -62,7 +62,7 @@ function contentsToFirmwareReleases(contents: GithubContent[]) {
     return contents
         ?.map(contentToFirmwareRelease)
         .filter(r => !!r)
-        .sort((l, r) => semverCmp(l.version, r.version))
+        .sort((l, r) => -semverCmp(l.version, r.version))
 }
 
 export function normalizeSlug(slug: string): string {
