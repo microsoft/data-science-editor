@@ -76,7 +76,7 @@ module.exports = {
         `gatsby-transformer-json`,
         `gatsby-theme-material-ui`,
         `gatsby-plugin-react-helmet`,
-        `gatsby-transformer-sharp`,
+        `gatsby-plugin-image`,
         `gatsby-plugin-sharp`,
         {
             resolve: `gatsby-remark-images`,
@@ -84,6 +84,7 @@ module.exports = {
                 linkImagesToOriginal: false,
             },
         },
+        `gatsby-transformer-sharp`,
         {
             resolve: `gatsby-plugin-mdx`,
             options: {
