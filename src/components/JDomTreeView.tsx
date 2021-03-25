@@ -1,12 +1,9 @@
 import React, { useContext, useState, useEffect } from "react"
 import clsx from "clsx"
-import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 // tslint:disable-next-line: no-submodule-imports
 import { makeStyles, createStyles } from "@material-ui/core/styles"
 // tslint:disable-next-line: no-submodule-imports
 import TreeView from "@material-ui/lab/TreeView"
-// tslint:disable-next-line: no-submodule-imports
-// tslint:disable-next-line: no-submodule-imports
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
@@ -47,6 +44,7 @@ import {
 import LaunchIcon from "@material-ui/icons/Launch"
 import AppContext, { DrawerType } from "./AppContext"
 import { MOBILE_BREAKPOINT } from "./layout"
+import useDevices from "./hooks/useDevices"
 
 function DeviceTreeItem(
     props: { device: JDDevice } & StyledTreeViewItemProps & JDomTreeViewProps
@@ -88,8 +86,8 @@ function DeviceTreeItem(
     const alert = lost
         ? `lost device...`
         : dropped > 2
-        ? `${dropped} lost`
-        : undefined
+            ? `${dropped} pkt lost`
+            : undefined
     const labelInfo = [!!dropped && `${dropped} lost`, reading, serviceNames]
         .filter(r => !!r)
         .join(", ")
@@ -225,9 +223,8 @@ function RegisterTreeItem(
     const [attempts, setAttempts] = useState(register.lastGetAttempts)
     const optional = !!specification?.optional
     const failedGet = attempts > 2
-    const labelText = `${specification?.name || register.id}${
-        optional ? "?" : ""
-    }`
+    const labelText = `${specification?.name || register.id}${optional ? "?" : ""
+        }`
     const humanValue = useRegisterHumanValue(register)
     const handleClick = () => register.sendGetAsync();
 
@@ -322,17 +319,13 @@ export default function JDomTreeView(props: JDomTreeViewProps) {
         onSelect,
         checkboxes,
         dashboard,
-        deviceFilter,
         ...other
     } = props
     const classes = useStyles()
     const [expanded, setExpanded] = useState<string[]>(defaultExpanded || [])
     const [selected, setSelected] = useState<string[]>(defaultSelected || [])
     const [checked, setChecked] = useState<string[]>(defaultChecked || [])
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const devices = useChange(bus, () =>
-        bus.devices().filter(dev => !deviceFilter || deviceFilter(dev))
-    )
+    const devices = useDevices({ ignoreSelf: true })
 
     const handleToggle = (
         event: React.ChangeEvent<unknown>,
