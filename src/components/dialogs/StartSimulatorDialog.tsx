@@ -63,7 +63,7 @@ export default function StartSimulatorDialog(props: {
             onClose={onClose}
         >
             <DialogTitle id={deviceHostLabelId}>
-                Start a device simulator
+                Start a simulator
             </DialogTitle>
             <DialogContent>
                 <Grid container spacing={2}>
