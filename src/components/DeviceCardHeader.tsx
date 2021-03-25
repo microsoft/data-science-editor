@@ -5,8 +5,7 @@ import { Link } from "gatsby-theme-material-ui"
 import { JDDevice } from "../../jacdac-ts/src/jdom/device"
 import React from "react"
 import {
-    useRegisterIntValue,
-    useRegisterStringValue,
+    useRegisterUnpackedValue,
 } from "../jacdac/useRegisterValue"
 import DeviceActions from "./DeviceActions"
 import DeviceName from "./devices/DeviceName"
@@ -20,7 +19,7 @@ function DeviceFirmwareVersionChip(props: { device: JDDevice }) {
     const firmwareVersionRegister = device
         ?.service(0)
         ?.register(ControlReg.FirmwareVersion)
-    const firmwareVersion = useRegisterStringValue(firmwareVersionRegister)
+    const [firmwareVersion] = useRegisterUnpackedValue<[string]>(firmwareVersionRegister)
 
     return (
         (firmwareVersion && <Chip size="small" label={firmwareVersion} />) || (
@@ -32,7 +31,7 @@ function DeviceFirmwareVersionChip(props: { device: JDDevice }) {
 function DeviceTemperatureChip(props: { device: JDDevice }) {
     const { device } = props
     const tempRegister = device?.service(0)?.register(ControlReg.McuTemperature)
-    const temperature = useRegisterIntValue(tempRegister)
+    const [temperature] = useRegisterUnpackedValue<[number]>(tempRegister)
     return (
         (temperature !== undefined && (
             <Chip size="small" label={`${temperature}°`} />

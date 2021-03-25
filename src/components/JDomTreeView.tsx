@@ -17,7 +17,7 @@ import { isRegister, isEvent } from "../../jacdac-ts/src/jdom/spec"
 import { useMediaQuery, useTheme } from "@material-ui/core"
 import {
     useRegisterHumanValue,
-    useRegisterStringValue,
+    useRegisterUnpackedValue,
 } from "../jacdac/useRegisterValue"
 import useEventCount from "../jacdac/useEventCount"
 import DeviceActions from "./DeviceActions"
@@ -79,16 +79,13 @@ function DeviceTreeItem(
             .map(service => service.name),
         18
     )
-    const readingRegister = services.find(srv => srv.readingRegister)
-        ?.readingRegister
-    const reading = useRegisterHumanValue(readingRegister)
 
     const alert = lost
         ? `lost device...`
         : dropped > 2
             ? `${dropped} pkt lost`
             : undefined
-    const labelInfo = [!!dropped && `${dropped} lost`, reading, serviceNames]
+    const labelInfo = [!!dropped && `${dropped} lost`, serviceNames]
         .filter(r => !!r)
         .join(", ")
 
@@ -153,9 +150,12 @@ function ServiceTreeItem(
         ?.filter(isEvent)
         .map(info => service.event(info.identifier))
         .filter(ev => !eventFilter || eventFilter(ev))
-    const instanceName = useRegisterStringValue(
+    const [instanceName] = useRegisterUnpackedValue<[string]>(
         service.register(BaseReg.InstanceName)
     )
+    const readingRegister = service.readingRegister
+    const reading = useRegisterHumanValue(readingRegister)
+
     const name = service.name + (instanceName ? ` ${instanceName}` : "")
     const theme = useTheme()
     const mobile = useMediaQuery(theme.breakpoints.down(MOBILE_BREAKPOINT))
@@ -170,6 +170,7 @@ function ServiceTreeItem(
         <StyledTreeItem
             nodeId={id}
             labelText={name}
+            labelInfo={reading}
             kind={"service"}
             checked={open}
             setChecked={
@@ -225,7 +226,7 @@ function RegisterTreeItem(
     const failedGet = attempts > 2
     const labelText = `${specification?.name || register.id}${optional ? "?" : ""
         }`
-    const humanValue = useRegisterHumanValue(register)
+    const humanValue = useRegisterHumanValue(register, { visible: true })
     const handleClick = () => register.sendGetAsync();
 
     useEffect(

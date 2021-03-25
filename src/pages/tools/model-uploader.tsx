@@ -17,7 +17,7 @@ import useChange from '../../jacdac/useChange';
 import { IFile } from '../../../jacdac-ts/src/embed/protocol';
 import { prettySize } from '../../../jacdac-ts/src/jdom/pretty';
 import RegisterTrend from '../../components/RegisterTrend';
-import { useRegisterIntValue, useRegisterStringValue } from '../../jacdac/useRegisterValue';
+import { useRegisterUnpackedValue } from '../../jacdac/useRegisterValue';
 import useCall from '../../components/useCall';
 
 import Suspense from "../../components/ui/Suspense"
@@ -26,8 +26,8 @@ const ImportButton = lazy(() => import("../../components/ImportButton"))
 
 export function ModelContent(props: { service: JDService }) {
     const { service } = props
-    const modelSize = useRegisterIntValue(service.register(ModelRunnerReg.ModelSize));
-    const lastError = useRegisterStringValue(service.register(ModelRunnerReg.LastError));
+    const [modelSize] = useRegisterUnpackedValue<[number]>(service.register(ModelRunnerReg.ModelSize));
+    const [lastError] = useRegisterUnpackedValue<[number]>(service.register(ModelRunnerReg.LastError));
 
     return <>
         {lastError && <Alert severity="warning">{lastError}</Alert>}

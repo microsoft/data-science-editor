@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 // tslint:disable-next-line: no-submodule-imports
 import { makeStyles } from '@material-ui/core/styles';
 // tslint:disable-next-line: no-submodule-imports
@@ -13,7 +13,7 @@ import { navigate } from "gatsby";
 import { JDService } from '../../jacdac-ts/src/jdom/service';
 import { CardActions, createStyles } from '@material-ui/core';
 import DeviceCardHeader from './DeviceCardHeader';
-import { useRegisterStringValue } from '../jacdac/useRegisterValue';
+import { useRegisterUnpackedValue } from '../jacdac/useRegisterValue';
 import { DeviceLostAlert } from './alert/DeviceLostAlert';
 
 const useStyles = makeStyles(() => createStyles({
@@ -41,13 +41,13 @@ function navigateToService(service: JDService) {
 function DeviceDescription(props: { device: JDDevice }) {
     const { device } = props;
     const register = device?.service(0)?.register(ControlReg.DeviceDescription)
-    const description = useRegisterStringValue(register)
+    const [description] = useRegisterUnpackedValue<[string]>(register)
     return <span>{description || ""}</span>
 }
 
 export default function DeviceCard(props: {
     device: JDDevice,
-    children?: any,
+    children?: ReactNode,
     action?: JSX.Element | JSX.Element[],
     content?: JSX.Element | JSX.Element[],
     showDeviceId?: boolean,

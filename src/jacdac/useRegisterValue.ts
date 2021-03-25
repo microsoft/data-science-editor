@@ -12,31 +12,13 @@ export function useRegisterHumanValue(
     options?: RegisterOptions
 ): string {
     const [value, setValue] = useState<string>(register?.humanValue)
-    const { visible } = options || {}
+    const { visible } = options || { visible: true }
     // update value
     useEffect(
         () =>
             visible &&
             register?.subscribe(REPORT_UPDATE, () => {
                 setValue(register?.humanValue)
-            }),
-        [register, visible]
-    )
-    return value
-}
-
-export function useRegisterIntValue(
-    register: JDRegister,
-    options?: RegisterOptions
-): number {
-    const [value, setValue] = useState<number>(register?.intValue)
-    const { visible } = options || {}
-    // update value
-    useEffect(
-        () =>
-            visible &&
-            register?.subscribe(REPORT_UPDATE, () => {
-                setValue(register?.intValue)
             }),
         [register, visible]
     )
@@ -58,24 +40,6 @@ export function useRegisterUnpackedValue<T extends PackedValues>(
         [register, visible]
     )
     return value || ([] as T)
-}
-
-export function useRegisterStringValue(
-    register: JDRegister,
-    options?: RegisterOptions
-): string {
-    const [value, setValue] = useState<string>(register?.stringValue)
-    const { visible } = options || {}
-    // update value
-    useEffect(
-        () =>
-            visible &&
-            register?.subscribe(REPORT_UPDATE, () => {
-                setValue(register?.stringValue)
-            }),
-        [register, visible]
-    )
-    return value
 }
 
 export function useRegisterBoolValue(
