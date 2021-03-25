@@ -53,25 +53,26 @@ export default function RegisterInput(props: {
         specification.kind === "rw" || (host && specification.kind !== "const")
     const hasData = useChange(register, _ => !!_.data)
     const color = hasSet ? "secondary" : "primary"
+    const regProps = visible !== undefined ? { visible } : undefined;
     const minReading = useReadingAuxilliaryValue(
         register,
         SystemReg.MinReading,
-        { visible }
+        regProps
     )
     const maxReading = useReadingAuxilliaryValue(
         register,
         SystemReg.MaxReading,
-        { visible }
+        regProps
     )
     const readingError = useReadingAuxilliaryValue(
         register,
         SystemReg.ReadingError,
-        { visible }
+        regProps
     )
     const resolution = useReadingAuxilliaryValue(
         register,
         SystemReg.ReadingResolution,
-        { visible }
+        regProps
     )
 
     useEffect(

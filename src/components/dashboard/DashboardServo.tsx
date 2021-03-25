@@ -1,7 +1,7 @@
 import React from "react"
 import { ServoReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
-import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
+import { useRegisterBoolValue, useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import SvgWidget from "../widgets/SvgWidget"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import useServiceHost from "../hooks/useServiceHost"
@@ -33,7 +33,7 @@ export default function DashboardServo(props: DashboardServiceProps) {
     const { service, visible } = props
 
     const enabledRegister = service.register(ServoReg.Enabled)
-    const [enabled] = useRegisterUnpackedValue<[boolean]>(
+    const enabled = useRegisterBoolValue(
         enabledRegister,
         props
     )
@@ -41,7 +41,8 @@ export default function DashboardServo(props: DashboardServiceProps) {
     const angleRegister = service.register(ServoReg.Angle)
     const angle = useActualAngle(service, visible)
     const [offset] = useRegisterUnpackedValue<[number]>(
-        service.register(ServoReg.Offset)
+        service.register(ServoReg.Offset),
+        props
     )
 
     const host = useServiceHost<ServoServiceHost>(service)
@@ -113,7 +114,7 @@ export default function DashboardServo(props: DashboardServiceProps) {
                 </SvgWidget>
             </Grid>
             <Grid item xs={12}>
-                <RegisterInput register={angleRegister} />
+                <RegisterInput register={angleRegister} visible={visible} />
             </Grid>
         </Grid>
     )

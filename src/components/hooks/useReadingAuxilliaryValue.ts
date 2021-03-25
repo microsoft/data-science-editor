@@ -13,7 +13,7 @@ export default function useReadingAuxilliaryValue(
     options?: { visible?: boolean }
 ): number[] {
     const { service, code } = register
-    const { visible } = options || {}
+    const { visible } = options || { visible: true }
     const reading = code === SystemReg.Reading || code === SystemReg.Value
     const auxilliaryRegister = reading
         ? service.register(identifier)

@@ -46,7 +46,7 @@ import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { isRegister } from "../../../jacdac-ts/src/jdom/spec"
 import RegisterInput from "../RegisterInput"
 import { JDRegister } from "../../../jacdac-ts/src/jdom/register"
-import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
+import { useRegisterBoolValue, useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import { CircularProgress, NoSsr } from "@material-ui/core"
 import useServiceHost from "../hooks/useServiceHost"
 
@@ -249,7 +249,7 @@ function ValueWidget(
 ) {
     const { valueRegister, intensityRegister, ...others } = props
     const { visible } = others
-    const [intensity] = useRegisterUnpackedValue<[boolean]>(
+    const intensity = useRegisterBoolValue(
         intensityRegister,
         others
     )

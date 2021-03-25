@@ -1,6 +1,6 @@
 import React from "react";
 import { DashboardServiceProps } from "./DashboardServiceWidget";
-import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue";
+import { useRegisterBoolValue } from "../../jacdac/useRegisterValue";
 import SvgWidget from "../widgets/SvgWidget";
 import useWidgetTheme from "../widgets/useWidgetTheme";
 import { SolenoidReg } from "../../../jacdac-ts/src/jdom/constants";
@@ -11,7 +11,7 @@ import useServiceHost from "../hooks/useServiceHost";
 export default function DashboardSolenoid(props: DashboardServiceProps) {
     const { service } = props;
     const pulledRegister = service.register(SolenoidReg.Pulled);
-    const [pulled] = useRegisterUnpackedValue<[boolean]>(pulledRegister, props);
+    const pulled = useRegisterBoolValue(pulledRegister, props);
     const host = useServiceHost(service);
     const color = host ? "secondary" : "primary";
     const { active, background, controlBackground, textProps } = useWidgetTheme(color);

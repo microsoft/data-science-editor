@@ -2,7 +2,7 @@
 import React, { useRef } from "react";
 import { TrafficLightReg } from "../../../jacdac-ts/src/jdom/constants";
 import { DashboardServiceProps } from "./DashboardServiceWidget";
-import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue";
+import { useRegisterBoolValue } from "../../jacdac/useRegisterValue";
 import SvgWidget from "../widgets/SvgWidget";
 import useWidgetTheme from "../widgets/useWidgetTheme";
 import useServiceHost from "../hooks/useServiceHost";
@@ -33,9 +33,9 @@ export default function DashboardTrafficLight(props: DashboardServiceProps) {
     const { service, services, variant } = props;
 
     const widgetRef = useRef<SVGGElement>();
-    const [red] = useRegisterUnpackedValue<[boolean]>(service.register(TrafficLightReg.Red), props)
-    const [orange] = useRegisterUnpackedValue<[boolean]>(service.register(TrafficLightReg.Orange), props)
-    const [green] = useRegisterUnpackedValue<[boolean]>(service.register(TrafficLightReg.Green), props)
+    const red = useRegisterBoolValue(service.register(TrafficLightReg.Red), props)
+    const orange = useRegisterBoolValue(service.register(TrafficLightReg.Orange), props)
+    const green = useRegisterBoolValue(service.register(TrafficLightReg.Green), props)
 
     const lightRegs = [TrafficLightReg.Red, TrafficLightReg.Orange, TrafficLightReg.Green]
     const lights = [red, orange, green]

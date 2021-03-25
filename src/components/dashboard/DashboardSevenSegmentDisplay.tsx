@@ -1,7 +1,7 @@
 import React from "react"
 import { SevenSegmentDisplayReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
-import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
+import { useRegisterBoolValue, useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import useServiceHost from "../hooks/useServiceHost"
 import SvgWidget from "../widgets/SvgWidget"
 import useWidgetTheme from "../widgets/useWidgetTheme"
@@ -12,7 +12,7 @@ import LoadingProgress from "../ui/LoadingProgress"
 export default function DashboardSevenSegmentDisplay(
     props: DashboardServiceProps
 ) {
-    const { service } = props
+    const { service, visible } = props
 
     const [digits] = useRegisterUnpackedValue<[Uint8Array]>(
         service.register(SevenSegmentDisplayReg.Digits)
@@ -25,7 +25,7 @@ export default function DashboardSevenSegmentDisplay(
         service.register(SevenSegmentDisplayReg.DigitCount),
         props
     )
-    const [decimalPoint] = useRegisterUnpackedValue<[boolean]>(
+    const decimalPoint = useRegisterBoolValue(
         service.register(SevenSegmentDisplayReg.DecimalPoint),
         props
     )
@@ -226,7 +226,7 @@ export default function DashboardSevenSegmentDisplay(
                 </SvgWidget>
             </Grid>
             <Grid item>
-                <RegisterInput register={brightnessRegister} />
+                <RegisterInput register={brightnessRegister} visible={visible} />
             </Grid>
         </Grid>
     )

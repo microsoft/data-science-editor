@@ -1,7 +1,7 @@
 import React from "react"
 import { PowerReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
-import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
+import { useRegisterBoolValue, useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import SvgWidget from "../widgets/SvgWidget"
 import useServiceHost from "../hooks/useServiceHost"
 import ReflectedLightServiceHost from "../../../jacdac-ts/src/hosts/reflectedlightservicehost"
@@ -12,11 +12,11 @@ export default function DashboardPower(props: DashboardServiceProps) {
     const { service } = props
 
     const enabledRegister = service.register(PowerReg.Enabled)
-    const [enabled] = useRegisterUnpackedValue<[boolean]>(
+    const enabled = useRegisterBoolValue(
         enabledRegister,
         props
     )
-    const [overload] = useRegisterUnpackedValue<[boolean]>(
+    const overload = useRegisterBoolValue(
         service.register(PowerReg.Overload),
         props
     )

@@ -1,6 +1,6 @@
 import React, { } from "react";
 import { DashboardServiceProps } from "./DashboardServiceWidget";
-import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue";
+import { useRegisterBoolValue, useRegisterUnpackedValue } from "../../jacdac/useRegisterValue";
 import SvgWidget from "../widgets/SvgWidget";
 import useWidgetTheme from "../widgets/useWidgetTheme";
 import useServiceHost from "../hooks/useServiceHost";
@@ -16,7 +16,7 @@ export default function DashboardCompass(props: DashboardServiceProps) {
     const headingRegister = service.register(CompassReg.Heading);
     const enabledRegister = service.register(CompassReg.Enabled);
     const [heading] = useRegisterUnpackedValue<[number]>(headingRegister, props)
-    const [enabled] = useRegisterUnpackedValue<[boolean]>(enabledRegister, props)
+    const enabled = useRegisterBoolValue(enabledRegister, props)
     const [status,] = useRegisterUnpackedValue<[SystemStatusCodes, number]>(service.statusCodeRegister, props);
     const off = !enabled;
 
