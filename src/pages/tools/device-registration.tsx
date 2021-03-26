@@ -9,6 +9,9 @@ import {
     MenuItem,
     TextField,
     Typography,
+    Card,
+    CardActions,
+    Button
 } from "@material-ui/core"
 import { ChangeEvent } from "react"
 import {
@@ -38,8 +41,13 @@ import { useFirmwareBlob } from "../../components/firmware/useFirmwareBlobs"
 import { FirmwareBlob } from "../../../jacdac-ts/src/jdom/flashing"
 import { useId } from "react-use-id-hook"
 import AddServiceIconButton from "../../components/AddServiceIconButton"
-
+import useDevices from "../../components/hooks/useDevices"
+import DeviceCardHeader from "../../components/DeviceCardHeader"
 import Suspense from "../../components/ui/Suspense"
+import { ControlReg } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
+import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
+import useGridBreakpoints from "../../components/useGridBreakpoints"
+
 const GithubPullRequestButton = lazy(
     () => import("../../components/GithubPullRequestButton")
 )
@@ -100,6 +108,8 @@ export default function DeviceRegistration() {
             repo: "",
         } as jdspec.DeviceSpec
     )
+    const gridBreakpoints = useGridBreakpoints()
+    const devices = useDevices({ announced: true, physical: true, ignoreSelf: true, firmwareIdentifier: true })
     const updateDevice = () => {
         setDevice(clone(device))
     }
@@ -141,8 +151,8 @@ export default function DeviceRegistration() {
     const idError = !device.id
         ? "missing identifier"
         : deviceSpecifications().find(dev => dev.id == device.id)
-        ? "identifer already used"
-        : ""
+            ? "identifer already used"
+            : ""
     const servicesError = device.services?.length
         ? ""
         : "Select at least one service"
@@ -234,6 +244,21 @@ export default function DeviceRegistration() {
             variant="outlined"
         />
     )
+    const handleImportDevice = (dev: JDDevice) => async () => {
+        const controlService = dev.service(0);
+        const descrReg = controlService.register(ControlReg.DeviceDescription)
+        await descrReg.refresh(true);
+        const urlReg = controlService.register(ControlReg.DeviceUrl)
+        await urlReg.refresh(true);
+
+        const fw = await dev.resolveFirmwareIdentifier()
+        if (fw)
+            device.firmwares = [fw];
+        device.services = dev.serviceClasses.slice(1)
+        device.description = descrReg.stringValue
+        device.link = urlReg.stringValue
+        updateDevice();
+    }
 
     return (
         <>
@@ -244,6 +269,14 @@ export default function DeviceRegistration() {
                 .
             </p>
             <Grid container direction="row" spacing={2}>
+                {devices.map(dev => <Grid item key={dev.id} {...gridBreakpoints}>
+                    <Card>
+                        <DeviceCardHeader device={dev} />
+                        <CardActions>
+                            <Button variant="outlined" onClick={handleImportDevice(dev)}>Import</Button>
+                        </CardActions>
+                    </Card>
+                </Grid>)}
                 <Grid item xs={12}>
                     <TextField
                         id={nameId}
@@ -298,9 +331,8 @@ export default function DeviceRegistration() {
                                     <Chip
                                         label={
                                             blob
-                                                ? `${
-                                                      blob.name
-                                                  } (0x${id.toString(16)})`
+                                                ? `${blob.name
+                                                } (0x${id.toString(16)})`
                                                 : `0x${id.toString(16)}`
                                         }
                                         onDelete={handleDeleteFirmware(i)}
