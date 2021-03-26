@@ -25,7 +25,7 @@ export default function SelectService(props: {
                     {services.map(service => (
                         <Grid key={service.id} item {...gridBreakpoints}>
                             <Card>
-                                <DeviceCardHeader device={service.device} />
+                                <DeviceCardHeader device={service.device} showAvatar={true} />
                                 <CardActions>
                                     <Button
                                         variant="contained"

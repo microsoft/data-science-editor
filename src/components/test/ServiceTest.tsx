@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import { Button } from "@material-ui/core"
 // tslint:disable-next-line: no-submodule-imports
@@ -16,6 +16,7 @@ import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { serviceTestFromServiceClass } from "../../../jacdac-ts/src/test/testspec"
 import SelectService from "../SelectService"
 import ServiceTestRunner from "./ServiceTestRunner"
+import { DISCONNECT } from "../../../jacdac-ts/src/jdom/constants"
 
 function Diagnostics(props: { serviceClass: number }) {
     const { serviceClass } = props
@@ -62,6 +63,15 @@ export default function ServiceTest(props: {
     const { classIdentifier: serviceClass } = serviceSpec
     const [service, setService] = useState<JDService>(undefined)
     const handleSelect = (service: JDService) => setService(service)
+    // clear selected service when json changes
+    useEffect(() => {
+        setService(undefined)
+    }, [serviceTest])
+    // clear service if device disconnects
+    useEffect(() => service?.device?.subscribe(DISCONNECT, () => {
+        setService(undefined)
+    }), [service])
+
     return (
         <>
             <h1>

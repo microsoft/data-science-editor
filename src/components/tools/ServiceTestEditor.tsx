@@ -10,12 +10,13 @@ import ServiceTest from "../test/ServiceTest"
 import { fetchText } from "../github"
 import AppContext from "../AppContext"
 
-const SERVICE_TEST_STORAGE_KEY = "jacdac:servicetesteditorsource"
+const SERVICE_TEST_SERVICE_STORAGE_KEY = "jacdac:servicetesteditor:service"
+const SERVICE_TEST_SOURCE_STORAGE_KEY = "jacdac:servicetesteditorsource"
 
 export default function ServiceTestEditor() {
     const { setError } = useContext(AppContext)
-    const [serviceClass, setServiceClass] = useState(SRV_BUTTON)
-    const [source, setSource] = useLocalStorage(SERVICE_TEST_STORAGE_KEY, "")
+    const [serviceClass, setServiceClass] = useLocalStorage<number>(SERVICE_TEST_SERVICE_STORAGE_KEY, SRV_BUTTON)
+    const [source, setSource] = useLocalStorage(SERVICE_TEST_SOURCE_STORAGE_KEY, "")
     const serviceSpec = useMemo(
         () => serviceSpecificationFromClassIdentifier(serviceClass),
         [serviceClass]
@@ -69,7 +70,7 @@ export default function ServiceTestEditor() {
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid item xs={12} xl={6}>
+            <Grid item xs={12} xl={5}>
                 <HighlightTextField
                     code={source}
                     language={"markdown"}
@@ -82,7 +83,7 @@ export default function ServiceTestEditor() {
                 />
             </Grid>
             {json && (
-                <Grid item xs={12} xl={6}>
+                <Grid item xs={12} xl={7}>
                     <ServiceTest showStartSimulator={true} serviceSpec={serviceSpec} serviceTest={json} />
                 </Grid>
             )}

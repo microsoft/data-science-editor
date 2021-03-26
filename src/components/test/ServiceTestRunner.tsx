@@ -237,20 +237,20 @@ export default function ServiceTestRunner(props: {
 
     return (
         <Grid container spacing={2}>
-            <Grid item xs>
+            <Grid item xs={3}>
                 <TestList
                     testRunner={testRunner}
                     currentTest={currentTest}
                     onSelectTest={handleSelectTest}
                 />
             </Grid>
-            {currentTest && (
-                <Grid item xs>
-                    <ActiveTest test={currentTest} />
-                </Grid>
-            )}
+            <Grid item xs={6}>
+                {currentTest ? <ActiveTest test={currentTest} /> : <Alert severity={"info"}>
+                    Select a test to get started.
+                </Alert>}
+            </Grid>
             {service && (
-                <Grid item xs>
+                <Grid item xs={3}>
                     <DashboardDevice
                         showAvatar={true}
                         showHeader={true}
