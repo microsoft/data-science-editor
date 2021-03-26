@@ -48,10 +48,6 @@ export default function ServiceTestEditor() {
             setError(e)
         }
     }
-    useEffect(() => {
-        if (serviceClass)
-            handleLoadFromGithub()
-    }, [serviceClass])
     return (
         <Grid spacing={2} container>
             <Grid item xs={12}>
