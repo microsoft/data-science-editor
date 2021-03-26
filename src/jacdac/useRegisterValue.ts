@@ -30,7 +30,7 @@ export function useRegisterUnpackedValue<T extends PackedValues>(
     options?: RegisterOptions
 ): T {
     const [value, setValue] = useState<T>(register?.unpackedValue as T)
-    const { visible } = options || {}
+    const { visible } = options || { visible: true }
     useEffect(
         () =>
             visible &&
@@ -47,7 +47,7 @@ export function useRegisterBoolValue(
     options?: RegisterOptions
 ): boolean {
     const [value, setValue] = useState<boolean>(register?.boolValue)
-    const { visible } = options || {}
+    const { visible } = options || { visible: true }
     // update value
     useEffect(
         () =>
