@@ -3,11 +3,7 @@ const fs = require(`fs-extra`)
 const sharp = require(`sharp`)
 const { slash } = require(`gatsby-core-utils`)
 const { createFilePath } = require(`gatsby-source-filesystem`)
-const { serviceSpecifications, identifierToUrlPath } = require(`./jacdac-ts/dist/jacdac.cjs`)
-const {
-    serviceSpecificationToDTDL,
-    DTMIToRoute,
-} = require(`./jacdac-ts/dist/jacdac-azure-iot.cjs`)
+const { serviceSpecifications, identifierToUrlPath, serviceSpecificationToDTDL, DTMIToRoute } = require(`./jacdac-ts/dist/jacdac.cjs`)
 const { IgnorePlugin } = require("webpack")
 const AVATAR_SIZE = 64
 
