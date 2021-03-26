@@ -21,6 +21,7 @@ import useChange from "../jacdac/useChange"
 import useDevices from "./hooks/useDevices"
 import useFirmwareBlobs from "./firmware/useFirmwareBlobs"
 import useMounted from "./hooks/useMounted"
+import { semverCmp } from "./semver"
 
 function UpdateDeviceCard(props: { device: JDDevice }) {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
@@ -35,6 +36,7 @@ function UpdateDeviceCard(props: { device: JDDevice }) {
             b => firmwareInfo.firmwareIdentifier == b.firmwareIdentifier
         )
     const update = blob && firmwareInfo && updateApplicable(firmwareInfo, blob)
+    const upgrade = update && semverCmp(blob.version, firmwareInfo.version) > 0
     const flashing = useChange(device, d => d.flashing)
     const mounted = useMounted()
 
@@ -62,17 +64,17 @@ function UpdateDeviceCard(props: { device: JDDevice }) {
         <DeviceCard
             device={device}
             showFirmware={true}
-            content={update && <span>Update to {blob.version}</span>}
+            content={update && <span>{upgrade ? "Upgrade" : "Downgrade"} to {blob.version}</span>}
             // tslint:disable-next-line: react-this-binding-issue
             action={
                 flashing ? (
                     <CircularProgressWithLabel value={progress} />
                 ) : update ? (
                     <Button
-                        aria-label="deploy new firmware to device"
+                        aria-label="flash firmware to device"
                         disabled={flashing}
                         variant="contained"
-                        color="primary"
+                        color={upgrade ? "primary" : "secondary"}
                         onClick={handleFlashing}
                     >
                         Flash
