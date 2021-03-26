@@ -128,7 +128,7 @@ const serviceViews: {
     },
     [SRV_ACCELEROMETER]: {
         component: DashboardAccelerometer,
-        weight: () => 2,
+        weight: () => 3,
     },
     [SRV_ROTARY_ENCODER]: {
         component: DashboardRotaryEncoder,
@@ -224,7 +224,7 @@ const serviceViews: {
     },
     [SRV_GYROSCOPE]: {
         component: DashboardGyroscope,
-        weight: () => 2,
+        weight: () => 3,
     },
     [SRV_SOUND_SPECTRUM]: {
         component: DashboardSoundSpectrum,
