@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useMemo, useState } from "react"
 import { Octokit } from "@octokit/core";
 import { createPullRequest } from "octokit-plugin-create-pull-request";
 import { Button, Link } from "gatsby-theme-material-ui";
@@ -11,6 +11,7 @@ import GitHubIcon from '@material-ui/icons/GitHub';
 import ApiKeyAccordion from "./ApiKeyAccordion";
 import { useId } from "react-use-id-hook";
 import LoadingProgress from "./ui/LoadingProgress";
+import { anyRandomUint32, toHex } from "../../jacdac-ts/src/jdom/utils";
 
 export interface GithubPullRequestButtonProps {
     title: string,
@@ -30,6 +31,7 @@ export default function GithubPullRequestButton(props: GithubPullRequestButtonPr
     const [confirmDialog, setConfirmDialog] = useState(false);
     const bodyId = useId()
     const [body, setBody] = useState(description)
+    const headSuffix = useMemo(() => toHex(anyRandomUint32(2)), [])
 
     const disabled = busy || !body || !title || !head || !files || !Object.keys(files).length
 
@@ -54,7 +56,7 @@ export default function GithubPullRequestButton(props: GithubPullRequestButtonPr
                 repo: "jacdac",
                 title,
                 body,
-                head,
+                head: head + "/" + headSuffix,
                 changes: [
                     {
                         files,

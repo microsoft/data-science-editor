@@ -128,31 +128,42 @@ function CommandListItem(props: { command: JDTestCommandRunner }) {
     const handleAnswer = (status: JDTestCommandStatus) => () =>
         command.finish(status)
     return (
-        <ListItem selected={status === JDTestCommandStatus.Active}>
-            <ListItemIcon>
-                <CommandStatusIcon command={command} />
-            </ListItemIcon>
-            <ListItemText
-                primary={message}
-                secondary={progress}
-            />
+        <>
+            <ListItem selected={status === JDTestCommandStatus.Active}>
+                <ListItemIcon>
+                    <CommandStatusIcon command={command} />
+                </ListItemIcon>
+                <ListItemText
+                    primary={message}
+                    secondary={progress}
+                />
+            </ListItem>
             {status === JDTestCommandStatus.RequiresUserInput && (
-                <ListItemSecondaryAction>
-                    <Button
-                        variant="outlined"
-                        onClick={handleAnswer(JDTestCommandStatus.Passed)}
-                    >
-                        Yes
+                <ListItem>
+
+                    <ListItemSecondaryAction>
+                        <Grid container spacing={1}>
+                            <Grid item><Button
+                                variant="outlined"
+                                onClick={handleAnswer(JDTestCommandStatus.Passed)}
+                            >
+                                Yes
                     </Button>
-                    <Button
-                        variant="outlined"
-                        onClick={handleAnswer(JDTestCommandStatus.Failed)}
-                    >
-                        No
+                            </Grid>
+                            <Grid item>
+                                <Button
+                                    variant="outlined"
+                                    onClick={handleAnswer(JDTestCommandStatus.Failed)}
+                                >
+                                    No
                     </Button>
-                </ListItemSecondaryAction>
+                            </Grid>
+                        </Grid>
+                    </ListItemSecondaryAction>
+                </ListItem>
             )}
-        </ListItem>
+
+        </>
     )
 }
 

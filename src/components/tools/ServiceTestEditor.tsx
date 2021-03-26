@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from "react"
+import React, { useContext, useEffect, useMemo } from "react"
 import { Button, Grid } from "@material-ui/core"
 import { parseSpecificationTestMarkdownToJSON } from "../../../jacdac-ts/jacdac-spec/spectool/jdtest"
 import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec"
@@ -48,6 +48,10 @@ export default function ServiceTestEditor() {
             setError(e)
         }
     }
+    useEffect(() => {
+        if (serviceClass)
+            handleLoadFromGithub()
+    }, [serviceClass])
     return (
         <Grid spacing={2} container>
             <Grid item xs={12}>
