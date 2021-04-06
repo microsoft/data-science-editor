@@ -20,11 +20,11 @@ import { OpenInNew } from "@material-ui/icons"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import ChevronRightIcon from "@material-ui/icons/ChevronRight"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import EmojiObjectsIcon from "@material-ui/icons/EmojiObjects"
-// tslint:disable-next-line: no-submodule-imports match-default-export-name
 import SettingsBrightnessIcon from "@material-ui/icons/SettingsBrightness"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import SystemUpdateAltIcon from "@material-ui/icons/SystemUpdateAlt"
+// tslint:disable-next-line: no-submodule-imports match-default-export-name
+import WifiIcon from '@material-ui/icons/Wifi';
 import DarkModeContext from "./ui/DarkModeContext"
 import KindIcon from "./KindIcon"
 import MakeCodeIcon from "./icons/MakeCodeIcon"
@@ -127,6 +127,11 @@ export default function ToolsDrawer() {
             text: "Start simulator",
             action: toggleShowDeviceHostsDialog,
             icon: <KindIcon kind={VIRTUAL_DEVICE_NODE_NAME} />,
+        },
+        {
+            text: "Peers",
+            url: "/tools/peers",
+            icon: <WifiIcon />,
         },
         {},
         {
