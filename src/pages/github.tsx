@@ -14,7 +14,7 @@ export default function Page() {
 
         <h3>Schematics and C SDK</h3>
 
-        <GithubRepositoryList repos={["microsoft/jacdac-mdk", "microsoft/jacdac-c"]} showDescription={true} />
+        <GithubRepositoryList repos={["microsoft/jacdac-ddk", "microsoft/jacdac-c"]} showDescription={true} />
 
         <h3> Platforms</h3>
 
