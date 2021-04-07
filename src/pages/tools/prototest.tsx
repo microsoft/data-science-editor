@@ -34,8 +34,8 @@ import Packet from "../../../jacdac-ts/src/jdom/packet"
 import { JDEvent } from "../../../jacdac-ts/src/jdom/event"
 import { AlertTitle } from "@material-ui/lab"
 import Alert from "../../components/ui/Alert"
-import JDDeviceHost from "../../../jacdac-ts/src/jdom/devicehost"
-import ProtocolTestServiceHost from "../../../jacdac-ts/src/jdom/protocoltestservicehost"
+import JDServiceProvider from "../../../jacdac-ts/src/jdom/serviceprovider"
+import ProtocolTestServer from "../../../jacdac-ts/src/jdom/protocoltestserver"
 import { Link } from "gatsby-theme-material-ui"
 
 function randomFieldPayload(field: JDField) {
@@ -288,9 +288,9 @@ export default function ProtocolTest() {
     useEffect(() => {
         if (!host) return () => {}
 
-        const d = new JDDeviceHost([new ProtocolTestServiceHost()])
-        bus.addDeviceHost(d)
-        return () => bus.removeDeviceHost(d)
+        const d = new JDServiceProvider([new ProtocolTestServer()])
+        bus.addServiceProvider(d)
+        return () => bus.removeServiceProvider(d)
     }, [host])
 
     return (

@@ -1,30 +1,21 @@
-import React, { useContext, useMemo } from "react"
+import React, { useContext } from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
-import useWidgetSize from "../widgets/useWidgetSize"
-import useServiceHost from "../hooks/useServiceHost"
+import useServiceServer from "../hooks/useServiceServer"
 import SvgWidget from "../widgets/SvgWidget"
-import useWidgetTheme from "../widgets/useWidgetTheme"
-import useChange from "../../jacdac/useChange"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
-import useAnimationFrame from "../hooks/useAnimationFrame"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
-import { Grid, rgbToHex, Slider } from "@material-ui/core"
-import LEDServiceHost, {
-    LedAnimation,
-    LedAnimationData,
-} from "../../../jacdac-ts/src/hosts/ledservicehost"
+import { Grid } from "@material-ui/core"
+import LEDServer from "../../../jacdac-ts/src/servers/ledserver"
 import { LedReg } from "../../../jacdac-ts/src/jdom/constants"
-import { hsvToCss } from "../../../jacdac-ts/src/jdom/color"
 import LoadingProgress from "../ui/LoadingProgress"
 
 export default function DashboardLED(props: DashboardServiceProps) {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { service } = props
-    const host = useServiceHost<LEDServiceHost>(service)
+    const host = useServiceServer<LEDServer>(service)
     const color = host ? "secondary" : "primary"
-    const [r, g, b] = useRegisterUnpackedValue<[number, number, number]>(service.register(LedReg.Color), props);
-    const [waveLength] = useRegisterUnpackedValue<[number]>(
-        service.register(LedReg.WaveLength),
+    const [r, g, b] = useRegisterUnpackedValue<[number, number, number]>(
+        service.register(LedReg.Color),
         props
     )
     const [ledCount] = useRegisterUnpackedValue<[number]>(
@@ -47,7 +38,7 @@ export default function DashboardLED(props: DashboardServiceProps) {
     // nothing to see
     if (r === undefined) return <LoadingProgress />
 
-    const opacity = 1;
+    const opacity = 1
     const fill = `rgb(${r}, ${g}, ${b})`
     const ln = Math.min(ledCount || 1, 5)
     const lw = 15.5

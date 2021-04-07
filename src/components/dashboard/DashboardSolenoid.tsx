@@ -6,13 +6,13 @@ import useWidgetTheme from "../widgets/useWidgetTheme";
 import { SolenoidReg } from "../../../jacdac-ts/src/jdom/constants";
 import useThrottledValue from "../hooks/useThrottledValue";
 import useSvgButtonProps from "../hooks/useSvgButtonProps";
-import useServiceHost from "../hooks/useServiceHost";
+import useServiceProvider from "../hooks/useServiceProvider";
 
 export default function DashboardSolenoid(props: DashboardServiceProps) {
     const { service } = props;
     const pulledRegister = service.register(SolenoidReg.Pulled);
     const pulled = useRegisterBoolValue(pulledRegister, props);
-    const host = useServiceHost(service);
+    const host = useServiceProvider(service);
     const color = host ? "secondary" : "primary";
     const { active, background, controlBackground, textProps } = useWidgetTheme(color);
 

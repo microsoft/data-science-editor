@@ -48,7 +48,7 @@ import RegisterInput from "../RegisterInput"
 import { JDRegister } from "../../../jacdac-ts/src/jdom/register"
 import { useRegisterBoolValue, useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import { CircularProgress, NoSsr } from "@material-ui/core"
-import useServiceHost from "../hooks/useServiceHost"
+import useServiceProvider from "../hooks/useServiceProvider"
 
 // bundled
 import DashboardButton from "./DashboardButton"
@@ -348,7 +348,7 @@ export default function DashboardServiceWidget(
     const { specification } = service
     const { component, bundled } =
         serviceViews[specification.classIdentifier] || {}
-    const host = useServiceHost(service)
+    const host = useServiceProvider(service)
     const color = host ? "secondary" : "primary"
     // no special support
     if (!component) return createElement(DefaultWidget, props)

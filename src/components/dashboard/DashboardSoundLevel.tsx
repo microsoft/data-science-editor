@@ -4,11 +4,11 @@ import {
     useRegisterBoolValue,
     useRegisterUnpackedValue,
 } from "../../jacdac/useRegisterValue"
-import useServiceHost from "../hooks/useServiceHost"
+import useServiceServer from "../hooks/useServiceServer"
 import { Grid, Slider } from "@material-ui/core"
 import MicIcon from "@material-ui/icons/Mic"
 import { REFRESH, SoundLevelReg } from "../../../jacdac-ts/src/jdom/constants"
-import AnalogSensorServiceHost from "../../../jacdac-ts/src/hosts/analogsensorservicehost"
+import AnalogSensorServer from "../../../jacdac-ts/src/servers/analogsensorserver"
 import IconButtonWithProgress from "../ui/IconButtonWithProgress"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import useMicrophoneVolume from "../hooks/useMicrophoneVolume"
@@ -17,7 +17,7 @@ import LoadingProgress from "../ui/LoadingProgress"
 
 function HostMicrophoneButton(props: {
     service: JDService
-    host?: AnalogSensorServiceHost
+    host?: AnalogSensorServer
     visible: boolean
 }) {
     const { host, service, visible } = props
@@ -74,7 +74,7 @@ export default function DashboardSoundLevel(props: DashboardServiceProps) {
         soundLevelRegister,
         props
     )
-    const host = useServiceHost<AnalogSensorServiceHost>(service)
+    const host = useServiceServer<AnalogSensorServer>(service)
     const color = host ? "secondary" : "primary"
 
     const onChange = (event: unknown, newValue: number | number[]): void => {

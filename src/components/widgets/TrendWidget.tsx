@@ -2,13 +2,13 @@ import React, { useRef, useEffect } from "react";
 import { CHANGE } from "../../../jacdac-ts/src/jdom/constants";
 import { JDRegister } from "../../../jacdac-ts/src/jdom/register";
 import useAnimationFrame from "../hooks/useAnimationFrame";
-import useServiceHost from "../hooks/useServiceHost";
+import useServiceServer from "../hooks/useServiceServer";
 import SvgWidget from "./SvgWidget";
 import useWidgetTheme from "./useWidgetTheme";
 
 export default function TrendWidget(props: { register: JDRegister, min: number, max: number, horizon: number, size?: string }) {
     const { register, min, max, horizon, size } = props;
-    const host = useServiceHost(register.service);
+    const host = useServiceServer(register.service);
     const color = host ? "secondary" : "primary";
     const { background, controlBackground, active } = useWidgetTheme(color)
     const dataRef = useRef<number[]>(undefined);

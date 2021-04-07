@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react"
-import { CHANGE, REPORT_UPDATE } from "../../../jacdac-ts/src/jdom/constants"
+import { REPORT_UPDATE } from "../../../jacdac-ts/src/jdom/constants"
 import { JDRegister } from "../../../jacdac-ts/src/jdom/register"
-import useServiceHost from "../hooks/useServiceHost"
+import useServiceServer from "../hooks/useServiceServer"
 import SvgWidget from "./SvgWidget"
 import useWidgetTheme from "./useWidgetTheme"
 
@@ -11,7 +11,7 @@ export default function BytesBarGraphWidget(props: {
     visible: boolean
 }) {
     const { register, size, visible } = props
-    const host = useServiceHost(register.service)
+    const host = useServiceServer(register.service)
     const color = host ? "secondary" : "primary"
     const { background, controlBackground, active } = useWidgetTheme(color)
     const pathRef = useRef<SVGPathElement>()

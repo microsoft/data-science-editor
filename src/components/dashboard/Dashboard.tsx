@@ -82,11 +82,11 @@ export default function Dashboard(props: DashboardProps) {
     const { selected, toggleSelected } = useSelectedNodes(mobile)
     const [hosted, physicals] = splitFilter(
         devices,
-        d => !!bus.deviceHost(d.deviceId)
+        d => !!bus.findServiceProvider(d.deviceId)
     )
     const roleManager = useRoleManager()
     const handleClearSimulators = () => {
-        bus.deviceHosts().forEach(dev => bus.removeDeviceHost(dev))
+        bus.serviceProviders().forEach(dev => bus.removeServiceProvider(dev))
     }
     const handleStartSimulators = () => roleManager?.startSimulators()
 

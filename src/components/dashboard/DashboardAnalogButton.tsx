@@ -2,12 +2,12 @@ import React, { useState } from "react"
 import { AnalogButtonReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
-import useServiceHost from "../hooks/useServiceHost"
+import useServiceServer from "../hooks/useServiceServer"
 import SvgWidget from "../widgets/SvgWidget"
 import useSvgButtonProps from "../hooks/useSvgButtonProps"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import { describeArc } from "../widgets/svgutils"
-import AnalogSensorServiceHost from "../../../jacdac-ts/src/hosts/analogsensorservicehost"
+import AnalogSensorServer from "../../../jacdac-ts/src/servers/analogsensorserver"
 import useAnimationFrame from "../hooks/useAnimationFrame"
 import LoadingProgress from "../ui/LoadingProgress"
 
@@ -27,7 +27,7 @@ export default function DashboardAnalogButton(props: DashboardServiceProps) {
     )
     //const [buttonVariant] = useRegisterUnpackedValue<[AnalogButtonVariant]>(service.register(AnalogButtonReg.Variant));
     const widgetSize = `clamp(3rem, 10vw, 16vw)`
-    const host = useServiceHost<AnalogSensorServiceHost>(service)
+    const host = useServiceServer<AnalogSensorServer>(service)
     const [down, setDown] = useState(false)
     const color = host ? "secondary" : "primary"
     const label = `button pressure ${pressure}`

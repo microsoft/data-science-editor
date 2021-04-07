@@ -4,7 +4,7 @@ import { VIRTUAL_DEVICE_NODE_NAME } from "../../../jacdac-ts/src/jdom/constants"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device";
 import useDeviceSpecification from "../../jacdac/useDeviceSpecification";
 import CmdButton from "../CmdButton";
-import useDeviceHost from "../hooks/useDeviceHost";
+import useServiceProvider from "../hooks/useServiceProvider";
 import KindIcon from "../KindIcon"
 import useDeviceStatusLightStyle from "./useDeviceStatusLightStyle";
 import Helmet from "react-helmet"
@@ -35,7 +35,7 @@ export default function DeviceAvatar(props: { device: JDDevice, size?: "small" |
   const name = useDeviceName(device);
   const classes = useStyles();
   const sizeClassName = size === "small" ? classes.small : size === "large" ? classes.large : undefined;
-  const host = useDeviceHost(device);
+  const host = useServiceProvider(device);
   const source = device.source;
   const {
     className: statusLEDClassName,

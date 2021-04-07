@@ -1,14 +1,17 @@
 import React from "react"
 import { ServoReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
-import { useRegisterBoolValue, useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
+import {
+    useRegisterBoolValue,
+    useRegisterUnpackedValue,
+} from "../../jacdac/useRegisterValue"
 import SvgWidget from "../widgets/SvgWidget"
 import useWidgetTheme from "../widgets/useWidgetTheme"
-import useServiceHost from "../hooks/useServiceHost"
+import useServiceServer from "../hooks/useServiceServer"
 import useThrottledValue from "../hooks/useThrottledValue"
-import { SG90_RESPONSE_SPEED } from "../../../jacdac-ts/src/hosts/hosts"
+import { SG90_RESPONSE_SPEED } from "../../../jacdac-ts/src/servers/servers"
 import { Grid } from "@material-ui/core"
-import ServoServiceHost from "../../../jacdac-ts/src/hosts/servoservicehost"
+import ServoServer from "../../../jacdac-ts/src/servers/servoserver"
 import RegisterInput from "../RegisterInput"
 import PowerButton from "../widgets/PowerButton"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
@@ -33,10 +36,7 @@ export default function DashboardServo(props: DashboardServiceProps) {
     const { service, visible } = props
 
     const enabledRegister = service.register(ServoReg.Enabled)
-    const enabled = useRegisterBoolValue(
-        enabledRegister,
-        props
-    )
+    const enabled = useRegisterBoolValue(enabledRegister, props)
     const off = !enabled
     const angleRegister = service.register(ServoReg.Angle)
     const angle = useActualAngle(service, visible)
@@ -45,7 +45,7 @@ export default function DashboardServo(props: DashboardServiceProps) {
         props
     )
 
-    const host = useServiceHost<ServoServiceHost>(service)
+    const host = useServiceServer<ServoServer>(service)
     const color = host ? "secondary" : "primary"
     const {
         background,

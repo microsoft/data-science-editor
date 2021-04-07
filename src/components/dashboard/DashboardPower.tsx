@@ -3,8 +3,8 @@ import { PowerReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterBoolValue, useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import SvgWidget from "../widgets/SvgWidget"
-import useServiceHost from "../hooks/useServiceHost"
-import ReflectedLightServiceHost from "../../../jacdac-ts/src/hosts/reflectedlightservicehost"
+import useServiceServer from "../hooks/useServiceServer"
+import ReflectedLightServer from "../../../jacdac-ts/src/servers/reflectedlightserver"
 import PowerButton from "../widgets/PowerButton"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 
@@ -25,7 +25,7 @@ export default function DashboardPower(props: DashboardServiceProps) {
         props
     )
 
-    const host = useServiceHost<ReflectedLightServiceHost>(service)
+    const host = useServiceServer<ReflectedLightServer>(service)
     const color = host ? "secondary" : "primary"
     const { background, active, textProps } = useWidgetTheme(color)
 

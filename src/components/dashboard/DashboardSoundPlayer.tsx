@@ -5,12 +5,12 @@ import {
 } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
-import useServiceHost from "../hooks/useServiceHost"
+import useServiceServer from "../hooks/useServiceServer"
 import { Button, Grid, Slider } from "@material-ui/core"
 import { useChangeAsync } from "../../jacdac/useChange"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
-import SoundPlayerServiceHost from "../../../jacdac-ts/src/hosts/soundplayerservicehost"
+import SoundPlayerServer from "../../../jacdac-ts/src/servers/soundplayerserver"
 import { Howl } from "howler"
 
 function SoundButton(props: {
@@ -37,7 +37,7 @@ export default function DashboardSoundPlayer(props: DashboardServiceProps) {
     const { service } = props
     const volumeRegister = service.register(SoundPlayerReg.Volume)
     const [volume] = useRegisterUnpackedValue<[number]>(volumeRegister, props)
-    const host = useServiceHost<SoundPlayerServiceHost>(service)
+    const host = useServiceServer<SoundPlayerServer>(service)
     const color = host ? "secondary" : "primary"
     const sounds = useChangeAsync(
         service,

@@ -3,8 +3,8 @@ import { RotaryEncoderReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import SvgWidget from "../widgets/SvgWidget"
-import useServiceHost from "../hooks/useServiceHost"
-import RotaryEncoderServiceHost from "../../../jacdac-ts/src/hosts/rotaryencoderservicehost"
+import useServiceServer from "../hooks/useServiceServer"
+import RotaryEncoderServer from "../../../jacdac-ts/src/servers/rotaryencoderserver"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import { Grid, Slider } from "@material-ui/core"
 import useThrottledValue from "../hooks/useThrottledValue"
@@ -17,14 +17,13 @@ export default function DashboardRotaryEncoder(props: DashboardServiceProps) {
         props
     )
     const clicksPerTurnRegister = service.register(
-        RotaryEncoderReg.ClicksPerTurn,
-        props
+        RotaryEncoderReg.ClicksPerTurn
     )
     const [clicksPerTurn = 12] = useRegisterUnpackedValue<[number]>(
         clicksPerTurnRegister,
         props
     )
-    const host = useServiceHost<RotaryEncoderServiceHost>(service)
+    const host = useServiceServer<RotaryEncoderServer>(service)
     const color = host ? "secondary" : "primary"
     const { background, controlBackground, active, textProps } = useWidgetTheme(
         color

@@ -1,8 +1,8 @@
 import { SwitchReg, SwitchVariant } from "../../../jacdac-ts/src/jdom/constants";
 import { useRegisterBoolValue, useRegisterUnpackedValue } from "../../jacdac/useRegisterValue";
-import useServiceHost from "../hooks/useServiceHost";
+import useServiceServer from "../hooks/useServiceServer";
 import { DashboardServiceProps } from "./DashboardServiceWidget";
-import SwitchServiceHost from "../../../jacdac-ts/src/hosts/switchservicehost"
+import SwitchServer from "../../../jacdac-ts/src/servers/switchserver"
 import React from "react";
 import { Switch } from "@material-ui/core";
 import { useId } from "react-use-id-hook"
@@ -15,7 +15,7 @@ export default function DashboardSwitch(props: DashboardServiceProps) {
     const labelId = useId();
     const on = useRegisterBoolValue(service.register(SwitchReg.Active), props)
     const [switchVariant] = useRegisterUnpackedValue<[SwitchVariant]>(service.register(SwitchReg.Variant), props);
-    const host = useServiceHost<SwitchServiceHost>(service);
+    const host = useServiceServer<SwitchServer>(service);
     const color = host ? "secondary" : "primary";
     const widgetSize = `clamp(5em, 25vw, 100%)`
 

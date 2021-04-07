@@ -9,7 +9,7 @@ import AppContext from "./AppContext"
 import MembersInput from "./fields/MembersInput"
 import RegisterTrend from "./RegisterTrend"
 import IconButtonWithProgress from "./ui/IconButtonWithProgress"
-import useRegisterHost from "./hooks/useRegisterHost"
+import useRegisterServer from "./hooks/useRegisterServer"
 import useReadingAuxilliaryValue from "./hooks/useReadingAuxilliaryValue"
 import useChange from "../jacdac/useChange"
 
@@ -48,7 +48,7 @@ export default function RegisterInput(props: {
     const [working, setWorking] = useState(false)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [args, setArgs] = useState<any[]>(register.unpackedValue || [])
-    const host = useRegisterHost(register)
+    const host = useRegisterServer(register)
     const hasSet =
         specification.kind === "rw" || (host && specification.kind !== "const")
     const hasData = useChange(register, _ => !!_.data)

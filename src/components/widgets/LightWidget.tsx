@@ -4,8 +4,8 @@ import {
     LedPixelVariant,
     RENDER,
 } from "../../../jacdac-ts/src/jdom/constants"
-import useServiceHost from "../hooks/useServiceHost"
-import LedPixelServiceHost from "../../../jacdac-ts/src/hosts/ledpixelservicehost"
+import useServiceServer from "../hooks/useServiceServer"
+import LedPixelServer from "../../../jacdac-ts/src/servers/ledpixelserver"
 import SvgWidget from "../widgets/SvgWidget"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
@@ -80,7 +80,7 @@ function LightStripWidget(props: {
     lightVariant: LedPixelVariant
     numPixels: number
     actualBrightness: number
-    host: LedPixelServiceHost
+    host: LedPixelServer
     widgetSize?: string
 }) {
     const {
@@ -216,7 +216,7 @@ function LightStripWidget(props: {
 function LightMatrixWidget(props: {
     lightVariant: LedPixelVariant
     actualBrightness: number
-    host: LedPixelServiceHost
+    host: LedPixelServer
     widgetSize?: string
     columns: number
     rows: number
@@ -316,7 +316,7 @@ export default function LightWidget(props: {
         service.register(LedPixelReg.NumColumns),
         props
     )
-    const host = useServiceHost<LedPixelServiceHost>(service)
+    const host = useServiceServer<LedPixelServer>(service)
 
     if (numPixels === undefined || actualBrightness === undefined)
         return <LoadingProgress /> // nothing to render

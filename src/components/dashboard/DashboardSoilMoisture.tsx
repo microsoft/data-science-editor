@@ -3,10 +3,10 @@ import { SoilMoistureReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import useWidgetSize from "../widgets/useWidgetSize"
-import useServiceHost from "../hooks/useServiceHost"
+import useServiceServer from "../hooks/useServiceServer"
 import SvgWidget from "../widgets/SvgWidget"
 import useWidgetTheme from "../widgets/useWidgetTheme"
-import SensorServiceHost from "../../../jacdac-ts/src/hosts/sensorservicehost"
+import SensorServer from "../../../jacdac-ts/src/servers/sensorserver"
 import { useId } from "react-use-id-hook"
 import { Grid, Slider } from "@material-ui/core"
 
@@ -15,7 +15,7 @@ export default function DashboardSoilMoisture(props: DashboardServiceProps) {
     const moistureReg = service.register(SoilMoistureReg.Moisture)
     const [value] = useRegisterUnpackedValue<[number]>(moistureReg, props)
     const widgetSize = useWidgetSize(variant, services.length)
-    const host = useServiceHost<SensorServiceHost<[number]>>(service)
+    const host = useServiceServer<SensorServer<[number]>>(service)
     const color = host ? "secondary" : "primary"
     const { active, background, controlBackground, textProps } = useWidgetTheme(
         color

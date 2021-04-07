@@ -2,8 +2,8 @@ import React from "react"
 import { ColorReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
-import useServiceHost from "../hooks/useServiceHost"
-import SensorServiceHost from "../../../jacdac-ts/src/hosts/sensorservicehost"
+import useServiceServer from "../hooks/useServiceServer"
+import SensorServer from "../../../jacdac-ts/src/servers/sensorserver"
 import { BlockPicker } from "react-color"
 import SvgWidget from "../widgets/SvgWidget"
 import useWidgetTheme from "../widgets/useWidgetTheme"
@@ -16,7 +16,7 @@ export default function DashboardColor(props: DashboardServiceProps) {
         register,
         props
     )
-    const host = useServiceHost<SensorServiceHost<[number, number, number]>>(
+    const host = useServiceServer<SensorServer<[number, number, number]>>(
         service
     )
     const color = host ? "secondary" : "primary"

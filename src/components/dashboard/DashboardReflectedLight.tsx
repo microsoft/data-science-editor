@@ -3,11 +3,11 @@ import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import SvgWidget from "../widgets/SvgWidget"
 import useWidgetTheme from "../widgets/useWidgetTheme"
-import useServiceHost from "../hooks/useServiceHost"
+import useServiceServer from "../hooks/useServiceServer"
 import useWidgetSize from "../widgets/useWidgetSize"
 import useThrottledValue from "../hooks/useThrottledValue"
 import useSvgButtonProps from "../hooks/useSvgButtonProps"
-import ReflectedLightServiceHost from "../../../jacdac-ts/src/hosts/reflectedlightservicehost"
+import ReflectedLightServer from "../../../jacdac-ts/src/servers/reflectedlightserver"
 import {
     ReflectedLightReg,
     ReflectedLightVariant,
@@ -26,7 +26,7 @@ export default function DashboardReflectedLight(props: DashboardServiceProps) {
         props
     )
 
-    const host = useServiceHost<ReflectedLightServiceHost>(service)
+    const host = useServiceServer<ReflectedLightServer>(service)
     const color = host ? "secondary" : "primary"
     const { background, controlBackground } = useWidgetTheme(color)
     const widgetSize = useWidgetSize(variant, services.length)

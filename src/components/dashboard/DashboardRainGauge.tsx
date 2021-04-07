@@ -3,9 +3,9 @@ import { RainGaugeReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import SvgWidget from "../widgets/SvgWidget"
 import useWidgetTheme from "../widgets/useWidgetTheme"
-import useServiceHost from "../hooks/useServiceHost"
+import useServiceServer from "../hooks/useServiceServer"
 import useThrottledValue from "../hooks/useThrottledValue"
-import RainGaugeServiceHost from "../../../jacdac-ts/src/hosts/RainGaugeServiceHost"
+import RainGaugeServer from "../../../jacdac-ts/src/servers/RainGaugeServer"
 import useChange from "../../jacdac/useChange"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import { useId } from "react-use-id-hook"
@@ -24,7 +24,7 @@ export default function DashbaordRainGauge(props: DashboardServiceProps) {
         props
     )
     const clipId = useId()
-    const host = useServiceHost<RainGaugeServiceHost>(service)
+    const host = useServiceServer<RainGaugeServer>(service)
     const tiltCount = useChange(host, h => h?.tiltCount)
     const level = useChange(host, h => h?.level)
     const tiltAngle =

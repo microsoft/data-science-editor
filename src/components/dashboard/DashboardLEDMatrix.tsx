@@ -4,10 +4,10 @@ import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import SvgWidget from "../widgets/SvgWidget"
 import useWidgetTheme from "../widgets/useWidgetTheme"
-import useServiceHost from "../hooks/useServiceHost"
+import useServiceProvider from "../hooks/useServiceProvider"
 import useFireKey from "../hooks/useFireKey"
 import useKeyboardNavigationProps from "../hooks/useKeyboardNavigationProps"
-import { toggle } from "../../../jacdac-ts/src/hosts/ledmatrixservicehost"
+import { toggle } from "../../../jacdac-ts/src/servers/ledmatrixserver"
 import LoadingProgress from "../ui/LoadingProgress"
 
 export default function DashboardLEDMatrixDisplay(
@@ -30,7 +30,7 @@ export default function DashboardLEDMatrixDisplay(
         service.register(LedMatrixReg.Columns),
         props
     )
-    const host = useServiceHost(service)
+    const host = useServiceProvider(service)
     const color = host ? "secondary" : "primary"
     const { background, controlBackground, active } = useWidgetTheme(color)
 

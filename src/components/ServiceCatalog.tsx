@@ -18,7 +18,7 @@ import {
 import { arrayConcatMany, unique } from "../../jacdac-ts/src/jdom/utils"
 import MakeCodeIcon from "./icons/MakeCodeIcon"
 import KindIcon from "./KindIcon"
-import { hostDefinitionFromServiceClass } from "../../jacdac-ts/src/hosts/hosts"
+import { serviceProviderDefinitionFromServiceClass } from "../../jacdac-ts/src/servers/servers"
 import JacdacIcon from "./icons/JacdacIcon"
 import SpeedIcon from "@material-ui/icons/Speed"
 import { VIRTUAL_DEVICE_NODE_NAME } from "../../jacdac-ts/src/jdom/constants"
@@ -92,7 +92,7 @@ export default function ServiceCatalog() {
             )
         if (simulators)
             r = r.filter(
-                srv => !!hostDefinitionFromServiceClass(srv.classIdentifier)
+                srv => !!serviceProviderDefinitionFromServiceClass(srv.classIdentifier)
             )
         if (devices)
             r = r.filter(

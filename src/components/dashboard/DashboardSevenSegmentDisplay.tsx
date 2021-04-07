@@ -2,7 +2,7 @@ import React from "react"
 import { SevenSegmentDisplayReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterBoolValue, useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
-import useServiceHost from "../hooks/useServiceHost"
+import useServiceProvider from "../hooks/useServiceProvider"
 import SvgWidget from "../widgets/SvgWidget"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import { Grid } from "@material-ui/core"
@@ -30,7 +30,7 @@ export default function DashboardSevenSegmentDisplay(
         props
     )
 
-    const host = useServiceHost(service)
+    const host = useServiceProvider(service)
     const color = host ? "secondary" : "primary"
     const { active, background } = useWidgetTheme(color)
 

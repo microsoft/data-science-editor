@@ -12,8 +12,8 @@ import AddIcon from '@material-ui/icons/Add';
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip";
-import useServiceHost from "../hooks/useServiceHost";
-import LedPixelServiceHost from "../../../jacdac-ts/src/hosts/ledpixelservicehost";
+import useServiceServer from "../hooks/useServiceServer";
+import LedPixelServer from "../../../jacdac-ts/src/servers/ledpixelserver";
 import LightWidget from "../widgets/LightWidget";
 import { LedPixelCmd } from "../../../jacdac-ts/src/jdom/constants";
 /*
@@ -196,7 +196,7 @@ function LightCommand(props: { service: JDService, expanded: boolean }) {
 
 export default function DashboardLEDPixel(props: DashboardServiceProps) {
     const { service, services, expanded } = props;
-    const host = useServiceHost<LedPixelServiceHost>(service);
+    const host = useServiceServer<LedPixelServer>(service);
     return <>
         {host && <LightWidget widgetCount={services.length} {...props} />}
         {expanded &&

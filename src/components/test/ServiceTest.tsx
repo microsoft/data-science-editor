@@ -8,9 +8,9 @@ import InfoIcon from "@material-ui/icons/Info"
 import Alert from "../ui/Alert"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import {
-    addHost,
-    hostDefinitionFromServiceClass,
-} from "../../../jacdac-ts/src/hosts/hosts"
+    addServiceProvider,
+    serviceProviderDefinitionFromServiceClass,
+} from "../../../jacdac-ts/src/servers/servers"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { serviceTestFromServiceClass } from "../../../jacdac-ts/src/test/testspec"
@@ -22,8 +22,8 @@ function Diagnostics(props: { serviceClass: number }) {
     const { serviceClass } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
 
-    const hostDefinition = hostDefinitionFromServiceClass(serviceClass)
-    const handleStartSimulator = () => addHost(bus, hostDefinition)
+    const hostDefinition = serviceProviderDefinitionFromServiceClass(serviceClass)
+    const handleStartSimulator = () => addServiceProvider(bus, hostDefinition)
 
     if (!hostDefinition) return null
 

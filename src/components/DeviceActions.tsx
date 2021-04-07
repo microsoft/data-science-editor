@@ -6,7 +6,7 @@ import FingerprintIcon from '@material-ui/icons/Fingerprint';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context";
 import CmdButton from "./CmdButton";
-import useDeviceHost from "./hooks/useDeviceHost"
+import useServiceProvider from "./hooks/useServiceProvider"
 import CloseIcon from '@material-ui/icons/Close';
 
 export default function DeviceActions(props: {
@@ -18,7 +18,7 @@ export default function DeviceActions(props: {
 }) {
     const { device, showReset, children, hideIdentity, showStopHost } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const host = useDeviceHost(device);
+    const host = useServiceProvider(device);
 
     const handleIdentify = async () => {
         await device.identify()
@@ -27,7 +27,7 @@ export default function DeviceActions(props: {
         await device.reset()
     }
     const handleStop = () => {
-        bus.removeDeviceHost(host);
+        bus.removeServiceProvider(host);
     }
     return <>
         {showStopHost && host && <CmdButton trackName="device.stop" size="small" title="stop simulator" onClick={handleStop} icon={<CloseIcon />} />}

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { ButtonEvent, ButtonReg, EVENT, REPORT_UPDATE } from "../../../jacdac-ts/src/jdom/constants";
-import ButtonServiceHost from "../../../jacdac-ts/src/hosts/buttonservicehost";
+import ButtonServer from "../../../jacdac-ts/src/servers/buttonserver";
 import { DashboardServiceProps } from "./DashboardServiceWidget";
 import ButtonWidget from "../widgets/ButtonWidget";
-import useServiceHost from "../hooks/useServiceHost";
+import useServiceServer from "../hooks/useServiceServer";
 import LoadingProgress from "../ui/LoadingProgress"
 
 export default function DashboardButton(props: DashboardServiceProps) {
@@ -22,7 +22,7 @@ export default function DashboardButton(props: DashboardServiceProps) {
     const upEvent = service.event(ButtonEvent.Up);
     useEffect(() => upEvent.subscribe(EVENT, () => setPressed(false)), [upEvent])
 
-    const host = useServiceHost<ButtonServiceHost>(service);
+    const host = useServiceServer<ButtonServer>(service);
     const color = host ? "secondary" : "primary";
     const label = `button ${pressed ? `down` : `up`}`
     const handleDown = () => host?.down();

@@ -5,10 +5,10 @@ import { DashboardServiceProps } from "./DashboardServiceWidget";
 import { useRegisterBoolValue } from "../../jacdac/useRegisterValue";
 import SvgWidget from "../widgets/SvgWidget";
 import useWidgetTheme from "../widgets/useWidgetTheme";
-import useServiceHost from "../hooks/useServiceHost";
+import useServiceServer from "../hooks/useServiceServer";
 import useWidgetSize from "../widgets/useWidgetSize";
 import useSvgButtonProps from "../hooks/useSvgButtonProps";
-import TrafficLightServiceHost from "../../../jacdac-ts/src/hosts/trafficlightservicehost";
+import TrafficLightServer from "../../../jacdac-ts/src/servers/trafficlightserver";
 import useKeyboardNavigationProps from "../hooks/useKeyboardNavigationProps";
 
 const m = 2;
@@ -40,7 +40,7 @@ export default function DashboardTrafficLight(props: DashboardServiceProps) {
     const lightRegs = [TrafficLightReg.Red, TrafficLightReg.Orange, TrafficLightReg.Green]
     const lights = [red, orange, green]
 
-    const host = useServiceHost<TrafficLightServiceHost>(service);
+    const host = useServiceServer<TrafficLightServer>(service);
     const color = host ? "secondary" : "primary";
     const { background, controlBackground } = useWidgetTheme(color)
     const widgetSize = useWidgetSize(variant, services.length)

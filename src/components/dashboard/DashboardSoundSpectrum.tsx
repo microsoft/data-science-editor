@@ -4,7 +4,7 @@ import {
     useRegisterBoolValue,
     useRegisterUnpackedValue,
 } from "../../jacdac/useRegisterValue"
-import useServiceHost from "../hooks/useServiceHost"
+import useServiceServer from "../hooks/useServiceServer"
 import { Grid } from "@material-ui/core"
 import MicIcon from "@material-ui/icons/Mic"
 import {
@@ -14,12 +14,12 @@ import {
 import useMicrophoneSpectrum from "../hooks/useMicrophoneSpectrum"
 import IconButtonWithProgress from "../ui/IconButtonWithProgress"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
-import SensorServiceHost from "../../../jacdac-ts/src/hosts/sensorservicehost"
+import SensorServer from "../../../jacdac-ts/src/servers/sensorserver"
 import BytesBarGraphWidget from "../widgets/BytesBarGraphWidget"
 
 function HostMicrophoneButton(props: {
     service: JDService
-    host?: SensorServiceHost<[Uint8Array]>
+    host?: SensorServer<[Uint8Array]>
     visible: boolean
 }) {
     const { host, service, visible } = props
@@ -89,7 +89,7 @@ export default function DashboardSoundSpectrum(props: DashboardServiceProps) {
     const frequencyBinsRegister = service.register(
         SoundSpectrumReg.FrequencyBins
     )
-    const host = useServiceHost<SensorServiceHost<[Uint8Array]>>(service)
+    const host = useServiceServer<SensorServer<[Uint8Array]>>(service)
 
     return (
         <Grid container direction="column">

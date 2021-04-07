@@ -9,7 +9,7 @@ import {
 import { useSnackbar } from "notistack"
 import React, { useContext, useMemo, useState } from "react"
 import { useId } from "react-use-id-hook"
-import hosts, { addHost } from "../../../jacdac-ts/src/hosts/hosts"
+import servers, { addServiceProvider } from "../../../jacdac-ts/src/servers/servers"
 import { VIRTUAL_DEVICE_NODE_NAME } from "../../../jacdac-ts/src/jdom/constants"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import { delay, uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
@@ -28,14 +28,14 @@ export default function StartSimulatorDialog(props: {
 
     const [selected, setSelected] = useState("button")
     const { enqueueSnackbar } = useSnackbar()
-    const hostDefinitions = useMemo(() => hosts(), [])
+    const hostDefinitions = useMemo(() => servers(), [])
 
     const handleChange = (ev: React.ChangeEvent<{ value: unknown }>) => {
         setSelected(ev.target.value as string)
     }
     const handleClick = () => {
         const host = hostDefinitions.find(h => h.name === selected)
-        addHost(bus, host)
+        addServiceProvider(bus, host)
         onClose()
     }
     const handleAddAll = async () => {
@@ -51,7 +51,7 @@ export default function StartSimulatorDialog(props: {
         onClose()
         for (const host of allHostDefinitions) {
             await delay(100)
-            addHost(bus, host)
+            addServiceProvider(bus, host)
         }
     }
 

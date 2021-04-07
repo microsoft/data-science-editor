@@ -9,7 +9,7 @@ import {
 } from "../../jacdac-ts/src/jdom/bluetooth"
 import IFrameBridgeClient from "../../jacdac-ts/src/jdom/iframebridgeclient"
 import Flags from "../../jacdac-ts/src/jdom/flags"
-import GamepadHostManager from "../../jacdac-ts/src/hosts/gamepadhostmanager"
+import GamepadHostManager from "../../jacdac-ts/src/servers/gamepadservermanager"
 import JacdacFlags from "../jacdac/Flags"
 
 function sniffQueryArguments() {

@@ -3,9 +3,9 @@ import { DashboardServiceProps } from "./DashboardServiceWidget";
 import { useRegisterBoolValue, useRegisterUnpackedValue } from "../../jacdac/useRegisterValue";
 import SvgWidget from "../widgets/SvgWidget";
 import useWidgetTheme from "../widgets/useWidgetTheme";
-import useServiceHost from "../hooks/useServiceHost";
+import useServiceServer from "../hooks/useServiceServer";
 import { Grid, Slider } from "@material-ui/core";
-import SensorServiceHost from "../../../jacdac-ts/src/hosts/sensorservicehost";
+import SensorServer from "../../../jacdac-ts/src/servers/sensorserver";
 import { CompassReg, SystemStatusCodes } from "../../../jacdac-ts/src/jdom/constants";
 import PowerButton from "../widgets/PowerButton";
 import LoadingProgress from "../ui/LoadingProgress";
@@ -20,7 +20,7 @@ export default function DashboardCompass(props: DashboardServiceProps) {
     const [status,] = useRegisterUnpackedValue<[SystemStatusCodes, number]>(service.statusCodeRegister, props);
     const off = !enabled;
 
-    const host = useServiceHost<SensorServiceHost<[number]>>(service);
+    const host = useServiceServer<SensorServer<[number]>>(service);
     const color = host ? "secondary" : "primary";
     const { background, controlBackground, active, textProps } = useWidgetTheme(color)
 

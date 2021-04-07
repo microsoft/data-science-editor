@@ -1,10 +1,10 @@
-import React, { lazy, useCallback, ChangeEvent } from "react"
+import React, { lazy, useCallback } from "react"
 import { AccelerometerReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import useWidgetTheme from "../widgets/useWidgetTheme"
-import useServiceHost from "../hooks/useServiceHost"
-import SensorServiceHost from "../../../jacdac-ts/src/hosts/sensorservicehost"
+import useServiceServer from "../hooks/useServiceServer"
+import SensorServer from "../../../jacdac-ts/src/servers/sensorserver"
 import { JDRegister } from "../../../jacdac-ts/src/jdom/register"
 import { Grid, Mark, NoSsr } from "@material-ui/core"
 import { roundWithPrecision } from "../../../jacdac-ts/src/jdom/utils"
@@ -17,7 +17,7 @@ const CanvasWidget = lazy(() => import("../widgets/CanvasWidget"))
 
 const valueDisplay = (v: number) => roundWithPrecision(v, 1)
 function Sliders(props: {
-    host: SensorServiceHost<[number, number, number]>
+    host: SensorServer<[number, number, number]>
     register: JDRegister
     visible?: boolean
 }) {
@@ -108,7 +108,7 @@ function lerp(v0: number, v1: number, t: number) {
 export default function DashboardAccelerometer(props: DashboardServiceProps) {
     const { service, visible } = props
     const register = service.register(AccelerometerReg.Forces)
-    const host = useServiceHost<SensorServiceHost<[number, number, number]>>(
+    const host = useServiceServer<SensorServer<[number, number, number]>>(
         service
     )
     const color = host ? "secondary" : "primary"

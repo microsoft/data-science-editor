@@ -13,9 +13,9 @@ import { Button } from "gatsby-theme-material-ui"
 import Markdown from "./ui/Markdown"
 import ServiceSpecificationStatusAlert from "./ServiceSpecificationStatusAlert"
 import {
-    addHost,
-    hostDefinitionFromServiceClass,
-} from "../../jacdac-ts/src/hosts/hosts"
+    addServiceProvider,
+    serviceProviderDefinitionFromServiceClass,
+} from "../../jacdac-ts/src/servers/servers"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import KindIcon from "./KindIcon"
 import { VIRTUAL_DEVICE_NODE_NAME } from "../../jacdac-ts/src/jdom/constants"
@@ -39,9 +39,9 @@ export default function ServiceSpecificationCard(props: {
         spec = serviceSpecificationFromClassIdentifier(serviceClass)
     const sc = spec?.classIdentifier || serviceClass
     const srv = spec?.shortId || sc?.toString(16)
-    const hostDefinition = hostDefinitionFromServiceClass(sc)
+    const hostDefinition = serviceProviderDefinitionFromServiceClass(sc)
     const handleSimulatorClick = () => {
-        addHost(bus, hostDefinition)
+        addServiceProvider(bus, hostDefinition)
         navigate("/dashboard/")
     }
 

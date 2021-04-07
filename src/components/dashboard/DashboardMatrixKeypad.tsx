@@ -4,10 +4,10 @@ import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import SvgWidget from "../widgets/SvgWidget"
 import useWidgetTheme from "../widgets/useWidgetTheme"
-import useServiceHost from "../hooks/useServiceHost"
+import useServiceServer from "../hooks/useServiceServer"
 import useFireKey from "../hooks/useFireKey"
 import useKeyboardNavigationProps from "../hooks/useKeyboardNavigationProps"
-import MatrixKeypadServiceHost from "../../../jacdac-ts/src/hosts/matrixkeypadservicehost"
+import MatrixKeypadServer from "../../../jacdac-ts/src/servers/matrixkeypadserver"
 import LoadingProgress from "../ui/LoadingProgress"
 import useWidgetSize from "../widgets/useWidgetSize"
 
@@ -32,7 +32,7 @@ export default function DashboardMatrixKeypad(props: DashboardServiceProps) {
         service.register(MatrixKeypadReg.Columns),
         props
     )
-    const host = useServiceHost<MatrixKeypadServiceHost>(service)
+    const host = useServiceServer<MatrixKeypadServer>(service)
     const color = host ? "secondary" : "primary"
     const { background, controlBackground, active, textProps } = useWidgetTheme(
         color

@@ -15,7 +15,7 @@ import Markdown from "./ui/Markdown"
 import EnumSpecification from "./EnumSpecification"
 import { Box, Grid } from "@material-ui/core"
 import ServiceSpecificationStatusAlert from "./ServiceSpecificationStatusAlert"
-import useDeviceHostFromServiceClass from "./hooks/useDeviceHostFromServiceClass"
+import useServiceProviderFromServiceClass from "./hooks/useServiceProviderFromServiceClass"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import useChange from "../jacdac/useChange"
 import DashbardDeviceItem from "./dashboard/DashboardDeviceItem"
@@ -61,7 +61,7 @@ export default function ServiceSpecification(props: {
             pipeReports.indexOf(r) < 0
     )
     // spin up host on demand
-    useDeviceHostFromServiceClass(node.classIdentifier)
+    useServiceProviderFromServiceClass(node.classIdentifier)
 
     const reportOf = (pkt: jdspec.PacketInfo) =>
         reports.find(rep => isReportOf(pkt, rep))

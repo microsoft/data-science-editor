@@ -10,7 +10,7 @@ import GridHeader from "./ui/GridHeader"
 import { Link } from "gatsby-theme-material-ui"
 import MakeCodeIcon from "./icons/MakeCodeIcon"
 import { VIRTUAL_DEVICE_NODE_NAME } from "../../jacdac-ts/src/jdom/constants"
-import { hostDefinitionFromServiceClass } from "../../jacdac-ts/src/hosts/hosts"
+import { serviceProviderDefinitionFromServiceClass } from "../../jacdac-ts/src/servers/servers"
 import KindIcon from "./KindIcon"
 import ChipList from "./ui/ChipList"
 import JacdacIcon from "./icons/JacdacIcon"
@@ -22,7 +22,7 @@ function ServiceSpecificatinListItem(props: { service: jdspec.ServiceSpec }) {
     const { service } = props
     const { shortId, classIdentifier, name, notes, tags } = service
     const makecode = resolveMakecodeServiceFromClassIdentifier(classIdentifier)
-    const simulator = hostDefinitionFromServiceClass(classIdentifier)
+    const simulator = serviceProviderDefinitionFromServiceClass(classIdentifier)
     const device = !!deviceSpecificationsForService(classIdentifier)?.length
     const test = serviceTestFromServiceClass(classIdentifier)
 

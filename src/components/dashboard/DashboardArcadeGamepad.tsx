@@ -6,9 +6,9 @@ import {
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import SvgWidget from "../widgets/SvgWidget"
-import useServiceHost from "../hooks/useServiceHost"
+import useServiceServer from "../hooks/useServiceServer"
 import useWidgetTheme from "../widgets/useWidgetTheme"
-import ArcadeGamepadServiceHost from "../../../jacdac-ts/src/hosts/arcadegamepadservicehost"
+import ArcadeGamepadServer from "../../../jacdac-ts/src/servers/arcadegamepadserver"
 import useSvgButtonProps from "../hooks/useSvgButtonProps"
 import LoadingProgress from "../ui/LoadingProgress"
 
@@ -26,7 +26,7 @@ function ArcadeButton(props: {
     ri: number
     pressure: number
     button: ArcadeGamepadButton
-    host: ArcadeGamepadServiceHost
+    host: ArcadeGamepadServer
     onRefresh: () => void
     color?: "primary" | "secondary"
 }) {
@@ -84,7 +84,7 @@ export default function DashboardArcadeGamepad(props: DashboardServiceProps) {
     const [pressed] = useRegisterUnpackedValue<
         [[ArcadeGamepadButton, number][]]
     >(pressedRegister, props)
-    const host = useServiceHost<ArcadeGamepadServiceHost>(service)
+    const host = useServiceServer<ArcadeGamepadServer>(service)
     const color = host ? "secondary" : "primary"
     const { background } = useWidgetTheme(color)
 
