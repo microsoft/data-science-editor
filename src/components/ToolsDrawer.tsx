@@ -24,18 +24,18 @@ import SettingsBrightnessIcon from "@material-ui/icons/SettingsBrightness"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import SystemUpdateAltIcon from "@material-ui/icons/SystemUpdateAlt"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import WifiIcon from '@material-ui/icons/Wifi';
+import WifiIcon from "@material-ui/icons/Wifi"
 import DarkModeContext from "./ui/DarkModeContext"
 import KindIcon from "./KindIcon"
 import MakeCodeIcon from "./icons/MakeCodeIcon"
 import JupyterIcon from "./icons/JupyterIcon"
-import JacdacIcon from "./icons/JacdacIcon"
 import {
     DEVICE_NODE_NAME,
     SERVICE_NODE_NAME,
     VIRTUAL_DEVICE_NODE_NAME,
     SERVICE_TEST_NODE_NAME,
 } from "../../jacdac-ts/src/jdom/constants"
+import JacdacFlags from "../jacdac/Flags"
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -119,16 +119,11 @@ export default function ToolsDrawer() {
     }
     const links = [
         {
-            text: "Dashboard",
-            url: "/dashboard",
-            icon: <JacdacIcon />,
-        },
-        {
             text: "Start simulator",
             action: toggleShowDeviceHostsDialog,
             icon: <KindIcon kind={VIRTUAL_DEVICE_NODE_NAME} />,
         },
-        {
+        JacdacFlags.peers && {
             text: "Peers",
             url: "/tools/peers",
             icon: <WifiIcon />,
@@ -182,7 +177,7 @@ export default function ToolsDrawer() {
             url: "/tools/device-registration",
             icon: <KindIcon kind={DEVICE_NODE_NAME} />,
         },
-    ]
+    ].filter(l => !!l)
 
     if (!toolsMenu) return null
 

@@ -10,6 +10,7 @@ import {
 import IFrameBridgeClient from "../../jacdac-ts/src/jdom/iframebridgeclient"
 import Flags from "../../jacdac-ts/src/jdom/flags"
 import GamepadHostManager from "../../jacdac-ts/src/hosts/gamepadhostmanager"
+import JacdacFlags from "../jacdac/Flags"
 
 function sniffQueryArguments() {
     if (typeof window === "undefined" || typeof URLSearchParams === "undefined")
@@ -24,7 +25,8 @@ function sniffQueryArguments() {
     return {
         diagnostics: params.get(`dbg`) === "1",
         webUSB: isWebUSBSupported() && params.get(`webusb`) !== "0" && !toolsMakecode,
-        webBluetooth: isWebBluetoothSupported() && params.get(`webble`) !== "0" && !toolsMakecode,
+        webBluetooth: isWebBluetoothSupported() && params.get(`webble`) === "1" && !toolsMakecode,
+        peers: params.get(`peers`) === "1",
         parentOrigin: params.get("parentOrigin"),
         frameId: window.location.hash?.slice(1),
     }
@@ -34,6 +36,7 @@ const args = sniffQueryArguments()
 Flags.diagnostics = args.diagnostics
 Flags.webUSB = args.webUSB
 Flags.webBluetooth = args.webBluetooth
+JacdacFlags.peers = args.peers
 
 // defeat react fast-refresh
 function createBus(): JDBus {

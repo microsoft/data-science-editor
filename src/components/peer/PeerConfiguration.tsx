@@ -14,6 +14,8 @@ import useChange from "../../jacdac/useChange"
 import { Button, Link } from "gatsby-theme-material-ui"
 import PeerJSBridge, { PeerConnection } from "./peerjsbridge"
 import GridHeader from "../ui/GridHeader"
+import Alert from "../ui/Alert"
+import JacdacFlags from "../../jacdac/Flags"
 
 function PeerItem(props: { peer: PeerJSBridge }) {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
@@ -35,13 +37,7 @@ function PeerItem(props: { peer: PeerJSBridge }) {
             <Card>
                 <CardContent>
                     <Typography>
-                        Connect to be able join other Jacdac networks. This
-                        functionality uses the &nbsp;
-                        <Link href="https://peerjs.com/peerserver.html">
-                            PeerServer Cloud Service
-                        </Link>
-                        to establish connections. No data is sent through the
-                        server.
+                        Connect to be able join other Jacdac networks.
                     </Typography>
                     {id && (
                         <TextField
@@ -133,6 +129,7 @@ function ConnectionItem(props: { connection: PeerConnection }) {
 
 export default function Peers() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const { peers: enabled } = JacdacFlags
     const peer = useChange(
         bus,
         _ => _.bridges.find(b => b instanceof PeerJSBridge) as PeerJSBridge
@@ -141,19 +138,32 @@ export default function Peers() {
 
     return (
         <>
-            <h1>Jacdac Web Connect</h1>
+            <h1>Jacdac Peers</h1>
+            <Alert severity="warning">Experimental feature</Alert>
             <p>
                 This section allows you to connect multiple Jacdac dashboard in
-                real time over the web (using WebRTC).
+                real time over the web (using WebRTC). This functionality uses
+                the &nbsp;
+                <Link href="https://peerjs.com/peerserver.html">
+                    PeerServer Cloud Service
+                </Link>
+                to establish connections. No data is sent through the server.
             </p>
-            <Grid container spacing={1}>
-                <PeerItem peer={peer} />
-                <GridHeader title="Peers" />
-                {peer && <ConnectItem peer={peer} />}
-                {connections?.map(conn => (
-                    <ConnectionItem key={conn.label} connection={conn} />
-                ))}
-            </Grid>
+            {!enabled && (
+                <Alert severity="error">
+                    This functionality is not enabled.
+                </Alert>
+            )}
+            {enabled && (
+                <Grid container spacing={1}>
+                    <PeerItem peer={peer} />
+                    <GridHeader title="Peers" />
+                    {peer && <ConnectItem peer={peer} />}
+                    {connections?.map(conn => (
+                        <ConnectionItem key={conn.label} connection={conn} />
+                    ))}
+                </Grid>
+            )}
         </>
     )
 }
