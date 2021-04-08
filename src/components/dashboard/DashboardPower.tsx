@@ -41,10 +41,7 @@ export default function DashboardPower(props: DashboardServiceProps) {
     const hw = 4
     const rw = mw / 2
 
-    const toggleEnabled = async () => {
-        await enabledRegister.sendSetBoolAsync(!enabled)
-        enabledRegister.refresh()
-    }
+    const toggleEnabled = () => enabledRegister.sendSetBoolAsync(!enabled, true)
     const widgetSize = `clamp(3rem, 10vw, 16vw)`
 
     return (

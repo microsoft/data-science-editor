@@ -65,10 +65,7 @@ export default function DashboardServo(props: DashboardServiceProps) {
     const pri = 6
     const text = enabled ? `${Math.round(a)}°` : "off"
 
-    const toggleOff = async () => {
-        await enabledRegister.sendSetBoolAsync(!enabled)
-        enabledRegister.refresh()
-    }
+    const toggleOff = () => enabledRegister.sendSetBoolAsync(!enabled, true)
 
     return (
         <Grid container alignContent="center">
