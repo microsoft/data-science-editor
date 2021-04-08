@@ -12,6 +12,7 @@ import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
 import SoundPlayerServer from "../../../jacdac-ts/src/servers/soundplayerserver"
 import { Howl } from "howler"
+import LoadingProgress from "../ui/LoadingProgress"
 
 function SoundButton(props: {
     service: JDService
@@ -70,10 +71,14 @@ export default function DashboardSoundPlayer(props: DashboardServiceProps) {
             if (server) server.onPlay = undefined
         }
     }, [volume, server])
+
+    if (!sounds)
+        return <LoadingProgress />
+
     return (
         <Grid container spacing={1}>
             {sounds?.map(sound => (
-                <Grid item key={sound[1]}>
+                <Grid item xs key={sound[1]}>
                     <SoundButton
                         service={service}
                         duration={sound[0]}

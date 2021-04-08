@@ -4,7 +4,6 @@ import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import SvgWidget from "../widgets/SvgWidget"
 import useWidgetTheme from "../widgets/useWidgetTheme"
-import useServiceProvider from "../hooks/useServiceProvider"
 import useFireKey from "../hooks/useFireKey"
 import useKeyboardNavigationProps from "../hooks/useKeyboardNavigationProps"
 import { toggle } from "../../../jacdac-ts/src/servers/ledmatrixserver"
@@ -19,7 +18,7 @@ export default function DashboardLEDMatrixDisplay(
     const widgetRef = useRef<SVGGElement>()
     const ledsRegister = service.register(LedMatrixReg.Leds)
     const [leds] = useRegisterUnpackedValue<[Uint8Array]>(ledsRegister, props)
-    const [brightness] = useRegisterUnpackedValue<[number]>(
+    const [brightness = 0] = useRegisterUnpackedValue<[number]>(
         service.register(LedMatrixReg.Brightness),
         props
     )
