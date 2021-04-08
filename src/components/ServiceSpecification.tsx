@@ -60,7 +60,7 @@ export default function ServiceSpecification(props: {
             reports.indexOf(r) < 0 &&
             pipeReports.indexOf(r) < 0
     )
-    // spin up host on demand
+    // spin up provider on demand
     useServiceProviderFromServiceClass(node.classIdentifier)
 
     const reportOf = (pkt: jdspec.PacketInfo) =>

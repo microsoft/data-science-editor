@@ -39,19 +39,19 @@ export default function StartSimulatorDialog(props: {
         onClose()
     }
     const handleAddAll = async () => {
-        const allHostDefinitions = uniqueMap(
+        const allProviderDefinitions = uniqueMap(
             providerDefinitions.filter(hd => hd.serviceClasses.length === 1),
             hd => hd.serviceClasses[0].toString(),
             h => h
         )
-        enqueueSnackbar(`starting ${allHostDefinitions.length} simulators...`, {
+        enqueueSnackbar(`starting ${allProviderDefinitions.length} simulators...`, {
             variant: "info",
             key: "startdevicehosts",
         })
         onClose()
-        for (const host of allHostDefinitions) {
+        for (const provider of allProviderDefinitions) {
             await delay(100)
-            addServiceProvider(bus, host)
+            addServiceProvider(bus, provider)
         }
     }
 
