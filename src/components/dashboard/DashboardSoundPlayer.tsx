@@ -66,7 +66,9 @@ export default function DashboardSoundPlayer(props: DashboardServiceProps) {
                 })
                 sound.play()
             }
-        return () => (server.onPlay = undefined)
+        return () => {
+            if (server) server.onPlay = undefined
+        }
     }, [volume, server])
     return (
         <Grid container spacing={1}>
