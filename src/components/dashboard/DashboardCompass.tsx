@@ -63,7 +63,7 @@ export default function DashboardCompass(props: DashboardServiceProps) {
                 <PowerButton r={pr} ri={pri} cx={w - pr - 1} cy={h - pr - 1}
                     color={color}
                     strokeWidth={1}
-                    off={off} onClick={server && toggleOff} />
+                    off={off} onClick={toggleOff} />
             </SvgWidget >
         </Grid>
         {server && <Grid item>
