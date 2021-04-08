@@ -40,15 +40,18 @@ import {
     SRV_TRAFFIC_LIGHT,
     SRV_WATER_LEVEL,
     SRV_WIND_DIRECTION,
+    SRV_BIT_RADIO,
     SystemReg,
 } from "../../../jacdac-ts/src/jdom/constants"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { isRegister } from "../../../jacdac-ts/src/jdom/spec"
 import RegisterInput from "../RegisterInput"
 import { JDRegister } from "../../../jacdac-ts/src/jdom/register"
-import { useRegisterBoolValue, useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
+import {
+    useRegisterBoolValue,
+    useRegisterUnpackedValue,
+} from "../../jacdac/useRegisterValue"
 import { CircularProgress, NoSsr } from "@material-ui/core"
-import useServiceProvider from "../hooks/useServiceProvider"
 
 // bundled
 import DashboardButton from "./DashboardButton"
@@ -96,6 +99,7 @@ const DashboardRandomNumberGenerator = lazy(
 const DashboardCompass = lazy(() => import("./DashboardCompass"))
 const DashboardGyroscope = lazy(() => import("./DashboardGyroscope"))
 const DashboardSolenoid = lazy(() => import("./DashboardSolenoid"))
+const DashboardBitRadio = lazy(() => import("./DashboardBitRadio"))
 
 export interface DashboardServiceProps {
     service: JDService
@@ -234,6 +238,10 @@ const serviceViews: {
     [SRV_SOLENOID]: {
         component: DashboardSolenoid,
     },
+    [SRV_BIT_RADIO]: {
+        component: DashboardBitRadio,
+        weight: () => 6,
+    },
 }
 
 const collapsedRegisters = [
@@ -250,10 +258,7 @@ function ValueWidget(
 ) {
     const { valueRegister, intensityRegister, ...others } = props
     const { visible } = others
-    const intensity = useRegisterBoolValue(
-        intensityRegister,
-        others
-    )
+    const intensity = useRegisterBoolValue(intensityRegister, others)
     const hasIntensity = intensity !== undefined
     const off = hasIntensity ? !intensity : undefined
     const toggleOff = async () => {
