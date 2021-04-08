@@ -23,7 +23,7 @@ function SoundButton(props: {
     const handleClick = async () => {
         await service.sendCmdAsync(
             SoundPlayerCmd.Play,
-            jdpack("u0.16 s", [1, name]),
+            jdpack("s", [name]),
             false
         )
     }
@@ -58,12 +58,11 @@ export default function DashboardSoundPlayer(props: DashboardServiceProps) {
         volumeRegister.sendSetPackedAsync("u0.16", [newValue], true)
     }
     useEffect(() => {
-        if (server)
-            server.onPlay = (vol: number, name: string) => {
-                // Setup the new Howl.
+        if (server && volume)
+            server.onPlay = (name: string) => {
                 const sound = new Howl({
-                    src: [`/jacdac-ts/sounds/${name}.wav`],
-                    volume: vol * volume,
+                    src: [`/jacdac-docs/sounds/${name}.wav`],
+                    volume: volume,
                 })
                 sound.play()
             }
