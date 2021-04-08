@@ -9,7 +9,7 @@ import {
 } from "../../jacdac-ts/src/jdom/bluetooth"
 import IFrameBridgeClient from "../../jacdac-ts/src/jdom/iframebridgeclient"
 import Flags from "../../jacdac-ts/src/jdom/flags"
-import GamepadHostManager from "../../jacdac-ts/src/servers/gamepadservermanager"
+import GamepadServerManager from "../../jacdac-ts/src/servers/gamepadservermanager"
 import JacdacFlags from "../jacdac/Flags"
 
 function sniffQueryArguments() {
@@ -51,7 +51,7 @@ function createBus(): JDBus {
     )
     // parentOrigin: args.parentOrigin,
     if (Flags.webUSB) b.setBackgroundFirmwareScans(true)
-    GamepadHostManager.start(b)
+    GamepadServerManager.start(b)
 
     // tslint:disable-next-line: no-unused-expression
     // always start bridge

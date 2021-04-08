@@ -196,9 +196,9 @@ function LightCommand(props: { service: JDService, expanded: boolean }) {
 
 export default function DashboardLEDPixel(props: DashboardServiceProps) {
     const { service, services, expanded } = props;
-    const host = useServiceServer<LedPixelServer>(service);
+    const server = useServiceServer<LedPixelServer>(service);
     return <>
-        {host && <LightWidget widgetCount={services.length} {...props} />}
+        {server && <LightWidget widgetCount={services.length} {...props} />}
         {expanded &&
             <LightCommand service={service} expanded={expanded} />}
     </>

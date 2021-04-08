@@ -22,11 +22,11 @@ export default function DashboardButton(props: DashboardServiceProps) {
     const upEvent = service.event(ButtonEvent.Up);
     useEffect(() => upEvent.subscribe(EVENT, () => setPressed(false)), [upEvent])
 
-    const host = useServiceServer<ButtonServer>(service);
-    const color = host ? "secondary" : "primary";
+    const server = useServiceServer<ButtonServer>(service);
+    const color = server ? "secondary" : "primary";
     const label = `button ${pressed ? `down` : `up`}`
-    const handleDown = () => host?.down();
-    const handleUp = () => host?.up();
+    const handleDown = () => server?.down();
+    const handleUp = () => server?.up();
     const widgetSize = `clamp(3rem, 10vw, 16vw)`
 
     if (pressed === undefined)
@@ -35,8 +35,8 @@ export default function DashboardButton(props: DashboardServiceProps) {
     return <ButtonWidget
         checked={!!pressed}
         color={color}
-        onDown={host && handleDown}
-        onUp={host && handleUp}
+        onDown={server && handleDown}
+        onUp={server && handleUp}
         label={label}
         size={widgetSize}
     />

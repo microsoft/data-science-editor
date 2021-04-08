@@ -15,8 +15,8 @@ export default function DashboardSoilMoisture(props: DashboardServiceProps) {
     const moistureReg = service.register(SoilMoistureReg.Moisture)
     const [value] = useRegisterUnpackedValue<[number]>(moistureReg, props)
     const widgetSize = useWidgetSize(variant, services.length)
-    const host = useServiceServer<SensorServer<[number]>>(service)
-    const color = host ? "secondary" : "primary"
+    const server = useServiceServer<SensorServer<[number]>>(service)
+    const color = server ? "secondary" : "primary"
     const { active, background, controlBackground, textProps } = useWidgetTheme(
         color
     )
@@ -31,7 +31,7 @@ export default function DashboardSoilMoisture(props: DashboardServiceProps) {
     const ch = (h - cm) * ((0.12 + value) / 1.12)
     const onChange = (event: unknown, newValue: number | number[]): void => {
         const svalue = newValue as number
-        host?.reading.setValues([svalue])
+        server?.reading.setValues([svalue])
         moistureReg.refresh()
     }
 
@@ -70,7 +70,7 @@ export default function DashboardSoilMoisture(props: DashboardServiceProps) {
                     </text>
                 </SvgWidget>
             </Grid>
-            {host && hasValue && (
+            {server && hasValue && (
                 <Grid item xs>
                     <Slider
                         valueLabelDisplay="off"

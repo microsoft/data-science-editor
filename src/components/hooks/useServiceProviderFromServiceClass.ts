@@ -15,7 +15,7 @@ export default function useServiceProviderFromServiceClass(
         const devices = bus.devices({ serviceClass })
         const def =
             !devices.length && serviceProviderDefinitionFromServiceClass(serviceClass)
-        const host = def && addServiceProvider(bus, def)
-        return () => bus.removeServiceProvider(host)
+        const provider = def && addServiceProvider(bus, def)
+        return () => bus.removeServiceProvider(provider)
     }, [serviceClass])
 }

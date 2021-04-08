@@ -12,8 +12,8 @@ import LoadingProgress from "../ui/LoadingProgress"
 export default function DashboardLED(props: DashboardServiceProps) {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { service } = props
-    const host = useServiceServer<LEDServer>(service)
-    const color = host ? "secondary" : "primary"
+    const server = useServiceServer<LEDServer>(service)
+    const color = server ? "secondary" : "primary"
     const [r, g, b] = useRegisterUnpackedValue<[number, number, number]>(
         service.register(LedReg.Color),
         props

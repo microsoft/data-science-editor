@@ -6,14 +6,14 @@ import useWidgetTheme from "../widgets/useWidgetTheme";
 import { SolenoidReg } from "../../../jacdac-ts/src/jdom/constants";
 import useThrottledValue from "../hooks/useThrottledValue";
 import useSvgButtonProps from "../hooks/useSvgButtonProps";
-import useServiceProvider from "../hooks/useServiceProvider";
+import useServiceServer from "../hooks/useServiceServer";
 
 export default function DashboardSolenoid(props: DashboardServiceProps) {
     const { service } = props;
     const pulledRegister = service.register(SolenoidReg.Pulled);
     const pulled = useRegisterBoolValue(pulledRegister, props);
-    const host = useServiceProvider(service);
-    const color = host ? "secondary" : "primary";
+    const server = useServiceServer(service);
+    const color = server ? "secondary" : "primary";
     const { active, background, controlBackground, textProps } = useWidgetTheme(color);
 
     const w = 128
@@ -27,11 +27,11 @@ export default function DashboardSolenoid(props: DashboardServiceProps) {
     const label = pulled ? "pull solenoid" : "push solenoid"
 
     const onToggle = (ev: React.PointerEvent) => {
-        host?.register(SolenoidReg.Pulled)?.setValues([!pulled ? 1 : 0]);
+        server?.register(SolenoidReg.Pulled)?.setValues([!pulled ? 1 : 0]);
         pulledRegister.refresh();
     }
 
-    const buttonProps = useSvgButtonProps<SVGRectElement>(label, !!host && onToggle)
+    const buttonProps = useSvgButtonProps<SVGRectElement>(label, !!server && onToggle)
 
     return <SvgWidget width={w} height={h} background={background} >
         <rect x={m + pos} y={m + (bh - bsh) / 2} width={bw} height={bsh} rx={m} ry={m} fill={active} stroke={controlBackground} />

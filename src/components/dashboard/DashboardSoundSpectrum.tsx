@@ -89,7 +89,7 @@ export default function DashboardSoundSpectrum(props: DashboardServiceProps) {
     const frequencyBinsRegister = service.register(
         SoundSpectrumReg.FrequencyBins
     )
-    const host = useServiceServer<SensorServer<[Uint8Array]>>(service)
+    const server = useServiceServer<SensorServer<[Uint8Array]>>(service)
 
     return (
         <Grid container direction="column">
@@ -99,7 +99,7 @@ export default function DashboardSoundSpectrum(props: DashboardServiceProps) {
             <Grid item>
                 <HostMicrophoneButton
                     service={service}
-                    host={host}
+                    host={server}
                     visible={visible}
                 />
             </Grid>

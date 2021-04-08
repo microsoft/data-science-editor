@@ -23,8 +23,8 @@ export default function DashboardRotaryEncoder(props: DashboardServiceProps) {
         clicksPerTurnRegister,
         props
     )
-    const host = useServiceServer<RotaryEncoderServer>(service)
-    const color = host ? "secondary" : "primary"
+    const server = useServiceServer<RotaryEncoderServer>(service)
+    const color = server ? "secondary" : "primary"
     const { background, controlBackground, active, textProps } = useWidgetTheme(
         color
     )
@@ -36,7 +36,7 @@ export default function DashboardRotaryEncoder(props: DashboardServiceProps) {
     const fs = Math.max(0.2, 0.5 - label.length * 0.1)
 
     const handleChange = async (ev: unknown, newValue: number | number[]) => {
-        host?.reading.setValues([newValue as number])
+        server?.reading.setValues([newValue as number])
         positionRegister.refresh()
         clicksPerTurnRegister.refresh()
     }
@@ -73,7 +73,7 @@ export default function DashboardRotaryEncoder(props: DashboardServiceProps) {
                     </text>
                 </SvgWidget>
             </Grid>
-            {host && (
+            {server && (
                 <Grid item>
                     <Slider
                         color={color}

@@ -32,8 +32,8 @@ export default function DashboardMatrixKeypad(props: DashboardServiceProps) {
         service.register(MatrixKeypadReg.Columns),
         props
     )
-    const host = useServiceServer<MatrixKeypadServer>(service)
-    const color = host ? "secondary" : "primary"
+    const server = useServiceServer<MatrixKeypadServer>(service)
+    const color = server ? "secondary" : "primary"
     const { background, controlBackground, active, textProps } = useWidgetTheme(
         color
     )
@@ -42,7 +42,7 @@ export default function DashboardMatrixKeypad(props: DashboardServiceProps) {
     // no data about layout
     if (rows === undefined || columns === undefined) return <LoadingProgress />
 
-    const clickeable = !!host
+    const clickeable = !!server
     // compute size
     const pw = 8
     const ph = 8
@@ -53,11 +53,11 @@ export default function DashboardMatrixKeypad(props: DashboardServiceProps) {
     const h = rows * ph + (rows + 1) * m
 
     const handleButtonUp = (index: number) => () => {
-        host.up(index)
+        server.up(index)
         pressedRegister.refresh()
     }
     const handleButtonDown = (index: number) => () => {
-        host.down(index)
+        server.down(index)
         pressedRegister.refresh()
     }
 

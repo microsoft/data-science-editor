@@ -74,12 +74,12 @@ export default function DashboardSoundLevel(props: DashboardServiceProps) {
         soundLevelRegister,
         props
     )
-    const host = useServiceServer<AnalogSensorServer>(service)
-    const color = host ? "secondary" : "primary"
+    const server = useServiceServer<AnalogSensorServer>(service)
+    const color = server ? "secondary" : "primary"
 
     const onChange = (event: unknown, newValue: number | number[]): void => {
         const svalue = newValue as number
-        host?.reading.setValues([svalue])
+        server?.reading.setValues([svalue])
         soundLevelRegister.sendGetAsync() // refresh
     }
 
@@ -100,13 +100,13 @@ export default function DashboardSoundLevel(props: DashboardServiceProps) {
                     <Grid item>
                         <HostMicrophoneButton
                             service={service}
-                            host={host}
+                            host={server}
                             visible={visible}
                         />
                     </Grid>
                     <Grid item xs>
                         <Slider
-                            disabled={!host}
+                            disabled={!server}
                             valueLabelDisplay="off"
                             min={0}
                             max={1}

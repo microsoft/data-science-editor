@@ -17,11 +17,11 @@ const CanvasWidget = lazy(() => import("../widgets/CanvasWidget"))
 
 const valueDisplay = (v: number) => roundWithPrecision(v, 1)
 function Sliders(props: {
-    host: SensorServer<[number, number, number]>
+    server: SensorServer<[number, number, number]>
     register: JDRegister
     visible?: boolean
 }) {
-    const { host, register } = props
+    const { server, register } = props
     const forces = useRegisterUnpackedValue<[number, number, number]>(
         register,
         props
@@ -31,11 +31,11 @@ function Sliders(props: {
         event: unknown,
         newValue: number | number[]
     ) => {
-        const [, y] = host.reading.values()
+        const [, y] = server.reading.values()
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const n = (newValue as any) as number
         const nz = -Math.sqrt(1 - (n * n + y * y))
-        host.reading.setValues([n, y, nz])
+        server.reading.setValues([n, y, nz])
         await register.sendGetAsync()
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -43,11 +43,11 @@ function Sliders(props: {
         event: unknown,
         newValue: number | number[]
     ) => {
-        const [x] = host.reading.values()
+        const [x] = server.reading.values()
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const n = (newValue as any) as number
         const nz = -Math.sqrt(1 - (x * x + n * n))
-        host.reading.setValues([x, n, nz])
+        server.reading.setValues([x, n, nz])
         await register.sendGetAsync()
     }
 
@@ -108,10 +108,10 @@ function lerp(v0: number, v1: number, t: number) {
 export default function DashboardAccelerometer(props: DashboardServiceProps) {
     const { service, visible } = props
     const register = service.register(AccelerometerReg.Forces)
-    const host = useServiceServer<SensorServer<[number, number, number]>>(
+    const server = useServiceServer<SensorServer<[number, number, number]>>(
         service
     )
-    const color = host ? "secondary" : "primary"
+    const color = server ? "secondary" : "primary"
     const { active } = useWidgetTheme(color)
     const rotator = useCallback(
         (delta: number, rotation: Vector) => {
@@ -143,8 +143,8 @@ export default function DashboardAccelerometer(props: DashboardServiceProps) {
                     </Suspense>
                 </NoSsr>
             </Grid>
-            {host && (
-                <Sliders host={host} register={register} visible={visible} />
+            {server && (
+                <Sliders server={server} register={register} visible={visible} />
             )}
         </Grid>
     )

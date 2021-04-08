@@ -16,10 +16,10 @@ export default function DashboardColor(props: DashboardServiceProps) {
         register,
         props
     )
-    const host = useServiceServer<SensorServer<[number, number, number]>>(
+    const server = useServiceServer<SensorServer<[number, number, number]>>(
         service
     )
-    const color = host ? "secondary" : "primary"
+    const color = server ? "secondary" : "primary"
     const { background } = useWidgetTheme(color)
 
     if (r === undefined) return <LoadingProgress />
@@ -32,17 +32,17 @@ export default function DashboardColor(props: DashboardServiceProps) {
     }) => {
         console.log({ color })
         const { rgb } = color
-        host.reading.setValues([rgb.r / 0xff, rgb.g / 0xff, rgb.b / 0xff])
+        server.reading.setValues([rgb.r / 0xff, rgb.g / 0xff, rgb.b / 0xff])
         register.refresh()
     }
     const w = 64
     const rx = 4
-    if (host)
+    if (server)
         return (
             <BlockPicker
                 color={value}
                 triangle="hide"
-                onChangeComplete={host && handleChange}
+                onChangeComplete={server && handleChange}
             />
         )
     else

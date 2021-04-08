@@ -37,8 +37,8 @@ export default function DashboardSoundPlayer(props: DashboardServiceProps) {
     const { service } = props
     const volumeRegister = service.register(SoundPlayerReg.Volume)
     const [volume] = useRegisterUnpackedValue<[number]>(volumeRegister, props)
-    const host = useServiceServer<SoundPlayerServer>(service)
-    const color = host ? "secondary" : "primary"
+    const server = useServiceServer<SoundPlayerServer>(service)
+    const color = server ? "secondary" : "primary"
     const sounds = useChangeAsync(
         service,
         async () => {
@@ -57,8 +57,8 @@ export default function DashboardSoundPlayer(props: DashboardServiceProps) {
         volumeRegister.sendSetPackedAsync("u0.16", [newValue], true)
     }
     useEffect(() => {
-        if (host)
-            host.onPlay = (vol: number, name: string) => {
+        if (server)
+            server.onPlay = (vol: number, name: string) => {
                 // Setup the new Howl.
                 const sound = new Howl({
                     src: [`/jacdac-ts/sounds/${name}.wav`],
@@ -66,8 +66,8 @@ export default function DashboardSoundPlayer(props: DashboardServiceProps) {
                 })
                 sound.play()
             }
-        return () => (host.onPlay = undefined)
-    }, [volume, host])
+        return () => (server.onPlay = undefined)
+    }, [volume, server])
     return (
         <Grid container spacing={1}>
             {sounds?.map(sound => (

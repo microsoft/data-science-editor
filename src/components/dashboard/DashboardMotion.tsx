@@ -12,17 +12,17 @@ export default function DashboardMotion(props: DashboardServiceProps) {
     const { service } = props
     const movingRegister = service.register(MotionReg.Moving)
     const moving = useRegisterBoolValue(movingRegister, props)
-    const host = useServiceServer<SensorServer<[boolean]>>(service)
-    const color = host ? "secondary" : "primary"
+    const server = useServiceServer<SensorServer<[boolean]>>(service)
+    const color = server ? "secondary" : "primary"
     const { background, controlBackground, active } = useWidgetTheme(color)
 
     const handleDown = () => {
-        host?.reading.setValues([!moving])
+        server?.reading.setValues([!moving])
         movingRegister.refresh()
     }
     const buttonProps = useSvgButtonProps<SVGPathElement>(
         "movement detected",
-        host && handleDown
+        server && handleDown
     )
 
     const w = 64

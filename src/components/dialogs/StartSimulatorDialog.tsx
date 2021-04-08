@@ -28,19 +28,19 @@ export default function StartSimulatorDialog(props: {
 
     const [selected, setSelected] = useState("button")
     const { enqueueSnackbar } = useSnackbar()
-    const hostDefinitions = useMemo(() => servers(), [])
+    const providerDefinitions = useMemo(() => servers(), [])
 
     const handleChange = (ev: React.ChangeEvent<{ value: unknown }>) => {
         setSelected(ev.target.value as string)
     }
     const handleClick = () => {
-        const host = hostDefinitions.find(h => h.name === selected)
-        addServiceProvider(bus, host)
+        const provider = providerDefinitions.find(h => h.name === selected)
+        addServiceProvider(bus, provider)
         onClose()
     }
     const handleAddAll = async () => {
         const allHostDefinitions = uniqueMap(
-            hostDefinitions.filter(hd => hd.serviceClasses.length === 1),
+            providerDefinitions.filter(hd => hd.serviceClasses.length === 1),
             hd => hd.serviceClasses[0].toString(),
             h => h
         )
@@ -77,7 +77,7 @@ export default function StartSimulatorDialog(props: {
                             value={selected}
                             onChange={handleChange}
                         >
-                            {hostDefinitions.map(host => (
+                            {providerDefinitions.map(host => (
                                 <MenuItem key={host.name} value={host.name}>
                                     {host.name}
                                 </MenuItem>

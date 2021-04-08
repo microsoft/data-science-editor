@@ -48,9 +48,9 @@ export default function RegisterInput(props: {
     const [working, setWorking] = useState(false)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [args, setArgs] = useState<any[]>(register.unpackedValue || [])
-    const host = useRegisterServer(register)
+    const server = useRegisterServer(register)
     const hasSet =
-        specification.kind === "rw" || (host && specification.kind !== "const")
+        specification.kind === "rw" || (server && specification.kind !== "const")
     const hasData = useChange(register, _ => !!_.data)
     const color = hasSet ? "secondary" : "primary"
     const regProps = visible !== undefined ? { visible } : undefined;
@@ -91,8 +91,8 @@ export default function RegisterInput(props: {
         if (working) return
         try {
             setWorking(true)
-            if (host) {
-                host.setValues(values)
+            if (server) {
+                server.setValues(values)
                 await register.refresh()
             } else
                 await register.sendSetPackedAsync(

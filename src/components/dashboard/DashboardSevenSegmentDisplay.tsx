@@ -8,6 +8,7 @@ import useWidgetTheme from "../widgets/useWidgetTheme"
 import { Grid } from "@material-ui/core"
 import RegisterInput from "../RegisterInput"
 import LoadingProgress from "../ui/LoadingProgress"
+import useServiceServer from "../hooks/useServiceServer"
 
 export default function DashboardSevenSegmentDisplay(
     props: DashboardServiceProps
@@ -30,8 +31,8 @@ export default function DashboardSevenSegmentDisplay(
         props
     )
 
-    const host = useServiceProvider(service)
-    const color = host ? "secondary" : "primary"
+    const server = useServiceServer(service)
+    const color = server ? "secondary" : "primary"
     const { active, background } = useWidgetTheme(color)
 
     if (digitCount === undefined) return <LoadingProgress />

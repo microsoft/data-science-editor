@@ -80,14 +80,14 @@ function LightStripWidget(props: {
     lightVariant: LedPixelVariant
     numPixels: number
     actualBrightness: number
-    host: LedPixelServer
+    server: LedPixelServer
     widgetSize?: string
 }) {
     const {
         lightVariant,
         numPixels,
         actualBrightness,
-        host,
+        server,
         widgetSize,
     } = props
     const { background, controlBackground } = useWidgetTheme()
@@ -101,7 +101,7 @@ function LightStripWidget(props: {
 
     // paint svg via dom
     const paint = () =>
-        setRgbLeds(pixelsRef.current, host?.colors, neocircleradius)
+        setRgbLeds(pixelsRef.current, server?.colors, neocircleradius)
 
     // reposition pixels along the path
     useEffect(() => {
@@ -127,7 +127,7 @@ function LightStripWidget(props: {
     }, [lightVariant, numPixels, pathRef.current, pixelsRef.current])
 
     // render when new colors are in
-    useEffect(() => host?.subscribe(RENDER, paint), [host])
+    useEffect(() => server?.subscribe(RENDER, paint), [server])
 
     let width: number
     let height: number
@@ -216,12 +216,12 @@ function LightStripWidget(props: {
 function LightMatrixWidget(props: {
     lightVariant: LedPixelVariant
     actualBrightness: number
-    host: LedPixelServer
+    server: LedPixelServer
     widgetSize?: string
     columns: number
     rows: number
 }) {
-    const { columns, rows, host, widgetSize } = props
+    const { columns, rows, server, widgetSize } = props
     const { background, controlBackground } = useWidgetTheme()
 
     const widgetRef = useRef<SVGGElement>()
@@ -235,7 +235,7 @@ function LightMatrixWidget(props: {
     const h = rows * ph + (rows + 1) * m
 
     // paint svg via dom
-    const paint = () => setRgbLeds(widgetRef.current, host?.colors)
+    const paint = () => setRgbLeds(widgetRef.current, server?.colors)
 
     // add leds
     const render = () => {
@@ -275,7 +275,7 @@ function LightMatrixWidget(props: {
     useEffect(paint, [columns, rows, widgetRef.current])
 
     // render when new colors are in
-    useEffect(() => host?.subscribe(RENDER, paint), [host])
+    useEffect(() => server?.subscribe(RENDER, paint), [server])
 
     return (
         <SvgWidget width={w} height={h} size={widgetSize}>
@@ -316,7 +316,7 @@ export default function LightWidget(props: {
         service.register(LedPixelReg.NumColumns),
         props
     )
-    const host = useServiceServer<LedPixelServer>(service)
+    const server = useServiceServer<LedPixelServer>(service)
 
     if (numPixels === undefined || actualBrightness === undefined)
         return <LoadingProgress /> // nothing to render
@@ -330,7 +330,7 @@ export default function LightWidget(props: {
             <LightMatrixWidget
                 lightVariant={lightVariant}
                 actualBrightness={actualBrightness}
-                host={host}
+                server={server}
                 columns={columns}
                 rows={rows}
             />
@@ -341,7 +341,7 @@ export default function LightWidget(props: {
                 numPixels={numPixels}
                 lightVariant={lightVariant}
                 actualBrightness={actualBrightness}
-                host={host}
+                server={server}
             />
         )
 }

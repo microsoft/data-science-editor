@@ -27,9 +27,9 @@ export default function DashboardAnalogButton(props: DashboardServiceProps) {
     )
     //const [buttonVariant] = useRegisterUnpackedValue<[AnalogButtonVariant]>(service.register(AnalogButtonReg.Variant));
     const widgetSize = `clamp(3rem, 10vw, 16vw)`
-    const host = useServiceServer<AnalogSensorServer>(service)
+    const server = useServiceServer<AnalogSensorServer>(service)
     const [down, setDown] = useState(false)
-    const color = host ? "secondary" : "primary"
+    const color = server ? "secondary" : "primary"
     const label = `button pressure ${pressure}`
     const { background, controlBackground, active } = useWidgetTheme(color)
     const handleDown = () => {
@@ -40,26 +40,26 @@ export default function DashboardAnalogButton(props: DashboardServiceProps) {
     }
     const buttonProps = useSvgButtonProps<SVGCircleElement>(
         label,
-        host && handleDown,
-        host && handleUp
+        server && handleDown,
+        server && handleUp
     )
 
     useAnimationFrame(() => {
-        if (!host) return false
-        const [p] = host.reading.values()
+        if (!server) return false
+        const [p] = server.reading.values()
         let keepAnimating = true
         if (down) {
             if (p > 1 - ACTIVE_SPEED) {
-                host.reading.setValues([1])
+                server.reading.setValues([1])
                 keepAnimating = false
-            } else host.reading.setValues([p + ACTIVE_SPEED])
+            } else server.reading.setValues([p + ACTIVE_SPEED])
         } else {
             if (p < INACTIVE_SPEED) {
-                host.reading.setValues([0])
+                server.reading.setValues([0])
                 keepAnimating = false
-            } else host.reading.setValues([p - INACTIVE_SPEED])
+            } else server.reading.setValues([p - INACTIVE_SPEED])
         }
-        host.reading.sendGetAsync() // refresh ui
+        server.reading.sendGetAsync() // refresh ui
         return keepAnimating
     }, [down])
 

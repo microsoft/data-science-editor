@@ -8,6 +8,6 @@ import useChange from "../../jacdac/useChange";
  */
 export default function useServiceProvider(device: JDDevice) {
     const { bus } = useContext<JacdacContextProps>(JacdacContext);
-    const host = useChange(bus, b => device && b.findServiceProvider(device.deviceId));
-    return host;
+    const provider = useChange(bus, b => device && b.findServiceProvider(device.deviceId));
+    return provider;
 }

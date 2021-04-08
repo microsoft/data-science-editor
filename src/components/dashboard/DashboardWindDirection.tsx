@@ -20,8 +20,8 @@ export default function DashboardWindDirection(props: DashboardServiceProps) {
         props
     )
 
-    const host = useServiceServer<SensorServer<[number]>>(service)
-    const color = host ? "secondary" : "primary"
+    const server = useServiceServer<SensorServer<[number]>>(service)
+    const color = server ? "secondary" : "primary"
     const { background, controlBackground, active } = useWidgetTheme(color)
     const arrowHeadId = useId()
 
@@ -40,7 +40,7 @@ export default function DashboardWindDirection(props: DashboardServiceProps) {
     const cy2 = (h * 2) / 5
 
     const handleChange = async (ev: unknown, newValue: number | number[]) => {
-        await host?.reading.setValues([newValue as number])
+        await server?.reading.setValues([newValue as number])
         directionRegister.refresh()
     }
 
@@ -85,7 +85,7 @@ export default function DashboardWindDirection(props: DashboardServiceProps) {
                     </g>
                 </SvgWidget>
             </Grid>
-            {host && (
+            {server && (
                 <Grid item>
                     <Slider
                         color={color}

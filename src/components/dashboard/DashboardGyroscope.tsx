@@ -15,11 +15,11 @@ import Suspense from "../ui/Suspense"
 import SliderWithLabel from "../ui/SliderWithLabel"
 
 function Sliders(props: {
-    host: SensorServer<[number, number, number]>
+    server: SensorServer<[number, number, number]>
     register: JDRegister
     visible: boolean
 }) {
-    const { host, register, visible } = props
+    const { server, register, visible } = props
     const rates = useRegisterUnpackedValue<[number, number, number]>(register, {
         visible,
     })
@@ -28,10 +28,10 @@ function Sliders(props: {
         event: unknown,
         newValue: number | number[]
     ) => {
-        const [, y, z] = host.reading.values()
+        const [, y, z] = server.reading.values()
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const n = (newValue as any) as number
-        host.reading.setValues([n, y, z])
+        server.reading.setValues([n, y, z])
         register.sendGetAsync()
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -39,10 +39,10 @@ function Sliders(props: {
         event: unknown,
         newValue: number | number[]
     ) => {
-        const [x, , z] = host.reading.values()
+        const [x, , z] = server.reading.values()
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const n = (newValue as any) as number
-        host.reading.setValues([x, n, z])
+        server.reading.setValues([x, n, z])
         register.sendGetAsync()
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -50,10 +50,10 @@ function Sliders(props: {
         event: unknown,
         newValue: number | number[]
     ) => {
-        const [x, y] = host.reading.values()
+        const [x, y] = server.reading.values()
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const n = (newValue as any) as number
-        host.reading.setValues([x, y, n])
+        server.reading.setValues([x, y, n])
         register.sendGetAsync()
     }
     const valueDisplay = (v: number) => `${roundWithPrecision(v, 1)}°/s`
@@ -117,10 +117,10 @@ function Sliders(props: {
 export default function DashboardGyroscope(props: DashboardServiceProps) {
     const { service, visible } = props
     const register = service.register(GyroscopeReg.RotationRates)
-    const host = useServiceServer<SensorServer<[number, number, number]>>(
+    const server = useServiceServer<SensorServer<[number, number, number]>>(
         service
     )
-    const color = host ? "secondary" : "primary"
+    const color = server ? "secondary" : "primary"
     const { active } = useWidgetTheme(color)
     const rotator = useCallback(
         (delta, rotation: Vector) => {
@@ -148,8 +148,12 @@ export default function DashboardGyroscope(props: DashboardServiceProps) {
                     </Suspense>
                 </NoSsr>
             </Grid>
-            {host && (
-                <Sliders host={host} register={register} visible={visible} />
+            {server && (
+                <Sliders
+                    server={server}
+                    register={register}
+                    visible={visible}
+                />
             )}
         </Grid>
     )

@@ -35,7 +35,7 @@ export default function DeviceAvatar(props: { device: JDDevice, size?: "small" |
   const name = useDeviceName(device);
   const classes = useStyles();
   const sizeClassName = size === "small" ? classes.small : size === "large" ? classes.large : undefined;
-  const host = useServiceProvider(device);
+  const server = useServiceProvider(device);
   const source = device.source;
   const {
     className: statusLEDClassName,
@@ -47,10 +47,10 @@ export default function DeviceAvatar(props: { device: JDDevice, size?: "small" |
     <CmdButton
       trackName="device.identify"
       size="small"
-      title={`identify ${host ? "simulator" : "device"} ${name}`}
+      title={`identify ${server ? "simulator" : "device"} ${name}`}
       onClick={handleIdentify}
       className={statusLEDClassName}
-      icon={host ? <KindIcon kind={VIRTUAL_DEVICE_NODE_NAME} /> : !imageUrl ? <TransportIcon type={source} /> : <Avatar
+      icon={server ? <KindIcon kind={VIRTUAL_DEVICE_NODE_NAME} /> : !imageUrl ? <TransportIcon type={source} /> : <Avatar
         className={sizeClassName}
         alt={specification?.name || "Image of the device"}
         src={imageUrl}

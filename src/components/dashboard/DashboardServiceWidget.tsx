@@ -55,6 +55,7 @@ import DashboardButton from "./DashboardButton"
 import DashboardServo from "./DashboardServo"
 import DashboardRotaryEncoder from "./DashboardRotaryEncoder"
 import DashboardSwitch from "./DashboardSwitch"
+import useServiceServer from "../hooks/useServiceServer"
 
 // lazy devices
 const DashboardAccelerometer = lazy(() => import("./DashboardAccelerometer"))
@@ -348,8 +349,8 @@ export default function DashboardServiceWidget(
     const { specification } = service
     const { component, bundled } =
         serviceViews[specification.classIdentifier] || {}
-    const host = useServiceProvider(service)
-    const color = host ? "secondary" : "primary"
+    const server = useServiceServer(service)
+    const color = server ? "secondary" : "primary"
     // no special support
     if (!component) return createElement(DefaultWidget, props)
 

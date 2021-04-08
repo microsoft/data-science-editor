@@ -20,8 +20,8 @@ export default function DashboardCompass(props: DashboardServiceProps) {
     const [status,] = useRegisterUnpackedValue<[SystemStatusCodes, number]>(service.statusCodeRegister, props);
     const off = !enabled;
 
-    const host = useServiceServer<SensorServer<[number]>>(service);
-    const color = host ? "secondary" : "primary";
+    const server = useServiceServer<SensorServer<[number]>>(service);
+    const color = server ? "secondary" : "primary";
     const { background, controlBackground, active, textProps } = useWidgetTheme(color)
 
     if (heading === undefined)
@@ -41,7 +41,7 @@ export default function DashboardCompass(props: DashboardServiceProps) {
     const pri = 3;
 
     const handleChange = async (ev: unknown, newValue: number | number[]) => {
-        await host?.reading.setValues([newValue as number])
+        await server?.reading.setValues([newValue as number])
         headingRegister.refresh()
     }
     const valueDisplay = (angle: number) => `${Math.round(angle)}°`;
@@ -63,10 +63,10 @@ export default function DashboardCompass(props: DashboardServiceProps) {
                 <PowerButton r={pr} ri={pri} cx={w - pr - 1} cy={h - pr - 1}
                     color={color}
                     strokeWidth={1}
-                    off={off} onClick={host && toggleOff} />
+                    off={off} onClick={server && toggleOff} />
             </SvgWidget >
         </Grid>
-        {host && <Grid item>
+        {server && <Grid item>
             <Slider
                 color={color}
                 valueLabelDisplay="auto"

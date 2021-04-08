@@ -45,8 +45,8 @@ export default function DashboardServo(props: DashboardServiceProps) {
         props
     )
 
-    const host = useServiceServer<ServoServer>(service)
-    const color = host ? "secondary" : "primary"
+    const server = useServiceServer<ServoServer>(service)
+    const color = server ? "secondary" : "primary"
     const {
         background,
         controlBackground,

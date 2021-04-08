@@ -26,11 +26,11 @@ function ArcadeButton(props: {
     ri: number
     pressure: number
     button: ArcadeGamepadButton
-    host: ArcadeGamepadServer
+    server: ArcadeGamepadServer
     onRefresh: () => void
     color?: "primary" | "secondary"
 }) {
-    const { cx, cy, ro, color, pressure, ri, button, host, onRefresh } = props
+    const { cx, cy, ro, color, pressure, ri, button, server, onRefresh } = props
     const { textProps, active, background, controlBackground } = useWidgetTheme(
         color
     )
@@ -39,11 +39,11 @@ function ArcadeButton(props: {
     const label = buttonLabels[button] || title[0]
 
     const handleDown = () => {
-        host?.down(button, 0.7)
+        server?.down(button, 0.7)
         onRefresh()
     }
     const handleUp = () => {
-        host?.up(button)
+        server?.up(button)
         onRefresh()
     }
     const buttonProps = useSvgButtonProps<SVGCircleElement>(
@@ -84,8 +84,8 @@ export default function DashboardArcadeGamepad(props: DashboardServiceProps) {
     const [pressed] = useRegisterUnpackedValue<
         [[ArcadeGamepadButton, number][]]
     >(pressedRegister, props)
-    const host = useServiceServer<ArcadeGamepadServer>(service)
-    const color = host ? "secondary" : "primary"
+    const server = useServiceServer<ArcadeGamepadServer>(service)
+    const color = server ? "secondary" : "primary"
     const { background } = useWidgetTheme(color)
 
     if (!available?.length) return <LoadingProgress />
@@ -157,7 +157,7 @@ export default function DashboardArcadeGamepad(props: DashboardServiceProps) {
                         ro={pos.small ? sro : ro}
                         ri={pos.small ? sri : ri}
                         button={button}
-                        host={host}
+                        server={server}
                         onRefresh={handleRefresh}
                         pressure={pressed?.find(p => p[0] === button)?.[1] || 0}
                         color={color}

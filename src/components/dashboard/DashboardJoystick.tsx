@@ -10,12 +10,12 @@ export default function DashboardJoystick(props: DashboardServiceProps) {
     const { service } = props
     const register = service.register(JoystickReg.Direction)
     const [x, y] = useRegisterUnpackedValue<[number, number]>(register, props)
-    const host = useServiceServer<JoystickSensorServer>(service)
-    const color = host ? "secondary" : "primary"
+    const server = useServiceServer<JoystickSensorServer>(service)
+    const color = server ? "secondary" : "primary"
 
-    const values = () => host.reading.values()
+    const values = () => server.reading.values()
     const onUpdate = (newx: number, newy: number) => {
-        host.reading.setValues([newx, newy])
+        server.reading.setValues([newx, newy])
         register.refresh()
     }
 
@@ -25,7 +25,7 @@ export default function DashboardJoystick(props: DashboardServiceProps) {
             y={y}
             color={color}
             onUpdate={onUpdate}
-            hostValues={host && values}
+            hostValues={server && values}
         />
     )
 }

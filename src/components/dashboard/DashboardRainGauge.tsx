@@ -24,20 +24,20 @@ export default function DashbaordRainGauge(props: DashboardServiceProps) {
         props
     )
     const clipId = useId()
-    const host = useServiceServer<RainGaugeServer>(service)
-    const tiltCount = useChange(host, h => h?.tiltCount)
-    const level = useChange(host, h => h?.level)
+    const server = useServiceServer<RainGaugeServer>(service)
+    const tiltCount = useChange(server, h => h?.tiltCount)
+    const level = useChange(server, h => h?.level)
     const tiltAngle =
         tiltCount !== undefined ? (tiltCount % 2 ? -TILT : TILT) : 0
-    const color = host ? "secondary" : "primary"
+    const color = server ? "secondary" : "primary"
     const { background, active, textPrimary } = useWidgetTheme(color)
     const a = useThrottledValue(tiltAngle, 45)
     const l = useThrottledValue(level !== undefined ? level : 0.5, 1)
-    const clickeable = !!host
+    const clickeable = !!server
     const handleClick = async (event: React.PointerEvent<SVGRectElement>) => {
         event.preventDefault()
         event.stopPropagation()
-        await host?.rain(0.25)
+        await server?.rain(0.25)
         await precipitationRegister.refresh()
     }
     const buttonProps = useSvgButtonProps<SVGRectElement>(

@@ -14,8 +14,8 @@ export default function DashbaordWaterLevel(props: DashboardServiceProps) {
 
     const levelRegister = service.register(WaterLevelReg.Level)
     const [value] = useRegisterUnpackedValue<[number]>(levelRegister, props)
-    const host = useServiceServer<SensorServer<[number]>>(service)
-    const color = host ? "secondary" : "primary"
+    const server = useServiceServer<SensorServer<[number]>>(service)
+    const color = server ? "secondary" : "primary"
     const { background, controlBackground, active, textProps } = useWidgetTheme(
         color
     )
@@ -35,7 +35,7 @@ export default function DashbaordWaterLevel(props: DashboardServiceProps) {
 
     const onChange = (event: unknown, newValue: number | number[]): void => {
         const svalue = newValue as number
-        host?.reading.setValues([svalue])
+        server?.reading.setValues([svalue])
         levelRegister.refresh()
     }
 
@@ -85,7 +85,7 @@ export default function DashbaordWaterLevel(props: DashboardServiceProps) {
                     )}
                 </SvgWidget>
             </Grid>
-            {host && hasValue && (
+            {server && hasValue && (
                 <Grid item xs>
                     <Slider
                         valueLabelDisplay="off"

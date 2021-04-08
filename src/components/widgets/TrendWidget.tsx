@@ -8,8 +8,8 @@ import useWidgetTheme from "./useWidgetTheme";
 
 export default function TrendWidget(props: { register: JDRegister, min: number, max: number, horizon: number, size?: string }) {
     const { register, min, max, horizon, size } = props;
-    const host = useServiceServer(register.service);
-    const color = host ? "secondary" : "primary";
+    const server = useServiceServer(register.service);
+    const color = server ? "secondary" : "primary";
     const { background, controlBackground, active } = useWidgetTheme(color)
     const dataRef = useRef<number[]>(undefined);
     const pathRef = useRef<SVGPathElement>();

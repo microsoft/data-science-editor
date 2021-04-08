@@ -26,19 +26,19 @@ export default function DashboardReflectedLight(props: DashboardServiceProps) {
         props
     )
 
-    const host = useServiceServer<ReflectedLightServer>(service)
-    const color = host ? "secondary" : "primary"
+    const server = useServiceServer<ReflectedLightServer>(service)
+    const color = server ? "secondary" : "primary"
     const { background, controlBackground } = useWidgetTheme(color)
     const widgetSize = useWidgetSize(variant, services.length)
 
     const maxValue = 1.0
     const handleDown = () => {
-        host.reading.setValues([brightness > 0 ? 0 : 1.0])
+        server.reading.setValues([brightness > 0 ? 0 : 1.0])
         brighessRegister.refresh()
     }
     const buttonProps = useSvgButtonProps<SVGRectElement>(
         "line detector",
-        host && handleDown
+        server && handleDown
     )
 
     const actualBrightness = useThrottledValue(brightness || 0, maxValue << 2)

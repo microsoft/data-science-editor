@@ -18,7 +18,7 @@ export default function DeviceActions(props: {
 }) {
     const { device, showReset, children, hideIdentity, showStopHost } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const host = useServiceProvider(device);
+    const provider = useServiceProvider(device);
 
     const handleIdentify = async () => {
         await device.identify()
@@ -27,10 +27,10 @@ export default function DeviceActions(props: {
         await device.reset()
     }
     const handleStop = () => {
-        bus.removeServiceProvider(host);
+        bus.removeServiceProvider(provider);
     }
     return <>
-        {showStopHost && host && <CmdButton trackName="device.stop" size="small" title="stop simulator" onClick={handleStop} icon={<CloseIcon />} />}
+        {showStopHost && provider && <CmdButton trackName="device.stop" size="small" title="stop simulator" onClick={handleStop} icon={<CloseIcon />} />}
         {!hideIdentity && <CmdButton trackName="device.identify" size="small" title="identify" onClick={handleIdentify} icon={<FingerprintIcon />} />}
         {showReset && <CmdButton trackName="device.reset" size="small" title="reset" onClick={handleReset} icon={<RefreshIcon />} />}
         {children}

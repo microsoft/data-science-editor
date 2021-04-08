@@ -11,8 +11,8 @@ export default function BytesBarGraphWidget(props: {
     visible: boolean
 }) {
     const { register, size, visible } = props
-    const host = useServiceServer(register.service)
-    const color = host ? "secondary" : "primary"
+    const server = useServiceServer(register.service)
+    const color = server ? "secondary" : "primary"
     const { background, controlBackground, active } = useWidgetTheme(color)
     const pathRef = useRef<SVGPathElement>()
 

@@ -40,8 +40,8 @@ export default function DashboardTrafficLight(props: DashboardServiceProps) {
     const lightRegs = [TrafficLightReg.Red, TrafficLightReg.Orange, TrafficLightReg.Green]
     const lights = [red, orange, green]
 
-    const host = useServiceServer<TrafficLightServer>(service);
-    const color = host ? "secondary" : "primary";
+    const server = useServiceServer<TrafficLightServer>(service);
+    const color = server ? "secondary" : "primary";
     const { background, controlBackground } = useWidgetTheme(color)
     const widgetSize = useWidgetSize(variant, services.length)
 

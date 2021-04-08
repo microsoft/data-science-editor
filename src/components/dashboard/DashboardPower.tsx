@@ -25,8 +25,8 @@ export default function DashboardPower(props: DashboardServiceProps) {
         props
     )
 
-    const host = useServiceServer<ReflectedLightServer>(service)
-    const color = host ? "secondary" : "primary"
+    const server = useServiceServer<ReflectedLightServer>(service)
+    const color = server ? "secondary" : "primary"
     const { background, active, textProps } = useWidgetTheme(color)
 
     const w = 64
