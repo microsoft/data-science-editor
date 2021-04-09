@@ -58,7 +58,7 @@ function Carousel() {
                 showHeader={false}
                 deviceSort={deviceSort}
                 deviceFilter={deviceFilter}
-                showStartSimulators={true}
+                showStartSimulators={false}
             />
             {!!extensions?.length && (
                 <Box m={1}>
