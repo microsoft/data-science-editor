@@ -1,5 +1,5 @@
 import React, { useRef } from "react"
-import { Canvas, useFrame } from "react-three-fiber"
+import { Canvas, useFrame } from "@react-three/fiber"
 import { Mesh } from "three"
 import { Line, Plane, OrbitControls } from "@react-three/drei"
 import { Vector } from "./threeutils"
