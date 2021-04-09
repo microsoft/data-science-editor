@@ -88,19 +88,19 @@ export default function ServiceTestEditor() {
                 </Grid>
             </Grid>
             <Grid spacing={2} container>
-            <Grid item xs={12} xl={5}>
-                <HighlightTextField
-                    code={source}
-                    language={"markdown"}
-                    onChange={setSource}
-                    annotations={json?.errors}
-                    pullRequestTitle={
-                        json && `Service test: ${serviceSpec.name}`
-                    }
-                    pullRequestPath={servicePath}
-                />
-            </Grid>
-                <Grid item xs={12} xl={5}>
+                <Grid item xs={6} xl={5}>
+                    <HighlightTextField
+                        code={source}
+                        language={"markdown"}
+                        onChange={setSource}
+                        annotations={json?.errors}
+                        pullRequestTitle={
+                            json && `Service test: ${serviceSpec.name}`
+                        }
+                        pullRequestPath={servicePath}
+                    />
+                </Grid>
+                <Grid item xs={6} xl={5}>
                     <Markdown source={markdownSource} />
                 </Grid>
             </Grid>
