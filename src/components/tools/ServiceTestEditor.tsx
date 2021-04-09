@@ -9,14 +9,17 @@ import { SRV_BUTTON } from "../../../jacdac-ts/src/jdom/constants"
 import ServiceTest from "../test/ServiceTest"
 import { fetchText } from "../github"
 import AppContext from "../AppContext"
+import Markdown from "../ui/Markdown"
 
 const SERVICE_TEST_SERVICE_STORAGE_KEY = "jacdac:servicetesteditor:service"
 const SERVICE_TEST_SOURCE_STORAGE_KEY = "jacdac:servicetesteditorsource"
+const SERVICE_MARKDOWN_SOURCE_STORAGE_KEY = "jacdac:servicetesteditorsource:markdown"
 
 export default function ServiceTestEditor() {
     const { setError } = useContext(AppContext)
     const [serviceClass, setServiceClass] = useLocalStorage<number>(SERVICE_TEST_SERVICE_STORAGE_KEY, SRV_BUTTON)
     const [source, setSource] = useLocalStorage(SERVICE_TEST_SOURCE_STORAGE_KEY, "")
+    const [markdownSource, setMarkdownSource] = useLocalStorage(SERVICE_MARKDOWN_SOURCE_STORAGE_KEY, "")
     const serviceSpec = useMemo(
         () => serviceSpecificationFromClassIdentifier(serviceClass),
         [serviceClass]
@@ -42,6 +45,20 @@ export default function ServiceTestEditor() {
             )
             if (ghSource)
                 setSource(ghSource)
+            else
+                setError("Specification source not found")
+        } catch (e) {
+            setError(e)
+        }
+        try {
+            const ghSource = await fetchText(
+                "microsoft/jacdac",
+                "main",
+                `services/${serviceSpec.shortId}.md`,
+                "text/plain"
+            )
+            if (ghSource)
+                setMarkdownSource(ghSource)
             else
                 setError("Test source not found")
         } catch (e) {
@@ -70,6 +87,7 @@ export default function ServiceTestEditor() {
                     </Grid>
                 </Grid>
             </Grid>
+            <Grid spacing={2} container>
             <Grid item xs={12} xl={5}>
                 <HighlightTextField
                     code={source}
@@ -81,6 +99,10 @@ export default function ServiceTestEditor() {
                     }
                     pullRequestPath={servicePath}
                 />
+            </Grid>
+                <Grid item xs={12} xl={5}>
+                    <Markdown source={markdownSource} />
+                </Grid>
             </Grid>
             {json && (
                 <Grid item xs={12} xl={7}>
