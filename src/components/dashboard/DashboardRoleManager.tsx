@@ -23,13 +23,11 @@ export default function DashboardRoleManager(props: DashboardServiceProps) {
     const roleManager = useChange(bus, _ => _.roleManager)
     const roles = useChange(roleManager, _ => _?.roles)
 
-    const handleClick = () => roleManager?.startSimulators()
-
     if (autoBind === undefined) return <LoadingProgress />
 
     return (
         <>
-            {expanded && !!roles?.length && (
+            {roles && (
                 <Grid item xs={12}>
                     <List dense={true}>
                         {roles.map(role => (
@@ -49,15 +47,6 @@ export default function DashboardRoleManager(props: DashboardServiceProps) {
                     <label id={labelId}>auto assign roles</label>
                 </Grid>
             )}
-            <Grid item xs={12}>
-                <Button
-                    disabled={!roleManager}
-                    variant="outlined"
-                    onClick={handleClick}
-                >
-                    Start simulators
-                </Button>
-            </Grid>
         </>
     )
 }

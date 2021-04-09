@@ -17,10 +17,10 @@ import LoadingProgress from "../ui/LoadingProgress"
 
 function HostMicrophoneButton(props: {
     service: JDService
-    host?: AnalogSensorServer
+    server?: AnalogSensorServer
     visible: boolean
 }) {
-    const { host, service, visible } = props
+    const { server, service, visible } = props
     const enabledRegister = service.register(SoundLevelReg.Enabled)
     const enabled = useRegisterBoolValue(enabledRegister, props)
     const [minDecibels] = useRegisterUnpackedValue<[number]>(
@@ -32,13 +32,13 @@ function HostMicrophoneButton(props: {
         props
     )
     const { volume, onClickActivateMicrophone } = useMicrophoneVolume(
-        enabled && !!host,
+        enabled && !!server,
         { fftSize: 64, smoothingTimeConstant: 0, minDecibels, maxDecibels }
     )
     const title = enabled ? "Stop microphone" : "Start microphone"
 
     const handleClick = async () => {
-        if (!enabled) await onClickActivateMicrophone()
+        if (!enabled && server) await onClickActivateMicrophone()
         await enabledRegister.sendSetBoolAsync(!enabled, true)
     }
 
@@ -46,13 +46,13 @@ function HostMicrophoneButton(props: {
     useEffect(
         () =>
             visible &&
-            host?.subscribe(REFRESH, () => {
+            server?.subscribe(REFRESH, () => {
                 const v = volume?.()
                 if (v !== undefined) {
-                    host.reading.setValues([v])
+                    server.reading.setValues([v])
                 }
             }),
-        [host, volume, visible]
+        [server, volume, visible]
     )
 
     return (
@@ -100,7 +100,7 @@ export default function DashboardSoundLevel(props: DashboardServiceProps) {
                     <Grid item>
                         <HostMicrophoneButton
                             service={service}
-                            host={server}
+                            server={server}
                             visible={visible}
                         />
                     </Grid>

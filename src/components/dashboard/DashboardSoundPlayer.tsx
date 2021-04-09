@@ -12,6 +12,7 @@ import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
 import SoundPlayerServer from "../../../jacdac-ts/src/servers/soundplayerserver"
 import { Howl } from "howler"
+import LoadingProgress from "../ui/LoadingProgress"
 
 function SoundButton(props: {
     service: JDService
@@ -22,7 +23,7 @@ function SoundButton(props: {
     const handleClick = async () => {
         await service.sendCmdAsync(
             SoundPlayerCmd.Play,
-            jdpack("u0.16 s", [1, name]),
+            jdpack("s", [name]),
             false
         )
     }
@@ -57,12 +58,11 @@ export default function DashboardSoundPlayer(props: DashboardServiceProps) {
         volumeRegister.sendSetPackedAsync("u0.16", [newValue], true)
     }
     useEffect(() => {
-        if (server)
-            server.onPlay = (vol: number, name: string) => {
-                // Setup the new Howl.
+        if (server && volume)
+            server.onPlay = (name: string) => {
                 const sound = new Howl({
-                    src: [`/jacdac-ts/sounds/${name}.wav`],
-                    volume: vol * volume,
+                    src: [`/jacdac-docs/sounds/${name}.wav`],
+                    volume: volume,
                 })
                 sound.play()
             }
@@ -70,10 +70,14 @@ export default function DashboardSoundPlayer(props: DashboardServiceProps) {
             if (server) server.onPlay = undefined
         }
     }, [volume, server])
+
+    if (!sounds)
+        return <LoadingProgress />
+
     return (
         <Grid container spacing={1}>
             {sounds?.map(sound => (
-                <Grid item key={sound[1]}>
+                <Grid item xs key={sound[1]}>
                     <SoundButton
                         service={service}
                         duration={sound[0]}

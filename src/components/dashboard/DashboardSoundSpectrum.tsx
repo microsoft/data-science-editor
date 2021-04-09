@@ -19,10 +19,10 @@ import BytesBarGraphWidget from "../widgets/BytesBarGraphWidget"
 
 function HostMicrophoneButton(props: {
     service: JDService
-    host?: SensorServer<[Uint8Array]>
+    server?: SensorServer<[Uint8Array]>
     visible: boolean
 }) {
-    const { host, service, visible } = props
+    const { server, service, visible } = props
     const enabledRegister = service.register(SoundSpectrumReg.Enabled)
     const enabled = useRegisterBoolValue(enabledRegister, props)
     const [minDecibels] = useRegisterUnpackedValue<[number]>(
@@ -43,7 +43,7 @@ function HostMicrophoneButton(props: {
         props
     )
     const { spectrum, onClickActivateMicrophone } = useMicrophoneSpectrum(
-        enabled && !!host,
+        enabled && !!server,
         {
             fftSize,
             smoothingTimeConstant,
@@ -54,7 +54,7 @@ function HostMicrophoneButton(props: {
     const title = enabled ? "Stop microphone" : "Start microphone"
 
     const handleClick = async () => {
-        if (!enabled) await onClickActivateMicrophone()
+        if (!enabled && server) await onClickActivateMicrophone()
         await enabledRegister.sendSetBoolAsync(!enabled, true)
     }
 
@@ -63,13 +63,13 @@ function HostMicrophoneButton(props: {
         () =>
             visible &&
             enabled &&
-            host?.subscribe(REFRESH, () => {
+            server?.subscribe(REFRESH, () => {
                 const v = spectrum?.()
                 if (v !== undefined) {
-                    host.reading.setValues([v], true)
+                    server.reading.setValues([v], true)
                 }
             }),
-        [host, spectrum, visible]
+        [server, spectrum, visible]
     )
 
     return (
@@ -99,7 +99,7 @@ export default function DashboardSoundSpectrum(props: DashboardServiceProps) {
             <Grid item>
                 <HostMicrophoneButton
                     service={service}
-                    host={server}
+                    server={server}
                     visible={visible}
                 />
             </Grid>
