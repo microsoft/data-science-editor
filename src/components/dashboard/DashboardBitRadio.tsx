@@ -4,17 +4,20 @@ import { BitRadioCmd } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import { REPORT_RECEIVE } from "../../../jacdac-ts/src/jdom/constants"
 import { jdunpack, PackedValues } from "../../../jacdac-ts/src/jdom/pack"
 import Packet from "../../../jacdac-ts/src/jdom/packet"
+import CodeBlock from "../CodeBlock"
+
+const HORIZON = 10
+
+interface RadioMessageProps {
+    time: number
+    deviceSerial: number
+    rssi: number
+    payload: PackedValues
+}
 
 export default function DashboardBitRadio(props: DashboardServiceProps) {
     const { service } = props
-    const [lastEvents, setLastEvents] = useState<
-        {
-            time: number
-            deviceSerial: number
-            rssi: number
-            payload: PackedValues
-        }[]
-    >([])
+    const [lastEvents, setLastEvents] = useState<RadioMessageProps[]>([])
 
     const appendMessage = (data: PackedValues) => {
         if (!data) return
@@ -23,7 +26,7 @@ export default function DashboardBitRadio(props: DashboardServiceProps) {
         const evs = lastEvents.slice(0)
         const msg = { time, deviceSerial, rssi, payload }
         evs.push(msg)
-        while (evs.length > 10) evs.shift()
+        while (evs.length > HORIZON) evs.shift()
         setLastEvents(evs)
     }
 
@@ -43,20 +46,15 @@ export default function DashboardBitRadio(props: DashboardServiceProps) {
                         values = jdunpack(data, "u32 u32 i8 x[1] b")
                         break
                 }
-                appendMessage(values)
+                appendMessage(values.filter(v => v !== undefined && v !== ""))
             }),
         [service, lastEvents]
     )
 
-    return (
-        <>
-            {lastEvents.map((lv, i) => (
-                <div key={i}>
-                    {lv.payload
-                        .filter(v => v !== undefined && v !== "")
-                        .join(", ")}
-                </div>
-            ))}
-        </>
-    )
+    const text = lastEvents
+        .map(ev =>
+            ev.payload.filter(v => v !== undefined && v !== "").join(",")
+        )
+        .join("\n")
+    return <CodeBlock>{text}</CodeBlock>
 }
