@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useContext } from "react"
 import {
     Box,
     Button,
@@ -9,23 +9,13 @@ import ThemedLayout from "../../components/ui/ThemedLayout"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import { isReading, isValueOrIntensity } from "../../../jacdac-ts/src/jdom/spec"
 import {
-    arrayConcatMany,
     strcmp,
-    unique,
 } from "../../../jacdac-ts/src/jdom/utils"
-import {
-    SRV_CONTROL,
-    SRV_LOGGER,
-    SRV_POWER,
-    SRV_PROTO_TEST,
-    SRV_ROLE_MANAGER,
-    SRV_SETTINGS,
-} from "../../../jacdac-ts/src/jdom/constants"
 import MakeCodeIcon from "../icons/MakeCodeIcon"
 import Helmet from "react-helmet"
-import { resolveMakecodeServiceFromClassIdentifier } from "../../../jacdac-ts/src/jdom/makecode"
 import Dashboard from "../../components/dashboard/Dashboard"
-import useDevices from "../hooks/useDevices"
+import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
+import useChange from "../../jacdac/useChange"
 
 function deviceSort(l: JDDevice, r: JDDevice): number {
     const srvScore = (srv: jdspec.ServiceSpec) =>
@@ -55,50 +45,12 @@ function deviceSort(l: JDDevice, r: JDDevice): number {
     return strcmp(l.deviceId, r.deviceId)
 }
 
-// hide the makecode device itself and power devices
-const ignoredServices = [
-    SRV_CONTROL,
-    SRV_LOGGER,
-    SRV_SETTINGS,
-    SRV_ROLE_MANAGER,
-    SRV_POWER,
-    SRV_PROTO_TEST,
-]
-const deviceFilter = (device: JDDevice) =>
-    !!device.serviceClasses.filter(sc => ignoredServices.indexOf(sc) < 0).length
-
 function Carousel() {
-    const devices = useDevices({ announced: true, ignoreSelf: true }).filter(
-        deviceFilter
-    )
-    const extensions = unique(
-        arrayConcatMany(
-            devices.map(device =>
-                device
-                    .services()
-                    .map(srv =>
-                        resolveMakecodeServiceFromClassIdentifier(
-                            srv.serviceClass
-                        )
-                    )
-                    .map(info => info?.client.repo)
-                    .filter(q => !!q)
-            )
-        )
-    )
-    const handleAdd = () => {
-        // list all devices connected to the bus
-        // and query for them, let makecode show the missing ones
-        // send message to makecode
-        window.parent.postMessage(
-            {
-                type: "addextensions",
-                extensions,
-                broadcast: true,
-            },
-            "*"
-        )
-    }
+    const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const { iframeBridge } = bus;
+    const { deviceFilter } = iframeBridge;
+    const extensions = useChange(iframeBridge, _ => _?.candidateExtensions)
+    const handleAdd = () => iframeBridge?.postAddExtensions();
 
     return (
         <>
@@ -147,10 +99,10 @@ export default function Page() {
                     {`
 html {
     margin-right: 4px;
-    overflow-y: auto !important;
 }
 html, body {
     background: transparent !important;
+    overflow: hidden !important;
 }
 `}
                 </style>
