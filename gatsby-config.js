@@ -235,7 +235,7 @@ module.exports = {
                 start_url: `/`,
                 background_color: `#ffc400`,
                 theme_color: `#ffc400`,
-                display: `minimal-ui`,
+                display: `standalone`,
                 cache_busting_mode: "none",
                 icon: `src/images/favicon.svg`,
                 crossOrigin: `use-credentials`,
