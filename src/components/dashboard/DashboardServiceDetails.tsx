@@ -21,7 +21,7 @@ const collapsedRegisters = [
 ]
 
 export default function DashboardServiceDetails(props: DashboardServiceProps) {
-    const { service, expanded } = props;
+    const { service, expanded, visible } = props;
     const specification = useChange(service, spec => spec.specification);
     const registers: JDRegister[] = useMemo(() => {
         const packets = specification?.packets;
@@ -47,6 +47,7 @@ export default function DashboardServiceDetails(props: DashboardServiceProps) {
                 showRegisterName={true}
                 hideMissingValues={false}
                 showTrend={false}
+                visible={visible}
             /></Grid>
         })}
     </>

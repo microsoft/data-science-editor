@@ -45,6 +45,7 @@ export default function ServiceRegisters(props: {
                     showTrend={
                         showTrends && register.code === SystemReg.Reading
                     }
+                    visible={true}
                 />
             ))}
         </AutoGrid>

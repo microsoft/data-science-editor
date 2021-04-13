@@ -32,7 +32,7 @@ export function ModelContent(props: { service: JDService }) {
     return <>
         {lastError && <Alert severity="warning">{lastError}</Alert>}
         <Typography>model size: {modelSize === undefined ? "..." : prettySize(modelSize)}</Typography>
-        <RegisterInput register={service.register(ModelRunnerReg.AutoInvokeEvery)} />
+        <RegisterInput register={service.register(ModelRunnerReg.AutoInvokeEvery)} visible={true} />
         <RegisterTrend showName register={service.register(ModelRunnerReg.Outputs)} mini={true} />
     </>
 }
