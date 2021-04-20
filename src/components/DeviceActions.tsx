@@ -12,11 +12,11 @@ import CloseIcon from '@material-ui/icons/Close';
 export default function DeviceActions(props: {
     device: JDDevice,
     showReset?: boolean,
-    showStopHost?: boolean,
+    showStop?: boolean,
     hideIdentity?: boolean,
     children?: JSX.Element | JSX.Element[]
 }) {
-    const { device, showReset, children, hideIdentity, showStopHost } = props
+    const { device, showReset, children, hideIdentity, showStop } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const provider = useServiceProvider(device);
 
@@ -26,11 +26,11 @@ export default function DeviceActions(props: {
     const handleReset = async () => {
         await device.reset()
     }
-    const handleStop = () => {
+    const handleStop = async () => {
         bus.removeServiceProvider(provider);
     }
     return <>
-        {showStopHost && provider && <CmdButton trackName="device.stop" size="small" title="stop simulator" onClick={handleStop} icon={<CloseIcon />} />}
+        {showStop && provider && <CmdButton trackName="device.stop" size="small" title="stop simulator" onClick={handleStop} icon={<CloseIcon />} />}
         {!hideIdentity && <CmdButton trackName="device.identify" size="small" title="identify" onClick={handleIdentify} icon={<FingerprintIcon />} />}
         {showReset && <CmdButton trackName="device.reset" size="small" title="reset" onClick={handleReset} icon={<RefreshIcon />} />}
         {children}

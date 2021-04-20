@@ -102,7 +102,7 @@ export default function DashboardDevice(
                 action={
                     <DeviceActions
                         device={device}
-                        showStopHost={expanded && !mobile}
+                        showStop={expanded}
                         hideIdentity={true}
                         showReset={expanded && !mobile}
                     >
