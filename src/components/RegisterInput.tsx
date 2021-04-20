@@ -43,25 +43,36 @@ export default function RegisterInput(props: {
     } = props
     const { service, specification } = register
     const { device } = service
-    const { fields } = register
+    const { fields, code } = register
     const { setError: setAppError } = useContext(AppContext)
     const [working, setWorking] = useState(false)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [args, setArgs] = useState<any[]>(register.unpackedValue || [])
     const server = useRegisterServer(register)
     const hasSet =
-        specification.kind === "rw" || (server && specification.kind !== "const")
+        specification.kind === "rw" ||
+        (server && specification.kind !== "const")
     const hasData = useChange(register, _ => !!_.data)
     const color = hasSet ? "secondary" : "primary"
-    const regProps = visible !== undefined ? { visible } : undefined;
-    const minReading = useReadingAuxilliaryValue(
+    const regProps = visible !== undefined ? { visible } : undefined
+    const isReading = code === SystemReg.Reading
+    const isValue = !isReading && code === SystemReg.Value
+    const min = useReadingAuxilliaryValue(
         register,
-        SystemReg.MinReading,
+        isReading
+            ? SystemReg.MinReading
+            : isValue
+            ? SystemReg.MinValue
+            : undefined,
         regProps
     )
-    const maxReading = useReadingAuxilliaryValue(
+    const max = useReadingAuxilliaryValue(
         register,
-        SystemReg.MaxReading,
+        isReading
+            ? SystemReg.MaxReading
+            : isValue
+            ? SystemReg.MaxValue
+            : undefined,
         regProps
     )
     const readingError = useReadingAuxilliaryValue(
@@ -77,7 +88,8 @@ export default function RegisterInput(props: {
 
     useEffect(
         () =>
-            visible && register.subscribe(REPORT_UPDATE, () => {
+            visible &&
+            register.subscribe(REPORT_UPDATE, () => {
                 const vs = register.unpackedValue
                 if (vs !== undefined) setArgs(vs)
             }),
@@ -167,8 +179,8 @@ export default function RegisterInput(props: {
                     setValues={hasSet && sendArgs}
                     showDataType={showDataType}
                     variant={variant}
-                    min={minReading}
-                    max={maxReading}
+                    min={min}
+                    max={max}
                     resolution={resolution}
                     error={readingError}
                     off={off}
