@@ -94,7 +94,8 @@
     "dockerdocs": "node node_modules/gatsby/cli.js develop --host:0.0.0.0",
     "builddtdl": "cd jacdac-ts && yarn builddtdl",
     "buildspecs": "cd jacdac-ts && yarn buildspecs",
-    "watchts": "cd jacdac-ts && yarn watch"
+    "watchts": "cd jacdac-ts && yarn watch",
+    "buildpxt": "cd jacdac-ts/pxt-jacdac && sh mk.sh"
   },
   "repository": {
     "type": "git",
