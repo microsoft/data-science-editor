@@ -9,6 +9,7 @@ import {
     useTheme,
 } from "@material-ui/core"
 import React from "react"
+import { getNumber, NumberFormat } from "../../jacdac-ts/src/jdom/buffer"
 import {
     JD_FRAME_FLAG_ACK_REQUESTED,
     JD_FRAME_FLAG_COMMAND,
@@ -20,6 +21,26 @@ import Packet from "../../jacdac-ts/src/jdom/packet"
 import { fromHex, toHex } from "../../jacdac-ts/src/jdom/utils"
 import PaperBox from "./ui/PaperBox"
 import Tooltip from "./ui/Tooltip"
+
+interface SlotProps {
+    offset: number
+    size: number
+    format?: NumberFormat
+    formatHex?: boolean
+    name: string
+    description: string
+    know?: { [index: string]: string | number }
+}
+
+function HeaderMap(props: { header: Uint8Array } & SlotProps) {
+    const { header, offset, size, name } = props
+    const bytes = header.slice(offset, offset + size)
+    return (
+        <Tooltip title={name}>
+            <span>{toHex(bytes)}</span>
+        </Tooltip>
+    )
+}
 
 export default function PacketHeaderLayout(props: {
     packet?: Packet
@@ -33,16 +54,19 @@ export default function PacketHeaderLayout(props: {
     const { header } = pkt
     const frameFlags = header[3]
 
-    const slots = [
+    const slots: SlotProps[] = [
         {
             offset: 0,
             size: 2,
+            format: NumberFormat.UInt16LE,
+            formatHex: true,
             name: "frame_crc",
             description: "CRC",
         },
         {
             offset: 2,
             size: 1,
+            format: NumberFormat.UInt8LE,
             name: "frame_size",
             description: "Size of the data field in bytes.",
         },
@@ -55,6 +79,7 @@ export default function PacketHeaderLayout(props: {
         {
             offset: 4,
             size: 8,
+            formatHex: true,
             name: "device_identifiter",
             description: "64-bit device identifier",
         },
@@ -62,6 +87,7 @@ export default function PacketHeaderLayout(props: {
         {
             offset: 12,
             size: 1,
+            format: NumberFormat.UInt8LE,
             name: "packet_size",
             description:
                 "The size of the payload field. Maximum size is 236 bytes.",
@@ -69,6 +95,7 @@ export default function PacketHeaderLayout(props: {
         {
             offset: 13,
             size: 1,
+            format: NumberFormat.UInt8LE,
             name: "service_number",
             know: {
                 [JD_SERVICE_INDEX_PIPE.toString(16)]: "pipe",
@@ -80,6 +107,8 @@ export default function PacketHeaderLayout(props: {
         {
             offset: 14,
             size: 2,
+            format: NumberFormat.UInt16LE,
+            formatHex: true,
             name: "service_command",
             description: "Identifier for the command",
         },
@@ -120,16 +149,7 @@ export default function PacketHeaderLayout(props: {
                                 key={slot.name}
                                 mr={theme.spacing(0.1)}
                             >
-                                <Tooltip title={slot.name}>
-                                    <span>
-                                        {toHex(
-                                            header.slice(
-                                                slot.offset,
-                                                slot.offset + slot.size
-                                            )
-                                        )}
-                                    </span>
-                                </Tooltip>
+                                <HeaderMap header={header} {...slot} />
                             </Box>
                         ))}
                     </code>
@@ -141,6 +161,7 @@ export default function PacketHeaderLayout(props: {
                         <Table size="small">
                             <TableHead>
                                 <TableRow>
+                                    <TableCell>Bytes</TableCell>
                                     <TableCell>Value</TableCell>
                                     <TableCell>Offset</TableCell>
                                     <TableCell>Size</TableCell>
@@ -154,11 +175,20 @@ export default function PacketHeaderLayout(props: {
                                         slot.offset,
                                         slot.offset + slot.size
                                     )
+                                    const value =
+                                        slot.format &&
+                                        getNumber(buf, slot.format, 0)
                                     const known = slot.know?.[toHex(buf)]
                                     return (
                                         <TableRow key={slot.name}>
                                             <TableCell>
                                                 <code>{toHex(buf)}</code>
+                                            </TableCell>
+                                            <TableCell>
+                                                {value !== undefined &&
+                                                slot.formatHex
+                                                    ? `0x${value.toString(16)}`
+                                                    : value}
                                                 {known && (
                                                     <code>({known})</code>
                                                 )}
