@@ -336,7 +336,7 @@ export default function MemberInput(props: {
                 spellCheck={false}
                 value={textValue}
                 label={label}
-                inputProps={{ ["aria-label"]: label }}
+                inputProps={{ ["aria-label"]: label, readOnly: disabled }}
                 helperText={helperText}
                 onChange={disabled ? undefined : handleChange}
                 required={value === undefined}
