@@ -56,6 +56,7 @@ export default function PacketInspector() {
                 packet={packet}
                 showSlots={true}
                 showFlags={true}
+                showCommands={true}
             />
             <PacketDataLayout
                 packet={packet}

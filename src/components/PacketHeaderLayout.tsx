@@ -11,6 +11,9 @@ import {
 import React from "react"
 import { getNumber, NumberFormat } from "../../jacdac-ts/src/jdom/buffer"
 import {
+    CMD_EVENT_MASK,
+    CMD_GET_REG,
+    CMD_SET_REG,
     JD_FRAME_FLAG_ACK_REQUESTED,
     JD_FRAME_FLAG_COMMAND,
     JD_FRAME_FLAG_IDENTIFIER_IS_SERVICE_CLASS,
@@ -47,12 +50,14 @@ export default function PacketHeaderLayout(props: {
     data?: string
     showSlots?: boolean
     showFlags?: boolean
+    showCommands?: boolean
 }) {
-    const { packet, data, showSlots, showFlags } = props
+    const { packet, data, showSlots, showFlags, showCommands } = props
     const theme = useTheme()
     const pkt = packet || Packet.fromBinary(fromHex(data))
     const { header } = pkt
     const frameFlags = header[3]
+    const serviceCommand = pkt.serviceCommand
 
     const slots: SlotProps[] = [
         {
@@ -136,7 +141,28 @@ export default function PacketHeaderLayout(props: {
             description:
                 "The packet is a multi command. The service class is the first 4 bytes of the device id.",
         },
-    ].filter(f => frameFlags & f.flag)
+    ].filter(f => (frameFlags & f.flag) === f.flag)
+
+    const commandFlags = [
+        {
+            flag: CMD_GET_REG,
+            active: (serviceCommand & CMD_GET_REG) === CMD_GET_REG,
+            name: "CMD_GET_REG",
+            description: "Get register value",
+        },
+        {
+            flag: CMD_SET_REG,
+            active: (serviceCommand & CMD_SET_REG) === CMD_SET_REG,
+            name: "CMD_SET_REG",
+            description: "Set register value",
+        },
+        {
+            flag: CMD_EVENT_MASK,
+            active: (serviceCommand & CMD_EVENT_MASK) !== 0,
+            name: "CMD_EVENT_MASK",
+            description: "Command is an event",
+        },
+    ].filter(f => f.active)
 
     return (
         <>
@@ -207,11 +233,54 @@ export default function PacketHeaderLayout(props: {
                     </TableContainer>
                 </PaperBox>
             )}
+            {showCommands && !!commandFlags.length && (
+                <PaperBox key="flags">
+                    <TableContainer>
+                        <Table size="small">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell colSpan={3}>
+                                        Service command
+                                    </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>Flag</TableCell>
+                                    <TableCell>Name</TableCell>
+                                    <TableCell>Description</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {commandFlags.map(flag => (
+                                    <TableRow key={flag.name}>
+                                        <TableCell>
+                                            <code>
+                                                {(
+                                                    "0000" +
+                                                    flag.flag.toString(16)
+                                                ).slice(-4)}
+                                            </code>
+                                        </TableCell>
+                                        <TableCell>{flag.name}</TableCell>
+                                        <TableCell>
+                                            {flag.description}
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </PaperBox>
+            )}
             {showFlags && !!flags.length && (
                 <PaperBox key="flags">
                     <TableContainer>
                         <Table size="small">
                             <TableHead>
+                                <TableRow>
+                                    <TableCell colSpan={3}>
+                                        Frame flags
+                                    </TableCell>
+                                </TableRow>
                                 <TableRow>
                                     <TableCell>Flag</TableCell>
                                     <TableCell>Name</TableCell>
