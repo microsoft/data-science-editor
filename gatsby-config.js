@@ -5,7 +5,7 @@ const pathPrefix = "/jacdac-docs"
 module.exports = {
     siteMetadata: {
         title: `Jacdac`,
-        description: `plug-n-play for microcontrollers.`,
+        description: `plug-n-play for microcontrollers`,
         author: `Microsoft`,
         siteUrl: siteUrl,
     },
