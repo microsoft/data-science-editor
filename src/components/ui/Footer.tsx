@@ -59,7 +59,7 @@ export default function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    {sha}
+                    {sha.slice(0, 8)}
                 </a>
             )}
             <Typography component="span" variant="inherit">
