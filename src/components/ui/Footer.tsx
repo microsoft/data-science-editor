@@ -28,7 +28,7 @@ export default function Footer() {
     const repo = process.env.GATSBY_GITHUB_REPOSITORY
     const sha = process.env.GATSBY_GITHUB_SHA
 
-    console.debug("footer", { repo, sha, env: process.env })
+    console.debug("footer", { repo, sha })
 
     return (
         <footer role="contentinfo" className={classes.footer}>

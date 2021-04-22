@@ -19,6 +19,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - uses: bahmutov/npm-install@v1
       - run: yarn distdocs
+        env:
+          GATSBY_GITHUB_REPOSITORY: ${{ github.repository }}
+          GATSBY_GITHUB_REF: ${{ github.ref }}
+          GATSBY_GITHUB_SHA: ${{ github.sha }}
       - run: yarn builddtdl
       - name: github pages
         uses: peaceiris/actions-gh-pages@v3
@@ -26,7 +30,3 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
-        env:
-          GATSBY_GITHUB_REPOSITORY: ${{ github.repository }}
-          GATSBY_GITHUB_REF: ${{ github.ref }}
-          GATSBY_GITHUB_SHA: ${{ github.sha }}
