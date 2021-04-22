@@ -25,10 +25,10 @@ const useStyles = makeStyles(theme =>
 
 export default function Footer() {
     const classes = useStyles()
-    const repo = process.env["GATSBY_GITHUB_REPOSITORY"]
-    const sha = process.env["GATSBY_GITHUB_SHA"]
+    const repo = process.env.GATSBY_GITHUB_REPOSITORY
+    const sha = process.env.GATSBY_GITHUB_SHA
 
-    console.log("footer", { repo, sha })
+    console.debug("footer", { repo, sha, env: process.env })
 
     return (
         <footer role="contentinfo" className={classes.footer}>
