@@ -33,11 +33,11 @@ export default function Footer() {
     return (
         <footer role="contentinfo" className={classes.footer}>
             <a
-                href="https://privacy.microsoft.com/en-us/privacystatement"
+                href="https://go.microsoft.com/fwlink/?LinkId=521839"
                 target="_blank"
                 rel="noopener noreferrer"
             >
-                Privacy
+                Privacy &amp; Cookies
             </a>
             <a
                 href="https://www.microsoft.com/en-us/legal/intellectualproperty/copyright"
