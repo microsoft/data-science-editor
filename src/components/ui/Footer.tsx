@@ -53,12 +53,18 @@ export default function Footer() {
             >
                 Trademarks
             </a>
+            {repo && sha && (
+                <a
+                    href={`https://github.com/${repo}/commit/${sha}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    {sha}
+                </a>
+            )}
             <Typography component="span" variant="inherit">
                 © {new Date().getFullYear()} Microsoft Corporation
             </Typography>
-            {repo && sha && (
-                <a href={`https://github.com/${repo}/commit/${sha}`}>{sha}</a>
-            )}
         </footer>
     )
 }
