@@ -9,7 +9,7 @@ export const onRouteUpdate = ({ location }, options) => {
 export const onServiceWorkerUpdateReady = () => {
     // force reload
     console.debug(`offline: update ready, reloading...`)
-    window.location.reload()
+    window.location.reload(true)
 }
 
 export const wrapPageElement = Layout
