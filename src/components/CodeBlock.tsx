@@ -25,12 +25,20 @@ const CodeSandboxButton = lazy(() => import("./ui/CodeSandboxButton"))
 
 function HighlightedCode(props: {
     children: string
+    codeSandbox?: boolean
     className?: string
     downloadName?: string
     downloadText?: string
     url?: string
 }) {
-    const { children, className, downloadName, downloadText, url } = props
+    const {
+        children,
+        codeSandbox,
+        className,
+        downloadName,
+        downloadText,
+        url,
+    } = props
     const { darkMode } = useContext(DarkModeContext)
     const language = className?.replace(/language-/, "") || ""
     const theme = (darkMode === "dark" ? DARK_THEME : LIGHT_THEME) as PrismTheme
@@ -71,6 +79,13 @@ function HighlightedCode(props: {
                             </Tooltip>
                         </Link>
                     )}
+                    {codeSandbox && (
+                        <div style={{ float: "right" }}>
+                            <Suspense>
+                                <CodeSandboxButton source={children} />
+                            </Suspense>
+                        </div>
+                    )}
                     {tokens?.map((line, index) => {
                         const lineProps = getLineProps({ line, key: index })
                         return (
@@ -100,6 +115,8 @@ export default function CodeBlock(props: {
     const { children, className } = props
     const language = className?.replace(/language-/, "") || ""
 
+    console.log({ language, className, children })
+
     switch (language) {
         case "trace":
             return (
@@ -118,15 +135,14 @@ export default function CodeBlock(props: {
                     <Markdown source={children.trim()} />
                 </Alert>
             )
-        /*case "tsx":
+        case "vanilla":
             return (
-                <>
-                    <HighlightedCode {...props} />
-                    <Suspense>
-                        <CodeSandboxButton source={children} />
-                    </Suspense>
-                </>
-            )*/
+                <HighlightedCode
+                    {...props}
+                    className={"javascript"}
+                    codeSandbox={true}
+                />
+            )
         default:
             return <HighlightedCode {...props} />
     }

@@ -29,20 +29,18 @@ npm install --save jacdac-ts
 
 If you are using JavaScript/TypeScript ES6, import all APIs 
 
-```javascript
+```vanilla
 import { createUSBBus, CHANGE } from "jacdac-ts"
 
 const bus = createUSBBus();
-await bus.connect();
-bus.on(CHANGE, () => console.log(bus.devices()
-    .map(device => device.toString())
-    .join(", "))
-    )
+bus.on(CHANGE, () => console.log(bus.devices()))
+// call connect from a user interaction
+bus.connect();
 ```
 
 ## Vanilla JavaScript
 
 If you wish to use the library from a CDN or directly from a test web page, you can use the precompiled
-``jacdac.umd.ts`` file. All exported symbols are imported into the ``jacdac`` name.
+``jacdac-umd.ts`` file. All exported symbols are imported into the ``jacdac`` name.
 
 See [tools](/tools/) for example of vanilla HTML/JavaScript pages using the library.
