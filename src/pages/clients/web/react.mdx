@@ -11,9 +11,10 @@ Jacdac is compatible with React 16+ and hooks
 The ``JacdacContext`` provides access to the bus, and connection/disconnection functionalies from your hooks or components.
 
 ```tsx
-import { JacdacContext } from "jacdac-ts";
+import React, { useContext } from "react"
+import { JacdacContext } from "jacdac-ts"
 
-function myComponent() {
+function MyComponent() {
     const { bus, connectionState, connectAsync, disconnectAsync } = useContext(JacdacContext)
 
     return <div>
