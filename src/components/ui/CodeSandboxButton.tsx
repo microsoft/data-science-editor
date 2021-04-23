@@ -9,9 +9,7 @@ export default function CodeSandboxButton(props: { source: string }) {
     const [importing, setImporting] = useState(false)
 
     const handleClick = async () => {
-        const content = `
-${source.split(/\n/g).join("\n    ")}
-`
+        const content = source
         const html = `
 <html>
     <script src="./node_modules/jacdac-ts/dist/jacdac-umd.js" />
