@@ -1,3 +1,4 @@
+import { useMemo } from "react"
 import { semverCmp } from "./semver"
 import useFetch from "./useFetch"
 
@@ -195,13 +196,15 @@ export function useLatestReleases(slug: string, options?: GitHubApiOptions) {
             error: undefined,
             status: undefined,
         }
-    const uri = `repos/${normalizeSlug(slug)}/contents/dist`
-    const res = useFetchApi<GithubContent[]>(uri, {
-        ...(options || {}),
-        ignoreThrottled: true,
-    })
-    return {
-        ...res,
-        response: contentsToFirmwareReleases(res.response),
-    }
+    return useMemo(() => {
+        const uri = `repos/${normalizeSlug(slug)}/contents/dist`
+        const res = useFetchApi<GithubContent[]>(uri, {
+            ...(options || {}),
+            ignoreThrottled: true,
+        })
+        return {
+            ...res,
+            response: contentsToFirmwareReleases(res.response),
+        }
+    }, [slug, options?.ignoreThrottled])
 }

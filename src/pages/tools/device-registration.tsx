@@ -11,7 +11,7 @@ import {
     Typography,
     Card,
     CardActions,
-    Button
+    Button,
 } from "@material-ui/core"
 import { ChangeEvent } from "react"
 import {
@@ -47,6 +47,7 @@ import Suspense from "../../components/ui/Suspense"
 import { ControlReg } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import useGridBreakpoints from "../../components/useGridBreakpoints"
+import { useDebounce } from "use-debounce"
 
 const GithubPullRequestButton = lazy(
     () => import("../../components/GithubPullRequestButton")
@@ -109,7 +110,12 @@ export default function DeviceRegistration() {
         } as jdspec.DeviceSpec
     )
     const gridBreakpoints = useGridBreakpoints()
-    const devices = useDevices({ announced: true, physical: true, ignoreSelf: true, firmwareIdentifier: true })
+    const devices = useDevices({
+        announced: true,
+        physical: true,
+        ignoreSelf: true,
+        firmwareIdentifier: true,
+    })
     const updateDevice = () => {
         setDevice(clone(device))
     }
@@ -151,8 +157,8 @@ export default function DeviceRegistration() {
     const idError = !device.id
         ? "missing identifier"
         : deviceSpecifications().find(dev => dev.id == device.id)
-            ? "identifer already used"
-            : ""
+        ? "identifer already used"
+        : ""
     const servicesError = device.services?.length
         ? ""
         : "Select at least one service"
@@ -182,6 +188,7 @@ export default function DeviceRegistration() {
         updateDevice()
     }
     const handleRepoChange = (ev: unknown, newValue: string) => {
+        console.log(`new repo`, { newValue })
         device.repo = newValue
         updateDevice()
     }
@@ -245,19 +252,18 @@ export default function DeviceRegistration() {
         />
     )
     const handleImportDevice = (dev: JDDevice) => async () => {
-        const controlService = dev.service(0);
+        const controlService = dev.service(0)
         const descrReg = controlService.register(ControlReg.DeviceDescription)
-        await descrReg.refresh(true);
+        await descrReg.refresh(true)
         const urlReg = controlService.register(ControlReg.DeviceUrl)
-        await urlReg.refresh(true);
+        await urlReg.refresh(true)
 
         const fw = await dev.resolveFirmwareIdentifier()
-        if (fw)
-            device.firmwares = [fw];
+        if (fw) device.firmwares = [fw]
         device.services = dev.serviceClasses.slice(1)
         device.description = descrReg.stringValue
         device.link = urlReg.stringValue
-        updateDevice();
+        updateDevice()
     }
 
     return (
@@ -269,14 +275,21 @@ export default function DeviceRegistration() {
                 .
             </p>
             <Grid container direction="row" spacing={2}>
-                {devices.map(dev => <Grid item key={dev.id} {...gridBreakpoints}>
-                    <Card>
-                        <DeviceCardHeader device={dev} />
-                        <CardActions>
-                            <Button variant="outlined" onClick={handleImportDevice(dev)}>Import</Button>
-                        </CardActions>
-                    </Card>
-                </Grid>)}
+                {devices.map(dev => (
+                    <Grid item key={dev.id} {...gridBreakpoints}>
+                        <Card>
+                            <DeviceCardHeader device={dev} />
+                            <CardActions>
+                                <Button
+                                    variant="outlined"
+                                    onClick={handleImportDevice(dev)}
+                                >
+                                    Import
+                                </Button>
+                            </CardActions>
+                        </Card>
+                    </Grid>
+                ))}
                 <Grid item xs={12}>
                     <TextField
                         id={nameId}
@@ -292,15 +305,9 @@ export default function DeviceRegistration() {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <CompanySelect
-                        value={device?.company}
-                        error={companyError}
-                        onValueChange={handleCompanyChanged}
-                    />
-                </Grid>
-                <Grid item xs={12}>
                     <Autocomplete
                         id={repoId}
+                        freeSolo={true}
                         autoComplete
                         placeholder="https://github.com/..."
                         inputValue={device.repo || ""}
@@ -308,11 +315,13 @@ export default function DeviceRegistration() {
                         options={companyRepos}
                         renderInput={renderRepoInput}
                     />
-                    {!githubError && (
-                        <Box mt={1}>
-                            <FirmwareCard slug={device.repo} />
-                        </Box>
-                    )}
+                </Grid>
+                <Grid item xs={12}>
+                    <CompanySelect
+                        value={device?.company}
+                        error={companyError}
+                        onValueChange={handleCompanyChanged}
+                    />
                 </Grid>
                 <Grid item xs={12}>
                     <PaperBox elevation={1}>
@@ -331,8 +340,9 @@ export default function DeviceRegistration() {
                                     <Chip
                                         label={
                                             blob
-                                                ? `${blob.name
-                                                } (0x${id.toString(16)})`
+                                                ? `${
+                                                      blob.name
+                                                  } (0x${id.toString(16)})`
                                                 : `0x${id.toString(16)}`
                                         }
                                         onDelete={handleDeleteFirmware(i)}

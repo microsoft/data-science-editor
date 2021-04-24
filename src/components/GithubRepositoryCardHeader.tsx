@@ -21,7 +21,7 @@ export default function GithubRepositoryCardHeader(props: {
         <>
             <Link href={repo.html_url} target={target}>
                 <Typography component="span" variant="h6">
-                    {repo.organization.login}
+                    {repo.organization?.login}
                 </Typography>
             </Link>
             <Box component="span" ml={0.5} mr={0.5}>
