@@ -1,7 +1,9 @@
+/*
+requires "@microsoft/applicationinsights-web-basic": "^2.6.1",
 import { ApplicationInsights } from "@microsoft/applicationinsights-web-basic"
 
 // YOUR_INSTRUMENTATION_KEY_GOES_HERE
-const instrumentationKey: string = undefined;
+const instrumentationKey: string = undefined
 const appInsights =
     instrumentationKey &&
     new ApplicationInsights({
@@ -32,13 +34,19 @@ const track =
           (name, properties) => {}
 if (typeof window !== "undefined") {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (window as any).analytics = {
+    ;(window as any).analytics = {
         page,
         track,
     }
 }
+*/
 
-export default function useAnalytics() {
+export default function useAnalytics(): {
+    page: () => void
+    track: (name: string, properties?: { [key: string]: string | number }) => void
+} {
+    const page = () => {}
+    const track = () => {}
     return {
         page,
         track,
