@@ -15,6 +15,12 @@ steps:
     versionSpec: '14.x'
   displayName: 'Install Node.js'
 
+- task: ms.vss-governance-buildtask.governance-build-task-component-detection.ComponentGovernanceComponentDetection@0
+  displayName: 'Component Governance Detection'
+  inputs:
+    alertWarningLevel: Medium
+    scanType: 'Register'
+
 - script: |
     yarn install --frozen-lockfile
     yarn distdocs
