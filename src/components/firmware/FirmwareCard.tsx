@@ -14,7 +14,11 @@ import {
     MenuItem,
     Typography,
 } from "@material-ui/core"
-import { fetchReleaseBinary, GithubFirmwareRelease, useLatestReleases } from "../github"
+import {
+    fetchReleaseBinary,
+    GithubFirmwareRelease,
+    useLatestReleases,
+} from "../github"
 import { useFirmwareBlob } from "./useFirmwareBlobs"
 import GithubRepositoryCardHeader from "../GithubRepositoryCardHeader"
 import Alert from "../ui/Alert"
@@ -34,8 +38,12 @@ export default function FirmwareCard(props: { slug: string }) {
     const tag = release?.version || ""
     const disabled = downloading
     const version = firmwareBlobs?.[0].version
+    // version starts with v
     const updateAvailable =
-        !!tag && !!version && tag.slice(1) !== version.substr(0, tag.length - 1)
+        !!tag &&
+        !!version &&
+        tag !== version.replace(/^v/, "").substr(0, tag.length)
+    console.log({ version, tag, updateAvailable })
     const downloadColor = updateAvailable ? "primary" : "inherit"
     const downloadVariant = updateAvailable ? "contained" : "text"
 
@@ -76,6 +84,11 @@ export default function FirmwareCard(props: { slug: string }) {
             <GithubRepositoryCardHeader slug={slug} />
             <CardContent>
                 {error && <Alert severity="error">{error}</Alert>}
+                {!firmwareBlobs?.length && (
+                    <Alert severity="info">
+                        No firmware binary found in repository.
+                    </Alert>
+                )}
                 {!!firmwareBlobs?.length && (
                     <Box mb={1}>
                         <Accordion

@@ -1,59 +1,79 @@
-import React, { createContext, useState } from "react";
-import { CHANGE, ERROR } from "../../jacdac-ts/src/jdom/constants";
-import { JDEventSource } from "../../jacdac-ts/src/jdom/eventsource";
-import { delay } from "../../jacdac-ts/src/jdom/utils";
-import useEffectAsync from "./useEffectAsync";
+import React, { createContext, useState } from "react"
+import { CHANGE, ERROR } from "../../jacdac-ts/src/jdom/constants"
+import {
+    IEventSource,
+    JDEventSource,
+} from "../../jacdac-ts/src/jdom/eventsource"
+import Flags from "../../jacdac-ts/src/jdom/flags"
+import { delay } from "../../jacdac-ts/src/jdom/utils"
+import useEffectAsync from "./useEffectAsync"
 
 export const DB_VALUE_CHANGE = "dbValueChange"
 
+interface IDbStorage {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    get(table: string, key: string): Promise<any>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    set(table: string, key: string, value: any): Promise<void>
+    list(table: string): Promise<string[]>
+    clear(table: string): Promise<void>
+}
+
 export class DbStore<T> extends JDEventSource {
-    constructor(public readonly db: Db, public readonly name: string) {
-        super();
+    constructor(public readonly db: IDbStorage, public readonly name: string) {
+        super()
     }
     get(id: string): Promise<T> {
-        return this.db.get(this.name, id);
+        return this.db.get(this.name, id)
     }
-    set(id: string, value: T): Promise<void> {
-        return this.db.set(this.name, id, value)
-            .then(() => {
-                this.emit(DB_VALUE_CHANGE, id)
-                this.emit(CHANGE)
-            })
+    async set(id: string, value: T) {
+        const current = (await this.db.get(this.name, id)) as T
+        if (current !== value) {
+            await this.db.set(this.name, id, value)
+            this.emit(DB_VALUE_CHANGE, id)
+            this.emit(CHANGE)
+        }
     }
     list(): Promise<string[]> {
         return this.db.list(this.name)
     }
     async clear() {
-        this.db.clear(this.name);
+        this.db.clear(this.name)
         this.emit(CHANGE)
     }
 }
 
-export class Db extends JDEventSource {
-    upgrading = false;
+export interface IDb extends IEventSource {
+    readonly blobs: DbStore<Blob>
+    readonly values: DbStore<string>
+    readonly firmwares: DbStore<Blob>
+}
 
-    private _db: IDBDatabase;
-    readonly blobs: DbStore<Blob>;
-    readonly values: DbStore<string>;
-    readonly firmwares: DbStore<Blob>;
+class IDBDb extends JDEventSource implements IDbStorage, IDb {
+    upgrading = false
+
+    private _db: IDBDatabase
+    readonly blobs: DbStore<Blob>
+    readonly values: DbStore<string>
+    readonly firmwares: DbStore<Blob>
 
     constructor() {
-        super();
-        this.blobs = new DbStore<Blob>(this, Db.STORE_BLOBS);
-        this.values = new DbStore<string>(this, Db.STORE_STORAGE);
-        this.firmwares = new DbStore<Blob>(this, Db.STORE_FIRMWARE_BLOBS);
+        super()
+        this.blobs = new DbStore<Blob>(this, IDBDb.STORE_BLOBS)
+        this.values = new DbStore<string>(this, IDBDb.STORE_STORAGE)
+        this.firmwares = new DbStore<Blob>(this, IDBDb.STORE_FIRMWARE_BLOBS)
     }
 
     private get db() {
-        return this._db;
+        return this._db
     }
 
     private set db(idb: IDBDatabase) {
-        this._db = idb;
+        this._db = idb
         if (this._db)
-            this._db.onerror = (event) => {
-                this.emit(ERROR, event);
-            };
+            this._db.onerror = event => {
+                this.emit(ERROR, event)
+            }
     }
 
     static DB_VERSION = 17
@@ -61,34 +81,34 @@ export class Db extends JDEventSource {
     static STORE_BLOBS = "BLOBS"
     static STORE_FIRMWARE_BLOBS = "STORE_FIRMWARE_BLOBS"
     static STORE_STORAGE = "STORAGE"
-    public static create(): Promise<Db> {
-        return new Promise((resolve) => {
+    public static create(): Promise<IDBDb> {
+        return new Promise(resolve => {
             // create or upgrade database
-            const request = indexedDB.open(Db.DB_NAME, Db.DB_VERSION);
-            const db: Db = new Db();
+            const request = indexedDB.open(IDBDb.DB_NAME, IDBDb.DB_VERSION)
+            const db: IDBDb = new IDBDb()
             request.onsuccess = function () {
                 db.db = request.result
-                resolve(db);
+                resolve(db)
             }
             request.onupgradeneeded = function () {
                 console.log(`db: upgrade`)
-                db.upgrading = true;
+                db.upgrading = true
                 try {
-                    const db = request.result;
+                    const db = request.result
                     const stores = db.objectStoreNames
-                    if (!stores.contains(Db.STORE_STORAGE))
-                        db.createObjectStore(Db.STORE_STORAGE);
-                    if (!stores.contains(Db.STORE_FIRMWARE_BLOBS))
-                        db.createObjectStore(Db.STORE_FIRMWARE_BLOBS);
-                    if (!stores.contains(Db.STORE_BLOBS))
-                        db.createObjectStore(Db.STORE_BLOBS);
+                    if (!stores.contains(IDBDb.STORE_STORAGE))
+                        db.createObjectStore(IDBDb.STORE_STORAGE)
+                    if (!stores.contains(IDBDb.STORE_FIRMWARE_BLOBS))
+                        db.createObjectStore(IDBDb.STORE_FIRMWARE_BLOBS)
+                    if (!stores.contains(IDBDb.STORE_BLOBS))
+                        db.createObjectStore(IDBDb.STORE_BLOBS)
                     db.onerror = function (event) {
-                        console.log("idb error", event);
-                    };
+                        console.log("idb error", event)
+                    }
                 } finally {
-                    db.upgrading = false;
+                    db.upgrading = false
                 }
-            };
+            }
         })
     }
 
@@ -98,116 +118,186 @@ export class Db extends JDEventSource {
     }
 
     list(table: string): Promise<string[]> {
-        return this.checkUpgrading().then(() => new Promise<string[]>((resolve, reject) => {
-            try {
-                const transaction = this.db.transaction([table], "readonly");
-                const blobs = transaction.objectStore(table)
-                const request = blobs.getAllKeys()
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                request.onsuccess = (event) => resolve((event.target as any).result)
-                request.onerror = (event) => {
-                    this.emit(ERROR, event)
-                    resolve(undefined)
-                }
-            } catch (e) {
-                this.emit(ERROR, e)
-                reject(e)
-            }
-        }))
+        return this.checkUpgrading().then(
+            () =>
+                new Promise<string[]>((resolve, reject) => {
+                    try {
+                        const transaction = this.db.transaction(
+                            [table],
+                            "readonly"
+                        )
+                        const blobs = transaction.objectStore(table)
+                        const request = blobs.getAllKeys()
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        request.onsuccess = event =>
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            resolve((event.target as any).result)
+                        request.onerror = event => {
+                            this.emit(ERROR, event)
+                            resolve(undefined)
+                        }
+                    } catch (e) {
+                        this.emit(ERROR, e)
+                        reject(e)
+                    }
+                })
+        )
     }
 
     get<T>(table: string, id: string): Promise<T> {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return this.checkUpgrading().then(() => new Promise<any>((resolve, reject) => {
-            try {
-                const transaction = this.db.transaction([table], "readonly");
-                const blobs = transaction.objectStore(table)
-                const request = blobs.get(id);
+        return this.checkUpgrading().then(
+            () =>
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                request.onsuccess = (event) => resolve((event.target as any).result)
-                request.onerror = (event) => {
-                    this.emit(ERROR, event)
-                    resolve(undefined)
-                }
-            } catch (e) {
-                this.emit(ERROR, e)
-                reject(e)
-            }
-        }))
+                new Promise<any>((resolve, reject) => {
+                    try {
+                        const transaction = this.db.transaction(
+                            [table],
+                            "readonly"
+                        )
+                        const blobs = transaction.objectStore(table)
+                        const request = blobs.get(id)
+                        request.onsuccess = event =>
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            resolve((event.target as any).result)
+                        request.onerror = event => {
+                            this.emit(ERROR, event)
+                            resolve(undefined)
+                        }
+                    } catch (e) {
+                        this.emit(ERROR, e)
+                        reject(e)
+                    }
+                })
+        )
     }
 
     set<T>(table: string, id: string, data: T): Promise<void> {
-        return this.checkUpgrading()
-            .then(() => new Promise<void>((resolve, reject) => {
-                try {
-                    const transaction = this.db.transaction([table], "readwrite");
-                    const blobs = transaction.objectStore(table)
-                    const request = data !== undefined ? blobs.put(data, id) : blobs.delete(id);
-                    request.onsuccess = () => {
-                        this.emit(CHANGE)
-                        resolve()
+        return this.checkUpgrading().then(
+            () =>
+                new Promise<void>((resolve, reject) => {
+                    try {
+                        const transaction = this.db.transaction(
+                            [table],
+                            "readwrite"
+                        )
+                        const blobs = transaction.objectStore(table)
+                        const request =
+                            data !== undefined
+                                ? blobs.put(data, id)
+                                : blobs.delete(id)
+                        request.onsuccess = () => {
+                            this.emit(CHANGE)
+                            resolve()
+                        }
+                        request.onerror = event => {
+                            this.emit(ERROR, event)
+                            resolve()
+                        }
+                    } catch (e) {
+                        this.emit(ERROR, e)
+                        reject(e)
                     }
-                    request.onerror = (event) => {
-                        this.emit(ERROR, event)
-                        resolve()
-                    }
-                } catch (e) {
-                    this.emit(ERROR, e)
-                    reject(e)
-                }
-            }));
+                })
+        )
     }
 
     clear(table: string) {
-        return this.checkUpgrading()
-            .then(() => new Promise<void>((resolve, reject) => {
-                try {
-                    const transaction = this.db.transaction([table], "readwrite");
-                    const blobs = transaction.objectStore(table)
-                    const request = blobs.clear();
-                    request.onsuccess = () => {
-                        this.emit(CHANGE)
-                        resolve()
+        return this.checkUpgrading().then(
+            () =>
+                new Promise<void>((resolve, reject) => {
+                    try {
+                        const transaction = this.db.transaction(
+                            [table],
+                            "readwrite"
+                        )
+                        const blobs = transaction.objectStore(table)
+                        const request = blobs.clear()
+                        request.onsuccess = () => {
+                            this.emit(CHANGE)
+                            resolve()
+                        }
+                        request.onerror = event => {
+                            this.emit(ERROR, event)
+                            resolve()
+                        }
+                    } catch (e) {
+                        this.emit(ERROR, e)
+                        reject(e)
                     }
-                    request.onerror = (event) => {
-                        this.emit(ERROR, event)
-                        resolve()
-                    }
-                } catch (e) {
-                    this.emit(ERROR, e)
-                    reject(e)
-                }
-            }));
+                })
+        )
+    }
+}
+
+class MemoryDb extends JDEventSource implements IDb, IDbStorage {
+    private readonly tables = {
+        [IDBDb.STORE_BLOBS]: {},
+        [IDBDb.STORE_STORAGE]: {},
+        [IDBDb.STORE_FIRMWARE_BLOBS]: {},
+    }
+    readonly blobs: DbStore<Blob>
+    readonly values: DbStore<string>
+    readonly firmwares: DbStore<Blob>
+
+    constructor() {
+        super()
+        this.blobs = new DbStore<Blob>(this, IDBDb.STORE_BLOBS)
+        this.values = new DbStore<string>(this, IDBDb.STORE_STORAGE)
+        this.firmwares = new DbStore<Blob>(this, IDBDb.STORE_FIRMWARE_BLOBS)
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async get(table: string, key: string): Promise<any> {
+        return this.tables[table]?.[key]
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async set(table: string, key: string, value: any): Promise<void> {
+        const t = this.tables[table]
+        if (t) t[key] = value
+    }
+    async list(table: string): Promise<string[]> {
+        const keys = Object.keys(this.tables[table] || {})
+        return keys
+    }
+    async clear(table: string): Promise<void> {
+        const t = this.tables[table]
+        if (t) this.tables[table] = {}
     }
 }
 
 export interface DbContextProps {
-    db: Db,
+    db: IDb
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     error: any
 }
 
 const DbContext = createContext<DbContextProps>({
     db: undefined,
-    error: undefined
-});
-DbContext.displayName = "db";
+    error: undefined,
+})
+DbContext.displayName = "db"
 
-export default DbContext;
+export default DbContext
 
 // eslint-disable-next-line react/prop-types
 export const DbProvider = ({ children }) => {
-    const [db, setDb] = useState<Db>(undefined)
+    const [db, setDb] = useState<IDb>(undefined)
     const [error, setError] = useState(undefined)
     useEffectAsync(async () => {
-        try {
-            const r = await Db.create();
-            setDb(r);
+        if (Flags.storage) {
+            console.debug(`db: indexeddb`)
+            try {
+                const r = await IDBDb.create()
+                setDb(r)
+            } catch (e) {
+                setError(e)
+            }
+        } else {
+            console.debug(`db: in memory`)
+            setDb(new MemoryDb())
         }
-        catch (e) {
-            setError(e)
-        }
-    }, []);
+    }, [])
     return (
         <DbContext.Provider value={{ db, error }}>
             {children}

@@ -29,7 +29,6 @@ import {
     ThemeOptions,
 } from "@material-ui/core/styles"
 import AppContext, { DrawerType } from "./AppContext"
-import useFirmwareBlobs from "./firmware/useFirmwareBlobs"
 import { MDXProvider } from "@mdx-js/react"
 import DarkModeProvider from "./ui/DarkModeProvider"
 import DarkModeContext from "./ui/DarkModeContext"
@@ -319,7 +318,6 @@ function LayoutWithContext(props: LayoutProps) {
 
     const { darkMode } = useContext(DarkModeContext)
     const { drawerType, toolsMenu } = useContext(AppContext)
-    useFirmwareBlobs()
     const drawerOpen = drawerType !== DrawerType.None
     const theme = useTheme()
     const medium = useMediaQuery(theme.breakpoints.down(MEDIUM_BREAKPOINT))

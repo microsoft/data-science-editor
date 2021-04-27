@@ -196,15 +196,13 @@ export function useLatestReleases(slug: string, options?: GitHubApiOptions) {
             error: undefined,
             status: undefined,
         }
-    return useMemo(() => {
-        const uri = `repos/${normalizeSlug(slug)}/contents/dist`
-        const res = useFetchApi<GithubContent[]>(uri, {
-            ...(options || {}),
-            ignoreThrottled: true,
-        })
-        return {
-            ...res,
-            response: contentsToFirmwareReleases(res.response),
-        }
-    }, [slug, options?.ignoreThrottled])
+    const uri = `repos/${normalizeSlug(slug)}/contents/dist`
+    const res = useFetchApi<GithubContent[]>(uri, {
+        ...(options || {}),
+        ignoreThrottled: true,
+    })
+    return {
+        ...res,
+        response: contentsToFirmwareReleases(res.response),
+    }
 }

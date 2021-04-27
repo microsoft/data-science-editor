@@ -34,7 +34,6 @@ import {
     normalizeDeviceSpecification,
 } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import ImportImageCanvas from "../../components/ImageImportCanvas"
-import FirmwareCard from "../../components/firmware/FirmwareCard"
 // tslint:disable-next-line: no-submodule-imports
 import { Autocomplete } from "@material-ui/lab/"
 import { useFirmwareBlob } from "../../components/firmware/useFirmwareBlobs"
@@ -47,7 +46,6 @@ import Suspense from "../../components/ui/Suspense"
 import { ControlReg } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import useGridBreakpoints from "../../components/useGridBreakpoints"
-import { useDebounce } from "use-debounce"
 
 const GithubPullRequestButton = lazy(
     () => import("../../components/GithubPullRequestButton")

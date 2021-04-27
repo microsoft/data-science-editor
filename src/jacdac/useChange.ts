@@ -1,10 +1,10 @@
-import { JDNode } from "../../jacdac-ts/src/jdom/node";
 import { CHANGE } from "../../jacdac-ts/src/jdom/constants";
 import { useState, useEffect } from "react";
-import { JDEventSource } from "../../jacdac-ts/src/jdom/eventsource";
+import { IEventSource } from "../../jacdac-ts/src/jdom/eventsource";
 import useEffectAsync from "../components/useEffectAsync";
 
-export default function useChange<TNode extends JDEventSource, TValue>(node: TNode, query?: (n: TNode) => TValue, deps?: React.DependencyList): TValue {
+export default function useChange<TNode extends IEventSource, TValue>(node: TNode, query?: (n: TNode) => TValue, deps?: React.DependencyList): TValue {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [version, setVersion] = useState(node?.changeId || 0)
     const value = query ? query(node) : undefined
 
@@ -16,7 +16,7 @@ export default function useChange<TNode extends JDEventSource, TValue>(node: TNo
     return value;
 }
 
-export function useChangeAsync<TNode extends JDEventSource, TValue>(node: TNode, query?: (n: TNode) => Promise<TValue>, deps?: React.DependencyList): TValue {
+export function useChangeAsync<TNode extends IEventSource, TValue>(node: TNode, query?: (n: TNode) => Promise<TValue>, deps?: React.DependencyList): TValue {
     const [version, setVersion] = useState(node?.changeId || 0)
     const [value, setValue] = useState(undefined);
 
