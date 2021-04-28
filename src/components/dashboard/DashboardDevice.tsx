@@ -148,7 +148,10 @@ export default function DashboardDevice(
                             <DashboardServiceDetails
                                 key={"details" + service.serviceIndex}
                                 service={service}
+                                services={services}
                                 expanded={expanded}
+                                variant={variant}
+                                visible={visible}
                             />
                         ))}
                     </Grid>
