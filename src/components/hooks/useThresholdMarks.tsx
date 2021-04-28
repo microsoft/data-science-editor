@@ -7,24 +7,24 @@ import { SystemEvent, SystemReg } from "../../../jacdac-ts/src/jdom/constants";
 
 export default function useThresholdMarks(service: JDService, color?: "primary" | "secondary"): Mark[] {
     const marks: Mark[] = [];
-    const lowRegister = service.register(SystemReg.LowThreshold);
-    const [low] = useRegisterUnpackedValue<[number]>(lowRegister)
-    const highRegister = service.register(SystemReg.HighThreshold);
-    const [high] = useRegisterUnpackedValue<[number]>(highRegister)
+    const inactiveRegister = service.register(SystemReg.InactiveThreshold);
+    const [inactive] = useRegisterUnpackedValue<[number]>(inactiveRegister)
+    const activeRegister = service.register(SystemReg.ActiveThreshold);
+    const [active] = useRegisterUnpackedValue<[number]>(activeRegister)
 
-    if (low !== undefined) {
-        const lowEvent = service.event(SystemEvent.Low);
+    if (inactive !== undefined) {
+        const inactiveEvent = service.event(SystemEvent.Inactive);
         marks.push({
-            value: low,
-            label: lowEvent ? <EventBadge event={lowEvent} color={color} /> : lowRegister.name
+            value: inactive,
+            label: inactiveEvent ? <EventBadge event={inactiveEvent} color={color} /> : inactiveRegister.name
         });
     }
 
-    if (high !== undefined) {
-        const highEvent = service.event(SystemEvent.High);
+    if (active !== undefined) {
+        const activeEvent = service.event(SystemEvent.Active);
         marks.push({
-            value: high,
-            label: highEvent ? <EventBadge event={highEvent} color={color} /> : highRegister.name
+            value: active,
+            label: activeEvent ? <EventBadge event={activeEvent} color={color} /> : activeRegister.name
         });
     }
 

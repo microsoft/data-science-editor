@@ -42,7 +42,7 @@ export default function DashboardServiceWidgetItem(
                     </Grid>
                 )}
                 {expanded && server && (
-                    <Grid item xs alignContent="flex-end">
+                    <Grid item xs>
                         <IconButtonWithTooltip
                             title="Remove service"
                             onClick={handleRemove}

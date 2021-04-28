@@ -7,7 +7,6 @@ import React, {
 } from "react"
 import {
     SRV_ACCELEROMETER,
-    SRV_ANALOG_BUTTON,
     SRV_ARCADE_GAMEPAD,
     SRV_BUTTON,
     SRV_BUZZER,
@@ -90,7 +89,6 @@ const DashboardMotion = lazy(() => import("./DashboardMotion"))
 const DashboardWaterLevel = lazy(() => import("./DashboardWaterLevel"))
 const DashboardColor = lazy(() => import("./DashboardColor"))
 const DashboardSoundPlayer = lazy(() => import("./DashboardSoundPlayer"))
-const DashboardAnalogButton = lazy(() => import("./DashboardAnalogButton"))
 const DashboardSoundLevel = lazy(() => import("./DashboardSoundLevel"))
 const DashboardSoundSpectrum = lazy(() => import("./DashboardSoundSpectrum"))
 const DashboardRandomNumberGenerator = lazy(
@@ -213,9 +211,6 @@ const serviceViews: {
     [SRV_SOUND_PLAYER]: {
         component: DashboardSoundPlayer,
         weight: () => 2,
-    },
-    [SRV_ANALOG_BUTTON]: {
-        component: DashboardAnalogButton,
     },
     [SRV_SOUND_LEVEL]: {
         component: DashboardSoundLevel,

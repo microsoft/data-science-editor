@@ -50,11 +50,9 @@ export default function DashboardDevice(
     const name = useDeviceName(device)
     const services = useChange(device, () =>
         device
-            .services()
+            .services({ specification: true })
             .filter(
-                service =>
-                    ignoredServices.indexOf(service.serviceClass) < 0 &&
-                    !!service.specification
+                service => ignoredServices.indexOf(service.serviceClass) < 0
             )
     )
     const specification = useDeviceSpecification(device)
@@ -64,28 +62,34 @@ export default function DashboardDevice(
     const intersection = useIntersectionObserver(serviceGridRef)
     const visible = !!intersection?.isIntersecting
 
-    const ServiceWidgets = useCallback(() => (
-        <Grid
-            ref={serviceGridRef}
-            component="div"
-            container
-            spacing={2}
-            justify="center"
-            alignItems="flex-end"
-            alignContent="space-between"
-        >
-            {services?.map(service => (
-                <DashboardServiceWidgetItem
-                    key={service.id}
-                    service={service}
-                    expanded={expanded}
-                    services={services}
-                    variant={variant}
-                    visible={visible}
-                />
-            ))}
-        </Grid>
-    ), [dependencyId(services), expanded, variant, visible])
+    console.log({ services })
+    const ServiceWidgets = useCallback(
+        () => (
+            <Grid
+                ref={serviceGridRef}
+                component="div"
+                container
+                spacing={2}
+                justify="center"
+                alignItems="flex-end"
+                alignContent="space-between"
+            >
+                {services
+                    ?.filter(srv => expanded || !srv.isMixin)
+                    ?.map(service => (
+                        <DashboardServiceWidgetItem
+                            key={service.id}
+                            service={service}
+                            expanded={expanded}
+                            services={services}
+                            variant={variant}
+                            visible={visible}
+                        />
+                    ))}
+            </Grid>
+        ),
+        [dependencyId(services), expanded, variant, visible]
+    )
 
     if (!showHeader)
         return (
