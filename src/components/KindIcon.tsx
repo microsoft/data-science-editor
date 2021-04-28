@@ -27,6 +27,8 @@ import ConfirmationNumberIcon from "@material-ui/icons/ConfirmationNumber"
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import CheckCircleIcon from "@material-ui/icons/CheckCircle"
+// tslint:disable-next-line: no-submodule-imports match-default-export-name
+import SettingsIcon from "@material-ui/icons/Settings"
 
 import {
     PACKET_KIND_RO,
@@ -44,6 +46,7 @@ import {
     PIPE_REPORT_NODE_NAME,
     PACKET_KIND_ANNOUNCE,
     SERVICE_TEST_NODE_NAME,
+    SERVICE_MIXIN_NODE_NAME,
 } from "../../jacdac-ts/src/jdom/constants"
 import JacdacIcon from "./icons/JacdacIcon"
 
@@ -83,6 +86,9 @@ export default function KindIcon(props: { kind: string; className?: string }) {
             break
         case SERVICE_NODE_NAME:
             icon = <BubbleChartIcon className={className} />
+            break
+        case SERVICE_MIXIN_NODE_NAME:
+            icon = <SettingsIcon className={className} />
             break
         case PIPE_NODE_NAME:
             icon = <BlurLinearIcon className={className} />
