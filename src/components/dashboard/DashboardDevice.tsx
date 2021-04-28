@@ -62,7 +62,6 @@ export default function DashboardDevice(
     const intersection = useIntersectionObserver(serviceGridRef)
     const visible = !!intersection?.isIntersecting
 
-    console.log({ services })
     const ServiceWidgets = useCallback(
         () => (
             <Grid
