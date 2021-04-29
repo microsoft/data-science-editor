@@ -7,7 +7,6 @@ import React, {
 } from "react"
 import {
     SRV_ACCELEROMETER,
-    SRV_ARCADE_GAMEPAD,
     SRV_BUTTON,
     SRV_BUZZER,
     SRV_CHARACTER_SCREEN,
@@ -70,7 +69,6 @@ const DashboardCharacterScreen = lazy(
 )
 const DashboardRainGauge = lazy(() => import("./DashboardRainGauge"))
 const DashboardLEDMatrix = lazy(() => import("./DashboardLEDMatrix"))
-const DashboardArcadeGamepad = lazy(() => import("./DashboardArcadeGamepad"))
 const DashboardWindDirection = lazy(() => import("./DashboardWindDirection"))
 const DashboardMatrixKeypad = lazy(() => import("./DashboardMatrixKeypad"))
 const DashboardReflectedLight = lazy(() => import("./DashboardReflectedLight"))
@@ -164,10 +162,6 @@ const serviceViews: {
         component: DashboardLEDMatrix,
         weight: () => 3,
     },
-    [SRV_ARCADE_GAMEPAD]: {
-        component: DashboardArcadeGamepad,
-        weight: () => 3,
-    },
     [SRV_WIND_DIRECTION]: {
         component: DashboardWindDirection,
     },
@@ -194,6 +188,7 @@ const serviceViews: {
     },
     [SRV_JOYSTICK]: {
         component: DashboardJoystick,
+        weight: () => 3,
     },
     [SRV_SEVEN_SEGMENT_DISPLAY]: {
         component: DashboardSevenSegmentDisplay,
