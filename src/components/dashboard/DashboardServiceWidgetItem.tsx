@@ -15,6 +15,7 @@ export default function DashboardServiceWidgetItem(
     props: React.Attributes & DashboardServiceProps
 ): JSX.Element {
     const { service, expanded } = props
+    const { isMixin } = service
     const [instanceName] = useRegisterUnpackedValue<[number]>(
         service.register(SystemReg.InstanceName),
         props
@@ -41,7 +42,7 @@ export default function DashboardServiceWidgetItem(
                         </Typography>
                     </Grid>
                 )}
-                {expanded && server && (
+                {expanded && !isMixin && server && (
                     <Grid item xs>
                         <IconButtonWithTooltip
                             title="Remove service"
