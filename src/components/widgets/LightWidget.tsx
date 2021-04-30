@@ -294,12 +294,13 @@ function LightMatrixWidget(props: {
 }
 
 export default function LightWidget(props: {
+    server: LedPixelServer,
     variant?: "icon" | ""
     service: JDService
     widgetCount?: number
     visible?: boolean
 }) {
-    const { service } = props
+    const { service, server } = props
     const [numPixels] = useRegisterUnpackedValue<[number]>(
         service.register(LedPixelReg.NumPixels),
         props
@@ -316,7 +317,6 @@ export default function LightWidget(props: {
         service.register(LedPixelReg.NumColumns),
         props
     )
-    const server = useServiceServer<LedPixelServer>(service)
 
     if (numPixels === undefined || actualBrightness === undefined)
         return <LoadingProgress /> // nothing to render
