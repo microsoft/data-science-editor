@@ -91,7 +91,7 @@ function DeviceTreeItem(
         : dropped > 2
         ? `${dropped} pkt lost`
         : undefined
-    const labelInfo = [!!dropped && `${dropped} lost`, serviceNames]
+    const labelInfo = [dropped > 1 && `${dropped} lost`, serviceNames]
         .filter(r => !!r)
         .join(", ")
 
