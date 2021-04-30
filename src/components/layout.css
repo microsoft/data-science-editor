@@ -666,10 +666,6 @@ footer {
   margin-bottom: 1rem;
 }
 
-.gatsby-resp-image-wrapper {
-  max-width: 100% !important;
-}
-
 .prism-code {
   padding-bottom: 0.5rem !important;
   margin-bottom: 0 !important;
