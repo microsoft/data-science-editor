@@ -8,6 +8,8 @@ import MenuIcon from "@material-ui/icons/Menu"
 import AccountTreeIcon from "@material-ui/icons/AccountTree"
 import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
 import ConnectButtons from "../jacdac/ConnectButtons"
+import PacketsContext from "./PacketsContext"
+import { Badge } from "@material-ui/core"
 
 export default function DrawerToolsButtonGroup(props: {
     className?: string
@@ -17,6 +19,7 @@ export default function DrawerToolsButtonGroup(props: {
 }) {
     const { className, showToc, showCurrent, showConnect } = props
     const { drawerType, setDrawerType } = useContext(AppContext)
+    const { recording } = useContext(PacketsContext)
 
     const handleDrawer = (drawer: DrawerType) => () => setDrawerType(drawer)
     const drawers = [
@@ -34,6 +37,7 @@ export default function DrawerToolsButtonGroup(props: {
             drawer: DrawerType.Packets,
             label: "open packet console",
             icon: <HistoryIcon />,
+            badge: recording,
         },
     ]
         .filter(d => !!d)
@@ -51,7 +55,7 @@ export default function DrawerToolsButtonGroup(props: {
                     edge="start"
                 >
                     {" "}
-                    {drawer.icon}
+                    {drawer.badge ? <Badge color="error" variant="dot">{drawer.icon}</Badge> : drawer.icon}
                 </IconButtonWithTooltip>
             ))}
             {showConnect && <ConnectButtons transparent={true} full={false} />}
