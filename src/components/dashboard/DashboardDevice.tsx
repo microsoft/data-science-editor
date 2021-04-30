@@ -106,7 +106,7 @@ export default function DashboardDevice(
                     <DeviceActions
                         device={device}
                         showStop={expanded}
-                        hideIdentity={true}
+                        hideIdentity={!expanded}
                         showReset={expanded && !mobile}
                     >
                         {toggleExpanded && (
