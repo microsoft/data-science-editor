@@ -117,6 +117,7 @@ function Sliders(props: {
 export default function DashboardGyroscope(props: DashboardServiceProps) {
     const { service, visible } = props
     const register = service.register(GyroscopeReg.RotationRates)
+    useRegisterUnpackedValue<[number, number, number]>(register, props)
     const server = useServiceServer<SensorServer<[number, number, number]>>(
         service
     )
