@@ -100,8 +100,10 @@ function LightStripWidget(props: {
     const isRing = lightVariant === LedPixelVariant.Ring
 
     // paint svg via dom
-    const paint = () =>
+    const paint = () => {
+        //console.log('paint')
         setRgbLeds(pixelsRef.current, server?.colors, neocircleradius)
+    }
 
     // reposition pixels along the path
     useEffect(() => {
@@ -294,7 +296,7 @@ function LightMatrixWidget(props: {
 }
 
 export default function LightWidget(props: {
-    server: LedPixelServer,
+    server: LedPixelServer
     variant?: "icon" | ""
     service: JDService
     widgetCount?: number

@@ -117,7 +117,7 @@ function LightCommand(props: { service: JDService; expanded: boolean }) {
     const handleOffsetChange = (ev: ChangeEvent<{ value: string }>) => {
         setOffset(ev.target.value)
     }
-    const handleModeChange = (ev: ChangeEvent<{ value: string }>) => {
+    const handleModeChange = (ev: ChangeEvent<any>) => {
         const v = parseInt(ev.target.value)
         if (!isNaN(v)) setMode(v)
     }
