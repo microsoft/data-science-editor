@@ -35,7 +35,10 @@ function UpdateDeviceCard(props: { device: JDDevice }) {
         blobs?.find(
             b => firmwareInfo.firmwareIdentifier == b.firmwareIdentifier
         )
-    const update = blob && firmwareInfo && updateApplicable(firmwareInfo, blob)
+    const update =
+        blob?.version &&
+        firmwareInfo?.version &&
+        updateApplicable(firmwareInfo, blob)
     const upgrade = update && semverCmp(blob.version, firmwareInfo.version) > 0
     const flashing = useChange(device, d => d.flashing)
     const mounted = useMounted()
@@ -47,14 +50,12 @@ function UpdateDeviceCard(props: { device: JDDevice }) {
             device.flashing = true // don't refresh registers while flashing
             const updateCandidates = [firmwareInfo]
             await flashFirmwareBlob(bus, blob, updateCandidates, prog => {
-                if (mounted())
-                    setProgress(prog)
+                if (mounted()) setProgress(prog)
             })
             // trigger info
             device.firmwareInfo = undefined
         } catch (e) {
-            if (mounted())
-                setError(e)
+            if (mounted()) setError(e)
         } finally {
             device.flashing = false
         }
@@ -64,7 +65,13 @@ function UpdateDeviceCard(props: { device: JDDevice }) {
         <DeviceCard
             device={device}
             showFirmware={true}
-            content={update && <span>{upgrade ? "Upgrade" : "Downgrade"} to {blob.version}</span>}
+            content={
+                update && (
+                    <span>
+                        {upgrade ? "Upgrade" : "Downgrade"} to {blob.version}
+                    </span>
+                )
+            }
             // tslint:disable-next-line: react-this-binding-issue
             action={
                 flashing ? (
