@@ -2,7 +2,6 @@ import { Grid, Switch, Typography } from "@material-ui/core"
 import React, { useContext, useEffect, useState } from "react"
 import {
     bufferEq,
-    cryptoRandomUint32,
     delay,
     pick,
     randomRange,
@@ -37,6 +36,7 @@ import Alert from "../../components/ui/Alert"
 import JDServiceProvider from "../../../jacdac-ts/src/jdom/serviceprovider"
 import ProtocolTestServer from "../../../jacdac-ts/src/jdom/protocoltestserver"
 import { Link } from "gatsby-theme-material-ui"
+import { cryptoRandomUint32 } from "../../../jacdac-ts/src/jdom/random"
 
 function randomFieldPayload(field: JDField) {
     const { specification } = field

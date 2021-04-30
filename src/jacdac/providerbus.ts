@@ -1,12 +1,11 @@
 import { JDBus } from "../../jacdac-ts/src/jdom/bus"
-import {
-    createUSBTransport,
-    isWebUSBSupported,
-} from "../../jacdac-ts/src/jdom/usb"
+import { withPrefix } from "gatsby"
+import { isWebUSBSupported } from "../../jacdac-ts/src/jdom/transport/usb"
+import { createUSBWorkerTransport } from "../../jacdac-ts/src/jdom/transport/workertransport"
 import {
     createBluetoothTransport,
     isWebBluetoothSupported,
-} from "../../jacdac-ts/src/jdom/bluetooth"
+} from "../../jacdac-ts/src/jdom/transport/bluetooth"
 import IFrameBridgeClient from "../../jacdac-ts/src/jdom/iframebridgeclient"
 import Flags from "../../jacdac-ts/src/jdom/flags"
 import GamepadServerManager from "../../jacdac-ts/src/servers/gamepadservermanager"
@@ -24,8 +23,14 @@ function sniffQueryArguments() {
     const toolsMakecode = /\/tools\/makecode-/.test(window.location.href)
     return {
         diagnostics: params.get(`dbg`) === "1",
-        webUSB: isWebUSBSupported() && params.get(`webusb`) !== "0" && !toolsMakecode,
-        webBluetooth: isWebBluetoothSupported() && params.get(`webble`) === "1" && !toolsMakecode,
+        webUSB:
+            isWebUSBSupported() &&
+            params.get(`webusb`) !== "0" &&
+            !toolsMakecode,
+        webBluetooth:
+            isWebBluetoothSupported() &&
+            params.get(`webble`) === "1" &&
+            !toolsMakecode,
         peers: params.get(`peers`) === "1",
         parentOrigin: params.get("parentOrigin"),
         frameId: window.location.hash?.slice(1),
@@ -40,9 +45,12 @@ JacdacFlags.peers = args.peers
 
 // defeat react fast-refresh
 function createBus(): JDBus {
+    const worker =
+        typeof window !== "undefined" &&
+        new Worker(withPrefix("/jacdac-serviceworker.js"))
     const b = new JDBus(
         [
-            Flags.webUSB && createUSBTransport(),
+            Flags.webUSB && worker && createUSBWorkerTransport(worker),
             Flags.webBluetooth && createBluetoothTransport(),
         ],
         {

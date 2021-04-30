@@ -263,6 +263,11 @@ async function generateServicesJSON() {
     }
 }
 
+async function createWorkers() {
+    // copy jacdac-serviceworker.js to static
+    await fs.copy(`./jacdac-ts/dist/jacdac-serviceworker.js`, `./public/jacdac-serviceworker.js`)
+}
+
 // Implement the Gatsby API “createPages”. This is
 // called after the Gatsby bootstrap is finished so you have
 // access to any information necessary to programmatically
@@ -273,6 +278,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     await createDevicePages(graphql, actions, reporter)
     // generate JSON for Services/DTMI models
     await generateServicesJSON()
+    await createWorkers()
 }
 
 exports.onCreateNode = ({ node, actions, getNode }) => {

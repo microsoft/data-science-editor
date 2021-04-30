@@ -3,7 +3,7 @@ import { Button } from "gatsby-theme-material-ui"
 import {
     ConnectionState,
     JDTransport,
-} from "../../jacdac-ts/src/jdom/transport"
+} from "../../jacdac-ts/src/jdom/transport/transport"
 import { Badge, useMediaQuery, useTheme } from "@material-ui/core"
 import IconButtonWithProgress from "../components/ui/IconButtonWithProgress"
 import { MOBILE_BREAKPOINT } from "../components/layout"

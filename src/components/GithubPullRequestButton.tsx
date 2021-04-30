@@ -11,7 +11,8 @@ import GitHubIcon from '@material-ui/icons/GitHub';
 import ApiKeyAccordion from "./ApiKeyAccordion";
 import { useId } from "react-use-id-hook";
 import LoadingProgress from "./ui/LoadingProgress";
-import { anyRandomUint32, toHex } from "../../jacdac-ts/src/jdom/utils";
+import { toHex } from "../../jacdac-ts/src/jdom/utils";
+import { anyRandomUint32 } from "../../jacdac-ts/src/jdom/random";
 
 export interface GithubPullRequestButtonProps {
     title: string,
