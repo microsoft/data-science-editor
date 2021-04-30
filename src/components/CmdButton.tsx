@@ -1,6 +1,6 @@
 import { createStyles, darken, lighten, makeStyles, Theme } from "@material-ui/core"
 import { Button } from "gatsby-theme-material-ui"
-import React, { ReactNode, useContext, useEffect, useState } from "react"
+import React, { CSSProperties, ReactNode, useContext, useEffect, useState } from "react"
 import AppContext from "./AppContext"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import ErrorIcon from '@material-ui/icons/Error';
@@ -31,6 +31,7 @@ const useStyles = makeStyles((theme: Theme) => {
 export default function CmdButton(props: {
     onClick: () => Promise<void>,
     className?: string,
+    style?: CSSProperties,
     title?: string,
     children?: ReactNode,
     icon?: JSX.Element,
@@ -44,7 +45,7 @@ export default function CmdButton(props: {
     trackProperties?: { [key: string]: any },
     ackResetDelay?: number
 }) {
-    const { onClick, className, children, icon, title, disabled, disableReset, autoRun,
+    const { onClick, className, style, children, icon, title, disabled, disableReset, autoRun,
         trackName, trackProperties, ackResetDelay, ...others } = props
     const { setError: setAppError } = useContext(AppContext)
     const classes = useStyles()
@@ -111,6 +112,7 @@ export default function CmdButton(props: {
     if (!children && icon)
         return <IconButtonWithTooltip
             className={elClassName}
+            style={style}
             onClick={handleClick}
             aria-label={title}
             title={title}
@@ -119,6 +121,7 @@ export default function CmdButton(props: {
     else
         return <Button
             className={elClassName}
+            style={style}
             startIcon={icon}
             endIcon={statusIcon}
             onClick={handleClick}
