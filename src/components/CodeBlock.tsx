@@ -115,8 +115,6 @@ export default function CodeBlock(props: {
     const { children, className } = props
     const language = className?.replace(/language-/, "") || ""
 
-    console.log({ language, className, children })
-
     switch (language) {
         case "trace":
             return (
