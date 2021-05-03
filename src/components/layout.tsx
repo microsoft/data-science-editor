@@ -276,12 +276,6 @@ function MainAppBar(props: LayoutProps) {
                         )}
                         repo={"/github"}
                     />
-                    <FlashButton
-                        className={clsx(
-                            classes.menuButton,
-                            drawerOpen && classes.hideMobile
-                        )}
-                    />
                     <IconButtonWithTooltip
                         className={clsx(
                             classes.menuButton,
