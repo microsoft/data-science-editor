@@ -234,7 +234,7 @@ export default function PacketHeaderLayout(props: {
                 </PaperBox>
             )}
             {showCommands && !!commandFlags.length && (
-                <PaperBox key="flags">
+                <PaperBox key="commandflags">
                     <TableContainer>
                         <Table size="small">
                             <TableHead>
