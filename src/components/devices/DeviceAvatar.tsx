@@ -1,10 +1,4 @@
-import {
-    Avatar,
-    createStyles,
-    makeStyles,
-    Theme,
-    useTheme,
-} from "@material-ui/core"
+import { Avatar, createStyles, makeStyles, Theme } from "@material-ui/core"
 import React, { CSSProperties } from "react"
 import { VIRTUAL_DEVICE_NODE_NAME } from "../../../jacdac-ts/src/jdom/constants"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
@@ -40,7 +34,6 @@ export default function DeviceAvatar(props: {
 }) {
     const { device, size } = props
     const specification = useDeviceSpecification(device)
-    const theme = useTheme()
     const imageUrl = useDeviceImage(specification, "avatar")
     const name = useDeviceName(device)
     const classes = useStyles()

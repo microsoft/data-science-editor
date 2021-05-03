@@ -1,33 +1,22 @@
-import { Button, Grid } from "@material-ui/core"
-import { Alert } from "@material-ui/lab"
-import React, { useContext, useEffect, useRef, useState } from "react"
+import { Grid } from "@material-ui/core"
+import React, { useContext, useEffect, useRef } from "react"
 import {
     DEVICE_CHANGE,
     FIRMWARE_BLOBS_CHANGE,
     SRV_BOOTLOADER,
 } from "../../jacdac-ts/src/jdom/constants"
 import { JDDevice } from "../../jacdac-ts/src/jdom/device"
-import {
-    scanFirmwares,
-    flashFirmwareBlob,
-    updateApplicable,
-} from "../../jacdac-ts/src/jdom/flashing"
+import { scanFirmwares } from "../../jacdac-ts/src/jdom/flashing"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
-import CircularProgressWithLabel from "./ui/CircularProgressWithLabel"
 import DeviceCard from "./DeviceCard"
 import useGridBreakpoints from "./useGridBreakpoints"
-import AppContext from "./AppContext"
 import useChange from "../jacdac/useChange"
 import useDevices from "./hooks/useDevices"
 import useFirmwareBlobs from "./firmware/useFirmwareBlobs"
-import useMounted from "./hooks/useMounted"
-import { semverCmp } from "./semver"
+import { FlashDeviceButton } from "./firmware/FlashDeviceButton"
 
 function UpdateDeviceCard(props: { device: JDDevice }) {
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { device } = props
-    const { setError } = useContext(AppContext)
-    const [progress, setProgress] = useState(0)
     const blobs = useFirmwareBlobs()
     const firmwareInfo = useChange(device, d => d.firmwareInfo)
     const blob =
@@ -35,61 +24,13 @@ function UpdateDeviceCard(props: { device: JDDevice }) {
         blobs?.find(
             b => firmwareInfo.firmwareIdentifier == b.firmwareIdentifier
         )
-    const update =
-        blob?.version &&
-        firmwareInfo?.version &&
-        updateApplicable(firmwareInfo, blob)
-    const upgrade = update && semverCmp(blob.version, firmwareInfo.version) > 0
-    const flashing = useChange(device, d => d.flashing)
-    const mounted = useMounted()
-
-    const handleFlashing = async () => {
-        if (device.flashing) return
-        try {
-            setProgress(0)
-            device.flashing = true // don't refresh registers while flashing
-            const updateCandidates = [firmwareInfo]
-            await flashFirmwareBlob(bus, blob, updateCandidates, prog => {
-                if (mounted()) setProgress(prog)
-            })
-            // trigger info
-            device.firmwareInfo = undefined
-        } catch (e) {
-            if (mounted()) setError(e)
-        } finally {
-            device.flashing = false
-        }
-    }
 
     return (
         <DeviceCard
             device={device}
             showFirmware={true}
-            content={
-                update && (
-                    <span>
-                        {upgrade ? "Upgrade" : "Downgrade"} to {blob.version}
-                    </span>
-                )
-            }
             // tslint:disable-next-line: react-this-binding-issue
-            action={
-                flashing ? (
-                    <CircularProgressWithLabel value={progress} />
-                ) : update ? (
-                    <Button
-                        aria-label="flash firmware to device"
-                        disabled={flashing}
-                        variant="contained"
-                        color={upgrade ? "primary" : "secondary"}
-                        onClick={handleFlashing}
-                    >
-                        Flash
-                    </Button>
-                ) : firmwareInfo ? (
-                    <Alert severity="success">Up to date!</Alert>
-                ) : undefined
-            }
+            action={<FlashDeviceButton device={device} blob={blob} />}
         />
     )
 }
