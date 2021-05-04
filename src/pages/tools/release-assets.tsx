@@ -75,8 +75,27 @@ import SettingsBrightnessIcon from "@material-ui/icons/SettingsBrightness"
 import SystemUpdateAltIcon from "@material-ui/icons/SystemUpdateAlt"
 import WifiIcon from "@material-ui/icons/Wifi"
 import EditIcon from "@material-ui/icons/Edit"
+import JacdacIcon from "../../components/icons/JacdacIcon"
+import MakeCodeIcon from "../../components/icons/MakeCodeIcon"
+import EdgeImpulseIcon from "../../components/icons/EdgeImpulseIcon"
+import JupyterIcon from "../../components/icons/JupyterIcon"
+import HumidityIcon from "../../components/icons/HumidityIcon"
+import TemperatureIcon from "../../components/icons/TemperatureIcon"
 
-function IconGrid() {
+function CustomIconGrid() {
+    const icons = [<JacdacIcon />, <HumidityIcon />, <TemperatureIcon />]
+    return (
+        <Grid container spacing={1}>
+            {icons.map((icon, i) => (
+                <Grid item key={i}>
+                    {icon}
+                </Grid>
+            ))}
+        </Grid>
+    )
+}
+
+function MaterialUIIconGrid() {
     const icons = [
         <ExpandMoreIcon />,
         <CheckCircleOutlineIcon />,
@@ -169,7 +188,10 @@ export default function ReleaseAssets() {
         <>
             <h1>Release Assets</h1>
             <h2>Icons</h2>
-            <IconGrid />
+            <h3>Custom</h3>
+            <CustomIconGrid />
+            <h3>Material UI</h3>
+            <MaterialUIIconGrid />
             <h3>Service Simulators</h3>
             <p>These services has a custom simulator.</p>
             <ul>
