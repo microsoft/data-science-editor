@@ -11,12 +11,12 @@ export default function useServiceServer<T extends JDServiceServer>(
     const twin = useMemo<T>(() => createTwin?.(), [])
     useEffect(() => {
         if (!provider && twin) {
-            console.log(`set twin`, { twin, service })
+            //console.log(`set twin`, { twin, service })
             twin.twin = service
         }
         return () => {
             if (twin) {
-                console.log(`clean twin`, twin)
+                //console.log(`clean twin`, twin)
                 twin.twin = undefined
             }
         }
