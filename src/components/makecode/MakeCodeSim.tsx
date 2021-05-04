@@ -87,7 +87,7 @@ export default function Page() {
             secondary: {
                 main: "#ffc400",
             },
-            contrastThreshold: 5.1,
+            contrastThreshold: 3.1,
         },
     })
     const theme = responsiveFontSizes(rawTheme)
