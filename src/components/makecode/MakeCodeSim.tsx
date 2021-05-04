@@ -8,14 +8,13 @@ import {
 import ThemedLayout from "../../components/ui/ThemedLayout"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import { isReading, isValueOrIntensity } from "../../../jacdac-ts/src/jdom/spec"
-import {
-    strcmp,
-} from "../../../jacdac-ts/src/jdom/utils"
+import { strcmp } from "../../../jacdac-ts/src/jdom/utils"
 import MakeCodeIcon from "../icons/MakeCodeIcon"
 import Helmet from "react-helmet"
 import Dashboard from "../../components/dashboard/Dashboard"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import useChange from "../../jacdac/useChange"
+import DarkModeProvider from "../ui/DarkModeProvider"
 
 function deviceSort(l: JDDevice, r: JDDevice): number {
     const srvScore = (srv: jdspec.ServiceSpec) =>
@@ -47,10 +46,10 @@ function deviceSort(l: JDDevice, r: JDDevice): number {
 
 function Carousel() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const { iframeBridge } = bus;
-    const { deviceFilter } = iframeBridge;
+    const { iframeBridge } = bus
+    const { deviceFilter } = iframeBridge
     const extensions = useChange(iframeBridge, _ => _?.candidateExtensions)
-    const handleAdd = () => iframeBridge?.postAddExtensions();
+    const handleAdd = () => iframeBridge?.postAddExtensions()
 
     return (
         <>
@@ -87,16 +86,18 @@ export default function Page() {
             secondary: {
                 main: "#ffc400",
             },
+            type: "light",
             contrastThreshold: 3.1,
         },
     })
     const theme = responsiveFontSizes(rawTheme)
 
     return (
-        <ThemedLayout theme={theme}>
-            <Helmet>
-                <style>
-                    {`
+        <DarkModeProvider fixedMode="light">
+            <ThemedLayout theme={theme}>
+                <Helmet>
+                    <style>
+                        {`
 html {
     margin-right: 4px;
 }
@@ -105,9 +106,10 @@ html, body {
     overflow: hidden !important;
 }
 `}
-                </style>
-            </Helmet>
-            <Carousel />
-        </ThemedLayout>
+                    </style>
+                </Helmet>
+                <Carousel />
+            </ThemedLayout>
+        </DarkModeProvider>
     )
 }

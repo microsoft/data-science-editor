@@ -19,7 +19,6 @@ import MoreIcon from "@material-ui/icons/MoreVert"
 // tslint:disable-next-line: no-import-side-effect
 import "./layout.css"
 import SEO from "./seo"
-import FlashButton from "./FlashButton"
 // tslint:disable-next-line: no-submodule-imports
 import {
     createMuiTheme,
