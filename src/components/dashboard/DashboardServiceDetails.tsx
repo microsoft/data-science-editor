@@ -1,8 +1,11 @@
 import React, { useMemo } from "react"
-import { BaseReg, SystemReg } from "../../../jacdac-ts/src/jdom/constants"
+import {
+    REGISTER_OPTIONAL_POLL_COUNT,
+    SystemReg,
+} from "../../../jacdac-ts/src/jdom/constants"
 import useChange from "../../jacdac/useChange"
 import RegisterInput from "../RegisterInput"
-import { isIntegerType, isRegister } from "../../../jacdac-ts/src/jdom/spec"
+import { isRegister } from "../../../jacdac-ts/src/jdom/spec"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { Grid } from "@material-ui/core"
 import { JDRegister } from "../../../jacdac-ts/src/jdom/register"
@@ -35,7 +38,18 @@ export default function DashboardServiceDetails(props: DashboardServiceProps) {
             ids = ids
                 .filter(id => collapsedRegisters.indexOf(id) > -1)
                 .slice(0, 1)
-        return ids.map(id => service.register(id)).filter(reg => !!reg)
+        return (
+            ids
+                .map(id => service.register(id))
+                .filter(reg => !!reg)
+                // hide optional const register without values
+                .filter(
+                    reg =>
+                        !reg.specification?.optional ||
+                        (reg.specification?.kind === "const" &&
+                            reg.lastGetAttempts < REGISTER_OPTIONAL_POLL_COUNT)
+                )
+        )
     }, [specification, expanded])
 
     if (!registers?.length)
