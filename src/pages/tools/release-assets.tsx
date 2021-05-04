@@ -2,6 +2,11 @@
 // tslint:disable-file: match-default-export-name no-submodule-imports
 import React from "react"
 import { Grid } from "@material-ui/core"
+import { uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
+import serviceProviderDefinitions from "../../../jacdac-ts/src/servers/servers"
+import { hasServiceView } from "../../components/dashboard/DashboardServiceWidget"
+import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec"
+import { withPrefix } from "gatsby-link"
 
 // run scripts/collecticons.js to refresh
 
@@ -70,10 +75,6 @@ import SettingsBrightnessIcon from "@material-ui/icons/SettingsBrightness"
 import SystemUpdateAltIcon from "@material-ui/icons/SystemUpdateAlt"
 import WifiIcon from "@material-ui/icons/Wifi"
 import EditIcon from "@material-ui/icons/Edit"
-import { uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
-import serviceProviderDefinitions from "../../../jacdac-ts/src/servers/servers"
-import { hasServiceView } from "../../components/dashboard/DashboardServiceWidget"
-import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec"
 
 function IconGrid() {
     const icons = [
@@ -173,7 +174,16 @@ export default function ReleaseAssets() {
             <p>These services has a custom simulator.</p>
             <ul>
                 {services.map((srv, i) => (
-                    <li key={i}><a href={`/services/${srv.shortId}/playground`} target="review">{srv.name}</a></li>
+                    <li key={i}>
+                        <a
+                            href={withPrefix(
+                                `/services/${srv.shortId}/playground`
+                            )}
+                            target="review"
+                        >
+                            {srv.name}
+                        </a>
+                    </li>
                 ))}
             </ul>
         </>
