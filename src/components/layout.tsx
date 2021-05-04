@@ -28,21 +28,19 @@ import {
     ThemeOptions,
 } from "@material-ui/core/styles"
 import AppContext, { DrawerType } from "./AppContext"
-import { MDXProvider } from "@mdx-js/react"
 import DarkModeProvider from "./ui/DarkModeProvider"
 import DarkModeContext from "./ui/DarkModeContext"
 import Alert from "./ui/Alert"
 import GitHubButton from "./GitHubButton"
-import useMdxComponents from "./useMdxComponents"
 import Footer from "./ui/Footer"
 import DrawerToolsButtonGroup from "./DrawerToolsButtonGroup"
 import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
 import Flags from "../../jacdac-ts/src/jdom/flags"
-import ThemedLayout from "./ui/ThemedLayout"
 import OpenDashboardButton from "./buttons/OpenDashboardButton"
 import PacketStats from "./PacketStats"
 
 import Suspense from "./ui/Suspense"
+import ThemedMdxLayout from "./ui/ThemedMdxLayout"
 const WebDiagnostics = lazy(() => import("./WebDiagnostics"))
 const AppDrawer = lazy(() => import("./AppDrawer"))
 const ToolsDrawer = lazy(() => import("./ToolsDrawer"))
@@ -187,7 +185,15 @@ function LayoutWithDarkMode(props: LayoutProps) {
     const { fullScreen } = frontmatter || {
         fullScreen: makeCodeTool,
     }
-    const { darkMode, darkModeMounted } = useContext(DarkModeContext)
+    const { darkModeMounted } = useContext(DarkModeContext)
+
+    if (!darkModeMounted) return <div />
+    else if (fullScreen) return element
+    else return <LayoutWithMdx {...props} />
+}
+
+function LayoutWithMdx(props: LayoutProps) {
+    const { darkMode } = useContext(DarkModeContext)
     const isDark = darkMode === "dark"
     const themeDef: ThemeOptions = {
         palette: {
@@ -203,19 +209,11 @@ function LayoutWithDarkMode(props: LayoutProps) {
     }
     const rawTheme = createMuiTheme(themeDef)
     const theme = responsiveFontSizes(rawTheme)
-    const mdxComponents = useMdxComponents()
-
-    if (!darkModeMounted) return <div />
-
-    if (fullScreen)
-        return <MDXProvider components={mdxComponents}>{element}</MDXProvider>
 
     return (
-        <ThemedLayout theme={theme}>
-            <MDXProvider components={mdxComponents}>
-                <LayoutWithContext {...props} />
-            </MDXProvider>
-        </ThemedLayout>
+        <ThemedMdxLayout theme={theme}>
+            <LayoutWithContext {...props} />
+        </ThemedMdxLayout>
     )
 }
 
