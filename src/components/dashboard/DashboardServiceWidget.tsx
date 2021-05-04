@@ -337,6 +337,10 @@ function DefaultWidget(props: DashboardServiceProps) {
     )
 }
 
+export function hasServiceView(serviceClass: number) {
+    return !!serviceViews[serviceClass]
+}
+
 export default function DashboardServiceWidget(
     props: React.Attributes & DashboardServiceProps
 ): JSX.Element {
