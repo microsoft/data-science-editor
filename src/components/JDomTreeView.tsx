@@ -32,6 +32,7 @@ import {
     REGISTER_NODE_NAME,
     EVENT_NODE_NAME,
     SERVICE_MIXIN_NODE_NAME,
+    ControlAnnounceFlags,
 } from "../../jacdac-ts/src/jdom/constants"
 import useEventRaised from "../jacdac/useEventRaised"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
@@ -116,6 +117,7 @@ function DeviceTreeItem(
                 )
             }
         >
+            <AnnounceFlagsTreeItem device={device} />
             {services?.map(service => (
                 <ServiceTreeItem
                     key={service.id}
@@ -127,6 +129,34 @@ function DeviceTreeItem(
                 />
             ))}
         </StyledTreeItem>
+    )
+}
+
+function AnnounceFlagsTreeItem(props: { device: JDDevice }) {
+    const { device } = props
+    const { announceFlags, id } = device
+
+    const text = [
+        announceFlags & ControlAnnounceFlags.IsClient && "client",
+        announceFlags & ControlAnnounceFlags.SupportsACK && "acks",
+        announceFlags & ControlAnnounceFlags.SupportsBroadcast && "broadcast",
+        announceFlags & ControlAnnounceFlags.SupportsFrames && "frames",
+        (announceFlags & ControlAnnounceFlags.StatusLightRgbFade) ===
+            ControlAnnounceFlags.StatusLightMono && "mono status LED",
+        (announceFlags & ControlAnnounceFlags.StatusLightRgbFade) ===
+            ControlAnnounceFlags.StatusLightRgbNoFade &&
+            "rgb no fade status LED",
+        (announceFlags & ControlAnnounceFlags.StatusLightRgbFade) ===
+            ControlAnnounceFlags.StatusLightRgbFade && "rgb fade status LED",
+    ]
+        .filter(f => !!f)
+        .join(", ")
+    return (
+        <StyledTreeItem
+            nodeId={`${id}:flags`}
+            labelText={text}
+            labelInfo={`0x${announceFlags.toString(16)}`}
+        ></StyledTreeItem>
     )
 }
 
