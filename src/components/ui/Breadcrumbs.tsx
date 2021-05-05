@@ -7,7 +7,8 @@ export default function Breadcrumbs(props: { location: WindowLocation }) {
     const { location } = props
     const { pathname } = location
 
-    const parts = pathname.split(/\//g).filter(p => !!p)
+    // TODO update path in future
+    const parts = pathname.split(/\//g).filter(p => !!p && p !== "jacdac-docs")
 
     if (!parts.length) return null
     return (
