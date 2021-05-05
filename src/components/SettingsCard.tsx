@@ -153,6 +153,9 @@ export default function SettingsCard(props: {
     const values = useChangeAsync(client, c => c?.list())
     const handleClear = async () => await client?.clear()
 
+    const secrets = values?.filter(value => value.key[0] === "$")
+    const publics = values?.filter(value => value.key[0] !== "$")
+
     if (!client) return <LoadingProgress /> // wait till loaded
 
     return (
@@ -160,7 +163,13 @@ export default function SettingsCard(props: {
             <DeviceCardHeader device={service.device} showAvatar={true} />
             <CardContent>
                 <Grid container spacing={2}>
-                    {values?.map(({ key, value }) => (
+                    {mutable && <AddSettingRow client={client} key="add" />}
+                    {!!publics?.length && (
+                        <Grid item xs={12}>
+                            Settings
+                        </Grid>
+                    )}
+                    {publics?.map(({ key, value }) => (
                         <SettingRow
                             key={key}
                             name={key}
@@ -169,7 +178,20 @@ export default function SettingsCard(props: {
                             mutable={mutable}
                         />
                     ))}
-                    {mutable && <AddSettingRow client={client} key="add" />}
+                    {!!secrets?.length && (
+                        <Grid item xs={12}>
+                            Secrets
+                        </Grid>
+                    )}
+                    {secrets?.map(({ key, value }) => (
+                        <SettingRow
+                            key={key}
+                            name={key}
+                            value={value}
+                            client={client}
+                            mutable={mutable}
+                        />
+                    ))}
                 </Grid>
             </CardContent>
             {mutable && (
