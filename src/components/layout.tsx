@@ -324,26 +324,38 @@ function LayoutWithContext(props: LayoutProps) {
         [classes.contentShift]: drawerOpen,
         [classes.toolsContentShift]: toolsMenu,
     })
+
+    const InnerMainSection = () => (
+        <>
+            {!hideUnderConstruction && (
+                <Alert closeable={true} severity="warning">
+                    UNDER CONSTRUCTION - We are still working and changing the
+                    Jacdac specification. Do not build devices using Jacdac.
+                </Alert>
+            )}
+            {Flags.diagnostics && (
+                <Suspense>
+                    <WebDiagnostics />
+                </Suspense>
+            )}
+            {container && location && <Breadcrumbs location={location} />}
+            <Typography className={"markdown"} component="span">
+                {element}
+            </Typography>
+        </>
+    )
+
     const MainSection = () => (
         <>
             <main className={classes.mainContent}>
                 <div className={classes.drawerHeader} />
-                {location && <Breadcrumbs location={location} />}
-                {!hideUnderConstruction && (
-                    <Alert closeable={true} severity="warning">
-                        UNDER CONSTRUCTION - We are still working and changing
-                        the Jacdac specification. Do not build devices using
-                        Jacdac.
-                    </Alert>
+                {container ? (
+                    <Container>
+                        <InnerMainSection />
+                    </Container>
+                ) : (
+                    <InnerMainSection />
                 )}
-                {Flags.diagnostics && (
-                    <Suspense>
-                        <WebDiagnostics />
-                    </Suspense>
-                )}
-                <Typography className={"markdown"} component="span">
-                    {container ? <Container>{element}</Container> : element}
-                </Typography>
             </main>
             <Footer />
         </>

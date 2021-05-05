@@ -9,8 +9,6 @@ export default function Breadcrumbs(props: { location: WindowLocation }) {
 
     const parts = pathname.split(/\//g).filter(p => !!p)
 
-    console.log({ location, pathname, parts })
-
     if (!parts.length) return null
     return (
         <MaterialBreadcrumbs aria-label="breadcrumb">
