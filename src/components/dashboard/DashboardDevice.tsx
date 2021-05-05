@@ -12,6 +12,7 @@ import React, { useCallback, useRef } from "react"
 import {
     SRV_CTRL,
     SRV_LOGGER,
+    SRV_PROTO_TEST,
     SRV_SETTINGS,
 } from "../../../jacdac-ts/src/jdom/constants"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
@@ -33,7 +34,7 @@ import { DashboardDeviceProps } from "./Dashboard"
 import useIntersectionObserver from "../hooks/useIntersectionObserver"
 import { dependencyId } from "../../../jacdac-ts/src/jdom/node"
 
-const ignoredServices = [SRV_CTRL, SRV_LOGGER, SRV_SETTINGS]
+const ignoredServices = [SRV_CTRL, SRV_LOGGER, SRV_SETTINGS, SRV_PROTO_TEST]
 
 export default function DashboardDevice(
     props: {
