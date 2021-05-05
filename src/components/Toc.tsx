@@ -145,6 +145,11 @@ export default function Toc(props: { pagePath: string }) {
                 order: 0.5,
             },
             {
+                name: "Connector",
+                path: "/connector/",
+                order: 0.6,
+            },
+            {
                 name: "Reference",
                 path: "/reference/",
                 order: 1,
