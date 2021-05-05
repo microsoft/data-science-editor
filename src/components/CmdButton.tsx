@@ -127,7 +127,6 @@ export default function CmdButton(props: {
         if (autoRun) run()
     }, [autoRun])
 
-    console.log({ props, others })
     if (!children && icon)
         return (
             <IconButtonWithTooltip

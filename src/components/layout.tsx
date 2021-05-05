@@ -38,10 +38,12 @@ import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
 import Flags from "../../jacdac-ts/src/jdom/flags"
 import OpenDashboardButton from "./buttons/OpenDashboardButton"
 import PacketStats from "./PacketStats"
-
+import { WindowLocation } from "@reach/router"
 import Suspense from "./ui/Suspense"
 import ThemedMdxLayout from "./ui/ThemedMdxLayout"
 import { Link } from "gatsby-theme-material-ui"
+import Breadcrumbs from "./ui/Breadcrumbs"
+
 const WebDiagnostics = lazy(() => import("./WebDiagnostics"))
 const AppDrawer = lazy(() => import("./AppDrawer"))
 const ToolsDrawer = lazy(() => import("./ToolsDrawer"))
@@ -167,6 +169,7 @@ export interface LayoutProps {
         pageContext?: any
         path?: string
         uri?: string
+        location?: WindowLocation
     }
 }
 
@@ -297,7 +300,7 @@ function MainAppBar(props: LayoutProps) {
 
 function LayoutWithContext(props: LayoutProps) {
     const { element, props: pageProps } = props
-    const { pageContext, path } = pageProps
+    const { pageContext, path, location } = pageProps
     const { frontmatter } = pageContext || {}
     const makeCodeTool = /tools\/makecode-/.test(path)
     const {
@@ -325,6 +328,7 @@ function LayoutWithContext(props: LayoutProps) {
         <>
             <main className={classes.mainContent}>
                 <div className={classes.drawerHeader} />
+                {location && <Breadcrumbs location={location} />}
                 {!hideUnderConstruction && (
                     <Alert closeable={true} severity="warning">
                         UNDER CONSTRUCTION - We are still working and changing
