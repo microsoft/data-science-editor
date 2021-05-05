@@ -308,7 +308,11 @@ export default function MemberInput(props: {
                 spellCheck={false}
                 value={textValue}
                 label={label}
-                inputProps={{ ["aria-label"]: label }}
+                inputProps={{
+                    ["aria-label"]: label,
+                    ["aria-readonly"]: disabled,
+                    readOnly: disabled,
+                }}
                 helperText={helperText}
                 onChange={disabled ? undefined : handleChange}
                 required={value === undefined}
@@ -336,7 +340,11 @@ export default function MemberInput(props: {
                 spellCheck={false}
                 value={textValue}
                 label={label}
-                inputProps={{ ["aria-label"]: label, readOnly: disabled }}
+                inputProps={{
+                    "aria-label": label,
+                    "aria-readonly": disabled,
+                    readOnly: disabled,
+                }}
                 helperText={helperText}
                 onChange={disabled ? undefined : handleChange}
                 required={value === undefined}
