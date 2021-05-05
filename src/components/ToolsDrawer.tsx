@@ -25,6 +25,8 @@ import SettingsBrightnessIcon from "@material-ui/icons/SettingsBrightness"
 import SystemUpdateAltIcon from "@material-ui/icons/SystemUpdateAlt"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import WifiIcon from "@material-ui/icons/Wifi"
+// tslint:disable-next-line: no-submodule-imports match-default-export-name
+import SettingsIcon from "@material-ui/icons/Settings"
 import DarkModeContext from "./ui/DarkModeContext"
 import KindIcon from "./KindIcon"
 import MakeCodeIcon from "./icons/MakeCodeIcon"
@@ -129,6 +131,11 @@ export default function ToolsDrawer() {
             icon: <WifiIcon />,
         },
         {},
+        {
+            text: "Device Settings",
+            url: "/tools/settings",
+            icon: <SettingsIcon />,
+        },
         {
             text: "Firmware Update",
             url: "/tools/updater",
