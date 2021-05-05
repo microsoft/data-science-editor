@@ -9,7 +9,11 @@ import {
     useTheme,
 } from "@material-ui/core"
 import React, { useCallback, useRef } from "react"
-import { SRV_CTRL, SRV_LOGGER } from "../../../jacdac-ts/src/jdom/constants"
+import {
+    SRV_CTRL,
+    SRV_LOGGER,
+    SRV_SETTINGS,
+} from "../../../jacdac-ts/src/jdom/constants"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import useChange from "../../jacdac/useChange"
 import DeviceName from "../devices/DeviceName"
@@ -29,7 +33,7 @@ import { DashboardDeviceProps } from "./Dashboard"
 import useIntersectionObserver from "../hooks/useIntersectionObserver"
 import { dependencyId } from "../../../jacdac-ts/src/jdom/node"
 
-const ignoredServices = [SRV_CTRL, SRV_LOGGER]
+const ignoredServices = [SRV_CTRL, SRV_LOGGER, SRV_SETTINGS]
 
 export default function DashboardDevice(
     props: {
@@ -108,6 +112,7 @@ export default function DashboardDevice(
                         showStop={expanded}
                         hideIdentity={!expanded}
                         showReset={expanded && !mobile}
+                        showSettings={expanded && !mobile}
                     >
                         {toggleExpanded && (
                             <IconButtonWithTooltip

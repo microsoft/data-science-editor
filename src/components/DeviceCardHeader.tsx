@@ -4,9 +4,7 @@ import { CardHeader, Chip, Typography } from "@material-ui/core"
 import { Link } from "gatsby-theme-material-ui"
 import { JDDevice } from "../../jacdac-ts/src/jdom/device"
 import React from "react"
-import {
-    useRegisterUnpackedValue,
-} from "../jacdac/useRegisterValue"
+import { useRegisterUnpackedValue } from "../jacdac/useRegisterValue"
 import DeviceActions from "./DeviceActions"
 import DeviceName from "./devices/DeviceName"
 import DeviceCardMedia from "./DeviceCardMedia"
@@ -19,7 +17,9 @@ function DeviceFirmwareVersionChip(props: { device: JDDevice }) {
     const firmwareVersionRegister = device
         ?.service(0)
         ?.register(ControlReg.FirmwareVersion)
-    const [firmwareVersion] = useRegisterUnpackedValue<[string]>(firmwareVersionRegister)
+    const [firmwareVersion] = useRegisterUnpackedValue<[string]>(
+        firmwareVersionRegister
+    )
 
     return (
         (firmwareVersion && <Chip size="small" label={firmwareVersion} />) || (
@@ -46,6 +46,7 @@ export default function DeviceCardHeader(props: {
     showFirmware?: boolean
     showTemperature?: boolean
     showMedia?: boolean
+    showSettings?: boolean
 }) {
     const {
         device,
@@ -54,6 +55,7 @@ export default function DeviceCardHeader(props: {
         showMedia,
         showDeviceId,
         showAvatar,
+        showSettings,
     } = props
     const specification = useDeviceSpecification(device)
 
@@ -62,7 +64,7 @@ export default function DeviceCardHeader(props: {
             {showMedia && <DeviceCardMedia device={device} />}
             <CardHeader
                 avatar={showAvatar && <DeviceAvatar device={device} />}
-                action={<DeviceActions device={device} showReset={true} />}
+                action={<DeviceActions device={device} showReset={true} showSettings={showSettings} />}
                 title={
                     <Link
                         color="textPrimary"
