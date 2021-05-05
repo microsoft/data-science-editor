@@ -9,8 +9,8 @@ import SelectWithLabel from "../ui/SelectWithLabel"
 import useFirmwareBlobs from "./useFirmwareBlobs"
 import { FirmwareBlob } from "../../../jacdac-ts/src/jdom/flashing"
 import DeviceActions from "../DeviceActions"
-import { deviceSpecifications } from "../../../jacdac-ts/src/jdom/spec"
 import { FlashDeviceButton } from "./FlashDeviceButton"
+import { unique } from "../../../jacdac-ts/src/jdom/utils"
 
 const fwid = (fw: FirmwareBlob) =>
     fw ? `${fw.store},${fw.firmwareIdentifier},${fw.version}` : ""
@@ -23,15 +23,22 @@ function ManualFirmware() {
         ignoreSimulators: true,
     })
     const firmwares = useFirmwareBlobs()
+    const stores = unique(firmwares.map(fw => fw.store))
     const [deviceId, setDeviceId] = useState(devices?.[0]?.id)
     const [firmwareId, setFirmwareId] = useState<string>(fwid(firmwares?.[0]))
-    const devSpecs = deviceSpecifications()
+    const [store, setStore] = useState<string>(stores?.[0] || "")
 
     const handleDeviceChange = (
         ev: ChangeEvent<{ name?: string; value: unknown }>
     ) => {
         const id = ev.target.value as string
         setDeviceId(id)
+    }
+    const handleStoreChange = (
+        ev: ChangeEvent<{ name?: string; value: unknown }>
+    ) => {
+        const store = ev.target.value as string
+        setStore(store)
     }
     const handleFirmwareChange = (
         ev: ChangeEvent<{ name?: string; value: unknown }>
@@ -62,35 +69,48 @@ function ManualFirmware() {
                 )}
             </Grid>
             <Grid item xs={12}>
-                <SelectWithLabel
-                    helperText="choose a firmware"
-                    value={firmwareId}
-                    onChange={handleFirmwareChange}
-                >
-                    {firmwares?.map(fw => (
-                        <MenuItem key={fwid(fw)} value={fwid(fw)}>
-                            {`0x${fw.firmwareIdentifier.toString(16)}`}, &nbsp;
-                            {
-                                devSpecs.find(
-                                    ds =>
-                                        ds.firmwares?.indexOf(
-                                            fw.firmwareIdentifier
-                                        ) > -1
-                                )?.name
-                            }
-                            {fw.version}, &nbsp;
-                            <Typography variant="caption">
-                                {fw.store}
-                            </Typography>
-                        </MenuItem>
-                    ))}
-                </SelectWithLabel>
+                <Grid container direction="row" spacing={1}>
+                    <Grid item>
+                        <SelectWithLabel
+                            helperText="choose a firmware"
+                            value={store}
+                            onChange={handleStoreChange}
+                        >
+                            {stores?.map(store => (
+                                <MenuItem key={store} value={store}>
+                                    {store}
+                                </MenuItem>
+                            ))}
+                        </SelectWithLabel>
+                    </Grid>
+                    <Grid item>
+                        <SelectWithLabel
+                            helperText="choose a module"
+                            value={firmwareId}
+                            onChange={handleFirmwareChange}
+                        >
+                            {firmwares
+                                ?.filter(fw => fw.store === store)
+                                .map(fw => (
+                                    <MenuItem key={fwid(fw)} value={fwid(fw)}>
+                                        {fw.name} &nbsp;
+                                        <Typography variant="caption">
+                                            {fw.version}, &nbsp;
+                                            {`0x${fw.firmwareIdentifier.toString(
+                                                16
+                                            )}`}
+                                        </Typography>
+                                    </MenuItem>
+                                ))}
+                        </SelectWithLabel>
+                    </Grid>
+                </Grid>
             </Grid>
             <Grid item xs={12}>
                 <FlashDeviceButton
                     device={device}
                     blob={blob}
-                    ignoreFirmwareInfoCheck={true}
+                    ignoreFirmwareCheck={true}
                 />
             </Grid>
         </Grid>

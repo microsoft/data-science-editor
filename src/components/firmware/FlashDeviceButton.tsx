@@ -16,19 +16,19 @@ import useMounted from "./../hooks/useMounted"
 export function FlashDeviceButton(props: {
     device: JDDevice
     blob: FirmwareBlob
-    ignoreFirmwareInfoCheck?: boolean
+    ignoreFirmwareCheck?: boolean
 }) {
-    const { device, blob, ignoreFirmwareInfoCheck } = props
+    const { device, blob, ignoreFirmwareCheck } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { setError } = useContext(AppContext)
     const [progress, setProgress] = useState(0)
     const firmwareInfo = useChange(device, d => d?.firmwareInfo)
     const update =
-        ignoreFirmwareInfoCheck ||
+        ignoreFirmwareCheck ||
         (blob?.version &&
             firmwareInfo?.version &&
             updateApplicable(firmwareInfo, blob))
-    const flashing = useChange(device, d => d.flashing)
+    const flashing = useChange(device, d => !!d?.flashing)
     const missing = !device || !blob
     const disabled = flashing
     const mounted = useMounted()
@@ -39,7 +39,7 @@ export function FlashDeviceButton(props: {
             setProgress(0)
             device.flashing = true // don't refresh registers while flashing
             const updateCandidates = [firmwareInfo]
-            await flashFirmwareBlob(bus, blob, updateCandidates, prog => {
+            await flashFirmwareBlob(bus, blob, updateCandidates, ignoreFirmwareCheck, prog => {
                 if (mounted()) setProgress(prog)
             })
             // trigger info
