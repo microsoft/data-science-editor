@@ -1,5 +1,3 @@
-import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
-
 import React, { useContext } from "react"
 import { List } from "@material-ui/core"
 import PacketListItem from "./PacketListItem"
