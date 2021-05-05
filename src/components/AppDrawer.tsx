@@ -63,7 +63,7 @@ export default function AppDrawer(props: {
     const classes = useStyles()
     const { drawerType, setDrawerType, searchQuery } = useContext(AppContext)
     const open = drawerType !== DrawerType.None
-    const showSearchResults = !!searchQuery;
+    const showSearchResults = drawerType === DrawerType.Toc && !!searchQuery;
 
     const handleDrawerClose = () => {
         setDrawerType(DrawerType.None)
