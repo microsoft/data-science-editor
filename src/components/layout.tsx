@@ -41,6 +41,7 @@ import PacketStats from "./PacketStats"
 
 import Suspense from "./ui/Suspense"
 import ThemedMdxLayout from "./ui/ThemedMdxLayout"
+import { Link } from "gatsby-theme-material-ui"
 const WebDiagnostics = lazy(() => import("./WebDiagnostics"))
 const AppDrawer = lazy(() => import("./AppDrawer"))
 const ToolsDrawer = lazy(() => import("./ToolsDrawer"))
@@ -257,7 +258,9 @@ function MainAppBar(props: LayoutProps) {
                     />
                     <Hidden implementation="css" xsDown={true}>
                         <Typography component="h1" variant="h6">
-                            Jacdac{" "}
+                            <Link style={{ color: "white" }} to="/">
+                                Jacdac
+                            </Link>{" "}
                             {pageTitle &&
                                 pageTitle !== "Jacdac" &&
                                 `/ ${pageTitle}`}
