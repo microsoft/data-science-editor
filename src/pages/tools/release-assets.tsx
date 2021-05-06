@@ -81,6 +81,7 @@ import EdgeImpulseIcon from "../../components/icons/EdgeImpulseIcon"
 import JupyterIcon from "../../components/icons/JupyterIcon"
 import HumidityIcon from "../../components/icons/HumidityIcon"
 import TemperatureIcon from "../../components/icons/TemperatureIcon"
+import ForumIcon from "@material-ui/icons/Forum"
 
 function CustomIconGrid() {
     const icons = [<JacdacIcon />, <HumidityIcon />, <TemperatureIcon />]
@@ -162,6 +163,7 @@ function MaterialUIIconGrid() {
         <SystemUpdateAltIcon />,
         <WifiIcon />,
         <EditIcon />,
+        <ForumIcon />,
     ]
     return (
         <Grid container spacing={1}>

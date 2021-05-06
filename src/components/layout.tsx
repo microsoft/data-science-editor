@@ -31,7 +31,7 @@ import AppContext, { DrawerType } from "./AppContext"
 import DarkModeProvider from "./ui/DarkModeProvider"
 import DarkModeContext from "./ui/DarkModeContext"
 import Alert from "./ui/Alert"
-import GitHubButton from "./GitHubButton"
+import GitHubButton from "./buttons/GitHubButton"
 import Footer from "./ui/Footer"
 import DrawerToolsButtonGroup from "./DrawerToolsButtonGroup"
 import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
@@ -43,6 +43,7 @@ import Suspense from "./ui/Suspense"
 import ThemedMdxLayout from "./ui/ThemedMdxLayout"
 import { Link } from "gatsby-theme-material-ui"
 import Breadcrumbs from "./ui/Breadcrumbs"
+import ForumIcon from "@material-ui/icons/Forum"
 
 const WebDiagnostics = lazy(() => import("./WebDiagnostics"))
 const AppDrawer = lazy(() => import("./AppDrawer"))
@@ -272,6 +273,19 @@ function MainAppBar(props: LayoutProps) {
                     <div className={classes.grow} />
                     <PacketStats />
                     <OpenDashboardButton className={clsx(classes.menuButton)} />
+                    <IconButtonWithTooltip
+                        className={clsx(
+                            classes.menuButton,
+                            drawerOpen && classes.hideMobile
+                        )}
+                        aria-label="Discussions"
+                        title="Discussions"
+                        edge="start"
+                        color="inherit"
+                        to="https://github.com/microsoft/jacdac/discussions"
+                    >
+                        <ForumIcon />
+                    </IconButtonWithTooltip>
                     <GitHubButton
                         className={clsx(
                             classes.menuButton,
