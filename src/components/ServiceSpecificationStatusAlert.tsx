@@ -5,7 +5,7 @@ export function StatusAlert(props: { specification: jdspec.ServiceSpec }) {
     const { specification } = props;
 
     switch (specification?.status) {
-        case "deprecated": return <Alert severity="warning">Deprecated</Alert>
+        case "deprecated": return <Alert severity="error">Deprecated</Alert>
         case "experimental": return <Alert severity="info">Experimental</Alert>
         default: return null;
     }
