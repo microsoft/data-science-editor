@@ -697,3 +697,9 @@ footer {
   pointer-events: none;
   user-select: none;
 }
+
+/* bug fixes */
+/* blurry image: https://github.com/microsoft/jacdac/issues/368 */
+.gatsby-resp-image-background-image {
+  background-image: none !important;  
+}
