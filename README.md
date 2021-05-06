@@ -89,22 +89,6 @@ If the build fails after pulling, try
 yarn clean
 ```
 
-### Updating jacdac.github.io
-
-jacdac.github.io is the stable release of the jacdac web site. To integrate the changes,
-pull the changes in ``jacdac-docs/main`` into ``jacdac.github.io/main``.
-
-* create a local clone of ``jacdac.github.io``
-```
-git clone https://github.com/jacdac/jacdac.github.io
-cd jacdac.github.io
-git remote add jadcac-docs https://github.com/microsoft/jacdac-docs
-```
-
-* pull changes from jacdac-docs into jacdac.github.io
-```
-sh update.sh
-```
 ### Jacdac + MakeCode
 
 ### Local build
