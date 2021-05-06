@@ -3,16 +3,16 @@ import { Octokit } from "@octokit/core";
 import { createPullRequest } from "octokit-plugin-create-pull-request";
 import { Button, Link } from "gatsby-theme-material-ui";
 import { Dialog, DialogActions, DialogContent, DialogContentText, Grid, TextField, Typography } from "@material-ui/core";
-import AppContext from "./AppContext";
-import { GITHUB_API_KEY } from "./github";
-import useDbValue from "./useDbValue";
+import AppContext from "../AppContext";
+import { GITHUB_API_KEY } from "../github";
+import useDbValue from "../useDbValue";
 import { useSnackbar } from "notistack";
 import GitHubIcon from '@material-ui/icons/GitHub';
-import ApiKeyAccordion from "./ApiKeyAccordion";
+import ApiKeyAccordion from "../ApiKeyAccordion";
 import { useId } from "react-use-id-hook";
-import LoadingProgress from "./ui/LoadingProgress";
-import { toHex } from "../../jacdac-ts/src/jdom/utils";
-import { anyRandomUint32 } from "../../jacdac-ts/src/jdom/random";
+import LoadingProgress from "../ui/LoadingProgress";
+import { toHex } from "../../../jacdac-ts/src/jdom/utils";
+import { anyRandomUint32 } from "../../../jacdac-ts/src/jdom/random";
 
 export interface GithubPullRequestButtonProps {
     title: string,

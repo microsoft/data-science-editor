@@ -1,7 +1,7 @@
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import GitHubIcon from '@material-ui/icons/GitHub';
 import React from "react";
-import IconButtonWithTooltip from './ui/IconButtonWithTooltip';
+import IconButtonWithTooltip from '../ui/IconButtonWithTooltip';
 
 export default function GitHubButton(props: { repo: string, size?: "small" | "medium", className?: string }) {
     const { repo, size, className } = props;

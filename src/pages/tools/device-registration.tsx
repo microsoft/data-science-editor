@@ -48,7 +48,7 @@ import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import useGridBreakpoints from "../../components/useGridBreakpoints"
 
 const GithubPullRequestButton = lazy(
-    () => import("../../components/GithubPullRequestButton")
+    () => import("../../components/buttons/GithubPullRequestButton")
 )
 
 function CompanySelect(props: {
