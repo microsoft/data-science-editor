@@ -44,14 +44,20 @@ export default function Page() {
                 showDescription={true}
             />
 
-            <h2> Client frameworks</h2>
+            <h2>Embedded clients</h2>
 
             <GithubRepositoryList
                 repos={[
-                    "microsoft/jacdac-circuitpython",
                     "microsoft/pxt-jacdac",
-                    "microsoft/jacdac-ts",
+                    "microsoft/jacdac-circuitpython",
                 ]}
+                showDescription={true}
+            />
+
+            <h2>Web libraries</h2>
+
+            <GithubRepositoryList
+                repos={["microsoft/jacdac-ts"]}
                 showDescription={true}
             />
 
