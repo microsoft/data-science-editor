@@ -7,6 +7,8 @@ title: Jacdac
 
 **Jacdac** is a bus-based plug-and-play hardware and software stack for microcontrollers and their peripherals such as sensors and actuators. Jacdac is primarily designed for “modular electronics” scenarios that support rapid prototyping, creative exploration, making and learning through physical computing. Jacdac is designed to be cheap, flexible and extensible.
 
+![micro:bit V2 connected to Jacdac modules](./images/microbitadapterwithmodules.png)
+
 Jacdac includes:
 
 * a purpose-built 3-wire cable and edge connector that supports data communication and power delivery;
@@ -15,6 +17,15 @@ Jacdac includes:
 * full stack support from 8-bit microcontoller firmware to web simulators and debuggers.
 
 Try the **[dashboard](/dashboard/)** to simulate devices or visualize live data.
+
+## Connector
+
+Jacdac uses 3-pin custom-designed connectors to quickly interface development boards with sensors, LCDs, relays and more.  
+
+![A module with a Jacdac connector and cable](/images/mechanicalclickconnector.png)
+
+* Learn more about the [Jacdac connector](/connector)
+* Technical details and schematics in the [Jacdac Device Development Kit](https://github.com/microsoft/jacdac-ddk/tree/main/connector).
 
 ## Service specifications
 
@@ -31,6 +42,8 @@ The device catalog lists the registered Jacdac devices that can be automatically
 The catalog information provides vendor information, the services supported by a device, 
 firmware, and pictures. This information is also used to automtically detect, download and flash
 firmware onto devices.
+
+![A single color LED module](/images/jacdacsinglergbledmodule.png)
 
 * Browse the [device catalog](/devices/)
 * [Update](/tools/updater/) your firmware
@@ -53,9 +66,10 @@ providing connectivity to web-based tooling and services running in the web brow
 We've implemented Jacdac over **WebUSB**, which allows the Jacdac bus to reach into
 the web browser without any driver or program installation. 
 
-* use the [dashboard](/dashboard/) to display
-both physical and simulated Jacdac devices
-* explorer our set of [tools](/tools/)
+![A dashboard device with LED pixels](/images/dashboardlight.png)
+
+* use the [dashboard](/dashboard/) to display both physical and simulated devices
+* explore our set of [tools](/tools/)
 
 ## Community
 
