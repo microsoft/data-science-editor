@@ -29,7 +29,7 @@ function sniffQueryArguments() {
             !toolsMakecode,
         webBluetooth:
             isWebBluetoothSupported() &&
-            params.get(`webble`) === "1" &&
+            params.get(`webble`) !== "0" &&
             !toolsMakecode,
         peers: params.get(`peers`) === "1",
         parentOrigin: params.get("parentOrigin"),
