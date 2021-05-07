@@ -5,8 +5,11 @@ import { SRV_SETTINGS } from "../../../jacdac-ts/src/jdom/constants"
 import ConnectAlert from "../../components/alert/ConnectAlert"
 import SettingsCard from "../../components/SettingsCard"
 import useServices from "../../components/hooks/useServices"
+import useServiceProviderFromServiceClass from "../../components/hooks/useServiceProviderFromServiceClass"
 
 export default function Page() {
+    // spin up provider on demand
+    useServiceProviderFromServiceClass(SRV_SETTINGS)
     const services = useServices({ serviceClass: SRV_SETTINGS })
 
     return (
