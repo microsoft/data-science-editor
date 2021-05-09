@@ -8,6 +8,7 @@ import { IconButton } from "gatsby-theme-material-ui";
 import { arrayShuffle } from '../../jacdac-ts/src/jdom/utils';
 import { MEDIUM_BREAKPOINT, MOBILE_BREAKPOINT } from './layout';
 import useDeviceImage from './devices/useDeviceImage';
+import useMediaQueries from './hooks/useMediaQueries';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     root: {
@@ -33,10 +34,8 @@ export default function DeviceSpecificationList(props: {
     requiredServiceClasses?: number[]
 }) {
     const { count, shuffle, requiredServiceClasses, company } = props;
-    const theme = useTheme();
     const classes = useStyles();
-    const mobile = useMediaQuery(theme.breakpoints.down(MOBILE_BREAKPOINT));
-    const medium = useMediaQuery(theme.breakpoints.down(MEDIUM_BREAKPOINT));
+    const { mobile, medium } = useMediaQueries()
     const cols = mobile ? 1 : medium ? 3 : 4;
     const specs = useMemo(() => {
         let r = deviceSpecifications();

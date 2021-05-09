@@ -4,11 +4,11 @@ import {
     ConnectionState,
     JDTransport,
 } from "../../jacdac-ts/src/jdom/transport/transport"
-import { Badge, useMediaQuery, useTheme } from "@material-ui/core"
+import { Badge } from "@material-ui/core"
 import IconButtonWithProgress from "../components/ui/IconButtonWithProgress"
-import { MOBILE_BREAKPOINT } from "../components/layout"
 import TransportIcon from "../components/icons/TransportIcon"
 import useChange from "./useChange"
+import useMediaQueries from "../components/hooks/useMediaQueries"
 
 export default function ConnectButton(props: {
     full?: boolean
@@ -18,21 +18,21 @@ export default function ConnectButton(props: {
 }) {
     const { full, className, transparent, transport } = props
     const { type } = transport
-    const theme = useTheme()
-    const connectionState = useChange(transport, t => t.connectionState);
+    const connectionState = useChange(transport, t => t.connectionState)
     const showDisconnect =
         connectionState == ConnectionState.Connected ||
         connectionState == ConnectionState.Disconnecting
     const inProgress =
         connectionState == ConnectionState.Connecting ||
         connectionState == ConnectionState.Disconnecting
-    const small =
-        full !== true &&
-        (!full || useMediaQuery(theme.breakpoints.down(MOBILE_BREAKPOINT)))
+    const { mobile } = useMediaQueries()
+    const small = full !== true && (!full || mobile)
     const disabled =
         connectionState != ConnectionState.Connected &&
         connectionState != ConnectionState.Disconnected
-    const onClick = showDisconnect ? () => transport.disconnect() : () => transport.connect()
+    const onClick = showDisconnect
+        ? () => transport.disconnect()
+        : () => transport.connect()
     const icon = (
         <Badge color="primary" variant="dot" invisible={!showDisconnect}>
             <TransportIcon type={transport.type} />

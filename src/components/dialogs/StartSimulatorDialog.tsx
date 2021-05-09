@@ -9,13 +9,16 @@ import {
 import { useSnackbar } from "notistack"
 import React, { useContext, useMemo, useState } from "react"
 import { useId } from "react-use-id-hook"
-import servers, { addServiceProvider } from "../../../jacdac-ts/src/servers/servers"
+import servers, {
+    addServiceProvider,
+} from "../../../jacdac-ts/src/servers/servers"
 import { VIRTUAL_DEVICE_NODE_NAME } from "../../../jacdac-ts/src/jdom/constants"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import { delay, uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import KindIcon from "../KindIcon"
 import SelectWithLabel from "../ui/SelectWithLabel"
+import useMediaQueries from "../hooks/useMediaQueries"
 
 export default function StartSimulatorDialog(props: {
     open: boolean
@@ -29,11 +32,15 @@ export default function StartSimulatorDialog(props: {
     const [selected, setSelected] = useState("button")
     const { enqueueSnackbar } = useSnackbar()
     const providerDefinitions = useMemo(() => servers(), [])
+    const { mobile } = useMediaQueries()
 
     const handleChange = (ev: React.ChangeEvent<{ value: unknown }>) => {
         setSelected(ev.target.value as string)
     }
-    const handleClick = () => {
+    const handleCancel = () => {
+        onClose()
+    }
+    const handleStart = () => {
         const provider = providerDefinitions.find(h => h.name === selected)
         addServiceProvider(bus, provider)
         onClose()
@@ -44,10 +51,13 @@ export default function StartSimulatorDialog(props: {
             hd => hd.serviceClasses[0].toString(),
             h => h
         )
-        enqueueSnackbar(`starting ${allProviderDefinitions.length} simulators...`, {
-            variant: "info",
-            key: "startdevicehosts",
-        })
+        enqueueSnackbar(
+            `starting ${allProviderDefinitions.length} simulators...`,
+            {
+                variant: "info",
+                key: "startdevicehosts",
+            }
+        )
         onClose()
         for (const provider of allProviderDefinitions) {
             await delay(100)
@@ -61,10 +71,9 @@ export default function StartSimulatorDialog(props: {
             aria-labelledby={deviceHostLabelId}
             open={open}
             onClose={onClose}
+            fullScreen={mobile}
         >
-            <DialogTitle id={deviceHostLabelId}>
-                Start a simulator
-            </DialogTitle>
+            <DialogTitle id={deviceHostLabelId}>Start a simulator</DialogTitle>
             <DialogContent>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
@@ -86,13 +95,25 @@ export default function StartSimulatorDialog(props: {
                     </Grid>
                     <Grid item>
                         <Grid container spacing={1}>
+                            {mobile && (
+                                <Grid item>
+                                    <Button
+                                        aria-label={`cancel`}
+                                        variant="contained"
+                                        title="Cancel"
+                                        onClick={handleCancel}
+                                    >
+                                        cancel
+                                    </Button>
+                                </Grid>
+                            )}
                             <Grid item>
                                 <Button
                                     aria-label={`start ${selected}`}
                                     color="primary"
                                     variant="contained"
                                     title="Start new simulator"
-                                    onClick={handleClick}
+                                    onClick={handleStart}
                                     startIcon={
                                         <KindIcon
                                             kind={VIRTUAL_DEVICE_NODE_NAME}

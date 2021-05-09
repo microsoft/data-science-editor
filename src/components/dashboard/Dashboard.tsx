@@ -1,11 +1,10 @@
-import { Grid, useMediaQuery, useTheme } from "@material-ui/core"
+import { Grid } from "@material-ui/core"
 import React, { useContext } from "react"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import useSelectedNodes from "../../jacdac/useSelectedNodes"
 import { isReading, isValueOrIntensity } from "../../../jacdac-ts/src/jdom/spec"
 import { splitFilter, strcmp } from "../../../jacdac-ts/src/jdom/utils"
 import useDevices from "../hooks/useDevices"
-import { MOBILE_BREAKPOINT } from "../layout"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import AppContext from "../AppContext"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
@@ -18,6 +17,7 @@ import DevicesIcon from "@material-ui/icons/Devices"
 import ConnectAlert from "../alert/ConnectAlert"
 import ConnectButtons from "../../jacdac/ConnectButtons"
 import useRoleManager from "../services/useRoleManager"
+import useMediaQueries from "../hooks/useMediaQueries"
 
 function defaultDeviceSort(l: JDDevice, r: JDDevice): number {
     const srvScore = (srv: jdspec.ServiceSpec) =>
@@ -77,8 +77,7 @@ export default function Dashboard(props: DashboardProps) {
     const devices = useDevices({ announced: true, ignoreSelf: true })
         .filter(deviceFilter)
         .sort(deviceSort)
-    const theme = useTheme()
-    const mobile = useMediaQuery(theme.breakpoints.down(MOBILE_BREAKPOINT))
+    const { mobile } = useMediaQueries()
     const { selected, toggleSelected } = useSelectedNodes(mobile)
     const [hosted, physicals] = splitFilter(
         devices,

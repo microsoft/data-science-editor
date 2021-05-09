@@ -5,20 +5,18 @@ import {
     makeStyles,
     createStyles,
     ListItemText,
-    useMediaQuery,
-    useTheme,
     Box,
 } from "@material-ui/core"
 import Packet from "../../jacdac-ts/src/jdom/packet"
 import PacketsContext from "./PacketsContext"
 import PacketBadge from "./PacketBadge"
 import AppContext, { DrawerType } from "./AppContext"
-import { MOBILE_BREAKPOINT } from "./layout"
 import { META_PIPE, SRV_LOGGER } from "../../jacdac-ts/src/jdom/constants"
 import { prettyDuration } from "../../jacdac-ts/src/jdom/pretty"
 import { ellipseJoin } from "../../jacdac-ts/src/jdom/utils"
 import { jdunpack } from "../../jacdac-ts/src/jdom/pack"
 import { navigate } from "gatsby"
+import useMediaQueries from "./hooks/useMediaQueries"
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -38,8 +36,7 @@ export default function PacketListItem(props: {
     const { selectedPacket, setSelectedPacket } = useContext(PacketsContext)
     const { setDrawerType } = useContext(AppContext)
     const classes = useStyles()
-    const theme = useTheme()
-    const mobile = useMediaQuery(theme.breakpoints.down(MOBILE_BREAKPOINT))
+    const { mobile } = useMediaQueries()
     const { decoded } = packet
 
     const handleClick = () => {

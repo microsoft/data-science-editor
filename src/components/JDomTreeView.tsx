@@ -14,7 +14,6 @@ import { JDService } from "../../jacdac-ts/src/jdom/service"
 import { JDRegister } from "../../jacdac-ts/src/jdom/register"
 import useChange from "../jacdac/useChange"
 import { isRegister, isEvent } from "../../jacdac-ts/src/jdom/spec"
-import { useMediaQuery, useTheme } from "@material-ui/core"
 import {
     useRegisterHumanValue,
     useRegisterUnpackedValue,
@@ -48,8 +47,8 @@ import {
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import LaunchIcon from "@material-ui/icons/Launch"
 import AppContext, { DrawerType } from "./AppContext"
-import { MOBILE_BREAKPOINT } from "./layout"
 import useDevices from "./hooks/useDevices"
+import useMediaQueries from "./hooks/useMediaQueries"
 
 function DeviceTreeItem(
     props: { device: JDDevice } & StyledTreeViewItemProps & JDomTreeViewProps
@@ -72,8 +71,8 @@ function DeviceTreeItem(
             .services({ mixins: false })
             .filter(srv => !serviceFilter || serviceFilter(srv))
     )
-    const theme = useTheme()
-    const showActions = useMediaQuery(theme.breakpoints.up("sm"))
+    const { mobile } = useMediaQueries()
+    const showActions = !mobile
     const dropped = useChange(device.qos, qos => qos.dropped)
 
     const serviceNames = ellipseJoin(
@@ -193,8 +192,7 @@ function ServiceTreeItem(
     const reading = useRegisterHumanValue(readingRegister)
 
     const name = service.name + (instanceName ? ` ${instanceName}` : "")
-    const theme = useTheme()
-    const mobile = useMediaQuery(theme.breakpoints.down(MOBILE_BREAKPOINT))
+    const { mobile } = useMediaQueries()
     const { setDrawerType } = useContext(AppContext)
 
     const handleSpecClick = () => {

@@ -1,16 +1,15 @@
-import { Typography, useMediaQuery, useTheme } from "@material-ui/core"
+import { Typography } from "@material-ui/core"
 import React, { useContext } from "react"
 import Flags from "../../jacdac-ts/src/jdom/flags"
 import { prettySize } from "../../jacdac-ts/src/jdom/pretty"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import useChange from "../jacdac/useChange"
-import { MOBILE_BREAKPOINT } from "./layout"
+import useMediaQueries from "./hooks/useMediaQueries"
 
 export default function PacketStats() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { stats } = bus
-    const theme = useTheme()
-    const mobile = useMediaQuery(theme.breakpoints.down(MOBILE_BREAKPOINT))
+    const { mobile } = useMediaQueries()
     const current = useChange(stats, s => s.current)
     const { diagnostics } = Flags
 

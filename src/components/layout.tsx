@@ -1,12 +1,6 @@
 import React, { lazy, useContext } from "react"
 import clsx from "clsx"
-import {
-    makeStyles,
-    Container,
-    Hidden,
-    Box,
-    useMediaQuery,
-} from "@material-ui/core"
+import { makeStyles, Container, Hidden, Box } from "@material-ui/core"
 // tslint:disable-next-line: no-submodule-imports
 // tslint:disable-next-line: no-submodule-imports
 import AppBar from "@material-ui/core/AppBar"
@@ -24,7 +18,6 @@ import {
     createMuiTheme,
     responsiveFontSizes,
     createStyles,
-    useTheme,
     ThemeOptions,
 } from "@material-ui/core/styles"
 import AppContext, { DrawerType } from "./AppContext"
@@ -44,6 +37,7 @@ import ThemedMdxLayout from "./ui/ThemedMdxLayout"
 import { Link } from "gatsby-theme-material-ui"
 import Breadcrumbs from "./ui/Breadcrumbs"
 import ForumIcon from "@material-ui/icons/Forum"
+import useMediaQueries from "./hooks/useMediaQueries"
 
 const WebDiagnostics = lazy(() => import("./WebDiagnostics"))
 const AppDrawer = lazy(() => import("./AppDrawer"))
@@ -330,8 +324,7 @@ function LayoutWithContext(props: LayoutProps) {
     const { darkMode } = useContext(DarkModeContext)
     const { drawerType, toolsMenu } = useContext(AppContext)
     const drawerOpen = drawerType !== DrawerType.None
-    const theme = useTheme()
-    const medium = useMediaQuery(theme.breakpoints.down(MEDIUM_BREAKPOINT))
+    const { medium } = useMediaQueries()
     const container = !medium && !/^\/(tools\/|dashboard)/.test(path)
 
     const mainClasses = clsx(classes.content, {

@@ -5,8 +5,6 @@ import {
     Grid,
     Paper,
     Typography,
-    useMediaQuery,
-    useTheme,
 } from "@material-ui/core"
 import React, { useCallback, useRef } from "react"
 import {
@@ -28,11 +26,11 @@ import DeviceAvatar from "../devices/DeviceAvatar"
 import DashboardServiceWidgetItem from "./DashboardServiceWidgetItem"
 import DeviceActions from "../DeviceActions"
 import DashboardServiceDetails from "./DashboardServiceDetails"
-import { MOBILE_BREAKPOINT } from "../layout"
 import useDeviceName from "../devices/useDeviceName"
 import { DashboardDeviceProps } from "./Dashboard"
 import useIntersectionObserver from "../hooks/useIntersectionObserver"
 import { dependencyId } from "../../../jacdac-ts/src/jdom/node"
+import useMediaQueries from "../hooks/useMediaQueries"
 
 const ignoredServices = [SRV_CTRL, SRV_LOGGER, SRV_SETTINGS, SRV_PROTO_TEST]
 
@@ -61,8 +59,7 @@ export default function DashboardDevice(
             )
     )
     const specification = useDeviceSpecification(device)
-    const theme = useTheme()
-    const mobile = useMediaQuery(theme.breakpoints.down(MOBILE_BREAKPOINT))
+    const { mobile } = useMediaQueries()
     const serviceGridRef = useRef<HTMLDivElement>()
     const intersection = useIntersectionObserver(serviceGridRef)
     const visible = !!intersection?.isIntersecting
