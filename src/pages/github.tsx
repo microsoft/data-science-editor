@@ -64,7 +64,10 @@ export default function Page() {
             <h2> Tools & Integrations</h2>
 
             <GithubRepositoryList
-                repos={["microsoft/jupyter-jacdac"]}
+                repos={[
+                    "microsoft/node-red-contrib-jacdac",
+                    "microsoft/jupyter-jacdac",
+                ]}
                 showDescription={true}
             />
 
