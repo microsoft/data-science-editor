@@ -327,7 +327,7 @@ function LayoutWithContext(props: LayoutProps) {
     const { drawerType, toolsMenu } = useContext(AppContext)
     const drawerOpen = drawerType !== DrawerType.None
     const { medium } = useMediaQueries()
-    const container = !medium && !/^\/(tools\/|dashboard)/.test(path) // && path !== "/"
+    const container = !medium && !/^\/(tools\/\w|dashboard)/.test(path) // && path !== "/"
 
     const mainClasses = clsx(classes.content, {
         [classes.container]: container,
