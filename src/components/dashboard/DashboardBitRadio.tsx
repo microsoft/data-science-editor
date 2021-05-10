@@ -53,8 +53,9 @@ export default function DashboardBitRadio(props: DashboardServiceProps) {
 
     const text = lastEvents
         .map(ev =>
-            ev.payload.filter(v => v !== undefined && v !== "").join(",")
+            ev.payload?.filter(v => v !== undefined && v !== "").join(",")
         )
+        .filter(el => !!el)
         .join("\n")
     return <CodeBlock>{text}</CodeBlock>
 }

@@ -119,6 +119,7 @@ const useStyles = makeStyles(theme =>
             minHeight: "100vh",
             minWidth: "10rem",
             flexDirection: "column",
+            padding: theme.spacing(3),
             transition: theme.transitions.create("margin", {
                 easing: theme.transitions.easing.sharp,
                 duration: theme.transitions.duration.leavingScreen,
