@@ -6,8 +6,9 @@ import {
     Paper,
     Typography,
 } from "@material-ui/core"
-import React, { useCallback, useRef } from "react"
+import React, { useCallback, useEffect, useRef } from "react"
 import {
+    RESTART,
     SRV_CTRL,
     SRV_LOGGER,
     SRV_PROTO_TEST,
@@ -31,6 +32,7 @@ import { DashboardDeviceProps } from "./Dashboard"
 import useIntersectionObserver from "../hooks/useIntersectionObserver"
 import { dependencyId } from "../../../jacdac-ts/src/jdom/node"
 import useMediaQueries from "../hooks/useMediaQueries"
+import { useSnackbar } from "notistack"
 
 const ignoredServices = [SRV_CTRL, SRV_LOGGER, SRV_SETTINGS, SRV_PROTO_TEST]
 
@@ -63,6 +65,14 @@ export default function DashboardDevice(
     const serviceGridRef = useRef<HTMLDivElement>()
     const intersection = useIntersectionObserver(serviceGridRef)
     const visible = !!intersection?.isIntersecting
+    const { enqueueSnackbar } = useSnackbar()
+
+    useEffect(() => device?.subscribe(RESTART, () => {
+        console.debug(`${device.shortId} restarted...`)
+        enqueueSnackbar(`${device.shortId} restarted...`, {
+            variant: "warning",
+        })
+    }))
 
     const ServiceWidgets = useCallback(
         () => (
