@@ -84,7 +84,7 @@ export default function ServiceCard(props: {
                             to={
                                 linkToService && service.specification
                                     ? `/services/${service.specification.shortId}/`
-                                    : "/clients/web/jdom/service"
+                                    : "/clients/javascript/jdom/service"
                             }
                         >
                             {service.name}

@@ -70,7 +70,7 @@ export default function ServiceMarkdown(props: {
                 </li>
                 <li>
                     Using services in JavaScript with the{" "}
-                    <Link to={`/clients/web/jdom/`}>
+                    <Link to={`/clients/javascript/jdom/`}>
                         Jacdac Object Model (JDOM)
                     </Link>
                 </li>

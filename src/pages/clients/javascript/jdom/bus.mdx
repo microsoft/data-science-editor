@@ -4,10 +4,10 @@ hideToc: true
 
 # JDBus
 
-> A **bus** is the top-level [JDOM](/clients/web/jdom/) [node](/clients/web/jdom/node/).
+> A **bus** is the top-level [JDOM](/clients/javascript/jdom/) [node](/clients/javascript/jdom/node/).
 It processes the incoming and outcoming packets, 
 handles the connection to the underlying communiction transport
-and maintains a set of active [devices](/clients/web/jdom/device/) nodes.
+and maintains a set of active [devices](/clients/javascript/jdom/device/) nodes.
 
 ## WebUSB bus
 
@@ -15,6 +15,8 @@ The most common use is to create a bus that uses WebUSB to
 communicate to a physical Jacdac device. This is done with ``createUSBBus``.
 
 ```javascript
+import { createUSBBus } from "jacdac-ts"
+
 const bus = createUSBBus();
 ```
 
@@ -71,7 +73,13 @@ Catch all event raised when some change happened to the bus, whether it is a con
 or the error state changed.
 
 ```javascript
-bus.on(CHANGE, () => console.log('bus changed!'))
+import { CHANGE } from "jacdac-ts"
+
+bus.on(CHANGE, () => {
+    const devices = bus.devices()
+    for(const device of devices)
+        console.log(device)
+})
 ```
 
 ### ``CONNECTION_STATE``
