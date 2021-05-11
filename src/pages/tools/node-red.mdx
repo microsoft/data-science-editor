@@ -5,4 +5,29 @@ title: Node-Red
 
 # Node-Red
 
-Custom nodes to use Jacdac in node-red flows.
+You can leverage Jacdac from your [Node-RED](https://nodered.org) flow using https://flows.nodered.org/node/node-red-contrib-jacdac .
+
+The nodes connect to a Jacdac bus via a USB and allow to listen for events or sensor readings.
+
+## Requirements
+
+This node uses [node-usb](https://github.com/tessel/node-usb) which has specific installation requirements. If your node-red process crashes with 
+``LIBUSB_ERROR_NOT_SUPPORTED``, your USB setup is not right.
+
+## Install
+
+Use Palette manager in node-red or run the following command in your Node-RED user directory - typically ``~/.node-red``
+
+    npm install node-red-contrib-jacdac
+
+## Nodes
+
+### jacdac-event
+
+This node listens for [Jacdac events](/reference/protocol#events) and send them in the payload. 
+You can browse the [services specification catalog](/services/) to discover which events are available.
+
+### jacdac-read
+
+This node listens for [Jacdac reading](/reference/protocol#registers) and send them in the payload. 
+You can browse the [services specification catalog](/services/) (filter by ``Sensor``) to discover which reading registers are avilable are available.
