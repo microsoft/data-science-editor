@@ -46,7 +46,8 @@ export default function DashboardBitRadio(props: DashboardServiceProps) {
                         values = jdunpack(data, "u32 u32 i8 x[1] b")
                         break
                 }
-                appendMessage(values.filter(v => v !== undefined && v !== ""))
+                if (values)
+                    appendMessage(values.filter(v => v !== undefined && v !== ""))
             }),
         [service, lastEvents]
     )
