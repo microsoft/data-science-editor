@@ -4,6 +4,7 @@ title: Jacdac
 ---
 
 import Hero from "../components/home/Hero"
+import Features from "../components/home/Features"
 
 <Hero />
 
@@ -16,65 +17,5 @@ Jacdac is a bus-based plug-and-play hardware and software stack for microcontrol
 
 Try the **[dashboard](/dashboard/)** to simulate devices or visualize live data.
 
-## Connector
 
-Jacdac uses 3-pin custom-designed connectors to quickly interface development boards with sensors, LCDs, relays and more.
-
-![A module with a Jacdac connector and cable](/images/mechanicalclickconnector.png)
-
--   Learn more about the [Jacdac connector](/connector)
--   Technical details and schematics in the [Jacdac Device Development Kit](https://github.com/microsoft/jacdac-ddk/tree/main/connector).
-
-## Service specifications
-
-Jacdac services are specified to abstract the hardware device from the software implementation.
-The services are comprised of registers, commands and events, along with precise data layout information
-for each packet.
-
--   Browse the [service catalog](/services/)
--   Learn more about [service specifications](/reference/service-specification/)
-
-## Device catalog & firmware updates
-
-The device catalog lists the registered Jacdac devices that can be automatically detected on the bus.
-The catalog information provides vendor information, the services supported by a device,
-firmware, and pictures. This information is also used to automtically detect, download and flash
-firmware onto devices.
-
-![A single color LED module](/images/jacdacsinglergbledmodule.png)
-
--   Browse the [device catalog](/devices/)
--   [Update](/tools/updater/) your firmware
--   Learn more about [device definitions](/reference/device-definition/)
-
-## Protocol overview
-
-Jacdac devices communicate using _packets_ over a _bus_, where each _device_ can advertise itself
-and the set of _services_ it provides.
-A _service_ provides _registers_, _events_ and _commands_ to communicate with other devices.
-Jacdac packets are sent serially among physical devices on the Jacdac bus
-and may also be sent over WebUSB/WebBLE,
-providing connectivity to web-based tooling and services running in the web browser
-(see the connect icon at the top of this page).
-
--   Learn more about the [protocol specification](/reference/protocol/)
-
-## Web-based simulators and tools
-
-We've implemented Jacdac over **WebUSB**, which allows the Jacdac bus to reach into
-the web browser without any driver or program installation.
-
-![A dashboard device with LED pixels](/images/dashboardlight.png)
-
--   use the [dashboard](/dashboard/) to display both physical and simulated devices
--   explore our set of [tools](/tools/)
--   [TypeScript/JavaScript library](/clients/web) to integrate Jacdac in your own web sites
-
-## Community
-
-Jacdac is open source and
-most of the commmunication happens through our GitHub project.
-
--   [start a discussion](https://github.com/microsoft/jacdac/discussions).
--   [file an issue](https://github.com/microsoft/jacdac/issues).
--   [GitHub repositories](/github/)
+<Features />
