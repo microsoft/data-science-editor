@@ -4,7 +4,6 @@ import { Box, CardHeader, Typography } from "@material-ui/core"
 import { useLatestRelease, useRepository } from "./github"
 import GitHubIcon from "@material-ui/icons/GitHub"
 import { Link } from "gatsby-theme-material-ui"
-import { inIFrame } from "../../jacdac-ts/src/jdom/iframeclient"
 import LoadingProgress from "./ui/LoadingProgress"
 
 export default function GithubRepositoryCardHeader(props: {
@@ -14,8 +13,7 @@ export default function GithubRepositoryCardHeader(props: {
     const { slug, showRelease } = props
     const { response: repo, loading: repoLoading, status } = useRepository(slug)
     const { response: release } = useLatestRelease(showRelease && slug)
-    const iframe = inIFrame()
-    const target = iframe ? "_blank" : ""
+    const target = "_blank" // always bounce out to github
 
     const title = repo ? (
         <>
