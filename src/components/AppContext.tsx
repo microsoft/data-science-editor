@@ -77,6 +77,8 @@ export const AppProvider = ({ children }) => {
         const msg = e?.message || e + ""
         enqueueSnackbar(msg, {
             variant: "error",
+            preventDuplicate: true,
+            autoHideDuration: 4000,
         })
     }
 
