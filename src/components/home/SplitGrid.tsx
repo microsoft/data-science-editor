@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react"
-import { Box, Grid, Typography } from "@material-ui/core"
+import { Box, Grid, GridSize, Typography } from "@material-ui/core"
 import { Button } from "gatsby-theme-material-ui"
 
 export default function SplitGrid(props: {
@@ -11,7 +11,7 @@ export default function SplitGrid(props: {
     buttonText?: string
     buttonUrl?: string
     image: ReactNode
-    imageColumns?: number
+    imageColumns?: GridSize
 }) {
     const { right, title, subtitle, description, image, caption, buttonText, buttonUrl, imageColumns = 5 } = props
 
@@ -64,8 +64,8 @@ export default function SplitGrid(props: {
             <Grid
                 container
                 direction="row"
-                alignContent="center"
-                alignItems="center"
+                alignContent="flex-start"
+                alignItems="flex-start"
                 spacing={2}
             >
                 {right ? imageItem : textItem}
