@@ -63,7 +63,7 @@ export default function Features() {
             description={"Integrate Jacdac into your web site or node.js application using our TypeScript/JavaScript npm library."}
             buttonUrl="/clients/web"
             imageColumns={3}
-            image={<StaticImage src={"./html5.svg"} alt="HTML5 logo" />}
+            image={<StaticImage src={"./html5.png"} alt="HTML5 logo" />}
         />
     </>
 }
