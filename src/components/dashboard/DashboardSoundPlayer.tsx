@@ -43,11 +43,17 @@ export default function DashboardSoundPlayer(props: DashboardServiceProps) {
     const sounds = useChangeAsync(
         service,
         async () => {
-            const sounds = await service.receiveWithInPipe<[number, string]>(
-                SoundPlayerCmd.ListSounds,
-                "u32 s"
-            )
-            return sounds
+            try {
+                const sounds = await service.receiveWithInPipe<[number, string]>(
+                    SoundPlayerCmd.ListSounds,
+                    "u32 s",
+                    1000
+                )
+                return sounds
+            } catch (e) {
+                console.error(e)
+                return []
+            }
         },
         [service]
     )
