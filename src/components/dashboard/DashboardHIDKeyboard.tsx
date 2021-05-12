@@ -1,5 +1,5 @@
 import React, { useState, KeyboardEvent } from "react"
-import { Grid, Typography } from "@material-ui/core"
+import { createStyles, Grid, makeStyles, Typography } from "@material-ui/core"
 import { HidKeyboardAction, HidKeyboardCmd, HidKeyboardModifiers } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import SendIcon from '@material-ui/icons/Send';
@@ -60,10 +60,23 @@ const selectors = {
 }
 const reverseSelectors: { [index: number]: string } = Object.keys(selectors).reduce((r, key) => { r[selectors[key]] = key; return r }, {})
 
+const useStyles = makeStyles((theme) => createStyles({
+    capture: {
+        cursor: "pointer",
+        "&:hover": {
+            borderColor: theme.palette.primary.main,
+        },
+        "&:focus": {
+            borderColor: theme.palette.action.active,
+        }
+    }
+}));
+
 export default function DashboardBuzzer(props: DashboardServiceProps) {
     const { service } = props
     const [selector, setSelector] = useState(0)
     const [modifiers, setModifiers] = useState(HidKeyboardModifiers.None)
+    const classes = useStyles()
 
     console.log({ selector, modifiers: modifiers.toString(16) })
 
@@ -118,6 +131,7 @@ export default function DashboardBuzzer(props: DashboardServiceProps) {
     return <Grid container spacing={1}>
         <Grid item>
             <pre
+                className={classes.capture}
                 tabIndex={0}
                 onKeyDown={handleKeyDown}
                 onKeyUp={handleKeyUp}
