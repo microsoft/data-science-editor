@@ -7,6 +7,9 @@ import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
 import CmdButton from "../CmdButton"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip";
 import ClearIcon from "@material-ui/icons/Clear"
+import useServiceServer from "../hooks/useServiceServer";
+import HIDKeyboardServer from "../../../jacdac-ts/src/servers/hidkeyboardserver";
+import useChange from "../../jacdac/useChange";
 
 const selectors = {
     "a": 0x04,
@@ -72,10 +75,28 @@ const useStyles = makeStyles((theme) => createStyles({
     }
 }));
 
+function renderKey(selector: number, modifiers: HidKeyboardModifiers) {
+    const values = []
+    if ((modifiers & HidKeyboardModifiers.LeftAlt) === HidKeyboardModifiers.LeftAlt) values.push("Alt")
+    if ((modifiers & HidKeyboardModifiers.LeftControl) === HidKeyboardModifiers.LeftControl) values.push("Ctrl")
+    if ((modifiers & HidKeyboardModifiers.LeftGUI) === HidKeyboardModifiers.LeftGUI) values.push("Cmd")
+    if ((modifiers & HidKeyboardModifiers.LeftShift) === HidKeyboardModifiers.LeftShift) values.push("Shift")
+    if ((modifiers & HidKeyboardModifiers.RightAlt) === HidKeyboardModifiers.RightAlt) values.push("Right Alt")
+    if ((modifiers & HidKeyboardModifiers.RightControl) === HidKeyboardModifiers.RightControl) values.push("Right Ctrl")
+    if ((modifiers & HidKeyboardModifiers.RightGUI) === HidKeyboardModifiers.RightGUI) values.push("Right Cmd")
+    if ((modifiers & HidKeyboardModifiers.RightShift) === HidKeyboardModifiers.RightShift) values.push("Right Shift")
+
+    values.push(reverseSelectors[selector])
+
+    const value = values.filter(v => !!v).join(" + ")
+    return value
+}
+
 export default function DashboardBuzzer(props: DashboardServiceProps) {
     const { service } = props
     const [selector, setSelector] = useState(0)
     const [modifiers, setModifiers] = useState(HidKeyboardModifiers.None)
+    const server = useServiceServer<HIDKeyboardServer>(service)
     const classes = useStyles()
 
     console.log({ selector, modifiers: modifiers.toString(16) })
@@ -102,9 +123,10 @@ export default function DashboardBuzzer(props: DashboardServiceProps) {
         ev.preventDefault()
     }
 
-    const handleClear = () => {
+    const handleClear = async () => {
         setSelector(0)
         setModifiers(HidKeyboardModifiers.None)
+        await service.sendCmdAsync(HidKeyboardCmd.Clear)
     }
 
     const handleClick = async () => {
@@ -113,19 +135,8 @@ export default function DashboardBuzzer(props: DashboardServiceProps) {
         await service.sendCmdAsync(HidKeyboardCmd.Key, data)
     }
 
-    const values = []
-    if ((modifiers & HidKeyboardModifiers.LeftAlt) === HidKeyboardModifiers.LeftAlt) values.push("Alt")
-    if ((modifiers & HidKeyboardModifiers.LeftControl) === HidKeyboardModifiers.LeftControl) values.push("Ctrl")
-    if ((modifiers & HidKeyboardModifiers.LeftGUI) === HidKeyboardModifiers.LeftGUI) values.push("Cmd")
-    if ((modifiers & HidKeyboardModifiers.LeftShift) === HidKeyboardModifiers.LeftShift) values.push("Shift")
-    if ((modifiers & HidKeyboardModifiers.RightAlt) === HidKeyboardModifiers.RightAlt) values.push("Right Alt")
-    if ((modifiers & HidKeyboardModifiers.RightControl) === HidKeyboardModifiers.RightControl) values.push("Right Ctrl")
-    if ((modifiers & HidKeyboardModifiers.RightGUI) === HidKeyboardModifiers.RightGUI) values.push("Right Cmd")
-    if ((modifiers & HidKeyboardModifiers.RightShift) === HidKeyboardModifiers.RightShift) values.push("Right Shift")
-
-    values.push(reverseSelectors[selector])
-
-    const value = values.filter(v => !!v).join(" + ")
+    const serverValue = useChange(server, _ => _?.lastKey?.map(key => renderKey(key[0], key[1]))?.join("\n"))
+    const value = renderKey(selector, modifiers)
     const disabled = !selector
     const clearDisabled = !selector && !modifiers
 
@@ -142,8 +153,13 @@ export default function DashboardBuzzer(props: DashboardServiceProps) {
             <Typography variant="caption">select this element and enter your key combo (not all keys supported)</Typography>
         </Grid>
         <Grid item xs>
-            <IconButtonWithTooltip title="clear keys" disabled={clearDisabled} onClick={handleClear}><ClearIcon /></IconButtonWithTooltip>
-            <CmdButton icon={<SendIcon />} disabled={disabled} onClick={handleClick} title="send keys" />
+            <CmdButton title="clear keys" disabled={clearDisabled} onClick={handleClear} icon={<ClearIcon />} />
+            <CmdButton title="send keys" disabled={disabled} onClick={handleClick} icon={<SendIcon />} />
         </Grid>
+        {server && <Grid item xs={12}>
+            <Typography variant="caption" component="pre">
+                key status: {serverValue || "no keys"}
+            </Typography>
+        </Grid>}
     </Grid>
 }
