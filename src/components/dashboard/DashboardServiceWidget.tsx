@@ -236,7 +236,7 @@ const serviceViews: {
     },
     [SRV_HID_KEYBOARD]: {
         component: DashboardHIDKeyboard,
-        weight: () => 2
+        weight: () => 3
     }
 }
 
