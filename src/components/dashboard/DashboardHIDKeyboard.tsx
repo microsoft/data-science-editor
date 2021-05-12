@@ -127,6 +127,7 @@ export default function DashboardBuzzer(props: DashboardServiceProps) {
 
     const value = values.filter(v => !!v).join(" + ")
     const disabled = !selector
+    const clearDisabled = !selector && !modifiers
 
     return <Grid container spacing={1}>
         <Grid item>
@@ -141,9 +142,7 @@ export default function DashboardBuzzer(props: DashboardServiceProps) {
             <Typography variant="caption">select this element and enter your key combo (not all keys supported)</Typography>
         </Grid>
         <Grid item xs>
-            <IconButtonWithTooltip title="clear keys" onClick={handleClear}><ClearIcon /></IconButtonWithTooltip>
-        </Grid>
-        <Grid item xs>
+            <IconButtonWithTooltip title="clear keys" disabled={clearDisabled} onClick={handleClear}><ClearIcon /></IconButtonWithTooltip>
             <CmdButton icon={<SendIcon />} disabled={disabled} onClick={handleClick} title="send keys" />
         </Grid>
     </Grid>
