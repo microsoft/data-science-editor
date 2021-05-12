@@ -1,4 +1,4 @@
-import React, { useState, KeyboardEvent } from "react"
+import React, { useState, KeyboardEvent, useRef } from "react"
 import { createStyles, Grid, makeStyles, Typography } from "@material-ui/core"
 import { HidKeyboardAction, HidKeyboardCmd, HidKeyboardModifiers } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
@@ -97,12 +97,13 @@ export default function DashboardHIDKeyboard(props: DashboardServiceProps) {
     const [modifiers, setModifiers] = useState(HidKeyboardModifiers.None)
     const server = useServiceServer<HIDKeyboardServer>(service)
     const classes = useStyles()
+    const inputButtonRef = useRef<HTMLInputElement>()
 
     const handleKeyDown = (ev: KeyboardEvent<HTMLInputElement>) => {
         ev.stopPropagation()
         ev.preventDefault()
         const { altKey, ctrlKey, shiftKey, metaKey, key } = ev
-        console.log({ key })
+        console.log({ altKey, ctrlKey, shiftKey, metaKey, key })
 
         const newSelector = selectors[key.toLowerCase()] || 0
         const newModifiers = modifiers |
@@ -121,13 +122,14 @@ export default function DashboardHIDKeyboard(props: DashboardServiceProps) {
     }
 
     const handleClear = async () => {
+        inputButtonRef.current.value = ""
         setSelector(0)
         setModifiers(HidKeyboardModifiers.None)
         await service.sendCmdAsync(HidKeyboardCmd.Clear)
     }
 
     const handleClick = async () => {
-        console.log('send')
+        inputButtonRef.current.value = ""
         await delay(100)
         const unpacked: [([number, HidKeyboardModifiers, HidKeyboardAction])[]] = [[[selector, modifiers, HidKeyboardAction.Press]]]
         const data = jdpack("r: u16 u8 u8", unpacked)
@@ -152,7 +154,7 @@ export default function DashboardHIDKeyboard(props: DashboardServiceProps) {
             <Typography variant="caption">focus and type your key combo (not all keys supported)</Typography>
         </Grid>
         <Grid item xs>
-            <input onFocus={handleClick} disabled={disabled} placeholder="focus to send" type="text" />
+            <input ref={inputButtonRef} onFocus={handleClick} disabled={disabled} placeholder="focus to send" type="text" />
             <CmdButton title="clear keys" disabled={clearDisabled} onClick={handleClear} icon={<ClearIcon />} />
         </Grid>
         {server && <Grid item xs={12}>
