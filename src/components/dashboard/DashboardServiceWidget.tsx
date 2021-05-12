@@ -40,6 +40,7 @@ import {
     SRV_WIND_DIRECTION,
     SRV_BIT_RADIO,
     SystemReg,
+    SRV_HID_KEYBOARD,
 } from "../../../jacdac-ts/src/jdom/constants"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { isRegister } from "../../../jacdac-ts/src/jdom/spec"
@@ -96,6 +97,7 @@ const DashboardCompass = lazy(() => import("./DashboardCompass"))
 const DashboardGyroscope = lazy(() => import("./DashboardGyroscope"))
 const DashboardSolenoid = lazy(() => import("./DashboardSolenoid"))
 const DashboardBitRadio = lazy(() => import("./DashboardBitRadio"))
+const DashboardHIDKeyboard = lazy(() => import("./DashboardHIDKeyboard"))
 
 export interface DashboardServiceProps {
     service: JDService
@@ -232,6 +234,10 @@ const serviceViews: {
         component: DashboardBitRadio,
         weight: () => 6,
     },
+    [SRV_HID_KEYBOARD]: {
+        component: DashboardHIDKeyboard,
+        weight: () => 2
+    }
 }
 
 const collapsedRegisters = [
