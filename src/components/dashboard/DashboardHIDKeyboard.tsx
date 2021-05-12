@@ -2,13 +2,13 @@ import React, { useState, KeyboardEvent } from "react"
 import { createStyles, Grid, makeStyles, Typography } from "@material-ui/core"
 import { HidKeyboardAction, HidKeyboardCmd, HidKeyboardModifiers } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
-import SendIcon from '@material-ui/icons/Send';
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
 import CmdButton from "../CmdButton"
 import ClearIcon from "@material-ui/icons/Clear"
 import useServiceServer from "../hooks/useServiceServer";
 import HIDKeyboardServer from "../../../jacdac-ts/src/servers/hidkeyboardserver";
 import useChange from "../../jacdac/useChange";
+import { delay } from "../../../jacdac-ts/src/jdom/utils"
 
 const selectors = {
     "a": 0x04,
@@ -129,6 +129,8 @@ export default function DashboardHIDKeyboard(props: DashboardServiceProps) {
     }
 
     const handleClick = async () => {
+        console.log('send')
+        await delay(100)
         const unpacked: [([number, HidKeyboardModifiers, HidKeyboardAction])[]] = [[[selector, modifiers, HidKeyboardAction.Press]]]
         const data = jdpack("r: u16 u8 u8", unpacked)
         await service.sendCmdAsync(HidKeyboardCmd.Key, data)
@@ -152,8 +154,8 @@ export default function DashboardHIDKeyboard(props: DashboardServiceProps) {
             <Typography variant="caption">focus and type your key combo (not all keys supported)</Typography>
         </Grid>
         <Grid item xs>
+            <input onFocus={handleClick} disabled={disabled} placeholder="focus to send" type="text" />
             <CmdButton title="clear keys" disabled={clearDisabled} onClick={handleClear} icon={<ClearIcon />} />
-            <CmdButton title="send keys" disabled={disabled} onClick={handleClick} icon={<SendIcon />} />
         </Grid>
         {server && <Grid item xs={12}>
             <Typography variant="caption" component="pre">
