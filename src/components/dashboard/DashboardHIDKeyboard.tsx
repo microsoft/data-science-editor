@@ -5,7 +5,6 @@ import { DashboardServiceProps } from "./DashboardServiceWidget"
 import SendIcon from '@material-ui/icons/Send';
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
 import CmdButton from "../CmdButton"
-import IconButtonWithTooltip from "../ui/IconButtonWithTooltip";
 import ClearIcon from "@material-ui/icons/Clear"
 import useServiceServer from "../hooks/useServiceServer";
 import HIDKeyboardServer from "../../../jacdac-ts/src/servers/hidkeyboardserver";
@@ -92,7 +91,7 @@ function renderKey(selector: number, modifiers: HidKeyboardModifiers) {
     return value
 }
 
-export default function DashboardBuzzer(props: DashboardServiceProps) {
+export default function DashboardHIDKeyboard(props: DashboardServiceProps) {
     const { service } = props
     const [selector, setSelector] = useState(0)
     const [modifiers, setModifiers] = useState(HidKeyboardModifiers.None)
@@ -150,7 +149,7 @@ export default function DashboardBuzzer(props: DashboardServiceProps) {
             >
                 {value || "..."}
             </pre>
-            <Typography variant="caption">select this element and enter your key combo (not all keys supported)</Typography>
+            <Typography variant="caption">focus and type your key combo (not all keys supported)</Typography>
         </Grid>
         <Grid item xs>
             <CmdButton title="clear keys" disabled={clearDisabled} onClick={handleClear} icon={<ClearIcon />} />
