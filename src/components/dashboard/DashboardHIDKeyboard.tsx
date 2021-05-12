@@ -129,7 +129,6 @@ export default function DashboardHIDKeyboard(props: DashboardServiceProps) {
     }
 
     const handleClick = async () => {
-        inputButtonRef.current.value = ""
         await delay(100)
         const unpacked: [([number, HidKeyboardModifiers, HidKeyboardAction])[]] = [[[selector, modifiers, HidKeyboardAction.Press]]]
         const data = jdpack("r: u16 u8 u8", unpacked)
