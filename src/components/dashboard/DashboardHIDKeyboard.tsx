@@ -46,6 +46,17 @@ const selectors = {
     "8": 0x25,
     "9": 0x26,
     "0": 0x27,
+
+    "enter": 0x28,
+    "escape": 0x29,
+    "backspace": 0x2a,
+    "tab": 0x2b,
+    " ": 0x2c,
+    "-": 0x2d,
+    "_": 0x2d,
+    "=": 0x2e,
+    "+": 0x2e,
+    // TODO entire list
 }
 const reverseSelectors: { [index: number]: string } = Object.keys(selectors).reduce((r, key) => { r[selectors[key]] = key; return r }, {})
 
@@ -59,8 +70,8 @@ export default function DashboardBuzzer(props: DashboardServiceProps) {
     const handleKeyDown = (ev: KeyboardEvent<HTMLInputElement>) => {
         ev.stopPropagation()
         ev.preventDefault()
-        console.log({ ev })
         const { altKey, ctrlKey, shiftKey, metaKey, key } = ev
+        console.log({ key })
 
         const newSelector = selectors[key.toLowerCase()] || 0
         const newModifiers = modifiers |
