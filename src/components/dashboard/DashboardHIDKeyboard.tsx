@@ -98,8 +98,6 @@ export default function DashboardHIDKeyboard(props: DashboardServiceProps) {
     const server = useServiceServer<HIDKeyboardServer>(service)
     const classes = useStyles()
 
-    console.log({ selector, modifiers: modifiers.toString(16) })
-
     const handleKeyDown = (ev: KeyboardEvent<HTMLInputElement>) => {
         ev.stopPropagation()
         ev.preventDefault()
