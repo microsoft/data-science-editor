@@ -62,6 +62,8 @@ export default function PacketInspector() {
                 packet={packet}
                 showHex={true}
                 showDecoded={true}
+                showJSON={true}
+                showUnpacked={true}
             />
             {ack && (
                 <>
