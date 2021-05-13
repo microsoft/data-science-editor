@@ -47,7 +47,7 @@ function deviceSort(l: JDDevice, r: JDDevice): number {
 function Carousel() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { iframeBridge } = bus
-    const { deviceFilter } = iframeBridge
+    const { deviceFilter, serviceFilter } = iframeBridge
     const extensions = useChange(iframeBridge, _ => _?.candidateExtensions)
     const handleAdd = () => iframeBridge?.postAddExtensions()
 
@@ -57,6 +57,7 @@ function Carousel() {
                 showHeader={false}
                 deviceSort={deviceSort}
                 deviceFilter={deviceFilter}
+                serviceFilter={serviceFilter}
                 showStartSimulators={false}
             />
             {!!extensions?.length && (

@@ -18,6 +18,7 @@ import ConnectAlert from "../alert/ConnectAlert"
 import ConnectButtons from "../../jacdac/ConnectButtons"
 import useRoleManager from "../services/useRoleManager"
 import useMediaQueries from "../hooks/useMediaQueries"
+import { JDService } from "../../../jacdac-ts/src/jdom/service"
 
 function defaultDeviceSort(l: JDDevice, r: JDDevice): number {
     const srvScore = (srv: jdspec.ServiceSpec) =>
@@ -55,6 +56,7 @@ function defaultDeviceFilter(d: JDDevice): boolean {
 export interface DashboardDeviceProps {
     showHeader?: boolean
     showAvatar?: boolean
+    serviceFilter?: (srv: JDService) => boolean
 }
 
 export interface DashboardProps extends DashboardDeviceProps {

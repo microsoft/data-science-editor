@@ -46,6 +46,7 @@ export default function DashboardDevice(
 ) {
     const {
         device,
+        serviceFilter,
         expanded,
         toggleExpanded,
         variant,
@@ -89,6 +90,7 @@ export default function DashboardDevice(
             >
                 {services
                     ?.filter(srv => expanded || !srv.isMixin)
+                    ?.filter(srv => !serviceFilter || serviceFilter(srv))
                     ?.map(service => (
                         <DashboardServiceWidgetItem
                             key={service.id}
