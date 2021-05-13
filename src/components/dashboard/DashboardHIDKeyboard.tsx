@@ -1,42 +1,46 @@
 import React, { useState, KeyboardEvent, useRef } from "react"
 import { createStyles, Grid, makeStyles, Typography } from "@material-ui/core"
-import { HidKeyboardAction, HidKeyboardCmd, HidKeyboardModifiers } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
+import {
+    HidKeyboardAction,
+    HidKeyboardCmd,
+    HidKeyboardModifiers,
+} from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
 import CmdButton from "../CmdButton"
 import ClearIcon from "@material-ui/icons/Clear"
-import useServiceServer from "../hooks/useServiceServer";
-import HIDKeyboardServer from "../../../jacdac-ts/src/servers/hidkeyboardserver";
-import useChange from "../../jacdac/useChange";
+import useServiceServer from "../hooks/useServiceServer"
+import HIDKeyboardServer from "../../../jacdac-ts/src/servers/hidkeyboardserver"
+import useChange from "../../jacdac/useChange"
 import { delay } from "../../../jacdac-ts/src/jdom/utils"
 
 const selectors = {
-    "a": 0x04,
-    "b": 0x05,
-    "c": 0x06,
-    "d": 0x07,
-    "e": 0x08,
-    "f": 0x09,
-    "g": 0x0a,
-    "h": 0x0b,
-    "i": 0x0c,
-    "j": 0x0d,
-    "k": 0x0e,
-    "l": 0x0f,
-    "m": 0x10,
-    "n": 0x11,
-    "o": 0x12,
-    "p": 0x13,
-    "q": 0x14,
-    "r": 0x15,
-    "s": 0x16,
-    "t": 0x17,
-    "u": 0x18,
-    "v": 0x19,
-    "w": 0x1a,
-    "x": 0x1b,
-    "y": 0x1c,
-    "z": 0x1d,
+    a: 0x04,
+    b: 0x05,
+    c: 0x06,
+    d: 0x07,
+    e: 0x08,
+    f: 0x09,
+    g: 0x0a,
+    h: 0x0b,
+    i: 0x0c,
+    j: 0x0d,
+    k: 0x0e,
+    l: 0x0f,
+    m: 0x10,
+    n: 0x11,
+    o: 0x12,
+    p: 0x13,
+    q: 0x14,
+    r: 0x15,
+    s: 0x16,
+    t: 0x17,
+    u: 0x18,
+    v: 0x19,
+    w: 0x1a,
+    x: 0x1b,
+    y: 0x1c,
+    z: 0x1d,
 
     "1": 0x1e,
     "2": 0x1f,
@@ -49,44 +53,138 @@ const selectors = {
     "9": 0x26,
     "0": 0x27,
 
-    "enter": 0x28,
-    "escape": 0x29,
-    "backspace": 0x2a,
-    "tab": 0x2b,
+    "!": 0x1e,
+    "@": 0x1f,
+    "#": 0x20,
+    $: 0x21,
+    "%": 0x22,
+    "^": 0x23,
+    "&": 0x24,
+    "*": 0x25,
+    "(": 0x26,
+    ")": 0x27,
+
+    enter: 0x28,
+    escape: 0x29,
+    backspace: 0x2a,
+    tab: 0x2b,
     " ": 0x2c,
     "-": 0x2d,
-    "_": 0x2d,
+    _: 0x2d,
     "=": 0x2e,
     "+": 0x2e,
-    // TODO entire list
+    "[": 0x2f,
+    "{": 0x2f,
+    "]": 0x30,
+    "}": 0x30,
+    "\\": 0x31,
+    "|": 0x31,
+    // non-US #
+    "~": 0x32,
+    ";": 0x33,
+    ":": 0x33,
+    "'": 0x34,
+    '"': 0x34,
+    // grave accent tilde
+    ",": 0x36,
+    "<": 0x37,
+    ".": 0x37,
+    ">": 0x37,
+    "/": 0x38,
+    "?": 0x38,
+    capslock: 0x39,
+    f1: 0x3a,
+    f2: 0x3b,
+    f3: 0x3c,
+    f4: 0x3d,
+    f5: 0x3e,
+    f6: 0x3f,
+    f7: 0x40,
+    f8: 0x41,
+    f9: 0x42,
+    f10: 0x43,
+    f11: 0x44,
+    f12: 0x45,
+    printscreen: 0x46,
+    scrolllock: 0x47,
+    pause: 0x48,
+    insert: 0x49,
+    home: 0x4a,
+    pageup: 0x4b,
+    delete: 0x4c,
+    end: 0x4d,
+    pagedown: 0x4e,
+    arrowright: 0x4f,
+    arrowleft: 0x50,
+    arrowdown: 0x51,
+    arrowup: 0x52,
+    numlock: 0x53,
+    numpaddivide: 0x54,
+    numpadmultiply: 0x55,
+    numpadsubstract: 0x56,
+    numpadadd: 0x57,
+    numpadenter: 0x58,
+    numpad1: 0x59,
+    numpad2: 0x5a,
+    numpad3: 0x5b,
+    numpad4: 0x5c,
+    numpad5: 0x5d,
+    numpad6: 0x5e,
+    numpad7: 0x5f,
+    numpad8: 0x60,
+    numpad9: 0x61,
+    numpad0: 0x62,
+    numpaddecimal: 0x63,
 }
-const reverseSelectors: { [index: number]: string } = Object.keys(selectors).reduce((r, key) => { r[selectors[key]] = key; return r }, {})
+const reverseSelectors: { [index: number]: string } = Object.keys(
+    selectors
+).reduce((r, key) => {
+    if (!r[selectors[key]]) r[selectors[key]] = key
+    return r
+}, {})
+const modifierCodes = {
+    controlleft: HidKeyboardModifiers.LeftControl,
+    controlright: HidKeyboardModifiers.RightControl,
+    altleft: HidKeyboardModifiers.LeftAlt,
+    altright: HidKeyboardModifiers.RightAlt,
+    shiftleft: HidKeyboardModifiers.LeftShift,
+    shiftright: HidKeyboardModifiers.RightShift,
+    metaleft: HidKeyboardModifiers.LeftGUI,
+    metaright: HidKeyboardModifiers.RightGUI,
+}
 
-const useStyles = makeStyles((theme) => createStyles({
-    capture: {
-        cursor: "pointer",
-        "&:hover": {
-            borderColor: theme.palette.primary.main,
+const useStyles = makeStyles(theme =>
+    createStyles({
+        capture: {
+            cursor: "pointer",
+            "&:hover": {
+                borderColor: theme.palette.primary.main,
+            },
+            "&:focus": {
+                borderColor: theme.palette.action.active,
+            },
         },
-        "&:focus": {
-            borderColor: theme.palette.action.active,
-        }
-    }
-}));
+    })
+)
 
 function renderKey(selector: number, modifiers: HidKeyboardModifiers) {
+    const flags = [
+        "Ctrl",
+        "Shift",
+        "Alt",
+        "GUI",
+        "Right Ctrl",
+        "Right Shift",
+        "Right Alt",
+        "Right GUI",
+    ]
     const values = []
-    if ((modifiers & HidKeyboardModifiers.LeftAlt) === HidKeyboardModifiers.LeftAlt) values.push("Alt")
-    if ((modifiers & HidKeyboardModifiers.LeftControl) === HidKeyboardModifiers.LeftControl) values.push("Ctrl")
-    if ((modifiers & HidKeyboardModifiers.LeftGUI) === HidKeyboardModifiers.LeftGUI) values.push("Cmd")
-    if ((modifiers & HidKeyboardModifiers.LeftShift) === HidKeyboardModifiers.LeftShift) values.push("Shift")
-    if ((modifiers & HidKeyboardModifiers.RightAlt) === HidKeyboardModifiers.RightAlt) values.push("Right Alt")
-    if ((modifiers & HidKeyboardModifiers.RightControl) === HidKeyboardModifiers.RightControl) values.push("Right Ctrl")
-    if ((modifiers & HidKeyboardModifiers.RightGUI) === HidKeyboardModifiers.RightGUI) values.push("Right Cmd")
-    if ((modifiers & HidKeyboardModifiers.RightShift) === HidKeyboardModifiers.RightShift) values.push("Right Shift")
-
+    flags.forEach((flag, i) => {
+        if (modifiers & (1 << i)) {
+            values.push(flag)
+        }
+    })
     values.push(reverseSelectors[selector])
-
     const value = values.filter(v => !!v).join(" + ")
     return value
 }
@@ -102,17 +200,25 @@ export default function DashboardHIDKeyboard(props: DashboardServiceProps) {
     const handleKeyDown = (ev: KeyboardEvent<HTMLInputElement>) => {
         ev.stopPropagation()
         ev.preventDefault()
-        const { altKey, ctrlKey, shiftKey, metaKey, key } = ev
-        console.log({ altKey, ctrlKey, shiftKey, metaKey, key })
+        const { key, code } = ev
 
-        const newSelector = selectors[key.toLowerCase()] || 0
-        const newModifiers = modifiers |
-            (altKey && HidKeyboardModifiers.LeftAlt) |
-            (metaKey && HidKeyboardModifiers.LeftGUI) |
-            (ctrlKey && HidKeyboardModifiers.LeftControl) |
-            (shiftKey && HidKeyboardModifiers.LeftShift)
-        if (newSelector)
-            setSelector(newSelector)
+        const newSelector =
+            selectors[code.toLowerCase()] || selectors[key.toLowerCase()] || 0
+        let newModifiers = modifiers
+        const mcode = modifierCodes[code.toLowerCase()]
+        if (mcode) {
+            if (newModifiers & mcode) newModifiers &= ~mcode
+            else newModifiers |= mcode
+        }
+
+        console.log({
+            key,
+            code,
+            newModifiers: newModifiers.toString(16),
+            newSelector: newSelector.toString(16),
+        })
+
+        if (newSelector) setSelector(newSelector)
         setModifiers(newModifiers)
     }
 
@@ -130,36 +236,57 @@ export default function DashboardHIDKeyboard(props: DashboardServiceProps) {
 
     const handleClick = async () => {
         await delay(100)
-        const unpacked: [([number, HidKeyboardModifiers, HidKeyboardAction])[]] = [[[selector, modifiers, HidKeyboardAction.Press]]]
+        const unpacked: [
+            [number, HidKeyboardModifiers, HidKeyboardAction][]
+        ] = [[[selector, modifiers, HidKeyboardAction.Press]]]
         const data = jdpack("r: u16 u8 u8", unpacked)
         await service.sendCmdAsync(HidKeyboardCmd.Key, data)
     }
 
-    const serverValue = useChange(server, _ => _?.lastKey?.map(key => renderKey(key[0], key[1]))?.join("\n"))
+    const serverValue = useChange(server, _ =>
+        _?.lastKey?.map(key => renderKey(key[0], key[1]))?.join("\n")
+    )
     const value = renderKey(selector, modifiers)
     const disabled = !selector
     const clearDisabled = !selector && !modifiers
 
-    return <Grid container spacing={1}>
-        <Grid item>
-            <pre
-                className={classes.capture}
-                tabIndex={0}
-                onKeyDown={handleKeyDown}
-                onKeyUp={handleKeyUp}
-            >
-                {value || "..."}
-            </pre>
-            <Typography variant="caption">focus and type your key combo (not all keys supported)</Typography>
+    return (
+        <Grid container spacing={1}>
+            <Grid item>
+                <pre
+                    className={classes.capture}
+                    tabIndex={0}
+                    onKeyDown={handleKeyDown}
+                    onKeyUp={handleKeyUp}
+                >
+                    {value || "..."}
+                </pre>
+                <Typography variant="caption">
+                    focus and type your key combo (not all keys supported)
+                </Typography>
+            </Grid>
+            <Grid item xs>
+                <input
+                    ref={inputButtonRef}
+                    onFocus={handleClick}
+                    disabled={disabled}
+                    placeholder="focus to send"
+                    type="text"
+                />
+                <CmdButton
+                    title="clear keys"
+                    disabled={clearDisabled}
+                    onClick={handleClear}
+                    icon={<ClearIcon />}
+                />
+            </Grid>
+            {server && (
+                <Grid item xs={12}>
+                    <Typography variant="caption" component="pre">
+                        key status: {serverValue || "no keys"}
+                    </Typography>
+                </Grid>
+            )}
         </Grid>
-        <Grid item xs>
-            <input ref={inputButtonRef} onFocus={handleClick} disabled={disabled} placeholder="focus to send" type="text" />
-            <CmdButton title="clear keys" disabled={clearDisabled} onClick={handleClear} icon={<ClearIcon />} />
-        </Grid>
-        {server && <Grid item xs={12}>
-            <Typography variant="caption" component="pre">
-                key status: {serverValue || "no keys"}
-            </Typography>
-        </Grid>}
-    </Grid>
+    )
 }
