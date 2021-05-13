@@ -9,9 +9,6 @@ import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
 import CmdButton from "../CmdButton"
 import ClearIcon from "@material-ui/icons/Clear"
-import useServiceServer from "../hooks/useServiceServer"
-import HIDKeyboardServer from "../../../jacdac-ts/src/servers/hidkeyboardserver"
-import useChange from "../../jacdac/useChange"
 import { delay } from "../../../jacdac-ts/src/jdom/utils"
 
 const selectors = {
@@ -222,7 +219,7 @@ export default function DashboardHIDKeyboard(props: DashboardServiceProps) {
     const { service } = props
     const [selector, setSelector] = useState(0)
     const [modifiers, setModifiers] = useState(HidKeyboardModifiers.None)
-    const server = useServiceServer<HIDKeyboardServer>(service)
+    const [received, setReceived] = useState<string[]>([])
     const classes = useStyles()
     const inputButtonRef = useRef<HTMLInputElement>()
 
@@ -251,6 +248,11 @@ export default function DashboardHIDKeyboard(props: DashboardServiceProps) {
         setModifiers(newModifiers)
     }
 
+    const handleKeyDownReceived = (ev: KeyboardEvent<HTMLInputElement>) => {
+        const { code } = ev
+        setReceived([...received, code.toLocaleLowerCase()])
+    }
+
     const handleKeyUp = (ev: KeyboardEvent<HTMLInputElement>) => {
         ev.stopPropagation()
         ev.preventDefault()
@@ -264,6 +266,7 @@ export default function DashboardHIDKeyboard(props: DashboardServiceProps) {
     }
 
     const handleClick = async () => {
+        setReceived([])
         await delay(100)
         const unpacked: [
             [number, HidKeyboardModifiers, HidKeyboardAction][]
@@ -272,9 +275,6 @@ export default function DashboardHIDKeyboard(props: DashboardServiceProps) {
         await service.sendCmdAsync(HidKeyboardCmd.Key, data)
     }
 
-    const serverValue = useChange(server, _ =>
-        _?.lastKey?.map(key => renderKey(key[0], key[1]))?.join("\n")
-    )
     const value = renderKey(selector, modifiers)
     const disabled = !selector
     const clearDisabled = !selector && !modifiers
@@ -298,6 +298,7 @@ export default function DashboardHIDKeyboard(props: DashboardServiceProps) {
                 <input
                     ref={inputButtonRef}
                     onFocus={handleClick}
+                    onKeyDown={handleKeyDownReceived}
                     disabled={disabled}
                     placeholder="focus to send"
                     type="text"
@@ -309,13 +310,11 @@ export default function DashboardHIDKeyboard(props: DashboardServiceProps) {
                     icon={<ClearIcon />}
                 />
             </Grid>
-            {server && (
-                <Grid item xs={12}>
-                    <Typography variant="caption" component="pre">
-                        key status: {serverValue || "no keys"}
-                    </Typography>
-                </Grid>
-            )}
+            <Grid item xs={12}>
+                <Typography variant="caption" component="pre">
+                    received: {received.join(" + ")}
+                </Typography>
+            </Grid>
         </Grid>
     )
 }
