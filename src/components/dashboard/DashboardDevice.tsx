@@ -9,7 +9,7 @@ import {
 import React, { useCallback, useEffect, useRef } from "react"
 import {
     RESTART,
-    SRV_CTRL,
+    SRV_CONTROL,
     SRV_LOGGER,
     SRV_PROTO_TEST,
     SRV_SETTINGS,
@@ -34,7 +34,7 @@ import { dependencyId } from "../../../jacdac-ts/src/jdom/node"
 import useMediaQueries from "../hooks/useMediaQueries"
 import { useSnackbar } from "notistack"
 
-const ignoredServices = [SRV_CTRL, SRV_LOGGER, SRV_SETTINGS, SRV_PROTO_TEST]
+const ignoredServices = [SRV_CONTROL, SRV_LOGGER, SRV_SETTINGS, SRV_PROTO_TEST]
 
 export default function DashboardDevice(
     props: {
@@ -67,12 +67,14 @@ export default function DashboardDevice(
     const visible = !!intersection?.isIntersecting
     const { enqueueSnackbar } = useSnackbar()
 
-    useEffect(() => device?.subscribe(RESTART, () => {
-        console.debug(`${device.shortId} restarted...`)
-        enqueueSnackbar(`${device.shortId} restarted...`, {
-            variant: "warning",
+    useEffect(() =>
+        device?.subscribe(RESTART, () => {
+            console.debug(`${device.shortId} restarted...`)
+            enqueueSnackbar(`${device.shortId} restarted...`, {
+                variant: "warning",
+            })
         })
-    }))
+    )
 
     const ServiceWidgets = useCallback(
         () => (

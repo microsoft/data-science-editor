@@ -23,7 +23,7 @@ import DeviceActions from "./DeviceActions"
 import {
     LOST,
     FOUND,
-    SRV_CTRL,
+    SRV_CONTROL,
     SRV_LOGGER,
     GET_ATTEMPT,
     BaseReg,
@@ -32,6 +32,8 @@ import {
     EVENT_NODE_NAME,
     SERVICE_MIXIN_NODE_NAME,
     ControlAnnounceFlags,
+    SRV_ROLE_MANAGER,
+    SRV_SETTINGS,
 } from "../../jacdac-ts/src/jdom/constants"
 import useEventRaised from "../jacdac/useEventRaised"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
@@ -79,8 +81,10 @@ function DeviceTreeItem(
         services
             .filter(
                 service =>
-                    service.serviceClass !== SRV_CTRL &&
-                    service.serviceClass !== SRV_LOGGER
+                    service.serviceClass !== SRV_CONTROL &&
+                    service.serviceClass !== SRV_LOGGER &&
+                    service.serviceClass !== SRV_ROLE_MANAGER &&
+                    service.serviceClass !== SRV_SETTINGS
             )
             .map(service => service.name),
         18
