@@ -198,14 +198,14 @@ const useStyles = makeStyles(theme =>
 
 function renderKey(selector: number, modifiers: HidKeyboardModifiers) {
     const flags = [
-        "Ctrl",
-        "Shift",
-        "Alt",
-        "GUI",
-        "Right Ctrl",
-        "Right Shift",
-        "Right Alt",
-        "Right GUI",
+        "ctrl",
+        "shift",
+        "alt",
+        "cmd",
+        "right ctrl",
+        "right shift",
+        "right alt",
+        "right cmd",
     ]
     const values = []
     flags.forEach((flag, i) => {
