@@ -249,6 +249,8 @@ export default function DashboardHIDKeyboard(props: DashboardServiceProps) {
     }
 
     const handleKeyDownReceived = (ev: KeyboardEvent<HTMLInputElement>) => {
+        ev.stopPropagation()
+        ev.preventDefault()
         const { code } = ev
         setReceived([...received, code.toLocaleLowerCase()])
     }
@@ -276,44 +278,42 @@ export default function DashboardHIDKeyboard(props: DashboardServiceProps) {
     }
 
     const value = renderKey(selector, modifiers)
-    const disabled = !selector
     const clearDisabled = !selector && !modifiers
 
     return (
-        <Grid container spacing={1}>
-            <Grid item>
-                <pre
-                    className={classes.capture}
-                    tabIndex={0}
-                    onKeyDown={handleKeyDown}
-                    onKeyUp={handleKeyUp}
-                >
-                    {value || "..."}
-                </pre>
-                <Typography variant="caption">
-                    focus and type your key combo (not all keys supported)
-                </Typography>
+        <Grid container direction="column" spacing={1}>
+            <Grid item xs={12}>
+                <Grid container>
+                    <Grid item xs>
+                        <pre
+                            style={{ minWidth: "18rem" }}
+                            className={classes.capture}
+                            tabIndex={0}
+                            onKeyDown={handleKeyDown}
+                            onKeyUp={handleKeyUp}
+                        >
+                            {value || "focus and type your key combo"}
+                        </pre>
+                    </Grid>
+                    <Grid item>
+                        <CmdButton
+                            title="clear keys"
+                            disabled={clearDisabled}
+                            onClick={handleClear}
+                            icon={<ClearIcon />}
+                        />
+                    </Grid>
+                </Grid>
             </Grid>
-            <Grid item xs>
-                <input
+            <Grid item xs={12}>
+                <pre
+                    tabIndex={0}
                     ref={inputButtonRef}
                     onFocus={handleClick}
                     onKeyDown={handleKeyDownReceived}
-                    disabled={disabled}
-                    placeholder="focus to send"
-                    type="text"
-                />
-                <CmdButton
-                    title="clear keys"
-                    disabled={clearDisabled}
-                    onClick={handleClear}
-                    icon={<ClearIcon />}
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <Typography variant="caption" component="pre">
-                    received: {received.join(" + ")}
-                </Typography>
+                >
+                    {received.length ? received.join(" + ") : "click to send"}
+                </pre>
             </Grid>
         </Grid>
     )
