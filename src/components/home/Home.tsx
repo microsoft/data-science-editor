@@ -23,8 +23,8 @@ export default function Home() {
                 }
             />
             <CenterGrid
-                description="Designed for “modular electronics” scenarios that support rapid prototyping, creative exploration, making and learning through physical computing."
-                caption="Cheap, flexible and extensible."
+                subtitle2="Designed for “modular electronics” scenarios that support rapid prototyping, creative exploration, making and learning through physical computing."
+                description="Cheap, flexible and extensible."
             />
             <Grid item xs={12}>
                 <StaticImage
@@ -78,7 +78,8 @@ export default function Home() {
             <SplitGrid
                 right={false}
                 subtitle="How does it work?"
-                description="Jacdac packets are sent serially among physical devices on the Jacdac bus and may also be sent over WebUSB/WebBLE, providing connectivity to web-based tooling and services running in the web browser."
+                caption="Jacdac packets are sent serially among physical devices on the Jacdac bus and may also be sent over WebUSB/WebBLE, providing connectivity to web-based tooling and services running in the web browser."
+                imageColumns={8}
                 image={
                     <StaticImage
                         src="./buttoncable.png"
@@ -90,9 +91,7 @@ export default function Home() {
             <SplitGrid
                 right={true}
                 subtitle={"Service specifications"}
-                description={
-                    "Jacdac services are specified to abstract the hardware device from the software implementation. The services are comprised of registers, commands and events, along with precise data layout information for each packet."
-                }
+                caption="Jacdac services are specified to abstract the hardware device from the software implementation. The services are comprised of registers, commands and events, along with precise data layout information for each packet."
                 buttonUrl="/services"
                 image={
                     <StaticImage
@@ -105,7 +104,7 @@ export default function Home() {
             <SplitGrid
                 right={false}
                 subtitle="Simulate and communicate from the browser"
-                description="The Jacdac bus can be simulated in the browser and communicate to hardware without any driver or program installation."
+                caption="The Jacdac bus can be simulated in the browser and communicate to hardware without any driver or program installation."
                 image={
                     <StaticImage
                         src="./dashboard.png"
@@ -127,7 +126,7 @@ export default function Home() {
             <SplitGrid
                 right={true}
                 title="Beautifully simple."
-                description="The device catalog lists the registered Jacdac devices that can be automatically detected on the bus. The catalog information provides vendor information, the services supported by a device, firmware, and pictures."
+                caption="The device catalog lists the registered Jacdac devices that can be automatically detected on the bus. The catalog information provides vendor information, the services supported by a device, firmware, and pictures."
                 buttonText="Discover the device catalog"
                 buttonVariant="link"
                 buttonUrl="/devices"

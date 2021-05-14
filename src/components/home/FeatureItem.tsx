@@ -13,6 +13,7 @@ export interface FeatureItemProps {
     startImage?: ReactNode
     title?: string
     subtitle?: string
+    subtitle2?: string
     description?: string
     caption?: string
     buttonText?: string
@@ -29,7 +30,13 @@ const useStyles = makeStyles((theme: Theme) =>
             textAlign: "center",
         },
         description: {
-            fontSize: theme.typography.fontSize * 1.5,
+            fontSize: theme.typography.fontSize * 2.1,
+        },
+        caption: {
+            fontSize: theme.typography.fontSize * 1.8,
+        },
+        button: {
+            fontSize: theme.typography.fontSize * 1.8,
         },
     })
 )
@@ -38,6 +45,7 @@ export default function FeatureItem(props: FeatureItemProps) {
     const {
         title,
         subtitle,
+        subtitle2,
         description,
         buttonText,
         buttonUrl,
@@ -72,6 +80,13 @@ export default function FeatureItem(props: FeatureItemProps) {
                     </Typography>
                 </Grid>
             )}
+            {subtitle2 && (
+                <Grid item xs={12}>
+                    <Typography variant="h3" className={cls}>
+                        {subtitle2}
+                    </Typography>
+                </Grid>
+            )}
             {description && (
                 <Grid item xs={12}>
                     <Typography
@@ -84,15 +99,18 @@ export default function FeatureItem(props: FeatureItemProps) {
             )}
             {caption && (
                 <Grid item xs={12}>
-                    <Typography variant="body2" className={cls}>
+                    <Typography
+                        variant="body2"
+                        className={clsx(cls, classes.caption)}
+                    >
                         {caption}
                     </Typography>
                 </Grid>
             )}
             {buttonUrl && buttonText && (
-                <Grid item xs={12}>
+                <Grid item xs={12} className={clsx(cls, classes.button)}>
                     {buttonVariant === "link" ? (
-                        <Link to={buttonUrl} className={cls}>
+                        <Link to={buttonUrl}>
                             {buttonText}
                             {" >"}
                         </Link>
@@ -101,7 +119,6 @@ export default function FeatureItem(props: FeatureItemProps) {
                             variant="contained"
                             color={buttonColor}
                             to={buttonUrl}
-                            className={cls}
                         >
                             {buttonText}
                         </Button>

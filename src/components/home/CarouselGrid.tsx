@@ -11,7 +11,7 @@ export default function CarouselGrid(props: { children: ReactNode }) {
                 direction="row"
                 spacing={2}
                 alignContent="center"
-                alignItems="center"
+                alignItems="flex-start"
             >
                 {children}
             </Grid>
