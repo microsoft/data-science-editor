@@ -14,7 +14,7 @@ export default function Home() {
                 subtitle="plug-and-play for microcontrollers"
                 buttonText="Try the dashboard"
                 buttonUrl="/dashboard"
-                imageColumns={7}
+                imageColumns={6}
                 image={
                     <StaticImage
                         src="./manymodulestogether.png"
@@ -25,8 +25,6 @@ export default function Home() {
             <CenterGrid
                 description="Designed for “modular electronics” scenarios that support rapid prototyping, creative exploration, making and learning through physical computing."
                 caption="Cheap, flexible and extensible."
-                buttonText="Buy"
-                buttonUrl="/devices"
             />
             <Grid item xs={12}>
                 <StaticImage
