@@ -20,19 +20,14 @@ export default function VMEditorRunner() {
     const json = useMemo(() => parseITTTMarkdownToJSON(source), [source])
     return (
         <Grid spacing={2} container>
-            <Grid spacing={2} container>
-                <Grid item xs={12} sm={7}>
-                    <HighlightTextField
-                        code={source}
-                        language={"markdown"}
-                        onChange={setSource}
-                        annotations={json?.errors}
-                    />
-                </Grid>
+            <Grid item xs={12}>
+                <HighlightTextField
+                    code={source}
+                    language={"markdown"}
+                    onChange={setSource}
+                    annotations={json?.errors}
+                />
             </Grid>
-            {json && bus === undefined && (
-                <Alert severity="warning">Cannot run VM without a bus!</Alert>
-            )}
             <GridHeader title="Preview" />
             {json && bus && (
                 <Grid item xs={12}>
