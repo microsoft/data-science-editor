@@ -14,6 +14,7 @@ export default function Home() {
                 subtitle="plug-and-play for microcontrollers"
                 buttonText="Try the dashboard"
                 buttonUrl="/dashboard"
+                imageColumns={7}
                 image={
                     <StaticImage
                         src="./manymodulestogether.png"

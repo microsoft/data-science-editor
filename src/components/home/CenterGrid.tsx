@@ -13,7 +13,7 @@ export default function CenterGrid(props: FeatureItemProps) {
                 alignContent="center"
                 alignItems="center"
             >
-                <FeatureItem {...props} />
+                <FeatureItem {...props} centered={true} />
             </Grid>
         </Grid>
     )

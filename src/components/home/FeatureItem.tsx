@@ -28,6 +28,9 @@ const useStyles = makeStyles((theme: Theme) =>
         centered: {
             textAlign: "center",
         },
+        description: {
+            fontSize: theme.typography.fontSize * 1.5,
+        },
     })
 )
 
@@ -47,6 +50,7 @@ export default function FeatureItem(props: FeatureItemProps) {
     } = props
     const classes = useStyles()
     const centeredCls = centered && classes.centered
+    const cls = centeredCls
     return (
         <>
             {startImage && (
@@ -56,30 +60,39 @@ export default function FeatureItem(props: FeatureItemProps) {
             )}
             {title && (
                 <Grid item xs={12}>
-                    <Typography variant="h1" className={centeredCls}>
+                    <Typography variant="h1" className={cls}>
                         {title}
                     </Typography>
                 </Grid>
             )}
             {subtitle && (
                 <Grid item xs={12}>
-                    <Typography variant="h2">{subtitle}</Typography>
+                    <Typography variant="h2" className={cls}>
+                        {subtitle}
+                    </Typography>
                 </Grid>
             )}
             {description && (
                 <Grid item xs={12}>
-                    <Typography variant="body1">{description}</Typography>
+                    <Typography
+                        variant="body1"
+                        className={clsx(cls, classes.description)}
+                    >
+                        {description}
+                    </Typography>
                 </Grid>
             )}
             {caption && (
                 <Grid item xs={12}>
-                    <Typography variant="body2">{caption}</Typography>
+                    <Typography variant="body2" className={cls}>
+                        {caption}
+                    </Typography>
                 </Grid>
             )}
             {buttonUrl && buttonText && (
                 <Grid item xs={12}>
                     {buttonVariant === "link" ? (
-                        <Link to={buttonUrl}>
+                        <Link to={buttonUrl} className={cls}>
                             {buttonText}
                             {" >"}
                         </Link>
@@ -88,6 +101,7 @@ export default function FeatureItem(props: FeatureItemProps) {
                             variant="contained"
                             color={buttonColor}
                             to={buttonUrl}
+                            className={cls}
                         >
                             {buttonText}
                         </Button>
@@ -95,7 +109,7 @@ export default function FeatureItem(props: FeatureItemProps) {
                 </Grid>
             )}
             {image && (
-                <Grid item xs={12}>
+                <Grid item xs={12} className={cls}>
                     {image}
                 </Grid>
             )}
