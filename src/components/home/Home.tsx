@@ -86,8 +86,24 @@ export default function Home() {
                     />
                 }
             />
+
             <SplitGrid
                 right={true}
+                subtitle={"Service specifications"}
+                description={
+                    "Jacdac services are specified to abstract the hardware device from the software implementation. The services are comprised of registers, commands and events, along with precise data layout information for each packet."
+                }
+                buttonUrl="/services"
+                image={
+                    <StaticImage
+                        src={"./dashboardtemp.png"}
+                        alt="A dashboard of humidity temperature module"
+                    />
+                }
+            />
+
+            <SplitGrid
+                right={false}
                 subtitle="Simulate and communicate from the browser"
                 description="The Jacdac bus can be simulated in the browser and communicate to hardware without any driver or program installation."
                 image={
@@ -207,20 +223,6 @@ export default function Home() {
                 }
             />
 
-            <SplitGrid
-                right={false}
-                subtitle={"Service specifications"}
-                description={
-                    "Jacdac services are specified to abstract the hardware device from the software implementation. The services are comprised of registers, commands and events, along with precise data layout information for each packet."
-                }
-                buttonUrl="/services"
-                image={
-                    <StaticImage
-                        src={"./dashboardtemp.png"}
-                        alt="A dashboard of humidity temperature module"
-                    />
-                }
-            />
 
             <SplitGrid
                 right={true}
