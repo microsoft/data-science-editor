@@ -156,7 +156,7 @@ export default function Home() {
                         startImage={
                             <StaticImage
                                 width={64}
-                                src="./html5icon.svg"
+                                src="./html5.png"
                                 alt="HTML5 icon"
                             />
                         }
