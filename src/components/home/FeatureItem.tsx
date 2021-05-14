@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) =>
             textAlign: "center",
         },
         description: {
-            fontSize: theme.typography.fontSize * 2.1,
+            fontSize: theme.typography.fontSize * 2,
         },
         caption: {
             fontSize: theme.typography.fontSize * 1.8,

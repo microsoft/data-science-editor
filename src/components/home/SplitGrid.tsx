@@ -38,7 +38,7 @@ export default function SplitGrid(
                 direction="row"
                 alignContent="flex-start"
                 alignItems="flex-start"
-                spacing={2}
+                spacing={4}
             >
                 {right ? imageItem : textItem}
                 {right ? textItem : imageItem}
