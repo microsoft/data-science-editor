@@ -51,7 +51,7 @@ function HighlightedCode(props: {
     return (
         <Highlight
             {...defaultProps}
-            code={children}
+            code={children.replace(/[\s\r\n]*/g, "")}
             language={language as Language}
             theme={theme}
         >

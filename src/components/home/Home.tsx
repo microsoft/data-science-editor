@@ -177,6 +177,9 @@ export default function Home() {
                         }
                         subtitle="JavaScript package"
                         description="Integrate Jacdac into your web site or node.js application using our TypeScript/JavaScript npm package."
+                        buttonText="Learn more"
+                        buttonUrl="/clients/javascript"
+                        buttonVariant="link"
                     />
                 </Grid>
             </CarouselGrid>
