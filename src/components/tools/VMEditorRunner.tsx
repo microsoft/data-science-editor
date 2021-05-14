@@ -17,10 +17,7 @@ export default function VMEditorRunner() {
         VM_MARKDOWN_SOURCE_STORAGE_KEY,
         `# VM Handler program\n\n`
     )
-    const json = useMemo(
-        () => parseITTTMarkdownToJSON(source),
-        [source]
-    )
+    const json = useMemo(() => parseITTTMarkdownToJSON(source), [source])
     return (
         <Grid spacing={2} container>
             <Grid spacing={2} container>
@@ -34,21 +31,17 @@ export default function VMEditorRunner() {
                 </Grid>
             </Grid>
             {json && bus === undefined && (
-                <Alert severity="warning">
-                    Cannot run VM without a bus!
-                </Alert>
-            )
-            }
+                <Alert severity="warning">Cannot run VM without a bus!</Alert>
+            )}
             <GridHeader title="Preview" />
             {json && bus && (
-                <Grid item xs={12} xl={7}>
-                    <VMRunner
-                        json={json}
-                        bus={bus}
-                    />
+                <Grid item xs={12}>
+                    <VMRunner json={json} bus={bus} />
                 </Grid>
             )}
-            <DashBoard/>
+            <Grid xs={12}>
+                <DashBoard />
+            </Grid>
         </Grid>
     )
 }
