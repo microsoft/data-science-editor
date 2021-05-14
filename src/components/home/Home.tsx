@@ -8,7 +8,7 @@ import SplitGrid from "./SplitGrid"
 
 export default function Home() {
     return (
-        <Grid container spacing={8}>
+        <Grid container spacing={10}>
             <SplitGrid
                 title="Jacdac"
                 subtitle="plug-and-play for microcontrollers"
