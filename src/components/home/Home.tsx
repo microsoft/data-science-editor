@@ -115,9 +115,10 @@ export default function Home() {
                 buttonText="Discover the device catalog"
                 buttonVariant="link"
                 buttonUrl="/devices"
+                imageColumns={7}
                 image={
                     <StaticImage
-                        src="./manymodulestogether.png"
+                        src="./beautifysimple.png"
                         alt="5 Jacdac modules together"
                     />
                 }
