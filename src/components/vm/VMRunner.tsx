@@ -15,14 +15,13 @@ export default function VMRunner(props: { json: IT4Program; bus: JDBus }) {
         [bus, json]
     )
     const testRunner = useChange(bus, factory)
-    const status = useChange(testRunner, t => t?.status)
-
+    
     if (!testRunner) return <LoadingProgress />
-
+    
+    const status = useChange(testRunner, t => t.status)
     const handleRun = () => testRunner.start()
     const handleCancel = () => testRunner.cancel()
-    const running = status !== VMStatus.Ready // TODO fix
-
+    const running = status === VMStatus.Running
     return (
         <Button
             variant="contained"
