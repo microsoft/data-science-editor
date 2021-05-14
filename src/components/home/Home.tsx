@@ -8,7 +8,7 @@ import SplitGrid from "./SplitGrid"
 
 export default function Home() {
     return (
-        <Grid container spacing={10}>
+        <Grid container spacing={10} direction="column" alignContent="center" alignItems="center">
             <SplitGrid
                 title="Jacdac"
                 subtitle="plug-and-play for microcontrollers"
@@ -23,8 +23,8 @@ export default function Home() {
                 }
             />
             <CenterGrid
-                subtitle2="Designed for “modular electronics” scenarios that support rapid prototyping, creative exploration, making and learning through physical computing."
-                description="Cheap, flexible and extensible."
+                description="Designed for “modular electronics” scenarios that support rapid prototyping, creative exploration, making and learning through physical computing."
+                caption="Cheap, flexible and extensible."
             />
             <Grid item xs={12}>
                 <StaticImage
