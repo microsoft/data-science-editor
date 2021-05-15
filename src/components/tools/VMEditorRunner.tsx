@@ -34,7 +34,7 @@ export default function VMEditorRunner() {
                     <VMRunner json={json} bus={bus} />
                 </Grid>
             )}
-            <Grid xs={12}>
+            <Grid item xs={12}>
                 <DashBoard />
             </Grid>
         </Grid>
