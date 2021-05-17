@@ -62,7 +62,7 @@ export default function DashboardDevice(
             )
     )
     const specification = useDeviceSpecification(device)
-    const { mobile } = useMediaQueries()
+    const { xs: mobile } = useMediaQueries()
     const serviceGridRef = useRef<HTMLDivElement>()
     const intersection = useIntersectionObserver(serviceGridRef)
     const visible = !!intersection?.isIntersecting
