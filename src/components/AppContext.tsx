@@ -1,3 +1,4 @@
+import { Button } from "gatsby-theme-material-ui"
 import { useSnackbar } from "notistack"
 import React, {
     createContext,
@@ -7,6 +8,7 @@ import React, {
     useState,
 } from "react"
 import { ERROR } from "../../jacdac-ts/src/jdom/constants"
+import errorCode from "../../jacdac-ts/src/jdom/error"
 import { JDService } from "../../jacdac-ts/src/jdom/service"
 import { isCancelError } from "../../jacdac-ts/src/jdom/utils"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
@@ -75,10 +77,12 @@ export const AppProvider = ({ children }) => {
         if (isCancelError(e)) return
         console.error(e)
         const msg = e?.message || e + ""
+        const code = errorCode(e)
         enqueueSnackbar(msg, {
             variant: "error",
             preventDuplicate: true,
-            autoHideDuration: 4000,
+            autoHideDuration: code ? 8000 : 4000,
+            action: code && <Button to={`/errors/${code}`}>Help</Button>,
         })
     }
 
@@ -97,7 +101,7 @@ export const AppProvider = ({ children }) => {
         () =>
             bus.subscribe(ERROR, (e: { exception: Error }) => {
                 if (isCancelError(e.exception)) return
-                setError(e.exception.message)
+                setError(e.exception)
             }),
         []
     )
