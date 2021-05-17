@@ -65,7 +65,7 @@ export default PacketsContext
 
 // eslint-disable-next-line react/prop-types
 export const PacketsProvider = ({ children }) => {
-    const { bus, disconnectAsync } = useContext<JacdacContextProps>(
+    const { bus } = useContext<JacdacContextProps>(
         JacdacContext
     )
     const { value: filter, setValue: _setFilter } = useDbValue(
@@ -120,7 +120,7 @@ export const PacketsProvider = ({ children }) => {
             player.current.stop()
         } else {
             clearPackets()
-            await disconnectAsync()
+            await bus.disconnect()
             player.current.start()
         }
     }
