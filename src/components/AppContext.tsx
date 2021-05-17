@@ -8,7 +8,7 @@ import React, {
     useState,
 } from "react"
 import { ERROR } from "../../jacdac-ts/src/jdom/constants"
-import errorCode from "../../jacdac-ts/src/jdom/error"
+import errorPath from "../../jacdac-ts/src/jdom/error"
 import { JDService } from "../../jacdac-ts/src/jdom/service"
 import { isCancelError } from "../../jacdac-ts/src/jdom/utils"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
@@ -77,7 +77,7 @@ export const AppProvider = ({ children }) => {
         if (isCancelError(e)) return
         console.error(e)
         const msg = e?.message || e + ""
-        const code = errorCode(e)
+        const code = errorPath(e)
         enqueueSnackbar(msg, {
             variant: "error",
             preventDuplicate: true,
