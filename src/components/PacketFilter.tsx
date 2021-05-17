@@ -157,6 +157,11 @@ function FilterMenu(props: {
                         value: false,
                     },
                     {
+                        cmd: "reset-in",
+                        kind: "announce",
+                        value: false,
+                    },
+                    {
                         cmd: "get",
                         kind: "ro",
                         value: true,

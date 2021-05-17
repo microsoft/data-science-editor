@@ -70,7 +70,7 @@ export const PacketsProvider = ({ children }) => {
     )
     const { value: filter, setValue: _setFilter } = useDbValue(
         "packetfilter",
-        "repeated-announce:false"
+        "announce:false reset-in:false min-priority:false"
     )
 
     const recorder = useRef<TraceRecorder>(undefined)
