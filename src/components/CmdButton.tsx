@@ -56,6 +56,7 @@ export default function CmdButton(props: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     trackProperties?: { [key: string]: any }
     ackResetDelay?: number
+    color?: "primary" | "secondary"
 }) {
     const {
         onClick,
@@ -70,6 +71,7 @@ export default function CmdButton(props: {
         trackName,
         trackProperties,
         ackResetDelay,
+        color,
         ...others
     } = props
 
@@ -136,6 +138,7 @@ export default function CmdButton(props: {
                 aria-label={title}
                 title={title}
                 disabled={_disabled}
+                color={color}
                 {...others}
             >
                 {statusIcon || icon}
@@ -152,6 +155,7 @@ export default function CmdButton(props: {
                 aria-label={title}
                 title={title}
                 disabled={_disabled}
+                color={color}
                 {...others}
             >
                 {children}

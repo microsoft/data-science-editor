@@ -9,10 +9,12 @@ import { JDService } from "../../../jacdac-ts/src/jdom/service"
 
 export default function SelectServiceGrid(props: {
     serviceClass: number
+    buttonText?: string
+    disabled?: boolean
     onSelect: (service: JDService) => void
 }) {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const { serviceClass, onSelect } = props
+    const { serviceClass, buttonText, onSelect, disabled } = props
     const services = useChange(bus, n => n.services({ serviceClass }), [])
     const gridBreakpoints = useGridBreakpoints()
 
@@ -34,8 +36,9 @@ export default function SelectServiceGrid(props: {
                                         variant="contained"
                                         color="primary"
                                         onClick={handleSelect(service)}
+                                        disabled={disabled}
                                     >
-                                        Select
+                                        {buttonText || "Select"}
                                     </Button>
                                 </CardActions>
                             </Card>
