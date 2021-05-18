@@ -20,7 +20,7 @@ import useRoleManager from "../services/useRoleManager"
 import useMediaQueries from "../hooks/useMediaQueries"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { Alert } from "@material-ui/lab"
-import { Button, IconButton } from "gatsby-theme-material-ui"
+import { IconButton } from "gatsby-theme-material-ui"
 import {
     addServiceProvider,
     serviceProviderDefinitionFromServiceClass,
@@ -29,7 +29,6 @@ import {
     SRV_BUTTON,
     SRV_LED,
     SRV_POTENTIOMETER,
-    SRV_SERVO,
     SRV_TRAFFIC_LIGHT,
 } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 
