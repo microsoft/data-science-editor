@@ -19,6 +19,8 @@ import ConnectButtons from "../../jacdac/ConnectButtons"
 import useRoleManager from "../services/useRoleManager"
 import useMediaQueries from "../hooks/useMediaQueries"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import { Alert } from "@material-ui/lab"
+import { Button } from "gatsby-theme-material-ui"
 
 function defaultDeviceSort(l: JDDevice, r: JDDevice): number {
     const srvScore = (srv: jdspec.ServiceSpec) =>
@@ -81,7 +83,7 @@ export default function Dashboard(props: DashboardProps) {
         .sort(deviceSort)
     const { mobile } = useMediaQueries()
     const { selected, toggleSelected } = useSelectedNodes(mobile)
-    const [hosted, physicals] = splitFilter(
+    const [simulators, physicals] = splitFilter(
         devices,
         d => !!bus.findServiceProvider(d.deviceId)
     )
@@ -119,11 +121,19 @@ export default function Dashboard(props: DashboardProps) {
                         </IconButtonWithTooltip>{" "}
                     </>
                 }
-                devices={hosted}
+                devices={simulators}
                 expanded={selected}
                 toggleExpanded={toggleSelected}
                 {...other}
-            />
+            >
+                {showStartSimulators && simulators?.length && (
+                    <Alert severity="info">
+                        Simulate a <Button>button</Button> or a{" "}
+                        <Button>servo</Button>... or any other by clicking
+                        <AddIcon />.
+                    </Alert>
+                )}
+            </DashboardDeviceGroup>
             <DashboardDeviceGroup
                 title="Devices"
                 action={
