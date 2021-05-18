@@ -141,48 +141,54 @@ export default function Dashboard(props: DashboardProps) {
                 {...other}
             >
                 {showStartSimulators && !simulators?.length && (
-                    <Alert severity="info">
-                        Simulate a{" "}
-                        <IconButton
-                            onClick={handleStartSimulator(SRV_BUTTON)}
-                            title="button"
-                            aria-label="start button simulator"
-                        >
-                            🔘
-                        </IconButton>
-                        , or a
-                        <IconButton
-                            onClick={handleStartSimulator(SRV_POTENTIOMETER)}
-                            title="slider"
-                            aria-label="start slider simulator"
-                        >
-                            🎚️
-                        </IconButton>
-                        , or a
-                        <IconButton
-                            onClick={handleStartSimulator(SRV_LED)}
-                            title="LED"
-                            aria-label="start LED simulator"
-                        >
-                            💡
-                        </IconButton>
-                        , or a
-                        <IconButton
-                            onClick={handleStartSimulator(SRV_TRAFFIC_LIGHT)}
-                            title="traffic light"
-                            aria-label="start traffic light simulator"
-                        >
-                            🚦
-                        </IconButton>
-                        ... or many more by clicking &nbsp;
-                        <IconButtonWithTooltip
-                            title="start simulator"
-                            onClick={toggleShowDeviceHostsDialog}
-                        >
-                            <AddIcon />
-                        </IconButtonWithTooltip>
-                        .
-                    </Alert>
+                    <Grid item xs={12}>
+                        <Alert severity="info">
+                            Simulate a{" "}
+                            <IconButton
+                                onClick={handleStartSimulator(SRV_BUTTON)}
+                                title="button"
+                                aria-label="start button simulator"
+                            >
+                                🔘
+                            </IconButton>
+                            , or a
+                            <IconButton
+                                onClick={handleStartSimulator(
+                                    SRV_POTENTIOMETER
+                                )}
+                                title="slider"
+                                aria-label="start slider simulator"
+                            >
+                                🎚️
+                            </IconButton>
+                            , or a
+                            <IconButton
+                                onClick={handleStartSimulator(SRV_LED)}
+                                title="LED"
+                                aria-label="start LED simulator"
+                            >
+                                💡
+                            </IconButton>
+                            , or a
+                            <IconButton
+                                onClick={handleStartSimulator(
+                                    SRV_TRAFFIC_LIGHT
+                                )}
+                                title="traffic light"
+                                aria-label="start traffic light simulator"
+                            >
+                                🚦
+                            </IconButton>
+                            ... or many more by clicking &nbsp;
+                            <IconButtonWithTooltip
+                                title="start simulator"
+                                onClick={toggleShowDeviceHostsDialog}
+                            >
+                                <AddIcon />
+                            </IconButtonWithTooltip>
+                            .
+                        </Alert>
+                    </Grid>
                 )}
             </DashboardDeviceGroup>
             <DashboardDeviceGroup
