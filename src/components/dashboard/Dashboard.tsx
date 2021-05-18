@@ -143,7 +143,7 @@ export default function Dashboard(props: DashboardProps) {
             >
                 {showStartSimulators && !simulators?.length && (
                     <Grid item xs={12}>
-                        <Alert severity="info">
+                        <Alert severity="info" closeable={true}>
                             Simulate devices (
                             <IconButton
                                 onClick={handleStartSimulator(SRV_BUTTON)}
