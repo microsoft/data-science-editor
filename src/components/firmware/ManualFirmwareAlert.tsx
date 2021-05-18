@@ -8,9 +8,9 @@ import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import SelectWithLabel from "../ui/SelectWithLabel"
 import useFirmwareBlobs from "./useFirmwareBlobs"
 import { FirmwareBlob } from "../../../jacdac-ts/src/jdom/flashing"
-import DeviceActions from "../DeviceActions"
 import { FlashDeviceButton } from "./FlashDeviceButton"
 import { unique } from "../../../jacdac-ts/src/jdom/utils"
+import SelectDevice from "../devices/SelectDevice"
 
 const fwid = (fw: FirmwareBlob) =>
     fw ? `${fw.store},${fw.firmwareIdentifier},${fw.version}` : ""
@@ -28,12 +28,7 @@ function ManualFirmware() {
     const [firmwareId, setFirmwareId] = useState<string>(fwid(firmwares?.[0]))
     const [store, setStore] = useState<string>(stores?.[0] || "")
 
-    const handleDeviceChange = (
-        ev: ChangeEvent<{ name?: string; value: unknown }>
-    ) => {
-        const id = ev.target.value as string
-        setDeviceId(id)
-    }
+    const handleDeviceChange = (newId: string) => setDeviceId(newId)
     const handleStoreChange = (
         ev: ChangeEvent<{ name?: string; value: unknown }>
     ) => {
@@ -53,20 +48,11 @@ function ManualFirmware() {
     return (
         <Grid container spacing={1}>
             <Grid item xs={12}>
-                <SelectWithLabel
-                    helperText="choose a device"
-                    value={deviceId}
+                <SelectDevice
+                    devices={devices}
+                    deviceId={deviceId}
                     onChange={handleDeviceChange}
-                >
-                    {devices?.map(dev => (
-                        <MenuItem key={dev.id} value={dev.id}>
-                            {dev.describe()}
-                        </MenuItem>
-                    ))}
-                </SelectWithLabel>
-                {deviceId && (
-                    <DeviceActions device={bus.node(deviceId) as JDDevice} />
-                )}
+                />
             </Grid>
             <Grid item xs={12}>
                 <Grid container direction="row" spacing={1}>
