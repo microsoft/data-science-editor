@@ -27,10 +27,11 @@ import {
 } from "../../../jacdac-ts/src/servers/servers"
 import {
     SRV_BUTTON,
+    SRV_BUZZER,
+    SRV_JOYSTICK,
     SRV_LED,
-    SRV_POTENTIOMETER,
     SRV_TRAFFIC_LIGHT,
-} from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
+} from "../../../jacdac-ts/src/jdom/constants"
 
 function defaultDeviceSort(l: JDDevice, r: JDDevice): number {
     const srvScore = (srv: jdspec.ServiceSpec) =>
@@ -143,7 +144,7 @@ export default function Dashboard(props: DashboardProps) {
                 {showStartSimulators && !simulators?.length && (
                     <Grid item xs={12}>
                         <Alert severity="info">
-                            Simulate a{" "}
+                            Simulate devices (
                             <IconButton
                                 onClick={handleStartSimulator(SRV_BUTTON)}
                                 title="button"
@@ -151,17 +152,22 @@ export default function Dashboard(props: DashboardProps) {
                             >
                                 🔘
                             </IconButton>
-                            , or a
+                            ,
                             <IconButton
-                                onClick={handleStartSimulator(
-                                    SRV_POTENTIOMETER
-                                )}
-                                title="slider"
-                                aria-label="start slider simulator"
+                                onClick={handleStartSimulator(SRV_BUZZER)}
+                                title="buzzer"
+                                aria-label="start buzzer simulator"
                             >
-                                🎚️
+                                🎹
                             </IconButton>
-                            , or a
+                            <IconButton
+                                onClick={handleStartSimulator(SRV_JOYSTICK)}
+                                title="joystick"
+                                aria-label="start joystick simulator"
+                            >
+                                🕹️
+                            </IconButton>
+                            ,
                             <IconButton
                                 onClick={handleStartSimulator(SRV_LED)}
                                 title="LED"
@@ -169,7 +175,7 @@ export default function Dashboard(props: DashboardProps) {
                             >
                                 💡
                             </IconButton>
-                            , or a
+                            ,
                             <IconButton
                                 onClick={handleStartSimulator(
                                     SRV_TRAFFIC_LIGHT
@@ -179,7 +185,7 @@ export default function Dashboard(props: DashboardProps) {
                             >
                                 🚦
                             </IconButton>
-                            ... or many more by clicking &nbsp;
+                            , ...) by clicking &nbsp;
                             <IconButtonWithTooltip
                                 title="start simulator"
                                 onClick={toggleShowDeviceHostsDialog}
