@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, { useContext, useState } from "react"
 import SelectEvent from "../../components/select/SelectEvent"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import useDevices from "../../components/hooks/useDevices"
@@ -25,12 +25,29 @@ import IconButtonWithTooltip from "../../components/ui/IconButtonWithTooltip"
 import AddIcon from "@material-ui/icons/Add"
 import DeleteIcon from "@material-ui/icons/Delete"
 import SelectServiceGrid from "../../components/select/SelectServiceGrid"
-import CmdButton from "../../components/CmdButton"
+import SettingsClient from "../../../jacdac-ts/src/jdom/settingsclient"
+import useServiceClient from "../../components/useServiceClient"
+import { stringToBuffer } from "../../../jacdac-ts/src/jdom/utils"
+import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
+import { randomDeviceId } from "../../../jacdac-ts/src/jdom/random"
 
 interface HIDEvent {
+    key?: string
     eventId: string
     selector: number
     modifiers: HidKeyboardModifiers
+}
+
+function HIDEventToBuffer(event: JDEvent, ev: HIDEvent) {
+    const deviceId = stringToBuffer(event.service.device.deviceId)
+    const payload = jdpack("b[8] u32 u8 u8 u16", [
+        deviceId,
+        event.service.serviceClass,
+        event.code,
+        ev.selector,
+        ev.modifiers,
+    ])
+    return payload
 }
 
 function SelectHIDEvent(props: { onAdd: (hidEvent: HIDEvent) => void }) {
@@ -126,78 +143,97 @@ function SelectHIDEvent(props: { onAdd: (hidEvent: HIDEvent) => void }) {
     )
 }
 
+const PREFIX = "@ke_"
 export default function HIDEvents() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const [device, setDevice] = useState<JDDevice>()
+    const [settingsService, setSettingsService] = useState<JDService>()
     const [hidEvents, setHIDEvents] = useState<HIDEvent[]>([])
-    const handleAdd = (hidEvent: HIDEvent) => {
-        setHIDEvents([...hidEvents, hidEvent])
+
+    const settings = useServiceClient(
+        settingsService,
+        srv => new SettingsClient(srv)
+    )
+    useChange(settings, async () => {
+        console.log(`settings changed`)
+        const hes: HIDEvent[] = []
+        if (settings) {
+            const all = await settings.list()
+            console.log({ all })
+            for (const kv of all.filter(entry =>
+                entry.key?.startsWith(PREFIX)
+            )) {
+                const { value } = kv
+                // decode value
+                console.log({ value })
+            }
+        }
+        if (JSON.stringify(hes) !== JSON.stringify(hidEvents)) setHIDEvents(hes)
+    })
+    const handleAdd = async (hidEvent: HIDEvent) => {
+        const event = bus.node(hidEvent.eventId) as JDEvent
+        if (!event) return
+
+        const payload = HIDEventToBuffer(event, hidEvent)
+        settings.setValue(PREFIX + randomDeviceId(), payload)
     }
     const handleRemoveBinding = (index: number) => () => {
-        setHIDEvents([
-            ...hidEvents.slice(0, index),
-            ...hidEvents.slice(index + 1),
-        ])
+        const { key } = hidEvents[index]
+        if (key) settings.deleteValue(key)
     }
-    const handleSelectHub = (service: JDService) => {}
-    const handleSave = async () => {}
-    const saveDisabled = !device
+    const handleSelectHub = (service: JDService) => setSettingsService(service)
     return (
         <>
-            <h1>HID Event</h1>
-            <h2>Select hub</h2>
+            <h1>Map events to Keyboard combos</h1>
             <SelectServiceGrid
                 onSelect={handleSelectHub}
                 serviceClass={SRV_SETTINGS}
             />
-            <h2>Configure keys</h2>
-            <SelectHIDEvent onAdd={handleAdd} />
-            <Grid container spacing={1}>
-                {hidEvents.map(({ eventId, selector, modifiers }, index) => {
-                    const event = bus.node(eventId) as JDEvent
-                    return (
-                        <Grid item xs={12} key={index}>
-                            <Grid
-                                container
-                                direction="row"
-                                spacing={1}
-                                alignContent="center"
-                            >
-                                <Grid item xs>
-                                    <Input
-                                        value={event.friendlyName}
-                                        readOnly={true}
-                                    />
-                                </Grid>
-                                <Grid item xs>
-                                    <Input
-                                        value={renderKey(selector, modifiers)}
-                                        readOnly={true}
-                                    />
-                                </Grid>
-                                <Grid item>
-                                    <IconButtonWithTooltip
-                                        title={"Remove binding"}
-                                        onClick={handleRemoveBinding(index)}
+            {settings && <SelectHIDEvent onAdd={handleAdd} />}
+            {settings && (
+                <Grid container spacing={1}>
+                    {hidEvents.map(
+                        ({ eventId, selector, modifiers }, index) => {
+                            const event = bus.node(eventId) as JDEvent
+                            return (
+                                <Grid item xs={12} key={index}>
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        spacing={1}
+                                        alignContent="center"
                                     >
-                                        <DeleteIcon />
-                                    </IconButtonWithTooltip>
+                                        <Grid item xs>
+                                            <Input
+                                                value={event.friendlyName}
+                                                readOnly={true}
+                                            />
+                                        </Grid>
+                                        <Grid item xs>
+                                            <Input
+                                                value={renderKey(
+                                                    selector,
+                                                    modifiers
+                                                )}
+                                                readOnly={true}
+                                            />
+                                        </Grid>
+                                        <Grid item>
+                                            <IconButtonWithTooltip
+                                                title={"Remove binding"}
+                                                onClick={handleRemoveBinding(
+                                                    index
+                                                )}
+                                            >
+                                                <DeleteIcon />
+                                            </IconButtonWithTooltip>
+                                        </Grid>
+                                    </Grid>
                                 </Grid>
-                            </Grid>
-                        </Grid>
-                    )
-                })}
-            </Grid>
-            <h3>Save configuration</h3>
-            <CmdButton
-                variant="contained"
-                color="primary"
-                title="Save keys to device"
-                onClick={handleSave}
-                disabled={saveDisabled}
-            >
-                Save
-            </CmdButton>
+                            )
+                        }
+                    )}
+                </Grid>
+            )}
         </>
     )
 }
