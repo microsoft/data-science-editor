@@ -19,7 +19,6 @@ import ConnectButtons from "../../jacdac/ConnectButtons"
 import useRoleManager from "../services/useRoleManager"
 import useMediaQueries from "../hooks/useMediaQueries"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
-import { Alert } from "@material-ui/lab"
 import { IconButton } from "gatsby-theme-material-ui"
 import {
     addServiceProvider,
@@ -32,6 +31,7 @@ import {
     SRV_LED,
     SRV_TRAFFIC_LIGHT,
 } from "../../../jacdac-ts/src/jdom/constants"
+import Alert from "../ui/Alert"
 
 function defaultDeviceSort(l: JDDevice, r: JDDevice): number {
     const srvScore = (srv: jdspec.ServiceSpec) =>

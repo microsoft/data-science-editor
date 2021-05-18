@@ -1,14 +1,48 @@
-import { Box, Collapse } from '@material-ui/core';
-import { Alert as MaterialAlert, AlertProps } from '@material-ui/lab';
-import React, { useState } from 'react';
+import { Collapse, createStyles, makeStyles } from "@material-ui/core"
+import {
+    Alert as MaterialAlert,
+    AlertProps,
+    AlertTitle,
+} from "@material-ui/lab"
+import React, { ReactNode, useState } from "react"
 
-export default function Alert(props: { closeable?: boolean; } & AlertProps) {
-    const { closeable, ...others } = props;
+const useStyles = makeStyles(theme =>
+    createStyles({
+        root: {
+            marginBottom: theme.spacing(2),
+        },
+        icon: {
+            flexDirection: "column",
+            justifyContent: "center",
+        },
+    })
+)
+
+export default function Alert(
+    props: {
+        closeable?: boolean
+        title?: ReactNode
+        children: ReactNode
+    } & AlertProps
+) {
+    const { closeable, title, children, ...others } = props
+    const classes = useStyles()
+    console.log({ classes })
     const [open, setOpen] = useState(true)
     const handleClose = () => setOpen(false)
-    return <Box mb={2}>
+    return (
         <Collapse in={open}>
-            <MaterialAlert onClose={closeable && handleClose} {...others} />
+            <MaterialAlert
+                className={classes.root}
+                classes={{
+                    icon: !title && classes.icon,
+                }}
+                onClose={closeable && handleClose}
+                {...others}
+            >
+                {title && <AlertTitle>{title}</AlertTitle>}
+                {children}
+            </MaterialAlert>
         </Collapse>
-    </Box>
+    )
 }
