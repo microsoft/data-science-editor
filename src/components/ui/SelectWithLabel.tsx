@@ -2,6 +2,7 @@ import {
     FormControl,
     FormHelperText,
     InputLabel,
+    MenuItem,
     Select,
 } from "@material-ui/core"
 import React, { ChangeEvent, ReactNode } from "react"
@@ -20,6 +21,7 @@ export default function SelectWithLabel(props: {
     onClose?: (ev: ChangeEvent<unknown>) => void
     helperText?: string
     children?: ReactNode
+    none?: ReactNode
 }) {
     const {
         label,
@@ -34,6 +36,7 @@ export default function SelectWithLabel(props: {
         children,
         helperText,
         type,
+        none,
     } = props
     const labelId = useId()
     const descrId = useId()
@@ -57,6 +60,11 @@ export default function SelectWithLabel(props: {
                 onChange={onChange}
                 onClose={onClose}
             >
+                {none && (
+                    <MenuItem key={"none"} value={""}>
+                        {none}
+                    </MenuItem>
+                )}
                 {children}
             </Select>
             {hasDescr && (

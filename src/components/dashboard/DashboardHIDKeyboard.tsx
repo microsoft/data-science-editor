@@ -236,14 +236,6 @@ export default function DashboardHIDKeyboard(props: DashboardServiceProps) {
             if (newModifiers & mcode) newModifiers &= ~mcode
             else newModifiers |= mcode
         }
-
-        console.log({
-            key,
-            code,
-            newModifiers: newModifiers.toString(16),
-            newSelector: newSelector.toString(16),
-        })
-
         if (newSelector) setSelector(newSelector)
         setModifiers(newModifiers)
     }

@@ -10,7 +10,7 @@ import useFirmwareBlobs from "./useFirmwareBlobs"
 import { FirmwareBlob } from "../../../jacdac-ts/src/jdom/flashing"
 import { FlashDeviceButton } from "./FlashDeviceButton"
 import { unique } from "../../../jacdac-ts/src/jdom/utils"
-import SelectDevice from "../devices/SelectDevice"
+import SelectDevice from "../select/SelectDevice"
 
 const fwid = (fw: FirmwareBlob) =>
     fw ? `${fw.store},${fw.firmwareIdentifier},${fw.version}` : ""

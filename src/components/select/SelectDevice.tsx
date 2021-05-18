@@ -25,6 +25,7 @@ export default function SelectDevice(props: {
             helperText="choose a device"
             value={deviceId}
             onChange={handleDeviceChange}
+            disabled={!devices?.length}
         >
             {devices?.map(dev => (
                 <MenuItem key={dev.id} value={dev.id}>

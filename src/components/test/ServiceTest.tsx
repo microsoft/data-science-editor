@@ -14,7 +14,7 @@ import {
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { serviceTestFromServiceClass } from "../../../jacdac-ts/src/test/testspec"
-import SelectService from "../SelectService"
+import SelectServiceGrid from "../select/SelectServiceGrid"
 import ServiceTestRunner from "./ServiceTestRunner"
 import { DISCONNECT } from "../../../jacdac-ts/src/jdom/constants"
 
@@ -45,7 +45,7 @@ function ServiceTestRunnerSelect(props: {
     return (
         <>
             <h3>Select a device to test</h3>
-            <SelectService serviceClass={serviceClass} onSelect={onSelect} />
+            <SelectServiceGrid serviceClass={serviceClass} onSelect={onSelect} />
         </>
     )
 }

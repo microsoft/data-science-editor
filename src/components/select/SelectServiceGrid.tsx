@@ -1,13 +1,13 @@
 import React, { useContext } from "react"
-import useGridBreakpoints from "./useGridBreakpoints"
-import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
-import useChange from "../jacdac/useChange"
+import useGridBreakpoints from "../useGridBreakpoints"
+import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
+import useChange from "../../jacdac/useChange"
 import { Grid, Card, CardActions, Button } from "@material-ui/core"
-import DeviceCardHeader from "./DeviceCardHeader"
-import Alert from "./ui/Alert"
-import { JDService } from "../../jacdac-ts/src/jdom/service"
+import DeviceCardHeader from "../DeviceCardHeader"
+import Alert from "../ui/Alert"
+import { JDService } from "../../../jacdac-ts/src/jdom/service"
 
-export default function SelectService(props: {
+export default function SelectServiceGrid(props: {
     serviceClass: number
     onSelect: (service: JDService) => void
 }) {

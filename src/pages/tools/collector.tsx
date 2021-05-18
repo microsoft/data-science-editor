@@ -24,7 +24,7 @@ import FieldDataSet from "../../components/FieldDataSet"
 import Trend from "../../components/Trend"
 // tslint:disable-next-line: no-submodule-imports
 import Alert from "../../components/ui/Alert"
-import EventSelect from "../../components/EventSelect"
+import SelectEvent from "../../components/select/SelectEvent"
 import { JDEvent } from "../../../jacdac-ts/src/jdom/event"
 import {
     EVENT,
@@ -42,6 +42,7 @@ import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import ServiceManagerContext from "../../components/ServiceManagerContext"
 import useChartPalette from "../../components/useChartPalette"
 import { isSensor } from "../../../jacdac-ts/src/jdom/spec"
+import useEvents from "../../components/hooks/useEvents"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -136,6 +137,7 @@ export default function Collector() {
     const error = errorSamplingDuration || errorSamplingIntervalDelay
     const triggerEvent = bus.node(triggerEventId) as JDEvent
     const startEnabled = !!recordingRegisters?.length
+    const events = useEvents()
 
     useEffect(() => {
         //console.log(`trigger event`, triggerEventId, triggerEvent)
@@ -425,8 +427,8 @@ export default function Collector() {
                         variant="outlined"
                         onChange={handlePrefixChange}
                     />
-                    <EventSelect
-                        className={classes.field}
+                    <SelectEvent
+                        events={events}
                         eventId={triggerEventId}
                         onChange={handleTriggerChange}
                         label={"Start Event"}
