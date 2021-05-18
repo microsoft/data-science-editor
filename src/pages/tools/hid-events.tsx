@@ -27,9 +27,10 @@ import DeleteIcon from "@material-ui/icons/Delete"
 import SelectServiceGrid from "../../components/select/SelectServiceGrid"
 import SettingsClient from "../../../jacdac-ts/src/jdom/settingsclient"
 import useServiceClient from "../../components/useServiceClient"
-import { stringToBuffer } from "../../../jacdac-ts/src/jdom/utils"
-import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
+import { fromHex, toHex } from "../../../jacdac-ts/src/jdom/utils"
+import { jdpack, jdunpack } from "../../../jacdac-ts/src/jdom/pack"
 import { randomDeviceId } from "../../../jacdac-ts/src/jdom/random"
+import { JDBus } from "../../../jacdac-ts/src/jdom/bus"
 
 interface HIDEvent {
     key?: string
@@ -38,16 +39,46 @@ interface HIDEvent {
     modifiers: HidKeyboardModifiers
 }
 
+type FORMAT_TYPE = [Uint8Array, number, number, number, number, number]
+const FORMAT = "b[8] u32 u8 u8 u16 u16"
+
 function HIDEventToBuffer(event: JDEvent, ev: HIDEvent) {
-    const deviceId = stringToBuffer(event.service.device.deviceId)
-    const payload = jdpack("b[8] u32 u8 u8 u16", [
+    const deviceId = fromHex(event.service.device.deviceId)
+    const { service, code } = event
+    const { serviceClass, serviceIndex } = service
+    const { selector, modifiers } = ev
+    const payload = jdpack<FORMAT_TYPE>(FORMAT, [
         deviceId,
-        event.service.serviceClass,
-        event.code,
-        ev.selector,
-        ev.modifiers,
+        serviceClass,
+        serviceIndex,
+        code,
+        selector,
+        modifiers,
     ])
     return payload
+}
+
+function bufferToHIDEvent(key: string, data: Uint8Array, bus: JDBus): HIDEvent {
+    if (data?.length !== 18) return undefined
+    const [
+        deviceId,
+        serviceClass,
+        serviceIndex,
+        eventCode,
+        selector,
+        modifiers,
+    ] = jdunpack<FORMAT_TYPE>(data, FORMAT)
+    const deviceIds = toHex(deviceId)
+    const device = bus.device(deviceIds, true)
+    const event = device?.service(serviceIndex)?.event(eventCode)
+
+    if (!event || event.service.serviceClass !== serviceClass) return undefined
+    return {
+        key,
+        eventId: event.id,
+        selector,
+        modifiers,
+    }
 }
 
 function SelectHIDEvent(props: { onAdd: (hidEvent: HIDEvent) => void }) {
@@ -162,9 +193,9 @@ export default function HIDEvents() {
             for (const kv of all.filter(entry =>
                 entry.key?.startsWith(PREFIX)
             )) {
-                const { value } = kv
-                // decode value
-                console.log({ value })
+                const { key, value } = kv
+                const he = bufferToHIDEvent(key, value, bus)
+                if (he) hes.push(he)
             }
         }
         if (JSON.stringify(hes) !== JSON.stringify(hidEvents)) setHIDEvents(hes)
