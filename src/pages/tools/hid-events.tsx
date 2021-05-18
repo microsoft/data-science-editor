@@ -3,7 +3,14 @@ import SelectEvent from "../../components/select/SelectEvent"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import useDevices from "../../components/hooks/useDevices"
 import SelectDevice from "../../components/select/SelectDevice"
-import { Grid, Input } from "@material-ui/core"
+import {
+    Grid,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+} from "@material-ui/core"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import useChange from "../../jacdac/useChange"
 import SelectService from "../../components/select/SelectService"
@@ -24,16 +31,16 @@ import KeyboardKeyInput, {
 import IconButtonWithTooltip from "../../components/ui/IconButtonWithTooltip"
 import AddIcon from "@material-ui/icons/Add"
 import DeleteIcon from "@material-ui/icons/Delete"
-import SelectServiceGrid from "../../components/select/SelectServiceGrid"
 import SettingsClient from "../../../jacdac-ts/src/jdom/settingsclient"
 import useServiceClient from "../../components/useServiceClient"
 import { fromHex, toHex } from "../../../jacdac-ts/src/jdom/utils"
 import { jdpack, jdunpack } from "../../../jacdac-ts/src/jdom/pack"
 import { randomDeviceId } from "../../../jacdac-ts/src/jdom/random"
 import { JDBus } from "../../../jacdac-ts/src/jdom/bus"
+import useServices from "../../components/hooks/useServices"
 
 // all settings keys are prefixed with this string
-const PREFIX = "@ke_" 
+const PREFIX = "@ke_"
 // data layout format (18bytes)
 const FORMAT = "b[8] u32 u8 u8 u16 u16"
 // data layout types
@@ -45,7 +52,6 @@ interface HIDEvent {
     selector: number
     modifiers: HidKeyboardModifiers
 }
-
 
 function HIDEventToBuffer(event: JDEvent, ev: HIDEvent) {
     const deviceId = fromHex(event.service.device.deviceId)
@@ -181,6 +187,7 @@ function SelectHIDEvent(props: { onAdd: (hidEvent: HIDEvent) => void }) {
 
 export default function HIDEvents() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const services = useServices({ serviceClass: SRV_SETTINGS })
     const [settingsService, setSettingsService] = useState<JDService>()
     const [hidEvents, setHIDEvents] = useState<HIDEvent[]>([])
 
@@ -189,11 +196,9 @@ export default function HIDEvents() {
         srv => new SettingsClient(srv)
     )
     useChange(settings, async () => {
-        console.log(`settings changed`)
         const hes: HIDEvent[] = []
         if (settings) {
             const all = await settings.list()
-            console.log({ all })
             for (const kv of all.filter(entry =>
                 entry.key?.startsWith(PREFIX)
             )) {
@@ -215,60 +220,89 @@ export default function HIDEvents() {
         const { key } = hidEvents[index]
         if (key) settings.deleteValue(key)
     }
-    const handleSelectHub = (service: JDService) => setSettingsService(service)
+    const handleSelectHub = (newServiceId: string) =>
+        setSettingsService(bus.node(newServiceId) as JDService)
     return (
         <>
             <h1>Map events to Keyboard combos</h1>
-            <SelectServiceGrid
-                onSelect={handleSelectHub}
-                serviceClass={SRV_SETTINGS}
-            />
-            {settings && <SelectHIDEvent onAdd={handleAdd} />}
-            {settings && (
-                <Grid container spacing={1}>
-                    {hidEvents.map(
-                        ({ eventId, selector, modifiers }, index) => {
-                            const event = bus.node(eventId) as JDEvent
-                            return (
-                                <Grid item xs={12} key={index}>
-                                    <Grid
-                                        container
-                                        direction="row"
-                                        spacing={1}
-                                        alignContent="center"
-                                    >
-                                        <Grid item xs>
-                                            <Input
-                                                value={event.friendlyName}
-                                                readOnly={true}
-                                            />
-                                        </Grid>
-                                        <Grid item xs>
-                                            <Input
-                                                value={renderKey(
-                                                    selector,
-                                                    modifiers
-                                                )}
-                                                readOnly={true}
-                                            />
-                                        </Grid>
-                                        <Grid item>
-                                            <IconButtonWithTooltip
-                                                title={"Remove binding"}
-                                                onClick={handleRemoveBinding(
-                                                    index
-                                                )}
-                                            >
-                                                <DeleteIcon />
-                                            </IconButtonWithTooltip>
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-                            )
-                        }
-                    )}
+            <Grid container spacing={1}>
+                <Grid item xs={12}>
+                    <SelectService
+                        helperText="choose a hub"
+                        friendlyName={true}
+                        services={services}
+                        serviceId={settingsService?.id}
+                        onChange={handleSelectHub}
+                    />
                 </Grid>
-            )}
+                {settings && (
+                    <Grid item xs={12}>
+                        <SelectHIDEvent onAdd={handleAdd} />
+                    </Grid>
+                )}
+
+                {settings && (
+                    <Grid item>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Device</TableCell>
+                                    <TableCell>Service</TableCell>
+                                    <TableCell>Event</TableCell>
+                                    <TableCell>Key</TableCell>
+                                    <TableCell />
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {hidEvents.map(
+                                    (
+                                        { eventId, selector, modifiers },
+                                        index
+                                    ) => {
+                                        const event = bus.node(
+                                            eventId
+                                        ) as JDEvent
+                                        return (
+                                            <TableRow key={index}>
+                                                <TableCell>
+                                                    {
+                                                        event.service.device
+                                                            .friendlyName
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {event.service.name}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {event.name}
+                                                </TableCell>
+                                                <TableCell>
+                                                    <code>
+                                                        {renderKey(
+                                                            selector,
+                                                            modifiers
+                                                        )}
+                                                    </code>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <IconButtonWithTooltip
+                                                        title={"Remove binding"}
+                                                        onClick={handleRemoveBinding(
+                                                            index
+                                                        )}
+                                                    >
+                                                        <DeleteIcon />
+                                                    </IconButtonWithTooltip>
+                                                </TableCell>
+                                            </TableRow>
+                                        )
+                                    }
+                                )}
+                            </TableBody>
+                        </Table>
+                    </Grid>
+                )}
+            </Grid>
         </>
     )
 }

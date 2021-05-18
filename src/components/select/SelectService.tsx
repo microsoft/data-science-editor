@@ -8,8 +8,9 @@ export default function SelectService(props: {
     serviceId: string
     onChange: (newServiceId: string) => void
     friendlyName?: boolean
+    helperText?: string
 }) {
-    const { services, serviceId, onChange, friendlyName } = props
+    const { services, serviceId, onChange, helperText, friendlyName } = props
 
     const handleChange = async (
         ev: ChangeEvent<{ name?: string; value: unknown }>
@@ -19,7 +20,7 @@ export default function SelectService(props: {
     }
     return (
         <SelectWithLabel
-            helperText="choose a service"
+            helperText={helperText || "choose a service"}
             value={serviceId}
             onChange={handleChange}
             disabled={!services?.length}
