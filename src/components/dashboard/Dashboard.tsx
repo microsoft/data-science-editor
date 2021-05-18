@@ -19,19 +19,7 @@ import ConnectButtons from "../../jacdac/ConnectButtons"
 import useRoleManager from "../services/useRoleManager"
 import useMediaQueries from "../hooks/useMediaQueries"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
-import { IconButton } from "gatsby-theme-material-ui"
-import {
-    addServiceProvider,
-    serviceProviderDefinitionFromServiceClass,
-} from "../../../jacdac-ts/src/servers/servers"
-import {
-    SRV_BUTTON,
-    SRV_BUZZER,
-    SRV_JOYSTICK,
-    SRV_LED,
-    SRV_TRAFFIC_LIGHT,
-} from "../../../jacdac-ts/src/jdom/constants"
-import Alert from "../ui/Alert"
+import SimulateDeviceAlert from "../alert/SimulateDeviceAlert"
 
 function defaultDeviceSort(l: JDDevice, r: JDDevice): number {
     const srvScore = (srv: jdspec.ServiceSpec) =>
@@ -103,10 +91,6 @@ export default function Dashboard(props: DashboardProps) {
         bus.serviceProviders().forEach(dev => bus.removeServiceProvider(dev))
     }
     const handleStartSimulators = () => roleManager?.startSimulators()
-    const handleStartSimulator = (serviceClass: number) => () => {
-        const provider = serviceProviderDefinitionFromServiceClass(serviceClass)
-        addServiceProvider(bus, provider)
-    }
 
     return (
         <>
@@ -143,57 +127,7 @@ export default function Dashboard(props: DashboardProps) {
             >
                 {showStartSimulators && !simulators?.length && (
                     <Grid item xs={12}>
-                        <Alert severity="info" closeable={true}>
-                            Simulate devices (
-                            <IconButton
-                                onClick={handleStartSimulator(SRV_BUTTON)}
-                                title="button"
-                                aria-label="start button simulator"
-                            >
-                                🔘
-                            </IconButton>
-                            ,
-                            <IconButton
-                                onClick={handleStartSimulator(SRV_BUZZER)}
-                                title="buzzer"
-                                aria-label="start buzzer simulator"
-                            >
-                                🎹
-                            </IconButton>
-                            <IconButton
-                                onClick={handleStartSimulator(SRV_JOYSTICK)}
-                                title="joystick"
-                                aria-label="start joystick simulator"
-                            >
-                                🕹️
-                            </IconButton>
-                            ,
-                            <IconButton
-                                onClick={handleStartSimulator(SRV_LED)}
-                                title="LED"
-                                aria-label="start LED simulator"
-                            >
-                                💡
-                            </IconButton>
-                            ,
-                            <IconButton
-                                onClick={handleStartSimulator(
-                                    SRV_TRAFFIC_LIGHT
-                                )}
-                                title="traffic light"
-                                aria-label="start traffic light simulator"
-                            >
-                                🚦
-                            </IconButton>
-                            , ...) by clicking &nbsp;
-                            <IconButtonWithTooltip
-                                title="start simulator"
-                                onClick={toggleShowDeviceHostsDialog}
-                            >
-                                <AddIcon />
-                            </IconButtonWithTooltip>
-                            .
-                        </Alert>
+                        <SimulateDeviceAlert />
                     </Grid>
                 )}
             </DashboardDeviceGroup>
