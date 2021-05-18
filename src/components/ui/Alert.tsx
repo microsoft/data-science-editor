@@ -27,7 +27,6 @@ export default function Alert(
 ) {
     const { closeable, title, children, ...others } = props
     const classes = useStyles()
-    console.log({ classes })
     const [open, setOpen] = useState(true)
     const handleClose = () => setOpen(false)
     return (
