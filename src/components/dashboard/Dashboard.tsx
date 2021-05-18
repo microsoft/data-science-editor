@@ -20,7 +20,18 @@ import useRoleManager from "../services/useRoleManager"
 import useMediaQueries from "../hooks/useMediaQueries"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { Alert } from "@material-ui/lab"
-import { Button } from "gatsby-theme-material-ui"
+import { Button, IconButton } from "gatsby-theme-material-ui"
+import {
+    addServiceProvider,
+    serviceProviderDefinitionFromServiceClass,
+} from "../../../jacdac-ts/src/servers/servers"
+import {
+    SRV_BUTTON,
+    SRV_LED,
+    SRV_POTENTIOMETER,
+    SRV_SERVO,
+    SRV_TRAFFIC_LIGHT,
+} from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 
 function defaultDeviceSort(l: JDDevice, r: JDDevice): number {
     const srvScore = (srv: jdspec.ServiceSpec) =>
@@ -92,6 +103,10 @@ export default function Dashboard(props: DashboardProps) {
         bus.serviceProviders().forEach(dev => bus.removeServiceProvider(dev))
     }
     const handleStartSimulators = () => roleManager?.startSimulators()
+    const handleStartSimulator = (serviceClass: number) => () => {
+        const provider = serviceProviderDefinitionFromServiceClass(serviceClass)
+        addServiceProvider(bus, provider)
+    }
 
     return (
         <>
@@ -126,11 +141,48 @@ export default function Dashboard(props: DashboardProps) {
                 toggleExpanded={toggleSelected}
                 {...other}
             >
-                {showStartSimulators && simulators?.length && (
+                {showStartSimulators && !simulators?.length && (
                     <Alert severity="info">
-                        Simulate a <Button>button</Button> or a{" "}
-                        <Button>servo</Button>... or any other by clicking
-                        <AddIcon />.
+                        Simulate a{" "}
+                        <IconButton
+                            onClick={handleStartSimulator(SRV_BUTTON)}
+                            title="button"
+                            aria-label="start button simulator"
+                        >
+                            🔘
+                        </IconButton>
+                        , or a
+                        <IconButton
+                            onClick={handleStartSimulator(SRV_POTENTIOMETER)}
+                            title="slider"
+                            aria-label="start slider simulator"
+                        >
+                            🎚️
+                        </IconButton>
+                        , or a
+                        <IconButton
+                            onClick={handleStartSimulator(SRV_LED)}
+                            title="LED"
+                            aria-label="start LED simulator"
+                        >
+                            💡
+                        </IconButton>
+                        , or a
+                        <IconButton
+                            onClick={handleStartSimulator(SRV_TRAFFIC_LIGHT)}
+                            title="traffic light"
+                            aria-label="start traffic light simulator"
+                        >
+                            🚦
+                        </IconButton>
+                        ... or many more by clicking &nbsp;
+                        <IconButtonWithTooltip
+                            title="start simulator"
+                            onClick={toggleShowDeviceHostsDialog}
+                        >
+                            <AddIcon />
+                        </IconButtonWithTooltip>
+                        .
                     </Alert>
                 )}
             </DashboardDeviceGroup>
