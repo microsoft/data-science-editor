@@ -32,6 +32,13 @@ import { jdpack, jdunpack } from "../../../jacdac-ts/src/jdom/pack"
 import { randomDeviceId } from "../../../jacdac-ts/src/jdom/random"
 import { JDBus } from "../../../jacdac-ts/src/jdom/bus"
 
+// all settings keys are prefixed with this string
+const PREFIX = "@ke_" 
+// data layout format (18bytes)
+const FORMAT = "b[8] u32 u8 u8 u16 u16"
+// data layout types
+type FORMAT_TYPE = [Uint8Array, number, number, number, number, number]
+
 interface HIDEvent {
     key?: string
     eventId: string
@@ -39,8 +46,6 @@ interface HIDEvent {
     modifiers: HidKeyboardModifiers
 }
 
-type FORMAT_TYPE = [Uint8Array, number, number, number, number, number]
-const FORMAT = "b[8] u32 u8 u8 u16 u16"
 
 function HIDEventToBuffer(event: JDEvent, ev: HIDEvent) {
     const deviceId = fromHex(event.service.device.deviceId)
@@ -174,7 +179,6 @@ function SelectHIDEvent(props: { onAdd: (hidEvent: HIDEvent) => void }) {
     )
 }
 
-const PREFIX = "@ke_"
 export default function HIDEvents() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const [settingsService, setSettingsService] = useState<JDService>()
