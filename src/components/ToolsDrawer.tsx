@@ -141,6 +141,7 @@ export default function ToolsDrawer() {
             url: "/tools/updater",
             icon: <SystemUpdateAltIcon />,
         },
+        /*
         {
             // separator
         },
@@ -154,7 +155,6 @@ export default function ToolsDrawer() {
             url: "/tools/jupyterlab",
             icon: <JupyterIcon />,
         },
-        /*
             {
                 text: "Edge Impulse",
                 url: "/tools/edge-impulse",
