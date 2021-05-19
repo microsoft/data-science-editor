@@ -65,6 +65,7 @@ export default function Page() {
 
             <GithubRepositoryList
                 repos={[
+                    "microsoft/jacdac-multitool",
                     "microsoft/node-red-contrib-jacdac",
                     "microsoft/jupyter-jacdac",
                 ]}
