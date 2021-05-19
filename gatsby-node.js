@@ -265,7 +265,9 @@ async function generateServicesJSON() {
 
 async function createWorkers() {
     // copy jacdac-serviceworker.js to static
-    await fs.copy(`./jacdac-ts/dist/jacdac-serviceworker.js`, `./public/jacdac-serviceworker.js`)
+    // include version number to bust out caching
+    const jacdacTsPackageJson = fs.readJsonSync(`./jacdac-ts/package.json`)
+    await fs.copy(`./jacdac-ts/dist/jacdac-serviceworker.js`, `./public/jacdac-serviceworker-${jacdacTsPackageJson.version}.js`)
 }
 
 // Implement the Gatsby API “createPages”. This is

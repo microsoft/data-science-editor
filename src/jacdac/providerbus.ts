@@ -10,6 +10,7 @@ import IFrameBridgeClient from "../../jacdac-ts/src/jdom/iframebridgeclient"
 import Flags from "../../jacdac-ts/src/jdom/flags"
 import GamepadServerManager from "../../jacdac-ts/src/servers/gamepadservermanager"
 import JacdacFlags from "../jacdac/Flags"
+import jacdacTsPackage from "../../jacdac-ts/package.json"
 
 function sniffQueryArguments() {
     if (typeof window === "undefined" || typeof URLSearchParams === "undefined")
@@ -47,7 +48,9 @@ JacdacFlags.peers = args.peers
 function createBus(): JDBus {
     const worker =
         typeof window !== "undefined" &&
-        new Worker(withPrefix("/jacdac-serviceworker.js"))
+        new Worker(
+            withPrefix(`/jacdac-serviceworker-${jacdacTsPackage.version}.js`)
+        )
     const b = new JDBus(
         [
             Flags.webUSB && worker && createUSBWorkerTransport(worker),
