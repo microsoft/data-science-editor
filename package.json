@@ -74,7 +74,8 @@
     "is-svg": "^4.2.2",
     "xmlhttprequest-ssl": "^1.6.2",
     "sanitize-html": "^2.3.2",
-    "trim": "^0.0.3"
+    "trim": "^0.0.3",
+    "postcss": "^8.2.10"
   },
   "keywords": [
     "jacdac"
