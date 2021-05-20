@@ -74,7 +74,7 @@ export const AppProvider = ({ children }) => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const setError = (e: any) => {
-        if (isCancelError(e)) return
+        if (!e || isCancelError(e)) return
         console.error(e)
         const msg = e?.message || e + ""
         const code = errorPath(e)
