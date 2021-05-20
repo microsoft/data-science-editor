@@ -61,13 +61,23 @@ export default function Page() {
                 showDescription={true}
             />
 
-            <h2> Tools & Integrations</h2>
+            <h2>Integrations</h2>
+
+            <GithubRepositoryList
+                repos={[
+                    "microsoft/node-red-contrib-jacdac",
+                    "microsoft/jupyter-jacdac",
+                ]}
+                showDescription={true}
+            />
+
+            <h2>Embedded Tools</h2>
 
             <GithubRepositoryList
                 repos={[
                     "microsoft/pxt-jacdac/tools/multitool",
-                    "microsoft/node-red-contrib-jacdac",
-                    "microsoft/jupyter-jacdac",
+                    "microsoft/pxt-jacdac/tools/hid-events",
+                    "microsoft/pxt-jacdac/devices/microbit",
                 ]}
                 showDescription={true}
             />
