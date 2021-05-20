@@ -28,7 +28,7 @@ function MakeCodeFolderLink(props: {
             target="blank"
         >
             <Typography component="span" variant="h5">
-                {pxtJson?.name || `${repo.name}/ ${folder}`}
+                {`${repo.name}/ ${pxtJson?.name || folder}`}
             </Typography>
         </Link>
     )
