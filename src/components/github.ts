@@ -66,8 +66,13 @@ function contentsToFirmwareReleases(contents: GithubContent[]) {
         .sort((l, r) => -semverCmp(l.version, r.version))
 }
 
-export function normalizeSlug(slug: string): string {
-    return slug.replace(/^https:\/\/github.com\//, "")
+export function normalizeSlug(slug: string) {
+    const cleaned = slug.replace(/^https:\/\/github.com\//, "")
+    const parts = cleaned.split("/")
+    return {
+        repoPath: `${parts[0]}/${parts[1]}`,
+        folder: parts.slice(2).join("/"),
+    }
 }
 
 export interface GitHubApiOptions {
@@ -87,7 +92,8 @@ export async function fetchLatestRelease(
     options?: GitHubApiOptions
 ): Promise<GithubFirmwareRelease> {
     // https://api.github.com/repos/microsoft/jacdac-msr-modules/contents/dist
-    const uri = `${ROOT}repos/${normalizeSlug(slug)}/contents/dist`
+    const { repoPath } = normalizeSlug(slug)
+    const uri = `${ROOT}repos/${repoPath}/contents/dist`
     const resp = await fetch(uri)
     //    console.log(resp)
     switch (resp.status) {
@@ -113,9 +119,8 @@ export async function fetchReleaseBinary(
     version: string
 ): Promise<Blob> {
     // we are not using the release api because of CORS.
-    const downloadUrl = `https://raw.githubusercontent.com/${normalizeSlug(
-        slug
-    )}/main/dist/fw-${version}.uf2`
+    const { repoPath } = normalizeSlug(slug)
+    const downloadUrl = `https://raw.githubusercontent.com/${repoPath}/main/dist/fw-${version}.uf2`
     const req = await fetch(downloadUrl, {
         headers: { Accept: "application/octet-stream" },
     })
@@ -132,9 +137,10 @@ export async function fetchText(
     path: string,
     mimeType: string
 ) {
-    const downloadUrl = `https://raw.githubusercontent.com/${normalizeSlug(
-        slug
-    )}/${tag}/${path}`
+    const { repoPath, folder } = normalizeSlug(slug)
+    const downloadUrl = `https://raw.githubusercontent.com/${repoPath}/${tag}/${
+        folder ? `${folder}/` : ""
+    }${path}`
     const req = await fetch(downloadUrl, {
         headers: { Accept: mimeType },
     })
@@ -174,8 +180,24 @@ function useFetchApi<T>(path: string, options?: GitHubApiOptions) {
     return res
 }
 
+export function useFetchJSON<T>(
+    slug: string,
+    tag: string,
+    path: string,
+    mimeType: "text/plain" | "application/json"
+) {
+    const { repoPath, folder } = normalizeSlug(slug)
+    const downloadUrl = `https://raw.githubusercontent.com/${repoPath}/${tag}/${
+        folder ? `${folder}/` : ""
+    }${path}`
+    return useFetch<T>(downloadUrl, {
+        headers: { Accept: mimeType },
+    })
+}
+
 export function useRepository(slug: string) {
-    const path = `repos/${normalizeSlug(slug)}`
+    const { repoPath } = normalizeSlug(slug)
+    const path = `repos/${repoPath}`
     const res = useFetchApi<GithubRepository>(path, { ignoreThrottled: true })
     return res
 }
@@ -196,7 +218,8 @@ export function useLatestReleases(slug: string, options?: GitHubApiOptions) {
             error: undefined,
             status: undefined,
         }
-    const uri = `repos/${normalizeSlug(slug)}/contents/dist`
+    const { repoPath } = normalizeSlug(slug)
+    const uri = `repos/${repoPath}/contents/dist`
     const res = useFetchApi<GithubContent[]>(uri, {
         ...(options || {}),
         ignoreThrottled: true,

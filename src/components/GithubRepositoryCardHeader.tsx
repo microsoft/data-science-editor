@@ -1,10 +1,38 @@
 import React from "react"
 // tslint:disable-next-line: no-submodule-imports
 import { Box, CardHeader, Typography } from "@material-ui/core"
-import { useLatestRelease, useRepository } from "./github"
+import {
+    GithubRepository,
+    normalizeSlug,
+    useFetchJSON,
+    useLatestRelease,
+    useRepository,
+} from "./github"
 import GitHubIcon from "@material-ui/icons/GitHub"
 import { Link } from "gatsby-theme-material-ui"
 import LoadingProgress from "./ui/LoadingProgress"
+
+function MakeCodeFolderLink(props: {
+    slug: string
+    folder: string
+    repo: GithubRepository
+}) {
+    const { slug, folder, repo } = props
+    const { response: pxtJson } = useFetchJSON<{
+        name: string
+        description: string
+    }>(slug, repo.default_branch, "pxt.json", "application/json")
+    return (
+        <Link
+            href={`${repo.html_url}/tree/${repo.default_branch}/${folder}`}
+            target="blank"
+        >
+            <Typography component="span" variant="h5">
+                {pxtJson?.name || `${repo.name}/ ${folder}`}
+            </Typography>
+        </Link>
+    )
+}
 
 export default function GithubRepositoryCardHeader(props: {
     slug: string
@@ -13,27 +41,29 @@ export default function GithubRepositoryCardHeader(props: {
     const { slug, showRelease } = props
     const { response: repo, loading: repoLoading, status } = useRepository(slug)
     const { response: release } = useLatestRelease(showRelease && slug)
-    const target = "_blank" // always bounce out to github
+    const { folder } = normalizeSlug(slug)
 
     const title = repo ? (
         <>
-            <Link href={repo.html_url} target={target}>
-                <Typography component="span" variant="h6">
-                    {repo.organization?.login}
-                </Typography>
-            </Link>
+            <Typography component="span" variant="h6">
+                {repo.organization?.login}
+            </Typography>
             <Box component="span" ml={0.5} mr={0.5}>
                 /
             </Box>
-            <Link href={repo.html_url} target={target}>
-                <Typography component="span" variant="h5">
-                    {repo.name}
-                </Typography>
-            </Link>
+            {folder ? (
+                <MakeCodeFolderLink slug={slug} folder={folder} repo={repo} />
+            ) : (
+                <Link href={repo.html_url} target="_blank">
+                    <Typography component="span" variant="h5">
+                        {repo.name}
+                    </Typography>
+                </Link>
+            )}
         </>
     ) : (
         <>
-            <Link href={`https://github.com/${slug}`} target={target}>
+            <Link href={`https://github.com/${slug}`} target="_blank">
                 <Typography component="span" variant="h6">
                     {slug}
                 </Typography>
