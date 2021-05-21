@@ -174,6 +174,7 @@ function loadBlocks(): CachedBlockDefinitions {
                 ...intensity.fields.map((field, i) => ({
                     type: "input_value",
                     name: `VALUE${i}`,
+                    check: field.type === "bool" ? "Boolean" : "Number"
                 })),
             ],
             values: toMap(
@@ -206,9 +207,10 @@ function loadBlocks(): CachedBlockDefinitions {
                 .join(" ")}`,
             args0: [
                 fieldVariable(service),
-                ...value.fields.map((_, i) => ({
+                ...value.fields.map((field, i) => ({
                     type: "input_value",
                     name: `VALUE${i}`,
+                    check: field.type === "bool" ? "Boolean" : "Number"
                 })),
             ],
             values: toMap(
