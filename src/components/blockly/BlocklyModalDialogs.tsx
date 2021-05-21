@@ -20,8 +20,6 @@ export default function BlocklyModalDialogs() {
     const callback = useRef<any>()
     const showDialog = !!dialogType
 
-    console.log({ dialogType, message, value, callback })
-
     useEffect(() => {
         // store older
         const previous = {

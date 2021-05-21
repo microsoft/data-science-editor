@@ -87,7 +87,7 @@ export default function VmEditor(props: {
                 workspaceConfiguration={{
                     comments: false,
                     css: true,
-                    trash: false,
+                    trashcan: false,
                     grid: {
                         spacing: 25,
                         length: 1,
