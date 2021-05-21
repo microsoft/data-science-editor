@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react"
 import ReactBlockly from "react-blockly"
 import Blockly from "blockly"
+import '@blockly/field-slider';
 import Theme from "@blockly/theme-modern"
 import { DisableTopBlocks } from "@blockly/disable-top-blocks"
 /*
@@ -54,8 +55,7 @@ export default function VmEditor(props: {
         onXmlChange?.(newXml)
 
         // update toolbox with declared roles
-        const allBlocks = workspace.getAllBlocks(false)
-        const newServices = scanServices(allBlocks)
+        const newServices = scanServices(workspace)
         if (JSON.stringify(services) !== JSON.stringify(newServices))
             setServices(newServices)
     }

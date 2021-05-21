@@ -25,7 +25,6 @@ import useServices from "../hooks/useServices"
 const NEW_PROJET_XML =
     '<xml xmlns="http://www.w3.org/1999/xhtml"><block type="jacdac_configuration"></block></xml>'
 
-const DECLARE_ROLE_TYPE_PREFIX = `jacdac_role_set_`
 const ignoredServices = [
     SRV_CONTROL,
     SRV_LOGGER,
@@ -55,6 +54,16 @@ export interface CategoryDefinition {
 type CachedBlockDefinitions = {
     blocks: BlockDefinition[]
     services: jdspec.ServiceSpec[]
+}
+
+function isBooleanField(field: jdspec.PacketMember) {
+    return field.type === "bool"
+}
+function isBoolean(pkt: jdspec.PacketInfo) {
+    return pkt.fields.length === 1 && isBooleanField(pkt.fields[0])
+}
+function toBlocklyType(field: jdspec.PacketMember) {
+    return isBooleanField(field) ? "Boolean" : "Number"
 }
 
 let cachedBlocks: CachedBlockDefinitions
@@ -160,13 +169,22 @@ function loadBlocks(): CachedBlockDefinitions {
         })),
         ...intensities.map(({ service, intensity }) => ({
             type: `jacdac_${service.shortId}_intensity_set`,
-            message0: "set %1 %2",
+            message0: isBoolean(intensity)
+                ? `set %1 %2`
+                : `set %1 ${intensity.name} to ${intensity.fields
+                      .map(
+                          (field, i) =>
+                              `${field.name === "_" ? "" : `${field.name} `}%${
+                                  i + 2
+                              }`
+                      )
+                      .join(" ")}`,
             args0: [
                 fieldVariable(service),
                 ...intensity.fields.map((field, i) => ({
                     type: "input_value",
                     name: `VALUE${i}`,
-                    check: field.type === "bool" ? "Boolean" : "Number",
+                    check: toBlocklyType(field),
                 })),
             ],
             values: toMap(
@@ -175,13 +193,7 @@ function loadBlocks(): CachedBlockDefinitions {
                 field =>
                     field.type === "bool"
                         ? { type: "jacdac_on_off", shadow: true }
-                        : {
-                              type: "math_number",
-                              min: 0,
-                              max: 1,
-                              precision: 0.1,
-                              shadow: true,
-                          }
+                        : { type: "jacdac_percent", shadow: true }
             ),
             inputsInline: true,
             colour: HUE,
@@ -202,7 +214,7 @@ function loadBlocks(): CachedBlockDefinitions {
                 ...value.fields.map((field, i) => ({
                     type: "input_value",
                     name: `VALUE${i}`,
-                    check: field.type === "bool" ? "Boolean" : "Number",
+                    check: toBlocklyType(field),
                 })),
             ],
             values: toMap(
@@ -211,6 +223,11 @@ function loadBlocks(): CachedBlockDefinitions {
                 field =>
                     field.type === "bool"
                         ? { type: "jacdac_on_off", shadow: true }
+                        : field.unit == "°"
+                        ? {
+                              type: "jacdac_angle",
+                              shadow: true,
+                          }
                         : {
                               type: "math_number",
                               value: field.defaultValue || 0,
@@ -277,31 +294,7 @@ function loadBlocks(): CachedBlockDefinitions {
             tooltip: "",
             helpUrl: "",
         },
-        {
-            type: "jacdac_servo_write_angle",
-            message0: "set %1 angle to %2 %3",
-            args0: [
-                {
-                    type: "field_variable",
-                    name: "ROLE",
-                    variable: "servo",
-                },
-                {
-                    type: "input_dummy",
-                },
-                {
-                    type: "input_value",
-                    name: "VALUE",
-                    check: "Number",
-                },
-            ],
-            inputsInline: true,
-            previousStatement: "Statement",
-            nextStatement: "Statement",
-            colour: HUE,
-            tooltip: "",
-            helpUrl: "",
-        },
+        // shadow field editors
         {
             type: `jacdac_on_off`,
             message0: `%1`,
@@ -318,6 +311,52 @@ function loadBlocks(): CachedBlockDefinitions {
             colour: HUE,
             output: "Boolean",
         },
+        {
+            type: `jacdac_angle`,
+            message0: `%1`,
+            args0: [
+                {
+                    type: "field_angle",
+                    name: "VALUE",
+                    min: 0,
+                    max: 360,
+                    precision: 10,
+                },
+            ],
+            colour: HUE,
+            output: "Number",
+        },
+        {
+            type: `jacdac_percent`,
+            message0: `%1 %`,
+            args0: [
+                {
+                    type: "field_slider",
+                    name: "VALUE",
+                    min: 0,
+                    max: 100,
+                    precision: 1,
+                },
+            ],
+            colour: HUE,
+            output: "Number",
+        },
+        {
+            type: `jacdac_ratio`,
+            message0: `%1`,
+            args0: [
+                {
+                    type: "field_slider",
+                    name: "VALUE",
+                    min: 0,
+                    max: 1,
+                    precision: 0.1,
+                },
+            ],
+            colour: HUE,
+            output: "Number",
+        },
+        // custom math blocks
         {
             type: "jacdac_math_arithmetic",
             message0: "%1 %2 %3",
@@ -402,16 +441,13 @@ function loadBlocks(): CachedBlockDefinitions {
     return cachedBlocks
 }
 
-export function scanServices(blocks: Blockly.Block[]) {
-    const declarers = blocks.filter(
-        b => b.isEnabled() && b.type.startsWith(DECLARE_ROLE_TYPE_PREFIX)
-    )
-    const services = unique(
-        declarers.map(b => b.type.substring(DECLARE_ROLE_TYPE_PREFIX.length))
-    )
-        .filter(srv => !!srv)
-        .sort()
-
+const builtinTypes = ["", "Boolean", "Number", "String"]
+export function scanServices(workspace: Blockly.Workspace) {
+    // blockly has the tendency to keep all variables around
+    // make sure they are referencedin the workspace
+    const variableTypes = workspace.getVariableTypes()
+    const services = variableTypes.filter(v => builtinTypes.indexOf(v) < 0)
+    console.log({ variableTypes })
     return services
 }
 
