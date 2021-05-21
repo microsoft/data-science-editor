@@ -465,7 +465,7 @@ export default function useToolbox(blockServices?: string[]): {
                         block => block.service
                     )
                 ).map(service => ({
-                    text: `Add ${service.name} role`,
+                    text: `Add ${service.name}`,
                     callbackKey: `jacdac_add_role_callback_${service.shortId}`,
                     service,
                 })),
