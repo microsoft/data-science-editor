@@ -284,7 +284,7 @@ function loadBlocks(): CachedBlockDefinitions {
                     type: "input_value",
                     name: "TIME",
                     check: "Number",
-                },                
+                },
             ],
             inputsInline: true,
             previousStatement: "Statement",
@@ -457,6 +457,40 @@ function loadBlocks(): CachedBlockDefinitions {
     }
 
     return cachedBlocks
+}
+
+export function createGenerator() {
+    const gen = new Blockly.Generator("Jacdac")
+    const PRECEDENCE = 0
+    const { blocks } = loadBlocks()
+
+    const generate = (block: BlockDefinition, b: Blockly.Block) => {
+        const json = {
+            type: block.type,
+        }
+        return [JSON.stringify(json), PRECEDENCE]
+    }
+
+    // builts from blockly
+    gen["logic_null"] = () => ["null", PRECEDENCE]
+    gen["text"] = block => {
+        const textValue = block.getFieldValue("TEXT")
+        const code = '"' + textValue + '"'
+        return [code, PRECEDENCE]
+    }
+    gen["math_number"] = block => {
+        const code = Number(block.getFieldValue("NUM"))
+        return [code, PRECEDENCE]
+    }
+    gen["logic_boolean"] = block => {
+        const code = block.getFieldValue("BOOL") == "TRUE" ? "true" : "false"
+        return [code, PRECEDENCE]
+    }
+    // add pre-generator generators
+    blocks
+        .filter(block => !gen[block.type])
+        .forEach(block => gen[block.type] = (b: Blockly.Block) => generate(block, b))
+    return gen
 }
 
 const builtinTypes = ["", "Boolean", "Number", "String"]
