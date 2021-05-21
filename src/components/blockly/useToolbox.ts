@@ -468,7 +468,10 @@ export function createGenerator() {
         const json = {
             type: block.type,
         }
-        return [JSON.stringify(json), PRECEDENCE]
+
+        console.log({ b })
+        if (block.output) return [JSON.stringify(json), PRECEDENCE]
+        return JSON.stringify(json)
     }
 
     // builts from blockly
@@ -489,7 +492,10 @@ export function createGenerator() {
     // add pre-generator generators
     blocks
         .filter(block => !gen[block.type])
-        .forEach(block => gen[block.type] = (b: Blockly.Block) => generate(block, b))
+        .forEach(
+            block =>
+                (gen[block.type] = (b: Blockly.Block) => generate(block, b))
+        )
     return gen
 }
 

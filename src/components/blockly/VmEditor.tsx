@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react"
 import ReactBlockly from "react-blockly"
 import Blockly from "blockly"
-import '@blockly/field-slider';
+import "@blockly/field-slider"
 import Theme from "@blockly/theme-modern"
 import { DisableTopBlocks } from "@blockly/disable-top-blocks"
 /*
@@ -11,7 +11,7 @@ import {
     ContinuousMetrics,
 } from "@blockly/continuous-toolbox"
 */
-import useToolbox, { scanServices } from "./useToolbox"
+import useToolbox, { createGenerator, scanServices } from "./useToolbox"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
 import BlocklyModalDialogs from "./BlocklyModalDialogs"
 
@@ -49,10 +49,16 @@ export default function VmEditor(props: {
     const handleChange = (workspace: Blockly.WorkspaceSvg) => {
         initWorkspace()
 
+        // save xml
         const newXml = Blockly.Xml.domToText(
             Blockly.Xml.workspaceToDom(workspace)
         )
         onXmlChange?.(newXml)
+
+        // emit json
+        //const gen = createGenerator()
+        //const vm = gen.workspaceToCode(workspace)
+        //console.log({ vm })
 
         // update toolbox with declared roles
         const newServices = scanServices(workspace)
