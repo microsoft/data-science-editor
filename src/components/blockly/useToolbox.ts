@@ -445,9 +445,10 @@ const builtinTypes = ["", "Boolean", "Number", "String"]
 export function scanServices(workspace: Blockly.Workspace) {
     // blockly has the tendency to keep all variables around
     // make sure they are referencedin the workspace
-    const variableTypes = workspace.getVariableTypes()
-    const services = variableTypes.filter(v => builtinTypes.indexOf(v) < 0)
-    console.log({ variableTypes })
+    const variables = workspace.getAllVariables()
+        .filter(v => builtinTypes.indexOf(v.type) < 0) // remove buildins
+        .filter(v => !!workspace.getVariableUsesById(v.getId()).length)
+    const services = variables.map(v => v.type)
     return services
 }
 
