@@ -459,44 +459,71 @@ function loadBlocks(): CachedBlockDefinitions {
     return cachedBlocks
 }
 
-export function createGenerator() {
-    const gen = new Blockly.Generator("Jacdac")
-    const PRECEDENCE = 0
-    const { blocks } = loadBlocks()
-
-    const generate = (block: BlockDefinition, b: Blockly.Block) => {
-        const json = {
-            type: block.type,
+export function domToJSON(workspace: Blockly.Workspace) {
+    const variablesToJSON = (variableList: Blockly.VariableModel[]) =>
+        variableList.map(variable => ({
+            name: variable.name,
+            type: variable.type,
+            id: variable.getId(),
+        }))
+    const fieldToJSON = (field: Blockly.Field) => {
+        if (field.isSerializable()) {
+            const container = Blockly.utils.xml.createElement("field")
+            container.setAttribute("name", field.name || "")
+            const fieldXml = field.toXml(container)
+            return fieldXml.outerHTML
         }
-
-        console.log({ b })
-        if (block.output) return [JSON.stringify(json), PRECEDENCE]
-        return JSON.stringify(json)
+        return undefined
+    }
+    const blockToJSON = (block: Blockly.Block) => {
+        if (!block?.isEnabled()) return undefined
+        // Skip over insertion markers.
+        if (block.isInsertionMarker()) {
+            const child = block.getChildren(false)[0]
+            if (child) return blockToJSON(child)
+            else return undefined
+        }
+        // dump object
+        const element = {
+            block: block.isShadow() ? "shadow" : "block",
+            type: block.type,
+            id: block.id,
+            inputs: block.inputList.map((input, i) => {
+                const container = {
+                    input: input.type,
+                    name: input.name,
+                    fields: input.fieldRow?.map(field => fieldToJSON(field)),
+                    child: blockToJSON(input.connection?.targetBlock()),
+                }
+                return container
+            }),
+            next: blockToJSON(block.getNextBlock()),
+        }
+        return element
     }
 
-    // builts from blockly
-    gen["logic_null"] = () => ["null", PRECEDENCE]
-    gen["text"] = block => {
-        const textValue = block.getFieldValue("TEXT")
-        const code = '"' + textValue + '"'
-        return [code, PRECEDENCE]
+    const clean = (o: any) => {
+        if (!o) return
+        Object.keys(o).forEach(k => {
+            if (o[k] === undefined) delete o[k]
+            else if (Array.isArray(o[k]) && !o[k].length) delete o[k]
+            else if (typeof o === "object") clean(o[k])
+        })
     }
-    gen["math_number"] = block => {
-        const code = Number(block.getFieldValue("NUM"))
-        return [code, PRECEDENCE]
+
+    try {
+        const variables = Blockly.Variables.allUsedVarModels(workspace)
+        const blocks = workspace.getTopBlocks(true)
+        const json = {
+            variables: variablesToJSON(variables),
+            blocks: blocks.map(blockToJSON),
+        }
+        clean(json)
+        return json
+    } catch (e) {
+        console.error(e)
+        return undefined
     }
-    gen["logic_boolean"] = block => {
-        const code = block.getFieldValue("BOOL") == "TRUE" ? "true" : "false"
-        return [code, PRECEDENCE]
-    }
-    // add pre-generator generators
-    blocks
-        .filter(block => !gen[block.type])
-        .forEach(
-            block =>
-                (gen[block.type] = (b: Blockly.Block) => generate(block, b))
-        )
-    return gen
 }
 
 const builtinTypes = ["", "Boolean", "Number", "String"]

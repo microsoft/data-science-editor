@@ -11,7 +11,10 @@ import {
     ContinuousMetrics,
 } from "@blockly/continuous-toolbox"
 */
-import useToolbox, { createGenerator, scanServices } from "./useToolbox"
+import useToolbox, {
+    domToJSON,
+    scanServices,
+} from "./useToolbox"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
 import BlocklyModalDialogs from "./BlocklyModalDialogs"
 
@@ -56,9 +59,8 @@ export default function VmEditor(props: {
         onXmlChange?.(newXml)
 
         // emit json
-        //const gen = createGenerator()
-        //const vm = gen.workspaceToCode(workspace)
-        //console.log({ vm })
+        const json = domToJSON(workspace)
+        console.log(json)
 
         // update toolbox with declared roles
         const newServices = scanServices(workspace)
