@@ -22,6 +22,7 @@ import {
 import {
     groupBy,
     SMap,
+    toMap,
     unique,
     uniqueMap,
 } from "../../../jacdac-ts/src/jdom/utils"
@@ -170,24 +171,24 @@ function loadBlocks(): CachedBlockDefinitions {
             message0: "set %1 %2",
             args0: [
                 fieldVariable(service),
-                ...intensity.fields.map(field =>
+                ...intensity.fields.map((field, i) => ({
+                    type: "input_value",
+                    name: `VALUE${i}`,
+                })),
+            ],
+            values: toMap(
+                intensity.fields,
+                (_, i) => `VALUE${i}`,
+                field =>
                     field.type === "bool"
-                        ? {
-                              type: "field_dropdown",
-                              name: "VALUE",
-                              options: [
-                                  ["on", "ON"],
-                                  ["off", "OFF"],
-                              ],
-                          }
+                        ? { type: "jacdac_on_off" }
                         : {
                               type: "math_number",
                               min: 0,
                               max: 1,
                               precision: 0.1,
                           }
-                ),
-            ],
+            ),
             inputsInline: true,
             colour: HUE,
             tooltip: "",
@@ -204,25 +205,24 @@ function loadBlocks(): CachedBlockDefinitions {
                 .join(" ")}`,
             args0: [
                 fieldVariable(service),
-                ...value.fields.map(field =>
+                ...value.fields.map((_, i) => ({
+                    type: "input_value",
+                    name: `VALUE${i}`,
+                })),
+            ],
+            values: toMap(
+                value.fields,
+                (_, i) => `VALUE${i}`,
+                field =>
                     field.type === "bool"
-                        ? {
-                              type: "field_dropdown",
-                              name: "VALUE",
-                              options: [
-                                  ["on", "ON"],
-                                  ["off", "OFF"],
-                              ],
-                          }
+                        ? { type: "jacdac_on_off" }
                         : {
-                              type: "field_number",
-                              name: "VALUE",
+                              type: "math_number",
                               value: field.defaultValue || 0,
                               min: field.absoluteMin,
                               max: field.absoluteMax,
                           }
-                ),
-            ],
+            ),
             inputsInline: true,
             colour: HUE,
             tooltip: "",
@@ -302,9 +302,25 @@ function loadBlocks(): CachedBlockDefinitions {
             inputsInline: true,
             previousStatement: "Statement",
             nextStatement: "Statement",
-            colour: 230,
+            colour: HUE,
             tooltip: "",
             helpUrl: "",
+        },
+        {
+            type: `jacdac_on_off`,
+            message0: `%1`,
+            args0: [
+                {
+                    type: "field_dropdown",
+                    name: "VALUE",
+                    options: [
+                        ["on", "ON"],
+                        ["off", "OFF"],
+                    ],
+                },
+            ],
+            colour: HUE,
+            output: "Boolean",
         },
     ]
 
@@ -380,6 +396,7 @@ export default function useToolbox(blockServices?: string[]): {
                 colour: "#5CA699",
                 blocks: groupBlocks.map(block => ({
                     type: block.type,
+                    values: block.values,
                 })),
                 button: Object.values(
                     uniqueMap(
