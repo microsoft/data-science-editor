@@ -47,9 +47,10 @@ type BlockDefinition = any
 
 export interface CategoryDefinition {
     name: string
+    custom?: string
     colour?: string
     categorystyle?: string
-    blocks: BlockDefinition[]
+    blocks?: BlockDefinition[]
     button?: {
         text: string
         callbackKey: string
@@ -405,6 +406,10 @@ export default function useToolbox(blockServices?: string[]): {
             categorystyle: "math_category",
             blocks: [{ type: "math_arithmetic" }, { type: "math_number" }],
         },
+        {
+            name: "Variables",
+            custom: "VARIABLE_DYNAMIC"
+        }
     ].filter(cat => !!cat.blocks?.length)
 
     return {

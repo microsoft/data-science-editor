@@ -12,6 +12,7 @@ import {
 */
 import useToolbox, { scanServices } from "./useToolbox"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
+import BlocklyModalDialogs from "./BlocklyModalDialogs"
 
 export default function VmEditor(props: {
     className?: string
@@ -78,32 +79,35 @@ export default function VmEditor(props: {
     }, [JSON.stringify(toolboxCategories)])
 
     return (
-        <ReactBlockly
-            ref={reactBlockly}
-            toolboxCategories={toolboxCategories}
-            workspaceConfiguration={{
-                comments: false,
-                css: true,
-                trash: false,
-                grid: {
-                    spacing: 25,
-                    length: 1,
-                    colour: "#ccc",
-                    snap: true,
-                },
-                renderer: "zelos",
-                theme: Theme,
-                oneBasedIndex: false,
-                move: {
-                    scrollbars: {
-                        vertical: false,
-                        horizontal: true,
+        <>
+            <BlocklyModalDialogs />
+            <ReactBlockly
+                ref={reactBlockly}
+                toolboxCategories={toolboxCategories}
+                workspaceConfiguration={{
+                    comments: false,
+                    css: true,
+                    trash: false,
+                    grid: {
+                        spacing: 25,
+                        length: 1,
+                        colour: "#ccc",
+                        snap: true,
                     },
-                },
-            }}
-            initialXml={initialXml || newProjectXml}
-            wrapperDivClassName={className}
-            workspaceDidChange={handleChange}
-        />
+                    renderer: "zelos",
+                    theme: Theme,
+                    oneBasedIndex: false,
+                    move: {
+                        scrollbars: {
+                            vertical: false,
+                            horizontal: true,
+                        },
+                    },
+                }}
+                initialXml={initialXml || newProjectXml}
+                wrapperDivClassName={className}
+                workspaceDidChange={handleChange}
+            />
+        </>
     )
 }
