@@ -26,12 +26,9 @@ import {
     uniqueMap,
 } from "../../../jacdac-ts/src/jdom/utils"
 import useServices from "../hooks/useServices"
-import { Minimize } from "@material-ui/icons"
 
-const initialXml =
+const NEW_PROJET_XML =
     '<xml xmlns="http://www.w3.org/1999/xhtml"><block type="jacdac_configuration"></block></xml>'
-
-export const START_SIMULATOR_CALLBACK_KEY = "jacdac_start_simulator"
 
 const DECLARE_ROLE_TYPE_PREFIX = `jacdac_role_set_`
 const MISSING_GROUP = "Miscellanous"
@@ -47,6 +44,18 @@ const ignoredEvents = [SystemEvent.StatusCodeChanged]
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type BlockDefinition = any
+
+export interface CategoryDefinition {
+    name: string
+    colour?: string
+    categorystyle?: string
+    blocks: BlockDefinition[]
+    button?: {
+        text: string
+        callbackKey: string
+        service: jdspec.ServiceSpec
+    }[]
+}
 
 type CachedBlockDefinitions = {
     blocks: BlockDefinition[]
@@ -110,22 +119,6 @@ function loadBlocks(): CachedBlockDefinitions {
 
     // generate blocks
     const blocks: BlockDefinition[] = [
-        {
-            type: "jacdac_configuration",
-            message0: "configuration",
-            inputsInline: true,
-            nextStatement: "Role",
-            style: "variable_blocks",
-        },
-        ...allServices.map(service => ({
-            type: `${DECLARE_ROLE_TYPE_PREFIX}${service.shortId}`,
-            message0: `define ${humanify(service.shortName)} %1`,
-            args0: [fieldVariable(service)],
-            style: "variable_blocks",
-            previousStatement: "Role",
-            nextStatement: "Role",
-            service,
-        })),
         ...events.map(({ service, events }) => ({
             type: `jacdac_${service.shortId}_events`,
             message0: `when %1 %2`,
@@ -355,8 +348,11 @@ export function scanServices(blocks: Blockly.Block[]) {
     return services
 }
 
-export default function useToolbox(blockServices?: string[]) {
-    const { blocks, groups } = useMemo(() => loadBlocks(), [])
+export default function useToolbox(blockServices?: string[]): {
+    toolboxCategories: CategoryDefinition[]
+    newProjectXml: string
+} {
+    const { groups } = useMemo(() => loadBlocks(), [])
     const liveServices = useServices({ specification: true })
 
     const services = unique([
@@ -366,35 +362,37 @@ export default function useToolbox(blockServices?: string[]) {
             .map(service => service.specification?.shortId),
     ])
 
-    const toolboxBlocks = [...blocks.map(block => ({ type: block.type }))]
     const toolboxCategories = [
-        {
-            name: "Configuration",
-            colour: "#0f00ff",
-            button: [
-                {
-                    text: "Start simulator",
-                    callbackKey: START_SIMULATOR_CALLBACK_KEY,
-                },
-            ],
-            blocks: [{ type: "jacdac_configuration" }],
-        },
-        ...Object.keys(groups).map(group => ({
-            name: group,
-            colour: "#5CA699",
-            blocks: groups[group]
-                .filter(
+        ...Object.keys(groups)
+            .map(group => ({
+                group,
+                groupBlocks: groups[group].filter(
                     block =>
                         !services ||
                         services.indexOf(block.service.shortId) > -1
-                )
-                .map(block => ({
+                ),
+            }))
+            .map(({ group, groupBlocks }) => ({
+                name: group,
+                colour: "#5CA699",
+                blocks: groupBlocks.map(block => ({
                     type: block.type,
                 })),
-        })),
+                button: Object.values(
+                    uniqueMap(
+                        groupBlocks,
+                        block => block.service.shortId,
+                        block => block.service
+                    )
+                ).map(service => ({
+                    text: `Add ${service.name} role`,
+                    callbackKey: `jacdac_add_role_callback_${service.shortId}`,
+                    service,
+                })),
+            })),
         {
             name: "Logic",
-            style: "logic_blocks",
+            categorystyle: "logic_category",
             blocks: [
                 { type: "logic_compare" },
                 { type: "logic_operation" },
@@ -404,14 +402,13 @@ export default function useToolbox(blockServices?: string[]) {
         },
         {
             name: "Math",
-            style: "math_blocks",
+            categorystyle: "math_category",
             blocks: [{ type: "math_arithmetic" }, { type: "math_number" }],
         },
     ].filter(cat => !!cat.blocks?.length)
 
     return {
-        toolboxBlocks,
         toolboxCategories,
-        initialXml,
+        newProjectXml: NEW_PROJET_XML,
     }
 }

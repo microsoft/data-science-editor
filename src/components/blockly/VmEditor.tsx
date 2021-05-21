@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import ReactBlockly from "react-blockly"
 import Blockly from "blockly"
 import Theme from "@blockly/theme-modern"
@@ -10,11 +10,8 @@ import {
     ContinuousMetrics,
 } from "@blockly/continuous-toolbox"
 */
-import useToolbox, {
-    DECLARE_ROLE_CALLBACK_KEY,
-    scanServices,
-} from "./useToolbox"
-import AppContext from "../AppContext"
+import useToolbox, { scanServices } from "./useToolbox"
+import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
 
 export default function VmEditor(props: {
     className?: string
@@ -22,13 +19,8 @@ export default function VmEditor(props: {
     onXmlChange?: (xml: string) => void
 }) {
     const { className, onXmlChange, initialXml } = props
-    const { toggleShowDeviceHostsDialog } = useContext(AppContext)
     const [services, setServices] = useState<string[]>([])
-    const {
-        toolboxBlocks,
-        toolboxCategories,
-        initialXml: defaultInitialXml,
-    } = useToolbox(services)
+    const { toolboxCategories, newProjectXml } = useToolbox(services)
     // ReactBlockly
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const reactBlockly = useRef<any>()
@@ -49,16 +41,9 @@ export default function VmEditor(props: {
         // The plugin must be initialized before it has any effect.
         const disableTopBlocksPlugin = new DisableTopBlocks()
         disableTopBlocksPlugin.init()
-
-        // buttons
-        workspace.registerButtonCallback(
-            DECLARE_ROLE_CALLBACK_KEY,
-            function () {
-                toggleShowDeviceHostsDialog()
-            }
-        )
     }
 
+    // blockly did a change
     const handleChange = (workspace: Blockly.WorkspaceSvg) => {
         initWorkspace()
 
@@ -74,10 +59,27 @@ export default function VmEditor(props: {
             setServices(newServices)
     }
 
+    // track workspace changes and update callbacks
+    useEffect(() => {
+        // collect buttons
+        const workspace = resolveWorkspace()
+        const buttons = arrayConcatMany(
+            toolboxCategories?.filter(cat => cat.button).map(cat => cat.button)
+        )
+        buttons.forEach(button =>
+            workspace.registerButtonCallback(button.callbackKey, () =>
+                Blockly.Variables.createVariableButtonHandler(
+                    workspace,
+                    null,
+                    button.service.shortId
+                )
+            )
+        )
+    }, [JSON.stringify(toolboxCategories)])
+
     return (
         <ReactBlockly
             ref={reactBlockly}
-            toolboxBlocks={toolboxBlocks}
             toolboxCategories={toolboxCategories}
             workspaceConfiguration={{
                 comments: false,
@@ -99,7 +101,7 @@ export default function VmEditor(props: {
                     },
                 },
             }}
-            initialXml={initialXml || defaultInitialXml}
+            initialXml={initialXml || newProjectXml}
             wrapperDivClassName={className}
             workspaceDidChange={handleChange}
         />
