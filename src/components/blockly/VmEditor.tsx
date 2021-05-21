@@ -14,6 +14,7 @@ import {
 import useToolbox, {
     domToJSON,
     scanServices,
+    WorkspaceJSON,
 } from "./useToolbox"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
 import BlocklyModalDialogs from "./BlocklyModalDialogs"
@@ -22,8 +23,9 @@ export default function VmEditor(props: {
     className?: string
     initialXml?: string
     onXmlChange?: (xml: string) => void
+    onJSONChange?: (json: WorkspaceJSON) => void
 }) {
-    const { className, onXmlChange, initialXml } = props
+    const { className, onXmlChange, onJSONChange, initialXml } = props
     const [services, setServices] = useState<string[]>([])
     const { toolboxCategories, newProjectXml } = useToolbox(services)
     // ReactBlockly
@@ -53,14 +55,18 @@ export default function VmEditor(props: {
         initWorkspace()
 
         // save xml
-        const newXml = Blockly.Xml.domToText(
-            Blockly.Xml.workspaceToDom(workspace)
-        )
-        onXmlChange?.(newXml)
+        if (onXmlChange) {
+            const newXml = Blockly.Xml.domToText(
+                Blockly.Xml.workspaceToDom(workspace)
+            )
+            onXmlChange(newXml)
+        }
 
-        // emit json
-        const json = domToJSON(workspace)
-        console.log(json)
+        if (onJSONChange) {
+            // emit json
+            const json = domToJSON(workspace)
+            onJSONChange(json)
+        }
 
         // update toolbox with declared roles
         const newServices = scanServices(workspace)

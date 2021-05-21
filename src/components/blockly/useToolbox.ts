@@ -459,13 +459,55 @@ function loadBlocks(): CachedBlockDefinitions {
     return cachedBlocks
 }
 
-export function domToJSON(workspace: Blockly.Workspace) {
-    const variablesToJSON = (variableList: Blockly.VariableModel[]) =>
-        variableList.map(variable => ({
-            name: variable.name,
-            type: variable.type,
-            id: variable.getId(),
-        }))
+export interface VariableJSON {
+    type: string
+    id: string
+    name: string
+}
+
+export interface InputJSON {
+    type: number
+    name: string
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    fields: (number | string | boolean | any)[]
+    child?: BlockJSON
+}
+
+export interface BlockJSON {
+    type: string
+    id: string
+    inputs?: InputJSON[]
+    next?: BlockJSON
+}
+
+export interface WorkspaceJSON {
+    variables: VariableJSON[]
+    blocks: BlockJSON[]
+}
+
+export function domToJSON(workspace: Blockly.Workspace): WorkspaceJSON {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const clean = (o: any) => {
+        if (!o) return o
+        Object.keys(o).forEach(k => {
+            if (o[k] === undefined) delete o[k]
+            else if (Array.isArray(o[k])) {
+                if (!o[k].length) delete o[k]
+                else {
+                    o[k] = o[k]
+                        .filter(v => v !== undefined && v !== null)
+                        .map(v => clean(v))
+                }
+            } else if (typeof o === "object") clean(o[k])
+        })
+        return o
+    }
+
+    const variableToJSON = (variable: Blockly.VariableModel): VariableJSON => ({
+        name: variable.name,
+        type: variable.type,
+        id: variable.getId(),
+    })
     const fieldToJSON = (field: Blockly.Field) => {
         if (field.isSerializable()) {
             const container = Blockly.utils.xml.createElement("field")
@@ -475,7 +517,7 @@ export function domToJSON(workspace: Blockly.Workspace) {
         }
         return undefined
     }
-    const blockToJSON = (block: Blockly.Block) => {
+    const blockToJSON = (block: Blockly.Block): BlockJSON => {
         if (!block?.isEnabled()) return undefined
         // Skip over insertion markers.
         if (block.isInsertionMarker()) {
@@ -484,13 +526,12 @@ export function domToJSON(workspace: Blockly.Workspace) {
             else return undefined
         }
         // dump object
-        const element = {
-            block: block.isShadow() ? "shadow" : "block",
+        const element: BlockJSON = {
             type: block.type,
             id: block.id,
-            inputs: block.inputList.map((input, i) => {
-                const container = {
-                    input: input.type,
+            inputs: block.inputList.map(input => {
+                const container: InputJSON = {
+                    type: input.type,
                     name: input.name,
                     fields: input.fieldRow?.map(field => fieldToJSON(field)),
                     child: blockToJSON(input.connection?.targetBlock()),
@@ -502,20 +543,11 @@ export function domToJSON(workspace: Blockly.Workspace) {
         return element
     }
 
-    const clean = (o: any) => {
-        if (!o) return
-        Object.keys(o).forEach(k => {
-            if (o[k] === undefined) delete o[k]
-            else if (Array.isArray(o[k]) && !o[k].length) delete o[k]
-            else if (typeof o === "object") clean(o[k])
-        })
-    }
-
     try {
         const variables = Blockly.Variables.allUsedVarModels(workspace)
         const blocks = workspace.getTopBlocks(true)
-        const json = {
-            variables: variablesToJSON(variables),
+        const json: WorkspaceJSON = {
+            variables: variables.map(variableToJSON),
             blocks: blocks.map(blockToJSON),
         }
         clean(json)
@@ -528,12 +560,9 @@ export function domToJSON(workspace: Blockly.Workspace) {
 
 const builtinTypes = ["", "Boolean", "Number", "String"]
 export function scanServices(workspace: Blockly.Workspace) {
-    // blockly has the tendency to keep all variables around
-    // make sure they are referencedin the workspace
-    const variables = workspace
-        .getAllVariables()
-        .filter(v => builtinTypes.indexOf(v.type) < 0) // remove buildins
-        .filter(v => !!workspace.getVariableUsesById(v.getId()).length)
+    const variables = Blockly.Variables.allUsedVarModels(workspace).filter(
+        v => builtinTypes.indexOf(v.type) < 0
+    ) // remove buildins
     const services = variables.map(v => v.type)
     return services
 }

@@ -25,7 +25,7 @@ export default function SimulateDeviceAlert() {
     const { toggleShowDeviceHostsDialog } = useContext(AppContext)
 
     return (
-        <Alert severity="info" closeable={true}>
+        <Alert severity="info">
             Simulate devices (
             <IconButtonWithTooltip
                 onClick={handleStartSimulator(SRV_BUTTON)}

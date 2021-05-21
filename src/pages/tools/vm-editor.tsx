@@ -1,8 +1,10 @@
 import { createStyles, Grid, makeStyles, NoSsr } from "@material-ui/core"
-import React from "react"
+import React, { useState } from "react"
+import { WorkspaceJSON } from "../../components/blockly/useToolbox"
 import VmEditor from "../../components/blockly/VmEditor"
 import Dashboard from "../../components/dashboard/Dashboard"
 import Alert from "../../components/ui/Alert"
+import Markdown from "../../components/ui/Markdown"
 import useLocalStorage from "../../components/useLocalStorage"
 
 const useStyles = makeStyles(() =>
@@ -17,9 +19,15 @@ const VM_SOURCE_STORAGE_KEY = "jacdac:vmeditor:xml"
 export default function Page() {
     const classes = useStyles()
     const [xml, setXml] = useLocalStorage(VM_SOURCE_STORAGE_KEY, "")
+    const [source, setSource] = useState("")
 
     const handleXml = (xml: string) => {
         setXml(xml)
+    }
+
+    const handleJSON = (json: WorkspaceJSON) => {
+        const newSource = JSON.stringify(json, null, 2)
+        setSource(newSource)
     }
 
     return (
@@ -36,8 +44,18 @@ export default function Page() {
                         className={classes.editor}
                         initialXml={xml}
                         onXmlChange={handleXml}
+                        onJSONChange={handleJSON}
                     />
                 </NoSsr>
+            </Grid>
+            <Grid item xs={12}>
+                <Markdown
+                    source={`
+\`\`\`json
+${source}
+\`\`\`                
+`}
+                />
             </Grid>
             <Grid item xs={12}>
                 <Dashboard showStartSimulators={true} />
