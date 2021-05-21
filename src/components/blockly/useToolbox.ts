@@ -393,7 +393,7 @@ export default function useToolbox(blockServices?: string[]): {
             })),
         {
             name: "Logic",
-            categorystyle: "logic_category",
+            colour: "%{BKY_LOGIC_HUE}",
             blocks: [
                 { type: "logic_compare" },
                 { type: "logic_operation" },
@@ -403,13 +403,14 @@ export default function useToolbox(blockServices?: string[]): {
         },
         {
             name: "Math",
-            categorystyle: "math_category",
+            colour: "%{BKY_MATH_HUE}",
             blocks: [{ type: "math_arithmetic" }, { type: "math_number" }],
         },
         {
             name: "Variables",
-            custom: "VARIABLE_DYNAMIC"
-        }
+            colour: "%{BKY_VARIABLES_HUE}",
+            custom: "VARIABLE",
+        },
     ].filter(cat => !!cat.blocks?.length)
 
     return {
