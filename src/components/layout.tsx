@@ -226,9 +226,8 @@ function MainAppBar(props: LayoutProps) {
     const { pageTitle } = frontmatter || {}
 
     const classes = useStyles()
-    const { drawerType, widgetMode, toolsMenu, setToolsMenu } = useContext(
-        AppContext
-    )
+    const { drawerType, widgetMode, toolsMenu, setToolsMenu } =
+        useContext(AppContext)
     const { darkMode } = useContext(DarkModeContext)
     const drawerOpen = drawerType !== DrawerType.None
     const appBarColor =
@@ -314,13 +313,11 @@ function LayoutWithContext(props: LayoutProps) {
     const { pageContext, path, location } = pageProps
     const { frontmatter } = pageContext || {}
     const makeCodeTool = /tools\/makecode-/.test(path)
-    const {
-        hideMainMenu = false,
-        hideUnderConstruction = false,
-    } = frontmatter || {
-        hideMainMenu: makeCodeTool,
-        hideUnderConstruction: makeCodeTool,
-    }
+    const { hideMainMenu = false, hideUnderConstruction = false } =
+        frontmatter || {
+            hideMainMenu: makeCodeTool,
+            hideUnderConstruction: makeCodeTool,
+        }
 
     const classes = useStyles()
 
@@ -328,8 +325,9 @@ function LayoutWithContext(props: LayoutProps) {
     const { drawerType, toolsMenu } = useContext(AppContext)
     const drawerOpen = drawerType !== DrawerType.None
     const { medium } = useMediaQueries()
-    const container = !medium && !/^\/(tools\/makecode-|dashboard)/.test(path) // && path !== "/"
-
+    const container =
+        !medium && !/^\/(tools\/(makecode-|vm-editor)|dashboard)/.test(path)
+    // && path !== "/"
     const mainClasses = clsx(classes.content, {
         [classes.container]: container,
         [classes.contentShift]: drawerOpen,

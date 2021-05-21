@@ -94,6 +94,7 @@ export default function ApiKeyAccordion(props: {
                     label="API key"
                     fullWidth
                     value={key}
+                    type="password"
                     onChange={handleApiChange}
                 />
             </AccordionDetails>

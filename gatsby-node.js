@@ -267,7 +267,10 @@ async function createWorkers() {
     // copy jacdac-serviceworker.js to static
     // include version number to bust out caching
     const jacdacTsPackageJson = fs.readJsonSync(`./jacdac-ts/package.json`)
-    await fs.copy(`./jacdac-ts/dist/jacdac-serviceworker.js`, `./public/jacdac-serviceworker-${jacdacTsPackageJson.version}.js`)
+    await fs.copy(
+        `./jacdac-ts/dist/jacdac-serviceworker.js`,
+        `./public/jacdac-serviceworker-${jacdacTsPackageJson.version}.js`
+    )
 }
 
 // Implement the Gatsby API “createPages”. This is
@@ -301,7 +304,13 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
 }
 
 exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
-    const { setWebpackConfig } = actions
+    const { setWebpackConfig, replaceWebpackConfig } = actions
+    console.log({ stage })
+    const plugins = [
+        new IgnorePlugin({
+            resourceRegExp: /^canvas|@axe-core\/react$/,
+        }),
+    ]
     if (stage.startsWith("develop")) {
         setWebpackConfig({
             resolve: {
@@ -309,26 +318,24 @@ exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
                     "react-dom": "@hot-loader/react-dom",
                 },
             },
+            plugins,
         })
     }
-    // make sure axe is not part of the final build
-    /*
-  if (stage === 'build-javascript') {
-    setWebpackConfig({
-      plugins: [
-        new IgnorePlugin({
-          resourceRegExp: /^@axe-core\/react$/,
-        }),
-      ],
-    })
-  }
-  */
+    if (stage === "build-javascript" || stage === "build-html") {
+        console.log(`enabling ignore filters`)
+        setWebpackConfig({
+            plugins,
+        })
+    }
 
     // enable verbose logging
     const config = getConfig()
     config.stats = "verbose"
     config.performance.hints = "warning"
-    actions.replaceWebpackConfig(config)
+    replaceWebpackConfig(config)
+
+    // final webpack
+    console.log({ webpack: getConfig() })
 }
 
 // generate a full list of pages for compliance
