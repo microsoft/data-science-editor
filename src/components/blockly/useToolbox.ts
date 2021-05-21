@@ -181,12 +181,13 @@ function loadBlocks(): CachedBlockDefinitions {
                 (_, i) => `VALUE${i}`,
                 field =>
                     field.type === "bool"
-                        ? { type: "jacdac_on_off" }
+                        ? { type: "jacdac_on_off", shadow: true }
                         : {
                               type: "math_number",
                               min: 0,
                               max: 1,
                               precision: 0.1,
+                              shadow: true,
                           }
             ),
             inputsInline: true,
@@ -215,12 +216,13 @@ function loadBlocks(): CachedBlockDefinitions {
                 (_, i) => `VALUE${i}`,
                 field =>
                     field.type === "bool"
-                        ? { type: "jacdac_on_off" }
+                        ? { type: "jacdac_on_off", shadow: true }
                         : {
                               type: "math_number",
                               value: field.defaultValue || 0,
                               min: field.absoluteMin,
                               max: field.absoluteMax,
+                              shadow: true,
                           }
             ),
             inputsInline: true,
@@ -473,21 +475,21 @@ export default function useToolbox(blockServices?: string[]): {
                 {
                     type: "logic_compare",
                     values: {
-                        A: { type: "math_number" },
-                        B: { type: "math_number" },
+                        A: { type: "math_number", shadow: true },
+                        B: { type: "math_number", shadow: true },
                     },
                 },
                 {
                     type: "logic_operation",
                     values: {
-                        A: { type: "logic_boolean" },
-                        B: { type: "logic_boolean" },
+                        A: { type: "logic_boolean", shadow: true },
+                        B: { type: "logic_boolean", shadow: true },
                     },
                 },
                 {
                     type: "logic_negate",
                     values: {
-                        BOOL: { type: "logic_boolean" },
+                        BOOL: { type: "logic_boolean", shadow: true },
                     },
                 },
                 { type: "logic_boolean" },
@@ -500,14 +502,14 @@ export default function useToolbox(blockServices?: string[]): {
                 {
                     type: "jacdac_math_arithmetic",
                     values: {
-                        A: { type: "math_number" },
-                        B: { type: "math_number" },
+                        A: { type: "math_number", shadow: true },
+                        B: { type: "math_number", shadow: true },
                     },
                 },
                 {
                     type: "jacdac_math_single",
                     values: {
-                        NUM: { type: "math_number" },
+                        NUM: { type: "math_number", shadow: true },
                     },
                 },
                 { type: "math_number" },
