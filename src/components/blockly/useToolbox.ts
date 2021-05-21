@@ -181,15 +181,15 @@ function loadBlocks(): CachedBlockDefinitions {
                       .join(" ")}`,
             args0: [
                 fieldVariable(service),
-                ...intensity.fields.map((field, i) => ({
+                ...intensity.fields.map(field => ({
                     type: "input_value",
-                    name: `VALUE${i}`,
+                    name: field.name,
                     check: toBlocklyType(field),
                 })),
             ],
             values: toMap(
                 intensity.fields,
-                (_, i) => `VALUE${i}`,
+                field => field.name,
                 field =>
                     field.type === "bool"
                         ? { type: "jacdac_on_off", shadow: true }
@@ -211,15 +211,15 @@ function loadBlocks(): CachedBlockDefinitions {
                 .join(" ")}`,
             args0: [
                 fieldVariable(service),
-                ...value.fields.map((field, i) => ({
+                ...value.fields.map(field => ({
                     type: "input_value",
-                    name: `VALUE${i}`,
+                    name: field.name,
                     check: toBlocklyType(field),
                 })),
             ],
             values: toMap(
                 value.fields,
-                (_, i) => `VALUE${i}`,
+                field => field.name,
                 field =>
                     field.type === "bool"
                         ? { type: "jacdac_on_off", shadow: true }
@@ -445,7 +445,8 @@ const builtinTypes = ["", "Boolean", "Number", "String"]
 export function scanServices(workspace: Blockly.Workspace) {
     // blockly has the tendency to keep all variables around
     // make sure they are referencedin the workspace
-    const variables = workspace.getAllVariables()
+    const variables = workspace
+        .getAllVariables()
         .filter(v => builtinTypes.indexOf(v.type) < 0) // remove buildins
         .filter(v => !!workspace.getVariableUsesById(v.getId()).length)
     const services = variables.map(v => v.type)
