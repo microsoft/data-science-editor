@@ -19,20 +19,13 @@ import {
     isRegister,
     serviceSpecifications,
 } from "../../../jacdac-ts/src/jdom/spec"
-import {
-    groupBy,
-    SMap,
-    toMap,
-    unique,
-    uniqueMap,
-} from "../../../jacdac-ts/src/jdom/utils"
+import { toMap, unique, uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
 import useServices from "../hooks/useServices"
 
 const NEW_PROJET_XML =
     '<xml xmlns="http://www.w3.org/1999/xhtml"><block type="jacdac_configuration"></block></xml>'
 
 const DECLARE_ROLE_TYPE_PREFIX = `jacdac_role_set_`
-const MISSING_GROUP = "Miscellanous"
 const ignoredServices = [
     SRV_CONTROL,
     SRV_LOGGER,
@@ -62,7 +55,6 @@ export interface CategoryDefinition {
 type CachedBlockDefinitions = {
     blocks: BlockDefinition[]
     services: jdspec.ServiceSpec[]
-    groups: SMap<BlockDefinition[]>
 }
 
 let cachedBlocks: CachedBlockDefinitions
@@ -174,7 +166,7 @@ function loadBlocks(): CachedBlockDefinitions {
                 ...intensity.fields.map((field, i) => ({
                     type: "input_value",
                     name: `VALUE${i}`,
-                    check: field.type === "bool" ? "Boolean" : "Number"
+                    check: field.type === "bool" ? "Boolean" : "Number",
                 })),
             ],
             values: toMap(
@@ -210,7 +202,7 @@ function loadBlocks(): CachedBlockDefinitions {
                 ...value.fields.map((field, i) => ({
                     type: "input_value",
                     name: `VALUE${i}`,
-                    check: field.type === "bool" ? "Boolean" : "Number"
+                    check: field.type === "bool" ? "Boolean" : "Number",
                 })),
             ],
             values: toMap(
@@ -405,10 +397,6 @@ function loadBlocks(): CachedBlockDefinitions {
     cachedBlocks = {
         blocks,
         services,
-        groups: groupBy(
-            jdBlocks,
-            block => block.service.group || MISSING_GROUP
-        ),
     }
 
     return cachedBlocks
@@ -431,36 +419,38 @@ export default function useToolbox(blockServices?: string[]): {
     toolboxCategories: CategoryDefinition[]
     newProjectXml: string
 } {
-    const { groups } = useMemo(() => loadBlocks(), [])
+    const { blocks, services } = useMemo(() => loadBlocks(), [])
     const liveServices = useServices({ specification: true })
 
-    const services = unique([
+    const toolboxServices = unique([
         ...blockServices,
         ...liveServices
             .filter(srv => ignoredServices.indexOf(srv.serviceClass) < 0)
             .map(service => service.specification?.shortId),
     ])
+        .map(serviceShortId =>
+            services.find(service => service.shortId === serviceShortId)
+        )
+        .filter(srv => !!srv)
 
     const toolboxCategories = [
-        ...Object.keys(groups)
-            .map(group => ({
-                group,
-                groupBlocks: groups[group].filter(
-                    block =>
-                        !services ||
-                        services.indexOf(block.service.shortId) > -1
+        ...toolboxServices
+            .map(service => ({
+                service,
+                serviceBlocks: blocks.filter(
+                    block => block.service === service
                 ),
             }))
-            .map(({ group, groupBlocks }) => ({
-                name: group,
+            .map(({ service, serviceBlocks }) => ({
+                name: service.name,
                 colour: "#5CA699",
-                blocks: groupBlocks.map(block => ({
+                blocks: serviceBlocks.map(block => ({
                     type: block.type,
                     values: block.values,
                 })),
                 button: Object.values(
                     uniqueMap(
-                        groupBlocks,
+                        serviceBlocks,
                         block => block.service.shortId,
                         block => block.service
                     )
