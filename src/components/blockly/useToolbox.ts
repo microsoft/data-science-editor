@@ -118,6 +118,8 @@ function loadBlocks(): CachedBlockDefinitions {
         }))
         .filter(kv => !!kv.events.length)
 
+    const HUE = 230
+
     // generate blocks
     const blocks: BlockDefinition[] = [
         ...events.map(({ service, events }) => ({
@@ -131,7 +133,7 @@ function loadBlocks(): CachedBlockDefinitions {
                     options: events.map(event => [event.name, event.name]),
                 },
             ],
-            style: "logic_blocks",
+            colour: HUE,
             inputsInline: true,
             nextStatement: null,
             tooltip: "",
@@ -140,12 +142,24 @@ function loadBlocks(): CachedBlockDefinitions {
             events,
         })),
         ...readings.map(({ service, reading }) => ({
+            type: `jacdac_${service.shortId}_reading_change`,
+            message0: `when %1 ${humanify(reading.name)} change`,
+            args0: [fieldVariable(service)],
+            inputsInline: true,
+            nextStatement: "Statement",
+            colour: HUE,
+            tooltip: "",
+            helpUrl: "",
+            service,
+            reading,
+        })),
+        ...readings.map(({ service, reading }) => ({
             type: `jacdac_${service.shortId}_reading`,
             message0: `%1 ${humanify(reading.name)}`,
             args0: [fieldVariable(service)],
             inputsInline: true,
             output: "Number",
-            colour: 230,
+            colour: HUE,
             tooltip: "",
             helpUrl: "",
             service,
@@ -175,7 +189,7 @@ function loadBlocks(): CachedBlockDefinitions {
                 ),
             ],
             inputsInline: true,
-            colour: 230,
+            colour: HUE,
             tooltip: "",
             helpUrl: "",
             service,
@@ -210,7 +224,7 @@ function loadBlocks(): CachedBlockDefinitions {
                 ),
             ],
             inputsInline: true,
-            colour: 230,
+            colour: HUE,
             tooltip: "",
             helpUrl: "",
             service,
@@ -226,24 +240,12 @@ function loadBlocks(): CachedBlockDefinitions {
                 args0: [fieldVariable(service)],
                 inputsInline: true,
                 output: value.fields[0].type === "bool" ? "Boolean" : "Number",
-                colour: 230,
+                colour: HUE,
                 tooltip: "",
                 helpUrl: "",
                 service,
                 value,
             })),
-        ...readings.map(({ service, reading }) => ({
-            type: `jacdac_${service.shortId}_reading_change`,
-            message0: `when %1 ${humanify(reading.name)} change`,
-            args0: [fieldVariable(service)],
-            inputsInline: true,
-            nextStatement: "Statement",
-            style: "logic_blocks",
-            tooltip: "",
-            helpUrl: "",
-            service,
-            reading,
-        })),
         {
             type: "jacdac_await_condition",
             message0: "while %1",
