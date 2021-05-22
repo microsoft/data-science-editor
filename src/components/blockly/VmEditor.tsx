@@ -4,16 +4,7 @@ import Blockly from "blockly"
 import "@blockly/field-slider"
 import Theme from "@blockly/theme-modern"
 import { DisableTopBlocks } from "@blockly/disable-top-blocks"
-/*
-import {
-    ContinuousToolbox,
-    ContinuousFlyout,
-    ContinuousMetrics,
-} from "@blockly/continuous-toolbox"
-*/
-import useToolbox, {
-    scanServices,
-} from "./useToolbox"
+import useToolbox, { scanServices } from "./useToolbox"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
 import BlocklyModalDialogs from "./BlocklyModalDialogs"
 import { domToJSON, WorkspaceJSON } from "./generator"
