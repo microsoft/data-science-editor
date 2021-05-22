@@ -1,6 +1,7 @@
 import { createStyles, Grid, makeStyles, NoSsr } from "@material-ui/core"
 import React, { useState } from "react"
-import { WorkspaceJSON } from "../../components/blockly/useToolbox"
+import Flags from "../../../jacdac-ts/src/jdom/flags"
+import { WorkspaceJSON } from "../../components/blockly/generator"
 import VmEditor from "../../components/blockly/VmEditor"
 import Dashboard from "../../components/dashboard/Dashboard"
 import Alert from "../../components/ui/Alert"
@@ -48,15 +49,28 @@ export default function Page() {
                     />
                 </NoSsr>
             </Grid>
-            <Grid item xs={12}>
-                <Markdown
-                    source={`
+            {Flags.diagnostics && (
+                <Grid item xs={12}>
+                    <Markdown
+                        source={`
+\`\`\`xml
+${xml}
+\`\`\`                
+`}
+                    />
+                </Grid>
+            )}
+            {Flags.diagnostics && (
+                <Grid item xs={12}>
+                    <Markdown
+                        source={`
 \`\`\`json
 ${source}
 \`\`\`                
 `}
-                />
-            </Grid>
+                    />
+                </Grid>
+            )}
             <Grid item xs={12}>
                 <Dashboard showStartSimulators={true} />
             </Grid>

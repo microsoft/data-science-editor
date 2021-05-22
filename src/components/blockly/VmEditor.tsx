@@ -12,12 +12,11 @@ import {
 } from "@blockly/continuous-toolbox"
 */
 import useToolbox, {
-    domToJSON,
     scanServices,
-    WorkspaceJSON,
 } from "./useToolbox"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
 import BlocklyModalDialogs from "./BlocklyModalDialogs"
+import { domToJSON, WorkspaceJSON } from "./generator"
 
 export default function VmEditor(props: {
     className?: string
@@ -62,6 +61,7 @@ export default function VmEditor(props: {
             onXmlChange(newXml)
         }
 
+        // save json
         if (onJSONChange) {
             // emit json
             const json = domToJSON(workspace)

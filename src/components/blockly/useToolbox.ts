@@ -74,7 +74,7 @@ function loadBlocks(): CachedBlockDefinitions {
         `${humanify(srv.camelName).toLowerCase()} 1`
     const fieldVariable = (service: jdspec.ServiceSpec) => ({
         type: "field_variable",
-        name: "ROLE",
+        name: "role",
         variable: variableName(service),
         variableTypes: [service.shortId],
         defaultType: service.shortId,
@@ -131,7 +131,7 @@ function loadBlocks(): CachedBlockDefinitions {
                 fieldVariable(service),
                 {
                     type: "field_dropdown",
-                    name: "EVENT",
+                    name: "event",
                     options: events.map(event => [event.name, event.name]),
                 },
             ],
@@ -300,10 +300,10 @@ function loadBlocks(): CachedBlockDefinitions {
             args0: [
                 {
                     type: "field_dropdown",
-                    name: "VALUE",
+                    name: "value",
                     options: [
-                        ["on", "ON"],
-                        ["off", "OFF"],
+                        ["on", "on"],
+                        ["off", "off"],
                     ],
                 },
             ],
@@ -316,7 +316,7 @@ function loadBlocks(): CachedBlockDefinitions {
             args0: [
                 {
                     type: "field_dropdown",
-                    name: "VALUE",
+                    name: "value",
                     options: [
                         ["0.1", "0.1"],
                         ["1", "1"],
@@ -335,7 +335,7 @@ function loadBlocks(): CachedBlockDefinitions {
             args0: [
                 {
                     type: "field_angle",
-                    name: "VALUE",
+                    name: "value",
                     min: 0,
                     max: 360,
                     precision: 10,
@@ -350,7 +350,7 @@ function loadBlocks(): CachedBlockDefinitions {
             args0: [
                 {
                     type: "field_slider",
-                    name: "VALUE",
+                    name: "value",
                     min: 0,
                     max: 100,
                     precision: 1,
@@ -365,7 +365,7 @@ function loadBlocks(): CachedBlockDefinitions {
             args0: [
                 {
                     type: "field_slider",
-                    name: "VALUE",
+                    name: "value",
                     min: 0,
                     max: 1,
                     precision: 0.1,
@@ -433,8 +433,6 @@ function loadBlocks(): CachedBlockDefinitions {
         },
     ]
 
-    console.log({ blocks })
-
     // register blocks with Blockly, happens once
     blocks.map(
         block =>
@@ -459,104 +457,6 @@ function loadBlocks(): CachedBlockDefinitions {
     return cachedBlocks
 }
 
-export interface VariableJSON {
-    type: string
-    id: string
-    name: string
-}
-
-export interface InputJSON {
-    type: number
-    name: string
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    fields: (number | string | boolean | any)[]
-    child?: BlockJSON
-}
-
-export interface BlockJSON {
-    type: string
-    id: string
-    inputs?: InputJSON[]
-    next?: BlockJSON
-}
-
-export interface WorkspaceJSON {
-    variables: VariableJSON[]
-    blocks: BlockJSON[]
-}
-
-export function domToJSON(workspace: Blockly.Workspace): WorkspaceJSON {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const clean = (o: any) => {
-        if (!o) return o
-        Object.keys(o).forEach(k => {
-            if (o[k] === undefined) delete o[k]
-            else if (Array.isArray(o[k])) {
-                if (!o[k].length) delete o[k]
-                else {
-                    o[k] = o[k]
-                        .filter(v => v !== undefined && v !== null)
-                        .map(v => clean(v))
-                }
-            } else if (typeof o === "object") clean(o[k])
-        })
-        return o
-    }
-
-    const variableToJSON = (variable: Blockly.VariableModel): VariableJSON => ({
-        name: variable.name,
-        type: variable.type,
-        id: variable.getId(),
-    })
-    const fieldToJSON = (field: Blockly.Field) => {
-        if (field.isSerializable()) {
-            const container = Blockly.utils.xml.createElement("field")
-            container.setAttribute("name", field.name || "")
-            const fieldXml = field.toXml(container)
-            return fieldXml.outerHTML
-        }
-        return undefined
-    }
-    const blockToJSON = (block: Blockly.Block): BlockJSON => {
-        if (!block?.isEnabled()) return undefined
-        // Skip over insertion markers.
-        if (block.isInsertionMarker()) {
-            const child = block.getChildren(false)[0]
-            if (child) return blockToJSON(child)
-            else return undefined
-        }
-        // dump object
-        const element: BlockJSON = {
-            type: block.type,
-            id: block.id,
-            inputs: block.inputList.map(input => {
-                const container: InputJSON = {
-                    type: input.type,
-                    name: input.name,
-                    fields: input.fieldRow?.map(field => fieldToJSON(field)),
-                    child: blockToJSON(input.connection?.targetBlock()),
-                }
-                return container
-            }),
-            next: blockToJSON(block.getNextBlock()),
-        }
-        return element
-    }
-
-    try {
-        const variables = Blockly.Variables.allUsedVarModels(workspace)
-        const blocks = workspace.getTopBlocks(true)
-        const json: WorkspaceJSON = {
-            variables: variables.map(variableToJSON),
-            blocks: blocks.map(blockToJSON),
-        }
-        clean(json)
-        return json
-    } catch (e) {
-        console.error(e)
-        return undefined
-    }
-}
 
 const builtinTypes = ["", "Boolean", "Number", "String"]
 export function scanServices(workspace: Blockly.Workspace) {
