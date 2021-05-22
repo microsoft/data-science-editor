@@ -10,7 +10,12 @@ import {
     IT4Program,
     IT4Role,
 } from "../../../jacdac-ts/src/vm/ir"
-import { BUILTIN_TYPES, loadBlocks, WHILE_CONDITION_BLOCK } from "./useToolbox"
+import {
+    BUILTIN_TYPES,
+    loadBlocks,
+    WAIT_BLOCK,
+    WHILE_CONDITION_BLOCK,
+} from "./useToolbox"
 
 const ops = {
     AND: "&&",
@@ -96,6 +101,25 @@ function blockToExpression(block: BlockJSON) {
     return undefined
 }
 
+function blockToCommand(block: BlockJSON): IT4GuardedCommand {
+    let command: jsep.CallExpression
+    const { type, inputs } = block
+    switch (type) {
+        case WAIT_BLOCK: {
+            const time = blockToExpression(inputs[0].child)
+            command = {
+                type: "CallExpression",
+                arguments: [time],
+                callee: undefined, // TODO
+            }
+        }
+    }
+
+    return {
+        command,
+    }
+}
+
 export default function workspaceJSONToIT4Program(
     workspace: WorkspaceJSON
 ): IT4Program {
@@ -134,7 +158,7 @@ export default function workspaceJSONToIT4Program(
                 command: {
                     type: "CallExpression",
                     arguments: [blockToExpression(condition)],
-                    callee: undefined,
+                    callee: undefined, // TODO
                 },
             })
         } else {
@@ -144,7 +168,12 @@ export default function workspaceJSONToIT4Program(
             }
             const { service, events } = def
             console.log("event", { service, events, def })
+            // TODO
         }
+
+        // process children
+        top.children?.forEach(child => commands.push(blockToCommand(child)))
+
         return {
             description: type,
             commands,
