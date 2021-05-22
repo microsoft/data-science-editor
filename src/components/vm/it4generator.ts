@@ -15,12 +15,18 @@ import { BUILTIN_TYPES, loadBlocks, WHILE_CONDITION_BLOCK } from "./useToolbox"
 const ops = {
     AND: "&&",
     OR: "||",
+    EQ: "===",
+    NEQ: "!==",
+    LT: "<",
+    GT: ">",
+    LTE: "<=",
+    GTE: ">=",
 }
 
 function blockToExpression(block: BlockJSON) {
     if (!block) return undefined
     const { type, value, inputs } = block
-    if (value)
+    if (value !== undefined)
         // literal
         return <jsep.Literal>{
             type: "Literal",
@@ -36,6 +42,26 @@ function blockToExpression(block: BlockJSON) {
             const op = inputs[1].fields["op"].value as string
             return <jsep.LogicalExpression>{
                 type: "LogicalExpression",
+                left,
+                right,
+                operator: ops[op] || op,
+            }
+        }
+        case "logic_negate": {
+            const argument = blockToExpression(inputs[0].child)
+            return <jsep.UnaryExpression>{
+                type: "UnaryExpression",
+                operator: "!",
+                argument,
+                prefix: false, // TODO:?
+            }
+        }
+        case "logic_compare": {
+            const left = blockToExpression(inputs[0].child)
+            const right = blockToExpression(inputs[1].child)
+            const op = inputs[1].fields["op"].value as string
+            return <jsep.BinaryExpression>{
+                type: "BinaryExpression",
                 left,
                 right,
                 operator: ops[op] || op,
