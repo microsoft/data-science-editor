@@ -1,7 +1,8 @@
 import { createStyles, Grid, makeStyles, NoSsr } from "@material-ui/core"
-import React, { useState } from "react"
+import React, { useRef, useState } from "react"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
-import { WorkspaceJSON } from "../../components/blockly/generator"
+import { IT4Program } from "../../../jacdac-ts/src/vm/ir"
+import { WorkspaceJSON } from "../../components/blockly/JSONGenerator"
 import VmEditor from "../../components/blockly/VmEditor"
 import Dashboard from "../../components/dashboard/Dashboard"
 import Alert from "../../components/ui/Alert"
@@ -20,15 +21,19 @@ const VM_SOURCE_STORAGE_KEY = "jacdac:vmeditor:xml"
 export default function Page() {
     const classes = useStyles()
     const [xml, setXml] = useLocalStorage(VM_SOURCE_STORAGE_KEY, "")
-    const [source, setSource] = useState("")
+    const [source, setSource] = useState<WorkspaceJSON>()
+    const [program, setProgram] = useState<IT4Program>()
 
     const handleXml = (xml: string) => {
         setXml(xml)
     }
-
     const handleJSON = (json: WorkspaceJSON) => {
-        const newSource = JSON.stringify(json, null, 2)
-        setSource(newSource)
+        const newSource = JSON.stringify(json)
+        if (JSON.stringify(source) !== newSource) setSource(json)
+    }
+    const handleI4Program = (json: IT4Program) => {
+        const newProgram = JSON.stringify(json)
+        if (JSON.stringify(program) !== newProgram) setProgram(json)
     }
 
     return (
@@ -46,6 +51,7 @@ export default function Page() {
                         initialXml={xml}
                         onXmlChange={handleXml}
                         onJSONChange={handleJSON}
+                        onIT4ProgramChange={handleI4Program}
                     />
                 </NoSsr>
             </Grid>
@@ -53,9 +59,19 @@ export default function Page() {
                 <Grid item xs={12}>
                     <Markdown
                         source={`
+### IT4 program
+
 \`\`\`json
-${source}
+${JSON.stringify(program, null, 2)}
 \`\`\`   
+
+### Workspace JSON
+
+\`\`\`json
+${JSON.stringify(source, null, 2)}
+\`\`\`   
+
+### Blockly XML
 
 \`\`\`xml
 ${xml}

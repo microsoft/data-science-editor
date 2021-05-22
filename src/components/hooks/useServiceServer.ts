@@ -13,7 +13,6 @@ export default function useServiceServer<T extends JDServiceServer>(
         let twin = service.twin as T
         if (!twin && createTwin) {
             twin = createTwin()
-            console.debug(`create twin`, { twin })
             if (twin) service.twin = twin
         }
         return twin

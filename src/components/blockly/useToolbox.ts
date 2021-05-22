@@ -457,10 +457,10 @@ function loadBlocks(): CachedBlockDefinitions {
     return cachedBlocks
 }
 
-const builtinTypes = ["", "Boolean", "Number", "String"]
+export const BUILTIN_TYPES = ["", "Boolean", "Number", "String"]
 export function scanServices(workspace: Blockly.Workspace) {
     const variables = Blockly.Variables.allUsedVarModels(workspace).filter(
-        v => builtinTypes.indexOf(v.type) < 0
+        v => BUILTIN_TYPES.indexOf(v.type) < 0
     ) // remove buildins
     const services = variables.map(v => v.type)
     return services

@@ -28,6 +28,7 @@ export interface InputJSON {
 export interface BlockJSON {
     type: string
     id: string
+    children?: BlockJSON[]
     value?: string | number | boolean
     inputs?: InputJSON[]
     next?: BlockJSON
@@ -99,6 +100,19 @@ export function domToJSON(workspace: Blockly.Workspace): WorkspaceJSON {
         }
         return undefined
     }
+    const flattenNext = (block: BlockJSON) => {
+        // flatten the linked list of next into an array
+        const children: BlockJSON[] = []
+        let current = block.next
+        while (current) {
+            children.push(current)
+            current = current.next
+        }
+        if (children.length) {
+            block.children = children
+            block.next = undefined
+        }
+    }
     const blockToJSON = (block: Blockly.Block): BlockJSON => {
         if (!block?.isEnabled()) return undefined
         // Skip over insertion markers.
@@ -129,6 +143,7 @@ export function domToJSON(workspace: Blockly.Workspace): WorkspaceJSON {
                     : undefined,
             next: blockToJSON(block.getNextBlock()),
         }
+        flattenNext(element)
         clean(element)
         return element
     }

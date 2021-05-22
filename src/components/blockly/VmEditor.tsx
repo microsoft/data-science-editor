@@ -9,19 +9,28 @@ import { DisableTopBlocks } from "@blockly/disable-top-blocks"
 import useToolbox, { scanServices } from "./useToolbox"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
 import BlocklyModalDialogs from "./BlocklyModalDialogs"
-import { domToJSON, WorkspaceJSON } from "./generator"
+import { domToJSON, WorkspaceJSON } from "./jsongenerator"
 import DarkModeContext from "../ui/DarkModeContext"
+import { IT4Program } from "../../../jacdac-ts/src/vm/ir"
+import workspaceJSONToIT4Program from "./it4generator"
 
 export default function VmEditor(props: {
     className?: string
     initialXml?: string
     onXmlChange?: (xml: string) => void
     onJSONChange?: (json: WorkspaceJSON) => void
+    onIT4ProgramChange?: (program: IT4Program) => void
 }) {
-    const { className, onXmlChange, onJSONChange, initialXml } = props
+    const {
+        className,
+        onXmlChange,
+        onJSONChange,
+        onIT4ProgramChange,
+        initialXml,
+    } = props
     const { darkMode } = useContext(DarkModeContext)
     const [services, setServices] = useState<string[]>([])
-    const { toolboxCategories, newProjectXml } = useToolbox(services)    
+    const { toolboxCategories, newProjectXml } = useToolbox(services)
     // ReactBlockly
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const reactBlockly = useRef<any>()
@@ -60,10 +69,14 @@ export default function VmEditor(props: {
         }
 
         // save json
-        if (onJSONChange) {
+        if (onJSONChange || onIT4ProgramChange) {
             // emit json
             const json = domToJSON(workspace)
-            onJSONChange(json)
+            onJSONChange?.(json)
+            if (onIT4ProgramChange) {
+                const program = workspaceJSONToIT4Program(json)
+                onIT4ProgramChange(program)
+            }
         }
 
         // update toolbox with declared roles
