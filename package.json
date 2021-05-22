@@ -6,6 +6,7 @@
   "author": "Microsoft",
   "dependencies": {
     "@axe-core/react": "^4.2.0",
+    "@blockly/block-dynamic-connection": "^0.1.2",
     "@blockly/continuous-toolbox": "^1.0.6",
     "@blockly/disable-top-blocks": "^0.1.9",
     "@blockly/field-slider": "^2.1.17",

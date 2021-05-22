@@ -457,7 +457,6 @@ function loadBlocks(): CachedBlockDefinitions {
     return cachedBlocks
 }
 
-
 const builtinTypes = ["", "Boolean", "Number", "String"]
 export function scanServices(workspace: Blockly.Workspace) {
     const variables = Blockly.Variables.allUsedVarModels(workspace).filter(
@@ -531,6 +530,7 @@ export default function useToolbox(blockServices?: string[]): {
             name: "Logic",
             colour: "%{BKY_LOGIC_HUE}",
             blocks: [
+                { type: "dynamic_if" },
                 {
                     type: "logic_compare",
                     values: {

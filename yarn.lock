@@ -1058,6 +1058,11 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
+"@blockly/block-dynamic-connection@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@blockly/block-dynamic-connection/-/block-dynamic-connection-0.1.2.tgz#4a2069090a0ca48a2233f1f9bf5d42e659c21082"
+  integrity sha512-mhb1J3zlEETdh9hVroIBwqetEzBswWGfKjpx5l8EkevnupJtKS2FvO4ou9CSGZomo/V26v4Aa20p89sKte7XXA==
+
 "@blockly/continuous-toolbox@^1.0.6":
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/@blockly/continuous-toolbox/-/continuous-toolbox-1.0.6.tgz#8fa936b8e5728ef73d790ae0305978a01a9eb57a"
