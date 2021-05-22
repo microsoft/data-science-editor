@@ -1,14 +1,16 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
 import ReactBlockly from "react-blockly"
 import Blockly from "blockly"
 import "@blockly/field-slider"
 import "@blockly/block-dynamic-connection"
 import Theme from "@blockly/theme-modern"
+import DarkTheme from "@blockly/theme-dark"
 import { DisableTopBlocks } from "@blockly/disable-top-blocks"
 import useToolbox, { scanServices } from "./useToolbox"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
 import BlocklyModalDialogs from "./BlocklyModalDialogs"
 import { domToJSON, WorkspaceJSON } from "./generator"
+import DarkModeContext from "../ui/DarkModeContext"
 
 export default function VmEditor(props: {
     className?: string
@@ -17,12 +19,15 @@ export default function VmEditor(props: {
     onJSONChange?: (json: WorkspaceJSON) => void
 }) {
     const { className, onXmlChange, onJSONChange, initialXml } = props
+    const { darkMode } = useContext(DarkModeContext)
     const [services, setServices] = useState<string[]>([])
-    const { toolboxCategories, newProjectXml } = useToolbox(services)
+    const { toolboxCategories, newProjectXml } = useToolbox(services)    
     // ReactBlockly
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const reactBlockly = useRef<any>()
     const workspaceReady = useRef(false)
+
+    const theme = darkMode === "dark" ? DarkTheme : Theme
 
     const resolveWorkspace = (): Blockly.WorkspaceSvg =>
         reactBlockly.current?.workspace?.state?.workspace
@@ -101,7 +106,7 @@ export default function VmEditor(props: {
                         snap: true,
                     },
                     renderer: "zelos",
-                    theme: Theme,
+                    theme,
                     oneBasedIndex: false,
                     move: {
                         scrollbars: {

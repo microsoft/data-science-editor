@@ -10,6 +10,7 @@
     "@blockly/continuous-toolbox": "^1.0.6",
     "@blockly/disable-top-blocks": "^0.1.9",
     "@blockly/field-slider": "^2.1.17",
+    "@blockly/theme-dark": "^1.0.6",
     "@blockly/theme-modern": "^2.1.16",
     "@gatsby-contrib/gatsby-plugin-elasticlunr-search": "^3.0.2",
     "@hot-loader/react-dom": "^17.0.1",

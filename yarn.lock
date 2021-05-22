@@ -1078,6 +1078,11 @@
   resolved "https://registry.yarnpkg.com/@blockly/field-slider/-/field-slider-2.1.17.tgz#e0e124f2a2e95b65ff9f8a3932e30de5e5904ff0"
   integrity sha512-KCr0iPsKAsNCrLGN9718+KCl4GWwlw71xAkL1ngbDjDYJiP7O22jPGS9GtlKX7TEijDWIEq0iIJ2uRMi6RHfAQ==
 
+"@blockly/theme-dark@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@blockly/theme-dark/-/theme-dark-1.0.6.tgz#dad2467cac8342894edb019ea173499fce929c77"
+  integrity sha512-4ExQn9rePL1wipxln0Z9Qsy8B/RGWqiq6g9W/kZ5VyIsfP1ZnxUDfRAQQTkzkson88w78PowreFVFQgB8ZYrHQ==
+
 "@blockly/theme-modern@^2.1.16":
   version "2.1.16"
   resolved "https://registry.yarnpkg.com/@blockly/theme-modern/-/theme-modern-2.1.16.tgz#5f95d6adc18043a8b0f75eb767aa1752950846bb"
