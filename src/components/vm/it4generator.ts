@@ -1,4 +1,4 @@
-import { visitWorkspace, WorkspaceJSON } from "./JSONGenerator"
+import { visitWorkspace, WorkspaceJSON } from "./jsongenerator"
 import {
     IT4GuardedCommand,
     IT4Handler,
