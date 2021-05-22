@@ -129,7 +129,7 @@ export default function Protocol() {
                 description="Absolutely. We would be thrilled if you used a Jacdac PCB connector on your board or product! You can use the name Jacdac without royalties or attribution."
                 buttonText="Integrate Jacdac into your hardware"
                 buttonVariant="link"
-                buttonUrl="/connector"
+                buttonUrl="/hardware/"
             />
         </Grid>
     )

@@ -32,7 +32,7 @@ export default function Protocol() {
             />
 
             <CenterGrid
-                subtitle="Plug-and-play"
+                subtitle="Plug-and-play."
                 description="Every Jacdac device has a tiny micro-controller that runs the Jacdac protocol and communicates with the bus."
                 image={
                     <StaticImage
@@ -76,7 +76,7 @@ export default function Protocol() {
                 description="A PCB edge connector was chosen for Jacdac primarily because it essentially adds no cost to a product."
                 buttonText="Physical connector"
                 buttonVariant="link"
-                buttonUrl="/connector/"
+                buttonUrl="/hardware/connector/"
                 imageColumns={6}
                 image={
                     <StaticImage
@@ -145,7 +145,7 @@ export default function Protocol() {
                 description="Absolutely. We would be thrilled if you used a Jacdac PCB connector on your board or product! You can use the name Jacdac without royalties or attribution."
                 buttonText="Integrate Jacdac into your hardware"
                 buttonVariant="link"
-                buttonUrl="/connector"
+                buttonUrl="/hardware/connector"
             />
         </Grid>
     )

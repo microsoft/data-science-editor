@@ -65,7 +65,7 @@ export default function Home() {
                 }
                 buttonText="Physical interconnect"
                 buttonVariant="link"
-                buttonUrl="/connector"
+                buttonUrl="/hardware/"
             />
             <SplitGrid
                 right={true}
