@@ -14,6 +14,7 @@ export interface FeatureItemProps {
     title?: string
     subtitle?: string
     subtitle2?: string
+    subtitle3?: string
     description?: string
     caption?: string
     buttonText?: string
@@ -30,13 +31,13 @@ const useStyles = makeStyles((theme: Theme) =>
             textAlign: "center",
         },
         description: {
-            fontSize: theme.typography.fontSize * 2,
+            fontSize: theme.typography.fontSize * 1.8,
         },
         caption: {
-            fontSize: theme.typography.fontSize * 1.8,
+            fontSize: theme.typography.fontSize,
         },
         button: {
-            fontSize: theme.typography.fontSize * 1.8,
+            fontSize: theme.typography.fontSize * 1.5,
         },
     })
 )
@@ -46,6 +47,7 @@ export default function FeatureItem(props: FeatureItemProps) {
         title,
         subtitle,
         subtitle2,
+        subtitle3,
         description,
         buttonText,
         buttonUrl,
@@ -84,6 +86,13 @@ export default function FeatureItem(props: FeatureItemProps) {
                 <Grid item xs={12}>
                     <Typography variant="h3" className={cls}>
                         {subtitle2}
+                    </Typography>
+                </Grid>
+            )}
+            {subtitle3 && (
+                <Grid item xs={12}>
+                    <Typography variant="h4" className={cls}>
+                        {subtitle3}
                     </Typography>
                 </Grid>
             )}

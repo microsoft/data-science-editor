@@ -7,9 +7,10 @@ export default function SplitGrid(
         right?: boolean
         image: ReactNode
         imageColumns?: GridSize
+        centered?: boolean
     } & FeatureItemProps
 ) {
-    const { right, image, imageColumns = 5, ...others } = props
+    const { right, image, centered, imageColumns = 5, ...others } = props
 
     const textItem = (
         <Grid item xs>
@@ -17,8 +18,8 @@ export default function SplitGrid(
                 container
                 spacing={2}
                 direction="column"
-                alignContent="flex-start"
-                alignItems="flex-start"
+                alignContent={"flex-start"}
+                alignItems={centered ? "center" : "flex-start"}
             >
                 <FeatureItem {...others} />
             </Grid>

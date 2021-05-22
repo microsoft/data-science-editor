@@ -5,10 +5,20 @@ import CarouselGrid from "./CarouselGrid"
 import CenterGrid from "./CenterGrid"
 import FeatureItem from "./FeatureItem"
 import SplitGrid from "./SplitGrid"
+import DirectionsBusIcon from "@material-ui/icons/DirectionsBus"
+import PlaylistAddCheckIcon from "@material-ui/icons/PlaylistAddCheck"
+import FindReplaceIcon from "@material-ui/icons/FindReplace"
+import SubscriptionsIcon from "@material-ui/icons/Subscriptions"
 
 export default function Home() {
     return (
-        <Grid container spacing={10} direction="column" alignContent="center" alignItems="center">
+        <Grid
+            container
+            spacing={10}
+            direction="column"
+            alignContent="center"
+            alignItems="center"
+        >
             <SplitGrid
                 title="Jacdac"
                 subtitle="plug-and-play for microcontrollers"
@@ -93,10 +103,84 @@ export default function Home() {
                 buttonVariant="link"
                 buttonUrl="/reference/protocol"
             />
+
+            <CarouselGrid>
+                <Grid item xs={12} sm={6}>
+                    <FeatureItem
+                        startImage={<DirectionsBusIcon fontSize="large" />}
+                        description="Bus topology"
+                        caption="Jacdac packets are sent serially among physical devices on the Jacdac bus and may also be sent over WebUSB/WebBLE, providing connectivity to web-based tooling and services running in the web browser."
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <FeatureItem
+                        startImage={<PlaylistAddCheckIcon fontSize="large" />}
+                        description="Device discovery and service advertisement"
+                        caption="Any device that hosts a service must also run the control service. The control service is responsible for advertising any services a device is running every 500 milliseconds."
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <FeatureItem
+                        startImage={<FindReplaceIcon fontSize="large" />}
+                        description="Standardized service abstraction"
+                        caption="This abstraction brings plug-and-play dynamism to Jacdac so that devices with different hardware, but the same overall functionality, can replace one another without having to recompile user applications."
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <FeatureItem
+                        startImage={<SubscriptionsIcon fontSize="large" />}
+                        description="Full stack from 8bit MCU to web development"
+                        caption="The responsibility of the physical layer is to send/receive a byte buffer (representing a Jacdac frame from the transport layer over a particular media): Single Wire Serial connects MCUs to each other using UART, WebUSB connects MCU to web browser"
+                    />
+                </Grid>
+            </CarouselGrid>
+
+            <SplitGrid
+                right={true}
+                subtitle3="Simulate and communicate from the browser."
+                description="Jacdac packets are sent serially among physical devices on the Jacdac bus and may also be sent over WebUSB/WebBLE, providing connectivity to web-based tooling and services running in the web browser."
+                imageColumns={6}
+                centered={true}
+                image={
+                    <StaticImage
+                        src="./dashboard.png"
+                        alt="A dashboard of simulated devices"
+                    />
+                }
+            />
+
+            <CenterGrid
+                subtitle="Enabling a cheaper ecosystem."
+                description="A PCB edge connector was chosen for Jacdac primarily because it essentially adds no cost to a product. A module is a small PCB that includes an MCU connected to an on-board sensor or actuator."
+                image={
+                    <StaticImage
+                        src="./rhtempvertical.png"
+                        alt="Humidity temperature module vertial"
+                    />
+                }
+            />
+
+            <SplitGrid
+                right={true}
+                subtitle="Time to join."
+                description="The Jacdac Device Development Kit (DDK) is for 3rd party hardware designers, firmware developers and manufacturers who wish to create their own Jacdac devices."
+                imageColumns={8}
+                centered={true}
+                buttonText="Device Development Kit"
+                buttonUrl="https://github.com/microsoft/jacdac-ddk"
+                buttonVariant="link"
+                image={
+                    <StaticImage
+                        src="./beautifysimple.png"
+                        alt="An array of Jacdac modules"
+                    />
+                }
+            />
+
             <SplitGrid
                 right={false}
                 subtitle="How does it work?"
-                caption="Jacdac packets are sent serially among physical devices on the Jacdac bus and may also be sent over WebUSB/WebBLE, providing connectivity to web-based tooling and services running in the web browser."
+                description="Jacdac packets are sent serially among physical devices on the Jacdac bus and may also be sent over WebUSB/WebBLE, providing connectivity to web-based tooling and services running in the web browser."
                 imageColumns={8}
                 image={
                     <StaticImage
@@ -119,44 +203,6 @@ export default function Home() {
                 }
             />
 
-            <SplitGrid
-                right={false}
-                subtitle="Simulate and communicate from the browser"
-                caption="The Jacdac bus can be simulated in the browser and communicate to hardware without any driver or program installation."
-                image={
-                    <StaticImage
-                        src="./dashboard.png"
-                        alt="A dashboard of simulated devices"
-                    />
-                }
-            />
-            <CenterGrid
-                title="A cheaper modules' ecosystem"
-                description="The cable connector plugs directly on the edge of the module, without requiring any female port on the module side. Just add a tiny microcontroller and your module is Jacdac enabled!"
-                image={
-                    <StaticImage
-                        src="./rhtempvertical.png"
-                        alt="Humidity temperature module vertial"
-                    />
-                }
-            />
-
-            <SplitGrid
-                right={true}
-                title="Beautifully simple."
-                caption="The device catalog lists the registered Jacdac devices that can be automatically detected on the bus. The catalog information provides vendor information, the services supported by a device, firmware, and pictures."
-                buttonText="Discover the device catalog"
-                buttonVariant="link"
-                buttonUrl="/devices"
-                imageColumns={7}
-                image={
-                    <StaticImage
-                        src="./beautifysimple.png"
-                        alt="5 Jacdac modules together"
-                    />
-                }
-            />
-
             <CarouselGrid>
                 <Grid item xs={12} sm={4}>
                     <FeatureItem
@@ -167,8 +213,8 @@ export default function Home() {
                                 alt="Icon of two plugs connecting"
                             />
                         }
-                        subtitle="Hot plug discovery"
-                        description="The device catalog lists the registered Jacdac devices that can be automatically detected on the bus. The catalog information provides vendor information, the service."
+                        description="Hot plug discovery"
+                        caption="The device catalog lists the registered Jacdac devices that can be automatically detected on the bus. The catalog information provides vendor information, the service."
                     />
                 </Grid>
                 <Grid item xs={12} sm={4}>
@@ -180,8 +226,8 @@ export default function Home() {
                                 alt="Firmware icon"
                             />
                         }
-                        subtitle="Firmware updates"
-                        description="The device catalog is automtically detect, download and flash firmware onto devices."
+                        description="Firmware updates"
+                        caption="The device catalog is automtically detect, download and flash firmware onto devices."
                     />
                 </Grid>
                 <Grid item xs={12} sm={4}>
@@ -193,8 +239,8 @@ export default function Home() {
                                 alt="HTML5 icon"
                             />
                         }
-                        subtitle="JavaScript package"
-                        description="Integrate Jacdac into your web site or node.js application using our TypeScript/JavaScript npm package."
+                        description="JavaScript package"
+                        caption="Integrate Jacdac into your web site or node.js application using our TypeScript/JavaScript npm package."
                         buttonText="Learn more"
                         buttonUrl="/clients/javascript"
                         buttonVariant="link"
