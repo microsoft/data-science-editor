@@ -161,3 +161,31 @@ export function domToJSON(workspace: Blockly.Workspace): WorkspaceJSON {
         return undefined
     }
 }
+
+
+export function visit(workspace: WorkspaceJSON, visitor: {
+    visitBlock?: (block: BlockJSON) => void,
+    visitInput?: (input: InputJSON) => void,
+    visitField?: (name: string, field: FieldJSON) => void,
+}) {
+    const visitBlock = (block: BlockJSON) => {
+        if (!block) return;
+        visitor.visitBlock?.(block)
+        const { inputs, children } = block
+        inputs?.forEach(visitInput)
+        children?.forEach(visitBlock)
+    }
+    const visitInput = (input: InputJSON) => {
+        if (!input) return
+        visitor.visitInput?.(input)
+        const { fields, child } = input
+        if(fields)
+            Object.keys(fields).map(k => visitField(k, fields[k]))
+        visitBlock(child)
+    }
+    const visitField = (name: string, field: FieldJSON) => {
+        if (!field) return
+        visitor.visitField?.(name, field)
+    }
+    workspace.blocks.forEach(visitBlock)
+}

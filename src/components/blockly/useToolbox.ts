@@ -67,7 +67,7 @@ function toBlocklyType(field: jdspec.PacketMember) {
 }
 
 let cachedBlocks: CachedBlockDefinitions
-function loadBlocks(): CachedBlockDefinitions {
+export function loadBlocks(): CachedBlockDefinitions {
     if (cachedBlocks) return cachedBlocks
 
     const variableName = (srv: jdspec.ServiceSpec) =>
@@ -153,7 +153,7 @@ function loadBlocks(): CachedBlockDefinitions {
             tooltip: "",
             helpUrl: "",
             service,
-            reading,
+            register: reading,
         })),
         ...readings.map(({ service, reading }) => ({
             type: `jacdac_${service.shortId}_reading`,
@@ -165,7 +165,7 @@ function loadBlocks(): CachedBlockDefinitions {
             tooltip: "",
             helpUrl: "",
             service,
-            reading,
+            register: reading,
         })),
         ...intensities.map(({ service, intensity }) => ({
             type: `jacdac_${service.shortId}_intensity_set`,
@@ -200,7 +200,7 @@ function loadBlocks(): CachedBlockDefinitions {
             tooltip: "",
             helpUrl: "",
             service,
-            intensity,
+            register: intensity,
             previousStatement: "Statement",
             nextStatement: "Statement",
         })),
@@ -241,7 +241,7 @@ function loadBlocks(): CachedBlockDefinitions {
             tooltip: "",
             helpUrl: "",
             service,
-            value,
+            register: value,
             previousStatement: "Statement",
             nextStatement: "Statement",
         })),
@@ -257,7 +257,7 @@ function loadBlocks(): CachedBlockDefinitions {
                 tooltip: "",
                 helpUrl: "",
                 service,
-                value,
+                register: value,
             })),
         // specific blocks
         {
