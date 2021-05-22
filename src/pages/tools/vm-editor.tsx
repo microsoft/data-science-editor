@@ -1,13 +1,14 @@
 import { createStyles, Grid, makeStyles, NoSsr } from "@material-ui/core"
-import React, { useRef, useState } from "react"
+import React, { useState } from "react"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import { IT4Program } from "../../../jacdac-ts/src/vm/ir"
 import { WorkspaceJSON } from "../../components/blockly/JSONGenerator"
-import VmEditor from "../../components/blockly/VmEditor"
+import VmEditor from "../../components/vm/VmEditor"
 import Dashboard from "../../components/dashboard/Dashboard"
 import Alert from "../../components/ui/Alert"
 import Markdown from "../../components/ui/Markdown"
 import useLocalStorage from "../../components/useLocalStorage"
+import VMRunner from "../../components/vm/VMRunner"
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -54,6 +55,9 @@ export default function Page() {
                         onIT4ProgramChange={handleI4Program}
                     />
                 </NoSsr>
+            </Grid>
+            <Grid item xs={12}>
+                <VMRunner program={program} />
             </Grid>
             {Flags.diagnostics && (
                 <Grid item xs={12}>
