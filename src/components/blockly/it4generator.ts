@@ -1,5 +1,10 @@
-import { visit, WorkspaceJSON } from "./JSONGenerator"
-import { IT4Handler, IT4Program, IT4Role } from "../../../jacdac-ts/src/vm/ir"
+import { visitWorkspace, WorkspaceJSON } from "./JSONGenerator"
+import {
+    IT4GuardedCommand,
+    IT4Handler,
+    IT4Program,
+    IT4Role,
+} from "../../../jacdac-ts/src/vm/ir"
 import { BUILTIN_TYPES, loadBlocks } from "./useToolbox"
 
 export default function workspaceJSONToIT4Program(
@@ -15,7 +20,7 @@ export default function workspaceJSONToIT4Program(
     const events: string[] = []
 
     // collect registers and events
-    visit(workspace, {
+    visitWorkspace(workspace, {
         visitBlock: b => {
             const def =
                 /^jacdac_/.test(b.type) && blocks.find(d => d.type === b.type)
@@ -28,7 +33,15 @@ export default function workspaceJSONToIT4Program(
         },
     })
 
-    const handlers: IT4Handler[] = []
+    const handlers = workspace.blocks.map(top => {
+        const description = top.type
+        // TODO
+        const handler: IT4Handler = {
+            description,
+            commands: [],
+        }
+        return handler
+    })
 
     return {
         description: "not required?",

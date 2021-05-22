@@ -162,30 +162,37 @@ export function domToJSON(workspace: Blockly.Workspace): WorkspaceJSON {
     }
 }
 
+export interface WorkspaceVisitor {
+    visitBlock?: (block: BlockJSON) => void
+    visitInput?: (input: InputJSON) => void
+    visitField?: (name: string, field: FieldJSON) => void
+}
 
-export function visit(workspace: WorkspaceJSON, visitor: {
-    visitBlock?: (block: BlockJSON) => void,
-    visitInput?: (input: InputJSON) => void,
-    visitField?: (name: string, field: FieldJSON) => void,
-}) {
-    const visitBlock = (block: BlockJSON) => {
-        if (!block) return;
-        visitor.visitBlock?.(block)
-        const { inputs, children } = block
-        inputs?.forEach(visitInput)
-        children?.forEach(visitBlock)
-    }
-    const visitInput = (input: InputJSON) => {
-        if (!input) return
-        visitor.visitInput?.(input)
-        const { fields, child } = input
-        if(fields)
-            Object.keys(fields).map(k => visitField(k, fields[k]))
-        visitBlock(child)
-    }
-    const visitField = (name: string, field: FieldJSON) => {
-        if (!field) return
-        visitor.visitField?.(name, field)
-    }
-    workspace.blocks.forEach(visitBlock)
+export function visitBlock(block: BlockJSON, visitor: WorkspaceVisitor) {
+    if (!block) return
+    visitor.visitBlock?.(block)
+    const { inputs, children } = block
+    inputs?.forEach(input => visitInput(input, visitor))
+    children?.forEach(child => visitBlock(child, visitor))
+}
+
+export function visitInput(input: InputJSON, visitor: WorkspaceVisitor) {
+    if (!input) return
+    visitor.visitInput?.(input)
+    const { fields, child } = input
+    if (fields) Object.keys(fields).map(k => visitField(k, fields[k], visitor))
+    visitBlock(child, visitor)
+}
+
+export function visitField(
+    name: string,
+    field: FieldJSON,
+    visitor: WorkspaceVisitor
+) {
+    if (!field) return
+    visitor.visitField?.(name, field)
+}
+
+export function visitWorkspace(workspace: WorkspaceJSON, visitor: WorkspaceVisitor) {
+    workspace.blocks.forEach(block => visitBlock(block, visitor))
 }
