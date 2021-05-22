@@ -33,8 +33,8 @@ export default function Home() {
                 }
             />
             <CenterGrid
-                description="Not only a new protocol designed for easier physical connectivity. It is an entire stack that bridges the world of the low cost microcontroller to the web browser and beyond."
-                caption="Cheap, flexible and extensible."
+                subtitle3="Not only a new protocol designed for easier physical connectivity. It is an entire stack that bridges the world of the low cost microcontroller to the web browser and beyond."
+                description="Cheap, flexible and extensible."
             />
             <Grid item xs={12}>
                 <StaticImage
