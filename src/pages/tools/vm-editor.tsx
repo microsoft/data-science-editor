@@ -53,19 +53,12 @@ export default function Page() {
                 <Grid item xs={12}>
                     <Markdown
                         source={`
-\`\`\`xml
-${xml}
-\`\`\`                
-`}
-                    />
-                </Grid>
-            )}
-            {Flags.diagnostics && (
-                <Grid item xs={12}>
-                    <Markdown
-                        source={`
 \`\`\`json
 ${source}
+\`\`\`   
+
+\`\`\`xml
+${xml}
 \`\`\`                
 `}
                     />

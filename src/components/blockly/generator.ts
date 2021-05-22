@@ -3,6 +3,7 @@ import Flags from "../../../jacdac-ts/src/jdom/flags"
 import { SMap, toMap } from "../../../jacdac-ts/src/jdom/utils"
 
 export interface VariableJSON {
+    // Boolean, Number, String, or service short id
     type: string
     id: string
     name: string
@@ -11,6 +12,9 @@ export interface VariableJSON {
 export type FieldJSON = {
     id?: string
     value?: number | string | boolean
+    // Boolean, Number, String, or service short id
+    variabletype?: string
+    // and extra fields, subclass
 }
 
 export interface InputJSON {
@@ -35,6 +39,11 @@ export interface WorkspaceJSON {
 }
 
 export function domToJSON(workspace: Blockly.Workspace): WorkspaceJSON {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const clean = (o: any) =>
+        Object.keys(o)
+            .filter(k => o[k] === undefined || o[k] === null)
+            .forEach(k => delete o[k])
     const builtins: SMap<(block: Blockly.Block) => string | number | boolean> =
         {
             logic_null: () => null,
@@ -56,11 +65,13 @@ export function domToJSON(workspace: Blockly.Workspace): WorkspaceJSON {
         id: variable.getId(),
     })
     const fieldsToJSON = (fields: Blockly.Field[]) =>
-        toMap(
-            fields,
-            field => (field.name as string)?.toLowerCase(),
-            fieldToJSON
-        )
+        !fields.length
+            ? undefined
+            : toMap(
+                  fields,
+                  field => (field.name as string)?.toLowerCase(),
+                  fieldToJSON
+              )
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const xmlToJSON = (xml: Element): any => {
         const j = {}
@@ -118,6 +129,7 @@ export function domToJSON(workspace: Blockly.Workspace): WorkspaceJSON {
                     : undefined,
             next: blockToJSON(block.getNextBlock()),
         }
+        clean(element)
         return element
     }
 
