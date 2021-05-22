@@ -51,7 +51,7 @@ export default function Protocol() {
                 }
                 buttonText={"Learn more"}
                 buttonVariant="link"
-                buttonUrl="/reference/protocol/"
+                buttonUrl="/protocol/"
             />
 
             <SplitGrid
@@ -65,9 +65,9 @@ export default function Protocol() {
                         alt="A LED module"
                     />
                 }
-                buttonText="PADUK firmware"
+                buttonText="Device Development Kit"
                 buttonVariant="link"
-                buttonUrl="https://github.com/microsoft/jacdac-padauk"
+                buttonUrl="https://github.com/microsoft/jacdac-ddk"
             />
 
             <SplitGrid

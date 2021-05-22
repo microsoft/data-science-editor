@@ -96,6 +96,7 @@ export default function Home() {
                     />
                 }
             />
+
             <CenterGrid
                 subtitle="Discover the benefits of Jacdac protocol."
                 description="Jacdac devices communicate using packets over a bus, where each device can advertise itself and the set of services it provides. A service provides registers, events and commands to communicate with other devices."
@@ -135,20 +136,6 @@ export default function Home() {
                 </Grid>
             </CarouselGrid>
 
-            <SplitGrid
-                right={true}
-                subtitle3="Simulate and communicate from the browser."
-                description="Jacdac packets are sent serially among physical devices on the Jacdac bus and may also be sent over WebUSB/WebBLE, providing connectivity to web-based tooling and services running in the web browser."
-                imageColumns={6}
-                centered={true}
-                image={
-                    <StaticImage
-                        src="./dashboard.png"
-                        alt="A dashboard of simulated devices"
-                    />
-                }
-            />
-
             <CenterGrid
                 subtitle="Enabling a cheaper ecosystem."
                 description="A PCB edge connector was chosen for Jacdac primarily because it essentially adds no cost to a product. A module is a small PCB that includes an MCU connected to an on-board sensor or actuator."
@@ -158,6 +145,9 @@ export default function Home() {
                         alt="Humidity temperature module vertial"
                     />
                 }
+                buttonText="Hardware overview"
+                buttonVariant="link"
+                buttonUrl="/hardware/"
             />
 
             <SplitGrid
@@ -240,7 +230,7 @@ export default function Home() {
                 description="Absolutely. We would be thrilled if you used a Jacdac PCB connector on your board or product! You can use the name Jacdac without royalties or attribution."
                 buttonText="Integrate Jacdac into your hardware"
                 buttonVariant="link"
-                buttonUrl="/connector"
+                buttonUrl="/hardware/"
             />
         </Grid>
     )
