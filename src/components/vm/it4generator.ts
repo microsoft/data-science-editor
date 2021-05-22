@@ -21,6 +21,10 @@ const ops = {
     GT: ">",
     LTE: "<=",
     GTE: ">=",
+    NEG: "-",
+    ADD: "+",
+    MUL: "*",
+    DIV: "/",
 }
 
 function blockToExpression(block: BlockJSON) {
@@ -36,15 +40,36 @@ function blockToExpression(block: BlockJSON) {
 
     console.log(`block`, block)
     switch (type) {
+        case "jacdac_math_single": {
+            const argument = blockToExpression(inputs[0].child)
+            const op = inputs[0].fields["op"].value as string
+            return <jsep.UnaryExpression>{
+                type: "UnaryExpression",
+                operator: ops[op] || op,
+                argument,
+                prefix: false, // TODO:?
+            }
+        }
+        case "jacdac_math_arithmetic": {
+            const left = blockToExpression(inputs[0].child)
+            const right = blockToExpression(inputs[1].child)
+            const op = inputs[1].fields["op"].value as string
+            return <jsep.BinaryExpression>{
+                type: "BinaryExpression",
+                operator: ops[op] || op,
+                left,
+                right,
+            }
+        }
         case "logic_operation": {
             const left = blockToExpression(inputs[0].child)
             const right = blockToExpression(inputs[1].child)
             const op = inputs[1].fields["op"].value as string
             return <jsep.LogicalExpression>{
                 type: "LogicalExpression",
+                operator: ops[op] || op,
                 left,
                 right,
-                operator: ops[op] || op,
             }
         }
         case "logic_negate": {
@@ -62,9 +87,9 @@ function blockToExpression(block: BlockJSON) {
             const op = inputs[1].fields["op"].value as string
             return <jsep.BinaryExpression>{
                 type: "BinaryExpression",
+                operator: ops[op] || op,
                 left,
                 right,
-                operator: ops[op] || op,
             }
         }
     }
