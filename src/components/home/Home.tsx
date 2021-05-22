@@ -23,7 +23,7 @@ export default function Home() {
                 }
             />
             <CenterGrid
-                description="Designed for “modular electronics” scenarios that support rapid prototyping, creative exploration, making and learning through physical computing."
+                description="Not only a new protocol designed for easier physical connectivity. It is an entire stack that bridges the world of the low cost microcontroller to the web browser and beyond."
                 caption="Cheap, flexible and extensible."
             />
             <Grid item xs={12}>
@@ -46,14 +46,14 @@ export default function Home() {
             <SplitGrid
                 right={false}
                 subtitle="Plug it in."
-                description="Jacdac uses 3-pin custom-designed connectors to quickly interface development boards with sensors, LCDs, relays and more."
+                description="Jacdac relies on a 3-wire bus for power delivery and data transfer. A purpose-built connector is used to interface with the Jacdac PCB edge connector."
                 image={
                     <StaticImage
                         src="./rotarycable.png"
                         alt="A rotary encoder module with a Jacdac cable attached."
                     />
                 }
-                buttonText="The new connector and cable"
+                buttonText="Physical interconnect"
                 buttonVariant="link"
                 buttonUrl="/connector"
             />
@@ -71,9 +71,27 @@ export default function Home() {
                     />
                 }
             />
+            <SplitGrid
+                right={false}
+                subtitle="Record it."
+                description="Instantly start to collect streaming data from Jacdac devices into various output formats. Yes, it’s as easy as it sounds."
+                buttonText="Try the data collector"
+                buttonVariant="link"
+                buttonUrl="/tools/data-collector"
+                imageColumns={8}
+                image={
+                    <StaticImage
+                        src="./recordit.png"
+                        alt="Charts of recorded data"
+                    />
+                }
+            />
             <CenterGrid
-                subtitle="Discover the benefits that Jacdac brings."
+                subtitle="Discover the benefits of Jacdac protocol."
                 description="Jacdac devices communicate using packets over a bus, where each device can advertise itself and the set of services it provides. A service provides registers, events and commands to communicate with other devices."
+                buttonText="Protocol specification"
+                buttonVariant="link"
+                buttonUrl="/reference/protocol"
             />
             <SplitGrid
                 right={false}

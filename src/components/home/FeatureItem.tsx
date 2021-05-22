@@ -100,7 +100,7 @@ export default function FeatureItem(props: FeatureItemProps) {
             {caption && (
                 <Grid item xs={12}>
                     <Typography
-                        variant="body2"
+                        variant="subtitle2"
                         className={clsx(cls, classes.caption)}
                     >
                         {caption}
