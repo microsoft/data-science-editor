@@ -145,6 +145,16 @@ export default function Toc(props: { pagePath: string }) {
                 order: 0.5,
             },
             {
+                name: "Protocol",
+                path: "/protocol/",
+                order: 0.55,
+            },
+            {
+                name: "Hardware",
+                path: "/hardware/",
+                order: 0.6,
+            },
+            {
                 name: "Connector",
                 path: "/connector/",
                 order: 0.6,
@@ -152,17 +162,17 @@ export default function Toc(props: { pagePath: string }) {
             {
                 name: "Reference",
                 path: "/reference/",
-                order: 1,
+                order: 0.8,
             },
             {
                 name: "Services",
                 path: "/services/",
-                order: 0.6,
+                order: 0.9,
             },
             {
                 name: "Devices",
                 path: "/devices/",
-                order: 0.7,
+                order: 0.95,
             },
             {
                 name: "Tools",
