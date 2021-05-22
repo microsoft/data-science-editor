@@ -153,7 +153,7 @@ export function domToJSON(workspace: Blockly.Workspace): WorkspaceJSON {
         const blocks = workspace.getTopBlocks(true).filter(b => b.isEnabled())
         const json: WorkspaceJSON = {
             variables: variables.map(variableToJSON),
-            blocks: blocks.map(blockToJSON),
+            blocks: blocks.map(blockToJSON).filter(b => !!b),
         }
         return json
     } catch (e) {
@@ -193,6 +193,9 @@ export function visitField(
     visitor.visitField?.(name, field)
 }
 
-export function visitWorkspace(workspace: WorkspaceJSON, visitor: WorkspaceVisitor) {
+export function visitWorkspace(
+    workspace: WorkspaceJSON,
+    visitor: WorkspaceVisitor
+) {
     workspace.blocks.forEach(block => visitBlock(block, visitor))
 }

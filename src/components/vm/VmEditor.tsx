@@ -74,8 +74,13 @@ export default function VmEditor(props: {
             const json = domToJSON(workspace)
             onJSONChange?.(json)
             if (onIT4ProgramChange) {
-                const program = workspaceJSONToIT4Program(json)
-                onIT4ProgramChange(program)
+                try {
+                    const program = workspaceJSONToIT4Program(json)
+                    onIT4ProgramChange(program)
+                } catch (e) {
+                    console.error(e)
+                    onIT4ProgramChange(undefined)
+                }
             }
         }
 

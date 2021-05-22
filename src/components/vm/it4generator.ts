@@ -1,15 +1,55 @@
-import { visitWorkspace, WorkspaceJSON } from "./jsongenerator"
+import {
+    BlockJSON,
+    FieldJSON,
+    visitWorkspace,
+    WorkspaceJSON,
+} from "./jsongenerator"
 import {
     IT4GuardedCommand,
     IT4Handler,
     IT4Program,
     IT4Role,
 } from "../../../jacdac-ts/src/vm/ir"
-import { BUILTIN_TYPES, loadBlocks } from "./useToolbox"
+import { BUILTIN_TYPES, loadBlocks, WHILE_CONDITION_BLOCK } from "./useToolbox"
+
+const ops = {
+    AND: "&&",
+    OR: "||",
+}
+
+function blockToExpression(block: BlockJSON) {
+    if (!block) return undefined
+    const { type, value, inputs } = block
+    if (value)
+        // literal
+        return <jsep.Literal>{
+            type: "Literal",
+            value: value,
+            raw: value + "",
+        }
+
+    console.log(`block`, block)
+    switch (type) {
+        case "logic_operation": {
+            const left = blockToExpression(inputs[0].child)
+            const right = blockToExpression(inputs[1].child)
+            const op = inputs[1].fields["op"].value as string
+            return <jsep.LogicalExpression>{
+                type: "LogicalExpression",
+                left,
+                right,
+                operator: ops[op] || op,
+            }
+        }
+    }
+    return undefined
+}
 
 export default function workspaceJSONToIT4Program(
     workspace: WorkspaceJSON
 ): IT4Program {
+    console.debug(`compile it4`, { workspace })
+
     const { blocks } = loadBlocks()
     const roles: IT4Role[] = workspace.variables
         .filter(v => BUILTIN_TYPES.indexOf(v.type) < 0)
@@ -33,14 +73,31 @@ export default function workspaceJSONToIT4Program(
         },
     })
 
-    const handlers = workspace.blocks.map(top => {
-        const description = top.type
-        // TODO
-        const handler: IT4Handler = {
-            description,
-            commands: [],
+    const handlers: IT4Handler[] = workspace.blocks.map(top => {
+        const { type, inputs } = top
+        const commands: IT4GuardedCommand[] = []
+        if (type === WHILE_CONDITION_BLOCK) {
+            // this is while (...)
+            const { child: condition } = inputs[0]
+            commands.push({
+                command: {
+                    type: "CallExpression",
+                    arguments: [blockToExpression(condition)],
+                    callee: undefined,
+                },
+            })
+        } else {
+            const def = blocks.find(def => def.type === type) as {
+                service: jdspec.ServiceSpec
+                events: jdspec.PacketInfo[]
+            }
+            const { service, events } = def
+            console.log("event", { service, events, def })
         }
-        return handler
+        return {
+            description: type,
+            commands,
+        }
     })
 
     return {

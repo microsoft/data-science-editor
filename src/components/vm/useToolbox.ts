@@ -38,6 +38,10 @@ const ignoredEvents = [SystemEvent.StatusCodeChanged]
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type BlockDefinition = any
 
+export const WHILE_CONDITION_BLOCK = "jacdac_while_event"
+export const WHILE_CONDITION_BLOCK_CONDITION = "condition"
+export const WAIT_BLOCK = "jacdac_wait"
+
 export interface CategoryDefinition {
     name: string
     custom?: string
@@ -261,12 +265,12 @@ export function loadBlocks(): CachedBlockDefinitions {
             })),
         // specific blocks
         {
-            type: "jacdac_while_event",
+            type: WHILE_CONDITION_BLOCK,
             message0: "while %1",
             args0: [
                 {
                     type: "input_value",
-                    name: "CONDITION",
+                    name: WHILE_CONDITION_BLOCK_CONDITION,
                     check: "Boolean",
                 },
             ],
@@ -277,7 +281,7 @@ export function loadBlocks(): CachedBlockDefinitions {
             helpUrl: "",
         },
         {
-            type: "jacdac_wait",
+            type: WAIT_BLOCK,
             message0: "wait %1 s",
             args0: [
                 {
@@ -516,7 +520,7 @@ export default function useToolbox(blockServices?: string[]): {
             colour: "%{BKY_LISTS_HUE}",
             blocks: [
                 {
-                    type: "jacdac_while_event",
+                    type: WHILE_CONDITION_BLOCK,
                 },
                 {
                     type: "jacdac_wait",
