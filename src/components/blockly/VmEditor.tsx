@@ -28,6 +28,7 @@ export default function VmEditor(props: {
     const workspaceReady = useRef(false)
 
     const theme = darkMode === "dark" ? DarkTheme : Theme
+    const gridColor = darkMode === "dark" ? "#555" : "#ccc"
 
     const resolveWorkspace = (): Blockly.WorkspaceSvg =>
         reactBlockly.current?.workspace?.state?.workspace
@@ -102,7 +103,7 @@ export default function VmEditor(props: {
                     grid: {
                         spacing: 25,
                         length: 1,
-                        colour: "#ccc",
+                        colour: gridColor,
                         snap: true,
                     },
                     renderer: "zelos",
