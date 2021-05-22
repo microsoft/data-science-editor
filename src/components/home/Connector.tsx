@@ -112,8 +112,8 @@ export default function Connector() {
                 description="Not requiring a female port mounted on the Jacdac modules means less sourcing and assembly costs. On top of that, our PCB edge and cable connector have been tested extensively to ensure a consistent experience up to 1500 cycles."
                 image={
                     <StaticImage
-                        src="./insertion.gif"
-                        alt="Animation of the cable insertion and simulated forces."
+                        src="./forces.png"
+                        alt="The cable insertion and simulated forces."
                     />
                 }
             />
