@@ -17,7 +17,7 @@ export default function Connector() {
         >
             <SplitGrid
                 title="Connector"
-                description="Jacdac uses 3-pin custom-designed connectors to quickly interface development boards with sensors, LCDs, relays and more."
+                description="Jacdac uses 3-pin custom-designed connectors to quickly interface development boards with sensors, relays and more."
                 buttonText="Go to specification"
                 buttonUrl="https://github.com/microsoft/jacdac-ddk/tree/main/connector"
                 imageColumns={6}

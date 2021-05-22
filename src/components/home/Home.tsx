@@ -101,7 +101,7 @@ export default function Home() {
                 description="Jacdac devices communicate using packets over a bus, where each device can advertise itself and the set of services it provides. A service provides registers, events and commands to communicate with other devices."
                 buttonText="Protocol specification"
                 buttonVariant="link"
-                buttonUrl="/reference/protocol"
+                buttonUrl="/protocol/"
             />
 
             <CarouselGrid>
@@ -227,7 +227,7 @@ export default function Home() {
                             />
                         }
                         description="Firmware updates"
-                        caption="The device catalog is automtically detect, download and flash firmware onto devices."
+                        caption="The device catalog is automatically detect, download and flash firmware onto devices."
                     />
                 </Grid>
                 <Grid item xs={12} sm={4}>
@@ -309,7 +309,7 @@ export default function Home() {
                 right={false}
                 subtitle={"Firmware updates"}
                 description={
-                    "The device catalog is automtically detect, download and flash firmware onto devices."
+                    "The device catalog is automatically detect, download and flash firmware onto devices."
                 }
                 buttonUrl="/tools/updater"
                 image={
