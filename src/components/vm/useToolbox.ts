@@ -19,7 +19,12 @@ import {
     isRegister,
     serviceSpecifications,
 } from "../../../jacdac-ts/src/jdom/spec"
-import { toMap, unique, uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
+import {
+    SMap,
+    toMap,
+    unique,
+    uniqueMap,
+} from "../../../jacdac-ts/src/jdom/utils"
 import useServices from "../hooks/useServices"
 
 const NEW_PROJET_XML =
@@ -35,8 +40,48 @@ const ignoredServices = [
 ]
 const ignoredEvents = [SystemEvent.StatusCodeChanged]
 
+export interface InputDefinition {
+    type: string
+    name: string
+    variable?: string
+    variableTypes?: string[]
+    defaultType?: string
+    check?: string | string[]
+}
+
+export interface OptionsInputDefinition extends InputDefinition {
+    options?: [string, string][]
+}
+
+export interface NumberInputDefinition extends InputDefinition {
+    min?: number
+    max?: number
+    precision?: number
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type BlockDefinition = any
+export interface BlockReference {
+    type: string
+    values?: SMap<BlockReference>
+    shadow?: boolean
+}
+
+export interface BlockDefinition extends BlockReference {
+    message0?: string
+    args0?: InputDefinition[]
+    colour?: number
+    inputsInline?: boolean
+    previousStatement?: string | string[]
+    nextStatement?: string | string[]
+    tooltip?: string
+    helpUrl?: string
+    service?: jdspec.ServiceSpec
+    events?: jdspec.PacketInfo[]
+    register?: jdspec.PacketInfo
+    style?: string
+    output?: string
+    extensions?: string[]
+}
 
 export const WHILE_CONDITION_BLOCK = "jacdac_while_event"
 export const WHILE_CONDITION_BLOCK_CONDITION = "condition"
@@ -76,7 +121,7 @@ export function loadBlocks(): CachedBlockDefinitions {
 
     const variableName = (srv: jdspec.ServiceSpec) =>
         `${humanify(srv.camelName).toLowerCase()} 1`
-    const fieldVariable = (service: jdspec.ServiceSpec) => ({
+    const fieldVariable = (service: jdspec.ServiceSpec): InputDefinition => ({
         type: "field_variable",
         name: "role",
         variable: variableName(service),
@@ -126,14 +171,13 @@ export function loadBlocks(): CachedBlockDefinitions {
 
     const HUE = 230
 
-    // generate blocks
-    const blocks: BlockDefinition[] = [
-        ...events.map(({ service, events }) => ({
+    const eventBlocks: BlockDefinition[] = events.map(
+        ({ service, events }) => ({
             type: `jacdac_${service.shortId}_events`,
             message0: `when %1 %2`,
             args0: [
                 fieldVariable(service),
-                {
+                <InputDefinition>{
                     type: "field_dropdown",
                     name: "event",
                     options: events.map(event => [event.name, event.name]),
@@ -146,8 +190,11 @@ export function loadBlocks(): CachedBlockDefinitions {
             helpUrl: "",
             service,
             events,
-        })),
-        ...readings.map(({ service, reading }) => ({
+        })
+    )
+
+    const readingChangeBlocks: BlockDefinition[] = readings.map(
+        ({ service, reading }) => ({
             type: `jacdac_${service.shortId}_reading_change`,
             message0: `when %1 ${humanify(reading.name)} change`,
             args0: [fieldVariable(service)],
@@ -158,8 +205,11 @@ export function loadBlocks(): CachedBlockDefinitions {
             helpUrl: "",
             service,
             register: reading,
-        })),
-        ...readings.map(({ service, reading }) => ({
+        })
+    )
+
+    const readingGetBlocks: BlockDefinition[] = readings.map(
+        ({ service, reading }) => ({
             type: `jacdac_${service.shortId}_reading`,
             message0: `%1 ${humanify(reading.name)}`,
             args0: [fieldVariable(service)],
@@ -170,8 +220,11 @@ export function loadBlocks(): CachedBlockDefinitions {
             helpUrl: "",
             service,
             register: reading,
-        })),
-        ...intensities.map(({ service, intensity }) => ({
+        })
+    )
+
+    const intensitySetBlocks: BlockDefinition[] = intensities.map(
+        ({ service, intensity }) => ({
             type: `jacdac_${service.shortId}_intensity_set`,
             message0: isBoolean(intensity)
                 ? `set %1 %2`
@@ -191,7 +244,7 @@ export function loadBlocks(): CachedBlockDefinitions {
                     check: toBlocklyType(field),
                 })),
             ],
-            values: toMap(
+            values: toMap<jdspec.PacketMember, BlockReference>(
                 intensity.fields,
                 field => field.name,
                 field =>
@@ -207,63 +260,157 @@ export function loadBlocks(): CachedBlockDefinitions {
             register: intensity,
             previousStatement: "Statement",
             nextStatement: "Statement",
-        })),
-        ...values.map(({ service, value }) => ({
-            type: `jacdac_${service.shortId}_value_set`,
-            message0: `set %1 ${humanify(value.name)} to ${value.fields
-                .map((_, i) => `%${2 + i}`)
-                .join(" ")}`,
-            args0: [
-                fieldVariable(service),
-                ...value.fields.map(field => ({
-                    type: "input_value",
-                    name: field.name,
-                    check: toBlocklyType(field),
-                })),
-            ],
-            values: toMap(
-                value.fields,
-                field => field.name,
-                field =>
-                    field.type === "bool"
-                        ? { type: "jacdac_on_off", shadow: true }
-                        : field.unit == "°"
-                        ? {
-                              type: "jacdac_angle",
-                              shadow: true,
-                          }
-                        : {
-                              type: "math_number",
-                              value: field.defaultValue || 0,
-                              min: field.absoluteMin,
-                              max: field.absoluteMax,
-                              shadow: true,
-                          }
-            ),
-            inputsInline: true,
-            colour: HUE,
-            tooltip: "",
-            helpUrl: "",
-            service,
-            register: value,
-            previousStatement: "Statement",
-            nextStatement: "Statement",
-        })),
-        ...values
-            .filter(v => v.value.fields.length === 1)
-            .map(({ service, value }) => ({
-                type: `jacdac_${service.shortId}_value_get`,
-                message0: `%1 ${humanify(value.name)}`,
-                args0: [fieldVariable(service)],
+        })
+    )
+
+    const valueSetBlocks: BlockDefinition[] = values.map(
+        ({ service, value }) =>
+            <BlockDefinition>{
+                type: `jacdac_${service.shortId}_value_set`,
+                message0: `set %1 ${humanify(value.name)} to ${value.fields
+                    .map((_, i) => `%${2 + i}`)
+                    .join(" ")}`,
+                args0: [
+                    fieldVariable(service),
+                    ...value.fields.map(field => ({
+                        type: "input_value",
+                        name: field.name,
+                        check: toBlocklyType(field),
+                    })),
+                ],
+                values: toMap(
+                    value.fields,
+                    field => field.name,
+                    field =>
+                        field.type === "bool"
+                            ? { type: "jacdac_on_off", shadow: true }
+                            : field.unit == "°"
+                            ? {
+                                  type: "jacdac_angle",
+                                  shadow: true,
+                              }
+                            : {
+                                  type: "math_number",
+                                  value: field.defaultValue || 0,
+                                  min: field.absoluteMin,
+                                  max: field.absoluteMax,
+                                  shadow: true,
+                              }
+                ),
                 inputsInline: true,
-                output: value.fields[0].type === "bool" ? "Boolean" : "Number",
                 colour: HUE,
                 tooltip: "",
                 helpUrl: "",
                 service,
                 register: value,
-            })),
-        // specific blocks
+                previousStatement: "Statement",
+                nextStatement: "Statement",
+            }
+    )
+
+    const valueGetBlocks: BlockDefinition[] = values
+        .filter(v => v.value.fields.length === 1)
+        .map(
+            ({ service, value }) =>
+                <BlockDefinition>{
+                    type: `jacdac_${service.shortId}_value_get`,
+                    message0: `%1 ${humanify(value.name)}`,
+                    args0: [fieldVariable(service)],
+                    inputsInline: true,
+                    output:
+                        value.fields[0].type === "bool" ? "Boolean" : "Number",
+                    colour: HUE,
+                    tooltip: "",
+                    helpUrl: "",
+                    service,
+                    register: value,
+                }
+        )
+
+    const shadowBlocks: BlockDefinition[] = [
+        {
+            type: `jacdac_on_off`,
+            message0: `%1`,
+            args0: [
+                <OptionsInputDefinition>{
+                    type: "field_dropdown",
+                    name: "value",
+                    options: [
+                        ["on", "on"],
+                        ["off", "off"],
+                    ],
+                },
+            ],
+            colour: HUE,
+            output: "Boolean",
+        },
+        {
+            type: `jacdac_time_picker`,
+            message0: `%1`,
+            args0: [
+                <OptionsInputDefinition>{
+                    type: "field_dropdown",
+                    name: "value",
+                    options: [
+                        ["0.1", "0.1"],
+                        ["1", "1"],
+                        ["5", "5"],
+                        ["30", "30"],
+                        ["60", "60"],
+                    ],
+                },
+            ],
+            colour: HUE,
+            output: "Number",
+        },
+        {
+            type: `jacdac_angle`,
+            message0: `%1`,
+            args0: [
+                <NumberInputDefinition>{
+                    type: "field_angle",
+                    name: "value",
+                    min: 0,
+                    max: 360,
+                    precision: 10,
+                },
+            ],
+            colour: HUE,
+            output: "Number",
+        },
+        {
+            type: `jacdac_percent`,
+            message0: `%1 %`,
+            args0: [
+                <NumberInputDefinition>{
+                    type: "field_slider",
+                    name: "value",
+                    min: 0,
+                    max: 100,
+                    precision: 1,
+                },
+            ],
+            colour: HUE,
+            output: "Number",
+        },
+        {
+            type: `jacdac_ratio`,
+            message0: `%1`,
+            args0: [
+                <NumberInputDefinition>{
+                    type: "field_slider",
+                    name: "value",
+                    min: 0,
+                    max: 1,
+                    precision: 0.1,
+                },
+            ],
+            colour: HUE,
+            output: "Number",
+        },
+    ]
+
+    const commandBlocks: BlockDefinition[] = [
         {
             type: WHILE_CONDITION_BLOCK,
             message0: "while %1",
@@ -297,88 +444,9 @@ export function loadBlocks(): CachedBlockDefinitions {
             tooltip: "",
             helpUrl: "",
         },
-        // shadow field editors
-        {
-            type: `jacdac_on_off`,
-            message0: `%1`,
-            args0: [
-                {
-                    type: "field_dropdown",
-                    name: "value",
-                    options: [
-                        ["on", "on"],
-                        ["off", "off"],
-                    ],
-                },
-            ],
-            colour: HUE,
-            output: "Boolean",
-        },
-        {
-            type: `jacdac_time_picker`,
-            message0: `%1`,
-            args0: [
-                {
-                    type: "field_dropdown",
-                    name: "value",
-                    options: [
-                        ["0.1", "0.1"],
-                        ["1", "1"],
-                        ["5", "5"],
-                        ["30", "30"],
-                        ["60", "60"],
-                    ],
-                },
-            ],
-            colour: HUE,
-            output: "Number",
-        },
-        {
-            type: `jacdac_angle`,
-            message0: `%1`,
-            args0: [
-                {
-                    type: "field_angle",
-                    name: "value",
-                    min: 0,
-                    max: 360,
-                    precision: 10,
-                },
-            ],
-            colour: HUE,
-            output: "Number",
-        },
-        {
-            type: `jacdac_percent`,
-            message0: `%1 %`,
-            args0: [
-                {
-                    type: "field_slider",
-                    name: "value",
-                    min: 0,
-                    max: 100,
-                    precision: 1,
-                },
-            ],
-            colour: HUE,
-            output: "Number",
-        },
-        {
-            type: `jacdac_ratio`,
-            message0: `%1`,
-            args0: [
-                {
-                    type: "field_slider",
-                    name: "value",
-                    min: 0,
-                    max: 1,
-                    precision: 0.1,
-                },
-            ],
-            colour: HUE,
-            output: "Number",
-        },
-        // custom math blocks
+    ]
+
+    const mathBlocks: BlockDefinition[] = [
         {
             type: "jacdac_math_arithmetic",
             message0: "%1 %2 %3",
@@ -388,7 +456,7 @@ export function loadBlocks(): CachedBlockDefinitions {
                     name: "A",
                     check: "Number",
                 },
-                {
+                <OptionsInputDefinition>{
                     type: "field_dropdown",
                     name: "OP",
                     options: [
@@ -410,13 +478,11 @@ export function loadBlocks(): CachedBlockDefinitions {
             helpUrl: "%{BKY_MATH_ARITHMETIC_HELPURL}",
             extensions: ["math_op_tooltip"],
         },
-
-        // Block for advanced math operators with single operand.
         {
             type: "jacdac_math_single",
             message0: "%1 %2",
             args0: [
-                {
+                <OptionsInputDefinition>{
                     type: "field_dropdown",
                     name: "OP",
                     options: [
@@ -435,6 +501,19 @@ export function loadBlocks(): CachedBlockDefinitions {
             helpUrl: "%{BKY_MATH_SINGLE_HELPURL}",
             extensions: ["math_op_tooltip"],
         },
+    ]
+
+    // generate blocks
+    const blocks: BlockDefinition[] = [
+        ...eventBlocks,
+        ...readingChangeBlocks,
+        ...readingGetBlocks,
+        ...intensitySetBlocks,
+        ...valueSetBlocks,
+        ...valueGetBlocks,
+        ...commandBlocks,
+        ...shadowBlocks,
+        ...mathBlocks,
     ]
 
     // register blocks with Blockly, happens once
