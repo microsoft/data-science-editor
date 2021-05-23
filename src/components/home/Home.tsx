@@ -68,7 +68,7 @@ export default function Home() {
             <SplitGrid
                 right={true}
                 subtitle="Protocol."
-                description="Bus topology, dynamic discovery, standardized services for micro-controllers."
+                description="Bus topology, dynamic discovery, standardized services designed for micro-controllers."
                 buttonText="Learn more"
                 buttonVariant="link"
                 buttonUrl="/protocol/"
@@ -81,7 +81,7 @@ export default function Home() {
             />            
             <SplitGrid
                 right={false}
-                subtitle="Standardized Services."
+                subtitle="Services catalog."
                 description="Jacdac services are specified to abstract the hardware device from the software implementation. The services are comprised of registers, commands and events, along with precise data layout information for each packet."
                 buttonText="Explore services"
                 buttonVariant="link"
