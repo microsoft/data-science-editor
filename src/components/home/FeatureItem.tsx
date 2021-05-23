@@ -22,6 +22,7 @@ export interface FeatureItemProps {
     buttonColor?: "primary" | "secondary" | "default"
     buttonUrl?: string
     buttonVariant?: "outlined" | "contained" | "link"
+    onButtonClick?: () => void
     image?: ReactNode
 }
 
@@ -57,6 +58,7 @@ export default function FeatureItem(props: FeatureItemProps) {
         caption,
         image,
         centered,
+        onButtonClick,
     } = props
     const classes = useStyles()
     const centeredCls = centered && classes.centered
@@ -116,10 +118,14 @@ export default function FeatureItem(props: FeatureItemProps) {
                     </Typography>
                 </Grid>
             )}
-            {buttonUrl && buttonText && (
+            {(buttonUrl || onButtonClick) && buttonText && (
                 <Grid item xs={12} className={clsx(cls, classes.button)}>
                     {buttonVariant === "link" ? (
-                        <Link to={buttonUrl}>
+                        <Link
+                            style={{ cursor: "pointer" }}
+                            to={buttonUrl}
+                            onClick={onButtonClick}
+                        >
                             {buttonText}
                             {" >"}
                         </Link>
@@ -128,6 +134,7 @@ export default function FeatureItem(props: FeatureItemProps) {
                             variant="contained"
                             color={buttonColor}
                             to={buttonUrl}
+                            onClick={onButtonClick}
                         >
                             {buttonText}
                         </Button>
