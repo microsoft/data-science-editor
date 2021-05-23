@@ -40,11 +40,9 @@ function DashboardServiceDevices(props: { serviceClass: number }) {
 
 export default function ServiceSpecification(props: {
     service: jdspec.ServiceSpec
-    showSource?: boolean
-    showDevices?: boolean
     showDerived?: boolean
 }) {
-    const { service: node, showSource, showDevices, showDerived } = props
+    const { service: node, showDerived } = props
     const { shortId, name, classIdentifier } = node
     const packets = node.packets.filter(pkt => showDerived || !pkt.derived)
     const registers = packets.filter(isRegister)

@@ -8,18 +8,18 @@ import TreeView from "@material-ui/lab/TreeView"
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import ArrowRightIcon from "@material-ui/icons/ArrowRight"
-import { JDDevice } from "../../jacdac-ts/src/jdom/device"
-import { JDEvent } from "../../jacdac-ts/src/jdom/event"
-import { JDService } from "../../jacdac-ts/src/jdom/service"
-import { JDRegister } from "../../jacdac-ts/src/jdom/register"
-import useChange from "../jacdac/useChange"
-import { isRegister, isEvent } from "../../jacdac-ts/src/jdom/spec"
+import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
+import { JDEvent } from "../../../jacdac-ts/src/jdom/event"
+import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import { JDRegister } from "../../../jacdac-ts/src/jdom/register"
+import useChange from "../../jacdac/useChange"
+import { isRegister, isEvent } from "../../../jacdac-ts/src/jdom/spec"
 import {
     useRegisterHumanValue,
     useRegisterUnpackedValue,
-} from "../jacdac/useRegisterValue"
-import useEventCount from "../jacdac/useEventCount"
-import DeviceActions from "./DeviceActions"
+} from "../../jacdac/useRegisterValue"
+import useEventCount from "../../jacdac/useEventCount"
+import DeviceActions from "../DeviceActions"
 import {
     LOST,
     FOUND,
@@ -34,23 +34,23 @@ import {
     ControlAnnounceFlags,
     SRV_ROLE_MANAGER,
     SRV_SETTINGS,
-} from "../../jacdac-ts/src/jdom/constants"
-import useEventRaised from "../jacdac/useEventRaised"
+} from "../../../jacdac-ts/src/jdom/constants"
+import useEventRaised from "../../jacdac/useEventRaised"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import { ellipseJoin } from "../../jacdac-ts/src/jdom/utils"
+import { ellipseJoin } from "../../../jacdac-ts/src/jdom/utils"
 import { Link } from "gatsby-theme-material-ui"
-import useDeviceName from "./devices/useDeviceName"
-import ConnectAlert from "./alert/ConnectAlert"
+import useDeviceName from "../devices/useDeviceName"
+import ConnectAlert from "../alert/ConnectAlert"
 import {
     StyledTreeItem,
     StyledTreeViewItemProps,
     StyledTreeViewProps,
-} from "./ui/StyledTreeView"
+} from "../ui/StyledTreeView"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import LaunchIcon from "@material-ui/icons/Launch"
-import AppContext, { DrawerType } from "./AppContext"
-import useDevices from "./hooks/useDevices"
-import useMediaQueries from "./hooks/useMediaQueries"
+import AppContext, { DrawerType } from "../AppContext"
+import useDevices from "../hooks/useDevices"
+import useMediaQueries from "../hooks/useMediaQueries"
 
 function DeviceTreeItem(
     props: { device: JDDevice } & StyledTreeViewItemProps & JDomTreeViewProps

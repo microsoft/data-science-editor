@@ -1,12 +1,33 @@
 import { Grid } from "@material-ui/core"
 import { StaticImage } from "gatsby-plugin-image"
-import React, { useContext } from "react"
+import React, { lazy, useContext } from "react"
 import CenterGrid from "./CenterGrid"
 import SplitGrid from "./SplitGrid"
 import AppContext, { DrawerType } from "../AppContext"
 import { navigate } from "gatsby-link"
+import Suspense from "../ui/Suspense"
+import {
+    SRV_BUTTON,
+    SRV_JOYSTICK,
+    SRV_LED,
+    SRV_LED_PIXEL,
+    SRV_POTENTIOMETER,
+    SRV_ROLE_MANAGER,
+    SRV_SERVO,
+    SRV_SOIL_MOISTURE,
+} from "../../../jacdac-ts/src/jdom/constants"
+import useServiceProviderFromServiceClass from "../hooks/useServiceProviderFromServiceClass"
+import useDevices from "../hooks/useDevices"
+import DashboardDevice from "../dashboard/DashboardDevice"
+const JDomTreeView = lazy(() => import("../tools/JDomTreeView"))
+const PacketView = lazy(() => import("../tools/PacketView"))
 
 export default function Tools() {
+    useServiceProviderFromServiceClass(SRV_BUTTON)
+    useServiceProviderFromServiceClass(SRV_JOYSTICK)
+    useServiceProviderFromServiceClass(SRV_SERVO)
+    useServiceProviderFromServiceClass(SRV_POTENTIOMETER)
+    useServiceProviderFromServiceClass(SRV_LED_PIXEL)
     const { setDrawerType, toggleShowDeviceHostsDialog } =
         useContext(AppContext)
     const handleStartSimulator = () => {
@@ -15,6 +36,16 @@ export default function Tools() {
     }
     const handleShowDeviceTree = () => setDrawerType(DrawerType.Dom)
     const handleShowPacketConsole = () => setDrawerType(DrawerType.Packets)
+    const simulatorClass = SRV_SERVO
+    const dashboards = useDevices({ ignoreSelf: true, announced: true })
+        .filter(dev => !dev.hasService(SRV_ROLE_MANAGER) && !dev.hasService(simulatorClass))
+        .slice(0, 4)
+    const simulator = useDevices({
+        ignoreSelf: true,
+        announced: true,
+        serviceClass: simulatorClass,
+    })?.[0]
+
     return (
         <Grid
             container
@@ -40,10 +71,15 @@ export default function Tools() {
                 subtitle="Dashboard"
                 description="Visualize and interact with physical or simulated devices in the dashboard."
                 image={
-                    <StaticImage
-                        src="./rotarysim.png"
-                        alt="A rotary encoder dashboard"
-                    />
+                    <Grid container spacing={1}>
+                        {dashboards.map(device => (
+                            <Grid item key={device.id} xs={12} sm={6}>
+                                <Suspense>
+                                    <DashboardDevice device={device} />
+                                </Suspense>
+                            </Grid>
+                        ))}
+                    </Grid>
                 }
                 buttonText="Try the dashboard"
                 buttonVariant="link"
@@ -55,10 +91,15 @@ export default function Tools() {
                 subtitle="Simulators."
                 description="Spin up virtual device and services to test your client software. Both physical and simulated devices can interact together."
                 image={
-                    <StaticImage
-                        src="./dashboardlight.png"
-                        alt="A simulated light strip"
-                    />
+                    <>
+                        {simulator && (
+                            <Suspense>
+                                <DashboardDevice
+                                    device={simulator}
+                                />
+                            </Suspense>
+                        )}
+                    </>
                 }
                 buttonText="Start a simulator"
                 buttonVariant="link"
@@ -70,10 +111,9 @@ export default function Tools() {
                 subtitle="Device Tree"
                 description="Inspect devices, services, registers and events in the device tree."
                 image={
-                    <StaticImage
-                        src="./devicetree.png"
-                        alt="A tree of devices, services and registers"
-                    />
+                    <Suspense>
+                        <JDomTreeView />
+                    </Suspense>
                 }
                 buttonText="Open Device Tree"
                 buttonVariant="link"
@@ -85,10 +125,11 @@ export default function Tools() {
                 subtitle="Packet Console"
                 description="Sniff the packet traffic, record and replay traces in the packet console."
                 image={
-                    <StaticImage
-                        src="./packetconsole.png"
-                        alt="A list of packet"
-                    />
+                    <div style={{ height: "14rem" }}>
+                        <Suspense>
+                            <PacketView />
+                        </Suspense>
+                    </div>
                 }
                 buttonText="Open Packet Console"
                 buttonVariant="link"

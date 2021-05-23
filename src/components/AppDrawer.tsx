@@ -12,7 +12,7 @@ import DrawerToolsButtonGroup from "./DrawerToolsButtonGroup";
 
 const Toc = lazy(() => import("./Toc"));
 const PacketView = lazy(() => import("./tools/PacketView"));
-const JDomTreeView = lazy(() => import("./JDomTreeView"));
+const JDomTreeView = lazy(() => import("./tools/JDomTreeView"));
 const DrawerSearchResults = lazy(() => import("./DrawerSearchResults"));
 const DrawerSearchInput = lazy(() => import("./DrawerSearchInput"));
 
