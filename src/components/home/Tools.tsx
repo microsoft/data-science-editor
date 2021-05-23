@@ -10,6 +10,7 @@ import {
     SRV_BUTTON,
     SRV_JOYSTICK,
     SRV_LED,
+    SRV_LED_MATRIX,
     SRV_LED_PIXEL,
     SRV_POTENTIOMETER,
     SRV_ROLE_MANAGER,
@@ -28,6 +29,7 @@ export default function Tools() {
     useServiceProviderFromServiceClass(SRV_SERVO)
     useServiceProviderFromServiceClass(SRV_POTENTIOMETER)
     useServiceProviderFromServiceClass(SRV_LED_PIXEL)
+    useServiceProviderFromServiceClass(SRV_LED_MATRIX)
     const { setDrawerType, toggleShowDeviceHostsDialog } =
         useContext(AppContext)
     const handleStartSimulator = () => {
@@ -36,7 +38,7 @@ export default function Tools() {
     }
     const handleShowDeviceTree = () => setDrawerType(DrawerType.Dom)
     const handleShowPacketConsole = () => setDrawerType(DrawerType.Packets)
-    const simulatorClass = SRV_SERVO
+    const simulatorClass = SRV_LED_MATRIX
     const dashboards = useDevices({ ignoreSelf: true, announced: true })
         .filter(dev => !dev.hasService(SRV_ROLE_MANAGER) && !dev.hasService(simulatorClass))
         .slice(0, 4)
