@@ -86,6 +86,7 @@ export interface BlockDefinition extends BlockReference {
     style?: string
     output?: string
     extensions?: string[]
+    command?: BlockCommand
 }
 
 export interface ServiceBlockDefinition extends BlockDefinition {

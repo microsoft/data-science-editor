@@ -1,9 +1,4 @@
-import {
-    BlockJSON,
-    FieldJSON,
-    visitWorkspace,
-    WorkspaceJSON,
-} from "./jsongenerator"
+import { BlockJSON, visitWorkspace, WorkspaceJSON } from "./jsongenerator"
 import {
     IT4GuardedCommand,
     IT4Handler,
@@ -12,10 +7,13 @@ import {
 } from "../../../jacdac-ts/src/vm/ir"
 import {
     BUILTIN_TYPES,
+    EventBlockDefinition,
     loadBlocks,
+    RegisterBlockDefinition,
     WAIT_BLOCK,
     WHILE_CONDITION_BLOCK,
 } from "./useToolbox"
+import { assert } from "../../../jacdac-ts/src/jdom/utils"
 
 const ops = {
     AND: "&&",
@@ -125,7 +123,7 @@ export default function workspaceJSONToIT4Program(
 ): IT4Program {
     console.debug(`compile it4`, { workspace })
 
-    const { blocks } = loadBlocks()
+    const { serviceBlocks } = loadBlocks()
     const roles: IT4Role[] = workspace.variables
         .filter(v => BUILTIN_TYPES.indexOf(v.type) < 0)
         .map(v => ({ role: v.name, serviceShortName: v.type }))
@@ -138,9 +136,12 @@ export default function workspaceJSONToIT4Program(
     visitWorkspace(workspace, {
         visitBlock: b => {
             const def =
-                /^jacdac_/.test(b.type) && blocks.find(d => d.type === b.type)
+                /^jacdac_/.test(b.type) &&
+                serviceBlocks.find(d => d.type === b.type)
             if (!def) return
-            const { service, register, events: defEvents } = def
+            const { service } = def
+            const { register } = def as RegisterBlockDefinition
+            const { events: defEvents } = def as EventBlockDefinition
             if (register) registers.push(`${service.shortId}.${register.name}`)
             if (defEvents)
                 for (const event of defEvents)
@@ -162,13 +163,25 @@ export default function workspaceJSONToIT4Program(
                 },
             })
         } else {
-            const def = blocks.find(def => def.type === type) as {
-                service: jdspec.ServiceSpec
-                events: jdspec.PacketInfo[]
+            const def = serviceBlocks.find(def => def.type === type)
+            assert(!!def)
+            const { command } = def
+            switch (command) {
+                case "event": {
+                    const { service, events } = def as EventBlockDefinition
+                    // TODO
+                    break
+                }
+                case "reading_change_event":
+                case "reading_get":
+                case "intensity_set":
+                case "value_get":
+                case "value_set": {
+                    const { service, register } = def as RegisterBlockDefinition
+                    // TODO
+                    break
+                }
             }
-            const { service, events } = def
-            console.log("event", { service, events, def })
-            // TODO
         }
 
         // process children
