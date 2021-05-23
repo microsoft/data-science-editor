@@ -66,6 +66,14 @@ export interface BlockReference {
     shadow?: boolean
 }
 
+export type BlockCommand =
+    | "event"
+    | "reading_change_event"
+    | "reading_get"
+    | "value_get"
+    | "value_set"
+    | "intensity_set"
+
 export interface BlockDefinition extends BlockReference {
     message0?: string
     args0?: InputDefinition[]
@@ -75,12 +83,29 @@ export interface BlockDefinition extends BlockReference {
     nextStatement?: string | string[]
     tooltip?: string
     helpUrl?: string
-    service?: jdspec.ServiceSpec
-    events?: jdspec.PacketInfo[]
-    register?: jdspec.PacketInfo
     style?: string
     output?: string
     extensions?: string[]
+}
+
+export interface ServiceBlockDefinition extends BlockDefinition {
+    service: jdspec.ServiceSpec
+    command: BlockCommand
+}
+
+export interface EventBlockDefinition extends ServiceBlockDefinition {
+    command: "event"
+    events: jdspec.PacketInfo[]
+}
+
+export interface RegisterBlockDefinition extends ServiceBlockDefinition {
+    command:
+        | "reading_change_event"
+        | "reading_get"
+        | "value_get"
+        | "value_set"
+        | "intensity_set"
+    register: jdspec.PacketInfo
 }
 
 export const WHILE_CONDITION_BLOCK = "jacdac_while_event"
@@ -102,6 +127,7 @@ export interface CategoryDefinition {
 
 type CachedBlockDefinitions = {
     blocks: BlockDefinition[]
+    serviceBlocks: ServiceBlockDefinition[],
     services: jdspec.ServiceSpec[]
 }
 
@@ -171,7 +197,7 @@ export function loadBlocks(): CachedBlockDefinitions {
 
     const HUE = 230
 
-    const eventBlocks: BlockDefinition[] = events.map(
+    const eventBlocks = events.map<EventBlockDefinition>(
         ({ service, events }) => ({
             type: `jacdac_${service.shortId}_events`,
             message0: `when %1 %2`,
@@ -190,10 +216,11 @@ export function loadBlocks(): CachedBlockDefinitions {
             helpUrl: "",
             service,
             events,
+            command: "event",
         })
     )
 
-    const readingChangeBlocks: BlockDefinition[] = readings.map(
+    const readingChangeBlocks = readings.map<RegisterBlockDefinition>(
         ({ service, reading }) => ({
             type: `jacdac_${service.shortId}_reading_change`,
             message0: `when %1 ${humanify(reading.name)} change`,
@@ -205,10 +232,12 @@ export function loadBlocks(): CachedBlockDefinitions {
             helpUrl: "",
             service,
             register: reading,
+
+            command: "reading_change_event",
         })
     )
 
-    const readingGetBlocks: BlockDefinition[] = readings.map(
+    const readingGetBlocks = readings.map<RegisterBlockDefinition>(
         ({ service, reading }) => ({
             type: `jacdac_${service.shortId}_reading`,
             message0: `%1 ${humanify(reading.name)}`,
@@ -220,10 +249,12 @@ export function loadBlocks(): CachedBlockDefinitions {
             helpUrl: "",
             service,
             register: reading,
+
+            command: "reading_get",
         })
     )
 
-    const intensitySetBlocks: BlockDefinition[] = intensities.map(
+    const intensitySetBlocks = intensities.map<RegisterBlockDefinition>(
         ({ service, intensity }) => ({
             type: `jacdac_${service.shortId}_intensity_set`,
             message0: isBoolean(intensity)
@@ -260,72 +291,73 @@ export function loadBlocks(): CachedBlockDefinitions {
             register: intensity,
             previousStatement: "Statement",
             nextStatement: "Statement",
+
+            command: "intensity_set",
         })
     )
 
-    const valueSetBlocks: BlockDefinition[] = values.map(
-        ({ service, value }) =>
-            <BlockDefinition>{
-                type: `jacdac_${service.shortId}_value_set`,
-                message0: `set %1 ${humanify(value.name)} to ${value.fields
-                    .map((_, i) => `%${2 + i}`)
-                    .join(" ")}`,
-                args0: [
-                    fieldVariable(service),
-                    ...value.fields.map(field => ({
-                        type: "input_value",
-                        name: field.name,
-                        check: toBlocklyType(field),
-                    })),
-                ],
-                values: toMap(
-                    value.fields,
-                    field => field.name,
-                    field =>
-                        field.type === "bool"
-                            ? { type: "jacdac_on_off", shadow: true }
-                            : field.unit == "°"
-                            ? {
-                                  type: "jacdac_angle",
-                                  shadow: true,
-                              }
-                            : {
-                                  type: "math_number",
-                                  value: field.defaultValue || 0,
-                                  min: field.absoluteMin,
-                                  max: field.absoluteMax,
-                                  shadow: true,
-                              }
-                ),
-                inputsInline: true,
-                colour: HUE,
-                tooltip: "",
-                helpUrl: "",
-                service,
-                register: value,
-                previousStatement: "Statement",
-                nextStatement: "Statement",
-            }
+    const valueSetBlocks = values.map<RegisterBlockDefinition>(
+        ({ service, value }) => ({
+            type: `jacdac_${service.shortId}_value_set`,
+            message0: `set %1 ${humanify(value.name)} to ${value.fields
+                .map((_, i) => `%${2 + i}`)
+                .join(" ")}`,
+            args0: [
+                fieldVariable(service),
+                ...value.fields.map(field => ({
+                    type: "input_value",
+                    name: field.name,
+                    check: toBlocklyType(field),
+                })),
+            ],
+            values: toMap(
+                value.fields,
+                field => field.name,
+                field =>
+                    field.type === "bool"
+                        ? { type: "jacdac_on_off", shadow: true }
+                        : field.unit == "°"
+                        ? {
+                              type: "jacdac_angle",
+                              shadow: true,
+                          }
+                        : {
+                              type: "math_number",
+                              value: field.defaultValue || 0,
+                              min: field.absoluteMin,
+                              max: field.absoluteMax,
+                              shadow: true,
+                          }
+            ),
+            inputsInline: true,
+            colour: HUE,
+            tooltip: "",
+            helpUrl: "",
+            service,
+            register: value,
+            previousStatement: "Statement",
+            nextStatement: "Statement",
+
+            command: "value_set",
+        })
     )
 
-    const valueGetBlocks: BlockDefinition[] = values
+    const valueGetBlocks = values
         .filter(v => v.value.fields.length === 1)
-        .map(
-            ({ service, value }) =>
-                <BlockDefinition>{
-                    type: `jacdac_${service.shortId}_value_get`,
-                    message0: `%1 ${humanify(value.name)}`,
-                    args0: [fieldVariable(service)],
-                    inputsInline: true,
-                    output:
-                        value.fields[0].type === "bool" ? "Boolean" : "Number",
-                    colour: HUE,
-                    tooltip: "",
-                    helpUrl: "",
-                    service,
-                    register: value,
-                }
-        )
+        .map<RegisterBlockDefinition>(({ service, value }) => ({
+            type: `jacdac_${service.shortId}_value_get`,
+            message0: `%1 ${humanify(value.name)}`,
+            args0: [fieldVariable(service)],
+            inputsInline: true,
+            output: value.fields[0].type === "bool" ? "Boolean" : "Number",
+            colour: HUE,
+            tooltip: "",
+            helpUrl: "",
+            service,
+            register: value,
+
+            command: "value_get",
+        }))
 
     const shadowBlocks: BlockDefinition[] = [
         {
@@ -503,14 +535,16 @@ export function loadBlocks(): CachedBlockDefinitions {
         },
     ]
 
-    // generate blocks
-    const blocks: BlockDefinition[] = [
+    const serviceBlocks: ServiceBlockDefinition[] = [
         ...eventBlocks,
         ...readingChangeBlocks,
         ...readingGetBlocks,
         ...intensitySetBlocks,
         ...valueSetBlocks,
         ...valueGetBlocks,
+    ]
+    const blocks: BlockDefinition[] = [
+        ...serviceBlocks,
         ...commandBlocks,
         ...shadowBlocks,
         ...mathBlocks,
@@ -525,7 +559,7 @@ export function loadBlocks(): CachedBlockDefinitions {
                 },
             })
     )
-    const jdBlocks = blocks.filter(block => !!block.service)
+    const jdBlocks = serviceBlocks.filter(block => !!block.service)
     const services = uniqueMap(
         jdBlocks,
         block => block.service.shortId,
@@ -534,6 +568,7 @@ export function loadBlocks(): CachedBlockDefinitions {
 
     cachedBlocks = {
         blocks,
+        serviceBlocks,
         services,
     }
 
@@ -553,7 +588,7 @@ export default function useToolbox(blockServices?: string[]): {
     toolboxCategories: CategoryDefinition[]
     newProjectXml: string
 } {
-    const { blocks, services } = useMemo(() => loadBlocks(), [])
+    const { serviceBlocks, services } = useMemo(() => loadBlocks(), [])
     const liveServices = useServices({ specification: true })
 
     const toolboxServices = unique([
@@ -571,7 +606,7 @@ export default function useToolbox(blockServices?: string[]): {
         ...toolboxServices
             .map(service => ({
                 service,
-                serviceBlocks: blocks.filter(
+                serviceBlocks: serviceBlocks.filter(
                     block => block.service === service
                 ),
             }))
