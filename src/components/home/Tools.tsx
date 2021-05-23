@@ -4,18 +4,15 @@ import React, { lazy, useContext } from "react"
 import CenterGrid from "./CenterGrid"
 import SplitGrid from "./SplitGrid"
 import AppContext, { DrawerType } from "../AppContext"
-import { navigate } from "gatsby-link"
 import Suspense from "../ui/Suspense"
 import {
     SRV_BUTTON,
     SRV_JOYSTICK,
-    SRV_LED,
     SRV_LED_MATRIX,
     SRV_LED_PIXEL,
     SRV_POTENTIOMETER,
     SRV_ROLE_MANAGER,
     SRV_SERVO,
-    SRV_SOIL_MOISTURE,
 } from "../../../jacdac-ts/src/jdom/constants"
 import useServiceProviderFromServiceClass from "../hooks/useServiceProviderFromServiceClass"
 import useDevices from "../hooks/useDevices"
@@ -30,17 +27,16 @@ export default function Tools() {
     useServiceProviderFromServiceClass(SRV_POTENTIOMETER)
     useServiceProviderFromServiceClass(SRV_LED_PIXEL)
     useServiceProviderFromServiceClass(SRV_LED_MATRIX)
-    const { setDrawerType, toggleShowDeviceHostsDialog } =
-        useContext(AppContext)
-    const handleStartSimulator = () => {
-        toggleShowDeviceHostsDialog()
-        navigate("/dashboard/")
-    }
+    const { setDrawerType } = useContext(AppContext)
     const handleShowDeviceTree = () => setDrawerType(DrawerType.Dom)
     const handleShowPacketConsole = () => setDrawerType(DrawerType.Packets)
     const simulatorClass = SRV_LED_MATRIX
     const dashboards = useDevices({ ignoreSelf: true, announced: true })
-        .filter(dev => !dev.hasService(SRV_ROLE_MANAGER) && !dev.hasService(simulatorClass))
+        .filter(
+            dev =>
+                !dev.hasService(SRV_ROLE_MANAGER) &&
+                !dev.hasService(simulatorClass)
+        )
         .slice(0, 4)
     const simulator = useDevices({
         ignoreSelf: true,
@@ -96,16 +92,11 @@ export default function Tools() {
                     <>
                         {simulator && (
                             <Suspense>
-                                <DashboardDevice
-                                    device={simulator}
-                                />
+                                <DashboardDevice device={simulator} />
                             </Suspense>
                         )}
                     </>
                 }
-                buttonText="Start a simulator"
-                buttonVariant="link"
-                onButtonClick={handleStartSimulator}
             />
 
             <SplitGrid
