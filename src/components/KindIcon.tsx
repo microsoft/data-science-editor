@@ -50,60 +50,60 @@ import {
 } from "../../jacdac-ts/src/jdom/constants"
 import JacdacIcon from "./icons/JacdacIcon"
 
-export default function KindIcon(props: { kind: string; className?: string }) {
-    const { kind, className } = props
+export default function KindIcon(props: { kind: string; className?: string, fontSize?: "small" | "default" | "inherit" | "large" }) {
+    const { kind, ...rest } = props
     let icon: JSX.Element
     switch (kind) {
         case PACKET_KIND_RO:
-            icon = <DataUsageIcon className={className} />
+            icon = <DataUsageIcon {...rest} />
             break
         case PACKET_KIND_RW:
-            icon = <CreateIcon className={className} />
+            icon = <CreateIcon {...rest} />
             break
         case PACKET_KIND_ANNOUNCE:
-            icon = <NotificationsNoneIcon className={className} />
+            icon = <NotificationsNoneIcon {...rest} />
             break
         case CONST_NODE_NAME:
-            icon = <LockIcon className={className} />
+            icon = <LockIcon {...rest} />
             break
         case COMMAND_NODE_NAME:
-            icon = <CallToActionIcon className={className} />
+            icon = <CallToActionIcon {...rest} />
             break
         case EVENT_NODE_NAME:
-            icon = <FlashOnIcon className={className} />
+            icon = <FlashOnIcon {...rest} />
             break
         case REPORT_NODE_NAME:
-            icon = <ReplyIcon className={className} />
+            icon = <ReplyIcon {...rest} />
             break
         case BUS_NODE_NAME:
-            icon = <DeviceHubIcon className={className} />
+            icon = <DeviceHubIcon {...rest} />
             break
         case DEVICE_NODE_NAME:
-            icon = <JacdacIcon className={className} />
+            icon = <JacdacIcon {...rest} />
             break
         case VIRTUAL_DEVICE_NODE_NAME:
-            icon = <ComputerIcon className={className} />
+            icon = <ComputerIcon {...rest} />
             break
         case SERVICE_NODE_NAME:
-            icon = <BubbleChartIcon className={className} />
+            icon = <BubbleChartIcon {...rest} />
             break
         case SERVICE_MIXIN_NODE_NAME:
-            icon = <SettingsIcon className={className} />
+            icon = <SettingsIcon {...rest} />
             break
         case PIPE_NODE_NAME:
-            icon = <BlurLinearIcon className={className} />
+            icon = <BlurLinearIcon {...rest} />
             break
         case PIPE_REPORT_NODE_NAME:
-            icon = <BlurLinearIcon className={className} />
+            icon = <BlurLinearIcon {...rest} />
             break
         case CRC_ACK_NODE_NAME:
-            icon = <ConfirmationNumberIcon className={className} />
+            icon = <ConfirmationNumberIcon {...rest} />
             break
         case SERVICE_TEST_NODE_NAME:
-            icon = <CheckCircleIcon className={className} />
+            icon = <CheckCircleIcon {...rest} />
             break
         default:
-            icon = <DeviceUnknownIcon className={className} />
+            icon = <DeviceUnknownIcon {...rest} />
             break
     }
     return icon

@@ -74,11 +74,11 @@ export default function Home() {
                 buttonUrl="/protocol/"
                 image={
                     <StaticImage
-                        src="./packetconsole.png"
-                        alt="Web simulator of a rotary encoder"
+                        src="./bustopology.png"
+                        alt="Four cables joining into a hub"
                     />
                 }
-            />            
+            />
             <SplitGrid
                 right={false}
                 subtitle="Services catalog."
@@ -93,14 +93,25 @@ export default function Home() {
                     />
                 }
             />
+
             <SplitGrid
                 right={true}
                 subtitle="Client Software."
                 description="Integrate Jacdac in your web or Node.JS using our Javascript library."
-                buttonText="Add Jacdac to your apps."
+                buttonText="Add Jacdac to your apps"
                 buttonVariant="link"
                 buttonUrl="/software/"
                 image={<StaticImage src="./html5.png" alt="HTML5 logo" />}
+            />
+
+            <SplitGrid
+                right={false}
+                subtitle="Tools."
+                description="Visualize, debug, sniff, track, record, replay, update... from your browser."
+                buttonText="Get productive with Jacdac"
+                buttonVariant="link"
+                buttonUrl="/tools/"
+                image={<StaticImage src="./devicetree.png" alt="Device tree" />}
             />
 
             <CenterGrid

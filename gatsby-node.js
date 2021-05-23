@@ -335,7 +335,7 @@ exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
     replaceWebpackConfig(config)
 
     // final webpack
-    console.log({ webpack: getConfig() })
+    //console.log({ webpack: getConfig() })
 }
 
 // generate a full list of pages for compliance

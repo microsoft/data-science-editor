@@ -29,8 +29,6 @@ import WifiIcon from "@material-ui/icons/Wifi"
 import SettingsIcon from "@material-ui/icons/Settings"
 import DarkModeContext from "./ui/DarkModeContext"
 import KindIcon from "./KindIcon"
-import MakeCodeIcon from "./icons/MakeCodeIcon"
-import JupyterIcon from "./icons/JupyterIcon"
 import {
     DEVICE_NODE_NAME,
     SERVICE_NODE_NAME,

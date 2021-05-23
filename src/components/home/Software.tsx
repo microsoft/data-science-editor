@@ -1,31 +1,26 @@
 import { Grid } from "@material-ui/core"
 import { StaticImage } from "gatsby-plugin-image"
 import React, { useContext } from "react"
-import CarouselGrid from "./CarouselGrid"
 import CenterGrid from "./CenterGrid"
-import FeatureItem from "./FeatureItem"
 import SplitGrid from "./SplitGrid"
-import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew"
-import CameraIcon from "@material-ui/icons/Camera"
-import TelegramIcon from "@material-ui/icons/Telegram"
-import { SRV_SOIL_MOISTURE } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
-import {
-    addServiceProvider,
-    serviceProviderDefinitionFromServiceClass,
-} from "../../../jacdac-ts/src/servers/servers"
-import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import AppContext, { DrawerType } from "../AppContext"
+import CarouselGrid from "./CarouselGrid"
+import FeatureItem from "./FeatureItem"
+// tslint:disable-next-line: no-submodule-imports match-default-export-name
+import AccountTreeIcon from "@material-ui/icons/AccountTree"
+import JacdacIcon from "../icons/JacdacIcon"
+import KindIcon from "../KindIcon"
+import { VIRTUAL_DEVICE_NODE_NAME } from "../../../jacdac-ts/src/jdom/constants"
+import { navigate } from "gatsby-link"
 
-export default function Protocol() {
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const { setDrawerType } = useContext(AppContext)
+export default function Software() {
+    const { setDrawerType, toggleShowDeviceHostsDialog } =
+        useContext(AppContext)
     const handleStartSimulator = () => {
-        const provider =
-            serviceProviderDefinitionFromServiceClass(SRV_SOIL_MOISTURE)
-        addServiceProvider(bus, provider)
+        toggleShowDeviceHostsDialog()
+        navigate("/dashboard/")
     }
     const handleShowDeviceTree = () => setDrawerType(DrawerType.Dom)
-    const handleShowPacketConsole = () => setDrawerType(DrawerType.Packets)
     return (
         <Grid
             container
@@ -91,65 +86,44 @@ export default function Protocol() {
                 description="Investigate and diagnose issues through our debugging tools."
             />
 
-            <SplitGrid
-                right={true}
-                subtitle="Dashboard"
-                description="Visualize and interact with physical or simulated devices in the dashboard."
-                image={
-                    <StaticImage
-                        src="./rotarysim.png"
-                        alt="A rotary encoder dashboard"
+            <CarouselGrid>
+                <Grid item xs={12} sm={4}>
+                    <FeatureItem
+                        startImage={<JacdacIcon fontSize="large" />}
+                        description="Dashboard"
+                        caption="Visualize and interact with physical or simulated devices in the dashboard."
+                        buttonText="Try the dashboard"
+                        buttonVariant="link"
+                        buttonUrl="/dashboard/"
                     />
-                }
-                buttonText="Try the dashboard"
-                buttonVariant="link"
-                buttonUrl="/dashboard/"
-            />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <FeatureItem
+                        startImage={
+                            <KindIcon
+                                kind={VIRTUAL_DEVICE_NODE_NAME}
+                                fontSize="large"
+                            />
+                        }
+                        description="Simulators."
+                        caption="Spin up virtual device and services to test your client software. Both physical and simulated devices can interact together."
+                        buttonText="Start a simulator"
+                        buttonVariant="link"
+                        onButtonClick={handleStartSimulator}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <FeatureItem
+                        startImage={<AccountTreeIcon fontSize="large" />}
+                        description="Device Tree."
+                        caption="Inspect devices, services, registers and events in the device tree."
+                        buttonText="Open Device Tree"
+                        buttonVariant="link"
+                        onButtonClick={handleShowDeviceTree}
+                    />
+                </Grid>
+            </CarouselGrid>
 
-            <SplitGrid
-                right={false}
-                subtitle="Simulators."
-                description="Spin up virtual device and services to test your client software. Both physical and simulated devices can interact together."
-                image={
-                    <StaticImage
-                        src="./dashboardlight.png"
-                        alt="A simulated light strip"
-                    />
-                }
-                buttonText="Start a simulator"
-                buttonVariant="link"
-                onButtonClick={handleStartSimulator}
-            />
-
-            <SplitGrid
-                right={true}
-                subtitle="Device Tree"
-                description="Inspect devices, services, registers and events in the device tree."
-                image={
-                    <StaticImage
-                        src="./devicetree.png"
-                        alt="A tree of devices, services and registers"
-                    />
-                }
-                buttonText="Open Device Tree"
-                buttonVariant="link"
-                onButtonClick={handleShowDeviceTree}
-            />
-
-            <SplitGrid
-                right={false}
-                subtitle="Packet Console"
-                description="Sniff the packet traffic, record and replay traces in the packet console."
-                image={
-                    <StaticImage
-                        src="./packetconsole.png"
-                        alt="A list of packet"
-                    />
-                }
-                buttonText="Open Packet Console"
-                buttonVariant="link"
-                onButtonClick={handleShowPacketConsole}
-            />
             <CenterGrid
                 subtitle2="Can I add Jacdac to my web app?"
                 description="Absolutely! You can embed our dashboard or add our JavaScript package."
@@ -164,30 +138,5 @@ export default function Protocol() {
 /*
 
 
-            <CarouselGrid>
-                <Grid item xs={12} sm={4}>
-                    <FeatureItem
-                        startImage={<TelegramIcon fontSize="large" />}
-                        description="Web first."
-                        caption="Access physical devices from the browser without driver installation."
-                    />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                    <FeatureItem
-                        startImage={<CameraIcon fontSize="large" />}
-                        description="NPM or GitHub."
-                        caption="Grab it on NPM or rebuild it from our GitHub repositories."
-                        buttonText="GitHub"
-                        buttonUrl="/github/"
-                        buttonVariant="link"
-                    />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                    <FeatureItem
-                        startImage={<PowerSettingsNewIcon fontSize="large" />}
-                        description="."
-                        caption="Specify your own services and deploy them on your devices."
-                    />
-                </Grid>
-            </CarouselGrid>
+            
 */
