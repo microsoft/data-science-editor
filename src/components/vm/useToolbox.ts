@@ -10,7 +10,10 @@ import {
     SystemEvent,
     SystemReg,
 } from "../../../jacdac-ts/src/jdom/constants"
-import { humanify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
+import {
+    humanify,
+    isNumericType,
+} from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import {
     isCommand,
     isEvent,
@@ -263,7 +266,7 @@ export function loadBlocks(): CachedBlockDefinitions {
         })
     )
 
-    const registerChangeEventBlocks = registers
+    const registerChangeByEventBlocks = registers
         .filter(
             ({ service }) =>
                 !service.packets.some(
@@ -272,8 +275,13 @@ export function loadBlocks(): CachedBlockDefinitions {
                         ignoredEvents.indexOf(pkt.identifier) < 0
                 )
         )
+        .filter(
+            ({ register }) =>
+                register.fields.length === 1 &&
+                isNumericType(register.fields[0])
+        )
         .map<RegisterBlockDefinition>(({ service, register }) => ({
-            type: `jacdac_${service.shortId}_${register.name}_change_event`,
+            type: `jacdac_${service.shortId}_${register.name}_change_by_event`,
             message0: `when %1 ${humanify(register.name)} change by %2`,
             args0: [
                 fieldVariable(service),
@@ -284,12 +292,7 @@ export function loadBlocks(): CachedBlockDefinitions {
                 },
             ].filter(v => !!v),
             values: {
-                threshold: {
-                    type: "math_number",
-                    value: 1,
-                    min: 0,
-                    shadow: true,
-                },
+                threshold: fieldToShadow(register.fields[0]),
             },
             inputsInline: true,
             nextStatement: "Statement",
@@ -377,7 +380,7 @@ export function loadBlocks(): CachedBlockDefinitions {
 
     const serviceBlocks: ServiceBlockDefinition[] = [
         ...eventBlocks,
-        ...registerChangeEventBlocks,
+        ...registerChangeByEventBlocks,
         ...registerGetBlocks,
         ...registerSetBlocks,
         ...commandBlocks,
