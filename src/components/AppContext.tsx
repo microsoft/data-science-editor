@@ -69,14 +69,22 @@ export const AppProvider = ({ children }) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const setError = (e: any) => {
         if (!e || isCancelError(e)) return
-        console.error(e)
         const msg = e?.message || e + ""
         const code = errorPath(e)
+
         enqueueSnackbar(msg, {
             variant: "error",
-            preventDuplicate: true,
             autoHideDuration: code ? 8000 : 4000,
-            action: code && <Button to={`/errors/${code}`}>Help</Button>,
+            preventDuplicate: true,
+            action: !!code && (
+                <Button
+                    variant="outlined"
+                    aria-label={`Open help page on ${code} error`}
+                    to={`/errors/${code}`}
+                >
+                    Help
+                </Button>
+            ),
         })
     }
 

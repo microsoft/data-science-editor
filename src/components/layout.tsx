@@ -315,11 +315,18 @@ function LayoutWithContext(props: LayoutProps) {
     const { pageContext, path, location } = pageProps
     const { frontmatter } = pageContext || {}
     const makeCodeTool = /tools\/makecode-/.test(path)
-    const { hideMainMenu = false, hideUnderConstruction = false } =
-        frontmatter || {
-            hideMainMenu: makeCodeTool,
-            hideUnderConstruction: makeCodeTool,
-        }
+    const fullWidthTools = /^\/(tools\/(makecode-|vm-editor)|dashboard)/.test(
+        path
+    )
+    const {
+        hideMainMenu = false,
+        hideUnderConstruction = false,
+        hideBreadcrumbs = false,
+    } = frontmatter || {
+        hideMainMenu: makeCodeTool,
+        hideUnderConstruction: makeCodeTool,
+        hideBreadcrumbs: fullWidthTools,
+    }
 
     const classes = useStyles()
 
@@ -327,8 +334,7 @@ function LayoutWithContext(props: LayoutProps) {
     const { drawerType, toolsMenu } = useContext(AppContext)
     const drawerOpen = drawerType !== DrawerType.None
     const { medium } = useMediaQueries()
-    const container =
-        !medium && !/^\/(tools\/(makecode-|vm-editor)|dashboard)/.test(path)
+    const container = !medium && !fullWidthTools
     // && path !== "/"
     const mainClasses = clsx(classes.content, {
         [classes.container]: container,
@@ -349,7 +355,9 @@ function LayoutWithContext(props: LayoutProps) {
                     <WebDiagnostics />
                 </Suspense>
             )}
-            {container && location && <Breadcrumbs location={location} />}
+            {!hideBreadcrumbs && location && (
+                <Breadcrumbs location={location} />
+            )}
             <Typography className={"markdown"} component="span">
                 {element}
             </Typography>
