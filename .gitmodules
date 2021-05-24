@@ -4,3 +4,9 @@
 [submodule "jacdac-ddk"]
 	path = jacdac-ddk
 	url = https://github.com/microsoft/jacdac-ddk
+[submodule "jupyter-jacdac"]
+	path = jupyter-jacdac
+	url = https://github.com/microsoft/jupyter-jacdac
+[submodule "node-red-contrib-jacdac"]
+	path = node-red-contrib-jacdac
+	url = https://github.com/microsoft/node-red-contrib-jacdac

@@ -129,6 +129,36 @@ export default function Tools() {
                 description="Collect data."
             />
 
+            <SplitGrid
+                right={false}
+                subtitle="Data collector."
+                description="Record any register data into a CSV file."
+                buttonText="Collect data"
+                buttonVariant="link"
+                buttonUrl="/tools/collector"
+                image={
+                    <StaticImage
+                        src="./recordit.png"
+                        alt="Data collector user interface"
+                    />
+                }
+            />
+
+            <SplitGrid
+                right={false}
+                subtitle="JupyterLab 2.0."
+                description="Collect data from your JupyterLab notebooks."
+                buttonText="Collect data"
+                buttonVariant="link"
+                buttonUrl="/tools/jupyterlab/"
+                image={
+                    <StaticImage
+                        src="./jupyterlab.png"
+                        alt="Screenshot of Jupyter lab"
+                    />
+                }
+            />
+
             <CenterGrid
                 subtitle2="Can I build my own tools?"
                 description="Absolutely! You can our JavaScript package to build your own Jacdac tooling."
