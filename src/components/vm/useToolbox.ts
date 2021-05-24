@@ -53,9 +53,14 @@ export interface NumberInputDefinition extends InputDefinition {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface BlockReference {
+    kind: "block"
     type: string
     values?: SMap<BlockReference>
-    shadow?: boolean
+    blockxml?: string
+
+    value?: number
+    min?: number
+    max?: number
 }
 
 export type EventTemplate = "event"
@@ -84,6 +89,13 @@ export interface BlockDefinition extends BlockReference {
     template?: BlockTemplate
 }
 
+export interface ButtonDefinition {
+    kind: "button"
+    text: string
+    callbackKey: string
+    service: jdspec.ServiceSpec
+}
+
 export interface ServiceBlockDefinition extends BlockDefinition {
     template: BlockTemplate
     service: jdspec.ServiceSpec
@@ -100,6 +112,7 @@ export interface RegisterBlockDefinition extends ServiceBlockDefinition {
 }
 
 export interface CommandBlockDefinition extends ServiceBlockDefinition {
+    kind: "block"
     template: CommandTemplate
     command: jdspec.PacketInfo
 }
@@ -109,16 +122,24 @@ export const WHILE_CONDITION_BLOCK_CONDITION = "condition"
 export const WAIT_BLOCK = "jacdac_wait"
 
 export interface CategoryDefinition {
+    kind: "category"
     name: string
     custom?: string
     colour?: string
     categorystyle?: string
-    blocks?: BlockDefinition[]
-    button?: {
-        text: string
-        callbackKey: string
-        service: jdspec.ServiceSpec
-    }[]
+    contents?: (BlockDefinition | ButtonDefinition)[]
+    button?: ButtonDefinition
+}
+
+export interface SeparatorDefinition {
+    kind: "sep"
+}
+
+export type ToolboxNode = SeparatorDefinition | CategoryDefinition
+
+export interface ToolboxConfiguration {
+    kind: "categoryToolbox"
+    contents: ToolboxNode[]
 }
 
 type CachedBlockDefinitions = {
@@ -162,24 +183,24 @@ export function loadBlocks(): CachedBlockDefinitions {
 
     const fieldName = (reg: jdspec.PacketInfo, field: jdspec.PacketMember) =>
         field.name === "_" ? reg.name : field.name
-    const fieldToShadow = (field: jdspec.PacketMember) =>
+    const fieldToShadow = (field: jdspec.PacketMember): BlockReference =>
         isBooleanField(field)
-            ? { type: "jacdac_on_off", shadow: true }
+            ? { kind: "block", type: "jacdac_on_off" }
             : isStringField(field)
-            ? { type: "text", shadow: true }
+            ? { kind: "block", type: "text" }
             : field.unit === "°"
             ? {
+                  kind: "block",
                   type: "jacdac_angle",
-                  shadow: true,
               }
             : field.unit === "/"
-            ? { type: "jacdac_percent", shadow: true }
+            ? { kind: "block", type: "jacdac_percent" }
             : {
+                  kind: "block",
                   type: "math_number",
                   value: field.defaultValue || 0,
                   min: field.typicalMin || field.absoluteMin,
                   max: field.typicalMax || field.absoluteMax,
-                  shadow: true,
               }
     const variableName = (srv: jdspec.ServiceSpec) =>
         `${humanify(srv.camelName).toLowerCase()} 1`
@@ -197,7 +218,7 @@ export function loadBlocks(): CachedBlockDefinitions {
             check: toBlocklyType(field),
         }))
     const fieldsToValues = (info: jdspec.PacketInfo) =>
-        toMap<jdspec.PacketMember, BlockReference>(
+        toMap<jdspec.PacketMember, BlockReference | BlockDefinition>(
             info.fields,
             field => fieldName(info, field),
             field => fieldToShadow(field)
@@ -242,6 +263,7 @@ export function loadBlocks(): CachedBlockDefinitions {
 
     const eventBlocks = events.map<EventBlockDefinition>(
         ({ service, events }) => ({
+            kind: "block",
             type: `jacdac_${service.shortId}_events`,
             message0: `when %1 %2`,
             args0: [
@@ -281,6 +303,7 @@ export function loadBlocks(): CachedBlockDefinitions {
                 isNumericType(register.fields[0])
         )
         .map<RegisterBlockDefinition>(({ service, register }) => ({
+            kind: "block",
             type: `jacdac_${service.shortId}_${register.name}_change_by_event`,
             message0: `when %1 ${humanify(register.name)} change by %2`,
             args0: [
@@ -307,6 +330,7 @@ export function loadBlocks(): CachedBlockDefinitions {
 
     const registerGetBlocks = registers.map<RegisterBlockDefinition>(
         ({ service, register }) => ({
+            kind: "block",
             type: `jacdac_${service.shortId}_${register.name}_get`,
             message0: `%1 ${humanify(register.name)}${
                 register.fields.length > 1 ? ` %2` : ""
@@ -339,6 +363,7 @@ export function loadBlocks(): CachedBlockDefinitions {
     const registerSetBlocks = registers
         .filter(({ register }) => register.kind === "rw")
         .map<RegisterBlockDefinition>(({ service, register }) => ({
+            kind: "block",
             type: `jacdac_${service.shortId}_${register.name}_set`,
             message0: `set %1 ${register.name} to ${
                 register.fields.length === 1 ? "%2" : fieldsToMessage(register)
@@ -359,6 +384,7 @@ export function loadBlocks(): CachedBlockDefinitions {
 
     const commandBlocks = commands.map<CommandBlockDefinition>(
         ({ service, command }) => ({
+            kind: "block",
             type: `jacdac_${service.shortId}_value_get`,
             message0: `${humanify(command.name)} %1 with ${fieldsToMessage(
                 command
@@ -388,6 +414,7 @@ export function loadBlocks(): CachedBlockDefinitions {
 
     const shadowBlocks: BlockDefinition[] = [
         {
+            kind: "block",
             type: `jacdac_on_off`,
             message0: `%1`,
             args0: [
@@ -404,6 +431,7 @@ export function loadBlocks(): CachedBlockDefinitions {
             output: "Boolean",
         },
         {
+            kind: "block",
             type: `jacdac_time_picker`,
             message0: `%1`,
             args0: [
@@ -423,6 +451,7 @@ export function loadBlocks(): CachedBlockDefinitions {
             output: "Number",
         },
         {
+            kind: "block",
             type: `jacdac_angle`,
             message0: `%1`,
             args0: [
@@ -438,6 +467,7 @@ export function loadBlocks(): CachedBlockDefinitions {
             output: "Number",
         },
         {
+            kind: "block",
             type: `jacdac_percent`,
             message0: `%1 %`,
             args0: [
@@ -453,6 +483,7 @@ export function loadBlocks(): CachedBlockDefinitions {
             output: "Number",
         },
         {
+            kind: "block",
             type: `jacdac_ratio`,
             message0: `%1`,
             args0: [
@@ -471,6 +502,7 @@ export function loadBlocks(): CachedBlockDefinitions {
 
     const runtimeBlocks: BlockDefinition[] = [
         {
+            kind: "block",
             type: WHILE_CONDITION_BLOCK,
             message0: "while %1",
             args0: [
@@ -487,6 +519,7 @@ export function loadBlocks(): CachedBlockDefinitions {
             helpUrl: "",
         },
         {
+            kind: "block",
             type: WAIT_BLOCK,
             message0: "wait %1 s",
             args0: [
@@ -507,6 +540,7 @@ export function loadBlocks(): CachedBlockDefinitions {
 
     const mathBlocks: BlockDefinition[] = [
         {
+            kind: "block",
             type: "jacdac_math_arithmetic",
             message0: "%1 %2 %3",
             args0: [
@@ -538,6 +572,7 @@ export function loadBlocks(): CachedBlockDefinitions {
             extensions: ["math_op_tooltip"],
         },
         {
+            kind: "block",
             type: "jacdac_math_single",
             message0: "%1 %2",
             args0: [
@@ -603,8 +638,32 @@ export function scanServices(workspace: Blockly.Workspace) {
     return services
 }
 
+function patchCategoryJSONtoXML(cat: CategoryDefinition): CategoryDefinition {
+    if (cat.button) {
+        if (!cat.contents) cat.contents = []
+        cat.contents.unshift(cat.button)
+    }
+    cat.contents
+        ?.filter(node => node.kind === "block")
+        .map(node => <BlockReference>node)
+        .filter(block => !!block.values && Blockly.Blocks[block.type]) // avoid broken blocks
+        .forEach(block => {
+            // yup, this suck but we have to go through it
+            block.blockxml = `<block type="${block.type}">${Object.keys(
+                block.values
+            )
+                .map(name => {
+                    const { type } = block.values[name]
+                    return `<value name="${name}"><shadow type="${type}" /></value>`
+                })
+                .join("\n")}</block>`
+            delete block.type
+        })
+    return cat
+}
+
 export default function useToolbox(blockServices?: string[]): {
-    toolboxCategories: CategoryDefinition[]
+    toolboxConfiguration: ToolboxConfiguration
     newProjectXml: string
 } {
     const { serviceBlocks, services } = useMemo(() => loadBlocks(), [])
@@ -620,106 +679,145 @@ export default function useToolbox(blockServices?: string[]): {
             services.find(service => service.shortId === serviceShortId)
         )
         .filter(srv => !!srv)
+        .sort((l, r) => l.name.localeCompare(r.name))
 
-    const toolboxCategories = [
-        ...toolboxServices
-            .map(service => ({
-                service,
-                serviceBlocks: serviceBlocks.filter(
-                    block => block.service === service
-                ),
-            }))
-            .map(({ service, serviceBlocks }) => ({
-                name: service.name,
-                colour: "#5CA699",
-                blocks: serviceBlocks.map(block => ({
-                    type: block.type,
-                    values: block.values,
-                })),
-                button: Object.values(
-                    uniqueMap(
-                        serviceBlocks,
-                        block => block.service.shortId,
-                        block => block.service
-                    )
-                ).map(service => ({
-                    text: `Add ${service.name}`,
-                    callbackKey: `jacdac_add_role_callback_${service.shortId}`,
-                    service,
-                })),
+    const servicesCategories: CategoryDefinition[] = toolboxServices
+        .map(service => ({
+            service,
+            serviceBlocks: serviceBlocks.filter(
+                block => block.service === service
+            ),
+        }))
+        .map<CategoryDefinition>(({ service, serviceBlocks }) => ({
+            kind: "category",
+            name: service.name,
+            colour: "#5CA699",
+            contents: serviceBlocks.map(block => ({
+                kind: "block",
+                type: block.type,
+                values: block.values,
             })),
-        {
-            name: "Commands",
-            colour: "%{BKY_LISTS_HUE}",
-            blocks: [
-                {
-                    type: WHILE_CONDITION_BLOCK,
+            button: {
+                kind: "button",
+                text: `Add ${service.name}`,
+                callbackKey: `jacdac_add_role_callback_${service.shortId}`,
+                service,
+            },
+        }))
+        .filter(cat => !!cat.contents?.length)
+
+    const commandsCategory: CategoryDefinition = {
+        kind: "category",
+        name: "Commands",
+        colour: "%{BKY_LISTS_HUE}",
+        contents: [
+            {
+                kind: "block",
+                type: WHILE_CONDITION_BLOCK,
+            },
+            {
+                kind: "block",
+                type: "jacdac_wait",
+                values: {
+                    TIME: { kind: "block", type: "jacdac_time_picker" },
                 },
-                {
-                    type: "jacdac_wait",
-                    values: {
-                        TIME: { type: "jacdac_time_picker", shadow: true },
+            },
+        ],
+    }
+
+    const logicCategory: CategoryDefinition = {
+        kind: "category",
+        name: "Logic",
+        colour: "%{BKY_LOGIC_HUE}",
+        contents: [
+            {
+                kind: "block",
+                type: "dynamic_if",
+            },
+            {
+                kind: "block",
+                type: "logic_compare",
+                values: {
+                    A: { kind: "block", type: "math_number" },
+                    B: { kind: "block", type: "math_number" },
+                },
+            },
+            {
+                kind: "block",
+                type: "logic_operation",
+                values: {
+                    A: { kind: "block", type: "logic_boolean" },
+                    B: { kind: "block", type: "logic_boolean" },
+                },
+            },
+            {
+                kind: "block",
+                type: "logic_negate",
+                values: {
+                    BOOL: { kind: "block", type: "logic_boolean" },
+                },
+            },
+            {
+                kind: "block",
+                type: "logic_boolean",
+            },
+        ],
+    }
+
+    const mathCategory: CategoryDefinition = {
+        kind: "category",
+        name: "Math",
+        colour: "%{BKY_MATH_HUE}",
+        contents: [
+            {
+                kind: "block",
+                type: "jacdac_math_arithmetic",
+                values: {
+                    A: { kind: "block", type: "math_number" },
+                    B: { kind: "block", type: "math_number" },
+                },
+            },
+            {
+                kind: "block",
+                type: "jacdac_math_single",
+                values: {
+                    NUM: {
+                        kind: "block",
+                        type: "math_number",
                     },
                 },
-            ],
-        },
-        {
-            name: "Logic",
-            colour: "%{BKY_LOGIC_HUE}",
-            blocks: [
-                { type: "dynamic_if" },
-                {
-                    type: "logic_compare",
-                    values: {
-                        A: { type: "math_number", shadow: true },
-                        B: { type: "math_number", shadow: true },
-                    },
-                },
-                {
-                    type: "logic_operation",
-                    values: {
-                        A: { type: "logic_boolean", shadow: true },
-                        B: { type: "logic_boolean", shadow: true },
-                    },
-                },
-                {
-                    type: "logic_negate",
-                    values: {
-                        BOOL: { type: "logic_boolean", shadow: true },
-                    },
-                },
-                { type: "logic_boolean" },
-            ],
-        },
-        {
-            name: "Math",
-            colour: "%{BKY_MATH_HUE}",
-            blocks: [
-                {
-                    type: "jacdac_math_arithmetic",
-                    values: {
-                        A: { type: "math_number", shadow: true },
-                        B: { type: "math_number", shadow: true },
-                    },
-                },
-                {
-                    type: "jacdac_math_single",
-                    values: {
-                        NUM: { type: "math_number", shadow: true },
-                    },
-                },
-                { type: "math_number" },
-            ],
-        },
-        {
-            name: "Variables",
-            colour: "%{BKY_VARIABLES_HUE}",
-            custom: "VARIABLE",
-        },
-    ].filter(cat => !!cat.blocks?.length)
+            },
+            { kind: "block", type: "math_number" },
+        ],
+    }
+
+    const variablesCategory: CategoryDefinition = {
+        kind: "category",
+        name: "Variables",
+        colour: "%{BKY_VARIABLES_HUE}",
+        custom: "VARIABLE",
+    }
+
+    const toolboxConfiguration: ToolboxConfiguration = {
+        kind: "categoryToolbox",
+        contents: [
+            ...servicesCategories,
+            <SeparatorDefinition>{
+                kind: "sep",
+            },
+            commandsCategory,
+            logicCategory,
+            mathCategory,
+            variablesCategory,
+        ].map(node =>
+            node.kind === "category"
+                ? patchCategoryJSONtoXML(node as CategoryDefinition)
+                : node
+        ),
+    }
 
     return {
-        toolboxCategories,
+        toolboxConfiguration,
         newProjectXml: NEW_PROJET_XML,
     }
 }
