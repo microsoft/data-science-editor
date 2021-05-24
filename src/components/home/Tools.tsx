@@ -145,7 +145,7 @@ export default function Tools() {
             />
 
             <SplitGrid
-                right={false}
+                right={true}
                 subtitle="JupyterLab 2.0."
                 description="Collect data from your JupyterLab notebooks."
                 buttonText="Collect data"
