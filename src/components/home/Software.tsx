@@ -11,15 +11,11 @@ import AccountTreeIcon from "@material-ui/icons/AccountTree"
 import JacdacIcon from "../icons/JacdacIcon"
 import KindIcon from "../KindIcon"
 import { VIRTUAL_DEVICE_NODE_NAME } from "../../../jacdac-ts/src/jdom/constants"
-import { navigate } from "gatsby-link"
+import HistoryIcon from "@material-ui/icons/History"
 
 export default function Software() {
-    const { setDrawerType, toggleShowDeviceHostsDialog } =
-        useContext(AppContext)
-    const handleStartSimulator = () => {
-        toggleShowDeviceHostsDialog()
-        navigate("/dashboard/")
-    }
+    const { setDrawerType } = useContext(AppContext)
+    const handleShowPackets = () => setDrawerType(DrawerType.Packets)
     const handleShowDeviceTree = () => setDrawerType(DrawerType.Dom)
     return (
         <Grid
@@ -114,27 +110,22 @@ export default function Software() {
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <FeatureItem
-                        startImage={
-                            <KindIcon
-                                kind={VIRTUAL_DEVICE_NODE_NAME}
-                                fontSize="large"
-                            />
-                        }
-                        description="Simulators."
-                        caption="Spin up virtual device and services to test your client software. Both physical and simulated devices can interact together."
-                        buttonText="Start a simulator"
-                        buttonVariant="link"
-                        onButtonClick={handleStartSimulator}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                    <FeatureItem
                         startImage={<AccountTreeIcon fontSize="large" />}
                         description="Device Tree."
                         caption="Inspect devices, services, registers and events in the device tree."
                         buttonText="Open Device Tree"
                         buttonVariant="link"
                         onButtonClick={handleShowDeviceTree}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <FeatureItem
+                        startImage={<HistoryIcon fontSize="large" />}
+                        description="Packet console."
+                        caption="Inspect every packet moving on the bus, save and reload traces from the web or your logic analyzer."
+                        buttonText="Show packets"
+                        buttonVariant="link"
+                        onButtonClick={handleShowPackets}
                     />
                 </Grid>
             </CarouselGrid>
