@@ -130,9 +130,6 @@ function isBooleanField(field: jdspec.PacketMember) {
 function isStringField(field: jdspec.PacketMember) {
     return field.type === "string"
 }
-function isBoolean(pkt: jdspec.PacketInfo) {
-    return pkt.fields.length === 1 && isBooleanField(pkt.fields[0])
-}
 function toBlocklyType(field: jdspec.PacketMember) {
     return isBooleanField(field)
         ? "Boolean"
