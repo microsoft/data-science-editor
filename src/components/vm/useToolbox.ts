@@ -266,11 +266,34 @@ export function loadBlocks(): CachedBlockDefinitions {
         })
     )
 
-    const registerChangeEventBlocks = registers.map<RegisterBlockDefinition>(
-        ({ service, register }) => ({
+    const registerChangeEventBlocks = registers
+        .filter(
+            ({ service }) =>
+                !service.packets.some(
+                    pkt =>
+                        isEvent(pkt) &&
+                        ignoredEvents.indexOf(pkt.identifier) < 0
+                )
+        )
+        .map<RegisterBlockDefinition>(({ service, register }) => ({
             type: `jacdac_${service.shortId}_${register.name}_change_event`,
-            message0: `when %1 ${humanify(register.name)} change`,
-            args0: [fieldVariable(service)],
+            message0: `when %1 ${humanify(register.name)} change by %2`,
+            args0: [
+                fieldVariable(service),
+                {
+                    type: "input_value",
+                    name: "threshold",
+                    check: "Number",
+                },
+            ].filter(v => !!v),
+            values: {
+                threshold: {
+                    type: "math_number",
+                    value: 1,
+                    min: 0,
+                    shadow: true,
+                },
+            },
             inputsInline: true,
             nextStatement: "Statement",
             colour: HUE,
@@ -280,8 +303,7 @@ export function loadBlocks(): CachedBlockDefinitions {
             register,
 
             template: "register_change_event",
-        })
-    )
+        }))
 
     const registerGetBlocks = registers.map<RegisterBlockDefinition>(
         ({ service, register }) => ({
