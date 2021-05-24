@@ -10,16 +10,15 @@ import {
     SystemEvent,
     SystemReg,
 } from "../../../jacdac-ts/src/jdom/constants"
+import { humanify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import {
-    humanify,
-    isNumericType,
-} from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
-import {
+    isCommand,
     isEvent,
     isRegister,
     serviceSpecifications,
 } from "../../../jacdac-ts/src/jdom/spec"
 import {
+    arrayConcatMany,
     SMap,
     toMap,
     unique,
@@ -29,16 +28,6 @@ import useServices from "../hooks/useServices"
 
 const NEW_PROJET_XML =
     '<xml xmlns="http://www.w3.org/1999/xhtml"><block type="jacdac_configuration"></block></xml>'
-
-const ignoredServices = [
-    SRV_CONTROL,
-    SRV_LOGGER,
-    SRV_ROLE_MANAGER,
-    SRV_PROTO_TEST,
-    SRV_SETTINGS,
-    SRV_BOOTLOADER,
-]
-const ignoredEvents = [SystemEvent.StatusCodeChanged]
 
 export interface InputDefinition {
     type: string
@@ -66,14 +55,16 @@ export interface BlockReference {
     shadow?: boolean
 }
 
-export type EventCommand = "event"
+export type EventTemplate = "event"
 
-export type RegisterCommand =
-    | "reading_change_event"
+export type RegisterTemplate =
+    | "register_change_event"
     | "register_set"
     | "register_get"
 
-export type BlockCommand = EventCommand | RegisterCommand
+export type CommandTemplate = "command"
+
+export type BlockTemplate = EventTemplate | RegisterTemplate | CommandTemplate
 
 export interface BlockDefinition extends BlockReference {
     message0?: string
@@ -87,22 +78,27 @@ export interface BlockDefinition extends BlockReference {
     style?: string
     output?: string
     extensions?: string[]
-    command?: BlockCommand
+    template?: BlockTemplate
 }
 
 export interface ServiceBlockDefinition extends BlockDefinition {
+    template: BlockTemplate
     service: jdspec.ServiceSpec
-    command: BlockCommand
 }
 
 export interface EventBlockDefinition extends ServiceBlockDefinition {
-    command: EventCommand
+    template: EventTemplate
     events: jdspec.PacketInfo[]
 }
 
 export interface RegisterBlockDefinition extends ServiceBlockDefinition {
-    command: RegisterCommand
+    template: RegisterTemplate
     register: jdspec.PacketInfo
+}
+
+export interface CommandBlockDefinition extends ServiceBlockDefinition {
+    template: CommandTemplate
+    command: jdspec.PacketInfo
 }
 
 export const WHILE_CONDITION_BLOCK = "jacdac_while_event"
@@ -131,17 +127,60 @@ type CachedBlockDefinitions = {
 function isBooleanField(field: jdspec.PacketMember) {
     return field.type === "bool"
 }
+function isStringField(field: jdspec.PacketMember) {
+    return field.type === "string"
+}
 function isBoolean(pkt: jdspec.PacketInfo) {
     return pkt.fields.length === 1 && isBooleanField(pkt.fields[0])
 }
 function toBlocklyType(field: jdspec.PacketMember) {
-    return isBooleanField(field) ? "Boolean" : "Number"
+    return isBooleanField(field)
+        ? "Boolean"
+        : isStringField(field)
+        ? "String"
+        : "Number"
 }
+
+const ignoredServices = [
+    SRV_CONTROL,
+    SRV_LOGGER,
+    SRV_ROLE_MANAGER,
+    SRV_PROTO_TEST,
+    SRV_SETTINGS,
+    SRV_BOOTLOADER,
+]
+const ignoredEvents = [SystemEvent.StatusCodeChanged]
+const includedRegisters = [
+    SystemReg.Reading,
+    SystemReg.Value,
+    SystemReg.Intensity,
+]
 
 let cachedBlocks: CachedBlockDefinitions
 export function loadBlocks(): CachedBlockDefinitions {
     if (cachedBlocks) return cachedBlocks
 
+    const fieldName = (reg: jdspec.PacketInfo, field: jdspec.PacketMember) =>
+        field.name === "_" ? reg.name : field.name
+    const fieldToShadow = (field: jdspec.PacketMember) =>
+        isBooleanField(field)
+            ? { type: "jacdac_on_off", shadow: true }
+            : isStringField(field)
+            ? { type: "text", shadow: true }
+            : field.unit === "°"
+            ? {
+                  type: "jacdac_angle",
+                  shadow: true,
+              }
+            : field.unit === "/"
+            ? { type: "jacdac_percent", shadow: true }
+            : {
+                  type: "math_number",
+                  value: field.defaultValue || 0,
+                  min: field.absoluteMin,
+                  max: field.absoluteMax,
+                  shadow: true,
+              }
     const variableName = (srv: jdspec.ServiceSpec) =>
         `${humanify(srv.camelName).toLowerCase()} 1`
     const fieldVariable = (service: jdspec.ServiceSpec): InputDefinition => ({
@@ -151,38 +190,35 @@ export function loadBlocks(): CachedBlockDefinitions {
         variableTypes: [service.shortId],
         defaultType: service.shortId,
     })
-
+    const fieldsToFieldInputs = (info: jdspec.PacketInfo) =>
+        info.fields.map(field => ({
+            type: "input_value",
+            name: field.name,
+            check: toBlocklyType(field),
+        }))
+    const fieldsToValues = (info: jdspec.PacketInfo) =>
+        toMap<jdspec.PacketMember, BlockReference>(
+            info.fields,
+            field => fieldName(info, field),
+            field => fieldToShadow(field)
+        )
+    const fieldsToMessage = (info: jdspec.PacketInfo) =>
+        info.fields
+            .map((field, i) => `${humanify(field.name)} %${2 + i}`)
+            .join(" ")
     const allServices = serviceSpecifications()
         .filter(service => !/^_/.test(service.shortId))
         .filter(service => ignoredServices.indexOf(service.classIdentifier) < 0)
-    const readings = allServices
+    const registers = allServices
         .map(service => ({
             service,
-            reading: service.packets.find(
+            register: service.packets.find(
                 pkt =>
                     isRegister(pkt) &&
-                    pkt.identifier === SystemReg.Reading &&
-                    pkt.fields.length == 1 &&
-                    isNumericType(pkt.fields[0])
+                    includedRegisters.indexOf(pkt.identifier) > -1
             ),
         }))
-        .filter(kv => !!kv.reading)
-    const intensities = allServices
-        .map(service => ({
-            service,
-            intensity: service.packets.find(
-                pkt => isRegister(pkt) && pkt.identifier === SystemReg.Intensity
-            ),
-        }))
-        .filter(kv => !!kv.intensity)
-    const values = allServices
-        .map(service => ({
-            service,
-            value: service.packets.find(
-                pkt => isRegister(pkt) && pkt.identifier === SystemReg.Value
-            ),
-        }))
-        .filter(kv => !!kv.value)
+        .filter(kv => !!kv.register)
     const events = allServices
         .map(service => ({
             service,
@@ -191,6 +227,16 @@ export function loadBlocks(): CachedBlockDefinitions {
             ),
         }))
         .filter(kv => !!kv.events.length)
+    const commands = arrayConcatMany(
+        allServices.map(service =>
+            service.packets
+                .filter(pkt => isCommand(pkt))
+                .map(pkt => ({
+                    service,
+                    command: pkt,
+                }))
+        )
+    )
 
     const HUE = 230
 
@@ -203,7 +249,10 @@ export function loadBlocks(): CachedBlockDefinitions {
                 <InputDefinition>{
                     type: "field_dropdown",
                     name: "event",
-                    options: events.map(event => [event.name, event.name]),
+                    options: events.map(event => [
+                        humanify(event.name),
+                        event.name,
+                    ]),
                 },
             ],
             colour: HUE,
@@ -213,14 +262,14 @@ export function loadBlocks(): CachedBlockDefinitions {
             helpUrl: "",
             service,
             events,
-            command: "event",
+            template: "event",
         })
     )
 
-    const readingChangeBlocks = readings.map<RegisterBlockDefinition>(
-        ({ service, reading }) => ({
-            type: `jacdac_${service.shortId}_reading_change`,
-            message0: `when %1 ${humanify(reading.name)} change`,
+    const registerChangeEventBlocks = registers.map<RegisterBlockDefinition>(
+        ({ service, register }) => ({
+            type: `jacdac_${service.shortId}_${register.name}_change_event`,
+            message0: `when %1 ${humanify(register.name)} change`,
             args0: [fieldVariable(service)],
             inputsInline: true,
             nextStatement: "Statement",
@@ -228,141 +277,91 @@ export function loadBlocks(): CachedBlockDefinitions {
             tooltip: "",
             helpUrl: "",
             service,
-            register: reading,
+            register,
 
-            command: "reading_change_event",
+            template: "register_change_event",
         })
     )
 
-    const readingGetBlocks = readings.map<RegisterBlockDefinition>(
-        ({ service, reading }) => ({
-            type: `jacdac_${service.shortId}_reading`,
-            message0: `%1 ${humanify(reading.name)}`,
-            args0: [fieldVariable(service)],
-            inputsInline: true,
-            output: "Number",
-            colour: HUE,
-            tooltip: "",
-            helpUrl: "",
-            service,
-            register: reading,
-
-            command: "register_get",
-        })
-    )
-
-    const intensitySetBlocks = intensities.map<RegisterBlockDefinition>(
-        ({ service, intensity }) => ({
-            type: `jacdac_${service.shortId}_intensity_set`,
-            message0: isBoolean(intensity)
-                ? `set %1 %2`
-                : `set %1 ${intensity.name} to ${intensity.fields
-                      .map(
-                          (field, i) =>
-                              `${field.name === "_" ? "" : `${field.name} `}%${
-                                  i + 2
-                              }`
-                      )
-                      .join(" ")}`,
+    const registerGetBlocks = registers.map<RegisterBlockDefinition>(
+        ({ service, register }) => ({
+            type: `jacdac_${service.shortId}_${register.name}_get`,
+            message0: `%1 ${humanify(register.name)}${
+                register.fields.length > 1 ? ` %2` : ""
+            }`,
             args0: [
                 fieldVariable(service),
-                ...intensity.fields.map(field => ({
-                    type: "input_value",
-                    name: field.name,
-                    check: toBlocklyType(field),
-                })),
-            ],
-            values: toMap<jdspec.PacketMember, BlockReference>(
-                intensity.fields,
-                field => field.name,
-                field =>
-                    field.type === "bool"
-                        ? { type: "jacdac_on_off", shadow: true }
-                        : { type: "jacdac_percent", shadow: true }
-            ),
+                register.fields.length > 1
+                    ? <OptionsInputDefinition>{
+                          type: "field_dropdown",
+                          name: "field",
+                          options: register.fields.map(field => [
+                              humanify(field.name),
+                              field.name,
+                          ]),
+                      }
+                    : undefined,
+            ].filter(v => !!v),
+            inputsInline: true,
+            output: toBlocklyType(register.fields[0]),
+            colour: HUE,
+            tooltip: "",
+            helpUrl: "",
+            service,
+            register,
+
+            template: "register_get",
+        })
+    )
+
+    const registerSetBlocks = registers
+        .filter(({ register }) => register.kind === "rw")
+        .map<RegisterBlockDefinition>(({ service, register }) => ({
+            type: `jacdac_${service.shortId}_${register.name}_set`,
+            message0: `set %1 ${register.name} to ${
+                register.fields.length === 1 ? "%2" : fieldsToMessage(register)
+            }`,
+            args0: [fieldVariable(service), ...fieldsToFieldInputs(register)],
+            values: fieldsToValues(register),
             inputsInline: true,
             colour: HUE,
             tooltip: "",
             helpUrl: "",
             service,
-            register: intensity,
+            register,
             previousStatement: "Statement",
             nextStatement: "Statement",
 
-            command: "register_set",
-        })
-    )
-
-    const valueSetBlocks = values.map<RegisterBlockDefinition>(
-        ({ service, value }) => ({
-            type: `jacdac_${service.shortId}_value_set`,
-            message0: `set %1 ${humanify(value.name)} to ${value.fields
-                .map((_, i) => `%${2 + i}`)
-                .join(" ")}`,
-            args0: [
-                fieldVariable(service),
-                ...value.fields.map(field => ({
-                    type: "input_value",
-                    name: field.name,
-                    check: toBlocklyType(field),
-                })),
-            ],
-            values: toMap(
-                value.fields,
-                field => field.name,
-                field =>
-                    field.type === "bool"
-                        ? { type: "jacdac_on_off", shadow: true }
-                        : field.unit == "°"
-                        ? {
-                              type: "jacdac_angle",
-                              shadow: true,
-                          }
-                        : {
-                              type: "math_number",
-                              value: field.defaultValue || 0,
-                              min: field.absoluteMin,
-                              max: field.absoluteMax,
-                              shadow: true,
-                          }
-            ),
-            inputsInline: true,
-            colour: HUE,
-            tooltip: "",
-            helpUrl: "",
-            service,
-            register: value,
-            previousStatement: "Statement",
-            nextStatement: "Statement",
-
-            command: "register_set",
-        })
-    )
-
-    const valueGetBlocks = values
-        .filter(v => v.value.fields.length === 1)
-        .map<RegisterBlockDefinition>(({ service, value }) => ({
-            type: `jacdac_${service.shortId}_value_get`,
-            message0: `%1 ${humanify(value.name)}`,
-            args0: [fieldVariable(service)],
-            inputsInline: true,
-            output: value.fields[0].type === "bool" ? "Boolean" : "Number",
-            colour: HUE,
-            tooltip: "",
-            helpUrl: "",
-            service,
-            register: value,
-
-            command: "register_get",
+            template: "register_set",
         }))
+
+    const commandBlocks = commands.map<CommandBlockDefinition>(
+        ({ service, command }) => ({
+            type: `jacdac_${service.shortId}_value_get`,
+            message0: `${humanify(command.name)} %1 with ${fieldsToMessage(
+                command
+            )}`,
+            args0: [fieldVariable(service), ...fieldsToFieldInputs(command)],
+            values: fieldsToValues(command),
+            inputsInline: true,
+            colour: HUE,
+            tooltip: "",
+            helpUrl: "",
+            service,
+            command,
+            previousStatement: "Statement",
+            nextStatement: "Statement",
+
+            template: "command",
+        })
+    )
 
     const serviceBlocks: ServiceBlockDefinition[] = [
         ...eventBlocks,
-        ...readingChangeBlocks,
-        ...readingGetBlocks,
-        ...intensitySetBlocks,
-        ...valueSetBlocks,
-        ...valueGetBlocks,
+        ...registerChangeEventBlocks,
+        ...registerGetBlocks,
+        ...registerSetBlocks,
+        ...commandBlocks,
     ]
 
     const shadowBlocks: BlockDefinition[] = [
@@ -448,7 +447,7 @@ export function loadBlocks(): CachedBlockDefinitions {
         },
     ]
 
-    const commandBlocks: BlockDefinition[] = [
+    const runtimeBlocks: BlockDefinition[] = [
         {
             type: WHILE_CONDITION_BLOCK,
             message0: "while %1",
@@ -543,7 +542,7 @@ export function loadBlocks(): CachedBlockDefinitions {
 
     const blocks: BlockDefinition[] = [
         ...serviceBlocks,
-        ...commandBlocks,
+        ...runtimeBlocks,
         ...shadowBlocks,
         ...mathBlocks,
     ]

@@ -13,7 +13,7 @@ import {
     WAIT_BLOCK,
     WHILE_CONDITION_BLOCK,
 } from "./useToolbox"
-import { assert } from "../../../jacdac-ts/src/jdom/utils"
+import { assert, unique } from "../../../jacdac-ts/src/jdom/utils"
 
 const ops = {
     AND: "&&",
@@ -165,14 +165,14 @@ export default function workspaceJSONToIT4Program(
         } else {
             const def = serviceBlocks.find(def => def.type === type)
             assert(!!def)
-            const { command } = def
-            switch (command) {
+            const { template } = def
+            switch (template) {
                 case "event": {
                     const { service, events } = def as EventBlockDefinition
                     // TODO
                     break
                 }
-                case "reading_change_event":
+                case "register_change_event":
                 case "register_set":
                 case "register_get": {
                     const { service, register } = def as RegisterBlockDefinition
@@ -194,8 +194,8 @@ export default function workspaceJSONToIT4Program(
     return {
         description: "not required?",
         roles,
-        registers,
-        events,
+        registers: unique(registers),
+        events: unique(events),
         handlers,
     }
 }
