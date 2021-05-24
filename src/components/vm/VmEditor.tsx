@@ -118,7 +118,7 @@ export default function VmEditor(props: {
                     comments: false,
                     css: true,
                     trashcan: false,
-                    sound: false,
+                    sounds: false,
                     grid: {
                         spacing: 25,
                         length: 1,
