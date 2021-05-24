@@ -66,13 +66,14 @@ export interface BlockReference {
     shadow?: boolean
 }
 
-export type BlockCommand =
-    | "event"
+export type EventCommand = "event"
+
+export type RegisterCommand =
     | "reading_change_event"
-    | "reading_get"
-    | "value_get"
-    | "value_set"
-    | "intensity_set"
+    | "register_set"
+    | "register_get"
+
+export type BlockCommand = EventCommand | RegisterCommand
 
 export interface BlockDefinition extends BlockReference {
     message0?: string
@@ -95,17 +96,12 @@ export interface ServiceBlockDefinition extends BlockDefinition {
 }
 
 export interface EventBlockDefinition extends ServiceBlockDefinition {
-    command: "event"
+    command: EventCommand
     events: jdspec.PacketInfo[]
 }
 
 export interface RegisterBlockDefinition extends ServiceBlockDefinition {
-    command:
-        | "reading_change_event"
-        | "reading_get"
-        | "value_get"
-        | "value_set"
-        | "intensity_set"
+    command: RegisterCommand
     register: jdspec.PacketInfo
 }
 
@@ -128,7 +124,7 @@ export interface CategoryDefinition {
 
 type CachedBlockDefinitions = {
     blocks: BlockDefinition[]
-    serviceBlocks: ServiceBlockDefinition[],
+    serviceBlocks: ServiceBlockDefinition[]
     services: jdspec.ServiceSpec[]
 }
 
@@ -251,7 +247,7 @@ export function loadBlocks(): CachedBlockDefinitions {
             service,
             register: reading,
 
-            command: "reading_get",
+            command: "register_get",
         })
     )
 
@@ -293,7 +289,7 @@ export function loadBlocks(): CachedBlockDefinitions {
             previousStatement: "Statement",
             nextStatement: "Statement",
 
-            command: "intensity_set",
+            command: "register_set",
         })
     )
 
@@ -339,7 +335,7 @@ export function loadBlocks(): CachedBlockDefinitions {
             previousStatement: "Statement",
             nextStatement: "Statement",
 
-            command: "value_set",
+            command: "register_set",
         })
     )
 
@@ -357,8 +353,17 @@ export function loadBlocks(): CachedBlockDefinitions {
             service,
             register: value,
 
-            command: "value_get",
+            command: "register_get",
         }))
+
+    const serviceBlocks: ServiceBlockDefinition[] = [
+        ...eventBlocks,
+        ...readingChangeBlocks,
+        ...readingGetBlocks,
+        ...intensitySetBlocks,
+        ...valueSetBlocks,
+        ...valueGetBlocks,
+    ]
 
     const shadowBlocks: BlockDefinition[] = [
         {
@@ -536,14 +541,6 @@ export function loadBlocks(): CachedBlockDefinitions {
         },
     ]
 
-    const serviceBlocks: ServiceBlockDefinition[] = [
-        ...eventBlocks,
-        ...readingChangeBlocks,
-        ...readingGetBlocks,
-        ...intensitySetBlocks,
-        ...valueSetBlocks,
-        ...valueGetBlocks,
-    ]
     const blocks: BlockDefinition[] = [
         ...serviceBlocks,
         ...commandBlocks,

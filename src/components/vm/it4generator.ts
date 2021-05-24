@@ -173,10 +173,8 @@ export default function workspaceJSONToIT4Program(
                     break
                 }
                 case "reading_change_event":
-                case "reading_get":
-                case "intensity_set":
-                case "value_get":
-                case "value_set": {
+                case "register_set":
+                case "register_get": {
                     const { service, register } = def as RegisterBlockDefinition
                     // TODO
                     break
