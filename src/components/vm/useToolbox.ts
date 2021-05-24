@@ -174,8 +174,8 @@ export function loadBlocks(): CachedBlockDefinitions {
             : {
                   type: "math_number",
                   value: field.defaultValue || 0,
-                  min: field.absoluteMin,
-                  max: field.absoluteMax,
+                  min: field.typicalMin || field.absoluteMin,
+                  max: field.typicalMax || field.absoluteMax,
                   shadow: true,
               }
     const variableName = (srv: jdspec.ServiceSpec) =>
@@ -190,7 +190,7 @@ export function loadBlocks(): CachedBlockDefinitions {
     const fieldsToFieldInputs = (info: jdspec.PacketInfo) =>
         info.fields.map(field => ({
             type: "input_value",
-            name: field.name,
+            name: fieldName(info, field),
             check: toBlocklyType(field),
         }))
     const fieldsToValues = (info: jdspec.PacketInfo) =>
@@ -316,7 +316,7 @@ export function loadBlocks(): CachedBlockDefinitions {
                           name: "field",
                           options: register.fields.map(field => [
                               humanify(field.name),
-                              field.name,
+                              fieldName(register, field),
                           ]),
                       }
                     : undefined,
