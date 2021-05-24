@@ -126,7 +126,7 @@ export default function Tools() {
 
             <CenterGrid
                 subtitle2="Data Science tools."
-                description="Collect data."
+                description="Collect data, train and push models."
             />
 
             <SplitGrid

@@ -35,7 +35,7 @@ import {
     VIRTUAL_DEVICE_NODE_NAME,
     SERVICE_TEST_NODE_NAME,
 } from "../../jacdac-ts/src/jdom/constants"
-import JacdacFlags from "../jacdac/Flags"
+import { UIFlags } from "../jacdac/providerbus"
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -102,9 +102,8 @@ function ToolsListItem(props: {
 
 export default function ToolsDrawer() {
     const classes = useStyles()
-    const { toolsMenu, setToolsMenu, toggleShowDeviceHostsDialog } = useContext(
-        AppContext
-    )
+    const { toolsMenu, setToolsMenu, toggleShowDeviceHostsDialog } =
+        useContext(AppContext)
     const { toggleDarkMode, darkMode } = useContext(DarkModeContext)
     const handleClick = link => () => {
         setToolsMenu(false)
@@ -123,20 +122,20 @@ export default function ToolsDrawer() {
             action: toggleShowDeviceHostsDialog,
             icon: <KindIcon kind={VIRTUAL_DEVICE_NODE_NAME} />,
         },
-        JacdacFlags.peers && {
+        UIFlags.peers && {
             text: "Peers",
-            url: "/tools/peers",
+            url: "/tools/peers/",
             icon: <WifiIcon />,
         },
         {},
         {
             text: "Device Settings",
-            url: "/tools/settings",
+            url: "/tools/settings/",
             icon: <SettingsIcon />,
         },
         {
             text: "Firmware Update",
-            url: "/tools/updater",
+            url: "/tools/updater/",
             icon: <SystemUpdateAltIcon />,
         },
         /*
@@ -169,17 +168,17 @@ export default function ToolsDrawer() {
         },
         {
             text: "Service Editor",
-            url: "/tools/service-editor",
+            url: "/tools/service-editor/",
             icon: <KindIcon kind={SERVICE_NODE_NAME} />,
         },
         {
             text: "Service Test Editor",
-            url: "/tools/service-test-editor",
+            url: "/tools/service-test-editor/",
             icon: <KindIcon kind={SERVICE_TEST_NODE_NAME} />,
         },
         {
             text: "Device registration",
-            url: "/tools/device-registration",
+            url: "/tools/device-registration/",
             icon: <KindIcon kind={DEVICE_NODE_NAME} />,
         },
     ].filter(l => !!l)

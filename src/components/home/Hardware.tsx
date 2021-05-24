@@ -99,6 +99,22 @@ export default function Protocol() {
                 }
             />
 
+            <SplitGrid
+                right={false}
+                subtitle="Firmware Updates."
+                description="Jacdac scans for registered devices and can upgrade firmware over the bus."
+                imageColumns={4}
+                image={
+                    <StaticImage
+                        src="./firmwareupdate.png"
+                        alt="A device with firmware up-to-date"
+                    />
+                }
+                buttonText={"Register device"}
+                buttonVariant="link"
+                buttonUrl="/tools/device-registration/"
+            />
+
             <CarouselGrid>
                 <Grid item xs={12} sm={4}>
                     <FeatureItem

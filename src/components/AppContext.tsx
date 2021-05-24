@@ -35,7 +35,6 @@ export interface AppProps {
     setToolsMenu: (visible: boolean) => void
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setError: (error: any) => void
-    widgetMode: boolean
     toggleShowDeviceHostsDialog: () => void
     showSelectRoleDialog: (srv: JDService) => void
 }
@@ -48,7 +47,6 @@ const AppContext = createContext<AppProps>({
     toolsMenu: false,
     setToolsMenu: () => {},
     setError: () => {},
-    widgetMode: false,
     toggleShowDeviceHostsDialog: () => {},
     showSelectRoleDialog: () => {},
 })
@@ -63,14 +61,10 @@ export const AppProvider = ({ children }) => {
     const [searchQuery, setSearchQuery] = useState("")
     const [toolsMenu, _setToolsMenu] = useState(false)
     const [showDeviceHostsDialog, setShowDeviceHostsDialog] = useState(false)
-    const [
-        showSelectRoleDialogService,
-        setShowSelectRoleDialogService,
-    ] = useState<JDService>(undefined)
+    const [showSelectRoleDialogService, setShowSelectRoleDialogService] =
+        useState<JDService>(undefined)
 
     const { enqueueSnackbar } = useSnackbar()
-    const widgetMode =
-        typeof window !== "undefined" && /widget=1/.test(window.location.href)
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const setError = (e: any) => {
@@ -127,7 +121,6 @@ export const AppProvider = ({ children }) => {
                 toolsMenu,
                 setToolsMenu,
                 setError,
-                widgetMode,
                 toggleShowDeviceHostsDialog,
                 showSelectRoleDialog,
             }}

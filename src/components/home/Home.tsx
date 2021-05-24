@@ -236,7 +236,7 @@ export default function Home() {
                         description="JavaScript package"
                         caption="Integrate Jacdac into your web site or node.js application using our TypeScript/JavaScript npm package."
                         buttonText="Learn more"
-                        buttonUrl="/clients/javascript"
+                        buttonUrl="/software/"
                         buttonVariant="link"
                     />
                 </Grid>

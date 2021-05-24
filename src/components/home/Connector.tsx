@@ -155,7 +155,7 @@ export default function Connector() {
                             />
                         }
                         description="Three pins."
-                        caption="The device catalog is automatically detected, downloaded and flashed onto devices."
+                        caption="The packets are transmitted serially on hardware using a 3-wire cable."
                     />
                 </Grid>
                 <Grid item xs={12} sm={4}>

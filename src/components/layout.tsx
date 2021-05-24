@@ -38,6 +38,7 @@ import { Link } from "gatsby-theme-material-ui"
 import Breadcrumbs from "./ui/Breadcrumbs"
 import ForumIcon from "@material-ui/icons/Forum"
 import useMediaQueries from "./hooks/useMediaQueries"
+import { UIFlags } from "../jacdac/providerbus"
 
 const WebDiagnostics = lazy(() => import("./WebDiagnostics"))
 const AppDrawer = lazy(() => import("./AppDrawer"))
@@ -226,12 +227,11 @@ function MainAppBar(props: LayoutProps) {
     const { pageTitle } = frontmatter || {}
 
     const classes = useStyles()
-    const { drawerType, widgetMode, toolsMenu, setToolsMenu } =
-        useContext(AppContext)
+    const { drawerType, toolsMenu, setToolsMenu } = useContext(AppContext)
     const { darkMode } = useContext(DarkModeContext)
     const drawerOpen = drawerType !== DrawerType.None
     const appBarColor =
-        darkMode === "dark" ? "inherit" : widgetMode ? "default" : undefined
+        darkMode === "dark" ? "inherit" : UIFlags.widget ? "default" : undefined
 
     const toggleToolsMenu = () => setToolsMenu(!toolsMenu)
 
@@ -258,12 +258,14 @@ function MainAppBar(props: LayoutProps) {
                     />
                     <Hidden implementation="css" xsDown={true}>
                         <Typography component="h1" variant="h6">
-                            <Link style={{ color: "white" }} to="/">
+                            <Link
+                                style={{
+                                    color: UIFlags.widget ? "black" : "white",
+                                }}
+                                to="/"
+                            >
                                 Jacdac
-                            </Link>{" "}
-                            {pageTitle &&
-                                pageTitle !== "Jacdac" &&
-                                `/ ${pageTitle}`}
+                            </Link>
                         </Typography>
                     </Hidden>
                     <div className={classes.grow} />

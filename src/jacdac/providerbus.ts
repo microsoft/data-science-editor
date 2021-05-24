@@ -9,7 +9,6 @@ import {
 import IFrameBridgeClient from "../../jacdac-ts/src/jdom/iframebridgeclient"
 import Flags from "../../jacdac-ts/src/jdom/flags"
 import GamepadServerManager from "../../jacdac-ts/src/servers/gamepadservermanager"
-import JacdacFlags from "../jacdac/Flags"
 import jacdacTsPackage from "../../jacdac-ts/package.json"
 
 function sniffQueryArguments() {
@@ -35,6 +34,7 @@ function sniffQueryArguments() {
         peers: params.get(`peers`) === "1",
         parentOrigin: params.get("parentOrigin"),
         frameId: window.location.hash?.slice(1),
+        widget: params.get("widget") === "1"
     }
 }
 
@@ -42,7 +42,11 @@ const args = sniffQueryArguments()
 Flags.diagnostics = args.diagnostics
 Flags.webUSB = args.webUSB
 Flags.webBluetooth = args.webBluetooth
-JacdacFlags.peers = args.peers
+
+export class UIFlags {
+    static widget = args.widget
+    static peers = args.peers
+}
 
 // defeat react fast-refresh
 function createBus(): JDBus {

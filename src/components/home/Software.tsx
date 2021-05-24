@@ -44,6 +44,7 @@ export default function Software() {
                 buttonText="JavaScript library"
                 buttonVariant="link"
                 buttonUrl="/clients/javascript"
+                imageColumns={4}
                 image={
                     <StaticImage
                         src="./html5.png"
@@ -95,6 +96,9 @@ export default function Software() {
             <CenterGrid
                 subtitle2="Developer tools."
                 description="Investigate and diagnose issues through our debugging tools."
+                buttonText="More tools..."
+                buttonVariant="link"
+                buttonUrl="/tools/"
             />
 
             <CarouselGrid>

@@ -6,7 +6,6 @@ import InfoIcon from '@material-ui/icons/Info';
 import Markdown from "./ui/Markdown"
 import { IconButton } from "gatsby-theme-material-ui";
 import { arrayShuffle } from '../../jacdac-ts/src/jdom/utils';
-import { MEDIUM_BREAKPOINT, MOBILE_BREAKPOINT } from './layout';
 import useDeviceImage from './devices/useDeviceImage';
 import useMediaQueries from './hooks/useMediaQueries';
 

@@ -1,6 +1,7 @@
 import { Grid } from "@material-ui/core"
 import { StaticImage } from "gatsby-plugin-image"
 import React from "react"
+import DeviceSpecificationList from "../DeviceSpecificationList"
 import CarouselGrid from "./CarouselGrid"
 import CenterGrid from "./CenterGrid"
 import FeatureItem from "./FeatureItem"
@@ -118,11 +119,22 @@ export default function Protocol() {
                         description="JavaScript package"
                         caption="Integrate Jacdac into your web site or node.js application using our TypeScript/JavaScript npm package."
                         buttonText="Learn more"
-                        buttonUrl="/clients/javascript"
                         buttonVariant="link"
+                        buttonUrl="/software"
                     />
                 </Grid>
             </CarouselGrid>
+
+            <SplitGrid
+                right={false}
+                subtitle="Device Catalog."
+                description="Jacdac identifies registered devices on the bus and can automatically find and upload the latest firmware for them."
+                imageColumns={6}
+                image={<DeviceSpecificationList count={6} />}
+                buttonText={"Explore devices"}
+                buttonVariant="link"
+                buttonUrl="/devices/"
+            />
 
             <CenterGrid
                 subtitle="Can I add Jacdac to my PCB?"
