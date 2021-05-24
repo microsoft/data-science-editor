@@ -1902,10 +1902,10 @@
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.11.tgz#aeb16f50649a91af79dbe36574b66d0f9e4d9f71"
   integrity sha512-3NsZsJIA/22P3QUyrEDNA2D133H4j224twJrdipXN38dpnIOzAbUDtOwkcJ5pXmn75w7LSQDjA4tO9dm1XlqlA==
 
-"@react-three/drei@^5.1.6":
-  version "5.1.6"
-  resolved "https://registry.yarnpkg.com/@react-three/drei/-/drei-5.1.6.tgz#c0ce4eba6a2aa21758de5ecc6c69b50a43f97e06"
-  integrity sha512-+kRo1a4YXQlxvFotANMPr97qhnF256kptjnRNXrntJN0hs14E4eTtUd1R0h4KSuzxraGCUy/cllxnB73SVAgQA==
+"@react-three/drei@^5.1.7":
+  version "5.1.7"
+  resolved "https://registry.yarnpkg.com/@react-three/drei/-/drei-5.1.7.tgz#5fbae12c4e0e22b98d28fb2932cb439837805b1e"
+  integrity sha512-n/q9pCF6Ze0Oa3Txuw2vpX2eAGMEK02boBwqhL94vG28Hdfdvq5HLTHGRlGaOh4fnBKWhJg9BugE/9MBm3B6DA==
   dependencies:
     "@babel/runtime" "^7.11.2"
     blob-polyfill "^5.0.20210201"
