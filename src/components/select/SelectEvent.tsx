@@ -7,9 +7,10 @@ export default function SelectEvent(props: {
     events: JDEvent[]
     eventId: string
     onChange: (eventId: string) => void
-    friendlyName?: boolean
+    friendlyName?: boolean,
+    label?: string
 }) {
-    const { events, eventId, onChange, friendlyName } = props
+    const { events, eventId, onChange, friendlyName, label } = props
 
     const handleChange = (ev: React.ChangeEvent<{ value: unknown }>) => {
         onChange(ev.target.value as string)
@@ -17,7 +18,7 @@ export default function SelectEvent(props: {
 
     return (
         <SelectWithLabel
-            helperText="choose an event"
+            helperText={label || "choose an event"}
             value={eventId}
             onChange={handleChange}
             disabled={!events?.length}
