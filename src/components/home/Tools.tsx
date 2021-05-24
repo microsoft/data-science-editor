@@ -54,14 +54,9 @@ export default function Tools() {
         >
             <SplitGrid
                 title="Tools"
-                subtitle3="Get productive with Jacdac."
+                subtitle3="Visualize, debug, sniff, track, record, replay, update... from your browser."
                 imageColumns={6}
                 image={<StaticImage src="./dashboard.png" alt="Dashboard" />}
-            />
-
-            <CenterGrid
-                subtitle2="Developer tools."
-                description="Investigate and diagnose issues through our debugging tools."
             />
 
             <SplitGrid

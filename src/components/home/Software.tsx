@@ -81,6 +81,21 @@ export default function Software() {
                 }
             />
 
+            <SplitGrid
+                right={false}
+                subtitle="Node-RED."
+                description="Add Jacdac to your Node-RED flows."
+                buttonText="Jacdac node"
+                buttonVariant="link"
+                buttonUrl="https://flows.nodered.org/node/node-red-contrib-jacdac"
+                image={
+                    <StaticImage
+                        src="./nodered.png"
+                        alt="Jacdac nodes for Node-RED"
+                    />
+                }
+            />
+
             <CenterGrid
                 subtitle2="Developer tools."
                 description="Investigate and diagnose issues through our debugging tools."
