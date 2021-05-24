@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useMemo } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { Button } from "@material-ui/core"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import { IT4Program } from "../../../jacdac-ts/src/vm/ir"
@@ -8,19 +8,33 @@ import useChange from "../../jacdac/useChange"
 import PlayArrowIcon from "@material-ui/icons/PlayArrow"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 
-export default function VMRunner(props: { program: IT4Program }) {
+export default function VMRunner(props: {
+    program: IT4Program
+    autoStart?: boolean
+}) {
+    const { program, autoStart: autoStartDefault } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const { program } = props
-    const factory = useCallback(
-        bus => program && new IT4ProgramRunner(program, bus),
-        [program]
-    )
-    const testRunner = useMemo(() => factory(bus), [program])
-    const status = useChange(testRunner, t => t?.status)
-    const handleRun = () => testRunner.start()
-    const handleCancel = () => testRunner.cancel()
-    const running = status === VMStatus.Running
+    const [testRunner, setTestRunner] = useState<IT4ProgramRunner>()
+    const [autoStart, setAutoStart] = useState(!!autoStartDefault)
+
+    useEffect(() => {
+        const runner = program && new IT4ProgramRunner(program, bus)
+        setTestRunner(runner)
+        if (runner && autoStart) runner.start()
+        return () => runner?.cancel()
+    }, [program, autoStart])
+
     const disabled = !testRunner
+    const status = useChange(testRunner, t => t?.status)
+    const handleRun = () => {
+        setAutoStart(autoStartDefault)
+        testRunner.start()
+    }
+    const handleCancel = () => {
+        setAutoStart(false)
+        testRunner.cancel()
+    }
+    const running = status === VMStatus.Running
 
     return (
         <Button

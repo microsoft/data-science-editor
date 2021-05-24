@@ -57,7 +57,7 @@ export default function Page() {
                 </NoSsr>
             </Grid>
             <Grid item xs={12}>
-                <VMRunner program={program} />
+                <VMRunner program={program} autoStart={true} />
             </Grid>
             {Flags.diagnostics && (
                 <Grid item xs={12}>
