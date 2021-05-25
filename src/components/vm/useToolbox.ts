@@ -199,6 +199,8 @@ export function loadBlocks(): CachedBlockDefinitions {
               }
             : field.unit === "/"
             ? { kind: "block", type: "jacdac_percent" }
+            : field.type === "u8"
+            ? { kind: "block", type: "jacdac_byte" }
             : {
                   kind: "block",
                   type: "math_number",
@@ -336,24 +338,23 @@ export function loadBlocks(): CachedBlockDefinitions {
         registers,
         reg => reg.register.fields.length == 1
     )
-    const registerSimplesGetBlocks =
-        registerSimples.map<RegisterBlockDefinition>(
-            ({ service, register }) => ({
-                kind: "block",
-                type: `jacdac_${service.shortId}_${register.name}_get`,
-                message0: `%1 ${humanify(register.name)}`,
-                args0: [fieldVariable(service)].filter(v => !!v),
-                inputsInline: true,
-                output: toBlocklyType(register.fields[0]),
-                colour: HUE,
-                tooltip: register.description,
-                helpUrl: "",
-                service,
-                register,
+    const registerSimplesGetBlocks = registerSimples
+        .filter(({ register }) => fieldsSupported(register))
+        .map<RegisterBlockDefinition>(({ service, register }) => ({
+            kind: "block",
+            type: `jacdac_${service.shortId}_${register.name}_get`,
+            message0: `%1 ${humanify(register.name)}`,
+            args0: [fieldVariable(service)].filter(v => !!v),
+            inputsInline: true,
+            output: toBlocklyType(register.fields[0]),
+            colour: HUE,
+            tooltip: register.description,
+            helpUrl: "",
+            service,
+            register,
 
-                template: "register_get",
-            })
-        )
+            template: "register_get",
+        }))
     const registerNumericsGetBlocks = registerComposites
         .filter(re => re.register.fields.some(isNumericType))
         .map<RegisterBlockDefinition>(({ service, register }) => ({
@@ -390,6 +391,7 @@ export function loadBlocks(): CachedBlockDefinitions {
 
     const registerSetBlocks = registers
         .filter(({ register }) => register.kind === "rw")
+        .filter(({ register }) => fieldsSupported(register))
         .map<RegisterBlockDefinition>(({ service, register }) => ({
             kind: "block",
             type: `jacdac_${service.shortId}_${register.name}_set`,
@@ -505,6 +507,22 @@ export function loadBlocks(): CachedBlockDefinitions {
                     name: "value",
                     min: 0,
                     max: 100,
+                    precision: 1,
+                },
+            ],
+            colour: HUE,
+            output: "Number",
+        },
+        {
+            kind: "block",
+            type: `jacdac_byte`,
+            message0: `%1`,
+            args0: [
+                <NumberInputDefinition>{
+                    type: "field_slider",
+                    name: "value",
+                    min: 0,
+                    max: 255,
                     precision: 1,
                 },
             ],
