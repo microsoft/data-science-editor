@@ -35,6 +35,10 @@ export default function DashboardLEDMatrixDisplay(
     const color = server ? "secondary" : "primary"
     const { background, controlBackground, active } = useWidgetTheme(color)
 
+    // render immediately if the server rendered again
+    useChange(server)
+    const navProps = useKeyboardNavigationProps(widgetRef.current)
+
     // no data about layout
     if (rows === undefined || columns === undefined) return <LoadingProgress />
 
@@ -56,9 +60,6 @@ export default function DashboardLEDMatrixDisplay(
             toggle(newLeds, bitindex)
             ledsRegister.sendSetAsync(newLeds, true)
         }
-
-    // render immediately if the server rendered again
-    useChange(server)
 
     // add leds
     const render = () => {
@@ -126,7 +127,6 @@ export default function DashboardLEDMatrixDisplay(
     }
 
     const { boxEls, ledEls } = render()
-    const navProps = useKeyboardNavigationProps(widgetRef.current)
     return (
         <SvgWidget width={w} height={h}>
             <rect
