@@ -112,6 +112,7 @@ export interface EventBlockDefinition extends ServiceBlockDefinition {
 export interface RegisterBlockDefinition extends ServiceBlockDefinition {
     template: RegisterTemplate
     register: jdspec.PacketInfo
+    field?: jdspec.PacketMember
 }
 
 export interface CommandBlockDefinition extends ServiceBlockDefinition {
@@ -387,6 +388,7 @@ export function loadBlocks(): CachedBlockDefinitions {
                 helpUrl: "",
                 service,
                 register,
+                field: register.fields[0],
 
                 template: "register_get",
             })
@@ -442,6 +444,7 @@ export function loadBlocks(): CachedBlockDefinitions {
         helpUrl: "",
         service,
         register,
+        field,
 
         template: "register_get",
     }))
