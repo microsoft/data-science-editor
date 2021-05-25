@@ -268,7 +268,7 @@ export function loadBlocks(): CachedBlockDefinitions {
         )
 
     const allServices = serviceSpecifications()
-        .filter(service => !/^_/.test(service.shortId))
+        .filter(service => !/^_/.test(service.shortId) && service.status !== "deprecated")
         .filter(service => ignoredServices.indexOf(service.classIdentifier) < 0)
     const registers = allServices
         .map(service => ({
