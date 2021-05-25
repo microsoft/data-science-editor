@@ -1,6 +1,8 @@
-import React, { KeyboardEvent } from "react"
+import React, { useEffect, useRef } from "react"
 import { createStyles, makeStyles } from "@material-ui/core"
 import { HidKeyboardModifiers } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
+import Keyboard from "react-simple-keyboard"
+import "react-simple-keyboard/build/css/index.css"
 
 const selectors = {
     a: 0x04,
@@ -161,12 +163,13 @@ const reverseSelectors: { [index: number]: string } = Object.keys(
 }, {})
 const modifierCodes = {
     controlleft: HidKeyboardModifiers.LeftControl,
-    controlright: HidKeyboardModifiers.RightControl,
     altleft: HidKeyboardModifiers.LeftAlt,
-    altright: HidKeyboardModifiers.RightAlt,
     shiftleft: HidKeyboardModifiers.LeftShift,
-    shiftright: HidKeyboardModifiers.RightShift,
     metaleft: HidKeyboardModifiers.LeftGUI,
+
+    controlright: HidKeyboardModifiers.RightControl,
+    altright: HidKeyboardModifiers.RightAlt,
+    shiftright: HidKeyboardModifiers.RightShift,
     metaright: HidKeyboardModifiers.RightGUI,
 }
 
@@ -181,28 +184,33 @@ const useStyles = makeStyles(theme =>
                 borderColor: theme.palette.action.active,
             },
         },
+        buttonSelected: {
+            background: `${theme.palette.primary.dark} !important`,
+            color: "white !important",
+        },
     })
 )
 
 export function renderKey(selector: number, modifiers: HidKeyboardModifiers) {
     const flags = [
-        "ctrl",
-        "shift",
-        "alt",
-        "cmd",
-        "right ctrl",
-        "right shift",
-        "right alt",
-        "right cmd",
+        "controlleft",
+        "shiftleft",
+        "altleft",
+        "metaleft",
+        "controlright",
+        "shiftright",
+        "altright",
+        "metaright",
     ]
     const values = []
     flags.forEach((flag, i) => {
         if (modifiers & (1 << i)) {
-            values.push(flag)
+            values.push(`{${flag}}`)
         }
     })
-    values.push(reverseSelectors[selector])
-    const value = values.filter(v => !!v).join(" + ")
+    const sel = reverseSelectors[selector]
+    if (sel !== undefined) values.push(sel.length > 1 ? `{${sel}}` : sel)
+    const value = values.filter(v => !!v).join(" ")
     return value
 }
 
@@ -211,38 +219,72 @@ export default function KeyboardKeyInput(props: {
     modifiers: HidKeyboardModifiers
     onChange: (newSelector: number, newModifiers: HidKeyboardModifiers) => void
 }) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const keyboardRef = useRef<any>()
     const { selector, modifiers, onChange } = props
     const classes = useStyles()
 
-    const handleKeyDown = (ev: KeyboardEvent<HTMLInputElement>) => {
-        ev.stopPropagation()
-        ev.preventDefault()
-        const { key, code } = ev
-
-        const newSelector =
-            selectors[code.toLowerCase()] || selectors[key.toLowerCase()] || 0
+    const layout = {
+        default: [
+            "{escape} {f1} {f2} {f3} {f4} {f5} {f6} {f7} {f8} {f9} {f10} {f11} {f12}",
+            "` 1 2 3 4 5 6 7 8 9 0 - = {backspace}",
+            "{tab} q w e r t y u i o p [ ] \\",
+            "{capslock} a s d f g h j k l ; ' {enter}",
+            "{shiftleft} z x c v b n m , . / {shiftright}",
+            "{controlleft} {altleft} {metaleft} {space} {metaright} {altright}",
+        ],
+    }
+    const display = {
+        "{escape}": "esc ⎋",
+        "{tab}": "tab ⇥",
+        "{backspace}": "backspace ⌫",
+        "{enter}": "enter ↵",
+        "{capslock}": "caps lock ⇪",
+        "{shiftleft}": "shift ⇧",
+        "{shiftright}": "shift ⇧",
+        "{controlleft}": "ctrl ⌃",
+        "{controlright}": "ctrl ⌃",
+        "{altleft}": "alt ⌥",
+        "{altright}": "alt ⌥",
+        "{metaleft}": "cmd ⌘",
+        "{metaright}": "cmd ⌘",
+    }
+    const handleKeyboardKeyPress = (code: string) => {
+        code = code.toLowerCase().replace(/[{}]/g, "")
+        let newSelector = selector
         let newModifiers = modifiers
-        const mcode = modifierCodes[code.toLowerCase()]
-        if (mcode) {
-            if (newModifiers & mcode) newModifiers &= ~mcode
-            else newModifiers |= mcode
+        const msel = selectors[code]
+        const mcode = modifierCodes[code]
+        if (msel) {
+            if (msel === selector) newSelector = undefined
+            else newSelector = msel
+        } else {
+            if (mcode) {
+                if (newModifiers & mcode) newModifiers &= ~mcode
+                else newModifiers |= mcode
+            }
         }
         onChange(newSelector, newModifiers)
     }
-    const handleKeyUp = (ev: KeyboardEvent<HTMLInputElement>) => {
-        ev.stopPropagation()
-        ev.preventDefault()
-    }
+
+    // todo: render value to simple-keyboard selectors
     const value = renderKey(selector, modifiers)
+    useEffect(() => {
+        keyboardRef.current?.addButtonTheme(value, classes.buttonSelected)
+        return () =>
+            keyboardRef.current?.removeButtonTheme(
+                value,
+                classes.buttonSelected
+            )
+    }, [value])
+
     return (
-        <pre
-            style={{ minWidth: "18rem" }}
-            className={classes.capture}
-            tabIndex={0}
-            onKeyDown={handleKeyDown}
-            onKeyUp={handleKeyUp}
-        >
-            {value || "focus and type your key combo"}
-        </pre>
+        <Keyboard
+            keyboardRef={r => (keyboardRef.current = r)}
+            onKeyPress={handleKeyboardKeyPress}
+            layout={layout}
+            display={display}
+            mergeDisplay={true}
+        />
     )
 }
