@@ -5,7 +5,7 @@ import Alert from "../ui/Alert"
 import React, { useContext } from "react"
 import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
-import ConnectButton from "../../jacdac/ConnectButton"
+import ConnectButton from "../buttons/ConnectButton"
 import { NoSsr } from "@material-ui/core"
 import useChange from "../../jacdac/useChange"
 
