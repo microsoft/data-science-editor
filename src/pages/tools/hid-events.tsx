@@ -29,7 +29,6 @@ import KeyboardKeyInput, {
     renderKey,
 } from "../../components/ui/KeyboardKeyInput"
 import IconButtonWithTooltip from "../../components/ui/IconButtonWithTooltip"
-import AddIcon from "@material-ui/icons/Add"
 import DeleteIcon from "@material-ui/icons/Delete"
 import SettingsClient from "../../../jacdac-ts/src/jdom/settingsclient"
 import useServiceClient from "../../components/useServiceClient"
@@ -38,6 +37,7 @@ import { jdpack, jdunpack } from "../../../jacdac-ts/src/jdom/pack"
 import { randomDeviceId } from "../../../jacdac-ts/src/jdom/random"
 import { JDBus } from "../../../jacdac-ts/src/jdom/bus"
 import useServices from "../../components/hooks/useServices"
+import { Button } from "gatsby-theme-material-ui"
 
 // all settings keys are prefixed with this string
 const PREFIX = "@ke_"
@@ -165,21 +165,21 @@ function SelectHIDEvent(props: { onAdd: (hidEvent: HIDEvent) => void }) {
                     onChange={handleEventChange}
                 />
             </Grid>
-            <Grid item xs>
+            <Grid item>
+                <Button
+                    variant="outlined"
+                    disabled={disabled}
+                    onClick={handleAdd}
+                >
+                    Add
+                </Button>
+            </Grid>
+            <Grid item xs={12}>
                 <KeyboardKeyInput
                     selector={selector}
                     modifiers={modifiers}
                     onChange={handleKeyChange}
                 />
-            </Grid>
-            <Grid item>
-                <IconButtonWithTooltip
-                    title={"Add binding"}
-                    disabled={disabled}
-                    onClick={handleAdd}
-                >
-                    <AddIcon />
-                </IconButtonWithTooltip>
             </Grid>
         </Grid>
     )
