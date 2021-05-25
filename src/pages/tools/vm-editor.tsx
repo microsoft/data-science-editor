@@ -1,4 +1,4 @@
-import { createStyles, Grid, makeStyles, NoSsr } from "@material-ui/core"
+import { createStyles, Grid, makeStyles, NoSsr, Theme } from "@material-ui/core"
 import React, { useState } from "react"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import { IT4Program } from "../../../jacdac-ts/src/vm/ir"
@@ -10,10 +10,17 @@ import Markdown from "../../components/ui/Markdown"
 import useLocalStorage from "../../components/useLocalStorage"
 import VMRunner from "../../components/vm/VMRunner"
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         editor: {
             height: "calc(50vh)",
+            "& .blocklyTreeLabel": {
+                fontFamily: theme.typography.fontFamily,
+            },
+            "& .blocklyText": {
+                fontWeight: `normal !important`,
+                fontFamily: `${theme.typography.fontFamily} !important`,
+            },
         },
     })
 )

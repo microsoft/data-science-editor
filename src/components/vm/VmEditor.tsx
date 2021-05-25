@@ -6,7 +6,11 @@ import "@blockly/block-dynamic-connection"
 import Theme from "@blockly/theme-modern"
 import DarkTheme from "@blockly/theme-dark"
 import { DisableTopBlocks } from "@blockly/disable-top-blocks"
-import useToolbox, { ButtonDefinition, scanServices } from "./useToolbox"
+import useToolbox, {
+    ButtonDefinition,
+    CategoryDefinition,
+    scanServices,
+} from "./useToolbox"
 import BlocklyModalDialogs from "./BlocklyModalDialogs"
 import { domToJSON, WorkspaceJSON } from "./jsongenerator"
 import DarkModeContext from "../ui/DarkModeContext"
@@ -106,12 +110,13 @@ export default function VmEditor(props: {
     }, [workspace, xml])
 
     // track workspace changes and update callbacks
-    useEffect(() => {
+useEffect(() => {
         if (!workspace) return
 
         // collect buttons
         const buttons: ButtonDefinition[] = toolboxConfiguration?.contents
-            ?.map(cat => cat.button)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            .map(cat => (cat as CategoryDefinition).button)
             .filter(btn => !!btn)
         buttons?.forEach(button =>
             workspace.registerButtonCallback(button.callbackKey, () =>
