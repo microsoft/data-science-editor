@@ -23,6 +23,7 @@ import {
 import {
     arrayConcatMany,
     SMap,
+    splitFilter,
     toMap,
     unique,
     uniqueMap,
@@ -159,9 +160,10 @@ function toBlocklyType(field: jdspec.PacketMember) {
         ? "Boolean"
         : isStringField(field)
         ? "String"
-        : "Number"
+        : isNumericType(field)
+        ? "Number"
+        : undefined
 }
-
 const ignoredServices = [
     SRV_CONTROL,
     SRV_LOGGER,
@@ -181,6 +183,8 @@ let cachedBlocks: CachedBlockDefinitions
 export function loadBlocks(): CachedBlockDefinitions {
     if (cachedBlocks) return cachedBlocks
 
+    const fieldsSupported = (pkt: jdspec.PacketInfo) =>
+        pkt.fields.every(toBlocklyType)
     const fieldName = (reg: jdspec.PacketInfo, field: jdspec.PacketMember) =>
         field.name === "_" ? reg.name : field.name
     const fieldToShadow = (field: jdspec.PacketMember): BlockReference =>
@@ -251,7 +255,7 @@ export function loadBlocks(): CachedBlockDefinitions {
     const commands = arrayConcatMany(
         allServices.map(service =>
             service.packets
-                .filter(pkt => isCommand(pkt))
+                .filter(pkt => isCommand(pkt) && fieldsSupported(pkt))
                 .map(pkt => ({
                     service,
                     command: pkt,
@@ -318,9 +322,9 @@ export function loadBlocks(): CachedBlockDefinitions {
                 threshold: fieldToShadow(register.fields[0]),
             },
             inputsInline: true,
-            nextStatement: "Statement",
+            nextStatement: null,
             colour: HUE,
-            tooltip: "",
+            tooltip: `Event raised when ${register.name} changes`,
             helpUrl: "",
             service,
             register,
@@ -328,8 +332,31 @@ export function loadBlocks(): CachedBlockDefinitions {
             template: "register_change_event",
         }))
 
-    const registerGetBlocks = registers.map<RegisterBlockDefinition>(
-        ({ service, register }) => ({
+    const [registerSimples, registerComposites] = splitFilter(
+        registers,
+        reg => reg.register.fields.length == 1
+    )
+    const registerSimplesGetBlocks =
+        registerSimples.map<RegisterBlockDefinition>(
+            ({ service, register }) => ({
+                kind: "block",
+                type: `jacdac_${service.shortId}_${register.name}_get`,
+                message0: `%1 ${humanify(register.name)}`,
+                args0: [fieldVariable(service)].filter(v => !!v),
+                inputsInline: true,
+                output: toBlocklyType(register.fields[0]),
+                colour: HUE,
+                tooltip: register.description,
+                helpUrl: "",
+                service,
+                register,
+
+                template: "register_get",
+            })
+        )
+    const registerNumericsGetBlocks = registerComposites
+        .filter(re => re.register.fields.some(isNumericType))
+        .map<RegisterBlockDefinition>(({ service, register }) => ({
             kind: "block",
             type: `jacdac_${service.shortId}_${register.name}_get`,
             message0: `%1 ${humanify(register.name)}${
@@ -341,24 +368,25 @@ export function loadBlocks(): CachedBlockDefinitions {
                     ? <OptionsInputDefinition>{
                           type: "field_dropdown",
                           name: "field",
-                          options: register.fields.map(field => [
-                              humanify(field.name),
-                              fieldName(register, field),
-                          ]),
+                          options: register.fields
+                              .filter(f => isNumericType(f))
+                              .map(field => [
+                                  humanify(field.name),
+                                  fieldName(register, field),
+                              ]),
                       }
                     : undefined,
             ].filter(v => !!v),
             inputsInline: true,
-            output: toBlocklyType(register.fields[0]),
+            output: "Number",
             colour: HUE,
-            tooltip: "",
+            tooltip: register.description,
             helpUrl: "",
             service,
             register,
 
             template: "register_get",
-        })
-    )
+        }))
 
     const registerSetBlocks = registers
         .filter(({ register }) => register.kind === "rw")
@@ -376,8 +404,8 @@ export function loadBlocks(): CachedBlockDefinitions {
             helpUrl: "",
             service,
             register,
-            previousStatement: "Statement",
-            nextStatement: "Statement",
+            previousStatement: null,
+            nextStatement: null,
 
             template: "register_set",
         }))
@@ -397,8 +425,8 @@ export function loadBlocks(): CachedBlockDefinitions {
             helpUrl: "",
             service,
             command,
-            previousStatement: "Statement",
-            nextStatement: "Statement",
+            previousStatement: null,
+            nextStatement: null,
 
             template: "command",
         })
@@ -407,7 +435,8 @@ export function loadBlocks(): CachedBlockDefinitions {
     const serviceBlocks: ServiceBlockDefinition[] = [
         ...eventBlocks,
         ...registerChangeByEventBlocks,
-        ...registerGetBlocks,
+        ...registerSimplesGetBlocks,
+        ...registerNumericsGetBlocks,
         ...registerSetBlocks,
         ...commandBlocks,
     ]
