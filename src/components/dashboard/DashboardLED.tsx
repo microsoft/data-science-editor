@@ -1,20 +1,84 @@
-import React from "react"
+import React, { useContext } from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import useServiceServer from "../hooks/useServiceServer"
 import SvgWidget from "../widgets/SvgWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
-import { Grid } from "@material-ui/core"
+import { Grid, IconButton } from "@material-ui/core"
 import LEDServer from "../../../jacdac-ts/src/servers/ledserver"
-import { LedReg } from "../../../jacdac-ts/src/jdom/constants"
+import { LedCmd, LedReg } from "../../../jacdac-ts/src/jdom/constants"
 import LoadingProgress from "../ui/LoadingProgress"
-import useChange from "../../jacdac/useChange"
 import useWidgetTheme from "../widgets/useWidgetTheme"
+import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord"
+import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
+import { rgbToHtmlColor } from "../../../jacdac-ts/src/jdom/utils"
+import AppContext from "../AppContext"
+
+// https://academo.org/demos/wavelength-to-colour-relationship/#:~:text=According%20to%20your%20tool%2C%20light%20at%20405nm%20corresponds,%280%2C0%2C255%29%2C%20has%20a%20quite%20longer%20wavelength%20of%20440nm.
+function nmToRGB(wavelength: number): number {
+    const Gamma = 0.8
+    const IntensityMax = 255
+    let factor: number, red: number, green: number, blue: number
+    if (wavelength >= 380 && wavelength < 440) {
+        red = -(wavelength - 440) / (440 - 380)
+        green = 0.0
+        blue = 1.0
+    } else if (wavelength >= 440 && wavelength < 490) {
+        red = 0.0
+        green = (wavelength - 440) / (490 - 440)
+        blue = 1.0
+    } else if (wavelength >= 490 && wavelength < 510) {
+        red = 0.0
+        green = 1.0
+        blue = -(wavelength - 510) / (510 - 490)
+    } else if (wavelength >= 510 && wavelength < 580) {
+        red = (wavelength - 510) / (580 - 510)
+        green = 1.0
+        blue = 0.0
+    } else if (wavelength >= 580 && wavelength < 645) {
+        red = 1.0
+        green = -(wavelength - 645) / (645 - 580)
+        blue = 0.0
+    } else if (wavelength >= 645 && wavelength < 781) {
+        red = 1.0
+        green = 0.0
+        blue = 0.0
+    } else {
+        red = 0.0
+        green = 0.0
+        blue = 0.0
+    }
+    // Let the intensity fall off near the vision limits
+    if (wavelength >= 380 && wavelength < 420) {
+        factor = 0.3 + (0.7 * (wavelength - 380)) / (420 - 380)
+    } else if (wavelength >= 420 && wavelength < 701) {
+        factor = 1.0
+    } else if (wavelength >= 701 && wavelength < 781) {
+        factor = 0.3 + (0.7 * (780 - wavelength)) / (780 - 700)
+    } else {
+        factor = 0.0
+    }
+    if (red !== 0) {
+        red = Math.round(IntensityMax * Math.pow(red * factor, Gamma))
+    }
+    if (green !== 0) {
+        green = Math.round(IntensityMax * Math.pow(green * factor, Gamma))
+    }
+    if (blue !== 0) {
+        blue = Math.round(IntensityMax * Math.pow(blue * factor, Gamma))
+    }
+    return ((red & 0xff) << 16) | ((green & 0xff) << 8) | (blue & 0xff)
+}
 
 export default function DashboardLED(props: DashboardServiceProps) {
     const { service } = props
+    const { setError } = useContext(AppContext)
     const server = useServiceServer<LEDServer>(service)
     const color = server ? "secondary" : "primary"
     const { active } = useWidgetTheme(color)
+    const [waveLength] = useRegisterUnpackedValue<[number]>(
+        service.register(LedReg.WaveLength),
+        props
+    )
     const [r, g, b] = useRegisterUnpackedValue<[number, number, number]>(
         service.register(LedReg.Color),
         props
@@ -24,13 +88,31 @@ export default function DashboardLED(props: DashboardServiceProps) {
         props
     )
 
-    // render immediately changes in the simulator
-    useChange(server?.color)
-
     // nothing to see
     if (r === undefined) return <LoadingProgress />
 
-    const opacity = 1
+    // send animate command
+    const buttonColors = waveLength
+        ? [nmToRGB(waveLength), 0x000000]
+        : [0xff0000, 0xff00ff, 0x0000ff, 0x00ff00, 0xffff00, 0x000000]
+    const handleSetColor = (col: number) => async () => {
+        try {
+            await service.sendCmdAsync(
+                LedCmd.Animate,
+                jdpack<[number, number, number, number]>("u8 u8 u8 u8", [
+                    (col >> 16) & 0xff,
+                    (col >> 8) & 0xff,
+                    col & 0xff,
+                    0,
+                ])
+            )
+            await service.register(LedReg.Color).sendGetAsync()
+        } catch (e) {
+            setError(e)
+        }
+    }
+
+    const opacity = !r && !b && !g ? 0 : 1
     const fill = `rgb(${r}, ${g}, ${b})`
     const ln = Math.min(ledCount || 1, 5)
     const lw = 15.5
@@ -38,9 +120,9 @@ export default function DashboardLED(props: DashboardServiceProps) {
     const w = (lw + m) * ln
     const h = 42
     return (
-        <Grid container spacing={1}>
+        <Grid container spacing={1} alignItems="center" alignContent="center">
             <Grid item xs={12}>
-                <SvgWidget width={w} height={h} size={"5em"}>
+                <SvgWidget width={w} height={h} size={`5em`}>
                     {Array(ln)
                         .fill(0)
                         .map((_, i) => (
@@ -111,6 +193,16 @@ export default function DashboardLED(props: DashboardServiceProps) {
                         ))}
                 </SvgWidget>
             </Grid>
+            {buttonColors.map(col => (
+                <Grid key={col} item xs={buttonColors.length === 2 ? 4 : 2}>
+                    <IconButton
+                        style={{ color: rgbToHtmlColor(col) }}
+                        onClick={handleSetColor(col)}
+                    >
+                        <FiberManualRecordIcon />
+                    </IconButton>
+                </Grid>
+            ))}
         </Grid>
     )
 }
