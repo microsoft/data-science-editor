@@ -1,8 +1,10 @@
 import Blockly from "blockly"
 import { useMemo } from "react"
 import {
+    JoystickReg,
     SRV_BOOTLOADER,
     SRV_CONTROL,
+    SRV_JOYSTICK,
     SRV_LOGGER,
     SRV_PROTO_TEST,
     SRV_ROLE_MANAGER,
@@ -184,6 +186,15 @@ const includedRegisters = [
     SystemReg.Intensity,
 ]
 
+const customMessages = [
+    {
+        service: SRV_JOYSTICK,
+        register: JoystickReg.Direction,
+        field: "buttons",
+        get: "is %1 %2 pressed",
+    }
+]
+
 let cachedBlocks: CachedBlockDefinitions
 export function loadBlocks(): CachedBlockDefinitions {
     if (cachedBlocks) return cachedBlocks
@@ -244,6 +255,9 @@ export function loadBlocks(): CachedBlockDefinitions {
         info.fields.length === 1 &&
         info.fields[0].type === "bool" &&
         info.name === "enabled"
+    const customMessage = (srv: jdspec.ServiceSpec, reg: jdspec.PacketInfo, field: jdspec.PacketMember) =>
+        customMessages.find(m => m.service === srv.classIdentifier && m.register === reg.identifier && m.field === field.name)
+
     const allServices = serviceSpecifications()
         .filter(service => !/^_/.test(service.shortId))
         .filter(service => ignoredServices.indexOf(service.classIdentifier) < 0)
@@ -353,7 +367,7 @@ export function loadBlocks(): CachedBlockDefinitions {
             ({ service, register }) => ({
                 kind: "block",
                 type: `jacdac_get_simple_${service.shortId}_${register.name}`,
-                message0: `%1 ${humanify(register.name)}`,
+                message0: customMessage(service, register, register.fields[0])?.get || `%1 ${humanify(register.name)}`,
                 args0: [fieldVariable(service)],
                 inputsInline: true,
                 output: toBlocklyType(register.fields[0]),
@@ -394,7 +408,7 @@ export function loadBlocks(): CachedBlockDefinitions {
     ].map<RegisterBlockDefinition>(({ service, register, field, einfo }) => ({
         kind: "block",
         type: `jacdac_get_enum_${service.shortId}_${register.name}_${field.name}`,
-        message0: `%1 ${humanify(register.name)}${
+        message0: customMessage(service, register, field)?.get || `%1 ${humanify(register.name)}${
             field.name === "_" ? "" : ` ${field.name}`
         } %2`,
         args0: [
