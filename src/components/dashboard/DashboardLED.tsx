@@ -1,19 +1,20 @@
-import React, { useContext } from "react"
+import React from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import useServiceServer from "../hooks/useServiceServer"
 import SvgWidget from "../widgets/SvgWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
-import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import { Grid } from "@material-ui/core"
 import LEDServer from "../../../jacdac-ts/src/servers/ledserver"
 import { LedReg } from "../../../jacdac-ts/src/jdom/constants"
 import LoadingProgress from "../ui/LoadingProgress"
+import useChange from "../../jacdac/useChange"
+import useWidgetTheme from "../widgets/useWidgetTheme"
 
 export default function DashboardLED(props: DashboardServiceProps) {
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { service } = props
     const server = useServiceServer<LEDServer>(service)
     const color = server ? "secondary" : "primary"
+    const { active } = useWidgetTheme(color)
     const [r, g, b] = useRegisterUnpackedValue<[number, number, number]>(
         service.register(LedReg.Color),
         props
@@ -23,17 +24,8 @@ export default function DashboardLED(props: DashboardServiceProps) {
         props
     )
 
-    /*
-    const animation = useMemo(() => new LedAnimation(animationData), [
-        animationData,
-    ])
-    useAnimationFrame(() => {
-        animation.update(bus.timestamp)
-        return true
-    }, [animation])
-
-    const hsv = useChange(animation, a => a?.hsv)
-    */
+    // render immediately changes in the simulator
+    useChange(server?.color)
 
     // nothing to see
     if (r === undefined) return <LoadingProgress />
@@ -62,8 +54,10 @@ export default function DashboardLED(props: DashboardServiceProps) {
                                     opacity=".65"
                                 />
                                 <path
-                                    fill="#8c8c8c"
+                                    fill={active}
                                     d="M2.8 17.5l-1.2-1.4h1L5 17.5v18.6c0 .3-.5.5-1.1.5-.6 0-1.1-.2-1.1-.5zm10.1 6.7c0-.7-1.1-1.3-2.1-1.8-.4-.2-1.2-.6-1.2-.9v-3.4l2.5-2h-.9l-3.7 2v3.5c0 .7.9 1.2 1.9 1.7.4.2 1.3.8 1.3 1.1v16.9c0 .4.5.7 1.1.7.6 0 1.1-.3 1.1-.7z"
+                                    stroke="#8c8c8c"
+                                    strokeWidth="1px"
                                 />
                                 <path
                                     opacity={opacity}
