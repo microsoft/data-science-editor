@@ -511,9 +511,11 @@ export function loadBlocks(): CachedBlockDefinitions {
         ({ service, command }) => ({
             kind: "block",
             type: `jacdac_command_${service.shortId}_${command.name}`,
-            message0: `${humanify(command.name)} %1 with ${fieldsToMessage(
-                command
-            )}`,
+            message0: !command.fields.length
+                ? `${humanify(command.name)} %1`
+                : `${humanify(command.name)} %1 with ${fieldsToMessage(
+                      command
+                  )}`,
             args0: [fieldVariable(service), ...fieldsToFieldInputs(command)],
             values: fieldsToValues(command),
             inputsInline: true,
