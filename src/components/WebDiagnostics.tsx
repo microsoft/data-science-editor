@@ -22,6 +22,7 @@ import PaperBox from "./ui/PaperBox"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import Alert from "./ui/Alert"
 import { AlertTitle } from "@material-ui/lab"
+import { SMap } from "../../jacdac-ts/src/jdom/utils"
 
 function NodeCallRow(props: { node: JDNode }) {
     const { node } = props
@@ -51,7 +52,7 @@ function NodeCallRow(props: { node: JDNode }) {
             </TableHead>
             <TableBody>
                 {events.map(ev => (
-                    <TableRow key={ev}>
+                    <TableRow key={`event:${ev}`}>
                         <TableCell>{ev}</TableCell>
                         <TableCell>{emitStats[ev] || 0}</TableCell>
                         <TableCell>{newListenerStats[ev] || 0}</TableCell>
@@ -64,8 +65,8 @@ function NodeCallRow(props: { node: JDNode }) {
 
 function NodeCalls() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const nodes: JDNode[] = []
-    visitNodes(bus, n => nodes.push(n))
+    const nodes: SMap<JDNode> = {}
+    visitNodes(bus, n => (nodes[n.id] = n))
 
     return (
         <PaperBox key="slots">
@@ -78,8 +79,8 @@ function NodeCalls() {
                             <TableCell>new listener</TableCell>
                         </TableRow>
                     </TableHead>
-                    {nodes.map(node => (
-                        <NodeCallRow key={`calls` + node.id} node={node} />
+                    {Object.values(nodes).map(node => (
+                        <NodeCallRow key={`calls:${node.id}`} node={node} />
                     ))}
                 </Table>
             </TableContainer>
@@ -114,7 +115,7 @@ function NodeListenerRow(props: { node: JDNode }) {
             </TableHead>
             <TableBody>
                 {eventNames.map((ev, i) => (
-                    <TableRow key={ev}>
+                    <TableRow key={`listener:${ev}`}>
                         <TableCell>{ev}</TableCell>
                         <TableCell>{counts[i]}</TableCell>
                         <TableCell>
@@ -131,15 +132,15 @@ function NodeListenerRow(props: { node: JDNode }) {
 
 function NodeListeners() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const nodes: JDNode[] = []
-    visitNodes(bus, n => nodes.push(n))
+    const nodes: SMap<JDNode> = {}
+    visitNodes(bus, n => (nodes[n.id] = n))
 
     return (
         <PaperBox key="slots">
             <TableContainer>
                 <Table size="small">
-                    {nodes.map(node => (
-                        <NodeListenerRow key={`node` + node.id} node={node} />
+                    {Object.values(nodes).map(node => (
+                        <NodeListenerRow key={`node:${node.id}`} node={node} />
                     ))}
                 </Table>
             </TableContainer>
@@ -154,12 +155,11 @@ export default function WebDiagnostics() {
         setV(v + 1)
     }
 
-    const handleChange = (panel: string) => (
-        event: React.ChangeEvent<unknown>,
-        isExpanded: boolean
-    ) => {
-        setExpanded(isExpanded ? panel : false)
-    }
+    const handleChange =
+        (panel: string) =>
+        (event: React.ChangeEvent<unknown>, isExpanded: boolean) => {
+            setExpanded(isExpanded ? panel : false)
+        }
 
     return (
         <Alert severity="info">
