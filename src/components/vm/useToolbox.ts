@@ -198,6 +198,8 @@ export function loadBlocks(): CachedBlockDefinitions {
                   type: "jacdac_angle",
               }
             : field.unit === "/"
+            ? { kind: "block", type: "jacdac_ratio" }
+            : /^%/.test(field.unit)
             ? { kind: "block", type: "jacdac_percent" }
             : field.type === "u8"
             ? { kind: "block", type: "jacdac_byte" }
@@ -319,15 +321,9 @@ export function loadBlocks(): CachedBlockDefinitions {
             message0: `when %1 ${humanify(register.name)} change by %2`,
             args0: [
                 fieldVariable(service),
-                {
-                    type: "input_value",
-                    name: "threshold",
-                    check: "Number",
-                },
+                ...fieldsToFieldInputs(register),
             ].filter(v => !!v),
-            values: {
-                threshold: fieldToShadow(register.fields[0]),
-            },
+            values: fieldsToValues(register),
             inputsInline: true,
             nextStatement: null,
             colour: HUE,
@@ -509,7 +505,7 @@ export function loadBlocks(): CachedBlockDefinitions {
         {
             kind: "block",
             type: `jacdac_percent`,
-            message0: `%1 %`,
+            message0: `%1`,
             args0: [
                 <NumberInputDefinition>{
                     type: "field_slider",
@@ -521,7 +517,7 @@ export function loadBlocks(): CachedBlockDefinitions {
             ],
             colour: HUE,
             output: "Number",
-        },
+        },     
         {
             kind: "block",
             type: `jacdac_byte`,
