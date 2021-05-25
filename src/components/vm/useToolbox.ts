@@ -164,6 +164,11 @@ function toBlocklyType(field: jdspec.PacketMember) {
         ? "Number"
         : undefined
 }
+function enumInfo(srv: jdspec.ServiceSpec, field: jdspec.PacketMember) {
+    const e = srv.enums?.[field.type]
+    return e
+}
+
 const ignoredServices = [
     SRV_CONTROL,
     SRV_LOGGER,
@@ -339,23 +344,81 @@ export function loadBlocks(): CachedBlockDefinitions {
         registers,
         reg => reg.register.fields.length == 1
     )
-    const registerSimplesGetBlocks = registerSimples
-        .filter(({ register }) => fieldsSupported(register))
-        .map<RegisterBlockDefinition>(({ service, register }) => ({
-            kind: "block",
-            type: `jacdac_get_simple_${service.shortId}_${register.name}`,
-            message0: `%1 ${humanify(register.name)}`,
-            args0: [fieldVariable(service)].filter(v => !!v),
-            inputsInline: true,
-            output: toBlocklyType(register.fields[0]),
-            colour: HUE,
-            tooltip: register.description,
-            helpUrl: "",
+    const [registerSimpleTypes, registerSimpleOthers] = splitFilter(
+        registerSimples,
+        ({ register }) => !!toBlocklyType(register.fields[0])
+    )
+    const registerSimplesGetBlocks =
+        registerSimpleTypes.map<RegisterBlockDefinition>(
+            ({ service, register }) => ({
+                kind: "block",
+                type: `jacdac_get_simple_${service.shortId}_${register.name}`,
+                message0: `%1 ${humanify(register.name)}`,
+                args0: [fieldVariable(service)],
+                inputsInline: true,
+                output: toBlocklyType(register.fields[0]),
+                colour: HUE,
+                tooltip: register.description,
+                helpUrl: "",
+                service,
+                register,
+
+                template: "register_get",
+            })
+        )
+    const registerSimpleEnumTypes = registerSimpleOthers
+        .filter(
+            ({ service, register }) => !!enumInfo(service, register.fields[0])
+        )
+        .map(({ service, register }) => ({
             service,
             register,
-
-            template: "register_get",
+            field: register.fields[0],
+            einfo: enumInfo(service, register.fields[0]),
         }))
+    const registerCompositeEnumTypes = arrayConcatMany(
+        registerComposites.map(({ service, register }) =>
+            register.fields
+                .map(field => ({
+                    service,
+                    register,
+                    field,
+                    einfo: enumInfo(service, field),
+                }))
+                .filter(({ einfo }) => !!einfo)
+        )
+    )
+    const registerEnumGetBlocks = [
+        ...registerSimpleEnumTypes,
+        ...registerCompositeEnumTypes,
+    ].map<RegisterBlockDefinition>(({ service, register, field, einfo }) => ({
+        kind: "block",
+        type: `jacdac_get_enum_${service.shortId}_${register.name}_${field.name}`,
+        message0: `%1 ${humanify(register.name)}${
+            field.name === "_" ? "" : ` ${field.name}`
+        } %2`,
+        args0: [
+            fieldVariable(service),
+            <OptionsInputDefinition>{
+                type: "field_dropdown",
+                name: field.name,
+                options: Object.keys(einfo.members).map(member => [
+                    humanify(member),
+                    member,
+                ]),
+            },
+        ],
+        inputsInline: true,
+        output: "Boolean",
+        colour: HUE,
+        tooltip: register.description,
+        helpUrl: "",
+        service,
+        register,
+
+        template: "register_get",
+    }))
+
     const registerNumericsGetBlocks = registerComposites
         .filter(re => re.register.fields.some(isNumericType))
         .map<RegisterBlockDefinition>(({ service, register }) => ({
@@ -443,6 +506,7 @@ export function loadBlocks(): CachedBlockDefinitions {
         ...eventBlocks,
         ...registerChangeByEventBlocks,
         ...registerSimplesGetBlocks,
+        ...registerEnumGetBlocks,
         ...registerNumericsGetBlocks,
         ...registerSetBlocks,
         ...commandBlocks,
@@ -517,7 +581,7 @@ export function loadBlocks(): CachedBlockDefinitions {
             ],
             colour: HUE,
             output: "Number",
-        },     
+        },
         {
             kind: "block",
             type: `jacdac_byte`,
