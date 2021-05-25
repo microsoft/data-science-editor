@@ -3,12 +3,12 @@ import { Button } from "gatsby-theme-material-ui"
 import {
     ConnectionState,
     JDTransport,
-} from "../../jacdac-ts/src/jdom/transport/transport"
+} from "../../../jacdac-ts/src/jdom/transport/transport"
 import { Badge } from "@material-ui/core"
-import IconButtonWithProgress from "../components/ui/IconButtonWithProgress"
-import TransportIcon from "../components/icons/TransportIcon"
-import useChange from "./useChange"
-import useMediaQueries from "../components/hooks/useMediaQueries"
+import IconButtonWithProgress from "../ui/IconButtonWithProgress"
+import TransportIcon from "../icons/TransportIcon"
+import useChange from "../../jacdac/useChange"
+import useMediaQueries from "../hooks/useMediaQueries"
 
 export default function ConnectButton(props: {
     full?: boolean

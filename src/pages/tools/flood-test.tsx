@@ -15,7 +15,7 @@ import { ControlCmd } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
 import ConnectAlert from "../../components/alert/ConnectAlert"
 import GridHeader from "../../components/ui/GridHeader"
-import ConnectButtons from "../../jacdac/ConnectButtons"
+import ConnectButtons from "../../components/buttons/ConnectButtons"
 
 function FloodCard(props: {
     device: JDDevice

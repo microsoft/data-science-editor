@@ -1,5 +1,5 @@
-import { CHANGE } from "../../jacdac-ts/src/jdom/constants";
 import { useState, useEffect } from "react";
+import { CHANGE } from "../../jacdac-ts/src/jdom/constants";
 import { IEventSource } from "../../jacdac-ts/src/jdom/eventsource";
 import useEffectAsync from "../components/useEffectAsync";
 

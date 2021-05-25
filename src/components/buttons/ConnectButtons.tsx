@@ -1,6 +1,6 @@
 import React, { useContext } from "react"
 import ConnectButton from "./ConnectButton"
-import JacdacContext, { JacdacContextProps } from "./Context"
+import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 
 export default function ConnectButtons(props: {
     full?: boolean

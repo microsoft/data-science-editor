@@ -15,7 +15,7 @@ import ClearIcon from "@material-ui/icons/Clear"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import DevicesIcon from "@material-ui/icons/Devices"
 import ConnectAlert from "../alert/ConnectAlert"
-import ConnectButtons from "../../jacdac/ConnectButtons"
+import ConnectButtons from "../buttons/ConnectButtons"
 import useRoleManager from "../services/useRoleManager"
 import useMediaQueries from "../hooks/useMediaQueries"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"

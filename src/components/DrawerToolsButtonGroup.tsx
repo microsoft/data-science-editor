@@ -7,7 +7,7 @@ import MenuIcon from "@material-ui/icons/Menu"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import AccountTreeIcon from "@material-ui/icons/AccountTree"
 import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
-import ConnectButtons from "../jacdac/ConnectButtons"
+import ConnectButtons from "./buttons/ConnectButtons"
 import PacketsContext from "./PacketsContext"
 import { Badge } from "@material-ui/core"
 
