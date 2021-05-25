@@ -27,10 +27,10 @@ import {
     SMap,
     splitFilter,
     toMap,
-    unique,
     uniqueMap,
 } from "../../../jacdac-ts/src/jdom/utils"
 import useServices from "../hooks/useServices"
+import Flags from "../../../jacdac-ts/src/jdom/flags"
 
 const NEW_PROJET_XML =
     '<xml xmlns="http://www.w3.org/1999/xhtml"><block type="jacdac_configuration"></block></xml>'
@@ -192,7 +192,7 @@ const customMessages = [
         register: JoystickReg.Direction,
         field: "buttons",
         get: "is %1 %2 pressed",
-    }
+    },
 ]
 
 let cachedBlocks: CachedBlockDefinitions
@@ -255,8 +255,17 @@ export function loadBlocks(): CachedBlockDefinitions {
         info.fields.length === 1 &&
         info.fields[0].type === "bool" &&
         info.name === "enabled"
-    const customMessage = (srv: jdspec.ServiceSpec, reg: jdspec.PacketInfo, field: jdspec.PacketMember) =>
-        customMessages.find(m => m.service === srv.classIdentifier && m.register === reg.identifier && m.field === field.name)
+    const customMessage = (
+        srv: jdspec.ServiceSpec,
+        reg: jdspec.PacketInfo,
+        field: jdspec.PacketMember
+    ) =>
+        customMessages.find(
+            m =>
+                m.service === srv.classIdentifier &&
+                m.register === reg.identifier &&
+                m.field === field.name
+        )
 
     const allServices = serviceSpecifications()
         .filter(service => !/^_/.test(service.shortId))
@@ -367,7 +376,9 @@ export function loadBlocks(): CachedBlockDefinitions {
             ({ service, register }) => ({
                 kind: "block",
                 type: `jacdac_get_simple_${service.shortId}_${register.name}`,
-                message0: customMessage(service, register, register.fields[0])?.get || `%1 ${humanify(register.name)}`,
+                message0:
+                    customMessage(service, register, register.fields[0])?.get ||
+                    `%1 ${humanify(register.name)}`,
                 args0: [fieldVariable(service)],
                 inputsInline: true,
                 output: toBlocklyType(register.fields[0]),
@@ -408,9 +419,11 @@ export function loadBlocks(): CachedBlockDefinitions {
     ].map<RegisterBlockDefinition>(({ service, register, field, einfo }) => ({
         kind: "block",
         type: `jacdac_get_enum_${service.shortId}_${register.name}_${field.name}`,
-        message0: customMessage(service, register, field)?.get || `%1 ${humanify(register.name)}${
-            field.name === "_" ? "" : ` ${field.name}`
-        } %2`,
+        message0:
+            customMessage(service, register, field)?.get ||
+            `%1 ${humanify(register.name)}${
+                field.name === "_" ? "" : ` ${field.name}`
+            } %2`,
         args0: [
             fieldVariable(service),
             <OptionsInputDefinition>{
@@ -812,16 +825,21 @@ export default function useToolbox(blockServices?: string[]): {
     const { serviceBlocks, services } = useMemo(() => loadBlocks(), [])
     const liveServices = useServices({ specification: true })
 
-    const toolboxServices = unique([
-        ...blockServices,
-        ...liveServices
-            .filter(srv => ignoredServices.indexOf(srv.serviceClass) < 0)
-            .map(service => service.specification?.shortId),
-    ])
-        .map(serviceShortId =>
-            services.find(service => service.shortId === serviceShortId)
-        )
-        .filter(srv => !!srv)
+    const toolboxServices: jdspec.ServiceSpec[] = uniqueMap(
+        Flags.diagnostics
+            ? services
+            : [
+                  ...blockServices
+                      .map(srvid =>
+                          services.find(service => service.shortId === srvid)
+                      )
+                      .filter(srv => !!srv),
+                  ...liveServices.map(srv => srv.specification),
+              ],
+        srv => srv.shortId,
+        srv => srv
+    )
+        .filter(srv => srv && ignoredServices.indexOf(srv.classIdentifier) < 0)
         .sort((l, r) => l.name.localeCompare(r.name))
 
     const servicesCategories: CategoryDefinition[] = toolboxServices
