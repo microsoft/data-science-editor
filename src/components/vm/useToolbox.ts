@@ -233,6 +233,10 @@ export function loadBlocks(): CachedBlockDefinitions {
         info.fields
             .map((field, i) => `${humanify(field.name)} %${2 + i}`)
             .join(" ")
+    const isEnabledRegister = (info: jdspec.PacketInfo) =>
+        info.fields.length === 1 &&
+        info.fields[0].type === "bool" &&
+        info.fields[0].name === "enabled"
     const allServices = serviceSpecifications()
         .filter(service => !/^_/.test(service.shortId))
         .filter(service => ignoredServices.indexOf(service.classIdentifier) < 0)
@@ -395,9 +399,13 @@ export function loadBlocks(): CachedBlockDefinitions {
         .map<RegisterBlockDefinition>(({ service, register }) => ({
             kind: "block",
             type: `jacdac_${service.shortId}_${register.name}_set`,
-            message0: `set %1 ${register.name} to ${
-                register.fields.length === 1 ? "%2" : fieldsToMessage(register)
-            }`,
+            message0: isEnabledRegister
+                ? `set %1 %2`
+                : `set %1 ${register.name} to ${
+                      register.fields.length === 1
+                          ? "%2"
+                          : fieldsToMessage(register)
+                  }`,
             args0: [fieldVariable(service), ...fieldsToFieldInputs(register)],
             values: fieldsToValues(register),
             inputsInline: true,
@@ -672,6 +680,19 @@ export function loadBlocks(): CachedBlockDefinitions {
         serviceBlocks,
         services,
     }
+
+    console.log({
+        cachedBlocks,
+        registers,
+        events,
+        commands,
+        eventBlocks,
+        registerChangeByEventBlocks,
+        registerSimplesGetBlocks,
+        registerNumericsGetBlocks,
+        registerSetBlocks,
+        commandBlocks,
+    })
 
     return cachedBlocks
 }
