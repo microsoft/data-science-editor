@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from "react"
+import React, { useContext, useEffect, useRef } from "react"
 import { createStyles, makeStyles } from "@material-ui/core"
 import { HidKeyboardModifiers } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import Keyboard from "react-simple-keyboard"
 import "react-simple-keyboard/build/css/index.css"
+import DarkModeContext from "./DarkModeContext"
 
 const selectors = {
     a: 0x04,
@@ -184,9 +185,24 @@ const useStyles = makeStyles(theme =>
                 borderColor: theme.palette.action.active,
             },
         },
-        buttonSelected: {
-            background: `${theme.palette.primary.dark} !important`,
+        darkKeyboard: {
+            backgroundColor: "#333 !important",
+            borderColor: "#777 !important",
             color: "white !important",
+            "& .hg-button": {
+                background: "rgba(0, 0, 0, 0.5) !important",
+                color: "white",
+            },
+            "& .hg-button.buttonSelected": {
+                background: `${theme.palette.primary.dark} !important`,
+                color: "white !important",
+            },
+    },
+        keyboard: {
+            "& .buttonSelected": {
+                background: `${theme.palette.primary.dark} !important`,
+                color: "white !important",
+            },
         },
     })
 )
@@ -222,7 +238,11 @@ export default function KeyboardKeyInput(props: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const keyboardRef = useRef<any>()
     const { selector, modifiers, onChange } = props
+    const { darkMode } = useContext(DarkModeContext)
     const classes = useStyles()
+    const theme = `hg-theme-default hg-layout-default ${
+        darkMode === "dark" ? classes.darkKeyboard : classes.keyboard
+    }`
 
     const layout = {
         default: [
@@ -270,12 +290,9 @@ export default function KeyboardKeyInput(props: {
     // todo: render value to simple-keyboard selectors
     const value = renderKey(selector, modifiers)
     useEffect(() => {
-        keyboardRef.current?.addButtonTheme(value, classes.buttonSelected)
+        keyboardRef.current?.addButtonTheme(value, "buttonSelected")
         return () =>
-            keyboardRef.current?.removeButtonTheme(
-                value,
-                classes.buttonSelected
-            )
+            keyboardRef.current?.removeButtonTheme(value, "buttonSelected")
     }, [value])
 
     return (
@@ -283,6 +300,7 @@ export default function KeyboardKeyInput(props: {
             keyboardRef={r => (keyboardRef.current = r)}
             onKeyPress={handleKeyboardKeyPress}
             layout={layout}
+            theme={theme}
             display={display}
             mergeDisplay={true}
         />
