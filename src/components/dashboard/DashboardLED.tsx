@@ -12,6 +12,8 @@ import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
 import { rgbToHtmlColor } from "../../../jacdac-ts/src/jdom/utils"
 import AppContext from "../AppContext"
+import useChange from "../../jacdac/useChange"
+import { delay } from "../../../jacdac-ts/src/jdom/utils"
 
 // https://academo.org/demos/wavelength-to-colour-relationship/#:~:text=According%20to%20your%20tool%2C%20light%20at%20405nm%20corresponds,%280%2C0%2C255%29%2C%20has%20a%20quite%20longer%20wavelength%20of%20440nm.
 function nmToRGB(wavelength: number): number {
@@ -79,10 +81,12 @@ export default function DashboardLED(props: DashboardServiceProps) {
         service.register(LedReg.WaveLength),
         props
     )
-    const [r, g, b] = useRegisterUnpackedValue<[number, number, number]>(
+    const busColor = useRegisterUnpackedValue<[number, number, number]>(
         service.register(LedReg.Color),
         props
     )
+    const serverColor = useChange(server?.color, _ => _?.values())
+    const [r,g,b] = serverColor || busColor
     const [ledCount] = useRegisterUnpackedValue<[number]>(
         service.register(LedReg.LedCount),
         props
@@ -103,9 +107,10 @@ export default function DashboardLED(props: DashboardServiceProps) {
                     (col >> 16) & 0xff,
                     (col >> 8) & 0xff,
                     col & 0xff,
-                    0,
+                    32,
                 ])
             )
+            await delay(500)
             await service.register(LedReg.Color).sendGetAsync()
         } catch (e) {
             setError(e)
