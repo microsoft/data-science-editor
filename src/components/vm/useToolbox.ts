@@ -139,7 +139,7 @@ export interface CommandBlockDefinition extends ServiceBlockDefinition {
 export interface CustomBlockDefinition extends ServiceBlockDefinition {
     kind: "block"
     template: CustomTemplate
-    command: string
+    expression: string
 }
 
 export const WHILE_CONDITION_BLOCK = "jacdac_while_event"
@@ -343,13 +343,13 @@ function loadBlocks(
             service =>
                 <CustomBlockDefinition>{
                     kind: "block",
-                    type: ``, // filled up later
+                    type: `key`,
                     message0: `send %1 key %2`,
                     args0: [
                         fieldVariable(service),
                         {
                             type: KeyboardKeyField.KEY,
-                            name: "key",
+                            name: "combo",
                         },
                     ],
                     colour: serviceColor(service),
@@ -359,12 +359,13 @@ function loadBlocks(
                     tooltip: `Send a keyboard key combo`,
                     helpUrl: serviceHelp(service),
                     service,
-                    command: "send_key",
+                    expression: `role.key(combo.selectors, combo.modifiers)`,
+                    //expression: `play_tone(frequency, duration) => role.send_pulse(frequency / 10000, duration)`,
                     template: "custom",
                 }
         ),
     ].map(def => {
-        def.type = `jacdac_custom_${def.service.shortId}_${def.command}`
+        def.type = `jacdac_custom_${def.service.shortId}_${def.type}`
         return def
     })
 
