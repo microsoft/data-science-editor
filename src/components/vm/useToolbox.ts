@@ -10,6 +10,7 @@ import {
     SRV_PROTO_TEST,
     SRV_ROLE_MANAGER,
     SRV_SETTINGS,
+    SRV_SEVEN_SEGMENT_DISPLAY,
     SystemEvent,
     SystemReg,
 } from "../../../jacdac-ts/src/jdom/constants"
@@ -139,7 +140,7 @@ export interface CommandBlockDefinition extends ServiceBlockDefinition {
 export interface CustomBlockDefinition extends ServiceBlockDefinition {
     kind: "block"
     template: CustomTemplate
-    expression: string
+    expression?: string
 }
 
 export const WHILE_CONDITION_BLOCK = "jacdac_while_event"
@@ -361,6 +362,37 @@ function loadBlocks(
                     service,
                     expression: `role.key(combo.selectors, combo.modifiers)`,
                     //expression: `play_tone(frequency, duration) => role.send_pulse(frequency / 10000, duration)`,
+                    template: "custom",
+                }
+        ),
+        ...resolveService(SRV_SEVEN_SEGMENT_DISPLAY).map(
+            service =>
+                <CustomBlockDefinition>{
+                    kind: "block",
+                    type: `set_digits`,
+                    message0: `set %1 digits to %2`,
+                    args0: [
+                        fieldVariable(service),
+                        {
+                            type: "input_value",
+                            name: "digits",
+                            check: "Number",
+                        },
+                    ],
+                    values: {
+                        digits: {
+                            kind: "block",
+                            type: "math_number",
+                        },
+                    },
+                    colour: serviceColor(service),
+                    inputsInline: true,
+                    previousStatement: null,
+                    nextStatement: null,
+                    tooltip: `Display a number of the screen`,
+                    helpUrl: serviceHelp(service),
+                    service,
+                    // encode digits
                     template: "custom",
                 }
         ),
