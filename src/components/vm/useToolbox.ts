@@ -743,9 +743,12 @@ function loadBlocks(
                 {
                     type: "field_variable",
                     name: "role",
-                    variable: "client",
-                    variableTypes: allServices.map(service => service.shortId),
-                    defaultType: allServices?.[0].shortId,
+                    variable: "all",
+                    variableTypes: [
+                        "client",
+                        ...allServices.map(service => service.shortId),
+                    ],
+                    defaultType: "client",
                 },
                 {
                     type: "input_value",
@@ -914,6 +917,8 @@ export default function useToolbox(blockServices?: string[]): {
         .filter(srv => srv && ignoredServices.indexOf(srv.classIdentifier) < 0)
         .sort((l, r) => l.name.localeCompare(r.name))
 
+    console.log({ blockServices, toolboxServices })
+
     const servicesCategories: CategoryDefinition[] = toolboxServices
         .map(service => ({
             service,
@@ -944,25 +949,26 @@ export default function useToolbox(blockServices?: string[]): {
         name: "Commands",
         colour: commandColor,
         contents: [
-            {
+            <BlockDefinition>{
                 kind: "block",
                 type: WHILE_CONDITION_BLOCK,
             },
-            {
+            <BlockDefinition>{
                 kind: "block",
                 type: WAIT_BLOCK,
                 values: {
                     time: { kind: "block", type: "jacdac_time_picker" },
                 },
             },
-            {
-                kind: "block",
-                type: SET_STATUS_LIGHT_BLOCK,
-                values: {
-                    color: { kind: "block", type: "jacdac_color" },
+            !!toolboxServices.length &&
+                <BlockDefinition>{
+                    kind: "block",
+                    type: SET_STATUS_LIGHT_BLOCK,
+                    values: {
+                        color: { kind: "block", type: "jacdac_color" },
+                    },
                 },
-            },
-        ],
+        ].filter(b => !!b),
     }
 
     const logicCategory: CategoryDefinition = {
