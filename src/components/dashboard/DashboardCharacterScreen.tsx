@@ -5,7 +5,6 @@ import {
 } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
-import useWidgetSize from "../widgets/useWidgetSize"
 import SvgWidget from "../widgets/SvgWidget"
 import { createStyles, makeStyles } from "@material-ui/core"
 import useWidgetTheme from "../widgets/useWidgetTheme"
@@ -40,9 +39,8 @@ export default function DashboardCharacterScreen(props: DashboardServiceProps) {
         service.register(CharacterScreenReg.TextDirection),
         props
     )
-    const { textPrimary, background, controlBackground } = useWidgetTheme(
-        "primary"
-    )
+    const { textPrimary, background, controlBackground } =
+        useWidgetTheme("primary")
 
     if (rows === undefined || columns === undefined) return <LoadingProgress /> // size unknown
 
