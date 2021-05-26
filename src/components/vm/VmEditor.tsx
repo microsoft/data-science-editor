@@ -35,7 +35,8 @@ export default function VmEditor(props: {
     const { darkMode } = useContext(DarkModeContext)
     const { setError } = useContext(AppContext)
     const [services, setServices] = useState<string[]>([])
-    const { toolboxConfiguration, newProjectXml, serviceBlocks } = useToolbox(services)
+    const { toolboxConfiguration, newProjectXml, serviceBlocks } =
+        useToolbox(services)
     const theme = darkMode === "dark" ? DarkTheme : Theme
     const gridColor = darkMode === "dark" ? "#555" : "#ccc"
 
@@ -77,7 +78,7 @@ export default function VmEditor(props: {
         },
         initialXml: initialXml || newProjectXml,
         onImportXmlError: () => setError("Error loading blocks..."),
-    })
+    }) as { workspace: Blockly.WorkspaceSvg; xml: string }
 
     useEffect(() => {
         if (!workspace) return
@@ -103,7 +104,10 @@ export default function VmEditor(props: {
             onJSONChange?.(json)
             if (onIT4ProgramChange) {
                 try {
-                    const program = workspaceJSONToIT4Program(serviceBlocks, json)
+                    const program = workspaceJSONToIT4Program(
+                        serviceBlocks,
+                        json
+                    )
                     onIT4ProgramChange(program)
                 } catch (e) {
                     console.error(e)

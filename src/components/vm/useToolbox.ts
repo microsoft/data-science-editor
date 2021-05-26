@@ -738,7 +738,7 @@ function loadBlocks(
         {
             kind: "block",
             type: SET_STATUS_LIGHT_BLOCK,
-            message0: "set %1 status %2",
+            message0: "set %1 status to %2",
             args0: [
                 {
                     type: "field_variable",
@@ -916,8 +916,6 @@ export default function useToolbox(blockServices?: string[]): {
     )
         .filter(srv => srv && ignoredServices.indexOf(srv.classIdentifier) < 0)
         .sort((l, r) => l.name.localeCompare(r.name))
-
-    console.log({ blockServices, toolboxServices })
 
     const servicesCategories: CategoryDefinition[] = toolboxServices
         .map(service => ({
