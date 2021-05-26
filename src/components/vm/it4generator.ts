@@ -60,7 +60,7 @@ export default function workspaceJSONToIT4Program(
         if (!block) return undefined
         const { type, value, inputs } = block
 
-        console.log(`block`, type, value, inputs)
+        console.debug(`block`, type, value, inputs)
 
         if (value !== undefined)
             // literal
