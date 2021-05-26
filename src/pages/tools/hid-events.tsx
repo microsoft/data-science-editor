@@ -26,7 +26,7 @@ import {
 } from "../../../jacdac-ts/src/jdom/constants"
 import { JDEvent } from "../../../jacdac-ts/src/jdom/event"
 import KeyboardKeyInput, {
-    renderKey,
+    renderKeyboardKey,
 } from "../../components/ui/KeyboardKeyInput"
 import IconButtonWithTooltip from "../../components/ui/IconButtonWithTooltip"
 import DeleteIcon from "@material-ui/icons/Delete"
@@ -278,9 +278,10 @@ export default function HIDEvents() {
                                                 </TableCell>
                                                 <TableCell>
                                                     <code>
-                                                        {renderKey(
+                                                        {renderKeyboardKey(
                                                             selector,
-                                                            modifiers
+                                                            modifiers,
+                                                            true
                                                         )}
                                                     </code>
                                                 </TableCell>
