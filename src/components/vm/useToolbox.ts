@@ -33,7 +33,7 @@ import useServices from "../hooks/useServices"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 
 const NEW_PROJET_XML =
-    '<xml xmlns="http://www.w3.org/1999/xhtml"><block type="jacdac_configuration"></block></xml>'
+    '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>'
 
 export interface InputDefinition {
     type: string
