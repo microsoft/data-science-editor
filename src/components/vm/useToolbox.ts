@@ -607,8 +607,8 @@ function loadBlocks(
         ...registerEnumGetBlocks,
         ...registerNumericsGetBlocks,
         ...registerSetBlocks,
-        ...commandBlocks,
         ...customBlockDefinitions,
+        ...commandBlocks,
     ]
 
     const shadowBlocks: BlockDefinition[] = [
