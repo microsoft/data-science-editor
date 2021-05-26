@@ -70,17 +70,20 @@ export class ReactField<T> extends Blockly.Field {
         this.div_ = Blockly.DropDownDiv.getContentDiv()
         ReactDOM.render(this.render(), this.div_)
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const border = (this.sourceBlock_ as any).getColourBorder()
-        const borderColour = border.colourBorder || border.colourLight
-        Blockly.DropDownDiv.setColour(
-            this.sourceBlock_.getColour(),
-            borderColour
-        )
-        Blockly.DropDownDiv.showPositionedByField(
-            this,
-            this.dropdownDispose_.bind(this)
-        )
+        // the div_ size has not been computed yet, so let the browse handle this
+        setTimeout(() => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const border = (this.sourceBlock_ as any).getColourBorder()
+            const borderColour = border.colourBorder || border.colourLight
+            Blockly.DropDownDiv.setColour(
+                this.sourceBlock_.getColour(),
+                borderColour
+            )
+            Blockly.DropDownDiv.showPositionedByField(
+                this,
+                this.dropdownDispose_.bind(this)
+            )
+        }, 1)
     }
 
     hide() {
