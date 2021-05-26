@@ -33,6 +33,7 @@ import {
 import useServices from "../hooks/useServices"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import { Theme, useTheme } from "@material-ui/core"
+import { withPrefix } from "gatsby-link"
 
 const NEW_PROJET_XML = '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>'
 
@@ -215,6 +216,8 @@ function loadBlocks(
     serviceColor: (srv: jdspec.ServiceSpec) => string,
     commandColor: string
 ): CachedBlockDefinitions {
+    const serviceHelp = (service: jdspec.ServiceSpec) =>
+        withPrefix(`/services/${service.shortId}`)
     const fieldsSupported = (pkt: jdspec.PacketInfo) =>
         pkt.fields.every(toBlocklyType)
     const fieldName = (reg: jdspec.PacketInfo, field: jdspec.PacketMember) =>
@@ -323,7 +326,7 @@ function loadBlocks(
     const eventBlocks = events.map<EventBlockDefinition>(
         ({ service, events }) => ({
             kind: "block",
-            type: `jacdac__events_${service.shortId}`,
+            type: `jacdac_events_${service.shortId}`,
             message0: `when %1 %2`,
             args0: [
                 fieldVariable(service),
@@ -339,8 +342,8 @@ function loadBlocks(
             colour: serviceColor(service),
             inputsInline: true,
             nextStatement: null,
-            tooltip: "",
-            helpUrl: "",
+            tooltip: `Events for the ${service.name} service`,
+            helpUrl: serviceHelp(service),
             service,
             events,
             template: "event",
@@ -375,7 +378,7 @@ function loadBlocks(
             nextStatement: null,
             colour: serviceColor(service),
             tooltip: `Event raised when ${register.name} changes`,
-            helpUrl: "",
+            helpUrl: serviceHelp(service),
             service,
             register,
 
@@ -403,7 +406,7 @@ function loadBlocks(
                 output: toBlocklyType(register.fields[0]),
                 colour: serviceColor(service),
                 tooltip: register.description,
-                helpUrl: "",
+                helpUrl: serviceHelp(service),
                 service,
                 register,
                 field: register.fields[0],
@@ -459,7 +462,7 @@ function loadBlocks(
         output: "Boolean",
         colour: serviceColor(service),
         tooltip: register.description,
-        helpUrl: "",
+        helpUrl: serviceHelp(service),
         service,
         register,
         field,
@@ -494,7 +497,7 @@ function loadBlocks(
             output: "Number",
             colour: serviceColor(service),
             tooltip: register.description,
-            helpUrl: "",
+            helpUrl: serviceHelp(service),
             service,
             register,
 
@@ -518,8 +521,8 @@ function loadBlocks(
             values: fieldsToValues(register),
             inputsInline: true,
             colour: serviceColor(service),
-            tooltip: "",
-            helpUrl: "",
+            tooltip: register.description,
+            helpUrl: serviceHelp(service),
             service,
             register,
             previousStatement: null,
@@ -541,8 +544,8 @@ function loadBlocks(
             values: fieldsToValues(command),
             inputsInline: true,
             colour: serviceColor(service),
-            tooltip: "",
-            helpUrl: "",
+            tooltip: command.description,
+            helpUrl: serviceHelp(service),
             service,
             command,
             previousStatement: null,
