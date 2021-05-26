@@ -55,6 +55,10 @@ export interface NumberInputDefinition extends InputDefinition {
     precision?: number
 }
 
+export interface ColorInputDefnition extends InputDefinition {
+    color?: string
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface BlockReference {
     kind: "block"
@@ -125,6 +129,7 @@ export interface CommandBlockDefinition extends ServiceBlockDefinition {
 export const WHILE_CONDITION_BLOCK = "jacdac_while_event"
 export const WHILE_CONDITION_BLOCK_CONDITION = "condition"
 export const WAIT_BLOCK = "jacdac_wait"
+export const SET_STATUS_LIGHT_BLOCK = "jacdac_set_status_light"
 
 export interface CategoryDefinition {
     kind: "category"
@@ -659,6 +664,39 @@ function loadBlocks(
             style: "math_blocks",
             output: "Number",
         },
+        {
+            kind: "block",
+            type: `jacdac_color`,
+            message0: `%1`,
+            args0: [
+                <ColorInputDefnition>{
+                    type: "field_colour",
+                    name: "col",
+                    colour: "#ff0000",
+                    colourOptions: [
+                        "#ff0000",
+                        "#ff8000",
+                        "#ffff00",
+                        "#ff9da5",
+                        "#00ff00",
+                        "#b09eff",
+                        "#00ffff",
+                        "#007fff",
+                        "#65471f",
+                        "#0000ff",
+                        "#7f00ff",
+                        "#ff0080",
+                        "#ff00ff",
+                        "#ffffff",
+                        "#999999",
+                        "#000000",
+                    ],
+                    columns: 4,
+                },
+            ],
+            style: "math_blocks",
+            output: "Color",
+        },
     ]
 
     const runtimeBlocks: BlockDefinition[] = [
@@ -686,7 +724,7 @@ function loadBlocks(
             args0: [
                 {
                     type: "input_value",
-                    name: "TIME",
+                    name: "time",
                     check: "Number",
                 },
             ],
@@ -694,7 +732,32 @@ function loadBlocks(
             previousStatement: "Statement",
             nextStatement: "Statement",
             colour: commandColor,
-            tooltip: "",
+            tooltip: "Wait the desired time",
+            helpUrl: "",
+        },
+        {
+            kind: "block",
+            type: SET_STATUS_LIGHT_BLOCK,
+            message0: "set %1 status %2",
+            args0: [
+                {
+                    type: "field_variable",
+                    name: "role",
+                    variable: "client",
+                    variableTypes: allServices.map(service => service.shortId),
+                    defaultType: allServices?.[0].shortId,
+                },
+                {
+                    type: "input_value",
+                    name: "color",
+                    check: "Color",
+                },
+            ],
+            inputsInline: true,
+            previousStatement: "Statement",
+            nextStatement: "Statement",
+            colour: commandColor,
+            tooltip: "Sets the color on the status light",
             helpUrl: "",
         },
     ]
@@ -889,7 +952,14 @@ export default function useToolbox(blockServices?: string[]): {
                 kind: "block",
                 type: WAIT_BLOCK,
                 values: {
-                    TIME: { kind: "block", type: "jacdac_time_picker" },
+                    time: { kind: "block", type: "jacdac_time_picker" },
+                },
+            },
+            {
+                kind: "block",
+                type: SET_STATUS_LIGHT_BLOCK,
+                values: {
+                    color: { kind: "block", type: "jacdac_color" },
                 },
             },
         ],
