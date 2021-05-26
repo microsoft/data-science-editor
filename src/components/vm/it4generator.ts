@@ -14,7 +14,7 @@ import {
     WAIT_BLOCK,
     WHILE_CONDITION_BLOCK,
 } from "./useToolbox"
-import { assert, unique } from "../../../jacdac-ts/src/jdom/utils"
+import { assert } from "../../../jacdac-ts/src/jdom/utils"
 
 const ops = {
     AND: "&&",
@@ -31,6 +31,22 @@ const ops = {
     DIV: "/",
 }
 
+function toIdentifier(id: string) {
+    return {
+        type: "Identifier",
+        name: id
+    } as jsep.Identifier
+}
+
+function toMemberExpression(root: string, field:string | jsep.Expression) {
+    return {
+        type: "MemberExpression",
+        object: toIdentifier(root),
+        property: typeof(field) === "string" ? toIdentifier(field) : field,
+        computed: false,
+    } as jsep.MemberExpression
+}
+
 export default function workspaceJSONToIT4Program(
     workspace: WorkspaceJSON
 ): IT4Program {
@@ -44,6 +60,9 @@ export default function workspaceJSONToIT4Program(
     const blockToExpression = (block: BlockJSON) => {
         if (!block) return undefined
         const { type, value, inputs } = block
+
+        console.log(`block`, type, value, inputs)
+
         if (value !== undefined)
             // literal
             return <jsep.Literal>{
@@ -52,7 +71,6 @@ export default function workspaceJSONToIT4Program(
                 raw: value + "",
             }
 
-        console.log(`block`, block)
         switch (type) {
             case "jacdac_math_single": {
                 const argument = blockToExpression(inputs[0].child)
@@ -112,10 +130,13 @@ export default function workspaceJSONToIT4Program(
                     const { template } = def
                     switch (template) {
                         case "register_get": {
-                            const { service, register } =
-                                def as RegisterBlockDefinition
-                            console.log(`register_get`, { service, register })
-                            break
+                            const { register } = def as RegisterBlockDefinition
+                            const { value: role } = inputs[0].fields["role"]
+                            const field = inputs[0].fields["field"]
+                            return toMemberExpression(
+                                role as string, 
+                                field ? toMemberExpression(register.name, field.value as string) : register.name
+                            )
                         }
                     }
                     break
@@ -134,7 +155,7 @@ export default function workspaceJSONToIT4Program(
                 command = {
                     type: "CallExpression",
                     arguments: [time],
-                    callee: undefined, // TODO
+                    callee:  toIdentifier("wait")
                 }
                 break
             }
@@ -145,15 +166,24 @@ export default function workspaceJSONToIT4Program(
                     const { template } = def
                     switch (template) {
                         case "register_set": {
-                            const { service, register } =
-                                def as RegisterBlockDefinition
-                            // TODO
+                            const { register } = def as RegisterBlockDefinition
+                            const val = blockToExpression(inputs[0].child)
+                            const { value: role } = inputs[0].fields.role
+                            command = {
+                                type: "CallExpression",
+                                arguments: [toMemberExpression(role as string, register.name),val],
+                                callee: toIdentifier("writeRegister")
+                            }
                             break
                         }
                         case "command": {
-                            const { service, command } =
-                                def as CommandBlockDefinition
-                            // TODO
+                            const { command: serviceCommand } = def as CommandBlockDefinition
+                            const { value: role } = inputs[0].fields.role
+                            command = {
+                                type: "CallExpression",
+                                arguments: inputs.map(a =>  blockToExpression(a.child)), 
+                                callee: toMemberExpression(role as string, serviceCommand.name)
+                            }
                             break
                         }
                     }
@@ -166,27 +196,6 @@ export default function workspaceJSONToIT4Program(
         }
     }
 
-    // visit all the nodes in the blockly tree
-    const registers: string[] = []
-    const events: string[] = []
-
-    // collect registers and events
-    visitWorkspace(workspace, {
-        visitBlock: b => {
-            const def =
-                /^jacdac_/.test(b.type) &&
-                serviceBlocks.find(d => d.type === b.type)
-            if (!def) return
-            const { service } = def
-            const { register } = def as RegisterBlockDefinition
-            const { events: defEvents } = def as EventBlockDefinition
-            if (register) registers.push(`${service.shortId}.${register.name}`)
-            if (defEvents)
-                for (const event of defEvents)
-                    events.push(`${service.shortId}.${event.name}`)
-        },
-    })
-
     const handlers: IT4Handler[] = workspace.blocks.map(top => {
         const { type, inputs } = top
         const commands: IT4GuardedCommand[] = []
@@ -197,7 +206,7 @@ export default function workspaceJSONToIT4Program(
                 command: {
                     type: "CallExpression",
                     arguments: [blockToExpression(condition)],
-                    callee: undefined, // TODO
+                    callee: toIdentifier("awaitCondition")
                 },
             })
         } else {
@@ -206,7 +215,15 @@ export default function workspaceJSONToIT4Program(
             const { template } = def
             switch (template) {
                 case "event": {
-                    const { service, events } = def as EventBlockDefinition
+                    const { value: role } = inputs[0].fields["role"]
+                    const { value: eventName } = inputs[0].fields["event"]
+                    commands.push({
+                        command: {
+                            type: "CallExpression",
+                            arguments: [ toMemberExpression(role.toString(), eventName.toString()) ],
+                            callee: toIdentifier("awaitEvent")
+                        },
+                    })
                     // TODO
                     break
                 }
@@ -222,16 +239,12 @@ export default function workspaceJSONToIT4Program(
         top.children?.forEach(child => commands.push(blockToCommand(child)))
 
         return {
-            description: type,
             commands,
         }
     })
 
     return {
-        description: "not required?",
         roles,
-        registers: unique(registers),
-        events: unique(events),
         handlers,
     }
 }
