@@ -821,6 +821,7 @@ function patchCategoryJSONtoXML(cat: CategoryDefinition): CategoryDefinition {
 }
 
 export default function useToolbox(blockServices?: string[]): {
+    serviceBlocks: BlockDefinition[]
     toolboxConfiguration: ToolboxConfiguration
     newProjectXml: string
 } {
@@ -985,6 +986,7 @@ export default function useToolbox(blockServices?: string[]): {
     }
 
     return {
+        serviceBlocks,
         toolboxConfiguration,
         newProjectXml: NEW_PROJET_XML,
     }

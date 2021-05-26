@@ -6,6 +6,7 @@ import {
     IT4Role,
 } from "../../../jacdac-ts/src/vm/ir"
 import {
+    BlockDefinition,
     BUILTIN_TYPES,
     CommandBlockDefinition,
     RegisterBlockDefinition,
@@ -46,11 +47,11 @@ function toMemberExpression(root: string, field: string | jsep.Expression) {
 }
 
 export default function workspaceJSONToIT4Program(
+    serviceBlocks: BlockDefinition[],
     workspace: WorkspaceJSON
 ): IT4Program {
     console.debug(`compile it4`, { workspace })
 
-    const { serviceBlocks } = loadBlocks()
     const roles: IT4Role[] = workspace.variables
         .filter(v => BUILTIN_TYPES.indexOf(v.type) < 0)
         .map(v => ({ role: v.name, serviceShortName: v.type }))
