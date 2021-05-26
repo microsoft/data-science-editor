@@ -310,16 +310,20 @@ function loadBlocks(
         .filter(service => ignoredServices.indexOf(service.classIdentifier) < 0)
     const resolveService = (cls: number): jdspec.ServiceSpec[] =>
         allServices.filter(srv => srv.classIdentifier === cls)
-    const registers = allServices
-        .map(service => ({
-            service,
-            register: service.packets.find(
-                pkt =>
-                    isRegister(pkt) &&
-                    includedRegisters.indexOf(pkt.identifier) > -1
-            ),
-        }))
-        .filter(kv => !!kv.register)
+    const registers = arrayConcatMany(
+        allServices.map(service =>
+            service.packets
+                .filter(
+                    pkt =>
+                        isRegister(pkt) &&
+                        includedRegisters.indexOf(pkt.identifier) > -1
+                )
+                .map(register => ({
+                    service,
+                    register,
+                }))
+        )
+    )
     const events = allServices
         .map(service => ({
             service,
@@ -933,6 +937,7 @@ function loadBlocks(
         block => block.service
     )
 
+    console.debug("vmblocks", { blocks, serviceBlocks, services })
     return {
         blocks,
         serviceBlocks,
