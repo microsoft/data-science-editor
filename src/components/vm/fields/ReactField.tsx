@@ -63,7 +63,6 @@ export class ReactField<T> extends Blockly.Field {
 
     fromXml(fieldElement: Element) {
         try {
-            console.log(fieldElement)
             const v = JSON.parse(fieldElement.textContent)
             this.value = v
         } catch (e) {
