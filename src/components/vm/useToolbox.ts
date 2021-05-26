@@ -658,8 +658,8 @@ function loadBlocks(
                     type: "field_dropdown",
                     name: "value",
                     options: [
-                        ["on", "on"],
-                        ["off", "off"],
+                        ["enabled", "on"],
+                        ["disabled", "off"],
                     ],
                 },
             ],
