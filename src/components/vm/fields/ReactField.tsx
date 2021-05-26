@@ -1,10 +1,16 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import Blockly from "blockly/core"
+import Blockly from "blockly"
 import JacdacProvider from "../../../jacdac/Provider"
 import { ReactNode } from "react"
 import { IdProvider } from "react-use-id-hook"
 import DarkModeProvider from "../../ui/DarkModeProvider"
+
+declare module "blockly" {
+    interface Block {
+        getColourTertiary(): string
+    }
+}
 
 /**
  * A base class for react-based field
@@ -72,13 +78,8 @@ export class ReactField<T> extends Blockly.Field {
 
         // the div_ size has not been computed yet, so let the browse handle this
         setTimeout(() => {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const border = (this.sourceBlock_ as any).getColourBorder()
-            const borderColour = border.colourBorder || border.colourLight
-            Blockly.DropDownDiv.setColour(
-                this.sourceBlock_.getColour(),
-                borderColour
-            )
+            const border = this.sourceBlock_.getColourTertiary()
+            Blockly.DropDownDiv.setColour(this.sourceBlock_.getColour(), border)
             Blockly.DropDownDiv.showPositionedByField(
                 this,
                 this.dropdownDispose_.bind(this)
