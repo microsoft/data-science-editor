@@ -20,6 +20,7 @@ import {
     isCommand,
     isEvent,
     isRegister,
+    isSensor,
     serviceSpecifications,
 } from "../../../jacdac-ts/src/jdom/spec"
 import {
@@ -31,9 +32,9 @@ import {
 } from "../../../jacdac-ts/src/jdom/utils"
 import useServices from "../hooks/useServices"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
+import { Theme, useTheme } from "@material-ui/core"
 
-const NEW_PROJET_XML =
-    '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>'
+const NEW_PROJET_XML = '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>'
 
 export interface InputDefinition {
     type: string
@@ -80,7 +81,7 @@ export type BlockTemplate = EventTemplate | RegisterTemplate | CommandTemplate
 export interface BlockDefinition extends BlockReference {
     message0?: string
     args0?: InputDefinition[]
-    colour?: number
+    colour?: number | string
     inputsInline?: boolean
     previousStatement?: string | string[]
     nextStatement?: string | string[]
@@ -124,6 +125,7 @@ export interface CommandBlockDefinition extends ServiceBlockDefinition {
 export const WHILE_CONDITION_BLOCK = "jacdac_while_event"
 export const WHILE_CONDITION_BLOCK_CONDITION = "condition"
 export const WAIT_BLOCK = "jacdac_wait"
+export const COMMANDS_COLOUR = "%{BKY_LISTS_HUE}"
 
 export interface CategoryDefinition {
     kind: "category"
@@ -196,10 +198,17 @@ const customMessages = [
     },
 ]
 
-let cachedBlocks: CachedBlockDefinitions
-export function loadBlocks(): CachedBlockDefinitions {
-    if (cachedBlocks) return cachedBlocks
+function createBlockTheme(theme: Theme) {
+    const sensorColor = theme.palette.primary.dark
+    const otherColor = theme.palette.secondary.dark
+    const serviceColor = (srv: jdspec.ServiceSpec) =>
+        isSensor(srv) ? sensorColor : otherColor
+    return { serviceColor }
+}
 
+function loadBlocks(
+    serviceColor: (srv: jdspec.ServiceSpec) => string
+): CachedBlockDefinitions {
     const fieldsSupported = (pkt: jdspec.PacketInfo) =>
         pkt.fields.every(toBlocklyType)
     const fieldName = (reg: jdspec.PacketInfo, field: jdspec.PacketMember) =>
@@ -269,7 +278,10 @@ export function loadBlocks(): CachedBlockDefinitions {
         )
 
     const allServices = serviceSpecifications()
-        .filter(service => !/^_/.test(service.shortId) && service.status !== "deprecated")
+        .filter(
+            service =>
+                !/^_/.test(service.shortId) && service.status !== "deprecated"
+        )
         .filter(service => ignoredServices.indexOf(service.classIdentifier) < 0)
     const registers = allServices
         .map(service => ({
@@ -318,7 +330,7 @@ export function loadBlocks(): CachedBlockDefinitions {
                     ]),
                 },
             ],
-            colour: HUE,
+            colour: serviceColor(service),
             inputsInline: true,
             nextStatement: null,
             tooltip: "",
@@ -355,7 +367,7 @@ export function loadBlocks(): CachedBlockDefinitions {
             values: fieldsToValues(register),
             inputsInline: true,
             nextStatement: null,
-            colour: HUE,
+            colour: serviceColor(service),
             tooltip: `Event raised when ${register.name} changes`,
             helpUrl: "",
             service,
@@ -383,7 +395,7 @@ export function loadBlocks(): CachedBlockDefinitions {
                 args0: [fieldVariable(service)],
                 inputsInline: true,
                 output: toBlocklyType(register.fields[0]),
-                colour: HUE,
+                colour: serviceColor(service),
                 tooltip: register.description,
                 helpUrl: "",
                 service,
@@ -439,7 +451,7 @@ export function loadBlocks(): CachedBlockDefinitions {
         ],
         inputsInline: true,
         output: "Boolean",
-        colour: HUE,
+        colour: serviceColor(service),
         tooltip: register.description,
         helpUrl: "",
         service,
@@ -474,7 +486,7 @@ export function loadBlocks(): CachedBlockDefinitions {
             ].filter(v => !!v),
             inputsInline: true,
             output: "Number",
-            colour: HUE,
+            colour: serviceColor(service),
             tooltip: register.description,
             helpUrl: "",
             service,
@@ -499,7 +511,7 @@ export function loadBlocks(): CachedBlockDefinitions {
             args0: [fieldVariable(service), ...fieldsToFieldInputs(register)],
             values: fieldsToValues(register),
             inputsInline: true,
-            colour: HUE,
+            colour: serviceColor(service),
             tooltip: "",
             helpUrl: "",
             service,
@@ -522,7 +534,7 @@ export function loadBlocks(): CachedBlockDefinitions {
             args0: [fieldVariable(service), ...fieldsToFieldInputs(command)],
             values: fieldsToValues(command),
             inputsInline: true,
-            colour: HUE,
+            colour: serviceColor(service),
             tooltip: "",
             helpUrl: "",
             service,
@@ -559,7 +571,7 @@ export function loadBlocks(): CachedBlockDefinitions {
                     ],
                 },
             ],
-            colour: HUE,
+            style: "logic_blocks",
             output: "Boolean",
         },
         {
@@ -579,7 +591,7 @@ export function loadBlocks(): CachedBlockDefinitions {
                     ],
                 },
             ],
-            colour: HUE,
+            style: "math_blocks",
             output: "Number",
         },
         {
@@ -595,7 +607,7 @@ export function loadBlocks(): CachedBlockDefinitions {
                     precision: 10,
                 },
             ],
-            colour: HUE,
+            style: "math_blocks",
             output: "Number",
         },
         {
@@ -611,7 +623,7 @@ export function loadBlocks(): CachedBlockDefinitions {
                     precision: 1,
                 },
             ],
-            colour: HUE,
+            style: "math_blocks",
             output: "Number",
         },
         {
@@ -643,7 +655,7 @@ export function loadBlocks(): CachedBlockDefinitions {
                     precision: 0.1,
                 },
             ],
-            colour: HUE,
+            style: "math_blocks",
             output: "Number",
         },
     ]
@@ -660,7 +672,7 @@ export function loadBlocks(): CachedBlockDefinitions {
                     check: "Boolean",
                 },
             ],
-            style: "logic_blocks",
+            colour: COMMANDS_COLOUR,
             inputsInline: true,
             nextStatement: "Statement",
             tooltip: "",
@@ -680,7 +692,7 @@ export function loadBlocks(): CachedBlockDefinitions {
             inputsInline: true,
             previousStatement: "Statement",
             nextStatement: "Statement",
-            colour: 230,
+            colour: COMMANDS_COLOUR,
             tooltip: "",
             helpUrl: "",
         },
@@ -768,26 +780,11 @@ export function loadBlocks(): CachedBlockDefinitions {
         block => block.service
     )
 
-    cachedBlocks = {
+    return {
         blocks,
         serviceBlocks,
         services,
     }
-
-    console.log({
-        cachedBlocks,
-        registers,
-        events,
-        commands,
-        eventBlocks,
-        registerChangeByEventBlocks,
-        registerSimplesGetBlocks,
-        registerNumericsGetBlocks,
-        registerSetBlocks,
-        commandBlocks,
-    })
-
-    return cachedBlocks
 }
 
 export const BUILTIN_TYPES = ["", "Boolean", "Number", "String"]
@@ -827,7 +824,12 @@ export default function useToolbox(blockServices?: string[]): {
     toolboxConfiguration: ToolboxConfiguration
     newProjectXml: string
 } {
-    const { serviceBlocks, services } = useMemo(() => loadBlocks(), [])
+    const theme = useTheme()
+    const { serviceColor } = createBlockTheme(theme)
+    const { serviceBlocks, services } = useMemo(
+        () => loadBlocks(serviceColor),
+        [theme]
+    )
     const liveServices = useServices({ specification: true })
 
     const toolboxServices: jdspec.ServiceSpec[] = uniqueMap(
@@ -857,7 +859,7 @@ export default function useToolbox(blockServices?: string[]): {
         .map<CategoryDefinition>(({ service, serviceBlocks }) => ({
             kind: "category",
             name: service.name,
-            colour: "#5CA699",
+            colour: serviceColor(service),
             contents: serviceBlocks.map(block => ({
                 kind: "block",
                 type: block.type,
@@ -875,7 +877,7 @@ export default function useToolbox(blockServices?: string[]): {
     const commandsCategory: CategoryDefinition = {
         kind: "category",
         name: "Commands",
-        colour: "%{BKY_LISTS_HUE}",
+        colour: COMMANDS_COLOUR,
         contents: [
             {
                 kind: "block",
@@ -883,7 +885,7 @@ export default function useToolbox(blockServices?: string[]): {
             },
             {
                 kind: "block",
-                type: "jacdac_wait",
+                type: WAIT_BLOCK,
                 values: {
                     TIME: { kind: "block", type: "jacdac_time_picker" },
                 },

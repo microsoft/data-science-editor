@@ -1,4 +1,4 @@
-import { BlockJSON, visitWorkspace, WorkspaceJSON } from "./jsongenerator"
+import { BlockJSON, WorkspaceJSON } from "./jsongenerator"
 import {
     IT4GuardedCommand,
     IT4Handler,
@@ -8,8 +8,6 @@ import {
 import {
     BUILTIN_TYPES,
     CommandBlockDefinition,
-    EventBlockDefinition,
-    loadBlocks,
     RegisterBlockDefinition,
     WAIT_BLOCK,
     WHILE_CONDITION_BLOCK,
@@ -34,15 +32,15 @@ const ops = {
 function toIdentifier(id: string) {
     return {
         type: "Identifier",
-        name: id
+        name: id,
     } as jsep.Identifier
 }
 
-function toMemberExpression(root: string, field:string | jsep.Expression) {
+function toMemberExpression(root: string, field: string | jsep.Expression) {
     return {
         type: "MemberExpression",
         object: toIdentifier(root),
-        property: typeof(field) === "string" ? toIdentifier(field) : field,
+        property: typeof field === "string" ? toIdentifier(field) : field,
         computed: false,
     } as jsep.MemberExpression
 }
@@ -134,8 +132,13 @@ export default function workspaceJSONToIT4Program(
                             const { value: role } = inputs[0].fields["role"]
                             const field = inputs[0].fields["field"]
                             return toMemberExpression(
-                                role as string, 
-                                field ? toMemberExpression(register.name, field.value as string) : register.name
+                                role as string,
+                                field
+                                    ? toMemberExpression(
+                                          register.name,
+                                          field.value as string
+                                      )
+                                    : register.name
                             )
                         }
                     }
@@ -155,7 +158,7 @@ export default function workspaceJSONToIT4Program(
                 command = {
                     type: "CallExpression",
                     arguments: [time],
-                    callee:  toIdentifier("wait")
+                    callee: toIdentifier("wait"),
                 }
                 break
             }
@@ -171,18 +174,30 @@ export default function workspaceJSONToIT4Program(
                             const { value: role } = inputs[0].fields.role
                             command = {
                                 type: "CallExpression",
-                                arguments: [toMemberExpression(role as string, register.name),val],
-                                callee: toIdentifier("writeRegister")
+                                arguments: [
+                                    toMemberExpression(
+                                        role as string,
+                                        register.name
+                                    ),
+                                    val,
+                                ],
+                                callee: toIdentifier("writeRegister"),
                             }
                             break
                         }
                         case "command": {
-                            const { command: serviceCommand } = def as CommandBlockDefinition
+                            const { command: serviceCommand } =
+                                def as CommandBlockDefinition
                             const { value: role } = inputs[0].fields.role
                             command = {
                                 type: "CallExpression",
-                                arguments: inputs.map(a =>  blockToExpression(a.child)), 
-                                callee: toMemberExpression(role as string, serviceCommand.name)
+                                arguments: inputs.map(a =>
+                                    blockToExpression(a.child)
+                                ),
+                                callee: toMemberExpression(
+                                    role as string,
+                                    serviceCommand.name
+                                ),
                             }
                             break
                         }
@@ -206,7 +221,7 @@ export default function workspaceJSONToIT4Program(
                 command: {
                     type: "CallExpression",
                     arguments: [blockToExpression(condition)],
-                    callee: toIdentifier("awaitCondition")
+                    callee: toIdentifier("awaitCondition"),
                 },
             })
         } else {
@@ -220,8 +235,13 @@ export default function workspaceJSONToIT4Program(
                     commands.push({
                         command: {
                             type: "CallExpression",
-                            arguments: [ toMemberExpression(role.toString(), eventName.toString()) ],
-                            callee: toIdentifier("awaitEvent")
+                            arguments: [
+                                toMemberExpression(
+                                    role.toString(),
+                                    eventName.toString()
+                                ),
+                            ],
+                            callee: toIdentifier("awaitEvent"),
                         },
                     })
                     // TODO
