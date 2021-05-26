@@ -229,9 +229,9 @@ export default function workspaceJSONToIT4Program(
             const def = serviceBlocks.find(def => def.type === type)
             assert(!!def)
             const { template } = def
+            const { value: role } = inputs[0].fields["role"]
             switch (template) {
                 case "event": {
-                    const { value: role } = inputs[0].fields["role"]
                     const { value: eventName } = inputs[0].fields["event"]
                     commands.push({
                         command: {
@@ -245,12 +245,24 @@ export default function workspaceJSONToIT4Program(
                             callee: toIdentifier("awaitEvent"),
                         },
                     })
-                    // TODO
                     break
                 }
                 case "register_change_event": {
-                    const { service, register } = def as RegisterBlockDefinition
-                    // TODO
+                    const { register } = def as RegisterBlockDefinition
+                    const argument = blockToExpression(inputs[0].child)
+                    commands.push({
+                        command: {
+                            type: "CallExpression",
+                            arguments: [
+                                toMemberExpression(
+                                    role.toString(),
+                                    register.name
+                                ),
+                                argument
+                            ],
+                            callee: toIdentifier("awaitChange"),
+                        },
+                    })
                     break
                 }
             }
