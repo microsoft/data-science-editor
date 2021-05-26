@@ -125,7 +125,6 @@ export interface CommandBlockDefinition extends ServiceBlockDefinition {
 export const WHILE_CONDITION_BLOCK = "jacdac_while_event"
 export const WHILE_CONDITION_BLOCK_CONDITION = "condition"
 export const WAIT_BLOCK = "jacdac_wait"
-export const COMMANDS_COLOUR = "%{BKY_LISTS_HUE}"
 
 export interface CategoryDefinition {
     kind: "category"
@@ -199,15 +198,17 @@ const customMessages = [
 ]
 
 function createBlockTheme(theme: Theme) {
-    const sensorColor = theme.palette.primary.dark
-    const otherColor = theme.palette.secondary.dark
+    const sensorColor = theme.palette.success.main
+    const otherColor = theme.palette.info.main
+    const commandColor = theme.palette.warning.main
     const serviceColor = (srv: jdspec.ServiceSpec) =>
         isSensor(srv) ? sensorColor : otherColor
-    return { serviceColor }
+    return { serviceColor, sensorColor, commandColor, otherColor }
 }
 
 function loadBlocks(
-    serviceColor: (srv: jdspec.ServiceSpec) => string
+    serviceColor: (srv: jdspec.ServiceSpec) => string,
+    commandColor: string
 ): CachedBlockDefinitions {
     const fieldsSupported = (pkt: jdspec.PacketInfo) =>
         pkt.fields.every(toBlocklyType)
@@ -672,7 +673,7 @@ function loadBlocks(
                     check: "Boolean",
                 },
             ],
-            colour: COMMANDS_COLOUR,
+            colour: commandColor,
             inputsInline: true,
             nextStatement: "Statement",
             tooltip: "",
@@ -692,7 +693,7 @@ function loadBlocks(
             inputsInline: true,
             previousStatement: "Statement",
             nextStatement: "Statement",
-            colour: COMMANDS_COLOUR,
+            colour: commandColor,
             tooltip: "",
             helpUrl: "",
         },
@@ -826,9 +827,9 @@ export default function useToolbox(blockServices?: string[]): {
     newProjectXml: string
 } {
     const theme = useTheme()
-    const { serviceColor } = createBlockTheme(theme)
+    const { serviceColor, commandColor } = createBlockTheme(theme)
     const { serviceBlocks, services } = useMemo(
-        () => loadBlocks(serviceColor),
+        () => loadBlocks(serviceColor, commandColor),
         [theme]
     )
     const liveServices = useServices({ specification: true })
@@ -878,7 +879,7 @@ export default function useToolbox(blockServices?: string[]): {
     const commandsCategory: CategoryDefinition = {
         kind: "category",
         name: "Commands",
-        colour: COMMANDS_COLOUR,
+        colour: commandColor,
         contents: [
             {
                 kind: "block",
@@ -970,19 +971,25 @@ export default function useToolbox(blockServices?: string[]): {
     const toolboxConfiguration: ToolboxConfiguration = {
         kind: "categoryToolbox",
         contents: [
+            commandsCategory,
+            servicesCategories?.length &&
+                <SeparatorDefinition>{
+                    kind: "sep",
+                },
             ...servicesCategories,
             <SeparatorDefinition>{
                 kind: "sep",
             },
-            commandsCategory,
             logicCategory,
             mathCategory,
             variablesCategory,
-        ].map(node =>
-            node.kind === "category"
-                ? patchCategoryJSONtoXML(node as CategoryDefinition)
-                : node
-        ),
+        ]
+            .filter(cat => !!cat)
+            .map(node =>
+                node.kind === "category"
+                    ? patchCategoryJSONtoXML(node as CategoryDefinition)
+                    : node
+            ),
     }
 
     return {
