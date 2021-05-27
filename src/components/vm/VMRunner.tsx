@@ -31,7 +31,7 @@ export default function VMRunner(props: {
         try {
             testRunner.start()
         } catch (e) {
-            // TODO expose error here
+            console.debug(e)
         }
     }
     const handleCancel = () => {
