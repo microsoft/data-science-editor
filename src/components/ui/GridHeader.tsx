@@ -1,4 +1,4 @@
-import { Box, Chip, createStyles, Grid, makeStyles, Typography, useTheme } from "@material-ui/core";
+import { Box, Chip, createStyles, Grid, makeStyles, Typography } from "@material-ui/core";
 import React from "react";
 import clsx from 'clsx';
 

@@ -52,8 +52,8 @@ function DeviceDescription(props: { device: JDDevice }) {
 export default function DeviceCard(props: {
     device: JDDevice
     children?: ReactNode
-    action?: JSX.Element | JSX.Element[]
-    content?: JSX.Element | JSX.Element[]
+    action?: ReactNode
+    content?: ReactNode
     showDeviceId?: boolean
     showServices?: boolean
     showTemperature?: boolean
