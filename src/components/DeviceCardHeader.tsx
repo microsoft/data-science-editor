@@ -47,6 +47,7 @@ export default function DeviceCardHeader(props: {
     showTemperature?: boolean
     showMedia?: boolean
     showSettings?: boolean
+    showReset?: boolean
 }) {
     const {
         device,
@@ -56,6 +57,7 @@ export default function DeviceCardHeader(props: {
         showDeviceId,
         showAvatar,
         showSettings,
+        showReset,
     } = props
     const specification = useDeviceSpecification(device)
 
@@ -64,7 +66,13 @@ export default function DeviceCardHeader(props: {
             {showMedia && <DeviceCardMedia device={device} />}
             <CardHeader
                 avatar={showAvatar && <DeviceAvatar device={device} />}
-                action={<DeviceActions device={device} showReset={true} showSettings={showSettings} />}
+                action={
+                    <DeviceActions
+                        device={device}
+                        showReset={showReset}
+                        showSettings={showSettings}
+                    />
+                }
                 title={
                     <Link
                         color="textPrimary"

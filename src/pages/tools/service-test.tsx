@@ -30,7 +30,7 @@ function DeviceItem(props: {
     return (
         <Grid item {...gridBreakpoints}>
             <Card>
-                <DeviceCardHeader device={device} showAvatar={true} />
+                <DeviceCardHeader device={device} showAvatar={true} showReset={true} />
                 <CardContent>
                     <Typography variant="caption">
                         Select a service to test.
