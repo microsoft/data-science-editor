@@ -44,6 +44,7 @@ import GridHeader from "../../components/ui/GridHeader"
 import { humanify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import ConnectAlert from "../../components/alert/ConnectAlert"
 import DeviceCardHeader from "../../components/DeviceCardHeader"
+import useGridBreakpoints from "../../components/useGridBreakpoints"
 
 // all settings keys are prefixed with this string
 const PREFIX = "@ke_"
@@ -207,6 +208,7 @@ export default function HIDEvents() {
     const [settingsService, setSettingsService] = useState<JDService>()
     const [hidEvents, setHIDEvents] = useState<HIDEvent[]>([])
     const [open, setOpen] = useState(false)
+    const gridBreakpoints = useGridBreakpoints()
 
     const handleOpenAdd = () => setOpen(true)
     const handleCloseAdd = () => setOpen(false)
@@ -214,15 +216,6 @@ export default function HIDEvents() {
     const settings = useServiceClient(
         settingsService,
         srv => new SettingsClient(srv)
-    )
-
-    // pick first adapter
-    useEffect(
-        () => {
-            if (!settingsService && settingsServices.length)
-                setSettingsService(settingsServices[0])
-        },
-        settingsServices.map(srv => srv.id)
     )
 
     useChange(settings, async () => {
@@ -253,7 +246,7 @@ export default function HIDEvents() {
         if (key) settings.deleteValue(key)
     }
     const handleSelectSettingsService = (service: JDService) => () =>
-        setSettingsService(service)
+        setSettingsService(settingsService === service ? undefined : service)
     return (
         <>
             <h1>Accesibility Adapter</h1>
@@ -264,36 +257,31 @@ export default function HIDEvents() {
                         <ConnectAlert serviceClass={SRV_SETTINGS} />
                     </Grid>
                 )}
-                {settingsServices.map(srv => (
-                    <Grid item key={srv.id}>
-                        <Card>
-                            <DeviceCardHeader
-                                device={srv.device}
-                                showAvatar={true}
-                                showMedia={true}
-                            />
-                            <CardActions>
-                                <Button
-                                    variant={
-                                        settingsService === srv
-                                            ? "contained"
-                                            : "text"
-                                    }
-                                    color={
-                                        settingsService === srv
-                                            ? "primary"
-                                            : "default"
-                                    }
-                                    onClick={handleSelectSettingsService(srv)}
-                                >
-                                    {settingsService === srv
-                                        ? "selected"
-                                        : "select"}
-                                </Button>
-                            </CardActions>
-                        </Card>
-                    </Grid>
-                ))}
+                {settingsServices
+                    .filter(srv => !settingsService || srv === settingsService)
+                    .map(srv => (
+                        <Grid item key={srv.id} {...gridBreakpoints}>
+                            <Card>
+                                <DeviceCardHeader
+                                    device={srv.device}
+                                    showAvatar={true}
+                                    showMedia={true}
+                                />
+                                <CardActions>
+                                    <Button
+                                        variant={"outlined"}
+                                        onClick={handleSelectSettingsService(
+                                            srv
+                                        )}
+                                    >
+                                        {settingsService === srv
+                                            ? "unselect"
+                                            : "select"}
+                                    </Button>
+                                </CardActions>
+                            </Card>
+                        </Grid>
+                    ))}
                 {settings && (
                     <>
                         <GridHeader title="Command Bindings" />
@@ -313,7 +301,7 @@ export default function HIDEvents() {
                                 modifiers,
                             }))
                             .map(({ event, selector, modifiers }, index) => (
-                                <Grid item xs key={event.id}>
+                                <Grid item {...gridBreakpoints} key={event.id}>
                                     <Card>
                                         <DeviceCardHeader
                                             device={event.service.device}
