@@ -71,6 +71,7 @@ export default function DeviceCardHeader(props: {
                         device={device}
                         showReset={showReset}
                         showSettings={showSettings}
+                        hideIdentity={showAvatar}
                     />
                 }
                 title={

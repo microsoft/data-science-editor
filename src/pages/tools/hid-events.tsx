@@ -150,7 +150,7 @@ function SelectHIDEvent(props: { onAdd: (hidEvent: HIDEvent) => void }) {
             {events
                 .filter(ev => !event || ev === event)
                 .map(ev => (
-                    <Grid item xs key={ev.id}>
+                    <Grid item xs={12} sm={6} lg={4} xl={3} key={ev.id}>
                         <Card>
                             <DeviceCardHeader
                                 device={ev.service.device}
@@ -382,7 +382,7 @@ export default function HIDEvents() {
                     </>
                 )}
             </Grid>
-            <Dialog open={open} onClose={handleCloseAdd} fullWidth={true}>
+            <Dialog open={open} onClose={handleCloseAdd} maxWidth={"lg"} fullWidth={true}>
                 <DialogTitle>Add binding</DialogTitle>
                 <DialogContent>
                     <SelectHIDEvent onAdd={handleAdd} />
