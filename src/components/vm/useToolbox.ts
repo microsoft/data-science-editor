@@ -7,6 +7,7 @@ import {
     SRV_CONTROL,
     SRV_HID_KEYBOARD,
     SRV_JOYSTICK,
+    SRV_LED_MATRIX,
     SRV_LOGGER,
     SRV_PROTO_TEST,
     SRV_ROLE_MANAGER,
@@ -40,6 +41,7 @@ import { withPrefix } from "gatsby-link"
 import { registerFields } from "./fields/fields"
 import KeyboardKeyField from "./fields/KeyboardKeyField"
 import NoteField from "./fields/NoteField"
+import LEDMatrixField from "./fields/LEDMatrixField"
 
 const NEW_PROJET_XML = '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>'
 
@@ -384,12 +386,17 @@ function loadBlocks(
                 <CustomBlockDefinition>{
                     kind: "block",
                     type: `play_note`,
-                    message0: `play %1 note %2 at volume %3`,
+                    message0: `play %1 note %2 for %3 s at volume %4`,
                     args0: [
                         fieldVariable(service),
                         {
                             type: "input_value",
                             name: "frequency",
+                            check: "Number",
+                        },
+                        {
+                            type: "input_value",
+                            name: "duration",
                             check: "Number",
                         },
                         {
@@ -402,6 +409,11 @@ function loadBlocks(
                         frequency: {
                             kind: "block",
                             type: "jacdac_note",
+                            shadow: true,
+                        },
+                        duration: {
+                            kind: "block",
+                            type: "jacdac_time_picker",
                             shadow: true,
                         },
                         volume: {
@@ -447,6 +459,30 @@ function loadBlocks(
                     previousStatement: null,
                     nextStatement: null,
                     tooltip: `Display a number of the screen`,
+                    helpUrl: serviceHelp(service),
+                    service,
+                    // encode digits
+                    template: "custom",
+                }
+        ),
+        ...resolveService(SRV_LED_MATRIX).map(
+            service =>
+                <CustomBlockDefinition>{
+                    kind: "block",
+                    type: `_show_leds`,
+                    message0: `show %1 leds %2`,
+                    args0: [
+                        fieldVariable(service),
+                        {
+                            type: LEDMatrixField.KEY,
+                            name: "leds",
+                        },
+                    ],
+                    colour: serviceColor(service),
+                    inputsInline: true,
+                    previousStatement: null,
+                    nextStatement: null,
+                    tooltip: `Display LEDs on the LED matrix`,
                     helpUrl: serviceHelp(service),
                     service,
                     // encode digits

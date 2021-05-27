@@ -5,6 +5,7 @@ import JacdacProvider from "../../../jacdac/Provider"
 import { ReactNode } from "react"
 import { IdProvider } from "react-use-id-hook"
 import DarkModeProvider from "../../ui/DarkModeProvider"
+import AppTheme from "../../ui/AppTheme"
 
 declare module "blockly" {
     interface Block {
@@ -121,7 +122,9 @@ export class ReactField<T> extends Blockly.Field {
         return (
             <DarkModeProvider>
                 <IdProvider>
-                    <JacdacProvider>{this.renderField()}</JacdacProvider>
+                    <JacdacProvider>
+                        <AppTheme>{this.renderField()}</AppTheme>
+                    </JacdacProvider>
                 </IdProvider>
             </DarkModeProvider>
         )

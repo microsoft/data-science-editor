@@ -1,12 +1,12 @@
-import React, { SVGProps, useRef } from "react"
-import SvgWidget from "../widgets/SvgWidget"
-import useWidgetTheme from "../widgets/useWidgetTheme"
+import React, { SVGProps, useEffect, useRef, useState } from "react"
+import SvgWidget from "./SvgWidget"
+import useWidgetTheme from "./useWidgetTheme"
 import useFireKey from "../hooks/useFireKey"
 import useKeyboardNavigationProps from "../hooks/useKeyboardNavigationProps"
 import { toggle } from "../../../jacdac-ts/src/servers/ledmatrixserver"
 import LoadingProgress from "../ui/LoadingProgress"
 
-export default function LEDMatrixDisplayWidget(props: {
+export default function LEDMatrixWidget(props: {
     leds: Uint8Array
     brightness: number
     rows: number
@@ -22,9 +22,13 @@ export default function LEDMatrixDisplayWidget(props: {
         color = "primary",
         onChange,
     } = props
+    const [currentLeds, setCurrentLeds] = useState(leds)
     const widgetRef = useRef<SVGGElement>()
     const { background, controlBackground, active } = useWidgetTheme(color)
     const navProps = useKeyboardNavigationProps(widgetRef.current)
+
+    // grad new leds value
+    useEffect(() => setCurrentLeds(leds), [leds])
 
     // no data about layout
     if (rows === undefined || columns === undefined) return <LoadingProgress />
@@ -44,8 +48,10 @@ export default function LEDMatrixDisplayWidget(props: {
     const handleLedClick =
         (bitindex: number) => (ev: React.PointerEvent<SVGRectElement>) => {
             if (ev && !ev.buttons) return
-            const newLeds = leds.slice(0)
+            const newLeds = currentLeds.slice(0)
             toggle(newLeds, bitindex)
+
+            setCurrentLeds(newLeds)
             onChange?.(newLeds)
         }
 
@@ -82,7 +88,7 @@ export default function LEDMatrixDisplayWidget(props: {
                 boxEls.push(box)
 
                 const bitindex = row * columnspadded + col
-                const byte = leds?.[bitindex >> 3]
+                const byte = currentLeds?.[bitindex >> 3]
                 const bit = bitindex % 8
                 const on = 1 === ((byte >> bit) & 1)
                 const handleClick = handleLedClick(bitindex)
