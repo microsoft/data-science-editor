@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, { lazy, useContext, useEffect, useRef, useState } from "react"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import {
     Card,
@@ -31,6 +31,7 @@ import SettingsClient from "../../../jacdac-ts/src/jdom/settingsclient"
 import useServiceClient from "../../components/useServiceClient"
 import {
     arrayConcatMany,
+    clone,
     fromHex,
     toHex,
 } from "../../../jacdac-ts/src/jdom/utils"
@@ -45,6 +46,11 @@ import { humanify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import ConnectAlert from "../../components/alert/ConnectAlert"
 import DeviceCardHeader from "../../components/DeviceCardHeader"
 import useGridBreakpoints from "../../components/useGridBreakpoints"
+import Suspense from "../../components/ui/Suspense"
+import useServiceProviderFromServiceClass from "../../components/hooks/useServiceProviderFromServiceClass"
+import AppContext from "../../components/AppContext"
+import { AlertTitle } from "@material-ui/lab"
+const ImportButton = lazy(() => import("../../components/ImportButton"))
 
 // all settings keys are prefixed with this string
 const PREFIX = "@ke_"
@@ -204,11 +210,13 @@ function SelectHIDEvent(props: { onAdd: (hidEvent: HIDEvent) => void }) {
 
 export default function HIDEvents() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const { setError } = useContext(AppContext)
     const settingsServices = useServices({ serviceClass: SRV_SETTINGS })
     const [settingsService, setSettingsService] = useState<JDService>()
     const [hidEvents, setHIDEvents] = useState<HIDEvent[]>([])
     const [open, setOpen] = useState(false)
     const gridBreakpoints = useGridBreakpoints()
+    const exportRef = useRef()
 
     const handleOpenAdd = () => setOpen(true)
     const handleCloseAdd = () => setOpen(false)
@@ -218,6 +226,7 @@ export default function HIDEvents() {
         srv => new SettingsClient(srv)
     )
 
+    useServiceProviderFromServiceClass(SRV_SETTINGS)
     useChange(settings, async () => {
         const hes: HIDEvent[] = []
         if (settings) {
@@ -247,6 +256,44 @@ export default function HIDEvents() {
     }
     const handleSelectSettingsService = (service: JDService) => () =>
         setSettingsService(settingsService === service ? undefined : service)
+
+    const exportUri =
+        hidEvents &&
+        `data:application/json;charset=UTF-8,${encodeURIComponent(
+            JSON.stringify(
+                clone(hidEvents).map(h => {
+                    delete h.key
+                    return h
+                })
+            )
+        )}`
+    useEffect(() => {
+        if (exportRef.current)
+            (exportRef.current as HTMLAnchorElement).download = "bindings.json"
+    }, [exportRef.current])
+    const handleFilesUploaded = async (files: File[]) => {
+        for (const file of files) {
+            try {
+                const text = await file.text()
+                const json = JSON.parse(text)
+                if (Array.isArray(json)) {
+                    for (const hidEvent of json as HIDEvent[]) {
+                        const event = bus.node(hidEvent.eventId) as JDEvent
+                        if (event) {
+                            const payload = HIDEventToBuffer(event, hidEvent)
+                            settings.setValue(
+                                PREFIX + randomDeviceId(),
+                                payload
+                            )
+                        }
+                    }
+                }
+            } catch (e) {
+                console.warn(e)
+                setError(`invalid file ${file.name}`)
+            }
+        }
+    }
     return (
         <>
             <h1>Accesibility Adapter</h1>
@@ -296,51 +343,98 @@ export default function HIDEvents() {
                         )}
                         {hidEvents
                             ?.map(({ eventId, selector, modifiers }) => ({
+                                eventId,
                                 event: bus.node(eventId) as JDEvent,
                                 selector,
                                 modifiers,
                             }))
-                            .map(({ event, selector, modifiers }, index) => (
-                                <Grid item {...gridBreakpoints} key={event.id}>
-                                    <Card>
-                                        <DeviceCardHeader
-                                            device={event.service.device}
-                                            showAvatar={true}
-                                        />
-                                        <CardContent>
-                                            <Typography variant="h6">
-                                                {event.service.name}{" "}
-                                                {humanify(event.name)}
-                                            </Typography>
-                                            <Typography variant="h5">
-                                                {renderKeyboardKey(
-                                                    selector,
-                                                    modifiers,
-                                                    true
+                            .map(
+                                (
+                                    { eventId, event, selector, modifiers },
+                                    index
+                                ) => (
+                                    <Grid
+                                        item
+                                        {...gridBreakpoints}
+                                        key={eventId}
+                                    >
+                                        <Card>
+                                            <DeviceCardHeader
+                                                device={event?.service.device}
+                                                showAvatar={true}
+                                            />
+                                            <CardContent>
+                                                {event ? (
+                                                    <Typography variant="h6">
+                                                        {`${
+                                                            event.service.name
+                                                        } ${humanify(
+                                                            event.name
+                                                        )}`}
+                                                    </Typography>
+                                                ) : (
+                                                    <Alert severity="warning">
+                                                        <AlertTitle>
+                                                            Device not found
+                                                        </AlertTitle>
+                                                    </Alert>
                                                 )}
-                                            </Typography>
-                                        </CardContent>
-                                        <CardActions>
-                                            <IconButtonWithTooltip
-                                                title={"Remove binding"}
-                                                onClick={handleRemoveBinding(
-                                                    index
-                                                )}
-                                            >
-                                                <DeleteIcon />
-                                            </IconButtonWithTooltip>
-                                        </CardActions>
-                                    </Card>
-                                </Grid>
-                            ))}
+
+                                                <Typography variant="h5">
+                                                    {renderKeyboardKey(
+                                                        selector,
+                                                        modifiers,
+                                                        true
+                                                    )}
+                                                </Typography>
+                                            </CardContent>
+                                            <CardActions>
+                                                <IconButtonWithTooltip
+                                                    title={"Remove binding"}
+                                                    onClick={handleRemoveBinding(
+                                                        index
+                                                    )}
+                                                >
+                                                    <DeleteIcon />
+                                                </IconButtonWithTooltip>
+                                            </CardActions>
+                                        </Card>
+                                    </Grid>
+                                )
+                            )}
                         <Grid item xs={12}>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleOpenAdd}
-                            >
-                                Add binding
-                            </Button>
+                            <Grid container spacing={1}>
+                                <Grid item>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={handleOpenAdd}
+                                    >
+                                        Add binding
+                                    </Button>
+                                </Grid>
+                                <Grid item>
+                                    <Button
+                                        ref={exportRef}
+                                        variant="outlined"
+                                        href={exportUri}
+                                    >
+                                        Export
+                                    </Button>
+                                </Grid>
+                                <Grid item>
+                                    <Suspense>
+                                        <ImportButton
+                                            icon={false}
+                                            text="Import"
+                                            onFilesUploaded={
+                                                handleFilesUploaded
+                                            }
+                                            acceptedFiles={["application/json"]}
+                                        />
+                                    </Suspense>
+                                </Grid>
+                            </Grid>
                         </Grid>
                     </>
                 )}

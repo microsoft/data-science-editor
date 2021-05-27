@@ -17,13 +17,32 @@ import DarkModeContext from "../ui/DarkModeContext"
 import { IT4Program } from "../../../jacdac-ts/src/vm/ir"
 import workspaceJSONToIT4Program from "./it4generator"
 import AppContext from "../AppContext"
+import { createStyles, makeStyles } from "@material-ui/core"
+import clsx from "clsx"
 
-export default function VmEditor(props: {
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        editor: {
+            height: "40vh",
+            "& .blocklyTreeLabel": {
+                fontFamily: theme.typography.fontFamily,
+            },
+            "& .blocklyText": {
+                fontWeight: `normal !important`,
+                fontFamily: `${theme.typography.fontFamily} !important`,
+            },
+        },
+    })
+)
+
+export default function VMBlockEditor(props: {
     className?: string
     initialXml?: string
     onXmlChange?: (xml: string) => void
     onJSONChange?: (json: WorkspaceJSON) => void
     onIT4ProgramChange?: (program: IT4Program) => void
+
+    serviceClass?: number
 }) {
     const {
         className,
@@ -31,12 +50,16 @@ export default function VmEditor(props: {
         onJSONChange,
         onIT4ProgramChange,
         initialXml,
+        serviceClass,
     } = props
+    const classes = useStyles()
     const { darkMode } = useContext(DarkModeContext)
     const { setError } = useContext(AppContext)
     const [services, setServices] = useState<string[]>([])
-    const { toolboxConfiguration, newProjectXml, serviceBlocks } =
-        useToolbox(services)
+    const { toolboxConfiguration, newProjectXml, serviceBlocks } = useToolbox({
+        blockServices: services,
+        serviceClass,
+    })
     const theme = darkMode === "dark" ? DarkTheme : Theme
     const gridColor = darkMode === "dark" ? "#555" : "#ccc"
 
@@ -145,7 +168,7 @@ export default function VmEditor(props: {
     return (
         <>
             <BlocklyModalDialogs />
-            <div className={className} ref={blocklyRef} />
+            <div className={clsx(classes.editor, className)} ref={blocklyRef} />
         </>
     )
 }
