@@ -17,6 +17,10 @@ export default class NoteField extends ReactField<FrequencyFeld> {
         return new NoteField(options)
     }
 
+    get defaultValue() {
+        return { frequency: 440 }
+    }
+
     getText_() {
         const { frequency } = this.value
         return (frequency | 0) + ""

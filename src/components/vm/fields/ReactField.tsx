@@ -44,13 +44,17 @@ export class ReactField<T> extends Blockly.Field {
         super(value, validator, options)
     }
 
+    get defaultValue(): T {
+        return {} as T
+    }
+
     get value(): T {
         try {
             const v = JSON.parse(this.getValue())
-            return (v || {}) as T
+            return (v || this.defaultValue) as T
         } catch (e) {
             console.warn(e)
-            return {} as T
+            return this.defaultValue
         }
     }
 
@@ -79,18 +83,17 @@ export class ReactField<T> extends Blockly.Field {
     showEditor_() {
         this.div_ = Blockly.DropDownDiv.getContentDiv()
         ReactDOM.render(this.render(), this.div_)
+        const border = this.sourceBlock_.getColourTertiary()
+        Blockly.DropDownDiv.setColour(this.sourceBlock_.getColour(), border)
 
         // the div_ size has not been computed yet, so let the browse handle this
         setTimeout(() => {
-            const border = this.sourceBlock_.getColourTertiary()
-            Blockly.DropDownDiv.setColour(this.sourceBlock_.getColour(), border)
             Blockly.DropDownDiv.showPositionedByField(
                 this,
                 this.dropdownDispose_.bind(this)
             )
-
             this.onMount()
-        }, 1)
+        }, 200)
     }
 
     hide() {
