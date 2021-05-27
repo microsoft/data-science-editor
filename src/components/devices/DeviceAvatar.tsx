@@ -1,5 +1,16 @@
-import { Avatar, createStyles, makeStyles, Theme } from "@material-ui/core"
-import React, { CSSProperties } from "react"
+import {
+    Avatar,
+    Button,
+    createStyles,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    makeStyles,
+    Theme,
+} from "@material-ui/core"
+import React, { CSSProperties, useEffect, useState } from "react"
 import { VIRTUAL_DEVICE_NODE_NAME } from "../../../jacdac-ts/src/jdom/constants"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import useDeviceSpecification from "../../jacdac/useDeviceSpecification"
@@ -11,6 +22,7 @@ import useDeviceImage from "./useDeviceImage"
 import TransportIcon from "../icons/TransportIcon"
 import { rgbToHtmlColor } from "../../../jacdac-ts/src/jdom/utils"
 import useChange from "../../jacdac/useChange"
+import Alert from "../ui/Alert"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -33,8 +45,10 @@ export default function DeviceAvatar(props: {
     size?: "small" | "large"
 }) {
     const { device, size } = props
+    const [identifyDialog, setIdentifyDialog] = useState(false)
     const specification = useDeviceSpecification(device)
     const imageUrl = useDeviceImage(specification, "avatar")
+    const largeImageUrl = useDeviceImage(specification)
     const name = useDeviceName(device)
     const classes = useStyles()
     const sizeClassName =
@@ -57,7 +71,17 @@ export default function DeviceAvatar(props: {
               color: rgbToHtmlColor(color),
           }
         : undefined
-    const handleIdentify = async () => await device.identify()
+    const handleSendIdentify = async () => await device.identify()
+    const handleOpenIdentify = async () => setIdentifyDialog(true)
+    const handleCloseIdentify = () => setIdentifyDialog(false)
+
+    useEffect(() => {
+        if (identifyDialog) {
+            const timerId = setInterval(() => handleSendIdentify(), 3500)
+            return () => clearInterval(timerId)
+        }
+    }, [identifyDialog])
+
     return (
         <>
             <CmdButton
@@ -65,7 +89,7 @@ export default function DeviceAvatar(props: {
                 style={style}
                 size="small"
                 title={`identify ${server ? "simulator" : "device"} ${name}`}
-                onClick={handleIdentify}
+                onClick={imageUrl ? handleOpenIdentify : handleSendIdentify}
                 icon={
                     server ? (
                         <KindIcon kind={VIRTUAL_DEVICE_NODE_NAME} />
@@ -83,6 +107,33 @@ export default function DeviceAvatar(props: {
                     )
                 }
             />
+            {imageUrl && (
+                <Dialog open={identifyDialog} onClose={handleCloseIdentify}>
+                    <DialogTitle>
+                        Identifying {device.friendlyName}...
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            <img
+                                alt={`image of ${device.friendlyName}`}
+                                src={largeImageUrl}
+                            />
+                            <Alert severity="info">
+                                Look for four blinks in around 2 seconds with
+                                the blue LED.
+                            </Alert>
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button
+                            variant="outlined"
+                            onClick={handleCloseIdentify}
+                        >
+                            Dismiss
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            )}
         </>
     )
 }

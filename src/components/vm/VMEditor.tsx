@@ -88,7 +88,7 @@ export default function VMEditor(props: {
             )}
             {showDashboard && (
                 <Grid item xs={12}>
-                    <Dashboard showStartSimulators={true} />
+                    <Dashboard showStartSimulators={true} showHeader={true} showAvatar={true} />
                 </Grid>
             )}
         </Grid>
