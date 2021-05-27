@@ -1022,11 +1022,16 @@ function patchCategoryJSONtoXML(cat: CategoryDefinition): CategoryDefinition {
     return cat
 }
 
-export default function useToolbox(blockServices?: string[]): {
+export default function useToolbox(props: {
+    blockServices?: string[]
+    serviceClass?: number
+}): {
     serviceBlocks: BlockDefinition[]
     toolboxConfiguration: ToolboxConfiguration
     newProjectXml: string
 } {
+    const { blockServices, serviceClass } = props
+
     const theme = useTheme()
     const { serviceColor, commandColor } = createBlockTheme(theme)
     const { serviceBlocks, services } = useMemo(
@@ -1045,7 +1050,7 @@ export default function useToolbox(blockServices?: string[]): {
                       )
                       .filter(srv => !!srv),
                   ...liveServices.map(srv => srv.specification),
-              ],
+              ].filter(srv => !serviceClass || srv.classIdentifier === serviceClass),
         srv => srv.shortId,
         srv => srv
     )

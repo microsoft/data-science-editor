@@ -1,151 +1,96 @@
-import React, { useContext, useEffect, useRef, useState } from "react"
-import { useBlocklyWorkspace } from "react-blockly"
-import Blockly from "blockly"
-import "@blockly/field-slider"
-import "@blockly/block-dynamic-connection"
-import Theme from "@blockly/theme-modern"
-import DarkTheme from "@blockly/theme-dark"
-import { DisableTopBlocks } from "@blockly/disable-top-blocks"
-import useToolbox, {
-    ButtonDefinition,
-    CategoryDefinition,
-    scanServices,
-} from "./useToolbox"
-import BlocklyModalDialogs from "./BlocklyModalDialogs"
-import { domToJSON, WorkspaceJSON } from "./jsongenerator"
-import DarkModeContext from "../ui/DarkModeContext"
+import { Grid, NoSsr, Typography } from "@material-ui/core"
+import React, { useState } from "react"
+import Flags from "../../../jacdac-ts/src/jdom/flags"
 import { IT4Program } from "../../../jacdac-ts/src/vm/ir"
-import workspaceJSONToIT4Program from "./it4generator"
-import AppContext from "../AppContext"
+import { WorkspaceJSON } from "../../components/vm/jsongenerator"
+import VMBlockEditor from "../../components/vm/VMBlockEditor"
+import Dashboard from "../../components/dashboard/Dashboard"
+import Alert from "../../components/ui/Alert"
+import useLocalStorage from "../../components/useLocalStorage"
+import VMRunner from "../../components/vm/VMRunner"
+import CodeBlock from "../../components/CodeBlock"
 
-export default function VmEditor(props: {
-    className?: string
-    initialXml?: string
-    onXmlChange?: (xml: string) => void
-    onJSONChange?: (json: WorkspaceJSON) => void
-    onIT4ProgramChange?: (program: IT4Program) => void
+function Diagnostics(props: {
+    program: IT4Program
+    source: WorkspaceJSON
+    xml: string
 }) {
-    const {
-        className,
-        onXmlChange,
-        onJSONChange,
-        onIT4ProgramChange,
-        initialXml,
-    } = props
-    const { darkMode } = useContext(DarkModeContext)
-    const { setError } = useContext(AppContext)
-    const [services, setServices] = useState<string[]>([])
-    const { toolboxConfiguration, newProjectXml, serviceBlocks } =
-        useToolbox(services)
-    const theme = darkMode === "dark" ? DarkTheme : Theme
-    const gridColor = darkMode === "dark" ? "#555" : "#ccc"
-
-    // ReactBlockly
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const blocklyRef = useRef(null)
-    const { workspace, xml } = useBlocklyWorkspace({
-        ref: blocklyRef,
-        toolboxConfiguration,
-        workspaceConfiguration: {
-            comments: false,
-            css: true,
-            trashcan: false,
-            sounds: false,
-            grid: {
-                spacing: 25,
-                length: 1,
-                colour: gridColor,
-                snap: true,
-            },
-            renderer: "zelos",
-            theme,
-            oneBasedIndex: false,
-            move: {
-                scrollbars: {
-                    vertical: false,
-                    horizontal: true,
-                },
-            },
-            zoom: {
-                controls: true,
-                wheel: true,
-                startScale: 1.0,
-                maxScale: 3,
-                minScale: 0.3,
-                scaleSpeed: 1.2,
-                pinch: true,
-            },
-        },
-        initialXml: initialXml || newProjectXml,
-        onImportXmlError: () => setError("Error loading blocks..."),
-    }) as { workspace: Blockly.WorkspaceSvg; xml: string }
-
-    useEffect(() => {
-        if (!workspace) return
-        // Add the disableOrphans event handler. This is not done automatically by
-        // the plugin and should be handled by your application.
-        workspace.addChangeListener(Blockly.Events.disableOrphans)
-
-        // The plugin must be initialized before it has any effect.
-        const disableTopBlocksPlugin = new DisableTopBlocks()
-        disableTopBlocksPlugin.init()
-    }, [workspace])
-
-    // blockly did a change
-    useEffect(() => {
-        if (!workspace) return
-
-        onXmlChange?.(xml)
-
-        // save json
-        if (onJSONChange || onIT4ProgramChange) {
-            // emit json
-            const json = domToJSON(workspace)
-            onJSONChange?.(json)
-            if (onIT4ProgramChange) {
-                try {
-                    const program = workspaceJSONToIT4Program(
-                        serviceBlocks,
-                        json
-                    )
-                    onIT4ProgramChange(program)
-                } catch (e) {
-                    console.error(e)
-                    onIT4ProgramChange(undefined)
-                }
-            }
-        }
-
-        // update toolbox with declared roles
-        const newServices = scanServices(workspace)
-        if (JSON.stringify(services) !== JSON.stringify(newServices))
-            setServices(newServices)
-    }, [workspace, xml])
-
-    // track workspace changes and update callbacks
-    useEffect(() => {
-        if (!workspace) return
-
-        // collect buttons
-        const buttons: ButtonDefinition[] = toolboxConfiguration?.contents
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            .map(cat => (cat as CategoryDefinition).button)
-            .filter(btn => !!btn)
-        buttons?.forEach(button =>
-            workspace.registerButtonCallback(button.callbackKey, () =>
-                Blockly.Variables.createVariableButtonHandler(
-                    workspace,
-                    null,
-                    button.service.shortId
-                )
-            )
-        )
-    }, [workspace, JSON.stringify(toolboxConfiguration)])
-
+    const { program, source, xml } = props
     return (
         <>
-            <BlocklyModalDialogs />
-            <div className={className} ref={blocklyRef} />
+            <Grid item xs={12}>
+                <Typography variant="subtitle1">IT4</Typography>
+                <CodeBlock className="json">
+                    {JSON.stringify(program, null, 2)}
+                </CodeBlock>
+            </Grid>
+            <Grid item xs={12}>
+                <Typography variant="subtitle1">Blockly JSON</Typography>
+                <CodeBlock className="json">
+                    {JSON.stringify(source, null, 2)}
+                </CodeBlock>
+            </Grid>
+            <Grid item xs={12}>
+                <Typography variant="subtitle1">Blockly XML</Typography>
+                <CodeBlock className="xml">{xml}</CodeBlock>
+            </Grid>
         </>
+    )
+}
+
+const VM_SOURCE_STORAGE_KEY = "jacdac:tools:vmeditor"
+export default function VMEditor(props: {
+    storageKey?: string
+    showDashboard?: boolean
+}) {
+    const { storageKey, showDashboard } = props
+    const [xml, setXml] = useLocalStorage(storageKey || VM_SOURCE_STORAGE_KEY, "")
+    const [source, setSource] = useState<WorkspaceJSON>()
+    const [program, setProgram] = useState<IT4Program>()
+
+    const handleXml = (xml: string) => {
+        setXml(xml)
+    }
+    const handleJSON = (json: WorkspaceJSON) => {
+        const newSource = JSON.stringify(json)
+        if (JSON.stringify(source) !== newSource) setSource(json)
+    }
+    const handleI4Program = (json: IT4Program) => {
+        const newProgram = JSON.stringify(json)
+        if (JSON.stringify(program) !== newProgram) setProgram(json)
+    }
+
+    return (
+        <Grid container direction="column" spacing={1}>
+            {!source?.blocks?.length && (
+                <Grid item xs={12}>
+                    <Alert severity="info" closeable={true}>
+                        Start a simulator or connect a device to load the blocks
+                        automatically.
+                    </Alert>
+                </Grid>
+            )}
+            <Grid item xs={12}>
+                <NoSsr>
+                    <VMBlockEditor
+                        initialXml={xml}
+                        onXmlChange={handleXml}
+                        onJSONChange={handleJSON}
+                        onIT4ProgramChange={handleI4Program}
+                    />
+                </NoSsr>
+            </Grid>
+            <Grid item xs={12}>
+                <VMRunner program={program} autoStart={true} />
+            </Grid>
+            {Flags.diagnostics && (
+                <Diagnostics program={program} source={source} xml={xml} />
+            )}
+            {showDashboard && (
+                <Grid item xs={12}>
+                    <Dashboard showStartSimulators={true} />
+                </Grid>
+            )}
+        </Grid>
     )
 }
