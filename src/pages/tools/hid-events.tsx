@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import {
     Card,
@@ -8,11 +8,6 @@ import {
     DialogContent,
     DialogTitle,
     Grid,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
     Typography,
 } from "@material-ui/core"
 import useChange from "../../jacdac/useChange"
@@ -220,6 +215,16 @@ export default function HIDEvents() {
         settingsService,
         srv => new SettingsClient(srv)
     )
+
+    // pick first adapter
+    useEffect(
+        () => {
+            if (!settingsService && settingsServices.length)
+                setSettingsService(settingsServices[0])
+        },
+        settingsServices.map(srv => srv.id)
+    )
+
     useChange(settings, async () => {
         const hes: HIDEvent[] = []
         if (settings) {
@@ -301,75 +306,45 @@ export default function HIDEvents() {
                                 </Alert>
                             </Grid>
                         )}
-                        {!!hidEvents?.length && (
-                            <Grid item xs>
-                                <Table>
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell>Device</TableCell>
-                                            <TableCell>Service</TableCell>
-                                            <TableCell>Event</TableCell>
-                                            <TableCell>Key</TableCell>
-                                            <TableCell />
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {hidEvents.map(
-                                            (
-                                                {
-                                                    eventId,
+                        {hidEvents
+                            ?.map(({ eventId, selector, modifiers }) => ({
+                                event: bus.node(eventId) as JDEvent,
+                                selector,
+                                modifiers,
+                            }))
+                            .map(({ event, selector, modifiers }, index) => (
+                                <Grid item xs key={event.id}>
+                                    <Card>
+                                        <DeviceCardHeader
+                                            device={event.service.device}
+                                            showAvatar={true}
+                                        />
+                                        <CardContent>
+                                            <Typography variant="h6">
+                                                {event.service.name}{" "}
+                                                {humanify(event.name)}
+                                            </Typography>
+                                            <Typography variant="h5">
+                                                {renderKeyboardKey(
                                                     selector,
                                                     modifiers,
-                                                },
-                                                index
-                                            ) => {
-                                                const event = bus.node(
-                                                    eventId
-                                                ) as JDEvent
-                                                return (
-                                                    <TableRow key={index}>
-                                                        <TableCell>
-                                                            {
-                                                                event.service
-                                                                    .device
-                                                                    .friendlyName
-                                                            }
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            {event.service.name}
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            {event.name}
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            <code>
-                                                                {renderKeyboardKey(
-                                                                    selector,
-                                                                    modifiers,
-                                                                    true
-                                                                )}
-                                                            </code>
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            <IconButtonWithTooltip
-                                                                title={
-                                                                    "Remove binding"
-                                                                }
-                                                                onClick={handleRemoveBinding(
-                                                                    index
-                                                                )}
-                                                            >
-                                                                <DeleteIcon />
-                                                            </IconButtonWithTooltip>
-                                                        </TableCell>
-                                                    </TableRow>
-                                                )
-                                            }
-                                        )}
-                                    </TableBody>
-                                </Table>
-                            </Grid>
-                        )}
+                                                    true
+                                                )}
+                                            </Typography>
+                                        </CardContent>
+                                        <CardActions>
+                                            <IconButtonWithTooltip
+                                                title={"Remove binding"}
+                                                onClick={handleRemoveBinding(
+                                                    index
+                                                )}
+                                            >
+                                                <DeleteIcon />
+                                            </IconButtonWithTooltip>
+                                        </CardActions>
+                                    </Card>
+                                </Grid>
+                            ))}
                         <Grid item xs={12}>
                             <Button
                                 variant="contained"
@@ -382,7 +357,12 @@ export default function HIDEvents() {
                     </>
                 )}
             </Grid>
-            <Dialog open={open} onClose={handleCloseAdd} maxWidth={"lg"} fullWidth={true}>
+            <Dialog
+                open={open}
+                onClose={handleCloseAdd}
+                maxWidth={"lg"}
+                fullWidth={true}
+            >
                 <DialogTitle>Add binding</DialogTitle>
                 <DialogContent>
                     <SelectHIDEvent onAdd={handleAdd} />
