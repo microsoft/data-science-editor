@@ -47,15 +47,15 @@ export default class LEDMatrixField extends ReactField<LEDMatrixFieldValue> {
         const columnspadded = columns + (8 - (columns % 8))
         const ledsBytes = fromHex(leds)
         const cvs = document.createElement("canvas")
-        const b = 1
-        const pw = 4
-        const ph = 4
-        const w = rows * pw
-        const h = columns * ph
+        const b = 3
+        const pw = 8
+        const ph = 8
+        const w = rows * pw + (rows - 1) * b
+        const h = columns * ph + (columns - 1) * b
         cvs.width = w + 2 * b
         cvs.height = h + 2 * b
         const ctx = cvs.getContext("2d")
-        ctx.fillStyle = "grey"
+        ctx.fillStyle = "#444"
         ctx.fillRect(b, b, w, h)
         ctx.fillStyle = "blue"
         for (let x = 0; x < columns; ++x) {
@@ -64,7 +64,8 @@ export default class LEDMatrixField extends ReactField<LEDMatrixFieldValue> {
                 const byte = ledsBytes[bitindex >> 3]
                 const bit = bitindex % 8
                 const on = 1 === ((byte >> bit) & 1)
-                if (on) ctx.fillRect(x * pw + b, y * ph + b, pw, ph)
+                ctx.fillStyle = on ? "#ffc400" : "#000"
+                ctx.fillRect(x * (pw + b) + b, y * (ph + b) + b, pw, ph)
             }
         }
         const dataUri = cvs.toDataURL("image/png")
@@ -105,6 +106,7 @@ export default class LEDMatrixField extends ReactField<LEDMatrixFieldValue> {
         return (
             <Suspense>
                 <LEDMatrixWidget
+                    color="secondary"
                     brightness={1}
                     leds={ledsBytes}
                     rows={rows}
