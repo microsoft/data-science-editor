@@ -208,8 +208,8 @@ export default function workspaceJSONToIT4Program(
             }
         }
         // for linking back 
-        (command as any).blocklyID = block.id
         return {
+            blocklyId: block.id,
             command,
         }
     }
