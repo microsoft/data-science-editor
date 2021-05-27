@@ -4,7 +4,7 @@ import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import useServiceServer from "../hooks/useServiceServer"
 import useChange from "../../jacdac/useChange"
-import LEDMatrixDisplayWidget from "../ui/LEDMatrixWidgets"
+import LEDMatrixDisplayWidget from "../widgets/LEDMatrixWidget"
 
 export default function DashboardLEDMatrixDisplay(
     props: DashboardServiceProps
