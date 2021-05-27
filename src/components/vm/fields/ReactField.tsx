@@ -76,6 +76,13 @@ export class ReactField<T> extends Blockly.Field {
         }
     }
 
+    setSourceBlock(block: Blockly.Block) {
+        super.setSourceBlock(block)
+        this.onSourceBlockChanged()
+    }
+
+    onSourceBlockChanged() {}
+
     onMount() {}
 
     onUnmount() {}
