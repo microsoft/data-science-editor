@@ -41,7 +41,7 @@ export class ReactField<T> extends Blockly.Field {
     protected div_: Element
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    constructor(value: T, validator?: any, options?: any) {
+    constructor(value: string, validator?: any, options?: any) {
         super(value, validator, options)
     }
 

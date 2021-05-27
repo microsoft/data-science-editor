@@ -17,7 +17,7 @@ export default class LEDMatrixField extends ReactField<LEDMatrixFieldValue> {
     static KEY = "jacdac_field_led_matrix"
     private img: SVGImageElement
 
-    constructor(value: any) {
+    constructor(value: string) {
         super(value)
 
         this.size_ = new Blockly.utils.Size(32, 32)
@@ -25,7 +25,7 @@ export default class LEDMatrixField extends ReactField<LEDMatrixFieldValue> {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static fromJson(options: any) {
-        return new LEDMatrixField(options)
+        return new LEDMatrixField(options?.value)
     }
 
     get defaultValue() {

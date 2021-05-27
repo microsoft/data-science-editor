@@ -15,7 +15,7 @@ export default class KeyboardKeyField extends ReactField<KeyboardFieldValue> {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static fromJson(options: any) {
-        return new KeyboardKeyField(options)
+        return new KeyboardKeyField(options?.value, undefined, options)
     }
 
     get defaultValue() {

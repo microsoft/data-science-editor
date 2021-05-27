@@ -14,7 +14,7 @@ export default class NoteField extends ReactField<FrequencyFeld> {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static fromJson(options: any) {
-        return new NoteField(options)
+        return new NoteField(options?.value, undefined, options)
     }
 
     get defaultValue() {
