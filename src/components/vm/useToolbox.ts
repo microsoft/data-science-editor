@@ -3,6 +3,7 @@ import { useMemo } from "react"
 import {
     JoystickReg,
     SRV_BOOTLOADER,
+    SRV_BUZZER,
     SRV_CONTROL,
     SRV_HID_KEYBOARD,
     SRV_JOYSTICK,
@@ -38,6 +39,7 @@ import { Theme, useTheme } from "@material-ui/core"
 import { withPrefix } from "gatsby-link"
 import { registerFields } from "./fields/fields"
 import KeyboardKeyField from "./fields/KeyboardKeyField"
+import NoteField from "./fields/NoteField"
 
 const NEW_PROJET_XML = '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>'
 
@@ -377,6 +379,49 @@ function loadBlocks(
                     template: "custom",
                 }
         ),
+        ...resolveService(SRV_BUZZER).map(
+            service =>
+                <CustomBlockDefinition>{
+                    kind: "block",
+                    type: `play_note`,
+                    message0: `play %1 note %2 at volume %3`,
+                    args0: [
+                        fieldVariable(service),
+                        {
+                            type: "input_value",
+                            name: "frequency",
+                            check: "Number",
+                        },
+                        {
+                            type: "input_value",
+                            name: "volume",
+                            check: "Number",
+                        },
+                    ],
+                    values: {
+                        frequency: {
+                            kind: "block",
+                            type: "jacdac_note",
+                            shadow: true,
+                        },
+                        volume: {
+                            kind: "block",
+                            type: "jacdac_ratio",
+                            value: 0.5,
+                            shadow: true,
+                        },
+                    },
+                    colour: serviceColor(service),
+                    inputsInline: true,
+                    previousStatement: null,
+                    nextStatement: null,
+                    tooltip: `Send a keyboard key combo`,
+                    helpUrl: serviceHelp(service),
+                    service,
+                    expression: `role.play_tone(frequency / 10000, duration) TODO`,
+                    template: "custom",
+                }
+        ),
         ...resolveService(SRV_SEVEN_SEGMENT_DISPLAY).map(
             service =>
                 <CustomBlockDefinition>{
@@ -693,6 +738,19 @@ function loadBlocks(
     ]
 
     const shadowBlocks: BlockDefinition[] = [
+        {
+            kind: "block",
+            type: `jacdac_note`,
+            message0: `%1`,
+            args0: [
+                {
+                    type: NoteField.KEY,
+                    name: "note",
+                },
+            ],
+            style: "math_blocks",
+            output: "Number",
+        },
         {
             kind: "block",
             type: `jacdac_on_off`,
@@ -1050,7 +1108,9 @@ export default function useToolbox(props: {
                       )
                       .filter(srv => !!srv),
                   ...liveServices.map(srv => srv.specification),
-              ].filter(srv => !serviceClass || srv.classIdentifier === serviceClass),
+              ].filter(
+                  srv => !serviceClass || srv.classIdentifier === serviceClass
+              ),
         srv => srv.shortId,
         srv => srv
     )
