@@ -1,4 +1,11 @@
-import { createStyles, Grid, makeStyles, NoSsr, Theme } from "@material-ui/core"
+import {
+    createStyles,
+    Grid,
+    makeStyles,
+    NoSsr,
+    Theme,
+    Typography,
+} from "@material-ui/core"
 import React, { useState } from "react"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import { IT4Program } from "../../../jacdac-ts/src/vm/ir"
@@ -6,9 +13,9 @@ import { WorkspaceJSON } from "../../components/vm/jsongenerator"
 import VmEditor from "../../components/vm/VmEditor"
 import Dashboard from "../../components/dashboard/Dashboard"
 import Alert from "../../components/ui/Alert"
-import Markdown from "../../components/ui/Markdown"
 import useLocalStorage from "../../components/useLocalStorage"
 import VMRunner from "../../components/vm/VMRunner"
+import CodeBlock from "../../components/CodeBlock"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -24,6 +31,34 @@ const useStyles = makeStyles((theme: Theme) =>
         },
     })
 )
+
+function Diagnostics(props: {
+    program: IT4Program
+    source: WorkspaceJSON
+    xml: string
+}) {
+    const { program, source, xml } = props
+    return (
+        <>
+            <Grid item xs={12}>
+                <Typography variant="subtitle1">IT4</Typography>
+                <CodeBlock className="json">
+                    {JSON.stringify(program, null, 2)}
+                </CodeBlock>
+            </Grid>
+            <Grid item xs={12}>
+                <Typography variant="subtitle1">Blockly JSON</Typography>
+                <CodeBlock className="json">
+                    {JSON.stringify(source, null, 2)}
+                </CodeBlock>
+            </Grid>
+            <Grid item xs={12}>
+                <Typography variant="subtitle1">Blockly XML</Typography>
+                <CodeBlock className="xml">{xml}</CodeBlock>
+            </Grid>
+        </>
+    )
+}
 
 const VM_SOURCE_STORAGE_KEY = "jacdac:vmeditor:xml"
 export default function Page() {
@@ -67,29 +102,7 @@ export default function Page() {
                 <VMRunner program={program} autoStart={true} />
             </Grid>
             {Flags.diagnostics && (
-                <Grid item xs={12}>
-                    <Markdown
-                        source={`
-### IT4 program
-
-\`\`\`json
-${JSON.stringify(program, null, 2)}
-\`\`\`   
-
-### Workspace JSON
-
-\`\`\`json
-${JSON.stringify(source, null, 2)}
-\`\`\`   
-
-### Blockly XML
-
-\`\`\`xml
-${xml}
-\`\`\`                
-`}
-                    />
-                </Grid>
+                <Diagnostics program={program} source={source} xml={xml} />
             )}
             <Grid item xs={12}>
                 <Dashboard showStartSimulators={true} />
