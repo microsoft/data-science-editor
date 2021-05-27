@@ -18,6 +18,10 @@ export default class KeyboardKeyField extends ReactField<KeyboardFieldValue> {
         return new KeyboardKeyField(options)
     }
 
+    get defaultValue() {
+        return { selector: 4, modifiers: 0 }
+    }
+
     getText_() {
         const { selector, modifiers } = this.value
         return renderKeyboardKey(selector, modifiers, true)
