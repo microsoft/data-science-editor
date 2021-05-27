@@ -49,6 +49,7 @@ import useGridBreakpoints from "../../components/useGridBreakpoints"
 import Suspense from "../../components/ui/Suspense"
 import useServiceProviderFromServiceClass from "../../components/hooks/useServiceProviderFromServiceClass"
 import AppContext from "../../components/AppContext"
+import { AlertTitle } from "@material-ui/lab"
 const ImportButton = lazy(() => import("../../components/ImportButton"))
 
 // all settings keys are prefixed with this string
@@ -363,15 +364,22 @@ export default function HIDEvents() {
                                                 showAvatar={true}
                                             />
                                             <CardContent>
-                                                <Typography variant="h6">
-                                                    {event
-                                                        ? `${
-                                                              event.service.name
-                                                          } ${humanify(
-                                                              event.name
-                                                          )}`
-                                                        : `device not found`}
-                                                </Typography>
+                                                {event ? (
+                                                    <Typography variant="h6">
+                                                        {`${
+                                                            event.service.name
+                                                        } ${humanify(
+                                                            event.name
+                                                        )}`}
+                                                    </Typography>
+                                                ) : (
+                                                    <Alert severity="warning">
+                                                        <AlertTitle>
+                                                            Device not found
+                                                        </AlertTitle>
+                                                    </Alert>
+                                                )}
+
                                                 <Typography variant="h5">
                                                     {renderKeyboardKey(
                                                         selector,
