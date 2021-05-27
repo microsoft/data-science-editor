@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react"
+import React, { lazy, useContext, useEffect, useRef, useState } from "react"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import {
     Card,
@@ -39,13 +39,17 @@ import { jdpack, jdunpack } from "../../../jacdac-ts/src/jdom/pack"
 import { randomDeviceId } from "../../../jacdac-ts/src/jdom/random"
 import { JDBus } from "../../../jacdac-ts/src/jdom/bus"
 import useServices from "../../components/hooks/useServices"
-import { Button, Link } from "gatsby-theme-material-ui"
+import { Button } from "gatsby-theme-material-ui"
 import Alert from "../../components/ui/Alert"
 import GridHeader from "../../components/ui/GridHeader"
 import { humanify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import ConnectAlert from "../../components/alert/ConnectAlert"
 import DeviceCardHeader from "../../components/DeviceCardHeader"
 import useGridBreakpoints from "../../components/useGridBreakpoints"
+import Suspense from "../../components/ui/Suspense"
+import useServiceProviderFromServiceClass from "../../components/hooks/useServiceProviderFromServiceClass"
+import AppContext from "../../components/AppContext"
+const ImportButton = lazy(() => import("../../components/ImportButton"))
 
 // all settings keys are prefixed with this string
 const PREFIX = "@ke_"
@@ -205,12 +209,13 @@ function SelectHIDEvent(props: { onAdd: (hidEvent: HIDEvent) => void }) {
 
 export default function HIDEvents() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const { setError } = useContext(AppContext)
     const settingsServices = useServices({ serviceClass: SRV_SETTINGS })
     const [settingsService, setSettingsService] = useState<JDService>()
     const [hidEvents, setHIDEvents] = useState<HIDEvent[]>([])
     const [open, setOpen] = useState(false)
     const gridBreakpoints = useGridBreakpoints()
-    const exportRef = useRef<HTMLAnchorElement>()
+    const exportRef = useRef()
 
     const handleOpenAdd = () => setOpen(true)
     const handleCloseAdd = () => setOpen(false)
@@ -220,6 +225,7 @@ export default function HIDEvents() {
         srv => new SettingsClient(srv)
     )
 
+    useServiceProviderFromServiceClass(SRV_SETTINGS)
     useChange(settings, async () => {
         const hes: HIDEvent[] = []
         if (settings) {
@@ -261,8 +267,32 @@ export default function HIDEvents() {
             )
         )}`
     useEffect(() => {
-        if (exportRef.current) exportRef.current.download = "bindings.json"
+        if (exportRef.current)
+            (exportRef.current as HTMLAnchorElement).download = "bindings.json"
     }, [exportRef.current])
+    const handleFilesUploaded = async (files: File[]) => {
+        for (const file of files) {
+            try {
+                const text = await file.text()
+                const json = JSON.parse(text)
+                if (Array.isArray(json)) {
+                    for (const hidEvent of json as HIDEvent[]) {
+                        const event = bus.node(hidEvent.eventId) as JDEvent
+                        if (event) {
+                            const payload = HIDEventToBuffer(event, hidEvent)
+                            settings.setValue(
+                                PREFIX + randomDeviceId(),
+                                payload
+                            )
+                        }
+                    }
+                }
+            } catch (e) {
+                console.warn(e)
+                setError(`invalid file ${file.name}`)
+            }
+        }
+    }
     return (
         <>
             <h1>Accesibility Adapter</h1>
@@ -312,43 +342,58 @@ export default function HIDEvents() {
                         )}
                         {hidEvents
                             ?.map(({ eventId, selector, modifiers }) => ({
+                                eventId,
                                 event: bus.node(eventId) as JDEvent,
                                 selector,
                                 modifiers,
                             }))
-                            .map(({ event, selector, modifiers }, index) => (
-                                <Grid item {...gridBreakpoints} key={event.id}>
-                                    <Card>
-                                        <DeviceCardHeader
-                                            device={event.service.device}
-                                            showAvatar={true}
-                                        />
-                                        <CardContent>
-                                            <Typography variant="h6">
-                                                {event.service.name}{" "}
-                                                {humanify(event.name)}
-                                            </Typography>
-                                            <Typography variant="h5">
-                                                {renderKeyboardKey(
-                                                    selector,
-                                                    modifiers,
-                                                    true
-                                                )}
-                                            </Typography>
-                                        </CardContent>
-                                        <CardActions>
-                                            <IconButtonWithTooltip
-                                                title={"Remove binding"}
-                                                onClick={handleRemoveBinding(
-                                                    index
-                                                )}
-                                            >
-                                                <DeleteIcon />
-                                            </IconButtonWithTooltip>
-                                        </CardActions>
-                                    </Card>
-                                </Grid>
-                            ))}
+                            .map(
+                                (
+                                    { eventId, event, selector, modifiers },
+                                    index
+                                ) => (
+                                    <Grid
+                                        item
+                                        {...gridBreakpoints}
+                                        key={eventId}
+                                    >
+                                        <Card>
+                                            <DeviceCardHeader
+                                                device={event?.service.device}
+                                                showAvatar={true}
+                                            />
+                                            <CardContent>
+                                                <Typography variant="h6">
+                                                    {event
+                                                        ? `${
+                                                              event.service.name
+                                                          } ${humanify(
+                                                              event.name
+                                                          )}`
+                                                        : `device not found`}
+                                                </Typography>
+                                                <Typography variant="h5">
+                                                    {renderKeyboardKey(
+                                                        selector,
+                                                        modifiers,
+                                                        true
+                                                    )}
+                                                </Typography>
+                                            </CardContent>
+                                            <CardActions>
+                                                <IconButtonWithTooltip
+                                                    title={"Remove binding"}
+                                                    onClick={handleRemoveBinding(
+                                                        index
+                                                    )}
+                                                >
+                                                    <DeleteIcon />
+                                                </IconButtonWithTooltip>
+                                            </CardActions>
+                                        </Card>
+                                    </Grid>
+                                )
+                            )}
                         <Grid item xs={12}>
                             <Grid container spacing={1}>
                                 <Grid item>
@@ -368,6 +413,18 @@ export default function HIDEvents() {
                                     >
                                         Export
                                     </Button>
+                                </Grid>
+                                <Grid item>
+                                    <Suspense>
+                                        <ImportButton
+                                            icon={false}
+                                            text="Import"
+                                            onFilesUploaded={
+                                                handleFilesUploaded
+                                            }
+                                            acceptedFiles={["application/json"]}
+                                        />
+                                    </Suspense>
                                 </Grid>
                             </Grid>
                         </Grid>
