@@ -78,6 +78,8 @@ export interface BlockReference {
 
 export type EventTemplate = "event"
 
+export type EventFieldTemplate = "event_field"
+
 export type RegisterTemplate =
     | "register_change_event"
     | "register_set"
@@ -89,6 +91,7 @@ export type CustomTemplate = "custom"
 
 export type BlockTemplate =
     | EventTemplate
+    | EventFieldTemplate
     | RegisterTemplate
     | CommandTemplate
     | CustomTemplate
@@ -123,6 +126,11 @@ export interface ServiceBlockDefinition extends BlockDefinition {
 export interface EventBlockDefinition extends ServiceBlockDefinition {
     template: EventTemplate
     events: jdspec.PacketInfo[]
+}
+
+export interface EventFieldDefinition extends ServiceBlockDefinition {
+    template: EventFieldTemplate
+    event: jdspec.PacketInfo
 }
 
 export interface RegisterBlockDefinition extends ServiceBlockDefinition {
@@ -432,6 +440,41 @@ function loadBlocks(
         })
     )
 
+    // generate accessor blocks for event data with numbers
+    const eventFieldBlocks = arrayConcatMany(
+        events.map(({ service, events }) =>
+            events
+                .filter(event => event.fields.filter(isNumericType).length > 0)
+                .map(event => ({ service, event }))
+                .map(
+                    ({ service, event }) =>
+                        <EventFieldDefinition>{
+                            kind: "block",
+                            type: `jacdac_event_field_${service.shortId}_${event.name}`,
+                            message0: `${event.name} %1`,
+                            args0: [
+                                <InputDefinition>{
+                                    type: "field_dropdown",
+                                    name: "field",
+                                    options: event.fields.map(field => [
+                                        humanify(field.name),
+                                        field.name,
+                                    ]),
+                                },
+                            ],
+                            colour: serviceColor(service),
+                            inputsInline: true,
+                            tooltip: `Data fields of the ${event.name} event`,
+                            helpUrl: serviceHelp(service),
+                            service,
+                            event,
+                            output: "Number",
+                            template: "event_field",
+                        }
+                )
+        )
+    )
+
     const registerChangeByEventBlocks = registers
         .filter(
             ({ service }) =>
@@ -639,6 +682,7 @@ function loadBlocks(
 
     const serviceBlocks: ServiceBlockDefinition[] = [
         ...eventBlocks,
+        ...eventFieldBlocks,
         ...registerChangeByEventBlocks,
         ...registerSimplesGetBlocks,
         ...registerEnumGetBlocks,
