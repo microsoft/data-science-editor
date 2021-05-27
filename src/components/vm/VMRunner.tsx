@@ -28,7 +28,11 @@ export default function VMRunner(props: {
     const status = useChange(testRunner, t => t?.status)
     const handleRun = () => {
         setAutoStart(autoStartDefault)
-        testRunner.start()
+        try {
+            testRunner.start()
+        } catch (e) {
+            // TODO expose error here
+        }
     }
     const handleCancel = () => {
         setAutoStart(false)
