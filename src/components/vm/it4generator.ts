@@ -28,6 +28,7 @@ const ops = {
     ADD: "+",
     MUL: "*",
     DIV: "/",
+    MINUS: "-"
 }
 
 function toIdentifier(id: string) {
@@ -206,8 +207,9 @@ export default function workspaceJSONToIT4Program(
                 }
             }
         }
-
+        // for linking back 
         return {
+            blocklyId: block.id,
             command,
         }
     }
