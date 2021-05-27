@@ -125,7 +125,7 @@ const serviceViews: {
     },
     [SRV_BUZZER]: {
         component: DashboardBuzzer,
-        weight: () => 2,
+        weight: () => 6,
     },
     [SRV_LED_PIXEL]: {
         component: DashboardLEDPixel,
