@@ -39,6 +39,7 @@ export class ReactField<T> extends Blockly.Field {
     SERIALIZABLE = true
     protected div_: Element
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     constructor(value: T, validator?: any, options?: any) {
         super(value, validator, options)
     }
@@ -71,6 +72,10 @@ export class ReactField<T> extends Blockly.Field {
         }
     }
 
+    onMount() {}
+
+    onUnmount() {}
+
     showEditor_() {
         this.div_ = Blockly.DropDownDiv.getContentDiv()
         ReactDOM.render(this.render(), this.div_)
@@ -83,6 +88,8 @@ export class ReactField<T> extends Blockly.Field {
                 this,
                 this.dropdownDispose_.bind(this)
             )
+
+            this.onMount()
         }, 1)
     }
 
@@ -93,6 +100,7 @@ export class ReactField<T> extends Blockly.Field {
     dropdownDispose_() {
         // this blows on hot reloads
         try {
+            this.onUnmount()
             ReactDOM.unmountComponentAtNode(this.div_)
         } catch (e) {
             console.error(e)

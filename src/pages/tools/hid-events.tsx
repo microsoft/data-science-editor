@@ -22,9 +22,7 @@ import {
     SystemEvent,
 } from "../../../jacdac-ts/src/jdom/constants"
 import { JDEvent } from "../../../jacdac-ts/src/jdom/event"
-import KeyboardKeyInput, {
-    renderKeyboardKey,
-} from "../../components/ui/KeyboardKeyInput"
+import KeyboardKeyInput from "../../components/ui/KeyboardKeyInput"
 import IconButtonWithTooltip from "../../components/ui/IconButtonWithTooltip"
 import DeleteIcon from "@material-ui/icons/Delete"
 import SettingsClient from "../../../jacdac-ts/src/jdom/settingsclient"
@@ -50,6 +48,7 @@ import Suspense from "../../components/ui/Suspense"
 import useServiceProviderFromServiceClass from "../../components/hooks/useServiceProviderFromServiceClass"
 import AppContext from "../../components/AppContext"
 import { AlertTitle } from "@material-ui/lab"
+import { renderKeyboardKey } from "../../../jacdac-ts/src/servers/hidkeyboardserver"
 const ImportButton = lazy(() => import("../../components/ImportButton"))
 
 // all settings keys are prefixed with this string
@@ -296,7 +295,7 @@ export default function HIDEvents() {
     }
     return (
         <>
-            <h1>Accesibility Adapter</h1>
+            <h1>Accessibility Adapter</h1>
             <Grid container spacing={1}>
                 <GridHeader title="Select an adapter" />
                 {!settingsServices?.length && (

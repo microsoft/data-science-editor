@@ -1,17 +1,16 @@
-import React, { ReactNode } from "react"
+import React, { lazy, ReactNode } from "react"
 import { HidKeyboardModifiers } from "../../../../jacdac-ts/src/jdom/constants"
 import { ReactField } from "./ReactField"
-import KeyboardKeyInput, { renderKeyboardKey } from "../../ui/KeyboardKeyInput"
+import Suspense from "../../ui/Suspense"
+import { renderKeyboardKey } from "../../../../jacdac-ts/src/servers/hidkeyboardserver"
+const KeyboardKeyInput = lazy(() => import("../../ui/KeyboardKeyInput"))
 
 export interface KeyboardFieldValue {
     selector: number
     modifiers: HidKeyboardModifiers
 }
 
-export default class KeyboardKeyField extends ReactField<{
-    selector: number
-    modifiers: HidKeyboardModifiers
-}> {
+export default class KeyboardKeyField extends ReactField<KeyboardFieldValue> {
     static KEY = "jacdac_field_keyboard_key"
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -33,11 +32,13 @@ export default class KeyboardKeyField extends ReactField<{
             this.value = { selector: newSelector, modifiers: newModifiers }
         }
         return (
-            <KeyboardKeyInput
-                initialSelector={selector}
-                initialModifiers={modifiers}
-                onChange={handleChange}
-            />
+            <Suspense>
+                <KeyboardKeyInput
+                    initialSelector={selector}
+                    initialModifiers={modifiers}
+                    onChange={handleChange}
+                />
+            </Suspense>
         )
     }
 }

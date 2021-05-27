@@ -1,5 +1,5 @@
 import { Grid, Slider } from "@material-ui/core"
-import React, { useEffect, useMemo } from "react"
+import React, { lazy, useEffect } from "react"
 import { BuzzerCmd, BuzzerReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
@@ -7,9 +7,10 @@ import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import useServiceServer from "../hooks/useServiceServer"
 import usePlayTone from "../hooks/usePlayTone"
 import BuzzerServer from "../../../jacdac-ts/src/servers/buzzerserver"
-import PianoWidget from "../widgets/PianoWidget"
 import VolumeDownIcon from "@material-ui/icons/VolumeDown"
 import VolumeUpIcon from "@material-ui/icons/VolumeUp"
+import Suspense from "../ui/Suspense"
+const PianoWidget = lazy(() => import("../widgets/PianoWidget"))
 
 export default function DashboardBuzzer(props: DashboardServiceProps) {
     const { service } = props
@@ -48,12 +49,14 @@ export default function DashboardBuzzer(props: DashboardServiceProps) {
     const handleChange = async (ev: unknown, newValue: number | number[]) => {
         volumeRegister.sendSetPackedAsync("u0.8", [newValue], true)
     }
-    useEffect(() => setVolume(volume), [volume])
+    useEffect(() => setVolume?.(volume), [volume])
 
     return (
         <>
             <Grid item xs>
-                <PianoWidget playTone={sendPlayTone} />
+                <Suspense>
+                    <PianoWidget playTone={sendPlayTone} />
+                </Suspense>
             </Grid>
             {volume !== undefined && (
                 <Grid item xs={12}>
