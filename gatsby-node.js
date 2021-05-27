@@ -11,6 +11,7 @@ const {
 } = require(`./jacdac-ts/dist/jacdac.cjs`)
 const { IgnorePlugin } = require("webpack")
 const AVATAR_SIZE = 64
+const LAZY_SIZE = 96
 
 async function createServicePages(graphql, actions, reporter) {
     const { createPage, createRedirect } = actions
@@ -141,6 +142,16 @@ async function createDevicePages(graphql, actions, reporter) {
         const imgpath = identifierToUrlPath(node.id) + ".jpg"
         const imgsrc = `./jacdac-ts/jacdac-spec/devices/${imgpath}`
         await fs.copy(imgsrc, `./public/images/devices/${imgpath}`)
+        await sharp(imgsrc)
+            .resize(null, LAZY_SIZE, {
+                fit: sharp.fit.cover,
+            })
+            .toFormat("jpeg")
+            .toFile(
+                `./public/images/devices/${
+                    identifierToUrlPath(node.id) + ".lazy.jpg"
+                }`
+            )
         await sharp(imgsrc)
             .resize(AVATAR_SIZE, AVATAR_SIZE, { fit: sharp.fit.cover })
             .toFormat("jpeg")

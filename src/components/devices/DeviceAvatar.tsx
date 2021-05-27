@@ -5,8 +5,8 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
     DialogTitle,
+    Grid,
     makeStyles,
     Theme,
 } from "@material-ui/core"
@@ -40,6 +40,41 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 )
 
+function LazyDeviceImage(props: { device: JDDevice }) {
+    const { device } = props
+    const specification = useDeviceSpecification(device)
+    const imageUrl = useDeviceImage(specification, "lazy")
+    const largeImageUrl = useDeviceImage(specification)
+    const [showLarge, setShowLarge] = useState(false)
+
+    if (!imageUrl) return null
+
+    const handleLargeLoaded = () => setShowLarge(true)
+
+    return (
+        <>
+            <img
+                style={{
+                    width: "100%",
+                    display: showLarge ? undefined : "none",
+                }}
+                src={largeImageUrl}
+                onLoad={handleLargeLoaded}
+            />
+            {!showLarge && (
+                <img
+                    style={{
+                        minHeight: "18rem",
+                        width: "100%",
+                        filter: "blur",
+                    }}
+                    src={imageUrl}
+                />
+            )}
+        </>
+    )
+}
+
 export default function DeviceAvatar(props: {
     device: JDDevice
     size?: "small" | "large"
@@ -48,7 +83,6 @@ export default function DeviceAvatar(props: {
     const [identifyDialog, setIdentifyDialog] = useState(false)
     const specification = useDeviceSpecification(device)
     const imageUrl = useDeviceImage(specification, "avatar")
-    const largeImageUrl = useDeviceImage(specification)
     const name = useDeviceName(device)
     const classes = useStyles()
     const sizeClassName =
@@ -113,16 +147,21 @@ export default function DeviceAvatar(props: {
                         Identifying {device.friendlyName}...
                     </DialogTitle>
                     <DialogContent>
-                        <DialogContentText>
-                            <img
-                                alt={`image of ${device.friendlyName}`}
-                                src={largeImageUrl}
-                            />
-                            <Alert severity="info">
-                                Look for four blinks in around 2 seconds with
-                                the blue LED.
-                            </Alert>
-                        </DialogContentText>
+                        <Grid
+                            container
+                            alignItems="center"
+                            alignContent={"center"}
+                        >
+                            <Grid item xs={12}>
+                                <LazyDeviceImage device={device} />
+                            </Grid>
+                            <Grid item xs>
+                                <Alert severity="info">
+                                    Look for four blinks in around 2 seconds
+                                    with the blue LED.
+                                </Alert>
+                            </Grid>
+                        </Grid>
                     </DialogContent>
                     <DialogActions>
                         <Button
