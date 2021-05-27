@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import {
     Card,
@@ -31,6 +31,7 @@ import SettingsClient from "../../../jacdac-ts/src/jdom/settingsclient"
 import useServiceClient from "../../components/useServiceClient"
 import {
     arrayConcatMany,
+    clone,
     fromHex,
     toHex,
 } from "../../../jacdac-ts/src/jdom/utils"
@@ -38,7 +39,7 @@ import { jdpack, jdunpack } from "../../../jacdac-ts/src/jdom/pack"
 import { randomDeviceId } from "../../../jacdac-ts/src/jdom/random"
 import { JDBus } from "../../../jacdac-ts/src/jdom/bus"
 import useServices from "../../components/hooks/useServices"
-import { Button } from "gatsby-theme-material-ui"
+import { Button, Link } from "gatsby-theme-material-ui"
 import Alert from "../../components/ui/Alert"
 import GridHeader from "../../components/ui/GridHeader"
 import { humanify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
@@ -209,6 +210,7 @@ export default function HIDEvents() {
     const [hidEvents, setHIDEvents] = useState<HIDEvent[]>([])
     const [open, setOpen] = useState(false)
     const gridBreakpoints = useGridBreakpoints()
+    const exportRef = useRef<HTMLAnchorElement>()
 
     const handleOpenAdd = () => setOpen(true)
     const handleCloseAdd = () => setOpen(false)
@@ -247,6 +249,20 @@ export default function HIDEvents() {
     }
     const handleSelectSettingsService = (service: JDService) => () =>
         setSettingsService(settingsService === service ? undefined : service)
+
+    const exportUri =
+        hidEvents &&
+        `data:application/json;charset=UTF-8,${encodeURIComponent(
+            JSON.stringify(
+                clone(hidEvents).map(h => {
+                    delete h.key
+                    return h
+                })
+            )
+        )}`
+    useEffect(() => {
+        if (exportRef.current) exportRef.current.download = "bindings.json"
+    }, [exportRef.current])
     return (
         <>
             <h1>Accesibility Adapter</h1>
@@ -334,13 +350,26 @@ export default function HIDEvents() {
                                 </Grid>
                             ))}
                         <Grid item xs={12}>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleOpenAdd}
-                            >
-                                Add binding
-                            </Button>
+                            <Grid container spacing={1}>
+                                <Grid item>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={handleOpenAdd}
+                                    >
+                                        Add binding
+                                    </Button>
+                                </Grid>
+                                <Grid item>
+                                    <Button
+                                        ref={exportRef}
+                                        variant="outlined"
+                                        href={exportUri}
+                                    >
+                                        Export
+                                    </Button>
+                                </Grid>
+                            </Grid>
                         </Grid>
                     </>
                 )}
