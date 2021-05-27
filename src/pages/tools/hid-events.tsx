@@ -296,7 +296,7 @@ export default function HIDEvents() {
     }
     return (
         <>
-            <h1>Accesibility Adapter</h1>
+            <h1>Accessibility Adapter</h1>
             <Grid container spacing={1}>
                 <GridHeader title="Select an adapter" />
                 {!settingsServices?.length && (
