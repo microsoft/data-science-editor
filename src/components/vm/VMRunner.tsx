@@ -21,7 +21,6 @@ import {
 import AddIcon from "@material-ui/icons/Add"
 import AppContext from "../AppContext"
 import { ERROR, TRACE } from "../../../jacdac-ts/src/jdom/constants"
-import { string } from "prop-types"
 
 export default function VMRunner(props: {
     program: IT4Program
