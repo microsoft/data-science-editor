@@ -28,7 +28,7 @@ const ops = {
     ADD: "+",
     MUL: "*",
     DIV: "/",
-    MINUS: "-"
+    MINUS: "-",
 }
 
 function toIdentifier(id: string) {
@@ -55,7 +55,7 @@ export default function workspaceJSONToIT4Program(
 
     const roles: IT4Role[] = workspace.variables
         .filter(v => BUILTIN_TYPES.indexOf(v.type) < 0)
-        .map(v => ({ role: v.name, serviceShortName: v.type }))
+        .map(v => ({ role: v.name, serviceShortId: v.type }))
 
     const blockToExpression = (block: BlockJSON) => {
         if (!block) return undefined
@@ -207,9 +207,9 @@ export default function workspaceJSONToIT4Program(
                 }
             }
         }
-        // for linking back 
+        // for linking back
         return {
-            blocklyId: block.id,
+            sourceId: block.id,
             command,
         }
     }
@@ -260,7 +260,7 @@ export default function workspaceJSONToIT4Program(
                                     role.toString(),
                                     register.name
                                 ),
-                                argument
+                                argument,
                             ],
                             callee: toIdentifier("awaitChange"),
                         },

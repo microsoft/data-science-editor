@@ -2,7 +2,11 @@ import React, { MutableRefObject, useContext, useEffect, useState } from "react"
 import { Button, Chip, Grid, Tooltip, Typography } from "@material-ui/core"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import { IT4Program } from "../../../jacdac-ts/src/vm/ir"
-import { IT4ProgramRunner, VMStatus } from "../../../jacdac-ts/src/vm/vmrunner"
+import {
+    IT4ProgramRunner,
+    TraceContext,
+    VMStatus,
+} from "../../../jacdac-ts/src/vm/vmrunner"
 import useChange from "../../jacdac/useChange"
 import PlayArrowIcon from "@material-ui/icons/PlayArrow"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
@@ -15,6 +19,9 @@ import {
     serviceProviderDefinitionFromServiceClass,
 } from "../../../jacdac-ts/src/servers/servers"
 import AddIcon from "@material-ui/icons/Add"
+import AppContext from "../AppContext"
+import { ERROR, TRACE } from "../../../jacdac-ts/src/jdom/constants"
+import { string } from "prop-types"
 
 export default function VMRunner(props: {
     program: IT4Program
@@ -23,9 +30,11 @@ export default function VMRunner(props: {
 }) {
     const { program, autoStart: autoStartDefault, runnerRef } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const { setError } = useContext(AppContext)
     const [testRunner, setTestRunner] = useState<IT4ProgramRunner>()
     const [autoStart, setAutoStart] = useState(!!autoStartDefault)
 
+    // create runner
     useEffect(() => {
         const runner = program && new IT4ProgramRunner(program, bus)
         setTestRunner(runner)
@@ -36,6 +45,20 @@ export default function VMRunner(props: {
             runnerRef.current = undefined
         }
     }, [program, autoStart])
+
+    // errors
+    useEffect(() => testRunner?.subscribe(ERROR, e => setError(e)))
+    // traces
+    const handleTrace = (value: { message: string; context: TraceContext }) => {
+        const { message, context } = value
+        console.debug(`vm> ${message}`, context)
+    }
+    useEffect(() =>
+        testRunner?.subscribe<{ message: string; context: TraceContext }>(
+            TRACE,
+            handleTrace
+        )
+    )
 
     const disabled = !testRunner
     const status = useChange(testRunner, t => t?.status)
@@ -52,7 +75,11 @@ export default function VMRunner(props: {
         testRunner.cancel()
     }
     const running = status === VMStatus.Running
-    const roles = useChange(runnerRef.current, _ => _?.roles)
+    const roles = useChange(runnerRef.current, _ => {
+        const r = _?.roles
+        if (r) console.debug(`vm roles`, { roles: r })
+        return r
+    })
 
     const handleRoleClick =
         (role: string, service: JDService, specification: jdspec.ServiceSpec) =>

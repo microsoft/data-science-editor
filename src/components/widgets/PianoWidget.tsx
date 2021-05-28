@@ -33,7 +33,6 @@ export default function PianoWidget(props: {
                 stopNote={() => {
                     // not supported
                 }}
-                width={"28rem"}
                 keyboardShortcuts={keyboardShortcuts}
             />
         </Box>
