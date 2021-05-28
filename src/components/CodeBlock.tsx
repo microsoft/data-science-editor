@@ -16,8 +16,6 @@ import GetAppIcon from "@material-ui/icons/GetApp"
 import LaunchIcon from "@material-ui/icons/Launch"
 import Tooltip from "./ui/Tooltip"
 import MakeCodeSnippet from "./makecode/MakeCodeSnippet"
-import Markdown from "./ui/Markdown"
-import { Alert } from "@material-ui/lab"
 import Suspense from "./ui/Suspense"
 
 const TraceSnippet = lazy(() => import("./TraceSnippet"))
@@ -124,15 +122,6 @@ export default function CodeBlock(props: {
             )
         case "blocks":
             return <MakeCodeSnippet renderedSource={children} />
-        case "info":
-        case "error":
-        case "warning":
-        case "success":
-            return (
-                <Alert severity={language}>
-                    <Markdown source={children.trim()} />
-                </Alert>
-            )
         case "vanilla":
             return (
                 <HighlightedCode
