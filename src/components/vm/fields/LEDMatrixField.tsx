@@ -1,9 +1,7 @@
 import React, { lazy, ReactNode } from "react"
 import { fromHex, toHex } from "../../../../jacdac-ts/src/jdom/utils"
 import Suspense from "../../ui/Suspense"
-import { ReactField } from "./ReactField"
-import Blockly from "blockly"
-import { child, elt } from "../../widgets/svg"
+import ReactImageField from "./ReactImageField"
 const LEDMatrixWidget = lazy(() => import("../../widgets/LEDMatrixWidget"))
 
 export interface LEDMatrixFieldValue {
@@ -13,14 +11,11 @@ export interface LEDMatrixFieldValue {
     columns: number
 }
 
-export default class LEDMatrixField extends ReactField<LEDMatrixFieldValue> {
+export default class LEDMatrixField extends ReactImageField<LEDMatrixFieldValue> {
     static KEY = "jacdac_field_led_matrix"
-    private img: SVGImageElement
 
     constructor(value: string) {
         super(value)
-
-        this.size_ = new Blockly.utils.Size(32, 32)
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -41,7 +36,13 @@ export default class LEDMatrixField extends ReactField<LEDMatrixFieldValue> {
         return `${leds} (${rows}x${columns})`
     }
 
-    private renderValue() {
+    doValueUpdate_(newValue: string) {
+        super.doValueUpdate_(newValue)
+        const { rows, columns } = this.value
+        this.setSize(32, (32 / columns) * rows)
+    }
+
+    renderValue(): string {
         const { leds, rows, columns } = this.value
         // render current state to LEDmatrix field
         const columnspadded = columns + (8 - (columns % 8))
@@ -69,30 +70,8 @@ export default class LEDMatrixField extends ReactField<LEDMatrixFieldValue> {
             }
         }
         const dataUri = cvs.toDataURL("image/png")
-        this.img?.setAttributeNS(
-            "http://www.w3.org/1999/xlink",
-            "xlink:href",
-            dataUri
-        )
+        return dataUri
     }
-
-    initView() {
-        const { rows, columns } = this.value
-        const w = this.size_.width
-        this.img = child(this.fieldGroup_, "image", {
-            height: ((w / columns) * rows) | 0,
-            width: w,
-            alt: "LED matrix",
-        }) as SVGImageElement
-        this.renderValue()
-    }
-
-    doValueUpdate_(newValue: string) {
-        this.value_ = newValue
-        this.renderValue()
-    }
-
-    updateSize_() {}
 
     renderField(): ReactNode {
         const { leds, rows, columns } = this.value
