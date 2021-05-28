@@ -1,5 +1,5 @@
 import React, { MutableRefObject, useContext, useEffect, useState } from "react"
-import { Button, Chip, Grid } from "@material-ui/core"
+import { Button, Chip, Grid, Tooltip, Typography } from "@material-ui/core"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import { IT4Program } from "../../../jacdac-ts/src/vm/ir"
 import { IT4ProgramRunner, VMStatus } from "../../../jacdac-ts/src/vm/vmrunner"
@@ -14,6 +14,7 @@ import {
     addServiceProvider,
     serviceProviderDefinitionFromServiceClass,
 } from "../../../jacdac-ts/src/servers/servers"
+import AddIcon from "@material-ui/icons/Add"
 
 export default function VMRunner(props: {
     program: IT4Program
@@ -92,20 +93,32 @@ export default function VMRunner(props: {
                     }))
                     .map(({ role, service, specification }) => (
                         <Grid item key={role}>
-                            <Chip
-                                label={role}
-                                variant={service ? "default" : "outlined"}
-                                avatar={
-                                    service && (
-                                        <DeviceAvatar device={service.device} />
-                                    )
+                            <Tooltip
+                                title={
+                                    service
+                                        ? `bound to ${service.device.friendlyName}`
+                                        : `start ${specification.name} simulator`
                                 }
-                                onClick={handleRoleClick(
-                                    role,
-                                    service,
-                                    specification
-                                )}
-                            />
+                            >
+                                <Chip
+                                    label={role}
+                                    variant={service ? "default" : "outlined"}
+                                    avatar={
+                                        service ? (
+                                            <DeviceAvatar
+                                                device={service.device}
+                                            />
+                                        ) : (
+                                            <AddIcon />
+                                        )
+                                    }
+                                    onClick={handleRoleClick(
+                                        role,
+                                        service,
+                                        specification
+                                    )}
+                                />
+                            </Tooltip>
                         </Grid>
                     ))}
         </Grid>

@@ -54,7 +54,7 @@ export default function IdentifyDialog(props: {
 }) {
     const { device, open, onClose } = props
     const handleSendIdentify = async () => await device.identify()
-    const handleCloseIdentify = () => onClose
+    const handleCloseIdentify = () => onClose()
 
     useEffect(() => {
         if (open) {
