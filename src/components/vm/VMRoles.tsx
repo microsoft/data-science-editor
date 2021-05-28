@@ -53,7 +53,7 @@ export default function VMRoles(props: { runner: IT4ProgramRunner }) {
                                 title={
                                     service
                                         ? `bound to ${service.device.friendlyName}`
-                                        : `start ${specification.name} simulator`
+                                        : `start simulator`
                                 }
                             >
                                 <Chip

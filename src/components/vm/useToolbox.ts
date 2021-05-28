@@ -311,8 +311,9 @@ function loadBlocks(
                     args0: [
                         fieldVariable(service),
                         {
-                            type: LEDColorField.KEY,
+                            type: "input_value",
                             name: "color",
+                            check: "Number",
                         },
                         {
                             type: "input_value",
@@ -321,6 +322,10 @@ function loadBlocks(
                         },
                     ],
                     values: {
+                        color: {
+                            kind: "block",
+                            type: LEDColorField.SHADOW.type,
+                        },
                         speed: {
                             kind: "block",
                             type: "jacdac_ratio",
@@ -922,9 +927,15 @@ function loadBlocks(
                 {
                     type: "input_value",
                     name: "color",
-                    check: "Color",
+                    check: "Number",
                 },
             ],
+            values: {
+                color: {
+                    kind: "block",
+                    type: LEDColorField.SHADOW.type,
+                },
+            },
             inputsInline: true,
             previousStatement: "Statement",
             nextStatement: "Statement",
@@ -1144,7 +1155,10 @@ export default function useToolbox(props: {
                     kind: "block",
                     type: SET_STATUS_LIGHT_BLOCK,
                     values: {
-                        color: { kind: "block", type: "jacdac_color" },
+                        color: {
+                            kind: "block",
+                            type: LEDColorField.SHADOW.type,
+                        },
                     },
                 },
         ].filter(b => !!b),
