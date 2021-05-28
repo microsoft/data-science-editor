@@ -34,7 +34,7 @@ export default class ServoAngleField extends SliderField {
     }
 
     getText_() {
-        return (this.value || 0) + "°"
+        return this.value + "°"
     }
 
     renderWidget(): ReactNode {

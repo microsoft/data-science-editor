@@ -3,55 +3,45 @@ import Blockly from "blockly"
 import { child } from "../../widgets/svg"
 
 export default class ReactImageField<T> extends ReactField<T> {
-    private img: SVGImageElement
-
     constructor(value: string, width = 32, height = 32) {
-        super(value)
-
-        this.size_ = new Blockly.utils.Size(width, height)
+        super(value, undefined, undefined, { width, height })
     }
 
     setSize(width: number, height: number) {
         this.size_ = new Blockly.utils.Size(width, height)
-        if (this.img) {
-            this.img.setAttribute("width", width + "")
-            this.img.setAttribute("height", height + "")
+        const img = this.view as SVGImageElement
+        if (img) {
+            img.setAttribute("width", width + "")
+            img.setAttribute("height", height + "")
         }
     }
 
-    updateImage() {
+    protected updateView() {
         const imgUri = this.renderValue()
+        const img = this.view as SVGImageElement
         if (imgUri) {
-            this.img?.setAttributeNS(
+            img?.setAttributeNS(
                 "http://www.w3.org/1999/xlink",
                 "xlink:href",
                 imgUri
             )
-            this.img?.setAttribute("alt", this.getText())
+            img?.setAttribute("alt", this.getText())
         }
     }
 
     /**
      * Renders the value to a data uri string
      */
-    renderValue(): string {
+    protected renderValue(): string {
         return undefined
     }
 
-    initView() {
+    protected initCustomView() {
         const { width, height } = this.size_
-        this.img = child(this.fieldGroup_, "image", {
+        return child(this.fieldGroup_, "image", {
             height,
             width,
             alt: this.getText(),
         }) as SVGImageElement
-        this.updateImage()
     }
-
-    doValueUpdate_(newValue: string) {
-        this.value_ = newValue
-        this.updateImage()
-    }
-
-    updateSize_() {}
 }

@@ -30,42 +30,32 @@ function LEDColorFieldWidget() {
 export default class LEDColorField extends ReactField<number> {
     static KEY = "jacdac_field_led_color"
     static SHADOW = toShadowDefinition(LEDColorField)
-    private circle: SVGCircleElement
 
     static fromJson(options: ReactFieldJSON) {
         return new LEDColorField(options)
     }
 
     constructor(options?: any) {
-        super(options?.value, undefined, options)
-
-        this.size_ = new Blockly.utils.Size(28, 28)
+        super(options?.value, undefined, options, { width: 28, height: 28 })
     }
 
-    updateSize_() {}
-
-    initView() {
+    protected initCustomView() {
         const { width } = this.size_
         const r = width >> 1
-        this.circle = child(this.fieldGroup_, "circle", {
+        return child(this.fieldGroup_, "circle", {
             r: width >> 1,
             cx: r,
             cy: r,
             strokeWidth: 2,
             stroke: "#777",
         }) as SVGCircleElement
-        this.updateView()
-    }
-
-    doValueUpdate_(newValue: string) {
-        this.value_ = newValue
-        this.updateView()
     }
 
     updateView() {
         const c = rgbToHtmlColor(this.value)
+        const circle = this.view as SVGCircleElement
         if (c) {
-            this.circle?.setAttribute("fill", c)
+            circle?.setAttribute("fill", c)
         }
     }
 

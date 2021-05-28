@@ -55,10 +55,17 @@ export type ReactFieldJSON = any
 export default class ReactField<T> extends Blockly.Field {
     SERIALIZABLE = true
     protected div_: Element
+    protected view: SVGElement
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    constructor(value: string, validator?: any, options?: any) {
+    constructor(
+        value: string,
+        validator?: any,
+        options?: any,
+        size?: { width: number; height: number }
+    ) {
         super(value, validator, options)
+        if (size) this.size_ = new Blockly.utils.Size(size.width, size.height)
     }
 
     get defaultValue(): T {
@@ -78,6 +85,20 @@ export default class ReactField<T> extends Blockly.Field {
     set value(v: T) {
         this.setValue(JSON.stringify(v))
     }
+
+    // override to listen for mounting events
+    onMount() {}
+
+    // override to listen for unmounting
+    onUnmount() {}
+
+    // override to support custom view
+    protected initCustomView(): SVGElement {
+        return null
+    }
+
+    // override to update view
+    protected updateView() {}
 
     getText_() {
         return JSON.stringify(this.value)
@@ -100,9 +121,22 @@ export default class ReactField<T> extends Blockly.Field {
 
     onSourceBlockChanged() {}
 
-    onMount() {}
+    initView() {
+        this.view = this.initCustomView()
+        if (this.view) this.updateView()
+        else super.initView()
+    }
 
-    onUnmount() {}
+    updateSize_() {
+        if (!this.view) super.updateSize_()
+    }
+
+    doValueUpdate_(newValue: string) {
+        if (this.view) {
+            this.value_ = newValue
+            this.updateView()
+        } else super.doValueUpdate_(newValue)
+    }
 
     showEditor_() {
         this.div_ = Blockly.DropDownDiv.getContentDiv()

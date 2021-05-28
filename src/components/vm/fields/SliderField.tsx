@@ -45,6 +45,10 @@ export default class SliderField extends ReactField<number> {
         return 0
     }
 
+    getText_() {
+        return this.value + ""
+    }
+
     renderField(): ReactNode {
         return <FieldWithSlider>{this.renderWidget()}</FieldWithSlider>
     }
