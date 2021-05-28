@@ -3,14 +3,31 @@ import NoteField from "./NoteField"
 import KeyboardKeyField from "./KeyboardKeyField"
 import LEDMatrixField from "./LEDMatrixField"
 import ServoAngleField from "./ServoAngleField"
+import { BlockDefinition } from "../toolbox"
+import { assert } from "../../../../jacdac-ts/src/jdom/utils"
 
-let registered = false
+let reactFieldShadows: BlockDefinition[]
 export function registerFields() {
-    if (registered) return
+    if (reactFieldShadows) return
 
-    registered = true
-    Blockly.fieldRegistry.register(KeyboardKeyField.KEY, KeyboardKeyField)
-    Blockly.fieldRegistry.register(NoteField.KEY, NoteField)
-    Blockly.fieldRegistry.register(LEDMatrixField.KEY, LEDMatrixField)
-    Blockly.fieldRegistry.register(ServoAngleField.KEY, ServoAngleField)
+    reactFieldShadows = []
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const registerType = (fieldType: any) => {
+        const key = fieldType.KEY
+        assert(!!key)
+        Blockly.fieldRegistry.register(key, fieldType)
+        if (fieldType.SHADOW) reactFieldShadows.push(fieldType.SHADOW)
+    }
+    const fieldTypes = [
+        KeyboardKeyField,
+        NoteField,
+        LEDMatrixField,
+        ServoAngleField,
+    ]
+    fieldTypes.forEach(registerType)
+}
+
+export function fieldShadows() {
+    registerFields()
+    return reactFieldShadows.slice(0)
 }

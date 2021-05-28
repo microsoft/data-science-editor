@@ -1,6 +1,7 @@
 import React, { lazy, ReactNode } from "react"
 import { fromHex, toHex } from "../../../../jacdac-ts/src/jdom/utils"
 import Suspense from "../../ui/Suspense"
+import { ReactFieldJSON } from "./ReactField"
 import ReactImageField from "./ReactImageField"
 const LEDMatrixWidget = lazy(() => import("../../widgets/LEDMatrixWidget"))
 
@@ -18,8 +19,7 @@ export default class LEDMatrixField extends ReactImageField<LEDMatrixFieldValue>
         super(value)
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    static fromJson(options: any) {
+    static fromJson(options: ReactFieldJSON) {
         return new LEDMatrixField(options?.value)
     }
 

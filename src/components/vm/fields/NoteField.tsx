@@ -1,7 +1,7 @@
 import React, { lazy, ReactNode } from "react"
 import { createToneContext, ToneContext } from "../../hooks/toneContext"
 import Suspense from "../../ui/Suspense"
-import { ReactField } from "./ReactField"
+import { ReactField, ReactFieldJSON, toShadowDefinition } from "./ReactField"
 const PianoWidget = lazy(() => import("../../widgets/PianoWidget"))
 
 export interface FrequencyFeld {
@@ -10,10 +10,10 @@ export interface FrequencyFeld {
 
 export default class NoteField extends ReactField<FrequencyFeld> {
     static KEY = "jacdac_field_note"
+    static SHADOW = toShadowDefinition(NoteField)
     toneContext: ToneContext
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    static fromJson(options: any) {
+    static fromJson(options: ReactFieldJSON) {
         return new NoteField(options?.value, undefined, options)
     }
 

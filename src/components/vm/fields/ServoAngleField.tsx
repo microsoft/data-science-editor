@@ -1,7 +1,13 @@
 import React, { lazy, ReactNode, useContext } from "react"
 import SliderField from "./SliderField"
 import Suspense from "../../ui/Suspense"
-import { ReactFieldContext, ReactFieldContextProps } from "./ReactField"
+import {
+    ReactFieldContext,
+    ReactFieldContextProps,
+    ReactFieldJSON,
+    toShadowDefinition,
+} from "./ReactField"
+
 const ServoWidget = lazy(() => import("../../widgets/ServoWidget"))
 
 function ServiceFieldWidget() {
@@ -21,9 +27,9 @@ function ServiceFieldWidget() {
 
 export default class ServoAngleField extends SliderField {
     static KEY = "jacdac_field_servo_angle"
+    static SHADOW = toShadowDefinition(ServoAngleField)
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    static fromJson(options: any) {
+    static fromJson(options: ReactFieldJSON) {
         return new ServoAngleField(options?.value, options)
     }
 

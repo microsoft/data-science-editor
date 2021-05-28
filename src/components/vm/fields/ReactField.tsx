@@ -8,6 +8,8 @@ import { IdProvider } from "react-use-id-hook"
 import DarkModeProvider from "../../ui/DarkModeProvider"
 import AppTheme from "../../ui/AppTheme"
 import { Box } from "@material-ui/core"
+import { BlockDefinition } from "../toolbox"
+import { assert } from "../../../../jacdac-ts/src/jdom/utils"
 
 declare module "blockly" {
     interface Block {
@@ -47,6 +49,8 @@ export default function ReactFieldProvider(props: {
         </ReactFieldContext.Provider>
     )
 }
+
+export type ReactFieldJSON = any
 
 export class ReactField<T> extends Blockly.Field {
     SERIALIZABLE = true
@@ -152,5 +156,25 @@ export class ReactField<T> extends Blockly.Field {
 
     renderField(): ReactNode {
         return <span>not implemented</span>
+    }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function toShadowDefinition(fieldType: any): BlockDefinition {
+    assert(!!fieldType.KEY)
+    const type = fieldType.KEY + "_shadow"
+    return {
+        kind: "block",
+        type,
+        message0: `%1`,
+        args0: [
+            {
+                type: fieldType.KEY,
+                name: "value",
+            },
+        ],
+        style: "math_blocks",
+        output: "Number",
+        template: "shadow",
     }
 }
