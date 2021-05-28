@@ -217,16 +217,15 @@ export default function workspaceJSONToIT4Program(
     const handlers: IT4Handler[] = workspace.blocks.map(top => {
         const { type, inputs } = top
         const commands: IT4GuardedCommand[] = []
+        let command: jsep.CallExpression = undefined
         if (type === WHILE_CONDITION_BLOCK) {
             // this is while (...)
             const { child: condition } = inputs[0]
-            commands.push({
-                command: {
-                    type: "CallExpression",
-                    arguments: [blockToExpression(condition)],
-                    callee: toIdentifier("awaitCondition"),
-                },
-            })
+            command = {
+                type: "CallExpression",
+                arguments: [blockToExpression(condition)],
+                callee: toIdentifier("awaitCondition"),
+            }
         } else {
             const def = serviceBlocks.find(def => def.type === type)
             assert(!!def)
@@ -235,41 +234,40 @@ export default function workspaceJSONToIT4Program(
             switch (template) {
                 case "event": {
                     const { value: eventName } = inputs[0].fields["event"]
-                    commands.push({
-                        command: {
-                            type: "CallExpression",
-                            arguments: [
-                                toMemberExpression(
-                                    role.toString(),
-                                    eventName.toString()
-                                ),
-                            ],
-                            callee: toIdentifier("awaitEvent"),
-                        },
-                    })
+                    command = {
+                        type: "CallExpression",
+                        arguments: [
+                            toMemberExpression(
+                                role.toString(),
+                                eventName.toString()
+                            ),
+                        ],
+                        callee: toIdentifier("awaitEvent"),
+                    }
                     break
                 }
                 case "register_change_event": {
                     const { register } = def as RegisterBlockDefinition
                     const argument = blockToExpression(inputs[0].child)
-                    commands.push({
-                        command: {
-                            type: "CallExpression",
-                            arguments: [
-                                toMemberExpression(
-                                    role.toString(),
-                                    register.name
-                                ),
-                                argument,
-                            ],
-                            callee: toIdentifier("awaitChange"),
-                        },
-                    })
+                    command = {
+                        type: "CallExpression",
+                        arguments: [
+                            toMemberExpression(
+                                role.toString(),
+                                register.name
+                            ),
+                            argument,
+                        ],
+                        callee: toIdentifier("awaitChange"),
+                    }
                     break
                 }
             }
         }
-
+        commands.push({
+            sourceId: top.id,
+            command
+        })
         // process children
         top.children?.forEach(child => commands.push(blockToCommand(child)))
 
