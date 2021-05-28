@@ -20,13 +20,21 @@ function Diagnostics(props: {
         <>
             <Grid item xs={12}>
                 <Typography variant="subtitle1">IT4</Typography>
-                <CodeBlock className="json">
+                <CodeBlock
+                    className="json"
+                    downloadName={"test.json.it4"}
+                    downloadText={JSON.stringify(program, null, 2)}
+                >
                     {JSON.stringify(program, null, 2)}
                 </CodeBlock>
             </Grid>
             <Grid item xs={12}>
                 <Typography variant="subtitle1">Blockly JSON</Typography>
-                <CodeBlock className="json">
+                <CodeBlock
+                    className="json"
+                    downloadName={"test.json"}
+                    downloadText={JSON.stringify(program, null, 2)}
+                >
                     {JSON.stringify(source, null, 2)}
                 </CodeBlock>
             </Grid>
@@ -44,7 +52,10 @@ export default function VMEditor(props: {
     showDashboard?: boolean
 }) {
     const { storageKey, showDashboard } = props
-    const [xml, setXml] = useLocalStorage(storageKey || VM_SOURCE_STORAGE_KEY, "")
+    const [xml, setXml] = useLocalStorage(
+        storageKey || VM_SOURCE_STORAGE_KEY,
+        ""
+    )
     const [source, setSource] = useState<WorkspaceJSON>()
     const [program, setProgram] = useState<IT4Program>()
 
@@ -88,7 +99,11 @@ export default function VMEditor(props: {
             )}
             {showDashboard && (
                 <Grid item xs={12}>
-                    <Dashboard showStartSimulators={true} showHeader={true} showAvatar={true} />
+                    <Dashboard
+                        showStartSimulators={true}
+                        showHeader={true}
+                        showAvatar={true}
+                    />
                 </Grid>
             )}
         </Grid>
