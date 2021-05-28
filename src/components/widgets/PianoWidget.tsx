@@ -25,6 +25,7 @@ export default function PianoWidget(props: {
     return (
         <Box mb={1} mt={1}>
             <Piano
+                width={400}
                 noteRange={{ first: firstNote, last: lastNote }}
                 playNote={midiNumber => {
                     const frequency = midiFrequencies[midiNumber]

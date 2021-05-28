@@ -17,6 +17,10 @@ export default class NoteField extends ReactField<number> {
         return 440
     }
 
+    getText_() {
+        return (this.value | 0) + ""
+    }
+
     onUnmount() {
         this.toneContext?.close()
         this.toneContext = undefined
