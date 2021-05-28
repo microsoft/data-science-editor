@@ -1,4 +1,4 @@
-import { ReactField } from "./ReactField"
+import ReactField from "./ReactField"
 import Blockly from "blockly"
 import { child } from "../../widgets/svg"
 

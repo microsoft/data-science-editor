@@ -1,14 +1,10 @@
 import React, { lazy, ReactNode } from "react"
 import { createToneContext, ToneContext } from "../../hooks/toneContext"
 import Suspense from "../../ui/Suspense"
-import { ReactField, ReactFieldJSON, toShadowDefinition } from "./ReactField"
+import ReactField, { ReactFieldJSON, toShadowDefinition } from "./ReactField"
 const PianoWidget = lazy(() => import("../../widgets/PianoWidget"))
 
-export interface FrequencyFeld {
-    frequency: number
-}
-
-export default class NoteField extends ReactField<FrequencyFeld> {
+export default class NoteField extends ReactField<number> {
     static KEY = "jacdac_field_note"
     static SHADOW = toShadowDefinition(NoteField)
     toneContext: ToneContext
@@ -18,12 +14,7 @@ export default class NoteField extends ReactField<FrequencyFeld> {
     }
 
     get defaultValue() {
-        return { frequency: 440 }
-    }
-
-    getText_() {
-        const { frequency } = this.value
-        return (frequency | 0) + ""
+        return 440
     }
 
     onUnmount() {
@@ -33,7 +24,7 @@ export default class NoteField extends ReactField<FrequencyFeld> {
 
     renderField(): ReactNode {
         const handlePlayTone = async (newFrequency: number) => {
-            this.value = { frequency: newFrequency }
+            this.value = newFrequency
             if (!this.toneContext) this.toneContext = createToneContext()
             this.toneContext?.playTone(newFrequency, 400)
         }

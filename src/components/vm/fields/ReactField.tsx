@@ -28,7 +28,7 @@ export const ReactFieldContext = createContext<ReactFieldContextProps>({
 })
 ReactFieldContext.displayName = "ReactField"
 
-export default function ReactFieldProvider(props: {
+export function ReactFieldProvider(props: {
     value: any
     onValueChange: (newValue: any) => any
     children: ReactNode
@@ -52,7 +52,7 @@ export default function ReactFieldProvider(props: {
 
 export type ReactFieldJSON = any
 
-export class ReactField<T> extends Blockly.Field {
+export default class ReactField<T> extends Blockly.Field {
     SERIALIZABLE = true
     protected div_: Element
 
@@ -145,7 +145,13 @@ export class ReactField<T> extends Blockly.Field {
                     <IdProvider>
                         <JacdacProvider>
                             <AppTheme>
-                                <Box m={1}>{this.renderField()}</Box>
+                                <Box
+                                    m={0.5}
+                                    borderRadius={"0.25rem"}
+                                    bgcolor="background.paper"
+                                >
+                                    {this.renderField()}
+                                </Box>
                             </AppTheme>
                         </JacdacProvider>
                     </IdProvider>

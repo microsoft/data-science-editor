@@ -1,6 +1,6 @@
 import React, { lazy, ReactNode } from "react"
 import { HidKeyboardModifiers } from "../../../../jacdac-ts/src/jdom/constants"
-import { ReactField, ReactFieldJSON } from "./ReactField"
+import ReactField, { ReactFieldJSON } from "./ReactField"
 import Suspense from "../../ui/Suspense"
 import { renderKeyboardKey } from "../../../../jacdac-ts/src/servers/hidkeyboardserver"
 const KeyboardKeyInput = lazy(() => import("../../ui/KeyboardKeyInput"))

@@ -8,6 +8,7 @@ import {
     SRV_CONTROL,
     SRV_HID_KEYBOARD,
     SRV_JOYSTICK,
+    SRV_LED,
     SRV_LED_MATRIX,
     SRV_LOGGER,
     SRV_PROTO_TEST,
@@ -66,6 +67,7 @@ import {
 } from "./toolbox"
 import NoteField from "./fields/NoteField"
 import ServoAngleField from "./fields/ServoAngleField"
+import LEDColorField from "./fields/LEDColorField"
 
 type CachedBlockDefinitions = {
     blocks: BlockDefinition[]
@@ -297,6 +299,42 @@ function loadBlocks(
                     service,
                     expression: `role.key(combo.selectors, combo.modifiers)`,
                     //expression: `play_tone(frequency, duration) => role.send_pulse(frequency / 10000, duration)`,
+                    template: "custom",
+                }
+        ),
+        ...resolveService(SRV_LED).map(
+            service =>
+                <CustomBlockDefinition>{
+                    kind: "block",
+                    type: `fade`,
+                    message0: `fade %1 to %2 at speed %3`,
+                    args0: [
+                        fieldVariable(service),
+                        {
+                            type: LEDColorField.KEY,
+                            name: "color",
+                        },
+                        {
+                            type: "input_value",
+                            name: "speed",
+                            check: "Number",
+                        },
+                    ],
+                    values: {
+                        speed: {
+                            kind: "block",
+                            type: "jacdac_ratio",
+                            shadow: true,
+                        },
+                    },
+                    colour: serviceColor(service),
+                    inputsInline: true,
+                    previousStatement: null,
+                    nextStatement: null,
+                    tooltip: `Fade LED color`,
+                    helpUrl: serviceHelp(service),
+                    service,
+                    expression: `role.animate((color >> 16) & 0xff, (color >> 8) & 0xff, (color >> 0) & 0xff, speed * 0xff)`,
                     template: "custom",
                 }
         ),

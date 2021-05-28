@@ -44,12 +44,6 @@ function genFirmwareId() {
     return (n[0] & 0xfff_ffff) | 0x3000_0000
 }
 
-function toFullHex(n: number[]) {
-    return (
-        "0x" + n.map(id => ("000000000" + id.toString(16)).slice(-8)).join("")
-    )
-}
-
 export function uniqueServiceId() {
     let id = genServId()
     while (

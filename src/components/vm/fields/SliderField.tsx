@@ -1,7 +1,6 @@
 import { Grid, Slider } from "@material-ui/core"
 import React, { ReactNode, useContext } from "react"
-import {
-    ReactField,
+import ReactField, {
     ReactFieldContext,
     ReactFieldContextProps,
 } from "./ReactField"
