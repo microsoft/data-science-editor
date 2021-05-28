@@ -19,6 +19,7 @@ import workspaceJSONToIT4Program from "./it4generator"
 import AppContext from "../AppContext"
 import { createStyles, makeStyles } from "@material-ui/core"
 import clsx from "clsx"
+import { IT4ProgramRunner } from "../../../jacdac-ts/src/vm/vmrunner"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -41,7 +42,7 @@ export default function VMBlockEditor(props: {
     onXmlChange?: (xml: string) => void
     onJSONChange?: (json: WorkspaceJSON) => void
     onIT4ProgramChange?: (program: IT4Program) => void
-
+    runner?: IT4ProgramRunner
     serviceClass?: number
 }) {
     const {
@@ -51,6 +52,7 @@ export default function VMBlockEditor(props: {
         onIT4ProgramChange,
         initialXml,
         serviceClass,
+        runner,
     } = props
     const classes = useStyles()
     const { darkMode } = useContext(DarkModeContext)

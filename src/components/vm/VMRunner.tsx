@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, { MutableRefObject, useContext, useEffect, useState } from "react"
 import { Button } from "@material-ui/core"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import { IT4Program } from "../../../jacdac-ts/src/vm/ir"
@@ -11,8 +11,9 @@ import StopIcon from "@material-ui/icons/Stop"
 export default function VMRunner(props: {
     program: IT4Program
     autoStart?: boolean
+    runnerRef?: MutableRefObject<IT4ProgramRunner>
 }) {
-    const { program, autoStart: autoStartDefault } = props
+    const { program, autoStart: autoStartDefault, runnerRef } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const [testRunner, setTestRunner] = useState<IT4ProgramRunner>()
     const [autoStart, setAutoStart] = useState(!!autoStartDefault)
@@ -20,8 +21,12 @@ export default function VMRunner(props: {
     useEffect(() => {
         const runner = program && new IT4ProgramRunner(program, bus)
         setTestRunner(runner)
+        if (runner && runnerRef) runnerRef.current = runner
         if (runner && autoStart) runner.start()
-        return () => runner?.cancel()
+        return () => {
+            runner?.cancel()
+            runnerRef.current = undefined
+        }
     }, [program, autoStart])
 
     const disabled = !testRunner
