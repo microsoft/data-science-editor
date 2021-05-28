@@ -1,5 +1,5 @@
 import { Grid, NoSsr, Typography } from "@material-ui/core"
-import React, { useRef, useState } from "react"
+import React, { useState } from "react"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import { IT4Program } from "../../../jacdac-ts/src/vm/ir"
 import { WorkspaceJSON } from "../../components/vm/jsongenerator"
@@ -9,7 +9,8 @@ import Alert from "../../components/ui/Alert"
 import useLocalStorage from "../../components/useLocalStorage"
 import VMRunner from "../../components/vm/VMRunner"
 import CodeBlock from "../../components/CodeBlock"
-import { IT4ProgramRunner } from "../../../jacdac-ts/src/vm/vmrunner"
+import useVMRunner from "./useVMRunner"
+import VMRoles from "./VMRoles"
 
 function Diagnostics(props: {
     program: IT4Program
@@ -53,13 +54,13 @@ export default function VMEditor(props: {
     showDashboard?: boolean
 }) {
     const { storageKey, showDashboard } = props
-    const runnerRef = useRef<IT4ProgramRunner>()
     const [xml, setXml] = useLocalStorage(
         storageKey || VM_SOURCE_STORAGE_KEY,
         ""
     )
     const [source, setSource] = useState<WorkspaceJSON>()
     const [program, setProgram] = useState<IT4Program>()
+    const { runner } = useVMRunner(program)
 
     const handleXml = (xml: string) => {
         setXml(xml)
@@ -90,16 +91,15 @@ export default function VMEditor(props: {
                         onXmlChange={handleXml}
                         onJSONChange={handleJSON}
                         onIT4ProgramChange={handleI4Program}
-                        runner={runnerRef.current}
+                        runner={runner}
                     />
                 </NoSsr>
             </Grid>
             <Grid item xs={12}>
-                <VMRunner
-                    program={program}
-                    autoStart={true}
-                    runnerRef={runnerRef}
-                />
+                <VMRunner autoStart={true} runner={runner} />
+            </Grid>
+            <Grid item xs={12}>
+                <VMRoles runner={runner} />
             </Grid>
             {Flags.diagnostics && (
                 <Diagnostics program={program} source={source} xml={xml} />
