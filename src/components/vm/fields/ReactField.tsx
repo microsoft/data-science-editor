@@ -1,4 +1,5 @@
-import React from "react"
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { createContext, useState } from "react"
 import ReactDOM from "react-dom"
 import Blockly from "blockly"
 import JacdacProvider from "../../../jacdac/Provider"
@@ -14,29 +15,39 @@ declare module "blockly" {
     }
 }
 
-/**
- * A base class for react-based field
- * TODO:
- 
-```
-  static fromJson(options) {
-    return new ReactDateField(new Date(options['date']));
-  }
-  
-  onDateSelected_ = (date) => {
-    this.setValue(new Date(date));
-    Blockly.DropDownDiv.hideIfOwner(this, true);
-  }
+export interface ReactFieldContextProps<T = any> {
+    value: T
+    onValueChange: (value: T) => void
+}
 
-  getText_() {
-    return this.value_.toLocaleDateString();
-  };
+export const ReactFieldContext = createContext<ReactFieldContextProps>({
+    value: undefined,
+    onValueChange: undefined,
+})
+ReactFieldContext.displayName = "ReactField"
 
-  fromXml(fieldElement) {
-    this.setValue(new Date(fieldElement.textContent));
-  }
-```
-*/
+export default function ReactFieldProvider(props: {
+    value: any
+    onValueChange: (newValue: any) => any
+    children: ReactNode
+}) {
+    const {
+        children,
+        value: initialValue,
+        onValueChange: onFieldValueChange,
+    } = props
+    const [value, setValue] = useState<any>(initialValue)
+    const onValueChange = (newValue: any) => {
+        setValue(newValue)
+        onFieldValueChange(newValue)
+    }
+    return (
+        <ReactFieldContext.Provider value={{ value, onValueChange }}>
+            {children}
+        </ReactFieldContext.Provider>
+    )
+}
+
 export class ReactField<T> extends Blockly.Field {
     SERIALIZABLE = true
     protected div_: Element
@@ -120,16 +131,22 @@ export class ReactField<T> extends Blockly.Field {
     }
 
     render() {
+        const onValueChange = (newValue: any) => (this.value = newValue)
         return (
-            <DarkModeProvider>
-                <IdProvider>
-                    <JacdacProvider>
-                        <AppTheme>
-                            <Box m={1}>{this.renderField()}</Box>
-                        </AppTheme>
-                    </JacdacProvider>
-                </IdProvider>
-            </DarkModeProvider>
+            <ReactFieldProvider
+                value={this.value}
+                onValueChange={onValueChange}
+            >
+                <DarkModeProvider>
+                    <IdProvider>
+                        <JacdacProvider>
+                            <AppTheme>
+                                <Box m={1}>{this.renderField()}</Box>
+                            </AppTheme>
+                        </JacdacProvider>
+                    </IdProvider>
+                </DarkModeProvider>
+            </ReactFieldProvider>
         )
     }
 
