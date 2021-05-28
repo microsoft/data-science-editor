@@ -1,16 +1,5 @@
-import {
-    Avatar,
-    Button,
-    createStyles,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    Grid,
-    makeStyles,
-    Theme,
-} from "@material-ui/core"
-import React, { CSSProperties, useEffect, useState } from "react"
+import { Avatar, createStyles, makeStyles, Theme } from "@material-ui/core"
+import React, { CSSProperties, useState } from "react"
 import { VIRTUAL_DEVICE_NODE_NAME } from "../../../jacdac-ts/src/jdom/constants"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import useDeviceSpecification from "../../jacdac/useDeviceSpecification"
@@ -22,7 +11,7 @@ import useDeviceImage from "./useDeviceImage"
 import TransportIcon from "../icons/TransportIcon"
 import { rgbToHtmlColor } from "../../../jacdac-ts/src/jdom/utils"
 import useChange from "../../jacdac/useChange"
-import Alert from "../ui/Alert"
+import IdentifyDialog from "../dialogs/IdentifyDialog"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -39,41 +28,6 @@ const useStyles = makeStyles((theme: Theme) =>
         },
     })
 )
-
-function LazyDeviceImage(props: { device: JDDevice }) {
-    const { device } = props
-    const specification = useDeviceSpecification(device)
-    const imageUrl = useDeviceImage(specification, "lazy")
-    const largeImageUrl = useDeviceImage(specification)
-    const [showLarge, setShowLarge] = useState(false)
-
-    if (!imageUrl) return null
-
-    const handleLargeLoaded = () => setShowLarge(true)
-
-    return (
-        <>
-            <img
-                style={{
-                    width: "100%",
-                    display: showLarge ? undefined : "none",
-                }}
-                src={largeImageUrl}
-                onLoad={handleLargeLoaded}
-            />
-            {!showLarge && (
-                <img
-                    style={{
-                        minHeight: "18rem",
-                        width: "100%",
-                        filter: "blur",
-                    }}
-                    src={imageUrl}
-                />
-            )}
-        </>
-    )
-}
 
 export default function DeviceAvatar(props: {
     device: JDDevice
@@ -108,14 +62,6 @@ export default function DeviceAvatar(props: {
     const handleSendIdentify = async () => await device.identify()
     const handleOpenIdentify = async () => setIdentifyDialog(true)
     const handleCloseIdentify = () => setIdentifyDialog(false)
-
-    useEffect(() => {
-        if (identifyDialog) {
-            const timerId = setInterval(() => handleSendIdentify(), 3500)
-            return () => clearInterval(timerId)
-        }
-    }, [identifyDialog])
-
     return (
         <>
             <CmdButton
@@ -142,36 +88,11 @@ export default function DeviceAvatar(props: {
                 }
             />
             {imageUrl && (
-                <Dialog open={identifyDialog} onClose={handleCloseIdentify}>
-                    <DialogTitle>
-                        Identifying {device.friendlyName}...
-                    </DialogTitle>
-                    <DialogContent>
-                        <Grid
-                            container
-                            alignItems="center"
-                            alignContent={"center"}
-                        >
-                            <Grid item xs={12}>
-                                <LazyDeviceImage device={device} />
-                            </Grid>
-                            <Grid item xs>
-                                <Alert severity="info">
-                                    Look for four blinks in around 2 seconds
-                                    with the blue LED.
-                                </Alert>
-                            </Grid>
-                        </Grid>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button
-                            variant="outlined"
-                            onClick={handleCloseIdentify}
-                        >
-                            Dismiss
-                        </Button>
-                    </DialogActions>
-                </Dialog>
+                <IdentifyDialog
+                    device={device}
+                    open={identifyDialog}
+                    onClose={handleCloseIdentify}
+                />
             )}
         </>
     )
