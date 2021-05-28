@@ -33,7 +33,7 @@ function Diagnostics(props: {
                 <CodeBlock
                     className="json"
                     downloadName={"test.json"}
-                    downloadText={JSON.stringify(program, null, 2)}
+                    downloadText={JSON.stringify(source, null, 2)}
                 >
                     {JSON.stringify(source, null, 2)}
                 </CodeBlock>
