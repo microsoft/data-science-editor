@@ -2,6 +2,7 @@ import Blockly from "blockly"
 import { useMemo } from "react"
 import {
     JoystickReg,
+    ServoReg,
     SRV_BOOTLOADER,
     SRV_BUZZER,
     SRV_CONTROL,
@@ -11,6 +12,7 @@ import {
     SRV_LOGGER,
     SRV_PROTO_TEST,
     SRV_ROLE_MANAGER,
+    SRV_SERVO,
     SRV_SETTINGS,
     SRV_SEVEN_SEGMENT_DISPLAY,
     SystemEvent,
@@ -42,6 +44,7 @@ import { registerFields } from "./fields/fields"
 import KeyboardKeyField from "./fields/KeyboardKeyField"
 import NoteField from "./fields/NoteField"
 import LEDMatrixField from "./fields/LEDMatrixField"
+import ServoAngleField from "./fields/ServoAngleField"
 
 const NEW_PROJET_XML = '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>'
 
@@ -244,14 +247,44 @@ function loadBlocks(
     serviceColor: (srv: jdspec.ServiceSpec) => string,
     commandColor: string
 ): CachedBlockDefinitions {
+    const customShadows = [
+        {
+            serviceClass: SRV_SERVO,
+            kind: "rw",
+            identifier: ServoReg.Angle,
+            field: "_",
+            shadow: <BlockDefinition>{
+                kind: "block",
+                type: "jacdac_servo_angle",
+            },
+        },
+    ]
+    const lookupCustomShadow = (
+        service: jdspec.ServiceSpec,
+        info: jdspec.PacketInfo,
+        field: jdspec.PacketMember
+    ) =>
+        customShadows.find(
+            cs =>
+                cs.serviceClass === service.classIdentifier &&
+                cs.kind == info.kind &&
+                cs.identifier === info.identifier &&
+                cs.field == field.name
+        )?.shadow
+
     const serviceHelp = (service: jdspec.ServiceSpec) =>
         withPrefix(`/services/${service.shortId}`)
     const fieldsSupported = (pkt: jdspec.PacketInfo) =>
         pkt.fields.every(toBlocklyType)
     const fieldName = (reg: jdspec.PacketInfo, field: jdspec.PacketMember) =>
         field.name === "_" ? reg.name : field.name
-    const fieldToShadow = (field: jdspec.PacketMember): BlockReference =>
-        isBooleanField(field)
+    const fieldToShadow = (
+        service: jdspec.ServiceSpec,
+        info: jdspec.PacketInfo,
+        field: jdspec.PacketMember
+    ): BlockReference =>
+        lookupCustomShadow(service, info, field) ||
+        (isBooleanField(field)
             ? { kind: "block", type: "jacdac_on_off" }
             : isStringField(field)
             ? { kind: "block", type: "text" }
@@ -272,7 +305,7 @@ function loadBlocks(
                   value: field.defaultValue || 0,
                   min: field.typicalMin || field.absoluteMin,
                   max: field.typicalMax || field.absoluteMax,
-              }
+              })
     const variableName = (srv: jdspec.ServiceSpec) =>
         `${humanify(srv.camelName).toLowerCase()} 1`
     const fieldVariable = (service: jdspec.ServiceSpec): InputDefinition => ({
@@ -288,11 +321,14 @@ function loadBlocks(
             name: fieldName(info, field),
             check: toBlocklyType(field),
         }))
-    const fieldsToValues = (info: jdspec.PacketInfo) =>
+    const fieldsToValues = (
+        service: jdspec.ServiceSpec,
+        info: jdspec.PacketInfo
+    ) =>
         toMap<jdspec.PacketMember, BlockReference | BlockDefinition>(
             info.fields,
             field => fieldName(info, field),
-            field => fieldToShadow(field)
+            field => fieldToShadow(service, info, field)
         )
     const fieldsToMessage = (info: jdspec.PacketInfo) =>
         info.fields
@@ -579,7 +615,7 @@ function loadBlocks(
                 fieldVariable(service),
                 ...fieldsToFieldInputs(register),
             ].filter(v => !!v),
-            values: fieldsToValues(register),
+            values: fieldsToValues(service, register),
             inputsInline: true,
             nextStatement: null,
             colour: serviceColor(service),
@@ -724,7 +760,7 @@ function loadBlocks(
                           : fieldsToMessage(register)
                   }`,
             args0: [fieldVariable(service), ...fieldsToFieldInputs(register)],
-            values: fieldsToValues(register),
+            values: fieldsToValues(service, register),
             inputsInline: true,
             colour: serviceColor(service),
             tooltip: register.description,
@@ -747,7 +783,7 @@ function loadBlocks(
                       command
                   )}`,
             args0: [fieldVariable(service), ...fieldsToFieldInputs(command)],
-            values: fieldsToValues(command),
+            values: fieldsToValues(service, command),
             inputsInline: true,
             colour: serviceColor(service),
             tooltip: command.description,
@@ -782,6 +818,19 @@ function loadBlocks(
                 {
                     type: NoteField.KEY,
                     name: "note",
+                },
+            ],
+            style: "math_blocks",
+            output: "Number",
+        },
+        {
+            kind: "block",
+            type: `jacdac_servo_angle`,
+            message0: `%1`,
+            args0: [
+                {
+                    type: ServoAngleField.KEY,
+                    name: "angle",
                 },
             ],
             style: "math_blocks",
