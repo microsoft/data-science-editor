@@ -12,7 +12,7 @@ export default function DashboardSoilMoisture(props: DashboardServiceProps) {
     const { service, services, variant } = props
     const moistureReg = service.register(SoilMoistureReg.Moisture)
     const [value] = useRegisterUnpackedValue<[number]>(moistureReg, props)
-    const widgetSize = useWidgetSize(variant, services.length)
+    const widgetSize = useWidgetSize(variant, services?.length)
     const server = useServiceServer<SensorServer<[number]>>(service)
     const color = server ? "secondary" : "primary"
 

@@ -232,6 +232,8 @@ export default function workspaceJSONToIT4Program(
             const { template } = def
             const { value: role } = inputs[0].fields["role"]
             switch (template) {
+                case "twin":
+                    break // ignore
                 case "event": {
                     const { value: eventName } = inputs[0].fields["event"]
                     command = {
@@ -252,10 +254,7 @@ export default function workspaceJSONToIT4Program(
                     command = {
                         type: "CallExpression",
                         arguments: [
-                            toMemberExpression(
-                                role.toString(),
-                                register.name
-                            ),
+                            toMemberExpression(role.toString(), register.name),
                             argument,
                         ],
                         callee: toIdentifier("awaitChange"),
@@ -266,7 +265,7 @@ export default function workspaceJSONToIT4Program(
         }
         commands.push({
             sourceId: top.id,
-            command
+            command,
         })
         // process children
         top.children?.forEach(child => commands.push(blockToCommand(child)))

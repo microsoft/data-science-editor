@@ -238,12 +238,12 @@ const serviceViews: {
     },
     [SRV_HID_KEYBOARD]: {
         component: DashboardHIDKeyboard,
-        weight: () => 12
+        weight: () => 12,
     },
     [SRV_HID_MOUSE]: {
         component: DashboardHIDMouse,
-        weight: () => 2
-    }
+        weight: () => 2,
+    },
 }
 
 const collapsedRegisters = [

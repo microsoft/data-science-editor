@@ -8,6 +8,7 @@ import {
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import AppContext from "../AppContext"
 import { ERROR, TRACE } from "../../../jacdac-ts/src/jdom/constants"
+import Flags from "../../../jacdac-ts/src/jdom/flags"
 
 export default function useVMRunner(program: IT4Program) {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
@@ -25,7 +26,7 @@ export default function useVMRunner(program: IT4Program) {
     // traces
     const handleTrace = (value: { message: string; context: TraceContext }) => {
         const { message, context } = value
-        console.debug(`vm> ${message}`, context)
+        if (Flags.diagnostics) console.debug(`vm> ${message}`, context)
     }
     useEffect(() =>
         testRunner?.subscribe<{ message: string; context: TraceContext }>(

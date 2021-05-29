@@ -1,18 +1,32 @@
-import { PaletteType } from "@material-ui/core"
+import { PaletteType, useMediaQuery } from "@material-ui/core"
 import React, { ReactNode, useEffect, useState } from "react"
 import DarkModeContext from "./DarkModeContext"
 
-export default function DarkModeProvider(props: { children: ReactNode }) {
-    const { children } = props
+export default function DarkModeProvider(props: {
+    fixedDarkMode?: PaletteType
+    temporary?: boolean
+    children: ReactNode
+}) {
+    const { fixedDarkMode, children } = props
     const KEY = "darkMode"
-    const [darkMode, setDarkMode] = useState<PaletteType>("light")
+    const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)", {
+        noSsr: true,
+    })
+    const localTheme = () =>
+        !fixedDarkMode &&
+        typeof window !== "undefined" &&
+        (window.localStorage.getItem(KEY) as PaletteType)
+
+    const [darkMode, setDarkMode] = useState<PaletteType>(
+        fixedDarkMode || localTheme() || (prefersDarkMode ? "dark" : "light")
+    )
     const [darkModeMounted, setMounted] = useState(false)
 
     const setMode = (mode: PaletteType) => {
         if (mode === darkMode) return // nothing to do
 
         console.debug(`dark mode: set ${mode}`)
-        if (typeof window !== "undefined")
+        if (!fixedDarkMode && typeof window !== "undefined")
             window.localStorage.setItem(KEY, mode)
         setDarkMode(mode)
     }
@@ -26,21 +40,9 @@ export default function DarkModeProvider(props: { children: ReactNode }) {
     }
 
     useEffect(() => {
-        const localTheme =
-            typeof window !== "undefined" &&
-            (window.localStorage.getItem(KEY) as PaletteType)
-        if (localTheme) {
-            setDarkMode(localTheme || "light")
-        } else if (
-            typeof window !== "undefined" &&
-            window?.matchMedia("(prefers-color-scheme: dark)").matches
-        ) {
-            setDarkMode("dark")
-        } else {
-            setDarkMode("light")
-        }
+        console.debug(`dark mode`, { fixedDarkMode, prefersDarkMode, darkMode })
         setMounted(true)
-    }, [darkMode])
+    }, [])
 
     return (
         <DarkModeContext.Provider

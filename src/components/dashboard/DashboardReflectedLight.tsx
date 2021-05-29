@@ -29,7 +29,7 @@ export default function DashboardReflectedLight(props: DashboardServiceProps) {
     const server = useServiceServer<ReflectedLightServer>(service)
     const color = server ? "secondary" : "primary"
     const { background, controlBackground } = useWidgetTheme(color)
-    const widgetSize = useWidgetSize(variant, services.length)
+    const widgetSize = useWidgetSize(variant, services?.length)
 
     const maxValue = 1.0
     const handleDown = () => {

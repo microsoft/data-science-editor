@@ -1,20 +1,15 @@
 import React, { lazy, ReactNode, useContext } from "react"
 import Suspense from "../../ui/Suspense"
-import ReactField, {
-    ReactFieldContext,
-    ReactFieldContextProps,
-    ReactFieldJSON,
-    toShadowDefinition,
-} from "./ReactField"
+import ReactField, { ReactFieldJSON, toShadowDefinition } from "./ReactField"
 import { rgbToHtmlColor } from "../../../../jacdac-ts/src/jdom/utils"
-import Blockly from "blockly"
 import { child } from "../../widgets/svg"
+import ValueContext, { ValueContextProps } from "./ValueContext"
 
 const LEDWidget = lazy(() => import("../../widgets/LEDWidget"))
 
 function LEDColorFieldWidget() {
     const { value, onValueChange } =
-        useContext<ReactFieldContextProps<number>>(ReactFieldContext)
+        useContext<ValueContextProps<number>>(ValueContext)
     return (
         <Suspense>
             <LEDWidget

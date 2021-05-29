@@ -1,5 +1,5 @@
 import { PaletteType } from "@material-ui/core";
-import React, { createContext } from "react";
+import { createContext } from "react";
 
 export interface DarkModeContextProps {
   darkMode: PaletteType,

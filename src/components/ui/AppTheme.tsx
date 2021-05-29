@@ -7,6 +7,7 @@ import {
 import React, { useContext } from "react"
 import DarkModeContext from "./DarkModeContext"
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function AppTheme(props: any) {
     const { darkMode } = useContext(DarkModeContext)
     const isDark = darkMode === "dark"

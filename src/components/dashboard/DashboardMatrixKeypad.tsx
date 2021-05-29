@@ -37,7 +37,7 @@ export default function DashboardMatrixKeypad(props: DashboardServiceProps) {
     const { background, controlBackground, active, textProps } = useWidgetTheme(
         color
     )
-    const widgetSize = useWidgetSize(variant, services.length)
+    const widgetSize = useWidgetSize(variant, services?.length)
 
     // no data about layout
     if (rows === undefined || columns === undefined) return <LoadingProgress />

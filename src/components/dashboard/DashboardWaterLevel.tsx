@@ -20,7 +20,7 @@ export default function DashbaordWaterLevel(props: DashboardServiceProps) {
         color
     )
     const hasValue = !isNaN(value)
-    const widgetSize = useWidgetSize(variant, services.length)
+    const widgetSize = useWidgetSize(variant, services?.length)
     const tvalue = hasValue ? `${Math.round(value * 100)}%` : `--`
 
     const mx = 5

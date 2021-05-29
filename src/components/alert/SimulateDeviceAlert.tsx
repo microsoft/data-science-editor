@@ -6,10 +6,7 @@ import {
     SRV_LED,
     SRV_TRAFFIC_LIGHT,
 } from "../../../jacdac-ts/src/jdom/constants"
-import {
-    addServiceProvider,
-    serviceProviderDefinitionFromServiceClass,
-} from "../../../jacdac-ts/src/servers/servers"
+import { startServiceProviderFromServiceClass } from "../../../jacdac-ts/src/servers/servers"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import AppContext from "../AppContext"
 import Alert from "../ui/Alert"
@@ -18,10 +15,8 @@ import AddIcon from "@material-ui/icons/Add"
 
 export default function SimulateDeviceAlert() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const handleStartSimulator = (serviceClass: number) => () => {
-        const provider = serviceProviderDefinitionFromServiceClass(serviceClass)
-        addServiceProvider(bus, provider)
-    }
+    const handleStartSimulator = (serviceClass: number) => () =>
+        startServiceProviderFromServiceClass(bus, serviceClass)
     const { toggleShowDeviceHostsDialog } = useContext(AppContext)
 
     return (

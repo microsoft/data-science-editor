@@ -6,6 +6,7 @@ import ServoAngleField from "./ServoAngleField"
 import { BlockDefinition } from "../toolbox"
 import { assert } from "../../../../jacdac-ts/src/jdom/utils"
 import LEDColorField from "./LEDColorField"
+import TwinField from "./TwinField"
 
 let reactFieldShadows: BlockDefinition[]
 export function registerFields() {
@@ -26,6 +27,7 @@ export function registerFields() {
         LEDMatrixField,
         ServoAngleField,
         LEDColorField,
+        TwinField,
     ]
     fieldTypes.forEach(registerType)
 }

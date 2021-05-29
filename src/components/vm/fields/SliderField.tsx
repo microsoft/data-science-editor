@@ -1,14 +1,12 @@
 import { Grid, Slider } from "@material-ui/core"
 import React, { ReactNode, useContext } from "react"
-import ReactField, {
-    ReactFieldContext,
-    ReactFieldContextProps,
-} from "./ReactField"
+import ReactField from "./ReactField"
+import ValueContext, { ValueContextProps } from "./ValueContext"
 
 function FieldWithSlider(props: { children: ReactNode }) {
     const { children } = props
     const { value, onValueChange } =
-        useContext<ReactFieldContextProps<number>>(ReactFieldContext)
+        useContext<ValueContextProps<number>>(ValueContext)
     const handleChange = async (ev: unknown, nv: number | number[]) => {
         const newValue = nv as number
         onValueChange(newValue)

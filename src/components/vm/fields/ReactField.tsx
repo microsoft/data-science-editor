@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { createContext, useState } from "react"
+import React from "react"
 import ReactDOM from "react-dom"
 import Blockly from "blockly"
 import JacdacProvider from "../../../jacdac/Provider"
@@ -10,44 +10,12 @@ import AppTheme from "../../ui/AppTheme"
 import { Box } from "@material-ui/core"
 import { BlockDefinition } from "../toolbox"
 import { assert } from "../../../../jacdac-ts/src/jdom/utils"
+import { ValueProvider } from "./ValueContext"
 
 declare module "blockly" {
     interface Block {
         getColourTertiary(): string
     }
-}
-
-export interface ReactFieldContextProps<T = any> {
-    value: T
-    onValueChange: (value: T) => void
-}
-
-export const ReactFieldContext = createContext<ReactFieldContextProps>({
-    value: undefined,
-    onValueChange: undefined,
-})
-ReactFieldContext.displayName = "ReactField"
-
-export function ReactFieldProvider(props: {
-    value: any
-    onValueChange: (newValue: any) => any
-    children: ReactNode
-}) {
-    const {
-        children,
-        value: initialValue,
-        onValueChange: onFieldValueChange,
-    } = props
-    const [value, setValue] = useState<any>(initialValue)
-    const onValueChange = (newValue: any) => {
-        setValue(newValue)
-        onFieldValueChange(newValue)
-    }
-    return (
-        <ReactFieldContext.Provider value={{ value, onValueChange }}>
-            {children}
-        </ReactFieldContext.Provider>
-    )
 }
 
 export type ReactFieldJSON = any
@@ -171,14 +139,14 @@ export default class ReactField<T> extends Blockly.Field {
     render() {
         const onValueChange = (newValue: any) => (this.value = newValue)
         return (
-            <ReactFieldProvider
-                value={this.value}
-                onValueChange={onValueChange}
-            >
-                <DarkModeProvider>
-                    <IdProvider>
-                        <JacdacProvider>
-                            <AppTheme>
+            <DarkModeProvider fixedDarkMode={"dark"}>
+                <IdProvider>
+                    <JacdacProvider>
+                        <AppTheme>
+                            <ValueProvider
+                                value={this.value}
+                                onValueChange={onValueChange}
+                            >
                                 <Box
                                     m={0.5}
                                     borderRadius={"0.25rem"}
@@ -186,16 +154,21 @@ export default class ReactField<T> extends Blockly.Field {
                                 >
                                     {this.renderField()}
                                 </Box>
-                            </AppTheme>
-                        </JacdacProvider>
-                    </IdProvider>
-                </DarkModeProvider>
-            </ReactFieldProvider>
+                            </ValueProvider>
+                        </AppTheme>
+                    </JacdacProvider>
+                </IdProvider>
+            </DarkModeProvider>
         )
     }
 
     renderField(): ReactNode {
         return <span>not implemented</span>
+    }
+
+    dispose() {
+        this.view = undefined
+        super.dispose()
     }
 }
 

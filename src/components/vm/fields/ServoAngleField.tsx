@@ -1,18 +1,14 @@
 import React, { lazy, ReactNode, useContext } from "react"
 import SliderField from "./SliderField"
 import Suspense from "../../ui/Suspense"
-import {
-    ReactFieldContext,
-    ReactFieldContextProps,
-    ReactFieldJSON,
-    toShadowDefinition,
-} from "./ReactField"
+import { ReactFieldJSON, toShadowDefinition } from "./ReactField"
+import ValueContext, { ValueContextProps } from "./ValueContext"
 
 const ServoWidget = lazy(() => import("../../widgets/ServoWidget"))
 
 function ServiceFieldWidget() {
     const { value } =
-        useContext<ReactFieldContextProps<number>>(ReactFieldContext)
+        useContext<ValueContextProps<number>>(ValueContext)
     return (
         <Suspense>
             <ServoWidget
