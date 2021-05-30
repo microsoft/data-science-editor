@@ -3,13 +3,13 @@ import React, { useContext } from "react"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import useChange from "../../jacdac/useChange"
 import AppContext from "../AppContext"
-import useRoleManager from "./useRoleManager"
+import useRoleManagerClient from "./useRoleManagerClient"
 import useServiceRole from "./useServiceRole"
 
 export default function ServiceRole(props: { service: JDService }) {
     const { service } = props
     const { showSelectRoleDialog } = useContext(AppContext)
-    const roleManager = useRoleManager()
+    const roleManager = useRoleManagerClient()
     const role = useServiceRole(service)
     const handleClick = () => showSelectRoleDialog(service)
 

@@ -3,7 +3,7 @@ import { ROLE_MANAGER_CHANGE } from "../../../jacdac-ts/src/jdom/constants"
 import { RoleManagerClient } from "../../../jacdac-ts/src/jdom/rolemanagerclient"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 
-export default function useRoleManager(): RoleManagerClient {
+export default function useRoleManagerClient(): RoleManagerClient {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const [mgr, setMgr] = useState<RoleManagerClient>(bus.roleManager)
     useEffect(() =>

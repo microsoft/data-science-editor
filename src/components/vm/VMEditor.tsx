@@ -11,6 +11,7 @@ import VMRunner from "../../components/vm/VMRunner"
 import CodeBlock from "../../components/CodeBlock"
 import useVMRunner from "./useVMRunner"
 import VMRoles from "./VMRoles"
+import useRoleManager from "./useRoleManager"
 
 function Diagnostics(props: {
     program: IT4Program
@@ -60,16 +61,20 @@ export default function VMEditor(props: {
     )
     const [source, setSource] = useState<WorkspaceJSON>()
     const [program, setProgram] = useState<IT4Program>()
-    const { runner } = useVMRunner(program)
+    const roleManager = useRoleManager()
+    const runner = useVMRunner(roleManager, program)
 
     const handleXml = (xml: string) => {
         setXml(xml)
     }
     const handleJSON = (json: WorkspaceJSON) => {
         const newSource = JSON.stringify(json)
-        if (JSON.stringify(source) !== newSource) setSource(json)
+        if (JSON.stringify(source) !== newSource) {
+            setSource(json)
+        }
     }
     const handleI4Program = (json: IT4Program) => {
+        if (json) roleManager.setRoles(json.roles)
         const newProgram = JSON.stringify(json)
         if (JSON.stringify(program) !== newProgram) setProgram(json)
     }
@@ -92,6 +97,7 @@ export default function VMEditor(props: {
                         onJSONChange={handleJSON}
                         onIT4ProgramChange={handleI4Program}
                         runner={runner}
+                        roleManager={roleManager}
                     />
                 </NoSsr>
             </Grid>
@@ -99,7 +105,7 @@ export default function VMEditor(props: {
                 <VMRunner autoStart={true} runner={runner} />
             </Grid>
             <Grid item xs={12}>
-                <VMRoles runner={runner} />
+                <VMRoles roleManager={roleManager} />
             </Grid>
             {Flags.diagnostics && (
                 <Diagnostics program={program} source={source} xml={xml} />

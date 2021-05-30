@@ -4,12 +4,14 @@ import { CHANGE } from "../../../jacdac-ts/src/jdom/constants"
 import { JDEventSource } from "../../../jacdac-ts/src/jdom/eventsource"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { assert } from "../../../jacdac-ts/src/jdom/utils"
-import { ROLES_CHANGE, } from "../../../jacdac-ts/src/vm/utils"
+import { RoleManager } from "../../../jacdac-ts/src/vm/rolemanager"
 import { IT4ProgramRunner } from "../../../jacdac-ts/src/vm/vmrunner"
+import useChange from "../../jacdac/useChange"
 import ReactField from "./fields/ReactField"
 
 export class WorkspaceServices extends JDEventSource {
     private _runner: IT4ProgramRunner
+    private _roleManager: RoleManager
 
     constructor() {
         super()
@@ -26,15 +28,15 @@ export class WorkspaceServices extends JDEventSource {
         }
     }
 
-    get roles(): {
-        name: string
-        service: JDService
-        serviceShortId: string
-    }[] {
-        const roles = this._runner?.roles
-        return roles
-            ? Object.keys(roles).map(name => ({ name, ...roles[name] }))
-            : []
+    get roleManager() {
+        return this._roleManager
+    }
+
+    set roleManager(value: RoleManager) {
+        if (this._roleManager !== value) {
+            this._roleManager = value
+            this.emit(CHANGE)
+        }
     }
 }
 
@@ -70,6 +72,10 @@ export function WorkspaceProvider(props: {
     const [sourceBlock, setSourceBlock] = useState<Blockly.Block>(
         field?.getSourceBlock()
     )
+    const workspace = sourceBlock?.workspace
+    const services = (workspace as BlocklyWorkspaceWithServices)?.jacdacServices
+    const roleManager = services?.roleManager
+    const runner = services?.runner
 
     const resolveRole = () => {
         const newSourceBlock = field.getSourceBlock()
@@ -85,16 +91,10 @@ export function WorkspaceProvider(props: {
             roleField?.toXml(xml)
         }
         const newRole = roleField?.getVariable()?.name
-        console.log(`resolved role`, { newSourceBlock, newRole })
         return newRole
     }
     const resolveRoleService = () => {
-        const newRoleService = role && runner?.resolveService(role)
-        console.log(`resolve role service`, {
-            role,
-            newRoleService,
-            roles: services?.roles,
-        })
+        const newRoleService = role && roleManager?.getService(role)
         return newRoleService
     }
 
@@ -103,23 +103,9 @@ export function WorkspaceProvider(props: {
         resolveRoleService()
     )
     const [flyout, setFlyout] = useState(!!sourceBlock?.isInFlyout)
-    const workspace = sourceBlock?.workspace
-    const services = (workspace as BlocklyWorkspaceWithServices)?.jacdacServices
-    const runner = services?.runner
-
-    console.log(`workspace context`, {
-        field,
-        sourceBlock,
-        flyout,
-        role,
-        roleService,
-        services,
-        runner,
-    })
 
     // resolve role
     useEffect(() => {
-        console.log(`updated field`, { field })
         return field?.events.subscribe(CHANGE, () => {
             const newSourceBlock = field.getSourceBlock()
             console.log(`field change`, { newSourceBlock })
@@ -132,9 +118,9 @@ export function WorkspaceProvider(props: {
     // resolve current role service
     useEffect(() => {
         setRoleService(resolveRoleService())
-        return runner?.subscribe(ROLES_CHANGE, () => {
+        return roleManager?.subscribe(CHANGE, () =>
             setRoleService(resolveRoleService())
-    })
+        )
     }, [role, runner])
 
     return (

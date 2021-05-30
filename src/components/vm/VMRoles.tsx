@@ -1,7 +1,6 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, { useContext } from "react"
 import { Chip, Grid, Tooltip } from "@material-ui/core"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
-import { IT4ProgramRunner } from "../../../jacdac-ts/src/vm/vmrunner"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import DeviceAvatar from "../devices/DeviceAvatar"
 import { serviceSpecificationFromName } from "../../../jacdac-ts/src/jdom/spec"
@@ -11,22 +10,13 @@ import {
     serviceProviderDefinitionFromServiceClass,
 } from "../../../jacdac-ts/src/servers/servers"
 import AddIcon from "@material-ui/icons/Add"
-import { ROLES_CHANGE } from "../../../jacdac-ts/src/vm/utils"
+import { RoleManager } from "../../../jacdac-ts/src/vm/rolemanager"
+import useChange from "../../jacdac/useChange"
 
-export default function VMRoles(props: { runner: IT4ProgramRunner }) {
+export default function VMRoles(props: { roleManager: RoleManager }) {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const { runner } = props
-    const [roles, setRoles] = useState(runner?.roles)
-
-    useEffect(
-        () =>
-            runner?.subscribe(ROLES_CHANGE, () => {
-                const newRoles = runner?.roles
-                console.log("vm role", newRoles)
-                setRoles(newRoles)
-            }),
-        [runner]
-    )
+    const { roleManager } = props
+    const roles = useChange(roleManager, _ => _?.roles)
     const handleRoleClick =
         (role: string, service: JDService, specification: jdspec.ServiceSpec) =>
         () => {

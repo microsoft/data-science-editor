@@ -9,8 +9,12 @@ import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import AppContext from "../AppContext"
 import { ERROR, TRACE } from "../../../jacdac-ts/src/jdom/constants"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
+import { RoleManager } from "../../../jacdac-ts/src/vm/rolemanager"
 
-export default function useVMRunner(program: IT4Program) {
+export default function useVMRunner(
+    roleManager: RoleManager,
+    program: IT4Program
+) {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { setError } = useContext(AppContext)
     const [testRunner, setTestRunner] = useState<IT4ProgramRunner>()
@@ -18,14 +22,17 @@ export default function useVMRunner(program: IT4Program) {
     // create runner
     useEffect(() => {
         try {
-            const newTestRunner = program && new IT4ProgramRunner(program, bus)
+            const newTestRunner =
+                program && new IT4ProgramRunner(bus, roleManager, program)
             console.log("new runner", newTestRunner)
             // register runner events
             setTestRunner(newTestRunner)
+
+            return () => newTestRunner?.unmount()
         } catch (e) {
             setTestRunner(undefined)
         }
-    }, [program])
+    }, [roleManager, program])
 
     // errors
     useEffect(
@@ -46,7 +53,5 @@ export default function useVMRunner(program: IT4Program) {
         [testRunner]
     )
 
-    return {
-        runner: testRunner,
-    }
+    return testRunner
 }

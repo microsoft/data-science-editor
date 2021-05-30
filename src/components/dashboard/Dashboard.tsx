@@ -16,7 +16,7 @@ import ClearIcon from "@material-ui/icons/Clear"
 import DevicesIcon from "@material-ui/icons/Devices"
 import ConnectAlert from "../alert/ConnectAlert"
 import ConnectButtons from "../buttons/ConnectButtons"
-import useRoleManager from "../services/useRoleManager"
+import useRoleManagerClient from "../services/useRoleManagerClient"
 import useMediaQueries from "../hooks/useMediaQueries"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import SimulateDeviceAlert from "../alert/SimulateDeviceAlert"
@@ -86,7 +86,7 @@ export default function Dashboard(props: DashboardProps) {
         devices,
         d => !!bus.findServiceProvider(d.deviceId)
     )
-    const roleManager = useRoleManager()
+    const roleManager = useRoleManagerClient()
     const handleClearSimulators = () => {
         bus.serviceProviders().forEach(dev => bus.removeServiceProvider(dev))
     }

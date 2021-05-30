@@ -19,6 +19,7 @@ import {
     BlocklyWorkspaceWithServices,
     WorkspaceServices,
 } from "./WorkspaceContext"
+import { RoleManager } from "../../../jacdac-ts/src/vm/rolemanager"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -42,6 +43,7 @@ export default function VMBlockEditor(props: {
     onJSONChange?: (json: WorkspaceJSON) => void
     onIT4ProgramChange?: (program: IT4Program) => void
     runner?: IT4ProgramRunner
+    roleManager?: RoleManager
     serviceClass?: number
 }) {
     const {
@@ -52,6 +54,7 @@ export default function VMBlockEditor(props: {
         initialXml,
         serviceClass,
         runner,
+        roleManager,
     } = props
     const classes = useStyles()
     const { darkMode } = useContext(DarkModeContext)
@@ -114,8 +117,17 @@ export default function VMBlockEditor(props: {
     useEffect(() => {
         const ws = workspace as any as BlocklyWorkspaceWithServices
         const services = ws?.jacdacServices
-        if (services) services.runner = runner
+        if (services) {
+            services.runner = runner
+        }
     }, [workspace, runner])
+    useEffect(() => {
+        const ws = workspace as any as BlocklyWorkspaceWithServices
+        const services = ws?.jacdacServices
+        if (services) {
+            services.roleManager = roleManager
+        }
+    }, [workspace, roleManager])
 
     // plugins
     useBlocklyPlugins(workspace)
