@@ -21,7 +21,7 @@ export default function ThemedLayout(props: {
             <SnackbarProvider maxSnack={maxSnack || 1} dense={true}>
                 <IdProvider>
                     <DbProvider>
-                        <JacdacProvider>
+                        <JacdacProvider connectOnStart={true}>
                             <ServiceManagerProvider>
                                 <PacketsProvider>
                                     <AppProvider>

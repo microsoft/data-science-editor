@@ -2,14 +2,17 @@ import React, { useState, useEffect, ReactNode } from "react"
 import JacdacContext from "./Context"
 import bus from "./providerbus"
 
-export default function JacdacProvider(props: { children: ReactNode }) {
-    const { children } = props
+export default function JacdacProvider(props: {
+    connectOnStart?: boolean
+    children: ReactNode
+}) {
+    const { connectOnStart, children } = props
     const [firstConnect, setFirstConnect] = useState(false)
 
     // connect in background on first load.
     useEffect(() => {
         // bus live accross hot-reloads
-        if (!firstConnect) {
+        if (!firstConnect && connectOnStart) {
             setFirstConnect(true)
             bus.connect(true)
         }
