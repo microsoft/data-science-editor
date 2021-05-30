@@ -4,6 +4,7 @@ import { CHANGE } from "../../../jacdac-ts/src/jdom/constants"
 import { JDEventSource } from "../../../jacdac-ts/src/jdom/eventsource"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { assert } from "../../../jacdac-ts/src/jdom/utils"
+import { ROLE_CHANGE } from "../../../jacdac-ts/src/vm/utils"
 import { IT4ProgramRunner } from "../../../jacdac-ts/src/vm/vmrunner"
 import ReactField from "./fields/ReactField"
 
@@ -83,9 +84,20 @@ export function WorkspaceProvider(props: {
         console.log(`resolved role`, { newSourceBlock, newRole })
         return newRole
     }
+    const resolveRoleService = () => {
+        const newRoleService = role && runner?.resolveService(role)
+        console.log(`resolve role service`, {
+            role,
+            newRoleService,
+            roles: services?.roles,
+        })
+        return newRoleService
+    }
 
     const [role, setRole] = useState<string>(resolveRole())
-    const [roleService, setRoleService] = useState<JDService>()
+    const [roleService, setRoleService] = useState<JDService>(
+        resolveRoleService()
+    )
     const [flyout, setFlyout] = useState(!!sourceBlock?.isInFlyout)
     const workspace = sourceBlock?.workspace
     const services = (workspace as BlocklyWorkspaceWithServices)?.jacdacServices
@@ -114,19 +126,22 @@ export function WorkspaceProvider(props: {
     }, [field, workspace, runner])
 
     // resolve current role service
-    useEffect(() => {
-        const newRoleService = role && runner?.resolveService(role)
-        console.log(`resolve role service`, {
-            role,
-            newRoleService,
-            roles: services?.roles,
-        })
-        setRoleService(newRoleService)
-    }, [role, runner])
+    useEffect(() => setRoleService(resolveRoleService()), [role, runner])
+
+    // resolve role bounds
+    useEffect(
+        () =>
+            runner?.subscribe(ROLE_CHANGE, () =>
+                setRoleService(resolveRoleService())
+            ),
+        [runner]
+    )
 
     return (
         // eslint-disable-next-line react/react-in-jsx-scope
-        <WorkspaceContext.Provider value={{ services, role, roleService, flyout }}>
+        <WorkspaceContext.Provider
+            value={{ services, role, roleService, flyout }}
+        >
             {children}
         </WorkspaceContext.Provider>
     )
