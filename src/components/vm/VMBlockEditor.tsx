@@ -109,7 +109,7 @@ export default function VMBlockEditor(props: {
 
     // blockly did a change
     useEffect(() => {
-        if (!workspace) return
+        if (!workspace || workspace.isDragging()) return
 
         onXmlChange?.(xml)
 
