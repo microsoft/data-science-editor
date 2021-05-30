@@ -25,7 +25,6 @@ export default function DarkModeProvider(props: {
     const setMode = (mode: PaletteType) => {
         if (mode === darkMode) return // nothing to do
 
-        console.debug(`dark mode: set ${mode}`)
         if (!fixedDarkMode && typeof window !== "undefined")
             window.localStorage.setItem(KEY, mode)
         setDarkMode(mode)
@@ -40,7 +39,6 @@ export default function DarkModeProvider(props: {
     }
 
     useEffect(() => {
-        console.debug(`dark mode`, { fixedDarkMode, prefersDarkMode, darkMode })
         setMounted(true)
     }, [])
 
