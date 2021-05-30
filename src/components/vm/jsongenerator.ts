@@ -110,7 +110,7 @@ export function domToJSON(workspace: Blockly.Workspace): WorkspaceJSON {
     }
     const flattenNext = (block: BlockJSON) => {
         // flatten the linked list of next into an array
-        const children: BlockJSON[] = []
+        let children: BlockJSON[] = []
         let current = block.next
         while (current) {
             children.push(current)
@@ -122,38 +122,45 @@ export function domToJSON(workspace: Blockly.Workspace): WorkspaceJSON {
         }
     }
     const blockToJSON = (block: Blockly.Block): BlockJSON => {
-        if (!block?.isEnabled()) return undefined
-        // Skip over insertion markers.
-        if (block.isInsertionMarker()) {
-            const child = block.getChildren(false)[0]
-            if (child) return blockToJSON(child)
-            else return undefined
+        const blockToJSONHidden = (block: Blockly.Block): BlockJSON => {
+            if (!block?.isEnabled()) return undefined
+            // Skip over insertion markers.
+            if (block.isInsertionMarker()) {
+                const child = block.getChildren(false)[0]
+                if (child) return blockToJSON(child)
+                else return undefined
+            }
+            // dump object
+            const value = builtins[block.type]?.(block)
+            const element: BlockJSON = {
+                type: block.type,
+                id: block.id,
+                value,
+                inputs:
+                    value === undefined
+                        ? block.inputList.map(input => {
+                              const container: InputJSON = {
+                                  type: input.type,
+                                  name: input.name,
+                                  fields: fieldsToJSON(input.fieldRow),
+                                  child: blockToJSON(
+                                      input.connection?.targetBlock()
+                                  ),
+                              }
+                              return container
+                          })
+                        : undefined,
+                next: blockToJSONHidden(block.getNextBlock()),
+            }
+            clean(element)
+            return element
         }
-        // dump object
-        const value = builtins[block.type]?.(block)
-        const element: BlockJSON = {
-            type: block.type,
-            id: block.id,
-            value,
-            inputs:
-                value === undefined
-                    ? block.inputList.map(input => {
-                          const container: InputJSON = {
-                              type: input.type,
-                              name: input.name,
-                              fields: fieldsToJSON(input.fieldRow),
-                              child: blockToJSON(
-                                  input.connection?.targetBlock()
-                              ),
-                          }
-                          return container
-                      })
-                    : undefined,
-            next: blockToJSON(block.getNextBlock()),
+        let top = blockToJSONHidden(block)
+        if (top) {
+            flattenNext(top)
+            clean(top)
         }
-        flattenNext(element)
-        clean(element)
-        return element
+        return top
     }
 
     try {

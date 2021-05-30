@@ -1,9 +1,12 @@
 import { BlockJSON, WorkspaceJSON } from "./jsongenerator"
 import {
-    IT4GuardedCommand,
+    IT4Base,
     IT4Handler,
     IT4Program,
     IT4Role,
+    toMemberExpression,
+    toIdentifier,
+    IT4IfThenElse,
 } from "../../../jacdac-ts/src/vm/ir"
 import {
     BlockDefinition,
@@ -31,22 +34,6 @@ const ops = {
     MINUS: "-",
 }
 
-function toIdentifier(id: string) {
-    return {
-        type: "Identifier",
-        name: id,
-    } as jsep.Identifier
-}
-
-function toMemberExpression(root: string, field: string | jsep.Expression) {
-    return {
-        type: "MemberExpression",
-        object: toIdentifier(root),
-        property: typeof field === "string" ? toIdentifier(field) : field,
-        computed: false,
-    } as jsep.MemberExpression
-}
-
 export default function workspaceJSONToIT4Program(
     serviceBlocks: BlockDefinition[],
     workspace: WorkspaceJSON
@@ -57,8 +44,10 @@ export default function workspaceJSONToIT4Program(
         .filter(v => BUILTIN_TYPES.indexOf(v.type) < 0)
         .map(v => ({ role: v.name, serviceShortId: v.type }))
 
-    const blockToExpression = (block: BlockJSON) => {
-        if (!block) return undefined
+    const blockToExpression: (block: BlockJSON) => jsep.Expression = (
+        block: BlockJSON
+    ) => {
+        if (!block) return toIdentifier("%%NOCODE%%")
         const { type, value, inputs } = block
 
         console.debug(`block`, type, value, inputs)
@@ -148,10 +137,10 @@ export default function workspaceJSONToIT4Program(
                 }
             }
         }
-        return undefined
+        return toIdentifier("%%NOCODE%%")
     }
 
-    const blockToCommand = (block: BlockJSON): IT4GuardedCommand => {
+    const blockToCommand = (block: BlockJSON): IT4Base => {
         let command: jsep.CallExpression
         const { type, inputs } = block
         switch (type) {
@@ -163,6 +152,20 @@ export default function workspaceJSONToIT4Program(
                     callee: toIdentifier("wait"),
                 }
                 break
+            }
+            case "dynamic_if": {
+                let ret: IT4IfThenElse = {
+                    sourceId: block.id,
+                    type: "ite",
+                    expr: blockToExpression(inputs[0]?.child),
+                    then: [],
+                    else: [],
+                }
+                const t = inputs[1]?.child
+                const e = inputs[2]?.child
+                if (t) addCommands(ret.then, [ t, ...(t.children ? t.children : [])])
+                if (e) addCommands(ret.else, [ e, ...(e.children ? e.children : [])])
+                return ret
             }
             // more builts
             default: {
@@ -210,13 +213,20 @@ export default function workspaceJSONToIT4Program(
         // for linking back
         return {
             sourceId: block.id,
+            type: "cmd",
             command,
-        }
+        } as IT4Base
+    }
+
+    const addCommands = (acc: IT4Base[], blocks: BlockJSON[]) => {
+        blocks?.forEach(child => {
+            if (child) acc.push(blockToCommand(child))
+        })
     }
 
     const handlers: IT4Handler[] = workspace.blocks.map(top => {
         const { type, inputs } = top
-        const commands: IT4GuardedCommand[] = []
+        const commands: IT4Base[] = []
         let command: jsep.CallExpression = undefined
         if (type === WHILE_CONDITION_BLOCK) {
             // this is while (...)
@@ -263,12 +273,14 @@ export default function workspaceJSONToIT4Program(
                 }
             }
         }
+
         commands.push({
             sourceId: top.id,
+            type: "cmd",
             command,
-        })
-        // process children
-        top.children?.forEach(child => commands.push(blockToCommand(child)))
+        } as IT4Base)
+
+        addCommands(commands, top.children)
 
         return {
             commands,
