@@ -14,14 +14,15 @@ export function useRegisterHumanValue(
     const [value, setValue] = useState<string>(register?.humanValue)
     const { visible } = options || { visible: true }
     // update value
-    useEffect(
-        () =>
+    useEffect(() => {
+        setValue(register?.humanValue)
+        return (
             visible &&
             register?.subscribe(REPORT_UPDATE, () => {
                 setValue(register?.humanValue)
-            }),
-        [register, visible]
-    )
+            })
+        )
+    }, [register, visible])
     return value
 }
 
@@ -31,14 +32,15 @@ export function useRegisterUnpackedValue<T extends PackedValues>(
 ): T {
     const [value, setValue] = useState<T>(register?.unpackedValue as T)
     const { visible } = options || { visible: true }
-    useEffect(
-        () =>
+    useEffect(() => {
+        setValue(register?.unpackedValue as T)
+        return (
             visible &&
             register?.subscribe(REPORT_UPDATE, () => {
                 setValue(register?.unpackedValue as T)
-            }),
-        [register, visible]
-    )
+            })
+        )
+    }, [register, visible])
     return value || ([] as T)
 }
 
@@ -49,13 +51,14 @@ export function useRegisterBoolValue(
     const [value, setValue] = useState<boolean>(register?.boolValue)
     const { visible } = options || { visible: true }
     // update value
-    useEffect(
-        () =>
+    useEffect(() => {
+        setValue(register?.boolValue)
+        return (
             visible &&
             register?.subscribe(REPORT_UPDATE, () => {
                 setValue(register?.boolValue)
-            }),
-        [register, visible]
-    )
+            })
+        )
+    }, [register, visible])
     return value
 }

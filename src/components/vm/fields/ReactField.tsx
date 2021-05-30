@@ -11,6 +11,9 @@ import { Box } from "@material-ui/core"
 import { BlockDefinition } from "../toolbox"
 import { assert } from "../../../../jacdac-ts/src/jdom/utils"
 import { ValueProvider } from "./ValueContext"
+import { JDEventSource } from "../../../../jacdac-ts/src/jdom/eventsource"
+import { CHANGE } from "../../../../jacdac-ts/src/jdom/constants"
+import { WorkspaceProvider } from "../WorkspaceContext"
 
 declare module "blockly" {
     interface Block {
@@ -20,8 +23,14 @@ declare module "blockly" {
 
 export type ReactFieldJSON = any
 
+export const SOURCE_BLOCK_CHANGE = "sourceBlockChange"
+export const VALUE_CHANGE = "valueChange"
+export const MOUNT = "mount"
+export const UNMOUNT = "unmount"
+
 export default class ReactField<T> extends Blockly.Field {
     SERIALIZABLE = true
+    public readonly events = new JDEventSource()
     protected div_: Element
     protected view: SVGElement
 
@@ -34,6 +43,7 @@ export default class ReactField<T> extends Blockly.Field {
     ) {
         super(value, validator, options)
         if (size) this.size_ = new Blockly.utils.Size(size.width, size.height)
+        console.log('new field')
     }
 
     get defaultValue(): T {
@@ -53,12 +63,6 @@ export default class ReactField<T> extends Blockly.Field {
     set value(v: T) {
         this.setValue(JSON.stringify(v))
     }
-
-    // override to listen for mounting events
-    onMount() {}
-
-    // override to listen for unmounting
-    onUnmount() {}
 
     // override to support custom view
     protected initCustomView(): SVGElement {
@@ -82,12 +86,19 @@ export default class ReactField<T> extends Blockly.Field {
         }
     }
 
-    setSourceBlock(block: Blockly.Block) {
-        super.setSourceBlock(block)
-        this.onSourceBlockChanged()
+    emitChange() {
+        this.events.emit(CHANGE)
     }
 
-    onSourceBlockChanged() {}
+    setSourceBlock(block: Blockly.Block) {
+        const changed = block !== this.sourceBlock_
+        super.setSourceBlock(block)
+        if (changed) {
+            console.log(`set source block`, { block, current: this.sourceBlock_ })
+            this.events.emit(SOURCE_BLOCK_CHANGE, block)
+            this.emitChange()
+        }
+    }
 
     initView() {
         this.view = this.initCustomView()
@@ -100,10 +111,15 @@ export default class ReactField<T> extends Blockly.Field {
     }
 
     doValueUpdate_(newValue: string) {
+        const change = this.value_ !== newValue
         if (this.view) {
             this.value_ = newValue
             this.updateView()
         } else super.doValueUpdate_(newValue)
+        if (change) {
+            this.events.emit(VALUE_CHANGE, this.value)
+            this.emitChange()
+        }
     }
 
     showEditor_() {
@@ -118,7 +134,7 @@ export default class ReactField<T> extends Blockly.Field {
                 this,
                 this.dropdownDispose_.bind(this)
             )
-            this.onMount()
+            this.events.emit(MOUNT)
         }, 200)
     }
 
@@ -129,7 +145,7 @@ export default class ReactField<T> extends Blockly.Field {
     dropdownDispose_() {
         // this blows on hot reloads
         try {
-            this.onUnmount()
+            this.events.emit(UNMOUNT)
             ReactDOM.unmountComponentAtNode(this.div_)
         } catch (e) {
             console.error(e)
@@ -139,26 +155,28 @@ export default class ReactField<T> extends Blockly.Field {
     render() {
         const onValueChange = (newValue: any) => (this.value = newValue)
         return (
-            <DarkModeProvider fixedDarkMode={"dark"}>
-                <IdProvider>
-                    <JacdacProvider>
-                        <AppTheme>
-                            <ValueProvider
-                                value={this.value}
-                                onValueChange={onValueChange}
-                            >
-                                <Box
-                                    m={0.5}
-                                    borderRadius={"0.25rem"}
-                                    bgcolor="background.paper"
+            <WorkspaceProvider field={this}>
+                <DarkModeProvider fixedDarkMode={"dark"}>
+                    <IdProvider>
+                        <JacdacProvider>
+                            <AppTheme>
+                                <ValueProvider
+                                    value={this.value}
+                                    onValueChange={onValueChange}
                                 >
-                                    {this.renderField()}
-                                </Box>
-                            </ValueProvider>
-                        </AppTheme>
-                    </JacdacProvider>
-                </IdProvider>
-            </DarkModeProvider>
+                                    <Box
+                                        m={0.5}
+                                        borderRadius={"0.25rem"}
+                                        bgcolor="background.paper"
+                                    >
+                                        {this.renderField()}
+                                    </Box>
+                                </ValueProvider>
+                            </AppTheme>
+                        </JacdacProvider>
+                    </IdProvider>
+                </DarkModeProvider>
+            </WorkspaceProvider>
         )
     }
 

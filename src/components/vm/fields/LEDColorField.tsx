@@ -30,6 +30,7 @@ export default class LEDColorField extends ReactField<number> {
         return new LEDColorField(options)
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     constructor(options?: any) {
         super(options?.value, undefined, options, { width: 28, height: 28 })
     }

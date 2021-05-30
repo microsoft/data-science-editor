@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import {
     ButtonEvent,
     ButtonReg,
@@ -18,20 +18,25 @@ import useSvgButtonProps from "../hooks/useSvgButtonProps"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import { describeArc } from "../widgets/svgutils"
 import useAnimationFrame from "../hooks/useAnimationFrame"
+import useRegister from "../hooks/useRegister"
+import useEvent from "../hooks/useEvent"
 
 export default function DashboardButton(props: DashboardServiceProps) {
     const { service } = props
     const [pressed, setPressed] = useState<boolean>(false)
-    const analog = useRegisterBoolValue(service.register(ButtonReg.Analog))
+    const analogRegister = useRegister(service, ButtonReg.Analog)
+    const analog = useRegisterBoolValue(analogRegister)
     // don't track reading, use events only
-    const downEvent = service.event(ButtonEvent.Down)
-    const upEvent = service.event(ButtonEvent.Up)
-    useEffect(() => downEvent.subscribe(EVENT, () => setPressed(true)), [
-        downEvent,
-    ])
-    useEffect(() => upEvent.subscribe(EVENT, () => setPressed(false)), [
-        upEvent,
-    ])
+    const downEvent = useEvent(service, ButtonEvent.Down)
+    const upEvent = useEvent(service, ButtonEvent.Up)
+    useEffect(
+        () => downEvent.subscribe(EVENT, () => setPressed(true)),
+        [downEvent]
+    )
+    useEffect(
+        () => upEvent.subscribe(EVENT, () => setPressed(false)),
+        [upEvent]
+    )
 
     if (!analog) return <BinaryButton {...props} pressed={pressed} />
     else return <AnalogButton {...props} pressed={pressed} />
@@ -70,9 +75,13 @@ function AnalogButton(props: { pressed: boolean } & DashboardServiceProps) {
         visible,
     })
     // find threshold if any
-    const thresholdRegister = mixins
-        .find(cfg => !!cfg.register(SystemReg.ActiveThreshold))
-        ?.register(SystemReg.ActiveThreshold)
+    const thresholdRegister = useMemo(
+        () =>
+            mixins
+                .find(cfg => !!cfg.register(SystemReg.ActiveThreshold))
+                ?.register(SystemReg.ActiveThreshold),
+        [service]
+    )
     const [threshold] = useRegisterUnpackedValue(thresholdRegister, { visible })
 
     //const [buttonVariant] = useRegisterUnpackedValue<[AnalogButtonVariant]>(service.register(AnalogButtonReg.Variant));

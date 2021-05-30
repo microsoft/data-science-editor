@@ -172,7 +172,9 @@ export function domToJSON(workspace: Blockly.Workspace): WorkspaceJSON {
     }
 
     try {
-        const variables = Blockly.Variables.allUsedVarModels(workspace)
+        const variables = Blockly.Variables.allUsedVarModels(workspace).sort(
+            (l, r) => l.name.localeCompare(r.name)
+        ) // stable sort name
         const blocks = workspace.getTopBlocks(true)
         const json: WorkspaceJSON = {
             variables: variables.map(variableToJSON),

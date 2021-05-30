@@ -23,14 +23,15 @@ export default function useReadingAuxilliaryValue(
         auxilliaryRegister?.unpackedValue
     )
 
-    useEffect(
-        () =>
+    useEffect(() => {
+        setValue(auxilliaryRegister?.unpackedValue)
+        return (
             visible &&
             auxilliaryRegister?.subscribe(REPORT_UPDATE, () => {
                 setValue(auxilliaryRegister?.unpackedValue)
-            }),
-        [register, auxilliaryRegister, visible]
-    )
+            })
+        )
+    }, [register, auxilliaryRegister, visible])
 
     return value
 }

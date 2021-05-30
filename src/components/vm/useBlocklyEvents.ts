@@ -24,7 +24,7 @@ export default function useBlocklyEvents(workspace: Blockly.WorkspaceSvg) {
                     // notify twin that the value changed
                     const twinField = block.inputList[1]
                         .fieldRow[0] as TwinField
-                    twinField.updateRole()
+                    twinField.emitChange()
                 }
                 break
             }

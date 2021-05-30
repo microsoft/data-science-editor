@@ -7,7 +7,6 @@ import { IdProvider } from "react-use-id-hook"
 import JacdacProvider from "../../../jacdac/Provider"
 import AppTheme from "../../ui/AppTheme"
 import { Button, Grid } from "@material-ui/core"
-import useServices from "../../hooks/useServices"
 import DashboardServiceWidget from "../../dashboard/DashboardServiceWidget"
 import AddIcon from "@material-ui/icons/Add"
 import { startServiceProviderFromServiceClass } from "../../../../jacdac-ts/src/servers/servers"
@@ -15,19 +14,21 @@ import JacdacContext, { JacdacContextProps } from "../../../jacdac/Context"
 import Alert from "../../ui/Alert"
 import Blockly from "blockly"
 import { serviceSpecificationFromClassIdentifier } from "../../../../jacdac-ts/src/jdom/spec"
+import WorkspaceContext, { WorkspaceProvider } from "../WorkspaceContext"
 
-function DashboardServiceFieldWidget(props: { serviceClass: number }) {
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
+function TwinWidget(props: { serviceClass: number }) {
     const { serviceClass } = props
+    const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const { roleService, flyout } = useContext(WorkspaceContext)
     const specification = serviceSpecificationFromClassIdentifier(serviceClass)
-    const services = useServices({ ignoreSelf: true, serviceClass })
-    const service = services?.[0]
     const handleStartSimulator = () =>
         startServiceProviderFromServiceClass(bus, serviceClass)
     const onPointerStopPropagation = (event: PointerEvent<HTMLDivElement>) => {
         // make sure blockly does not handle drags when interacting with UI
         event.stopPropagation()
     }
+
+    console.log(`twin`, { roleService, flyout })
 
     return (
         <Grid
@@ -37,7 +38,7 @@ function DashboardServiceFieldWidget(props: { serviceClass: number }) {
             justify="center"
             spacing={1}
         >
-            {service ? (
+            {roleService ? (
                 <Grid item>
                     <div
                         style={{ cursor: "inherit" }}
@@ -46,7 +47,7 @@ function DashboardServiceFieldWidget(props: { serviceClass: number }) {
                         onPointerMove={onPointerStopPropagation}
                     >
                         <DashboardServiceWidget
-                            service={service}
+                            service={roleService}
                             visible={true}
                             variant="icon"
                         />
@@ -57,14 +58,16 @@ function DashboardServiceFieldWidget(props: { serviceClass: number }) {
                     <Alert severity="info">
                         No {specification?.name || "service"}...
                     </Alert>
-                    <Button
-                        variant="contained"
-                        color="default"
-                        startIcon={<AddIcon />}
-                        onClick={handleStartSimulator}
-                    >
-                        start simulator
-                    </Button>
+                    {!flyout && (
+                        <Button
+                            variant="contained"
+                            color="default"
+                            startIcon={<AddIcon />}
+                            onClick={handleStartSimulator}
+                        >
+                            start simulator
+                        </Button>
+                    )}
                 </Grid>
             )}
         </Grid>
@@ -82,6 +85,7 @@ export default class TwinField extends ReactField<number> {
         return new TwinField(options)
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     constructor(options?: any) {
         super(options?.value, undefined, options, { width: 240, height: 160 })
         this.serviceClass = options.serviceClass
@@ -134,37 +138,22 @@ export default class TwinField extends ReactField<number> {
 
     renderBlock(): ReactNode {
         return (
-            <DarkModeProvider fixedDarkMode="dark">
-                <IdProvider>
-                    <JacdacProvider>
-                        <AppTheme>
-                            <DashboardServiceFieldWidget
-                                serviceClass={this.serviceClass}
-                            />
-                        </AppTheme>
-                    </JacdacProvider>
-                </IdProvider>
-            </DarkModeProvider>
+            <WorkspaceProvider field={this}>
+                <DarkModeProvider fixedDarkMode="dark">
+                    <IdProvider>
+                        <JacdacProvider>
+                            <AppTheme>
+                                <TwinWidget serviceClass={this.serviceClass} />
+                            </AppTheme>
+                        </JacdacProvider>
+                    </IdProvider>
+                </DarkModeProvider>
+            </WorkspaceProvider>
         )
     }
 
     // don't bind any mouse event
     bindEvents_() {
         Blockly.Tooltip.bindMouseEvents(this.getClickTarget_())
-    }
-
-    // track current role
-    onSourceBlockChanged() {
-        this.updateRole()
-    }
-
-    updateRole() {
-        const source = this.getSourceBlock()
-        const field = source?.inputList[0].fieldRow[0] as Blockly.FieldVariable
-        // force model geneartion
-        const xml = document.createElement("xml")
-        field?.toXml(xml)
-        const role = field?.getVariable()
-        console.log("updated role", { source, field, role })
     }
 }

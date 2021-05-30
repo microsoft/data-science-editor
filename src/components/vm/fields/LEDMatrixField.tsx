@@ -1,7 +1,7 @@
 import React, { lazy, ReactNode } from "react"
 import { fromHex, toHex } from "../../../../jacdac-ts/src/jdom/utils"
 import Suspense from "../../ui/Suspense"
-import { ReactFieldJSON } from "./ReactField"
+import { ReactFieldJSON, VALUE_CHANGE } from "./ReactField"
 import ReactImageField from "./ReactImageField"
 const LEDMatrixWidget = lazy(() => import("../../widgets/LEDMatrixWidget"))
 
@@ -17,6 +17,11 @@ export default class LEDMatrixField extends ReactImageField<LEDMatrixFieldValue>
 
     constructor(value: string) {
         super(value)
+
+        this.events.on(VALUE_CHANGE, () => {
+            const { rows, columns } = this.value
+            this.setSize(32, (32 / columns) * rows)    
+        })
     }
 
     static fromJson(options: ReactFieldJSON) {
@@ -34,12 +39,6 @@ export default class LEDMatrixField extends ReactImageField<LEDMatrixFieldValue>
     getText_() {
         const { leds, rows, columns } = this.value
         return `${leds} (${rows}x${columns})`
-    }
-
-    doValueUpdate_(newValue: string) {
-        super.doValueUpdate_(newValue)
-        const { rows, columns } = this.value
-        this.setSize(32, (32 / columns) * rows)
     }
 
     renderValue(): string {

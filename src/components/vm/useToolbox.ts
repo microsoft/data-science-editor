@@ -459,7 +459,7 @@ function loadBlocks(
         return def
     })
 
-    const bashboardBlocks: ServiceBlockDefinition[] = allServices.map(
+    const twinBlocks: ServiceBlockDefinition[] = allServices.map(
         service => ({
             kind: "block",
             type: `jacdac_twin_${service.shortId}`,
@@ -761,7 +761,7 @@ function loadBlocks(
         ...registerSetBlocks,
         ...customBlockDefinitions,
         ...commandBlocks,
-        ...bashboardBlocks,
+        ...twinBlocks,
     ]
 
     const shadowBlocks: BlockDefinition[] = [

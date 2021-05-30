@@ -13,6 +13,7 @@ import ServoServer from "../../../jacdac-ts/src/servers/servoserver"
 import RegisterInput from "../RegisterInput"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import ServoWidget from "../widgets/ServoWidget"
+import useRegister from "../hooks/useRegister"
 
 function useActualAngle(service: JDService, visible: boolean) {
     const [angle] = useRegisterUnpackedValue<[number]>(
@@ -33,14 +34,12 @@ function useActualAngle(service: JDService, visible: boolean) {
 export default function DashboardServo(props: DashboardServiceProps) {
     const { service, visible } = props
 
-    const enabledRegister = service.register(ServoReg.Enabled)
+    const enabledRegister = useRegister(service, ServoReg.Enabled)
     const enabled = useRegisterBoolValue(enabledRegister, props)
-    const angleRegister = service.register(ServoReg.Angle)
+    const angleRegister = useRegister(service, ServoReg.Angle)
     const angle = useActualAngle(service, visible)
-    const [offset] = useRegisterUnpackedValue<[number]>(
-        service.register(ServoReg.Offset),
-        props
-    )
+    const offsetRegister = useRegister(service, ServoReg.Offset)
+    const [offset] = useRegisterUnpackedValue<[number]>(offsetRegister, props)
 
     const server = useServiceServer<ServoServer>(service)
     const color = server ? "secondary" : "primary"

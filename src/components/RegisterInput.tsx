@@ -86,15 +86,17 @@ export default function RegisterInput(props: {
         regProps
     )
 
-    useEffect(
-        () =>
+    useEffect(() => {
+        const vs = register.unpackedValue
+        if (vs !== undefined) setArgs(vs)
+        return (
             visible &&
             register.subscribe(REPORT_UPDATE, () => {
                 const vs = register.unpackedValue
                 if (vs !== undefined) setArgs(vs)
-            }),
-        [register, visible]
-    )
+            })
+        )
+    }, [register, visible])
     const handleRefresh = () => {
         register.refresh(true)
     }
@@ -103,8 +105,7 @@ export default function RegisterInput(props: {
         if (working) return
         try {
             setWorking(true)
-            if (server)
-                server.setValues(values)
+            if (server) server.setValues(values)
             await register.sendSetPackedAsync(
                 specification.packFormat,
                 values,

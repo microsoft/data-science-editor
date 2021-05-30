@@ -1,7 +1,11 @@
 import React, { lazy, ReactNode } from "react"
 import { createToneContext, ToneContext } from "../../hooks/toneContext"
 import Suspense from "../../ui/Suspense"
-import ReactField, { ReactFieldJSON, toShadowDefinition } from "./ReactField"
+import ReactField, {
+    ReactFieldJSON,
+    toShadowDefinition,
+    UNMOUNT,
+} from "./ReactField"
 const PianoWidget = lazy(() => import("../../widgets/PianoWidget"))
 
 export default class NoteField extends ReactField<number> {
@@ -10,7 +14,16 @@ export default class NoteField extends ReactField<number> {
     toneContext: ToneContext
 
     static fromJson(options: ReactFieldJSON) {
-        return new NoteField(options?.value, undefined, options)
+        return new NoteField(options)
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    constructor(options?: any) {
+        super(options?.value, undefined, options)
+        this.events.on(UNMOUNT, () => {
+            this.toneContext?.close()
+            this.toneContext = undefined
+        })
     }
 
     get defaultValue() {
@@ -19,11 +32,6 @@ export default class NoteField extends ReactField<number> {
 
     getText_() {
         return (this.value | 0) + ""
-    }
-
-    onUnmount() {
-        this.toneContext?.close()
-        this.toneContext = undefined
     }
 
     renderField(): ReactNode {

@@ -15,6 +15,10 @@ import clsx from "clsx"
 import { IT4ProgramRunner } from "../../../jacdac-ts/src/vm/vmrunner"
 import useBlocklyEvents from "./useBlocklyEvents"
 import useBlocklyPlugins from "./useBlocklyPlugins"
+import {
+    BlocklyWorkspaceWithServices,
+    WorkspaceServices,
+} from "./WorkspaceContext"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -47,6 +51,7 @@ export default function VMBlockEditor(props: {
         onIT4ProgramChange,
         initialXml,
         serviceClass,
+        runner,
     } = props
     const classes = useStyles()
     const { darkMode } = useContext(DarkModeContext)
@@ -101,11 +106,21 @@ export default function VMBlockEditor(props: {
         onImportXmlError: () => setError("Error loading blocks..."),
     }) as { workspace: Blockly.WorkspaceSvg; xml: string }
 
+    // surface state to react
+    useEffect(() => {
+        const ws = workspace as any as BlocklyWorkspaceWithServices
+        if (ws) ws.jacdacServices = new WorkspaceServices()
+    }, [workspace])
+    useEffect(() => {
+        const ws = workspace as any as BlocklyWorkspaceWithServices
+        const services = ws?.jacdacServices
+        if (services) services.runner = runner
+    }, [workspace, runner])
+
+    // plugins
     useBlocklyPlugins(workspace)
     useBlocklyEvents(workspace)
     useToolboxButtons(workspace, toolboxConfiguration)
-
-    // code serialization
 
     // blockly did a change
     useEffect(() => {

@@ -8,15 +8,15 @@ import {
     toIdentifier,
     IT4IfThenElse,
 } from "../../../jacdac-ts/src/vm/ir"
+import { BUILTIN_TYPES } from "./useToolbox"
+import { assert } from "../../../jacdac-ts/src/jdom/utils"
 import {
     BlockDefinition,
-    BUILTIN_TYPES,
     CommandBlockDefinition,
     RegisterBlockDefinition,
     WAIT_BLOCK,
     WHILE_CONDITION_BLOCK,
-} from "./useToolbox"
-import { assert } from "../../../jacdac-ts/src/jdom/utils"
+} from "./toolbox"
 
 const ops = {
     AND: "&&",
@@ -154,7 +154,7 @@ export default function workspaceJSONToIT4Program(
                 break
             }
             case "dynamic_if": {
-                let ret: IT4IfThenElse = {
+                const ret: IT4IfThenElse = {
                     sourceId: block.id,
                     type: "ite",
                     expr: blockToExpression(inputs[0]?.child),
@@ -163,8 +163,16 @@ export default function workspaceJSONToIT4Program(
                 }
                 const t = inputs[1]?.child
                 const e = inputs[2]?.child
-                if (t) addCommands(ret.then, [ t, ...(t.children ? t.children : [])])
-                if (e) addCommands(ret.else, [ e, ...(e.children ? e.children : [])])
+                if (t)
+                    addCommands(ret.then, [
+                        t,
+                        ...(t.children ? t.children : []),
+                    ])
+                if (e)
+                    addCommands(ret.else, [
+                        e,
+                        ...(e.children ? e.children : []),
+                    ])
                 return ret
             }
             // more builts
