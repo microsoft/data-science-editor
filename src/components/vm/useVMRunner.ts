@@ -19,6 +19,7 @@ export default function useVMRunner(program: IT4Program) {
     useEffect(() => {
         try {
             const newTestRunner = program && new IT4ProgramRunner(program, bus)
+            console.log("new runner", newTestRunner)
             // register runner events
             setTestRunner(newTestRunner)
         } catch (e) {
@@ -27,17 +28,22 @@ export default function useVMRunner(program: IT4Program) {
     }, [program])
 
     // errors
-    useEffect(() => testRunner?.subscribe(ERROR, e => setError(e)))
+    useEffect(
+        () => testRunner?.subscribe(ERROR, e => setError(e)),
+        [testRunner]
+    )
     // traces
     const handleTrace = (value: { message: string; context: TraceContext }) => {
         const { message, context } = value
         if (Flags.diagnostics) console.debug(`vm> ${message}`, context)
     }
-    useEffect(() =>
-        testRunner?.subscribe<{ message: string; context: TraceContext }>(
-            TRACE,
-            handleTrace
-        )
+    useEffect(
+        () =>
+            testRunner?.subscribe<{ message: string; context: TraceContext }>(
+                TRACE,
+                handleTrace
+            ),
+        [testRunner]
     )
 
     return {

@@ -4,7 +4,7 @@ import { CHANGE } from "../../../jacdac-ts/src/jdom/constants"
 import { JDEventSource } from "../../../jacdac-ts/src/jdom/eventsource"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { assert } from "../../../jacdac-ts/src/jdom/utils"
-import { ROLE_CHANGE } from "../../../jacdac-ts/src/vm/utils"
+import { ROLES_CHANGE, } from "../../../jacdac-ts/src/vm/utils"
 import { IT4ProgramRunner } from "../../../jacdac-ts/src/vm/vmrunner"
 import ReactField from "./fields/ReactField"
 
@@ -130,16 +130,12 @@ export function WorkspaceProvider(props: {
     }, [field, workspace, runner])
 
     // resolve current role service
-    useEffect(() => setRoleService(resolveRoleService()), [role, runner])
-
-    // resolve role bounds
-    useEffect(
-        () =>
-            runner?.subscribe(ROLE_CHANGE, () =>
-                setRoleService(resolveRoleService())
-            ),
-        [runner]
-    )
+    useEffect(() => {
+        setRoleService(resolveRoleService())
+        return runner?.subscribe(ROLES_CHANGE, () => {
+            setRoleService(resolveRoleService())
+    })
+    }, [role, runner])
 
     return (
         // eslint-disable-next-line react/react-in-jsx-scope
