@@ -2,6 +2,7 @@ import Blockly from "blockly"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import { SMap, toMap } from "../../../jacdac-ts/src/jdom/utils"
 import ReactField from "./fields/ReactField"
+import { ServiceBlockDefinitionFactory } from "./toolbox"
 
 export interface VariableJSON {
     // Boolean, Number, String, or service short id
@@ -110,7 +111,7 @@ export function domToJSON(workspace: Blockly.Workspace): WorkspaceJSON {
     }
     const flattenNext = (block: BlockJSON) => {
         // flatten the linked list of next into an array
-        let children: BlockJSON[] = []
+        const children: BlockJSON[] = []
         let current = block.next
         while (current) {
             children.push(current)
@@ -123,13 +124,20 @@ export function domToJSON(workspace: Blockly.Workspace): WorkspaceJSON {
     }
     const blockToJSON = (block: Blockly.Block): BlockJSON => {
         const blockToJSONHidden = (block: Blockly.Block): BlockJSON => {
+            // skip disabled blocks
             if (!block?.isEnabled()) return undefined
-            // Skip over insertion markers.
+            // skip over insertion markers.
             if (block.isInsertionMarker()) {
                 const child = block.getChildren(false)[0]
                 if (child) return blockToJSON(child)
                 else return undefined
             }
+            // skip twins
+            const definition = (
+                Blockly.Blocks[block.type] as ServiceBlockDefinitionFactory
+            )?.jacdacDefinition
+            if (definition?.template === "twin") return undefined
+
             // dump object
             const value = builtins[block.type]?.(block)
             const element: BlockJSON = {
@@ -155,7 +163,7 @@ export function domToJSON(workspace: Blockly.Workspace): WorkspaceJSON {
             clean(element)
             return element
         }
-        let top = blockToJSONHidden(block)
+        const top = blockToJSONHidden(block)
         if (top) {
             flattenNext(top)
             clean(top)
@@ -165,7 +173,7 @@ export function domToJSON(workspace: Blockly.Workspace): WorkspaceJSON {
 
     try {
         const variables = Blockly.Variables.allUsedVarModels(workspace)
-        const blocks = workspace.getTopBlocks(true).filter(b => b.isEnabled())
+        const blocks = workspace.getTopBlocks(true)
         const json: WorkspaceJSON = {
             variables: variables.map(variableToJSON),
             blocks: blocks.map(blockToJSON).filter(b => !!b),

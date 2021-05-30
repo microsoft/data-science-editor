@@ -462,7 +462,7 @@ function loadBlocks(
     const bashboardBlocks: ServiceBlockDefinition[] = allServices.map(
         service => ({
             kind: "block",
-            type: `jacdac_dashboard_service_${service.shortId}`,
+            type: `jacdac_twin_${service.shortId}`,
             message0: `%1 %2 %3`,
             args0: [
                 fieldVariable(service),
@@ -471,13 +471,13 @@ function loadBlocks(
                 },
                 <InputDefinition>{
                     type: TwinField.KEY,
-                    name: "dashboard",
+                    name: "twin",
                     serviceClass: service.classIdentifier,
                 },
             ],
             colour: serviceColor(service),
             inputsInline: false,
-            tooltip: `Dashboard of the service`,
+            tooltip: `Twin of the service`,
             helpUrl: serviceHelp(service),
             service,
             template: "twin",
