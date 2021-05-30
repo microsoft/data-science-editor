@@ -81,17 +81,13 @@ export function WorkspaceProvider(props: {
         const newSourceBlock = field.getSourceBlock()
         const roleField = newSourceBlock?.inputList[0]
             ?.fieldRow[0] as FieldVariable
-        {
-            assert(
-                !roleField || roleField?.name === "role",
-                `unexpected field ${roleField.name}`,
-                { newSourceBlock, roleField }
-            )
+        if (roleField?.name === "role" && roleField instanceof FieldVariable) {
             const xml = document.createElement("xml")
             roleField?.toXml(xml)
+            const newRole = roleField?.getVariable()?.name
+            return newRole
         }
-        const newRole = roleField?.getVariable()?.name
-        return newRole
+        return undefined
     }
     const resolveRoleService = () => {
         const newRoleService = role && roleManager?.getService(role)
