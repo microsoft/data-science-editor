@@ -17,8 +17,13 @@ export default function useVMRunner(program: IT4Program) {
 
     // create runner
     useEffect(() => {
-        const runner = program && new IT4ProgramRunner(program, bus)
-        setTestRunner(runner)
+        try {
+            const newTestRunner = program && new IT4ProgramRunner(program, bus)
+            // register runner events
+            setTestRunner(newTestRunner)
+        } catch (e) {
+            setTestRunner(undefined)
+        }
     }, [program])
 
     // errors

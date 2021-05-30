@@ -76,7 +76,11 @@ export function WorkspaceProvider(props: {
         const roleField = newSourceBlock?.inputList[0]
             ?.fieldRow[0] as FieldVariable
         {
-            assert(!roleField || roleField?.name === "role")
+            assert(
+                !roleField || roleField?.name === "role",
+                `unexpected field ${roleField.name}`,
+                { newSourceBlock, roleField }
+            )
             const xml = document.createElement("xml")
             roleField?.toXml(xml)
         }
