@@ -1,8 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react"
 import { useBlocklyWorkspace } from "react-blockly"
 import Blockly from "blockly"
-import "@blockly/field-slider"
-import "@blockly/block-dynamic-connection"
 import Theme from "@blockly/theme-modern"
 import DarkTheme from "@blockly/theme-dark"
 import useToolbox, { scanServices, useToolboxButtons } from "./useToolbox"
@@ -16,6 +14,7 @@ import { createStyles, makeStyles } from "@material-ui/core"
 import clsx from "clsx"
 import { IT4ProgramRunner } from "../../../jacdac-ts/src/vm/vmrunner"
 import useBlocklyEvents from "./useBlocklyEvents"
+import useBlocklyPlugins from "./useBlocklyPlugins"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -102,9 +101,8 @@ export default function VMBlockEditor(props: {
         onImportXmlError: () => setError("Error loading blocks..."),
     }) as { workspace: Blockly.WorkspaceSvg; xml: string }
 
-    // listen for events needed for field editors
+    useBlocklyPlugins(workspace)
     useBlocklyEvents(workspace)
-    // setup buttons
     useToolboxButtons(workspace, toolboxConfiguration)
 
     // code serialization
