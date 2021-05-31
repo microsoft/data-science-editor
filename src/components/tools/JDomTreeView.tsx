@@ -55,14 +55,8 @@ import useMediaQueries from "../hooks/useMediaQueries"
 function DeviceTreeItem(
     props: { device: JDDevice } & StyledTreeViewItemProps & JDomTreeViewProps
 ) {
-    const {
-        device,
-        checked,
-        setChecked,
-        checkboxes,
-        serviceFilter,
-        ...other
-    } = props
+    const { device, checked, setChecked, checkboxes, serviceFilter, ...other } =
+        props
     const id = device.id
     const name = useDeviceName(device, true)
     const physical = useChange(device, d => d.physical)

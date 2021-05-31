@@ -9,7 +9,7 @@ import AppTheme from "../../ui/AppTheme"
 import Blockly from "blockly"
 import { WorkspaceProvider } from "../WorkspaceContext"
 
-export default class ReactInlineField<T> extends ReactField<T> {
+export default class ReactInlineField extends ReactField<unknown> {
     protected container: HTMLDivElement
     protected resizeObserver: ResizeObserver
 

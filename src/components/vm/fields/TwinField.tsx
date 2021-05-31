@@ -8,6 +8,7 @@ import JacdacContext, { JacdacContextProps } from "../../../jacdac/Context"
 import Alert from "../../ui/Alert"
 import { serviceSpecificationFromClassIdentifier } from "../../../../jacdac-ts/src/jdom/spec"
 import WorkspaceContext from "../WorkspaceContext"
+import ReactInlineField from "./ReactInlineField"
 
 function TwinWidget(props: { serviceClass: number }) {
     const { serviceClass } = props
@@ -67,7 +68,7 @@ function TwinWidget(props: { serviceClass: number }) {
     )
 }
 
-export default class TwinField extends ReactInlineField<number> {
+export default class TwinField extends ReactInlineField {
     static KEY = "jacdac_field_twin"
     static EDITABLE = false
     protected serviceClass: number
@@ -78,8 +79,8 @@ export default class TwinField extends ReactInlineField<number> {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     constructor(options?: any) {
-        super(options?.value, undefined, options, { width: 240, height: 160 })
-        this.serviceClass = options.serviceClass
+        super(options)
+        this.serviceClass = options?.serviceClass
     }
 
     renderInlineField() {
