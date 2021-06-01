@@ -1,47 +1,26 @@
-import React, { useState } from "react"
+import React from "react"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import SaveIcon from "@material-ui/icons/Save"
-import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    TextField,
-} from "@material-ui/core"
-import { useId } from "react-use-id-hook"
+import { toUTF8 } from "../../../jacdac-ts/src/jdom/utils"
+import { Tooltip } from "@material-ui/core"
+import { IconButton, Link } from "gatsby-theme-material-ui"
 
 export default function VMSaveButton(props: { xml: string }) {
     const { xml } = props
-    const [url, setUrl] = useState("")
-    const open = !!url
-    const handleClick = () => {
-        const baseUrl = window.location.href
-        const hash = `blocksxml=${encodeURIComponent(xml)}`
-
-        setUrl(`${baseUrl}#${hash}`)
+    const json = {
+        xml: xml,
     }
-    const handleClose = () => setUrl(undefined)
-    const urlId = useId()
+    const url = `data:application/json;charset=UTF-8,${encodeURIComponent(
+        JSON.stringify(json)
+    )}`
 
     return (
-        <>
-            <IconButtonWithTooltip title="save" onClick={handleClick}>
-                <SaveIcon />
-            </IconButtonWithTooltip>
-            <Dialog open={open} onClose={handleClose}>
-                <DialogContent>
-                    <DialogContentText>
-                        Share this URL to reload your program.
-                    </DialogContentText>
-                    <TextField fullWidth={true} id={urlId} value={url} label="URL" />
-                </DialogContent>
-                <DialogActions>
-                    <Button variant="contained" onClick={handleClose}>
-                        Close
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </>
+        <Link download="jacdac-blocks.jdblocks" href={url}>
+            <Tooltip title={"save"}>
+                <IconButton>
+                    <SaveIcon />
+                </IconButton>
+            </Tooltip>
+        </Link>
     )
 }
