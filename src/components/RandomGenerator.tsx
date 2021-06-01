@@ -20,6 +20,7 @@ import { Button } from "gatsby-theme-material-ui"
 import { NoSsr } from "@material-ui/core"
 import { useId } from "react-use-id-hook"
 import { cryptoRandomUint32 } from "../../jacdac-ts/src/jdom/random"
+import { toFullHex } from "../../jacdac-ts/src/jdom/utils"
 
 function looksRandom(n: number) {
     const s = n.toString(16)
