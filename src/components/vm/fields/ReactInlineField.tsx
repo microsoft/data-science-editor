@@ -29,6 +29,7 @@ export default class ReactInlineField extends ReactField<unknown> {
 
         this.container = document.createElement("div")
         this.container.style.display = "inline-block"
+        this.container.style.minWidth = "14rem"
         fo.appendChild(this.container)
 
         this.resizeObserver = new ResizeObserver(
