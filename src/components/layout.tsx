@@ -1,4 +1,4 @@
-import React, { lazy, useContext } from "react"
+import React, { lazy, useContext, useEffect } from "react"
 import clsx from "clsx"
 import { makeStyles, Container, Hidden, Box } from "@material-ui/core"
 // tslint:disable-next-line: no-submodule-imports
@@ -39,6 +39,7 @@ import Breadcrumbs from "./ui/Breadcrumbs"
 import ForumIcon from "@material-ui/icons/Forum"
 import useMediaQueries from "./hooks/useMediaQueries"
 import { UIFlags } from "../jacdac/providerbus"
+import { useSnackbar } from "notistack"
 
 const WebDiagnostics = lazy(() => import("./WebDiagnostics"))
 const AppDrawer = lazy(() => import("./AppDrawer"))
@@ -120,12 +121,15 @@ const useStyles = makeStyles(theme =>
             minHeight: "100vh",
             minWidth: "10rem",
             flexDirection: "column",
-            padding: theme.spacing(3),
             transition: theme.transitions.create("margin", {
                 easing: theme.transitions.easing.sharp,
                 duration: theme.transitions.duration.leavingScreen,
             }),
             flexGrow: 1,
+            padding: theme.spacing(0.5),
+        },
+        contentPadding: {
+            padding: theme.spacing(3),
         },
         container: {
             padding: theme.spacing(3),
@@ -220,12 +224,7 @@ function LayoutWithMdx(props: LayoutProps) {
     )
 }
 
-function MainAppBar(props: LayoutProps) {
-    const { props: pageProps } = props
-    const { pageContext } = pageProps
-    const { frontmatter } = pageContext || {}
-    const { pageTitle } = frontmatter || {}
-
+function MainAppBar() {
     const classes = useStyles()
     const { drawerType, toolsMenu, setToolsMenu } = useContext(AppContext)
     const { darkMode } = useContext(DarkModeContext)
@@ -324,7 +323,7 @@ function LayoutWithContext(props: LayoutProps) {
         hideBreadcrumbs = false,
     } = frontmatter || {
         hideMainMenu: makeCodeTool,
-        hideUnderConstruction: makeCodeTool,
+        hideUnderConstruction: makeCodeTool || fullWidthTools,
         hideBreadcrumbs: fullWidthTools,
     }
 
@@ -332,15 +331,29 @@ function LayoutWithContext(props: LayoutProps) {
 
     const { darkMode } = useContext(DarkModeContext)
     const { drawerType, toolsMenu } = useContext(AppContext)
+    const { enqueueSnackbar } = useSnackbar()
     const drawerOpen = drawerType !== DrawerType.None
     const { medium } = useMediaQueries()
     const container = !medium && !fullWidthTools
     // && path !== "/"
     const mainClasses = clsx(classes.content, {
         [classes.container]: container,
+        [classes.contentPadding]: !fullWidthTools,
         [classes.contentShift]: drawerOpen,
         [classes.toolsContentShift]: toolsMenu,
     })
+
+    // show under construction warning
+    useEffect(() => {
+        if (!hideUnderConstruction)
+            enqueueSnackbar(
+                `UNDER CONSTRUCTION - We are still working and changing the
+            Jacdac specification. Do not build devices using Jacdac.`,
+                {
+                    variant: "warning",
+                }
+            )
+    }, [])
 
     const InnerMainSection = () => (
         <>
@@ -358,9 +371,13 @@ function LayoutWithContext(props: LayoutProps) {
             {!hideBreadcrumbs && location && (
                 <Breadcrumbs location={location} />
             )}
-            <Typography className={"markdown"} component="span">
-                {element}
-            </Typography>
+            {fullWidthTools ? (
+                element
+            ) : (
+                <Typography className={"markdown"} component="span">
+                    {element}
+                </Typography>
+            )}
         </>
     )
 

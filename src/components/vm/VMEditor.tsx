@@ -4,12 +4,8 @@ import Flags from "../../../jacdac-ts/src/jdom/flags"
 import { IT4Program } from "../../../jacdac-ts/src/vm/ir"
 import { WorkspaceJSON } from "../../components/vm/jsongenerator"
 import VMBlockEditor from "../../components/vm/VMBlockEditor"
-import Dashboard from "../../components/dashboard/Dashboard"
-import Alert from "../../components/ui/Alert"
 import useLocalStorage from "../../components/useLocalStorage"
-import VMRunnerButton from "./VMRunnerButton"
 import useVMRunner from "./useVMRunner"
-import VMRoles from "./VMRoles"
 import useRoleManager from "./useRoleManager"
 import VMDiagnostics from "./VMDiagnostics"
 
@@ -24,7 +20,7 @@ export default function VMEditor(props: { storageKey?: string }) {
     const [program, setProgram] = useState<IT4Program>()
     const roleManager = useRoleManager()
     const autoStart = true
-    const { runner, run, cancel } = useVMRunner(roleManager, program, autoStart)
+    const { runner } = useVMRunner(roleManager, program, autoStart)
 
     const handleXml = (xml: string) => {
         setXml(xml)
@@ -43,14 +39,6 @@ export default function VMEditor(props: { storageKey?: string }) {
 
     return (
         <Grid container direction="column" spacing={1}>
-            {!source?.blocks?.length && (
-                <Grid item xs={12}>
-                    <Alert severity="info" closeable={true}>
-                        Start a simulator or connect a device to load the blocks
-                        automatically.
-                    </Alert>
-                </Grid>
-            )}
             <Grid item xs={12}>
                 <NoSsr>
                     <VMBlockEditor
@@ -63,23 +51,8 @@ export default function VMEditor(props: { storageKey?: string }) {
                     />
                 </NoSsr>
             </Grid>
-            <Grid item xs={12}>
-                <VMRunnerButton runner={runner} run={run} cancel={cancel} />
-            </Grid>
-            <Grid item xs={12}>
-                <VMRoles roleManager={roleManager} />
-            </Grid>
             {Flags.diagnostics && (
                 <VMDiagnostics program={program} source={source} xml={xml} />
-            )}
-            {Flags.diagnostics && (
-                <Grid item xs={12}>
-                    <Dashboard
-                        showStartSimulators={true}
-                        showHeader={true}
-                        showAvatar={true}
-                    />
-                </Grid>
             )}
         </Grid>
     )

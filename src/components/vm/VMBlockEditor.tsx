@@ -24,7 +24,7 @@ import { RoleManager } from "../../../jacdac-ts/src/vm/rolemanager"
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         editor: {
-            height: "calc(100vh - 10rem)",
+            height: "calc(100vh - 7rem)",
             "& .blocklyTreeLabel": {
                 fontFamily: theme.typography.fontFamily,
             },
@@ -111,10 +111,12 @@ export default function VMBlockEditor(props: {
 
     // surface state to react
     useEffect(() => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const ws = workspace as any as BlocklyWorkspaceWithServices
         if (ws) ws.jacdacServices = new WorkspaceServices()
     }, [workspace])
     useEffect(() => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const ws = workspace as any as BlocklyWorkspaceWithServices
         const services = ws?.jacdacServices
         if (services) {
@@ -122,6 +124,7 @@ export default function VMBlockEditor(props: {
         }
     }, [workspace, runner])
     useEffect(() => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const ws = workspace as any as BlocklyWorkspaceWithServices
         const services = ws?.jacdacServices
         if (services) {
@@ -167,8 +170,8 @@ export default function VMBlockEditor(props: {
 
     return (
         <>
-            <BlocklyModalDialogs />
             <div className={clsx(classes.editor, className)} ref={blocklyRef} />
+            <BlocklyModalDialogs />
         </>
     )
 }
