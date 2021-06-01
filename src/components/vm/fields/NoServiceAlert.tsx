@@ -18,6 +18,9 @@ export default function NoServiceAlert() {
     // nothing to do here
     if (roleService || flyout) return null
 
+    // unresolved, unknown service
+    if (!roleService && !roleServiceShortId) return null
+
     // unknown spec
     if (!spec) return <Alert severity="warning">Unknown service</Alert>
 
