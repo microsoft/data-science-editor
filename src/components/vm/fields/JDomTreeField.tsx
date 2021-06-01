@@ -20,7 +20,7 @@ function JDomTreeWidget(props: { serviceClass: number }) {
 
     return (
         <div
-            style={{ minWidth: "20rem", cursor: "inherit" }}
+            style={{ minWidth: "16rem", cursor: "inherit" }}
             onPointerDown={onPointerStopPropagation}
             onPointerUp={onPointerStopPropagation}
             onPointerMove={onPointerStopPropagation}

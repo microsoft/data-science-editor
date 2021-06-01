@@ -15,7 +15,7 @@ export default class ReactInlineField extends ReactField<unknown> {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     constructor(options?: any) {
-        super(options?.value, undefined, options, { width: 240, height: 80 })
+        super(options?.value, undefined, options, { width: 1, height: 1 })
     }
 
     protected initCustomView() {
@@ -28,6 +28,7 @@ export default class ReactInlineField extends ReactField<unknown> {
         }) as SVGForeignObjectElement
 
         this.container = document.createElement("div")
+        this.container.style.display = "inline-block"
         fo.appendChild(this.container)
 
         this.resizeObserver = new ResizeObserver(

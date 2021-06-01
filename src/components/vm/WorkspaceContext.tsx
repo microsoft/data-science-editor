@@ -3,10 +3,8 @@ import React, { createContext, ReactNode, useEffect, useState } from "react"
 import { CHANGE } from "../../../jacdac-ts/src/jdom/constants"
 import { JDEventSource } from "../../../jacdac-ts/src/jdom/eventsource"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
-import { assert } from "../../../jacdac-ts/src/jdom/utils"
 import { RoleManager } from "../../../jacdac-ts/src/vm/rolemanager"
 import { IT4ProgramRunner } from "../../../jacdac-ts/src/vm/vmrunner"
-import useChange from "../../jacdac/useChange"
 import ReactField from "./fields/ReactField"
 
 export class WorkspaceServices extends JDEventSource {

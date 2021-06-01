@@ -11,6 +11,7 @@ import Typography from "@material-ui/core/Typography"
 import KindIcon from "../KindIcon"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import SignalCellularConnectedNoInternet0BarIcon from "@material-ui/icons/SignalCellularConnectedNoInternet0Bar"
+import { useId } from "react-use-id-hook"
 
 declare module "csstype" {
     interface Properties {
@@ -50,7 +51,7 @@ const useTreeItemStyles = makeStyles((theme: Theme) =>
         },
         expanded: {},
         selected: {
-            color: theme.palette.background.default,
+            fontWeight: theme.typography.fontWeightBold,
         },
         label: {
             fontWeight: "inherit",
@@ -67,6 +68,7 @@ const useTreeItemStyles = makeStyles((theme: Theme) =>
         labelText: {
             fontWeight: "inherit",
             flexGrow: 1,
+            marginRight: theme.spacing(0.5),
         },
     })
 )
@@ -97,9 +99,12 @@ export function StyledTreeItem(
         alert,
         ...other
     } = props
+    const domId = useId()
 
     return (
         <TreeItem
+            id={domId}
+            tabIndex={0}
             nodeId={nodeId}
             label={
                 <div className={classes.labelRoot}>
@@ -110,7 +115,7 @@ export function StyledTreeItem(
                     <Typography variant="body2" className={classes.labelText}>
                         {labelText}
                     </Typography>
-                    {alert && <SignalCellularConnectedNoInternet0BarIcon />}
+                    {alert && "!"}
                     <Typography variant="caption" color="inherit">
                         {alert && (
                             <Typography variant="caption" component="span">
