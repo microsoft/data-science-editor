@@ -54,6 +54,7 @@ import {
     EventBlockDefinition,
     EventFieldDefinition,
     InputDefinition,
+    INSPECT_BLOCK,
     NEW_PROJET_XML,
     NumberInputDefinition,
     OptionsInputDefinition,
@@ -129,7 +130,7 @@ function createBlockTheme(theme: Theme) {
     const sensorColor = theme.palette.success.main
     const otherColor = theme.palette.info.main
     const commandColor = theme.palette.warning.main
-    const modulesColor = theme.palette.success.main
+    const modulesColor = theme.palette.grey[600]
     const serviceColor = (srv: jdspec.ServiceSpec) =>
         isSensor(srv) ? sensorColor : otherColor
     return { serviceColor, sensorColor, commandColor, modulesColor, otherColor }
@@ -137,7 +138,8 @@ function createBlockTheme(theme: Theme) {
 
 function loadBlocks(
     serviceColor: (srv: jdspec.ServiceSpec) => string,
-    commandColor: string
+    commandColor: string,
+    modulesColor: string
 ): CachedBlockDefinitions {
     const customShadows = [
         {
@@ -486,30 +488,6 @@ function loadBlocks(
         template: "twin",
     }))
 
-    const inspectBlocks: ServiceBlockDefinition[] = allServices.map(
-        service => ({
-            kind: "block",
-            type: `jacdac_inspect_${service.shortId}`,
-            message0: `inspect %1 %2 %3`,
-            args0: [
-                fieldVariable(service),
-                {
-                    type: "input_dummy",
-                },
-                <InputDefinition>{
-                    type: JDomTreeField.KEY,
-                    name: "twin",
-                },
-            ],
-            colour: serviceColor(service),
-            inputsInline: false,
-            tooltip: `Inspect a service`,
-            helpUrl: serviceHelp(service),
-            service,
-            template: "twin",
-        })
-    )
-
     const eventBlocks = events.map<EventBlockDefinition>(
         ({ service, events }) => ({
             kind: "block",
@@ -788,7 +766,6 @@ function loadBlocks(
         ...customBlockDefinitions,
         ...commandBlocks,
         ...twinBlocks,
-        ...inspectBlocks,
     ]
 
     const shadowBlocks: BlockDefinition[] = [
@@ -999,6 +976,35 @@ function loadBlocks(
             tooltip: "Sets the color on the status light",
             helpUrl: "",
         },
+        {
+            kind: "block",
+            type: INSPECT_BLOCK,
+            message0: `inspect %1 %2 %3`,
+            args0: [
+                {
+                    type: "field_variable",
+                    name: "role",
+                    variable: "none",
+                    variableTypes: [
+                        "client",
+                        ...allServices.map(service => service.shortId),
+                    ],
+                    defaultType: "client",
+                },
+                {
+                    type: "input_dummy",
+                },
+                <InputDefinition>{
+                    type: JDomTreeField.KEY,
+                    name: "twin",
+                },
+            ],
+            colour: modulesColor,
+            inputsInline: false,
+            tooltip: `Inspect a service`,
+            helpUrl: "",
+            template: "twin",
+        },
     ]
 
     const mathBlocks: BlockDefinition[] = [
@@ -1142,7 +1148,7 @@ export default function useToolbox(props: {
     const theme = useTheme()
     const { serviceColor, commandColor, modulesColor } = createBlockTheme(theme)
     const { serviceBlocks, services } = useMemo(
-        () => loadBlocks(serviceColor, commandColor),
+        () => loadBlocks(serviceColor, commandColor, modulesColor),
         [theme]
     )
     const liveServices = useServices({ specification: true })
@@ -1191,6 +1197,7 @@ export default function useToolbox(props: {
         }))
         .filter(cat => !!cat.contents?.length)
 
+    const hasServices = !!toolboxServices.length
     const commandsCategory: CategoryDefinition = {
         kind: "category",
         name: "Commands",
@@ -1207,17 +1214,16 @@ export default function useToolbox(props: {
                     time: { kind: "block", type: "jacdac_time_picker" },
                 },
             },
-            !!toolboxServices.length &&
-                <BlockDefinition>{
-                    kind: "block",
-                    type: SET_STATUS_LIGHT_BLOCK,
-                    values: {
-                        color: {
-                            kind: "block",
-                            type: LEDColorField.SHADOW.type,
-                        },
+            <BlockDefinition>{
+                kind: "block",
+                type: SET_STATUS_LIGHT_BLOCK,
+                values: {
+                    color: {
+                        kind: "block",
+                        type: LEDColorField.SHADOW.type,
                     },
                 },
+            },
         ].filter(b => !!b),
     }
 
@@ -1231,17 +1237,10 @@ export default function useToolbox(props: {
                 text: "start simulator",
                 callbackKey: START_SIMULATOR_CALLBACK_KEY,
             },
-            !!toolboxServices.length &&
-                <BlockDefinition>{
-                    kind: "block",
-                    type: SET_STATUS_LIGHT_BLOCK,
-                    values: {
-                        color: {
-                            kind: "block",
-                            type: LEDColorField.SHADOW.type,
-                        },
-                    },
-                },
+            <BlockDefinition>{
+                kind: "block",
+                type: INSPECT_BLOCK,
+            },
         ].filter(b => !!b),
     }
 

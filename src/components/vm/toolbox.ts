@@ -128,6 +128,7 @@ export const WHILE_CONDITION_BLOCK_CONDITION = "condition"
 export const WAIT_BLOCK = "jacdac_wait"
 export const SET_STATUS_LIGHT_BLOCK = "jacdac_set_status_light"
 export const START_SIMULATOR_CALLBACK_KEY = "jacdac_start_simulator"
+export const INSPECT_BLOCK = "jacdac_inspect"
 
 export interface CategoryDefinition {
     kind: "category"
