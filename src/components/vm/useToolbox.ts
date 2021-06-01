@@ -1278,11 +1278,11 @@ export default function useToolbox(props: {
             },
             <BlockDefinition>{
                 kind: "block",
-                type: TWIN_BLOCK,
+                type: WATCH_BLOCK,
             },
             <BlockDefinition>{
                 kind: "block",
-                type: WATCH_BLOCK,
+                type: TWIN_BLOCK,
             },
             <BlockDefinition>{
                 kind: "block",
