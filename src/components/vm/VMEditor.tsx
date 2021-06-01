@@ -1,4 +1,4 @@
-import { Grid, NoSsr, Typography } from "@material-ui/core"
+import { Grid, NoSsr } from "@material-ui/core"
 import React, { useState } from "react"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import { IT4Program } from "../../../jacdac-ts/src/vm/ir"
@@ -8,46 +8,10 @@ import Dashboard from "../../components/dashboard/Dashboard"
 import Alert from "../../components/ui/Alert"
 import useLocalStorage from "../../components/useLocalStorage"
 import VMRunner from "../../components/vm/VMRunner"
-import CodeBlock from "../../components/CodeBlock"
 import useVMRunner from "./useVMRunner"
 import VMRoles from "./VMRoles"
 import useRoleManager from "./useRoleManager"
-
-function Diagnostics(props: {
-    program: IT4Program
-    source: WorkspaceJSON
-    xml: string
-}) {
-    const { program, source, xml } = props
-    return (
-        <>
-            <Grid item xs={12}>
-                <Typography variant="subtitle1">IT4</Typography>
-                <CodeBlock
-                    className="json"
-                    downloadName={"test.json.it4"}
-                    downloadText={JSON.stringify(program, null, 2)}
-                >
-                    {JSON.stringify(program, null, 2)}
-                </CodeBlock>
-            </Grid>
-            <Grid item xs={12}>
-                <Typography variant="subtitle1">Blockly JSON</Typography>
-                <CodeBlock
-                    className="json"
-                    downloadName={"test.json"}
-                    downloadText={JSON.stringify(source, null, 2)}
-                >
-                    {JSON.stringify(source, null, 2)}
-                </CodeBlock>
-            </Grid>
-            <Grid item xs={12}>
-                <Typography variant="subtitle1">Blockly XML</Typography>
-                <CodeBlock className="xml">{xml}</CodeBlock>
-            </Grid>
-        </>
-    )
-}
+import VMDiagnostics from "./VMDiagnostics"
 
 const VM_SOURCE_STORAGE_KEY = "jacdac:tools:vmeditor"
 export default function VMEditor(props: {
@@ -108,7 +72,7 @@ export default function VMEditor(props: {
                 <VMRoles roleManager={roleManager} />
             </Grid>
             {Flags.diagnostics && (
-                <Diagnostics program={program} source={source} xml={xml} />
+                <VMDiagnostics program={program} source={source} xml={xml} />
             )}
             {showDashboard && (
                 <Grid item xs={12}>
