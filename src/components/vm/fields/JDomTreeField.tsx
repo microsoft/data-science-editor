@@ -3,22 +3,35 @@ import { ReactFieldJSON } from "./ReactField"
 import WorkspaceContext from "../WorkspaceContext"
 import ReactInlineField from "./ReactInlineField"
 import Suspense from "../../ui/Suspense"
+import { Alert } from "@material-ui/lab"
 const JDomServiceTreeView = lazy(
     () => import("../../tools/JDomServiceTreeView")
 )
 
 function JDomTreeWidget() {
     const { roleService } = useContext(WorkspaceContext)
-
-    if (!roleService) return null
+    const onPointerStopPropagation = (event: PointerEvent<HTMLDivElement>) => {
+        // make sure blockly does not handle drags when interacting with UI
+        event.stopPropagation()
+    }
 
     return (
-        <Suspense>
-            <JDomServiceTreeView
-                service={roleService}
-                defaultExpanded={[roleService.id]}
-            />
-        </Suspense>
+        <div
+            style={{ cursor: "inherit" }}
+            onPointerDown={onPointerStopPropagation}
+            onPointerUp={onPointerStopPropagation}
+            onPointerMove={onPointerStopPropagation}
+        >
+            {!roleService && <Alert severity="info">Select a role</Alert>}
+            {roleService && (
+                <Suspense>
+                    <JDomServiceTreeView
+                        service={roleService}
+                        defaultExpanded={[roleService.id]}
+                    />
+                </Suspense>
+            )}
+        </div>
     )
 }
 

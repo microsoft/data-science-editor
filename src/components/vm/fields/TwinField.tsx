@@ -22,8 +22,6 @@ function TwinWidget(props: { serviceClass: number }) {
         event.stopPropagation()
     }
 
-    console.log(`twin`, { roleService, flyout })
-
     return (
         <Grid
             container

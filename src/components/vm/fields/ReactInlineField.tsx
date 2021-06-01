@@ -15,7 +15,7 @@ export default class ReactInlineField extends ReactField<unknown> {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     constructor(options?: any) {
-        super(options?.value, undefined, options, { width: 240, height: 160 })
+        super(options?.value, undefined, options, { width: 240, height: 80 })
     }
 
     protected initCustomView() {
