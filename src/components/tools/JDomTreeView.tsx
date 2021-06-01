@@ -289,14 +289,7 @@ const useStyles = makeStyles(theme =>
 )
 
 export default function JDomTreeView(props: JDomTreeViewProps) {
-    const {
-        defaultExpanded,
-        defaultSelected,
-        onToggle,
-        onSelect,
-        dashboard,
-        ...other
-    } = props
+    const { defaultExpanded, defaultSelected, dashboard, ...other } = props
     const classes = useStyles()
     const [expanded, setExpanded] = useState<string[]>(defaultExpanded || [])
     const [selected, setSelected] = useState<string[]>(defaultSelected || [])
@@ -307,7 +300,6 @@ export default function JDomTreeView(props: JDomTreeViewProps) {
         nodeIds: string[]
     ) => {
         setExpanded(nodeIds)
-        if (onToggle) onToggle(nodeIds)
     }
 
     const handleSelect = (
@@ -315,7 +307,6 @@ export default function JDomTreeView(props: JDomTreeViewProps) {
         nodeIds: string[]
     ) => {
         setSelected(nodeIds)
-        if (onSelect) onSelect(nodeIds)
     }
 
     return (
