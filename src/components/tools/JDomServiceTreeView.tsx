@@ -10,8 +10,8 @@ import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
 import ArrowRightIcon from "@material-ui/icons/ArrowRight"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import useDevices from "../hooks/useDevices"
-import { DeviceTreeItem, JDomTreeViewProps } from "./JDomTreeViewItems"
+import { JDomTreeViewProps, ServiceTreeItem } from "./JDomTreeViewItems"
+import { JDService } from "../../../jacdac-ts/src/jdom/service"
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -25,12 +25,13 @@ const useStyles = makeStyles(theme =>
     })
 )
 
-export default function JDomTreeView(props: JDomTreeViewProps) {
-    const { defaultExpanded, defaultSelected, ...other } = props
+export default function JDomServiceTreeView(
+    props: { service: JDService } & JDomTreeViewProps
+) {
+    const { service, defaultExpanded, defaultSelected, ...other } = props
     const classes = useStyles()
     const [expanded, setExpanded] = useState<string[]>(defaultExpanded || [])
     const [selected, setSelected] = useState<string[]>(defaultSelected || [])
-    const devices = useDevices({ ignoreSelf: true })
 
     const handleToggle = (
         event: React.ChangeEvent<unknown>,
@@ -38,7 +39,6 @@ export default function JDomTreeView(props: JDomTreeViewProps) {
     ) => {
         setExpanded(nodeIds)
     }
-
     const handleSelect = (
         event: React.ChangeEvent<unknown>,
         nodeIds: string[]
@@ -57,15 +57,13 @@ export default function JDomTreeView(props: JDomTreeViewProps) {
             onNodeToggle={handleToggle}
             onNodeSelect={handleSelect}
         >
-            {devices?.map(device => (
-                <DeviceTreeItem
-                    key={device.id}
-                    device={device}
-                    expanded={expanded}
-                    selected={selected}
-                    {...other}
-                />
-            ))}
+            <ServiceTreeItem
+                key={service.id}
+                service={service}
+                expanded={expanded}
+                selected={selected}
+                {...other}
+            />
         </TreeView>
     )
 }

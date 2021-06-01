@@ -1,11 +1,11 @@
 import Blockly from "blockly"
 import { useEffect } from "react"
+import ReactField from "./fields/ReactField"
 import {
     BlockTemplate,
     ServiceBlockDefinition,
     ServiceBlockDefinitionFactory,
 } from "./toolbox"
-import TwinField from "./fields/TwinField"
 
 export default function useBlocklyEvents(workspace: Blockly.WorkspaceSvg) {
     const handleChange = (
@@ -22,8 +22,10 @@ export default function useBlocklyEvents(workspace: Blockly.WorkspaceSvg) {
                 const template = def?.template as BlockTemplate
                 if (template === "twin") {
                     // notify twin that the value changed
-                    const twinField = block.inputList[1]
-                        .fieldRow[0] as TwinField
+                    const twinInput = block.inputList[1]
+                    console.log("twins", { block, twinInput })
+                    const twinField = twinInput
+                        .fieldRow[0] as ReactField<unknown>
                     twinField.emitChange()
                 }
                 break

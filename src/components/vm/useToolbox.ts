@@ -71,6 +71,7 @@ import NoteField from "./fields/NoteField"
 import ServoAngleField from "./fields/ServoAngleField"
 import LEDColorField from "./fields/LEDColorField"
 import TwinField from "./fields/TwinField"
+import JDomTreeField from "./fields/JDomTreeField"
 
 type CachedBlockDefinitions = {
     blocks: BlockDefinition[]
@@ -459,10 +460,33 @@ function loadBlocks(
         return def
     })
 
-    const twinBlocks: ServiceBlockDefinition[] = allServices.map(
+    const twinBlocks: ServiceBlockDefinition[] = allServices.map(service => ({
+        kind: "block",
+        type: `jacdac_twin_${service.shortId}`,
+        message0: `%1 %2 %3`,
+        args0: [
+            fieldVariable(service),
+            {
+                type: "input_dummy",
+            },
+            <InputDefinition>{
+                type: TwinField.KEY,
+                name: "twin",
+                serviceClass: service.classIdentifier,
+            },
+        ],
+        colour: serviceColor(service),
+        inputsInline: false,
+        tooltip: `Twin of the service`,
+        helpUrl: serviceHelp(service),
+        service,
+        template: "twin",
+    }))
+
+    const inspectBlocks: ServiceBlockDefinition[] = allServices.map(
         service => ({
             kind: "block",
-            type: `jacdac_twin_${service.shortId}`,
+            type: `jacdac_inspect_${service.shortId}`,
             message0: `%1 %2 %3`,
             args0: [
                 fieldVariable(service),
@@ -470,14 +494,13 @@ function loadBlocks(
                     type: "input_dummy",
                 },
                 <InputDefinition>{
-                    type: TwinField.KEY,
+                    type: JDomTreeField.KEY,
                     name: "twin",
-                    serviceClass: service.classIdentifier,
                 },
             ],
             colour: serviceColor(service),
             inputsInline: false,
-            tooltip: `Twin of the service`,
+            tooltip: `Inspect a service`,
             helpUrl: serviceHelp(service),
             service,
             template: "twin",
@@ -762,6 +785,7 @@ function loadBlocks(
         ...customBlockDefinitions,
         ...commandBlocks,
         ...twinBlocks,
+        ...inspectBlocks,
     ]
 
     const shadowBlocks: BlockDefinition[] = [
