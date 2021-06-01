@@ -1320,7 +1320,7 @@ export default function useToolbox(props: {
     const toolboxConfiguration: ToolboxConfiguration = {
         kind: "categoryToolbox",
         contents: [
-            commandsCategory,
+            modulesCategory,
             servicesCategories?.length &&
                 <SeparatorDefinition>{
                     kind: "sep",
@@ -1329,10 +1329,7 @@ export default function useToolbox(props: {
             <SeparatorDefinition>{
                 kind: "sep",
             },
-            modulesCategory,
-            <SeparatorDefinition>{
-                kind: "sep",
-            },
+            commandsCategory,
             logicCategory,
             mathCategory,
             variablesCategory,
