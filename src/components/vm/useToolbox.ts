@@ -463,7 +463,7 @@ function loadBlocks(
     const twinBlocks: ServiceBlockDefinition[] = allServices.map(service => ({
         kind: "block",
         type: `jacdac_twin_${service.shortId}`,
-        message0: `%1 %2 %3`,
+        message0: `twin of %1 %2 %3`,
         args0: [
             fieldVariable(service),
             {
@@ -487,7 +487,7 @@ function loadBlocks(
         service => ({
             kind: "block",
             type: `jacdac_inspect_${service.shortId}`,
-            message0: `%1 %2 %3`,
+            message0: `inspect %1 %2 %3`,
             args0: [
                 fieldVariable(service),
                 {

@@ -10,15 +10,17 @@ const JDomServiceTreeView = lazy(
 
 function JDomTreeWidget(props: { serviceClass: number }) {
     const { serviceClass } = props
-    const { roleService } = useContext(WorkspaceContext)
+    const { roleService, flyout } = useContext(WorkspaceContext)
     const onPointerStopPropagation = (event: PointerEvent<HTMLDivElement>) => {
         // make sure blockly does not handle drags when interacting with UI
         event.stopPropagation()
     }
 
+    if (flyout) return null
+
     return (
         <div
-            style={{ cursor: "inherit" }}
+            style={{ minWidth: "20rem", cursor: "inherit" }}
             onPointerDown={onPointerStopPropagation}
             onPointerUp={onPointerStopPropagation}
             onPointerMove={onPointerStopPropagation}
@@ -26,7 +28,10 @@ function JDomTreeWidget(props: { serviceClass: number }) {
             <NoServiceAlert serviceClass={serviceClass} />
             {roleService && (
                 <Suspense>
-                    <JDomServiceTreeView service={roleService} />
+                    <JDomServiceTreeView
+                        service={roleService}
+                        defaultExpanded={[roleService.id]}
+                    />
                 </Suspense>
             )}
         </div>

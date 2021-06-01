@@ -10,7 +10,7 @@ import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
 import ArrowRightIcon from "@material-ui/icons/ArrowRight"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import { JDomTreeViewProps, ServiceMembersTreeItems } from "./JDomTreeViewItems"
+import { JDomTreeViewProps, ServiceTreeItem } from "./JDomTreeViewItems"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 
 const useStyles = makeStyles(theme =>
@@ -32,7 +32,6 @@ export default function JDomServiceTreeView(
     const classes = useStyles()
     const [expanded, setExpanded] = useState<string[]>(defaultExpanded || [])
     const [selected, setSelected] = useState<string[]>(defaultSelected || [])
-
     const handleToggle = (
         event: React.ChangeEvent<unknown>,
         nodeIds: string[]
@@ -57,7 +56,7 @@ export default function JDomServiceTreeView(
             onNodeToggle={handleToggle}
             onNodeSelect={handleSelect}
         >
-            <ServiceMembersTreeItems
+            <ServiceTreeItem
                 key={service.id}
                 service={service}
                 expanded={expanded}

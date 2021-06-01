@@ -79,9 +79,11 @@ export function WorkspaceProvider(props: {
 
     const resolveRole = () => {
         const newSourceBlock = field.getSourceBlock()
-        const roleField = newSourceBlock?.inputList[0]
-            ?.fieldRow[0] as FieldVariable
-        if (roleField?.name === "role" && roleField instanceof FieldVariable) {
+        const roleInput = newSourceBlock?.inputList[0]
+        const roleField = roleInput?.fieldRow.find(
+            f => f.name === "role" && f instanceof FieldVariable
+        ) as FieldVariable
+        if (roleField) {
             const xml = document.createElement("xml")
             roleField?.toXml(xml)
             const newRole = roleField?.getVariable()?.name

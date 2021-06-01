@@ -8,11 +8,12 @@ import NoServiceAlert from "./NoServiceAlert"
 
 function TwinWidget(props: { serviceClass: number }) {
     const { serviceClass } = props
-    const { roleService } = useContext(WorkspaceContext)
+    const { roleService, flyout } = useContext(WorkspaceContext)
     const onPointerStopPropagation = (event: PointerEvent<HTMLDivElement>) => {
         // make sure blockly does not handle drags when interacting with UI
         event.stopPropagation()
     }
+    if (flyout) return null
 
     return (
         <Grid
