@@ -1,4 +1,9 @@
-import React, { useContext, useState, useEffect } from "react"
+import React, {
+    useState,
+    useEffect,
+    useMemo,
+    useCallback,
+} from "react"
 import clsx from "clsx"
 // tslint:disable-next-line: no-submodule-imports
 import { makeStyles, createStyles } from "@material-ui/core/styles"
@@ -34,31 +39,28 @@ import {
     ControlAnnounceFlags,
     SRV_ROLE_MANAGER,
     SRV_SETTINGS,
+    SystemReg,
 } from "../../../jacdac-ts/src/jdom/constants"
 import useEventRaised from "../../jacdac/useEventRaised"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import { ellipseJoin } from "../../../jacdac-ts/src/jdom/utils"
-import { Link } from "gatsby-theme-material-ui"
 import useDeviceName from "../devices/useDeviceName"
-import ConnectAlert from "../alert/ConnectAlert"
 import {
     StyledTreeItem,
     StyledTreeViewItemProps,
     StyledTreeViewProps,
 } from "../ui/StyledTreeView"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import LaunchIcon from "@material-ui/icons/Launch"
-import AppContext, { DrawerType } from "../AppContext"
 import useDevices from "../hooks/useDevices"
 import useMediaQueries from "../hooks/useMediaQueries"
+import useRegister from "../hooks/useRegister"
 
 function DeviceTreeItem(
     props: { device: JDDevice } & StyledTreeViewItemProps & JDomTreeViewProps
 ) {
     const { device, serviceFilter, ...other } = props
-    const id = device.id
+    const { id, physical } = useMemo(() => device, [device])
     const name = useDeviceName(device, true)
-    const physical = useChange(device, d => d.physical)
     const kind = physical ? "device" : "virtualdevice"
     const lost = useEventRaised([LOST, FOUND], device, dev => !!dev?.lost)
     const services = useChange(device, () =>
@@ -149,9 +151,10 @@ function ServiceTreeItem(
     props: { service: JDService } & StyledTreeViewItemProps & JDomTreeViewProps
 ) {
     const { service, registerFilter, eventFilter, ...other } = props
-    const { specification, mixins, isMixin } = service
-    const showSpecificationAction = false
-    const id = service.id
+    const { specification, mixins, isMixin, name, id } = useMemo(
+        () => service,
+        [service]
+    )
     const packets = specification?.packets
     const registers = packets
         ?.filter(isRegister)
@@ -162,38 +165,19 @@ function ServiceTreeItem(
         ?.filter(isEvent)
         .map(info => service.event(info.identifier))
         .filter(ev => !eventFilter || eventFilter(ev))
-    const [instanceName] = useRegisterUnpackedValue<[string]>(
-        service.register(BaseReg.InstanceName)
-    )
-    const readingRegister = service.readingRegister
+    const instanceNameRegister = useRegister(service, BaseReg.InstanceName)
+    const [instanceName] =
+        useRegisterUnpackedValue<[string]>(instanceNameRegister)
+    const readingRegister = useRegister(service, SystemReg.Reading)
     const reading = useRegisterHumanValue(readingRegister)
 
-    const name = service.name + (instanceName ? ` ${instanceName}` : "")
-    const { mobile } = useMediaQueries()
-    const { setDrawerType } = useContext(AppContext)
-
-    const handleSpecClick = () => {
-        console.log(`spec click`, { mobile })
-        if (mobile) setDrawerType(DrawerType.None)
-    }
+    const labelText = name + (instanceName ? ` ${instanceName}` : "")
     return (
         <StyledTreeItem
             nodeId={id}
-            labelText={name}
+            labelText={labelText}
             labelInfo={reading}
             kind={isMixin ? SERVICE_MIXIN_NODE_NAME : SERVICE_NODE_NAME}
-            actions={
-                showSpecificationAction ? (
-                    <Link
-                        color="inherit"
-                        to={`/services/${specification.shortId}/`}
-                        aria-label={"Open specification"}
-                        onClick={handleSpecClick}
-                    >
-                        <LaunchIcon fontSize={"small"} />
-                    </Link>
-                ) : undefined
-            }
         >
             {registers?.map(register => (
                 <RegisterTreeItem
@@ -217,15 +201,16 @@ function RegisterTreeItem(
         JDomTreeViewProps
 ) {
     const { register } = props
-    const { specification, id } = register
-    const [attempts, setAttempts] = useState(register.lastGetAttempts)
+    const { specification, id, lastGetAttempts } = useMemo(
+        () => register,
+        [register]
+    )
+    const [attempts, setAttempts] = useState(lastGetAttempts)
     const optional = !!specification?.optional
     const failedGet = attempts > 2
-    const labelText = `${specification?.name || register.id}${
-        optional ? "?" : ""
-    }`
+    const labelText = `${specification?.name || id}${optional ? "?" : ""}`
     const humanValue = useRegisterHumanValue(register, { visible: true })
-    const handleClick = () => register.sendGetAsync()
+    const handleClick = useCallback(() => register.sendGetAsync(), [register])
 
     useEffect(
         () =>
