@@ -1,22 +1,14 @@
 import React, { PointerEvent, useContext } from "react"
 import { ReactFieldJSON } from "./ReactField"
-import { Button, Grid } from "@material-ui/core"
+import { Grid } from "@material-ui/core"
 import DashboardServiceWidget from "../../dashboard/DashboardServiceWidget"
-import AddIcon from "@material-ui/icons/Add"
-import { startServiceProviderFromServiceClass } from "../../../../jacdac-ts/src/servers/servers"
-import JacdacContext, { JacdacContextProps } from "../../../jacdac/Context"
-import Alert from "../../ui/Alert"
-import { serviceSpecificationFromClassIdentifier } from "../../../../jacdac-ts/src/jdom/spec"
 import WorkspaceContext from "../WorkspaceContext"
 import ReactInlineField from "./ReactInlineField"
+import NoServiceAlert from "./NoServiceAlert"
 
 function TwinWidget(props: { serviceClass: number }) {
     const { serviceClass } = props
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const { roleService, flyout } = useContext(WorkspaceContext)
-    const specification = serviceSpecificationFromClassIdentifier(serviceClass)
-    const handleStartSimulator = () =>
-        startServiceProviderFromServiceClass(bus, serviceClass)
+    const { roleService } = useContext(WorkspaceContext)
     const onPointerStopPropagation = (event: PointerEvent<HTMLDivElement>) => {
         // make sure blockly does not handle drags when interacting with UI
         event.stopPropagation()
@@ -30,38 +22,23 @@ function TwinWidget(props: { serviceClass: number }) {
             justify="center"
             spacing={1}
         >
-            {roleService ? (
-                <Grid item>
-                    <div
-                        style={{ cursor: "inherit" }}
-                        onPointerDown={onPointerStopPropagation}
-                        onPointerUp={onPointerStopPropagation}
-                        onPointerMove={onPointerStopPropagation}
-                    >
+            <Grid item>
+                <div
+                    style={{ cursor: "inherit" }}
+                    onPointerDown={onPointerStopPropagation}
+                    onPointerUp={onPointerStopPropagation}
+                    onPointerMove={onPointerStopPropagation}
+                >
+                    <NoServiceAlert serviceClass={serviceClass} />
+                    {roleService && (
                         <DashboardServiceWidget
                             service={roleService}
                             visible={true}
                             variant="icon"
                         />
-                    </div>
-                </Grid>
-            ) : (
-                <Grid item>
-                    <Alert severity="info">
-                        No {specification?.name || "service"}...
-                    </Alert>
-                    {!flyout && (
-                        <Button
-                            variant="contained"
-                            color="default"
-                            startIcon={<AddIcon />}
-                            onClick={handleStartSimulator}
-                        >
-                            start simulator
-                        </Button>
                     )}
-                </Grid>
-            )}
+                </div>
+            </Grid>
         </Grid>
     )
 }

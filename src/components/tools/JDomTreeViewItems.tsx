@@ -143,14 +143,11 @@ export function AnnounceFlagsTreeItem(props: { device: JDDevice }) {
     )
 }
 
-export function ServiceTreeItem(
+export function ServiceMembersTreeItems(
     props: { service: JDService } & StyledTreeViewItemProps & JDomTreeViewProps
 ) {
     const { service, registerFilter, eventFilter, ...other } = props
-    const { specification, mixins, isMixin, name, id } = useMemo(
-        () => service,
-        [service]
-    )
+    const { specification, mixins } = useMemo(() => service, [service])
     const packets = specification?.packets
     const registers = packets
         ?.filter(isRegister)
@@ -161,6 +158,30 @@ export function ServiceTreeItem(
         ?.filter(isEvent)
         .map(info => service.event(info.identifier))
         .filter(ev => !eventFilter || eventFilter(ev))
+    return (
+        <>
+            {registers?.map(register => (
+                <RegisterTreeItem
+                    key={register.id}
+                    register={register}
+                    {...other}
+                />
+            ))}
+            {events?.map(event => (
+                <EventTreeItem key={event.id} event={event} {...other} />
+            ))}
+            {mixins?.map(mixin => (
+                <ServiceTreeItem key={mixin.id} service={mixin} {...other} />
+            ))}
+        </>
+    )
+}
+
+export function ServiceTreeItem(
+    props: { service: JDService } & StyledTreeViewItemProps & JDomTreeViewProps
+) {
+    const { service } = props
+    const { isMixin, name, id } = useMemo(() => service, [service])
     const instanceNameRegister = useRegister(service, BaseReg.InstanceName)
     const [instanceName] =
         useRegisterUnpackedValue<[string]>(instanceNameRegister)
@@ -175,19 +196,7 @@ export function ServiceTreeItem(
             labelInfo={reading}
             kind={isMixin ? SERVICE_MIXIN_NODE_NAME : SERVICE_NODE_NAME}
         >
-            {registers?.map(register => (
-                <RegisterTreeItem
-                    key={register.id}
-                    register={register}
-                    {...other}
-                />
-            ))}
-            {events?.map(event => (
-                <EventTreeItem key={event.id} event={event} {...other} />
-            ))}
-            {mixins?.map(mixin => (
-                <ServiceTreeItem key={mixin.id} service={mixin} {...other} />
-            ))}
+            <ServiceMembersTreeItems service={service} {...props} />
         </StyledTreeItem>
     )
 }
