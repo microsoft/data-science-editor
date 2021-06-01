@@ -5,6 +5,7 @@ import { IT4ProgramRunner } from "../../../jacdac-ts/src/vm/vmrunner"
 import { WorkspaceJSON } from "./jsongenerator"
 import VMRunnerButton from "./VMRunnerButton"
 import VMSaveButton from "./VMSaveButton"
+import VMStartSimulatorButton from "./VMStartSimulatorButton"
 
 export default function VMToolbar(props: {
     runner: IT4ProgramRunner
@@ -22,6 +23,9 @@ export default function VMToolbar(props: {
             </Grid>
             <Grid item>
                 <VMSaveButton xml={xml} source={source} program={program} />
+            </Grid>
+            <Grid item>
+                <VMStartSimulatorButton />
             </Grid>
         </Grid>
     )

@@ -63,7 +63,6 @@ import {
     ServiceBlockDefinition,
     ServiceBlockDefinitionFactory,
     SET_STATUS_LIGHT_BLOCK,
-    START_SIMULATOR_CALLBACK_KEY,
     ToolboxConfiguration,
     TWIN_BLOCK,
     WAIT_BLOCK,
@@ -76,7 +75,6 @@ import ServoAngleField from "./fields/ServoAngleField"
 import LEDColorField from "./fields/LEDColorField"
 import TwinField from "./fields/TwinField"
 import JDomTreeField from "./fields/JDomTreeField"
-import AppContext from "../AppContext"
 
 type CachedBlockDefinitions = {
     blocks: BlockDefinition[]
@@ -1271,11 +1269,6 @@ export default function useToolbox(props: {
         name: "Debugger",
         colour: debuggerColor,
         contents: [
-            <ButtonDefinition>{
-                kind: "button",
-                text: "start simulator",
-                callbackKey: START_SIMULATOR_CALLBACK_KEY,
-            },
             <BlockDefinition>{
                 kind: "block",
                 type: WATCH_BLOCK,
@@ -1403,15 +1396,6 @@ export function useToolboxButtons(
     workspace: Blockly.WorkspaceSvg,
     toolboxConfiguration: ToolboxConfiguration
 ) {
-    const { toggleShowDeviceHostsDialog } = useContext(AppContext)
-
-    useEffect(() => {
-        workspace?.registerButtonCallback(
-            START_SIMULATOR_CALLBACK_KEY,
-            toggleShowDeviceHostsDialog
-        )
-    }, [workspace])
-
     // track workspace changes and update callbacks
     useEffect(() => {
         if (!workspace) return
