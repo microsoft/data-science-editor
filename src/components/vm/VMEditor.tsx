@@ -43,9 +43,11 @@ export default function VMEditor(props: { storageKey?: string }) {
             <Grid item xs={12}>
                 <VMToolbar
                     runner={runner}
-                    xml={xml}
                     run={run}
                     cancel={cancel}
+                    xml={xml}
+                    source={source}
+                    program={program}
                 />
             </Grid>
             <Grid item xs={12}>
