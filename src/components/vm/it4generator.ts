@@ -15,9 +15,11 @@ import {
     CommandBlockDefinition,
     EventFieldDefinition,
     RegisterBlockDefinition,
+    ServiceBlockDefinitionFactory,
     WAIT_BLOCK,
     WHILE_CONDITION_BLOCK,
 } from "./toolbox"
+import Blockly from "blockly"
 
 const ops = {
     AND: "&&",
@@ -50,12 +52,13 @@ export default function workspaceJSONToIT4Program(
         .filter(v => BUILTIN_TYPES.indexOf(v.type) < 0)
         .map(v => ({ role: v.name, serviceShortId: v.type }))
 
-    const blockToExpression: (ev: RoleEvent, block: BlockJSON) => jsep.Expression = (
+    const blockToExpression: (
         ev: RoleEvent,
         block: BlockJSON
-    ) => {
+    ) => jsep.Expression = (ev: RoleEvent, block: BlockJSON) => {
         if (!block) return toIdentifier("%%NOCODE%%")
         const { type, value, inputs } = block
+        console.log(`block2e`, { ev, block, type, value, inputs })
 
         console.debug(`block`, type, value, inputs)
 
@@ -121,9 +124,20 @@ export default function workspaceJSONToIT4Program(
                 }
             }
             default: {
-                const def = serviceBlocks.find(def => def.type === type)
+                const def = (
+                    Blockly.Blocks[type] as ServiceBlockDefinitionFactory
+                )?.jacdacDefinition
+                if (!def) {
+                    console.warn(`unknown block ${type}`, {
+                        type,
+                        ev,
+                        block,
+                        d: Blockly.Blocks[type],
+                    })
+                }
                 if (def) {
                     const { template } = def
+                    console.log("get", { type, def, template })
                     switch (template) {
                         case "register_get": {
                             const { register } = def as RegisterBlockDefinition
@@ -143,7 +157,7 @@ export default function workspaceJSONToIT4Program(
                             const { event } = def as EventFieldDefinition
                             if (ev.event !== event.identifierName) {
                                 // TODO: we need to raise an error to the user in Blockly
-                                // TODO: the field that they referenced in the block 
+                                // TODO: the field that they referenced in the block
                                 // TODO: doesn't belong to the event that fired
                             }
                             const field = inputs[0].fields["field"]
@@ -154,6 +168,22 @@ export default function workspaceJSONToIT4Program(
                                     field.value as string
                                 )
                             )
+                        }
+                        case "shadow": {
+                            const field = inputs[0].fields["value"]
+                            const { value } = field
+                            return <jsep.Literal>{
+                                type: "Literal",
+                                value: value,
+                                raw: value + "",
+                            }
+                        }
+                        default: {
+                            console.warn(
+                                `unsupported block template ${template} for ${type}`,
+                                { ev, block }
+                            )
+                            break
                         }
                     }
                     break
@@ -200,13 +230,18 @@ export default function workspaceJSONToIT4Program(
             }
             // more builts
             default: {
-                const def = serviceBlocks.find(def => def.type === type)
+                const def = (
+                    Blockly.Blocks[type] as ServiceBlockDefinitionFactory
+                )?.jacdacDefinition
                 if (def) {
                     const { template } = def
                     switch (template) {
                         case "register_set": {
                             const { register } = def as RegisterBlockDefinition
-                            const val = blockToExpression(event, inputs[0].child)
+                            const val = blockToExpression(
+                                event,
+                                inputs[0].child
+                            )
                             const { value: role } = inputs[0].fields.role
                             command = {
                                 type: "CallExpression",
@@ -235,6 +270,13 @@ export default function workspaceJSONToIT4Program(
                                     serviceCommand.name
                                 ),
                             }
+                            break
+                        }
+                        default: {
+                            console.warn(
+                                `unsupported command template ${template} for ${type}`,
+                                { event, block }
+                            )
                             break
                         }
                     }
@@ -273,7 +315,8 @@ export default function workspaceJSONToIT4Program(
                 callee: toIdentifier("awaitCondition"),
             }
         } else {
-            const def = serviceBlocks.find(def => def.type === type)
+            const def = (Blockly.Blocks[type] as ServiceBlockDefinitionFactory)
+                ?.jacdacDefinition
             assert(!!def)
             const { template } = def
             const { value: role } = inputs[0].fields["role"]
@@ -300,7 +343,10 @@ export default function workspaceJSONToIT4Program(
                 }
                 case "register_change_event": {
                     const { register } = def as RegisterBlockDefinition
-                    const argument = blockToExpression(undefined, inputs[0].child)
+                    const argument = blockToExpression(
+                        undefined,
+                        inputs[0].child
+                    )
                     command = {
                         type: "CallExpression",
                         arguments: [
@@ -309,6 +355,13 @@ export default function workspaceJSONToIT4Program(
                         ],
                         callee: toIdentifier("awaitChange"),
                     }
+                    break
+                }
+                default: {
+                    console.warn(
+                        `unsupported handler template ${template} for ${type}`,
+                        { top }
+                    )
                     break
                 }
             }
