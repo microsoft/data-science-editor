@@ -50,18 +50,15 @@ export type CommandTemplate = "command"
 
 export type CustomTemplate = "custom"
 
-export type ShadowTemplate = "shadow"
-
-export type TwinTemplate = "twin"
-
 export type BlockTemplate =
     | EventTemplate
     | EventFieldTemplate
     | RegisterTemplate
     | CommandTemplate
     | CustomTemplate
-    | ShadowTemplate
-    | TwinTemplate
+    | "shadow"
+    | "twin"
+    | "watch"
 
 export interface BlockDefinition extends BlockReference {
     message0?: string
@@ -129,6 +126,7 @@ export const WAIT_BLOCK = "jacdac_wait"
 export const SET_STATUS_LIGHT_BLOCK = "jacdac_set_status_light"
 export const START_SIMULATOR_CALLBACK_KEY = "jacdac_start_simulator"
 export const INSPECT_BLOCK = "jacdac_inspect"
+export const WATCH_BLOCK = "jacdac_watch"
 
 export interface CategoryDefinition {
     kind: "category"

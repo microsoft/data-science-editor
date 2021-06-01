@@ -66,6 +66,7 @@ import {
     START_SIMULATOR_CALLBACK_KEY,
     ToolboxConfiguration,
     WAIT_BLOCK,
+    WATCH_BLOCK,
     WHILE_CONDITION_BLOCK,
     WHILE_CONDITION_BLOCK_CONDITION,
 } from "./toolbox"
@@ -492,7 +493,7 @@ function loadBlocks(
         ({ service, events }) => ({
             kind: "block",
             type: `jacdac_events_${service.shortId}`,
-            message0: `when %1 %2`,
+            message0: `on %1 %2`,
             args0: [
                 fieldVariable(service),
                 <InputDefinition>{
@@ -1005,6 +1006,23 @@ function loadBlocks(
             helpUrl: "",
             template: "twin",
         },
+        {
+            kind: "block",
+            type: WATCH_BLOCK,
+            message0: `watch %1`,
+            args0: [
+                <InputDefinition>{
+                    type: "input_value",
+                    name: "value",
+                    check: ["Number", "Boolean", "String"],
+                },
+            ],
+            colour: modulesColor,
+            inputsInline: false,
+            tooltip: `Watch a value in the editor`,
+            helpUrl: "",
+            template: "watch",
+        },
     ]
 
     const mathBlocks: BlockDefinition[] = [
@@ -1119,7 +1137,14 @@ function patchCategoryJSONtoXML(cat: CategoryDefinition): CategoryDefinition {
     cat.contents
         ?.filter(node => node.kind === "block")
         .map(node => <BlockReference>node)
-        .filter(block => !!block.values && Blockly.Blocks[block.type]) // avoid broken blocks
+        .filter(block => {
+            const exists = Blockly.Blocks[block.type]
+            if (!exists && Flags.diagnostics)
+                console.warn(
+                    `block type '${block.type}' not found, consider refreshing page...`
+                )
+            return !!block.values && exists
+        }) // avoid broken blocks
         .forEach(block => {
             // yup, this suck but we have to go through it
             block.blockxml = `<block type="${block.type}">${Object.keys(
@@ -1236,6 +1261,10 @@ export default function useToolbox(props: {
                 kind: "button",
                 text: "start simulator",
                 callbackKey: START_SIMULATOR_CALLBACK_KEY,
+            },
+            <BlockDefinition>{
+                kind: "block",
+                type: WATCH_BLOCK,
             },
             <BlockDefinition>{
                 kind: "block",
