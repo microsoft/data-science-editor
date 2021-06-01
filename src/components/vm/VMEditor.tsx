@@ -8,6 +8,7 @@ import useLocalStorage from "../../components/useLocalStorage"
 import useVMRunner from "./useVMRunner"
 import useRoleManager from "./useRoleManager"
 import VMDiagnostics from "./VMDiagnostics"
+import VMToolbar from "./VMToolbar"
 
 const VM_SOURCE_STORAGE_KEY = "jacdac:tools:vmeditor"
 export default function VMEditor(props: { storageKey?: string }) {
@@ -20,7 +21,7 @@ export default function VMEditor(props: { storageKey?: string }) {
     const [program, setProgram] = useState<IT4Program>()
     const roleManager = useRoleManager()
     const autoStart = true
-    const { runner } = useVMRunner(roleManager, program, autoStart)
+    const { runner, run, cancel } = useVMRunner(roleManager, program, autoStart)
 
     const handleXml = (xml: string) => {
         setXml(xml)
@@ -39,6 +40,14 @@ export default function VMEditor(props: { storageKey?: string }) {
 
     return (
         <Grid container direction="column" spacing={1}>
+            <Grid item xs={12}>
+                <VMToolbar
+                    runner={runner}
+                    xml={xml}
+                    run={run}
+                    cancel={cancel}
+                />
+            </Grid>
             <Grid item xs={12}>
                 <NoSsr>
                     <VMBlockEditor

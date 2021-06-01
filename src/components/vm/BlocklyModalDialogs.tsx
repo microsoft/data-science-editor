@@ -83,7 +83,7 @@ export default function BlocklyModalDialogs() {
             <DialogContent>
                 <DialogContentText>{message}</DialogContentText>
                 {dialogType === "prompt" && (
-                    <TextField id={valueId} value={value} label="Value" onChange={handleValueChange} />
+                    <TextField id={valueId} value={value} label="Value" fullWidth={true} onChange={handleValueChange} />
                 )}
             </DialogContent>
             <DialogActions>
