@@ -24,8 +24,6 @@ export default function useVMRunner(
         try {
             const newTestRunner =
                 program && new IT4ProgramRunner(bus, roleManager, program)
-            console.log("new runner", newTestRunner)
-            // register runner events
             setTestRunner(newTestRunner)
 
             return () => newTestRunner?.unmount()
