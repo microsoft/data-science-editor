@@ -1266,7 +1266,7 @@ export default function useToolbox(props: {
 
     const modulesCategory: CategoryDefinition = {
         kind: "category",
-        name: "Debugger",
+        name: "Tools",
         colour: debuggerColor,
         contents: [
             <BlockDefinition>{
@@ -1360,15 +1360,11 @@ export default function useToolbox(props: {
     const toolboxConfiguration: ToolboxConfiguration = {
         kind: "categoryToolbox",
         contents: [
-            modulesCategory,
+            ...servicesCategories,
             servicesCategories?.length &&
                 <SeparatorDefinition>{
                     kind: "sep",
                 },
-            ...servicesCategories,
-            <SeparatorDefinition>{
-                kind: "sep",
-            },
             commandsCategory,
             logicCategory,
             mathCategory,
@@ -1376,6 +1372,7 @@ export default function useToolbox(props: {
             <SeparatorDefinition>{
                 kind: "sep",
             },
+            modulesCategory,
         ]
             .filter(cat => !!cat)
             .map(node =>
