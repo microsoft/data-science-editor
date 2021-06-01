@@ -13,6 +13,7 @@ import { assert } from "../../../jacdac-ts/src/jdom/utils"
 import {
     BlockDefinition,
     CommandBlockDefinition,
+    EventFieldDefinition,
     RegisterBlockDefinition,
     WAIT_BLOCK,
     WHILE_CONDITION_BLOCK,
@@ -29,9 +30,14 @@ const ops = {
     GTE: ">=",
     NEG: "-",
     ADD: "+",
-    MUL: "*",
-    DIV: "/",
+    MULTIPLY: "*",
+    DIVIDE: "/",
     MINUS: "-",
+}
+
+type RoleEvent = {
+    role: string
+    event: string
 }
 
 export default function workspaceJSONToIT4Program(
@@ -44,7 +50,8 @@ export default function workspaceJSONToIT4Program(
         .filter(v => BUILTIN_TYPES.indexOf(v.type) < 0)
         .map(v => ({ role: v.name, serviceShortId: v.type }))
 
-    const blockToExpression: (block: BlockJSON) => jsep.Expression = (
+    const blockToExpression: (ev: RoleEvent, block: BlockJSON) => jsep.Expression = (
+        ev: RoleEvent,
         block: BlockJSON
     ) => {
         if (!block) return toIdentifier("%%NOCODE%%")
@@ -62,7 +69,7 @@ export default function workspaceJSONToIT4Program(
 
         switch (type) {
             case "jacdac_math_single": {
-                const argument = blockToExpression(inputs[0].child)
+                const argument = blockToExpression(ev, inputs[0].child)
                 const op = inputs[0].fields["op"].value as string
                 return <jsep.UnaryExpression>{
                     type: "UnaryExpression",
@@ -72,8 +79,8 @@ export default function workspaceJSONToIT4Program(
                 }
             }
             case "jacdac_math_arithmetic": {
-                const left = blockToExpression(inputs[0].child)
-                const right = blockToExpression(inputs[1].child)
+                const left = blockToExpression(ev, inputs[0].child)
+                const right = blockToExpression(ev, inputs[1].child)
                 const op = inputs[1].fields["op"].value as string
                 return <jsep.BinaryExpression>{
                     type: "BinaryExpression",
@@ -83,8 +90,8 @@ export default function workspaceJSONToIT4Program(
                 }
             }
             case "logic_operation": {
-                const left = blockToExpression(inputs[0].child)
-                const right = blockToExpression(inputs[1].child)
+                const left = blockToExpression(ev, inputs[0].child)
+                const right = blockToExpression(ev, inputs[1].child)
                 const op = inputs[1].fields["op"].value as string
                 return <jsep.LogicalExpression>{
                     type: "LogicalExpression",
@@ -94,7 +101,7 @@ export default function workspaceJSONToIT4Program(
                 }
             }
             case "logic_negate": {
-                const argument = blockToExpression(inputs[0].child)
+                const argument = blockToExpression(ev, inputs[0].child)
                 return <jsep.UnaryExpression>{
                     type: "UnaryExpression",
                     operator: "!",
@@ -103,8 +110,8 @@ export default function workspaceJSONToIT4Program(
                 }
             }
             case "logic_compare": {
-                const left = blockToExpression(inputs[0].child)
-                const right = blockToExpression(inputs[1].child)
+                const left = blockToExpression(ev, inputs[0].child)
+                const right = blockToExpression(ev, inputs[1].child)
                 const op = inputs[1].fields["op"].value as string
                 return <jsep.BinaryExpression>{
                     type: "BinaryExpression",
@@ -132,6 +139,22 @@ export default function workspaceJSONToIT4Program(
                                     : register.name
                             )
                         }
+                        case "event_field": {
+                            const { event } = def as EventFieldDefinition
+                            if (ev.event !== event.identifierName) {
+                                // TODO: we need to raise an error to the user in Blockly
+                                // TODO: the field that they referenced in the block 
+                                // TODO: doesn't belong to the event that fired
+                            }
+                            const field = inputs[0].fields["field"]
+                            return toMemberExpression(
+                                ev.role,
+                                toMemberExpression(
+                                    ev.event,
+                                    field.value as string
+                                )
+                            )
+                        }
                     }
                     break
                 }
@@ -140,12 +163,12 @@ export default function workspaceJSONToIT4Program(
         return toIdentifier("%%NOCODE%%")
     }
 
-    const blockToCommand = (block: BlockJSON): IT4Base => {
+    const blockToCommand = (event: RoleEvent, block: BlockJSON): IT4Base => {
         let command: jsep.CallExpression
         const { type, inputs } = block
         switch (type) {
             case WAIT_BLOCK: {
-                const time = blockToExpression(inputs[0].child)
+                const time = blockToExpression(event, inputs[0].child)
                 command = {
                     type: "CallExpression",
                     arguments: [time],
@@ -157,19 +180,19 @@ export default function workspaceJSONToIT4Program(
                 const ret: IT4IfThenElse = {
                     sourceId: block.id,
                     type: "ite",
-                    expr: blockToExpression(inputs[0]?.child),
+                    expr: blockToExpression(event, inputs[0]?.child),
                     then: [],
                     else: [],
                 }
                 const t = inputs[1]?.child
                 const e = inputs[2]?.child
                 if (t)
-                    addCommands(ret.then, [
+                    addCommands(event, ret.then, [
                         t,
                         ...(t.children ? t.children : []),
                     ])
                 if (e)
-                    addCommands(ret.else, [
+                    addCommands(event, ret.else, [
                         e,
                         ...(e.children ? e.children : []),
                     ])
@@ -183,7 +206,7 @@ export default function workspaceJSONToIT4Program(
                     switch (template) {
                         case "register_set": {
                             const { register } = def as RegisterBlockDefinition
-                            const val = blockToExpression(inputs[0].child)
+                            const val = blockToExpression(event, inputs[0].child)
                             const { value: role } = inputs[0].fields.role
                             command = {
                                 type: "CallExpression",
@@ -205,7 +228,7 @@ export default function workspaceJSONToIT4Program(
                             command = {
                                 type: "CallExpression",
                                 arguments: inputs.map(a =>
-                                    blockToExpression(a.child)
+                                    blockToExpression(event, a.child)
                                 ),
                                 callee: toMemberExpression(
                                     role as string,
@@ -226,9 +249,13 @@ export default function workspaceJSONToIT4Program(
         } as IT4Base
     }
 
-    const addCommands = (acc: IT4Base[], blocks: BlockJSON[]) => {
+    const addCommands = (
+        event: RoleEvent,
+        acc: IT4Base[],
+        blocks: BlockJSON[]
+    ) => {
         blocks?.forEach(child => {
-            if (child) acc.push(blockToCommand(child))
+            if (child) acc.push(blockToCommand(event, child))
         })
     }
 
@@ -236,12 +263,13 @@ export default function workspaceJSONToIT4Program(
         const { type, inputs } = top
         const commands: IT4Base[] = []
         let command: jsep.CallExpression = undefined
+        let topEvent: RoleEvent = undefined
         if (type === WHILE_CONDITION_BLOCK) {
             // this is while (...)
             const { child: condition } = inputs[0]
             command = {
                 type: "CallExpression",
-                arguments: [blockToExpression(condition)],
+                arguments: [blockToExpression(undefined, condition)],
                 callee: toIdentifier("awaitCondition"),
             }
         } else {
@@ -264,11 +292,15 @@ export default function workspaceJSONToIT4Program(
                         ],
                         callee: toIdentifier("awaitEvent"),
                     }
+                    topEvent = {
+                        role: role.toString(),
+                        event: eventName.toString(),
+                    }
                     break
                 }
                 case "register_change_event": {
                     const { register } = def as RegisterBlockDefinition
-                    const argument = blockToExpression(inputs[0].child)
+                    const argument = blockToExpression(undefined, inputs[0].child)
                     command = {
                         type: "CallExpression",
                         arguments: [
@@ -288,7 +320,7 @@ export default function workspaceJSONToIT4Program(
             command,
         } as IT4Base)
 
-        addCommands(commands, top.children)
+        addCommands(topEvent, commands, top.children)
 
         return {
             commands,
