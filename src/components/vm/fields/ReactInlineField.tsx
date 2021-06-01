@@ -83,6 +83,10 @@ export default class ReactInlineField extends ReactField<unknown> {
         )
     }
 
+    getText_() {
+        return "..."
+    }
+
     // don't bind any mouse event
     bindEvents_() {
         Blockly.Tooltip.bindMouseEvents(this.getClickTarget_())
