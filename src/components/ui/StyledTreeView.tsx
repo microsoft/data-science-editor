@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from "react"
+import React from "react"
 // tslint:disable-next-line: no-submodule-imports
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles"
 // tslint:disable-next-line: no-submodule-imports
@@ -9,7 +9,6 @@ import Typography from "@material-ui/core/Typography"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import KindIcon from "../KindIcon"
-import { Switch } from "@material-ui/core"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import SignalCellularConnectedNoInternet0BarIcon from "@material-ui/icons/SignalCellularConnectedNoInternet0Bar"
 
@@ -82,8 +81,6 @@ export function StyledTreeItem(
         alert?: string
         labelInfo?: string
         labelText: string
-        checked?: boolean
-        setChecked?: (state: boolean) => void
         actions?: JSX.Element | JSX.Element[]
     }
 ) {
@@ -95,33 +92,17 @@ export function StyledTreeItem(
         labelInfo,
         color,
         bgColor,
-        checked,
-        setChecked,
         actions,
         nodeId,
         alert,
         ...other
     } = props
-    const [checkedState, setCheckedState] = useState(checked)
 
-    const handleChecked = (ev: ChangeEvent<HTMLInputElement>, c: boolean) => {
-        ev.stopPropagation()
-        setChecked(c)
-        setCheckedState(c)
-    }
     return (
         <TreeItem
             nodeId={nodeId}
             label={
                 <div className={classes.labelRoot}>
-                    {setChecked && (
-                        <Switch
-                            checked={checkedState}
-                            color="primary"
-                            inputProps={{ "aria-label": "secondary checkbox" }}
-                            onChange={handleChecked}
-                        />
-                    )}
                     {kind && (
                         <KindIcon kind={kind} className={classes.labelIcon} />
                     )}
@@ -162,15 +143,11 @@ export interface StyledTreeViewItemProps {
     key: string
     expanded: string[]
     selected: string[]
-    checked?: string[]
-    setChecked?: (id: string, value: boolean) => void
 }
 
 export interface StyledTreeViewProps {
-    defaultChecked?: string[]
     defaultExpanded?: string[]
     defaultSelected?: string[]
     onToggle?: (expanded: string[]) => void
     onSelect?: (selected: string[]) => void
-    onChecked?: (checked: string[]) => void
 }

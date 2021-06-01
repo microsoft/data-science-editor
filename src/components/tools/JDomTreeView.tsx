@@ -55,8 +55,7 @@ import useMediaQueries from "../hooks/useMediaQueries"
 function DeviceTreeItem(
     props: { device: JDDevice } & StyledTreeViewItemProps & JDomTreeViewProps
 ) {
-    const { device, checked, setChecked, checkboxes, serviceFilter, ...other } =
-        props
+    const { device, serviceFilter, ...other } = props
     const id = device.id
     const name = useDeviceName(device, true)
     const physical = useChange(device, d => d.physical)
@@ -93,7 +92,6 @@ function DeviceTreeItem(
         .filter(r => !!r)
         .join(", ")
 
-    const handleChecked = c => setChecked(id, c)
     return (
         <StyledTreeItem
             nodeId={id}
@@ -101,13 +99,6 @@ function DeviceTreeItem(
             labelInfo={labelInfo}
             alert={alert}
             kind={kind}
-            checked={checked?.indexOf(id) > -1}
-            setChecked={
-                checkboxes &&
-                checkboxes.indexOf("device") > -1 &&
-                setChecked &&
-                handleChecked
-            }
             actions={
                 showActions && (
                     <DeviceActions device={device} showReset={true} />
@@ -119,9 +110,6 @@ function DeviceTreeItem(
                 <ServiceTreeItem
                     key={service.id}
                     service={service}
-                    checked={checked}
-                    setChecked={setChecked}
-                    checkboxes={checkboxes}
                     {...other}
                 />
             ))}
@@ -160,19 +148,10 @@ function AnnounceFlagsTreeItem(props: { device: JDDevice }) {
 function ServiceTreeItem(
     props: { service: JDService } & StyledTreeViewItemProps & JDomTreeViewProps
 ) {
-    const {
-        service,
-        checked,
-        setChecked,
-        checkboxes,
-        registerFilter,
-        eventFilter,
-        ...other
-    } = props
+    const { service, registerFilter, eventFilter, ...other } = props
     const { specification, mixins, isMixin } = service
     const showSpecificationAction = false
     const id = service.id
-    const open = checked?.indexOf(id) > -1
     const packets = specification?.packets
     const registers = packets
         ?.filter(isRegister)
@@ -197,19 +176,12 @@ function ServiceTreeItem(
         console.log(`spec click`, { mobile })
         if (mobile) setDrawerType(DrawerType.None)
     }
-    const handleChecked = c => setChecked(id, c)
     return (
         <StyledTreeItem
             nodeId={id}
             labelText={name}
             labelInfo={reading}
             kind={isMixin ? SERVICE_MIXIN_NODE_NAME : SERVICE_NODE_NAME}
-            checked={open}
-            setChecked={
-                checkboxes?.indexOf("service") > -1 &&
-                setChecked &&
-                handleChecked
-            }
             actions={
                 showSpecificationAction ? (
                     <Link
@@ -227,31 +199,14 @@ function ServiceTreeItem(
                 <RegisterTreeItem
                     key={register.id}
                     register={register}
-                    checked={checked}
-                    setChecked={setChecked}
-                    checkboxes={checkboxes}
                     {...other}
                 />
             ))}
             {events?.map(event => (
-                <EventTreeItem
-                    key={event.id}
-                    event={event}
-                    checked={checked}
-                    setChecked={setChecked}
-                    checkboxes={checkboxes}
-                    {...other}
-                />
+                <EventTreeItem key={event.id} event={event} {...other} />
             ))}
             {mixins?.map(mixin => (
-                <ServiceTreeItem
-                    key={mixin.id}
-                    service={mixin}
-                    checked={checked}
-                    setChecked={setChecked}
-                    checkboxes={checkboxes}
-                    {...other}
-                />
+                <ServiceTreeItem key={mixin.id} service={mixin} {...other} />
             ))}
         </StyledTreeItem>
     )
@@ -261,7 +216,7 @@ function RegisterTreeItem(
     props: { register: JDRegister } & StyledTreeViewItemProps &
         JDomTreeViewProps
 ) {
-    const { register, checked, setChecked, checkboxes } = props
+    const { register } = props
     const { specification, id } = register
     const [attempts, setAttempts] = useState(register.lastGetAttempts)
     const optional = !!specification?.optional
@@ -280,10 +235,6 @@ function RegisterTreeItem(
         [register]
     )
 
-    const handleChecked = c => {
-        setChecked(id, c)
-    }
-
     // if register is optional and no data, hide
     if (optional && failedGet && humanValue === undefined) return <></>
 
@@ -294,13 +245,7 @@ function RegisterTreeItem(
             labelInfo={humanValue || (attempts > 0 && `#${attempts}`) || ""}
             kind={specification?.kind || REGISTER_NODE_NAME}
             alert={failedGet && !optional && humanValue === undefined && `???`}
-            checked={checked?.indexOf(id) > -1}
             onClick={handleClick}
-            setChecked={
-                checkboxes?.indexOf("register") > -1 &&
-                setChecked &&
-                handleChecked
-            }
         />
     )
 }
@@ -308,33 +253,23 @@ function RegisterTreeItem(
 function EventTreeItem(
     props: { event: JDEvent } & StyledTreeViewItemProps & JDomTreeViewProps
 ) {
-    const { event, checked, setChecked, checkboxes } = props
+    const { event } = props
     const { specification, id } = event
     const count = useEventCount(event)
 
-    const handleChecked = c => {
-        setChecked(id, c)
-    }
     return (
         <StyledTreeItem
             nodeId={id}
             labelText={specification?.name || event.id}
             labelInfo={(count || "") + ""}
             kind={EVENT_NODE_NAME}
-            checked={checked?.indexOf(id) > -1}
-            setChecked={
-                checkboxes?.indexOf("event") > -1 && setChecked && handleChecked
-            }
         />
     )
 }
 
-export type CheckedMap = { [id: string]: boolean }
-
 export interface JDomTreeViewProps extends StyledTreeViewProps {
     // don't render links to specification
     dashboard?: boolean
-    checkboxes?: ("device" | "service" | "register" | "event")[]
     deviceFilter?: (devices: JDDevice) => boolean
     serviceFilter?: (services: JDService) => boolean
     registerFilter?: (register: JDRegister) => boolean
@@ -357,18 +292,14 @@ export default function JDomTreeView(props: JDomTreeViewProps) {
     const {
         defaultExpanded,
         defaultSelected,
-        defaultChecked,
-        onChecked,
         onToggle,
         onSelect,
-        checkboxes,
         dashboard,
         ...other
     } = props
     const classes = useStyles()
     const [expanded, setExpanded] = useState<string[]>(defaultExpanded || [])
     const [selected, setSelected] = useState<string[]>(defaultSelected || [])
-    const [checked, setChecked] = useState<string[]>(defaultChecked || [])
     const devices = useDevices({ ignoreSelf: true })
 
     const handleToggle = (
@@ -386,41 +317,28 @@ export default function JDomTreeView(props: JDomTreeViewProps) {
         setSelected(nodeIds)
         if (onSelect) onSelect(nodeIds)
     }
-    const handleChecked = (id: string, v: boolean) => {
-        const i = checked.indexOf(id)
-        if (!v && i > -1) checked.splice(i, 1)
-        else if (v && i < 0) checked.push(id)
-        setChecked(checked)
-        if (onChecked) onChecked(checked)
-    }
 
     return (
-        <>
-            <ConnectAlert />
-            <TreeView
-                className={clsx(classes.root, classes.margins)}
-                defaultCollapseIcon={<ArrowDropDownIcon />}
-                defaultExpandIcon={<ArrowRightIcon />}
-                defaultEndIcon={<div style={{ width: 12 }} />}
-                expanded={expanded}
-                selected={selected}
-                onNodeToggle={handleToggle}
-                onNodeSelect={handleSelect}
-            >
-                {devices?.map(device => (
-                    <DeviceTreeItem
-                        key={device.id}
-                        device={device}
-                        checked={checked}
-                        setChecked={handleChecked}
-                        checkboxes={checkboxes}
-                        expanded={expanded}
-                        selected={selected}
-                        dashboard={dashboard}
-                        {...other}
-                    />
-                ))}
-            </TreeView>
-        </>
+        <TreeView
+            className={clsx(classes.root, classes.margins)}
+            defaultCollapseIcon={<ArrowDropDownIcon />}
+            defaultExpandIcon={<ArrowRightIcon />}
+            defaultEndIcon={<div style={{ width: 12 }} />}
+            expanded={expanded}
+            selected={selected}
+            onNodeToggle={handleToggle}
+            onNodeSelect={handleSelect}
+        >
+            {devices?.map(device => (
+                <DeviceTreeItem
+                    key={device.id}
+                    device={device}
+                    expanded={expanded}
+                    selected={selected}
+                    dashboard={dashboard}
+                    {...other}
+                />
+            ))}
+        </TreeView>
     )
 }

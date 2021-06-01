@@ -9,6 +9,7 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft"
 import AppContext, { DrawerType } from "./AppContext"
 import PacketRecorder from "./PacketRecorder"
 import DrawerToolsButtonGroup from "./DrawerToolsButtonGroup"
+import ConnectAlert from "./alert/ConnectAlert"
 
 const Toc = lazy(() => import("./Toc"))
 const PacketView = lazy(() => import("./tools/PacketView"))
@@ -117,9 +118,12 @@ export default function AppDrawer(props: { pagePath: string }) {
                     <PacketView showTime={true} />
                 </Suspense>
             ) : drawerType === DrawerType.Dom ? (
-                <Suspense>
-                    <JDomTreeView showDeviceFlags={true} />
-                </Suspense>
+                <>
+                    <ConnectAlert />
+                    <Suspense>
+                        <JDomTreeView />
+                    </Suspense>
+                </>
             ) : undefined}
         </Drawer>
     )
