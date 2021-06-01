@@ -45,6 +45,7 @@ export default function useVMRunner(
 
             return () => newTestRunner?.unmount()
         } catch (e) {
+            console.debug(e)
             setRunner(undefined)
         }
     }, [roleManager, program])
