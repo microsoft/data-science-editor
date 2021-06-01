@@ -127,6 +127,7 @@ export const WHILE_CONDITION_BLOCK = "jacdac_while_event"
 export const WHILE_CONDITION_BLOCK_CONDITION = "condition"
 export const WAIT_BLOCK = "jacdac_wait"
 export const SET_STATUS_LIGHT_BLOCK = "jacdac_set_status_light"
+export const START_SIMULATOR_CALLBACK_KEY = "jacdac_start_simulator"
 
 export interface CategoryDefinition {
     kind: "category"
@@ -142,7 +143,7 @@ export interface SeparatorDefinition {
     kind: "sep"
 }
 
-export type ToolboxNode = SeparatorDefinition | CategoryDefinition
+export type ToolboxNode = SeparatorDefinition | CategoryDefinition | ButtonDefinition
 
 export interface ToolboxConfiguration {
     kind: "categoryToolbox"

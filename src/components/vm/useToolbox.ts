@@ -1,5 +1,5 @@
 import Blockly from "blockly"
-import { useEffect, useMemo } from "react"
+import { useContext, useEffect, useMemo } from "react"
 import {
     JoystickReg,
     ServoReg,
@@ -62,6 +62,7 @@ import {
     ServiceBlockDefinition,
     ServiceBlockDefinitionFactory,
     SET_STATUS_LIGHT_BLOCK,
+    START_SIMULATOR_CALLBACK_KEY,
     ToolboxConfiguration,
     WAIT_BLOCK,
     WHILE_CONDITION_BLOCK,
@@ -72,6 +73,7 @@ import ServoAngleField from "./fields/ServoAngleField"
 import LEDColorField from "./fields/LEDColorField"
 import TwinField from "./fields/TwinField"
 import JDomTreeField from "./fields/JDomTreeField"
+import AppContext from "../AppContext"
 
 type CachedBlockDefinitions = {
     blocks: BlockDefinition[]
@@ -127,9 +129,10 @@ function createBlockTheme(theme: Theme) {
     const sensorColor = theme.palette.success.main
     const otherColor = theme.palette.info.main
     const commandColor = theme.palette.warning.main
+    const modulesColor = theme.palette.success.main
     const serviceColor = (srv: jdspec.ServiceSpec) =>
         isSensor(srv) ? sensorColor : otherColor
-    return { serviceColor, sensorColor, commandColor, otherColor }
+    return { serviceColor, sensorColor, commandColor, modulesColor, otherColor }
 }
 
 function loadBlocks(
@@ -1137,7 +1140,7 @@ export default function useToolbox(props: {
     const { blockServices, serviceClass } = props
 
     const theme = useTheme()
-    const { serviceColor, commandColor } = createBlockTheme(theme)
+    const { serviceColor, commandColor, modulesColor } = createBlockTheme(theme)
     const { serviceBlocks, services } = useMemo(
         () => loadBlocks(serviceColor, commandColor),
         [theme]
@@ -1181,7 +1184,7 @@ export default function useToolbox(props: {
             })),
             button: {
                 kind: "button",
-                text: `Add ${service.name}`,
+                text: `Add ${service.name} role`,
                 callbackKey: `jacdac_add_role_callback_${service.shortId}`,
                 service,
             },
@@ -1203,6 +1206,30 @@ export default function useToolbox(props: {
                 values: {
                     time: { kind: "block", type: "jacdac_time_picker" },
                 },
+            },
+            !!toolboxServices.length &&
+                <BlockDefinition>{
+                    kind: "block",
+                    type: SET_STATUS_LIGHT_BLOCK,
+                    values: {
+                        color: {
+                            kind: "block",
+                            type: LEDColorField.SHADOW.type,
+                        },
+                    },
+                },
+        ].filter(b => !!b),
+    }
+
+    const modulesCategory: CategoryDefinition = {
+        kind: "category",
+        name: "Modules",
+        colour: modulesColor,
+        contents: [
+            <ButtonDefinition>{
+                kind: "button",
+                text: "start simulator",
+                callbackKey: START_SIMULATOR_CALLBACK_KEY,
             },
             !!toolboxServices.length &&
                 <BlockDefinition>{
@@ -1303,9 +1330,16 @@ export default function useToolbox(props: {
             <SeparatorDefinition>{
                 kind: "sep",
             },
+            modulesCategory,
+            <SeparatorDefinition>{
+                kind: "sep",
+            },
             logicCategory,
             mathCategory,
             variablesCategory,
+            <SeparatorDefinition>{
+                kind: "sep",
+            },
         ]
             .filter(cat => !!cat)
             .map(node =>
@@ -1326,6 +1360,15 @@ export function useToolboxButtons(
     workspace: Blockly.WorkspaceSvg,
     toolboxConfiguration: ToolboxConfiguration
 ) {
+    const { toggleShowDeviceHostsDialog } = useContext(AppContext)
+
+    useEffect(() => {
+        workspace?.registerButtonCallback(
+            START_SIMULATOR_CALLBACK_KEY,
+            toggleShowDeviceHostsDialog
+        )
+    }, [workspace])
+
     // track workspace changes and update callbacks
     useEffect(() => {
         if (!workspace) return
