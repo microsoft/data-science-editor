@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
 import { Button } from "@material-ui/core"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import { IT4ProgramRunner, VMStatus } from "../../../jacdac-ts/src/vm/vmrunner"
@@ -6,33 +6,17 @@ import useChange from "../../jacdac/useChange"
 import PlayArrowIcon from "@material-ui/icons/PlayArrow"
 import StopIcon from "@material-ui/icons/Stop"
 
-export default function VMRunner(props: {
+export default function VMRunnerButton(props: {
     runner: IT4ProgramRunner
-    autoStart?: boolean
+    run: () => void
+    cancel: () => void
 }) {
-    const { runner, autoStart: autoStartDefault } = props
+    const { runner, run, cancel } = props
     const disabled = !runner
     const status = useChange(runner, t => t?.status)
-    const [autoStart, setAutoStart] = useState<boolean>(!!autoStartDefault)
-    const handleRun = () => {
-        setAutoStart(!!autoStartDefault)
-        try {
-            runner.start()
-        } catch (e) {
-            console.debug(e)
-        }
-    }
-    const handleCancel = () => {
-        setAutoStart(false)
-        runner.cancel()
-    }
+    const handleRun = () => run()
+    const handleCancel = () => cancel()
     const running = status === VMStatus.Running
-
-    // auto start
-    useEffect(() => {
-        if (autoStart && runner) runner.start()
-        return () => runner?.cancel()
-    }, [runner, autoStart])
 
     return (
         <Button

@@ -13,30 +13,44 @@ import { RoleManager } from "../../../jacdac-ts/src/vm/rolemanager"
 
 export default function useVMRunner(
     roleManager: RoleManager,
-    program: IT4Program
+    program: IT4Program,
+    autoStart: boolean
 ) {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { setError } = useContext(AppContext)
-    const [testRunner, setTestRunner] = useState<IT4ProgramRunner>()
+    const [runner, setRunner] = useState<IT4ProgramRunner>()
+    const [_autoStart, _setAutoStart] = useState<boolean>(!!autoStart)
+
+    const run = () => {
+        _setAutoStart(!!autoStart)
+        runner.start()
+    }
+    const cancel = () => {
+        _setAutoStart(false)
+        runner.cancel()
+    }
+
+    // auto start
+    useEffect(() => {
+        if (_autoStart && runner) runner.start()
+        return () => runner?.cancel()
+    }, [runner, _autoStart])
 
     // create runner
     useEffect(() => {
         try {
             const newTestRunner =
                 program && new IT4ProgramRunner(bus, roleManager, program)
-            setTestRunner(newTestRunner)
+            setRunner(newTestRunner)
 
             return () => newTestRunner?.unmount()
         } catch (e) {
-            setTestRunner(undefined)
+            setRunner(undefined)
         }
     }, [roleManager, program])
 
     // errors
-    useEffect(
-        () => testRunner?.subscribe(ERROR, e => setError(e)),
-        [testRunner]
-    )
+    useEffect(() => runner?.subscribe(ERROR, e => setError(e)), [runner])
     // traces
     const handleTrace = (value: { message: string; context: TraceContext }) => {
         const { message, context } = value
@@ -44,12 +58,12 @@ export default function useVMRunner(
     }
     useEffect(
         () =>
-            testRunner?.subscribe<{ message: string; context: TraceContext }>(
+            runner?.subscribe<{ message: string; context: TraceContext }>(
                 TRACE,
                 handleTrace
             ),
-        [testRunner]
+        [runner]
     )
 
-    return testRunner
+    return { runner, run, cancel }
 }

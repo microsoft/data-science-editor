@@ -7,18 +7,15 @@ import VMBlockEditor from "../../components/vm/VMBlockEditor"
 import Dashboard from "../../components/dashboard/Dashboard"
 import Alert from "../../components/ui/Alert"
 import useLocalStorage from "../../components/useLocalStorage"
-import VMRunner from "../../components/vm/VMRunner"
+import VMRunnerButton from "./VMRunnerButton"
 import useVMRunner from "./useVMRunner"
 import VMRoles from "./VMRoles"
 import useRoleManager from "./useRoleManager"
 import VMDiagnostics from "./VMDiagnostics"
 
 const VM_SOURCE_STORAGE_KEY = "jacdac:tools:vmeditor"
-export default function VMEditor(props: {
-    storageKey?: string
-    showDashboard?: boolean
-}) {
-    const { storageKey, showDashboard } = props
+export default function VMEditor(props: { storageKey?: string }) {
+    const { storageKey } = props
     const [xml, setXml] = useLocalStorage(
         storageKey || VM_SOURCE_STORAGE_KEY,
         ""
@@ -26,7 +23,8 @@ export default function VMEditor(props: {
     const [source, setSource] = useState<WorkspaceJSON>()
     const [program, setProgram] = useState<IT4Program>()
     const roleManager = useRoleManager()
-    const runner = useVMRunner(roleManager, program)
+    const autoStart = true
+    const { runner, run, cancel } = useVMRunner(roleManager, program, autoStart)
 
     const handleXml = (xml: string) => {
         setXml(xml)
@@ -66,7 +64,7 @@ export default function VMEditor(props: {
                 </NoSsr>
             </Grid>
             <Grid item xs={12}>
-                <VMRunner autoStart={true} runner={runner} />
+                <VMRunnerButton runner={runner} run={run} cancel={cancel} />
             </Grid>
             <Grid item xs={12}>
                 <VMRoles roleManager={roleManager} />
@@ -74,7 +72,7 @@ export default function VMEditor(props: {
             {Flags.diagnostics && (
                 <VMDiagnostics program={program} source={source} xml={xml} />
             )}
-            {showDashboard && (
+            {Flags.diagnostics && (
                 <Grid item xs={12}>
                     <Dashboard
                         showStartSimulators={true}

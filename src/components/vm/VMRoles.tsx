@@ -18,61 +18,45 @@ export default function VMRoles(props: { roleManager: RoleManager }) {
     const { roleManager } = props
     const roles = useChange(roleManager, _ => _?.roles)
     const handleRoleClick =
-        (role: string, service: JDService, specification: jdspec.ServiceSpec) =>
-        () => {
-            if (!service && specification) {
+        (role: string, service: JDService, serviceShortId: string) => () => {
+            const specification = serviceSpecificationFromName(serviceShortId)
+            if (specification)
                 addServiceProvider(
                     bus,
                     serviceProviderDefinitionFromServiceClass(
                         specification.classIdentifier
                     )
                 )
-            } else {
-                // do nothing
-            }
         }
-
     return (
         <Grid container spacing={1}>
-            {roles &&
-                Object.keys(roles)
-                    .map(role => ({
-                        role,
-                        service: roles[role].service,
-                        specification: serviceSpecificationFromName(
-                            roles[role].serviceShortId
-                        ),
-                    }))
-                    .map(({ role, service, specification }) => (
-                        <Grid item key={role}>
-                            <Tooltip
-                                title={
-                                    service
-                                        ? `bound to ${service.device.friendlyName}`
-                                        : `start simulator`
-                                }
-                            >
-                                <Chip
-                                    label={role}
-                                    variant={service ? "default" : "outlined"}
-                                    avatar={
-                                        service ? (
-                                            <DeviceAvatar
-                                                device={service.device}
-                                            />
-                                        ) : (
-                                            <AddIcon />
-                                        )
-                                    }
-                                    onClick={handleRoleClick(
-                                        role,
-                                        service,
-                                        specification
-                                    )}
-                                />
-                            </Tooltip>
-                        </Grid>
-                    ))}
+            {roles?.map(({ role, service, serviceShortId }) => (
+                <Grid item key={role}>
+                    <Tooltip
+                        title={
+                            service
+                                ? `bound to ${service.device.friendlyName}`
+                                : `start simulator`
+                        }
+                    >
+                        <Chip
+                            label={role}
+                            variant={service ? "default" : "outlined"}
+                            avatar={
+                                service ? (
+                                    <DeviceAvatar device={service.device} />
+                                ) : (
+                                    <AddIcon />
+                                )
+                            }
+                            onClick={
+                                !!serviceShortId &&
+                                handleRoleClick(role, service, serviceShortId)
+                            }
+                        />
+                    </Tooltip>
+                </Grid>
+            ))}
         </Grid>
     )
 }
