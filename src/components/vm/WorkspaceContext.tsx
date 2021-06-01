@@ -5,6 +5,7 @@ import { JDEventSource } from "../../../jacdac-ts/src/jdom/eventsource"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { RoleManager } from "../../../jacdac-ts/src/vm/rolemanager"
 import { IT4ProgramRunner } from "../../../jacdac-ts/src/vm/vmrunner"
+import useChange from "../../jacdac/useChange"
 import ReactField from "./fields/ReactField"
 
 export class WorkspaceServices extends JDEventSource {
@@ -43,6 +44,7 @@ export interface WorkspaceContextProps {
     services: WorkspaceServices
     flyout?: boolean
     role?: string
+    roleServiceShortId?: string
     roleService?: JDService
 }
 
@@ -51,6 +53,7 @@ export const WorkspaceContext = createContext<WorkspaceContextProps>({
     flyout: false,
     services: undefined,
     role: undefined,
+    roleServiceShortId: undefined,
     roleService: undefined,
 })
 WorkspaceContext.displayName = "Workspace"
@@ -98,6 +101,10 @@ export function WorkspaceProvider(props: {
     const [roleService, setRoleService] = useState<JDService>(
         resolveRoleService()
     )
+    const roleServiceShortId = useChange(
+        roleManager,
+        _ => _?.roles.find(r => r.role === role)?.serviceShortId
+    )
     const [flyout, setFlyout] = useState(!!sourceBlock?.isInFlyout)
 
     // resolve role
@@ -122,7 +129,7 @@ export function WorkspaceProvider(props: {
     return (
         // eslint-disable-next-line react/react-in-jsx-scope
         <WorkspaceContext.Provider
-            value={{ services, role, roleService, flyout }}
+            value={{ services, role, roleServiceShortId, roleService, flyout }}
         >
             {children}
         </WorkspaceContext.Provider>

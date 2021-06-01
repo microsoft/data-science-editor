@@ -65,6 +65,7 @@ import {
     SET_STATUS_LIGHT_BLOCK,
     START_SIMULATOR_CALLBACK_KEY,
     ToolboxConfiguration,
+    TWIN_BLOCK,
     WAIT_BLOCK,
     WATCH_BLOCK,
     WHILE_CONDITION_BLOCK,
@@ -131,16 +132,22 @@ function createBlockTheme(theme: Theme) {
     const sensorColor = theme.palette.success.main
     const otherColor = theme.palette.info.main
     const commandColor = theme.palette.warning.main
-    const modulesColor = theme.palette.grey[600]
+    const debuggerColor = theme.palette.grey[600]
     const serviceColor = (srv: jdspec.ServiceSpec) =>
         isSensor(srv) ? sensorColor : otherColor
-    return { serviceColor, sensorColor, commandColor, modulesColor, otherColor }
+    return {
+        serviceColor,
+        sensorColor,
+        commandColor,
+        debuggerColor,
+        otherColor,
+    }
 }
 
 function loadBlocks(
     serviceColor: (srv: jdspec.ServiceSpec) => string,
     commandColor: string,
-    modulesColor: string
+    debuggerColor: string
 ): CachedBlockDefinitions {
     const customShadows = [
         {
@@ -466,29 +473,6 @@ function loadBlocks(
         return def
     })
 
-    const twinBlocks: ServiceBlockDefinition[] = allServices.map(service => ({
-        kind: "block",
-        type: `jacdac_twin_${service.shortId}`,
-        message0: `twin of %1 %2 %3`,
-        args0: [
-            fieldVariable(service),
-            {
-                type: "input_dummy",
-            },
-            <InputDefinition>{
-                type: TwinField.KEY,
-                name: "twin",
-                serviceClass: service.classIdentifier,
-            },
-        ],
-        colour: serviceColor(service),
-        inputsInline: false,
-        tooltip: `Twin of the service`,
-        helpUrl: serviceHelp(service),
-        service,
-        template: "twin",
-    }))
-
     const eventBlocks = events.map<EventBlockDefinition>(
         ({ service, events }) => ({
             kind: "block",
@@ -766,7 +750,6 @@ function loadBlocks(
         ...registerSetBlocks,
         ...customBlockDefinitions,
         ...commandBlocks,
-        ...twinBlocks,
     ]
 
     const shadowBlocks: BlockDefinition[] = [
@@ -979,6 +962,35 @@ function loadBlocks(
         },
         {
             kind: "block",
+            type: TWIN_BLOCK,
+            message0: `twin of %1 %2 %3`,
+            args0: [
+                {
+                    type: "field_variable",
+                    name: "role",
+                    variable: "none",
+                    variableTypes: [
+                        "client",
+                        ...allServices.map(service => service.shortId),
+                    ],
+                    defaultType: "client",
+                },
+                {
+                    type: "input_dummy",
+                },
+                <InputDefinition>{
+                    type: TwinField.KEY,
+                    name: "twin",
+                },
+            ],
+            colour: debuggerColor,
+            inputsInline: false,
+            tooltip: `Twin of the service`,
+            helpUrl: "",
+            template: "twin",
+        },
+        {
+            kind: "block",
             type: INSPECT_BLOCK,
             message0: `inspect %1 %2 %3`,
             args0: [
@@ -1000,7 +1012,7 @@ function loadBlocks(
                     name: "twin",
                 },
             ],
-            colour: modulesColor,
+            colour: debuggerColor,
             inputsInline: false,
             tooltip: `Inspect a service`,
             helpUrl: "",
@@ -1017,11 +1029,13 @@ function loadBlocks(
                     check: ["Number", "Boolean", "String"],
                 },
             ],
-            colour: modulesColor,
+            colour: debuggerColor,
             inputsInline: false,
             tooltip: `Watch a value in the editor`,
             helpUrl: "",
             template: "watch",
+            nextStatement: null,
+            previousStatement: null,
         },
     ]
 
@@ -1171,9 +1185,10 @@ export default function useToolbox(props: {
     const { blockServices, serviceClass } = props
 
     const theme = useTheme()
-    const { serviceColor, commandColor, modulesColor } = createBlockTheme(theme)
+    const { serviceColor, commandColor, debuggerColor } =
+        createBlockTheme(theme)
     const { serviceBlocks, services } = useMemo(
-        () => loadBlocks(serviceColor, commandColor, modulesColor),
+        () => loadBlocks(serviceColor, commandColor, debuggerColor),
         [theme]
     )
     const liveServices = useServices({ specification: true })
@@ -1222,7 +1237,6 @@ export default function useToolbox(props: {
         }))
         .filter(cat => !!cat.contents?.length)
 
-    const hasServices = !!toolboxServices.length
     const commandsCategory: CategoryDefinition = {
         kind: "category",
         name: "Commands",
@@ -1254,13 +1268,17 @@ export default function useToolbox(props: {
 
     const modulesCategory: CategoryDefinition = {
         kind: "category",
-        name: "Modules",
-        colour: modulesColor,
+        name: "Debugger",
+        colour: debuggerColor,
         contents: [
             <ButtonDefinition>{
                 kind: "button",
                 text: "start simulator",
                 callbackKey: START_SIMULATOR_CALLBACK_KEY,
+            },
+            <BlockDefinition>{
+                kind: "block",
+                type: TWIN_BLOCK,
             },
             <BlockDefinition>{
                 kind: "block",

@@ -6,8 +6,7 @@ import WorkspaceContext from "../WorkspaceContext"
 import ReactInlineField from "./ReactInlineField"
 import NoServiceAlert from "./NoServiceAlert"
 
-function TwinWidget(props: { serviceClass: number }) {
-    const { serviceClass } = props
+function TwinWidget() {
     const { roleService, flyout } = useContext(WorkspaceContext)
     const onPointerStopPropagation = (event: PointerEvent<HTMLDivElement>) => {
         // make sure blockly does not handle drags when interacting with UI
@@ -24,21 +23,21 @@ function TwinWidget(props: { serviceClass: number }) {
             spacing={1}
         >
             <Grid item>
-                <div
-                    style={{ cursor: "inherit" }}
-                    onPointerDown={onPointerStopPropagation}
-                    onPointerUp={onPointerStopPropagation}
-                    onPointerMove={onPointerStopPropagation}
-                >
-                    <NoServiceAlert serviceClass={serviceClass} />
-                    {roleService && (
+                <NoServiceAlert />
+                {roleService && (
+                    <div
+                        style={{ cursor: "inherit" }}
+                        onPointerDown={onPointerStopPropagation}
+                        onPointerUp={onPointerStopPropagation}
+                        onPointerMove={onPointerStopPropagation}
+                    >
                         <DashboardServiceWidget
                             service={roleService}
                             visible={true}
                             variant="icon"
                         />
-                    )}
-                </div>
+                    </div>
+                )}
             </Grid>
         </Grid>
     )
@@ -47,7 +46,6 @@ function TwinWidget(props: { serviceClass: number }) {
 export default class TwinField extends ReactInlineField {
     static KEY = "jacdac_field_twin"
     static EDITABLE = false
-    protected serviceClass: number
 
     static fromJson(options: ReactFieldJSON) {
         return new TwinField(options)
@@ -56,10 +54,9 @@ export default class TwinField extends ReactInlineField {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     constructor(options?: any) {
         super(options)
-        this.serviceClass = options?.serviceClass
     }
 
     renderInlineField() {
-        return <TwinWidget serviceClass={this.serviceClass} />
+        return <TwinWidget />
     }
 }
