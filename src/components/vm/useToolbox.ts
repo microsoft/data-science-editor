@@ -1106,7 +1106,7 @@ function loadBlocks(
     // register field editors
     registerFields()
     // re-register blocks with blocklys
-    blocks.map(
+    blocks.forEach(
         block =>
             (Blockly.Blocks[block.type] = <ServiceBlockDefinitionFactory>{
                 jacdacDefinition: block,
