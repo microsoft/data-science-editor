@@ -20,7 +20,7 @@ import {
     WorkspaceServices,
 } from "./WorkspaceContext"
 import { RoleManager } from "../../../jacdac-ts/src/vm/rolemanager"
-import { arrayConcatMany, uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
+import { arrayConcatMany, toMap } from "../../../jacdac-ts/src/jdom/utils"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -175,7 +175,7 @@ export default function VMBlockEditor(props: {
     // apply errors
     useEffect(() => {
         if (!workspace) return
-        const allErrors = uniqueMap(
+        const allErrors = toMap(
             arrayConcatMany(
                 program?.handlers.map(h => h.errors?.filter(e => !!e.sourceId))
             ) || [],
