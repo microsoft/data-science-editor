@@ -58,6 +58,8 @@ function RoleChip(props: {
                     f => f.name === "role"
                 ) as FieldVariable
                 field.setValue(variable.getId())
+                const m = workspace.getMetrics()
+                twinBlock.moveBy(m.viewWidth / 2, m.viewHeight / 3)
                 twinBlock.initSvg()
                 twinBlock.render(false)
             }
