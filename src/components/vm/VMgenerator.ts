@@ -1,14 +1,14 @@
 import { BlockJSON, WorkspaceJSON } from "./jsongenerator"
 import {
-    IT4Base,
-    IT4Handler,
-    IT4Program,
-    IT4Role,
+    VMBase,
+    VMHandler,
+    VMProgram,
+    VMRole,
     toMemberExpression,
     toIdentifier,
-    IT4IfThenElse,
+    VMIfThenElse,
     RoleEvent,
-    IT4Error,
+    VMError,
 } from "../../../jacdac-ts/src/vm/ir"
 import { assert } from "../../../jacdac-ts/src/jdom/utils"
 import {
@@ -39,25 +39,25 @@ const ops = {
 
 const BUILTIN_TYPES = ["", "Boolean", "Number", "String"]
 
-export default function workspaceJSONToIT4Program(
+export default function workspaceJSONToVMProgram(
     workspace: WorkspaceJSON
-): IT4Program {
-    console.debug(`compile it4`, { workspace })
+): VMProgram {
+    console.debug(`compile vm`, { workspace })
 
-    const roles: IT4Role[] = workspace.variables
+    const roles: VMRole[] = workspace.variables
         .filter(v => BUILTIN_TYPES.indexOf(v.type) < 0)
         .map(v => ({ role: v.name, serviceShortId: v.type }))
 
     type ExpressionWithErrors = {
         expr: jsep.Expression
-        errors: IT4Error[]
+        errors: VMError[]
     }
 
     const blockToExpression: (
         ev: RoleEvent,
         block: BlockJSON
     ) => ExpressionWithErrors = (ev: RoleEvent, blockIn: BlockJSON) => {
-        const errors: IT4Error[] = []
+        const errors: VMError[] = []
 
         const blockToExpressionInner = (ev: RoleEvent, block: BlockJSON) => {
             if (!block) {
@@ -210,23 +210,23 @@ export default function workspaceJSONToIT4Program(
     }
 
     type CmdWithErrors = {
-        cmd: IT4Base
-        errors: IT4Error[]
+        cmd: VMBase
+        errors: VMError[]
     }
 
     const blockToCommand = (
         event: RoleEvent,
         block: BlockJSON
     ): CmdWithErrors => {
-        const makeIT4Base = (command: jsep.CallExpression) => {
+        const makeVMBase = (command: jsep.CallExpression) => {
             return {
                 sourceId: block.id,
                 type: "cmd",
                 command,
-            } as IT4Base
+            } as VMBase
         }
-        const processErrors = (errors: IT4Error[]) => {
-            return errors.map((e: IT4Error) => {
+        const processErrors = (errors: VMError[]) => {
+            return errors.map((e: VMError) => {
                 return {
                     sourceId: e.sourceId ? e.sourceId : block.id,
                     message: e.message,
@@ -242,7 +242,7 @@ export default function workspaceJSONToIT4Program(
                     inputs[0].child
                 )
                 return {
-                    cmd: makeIT4Base({
+                    cmd: makeVMBase({
                         type: "CallExpression",
                         arguments: [time],
                         callee: toIdentifier("wait"),
@@ -255,11 +255,11 @@ export default function workspaceJSONToIT4Program(
                     event,
                     inputs[0]?.child
                 )
-                const thenHandler: IT4Handler = {
+                const thenHandler: VMHandler = {
                     commands: [],
                     errors: [],
                 }
-                const elseHandler: IT4Handler = {
+                const elseHandler: VMHandler = {
                     commands: [],
                     errors: [],
                 }
@@ -279,7 +279,7 @@ export default function workspaceJSONToIT4Program(
                         elseHandler
                     )
                 }
-                const ifThenElse: IT4IfThenElse = {
+                const ifThenElse: VMIfThenElse = {
                     sourceId: block.id,
                     type: "ite",
                     expr,
@@ -309,7 +309,7 @@ export default function workspaceJSONToIT4Program(
                             )
                             const { value: role } = inputs[0].fields.role
                             return {
-                                cmd: makeIT4Base({
+                                cmd: makeVMBase({
                                     type: "CallExpression",
                                     arguments: [
                                         toMemberExpression(
@@ -331,7 +331,7 @@ export default function workspaceJSONToIT4Program(
                                 blockToExpression(event, a.child)
                             )
                             return {
-                                cmd: makeIT4Base({
+                                cmd: makeVMBase({
                                     type: "CallExpression",
                                     arguments: exprsErrors.map(p => p.expr),
                                     callee: toMemberExpression(
@@ -364,7 +364,7 @@ export default function workspaceJSONToIT4Program(
     const addCommands = (
         event: RoleEvent,
         blocks: BlockJSON[],
-        handler: IT4Handler
+        handler: VMHandler
     ) => {
         blocks?.forEach(child => {
             if (child) {
@@ -375,11 +375,11 @@ export default function workspaceJSONToIT4Program(
         })
     }
 
-    const handlers: IT4Handler[] = workspace.blocks.map(top => {
+    const handlers: VMHandler[] = workspace.blocks.map(top => {
         const { type, inputs } = top
         let command: jsep.CallExpression = undefined
         let topEvent: RoleEvent = undefined
-        let topErrors: IT4Error[] = []
+        let topErrors: VMError[] = []
         if (type === WHILE_CONDITION_BLOCK) {
             // this is while (...)
             const { child: condition } = inputs[0]
@@ -443,13 +443,13 @@ export default function workspaceJSONToIT4Program(
             }
         }
 
-        const handler: IT4Handler = {
+        const handler: VMHandler = {
             commands: [
                 {
                     sourceId: top.id,
                     type: "cmd",
                     command,
-                } as IT4Base,
+                } as VMBase,
             ],
             errors: topErrors,
         }

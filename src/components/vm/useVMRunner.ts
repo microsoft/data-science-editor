@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
-import { IT4Program } from "../../../jacdac-ts/src/vm/ir"
+import { VMProgram } from "../../../jacdac-ts/src/vm/ir"
 import {
-    IT4ProgramRunner,
-    TraceContext,
+    VMProgramRunner,
+    VMTraceContext,
 } from "../../../jacdac-ts/src/vm/vmrunner"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import AppContext from "../AppContext"
@@ -13,12 +13,12 @@ import { RoleManager } from "../../../jacdac-ts/src/vm/rolemanager"
 
 export default function useVMRunner(
     roleManager: RoleManager,
-    program: IT4Program,
+    program: VMProgram,
     autoStart: boolean
 ) {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { setError } = useContext(AppContext)
-    const [runner, setRunner] = useState<IT4ProgramRunner>()
+    const [runner, setRunner] = useState<VMProgramRunner>()
     const [_autoStart, _setAutoStart] = useState<boolean>(!!autoStart)
 
     const run = () => {
@@ -40,7 +40,7 @@ export default function useVMRunner(
     useEffect(() => {
         try {
             const newTestRunner =
-                program && new IT4ProgramRunner(bus, roleManager, program)
+                program && new VMProgramRunner(bus, roleManager, program)
             setRunner(newTestRunner)
 
             return () => newTestRunner?.unmount()
@@ -53,13 +53,13 @@ export default function useVMRunner(
     // errors
     useEffect(() => runner?.subscribe(ERROR, e => setError(e)), [runner])
     // traces
-    const handleTrace = (value: { message: string; context: TraceContext }) => {
+    const handleTrace = (value: { message: string; context: VMTraceContext }) => {
         const { message, context } = value
         if (Flags.diagnostics) console.debug(`vm> ${message}`, context)
     }
     useEffect(
         () =>
-            runner?.subscribe<{ message: string; context: TraceContext }>(
+            runner?.subscribe<{ message: string; context: VMTraceContext }>(
                 TRACE,
                 handleTrace
             ),

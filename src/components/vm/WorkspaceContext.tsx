@@ -4,12 +4,12 @@ import { CHANGE } from "../../../jacdac-ts/src/jdom/constants"
 import { JDEventSource } from "../../../jacdac-ts/src/jdom/eventsource"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { RoleManager } from "../../../jacdac-ts/src/vm/rolemanager"
-import { IT4ProgramRunner } from "../../../jacdac-ts/src/vm/vmrunner"
+import { VMProgramRunner } from "../../../jacdac-ts/src/vm/vmrunner"
 import useChange from "../../jacdac/useChange"
 import ReactField from "./fields/ReactField"
 
 export class WorkspaceServices extends JDEventSource {
-    private _runner: IT4ProgramRunner
+    private _runner: VMProgramRunner
     private _roleManager: RoleManager
 
     constructor() {
@@ -20,7 +20,7 @@ export class WorkspaceServices extends JDEventSource {
         return this._runner
     }
 
-    set runner(value: IT4ProgramRunner) {
+    set runner(value: VMProgramRunner) {
         if (this._runner !== value) {
             this._runner = value
             this.emit(CHANGE)

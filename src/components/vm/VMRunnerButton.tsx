@@ -1,13 +1,13 @@
 import React from "react"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
-import { IT4ProgramRunner, VMStatus } from "../../../jacdac-ts/src/vm/vmrunner"
+import { VMProgramRunner, VMStatus } from "../../../jacdac-ts/src/vm/vmrunner"
 import useChange from "../../jacdac/useChange"
 import PlayArrowIcon from "@material-ui/icons/PlayArrow"
 import StopIcon from "@material-ui/icons/Stop"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 
 export default function VMRunnerButton(props: {
-    runner: IT4ProgramRunner
+    runner: VMProgramRunner
     run: () => void
     cancel: () => void
 }) {

@@ -1,8 +1,8 @@
 import { Grid } from "@material-ui/core"
 import React from "react"
-import { IT4Program } from "../../../jacdac-ts/src/vm/ir"
+import { VMProgram } from "../../../jacdac-ts/src/vm/ir"
 import { RoleManager } from "../../../jacdac-ts/src/vm/rolemanager"
-import { IT4ProgramRunner } from "../../../jacdac-ts/src/vm/vmrunner"
+import { VMProgramRunner } from "../../../jacdac-ts/src/vm/vmrunner"
 import { WorkspaceJSON } from "./jsongenerator"
 import VMRoles from "./VMRoles"
 import VMRunnerButton from "./VMRunnerButton"
@@ -12,12 +12,12 @@ import { WorkspaceSvg } from "blockly"
 
 export default function VMToolbar(props: {
     roleManager: RoleManager
-    runner: IT4ProgramRunner
+    runner: VMProgramRunner
     run: () => void
     cancel: () => void
     xml: string
     source: WorkspaceJSON
-    program: IT4Program
+    program: VMProgram
     workspace?: WorkspaceSvg
 }) {
     const {

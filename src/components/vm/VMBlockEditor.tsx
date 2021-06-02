@@ -13,12 +13,12 @@ import useToolbox, { useToolboxButtons } from "./useToolbox"
 import BlocklyModalDialogs from "./BlocklyModalDialogs"
 import { domToJSON, WorkspaceJSON } from "./jsongenerator"
 import DarkModeContext from "../ui/DarkModeContext"
-import { IT4Program } from "../../../jacdac-ts/src/vm/ir"
-import workspaceJSONToIT4Program from "./it4generator"
+import { VMProgram } from "../../../jacdac-ts/src/vm/ir"
+import workspaceJSONToVMProgram from "./VMgenerator"
 import AppContext from "../AppContext"
 import { createStyles, makeStyles } from "@material-ui/core"
 import clsx from "clsx"
-import { IT4ProgramRunner } from "../../../jacdac-ts/src/vm/vmrunner"
+import { VMProgramRunner } from "../../../jacdac-ts/src/vm/vmrunner"
 import useBlocklyEvents from "./useBlocklyEvents"
 import useBlocklyPlugins from "./useBlocklyPlugins"
 import {
@@ -49,8 +49,8 @@ export default function VMBlockEditor(props: {
     initialXml?: string
     onXmlChange?: (xml: string) => void
     onJSONChange?: (json: WorkspaceJSON) => void
-    onIT4ProgramChange?: (program: IT4Program) => void
-    runner?: IT4ProgramRunner
+    onVMProgramChange?: (program: VMProgram) => void
+    runner?: VMProgramRunner
     roleManager?: RoleManager
     serviceClass?: number
     workspaceRef?: MutableRefObject<WorkspaceSvg>
@@ -59,7 +59,7 @@ export default function VMBlockEditor(props: {
         className,
         onXmlChange,
         onJSONChange,
-        onIT4ProgramChange,
+        onVMProgramChange,
         initialXml,
         serviceClass,
         runner,
@@ -70,7 +70,7 @@ export default function VMBlockEditor(props: {
     const { darkMode } = useContext(DarkModeContext)
     const { setError } = useContext(AppContext)
     const [source, setSource] = useState<WorkspaceJSON>()
-    const [program, setProgram] = useState<IT4Program>()
+    const [program, setProgram] = useState<VMProgram>()
     const { toolboxConfiguration, newProjectXml } = useToolbox({
         serviceClass,
         source,
@@ -165,25 +165,25 @@ export default function VMBlockEditor(props: {
         onXmlChange?.(xml)
 
         // save json
-        if (onJSONChange || onIT4ProgramChange) {
+        if (onJSONChange || onVMProgramChange) {
             // emit json
             const newSource = domToJSON(workspace)
             if (JSON.stringify(newSource) !== JSON.stringify(source)) {
                 setSource(newSource)
                 onJSONChange?.(newSource)
-                if (onIT4ProgramChange) {
+                if (onVMProgramChange) {
                     try {
-                        const newProgram = workspaceJSONToIT4Program(newSource)
+                        const newProgram = workspaceJSONToVMProgram(newSource)
                         if (
                             JSON.stringify(newProgram) !==
                             JSON.stringify(program)
                         ) {
                             setProgram(newProgram)
-                            onIT4ProgramChange(newProgram)
+                            onVMProgramChange(newProgram)
                         }
                     } catch (e) {
                         console.error(e)
-                        onIT4ProgramChange(undefined)
+                        onVMProgramChange(undefined)
                     }
                 }
             }

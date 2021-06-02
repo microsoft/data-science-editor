@@ -1,7 +1,7 @@
 import { Grid, NoSsr } from "@material-ui/core"
 import React, { useRef, useState } from "react"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
-import { IT4Program } from "../../../jacdac-ts/src/vm/ir"
+import { VMProgram } from "../../../jacdac-ts/src/vm/ir"
 import { WorkspaceJSON } from "../../components/vm/jsongenerator"
 import VMBlockEditor from "../../components/vm/VMBlockEditor"
 import useLocalStorage from "../../components/useLocalStorage"
@@ -20,14 +20,14 @@ export default function VMEditor(props: { storageKey?: string }) {
         ""
     )
     const [source, setSource] = useState<WorkspaceJSON>()
-    const [program, setProgram] = useState<IT4Program>()
+    const [program, setProgram] = useState<VMProgram>()
     const roleManager = useRoleManager()
     const autoStart = true
     const { runner, run, cancel } = useVMRunner(roleManager, program, autoStart)
 
     const handleXml = (xml: string) => setXml(xml)
     const handleJSON = (json: WorkspaceJSON) => setSource(json)
-    const handleI4Program = (json: IT4Program) => {
+    const handleI4Program = (json: VMProgram) => {
         if (json) roleManager.setRoles(json.roles)
         setProgram(json)
     }
@@ -52,7 +52,7 @@ export default function VMEditor(props: { storageKey?: string }) {
                         initialXml={xml}
                         onXmlChange={handleXml}
                         onJSONChange={handleJSON}
-                        onIT4ProgramChange={handleI4Program}
+                        onVMProgramChange={handleI4Program}
                         runner={runner}
                         roleManager={roleManager}
                         workspaceRef={workspaceRef}

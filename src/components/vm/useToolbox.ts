@@ -77,7 +77,7 @@ import LEDColorField from "./fields/LEDColorField"
 import TwinField from "./fields/TwinField"
 import JDomTreeField from "./fields/JDomTreeField"
 import { WorkspaceJSON } from "./jsongenerator"
-import { IT4Program } from "../../../jacdac-ts/src/vm/ir"
+import { VMProgram } from "../../../jacdac-ts/src/vm/ir"
 
 type CachedBlockDefinitions = {
     blocks: BlockDefinition[]
@@ -1172,7 +1172,7 @@ export default function useToolbox(props: {
     blockServices?: string[]
     serviceClass?: number
     source?: WorkspaceJSON
-    program?: IT4Program
+    program?: VMProgram
 }): {
     serviceBlocks: BlockDefinition[]
     toolboxConfiguration: ToolboxConfiguration
