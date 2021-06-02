@@ -34,6 +34,7 @@ export default function VMEditor(props: { storageKey?: string }) {
         <Grid container direction="column" spacing={1}>
             <Grid item xs={12}>
                 <VMToolbar
+                    roleManager={roleManager}
                     runner={runner}
                     run={run}
                     cancel={cancel}

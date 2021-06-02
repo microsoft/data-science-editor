@@ -29,7 +29,7 @@ export default function VMRoles(props: { roleManager: RoleManager }) {
                 )
         }
     return (
-        <Grid container spacing={1}>
+        <>
             {roles?.map(({ role, service, serviceShortId }) => (
                 <Grid item key={role}>
                     <Tooltip
@@ -57,6 +57,6 @@ export default function VMRoles(props: { roleManager: RoleManager }) {
                     </Tooltip>
                 </Grid>
             ))}
-        </Grid>
+        </>
     )
 }
