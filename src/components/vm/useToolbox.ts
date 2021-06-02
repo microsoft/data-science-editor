@@ -77,6 +77,7 @@ import LEDColorField from "./fields/LEDColorField"
 import TwinField from "./fields/TwinField"
 import JDomTreeField from "./fields/JDomTreeField"
 import { WorkspaceJSON } from "./jsongenerator"
+import { IT4Program } from "../../../jacdac-ts/src/vm/ir"
 
 type CachedBlockDefinitions = {
     blocks: BlockDefinition[]
@@ -1136,15 +1137,6 @@ function loadBlocks(
     }
 }
 
-export const BUILTIN_TYPES = ["", "Boolean", "Number", "String"]
-export function scanServices(workspace: Blockly.Workspace) {
-    const variables = Blockly.Variables.allUsedVarModels(workspace).filter(
-        v => BUILTIN_TYPES.indexOf(v.type) < 0
-    ) // remove buildins
-    const services = variables.map(v => v.type)
-    return services
-}
-
 function patchCategoryJSONtoXML(cat: CategoryDefinition): CategoryDefinition {
     if (cat.button) {
         if (!cat.contents) cat.contents = []
@@ -1180,12 +1172,13 @@ export default function useToolbox(props: {
     blockServices?: string[]
     serviceClass?: number
     source?: WorkspaceJSON
+    program?: IT4Program
 }): {
     serviceBlocks: BlockDefinition[]
     toolboxConfiguration: ToolboxConfiguration
     newProjectXml: string
 } {
-    const { blockServices, serviceClass, source } = props
+    const { serviceClass, source, program } = props
 
     const theme = useTheme()
     const { serviceColor, commandColor, debuggerColor } =
@@ -1194,6 +1187,10 @@ export default function useToolbox(props: {
         () => loadBlocks(serviceColor, commandColor, debuggerColor),
         [theme]
     )
+    const blockServices =
+        program?.roles.map(r => r.serviceShortId) ||
+        source?.variables.map(v => v.type) ||
+        []
     const liveServices = useServices({ specification: true })
     const usedEvents: Set<jdspec.PacketInfo> = new Set(
         source?.blocks

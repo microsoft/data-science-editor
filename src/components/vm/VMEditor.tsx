@@ -23,19 +23,11 @@ export default function VMEditor(props: { storageKey?: string }) {
     const autoStart = true
     const { runner, run, cancel } = useVMRunner(roleManager, program, autoStart)
 
-    const handleXml = (xml: string) => {
-        setXml(xml)
-    }
-    const handleJSON = (json: WorkspaceJSON) => {
-        const newSource = JSON.stringify(json)
-        if (JSON.stringify(source) !== newSource) {
-            setSource(json)
-        }
-    }
+    const handleXml = (xml: string) => setXml(xml)
+    const handleJSON = (json: WorkspaceJSON) => setSource(json)
     const handleI4Program = (json: IT4Program) => {
         if (json) roleManager.setRoles(json.roles)
-        const newProgram = JSON.stringify(json)
-        if (JSON.stringify(program) !== newProgram) setProgram(json)
+        setProgram(json)
     }
 
     return (

@@ -59,13 +59,13 @@ export default function VMBlockEditor(props: {
     const classes = useStyles()
     const { darkMode } = useContext(DarkModeContext)
     const { setError } = useContext(AppContext)
-    const [services, setServices] = useState<string[]>([])
     const [source, setSource] = useState<WorkspaceJSON>()
+    const [program, setProgram] = useState<IT4Program>()
 
-    const { toolboxConfiguration, newProjectXml, serviceBlocks } = useToolbox({
-        blockServices: services,
+    const { toolboxConfiguration, newProjectXml } = useToolbox({
         serviceClass,
-        source
+        source,
+        program
     })
     const theme = darkMode === "dark" ? DarkTheme : Theme
     const gridColor = darkMode === "dark" ? "#555" : "#ccc"
@@ -155,11 +155,14 @@ export default function VMBlockEditor(props: {
                 onJSONChange?.(newSource)
                 if (onIT4ProgramChange) {
                     try {
-                        const program = workspaceJSONToIT4Program(
-                            serviceBlocks,
-                            newSource
-                        )
-                        onIT4ProgramChange(program)
+                        const newProgram = workspaceJSONToIT4Program(newSource)
+                        if (
+                            JSON.stringify(newProgram) !==
+                            JSON.stringify(program)
+                        ) {
+                            setProgram(newProgram)
+                            onIT4ProgramChange(newProgram)
+                        }
                     } catch (e) {
                         console.error(e)
                         onIT4ProgramChange(undefined)
@@ -167,11 +170,6 @@ export default function VMBlockEditor(props: {
                 }
             }
         }
-
-        // update toolbox with declared roles
-        const newServices = scanServices(workspace)
-        if (JSON.stringify(services) !== JSON.stringify(newServices))
-            setServices(newServices)
     }, [workspace, xml])
 
     return (

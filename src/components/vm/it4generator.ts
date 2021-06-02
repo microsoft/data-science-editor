@@ -8,10 +8,8 @@ import {
     toIdentifier,
     IT4IfThenElse,
 } from "../../../jacdac-ts/src/vm/ir"
-import { BUILTIN_TYPES } from "./useToolbox"
 import { assert } from "../../../jacdac-ts/src/jdom/utils"
 import {
-    BlockDefinition,
     CommandBlockDefinition,
     EventFieldDefinition,
     RegisterBlockDefinition,
@@ -42,8 +40,9 @@ type RoleEvent = {
     event: string
 }
 
+const BUILTIN_TYPES = ["", "Boolean", "Number", "String"]
+
 export default function workspaceJSONToIT4Program(
-    serviceBlocks: BlockDefinition[],
     workspace: WorkspaceJSON
 ): IT4Program {
     console.debug(`compile it4`, { workspace })
