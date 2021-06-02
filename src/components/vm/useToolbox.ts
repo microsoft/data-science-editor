@@ -1,5 +1,5 @@
 import Blockly from "blockly"
-import { useContext, useEffect, useMemo } from "react"
+import { useEffect, useMemo } from "react"
 import {
     JoystickReg,
     ServoReg,
