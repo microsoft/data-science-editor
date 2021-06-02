@@ -345,16 +345,20 @@ export default function workspaceJSONToIT4Program(
                             }
                         }
                         default: {
-                            console.warn(
-                                `unsupported command template ${template} for ${type}`,
-                                { event, block }
-                            )
+                            return {
+                                cmd: undefined,
+                                errors: [
+                                    {
+                                        sourceId: block.id,
+                                        message: `unsupported command template ${template} for ${type}`,
+                                    },
+                                ],
+                            }
                         }
                     }
                 }
             }
         }
-        return undefined
     }
 
     const addCommands = (
@@ -364,8 +368,8 @@ export default function workspaceJSONToIT4Program(
     ) => {
         blocks?.forEach(child => {
             if (child) {
-                let { cmd, errors } = blockToCommand(event, child)
-                handler.commands.push(cmd)
+                const { cmd, errors } = blockToCommand(event, child)
+                if (cmd) handler.commands.push(cmd)
                 errors.forEach(e => handler.errors.push(e))
             }
         })
