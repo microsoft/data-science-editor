@@ -344,15 +344,28 @@ export default function workspaceJSONToVMProgram(
                                 ),
                             }
                         }
+                        case "watch": {
+                            const { expr, errors } = blockToExpression(
+                                event,
+                                inputs[0].child
+                            )
+                            return {
+                                cmd: makeVMBase({
+                                    type: "CallExpression",
+                                    arguments: [expr],
+                                    callee: toIdentifier("watch"),
+                                }),
+                                errors: processErrors(errors),
+                            }
+                        }
                         default: {
+                            console.warn(
+                                `unsupported block template ${template} for ${type}`,
+                                { block }
+                            )
                             return {
                                 cmd: undefined,
-                                errors: [
-                                    {
-                                        sourceId: block.id,
-                                        message: `unsupported command template ${template} for ${type}`,
-                                    },
-                                ],
+                                errors: [],
                             }
                         }
                     }
