@@ -57,6 +57,7 @@ export default function VMRoles(props: {
                     ) as FieldVariable
                     field.setValue(variable.getId())
                     twinBlock.initSvg()
+                    twinBlock.render(false)
                 }
                 workspace.centerOnBlock(twinBlock.id)
             }
