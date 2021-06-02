@@ -74,7 +74,7 @@ function RoleChip(props: {
             variant={service ? "default" : "outlined"}
             avatar={service && <DeviceAvatar device={service.device} />}
             onClick={handleRoleClick}
-            onDelete={!!server && handleDelete}
+            onDelete={server ? handleDelete : undefined}
             deleteIcon={
                 <Tooltip title="stop simulator">
                     <CancelIcon />
