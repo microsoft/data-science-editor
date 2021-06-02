@@ -55,7 +55,7 @@ export default function Protocol() {
             />
             <SplitGrid
                 right={false}
-                subtitle="Standardized services."
+                subtitle="'Nano' services."
                 description="Jacdac services are specified to abstract the hardware device from the software implementation. The services are comprised of registers, commands and events, along with precise data layout information for each packet."
                 imageColumns={8}
                 image={
