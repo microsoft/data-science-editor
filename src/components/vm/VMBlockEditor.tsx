@@ -32,7 +32,7 @@ import { withPrefix } from "gatsby"
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         editor: {
-            height: "calc(100vh - 7rem)",
+            height: "calc(100vh - 10rem)",
             "& .blocklyTreeLabel": {
                 fontFamily: theme.typography.fontFamily,
             },
