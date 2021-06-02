@@ -43,6 +43,7 @@ import {
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import useMediaQueries from "../hooks/useMediaQueries"
 import useRegister from "../hooks/useRegister"
+import useInstanceName from "../services/useInstanceName"
 
 export interface JDomTreeViewProps extends StyledTreeViewProps {
     deviceFilter?: (devices: JDDevice) => boolean
@@ -182,9 +183,7 @@ export function ServiceTreeItem(
 ) {
     const { service } = props
     const { isMixin, name, id } = useMemo(() => service, [service])
-    const instanceNameRegister = useRegister(service, BaseReg.InstanceName)
-    const [instanceName] =
-        useRegisterUnpackedValue<[string]>(instanceNameRegister)
+    const instanceName = useInstanceName(service)
     const readingRegister = useRegister(service, SystemReg.Reading)
     const reading = useRegisterHumanValue(readingRegister)
 
