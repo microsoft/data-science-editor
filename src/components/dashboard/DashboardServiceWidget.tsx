@@ -59,6 +59,7 @@ import DashboardServo from "./DashboardServo"
 import DashboardRotaryEncoder from "./DashboardRotaryEncoder"
 import DashboardSwitch from "./DashboardSwitch"
 import useServiceServer from "../hooks/useServiceServer"
+import useRegister from "../hooks/useRegister"
 
 // lazy devices
 const DashboardAccelerometer = lazy(() => import("./DashboardAccelerometer"))
@@ -323,7 +324,10 @@ function DefaultWidget(props: DashboardServiceProps) {
 
     // if register is value, disable if enabled is 0.
     if (register.specification.identifier == SystemReg.Value) {
-        const intensityRegister = register.service.register(SystemReg.Intensity)
+        const intensityRegister = useRegister(
+            register.service,
+            SystemReg.Intensity
+        )
         return (
             <ValueWidget
                 valueRegister={register}

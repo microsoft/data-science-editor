@@ -16,6 +16,7 @@ import IconButtonWithProgress from "../ui/IconButtonWithProgress"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import SensorServer from "../../../jacdac-ts/src/servers/sensorserver"
 import BytesBarGraphWidget from "../widgets/BytesBarGraphWidget"
+import useRegister from "../hooks/useRegister"
 
 function HostMicrophoneButton(props: {
     service: JDService
@@ -23,23 +24,41 @@ function HostMicrophoneButton(props: {
     visible: boolean
 }) {
     const { server, service, visible } = props
-    const enabledRegister = service.register(SoundSpectrumReg.Enabled)
+
+    const enabledRegister = useRegister(service, SoundSpectrumReg.Enabled)
+    const minDecibelsRegister = useRegister(
+        service,
+        SoundSpectrumReg.MinDecibels
+    )
+    const maxDecibelsRegister = useRegister(
+        service,
+        SoundSpectrumReg.MaxDecibels
+    )
+    const fftPow2SizeRegister = useRegister(
+        service,
+        SoundSpectrumReg.FftPow2Size
+    )
+    const smoothingTimeConstantRegister = useRegister(
+        service,
+        SoundSpectrumReg.SmoothingTimeConstant
+    )
+
     const enabled = useRegisterBoolValue(enabledRegister, props)
     const [minDecibels] = useRegisterUnpackedValue<[number]>(
-        service.register(SoundSpectrumReg.MinDecibels),
+        minDecibelsRegister,
         props
     )
     const [maxDecibels] = useRegisterUnpackedValue<[number]>(
-        service.register(SoundSpectrumReg.MaxDecibels),
+        maxDecibelsRegister,
         props
     )
     const [fftPow2Size] = useRegisterUnpackedValue<[number]>(
-        service.register(SoundSpectrumReg.FftPow2Size),
+        fftPow2SizeRegister,
         props
     )
     const fftSize = 1 << (fftPow2Size || 5)
     const [smoothingTimeConstant] = useRegisterUnpackedValue<[number]>(
-        service.register(SoundSpectrumReg.SmoothingTimeConstant),
+        smoothingTimeConstantRegister,
         props
     )
     const { spectrum, onClickActivateMicrophone } = useMicrophoneSpectrum(
@@ -86,7 +105,8 @@ function HostMicrophoneButton(props: {
 
 export default function DashboardSoundSpectrum(props: DashboardServiceProps) {
     const { service, visible } = props
-    const frequencyBinsRegister = service.register(
+    const frequencyBinsRegister = useRegister(
+        service,
         SoundSpectrumReg.FrequencyBins
     )
     const server = useServiceServer<SensorServer<[Uint8Array]>>(service)
@@ -94,7 +114,10 @@ export default function DashboardSoundSpectrum(props: DashboardServiceProps) {
     return (
         <Grid container direction="column">
             <Grid item>
-                <BytesBarGraphWidget visible={visible} register={frequencyBinsRegister} />
+                <BytesBarGraphWidget
+                    visible={visible}
+                    register={frequencyBinsRegister}
+                />
             </Grid>
             <Grid item>
                 <HostMicrophoneButton

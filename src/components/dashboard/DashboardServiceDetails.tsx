@@ -25,7 +25,7 @@ const collapsedRegisters = [
 
 export default function DashboardServiceDetails(props: DashboardServiceProps) {
     const { service, expanded, visible } = props
-    const specification = useChange(service, spec => spec.specification)
+    const specification = useMemo(() => service?.specification, [service])
     const registers: JDRegister[] = useMemo(() => {
         const packets = specification?.packets
         let ids =

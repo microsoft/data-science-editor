@@ -37,6 +37,11 @@ export function ModelContent(props: { service: JDService }) {
 
     const modelSizeRegister = useRegister(service, ModelRunnerReg.ModelSize)
     const lastErrorRegister = useRegister(service, ModelRunnerReg.LastError)
+    const autoInvokeEveryRegister = useRegister(
+        service,
+        ModelRunnerReg.AutoInvokeEvery
+    )
+    const outputsRegister = useRegister(service, ModelRunnerReg.Outputs)
 
     const [modelSize] = useRegisterUnpackedValue<[number]>(modelSizeRegister)
     const [lastError] = useRegisterUnpackedValue<[number]>(lastErrorRegister)
@@ -48,15 +53,8 @@ export function ModelContent(props: { service: JDService }) {
                 model size:{" "}
                 {modelSize === undefined ? "..." : prettySize(modelSize)}
             </Typography>
-            <RegisterInput
-                register={service.register(ModelRunnerReg.AutoInvokeEvery)}
-                visible={true}
-            />
-            <RegisterTrend
-                showName
-                register={service.register(ModelRunnerReg.Outputs)}
-                mini={true}
-            />
+            <RegisterInput register={autoInvokeEveryRegister} visible={true} />
+            <RegisterTrend showName register={outputsRegister} mini={true} />
         </>
     )
 }

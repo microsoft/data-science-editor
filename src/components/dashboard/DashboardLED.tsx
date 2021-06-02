@@ -53,7 +53,7 @@ export default function DashboardLED(props: DashboardServiceProps) {
                 ])
             )
             await delay(500)
-            await service.register(LedReg.Color).sendGetAsync()
+            await colorRegister.sendGetAsync()
         } catch (e) {
             setError(e)
         }
