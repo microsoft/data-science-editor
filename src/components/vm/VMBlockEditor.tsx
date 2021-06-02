@@ -203,6 +203,13 @@ export default function VMBlockEditor(props: {
             .forEach(b => b.setWarningText(allErrors[b.id] || null))
     }, [workspace, program])
 
+    // resize blockly
+    useEffect(() => {
+        const observer = new ResizeObserver(() => workspace.resize())
+        observer.observe(blocklyRef.current)
+        return () => observer.disconnect()
+    }, [workspace])
+
     return (
         <>
             <div className={clsx(classes.editor, className)} ref={blocklyRef} />
