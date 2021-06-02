@@ -59,6 +59,7 @@ import {
     NumberInputDefinition,
     OptionsInputDefinition,
     RegisterBlockDefinition,
+    resolveServiceBlockDefinition,
     SeparatorDefinition,
     ServiceBlockDefinition,
     ServiceBlockDefinitionFactory,
@@ -75,10 +76,12 @@ import ServoAngleField from "./fields/ServoAngleField"
 import LEDColorField from "./fields/LEDColorField"
 import TwinField from "./fields/TwinField"
 import JDomTreeField from "./fields/JDomTreeField"
+import { WorkspaceJSON } from "./jsongenerator"
 
 type CachedBlockDefinitions = {
     blocks: BlockDefinition[]
     serviceBlocks: ServiceBlockDefinition[]
+    eventFieldBlocks: EventFieldDefinition[]
     services: jdspec.ServiceSpec[]
 }
 
@@ -740,7 +743,6 @@ function loadBlocks(
 
     const serviceBlocks: ServiceBlockDefinition[] = [
         ...eventBlocks,
-        ...eventFieldBlocks,
         ...registerChangeByEventBlocks,
         ...registerSimplesGetBlocks,
         ...registerEnumGetBlocks,
@@ -983,7 +985,7 @@ function loadBlocks(
             ],
             colour: debuggerColor,
             inputsInline: false,
-            tooltip: `Twin of the service`,
+            tooltip: `Twin of the selected service`,
             helpUrl: "",
             template: "twin",
         },
@@ -1098,6 +1100,7 @@ function loadBlocks(
 
     const blocks: BlockDefinition[] = [
         ...serviceBlocks,
+        ...eventFieldBlocks,
         ...runtimeBlocks,
         ...shadowBlocks,
         ...mathBlocks,
@@ -1128,6 +1131,7 @@ function loadBlocks(
     return {
         blocks,
         serviceBlocks,
+        eventFieldBlocks,
         services,
     }
 }
@@ -1175,21 +1179,38 @@ function patchCategoryJSONtoXML(cat: CategoryDefinition): CategoryDefinition {
 export default function useToolbox(props: {
     blockServices?: string[]
     serviceClass?: number
+    source?: WorkspaceJSON
 }): {
     serviceBlocks: BlockDefinition[]
     toolboxConfiguration: ToolboxConfiguration
     newProjectXml: string
 } {
-    const { blockServices, serviceClass } = props
+    const { blockServices, serviceClass, source } = props
 
     const theme = useTheme()
     const { serviceColor, commandColor, debuggerColor } =
         createBlockTheme(theme)
-    const { serviceBlocks, services } = useMemo(
+    const { serviceBlocks, eventFieldBlocks, services } = useMemo(
         () => loadBlocks(serviceColor, commandColor, debuggerColor),
         [theme]
     )
     const liveServices = useServices({ specification: true })
+    const usedEvents: Set<jdspec.PacketInfo> = new Set(
+        source?.blocks
+            ?.map(block => ({
+                block,
+                definition: resolveServiceBlockDefinition(block.type),
+            }))
+            .filter(({ definition }) => definition.template === "event")
+            .map(({ block, definition }) => {
+                const eventName = block.inputs[0].fields["event"]
+                    .value as string
+                return (definition as EventBlockDefinition).events.find(
+                    ev => ev.name === eventName
+                )
+            })
+            .filter(ev => !!ev)
+    )
 
     const toolboxServices: jdspec.ServiceSpec[] = uniqueMap(
         Flags.diagnostics
@@ -1221,11 +1242,20 @@ export default function useToolbox(props: {
             kind: "category",
             name: service.name,
             colour: serviceColor(service),
-            contents: serviceBlocks.map(block => ({
-                kind: "block",
-                type: block.type,
-                values: block.values,
-            })),
+            contents: [
+                ...serviceBlocks.map<BlockDefinition>(block => ({
+                    kind: "block",
+                    type: block.type,
+                    values: block.values,
+                })),
+                ...eventFieldBlocks
+                    .filter(ev => usedEvents.has(ev.event))
+                    .map<BlockDefinition>(block => ({
+                        kind: "block",
+                        type: block.type,
+                        values: block.values,
+                    })),
+            ],
             button: {
                 kind: "button",
                 text: `Add ${service.name} role`,

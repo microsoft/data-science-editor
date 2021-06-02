@@ -2,7 +2,9 @@ import Blockly from "blockly"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import { SMap, toMap } from "../../../jacdac-ts/src/jdom/utils"
 import ReactField from "./fields/ReactField"
-import { ServiceBlockDefinitionFactory } from "./toolbox"
+import {
+    resolveServiceBlockDefinition,
+} from "./toolbox"
 
 export interface VariableJSON {
     // Boolean, Number, String, or service short id
@@ -133,9 +135,7 @@ export function domToJSON(workspace: Blockly.Workspace): WorkspaceJSON {
                 else return undefined
             }
             // skip twins
-            const definition = (
-                Blockly.Blocks[block.type] as ServiceBlockDefinitionFactory
-            )?.jacdacDefinition
+            const definition = resolveServiceBlockDefinition(block.type)
             if (definition?.template === "twin") return undefined
 
             // dump object

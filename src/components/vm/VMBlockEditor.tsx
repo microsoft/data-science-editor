@@ -60,9 +60,12 @@ export default function VMBlockEditor(props: {
     const { darkMode } = useContext(DarkModeContext)
     const { setError } = useContext(AppContext)
     const [services, setServices] = useState<string[]>([])
+    const [source, setSource] = useState<WorkspaceJSON>()
+
     const { toolboxConfiguration, newProjectXml, serviceBlocks } = useToolbox({
         blockServices: services,
         serviceClass,
+        source
     })
     const theme = darkMode === "dark" ? DarkTheme : Theme
     const gridColor = darkMode === "dark" ? "#555" : "#ccc"
@@ -146,18 +149,21 @@ export default function VMBlockEditor(props: {
         // save json
         if (onJSONChange || onIT4ProgramChange) {
             // emit json
-            const json = domToJSON(workspace)
-            onJSONChange?.(json)
-            if (onIT4ProgramChange) {
-                try {
-                    const program = workspaceJSONToIT4Program(
-                        serviceBlocks,
-                        json
-                    )
-                    onIT4ProgramChange(program)
-                } catch (e) {
-                    console.error(e)
-                    onIT4ProgramChange(undefined)
+            const newSource = domToJSON(workspace)
+            if (JSON.stringify(newSource) !== JSON.stringify(source)) {
+                setSource(newSource)
+                onJSONChange?.(newSource)
+                if (onIT4ProgramChange) {
+                    try {
+                        const program = workspaceJSONToIT4Program(
+                            serviceBlocks,
+                            newSource
+                        )
+                        onIT4ProgramChange(program)
+                    } catch (e) {
+                        console.error(e)
+                        onIT4ProgramChange(undefined)
+                    }
                 }
             }
         }

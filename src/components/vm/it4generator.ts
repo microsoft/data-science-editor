@@ -15,7 +15,7 @@ import {
     CommandBlockDefinition,
     EventFieldDefinition,
     RegisterBlockDefinition,
-    ServiceBlockDefinitionFactory,
+    resolveServiceBlockDefinition,
     WAIT_BLOCK,
     WHILE_CONDITION_BLOCK,
 } from "./toolbox"
@@ -124,9 +124,7 @@ export default function workspaceJSONToIT4Program(
                 }
             }
             default: {
-                const def = (
-                    Blockly.Blocks[type] as ServiceBlockDefinitionFactory
-                )?.jacdacDefinition
+                const def = resolveServiceBlockDefinition(type)
                 if (!def) {
                     console.warn(`unknown block ${type}`, {
                         type,
@@ -230,9 +228,7 @@ export default function workspaceJSONToIT4Program(
             }
             // more builts
             default: {
-                const def = (
-                    Blockly.Blocks[type] as ServiceBlockDefinitionFactory
-                )?.jacdacDefinition
+                const def = resolveServiceBlockDefinition(type)
                 if (def) {
                     const { template } = def
                     switch (template) {
@@ -315,8 +311,7 @@ export default function workspaceJSONToIT4Program(
                 callee: toIdentifier("awaitCondition"),
             }
         } else {
-            const def = (Blockly.Blocks[type] as ServiceBlockDefinitionFactory)
-                ?.jacdacDefinition
+            const def = resolveServiceBlockDefinition(type)
             assert(!!def)
             const { template } = def
             const { value: role } = inputs[0].fields["role"]

@@ -1,4 +1,5 @@
 import { SMap } from "../../../jacdac-ts/src/jdom/utils"
+import Blockly from "blockly"
 
 export const NEW_PROJET_XML = '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>'
 
@@ -92,6 +93,11 @@ export interface ServiceBlockDefinitionFactory {
     init: () => void
 }
 
+export function resolveServiceBlockDefinition(type: string) {
+    const b = Blockly.Blocks[type] as ServiceBlockDefinitionFactory
+    return b?.jacdacDefinition
+}
+
 export interface EventBlockDefinition extends ServiceBlockDefinition {
     template: EventTemplate
     events: jdspec.PacketInfo[]
@@ -142,7 +148,10 @@ export interface SeparatorDefinition {
     kind: "sep"
 }
 
-export type ToolboxNode = SeparatorDefinition | CategoryDefinition | ButtonDefinition
+export type ToolboxNode =
+    | SeparatorDefinition
+    | CategoryDefinition
+    | ButtonDefinition
 
 export interface ToolboxConfiguration {
     kind: "categoryToolbox"
