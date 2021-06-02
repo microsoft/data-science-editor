@@ -94,7 +94,7 @@ export default function VMBlockEditor(props: {
             oneBasedIndex: false,
             move: {
                 scrollbars: {
-                    vertical: false,
+                    vertical: true,
                     horizontal: true,
                 },
             },
