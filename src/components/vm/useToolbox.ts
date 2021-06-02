@@ -927,7 +927,7 @@ function loadBlocks(
         {
             kind: "block",
             type: SET_STATUS_LIGHT_BLOCK,
-            message0: "set %1 status to %2",
+            message0: "set %1 LED status to %2",
             args0: [
                 {
                     type: "field_variable",
