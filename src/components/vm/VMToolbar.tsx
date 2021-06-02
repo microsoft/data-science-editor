@@ -8,6 +8,7 @@ import VMRoles from "./VMRoles"
 import VMRunnerButton from "./VMRunnerButton"
 import VMSaveButton from "./VMSaveButton"
 import VMStartSimulatorButton from "./VMStartSimulatorButton"
+import { WorkspaceSvg } from "blockly"
 
 export default function VMToolbar(props: {
     roleManager: RoleManager
@@ -17,8 +18,18 @@ export default function VMToolbar(props: {
     xml: string
     source: WorkspaceJSON
     program: IT4Program
+    workspace?: WorkspaceSvg
 }) {
-    const { roleManager, runner, run, cancel, xml, source, program } = props
+    const {
+        roleManager,
+        runner,
+        run,
+        cancel,
+        xml,
+        source,
+        program,
+        workspace,
+    } = props
     return (
         <Grid
             container
@@ -36,7 +47,7 @@ export default function VMToolbar(props: {
             <Grid item>
                 <VMStartSimulatorButton />
             </Grid>
-            <VMRoles roleManager={roleManager} />
+            <VMRoles roleManager={roleManager} workspace={workspace} />
         </Grid>
     )
 }

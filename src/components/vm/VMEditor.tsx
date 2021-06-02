@@ -1,5 +1,5 @@
 import { Grid, NoSsr } from "@material-ui/core"
-import React, { useState } from "react"
+import React, { useRef, useState } from "react"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import { IT4Program } from "../../../jacdac-ts/src/vm/ir"
 import { WorkspaceJSON } from "../../components/vm/jsongenerator"
@@ -9,10 +9,12 @@ import useVMRunner from "./useVMRunner"
 import useRoleManager from "./useRoleManager"
 import VMDiagnostics from "./VMDiagnostics"
 import VMToolbar from "./VMToolbar"
+import { WorkspaceSvg } from "blockly"
 
 const VM_SOURCE_STORAGE_KEY = "jacdac:tools:vmeditor"
 export default function VMEditor(props: { storageKey?: string }) {
     const { storageKey } = props
+    const workspaceRef = useRef<WorkspaceSvg>()
     const [xml, setXml] = useLocalStorage(
         storageKey || VM_SOURCE_STORAGE_KEY,
         ""
@@ -41,6 +43,7 @@ export default function VMEditor(props: { storageKey?: string }) {
                     xml={xml}
                     source={source}
                     program={program}
+                    workspace={workspaceRef.current}
                 />
             </Grid>
             <Grid item xs={12}>
@@ -52,6 +55,7 @@ export default function VMEditor(props: { storageKey?: string }) {
                         onIT4ProgramChange={handleI4Program}
                         runner={runner}
                         roleManager={roleManager}
+                        workspaceRef={workspaceRef}
                     />
                 </NoSsr>
             </Grid>

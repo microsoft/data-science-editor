@@ -11,32 +11,62 @@ import {
 } from "../../../jacdac-ts/src/servers/servers"
 import { RoleManager } from "../../../jacdac-ts/src/vm/rolemanager"
 import useChange from "../../jacdac/useChange"
+import { BlockSvg, FieldVariable, WorkspaceSvg } from "blockly"
+import { TWIN_BLOCK } from "./toolbox"
 
-export default function VMRoles(props: { roleManager: RoleManager }) {
+export default function VMRoles(props: {
+    roleManager: RoleManager
+    workspace?: WorkspaceSvg
+}) {
+    const { roleManager, workspace } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const { roleManager } = props
     const roles = useChange(roleManager, _ => _?.roles)
     const handleRoleClick =
         (role: string, service: JDService, serviceShortId: string) => () => {
-            const specification = serviceSpecificationFromName(serviceShortId)
-            if (specification)
-                addServiceProvider(
-                    bus,
-                    serviceProviderDefinitionFromServiceClass(
-                        specification.classIdentifier
+            // spin off simulator
+            if (!service) {
+                const specification =
+                    serviceSpecificationFromName(serviceShortId)
+                if (specification)
+                    addServiceProvider(
+                        bus,
+                        serviceProviderDefinitionFromServiceClass(
+                            specification.classIdentifier
+                        )
                     )
-                )
+            }
+            // add twin block
+            if (workspace) {
+                // try to find existing twin block
+                let twinBlock = workspace
+                    .getTopBlocks(false)
+                    .find(
+                        b =>
+                            b.type === TWIN_BLOCK &&
+                            (
+                                b.inputList[0].fieldRow.find(
+                                    f => f.name === "role"
+                                ) as FieldVariable
+                            )?.getVariable()?.name === role
+                    ) as BlockSvg
+                if (!twinBlock) {
+                    twinBlock = workspace.newBlock(TWIN_BLOCK) as BlockSvg
+                    const variable = workspace.getVariable(role, serviceShortId)
+                    const field = twinBlock.inputList[0].fieldRow.find(
+                        f => f.name === "role"
+                    ) as FieldVariable
+                    field.setValue(variable.getId())
+                    twinBlock.initSvg()
+                }
+                workspace.centerOnBlock(twinBlock.id)
+            }
         }
     return (
         <>
             {roles?.map(({ role, service, serviceShortId }) => (
                 <Grid item key={role}>
                     <Tooltip
-                        title={
-                            service
-                                ? `bound to ${service.device.friendlyName}`
-                                : `start simulator`
-                        }
+                        title={service ? `add twin block` : `start simulator`}
                     >
                         <Chip
                             label={role}
@@ -46,10 +76,11 @@ export default function VMRoles(props: { roleManager: RoleManager }) {
                                     <DeviceAvatar device={service.device} />
                                 )
                             }
-                            onClick={
-                                !!serviceShortId &&
-                                handleRoleClick(role, service, serviceShortId)
-                            }
+                            onClick={handleRoleClick(
+                                role,
+                                service,
+                                serviceShortId
+                            )}
                         />
                     </Tooltip>
                 </Grid>

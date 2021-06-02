@@ -1,6 +1,12 @@
-import React, { useContext, useEffect, useRef, useState } from "react"
+import React, {
+    MutableRefObject,
+    useContext,
+    useEffect,
+    useRef,
+    useState,
+} from "react"
 import { useBlocklyWorkspace } from "react-blockly"
-import Blockly from "blockly"
+import { WorkspaceSvg } from "blockly"
 import Theme from "@blockly/theme-modern"
 import DarkTheme from "@blockly/theme-dark"
 import useToolbox, { useToolboxButtons } from "./useToolbox"
@@ -46,6 +52,7 @@ export default function VMBlockEditor(props: {
     runner?: IT4ProgramRunner
     roleManager?: RoleManager
     serviceClass?: number
+    workspaceRef?: MutableRefObject<WorkspaceSvg>
 }) {
     const {
         className,
@@ -56,6 +63,7 @@ export default function VMBlockEditor(props: {
         serviceClass,
         runner,
         roleManager,
+        workspaceRef,
     } = props
     const classes = useStyles()
     const { darkMode } = useContext(DarkModeContext)
@@ -110,7 +118,15 @@ export default function VMBlockEditor(props: {
         },
         initialXml: initialXml || newProjectXml,
         onImportXmlError: () => setError("Error loading blocks..."),
-    }) as { workspace: Blockly.WorkspaceSvg; xml: string }
+    }) as { workspace: WorkspaceSvg; xml: string }
+
+    // store ref
+    useEffect(() => {
+        if (workspaceRef) {
+            workspaceRef.current = workspace
+            return () => (workspaceRef.current = undefined)
+        }
+    }, [workspace, workspaceRef])
 
     // surface state to react
     useEffect(() => {
