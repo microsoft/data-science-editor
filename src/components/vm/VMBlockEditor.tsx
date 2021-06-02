@@ -20,6 +20,7 @@ import {
     WorkspaceServices,
 } from "./WorkspaceContext"
 import { RoleManager } from "../../../jacdac-ts/src/vm/rolemanager"
+import { arrayConcatMany, uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -61,11 +62,10 @@ export default function VMBlockEditor(props: {
     const { setError } = useContext(AppContext)
     const [source, setSource] = useState<WorkspaceJSON>()
     const [program, setProgram] = useState<IT4Program>()
-
     const { toolboxConfiguration, newProjectXml } = useToolbox({
         serviceClass,
         source,
-        program
+        program,
     })
     const theme = darkMode === "dark" ? DarkTheme : Theme
     const gridColor = darkMode === "dark" ? "#555" : "#ccc"
@@ -171,6 +171,21 @@ export default function VMBlockEditor(props: {
             }
         }
     }, [workspace, xml])
+
+    // apply errors
+    useEffect(() => {
+        if (!workspace) return
+        const allErrors = uniqueMap(
+            arrayConcatMany(
+                program?.handlers.map(h => h.errors?.filter(e => !!e.sourceId))
+            ) || [],
+            e => e.sourceId,
+            e => e.message
+        )
+        workspace
+            .getAllBlocks(false)
+            .forEach(b => b.setWarningText(allErrors[b.id] || null))
+    }, [workspace, program])
 
     return (
         <>
