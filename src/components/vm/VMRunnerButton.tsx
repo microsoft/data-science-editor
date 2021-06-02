@@ -20,7 +20,7 @@ export default function VMRunnerButton(props: {
 
     return (
         <IconButtonWithTooltip
-            title={runner ? "stop" : "start"}
+            title={running ? "stop" : "start"}
             disabled={disabled}
             onClick={running ? handleCancel : handleRun}
         >
