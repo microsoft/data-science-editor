@@ -7,10 +7,11 @@ import useWidgetTheme from "../widgets/useWidgetTheme"
 import useSvgButtonProps from "../hooks/useSvgButtonProps"
 import SensorServer from "../../../jacdac-ts/src/servers/sensorserver"
 import { MotionReg } from "../../../jacdac-ts/src/jdom/constants"
+import useRegister from "../hooks/useRegister"
 
 export default function DashboardMotion(props: DashboardServiceProps) {
     const { service } = props
-    const movingRegister = service.register(MotionReg.Moving)
+    const movingRegister = useRegister(service, MotionReg.Moving)
     const moving = useRegisterBoolValue(movingRegister, props)
     const server = useServiceServer<SensorServer<[boolean]>>(service)
     const color = server ? "secondary" : "primary"

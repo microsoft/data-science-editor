@@ -16,6 +16,7 @@ import useWidgetTheme from "../widgets/useWidgetTheme"
 import useSvgButtonProps from "../hooks/useSvgButtonProps"
 import LoadingProgress from "../ui/LoadingProgress"
 import useAnimationFrame from "../hooks/useAnimationFrame"
+import useRegister from "../hooks/useRegister"
 
 const buttonLabels = {
     [JoystickButtons.Left]: "\u25C4",
@@ -32,7 +33,7 @@ function decay(value: number, rate: number, precision: number) {
 
 function JoystickWidget(props: DashboardServiceProps) {
     const { service } = props
-    const register = service.register(JoystickReg.Direction)
+    const register = useRegister(service, JoystickReg.Direction)
     const [, x, y] = useRegisterUnpackedValue<
         [JoystickButtons, number, number]
     >(register, props)
@@ -216,9 +217,8 @@ function ArcadeButton(props: {
     color?: "primary" | "secondary"
 }) {
     const { cx, cy, ro, color, pressure, ri, button, server, onRefresh } = props
-    const { textProps, active, background, controlBackground } = useWidgetTheme(
-        color
-    )
+    const { textProps, active, background, controlBackground } =
+        useWidgetTheme(color)
     const checked = (pressure || 0) > 0
     const title = JoystickButtons[button]
     const label = buttonLabels[button] || title[0]
@@ -261,12 +261,17 @@ function ArcadeButton(props: {
 
 export default function DashboardJoystick(props: DashboardServiceProps) {
     const { service } = props
+    const variantRegister = useRegister(service, JoystickReg.Variant)
     let [variant] = useRegisterUnpackedValue<[JoystickVariant]>(
-        service.register(JoystickReg.Variant),
+        variantRegister,
         props
     )
+    const buttonsAvailableRegister = useRegister(
+        service,
+        JoystickReg.ButtonsAvailable
+    )
     const [buttonsAvailable] = useRegisterUnpackedValue<[JoystickButtons]>(
-        service.register(JoystickReg.ButtonsAvailable),
+        buttonsAvailableRegister,
         props
     )
 
@@ -277,7 +282,7 @@ export default function DashboardJoystick(props: DashboardServiceProps) {
         else if (!buttonsAvailable || buttonsAvailable === JoystickButtons.A)
             variant = JoystickVariant.Thumb
     }
-    const directionRegister = service.register(JoystickReg.Direction)
+    const directionRegister = useRegister(service, JoystickReg.Direction)
     const [buttons] = useRegisterUnpackedValue<
         [JoystickButtons, number, number]
     >(directionRegister, props)

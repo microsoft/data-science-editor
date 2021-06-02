@@ -11,12 +11,13 @@ import DeviceCardMedia from "./DeviceCardMedia"
 import useDeviceSpecification from "../jacdac/useDeviceSpecification"
 import { identifierToUrlPath } from "../../jacdac-ts/src/jdom/spec"
 import DeviceAvatar from "./devices/DeviceAvatar"
+import useChange from "../jacdac/useChange"
 
 function DeviceFirmwareVersionChip(props: { device: JDDevice }) {
     const { device } = props
-    const firmwareVersionRegister = device
-        ?.service(0)
-        ?.register(ControlReg.FirmwareVersion)
+    const firmwareVersionRegister = useChange(device, _ =>
+        _?.service(0)?.register(ControlReg.FirmwareVersion)
+    )
     const [firmwareVersion] = useRegisterUnpackedValue<[string]>(
         firmwareVersionRegister
     )
@@ -30,7 +31,9 @@ function DeviceFirmwareVersionChip(props: { device: JDDevice }) {
 
 function DeviceTemperatureChip(props: { device: JDDevice }) {
     const { device } = props
-    const tempRegister = device?.service(0)?.register(ControlReg.McuTemperature)
+    const tempRegister = useChange(device, _ =>
+        _?.service(0)?.register(ControlReg.McuTemperature)
+    )
     const [temperature] = useRegisterUnpackedValue<[number]>(tempRegister)
     return (
         (temperature !== undefined && (

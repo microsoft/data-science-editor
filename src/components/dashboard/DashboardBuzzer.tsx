@@ -10,13 +10,14 @@ import BuzzerServer from "../../../jacdac-ts/src/servers/buzzerserver"
 import VolumeDownIcon from "@material-ui/icons/VolumeDown"
 import VolumeUpIcon from "@material-ui/icons/VolumeUp"
 import Suspense from "../ui/Suspense"
+import useRegister from "../hooks/useRegister"
 const PianoWidget = lazy(() => import("../widgets/PianoWidget"))
 
 export default function DashboardBuzzer(props: DashboardServiceProps) {
     const { service } = props
     const server = useServiceServer<BuzzerServer>(service)
     const color = server ? "secondary" : "primary"
-    const volumeRegister = service.register(BuzzerReg.Volume)
+    const volumeRegister = useRegister(service, BuzzerReg.Volume)
     const [volume] = useRegisterUnpackedValue<[number]>(volumeRegister, props)
     const { playTone, setVolume, onClickActivateAudioContext } =
         usePlayTone(volume)

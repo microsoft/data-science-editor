@@ -70,7 +70,7 @@ const INACTIVE_SPEED = 0.1
 function AnalogButton(props: { pressed: boolean } & DashboardServiceProps) {
     const { service, pressed, visible } = props
     const { mixins } = service
-    const pressureRegister = service.register(ButtonReg.Pressure)
+    const pressureRegister = useRegister(service, ButtonReg.Pressure)
     const [pressure] = useRegisterUnpackedValue<[number]>(pressureRegister, {
         visible,
     })
@@ -84,7 +84,6 @@ function AnalogButton(props: { pressed: boolean } & DashboardServiceProps) {
     )
     const [threshold] = useRegisterUnpackedValue(thresholdRegister, { visible })
 
-    //const [buttonVariant] = useRegisterUnpackedValue<[AnalogButtonVariant]>(service.register(AnalogButtonReg.Variant));
     const widgetSize = `clamp(3rem, 10vw, 16vw)`
     const server = useServiceServer<ButtonServer>(service)
     const color = server ? "secondary" : "primary"

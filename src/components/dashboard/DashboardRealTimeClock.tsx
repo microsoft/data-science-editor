@@ -5,21 +5,17 @@ import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import { RealTimeClockReadingType } from "../../../jacdac-ts/src/servers/realtimeclockserver"
 import { Typography } from "@material-ui/core"
 import LoadingProgress from "../ui/LoadingProgress"
+import useRegister from "../hooks/useRegister"
 
 export default function DashboardRealTimeClock(props: DashboardServiceProps) {
     const { service } = props
 
-    const [
-        year,
-        month,
-        dayOfMonth,
-        hour,
-        min,
-        seconds,
-    ] = useRegisterUnpackedValue<RealTimeClockReadingType>(
-        service.register(RealTimeClockReg.LocalTime),
-        props
-    )
+    const localTimeRegister = useRegister(service, RealTimeClockReg.LocalTime)
+    const [year, month, dayOfMonth, hour, min, seconds] =
+        useRegisterUnpackedValue<RealTimeClockReadingType>(
+            localTimeRegister,
+            props
+        )
     if (year === undefined) return <LoadingProgress />
     const t = new Date(year, month - 1, dayOfMonth, hour, min, seconds)
     const date = t.toLocaleDateString()

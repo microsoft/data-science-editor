@@ -8,17 +8,17 @@ import useWidgetSize from "../widgets/useWidgetSize"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import { Grid, Slider } from "@material-ui/core"
 import SensorServer from "../../../jacdac-ts/src/servers/sensorserver"
+import useRegister from "../hooks/useRegister"
 
 export default function DashbaordWaterLevel(props: DashboardServiceProps) {
     const { service, services, variant } = props
 
-    const levelRegister = service.register(WaterLevelReg.Level)
+    const levelRegister = useRegister(service, WaterLevelReg.Level)
     const [value] = useRegisterUnpackedValue<[number]>(levelRegister, props)
     const server = useServiceServer<SensorServer<[number]>>(service)
     const color = server ? "secondary" : "primary"
-    const { background, controlBackground, active, textProps } = useWidgetTheme(
-        color
-    )
+    const { background, controlBackground, active, textProps } =
+        useWidgetTheme(color)
     const hasValue = !isNaN(value)
     const widgetSize = useWidgetSize(variant, services?.length)
     const tvalue = hasValue ? `${Math.round(value * 100)}%` : `--`

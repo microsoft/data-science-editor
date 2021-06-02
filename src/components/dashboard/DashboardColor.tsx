@@ -8,17 +8,17 @@ import { BlockPicker } from "react-color"
 import SvgWidget from "../widgets/SvgWidget"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import LoadingProgress from "../ui/LoadingProgress"
+import useRegister from "../hooks/useRegister"
 
 export default function DashboardColor(props: DashboardServiceProps) {
     const { service } = props
-    const register = service.register(ColorReg.Color)
+    const register = useRegister(service, ColorReg.Color)
     const [r, g, b] = useRegisterUnpackedValue<[number, number, number]>(
         register,
         props
     )
-    const server = useServiceServer<SensorServer<[number, number, number]>>(
-        service
-    )
+    const server =
+        useServiceServer<SensorServer<[number, number, number]>>(service)
     const color = server ? "secondary" : "primary"
     const { background } = useWidgetTheme(color)
 

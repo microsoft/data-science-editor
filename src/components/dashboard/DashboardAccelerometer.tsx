@@ -12,6 +12,7 @@ import { Vector } from "../widgets/threeutils"
 import LoadingProgress from "../ui/LoadingProgress"
 import Suspense from "../ui/Suspense"
 import SliderWithLabel from "../ui/SliderWithLabel"
+import useRegister from "../hooks/useRegister"
 
 const CanvasWidget = lazy(() => import("../widgets/CanvasWidget"))
 
@@ -33,7 +34,7 @@ function Sliders(props: {
     ) => {
         const [, y] = server.reading.values()
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const n = (newValue as any) as number
+        const n = newValue as any as number
         const nz = -Math.sqrt(1 - (n * n + y * y))
         server.reading.setValues([n, y, nz])
         await register.sendGetAsync()
@@ -45,7 +46,7 @@ function Sliders(props: {
     ) => {
         const [x] = server.reading.values()
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const n = (newValue as any) as number
+        const n = newValue as any as number
         const nz = -Math.sqrt(1 - (x * x + n * n))
         server.reading.setValues([x, n, nz])
         await register.sendGetAsync()
@@ -107,11 +108,10 @@ function lerp(v0: number, v1: number, t: number) {
 
 export default function DashboardAccelerometer(props: DashboardServiceProps) {
     const { service, visible } = props
-    const register = service.register(AccelerometerReg.Forces)
+    const register = useRegister(service, AccelerometerReg.Forces)
     useRegisterUnpackedValue<[number, number, number]>(register, props)
-    const server = useServiceServer<SensorServer<[number, number, number]>>(
-        service
-    )
+    const server =
+        useServiceServer<SensorServer<[number, number, number]>>(service)
     const color = server ? "secondary" : "primary"
     const { active } = useWidgetTheme(color)
     const rotator = useCallback(
@@ -145,7 +145,11 @@ export default function DashboardAccelerometer(props: DashboardServiceProps) {
                 </NoSsr>
             </Grid>
             {server && (
-                <Sliders server={server} register={register} visible={visible} />
+                <Sliders
+                    server={server}
+                    register={register}
+                    visible={visible}
+                />
             )}
         </Grid>
     )

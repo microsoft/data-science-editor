@@ -1,27 +1,28 @@
 import React from "react"
 import { PowerReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
-import { useRegisterBoolValue, useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
+import {
+    useRegisterBoolValue,
+    useRegisterUnpackedValue,
+} from "../../jacdac/useRegisterValue"
 import SvgWidget from "../widgets/SvgWidget"
 import useServiceServer from "../hooks/useServiceServer"
 import ReflectedLightServer from "../../../jacdac-ts/src/servers/reflectedlightserver"
 import PowerButton from "../widgets/PowerButton"
 import useWidgetTheme from "../widgets/useWidgetTheme"
+import useRegister from "../hooks/useRegister"
 
 export default function DashboardPower(props: DashboardServiceProps) {
     const { service } = props
 
-    const enabledRegister = service.register(PowerReg.Enabled)
-    const enabled = useRegisterBoolValue(
-        enabledRegister,
-        props
-    )
-    const overload = useRegisterBoolValue(
-        service.register(PowerReg.Overload),
-        props
-    )
+    const enabledRegister = useRegister(service, PowerReg.Enabled)
+    const overloadRegister = useRegister(service, PowerReg.Overload)
+    const batteryChargeRegister = useRegister(service, PowerReg.BatteryCharge)
+
+    const enabled = useRegisterBoolValue(enabledRegister, props)
+    const overload = useRegisterBoolValue(overloadRegister, props)
     const [batteryCharge] = useRegisterUnpackedValue<[number]>(
-        service.register(PowerReg.BatteryCharge),
+        batteryChargeRegister,
         props
     )
 

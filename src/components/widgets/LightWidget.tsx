@@ -11,6 +11,7 @@ import useWidgetTheme from "../widgets/useWidgetTheme"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import LoadingProgress from "../ui/LoadingProgress"
+import useRegister from "../hooks/useRegister"
 
 function rgbToHsl(r: number, g: number, b: number): [number, number, number] {
     const [r$, g$, b$] = [r / 255, g / 255, b / 255]
@@ -83,13 +84,8 @@ function LightStripWidget(props: {
     server: LedPixelServer
     widgetSize?: string
 }) {
-    const {
-        lightVariant,
-        numPixels,
-        actualBrightness,
-        server,
-        widgetSize,
-    } = props
+    const { lightVariant, numPixels, actualBrightness, server, widgetSize } =
+        props
     const { background, controlBackground } = useWidgetTheme()
     const pathRef = useRef<SVGPathElement>(undefined)
     const pixelsRef = useRef<SVGGElement>(undefined)
@@ -303,20 +299,29 @@ export default function LightWidget(props: {
     visible?: boolean
 }) {
     const { service, server } = props
+
+    const numPixelsRegister = useRegister(service, LedPixelReg.NumPixels)
+    const variantRegister = useRegister(service, LedPixelReg.Variant)
+    const actualBrightnessRegister = useRegister(
+        service,
+        LedPixelReg.ActualBrightness
+    )
+    const numColumnsRegister = useRegister(service, LedPixelReg.NumColumns)
+
     const [numPixels] = useRegisterUnpackedValue<[number]>(
-        service.register(LedPixelReg.NumPixels),
+        numPixelsRegister,
         props
     )
     const [lightVariant] = useRegisterUnpackedValue<[LedPixelVariant]>(
-        service.register(LedPixelReg.Variant),
+        variantRegister,
         props
     )
     const [actualBrightness] = useRegisterUnpackedValue<[number]>(
-        service.register(LedPixelReg.ActualBrightness),
+        actualBrightnessRegister,
         props
     )
     const [numColumns] = useRegisterUnpackedValue<[number]>(
-        service.register(LedPixelReg.NumColumns),
+        numColumnsRegister,
         props
     )
 

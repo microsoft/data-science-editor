@@ -10,25 +10,30 @@ import AppContext from "../AppContext"
 import useChange from "../../jacdac/useChange"
 import { delay } from "../../../jacdac-ts/src/jdom/utils"
 import LEDWidget from "../widgets/LEDWidget"
+import useRegister from "../hooks/useRegister"
 
 export default function DashboardLED(props: DashboardServiceProps) {
     const { service } = props
     const { setError } = useContext(AppContext)
     const server = useServiceServer<LEDServer>(service)
     const color = server ? "secondary" : "primary"
+    const waveLengthRegister = useRegister(service, LedReg.WaveLength)
     const [waveLength] = useRegisterUnpackedValue<[number]>(
-        service.register(LedReg.WaveLength),
+        waveLengthRegister,
         props
     )
+    const colorRegister = useRegister(service, LedReg.Color)
     const busColor = useRegisterUnpackedValue<[number, number, number]>(
-        service.register(LedReg.Color),
+        colorRegister,
         props
     )
     const serverColor = useChange(server?.color, _ => _?.values())
     const [r, g, b] = serverColor || busColor
     const rgb = (r << 16) | (g << 8) | b
+
+    const ledCountRegister = useRegister(service, LedReg.LedCount)
     const [ledCount] = useRegisterUnpackedValue<[number]>(
-        service.register(LedReg.LedCount),
+        ledCountRegister,
         props
     )
 

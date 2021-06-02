@@ -9,6 +9,7 @@ import SvgWidget from "../widgets/SvgWidget"
 import { createStyles, makeStyles } from "@material-ui/core"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import LoadingProgress from "../ui/LoadingProgress"
+import useRegister from "../hooks/useRegister"
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -23,20 +24,18 @@ const useStyles = makeStyles(() =>
 export default function DashboardCharacterScreen(props: DashboardServiceProps) {
     const { service } = props
     const classes = useStyles()
-    const [message] = useRegisterUnpackedValue<[string]>(
-        service.register(CharacterScreenReg.Message),
-        props
+    const messageRegister = useRegister(service, CharacterScreenReg.Message)
+    const rowsRegister = useRegister(service, CharacterScreenReg.Rows)
+    const columnsRegister = useRegister(service, CharacterScreenReg.Columns)
+    const textDirectionRegister = useRegister(
+        service,
+        CharacterScreenReg.TextDirection
     )
-    const [rows] = useRegisterUnpackedValue<[number]>(
-        service.register(CharacterScreenReg.Rows),
-        props
-    )
-    const [columns] = useRegisterUnpackedValue<[number]>(
-        service.register(CharacterScreenReg.Columns),
-        props
-    )
+    const [message] = useRegisterUnpackedValue<[string]>(messageRegister, props)
+    const [rows] = useRegisterUnpackedValue<[number]>(rowsRegister, props)
+    const [columns] = useRegisterUnpackedValue<[number]>(columnsRegister, props)
     const [textDirection] = useRegisterUnpackedValue<[number]>(
-        service.register(CharacterScreenReg.TextDirection),
+        textDirectionRegister,
         props
     )
     const { textPrimary, background, controlBackground } =

@@ -14,6 +14,7 @@ import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import useMicrophoneVolume from "../hooks/useMicrophoneVolume"
 import TrendWidget from "../widgets/TrendWidget"
 import LoadingProgress from "../ui/LoadingProgress"
+import useRegister from "../hooks/useRegister"
 
 function HostMicrophoneButton(props: {
     service: JDService
@@ -21,14 +22,18 @@ function HostMicrophoneButton(props: {
     visible: boolean
 }) {
     const { server, service, visible } = props
-    const enabledRegister = service.register(SoundLevelReg.Enabled)
+
+    const enabledRegister = useRegister(service, SoundLevelReg.Enabled)
+    const minDecibelsRegister = useRegister(service, SoundLevelReg.MinDecibels)
+    const maxDecibelsRegister = useRegister(service, SoundLevelReg.MaxDecibels)
+
     const enabled = useRegisterBoolValue(enabledRegister, props)
     const [minDecibels] = useRegisterUnpackedValue<[number]>(
-        service.register(SoundLevelReg.MinDecibels),
+        minDecibelsRegister,
         props
     )
     const [maxDecibels] = useRegisterUnpackedValue<[number]>(
-        service.register(SoundLevelReg.MaxDecibels),
+        maxDecibelsRegister,
         props
     )
     const { volume, onClickActivateMicrophone } = useMicrophoneVolume(
@@ -69,7 +74,7 @@ function HostMicrophoneButton(props: {
 
 export default function DashboardSoundLevel(props: DashboardServiceProps) {
     const { visible, service } = props
-    const soundLevelRegister = service.register(SoundLevelReg.SoundLevel)
+    const soundLevelRegister = useRegister(service, SoundLevelReg.SoundLevel)
     const [soundLevel] = useRegisterUnpackedValue<[number]>(
         soundLevelRegister,
         props

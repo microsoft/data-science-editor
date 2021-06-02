@@ -1,34 +1,49 @@
 import React from "react"
 import { SevenSegmentDisplayReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
-import { useRegisterBoolValue, useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
+import {
+    useRegisterBoolValue,
+    useRegisterUnpackedValue,
+} from "../../jacdac/useRegisterValue"
 import SvgWidget from "../widgets/SvgWidget"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import { Grid } from "@material-ui/core"
 import RegisterInput from "../RegisterInput"
 import LoadingProgress from "../ui/LoadingProgress"
 import useServiceServer from "../hooks/useServiceServer"
+import useRegister from "../hooks/useRegister"
 
 export default function DashboardSevenSegmentDisplay(
     props: DashboardServiceProps
 ) {
     const { service, visible } = props
 
-    const [digits] = useRegisterUnpackedValue<[Uint8Array]>(
-        service.register(SevenSegmentDisplayReg.Digits)
-    ) || [new Uint8Array(0)]
-    const brightnessRegister = service.register(
+    const digitsRegister = useRegister(service, SevenSegmentDisplayReg.Digits)
+    const brightnessRegister = useRegister(
+        service,
         SevenSegmentDisplayReg.Brightness
     )
-    const [brightness] = useRegisterUnpackedValue<[number]>(brightnessRegister, props)
+    const digitCountRegister = useRegister(
+        service,
+        SevenSegmentDisplayReg.DigitCount
+    )
+    const decimalPointRegister = useRegister(
+        service,
+        SevenSegmentDisplayReg.DecimalPoint
+    )
+
+    const [digits] = useRegisterUnpackedValue<[Uint8Array]>(digitsRegister) || [
+        new Uint8Array(0),
+    ]
+    const [brightness] = useRegisterUnpackedValue<[number]>(
+        brightnessRegister,
+        props
+    )
     const [digitCount] = useRegisterUnpackedValue<[number]>(
-        service.register(SevenSegmentDisplayReg.DigitCount),
+        digitCountRegister,
         props
     )
-    const decimalPoint = useRegisterBoolValue(
-        service.register(SevenSegmentDisplayReg.DecimalPoint),
-        props
-    )
+    const decimalPoint = useRegisterBoolValue(decimalPointRegister, props)
 
     const server = useServiceServer(service)
     const color = server ? "secondary" : "primary"
@@ -226,7 +241,10 @@ export default function DashboardSevenSegmentDisplay(
                 </SvgWidget>
             </Grid>
             <Grid item>
-                <RegisterInput register={brightnessRegister} visible={visible} />
+                <RegisterInput
+                    register={brightnessRegister}
+                    visible={visible}
+                />
             </Grid>
         </Grid>
     )

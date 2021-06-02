@@ -10,33 +10,31 @@ import useKeyboardNavigationProps from "../hooks/useKeyboardNavigationProps"
 import MatrixKeypadServer from "../../../jacdac-ts/src/servers/matrixkeypadserver"
 import LoadingProgress from "../ui/LoadingProgress"
 import useWidgetSize from "../widgets/useWidgetSize"
+import useRegister from "../hooks/useRegister"
 
 export default function DashboardMatrixKeypad(props: DashboardServiceProps) {
     const { service, services, variant } = props
 
     const widgetRef = useRef<SVGGElement>()
-    const pressedRegister = service.register(MatrixKeypadReg.Pressed)
+    const pressedRegister = useRegister(service, MatrixKeypadReg.Pressed)
+    const labelsRegister = useRegister(service, MatrixKeypadReg.Labels)
+    const rowsRegister = useRegister(service, MatrixKeypadReg.Rows)
+    const columnsRegister = useRegister(service, MatrixKeypadReg.Columns)
+
     const [pressed] = useRegisterUnpackedValue<[[number][]]>(
         pressedRegister,
         props
     )
     const [labels] = useRegisterUnpackedValue<[[string][]]>(
-        service.register(MatrixKeypadReg.Labels),
+        labelsRegister,
         props
     )
-    const [rows] = useRegisterUnpackedValue<[number]>(
-        service.register(MatrixKeypadReg.Rows),
-        props
-    )
-    const [columns] = useRegisterUnpackedValue<[number]>(
-        service.register(MatrixKeypadReg.Columns),
-        props
-    )
+    const [rows] = useRegisterUnpackedValue<[number]>(rowsRegister, props)
+    const [columns] = useRegisterUnpackedValue<[number]>(columnsRegister, props)
     const server = useServiceServer<MatrixKeypadServer>(service)
     const color = server ? "secondary" : "primary"
-    const { background, controlBackground, active, textProps } = useWidgetTheme(
-        color
-    )
+    const { background, controlBackground, active, textProps } =
+        useWidgetTheme(color)
     const widgetSize = useWidgetSize(variant, services?.length)
 
     // no data about layout

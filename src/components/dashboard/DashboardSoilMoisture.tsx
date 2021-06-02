@@ -7,10 +7,11 @@ import useServiceServer from "../hooks/useServiceServer"
 import SensorServer from "../../../jacdac-ts/src/servers/sensorserver"
 import { Grid, Slider } from "@material-ui/core"
 import SoilMoistureWidget from "../widgets/SoilMoistureWidget"
+import useRegister from "../hooks/useRegister"
 
 export default function DashboardSoilMoisture(props: DashboardServiceProps) {
     const { service, services, variant } = props
-    const moistureReg = service.register(SoilMoistureReg.Moisture)
+    const moistureReg = useRegister(service, SoilMoistureReg.Moisture)
     const [value] = useRegisterUnpackedValue<[number]>(moistureReg, props)
     const widgetSize = useWidgetSize(variant, services?.length)
     const server = useServiceServer<SensorServer<[number]>>(service)

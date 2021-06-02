@@ -10,11 +10,15 @@ import useThrottledValue from "../hooks/useThrottledValue"
 import { Grid, Slider } from "@material-ui/core"
 import SensorServer from "../../../jacdac-ts/src/servers/sensorserver"
 import LoadingProgress from "../ui/LoadingProgress"
+import useRegister from "../hooks/useRegister"
 
 export default function DashboardWindDirection(props: DashboardServiceProps) {
     const { service } = props
 
-    const directionRegister = service.register(WindDirectionReg.WindDirection)
+    const directionRegister = useRegister(
+        service,
+        WindDirectionReg.WindDirection
+    )
     const [direction] = useRegisterUnpackedValue<[number]>(
         directionRegister,
         props

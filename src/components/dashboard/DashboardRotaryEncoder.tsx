@@ -8,15 +8,17 @@ import RotaryEncoderServer from "../../../jacdac-ts/src/servers/rotaryencoderser
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import { Grid, Slider } from "@material-ui/core"
 import useThrottledValue from "../hooks/useThrottledValue"
+import useRegister from "../hooks/useRegister"
 
 export default function DashboardRotaryEncoder(props: DashboardServiceProps) {
     const { service } = props
-    const positionRegister = service.register(RotaryEncoderReg.Position)
+    const positionRegister = useRegister(service, RotaryEncoderReg.Position)
     const [position = 0] = useRegisterUnpackedValue<[number]>(
         positionRegister,
         props
     )
-    const clicksPerTurnRegister = service.register(
+    const clicksPerTurnRegister = useRegister(
+        service,
         RotaryEncoderReg.ClicksPerTurn
     )
     const [clicksPerTurn = 12] = useRegisterUnpackedValue<[number]>(
@@ -25,9 +27,8 @@ export default function DashboardRotaryEncoder(props: DashboardServiceProps) {
     )
     const server = useServiceServer<RotaryEncoderServer>(service)
     const color = server ? "secondary" : "primary"
-    const { background, controlBackground, active, textProps } = useWidgetTheme(
-        color
-    )
+    const { background, controlBackground, active, textProps } =
+        useWidgetTheme(color)
     const label = "" + position
     const widgetSize = `clamp(6rem, 15vw, 20vw)`
 

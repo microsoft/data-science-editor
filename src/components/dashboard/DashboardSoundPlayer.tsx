@@ -13,6 +13,7 @@ import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
 import SoundPlayerServer from "../../../jacdac-ts/src/servers/soundplayerserver"
 import { Howl } from "howler"
 import LoadingProgress from "../ui/LoadingProgress"
+import useRegister from "../hooks/useRegister"
 
 function SoundButton(props: {
     service: JDService
@@ -36,7 +37,7 @@ function SoundButton(props: {
 
 export default function DashboardSoundPlayer(props: DashboardServiceProps) {
     const { service } = props
-    const volumeRegister = service.register(SoundPlayerReg.Volume)
+    const volumeRegister = useRegister(service, SoundPlayerReg.Volume)
     const [volume] = useRegisterUnpackedValue<[number]>(volumeRegister, props)
     const server = useServiceServer<SoundPlayerServer>(service)
     const color = server ? "secondary" : "primary"
@@ -44,11 +45,9 @@ export default function DashboardSoundPlayer(props: DashboardServiceProps) {
         service,
         async () => {
             try {
-                const sounds = await service.receiveWithInPipe<[number, string]>(
-                    SoundPlayerCmd.ListSounds,
-                    "u32 s",
-                    1000
-                )
+                const sounds = await service.receiveWithInPipe<
+                    [number, string]
+                >(SoundPlayerCmd.ListSounds, "u32 s", 1000)
                 return sounds
             } catch (e) {
                 console.error(e)
@@ -77,8 +76,7 @@ export default function DashboardSoundPlayer(props: DashboardServiceProps) {
         }
     }, [volume, server])
 
-    if (!sounds)
-        return <LoadingProgress />
+    if (!sounds) return <LoadingProgress />
 
     return (
         <Grid container spacing={1}>

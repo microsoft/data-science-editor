@@ -16,13 +16,14 @@ import ServoWidget from "../widgets/ServoWidget"
 import useRegister from "../hooks/useRegister"
 
 function useActualAngle(service: JDService, visible: boolean) {
-    const [angle] = useRegisterUnpackedValue<[number]>(
-        service.register(ServoReg.Angle),
-        { visible }
-    )
+    const angleRegister = useRegister(service, ServoReg.Angle)
+    const [angle] = useRegisterUnpackedValue<[number]>(angleRegister, {
+        visible,
+    })
     // sec/60deg
+    const responseSpeedRegister = useRegister(service, ServoReg.ResponseSpeed)
     const [responseSpeed] = useRegisterUnpackedValue<[number]>(
-        service.register(ServoReg.ResponseSpeed),
+        responseSpeedRegister,
         { visible }
     )
     const rotationalSpeed = 60 / (responseSpeed || SG90_RESPONSE_SPEED)

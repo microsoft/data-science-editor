@@ -12,17 +12,20 @@ import {
     ReflectedLightReg,
     ReflectedLightVariant,
 } from "../../../jacdac-ts/src/jdom/constants"
+import useRegister from "../hooks/useRegister"
 
 export default function DashboardReflectedLight(props: DashboardServiceProps) {
     const { service, services, variant } = props
 
-    const brighessRegister = service.register(ReflectedLightReg.Brightness)
+    const brighessRegister = useRegister(service, ReflectedLightReg.Brightness)
+    const variantRegister = useRegister(service, ReflectedLightReg.Variant)
+
     const [brightness] = useRegisterUnpackedValue<[number]>(
         brighessRegister,
         props
     )
     const [sensorVariant] = useRegisterUnpackedValue<[ReflectedLightVariant]>(
-        service.register(ReflectedLightReg.Variant),
+        variantRegister,
         props
     )
 

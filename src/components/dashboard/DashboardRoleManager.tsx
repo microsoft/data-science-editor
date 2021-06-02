@@ -8,11 +8,12 @@ import LoadingProgress from "../ui/LoadingProgress"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import useChange from "../../jacdac/useChange"
 import { RoleListItem } from "../services/RoleListItem"
+import useRegister from "../hooks/useRegister"
 
 export default function DashboardRoleManager(props: DashboardServiceProps) {
     const { service, expanded } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const autoBindRegister = service.register(RoleManagerReg.AutoBind)
+    const autoBindRegister = useRegister(service, RoleManagerReg.AutoBind)
     const autoBind = useRegisterBoolValue(autoBindRegister, props)
     const handleChecked = async (ev, checked: boolean) => {
         await autoBindRegister.sendSetBoolAsync(checked, true)

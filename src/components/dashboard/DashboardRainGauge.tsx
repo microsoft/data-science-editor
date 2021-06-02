@@ -12,13 +12,17 @@ import { useId } from "react-use-id-hook"
 import useSvgButtonProps from "../hooks/useSvgButtonProps"
 import { roundWithPrecision } from "../../../jacdac-ts/src/jdom/utils"
 import LoadingProgress from "../ui/LoadingProgress"
+import useRegister from "../hooks/useRegister"
 
 const TILT = 15
 
 export default function DashbaordRainGauge(props: DashboardServiceProps) {
     const { service } = props
 
-    const precipitationRegister = service.register(RainGaugeReg.Precipitation)
+    const precipitationRegister = useRegister(
+        service,
+        RainGaugeReg.Precipitation
+    )
     const [precipitation] = useRegisterUnpackedValue<[number]>(
         precipitationRegister,
         props

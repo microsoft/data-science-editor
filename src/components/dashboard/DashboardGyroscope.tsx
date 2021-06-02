@@ -13,6 +13,7 @@ import { Vector } from "../widgets/threeutils"
 import LoadingProgress from "../ui/LoadingProgress"
 import Suspense from "../ui/Suspense"
 import SliderWithLabel from "../ui/SliderWithLabel"
+import useRegister from "../hooks/useRegister"
 
 function Sliders(props: {
     server: SensorServer<[number, number, number]>
@@ -30,7 +31,7 @@ function Sliders(props: {
     ) => {
         const [, y, z] = server.reading.values()
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const n = (newValue as any) as number
+        const n = newValue as any as number
         server.reading.setValues([n, y, z])
         register.sendGetAsync()
     }
@@ -41,7 +42,7 @@ function Sliders(props: {
     ) => {
         const [x, , z] = server.reading.values()
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const n = (newValue as any) as number
+        const n = newValue as any as number
         server.reading.setValues([x, n, z])
         register.sendGetAsync()
     }
@@ -52,7 +53,7 @@ function Sliders(props: {
     ) => {
         const [x, y] = server.reading.values()
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const n = (newValue as any) as number
+        const n = newValue as any as number
         server.reading.setValues([x, y, n])
         register.sendGetAsync()
     }
@@ -116,11 +117,10 @@ function Sliders(props: {
 
 export default function DashboardGyroscope(props: DashboardServiceProps) {
     const { service, visible } = props
-    const register = service.register(GyroscopeReg.RotationRates)
+    const register = useRegister(service, GyroscopeReg.RotationRates)
     useRegisterUnpackedValue<[number, number, number]>(register, props)
-    const server = useServiceServer<SensorServer<[number, number, number]>>(
-        service
-    )
+    const server =
+        useServiceServer<SensorServer<[number, number, number]>>(service)
     const color = server ? "secondary" : "primary"
     const { active } = useWidgetTheme(color)
     const rotator = useCallback(

@@ -9,12 +9,13 @@ import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import { RngReg } from "../../../jacdac-ts/src/jdom/constants"
 import { useId } from "react-use-id-hook"
 import LoadingProgress from "../ui/LoadingProgress"
+import useRegister from "../hooks/useRegister"
 
 export default function DashboardRandomNumberGenerator(
     props: DashboardServiceProps
 ) {
     const { service } = props
-    const randomRegister = service.register(RngReg.Random)
+    const randomRegister = useRegister(service, RngReg.Random)
     const [rnd] = useRegisterUnpackedValue<[Uint8Array]>(randomRegister, props)
     const textId = useId()
 
