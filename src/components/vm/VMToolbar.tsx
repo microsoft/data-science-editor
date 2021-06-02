@@ -10,8 +10,8 @@ import VMSaveButton from "./VMSaveButton"
 import VMStartSimulatorButton from "./VMStartSimulatorButton"
 
 export default function VMToolbar(props: {
-    roleManager: RoleManager,
-    runner: IT4ProgramRunner,
+    roleManager: RoleManager
+    runner: IT4ProgramRunner
     run: () => void
     cancel: () => void
     xml: string
@@ -20,7 +20,13 @@ export default function VMToolbar(props: {
 }) {
     const { roleManager, runner, run, cancel, xml, source, program } = props
     return (
-        <Grid container direction="row" spacing={1} alignItems="center" alignContent="center">
+        <Grid
+            container
+            direction="row"
+            spacing={1}
+            alignItems="center"
+            alignContent="center"
+        >
             <Grid item>
                 <VMRunnerButton runner={runner} run={run} cancel={cancel} />
             </Grid>
