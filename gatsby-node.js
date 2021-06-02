@@ -361,9 +361,27 @@ exports.onPostBuild = async ({ graphql }) => {
         }
     `)
 
-    return fs.writeFile(
+    await fs.writeFile(
         path.resolve(__dirname, ".cache/all-pages.csv"),
         data.pages.nodes
+            .map(
+                node =>
+                    `${
+                        "https://microsoft.github.io/jacdac-docs" + node.path
+                    }, ${node.path.slice(1)}`
+            )
+            .join("\n")
+    )
+
+    await fs.writeFile(
+        path.resolve(__dirname, ".cache/top-pages.csv"),
+        data.pages.nodes
+            .filter(
+                node =>
+                    node.path.slice(1).replace(/\/$/, "").split(/\//g).length <
+                        2 &&
+                    node.path.indexOf("offline-plugin-app-shell-fallback") < 0
+            )
             .map(
                 node =>
                     `${
