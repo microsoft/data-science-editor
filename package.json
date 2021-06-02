@@ -85,7 +85,9 @@
     "trim": "^1.0.1",
     "use-debounce": "^6.0.1",
     "use-editable": "^2.3.3",
-    "xmlhttprequest-ssl": "^1.6.3"
+    "xmlhttprequest-ssl": "^1.6.3",
+    "dns-packet": "^5.2.4",
+    "ws": "^7.4.6"
   },
   "keywords": [
     "jacdac"
