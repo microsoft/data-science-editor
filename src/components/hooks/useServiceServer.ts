@@ -7,11 +7,11 @@ export default function useServiceServer<T extends JDServiceServer>(
     service: JDService,
     createTwin?: () => T
 ) {
-    const provider = useServiceProvider(service.device)
+    const provider = useServiceProvider(service?.device)
     const twin = useMemo<T>(() => {
         if (provider) return undefined
-        let twin = service.twin as T
-        if (!twin && createTwin) {
+        let twin = service?.twin as T
+        if (!twin && service && createTwin) {
             twin = createTwin()
             if (twin) service.twin = twin
         }
