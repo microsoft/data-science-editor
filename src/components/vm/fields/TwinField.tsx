@@ -1,18 +1,38 @@
-import React, { PointerEvent, useContext } from "react"
+import React, { useContext } from "react"
 import { ReactFieldJSON } from "./ReactField"
-import { Grid } from "@material-ui/core"
+import { Grid, Typography } from "@material-ui/core"
 import DashboardServiceWidget from "../../dashboard/DashboardServiceWidget"
 import WorkspaceContext from "../WorkspaceContext"
 import ReactInlineField from "./ReactInlineField"
 import NoServiceAlert from "./NoServiceAlert"
+import DeviceAvatar from "../../devices/DeviceAvatar"
+import DeviceName from "../../devices/DeviceName"
+import useServices from "../../hooks/useServices"
+import { JDService } from "../../../../jacdac-ts/src/jdom/service"
+import { PointerBoundary } from "./PointerBoundary"
+
+function RoleBindingView(props: { roleService: JDService }) {
+    const { roleService } = props
+    const { device, serviceClass } = roleService
+    const services = useServices({ ignoreSelf: true, serviceClass })
+
+    if (services.length < 2) return null
+
+    return (
+        <Grid style={{ color: "white" }} item xs={12}>
+            <PointerBoundary>
+                <Typography variant="caption"> bound to</Typography>
+                <DeviceAvatar device={device} />
+                <DeviceName device={device} showShortId={true} />
+            </PointerBoundary>
+        </Grid>
+    )
+}
 
 function TwinWidget() {
     const { roleService, flyout } = useContext(WorkspaceContext)
-    const onPointerStopPropagation = (event: PointerEvent<HTMLDivElement>) => {
-        // make sure blockly does not handle drags when interacting with UI
-        event.stopPropagation()
-    }
     if (flyout) return null
+    if (!roleService) return <NoServiceAlert />
 
     return (
         <Grid
@@ -23,22 +43,15 @@ function TwinWidget() {
             spacing={1}
         >
             <Grid item>
-                <NoServiceAlert />
-                {roleService && (
-                    <div
-                        style={{ cursor: "inherit" }}
-                        onPointerDown={onPointerStopPropagation}
-                        onPointerUp={onPointerStopPropagation}
-                        onPointerMove={onPointerStopPropagation}
-                    >
-                        <DashboardServiceWidget
-                            service={roleService}
-                            visible={true}
-                            variant="icon"
-                        />
-                    </div>
-                )}
+                <PointerBoundary>
+                    <DashboardServiceWidget
+                        service={roleService}
+                        visible={true}
+                        variant="icon"
+                    />
+                </PointerBoundary>
             </Grid>
+            <RoleBindingView roleService={roleService} />
         </Grid>
     )
 }
