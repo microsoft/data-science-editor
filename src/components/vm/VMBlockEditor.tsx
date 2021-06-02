@@ -27,6 +27,7 @@ import {
 } from "./WorkspaceContext"
 import { RoleManager } from "../../../jacdac-ts/src/vm/rolemanager"
 import { arrayConcatMany, toMap } from "../../../jacdac-ts/src/jdom/utils"
+import { withPrefix } from "gatsby-link"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -106,6 +107,7 @@ export default function VMBlockEditor(props: {
                     horizontal: true,
                 },
             },
+            media: withPrefix("blockly"),
             zoom: {
                 controls: true,
                 wheel: true,

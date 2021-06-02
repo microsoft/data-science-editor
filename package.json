@@ -93,7 +93,7 @@
   "license": "MIT",
   "scripts": {
     "setup": "git submodule update --init --recursive && git pull && yarn install --frozen-lockfile",
-    "postinstall": "cd jacdac-ts && yarn install --frozen-lockfile && yarn dist",
+    "postinstall": "cp -r node_modules/blockly/media public/blockly && cd jacdac-ts && yarn install --frozen-lockfile && yarn dist",
     "pullsubmodules": "git submodule update --init --recursive",
     "lint": "node node_modules/eslint/bin/eslint.js src/**/*.ts src/**/*.tsx",
     "clean": "node node_modules/gatsby/cli.js clean",
