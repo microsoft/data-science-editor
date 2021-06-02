@@ -1246,7 +1246,9 @@ export default function useToolbox(props: {
                     values: block.values,
                 })),
                 ...eventFieldBlocks
-                    .filter(ev => usedEvents.has(ev.event))
+                    .filter(
+                        ev => ev.service === service && usedEvents.has(ev.event)
+                    )
                     .map<BlockDefinition>(block => ({
                         kind: "block",
                         type: block.type,
