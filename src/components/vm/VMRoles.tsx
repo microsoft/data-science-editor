@@ -9,7 +9,6 @@ import {
     addServiceProvider,
     serviceProviderDefinitionFromServiceClass,
 } from "../../../jacdac-ts/src/servers/servers"
-import AddIcon from "@material-ui/icons/Add"
 import { RoleManager } from "../../../jacdac-ts/src/vm/rolemanager"
 import useChange from "../../jacdac/useChange"
 
@@ -43,10 +42,8 @@ export default function VMRoles(props: { roleManager: RoleManager }) {
                             label={role}
                             variant={service ? "default" : "outlined"}
                             avatar={
-                                service ? (
+                                service && (
                                     <DeviceAvatar device={service.device} />
-                                ) : (
-                                    <AddIcon />
                                 )
                             }
                             onClick={
