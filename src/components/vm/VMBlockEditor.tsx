@@ -27,7 +27,7 @@ import {
 } from "./WorkspaceContext"
 import { RoleManager } from "../../../jacdac-ts/src/vm/rolemanager"
 import { arrayConcatMany, toMap } from "../../../jacdac-ts/src/jdom/utils"
-import { withPrefix } from "gatsby-link"
+import { withPrefix } from "gatsby"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
