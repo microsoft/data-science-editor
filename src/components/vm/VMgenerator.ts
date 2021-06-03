@@ -9,7 +9,7 @@ import {
     VMIfThenElse,
     RoleEvent,
     VMError,
-} from "../../../jacdac-ts/src/vm/ir"
+} from "../../../jacdac-ts/src/vm/VMir"
 import { assert } from "../../../jacdac-ts/src/jdom/utils"
 import {
     CommandBlockDefinition,
@@ -52,6 +52,10 @@ export default function workspaceJSONToVMProgram(
         errors: VMError[]
     }
 
+    class EmptyExpression extends Error {
+
+    }
+
     const blockToExpression: (
         ev: RoleEvent,
         block: BlockJSON
@@ -60,11 +64,7 @@ export default function workspaceJSONToVMProgram(
 
         const blockToExpressionInner = (ev: RoleEvent, block: BlockJSON) => {
             if (!block) {
-                errors.push({
-                    sourceId: blockIn?.id,
-                    message: `Incomplete code under this block.`,
-                })
-                return toIdentifier("%%NOCODE%%")
+                throw new EmptyExpression()
             }
             const { type, value, inputs } = block
             console.log(`block2e`, { ev, block, type, value, inputs })
@@ -196,11 +196,7 @@ export default function workspaceJSONToVMProgram(
                     }
                 }
             }
-            errors.push({
-                sourceId: block.id,
-                message: `Incomplete code.`,
-            })
-            return toIdentifier("%%NOCODE%%")
+            throw new EmptyExpression()
         }
         return {
             expr: blockToExpressionInner(ev, blockIn),
@@ -373,6 +369,12 @@ export default function workspaceJSONToVMProgram(
         }
     }
 
+    const nop = {
+        type: "CallExpression",
+        arguments: [],
+        callee: toIdentifier("nop"),
+    }
+
     const addCommands = (
         event: RoleEvent,
         blocks: BlockJSON[],
@@ -380,9 +382,20 @@ export default function workspaceJSONToVMProgram(
     ) => {
         blocks?.forEach(child => {
             if (child) {
-                const { cmd, errors } = blockToCommand(event, child)
-                if (cmd) handler.commands.push(cmd)
-                errors.forEach(e => handler.errors.push(e))
+                try {
+                    const { cmd, errors } = blockToCommand(event, child)
+                    if (cmd) handler.commands.push(cmd)
+                    errors.forEach(e => handler.errors.push(e))
+                } catch (e) {
+                    if (e instanceof EmptyExpression) {
+                        handler.commands.push({
+                                sourceId: child.id,
+                                type: "cmd",
+                                command: nop
+                            } as VMBase
+                        )
+                    }
+                }
             }
         })
     }
