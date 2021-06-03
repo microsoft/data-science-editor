@@ -79,7 +79,7 @@ import LEDColorField from "./fields/LEDColorField"
 import TwinField from "./fields/TwinField"
 import JDomTreeField from "./fields/JDomTreeField"
 import { WorkspaceJSON } from "./jsongenerator"
-import { VMProgram } from "../../../jacdac-ts/src/vm/ir"
+import { VMProgram } from "../../../jacdac-ts/src/vm/VMir"
 import WatchValueField from "./fields/WatchValueField"
 
 type CachedBlockDefinitions = {

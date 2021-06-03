@@ -9,7 +9,7 @@ import {
     VMIfThenElse,
     RoleEvent,
     VMError,
-} from "../../../jacdac-ts/src/vm/ir"
+} from "../../../jacdac-ts/src/vm/VMir"
 import { assert } from "../../../jacdac-ts/src/jdom/utils"
 import {
     CommandBlockDefinition,
