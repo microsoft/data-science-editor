@@ -18,6 +18,13 @@ export default class ReactInlineField extends ReactField<unknown> {
         super(options?.value, undefined, options, { width: 1, height: 1 })
     }
 
+    protected createContainer(): HTMLDivElement {
+        const c  = document.createElement("div")
+        c.style.display = "inline-block"
+        c.style.minWidth = "14rem"
+        return c;
+    }
+
     protected initCustomView() {
         const { width, height } = this.size_
         const fo = child(this.fieldGroup_, "foreignObject", {
@@ -27,9 +34,7 @@ export default class ReactInlineField extends ReactField<unknown> {
             height,
         }) as SVGForeignObjectElement
 
-        this.container = document.createElement("div")
-        this.container.style.display = "inline-block"
-        this.container.style.minWidth = "14rem"
+        this.container = this.createContainer()
         fo.appendChild(this.container)
 
         this.resizeObserver = new ResizeObserver(

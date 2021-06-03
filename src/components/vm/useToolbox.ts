@@ -59,6 +59,7 @@ import {
     NumberInputDefinition,
     OptionsInputDefinition,
     RegisterBlockDefinition,
+    REPEAT_EVERY_BLOCK,
     resolveServiceBlockDefinition,
     SeparatorDefinition,
     ServiceBlockDefinition,
@@ -1036,12 +1037,30 @@ function loadBlocks(
                 },
             ],
             colour: debuggerColor,
-            inputsInline: false,
+            inputsInline: true,
             tooltip: `Watch a value in the editor`,
             helpUrl: "",
             template: "watch",
             nextStatement: null,
             previousStatement: null,
+        },
+        {
+            kind: "block",
+            type: REPEAT_EVERY_BLOCK,
+            message0: `repeat every %1s`,
+            args0: [
+                <InputDefinition>{
+                    type: "input_value",
+                    name: "interval",
+                    check: "Number",
+                },
+            ],
+            colour: commandColor,
+            inputsInline: true,
+            tooltip: `Repeats code at a given interval in seconds`,
+            helpUrl: "",
+            template: "every",
+            nextStatement: null,
         },
     ]
 
@@ -1277,6 +1296,13 @@ export default function useToolbox(props: {
             <BlockDefinition>{
                 kind: "block",
                 type: WHILE_CONDITION_BLOCK,
+            },
+            <BlockDefinition>{
+                kind: "block",
+                type: REPEAT_EVERY_BLOCK,
+                values: {
+                    interval: { kind: "block", type: "jacdac_time_picker" },
+                },
             },
             <BlockDefinition>{
                 kind: "block",
