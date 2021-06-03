@@ -50,6 +50,7 @@ import {
     CategoryDefinition,
     ColorInputDefnition,
     CommandBlockDefinition,
+    CONNECTED_BLOCK,
     CONNECTION_BLOCK,
     CustomBlockDefinition,
     EventBlockDefinition,
@@ -942,18 +943,35 @@ function loadBlocks(
                     ],
                 },
             ],
-            values: {
-                color: {
-                    kind: "block",
-                    type: LEDColorField.SHADOW.type,
-                },
-            },
             inputsInline: true,
             nextStatement: null,
             colour: commandColor,
             tooltip: "Runs code when a role is connected or disconnected",
             helpUrl: "",
             template: "connection",
+        },
+        {
+            kind: "block",
+            type: CONNECTED_BLOCK,
+            message0: "%1 connected",
+            args0: [
+                {
+                    type: "field_variable",
+                    name: "role",
+                    variable: "any",
+                    variableTypes: [
+                        "client",
+                        ...allServices.map(service => service.shortId),
+                    ],
+                    defaultType: "client",
+                },
+            ],
+            output: "Boolean",
+            inputsInline: true,
+            colour: commandColor,
+            tooltip: "Runs code when a role is connected or disconnected",
+            helpUrl: "",
+            template: "connected",
         },
         {
             kind: "block",
@@ -1334,6 +1352,10 @@ export default function useToolbox(props: {
             <BlockDefinition>{
                 kind: "block",
                 type: CONNECTION_BLOCK,
+            },
+            <BlockDefinition>{
+                kind: "block",
+                type: CONNECTED_BLOCK,
             },
             <BlockDefinition>{
                 kind: "block",
