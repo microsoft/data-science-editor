@@ -17,7 +17,6 @@ import {
     RegisterBlockDefinition,
     resolveServiceBlockDefinition,
     WAIT_BLOCK,
-    WHILE_CONDITION_BLOCK,
 } from "./toolbox"
 import Blockly from "blockly"
 
@@ -393,66 +392,54 @@ export default function workspaceJSONToVMProgram(
         let command: jsep.CallExpression = undefined
         let topEvent: RoleEvent = undefined
         let topErrors: VMError[] = []
-        if (type === WHILE_CONDITION_BLOCK) {
-            // this is while (...)
-            const { child: condition } = inputs[0]
-            const { expr, errors } = blockToExpression(undefined, condition)
-            command = {
-                type: "CallExpression",
-                arguments: [expr],
-                callee: toIdentifier("awaitCondition"),
+        const def = resolveServiceBlockDefinition(type)
+        assert(!!def)
+        const { template } = def
+        const { value: role } = inputs[0].fields["role"]
+        switch (template) {
+            case "twin":
+                break // ignore
+            case "event": {
+                const { value: eventName } = inputs[0].fields["event"]
+                command = {
+                    type: "CallExpression",
+                    arguments: [
+                        toMemberExpression(
+                            role.toString(),
+                            eventName.toString()
+                        ),
+                    ],
+                    callee: toIdentifier("awaitEvent"),
+                }
+                topEvent = {
+                    role: role.toString(),
+                    event: eventName.toString(),
+                }
+                break
             }
-            topErrors = errors
-        } else {
-            const def = resolveServiceBlockDefinition(type)
-            assert(!!def)
-            const { template } = def
-            const { value: role } = inputs[0].fields["role"]
-            switch (template) {
-                case "twin":
-                    break // ignore
-                case "event": {
-                    const { value: eventName } = inputs[0].fields["event"]
-                    command = {
-                        type: "CallExpression",
-                        arguments: [
-                            toMemberExpression(
-                                role.toString(),
-                                eventName.toString()
-                            ),
-                        ],
-                        callee: toIdentifier("awaitEvent"),
-                    }
-                    topEvent = {
-                        role: role.toString(),
-                        event: eventName.toString(),
-                    }
-                    break
+            case "register_change_event": {
+                const { register } = def as RegisterBlockDefinition
+                const { expr, errors } = blockToExpression(
+                    undefined,
+                    inputs[0].child
+                )
+                command = {
+                    type: "CallExpression",
+                    arguments: [
+                        toMemberExpression(role.toString(), register.name),
+                        expr,
+                    ],
+                    callee: toIdentifier("awaitChange"),
                 }
-                case "register_change_event": {
-                    const { register } = def as RegisterBlockDefinition
-                    const { expr, errors } = blockToExpression(
-                        undefined,
-                        inputs[0].child
-                    )
-                    command = {
-                        type: "CallExpression",
-                        arguments: [
-                            toMemberExpression(role.toString(), register.name),
-                            expr,
-                        ],
-                        callee: toIdentifier("awaitChange"),
-                    }
-                    topErrors = errors
-                    break
-                }
-                default: {
-                    console.warn(
-                        `unsupported handler template ${template} for ${type}`,
-                        { top }
-                    )
-                    break
-                }
+                topErrors = errors
+                break
+            }
+            default: {
+                console.warn(
+                    `unsupported handler template ${template} for ${type}`,
+                    { top }
+                )
+                break
             }
         }
 

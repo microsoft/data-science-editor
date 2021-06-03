@@ -127,8 +127,6 @@ export interface CustomBlockDefinition extends ServiceBlockDefinition {
     expression?: string
 }
 
-export const WHILE_CONDITION_BLOCK = "jacdac_while_event"
-export const WHILE_CONDITION_BLOCK_CONDITION = "condition"
 export const WAIT_BLOCK = "jacdac_wait"
 export const SET_STATUS_LIGHT_BLOCK = "jacdac_set_status_light"
 export const TWIN_BLOCK = "jacdac_twin"

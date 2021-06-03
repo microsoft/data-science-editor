@@ -69,8 +69,6 @@ import {
     TWIN_BLOCK,
     WAIT_BLOCK,
     WATCH_BLOCK,
-    WHILE_CONDITION_BLOCK,
-    WHILE_CONDITION_BLOCK_CONDITION,
 } from "./toolbox"
 import NoteField from "./fields/NoteField"
 import ServoAngleField from "./fields/ServoAngleField"
@@ -896,23 +894,6 @@ function loadBlocks(
     const runtimeBlocks: BlockDefinition[] = [
         {
             kind: "block",
-            type: WHILE_CONDITION_BLOCK,
-            message0: "while %1",
-            args0: [
-                {
-                    type: "input_value",
-                    name: WHILE_CONDITION_BLOCK_CONDITION,
-                    check: "Boolean",
-                },
-            ],
-            colour: commandColor,
-            inputsInline: true,
-            nextStatement: "Statement",
-            tooltip: "",
-            helpUrl: "",
-        },
-        {
-            kind: "block",
             type: WAIT_BLOCK,
             message0: "wait %1 s",
             args0: [
@@ -1291,10 +1272,6 @@ export default function useToolbox(props: {
         name: "Commands",
         colour: commandColor,
         contents: [
-            <BlockDefinition>{
-                kind: "block",
-                type: WHILE_CONDITION_BLOCK,
-            },
             <BlockDefinition>{
                 kind: "block",
                 type: REPEAT_EVERY_BLOCK,
