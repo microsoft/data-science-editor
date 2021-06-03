@@ -269,6 +269,7 @@ function loadBlocks(
                 .filter(
                     pkt =>
                         isRegister(pkt) &&
+                        !pkt.lowLevel &&
                         includedRegisters.indexOf(pkt.identifier) > -1
                 )
                 .map(register => ({
@@ -281,14 +282,20 @@ function loadBlocks(
         .map(service => ({
             service,
             events: service.packets.filter(
-                pkt => isEvent(pkt) && ignoredEvents.indexOf(pkt.identifier) < 0
+                pkt =>
+                    isEvent(pkt) &&
+                    !pkt.lowLevel &&
+                    ignoredEvents.indexOf(pkt.identifier) < 0
             ),
         }))
         .filter(kv => !!kv.events.length)
     const commands = arrayConcatMany(
         allServices.map(service =>
             service.packets
-                .filter(pkt => isCommand(pkt) && fieldsSupported(pkt))
+                .filter(
+                    pkt =>
+                        isCommand(pkt) && !pkt.lowLevel && fieldsSupported(pkt)
+                )
                 .map(pkt => ({
                     service,
                     command: pkt,
