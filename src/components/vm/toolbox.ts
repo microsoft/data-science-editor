@@ -61,6 +61,7 @@ export type BlockTemplate =
     | "twin"
     | "watch"
     | "every"
+    | "connection"
 
 export interface BlockDefinition extends BlockReference {
     message0?: string
@@ -133,6 +134,7 @@ export const TWIN_BLOCK = "jacdac_twin"
 export const INSPECT_BLOCK = "jacdac_inspect"
 export const WATCH_BLOCK = "jacdac_watch"
 export const REPEAT_EVERY_BLOCK = "jacdac_repeat_every"
+export const CONNECTION_BLOCK = "jacdac_connection"
 
 export interface CategoryDefinition {
     kind: "category"

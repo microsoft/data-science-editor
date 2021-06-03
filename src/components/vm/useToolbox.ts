@@ -50,6 +50,7 @@ import {
     CategoryDefinition,
     ColorInputDefnition,
     CommandBlockDefinition,
+    CONNECTION_BLOCK,
     CustomBlockDefinition,
     EventBlockDefinition,
     EventFieldDefinition,
@@ -904,11 +905,48 @@ function loadBlocks(
                 },
             ],
             inputsInline: true,
-            previousStatement: "Statement",
-            nextStatement: "Statement",
+            previousStatement: null,
+            nextStatement: null,
             colour: commandColor,
             tooltip: "Wait the desired time",
             helpUrl: "",
+        },
+        {
+            kind: "block",
+            type: CONNECTION_BLOCK,
+            message0: "when %1 %2",
+            args0: [
+                {
+                    type: "field_variable",
+                    name: "role",
+                    variable: "any",
+                    variableTypes: [
+                        "client",
+                        ...allServices.map(service => service.shortId),
+                    ],
+                    defaultType: "client",
+                },
+                <OptionsInputDefinition>{
+                    type: "field_dropdown",
+                    name: "event",
+                    options: [
+                        ["connected", "connected"],
+                        ["disconnected", "disconnected"],
+                    ],
+                },
+            ],
+            values: {
+                color: {
+                    kind: "block",
+                    type: LEDColorField.SHADOW.type,
+                },
+            },
+            inputsInline: true,
+            nextStatement: null,
+            colour: commandColor,
+            tooltip: "Runs code when a role is connected or disconnected",
+            helpUrl: "",
+            template: "connection",
         },
         {
             kind: "block",
@@ -938,8 +976,8 @@ function loadBlocks(
                 },
             },
             inputsInline: true,
-            previousStatement: "Statement",
-            nextStatement: "Statement",
+            previousStatement: null,
+            nextStatement: null,
             colour: commandColor,
             tooltip: "Sets the color on the status light",
             helpUrl: "",
@@ -1285,6 +1323,10 @@ export default function useToolbox(props: {
                 values: {
                     time: { kind: "block", type: "jacdac_time_picker" },
                 },
+            },
+            <BlockDefinition>{
+                kind: "block",
+                type: CONNECTION_BLOCK,
             },
             <BlockDefinition>{
                 kind: "block",
