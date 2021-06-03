@@ -78,6 +78,7 @@ import TwinField from "./fields/TwinField"
 import JDomTreeField from "./fields/JDomTreeField"
 import { WorkspaceJSON } from "./jsongenerator"
 import { VMProgram } from "../../../jacdac-ts/src/vm/ir"
+import WatchValueField from "./fields/WatchValueField"
 
 type CachedBlockDefinitions = {
     blocks: BlockDefinition[]
@@ -1022,12 +1023,16 @@ function loadBlocks(
         {
             kind: "block",
             type: WATCH_BLOCK,
-            message0: `watch %1`,
+            message0: `watch %1 %2`,
             args0: [
                 <InputDefinition>{
                     type: "input_value",
                     name: "value",
                     check: ["Number", "Boolean", "String"],
+                },
+                <InputDefinition>{
+                    type: WatchValueField.KEY,
+                    name: "watch",
                 },
             ],
             colour: debuggerColor,

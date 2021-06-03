@@ -10,7 +10,7 @@ export default function ValueWithUnitWidget(props: {
     max?: number
     step?: number
     icon?: JSX.Element
-    label: string
+    label?: string
     secondaryLabel?: string
     tabIndex?: number
     color?: "primary" | "secondary"
@@ -76,7 +76,7 @@ export default function ValueWithUnitWidget(props: {
             container
             direction="column"
             tabIndex={tabIndex}
-            aria-label={`${valueText} ${label}`}
+            aria-label={`${valueText} ${label || ""}`}
         >
             <Grid item xs={12}>
                 <Grid container direction="row" alignContent="flex-end">
@@ -97,14 +97,16 @@ export default function ValueWithUnitWidget(props: {
                             direction="column"
                             alignContent="space-between"
                         >
-                            <Grid item>
-                                <Typography
-                                    style={unitStyle}
-                                    variant={labelVariant}
-                                >
-                                    {label}
-                                </Typography>
-                            </Grid>
+                            {label && (
+                                <Grid item>
+                                    <Typography
+                                        style={unitStyle}
+                                        variant={labelVariant}
+                                    >
+                                        {label}
+                                    </Typography>
+                                </Grid>
+                            )}
                             {secondaryLabel && (
                                 <Grid item>
                                     <Typography

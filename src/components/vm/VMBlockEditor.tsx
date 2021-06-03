@@ -207,10 +207,10 @@ export default function VMBlockEditor(props: {
 
     // resize blockly
     useEffect(() => {
-        const observer = new ResizeObserver(() => workspace.resize())
+        const observer = new ResizeObserver(() => workspace?.resize())
         observer.observe(blocklyRef.current)
         return () => observer.disconnect()
-    }, [workspace])
+    }, [workspace, blocklyRef.current])
 
     return (
         <>
