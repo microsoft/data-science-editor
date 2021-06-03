@@ -19,6 +19,7 @@ import {
     WAIT_BLOCK,
 } from "./toolbox"
 import Blockly from "blockly"
+import { LIGHT_MODE_REPLACE } from "../../../jacdac-ts/src/jdom/light"
 
 const ops = {
     AND: "&&",
@@ -246,10 +247,6 @@ export default function workspaceJSONToVMProgram(
                 }
             }
             case "dynamic_if": {
-                const { expr, errors } = blockToExpression(
-                    event,
-                    inputs[0]?.child
-                )
                 const thenHandler: VMHandler = {
                     commands: [],
                     errors: [],
@@ -274,6 +271,21 @@ export default function workspaceJSONToVMProgram(
                         elseHandler
                     )
                 }
+                let exprErrors: ExpressionWithErrors = undefined
+                try {
+                    exprErrors = blockToExpression(
+                        event,
+                        inputs[0]?.child
+                    )
+                } catch (e) {
+                    if (e instanceof EmptyExpression) {
+                        exprErrors = { expr: { type: "Literal", value: false, raw: "false "} as jsep.Literal, errors: [] }
+                    } else {
+                        throw e
+                    }
+                }
+                const { expr, errors } = exprErrors
+
                 const ifThenElse: VMIfThenElse = {
                     sourceId: block.id,
                     type: "ite",
