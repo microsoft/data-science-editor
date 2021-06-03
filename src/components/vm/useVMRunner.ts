@@ -53,7 +53,10 @@ export default function useVMRunner(
     // errors
     useEffect(() => runner?.subscribe(ERROR, e => setError(e)), [runner])
     // traces
-    const handleTrace = (value: { message: string; context: VMTraceContext }) => {
+    const handleTrace = (value: {
+        message: string
+        context: VMTraceContext
+    }) => {
         const { message, context } = value
         if (Flags.diagnostics) console.debug(`vm> ${message}`, context)
     }

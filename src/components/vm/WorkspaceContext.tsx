@@ -41,7 +41,7 @@ export class WorkspaceServices extends JDEventSource {
 
 export interface WorkspaceContextProps {
     workspace?: Blockly.Workspace
-    sourceId?: string,
+    sourceId?: string
     services: WorkspaceServices
     flyout?: boolean
     role?: string
@@ -58,7 +58,7 @@ export const WorkspaceContext = createContext<WorkspaceContextProps>({
     role: undefined,
     roleServiceShortId: undefined,
     roleService: undefined,
-    runner: undefined
+    runner: undefined,
 })
 WorkspaceContext.displayName = "Workspace"
 
@@ -80,8 +80,8 @@ export function WorkspaceProvider(props: {
     const sourceId = sourceBlock?.id
     const workspace = sourceBlock?.workspace
     const services = (workspace as BlocklyWorkspaceWithServices)?.jacdacServices
-    const roleManager = services?.roleManager
-    const runner = services?.runner
+    const roleManager = useChange(services, _ => _?.roleManager)
+    const runner = useChange(services, _ => _?.runner)
 
     const resolveRole = () => {
         const newSourceBlock = field.getSourceBlock()
@@ -134,7 +134,15 @@ export function WorkspaceProvider(props: {
     return (
         // eslint-disable-next-line react/react-in-jsx-scope
         <WorkspaceContext.Provider
-            value={{ sourceId, services, role, roleServiceShortId, roleService, runner, flyout }}
+            value={{
+                sourceId,
+                services,
+                role,
+                roleServiceShortId,
+                roleService,
+                runner,
+                flyout,
+            }}
         >
             {children}
         </WorkspaceContext.Provider>

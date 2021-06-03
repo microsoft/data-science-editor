@@ -6,7 +6,7 @@ import DarkModeProvider from "../../ui/DarkModeProvider"
 import { IdProvider } from "react-use-id-hook"
 import JacdacProvider from "../../../jacdac/Provider"
 import AppTheme from "../../ui/AppTheme"
-import Blockly from "blockly"
+import Blockly, { Block } from "blockly"
 import { WorkspaceProvider } from "../WorkspaceContext"
 
 export default class ReactInlineField extends ReactField<unknown> {
@@ -19,10 +19,10 @@ export default class ReactInlineField extends ReactField<unknown> {
     }
 
     protected createContainer(): HTMLDivElement {
-        const c  = document.createElement("div")
+        const c = document.createElement("div")
         c.style.display = "inline-block"
         c.style.minWidth = "14rem"
-        return c;
+        return c
     }
 
     protected initCustomView() {

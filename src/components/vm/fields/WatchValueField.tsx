@@ -16,17 +16,16 @@ function WatchValueWidget() {
     const [value, setValue] = useState<WatchValueType>(
         runner?.lookupWatch(sourceId)
     )
-    useEffect(
-        () =>
-            runner?.subscribe(VM_WATCH_CHANGE, watchSourceId => {
-                console.log(`watch change`, { watchSourceId, sourceId })
-                if (watchSourceId === sourceId) {
-                    const newValue = runner.lookupWatch(sourceId)
-                    setValue(newValue)
-                }
-            }),
-        [runner, sourceId]
-    )
+    useEffect(() => {
+        setValue(undefined)
+        return runner?.subscribe(VM_WATCH_CHANGE, watchSourceId => {
+            console.log(`watch change`, { watchSourceId, sourceId })
+            if (watchSourceId === sourceId) {
+                const newValue = runner.lookupWatch(sourceId)
+                setValue(newValue)
+            }
+        })
+    }, [runner, sourceId])
 
     let valueNumber = typeof value === "number" ? (value as number) : undefined
     if (!isNaN(valueNumber)) {
