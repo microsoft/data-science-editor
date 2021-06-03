@@ -1041,8 +1041,6 @@ function loadBlocks(
             tooltip: `Watch a value in the editor`,
             helpUrl: "",
             template: "watch",
-            nextStatement: null,
-            previousStatement: null,
         },
         {
             kind: "block",
