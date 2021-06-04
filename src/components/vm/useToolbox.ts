@@ -1,4 +1,4 @@
-import Blockly from "blockly"
+import Blockly, { ContextMenuRegistry } from "blockly"
 import { useEffect, useMemo } from "react"
 import {
     BuzzerCmd,
@@ -154,6 +154,11 @@ function loadBlocks(
     commandColor: string,
     debuggerColor: string
 ): CachedBlockDefinitions {
+    // context menu stuff
+    ContextMenuRegistry.registry.unregister("blockInline")
+    ContextMenuRegistry.registry.unregister("cleanWorkspace")
+
+    // blocks
     const customShadows = [
         {
             serviceClass: SRV_SERVO,
