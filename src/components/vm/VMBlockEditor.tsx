@@ -107,7 +107,7 @@ export default function VMBlockEditor(props: {
                     horizontal: true,
                 },
             },
-            media: withPrefix("blockly"),
+            media: withPrefix("blockly/media/"),
             zoom: {
                 controls: true,
                 wheel: true,
