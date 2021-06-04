@@ -19,7 +19,6 @@ function WatchValueWidget() {
     useEffect(() => {
         setValue(undefined)
         return runner?.subscribe(VM_WATCH_CHANGE, watchSourceId => {
-            console.log(`watch change`, { watchSourceId, sourceId })
             if (watchSourceId === sourceId) {
                 const newValue = runner.lookupWatch(sourceId)
                 setValue(newValue)
