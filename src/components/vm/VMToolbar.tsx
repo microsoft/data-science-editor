@@ -42,7 +42,7 @@ export default function VMToolbar(props: {
                 <VMRunnerButton runner={runner} run={run} cancel={cancel} />
             </Grid>
             <Grid item>
-                <VMSaveButton xml={xml} source={source} program={program} />
+                <VMSaveButton xml={xml} program={program} />
             </Grid>
             <Grid item>
                 <VMLoadButton workspace={workspace} />
