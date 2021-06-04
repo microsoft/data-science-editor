@@ -9,6 +9,7 @@ import {
     VMIfThenElse,
     RoleEvent,
     VMError,
+    VMCommand,
 } from "../../../jacdac-ts/src/vm/VMir"
 import { assert } from "../../../jacdac-ts/src/jdom/utils"
 import {
@@ -208,42 +209,49 @@ export default function workspaceJSONToVMProgram(
         errors: VMError[]
     }
 
+    const makeVMBase = (block: BlockJSON, command: jsep.CallExpression) => {
+        return {
+            sourceId: block.id,
+            type: "cmd",
+            command,
+        } as VMBase
+    }
+
+    const processErrors = (block: BlockJSON, errors: VMError[]) => {
+        return errors.map((e: VMError) => {
+            return {
+                sourceId: e.sourceId ? e.sourceId : block.id,
+                message: e.message,
+            }
+        })
+    }
+
+    const makeWait = (event: RoleEvent, block: BlockJSON) => {
+        const { inputs } = block
+        {
+            const { expr: time, errors } = blockToExpression(
+                event,
+                inputs[0].child
+            )
+            return {
+                cmd: makeVMBase(block, {
+                    type: "CallExpression",
+                    arguments: [time],
+                    callee: toIdentifier("wait"),
+                }),
+                errors: processErrors(block, errors),
+            }
+        }
+    }
+
     const blockToCommand = (
         event: RoleEvent,
         block: BlockJSON
     ): CmdWithErrors => {
-        const makeVMBase = (command: jsep.CallExpression) => {
-            return {
-                sourceId: block.id,
-                type: "cmd",
-                command,
-            } as VMBase
-        }
-        const processErrors = (errors: VMError[]) => {
-            return errors.map((e: VMError) => {
-                return {
-                    sourceId: e.sourceId ? e.sourceId : block.id,
-                    message: e.message,
-                }
-            })
-        }
-
         const { type, inputs } = block
         switch (type) {
-            case WAIT_BLOCK: {
-                const { expr: time, errors } = blockToExpression(
-                    event,
-                    inputs[0].child
-                )
-                return {
-                    cmd: makeVMBase({
-                        type: "CallExpression",
-                        arguments: [time],
-                        callee: toIdentifier("wait"),
-                    }),
-                    errors: processErrors(errors),
-                }
-            }
+            case WAIT_BLOCK: 
+                return makeWait(event, block)
             case "dynamic_if": {
                 const thenHandler: VMHandler = {
                     commands: [],
@@ -298,6 +306,7 @@ export default function workspaceJSONToVMProgram(
                 return {
                     cmd: ifThenElse,
                     errors: processErrors(
+                        block,
                         errors
                             .concat(thenHandler.errors)
                             .concat(elseHandler.errors)
@@ -318,7 +327,7 @@ export default function workspaceJSONToVMProgram(
                             )
                             const { value: role } = inputs[0].fields.role
                             return {
-                                cmd: makeVMBase({
+                                cmd: makeVMBase(block, {
                                     type: "CallExpression",
                                     arguments: [
                                         toMemberExpression(
@@ -329,7 +338,7 @@ export default function workspaceJSONToVMProgram(
                                     ],
                                     callee: toIdentifier("writeRegister"),
                                 }),
-                                errors: processErrors(errors),
+                                errors: processErrors(block, errors),
                             }
                         }
                         case "command": {
@@ -340,7 +349,7 @@ export default function workspaceJSONToVMProgram(
                                 blockToExpression(event, a.child)
                             )
                             return {
-                                cmd: makeVMBase({
+                                cmd: makeVMBase(block, {
                                     type: "CallExpression",
                                     arguments: exprsErrors.map(p => p.expr),
                                     callee: toMemberExpression(
@@ -349,6 +358,7 @@ export default function workspaceJSONToVMProgram(
                                     ),
                                 }),
                                 errors: processErrors(
+                                    block,
                                     exprsErrors.flatMap(p => p.errors)
                                 ),
                             }
@@ -411,6 +421,12 @@ export default function workspaceJSONToVMProgram(
             switch (template) {
                 case "twin":
                     break // ignore
+                case "every": {
+                    const { cmd, errors} = makeWait(undefined, top)
+                    command = (cmd as VMCommand).command
+                    topErrors = errors
+                    break
+                }
                 case "event": {
                     const { value: role } = inputs[0].fields["role"]
                     const { value: eventName } = inputs[0].fields["event"]
@@ -474,7 +490,7 @@ export default function workspaceJSONToVMProgram(
                 command = nop
                 topErrors = []
             } else {
-                throw(e)
+                throw e
             }
         }
 
