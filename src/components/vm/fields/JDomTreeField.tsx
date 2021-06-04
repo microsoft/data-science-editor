@@ -3,6 +3,8 @@ import { ReactFieldJSON } from "./ReactField"
 import WorkspaceContext from "../WorkspaceContext"
 import ReactInlineField from "./ReactInlineField"
 import Suspense from "../../ui/Suspense"
+import NoServiceAlert from "./NoServiceAlert"
+
 const JDomServiceTreeView = lazy(
     () => import("../../tools/JDomServiceTreeView")
 )
@@ -14,7 +16,8 @@ function JDomTreeWidget() {
         event.stopPropagation()
     }
 
-    if (!roleService || flyout) return null
+    if (flyout) return null
+    if (!roleService) return <NoServiceAlert />
 
     return (
         <div
