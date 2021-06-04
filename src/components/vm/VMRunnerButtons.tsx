@@ -12,7 +12,7 @@ import { VM_BREAKPOINT } from "../../../jacdac-ts/src/vm/VMutils"
 import { VMHandler, VMProgram } from "../../../jacdac-ts/src/vm/VMir"
 import { WorkspaceSvg } from "blockly"
 import PlayForWorkIcon from "@material-ui/icons/PlayForWork"
-
+import FastForwardIcon from "@material-ui/icons/FastForward"
 function useWorkspaceBreakpoints(program: VMProgram, workspace: WorkspaceSvg) {
     const breakpoints = useMemo(
         () =>
@@ -59,6 +59,11 @@ export default function VMRunnerButtons(props: {
         cancel()
     }
     const handlePause = () => setPaused(!paused)
+    const handleResume = () => {
+        setPaused(false)
+        runner.clearBreakpoints()
+        runner.resume()
+    }
     const handleStep = () => runner?.step()
 
     // register breakpoint handler
@@ -95,11 +100,11 @@ export default function VMRunnerButtons(props: {
             </Grid>
             <Grid item>
                 <IconButtonWithTooltip
-                    title={"pause"}
+                    title={paused ? "resume" : "pause"}
                     disabled={disabled}
-                    onClick={handlePause}
+                    onClick={paused ? handleResume : handlePause}
                 >
-                    <PauseIcon />
+                    {paused ? <FastForwardIcon /> : <PauseIcon />}
                 </IconButtonWithTooltip>
             </Grid>
             {paused && (
