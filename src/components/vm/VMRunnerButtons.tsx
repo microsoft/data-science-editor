@@ -51,16 +51,15 @@ export default function VMRunnerButtons(props: {
     console.log("runner status", status)
 
     const handleRun = () => {
-        runner?.clearBreakpoints()
+        setPaused(false)
         run()
     }
     const handleCancel = () => {
-        runner?.clearBreakpoints()
-        cancel()
         setPaused(false)
+        cancel()
     }
     const handlePause = () => setPaused(!paused)
-    const handleStep = () => runner?.resume()
+    const handleStep = () => runner?.step()
 
     // register breakpoint handler
     useEffect(
@@ -73,8 +72,14 @@ export default function VMRunnerButtons(props: {
     )
     // register breakpoints
     useEffect(() => {
-        if (paused) runner?.setBreakpoints(breakpoints)
-        return () => paused && runner?.clearBreakpoints()
+        if (paused) {
+            runner?.setBreakpoints(breakpoints)
+            runner?.resume()
+            return () => {
+                runner?.clearBreakpoints()
+                setBreakpoint(null)
+            }
+        }
     }, [runner, paused])
 
     return (

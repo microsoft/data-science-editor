@@ -82,6 +82,18 @@ import { WorkspaceJSON } from "./jsongenerator"
 import { VMProgram } from "../../../jacdac-ts/src/vm/VMir"
 import WatchValueField from "./fields/WatchValueField"
 
+// overrides blockly emboss filter for svg elements
+Blockly.BlockSvg.prototype.setHighlighted = function (highlighted) {
+    if (!this.rendered) {
+        return
+    }
+    if (highlighted) {
+        this.addSelect()
+    } else {
+        this.removeSelect()
+    }
+}
+
 type CachedBlockDefinitions = {
     blocks: BlockDefinition[]
     serviceBlocks: ServiceBlockDefinition[]
