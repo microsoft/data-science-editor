@@ -1,6 +1,6 @@
 import React, { useContext } from "react"
 import SaveIcon from "@material-ui/icons/Save"
-import { Tooltip } from "@material-ui/core"
+import { Grid, Tooltip } from "@material-ui/core"
 import { IconButton, Link } from "gatsby-theme-material-ui"
 import { VMProgram } from "../../../jacdac-ts/src/vm/VMir"
 import ImportButton from "../ImportButton"
@@ -8,7 +8,7 @@ import AppContext from "../AppContext"
 import { WorkspaceSvg, Xml } from "blockly"
 import VMFile from "../../../jacdac-ts/src/vm/vmfile"
 
-export function VMLoadButton(props: { workspace: WorkspaceSvg }) {
+function VMLoadButton(props: { workspace: WorkspaceSvg }) {
     const { workspace } = props
     const { setError } = useContext(AppContext)
     const disabled = !workspace
@@ -46,7 +46,7 @@ export function VMLoadButton(props: { workspace: WorkspaceSvg }) {
     )
 }
 
-export function VMSaveButton(props: { xml: string; program: VMProgram }) {
+function VMSaveButton(props: { xml: string; program: VMProgram }) {
     const { xml, program } = props
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const json: VMFile = {
@@ -66,5 +66,23 @@ export function VMSaveButton(props: { xml: string; program: VMProgram }) {
                 </IconButton>
             </Tooltip>
         </Link>
+    )
+}
+
+export default function VMFileButtons(props: {
+    xml: string
+    program: VMProgram
+    workspace: WorkspaceSvg
+}) {
+    const { xml, program, workspace } = props
+    return (
+        <>
+            <Grid item>
+                <VMSaveButton xml={xml} program={program} />
+            </Grid>
+            <Grid item>
+                <VMLoadButton workspace={workspace} />
+            </Grid>
+        </>
     )
 }

@@ -1,14 +1,13 @@
-import { Divider, Grid } from "@material-ui/core"
+import { Grid } from "@material-ui/core"
 import React from "react"
 import { VMProgram } from "../../../jacdac-ts/src/vm/VMir"
 import { RoleManager } from "../../../jacdac-ts/src/vm/rolemanager"
 import { VMProgramRunner } from "../../../jacdac-ts/src/vm/VMrunner"
-import { WorkspaceJSON } from "./jsongenerator"
 import VMRoles from "./VMRoles"
-import VMRunnerButton from "./VMRunnerButton"
+import VMRunnerButtons from "./VMRunnerButtons"
 import VMStartSimulatorButton from "./VMStartSimulatorButton"
 import { WorkspaceSvg } from "blockly"
-import { VMLoadButton, VMSaveButton } from "./VMFileButtons"
+import VMFileButtons from "./VMFileButtons"
 
 export default function VMToolbar(props: {
     roleManager: RoleManager
@@ -28,15 +27,8 @@ export default function VMToolbar(props: {
             alignItems="center"
             alignContent="center"
         >
-            <Grid item>
-                <VMSaveButton xml={xml} program={program} />
-            </Grid>
-            <Grid item>
-                <VMLoadButton workspace={workspace} />
-            </Grid>
-            <Grid item>
-                <VMRunnerButton runner={runner} run={run} cancel={cancel} />
-            </Grid>
+            <VMFileButtons xml={xml} program={program} workspace={workspace} />
+            <VMRunnerButtons runner={runner} run={run} cancel={cancel} />
             <Grid item>
                 <VMStartSimulatorButton />
             </Grid>
