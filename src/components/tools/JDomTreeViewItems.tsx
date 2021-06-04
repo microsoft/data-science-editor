@@ -151,12 +151,12 @@ export function ServiceMembersTreeItems(
     const { specification, mixins } = useMemo(() => service, [service])
     const packets = specification?.packets
     const registers = packets
-        ?.filter(isRegister)
+        ?.filter(pkt => !pkt.client && isRegister(pkt))
         .map(info => service.register(info.identifier))
         .filter(reg => !registerFilter || registerFilter(reg))
         .sort((l, r) => l.name.localeCompare(r.name))
     const events = packets
-        ?.filter(isEvent)
+        ?.filter(pkt => !pkt.client && isEvent(pkt))
         .map(info => service.event(info.identifier))
         .filter(ev => !eventFilter || eventFilter(ev))
     return (
