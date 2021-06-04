@@ -16,15 +16,15 @@ export default function VMRunnerButton(props: {
     const status = useChange(runner, t => t?.status)
     const handleRun = () => run()
     const handleCancel = () => cancel()
-    const running = status === VMStatus.Running
+    const stopped = !status || status === VMStatus.Stopped
 
     return (
         <IconButtonWithTooltip
-            title={running ? "stop" : "start"}
+            title={stopped ? "start" : "stop"}
             disabled={disabled}
-            onClick={running ? handleCancel : handleRun}
+            onClick={stopped ? handleRun : handleCancel}
         >
-            {running ? <StopIcon /> : <PlayArrowIcon />}
+            {stopped ? <PlayArrowIcon /> : <StopIcon />}
         </IconButtonWithTooltip>
     )
 }

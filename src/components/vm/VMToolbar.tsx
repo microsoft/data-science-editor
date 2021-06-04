@@ -1,4 +1,4 @@
-import { Grid } from "@material-ui/core"
+import { Divider, Grid } from "@material-ui/core"
 import React from "react"
 import { VMProgram } from "../../../jacdac-ts/src/vm/VMir"
 import { RoleManager } from "../../../jacdac-ts/src/vm/rolemanager"
@@ -16,20 +16,10 @@ export default function VMToolbar(props: {
     run: () => void
     cancel: () => void
     xml: string
-    source: WorkspaceJSON
     program: VMProgram
     workspace?: WorkspaceSvg
 }) {
-    const {
-        roleManager,
-        runner,
-        run,
-        cancel,
-        xml,
-        source,
-        program,
-        workspace,
-    } = props
+    const { roleManager, runner, run, cancel, xml, program, workspace } = props
     return (
         <Grid
             container
@@ -39,13 +29,13 @@ export default function VMToolbar(props: {
             alignContent="center"
         >
             <Grid item>
-                <VMRunnerButton runner={runner} run={run} cancel={cancel} />
-            </Grid>
-            <Grid item>
                 <VMSaveButton xml={xml} program={program} />
             </Grid>
             <Grid item>
                 <VMLoadButton workspace={workspace} />
+            </Grid>
+            <Grid item>
+                <VMRunnerButton runner={runner} run={run} cancel={cancel} />
             </Grid>
             <Grid item>
                 <VMStartSimulatorButton />

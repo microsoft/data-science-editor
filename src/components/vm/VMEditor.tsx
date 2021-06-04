@@ -41,7 +41,6 @@ export default function VMEditor(props: { storageKey?: string }) {
                     run={run}
                     cancel={cancel}
                     xml={xml}
-                    source={source}
                     program={program}
                     workspace={workspaceRef.current}
                 />
