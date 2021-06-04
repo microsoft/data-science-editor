@@ -1120,6 +1120,68 @@ function loadBlocks(
             helpUrl: "%{BKY_MATH_SINGLE_HELPURL}",
             extensions: ["math_op_tooltip"],
         },
+        {
+            kind: "block",
+            type: "jacdac_math_random",
+            message0: "random",
+            args0: [],
+            output: "Number",
+            style: "math_blocks",
+        },
+        {
+            kind: "block",
+            type: "jacdac_math_random_range",
+            message0: "random from %1 to %2",
+            args0: [
+                {
+                    type: "input_value",
+                    name: "min",
+                    check: "Number",
+                },
+                {
+                    type: "input_value",
+                    name: "max",
+                    check: "Number",
+                },
+            ],
+            output: "Number",
+            style: "math_blocks",
+            inputsInline: true,
+        },
+        {
+            kind: "block",
+            type: "jacdac_math_map",
+            message0: "map %1 from [%2, %3] to [%4, %5]",
+            args0: [
+                {
+                    type: "input_value",
+                    name: "value",
+                    check: "Number",
+                },
+                {
+                    type: "input_value",
+                    name: "fromMin",
+                    check: "Number",
+                },
+                {
+                    type: "input_value",
+                    name: "fromMax",
+                    check: "Number",
+                },
+                {
+                    type: "input_value",
+                    name: "toMin",
+                    check: "Number",
+                },
+                {
+                    type: "input_value",
+                    name: "toMax",
+                    check: "Number",
+                },
+            ],
+            output: "Number",
+            style: "math_blocks",
+        },
     ]
 
     const blocks: BlockDefinition[] = [
@@ -1409,6 +1471,9 @@ export default function useToolbox(props: {
                     },
                 },
             },
+            { kind: "block", type: "jacdac_math_random" },
+            { kind: "block", type: "jacdac_math_random_range" },
+            { kind: "block", type: "jacdac_math_map" },
             { kind: "block", type: "math_number" },
         ],
     }
