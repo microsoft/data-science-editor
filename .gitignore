@@ -3,4 +3,3 @@ node_modules
 static/images/makecode
 public
 .DS_Store
-static/blockly

@@ -28,7 +28,7 @@ export default function VMToolbar(props: {
             alignContent="center"
         >
             <VMFileButtons xml={xml} program={program} workspace={workspace} />
-            <VMRunnerButtons runner={runner} run={run} cancel={cancel} />
+            <VMRunnerButtons runner={runner} run={run} cancel={cancel} workspace={workspace} />
             <Grid item>
                 <VMStartSimulatorButton />
             </Grid>
