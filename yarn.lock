@@ -13511,10 +13511,10 @@ react-side-effect@^2.1.0:
   resolved "https://registry.yarnpkg.com/react-side-effect/-/react-side-effect-2.1.1.tgz#66c5701c3e7560ab4822a4ee2742dee215d72eb3"
   integrity sha512-2FoTQzRNTncBVtnzxFOk2mCpcfxQpenBMbk5kSVBg5UcPqV9fRbgY2zhb7GTWWOlpFmAxhClBDlIq8Rsubz1yQ==
 
-react-simple-keyboard@^3.1.26:
-  version "3.1.26"
-  resolved "https://registry.yarnpkg.com/react-simple-keyboard/-/react-simple-keyboard-3.1.26.tgz#ec55817a5773835a619d805b2aa91eb165f1889e"
-  integrity sha512-Vyyf2B8C01dK+lafy8YOYxKstycQcZFua14WMcoshIzvYl4VzExKSIrk3QRx3Loaf1gYyXLKMrorf46lO3j6ZQ==
+react-simple-keyboard@^3.1.27:
+  version "3.1.27"
+  resolved "https://registry.yarnpkg.com/react-simple-keyboard/-/react-simple-keyboard-3.1.27.tgz#406829d19857d6269bac0c99398104c49b0abda8"
+  integrity sha512-toAn0ukpdPAGcdjzEizWIB+U0m78XSaSZr+4gdgZjBp7fLKdoSkA/S0NDX4ljdYksyUJVzo+zmXMbGNpAv4y0Q==
 
 react-three-fiber@0.0.0-deprecated:
   version "0.0.0-deprecated"
