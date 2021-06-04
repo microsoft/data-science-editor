@@ -10,8 +10,10 @@ export default function useBlocklyPlugins(workspace: Blockly.WorkspaceSvg) {
         if (!workspace) return
 
         // context menu stuff
-        ContextMenuRegistry.registry.unregister("blockInline")
-        ContextMenuRegistry.registry.unregister("cleanWorkspace")
+        if (ContextMenuRegistry.registry.getItem("blockInline"))
+            ContextMenuRegistry.registry.unregister("blockInline")
+        if (ContextMenuRegistry.registry.getItem("cleanWorkspace"))
+            ContextMenuRegistry.registry.unregister("cleanWorkspace")
 
         // Add the disableOrphans event handler. This is not done automatically by
         // the plugin and should be handled by your application.
