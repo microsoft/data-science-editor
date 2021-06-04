@@ -19,8 +19,7 @@ import {
     resolveServiceBlockDefinition,
     WAIT_BLOCK,
 } from "./toolbox"
-import Blockly, { CollapsibleToolboxCategory } from "blockly"
-import { LIGHT_MODE_REPLACE } from "../../../jacdac-ts/src/jdom/light"
+import Blockly from "blockly"
 
 const ops = {
     AND: "&&",
