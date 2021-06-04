@@ -23,7 +23,7 @@ export default function useVMRunner(
 
     const run = () => {
         _setAutoStart(!!autoStart)
-        runner.start()
+        runner.startAsync()
     }
     const cancel = () => {
         _setAutoStart(false)
@@ -32,7 +32,7 @@ export default function useVMRunner(
 
     // auto start
     useEffect(() => {
-        if (_autoStart && runner) runner.start()
+        if (_autoStart && runner) runner.startAsync()
         return () => runner?.cancel()
     }, [runner, _autoStart])
 

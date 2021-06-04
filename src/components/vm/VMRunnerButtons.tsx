@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react"
+import { useChangeAsync } from "../../jacdac/useChange"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import { VMProgramRunner, VMStatus } from "../../../jacdac-ts/src/vm/VMrunner"
 import useChange from "../../jacdac/useChange"
@@ -38,7 +39,7 @@ export default function VMRunnerButtons(props: {
     workspace: WorkspaceSvg
 }) {
     const { runner, run, cancel, workspace } = props
-    const status = useChange(runner, t => t?.status)
+    const status = useChangeAsync(runner, async t => await t?.statusAsync())
     const disabled = !runner
     const stopped = !status || status === VMStatus.Stopped
     const program = runner?.program
@@ -59,10 +60,10 @@ export default function VMRunnerButtons(props: {
         cancel()
     }
     const handlePause = () => setPaused(!paused)
-    const handleResume = () => {
+    const handleResume = async () => {
         setPaused(false)
-        runner.clearBreakpoints()
-        runner.resume()
+        await runner.clearBreakpointsAsync()
+        runner.resumeAsync()
     }
     const handleStep = () => runner?.step()
 
@@ -78,11 +79,13 @@ export default function VMRunnerButtons(props: {
     // register breakpoints
     useEffect(() => {
         if (paused) {
-            runner?.setBreakpoints(breakpoints)
-            runner?.resume()
+            runner?.setBreakpointsAsync(breakpoints).then(() => {
+                runner?.resumeAsync()
+            })
             return () => {
-                runner?.clearBreakpoints()
-                setBreakpoint(null)
+                runner?.clearBreakpointsAsync().then(() => {
+                    setBreakpoint(null)
+                })
             }
         }
     }, [runner, paused])
