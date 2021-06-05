@@ -5,7 +5,7 @@ import { VMProgramRunner, VMStatus } from "../../../jacdac-ts/src/vm/VMrunner"
 import PlayArrowIcon from "@material-ui/icons/PlayArrow"
 import StopIcon from "@material-ui/icons/Stop"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
-import { Grid } from "@material-ui/core"
+import { Grid, Typography } from "@material-ui/core"
 import PauseIcon from "@material-ui/icons/Pause"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
 import { VM_BREAKPOINT } from "../../../jacdac-ts/src/vm/VMutils"
@@ -25,14 +25,14 @@ function useWorkspaceBreakpoints(program: VMProgram, workspace: WorkspaceSvg) {
             )?.filter(id => !!id) || [],
         [program]
     )
-    const setBreakpoint = (sourceId: string) => {
+    const setBreakpointHighlight = (sourceId: string) => {
         console.debug(`breakpoint`, { sourceId })
         workspace?.highlightBlock(sourceId)
     }
 
     return {
         breakpoints,
-        setBreakpoint,
+        setBreakpointHighlight,
     }
 }
 
@@ -47,10 +47,12 @@ export default function VMRunnerButtons(props: {
     const stopped = !status || status === VMStatus.Stopped
     const program = runner?.program
     const [indeterminate, setIndeterminate] = useState(false)
-    const [paused, setPaused] = useState(false)
+    const [breakpoint, setBreakpoint] = useState<string>(undefined)
+    const pausing = breakpoint === ""
+    const paused = !!breakpoint?.length
     const mounted = useMounted()
     const disabled = indeterminate || !runner
-    const { breakpoints, setBreakpoint } = useWorkspaceBreakpoints(
+    const { breakpoints, setBreakpointHighlight } = useWorkspaceBreakpoints(
         program,
         workspace
     )
@@ -60,8 +62,8 @@ export default function VMRunnerButtons(props: {
     const handleRun = async () => {
         try {
             setIndeterminate(true)
+            setBreakpoint(undefined)
             await run()
-            if (mounted()) setPaused(false)
         } finally {
             if (mounted()) setIndeterminate(false)
         }
@@ -69,8 +71,8 @@ export default function VMRunnerButtons(props: {
     const handleCancel = async () => {
         try {
             setIndeterminate(true)
+            setBreakpoint(undefined)
             await cancel()
-            if (mounted()) setPaused(false)
         } finally {
             if (mounted()) setIndeterminate(false)
         }
@@ -78,9 +80,9 @@ export default function VMRunnerButtons(props: {
     const handleResume = async () => {
         try {
             setIndeterminate(true)
+            setBreakpoint(undefined)
             await runner.clearBreakpointsAsync()
             await runner.resumeAsync()
-            if (mounted()) setPaused(false)
         } finally {
             if (mounted()) setIndeterminate(false)
         }
@@ -90,7 +92,7 @@ export default function VMRunnerButtons(props: {
             setIndeterminate(true)
             await runner.setBreakpointsAsync(breakpoints)
             await runner.resumeAsync()
-            if (mounted()) setPaused(true)
+            setBreakpoint("")
         } finally {
             if (mounted()) setIndeterminate(false)
         }
@@ -102,15 +104,22 @@ export default function VMRunnerButtons(props: {
         () =>
             runner?.subscribe(
                 VM_BREAKPOINT,
-                (_: VMHandler, sourceId?: string) => setBreakpoint(sourceId)
+                (_: VMHandler, sourceId?: string) => {
+                    console.log("breakpoint", { sourceId, mounted: mounted() })
+                    if (mounted()) setBreakpoint(sourceId)
+                }
             ),
         [runner]
     )
 
-    // reset breakpoint in ui when runner, paused mode changes
+    // setting blockly breakpoint
     useEffect(() => {
-        if (!runner || !paused) setBreakpoint(undefined)
-    }, [runner, paused])
+        setBreakpointHighlight(breakpoint)
+        return () => setBreakpointHighlight(undefined)
+    }, [breakpoint])
+
+    // reset breakpoint in ui when runner, paused mode changes
+    useEffect(() => setBreakpoint(undefined), [runner])
 
     return (
         <>
@@ -138,6 +147,13 @@ export default function VMRunnerButtons(props: {
                     {paused ? <PlayForWorkIcon /> : <PauseIcon />}
                 </IconButtonWithTooltip>
             </Grid>
+            {(pausing || paused) && (
+                <Grid item>
+                    <Typography variant="caption">
+                        {pausing ? "pausing" : "paused"}
+                    </Typography>
+                </Grid>
+            )}
         </>
     )
 }
