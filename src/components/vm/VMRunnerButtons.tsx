@@ -5,7 +5,7 @@ import { VMProgramRunner, VMStatus } from "../../../jacdac-ts/src/vm/VMrunner"
 import PlayArrowIcon from "@material-ui/icons/PlayArrow"
 import StopIcon from "@material-ui/icons/Stop"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
-import { Grid, Typography } from "@material-ui/core"
+import { Chip, Grid, Typography } from "@material-ui/core"
 import PauseIcon from "@material-ui/icons/Pause"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
 import { VM_BREAKPOINT } from "../../../jacdac-ts/src/vm/VMutils"
@@ -13,6 +13,8 @@ import { VMHandler, VMProgram } from "../../../jacdac-ts/src/vm/VMir"
 import { WorkspaceSvg } from "blockly"
 import PlayForWorkIcon from "@material-ui/icons/PlayForWork"
 import useMounted from "../hooks/useMounted"
+import IconButtonWithProgress from "../ui/IconButtonWithProgress"
+import BugReportIcon from "@material-ui/icons/BugReport"
 
 function useWorkspaceBreakpoints(program: VMProgram, workspace: WorkspaceSvg) {
     const breakpoints = useMemo(
@@ -26,7 +28,6 @@ function useWorkspaceBreakpoints(program: VMProgram, workspace: WorkspaceSvg) {
         [program]
     )
     const setBreakpointHighlight = (sourceId: string) => {
-        console.debug(`breakpoint`, { sourceId })
         workspace?.highlightBlock(sourceId)
     }
 
@@ -98,6 +99,7 @@ export default function VMRunnerButtons(props: {
         }
     }
     const handleStep = () => runner.step()
+    const handleCenterOnBreakpoint = () => workspace.centerOnBlock(breakpoint)
 
     // register breakpoint handler
     useEffect(
@@ -139,19 +141,28 @@ export default function VMRunnerButtons(props: {
                 </IconButtonWithTooltip>{" "}
             </Grid>
             <Grid item>
-                <IconButtonWithTooltip
-                    title={paused ? "step" : "pause"}
+                <IconButtonWithProgress
+                    title={pausing ? "cancel pause" : paused ? "step" : "pause"}
                     disabled={disabled}
-                    onClick={paused ? handleStep : handlePause}
+                    indeterminate={pausing}
+                    onClick={
+                        pausing
+                            ? handleResume
+                            : paused
+                            ? handleStep
+                            : handlePause
+                    }
                 >
                     {paused ? <PlayForWorkIcon /> : <PauseIcon />}
-                </IconButtonWithTooltip>
+                </IconButtonWithProgress>
             </Grid>
             {(pausing || paused) && (
                 <Grid item>
-                    <Typography variant="caption">
-                        {pausing ? "pausing" : "paused"}
-                    </Typography>
+                    <Chip
+                        icon={<BugReportIcon />}
+                        label={pausing ? "pausing" : "paused"}
+                        color={"secondary"}
+                    />
                 </Grid>
             )}
         </>
