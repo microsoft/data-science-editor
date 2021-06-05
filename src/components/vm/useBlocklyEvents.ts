@@ -18,7 +18,7 @@ export default function useBlocklyEvents(workspace: Blockly.WorkspaceSvg) {
                     // notify twin that the value changed
                     const twinInput = block.inputList[1]
                     const twinField = twinInput
-                        .fieldRow[0] as ReactField<unknown>
+                        .fieldRow.find(f => f.name === "twin") as ReactField<unknown>
                     twinField.emitChange()
                 }
                 break

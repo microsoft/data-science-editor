@@ -980,7 +980,7 @@ function loadBlocks(
         {
             kind: "block",
             type: TWIN_BLOCK,
-            message0: `twin of %1 %2 %3`,
+            message0: `view %1 %2 %3`,
             args0: [
                 {
                     type: "field_variable",
