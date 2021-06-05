@@ -41,6 +41,7 @@ import useMediaQueries from "./hooks/useMediaQueries"
 import { UIFlags } from "../jacdac/providerbus"
 import { useSnackbar } from "notistack"
 import { HideOnScroll } from "./ui/HideOnScroll"
+import OpenVMEditorButton from "./buttons/OpenVMEditorButton"
 
 const WebDiagnostics = lazy(() => import("./WebDiagnostics"))
 const AppDrawer = lazy(() => import("./AppDrawer"))
@@ -274,6 +275,9 @@ function MainAppBar() {
                         <div className={classes.grow} />
                         <PacketStats />
                         <OpenDashboardButton
+                            className={clsx(classes.menuButton)}
+                        />
+                        <OpenVMEditorButton
                             className={clsx(classes.menuButton)}
                         />
                         <IconButtonWithTooltip
