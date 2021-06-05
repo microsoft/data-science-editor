@@ -2,9 +2,7 @@ import Blockly from "blockly"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import { SMap, toMap } from "../../../jacdac-ts/src/jdom/utils"
 import ReactField from "./fields/ReactField"
-import {
-    resolveServiceBlockDefinition,
-} from "./toolbox"
+import { resolveServiceBlockDefinition } from "./toolbox"
 
 export interface VariableJSON {
     // Boolean, Number, String, or service short id
