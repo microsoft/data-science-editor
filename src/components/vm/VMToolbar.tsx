@@ -12,8 +12,8 @@ import VMFileButtons from "./VMFileButtons"
 export default function VMToolbar(props: {
     roleManager: RoleManager
     runner: VMProgramRunner
-    run: () => void
-    cancel: () => void
+    run: () => Promise<void>
+    cancel: () => Promise<void>
     xml: string
     program: VMProgram
     workspace?: WorkspaceSvg
