@@ -9,18 +9,17 @@ import {
 import { startServiceProviderFromServiceClass } from "../../../jacdac-ts/src/servers/servers"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import AppContext from "../AppContext"
-import Alert from "../ui/Alert"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import AddIcon from "@material-ui/icons/Add"
+import Alert from "../ui/Alert"
 
-export default function SimulateDeviceAlert() {
+export function SimulateDeviceHint() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const handleStartSimulator = (serviceClass: number) => () =>
         startServiceProviderFromServiceClass(bus, serviceClass)
     const { toggleShowDeviceHostsDialog } = useContext(AppContext)
-
     return (
-        <Alert severity="info">
+        <>
             Simulate devices (
             <IconButtonWithTooltip
                 onClick={handleStartSimulator(SRV_BUTTON)}
@@ -68,6 +67,14 @@ export default function SimulateDeviceAlert() {
                 <AddIcon />
             </IconButtonWithTooltip>
             .
+        </>
+    )
+}
+
+export default function SimulateDeviceAlert() {
+    return (
+        <Alert severity="info">
+            <SimulateDeviceHint />
         </Alert>
     )
 }
