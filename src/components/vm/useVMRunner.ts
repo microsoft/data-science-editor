@@ -14,18 +14,18 @@ import { RoleManager } from "../../../jacdac-ts/src/vm/rolemanager"
 export default function useVMRunner(
     roleManager: RoleManager,
     program: VMProgram,
-    autoStart: boolean
+    autoRun: boolean
 ) {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { setError } = useContext(AppContext)
     const [runner, setRunner] = useState<VMProgramRunner>()
-    const [_autoStart, _setAutoStart] = useState<boolean>(!!autoStart)
+    const [_autoStart, _setAutoStart] = useState<boolean>(!!autoRun)
 
-    const run = () => {
-        _setAutoStart(!!autoStart)
-        runner.startAsync()
+    const run = async () => {
+        _setAutoStart(!!autoRun)
+        await runner.startAsync()
     }
-    const cancel = () => {
+    const cancel = async () => {
         _setAutoStart(false)
         runner.cancel()
     }
