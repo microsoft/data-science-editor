@@ -99,7 +99,6 @@ export default function VMRunnerButtons(props: {
         }
     }
     const handleStep = () => runner.step()
-    const handleCenterOnBreakpoint = () => workspace.centerOnBlock(breakpoint)
 
     // register breakpoint handler
     useEffect(
