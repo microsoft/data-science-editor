@@ -55,10 +55,9 @@ import {
     CONNECTION_BLOCK,
     CustomBlockDefinition,
     DEVICE_TWIN_DEFINITION_BLOCK,
-    DEVICE_TWIN_PROPERTY_BLOCK,
+    DEVICE_TWIN_DESIRED_PROPERTY_BLOCK,
     DEVICE_TWIN_PROPERTY_TYPE,
-    DEVICE_TWIN_TELEMETRY_BLOCK,
-    DEVICE_TWIN_TELEMETRY_TYPE,
+    DEVICE_TWIN_REPORTED_PROPERTY_BLOCK,
     DEVICE_TWIN_VALUE_TYPE,
     EventBlockDefinition,
     EventFieldDefinition,
@@ -566,7 +565,7 @@ function loadBlocks(
         .map<RegisterBlockDefinition>(({ service, register }) => ({
             kind: "block",
             type: `jacdac_change_by_events_${service.shortId}_${register.name}`,
-            message0: `when %1 ${humanify(register.name)} change by %2`,
+            message0: `on %1 ${humanify(register.name)} change by %2`,
             args0: [
                 fieldVariable(service),
                 ...fieldsToFieldInputs(register),
@@ -941,7 +940,7 @@ function loadBlocks(
         {
             kind: "block",
             type: CONNECTION_BLOCK,
-            message0: "when %1 %2",
+            message0: "on %1 %2",
             args0: [
                 <VariableInputDefinition>{
                     type: "field_variable",
@@ -1264,15 +1263,18 @@ function loadBlocks(
         },
         {
             kind: "block",
-            type: DEVICE_TWIN_PROPERTY_BLOCK,
-            message0: "property %1 %2",
+            type: DEVICE_TWIN_DESIRED_PROPERTY_BLOCK,
+            message0: "desired property %1 %2 %3",
             args0: [
                 <VariableInputDefinition>{
                     type: "field_variable",
                     name: "name",
-                    variable: "property 1",
+                    variable: "reported property 1",
                     variableTypes: [DEVICE_TWIN_PROPERTY_TYPE],
                     defaultType: DEVICE_TWIN_PROPERTY_TYPE,
+                },
+                {
+                    type: "input_dummy",
                 },
                 <StatementInputDefinition>{
                     type: "input_statement",
@@ -1284,60 +1286,76 @@ function loadBlocks(
             nextStatement: deviceTwinStatementType,
             template: "dtdl",
             colour: deviceTwinColor,
+            inputsInline: false,
         },
         {
             kind: "block",
-            type: DEVICE_TWIN_TELEMETRY_BLOCK,
-            message0: "telemetry %1 %2",
+            type: "device_twin_option_desired_value",
+            message0: "desired value %1 %2 %3",
             args0: [
                 <VariableInputDefinition>{
                     type: "field_variable",
-                    name: "name",
-                    variable: "telemetry 1",
-                    variableTypes: [DEVICE_TWIN_TELEMETRY_TYPE],
-                    defaultType: DEVICE_TWIN_TELEMETRY_TYPE,
+                    name: "variable",
+                    variable: "desired value 1",
+                    variableTypes: [DEVICE_TWIN_VALUE_TYPE],
+                    defaultType: DEVICE_TWIN_VALUE_TYPE,
                 },
-                <StatementInputDefinition>{
-                    type: "input_statement",
-                    name: "options",
-                    check: deviceTwinTelemetryOptionStatementType,
-                },
-            ],
-            previousStatement: deviceTwinStatementType,
-            nextStatement: deviceTwinStatementType,
-            template: "dtdl",
-            colour: deviceTwinColor,
-        },
-        // options
-        {
-            kind: "block",
-            type: "device_twin_option_writeable",
-            message0: "writeable %1",
-            args0: [
                 <OptionsInputDefinition>{
                     type: "field_dropdown",
-                    name: "value",
-                    options: [
-                        ["yes", "on"],
-                        ["no", "off"],
-                    ],
+                    name: "type",
+                    options: ["float", "boolean", "string", "integer"].map(
+                        unit => [unit, unit]
+                    ),
+                },
+                <OptionsInputDefinition>{
+                    type: "field_dropdown",
+                    name: "unit",
+                    options: DTDLUnits().map(unit => [unit, unit]),
                 },
             ],
-            previousStatement: deviceTwinPropertyOptionStatementType,
-            nextStatement: deviceTwinPropertyOptionStatementType,
+            previousStatement: deviceTwinCommonOptionStatementType,
+            nextStatement: deviceTwinCommonOptionStatementType,
             template: "dtdlOption",
             colour: deviceTwinColor,
             inputsInline: false,
         },
         {
             kind: "block",
-            type: "device_twin_option_value",
-            message0: "value %1 %2 %3 %4",
+            type: DEVICE_TWIN_REPORTED_PROPERTY_BLOCK,
+            message0: "reported property %1 %2 %3",
+            args0: [
+                <VariableInputDefinition>{
+                    type: "field_variable",
+                    name: "name",
+                    variable: "desired property 1",
+                    variableTypes: [DEVICE_TWIN_PROPERTY_TYPE],
+                    defaultType: DEVICE_TWIN_PROPERTY_TYPE,
+                },
+                {
+                    type: "input_dummy",
+                },
+                <StatementInputDefinition>{
+                    type: "input_statement",
+                    name: "options",
+                    check: deviceTwinPropertyOptionStatementType,
+                },
+            ],
+            previousStatement: deviceTwinStatementType,
+            nextStatement: deviceTwinStatementType,
+            template: "dtdl",
+            colour: deviceTwinColor,
+            inputsInline: false,
+        },
+        // options
+        {
+            kind: "block",
+            type: "device_twin_option_reported_value",
+            message0: "reported value %1 %2 %3 %4",
             args0: [
                 <VariableInputDefinition>{
                     type: "field_variable",
                     name: "variable",
-                    variable: "value 1",
+                    variable: "reported value 1",
                     variableTypes: [DEVICE_TWIN_VALUE_TYPE],
                     defaultType: DEVICE_TWIN_VALUE_TYPE,
                 },
@@ -1388,6 +1406,15 @@ function loadBlocks(
             template: "dtdlOption",
             colour: deviceTwinColor,
             inputsInline: false,
+        },
+        // events
+        {
+            kind: "block",
+            type: "device_twin_reported_property_change",
+            message0: "on reported property change",
+            args0: [],
+            nextStatement: codeStatementType,
+            colour: deviceTwinColor,
         },
     ]
 

@@ -13,6 +13,10 @@ export interface ValueInputDefinition extends InputDefinition {
     check?: string | string[]
 }
 
+export interface DummyInputDefinition extends InputDefinition {
+    type: "input_dummy"
+}
+
 export interface StatementInputDefinition extends InputDefinition {
     type: "input_statement"
     check?: string | string[]
@@ -160,11 +164,10 @@ export const CONNECTION_BLOCK = "jacdac_connection"
 export const CONNECTED_BLOCK = "jacdac_connected"
 
 export const DEVICE_TWIN_DEFINITION_BLOCK = "device_twin_definition"
-export const DEVICE_TWIN_PROPERTY_BLOCK = "device_twin_property"
-export const DEVICE_TWIN_TELEMETRY_BLOCK = "device_twin_telemetry"
+export const DEVICE_TWIN_DESIRED_PROPERTY_BLOCK = "device_twin_desired_property"
+export const DEVICE_TWIN_REPORTED_PROPERTY_BLOCK = "device_twin_reported_property"
 
 export const DEVICE_TWIN_PROPERTY_TYPE = "DeviceTwinProperty"
-export const DEVICE_TWIN_TELEMETRY_TYPE = "DeviceTwinTelemetry"
 export const DEVICE_TWIN_VALUE_TYPE = "DeviceTwinValue"
 
 export interface CategoryDefinition {
