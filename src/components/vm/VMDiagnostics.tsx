@@ -1,6 +1,6 @@
 import { Grid, Typography } from "@material-ui/core"
 import React from "react"
-import { VMProgram } from "../../../jacdac-ts/src/vm/VMir"
+import { VMProgram } from "../../../jacdac-ts/src/vm/vmir"
 import { WorkspaceJSON } from "./jsongenerator"
 import CodeBlock from "../CodeBlock"
 

@@ -10,7 +10,7 @@ import {
     RoleEvent,
     VMError,
     VMCommand,
-} from "../../../jacdac-ts/src/vm/VMir"
+} from "../../../jacdac-ts/src/vm/vmir"
 import { assert } from "../../../jacdac-ts/src/jdom/utils"
 import {
     CommandBlockDefinition,

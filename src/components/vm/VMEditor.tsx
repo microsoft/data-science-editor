@@ -9,7 +9,7 @@ import useRoleManager from "./useRoleManager"
 import VMDiagnostics from "./VMDiagnostics"
 import VMToolbar from "./VMToolbar"
 import { WorkspaceSvg } from "blockly"
-import { VMProgram } from "../../../jacdac-ts/src/vm/VMir"
+import { VMProgram } from "../../../jacdac-ts/src/vm/vmir"
 
 const VM_SOURCE_STORAGE_KEY = "jacdac:tools:vmeditor"
 export default function VMEditor(props: { storageKey?: string }) {
