@@ -6,13 +6,32 @@ export const NEW_PROJET_XML = '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>'
 export interface InputDefinition {
     type: string
     name?: string
-    variable?: string
-    variableTypes?: string[]
-    defaultType?: string
+}
+
+export interface ValueInputDefinition extends InputDefinition {
+    type: "input_value"
     check?: string | string[]
 }
 
+export interface StatementInputDefinition extends InputDefinition {
+    type: "input_statement"
+    check?: string | string[]
+}
+
+export interface VariableInputDefinition extends InputDefinition {
+    type: "field_variable"
+    variable?: string
+    variableTypes?: string[]
+    defaultType?: string
+}
+
+export interface TextInputDefinition extends InputDefinition {
+    type: "field_text"
+    text?: string
+}
+
 export interface OptionsInputDefinition extends InputDefinition {
+    type: "field_dropdown"
     options?: [string, string][]
 }
 
@@ -63,6 +82,8 @@ export type BlockTemplate =
     | "every"
     | "connection"
     | "connected"
+    | "dtdl"
+    | "dtdlOption"
 
 export interface BlockDefinition extends BlockReference {
     message0?: string
@@ -137,6 +158,14 @@ export const WATCH_BLOCK = "jacdac_watch"
 export const REPEAT_EVERY_BLOCK = "jacdac_repeat_every"
 export const CONNECTION_BLOCK = "jacdac_connection"
 export const CONNECTED_BLOCK = "jacdac_connected"
+
+export const DEVICE_TWIN_DEFINITION_BLOCK = "device_twin_definition"
+export const DEVICE_TWIN_PROPERTY_BLOCK = "device_twin_property"
+export const DEVICE_TWIN_TELEMETRY_BLOCK = "device_twin_telemetry"
+
+export const DEVICE_TWIN_PROPERTY_TYPE = "DeviceTwinProperty"
+export const DEVICE_TWIN_TELEMETRY_TYPE = "DeviceTwinTelemetry"
+export const DEVICE_TWIN_VALUE_TYPE = "DeviceTwinValue"
 
 export interface CategoryDefinition {
     kind: "category"

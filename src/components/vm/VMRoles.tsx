@@ -9,7 +9,7 @@ import {
     addServiceProvider,
     serviceProviderDefinitionFromServiceClass,
 } from "../../../jacdac-ts/src/servers/servers"
-import { RoleManager } from "../../../jacdac-ts/src/vm/rolemanager"
+import RoleManager from "../../../jacdac-ts/src/servers/rolemanager"
 import useChange from "../../jacdac/useChange"
 import { BlockSvg, FieldVariable, WorkspaceSvg } from "blockly"
 import { TWIN_BLOCK } from "./toolbox"

@@ -54,6 +54,7 @@ export function domToJSON(workspace: Blockly.Workspace): WorkspaceJSON {
             math_number: block => Number(block.getFieldValue("NUM") || "0"),
             logic_boolean: block => block.getFieldValue("BOOL") === "TRUE",
             jacdac_on_off: block => block.getFieldValue("value") === "on",
+            jacdac_yes_no: block => block.getFieldValue("value") === "on",
             jacdac_time_picker: block =>
                 Number(block.getFieldValue("value") || "0"),
             jacdac_angle: block => Number(block.getFieldValue("value") || "0"),

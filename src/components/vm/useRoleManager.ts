@@ -1,6 +1,6 @@
 import { useContext, useMemo } from "react"
-import { RoleManager } from "../../../jacdac-ts/src/vm/rolemanager"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
+import RoleManager from "../../../jacdac-ts/src/servers/rolemanager"
 
 export default function useRoleManager() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)

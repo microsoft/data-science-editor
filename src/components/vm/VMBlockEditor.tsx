@@ -25,7 +25,7 @@ import {
     BlocklyWorkspaceWithServices,
     WorkspaceServices,
 } from "./WorkspaceContext"
-import { RoleManager } from "../../../jacdac-ts/src/vm/rolemanager"
+import RoleManager from "../../../jacdac-ts/src/servers/rolemanager"
 import { arrayConcatMany, toMap } from "../../../jacdac-ts/src/jdom/utils"
 import { withPrefix } from "gatsby"
 

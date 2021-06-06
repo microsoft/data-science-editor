@@ -1,7 +1,7 @@
-import { Box, Grid } from "@material-ui/core"
+import { Grid } from "@material-ui/core"
 import React from "react"
 import { VMProgram } from "../../../jacdac-ts/src/vm/ir"
-import { RoleManager } from "../../../jacdac-ts/src/vm/rolemanager"
+import RoleManager from "../../../jacdac-ts/src/servers/rolemanager"
 import { VMProgramRunner } from "../../../jacdac-ts/src/vm/runner"
 import VMRoles from "./VMRoles"
 import VMRunnerButtons from "./VMRunnerButtons"
@@ -10,7 +10,6 @@ import { WorkspaceSvg } from "blockly"
 import VMFileButtons from "./VMFileButtons"
 import useChange from "../../jacdac/useChange"
 import useDevices from "../hooks/useDevices"
-import { SimulateDeviceHint } from "../alert/SimulateDeviceAlert"
 
 export default function VMToolbar(props: {
     roleManager: RoleManager
@@ -44,11 +43,6 @@ export default function VMToolbar(props: {
                 <VMStartSimulatorButton />
             </Grid>
             <VMRoles roleManager={roleManager} workspace={workspace} />
-            {noRoles && (
-                <Grid item>
-                    <SimulateDeviceHint />
-                </Grid>
-            )}
         </Grid>
     )
 }
