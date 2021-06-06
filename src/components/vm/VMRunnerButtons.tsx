@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react"
-import { useChangeAsync } from "../../jacdac/useChange"
+import useChange from "../../jacdac/useChange"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import { VMProgramRunner, VMStatus } from "../../../jacdac-ts/src/vm/runner"
 import PlayArrowIcon from "@material-ui/icons/PlayArrow"
@@ -44,7 +44,7 @@ export default function VMRunnerButtons(props: {
     workspace: WorkspaceSvg
 }) {
     const { runner, run, cancel, workspace } = props
-    const status = useChangeAsync(runner, t => t?.statusAsync())
+    const status = useChange(runner, t => t?.status)
     const stopped = !status || status === VMStatus.Stopped
     const program = runner?.program
     const [indeterminate, setIndeterminate] = useState(false)
