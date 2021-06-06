@@ -4,13 +4,16 @@ import {
     VMHandler,
     VMProgram,
     VMRole,
-    toMemberExpression,
-    toIdentifier,
     VMIfThenElse,
-    RoleEvent,
     VMError,
     VMCommand,
 } from "../../../jacdac-ts/src/vm/ir"
+import {
+    toMemberExpression,
+    toIdentifier,
+    RoleEvent,
+} from "../../../jacdac-ts/src/vm/compile"
+
 import { assert } from "../../../jacdac-ts/src/jdom/utils"
 import {
     CommandBlockDefinition,
