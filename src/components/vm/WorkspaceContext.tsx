@@ -4,7 +4,7 @@ import { CHANGE } from "../../../jacdac-ts/src/jdom/constants"
 import { JDEventSource } from "../../../jacdac-ts/src/jdom/eventsource"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { RoleManager } from "../../../jacdac-ts/src/vm/rolemanager"
-import { VMProgramRunner } from "../../../jacdac-ts/src/vm/vmrunner"
+import { VMProgramRunner } from "../../../jacdac-ts/src/vm/runner"
 import useChange from "../../jacdac/useChange"
 import ReactField from "./fields/ReactField"
 

@@ -1,10 +1,10 @@
 import { useContext, useEffect, useState } from "react"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
-import { VMProgram } from "../../../jacdac-ts/src/vm/vmir"
+import { VMProgram } from "../../../jacdac-ts/src/vm/ir"
 import {
     VMProgramRunner,
     VMTraceContext,
-} from "../../../jacdac-ts/src/vm/vmrunner"
+} from "../../../jacdac-ts/src/vm/runner"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import AppContext from "../AppContext"
 import { ERROR, TRACE } from "../../../jacdac-ts/src/jdom/constants"

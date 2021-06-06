@@ -2,11 +2,11 @@ import React, { useContext } from "react"
 import SaveIcon from "@material-ui/icons/Save"
 import { Grid, Tooltip } from "@material-ui/core"
 import { IconButton, Link } from "gatsby-theme-material-ui"
-import { VMProgram } from "../../../jacdac-ts/src/vm/vmir"
+import { VMProgram } from "../../../jacdac-ts/src/vm/ir"
 import ImportButton from "../ImportButton"
 import AppContext from "../AppContext"
 import { WorkspaceSvg, Xml } from "blockly"
-import VMFile from "../../../jacdac-ts/src/vm/vmfile"
+import VMFile from "../../../jacdac-ts/src/vm/file"
 
 function VMLoadButton(props: { workspace: WorkspaceSvg }) {
     const { workspace } = props

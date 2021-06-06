@@ -4,8 +4,8 @@ import { Box, Grid, Switch, Typography, useTheme } from "@material-ui/core"
 import WorkspaceContext from "../WorkspaceContext"
 import ReactInlineField from "./ReactInlineField"
 import { PointerBoundary } from "./PointerBoundary"
-import { WatchValueType } from "../../../../jacdac-ts/src/vm/vmrunner"
-import { VM_WATCH_CHANGE } from "../../../../jacdac-ts/src/vm/vmutils"
+import { WatchValueType } from "../../../../jacdac-ts/src/vm/runner"
+import { VM_WATCH_CHANGE } from "../../../../jacdac-ts/src/vm/utils"
 import { roundWithPrecision } from "../../../../jacdac-ts/src/jdom/utils"
 
 function WatchValueWidget() {
