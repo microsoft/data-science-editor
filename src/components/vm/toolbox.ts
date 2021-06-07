@@ -30,7 +30,7 @@ export interface VariableInputDefinition extends InputDefinition {
 }
 
 export interface TextInputDefinition extends InputDefinition {
-    type: "field_text"
+    type: "field_input"
     text?: string
 }
 
@@ -162,6 +162,7 @@ export const WATCH_BLOCK = "jacdac_watch"
 export const REPEAT_EVERY_BLOCK = "jacdac_repeat_every"
 export const CONNECTION_BLOCK = "jacdac_connection"
 export const CONNECTED_BLOCK = "jacdac_connected"
+export const LOG_BLOCK = "jacdac_custom_logger_log"
 
 export const DEVICE_TWIN_DEFINITION_BLOCK = "device_twin_definition"
 export const DEVICE_TWIN_DESIRED_PROPERTY_BLOCK = "device_twin_desired_property"

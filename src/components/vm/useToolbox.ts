@@ -63,6 +63,7 @@ import {
     EventFieldDefinition,
     InputDefinition,
     INSPECT_BLOCK,
+    LOG_BLOCK,
     NEW_PROJET_XML,
     NumberInputDefinition,
     OptionsInputDefinition,
@@ -74,6 +75,7 @@ import {
     ServiceBlockDefinitionFactory,
     SET_STATUS_LIGHT_BLOCK,
     StatementInputDefinition,
+    TextInputDefinition,
     ToolboxConfiguration,
     TWIN_BLOCK,
     ValueInputDefinition,
@@ -307,6 +309,7 @@ function loadBlocks(
         )
 
     const allServices = serviceSpecifications()
+    const supportedServices = allServices
         .filter(
             service =>
                 !/^_/.test(service.shortId) && service.status !== "deprecated"
@@ -315,7 +318,7 @@ function loadBlocks(
     const resolveService = (cls: number): jdspec.ServiceSpec[] =>
         allServices.filter(srv => srv.classIdentifier === cls)
     const registers = arrayConcatMany(
-        allServices.map(service =>
+        supportedServices.map(service =>
             service.packets
                 .filter(
                     pkt =>
@@ -329,7 +332,7 @@ function loadBlocks(
                 }))
         )
     )
-    const events = allServices
+    const events = supportedServices
         .map(service => ({
             service,
             events: service.packets.filter(
@@ -341,7 +344,7 @@ function loadBlocks(
         }))
         .filter(kv => !!kv.events.length)
     const commands = arrayConcatMany(
-        allServices.map(service =>
+        supportedServices.map(service =>
             service.packets
                 .filter(
                     pkt =>
@@ -355,6 +358,32 @@ function loadBlocks(
     )
 
     const customBlockDefinitions: CustomBlockDefinition[] = [
+        ...resolveService(SRV_LOGGER).map(
+            service =>
+                <CustomBlockDefinition>{
+                    kind: "block",
+                    type: `log`, // do not rename
+                    message0: `log %1 with value %2`,
+                    args0: [
+                        <TextInputDefinition>{
+                            type: "field_input",
+                            name: "message",
+                        },
+                        <ValueInputDefinition>{
+                            type: "input_value",
+                            name: "value",
+                        },
+                    ],
+                    colour: commandColor,
+                    inputsInline: true,
+                    previousStatement: codeStatementType,
+                    nextStatement: codeStatementType,
+                    tooltip: `Logs a message and an optional value to the logger`,
+                    helpUrl: serviceHelp(service),
+                    service,
+                    template: "custom",
+                }
+        ),
         ...resolveService(SRV_HID_KEYBOARD).map(
             service =>
                 <CustomBlockDefinition>{
@@ -476,9 +505,13 @@ function loadBlocks(
                 }
         ),
     ].map(def => {
-        def.type = `jacdac_custom_${def.service.shortId}_${def.type}`
+        def.type = `jacdac_custom_${def.service.shortId.toLowerCase()}_${
+            def.type
+        }`
         return def
     })
+
+    console.log("custom blocks", customBlockDefinitions)
 
     const eventBlocks = events.map<EventBlockDefinition>(
         ({ service, events }) => ({
@@ -943,7 +976,7 @@ function loadBlocks(
                     variable: "any",
                     variableTypes: [
                         "client",
-                        ...allServices.map(service => service.shortId),
+                        ...supportedServices.map(service => service.shortId),
                     ],
                     defaultType: "client",
                 },
@@ -974,7 +1007,7 @@ function loadBlocks(
                     variable: "any",
                     variableTypes: [
                         "client",
-                        ...allServices.map(service => service.shortId),
+                        ...supportedServices.map(service => service.shortId),
                     ],
                     defaultType: "client",
                 },
@@ -997,7 +1030,7 @@ function loadBlocks(
                     variable: "all",
                     variableTypes: [
                         "client",
-                        ...allServices.map(service => service.shortId),
+                        ...supportedServices.map(service => service.shortId),
                     ],
                     defaultType: "client",
                 },
@@ -1031,7 +1064,7 @@ function loadBlocks(
                     variable: "none",
                     variableTypes: [
                         "client",
-                        ...allServices.map(service => service.shortId),
+                        ...supportedServices.map(service => service.shortId),
                     ],
                     defaultType: "client",
                 },
@@ -1060,7 +1093,7 @@ function loadBlocks(
                     variable: "none",
                     variableTypes: [
                         "client",
-                        ...allServices.map(service => service.shortId),
+                        ...supportedServices.map(service => service.shortId),
                     ],
                     defaultType: "client",
                 },
@@ -1624,6 +1657,10 @@ export default function useToolbox(props: {
                     },
                 },
             },
+            <BlockDefinition>{
+                kind: "block",
+                type: LOG_BLOCK,
+            },
         ].filter(b => !!b),
     }
 
@@ -1743,10 +1780,9 @@ export default function useToolbox(props: {
         contents: [
             deviceTwinsCategory,
             ...servicesCategories,
-            servicesCategories?.length &&
-                <SeparatorDefinition>{
-                    kind: "sep",
-                },
+            <SeparatorDefinition>{
+                kind: "sep",
+            },
             commandsCategory,
             logicCategory,
             mathCategory,
