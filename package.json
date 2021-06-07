@@ -22,10 +22,12 @@
     "@octokit/core": "^3.4.0",
     "@react-three/drei": "^5.3.1",
     "@react-three/fiber": "^6.2.2",
+    "@tidyjs/tidy": "^2.4.2",
     "@typescript-eslint/eslint-plugin": "^4.26.0",
     "@typescript-eslint/parser": "^4.26.0",
     "blockly": "^5.20210325.1",
     "compare-versions": "^3.6.0",
+    "dns-packet": "^5.2.4",
     "eslint": "^7.27.0",
     "eslint-plugin-react": "^7.24.0",
     "gatsby": "^3.6.2",
@@ -85,9 +87,8 @@
     "trim": "^1.0.1",
     "use-debounce": "^6.0.1",
     "use-editable": "^2.3.3",
-    "xmlhttprequest-ssl": "^1.6.3",
-    "dns-packet": "^5.2.4",
-    "ws": "^7.4.6"
+    "ws": "^7.4.6",
+    "xmlhttprequest-ssl": "^1.6.3"
   },
   "keywords": [
     "jacdac"
