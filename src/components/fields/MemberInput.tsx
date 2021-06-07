@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 // tslint:disable-next-line: no-submodule-imports
-import { FormControlLabel, Slider } from "@material-ui/core"
+import { FormControlLabel, Slider, Typography } from "@material-ui/core"
 import { MenuItem, Select, Switch, TextField } from "@material-ui/core"
 import {
     flagsToValue,
@@ -28,6 +28,7 @@ import useUnitIcon from "../hooks/useUnitIcon"
 import { PackedSimpleValue } from "../../../jacdac-ts/src/jdom/pack"
 import { useId } from "react-use-id-hook"
 import LoadingProgress from "../ui/LoadingProgress"
+import useWidgetTheme from "../widgets/useWidgetTheme"
 
 export default function MemberInput(props: {
     specification: jdspec.PacketMember
@@ -63,13 +64,8 @@ export default function MemberInput(props: {
         off,
         toggleOff,
     } = props
-    const {
-        typicalMin,
-        typicalMax,
-        absoluteMin,
-        absoluteMax,
-        type,
-    } = specification
+    const { typicalMin, typicalMax, absoluteMin, absoluteMax, type } =
+        specification
     const enumInfo = serviceSpecification.enums?.[specification.type]
     const disabled = !setValue
     const [errorText, setErrorText] = useState("")
@@ -83,6 +79,7 @@ export default function MemberInput(props: {
     const isWidget = variant === "widget"
     const widgetSize = useWidgetSize()
     const unitIcon = useUnitIcon(specification.unit, { "aria-label": label })
+    const { textPrimary } = useWidgetTheme(color)
 
     const minValue = pick(
         min,
@@ -190,7 +187,7 @@ export default function MemberInput(props: {
                         color={color}
                     />
                 }
-                label={label}
+                label={<span style={{ color: textPrimary }}>{label}</span>}
             />
         )
     } else if (enumInfo !== undefined) {
