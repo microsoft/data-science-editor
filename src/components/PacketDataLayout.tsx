@@ -7,8 +7,9 @@ import {
     TableHead,
     TableRow,
 } from "@material-ui/core"
+import { Alert, AlertTitle } from "@material-ui/lab"
 import React from "react"
-import { jdunpack } from "../../jacdac-ts/src/jdom/pack"
+import { jdunpack, PackedValues } from "../../jacdac-ts/src/jdom/pack"
 import Packet from "../../jacdac-ts/src/jdom/packet"
 import { unpackedToObject } from "../../jacdac-ts/src/jdom/packobject"
 import { toHex } from "../../jacdac-ts/src/jdom/utils"
@@ -26,9 +27,21 @@ export default function PacketDataLayout(props: {
     const { packet, showHex, showDecoded, showUnpacked, showJSON } = props
     const { data, decoded } = packet
     const info = decoded?.info
-    const unpacked = info?.packFormat && jdunpack(data, info.packFormat)
+    let unpacked: PackedValues
+    let error: string
+    try {
+        unpacked = info?.packFormat && jdunpack(data, info.packFormat)
+    } catch (e) {
+        error = e + ""
+    }
     return (
         <>
+            {error && (
+                <Alert severity="error">
+                    <AlertTitle>Invalid data payload</AlertTitle>
+                    {error}
+                </Alert>
+            )}
             {showHex && !!data.length && (
                 <PaperBox padding={0}>
                     <Tooltip
@@ -72,14 +85,14 @@ export default function PacketDataLayout(props: {
                     </TableContainer>
                 </PaperBox>
             )}
-            {showUnpacked && info?.packFormat && (
+            {showUnpacked && unpacked && (
                 <Box pb={2}>
                     <CodeBlock className="language-json">
                         {JSON.stringify(unpacked, null, 4)}
                     </CodeBlock>
                 </Box>
             )}
-            {showJSON && info?.packFormat && (
+            {showJSON && unpacked && (
                 <Box pb={2}>
                     <CodeBlock className="language-json">
                         {JSON.stringify(
