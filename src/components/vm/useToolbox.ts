@@ -55,10 +55,10 @@ import {
     CONNECTION_BLOCK,
     CustomBlockDefinition,
     DEVICE_TWIN_DEFINITION_BLOCK,
-    DEVICE_TWIN_DESIRED_PROPERTY_BLOCK,
+    DEVICE_TWIN_PROPERTY_BLOCK,
     DEVICE_TWIN_PROPERTY_TYPE,
-    DEVICE_TWIN_REPORTED_PROPERTY_BLOCK,
     DEVICE_TWIN_VALUE_TYPE,
+    DummyInputDefinition,
     EventBlockDefinition,
     EventFieldDefinition,
     InputDefinition,
@@ -109,6 +109,7 @@ type CachedBlockDefinitions = {
     blocks: BlockDefinition[]
     serviceBlocks: ServiceBlockDefinition[]
     eventFieldBlocks: EventFieldDefinition[]
+    azureIoTHubBlocks: BlockDefinition[]
     deviceTwinsBlocks: BlockDefinition[]
     services: jdspec.ServiceSpec[]
 }
@@ -162,6 +163,7 @@ function createBlockTheme(theme: Theme) {
     const otherColor = theme.palette.info.main
     const commandColor = theme.palette.warning.main
     const debuggerColor = theme.palette.grey[600]
+    const azureIoTHubColor = theme.palette.error.main
     const deviceTwinColor = theme.palette.error.light
     const serviceColor = (srv: jdspec.ServiceSpec) =>
         isSensor(srv) ? sensorColor : otherColor
@@ -171,6 +173,7 @@ function createBlockTheme(theme: Theme) {
         commandColor,
         debuggerColor,
         otherColor,
+        azureIoTHubColor,
         deviceTwinColor,
     }
 }
@@ -190,6 +193,7 @@ function loadBlocks(
     serviceColor: (srv: jdspec.ServiceSpec) => string,
     commandColor: string,
     debuggerColor: string,
+    azureIoTHubColor: string,
     deviceTwinColor: string
 ): CachedBlockDefinitions {
     // blocks
@@ -1273,17 +1277,51 @@ function loadBlocks(
         },
     ]
 
+    const azureIoTHubBlocks: BlockDefinition[] = [
+        {
+            kind: "block",
+            type: "device_twin_send_telemetry",
+            message0: "send telemetry %1 %2",
+            args0: [
+                <DummyInputDefinition>{
+                    type: "input_dummy",
+                },
+                <StatementInputDefinition>{
+                    type: "input_statement",
+                    name: "fields",
+                },
+            ],
+            previousStatement: codeStatementType,
+            nextStatement: codeStatementType,
+            colour: azureIoTHubColor,
+        },
+        {
+            kind: "block",
+            type: "device_twin_send_telemetry_value",
+            message0: "with %1 = %2",
+            args0: [
+                <TextInputDefinition>{
+                    type: "field_input",
+                    name: "name",
+                },
+                <ValueInputDefinition>{
+                    type: "input_value",
+                    name: "value",
+                    check: ["String", "Boolean", "Number"],
+                },
+            ],
+            previousStatement: codeStatementType,
+            nextStatement: codeStatementType,
+            colour: azureIoTHubColor,
+        },
+    ]
+
     const deviceTwinsBlocks: BlockDefinition[] = [
         {
             kind: "block",
             type: DEVICE_TWIN_DEFINITION_BLOCK,
-            message0: "device twin id %1",
-            args0: [
-                {
-                    type: "field_input",
-                    name: "id",
-                },
-            ],
+            message0: "device twin id",
+            args0: [],
             inputsInline: true,
             nextStatement: deviceTwinStatementType,
             template: "dtdl",
@@ -1291,71 +1329,13 @@ function loadBlocks(
         },
         {
             kind: "block",
-            type: DEVICE_TWIN_DESIRED_PROPERTY_BLOCK,
-            message0: "desired property %1 %2 %3",
+            type: DEVICE_TWIN_PROPERTY_BLOCK,
+            message0: "property %1 %2 %3",
             args0: [
                 <VariableInputDefinition>{
                     type: "field_variable",
                     name: "name",
-                    variable: "reported property 1",
-                    variableTypes: [DEVICE_TWIN_PROPERTY_TYPE],
-                    defaultType: DEVICE_TWIN_PROPERTY_TYPE,
-                },
-                {
-                    type: "input_dummy",
-                },
-                <StatementInputDefinition>{
-                    type: "input_statement",
-                    name: "options",
-                    check: deviceTwinPropertyOptionStatementType,
-                },
-            ],
-            previousStatement: deviceTwinStatementType,
-            nextStatement: deviceTwinStatementType,
-            template: "dtdl",
-            colour: deviceTwinColor,
-            inputsInline: false,
-        },
-        {
-            kind: "block",
-            type: "device_twin_option_desired_value",
-            message0: "desired value %1 %2 %3",
-            args0: [
-                <VariableInputDefinition>{
-                    type: "field_variable",
-                    name: "variable",
-                    variable: "desired value 1",
-                    variableTypes: [DEVICE_TWIN_VALUE_TYPE],
-                    defaultType: DEVICE_TWIN_VALUE_TYPE,
-                },
-                <OptionsInputDefinition>{
-                    type: "field_dropdown",
-                    name: "type",
-                    options: ["float", "boolean", "string", "integer"].map(
-                        unit => [unit, unit]
-                    ),
-                },
-                <OptionsInputDefinition>{
-                    type: "field_dropdown",
-                    name: "unit",
-                    options: DTDLUnits().map(unit => [unit, unit]),
-                },
-            ],
-            previousStatement: deviceTwinCommonOptionStatementType,
-            nextStatement: deviceTwinCommonOptionStatementType,
-            template: "dtdlOption",
-            colour: deviceTwinColor,
-            inputsInline: false,
-        },
-        {
-            kind: "block",
-            type: DEVICE_TWIN_REPORTED_PROPERTY_BLOCK,
-            message0: "reported property %1 %2 %3",
-            args0: [
-                <VariableInputDefinition>{
-                    type: "field_variable",
-                    name: "name",
-                    variable: "desired property 1",
+                    variable: "property 1",
                     variableTypes: [DEVICE_TWIN_PROPERTY_TYPE],
                     defaultType: DEVICE_TWIN_PROPERTY_TYPE,
                 },
@@ -1377,22 +1357,15 @@ function loadBlocks(
         // options
         {
             kind: "block",
-            type: "device_twin_option_reported_value",
-            message0: "reported value %1 %2 %3 %4",
+            type: "device_twin_option_property_field",
+            message0: "field %1 %2 %3",
             args0: [
                 <VariableInputDefinition>{
                     type: "field_variable",
                     name: "variable",
-                    variable: "reported value 1",
+                    variable: "value 1",
                     variableTypes: [DEVICE_TWIN_VALUE_TYPE],
                     defaultType: DEVICE_TWIN_VALUE_TYPE,
-                },
-                <OptionsInputDefinition>{
-                    type: "field_dropdown",
-                    name: "type",
-                    options: ["float", "boolean", "string", "integer"].map(
-                        unit => [unit, unit]
-                    ),
                 },
                 <OptionsInputDefinition>{
                     type: "field_dropdown",
@@ -1410,37 +1383,20 @@ function loadBlocks(
             colour: deviceTwinColor,
             inputsInline: false,
         },
-        {
-            kind: "block",
-            type: "device_twin_option_comment",
-            message0: "%1 %2",
-            args0: [
-                <OptionsInputDefinition>{
-                    type: "field_dropdown",
-                    name: "type",
-                    options: [
-                        ["comment", "comment"],
-                        ["description", "description"],
-                        ["display name", "displayName"],
-                    ],
-                },
-                {
-                    type: "field_multilinetext",
-                    name: "text",
-                },
-            ],
-            previousStatement: deviceTwinCommonOptionStatementType,
-            nextStatement: deviceTwinCommonOptionStatementType,
-            template: "dtdlOption",
-            colour: deviceTwinColor,
-            inputsInline: false,
-        },
         // events
         {
             kind: "block",
-            type: "device_twin_reported_property_change",
-            message0: "on reported property change",
-            args0: [],
+            type: "device_twin_property_change",
+            message0: "on property %1 change",
+            args0: [
+                <VariableInputDefinition>{
+                    type: "field_variable",
+                    name: "name",
+                    variable: "property 1",
+                    variableTypes: [DEVICE_TWIN_PROPERTY_TYPE],
+                    defaultType: DEVICE_TWIN_PROPERTY_TYPE,
+                },
+            ],
             nextStatement: codeStatementType,
             colour: deviceTwinColor,
         },
@@ -1452,6 +1408,7 @@ function loadBlocks(
         ...runtimeBlocks,
         ...shadowBlocks,
         ...mathBlocks,
+        ...azureIoTHubBlocks,
         ...deviceTwinsBlocks,
     ]
 
@@ -1481,6 +1438,7 @@ function loadBlocks(
         blocks,
         serviceBlocks,
         eventFieldBlocks,
+        azureIoTHubBlocks,
         deviceTwinsBlocks,
         services,
     }
@@ -1530,19 +1488,30 @@ export default function useToolbox(props: {
     const { serviceClass, source, program } = props
 
     const theme = useTheme()
-    const { serviceColor, commandColor, debuggerColor, deviceTwinColor } =
-        createBlockTheme(theme)
-    const { serviceBlocks, eventFieldBlocks, deviceTwinsBlocks, services } =
-        useMemo(
-            () =>
-                loadBlocks(
-                    serviceColor,
-                    commandColor,
-                    debuggerColor,
-                    deviceTwinColor
-                ),
-            [theme]
-        )
+    const {
+        serviceColor,
+        commandColor,
+        debuggerColor,
+        azureIoTHubColor,
+        deviceTwinColor,
+    } = createBlockTheme(theme)
+    const {
+        serviceBlocks,
+        eventFieldBlocks,
+        azureIoTHubBlocks,
+        deviceTwinsBlocks,
+        services,
+    } = useMemo(
+        () =>
+            loadBlocks(
+                serviceColor,
+                commandColor,
+                debuggerColor,
+                azureIoTHubColor,
+                deviceTwinColor
+            ),
+        [theme]
+    )
     const blockServices =
         program?.roles.map(r => r.serviceShortId) ||
         source?.variables.map(v => v.type) ||
@@ -1760,6 +1729,20 @@ export default function useToolbox(props: {
         custom: "VARIABLE",
     }
 
+    const azureIoTHubCategory: CategoryDefinition = {
+        kind: "category",
+        name: "Azure IoT Hub",
+        colour: azureIoTHubColor,
+        contents: [
+            ...azureIoTHubBlocks.map(
+                ({ type }) =>
+                    <BlockDefinition>{
+                        kind: "block",
+                        type,
+                    }
+            ),
+        ],
+    }
     const deviceTwinsCategory: CategoryDefinition = {
         kind: "category",
         name: "Device Twin",
@@ -1778,15 +1761,20 @@ export default function useToolbox(props: {
     const toolboxConfiguration: ToolboxConfiguration = {
         kind: "categoryToolbox",
         contents: [
-            deviceTwinsCategory,
             ...servicesCategories,
-            <SeparatorDefinition>{
-                kind: "sep",
-            },
+            !!serviceSpecifications.length &&
+                <SeparatorDefinition>{
+                    kind: "sep",
+                },
             commandsCategory,
             logicCategory,
             mathCategory,
             variablesCategory,
+            <SeparatorDefinition>{
+                kind: "sep",
+            },
+            azureIoTHubCategory,
+            deviceTwinsCategory,
             <SeparatorDefinition>{
                 kind: "sep",
             },

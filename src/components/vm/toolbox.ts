@@ -164,9 +164,9 @@ export const CONNECTION_BLOCK = "jacdac_connection"
 export const CONNECTED_BLOCK = "jacdac_connected"
 export const LOG_BLOCK = "jacdac_custom_logger_log"
 
+export const DEVICE_TWIN_SEND_TELEMETRY  = "device_twin_send_telemetry"
 export const DEVICE_TWIN_DEFINITION_BLOCK = "device_twin_definition"
-export const DEVICE_TWIN_DESIRED_PROPERTY_BLOCK = "device_twin_desired_property"
-export const DEVICE_TWIN_REPORTED_PROPERTY_BLOCK = "device_twin_reported_property"
+export const DEVICE_TWIN_PROPERTY_BLOCK = "device_twin_property"
 
 export const DEVICE_TWIN_PROPERTY_TYPE = "DeviceTwinProperty"
 export const DEVICE_TWIN_VALUE_TYPE = "DeviceTwinValue"
