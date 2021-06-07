@@ -1280,8 +1280,44 @@ function loadBlocks(
     const azureIoTHubBlocks: BlockDefinition[] = [
         {
             kind: "block",
+            type: "device_twin_receive_telemetry",
+            message0: "on receive cloud-to-device message",
+            args0: [],
+            nextStatement: codeStatementType,
+            colour: azureIoTHubColor,
+        },
+        {
+            kind: "block",
+            type: "device_twin_receive_telemetry_number",
+            message0: "received number %1",
+            args0: [
+                <TextInputDefinition>{
+                    type: "field_input",
+                    name: "name",
+                    text: "value",
+                },
+            ],
+            output: "Number",
+            colour: azureIoTHubColor,
+        },
+        {
+            kind: "block",
+            type: "device_twin_receive_telemetry_string",
+            message0: "received string %1",
+            args0: [
+                <TextInputDefinition>{
+                    type: "field_input",
+                    name: "name",
+                    text: "value",
+                },
+            ],
+            output: "String",
+            colour: azureIoTHubColor,
+        },
+        {
+            kind: "block",
             type: "device_twin_send_telemetry",
-            message0: "send telemetry %1 %2",
+            message0: "send device-to-cloud message %1 %2",
             args0: [
                 <DummyInputDefinition>{
                     type: "input_dummy",
@@ -1303,6 +1339,7 @@ function loadBlocks(
                 <TextInputDefinition>{
                     type: "field_input",
                     name: "name",
+                    text: "value",
                 },
                 <ValueInputDefinition>{
                     type: "input_value",
