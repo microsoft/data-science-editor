@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React, { useContext, useState } from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import useServiceServer from "../hooks/useServiceServer"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
@@ -17,19 +17,19 @@ export default function DashboardLED(props: DashboardServiceProps) {
     const { setError } = useContext(AppContext)
     const server = useServiceServer<LEDServer>(service)
     const color = server ? "secondary" : "primary"
+    const [speed, setSpeed] = useState(32)
+
     const waveLengthRegister = useRegister(service, LedReg.WaveLength)
     const [waveLength] = useRegisterUnpackedValue<[number]>(
         waveLengthRegister,
         props
     )
-    const colorRegister = useRegister(service, LedReg.Color)
+    const busColorRegister = useRegister(service, LedReg.Color)
     const busColor = useRegisterUnpackedValue<[number, number, number]>(
-        colorRegister,
+        busColorRegister,
         props
     )
     const serverColor = useChange(server?.color, _ => _?.values())
-    const [r, g, b] = serverColor || busColor
-    const rgb = (r << 16) | (g << 8) | b
 
     const ledCountRegister = useRegister(service, LedReg.LedCount)
     const [ledCount] = useRegisterUnpackedValue<[number]>(
@@ -37,11 +37,14 @@ export default function DashboardLED(props: DashboardServiceProps) {
         props
     )
 
+    const [r, g, b] = serverColor || busColor
+    const rgb = (r << 16) | (g << 8) | b
+
     // nothing to see
     if (r === undefined) return <LoadingProgress />
 
     // send animate command
-    const handleSetColor = (col: number) => async () => {
+    const handleSetColor = async (col: number) => {
         try {
             await service.sendCmdAsync(
                 LedCmd.Animate,
@@ -49,11 +52,11 @@ export default function DashboardLED(props: DashboardServiceProps) {
                     (col >> 16) & 0xff,
                     (col >> 8) & 0xff,
                     col & 0xff,
-                    32,
+                    speed,
                 ])
             )
             await delay(500)
-            await colorRegister.sendGetAsync()
+            await busColorRegister.sendGetAsync()
         } catch (e) {
             setError(e)
         }
@@ -62,10 +65,12 @@ export default function DashboardLED(props: DashboardServiceProps) {
     return (
         <LEDWidget
             color={color}
-            value={rgb}
+            ledColor={rgb}
             waveLength={waveLength}
             ledCount={ledCount}
-            onChange={handleSetColor}
+            onLedColorChange={handleSetColor}
+            speed={speed}
+            onSpeedChange={setSpeed}
         />
     )
 }

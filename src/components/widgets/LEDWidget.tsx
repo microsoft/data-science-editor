@@ -4,6 +4,7 @@ import { Grid, IconButton } from "@material-ui/core"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord"
 import { rgbToHtmlColor } from "../../../jacdac-ts/src/jdom/utils"
+import SliderWithLabel from "../ui/SliderWithLabel"
 
 // https://academo.org/demos/wavelength-to-colour-relationship/#:~:text=According%20to%20your%20tool%2C%20light%20at%20405nm%20corresponds,%280%2C0%2C255%29%2C%20has%20a%20quite%20longer%20wavelength%20of%20440nm.
 function nmToRGB(wavelength: number): number {
@@ -65,19 +66,34 @@ export default function LEDWidget(props: {
     color: "primary" | "secondary"
     waveLength?: number
     ledCount?: number
-    value: number
-    onChange?: (newValue: number) => void
+    ledColor: number
+    onLedColorChange?: (newLedColor: number) => void
+    speed?: number
+    onSpeedChange?: (newSpeed: number) => void
 }) {
-    const { color, waveLength, ledCount, value, onChange } = props
-    const r = (value >> 16) & 0xff
-    const g = (value >> 8) & 0xff
-    const b = (value >> 0) & 0xff
+    const {
+        color,
+        waveLength,
+        ledCount,
+        ledColor,
+        onLedColorChange,
+        speed = 32,
+        onSpeedChange,
+    } = props
+    const r = (ledColor >> 16) & 0xff
+    const g = (ledColor >> 8) & 0xff
+    const b = (ledColor >> 0) & 0xff
 
     const { active } = useWidgetTheme(color)
-    const handleSetColor = (col: number) => () => onChange(col)
+    const handleSetColor = (col: number) => () => onLedColorChange(col)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleSpeedChange: any = (event: unknown, newSpeed: number) =>
+        onSpeedChange(newSpeed)
     const buttonColors = waveLength
         ? [nmToRGB(waveLength), 0x000000]
         : [0xff0000, 0xff00ff, 0x0000ff, 0x00ff00, 0xffff00, 0x000000]
+    const speedValueLabelFormat = (newValue: number) =>
+        newValue == 0 ? "100%" : `${((newValue / 0xff) * 100) | 0}%`
 
     const opacity = !r && !b && !g ? 0 : 1
     const fill = `rgb(${r}, ${g}, ${b})`
@@ -160,7 +176,7 @@ export default function LEDWidget(props: {
                         ))}
                 </SvgWidget>
             </Grid>
-            {onChange &&
+            {onLedColorChange &&
                 buttonColors.map(col => (
                     <Grid key={col} item xs={buttonColors.length === 2 ? 4 : 2}>
                         <IconButton
@@ -171,6 +187,20 @@ export default function LEDWidget(props: {
                         </IconButton>
                     </Grid>
                 ))}
+            {onSpeedChange && (
+                <Grid item xs={12}>
+                    <SliderWithLabel
+                        label={"speed"}
+                        min={0}
+                        step={5}
+                        max={255}
+                        value={speed}
+                        valueLabelDisplay="auto"
+                        valueLabelFormat={speedValueLabelFormat}
+                        onChange={handleSpeedChange}
+                    />
+                </Grid>
+            )}
         </Grid>
     )
 }

@@ -13,8 +13,8 @@ function LEDColorFieldWidget() {
     return (
         <Suspense>
             <LEDWidget
-                value={value}
-                onChange={onValueChange}
+                ledColor={value}
+                onLedColorChange={onValueChange}
                 ledCount={3}
                 color="secondary"
             />
