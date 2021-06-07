@@ -177,15 +177,10 @@ const codeStatementType = "Code"
 const deviceTwinContentType = "DeviceTwinContent"
 const deviceTwinCommonOptionType = "DeviceTwinCommonOption"
 const deviceTwinPropertyOptionType = "DeviceTwinPropertyOption"
-const deviceTwinTelemetryOptionType = "DeviceTwinTelemetryOption"
 const deviceTwinStatementType = [deviceTwinContentType]
 const deviceTwinCommonOptionStatementType = [deviceTwinCommonOptionType]
 const deviceTwinPropertyOptionStatementType = [
     deviceTwinPropertyOptionType,
-    ...deviceTwinCommonOptionStatementType,
-]
-const deviceTwinTelemetryOptionStatementType = [
-    deviceTwinTelemetryOptionType,
     ...deviceTwinCommonOptionStatementType,
 ]
 
