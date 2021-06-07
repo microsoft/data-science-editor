@@ -1243,6 +1243,30 @@ function loadBlocks(
         },
         {
             kind: "block",
+            type: "jacdac_math_clamp",
+            message0: "clamp %1 in [%2, %3]",
+            args0: [
+                <ValueInputDefinition>{
+                    type: "input_value",
+                    name: "value",
+                    check: "Number",
+                },
+                <ValueInputDefinition>{
+                    type: "input_value",
+                    name: "minInclusive",
+                    check: "Number",
+                },
+                <ValueInputDefinition>{
+                    type: "input_value",
+                    name: "maxInclusive",
+                    check: "Number",
+                },
+            ],
+            output: "Number",
+            style: "math_blocks",
+        },
+        {
+            kind: "block",
             type: "jacdac_math_map",
             message0: "map %1 from [%2, %3] to [%4, %5]",
             args0: [
