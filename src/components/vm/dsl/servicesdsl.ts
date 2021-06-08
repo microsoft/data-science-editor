@@ -964,8 +964,6 @@ export class ServicesBlockDomainSpecificLanguage
         const { inputs } = block
         const { template } = definition
 
-        console.log("services compile to vm", { template, inputs })
-
         switch (template) {
             case "event": {
                 const { value: role } = inputs[0].fields["role"]

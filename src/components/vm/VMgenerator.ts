@@ -422,18 +422,9 @@ export default function workspaceJSONToVMProgram(
             assert(!!definition)
             const { template, dsl: dslName } = definition
             const dsl = dslName && dsls?.find(d => d.id === dslName)
-            console.log(`compile handler`, {
-                top,
-                definition,
-                template,
-                dsl,
-                dslName,
-                dsls,
-            })
 
             try {
                 if (dsl?.compileToVM) {
-                    console.log(`compile to vm`, { dsl, top, definition })
                     const { expression, errors, event } =
                         dsl?.compileToVM({
                             block: top,

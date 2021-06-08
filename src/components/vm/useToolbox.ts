@@ -587,8 +587,6 @@ export default function useToolbox(props: {
         .filter(cat => !!cat)
         .sort((l, r) => -(l.order - r.order))
 
-    console.log(`DSL categories`, dslsCategories)
-
     const toolboxConfiguration: ToolboxConfiguration = {
         kind: "categoryToolbox",
         contents: [
