@@ -81,7 +81,6 @@ export type BlockTemplate =
     | CommandTemplate
     | CustomTemplate
     | "shadow"
-    | "every"
     | "connection"
     | "connected"
     | "meta"

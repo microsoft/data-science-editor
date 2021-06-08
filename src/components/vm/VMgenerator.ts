@@ -47,6 +47,23 @@ export interface ExpressionWithErrors {
     errors: VMError[]
 }
 
+export const makeVMBase = (block: BlockJSON, command: jsep.CallExpression) => {
+    return {
+        sourceId: block.id,
+        type: "cmd",
+        command,
+    } as VMBase
+}
+
+export const processErrors = (block: BlockJSON, errors: VMError[]) => {
+    return errors.map((e: VMError) => {
+        return {
+            sourceId: e.sourceId ? e.sourceId : block.id,
+            message: e.message,
+        }
+    })
+}
+
 export default function workspaceJSONToVMProgram(
     workspace: WorkspaceJSON,
     dsls: BlockDomainSpecificLanguage[]
@@ -210,23 +227,6 @@ export default function workspaceJSONToVMProgram(
     type CmdWithErrors = {
         cmd: VMBase
         errors: VMError[]
-    }
-
-    const makeVMBase = (block: BlockJSON, command: jsep.CallExpression) => {
-        return {
-            sourceId: block.id,
-            type: "cmd",
-            command,
-        } as VMBase
-    }
-
-    const processErrors = (block: BlockJSON, errors: VMError[]) => {
-        return errors.map((e: VMError) => {
-            return {
-                sourceId: e.sourceId ? e.sourceId : block.id,
-                message: e.message,
-            }
-        })
     }
 
     const makeWait = (event: RoleEvent, block: BlockJSON) => {
@@ -440,12 +440,6 @@ export default function workspaceJSONToVMProgram(
                 if (!command && !topErrors?.length) {
                     switch (template) {
                         case "meta": {
-                            break
-                        }
-                        case "every": {
-                            const { cmd, errors } = makeWait(undefined, top)
-                            command = (cmd as VMCommand).command
-                            topErrors = errors
                             break
                         }
                         default: {

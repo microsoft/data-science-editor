@@ -1,3 +1,5 @@
+import { toIdentifier } from "../../../../jacdac-ts/src/vm/compile"
+import { VMCommand } from "../../../../jacdac-ts/src/vm/ir"
 import {
     BlockDefinition,
     CategoryDefinition,
@@ -8,6 +10,7 @@ import {
     ValueInputDefinition,
     WAIT_BLOCK,
 } from "../toolbox"
+import { makeVMBase, processErrors } from "../VMgenerator"
 import BlockDomainSpecificLanguage from "./dsl"
 
 const colour = "#4fbac9"
@@ -47,7 +50,6 @@ const loopsDsl: BlockDomainSpecificLanguage = {
             inputsInline: true,
             tooltip: `Repeats code at a given interval in seconds`,
             helpUrl: "",
-            template: "every",
             nextStatement: CODE_STATEMENT_TYPE,
         },
     ],
@@ -79,5 +81,26 @@ const loopsDsl: BlockDomainSpecificLanguage = {
             ].filter(b => !!b),
         },
     ],
+    compileToVM: ({ block, blockToExpression }) => {
+        const { type } = block
+        if (type === REPEAT_EVERY_BLOCK) {
+            const { inputs } = block
+            const { expr: time, errors } = blockToExpression(
+                undefined,
+                inputs[0].child
+            )
+            return {
+                expression: (
+                    makeVMBase(block, {
+                        type: "CallExpression",
+                        arguments: [time],
+                        callee: toIdentifier("wait"),
+                    }) as VMCommand
+                ).command,
+                errors: processErrors(block, errors),
+            }
+        }
+        return undefined
+    },
 }
 export default loopsDsl
