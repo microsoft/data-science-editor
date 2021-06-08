@@ -134,13 +134,6 @@ export function domToJSON(
             const definition = resolveServiceBlockDefinition(block.type)
             const dsl =
                 definition?.dsl && dsls.find(d => d.id === definition.dsl)
-            const dslConverted = dsl?.convertToJSON?.({
-                workspace,
-                block,
-                definition,
-            })
-            if (dslConverted) return dslConverted
-
             const value =
                 dsl?.blockToValue?.(block) || builtins[block.type]?.(block)
             const element: BlockJSON = {

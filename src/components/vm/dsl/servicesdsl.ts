@@ -69,8 +69,8 @@ import {
     VariableInputDefinition,
 } from "../toolbox"
 import BlockDomainSpecificLanguage, {
-    CompileToVMOptions,
-    CompileToVMResult,
+    CompileEventToVMOptions,
+    CompileEventToVMResult,
     CreateBlocksOptions,
     CreateCategoryOptions,
 } from "./dsl"
@@ -959,7 +959,7 @@ export class ServicesBlockDomainSpecificLanguage
         ]
     }
 
-    compileToVM(options: CompileToVMOptions): CompileToVMResult {
+    compileEventToVM(options: CompileEventToVMOptions): CompileEventToVMResult {
         const { block, definition, blockToExpression } = options
         const { inputs } = block
         const { template } = definition
@@ -968,7 +968,7 @@ export class ServicesBlockDomainSpecificLanguage
             case "event": {
                 const { value: role } = inputs[0].fields["role"]
                 const { value: eventName } = inputs[0].fields["event"]
-                return <CompileToVMResult>{
+                return <CompileEventToVMResult>{
                     expression: <jsep.CallExpression>{
                         type: "CallExpression",
                         arguments: [
@@ -992,7 +992,7 @@ export class ServicesBlockDomainSpecificLanguage
                     undefined,
                     inputs[0].child
                 )
-                return <CompileToVMResult>{
+                return <CompileEventToVMResult>{
                     expression: <jsep.CallExpression>{
                         type: "CallExpression",
                         arguments: [

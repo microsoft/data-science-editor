@@ -22,19 +22,13 @@ export interface CreateCategoryOptions {
     liveServices: JDService[]
 }
 
-export interface ConvertToJSONOptions {
-    workspace: Workspace
-    block: Block
-    definition: BlockDefinition
-}
-
-export interface CompileToVMOptions {
+export interface CompileEventToVMOptions {
     block: BlockJSON
     definition: ServiceBlockDefinition
     blockToExpression: (ev: RoleEvent, block: BlockJSON) => ExpressionWithErrors
 }
 
-export interface CompileToVMResult {
+export interface CompileEventToVMResult {
     event?: RoleEvent
     expression?: jsep.Expression
     errors?: VMError[]
@@ -48,7 +42,7 @@ export default interface BlockDomainSpecificLanguage {
 
     blockToValue?: (block: Block) => string | number | boolean
 
-    convertToJSON?: (options: ConvertToJSONOptions) => BlockJSON
-
-    compileToVM?: (options: CompileToVMOptions) => CompileToVMResult
+    compileEventToVM?: (
+        options: CompileEventToVMOptions
+    ) => CompileEventToVMResult
 }

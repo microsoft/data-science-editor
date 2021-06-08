@@ -81,7 +81,7 @@ const loopsDsl: BlockDomainSpecificLanguage = {
             ].filter(b => !!b),
         },
     ],
-    compileToVM: ({ block, blockToExpression }) => {
+    compileEventToVM: ({ block, blockToExpression }) => {
         const { type } = block
         if (type === REPEAT_EVERY_BLOCK) {
             const { inputs } = block

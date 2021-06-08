@@ -123,7 +123,7 @@ const toolsDSL: BlockDomainSpecificLanguage = {
         },
     ],
 
-    compileToVM: ({ block, blockToExpression }) => {
+    compileEventToVM: ({ block, blockToExpression }) => {
         const { type } = block
         if (type === WATCH_BLOCK) {
             const { inputs } = block

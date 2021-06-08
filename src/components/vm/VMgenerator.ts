@@ -415,26 +415,24 @@ export default function workspaceJSONToVMProgram(
     const handlers: VMHandler[] = workspace.blocks
         .map(top => {
             const { type } = top
-            let command: jsep.CallExpression = undefined
-            let topEvent: RoleEvent = undefined
-            let topErrors: VMError[] = []
+            let command: jsep.CallExpression
+            let topEvent: RoleEvent
+            let topErrors: VMError[]
             const definition = resolveServiceBlockDefinition(type)
             assert(!!definition)
             const { template, dsl: dslName } = definition
             const dsl = dslName && dsls?.find(d => d.id === dslName)
 
             try {
-                if (dsl?.compileToVM) {
-                    const { expression, errors, event } =
-                        dsl?.compileToVM({
-                            block: top,
-                            definition,
-                            blockToExpression,
-                        }) || {}
-                    command = expression as jsep.CallExpression
-                    topErrors = errors
-                    topEvent = event
-                }
+                const { expression, errors, event } =
+                    dsl?.compileEventToVM?.({
+                        block: top,
+                        definition,
+                        blockToExpression,
+                    }) || {}
+                command = expression as jsep.CallExpression
+                topErrors = errors
+                topEvent = event
 
                 // if dsl didn't compile anything try again
                 if (!command && !topErrors?.length) {
