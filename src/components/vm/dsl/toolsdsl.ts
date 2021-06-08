@@ -11,12 +11,13 @@ import {
     WATCH_BLOCK,
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
+import servicesDSL from "./servicesdsl"
 
 const colour = "#888"
 
 const toolsDSL: BlockDomainSpecificLanguage = {
     id: "tools",
-    createBlocks: ({ supportedServices }) => [
+    createBlocks: () => [
         {
             kind: "block",
             type: TWIN_BLOCK,
@@ -28,7 +29,9 @@ const toolsDSL: BlockDomainSpecificLanguage = {
                     variable: "none",
                     variableTypes: [
                         "client",
-                        ...supportedServices.map(service => service.shortId),
+                        ...servicesDSL.supportedServices.map(
+                            service => service.shortId
+                        ),
                     ],
                     defaultType: "client",
                 },
@@ -57,7 +60,9 @@ const toolsDSL: BlockDomainSpecificLanguage = {
                     variable: "none",
                     variableTypes: [
                         "client",
-                        ...supportedServices.map(service => service.shortId),
+                        ...servicesDSL.supportedServices.map(
+                            service => service.shortId
+                        ),
                     ],
                     defaultType: "client",
                 },

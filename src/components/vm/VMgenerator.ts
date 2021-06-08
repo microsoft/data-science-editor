@@ -413,7 +413,7 @@ export default function workspaceJSONToVMProgram(
     }
 
     const handlers: VMHandler[] = workspace.blocks.map(top => {
-        const { type, inputs } = top
+        const { type } = top
         let command: jsep.CallExpression = undefined
         let topEvent: RoleEvent = undefined
         let topErrors: VMError[] = []
@@ -421,7 +421,14 @@ export default function workspaceJSONToVMProgram(
         assert(!!definition)
         const { template, dsl: dslName } = definition
         const dsl = dslName && dsls?.find(d => d.id === dslName)
-        console.log(`template`, { template, dsl, dslName, dsls })
+        console.log(`compile handler`, {
+            top,
+            definition,
+            template,
+            dsl,
+            dslName,
+            dsls,
+        })
 
         try {
             if (dsl?.compileToVM) {
@@ -446,47 +453,6 @@ export default function workspaceJSONToVMProgram(
                     case "every": {
                         const { cmd, errors } = makeWait(undefined, top)
                         command = (cmd as VMCommand).command
-                        topErrors = errors
-                        break
-                    }
-                    case "event": {
-                        const { value: role } = inputs[0].fields["role"]
-                        const { value: eventName } = inputs[0].fields["event"]
-                        command = {
-                            type: "CallExpression",
-                            arguments: [
-                                toMemberExpression(
-                                    role.toString(),
-                                    eventName.toString()
-                                ),
-                            ],
-                            callee: toIdentifier("awaitEvent"),
-                        }
-                        topEvent = {
-                            role: role.toString(),
-                            event: eventName.toString(),
-                        }
-                        break
-                    }
-                    case "register_change_event": {
-                        const { value: role } = inputs[0].fields["role"]
-                        const { register } =
-                            definition as RegisterBlockDefinition
-                        const { expr, errors } = blockToExpression(
-                            undefined,
-                            inputs[0].child
-                        )
-                        command = {
-                            type: "CallExpression",
-                            arguments: [
-                                toMemberExpression(
-                                    role.toString(),
-                                    register.name
-                                ),
-                                expr,
-                            ],
-                            callee: toIdentifier("awaitChange"),
-                        }
                         topErrors = errors
                         break
                     }

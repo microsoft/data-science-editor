@@ -19,7 +19,11 @@ export function registerFields() {
     const registerType = (fieldType: any) => {
         const key = fieldType.KEY
         assert(!!key)
-        Blockly.fieldRegistry.unregister(key) // hot reload issues
+        try {
+            Blockly.fieldRegistry.unregister(key) // hot reload issues
+        } catch (e) {
+            // ignore hot reload issues
+        }
         Blockly.fieldRegistry.register(key, fieldType)
         if (fieldType.SHADOW) reactFieldShadows.push(fieldType.SHADOW)
     }

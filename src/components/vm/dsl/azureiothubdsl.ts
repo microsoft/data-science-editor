@@ -14,7 +14,7 @@ const colour = "#8a57c2"
 class AzureIoTHubBlockDomainSpecificLanguage
     implements BlockDomainSpecificLanguage
 {
-    id: "azureiothub"
+    id = "azureiothub"
     private _blocks: BlockDefinition[]
     createBlocks() {
         return (this._blocks = [

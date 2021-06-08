@@ -30,7 +30,7 @@ const deviceTwinPropertyOptionStatementType = [
 class DeviceTwinBlockDomainSpecificLanguage
     implements BlockDomainSpecificLanguage
 {
-    id: "devicetwin"
+    id = "devicetwin"
     private _blocks: BlockDefinition[]
     createBlocks() {
         return (this._blocks = [

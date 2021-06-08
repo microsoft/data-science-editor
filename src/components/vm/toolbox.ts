@@ -102,13 +102,6 @@ export interface BlockDefinition extends BlockReference {
     dsl?: string
 }
 
-export interface ButtonDefinition {
-    kind: "button"
-    text: string
-    callbackKey: string
-    service: jdspec.ServiceSpec
-}
-
 export interface ServiceBlockDefinition extends BlockDefinition {
     template: BlockTemplate
     service: jdspec.ServiceSpec
@@ -166,27 +159,33 @@ export const BUILTIN_TYPES = ["", ...PRIMITIVE_TYPES]
 
 export const CODE_STATEMENT_TYPE = "Code"
 
-export interface CategoryDefinition {
+export interface ContentDefinition {
+    kind: "category" | "sep" | "button"
+    order?: number
+}
+
+export interface CategoryDefinition extends ContentDefinition {
     kind: "category"
     name: string
-    order?: number
     custom?: string
     colour?: string
     categorystyle?: string
-    contents?: (BlockDefinition | ButtonDefinition)[]
+    contents?: (BlockDefinition | ContentDefinition)[]
     button?: ButtonDefinition
 }
 
-export interface SeparatorDefinition {
+export interface ButtonDefinition extends ContentDefinition {
+    kind: "button"
+    text: string
+    callbackKey: string
+    service: jdspec.ServiceSpec
+}
+
+export interface SeparatorDefinition extends ContentDefinition {
     kind: "sep"
 }
 
-export type ToolboxNode =
-    | SeparatorDefinition
-    | CategoryDefinition
-    | ButtonDefinition
-
 export interface ToolboxConfiguration {
     kind: "categoryToolbox"
-    contents: ToolboxNode[]
+    contents: ContentDefinition[]
 }

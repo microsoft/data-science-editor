@@ -1,43 +1,52 @@
 import { Theme } from "@material-ui/core"
 import { Block, Workspace } from "blockly"
+import { JDService } from "../../../../jacdac-ts/src/jdom/service"
 import { RoleEvent } from "../../../../jacdac-ts/src/vm/compile"
-import { VMError } from "../../../../jacdac-ts/src/vm/ir"
+import { VMError, VMProgram } from "../../../../jacdac-ts/src/vm/ir"
 import { BlockJSON, WorkspaceJSON } from "../jsongenerator"
 import {
     BlockDefinition,
-    CategoryDefinition,
+    ContentDefinition,
     ServiceBlockDefinition,
 } from "../toolbox"
 import { ExpressionWithErrors } from "../VMgenerator"
 
+export interface CreateBlocksOptions {
+    theme: Theme
+}
+
+export interface CreateCategoryOptions {
+    theme: Theme
+    source: WorkspaceJSON
+    program: VMProgram
+    liveServices: JDService[]
+}
+
+export interface ConvertToJSONOptions {
+    workspace: Workspace
+    block: Block
+    definition: BlockDefinition
+}
+
+export interface CompileToVMOptions {
+    block: BlockJSON
+    definition: ServiceBlockDefinition
+    blockToExpression: (ev: RoleEvent, block: BlockJSON) => ExpressionWithErrors
+}
+
+export interface CompileToVMResult {
+    event?: RoleEvent
+    expression?: jsep.Expression
+    errors?: VMError[]
+}
+
 export default interface BlockDomainSpecificLanguage {
     id: string
-    createBlocks?: (options: {
-        theme: Theme
-        supportedServices: jdspec.ServiceSpec[]
-    }) => BlockDefinition[]
+    createBlocks?: (options: CreateBlocksOptions) => BlockDefinition[]
 
-    createCategory?: (options: {
-        theme: Theme
-        source: WorkspaceJSON
-    }) => CategoryDefinition[]
+    createCategory?: (options: CreateCategoryOptions) => ContentDefinition[]
 
-    convertToJSON?: (options: {
-        workspace: Workspace
-        block: Block
-        definition: BlockDefinition
-    }) => BlockJSON
+    convertToJSON?: (options: ConvertToJSONOptions) => BlockJSON
 
-    compileToVM?: (options: {
-        block: BlockJSON
-        definition: ServiceBlockDefinition
-        blockToExpression: (
-            ev: RoleEvent,
-            block: BlockJSON
-        ) => ExpressionWithErrors
-    }) => {
-        event?: RoleEvent
-        expression?: jsep.Expression
-        errors?: VMError[]
-    }
+    compileToVM?: (options: CompileToVMOptions) => CompileToVMResult
 }
