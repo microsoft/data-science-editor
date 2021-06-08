@@ -160,7 +160,6 @@ export const WATCH_BLOCK = "jacdac_watch"
 export const REPEAT_EVERY_BLOCK = "jacdac_repeat_every"
 export const CONNECTION_BLOCK = "jacdac_connection"
 export const CONNECTED_BLOCK = "jacdac_connected"
-export const LOG_BLOCK = "jacdac_custom_logger_log"
 
 export const PRIMITIVE_TYPES = ["String", "Boolean", "Number"]
 export const CODE_STATEMENT_TYPE = "Code"

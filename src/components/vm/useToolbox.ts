@@ -58,7 +58,6 @@ import {
     EventBlockDefinition,
     EventFieldDefinition,
     InputDefinition,
-    LOG_BLOCK,
     NEW_PROJET_XML,
     NumberInputDefinition,
     OptionsInputDefinition,
@@ -69,7 +68,6 @@ import {
     ServiceBlockDefinition,
     ServiceBlockDefinitionFactory,
     SET_STATUS_LIGHT_BLOCK,
-    TextInputDefinition,
     ToolboxConfiguration,
     ValueInputDefinition,
     VariableInputDefinition,
@@ -332,32 +330,6 @@ function loadBlocks(
     )
 
     const customBlockDefinitions: CustomBlockDefinition[] = [
-        ...resolveService(SRV_LOGGER).map(
-            service =>
-                <CustomBlockDefinition>{
-                    kind: "block",
-                    type: `log`, // do not rename
-                    message0: `log %1 with value %2`,
-                    args0: [
-                        <TextInputDefinition>{
-                            type: "field_input",
-                            name: "message",
-                        },
-                        <ValueInputDefinition>{
-                            type: "input_value",
-                            name: "value",
-                        },
-                    ],
-                    colour: commandColor,
-                    inputsInline: true,
-                    previousStatement: CODE_STATEMENT_TYPE,
-                    nextStatement: CODE_STATEMENT_TYPE,
-                    tooltip: `Logs a message and an optional value to the logger`,
-                    helpUrl: serviceHelp(service),
-                    service,
-                    template: "custom",
-                }
-        ),
         ...resolveService(SRV_HID_KEYBOARD).map(
             service =>
                 <CustomBlockDefinition>{
@@ -484,8 +456,6 @@ function loadBlocks(
         }`
         return def
     })
-
-    console.log("custom blocks", customBlockDefinitions)
 
     const eventBlocks = events.map<EventBlockDefinition>(
         ({ service, events }) => ({
@@ -1404,10 +1374,6 @@ export default function useToolbox(props: {
                         type: LEDColorField.SHADOW.type,
                     },
                 },
-            },
-            <BlockDefinition>{
-                kind: "block",
-                type: LOG_BLOCK,
             },
         ].filter(b => !!b),
     }
