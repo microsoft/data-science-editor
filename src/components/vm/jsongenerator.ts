@@ -1,6 +1,7 @@
 import Blockly from "blockly"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import { SMap, toMap } from "../../../jacdac-ts/src/jdom/utils"
+import { BlockDomainSpecificLanguage } from "./dsl/DslContext"
 import ReactField from "./fields/ReactField"
 import { resolveServiceBlockDefinition } from "./toolbox"
 
@@ -41,7 +42,10 @@ export interface WorkspaceJSON {
     blocks: BlockJSON[]
 }
 
-export function domToJSON(workspace: Blockly.Workspace): WorkspaceJSON {
+export function domToJSON(
+    workspace: Blockly.Workspace,
+    dsls: BlockDomainSpecificLanguage[]
+): WorkspaceJSON {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const clean = (o: any) =>
         Object.keys(o)
@@ -133,9 +137,13 @@ export function domToJSON(workspace: Blockly.Workspace): WorkspaceJSON {
                 if (child) return blockToJSON(child)
                 else return undefined
             }
-            // skip twins
+
+            // allow DSL to handle conversion
             const definition = resolveServiceBlockDefinition(block.type)
-            if (definition?.template === "twin") return undefined
+            const dsl =
+                definition?.dsl && dsls.find(d => d.id === definition.dsl)
+            if (dsl?.convertToJSON)
+                return dsl.convertToJSON({ workspace, block, definition })
 
             // dump object
             const value = builtins[block.type]?.(block)

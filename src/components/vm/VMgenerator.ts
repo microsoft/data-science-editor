@@ -23,6 +23,7 @@ import {
     WAIT_BLOCK,
 } from "./toolbox"
 import Blockly from "blockly"
+import { BlockDomainSpecificLanguage } from "./dsl/DslContext"
 
 const ops = {
     AND: "&&",
@@ -43,7 +44,8 @@ const ops = {
 const BUILTIN_TYPES = ["", "Boolean", "Number", "String"]
 
 export default function workspaceJSONToVMProgram(
-    workspace: WorkspaceJSON
+    workspace: WorkspaceJSON,
+    dsls: BlockDomainSpecificLanguage[]
 ): VMProgram {
     console.debug(`compile vm`, { workspace })
 
@@ -252,7 +254,7 @@ export default function workspaceJSONToVMProgram(
     ): CmdWithErrors => {
         const { type, inputs } = block
         switch (type) {
-            case WAIT_BLOCK: 
+            case WAIT_BLOCK:
                 return makeWait(event, block)
             case "dynamic_if": {
                 const thenHandler: VMHandler = {
@@ -418,81 +420,87 @@ export default function workspaceJSONToVMProgram(
         let topErrors: VMError[] = []
         const def = resolveServiceBlockDefinition(type)
         assert(!!def)
-        const { template } = def
-        try {
-            switch (template) {
-                case "twin":
-                    break // ignore
-                case "every": {
-                    const { cmd, errors} = makeWait(undefined, top)
-                    command = (cmd as VMCommand).command
-                    topErrors = errors
-                    break
-                }
-                case "event": {
-                    const { value: role } = inputs[0].fields["role"]
-                    const { value: eventName } = inputs[0].fields["event"]
-                    command = {
-                        type: "CallExpression",
-                        arguments: [
-                            toMemberExpression(
-                                role.toString(),
-                                eventName.toString()
-                            ),
-                        ],
-                        callee: toIdentifier("awaitEvent"),
+        const { template, dsl } = def
+
+        if (!dsl) {
+            // dsl blocks, handled somewhere else in another compiler
+
+            try {
+                switch (template) {
+                    case "every": {
+                        const { cmd, errors } = makeWait(undefined, top)
+                        command = (cmd as VMCommand).command
+                        topErrors = errors
+                        break
                     }
-                    topEvent = {
-                        role: role.toString(),
-                        event: eventName.toString(),
+                    case "event": {
+                        const { value: role } = inputs[0].fields["role"]
+                        const { value: eventName } = inputs[0].fields["event"]
+                        command = {
+                            type: "CallExpression",
+                            arguments: [
+                                toMemberExpression(
+                                    role.toString(),
+                                    eventName.toString()
+                                ),
+                            ],
+                            callee: toIdentifier("awaitEvent"),
+                        }
+                        topEvent = {
+                            role: role.toString(),
+                            event: eventName.toString(),
+                        }
+                        break
                     }
-                    break
-                }
-                case "register_change_event": {
-                    const { value: role } = inputs[0].fields["role"]
-                    const { register } = def as RegisterBlockDefinition
-                    const { expr, errors } = blockToExpression(
-                        undefined,
-                        inputs[0].child
-                    )
-                    command = {
-                        type: "CallExpression",
-                        arguments: [
-                            toMemberExpression(role.toString(), register.name),
-                            expr,
-                        ],
-                        callee: toIdentifier("awaitChange"),
+                    case "register_change_event": {
+                        const { value: role } = inputs[0].fields["role"]
+                        const { register } = def as RegisterBlockDefinition
+                        const { expr, errors } = blockToExpression(
+                            undefined,
+                            inputs[0].child
+                        )
+                        command = {
+                            type: "CallExpression",
+                            arguments: [
+                                toMemberExpression(
+                                    role.toString(),
+                                    register.name
+                                ),
+                                expr,
+                            ],
+                            callee: toIdentifier("awaitChange"),
+                        }
+                        topErrors = errors
+                        break
                     }
-                    topErrors = errors
-                    break
-                }
-                case "watch": {
-                    const { expr, errors } = blockToExpression(
-                        undefined,
-                        inputs[0].child
-                    )
-                    command = {
-                        type: "CallExpression",
-                        arguments: [expr],
-                        callee: toIdentifier("watch"),
+                    case "watch": {
+                        const { expr, errors } = blockToExpression(
+                            undefined,
+                            inputs[0].child
+                        )
+                        command = {
+                            type: "CallExpression",
+                            arguments: [expr],
+                            callee: toIdentifier("watch"),
+                        }
+                        topErrors = errors
+                        break
                     }
-                    topErrors = errors
-                    break
+                    default: {
+                        console.warn(
+                            `unsupported handler template ${template} for ${type}`,
+                            { top }
+                        )
+                        break
+                    }
                 }
-                default: {
-                    console.warn(
-                        `unsupported handler template ${template} for ${type}`,
-                        { top }
-                    )
-                    break
+            } catch (e) {
+                if (e instanceof EmptyExpression) {
+                    command = nop
+                    topErrors = []
+                } else {
+                    throw e
                 }
-            }
-        } catch (e) {
-            if (e instanceof EmptyExpression) {
-                command = nop
-                topErrors = []
-            } else {
-                throw e
             }
         }
 

@@ -10,6 +10,7 @@ import VMDiagnostics from "./VMDiagnostics"
 import VMToolbar from "./VMToolbar"
 import { WorkspaceSvg } from "blockly"
 import { VMProgram } from "../../../jacdac-ts/src/vm/ir"
+import { DslProvider } from "./dsl/DslContext"
 
 const VM_SOURCE_STORAGE_KEY = "jacdac:tools:vmeditor"
 export default function VMEditor(props: { storageKey?: string }) {
@@ -33,34 +34,40 @@ export default function VMEditor(props: { storageKey?: string }) {
     }
 
     return (
-        <Grid container direction="column" spacing={1}>
-            <Grid item xs={12}>
-                <VMToolbar
-                    roleManager={roleManager}
-                    runner={runner}
-                    run={run}
-                    cancel={cancel}
-                    xml={xml}
-                    program={program}
-                    workspace={workspaceRef.current}
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <NoSsr>
-                    <VMBlockEditor
-                        initialXml={xml}
-                        onXmlChange={handleXml}
-                        onJSONChange={handleJSON}
-                        onVMProgramChange={handleI4Program}
-                        runner={runner}
+        <DslProvider>
+            <Grid container direction="column" spacing={1}>
+                <Grid item xs={12}>
+                    <VMToolbar
                         roleManager={roleManager}
-                        workspaceRef={workspaceRef}
+                        runner={runner}
+                        run={run}
+                        cancel={cancel}
+                        xml={xml}
+                        program={program}
+                        workspace={workspaceRef.current}
                     />
-                </NoSsr>
+                </Grid>
+                <Grid item xs={12}>
+                    <NoSsr>
+                        <VMBlockEditor
+                            initialXml={xml}
+                            onXmlChange={handleXml}
+                            onJSONChange={handleJSON}
+                            onVMProgramChange={handleI4Program}
+                            runner={runner}
+                            roleManager={roleManager}
+                            workspaceRef={workspaceRef}
+                        />
+                    </NoSsr>
+                </Grid>
+                {Flags.diagnostics && (
+                    <VMDiagnostics
+                        program={program}
+                        source={source}
+                        xml={xml}
+                    />
+                )}
             </Grid>
-            {Flags.diagnostics && (
-                <VMDiagnostics program={program} source={source} xml={xml} />
-            )}
-        </Grid>
+        </DslProvider>
     )
 }
