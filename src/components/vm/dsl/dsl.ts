@@ -1,5 +1,5 @@
 import { Theme } from "@material-ui/core"
-import { Block, Workspace } from "blockly"
+import { Block } from "blockly"
 import { JDService } from "../../../../jacdac-ts/src/jdom/service"
 import { RoleEvent } from "../../../../jacdac-ts/src/vm/compile"
 import { VMError, VMProgram } from "../../../../jacdac-ts/src/vm/ir"
