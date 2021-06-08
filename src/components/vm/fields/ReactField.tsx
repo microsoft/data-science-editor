@@ -75,12 +75,17 @@ export default class ReactField<T> extends Blockly.Field {
         return JSON.stringify(this.value)
     }
 
+    toXml(fieldElement: Element) {
+        fieldElement.textContent = JSON.stringify(this.value)
+        return fieldElement
+    }
+
     fromXml(fieldElement: Element) {
         try {
             const v = JSON.parse(fieldElement.textContent)
             this.value = v
         } catch (e) {
-            console.warn(e)
+            console.log(e, { text: fieldElement.textContent })
             this.value = undefined
         }
     }
