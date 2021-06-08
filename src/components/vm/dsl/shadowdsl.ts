@@ -1,3 +1,5 @@
+import { Block } from "blockly"
+import { SMap } from "../../../../jacdac-ts/src/jdom/utils"
 import { fieldShadows } from "../fields/fields"
 import {
     ColorInputDefnition,
@@ -5,6 +7,15 @@ import {
     OptionsInputDefinition,
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
+
+const builtins: SMap<(block: Block) => string | number | boolean> = {
+    jacdac_on_off: block => block.getFieldValue("value") === "on",
+    jacdac_yes_no: block => block.getFieldValue("value") === "on",
+    jacdac_time_picker: block => Number(block.getFieldValue("value") || "0"),
+    jacdac_angle: block => Number(block.getFieldValue("value") || "0"),
+    jacdac_percent: block => Number(block.getFieldValue("value") || "0"),
+    jacdac_ratio: block => Number(block.getFieldValue("value") || "0"),
+}
 
 const shadowDsl: BlockDomainSpecificLanguage = {
     id: "shadow",
@@ -162,5 +173,7 @@ const shadowDsl: BlockDomainSpecificLanguage = {
             output: "Color",
         },
     ],
+
+    blockToValue: block => builtins[block.type]?.(block),
 }
 export default shadowDsl

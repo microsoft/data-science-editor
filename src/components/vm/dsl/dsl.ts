@@ -46,6 +46,8 @@ export default interface BlockDomainSpecificLanguage {
 
     createCategory?: (options: CreateCategoryOptions) => ContentDefinition[]
 
+    blockToValue?: (block: Block) => string | number | boolean
+
     convertToJSON?: (options: ConvertToJSONOptions) => BlockJSON
 
     compileToVM?: (options: CompileToVMOptions) => CompileToVMResult
