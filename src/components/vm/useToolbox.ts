@@ -254,7 +254,7 @@ function loadBlocks(
 
     const dslsBlocks = arrayConcatMany(
         dsls.map(dsl =>
-            dsl?.createBlocks({ theme }).map(b => {
+            dsl?.createBlocks?.({ theme }).map(b => {
                 b.dsl = dsl.id // ensure DSL is set
                 return b
             })
@@ -357,45 +357,6 @@ export default function useToolbox(props: {
         ].filter(b => !!b),
     }
 
-    const logicCategory: CategoryDefinition = {
-        kind: "category",
-        name: "Logic",
-        colour: "%{BKY_LOGIC_HUE}",
-        contents: [
-            {
-                kind: "block",
-                type: "dynamic_if",
-            },
-            {
-                kind: "block",
-                type: "logic_compare",
-                values: {
-                    A: { kind: "block", type: "math_number" },
-                    B: { kind: "block", type: "math_number" },
-                },
-            },
-            {
-                kind: "block",
-                type: "logic_operation",
-                values: {
-                    A: { kind: "block", type: "logic_boolean" },
-                    B: { kind: "block", type: "logic_boolean" },
-                },
-            },
-            {
-                kind: "block",
-                type: "logic_negate",
-                values: {
-                    BOOL: { kind: "block", type: "logic_boolean" },
-                },
-            },
-            {
-                kind: "block",
-                type: "logic_boolean",
-            },
-        ],
-    }
-
     const variablesCategory: CategoryDefinition = {
         kind: "category",
         name: "Variables",
@@ -405,7 +366,7 @@ export default function useToolbox(props: {
 
     const dslsCategories = arrayConcatMany(
         dsls.map(dsl =>
-            dsl?.createCategory({ theme, source, program, liveServices })
+            dsl?.createCategory?.({ theme, source, program, liveServices })
         )
     )
         .filter(cat => !!cat)
@@ -415,7 +376,6 @@ export default function useToolbox(props: {
         kind: "categoryToolbox",
         contents: [
             commandsCategory,
-            logicCategory,
             variablesCategory,
             <SeparatorDefinition>{
                 kind: "sep",
