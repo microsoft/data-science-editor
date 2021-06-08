@@ -1,3 +1,4 @@
+import { toIdentifier } from "../../../../jacdac-ts/src/vm/compile"
 import JDomTreeField from "../fields/JDomTreeField"
 import TwinField from "../fields/TwinField"
 import WatchValueField from "../fields/WatchValueField"
@@ -43,6 +44,7 @@ const toolsDSL: BlockDomainSpecificLanguage = {
             inputsInline: false,
             tooltip: `Twin of the selected service`,
             helpUrl: "",
+            template: "meta",
         },
         {
             kind: "block",
@@ -71,6 +73,7 @@ const toolsDSL: BlockDomainSpecificLanguage = {
             inputsInline: false,
             tooltip: `Inspect a service`,
             helpUrl: "",
+            template: "meta",
         },
         {
             kind: "block",
@@ -115,7 +118,26 @@ const toolsDSL: BlockDomainSpecificLanguage = {
         },
     ],
 
-    convertToJSON: () => undefined,
+    compileToVM: ({ block, blockToExpression }) => {
+        const { type } = block
+        if (type === WATCH_BLOCK) {
+            const { inputs } = block
+            const { expr, errors } = blockToExpression(
+                undefined,
+                inputs[0].child
+            )
+            return {
+                expression: <jsep.CallExpression>{
+                    type: "CallExpression",
+                    arguments: [expr],
+                    callee: toIdentifier("watch"),
+                },
+                errors,
+            }
+        }
+
+        return undefined
+    },
 }
 
 export default toolsDSL

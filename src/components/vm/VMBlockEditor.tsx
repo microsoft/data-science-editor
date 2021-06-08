@@ -175,7 +175,10 @@ export default function VMBlockEditor(props: {
                 onJSONChange?.(newSource)
                 if (onVMProgramChange) {
                     try {
-                        const newProgram = workspaceJSONToVMProgram(newSource)
+                        const newProgram = workspaceJSONToVMProgram(
+                            newSource,
+                            dsls
+                        )
                         if (
                             JSON.stringify(newProgram) !==
                             JSON.stringify(program)

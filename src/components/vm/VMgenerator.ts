@@ -16,6 +16,7 @@ import {
 
 import { assert } from "../../../jacdac-ts/src/jdom/utils"
 import {
+    BUILTIN_TYPES,
     CommandBlockDefinition,
     EventFieldDefinition,
     RegisterBlockDefinition,
@@ -23,7 +24,7 @@ import {
     WAIT_BLOCK,
 } from "./toolbox"
 import Blockly from "blockly"
-import { BlockDomainSpecificLanguage } from "./dsl/DslContext"
+import BlockDomainSpecificLanguage from "./dsl/dsl"
 
 const ops = {
     AND: "&&",
@@ -41,22 +42,20 @@ const ops = {
     MINUS: "-",
 }
 
-const BUILTIN_TYPES = ["", "Boolean", "Number", "String"]
+export interface ExpressionWithErrors {
+    expr: jsep.Expression
+    errors: VMError[]
+}
 
 export default function workspaceJSONToVMProgram(
     workspace: WorkspaceJSON,
     dsls: BlockDomainSpecificLanguage[]
 ): VMProgram {
-    console.debug(`compile vm`, { workspace })
+    console.debug(`compile vm`, { workspace, dsls })
 
     const roles: VMRole[] = workspace.variables
         .filter(v => BUILTIN_TYPES.indexOf(v.type) < 0)
         .map(v => ({ role: v.name, serviceShortId: v.type }))
-
-    type ExpressionWithErrors = {
-        expr: jsep.Expression
-        errors: VMError[]
-    }
 
     class EmptyExpression extends Error {}
 
@@ -418,15 +417,31 @@ export default function workspaceJSONToVMProgram(
         let command: jsep.CallExpression = undefined
         let topEvent: RoleEvent = undefined
         let topErrors: VMError[] = []
-        const def = resolveServiceBlockDefinition(type)
-        assert(!!def)
-        const { template, dsl } = def
+        const definition = resolveServiceBlockDefinition(type)
+        assert(!!definition)
+        const { template, dsl: dslName } = definition
+        const dsl = dslName && dsls?.find(d => d.id === dslName)
+        console.log(`template`, { template, dsl, dslName, dsls })
 
-        if (!dsl) {
-            // dsl blocks, handled somewhere else in another compiler
+        try {
+            if (dsl?.compileToVM) {
+                console.log(`compile to vm`, { dsl, top, definition })
+                const { expression, errors } =
+                    dsl?.compileToVM({
+                        block: top,
+                        definition,
+                        blockToExpression,
+                    }) || {}
+                command = expression as jsep.CallExpression
+                topErrors = errors
+            }
 
-            try {
+            // if dsl didn't compile anything try again
+            if (!command && !topErrors?.length) {
                 switch (template) {
+                    case "meta": {
+                        break
+                    }
                     case "every": {
                         const { cmd, errors } = makeWait(undefined, top)
                         command = (cmd as VMCommand).command
@@ -454,7 +469,8 @@ export default function workspaceJSONToVMProgram(
                     }
                     case "register_change_event": {
                         const { value: role } = inputs[0].fields["role"]
-                        const { register } = def as RegisterBlockDefinition
+                        const { register } =
+                            definition as RegisterBlockDefinition
                         const { expr, errors } = blockToExpression(
                             undefined,
                             inputs[0].child
@@ -473,19 +489,6 @@ export default function workspaceJSONToVMProgram(
                         topErrors = errors
                         break
                     }
-                    case "watch": {
-                        const { expr, errors } = blockToExpression(
-                            undefined,
-                            inputs[0].child
-                        )
-                        command = {
-                            type: "CallExpression",
-                            arguments: [expr],
-                            callee: toIdentifier("watch"),
-                        }
-                        topErrors = errors
-                        break
-                    }
                     default: {
                         console.warn(
                             `unsupported handler template ${template} for ${type}`,
@@ -494,13 +497,14 @@ export default function workspaceJSONToVMProgram(
                         break
                     }
                 }
-            } catch (e) {
-                if (e instanceof EmptyExpression) {
-                    command = nop
-                    topErrors = []
-                } else {
-                    throw e
-                }
+            }
+        } catch (e) {
+            console.debug(e)
+            if (e instanceof EmptyExpression) {
+                command = nop
+                topErrors = []
+            } else {
+                throw e
             }
         }
 
@@ -512,7 +516,7 @@ export default function workspaceJSONToVMProgram(
                     command,
                 } as VMBase,
             ],
-            errors: topErrors,
+            errors: topErrors || [],
         }
 
         addCommands(topEvent, top.children, handler)

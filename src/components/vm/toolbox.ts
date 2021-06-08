@@ -81,10 +81,10 @@ export type BlockTemplate =
     | CommandTemplate
     | CustomTemplate
     | "shadow"
-    | "watch"
     | "every"
     | "connection"
     | "connected"
+    | "meta"
 
 export interface BlockDefinition extends BlockReference {
     message0?: string
@@ -162,6 +162,8 @@ export const CONNECTION_BLOCK = "jacdac_connection"
 export const CONNECTED_BLOCK = "jacdac_connected"
 
 export const PRIMITIVE_TYPES = ["String", "Boolean", "Number"]
+export const BUILTIN_TYPES = ["", ...PRIMITIVE_TYPES]
+
 export const CODE_STATEMENT_TYPE = "Code"
 
 export interface CategoryDefinition {
