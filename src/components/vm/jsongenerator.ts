@@ -142,7 +142,7 @@ export function domToJSON(
             if (dslConverted) return dslConverted
 
             const value =
-                dsl.blockToValue?.(block) || builtins[block.type]?.(block)
+                dsl?.blockToValue?.(block) || builtins[block.type]?.(block)
             const element: BlockJSON = {
                 type: block.type,
                 id: block.id,
