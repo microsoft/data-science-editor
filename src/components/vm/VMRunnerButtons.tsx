@@ -55,7 +55,7 @@ export default function VMRunnerButtons(props: {
         workspace
     )
 
-    console.log("runner status", status)
+    //console.log("runner status", status)
 
     const handleRun = async () => {
         try {
