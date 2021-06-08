@@ -412,84 +412,87 @@ export default function workspaceJSONToVMProgram(
         })
     }
 
-    const handlers: VMHandler[] = workspace.blocks.map(top => {
-        const { type } = top
-        let command: jsep.CallExpression = undefined
-        let topEvent: RoleEvent = undefined
-        let topErrors: VMError[] = []
-        const definition = resolveServiceBlockDefinition(type)
-        assert(!!definition)
-        const { template, dsl: dslName } = definition
-        const dsl = dslName && dsls?.find(d => d.id === dslName)
-        console.log(`compile handler`, {
-            top,
-            definition,
-            template,
-            dsl,
-            dslName,
-            dsls,
-        })
+    const handlers: VMHandler[] = workspace.blocks
+        .map(top => {
+            const { type } = top
+            let command: jsep.CallExpression = undefined
+            let topEvent: RoleEvent = undefined
+            let topErrors: VMError[] = []
+            const definition = resolveServiceBlockDefinition(type)
+            assert(!!definition)
+            const { template, dsl: dslName } = definition
+            const dsl = dslName && dsls?.find(d => d.id === dslName)
+            console.log(`compile handler`, {
+                top,
+                definition,
+                template,
+                dsl,
+                dslName,
+                dsls,
+            })
 
-        try {
-            if (dsl?.compileToVM) {
-                console.log(`compile to vm`, { dsl, top, definition })
-                const { expression, errors, event } =
-                    dsl?.compileToVM({
-                        block: top,
-                        definition,
-                        blockToExpression,
-                    }) || {}
-                command = expression as jsep.CallExpression
-                topErrors = errors
-                topEvent = event
-            }
+            try {
+                if (dsl?.compileToVM) {
+                    console.log(`compile to vm`, { dsl, top, definition })
+                    const { expression, errors, event } =
+                        dsl?.compileToVM({
+                            block: top,
+                            definition,
+                            blockToExpression,
+                        }) || {}
+                    command = expression as jsep.CallExpression
+                    topErrors = errors
+                    topEvent = event
+                }
 
-            // if dsl didn't compile anything try again
-            if (!command && !topErrors?.length) {
-                switch (template) {
-                    case "meta": {
-                        break
-                    }
-                    case "every": {
-                        const { cmd, errors } = makeWait(undefined, top)
-                        command = (cmd as VMCommand).command
-                        topErrors = errors
-                        break
-                    }
-                    default: {
-                        console.warn(
-                            `unsupported handler template ${template} for ${type}`,
-                            { top }
-                        )
-                        break
+                // if dsl didn't compile anything try again
+                if (!command && !topErrors?.length) {
+                    switch (template) {
+                        case "meta": {
+                            break
+                        }
+                        case "every": {
+                            const { cmd, errors } = makeWait(undefined, top)
+                            command = (cmd as VMCommand).command
+                            topErrors = errors
+                            break
+                        }
+                        default: {
+                            console.warn(
+                                `unsupported handler template ${template} for ${type}`,
+                                { top }
+                            )
+                            break
+                        }
                     }
                 }
+            } catch (e) {
+                console.debug(e)
+                if (e instanceof EmptyExpression) {
+                    return undefined
+                } else {
+                    throw e
+                }
             }
-        } catch (e) {
-            console.debug(e)
-            if (e instanceof EmptyExpression) {
-                command = nop
-                topErrors = []
-            } else {
-                throw e
+
+            // nothing to compile here
+            if (!command && !topErrors?.length) return undefined
+
+            const handler: VMHandler = {
+                commands: [
+                    {
+                        sourceId: top.id,
+                        type: "cmd",
+                        command,
+                    } as VMBase,
+                ],
+                errors: topErrors || [],
             }
-        }
 
-        const handler: VMHandler = {
-            commands: [
-                {
-                    sourceId: top.id,
-                    type: "cmd",
-                    command,
-                } as VMBase,
-            ],
-            errors: topErrors || [],
-        }
-
-        addCommands(topEvent, top.children, handler)
-
-        return handler
-    })
+            addCommands(topEvent, top.children, handler)
+            return handler
+        })
+        .filter(handler => !!handler)
 
     return {
         roles,

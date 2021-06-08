@@ -1,7 +1,7 @@
 import Blockly from "blockly"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import { SMap, toMap } from "../../../jacdac-ts/src/jdom/utils"
-import { BlockDomainSpecificLanguage } from "./dsl/DslContext"
+import BlockDomainSpecificLanguage from "./dsl/dsl"
 import ReactField from "./fields/ReactField"
 import { resolveServiceBlockDefinition } from "./toolbox"
 
