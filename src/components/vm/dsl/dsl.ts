@@ -34,6 +34,13 @@ export interface CompileEventToVMResult {
     errors?: VMError[]
 }
 
+export interface CompileExpressionToVMOptions {
+    event: RoleEvent
+    block: BlockJSON
+    definition: ServiceBlockDefinition
+    blockToExpressionInner: (ev: RoleEvent, block: BlockJSON) => jsep.Expression
+}
+
 export default interface BlockDomainSpecificLanguage {
     id: string
     createBlocks?: (options: CreateBlocksOptions) => BlockDefinition[]
@@ -45,4 +52,8 @@ export default interface BlockDomainSpecificLanguage {
     compileEventToVM?: (
         options: CompileEventToVMOptions
     ) => CompileEventToVMResult
+
+    compileExpressionToVM?: (
+        options: CompileExpressionToVMOptions
+    ) => ExpressionWithErrors
 }

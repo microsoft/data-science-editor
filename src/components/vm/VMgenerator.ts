@@ -98,6 +98,7 @@ export default function workspaceJSONToVMProgram(
                 }
 
             switch (type) {
+                case "math_single": // built-in blockly
                 case "jacdac_math_single": {
                     const argument = blockToExpressionInner(ev, inputs[0].child)
                     const op = inputs[0].fields["op"].value as string
@@ -108,6 +109,7 @@ export default function workspaceJSONToVMProgram(
                         prefix: false, // TODO:?
                     }
                 }
+                case "math_arithmetic": // built-in blockly
                 case "jacdac_math_arithmetic": {
                     const left = blockToExpressionInner(ev, inputs[0].child)
                     const right = blockToExpressionInner(ev, inputs[1].child)
@@ -151,8 +153,8 @@ export default function workspaceJSONToVMProgram(
                     }
                 }
                 default: {
-                    const def = resolveServiceBlockDefinition(type)
-                    if (!def) {
+                    const definition = resolveServiceBlockDefinition(type)
+                    if (!definition) {
                         console.warn(`unknown block ${type}`, {
                             type,
                             ev,
@@ -160,41 +162,24 @@ export default function workspaceJSONToVMProgram(
                             d: Blockly.Blocks[type],
                         })
                     } else {
-                        const { template } = def
-                        console.log("get", { type, def, template })
+                        // try any DSL
+                        const { dsl: dslName } = definition
+                        const dsl = dsls.find(d => d.id === dslName)
+                        const res = dsl?.compileExpressionToVM({
+                            event: ev,
+                            definition,
+                            block,
+                            blockToExpressionInner,
+                        })
+                        if (res) {
+                            if (res.errors)
+                                res.errors.forEach(e => errors.push(e))
+                            return res.expr
+                        }
+
+                        // try built-in
+                        const { template } = definition
                         switch (template) {
-                            case "register_get": {
-                                const { register } =
-                                    def as RegisterBlockDefinition
-                                const { value: role } = inputs[0].fields["role"]
-                                const field = inputs[0].fields["field"]
-                                return toMemberExpression(
-                                    role as string,
-                                    field
-                                        ? toMemberExpression(
-                                              register.name,
-                                              field.value as string
-                                          )
-                                        : register.name
-                                )
-                            }
-                            case "event_field": {
-                                const { event } = def as EventFieldDefinition
-                                if (ev.event !== event.name) {
-                                    errors.push({
-                                        sourceId: block.id,
-                                        message: `Event ${event.name} is not available in this handler.`,
-                                    })
-                                }
-                                const field = inputs[0].fields["field"]
-                                return toMemberExpression(
-                                    ev.role,
-                                    toMemberExpression(
-                                        ev.event,
-                                        field.value as string
-                                    )
-                                )
-                            }
                             case "shadow": {
                                 const field = inputs[0].fields["value"]
                                 const { value } = field

@@ -42,6 +42,7 @@ import {
     toIdentifier,
     toMemberExpression,
 } from "../../../../jacdac-ts/src/vm/compile"
+import { VMError } from "../../../../jacdac-ts/src/vm/ir"
 import KeyboardKeyField from "../fields/KeyboardKeyField"
 import LEDColorField from "../fields/LEDColorField"
 import LEDMatrixField from "../fields/LEDMatrixField"
@@ -68,9 +69,11 @@ import {
     ValueInputDefinition,
     VariableInputDefinition,
 } from "../toolbox"
+import { ExpressionWithErrors } from "../VMgenerator"
 import BlockDomainSpecificLanguage, {
     CompileEventToVMOptions,
     CompileEventToVMResult,
+    CompileExpressionToVMOptions,
     CreateBlocksOptions,
     CreateCategoryOptions,
 } from "./dsl"
@@ -1007,6 +1010,53 @@ export class ServicesBlockDomainSpecificLanguage
         }
 
         return undefined
+    }
+
+    compileExpressionToVM(
+        options: CompileExpressionToVMOptions
+    ): ExpressionWithErrors {
+        const { event, definition, block } = options
+        const { inputs, id } = block
+        const { template } = definition
+        switch (template) {
+            case "register_get": {
+                const { register } = definition as RegisterBlockDefinition
+                const { value: role } = inputs[0].fields["role"]
+                const field = inputs[0].fields["field"]
+                return {
+                    expr: toMemberExpression(
+                        role as string,
+                        field
+                            ? toMemberExpression(
+                                  register.name,
+                                  field.value as string
+                              )
+                            : register.name
+                    ),
+                    errors: [],
+                }
+            }
+            case "event_field": {
+                const { event: eventInfo } = definition as EventFieldDefinition
+                const errors: VMError[] = []
+                if (event.event !== eventInfo.name) {
+                    errors.push({
+                        sourceId: id,
+                        message: `Event ${eventInfo.name} is not available in this handler.`,
+                    })
+                }
+                const field = inputs[0].fields["field"]
+                return {
+                    expr: toMemberExpression(
+                        event.role,
+                        toMemberExpression(event.event, field.value as string)
+                    ),
+                    errors,
+                }
+            }
+            default:
+                return undefined
+        }
     }
 }
 const servicesDSL = new ServicesBlockDomainSpecificLanguage()
