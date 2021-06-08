@@ -166,6 +166,7 @@ export interface ContentDefinition {
 export interface CategoryDefinition extends ContentDefinition {
     kind: "category"
     name: string
+    order?: number
     custom?: string
     colour?: string
     categorystyle?: string

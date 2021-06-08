@@ -5,7 +5,7 @@ import WorkspaceContext from "../WorkspaceContext"
 import ReactInlineField from "./ReactInlineField"
 import { PointerBoundary } from "./PointerBoundary"
 import { WatchValueType } from "../../../../jacdac-ts/src/vm/runner"
-import { VM_WATCH_CHANGE } from "../../../../jacdac-ts/src/vm/utils"
+import { VM_EVENT, VMCode } from "../../../../jacdac-ts/src/vm/events"
 import { roundWithPrecision } from "../../../../jacdac-ts/src/jdom/utils"
 
 function WatchValueWidget() {
@@ -18,8 +18,8 @@ function WatchValueWidget() {
     )
     useEffect(() => {
         setValue(undefined)
-        return runner?.subscribe(VM_WATCH_CHANGE, watchSourceId => {
-            if (watchSourceId === sourceId) {
+        return runner?.subscribe(VM_EVENT, (code: VMCode, watchSourceId?: string) => {
+            if (code === VMCode.WatchChange && watchSourceId === sourceId) {
                 const newValue = runner.lookupWatch(sourceId)
                 setValue(newValue)
             }
