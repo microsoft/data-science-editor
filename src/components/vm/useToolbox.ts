@@ -10,14 +10,9 @@ import {
     BlockReference,
     ButtonDefinition,
     CategoryDefinition,
-    CODE_STATEMENT_TYPE,
-    InputDefinition,
     NEW_PROJET_XML,
-    REPEAT_EVERY_BLOCK,
     ServiceBlockDefinitionFactory,
     ToolboxConfiguration,
-    ValueInputDefinition,
-    WAIT_BLOCK,
 } from "./toolbox"
 import { WorkspaceJSON } from "./jsongenerator"
 import { VMProgram } from "../../../jacdac-ts/src/vm/ir"
@@ -40,60 +35,11 @@ type CachedBlockDefinitions = {
     blocks: BlockDefinition[]
 }
 
-function createBlockTheme(theme: Theme) {
-    const otherColor = theme.palette.info.main
-    const commandColor = theme.palette.warning.main
-    return {
-        commandColor,
-        otherColor,
-    }
-}
-
 function loadBlocks(
     dsls: BlockDomainSpecificLanguage[],
-    theme: Theme,
-    commandColor: string
+    theme: Theme
 ): CachedBlockDefinitions {
-    const runtimeBlocks: BlockDefinition[] = [
-        {
-            kind: "block",
-            type: WAIT_BLOCK,
-            message0: "wait %1 s",
-            args0: [
-                <ValueInputDefinition>{
-                    type: "input_value",
-                    name: "time",
-                    check: "Number",
-                },
-            ],
-            inputsInline: true,
-            previousStatement: CODE_STATEMENT_TYPE,
-            nextStatement: CODE_STATEMENT_TYPE,
-            colour: commandColor,
-            tooltip: "Wait the desired time",
-            helpUrl: "",
-        },
-        {
-            kind: "block",
-            type: REPEAT_EVERY_BLOCK,
-            message0: `repeat every %1s`,
-            args0: [
-                <InputDefinition>{
-                    type: "input_value",
-                    name: "interval",
-                    check: "Number",
-                },
-            ],
-            colour: commandColor,
-            inputsInline: true,
-            tooltip: `Repeats code at a given interval in seconds`,
-            helpUrl: "",
-            template: "every",
-            nextStatement: CODE_STATEMENT_TYPE,
-        },
-    ]
-
-    const dslsBlocks = arrayConcatMany(
+    const blocks = arrayConcatMany(
         dsls.map(dsl =>
             dsl?.createBlocks?.({ theme }).map(b => {
                 b.dsl = dsl.id // ensure DSL is set
@@ -101,9 +47,6 @@ function loadBlocks(
             })
         )
     )
-
-    const blocks: BlockDefinition[] = [...runtimeBlocks, ...dslsBlocks]
-
     console.log(`blocks`, { blocks })
 
     // register field editors
@@ -168,31 +111,7 @@ export default function useToolbox(props: {
 
     const { dsls } = useContext(DslContext)
     const theme = useTheme()
-    const { commandColor } = createBlockTheme(theme)
-    useMemo(() => loadBlocks(dsls, theme, commandColor), [theme, dsls])
-
-    const commandsCategory: CategoryDefinition = {
-        kind: "category",
-        name: "Commands",
-        order: 4,
-        colour: commandColor,
-        contents: [
-            <BlockDefinition>{
-                kind: "block",
-                type: REPEAT_EVERY_BLOCK,
-                values: {
-                    interval: { kind: "block", type: "jacdac_time_picker" },
-                },
-            },
-            <BlockDefinition>{
-                kind: "block",
-                type: WAIT_BLOCK,
-                values: {
-                    time: { kind: "block", type: "jacdac_time_picker" },
-                },
-            },
-        ].filter(b => !!b),
-    }
+    useMemo(() => loadBlocks(dsls, theme), [theme, dsls])
 
     const dslsCategories = arrayConcatMany(
         dsls.map(dsl =>
@@ -204,7 +123,7 @@ export default function useToolbox(props: {
 
     const toolboxConfiguration: ToolboxConfiguration = {
         kind: "categoryToolbox",
-        contents: [commandsCategory, ...dslsCategories]
+        contents: dslsCategories
             .filter(cat => !!cat)
             .map(node =>
                 node.kind === "category"

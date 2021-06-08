@@ -8,6 +8,7 @@ import mathDSL from "./mathdsl"
 import logicDsl from "./logicdsl"
 import variablesDsl from "./variablesdsl"
 import shadowDsl from "./shadowdsl"
+import loopsDsl from "./loopsdsl"
 
 export interface DslProps {
     dsls: BlockDomainSpecificLanguage[]
@@ -28,6 +29,7 @@ export const DslProvider = ({ children }) => {
             azureIoTHubDSL,
             deviceTwinDSL,
             toolsDSL,
+            loopsDsl,
             logicDsl,
             mathDSL,
             variablesDsl,
