@@ -4,6 +4,7 @@ import azureIoTHubDSL from "./azureiothubdsl"
 import BlockDomainSpecificLanguage from "./dsl"
 import deviceTwinDSL from "./devicetwindsl"
 import servicesDSL from "./servicesdsl"
+import mathDSL from "./mathdsl"
 
 export interface DslProps {
     dsls: BlockDomainSpecificLanguage[]
@@ -18,7 +19,10 @@ export default DslContext
 
 // eslint-disable-next-line react/prop-types
 export const DslProvider = ({ children }) => {
-    const dsls = useMemo(() => [servicesDSL, azureIoTHubDSL, deviceTwinDSL, toolsDSL], [])
+    const dsls = useMemo(
+        () => [servicesDSL, azureIoTHubDSL, deviceTwinDSL, toolsDSL, mathDSL],
+        []
+    )
     return (
         <DslContext.Provider value={{ dsls }}>{children}</DslContext.Provider>
     )
