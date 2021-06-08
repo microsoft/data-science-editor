@@ -357,13 +357,6 @@ export default function useToolbox(props: {
         ].filter(b => !!b),
     }
 
-    const variablesCategory: CategoryDefinition = {
-        kind: "category",
-        name: "Variables",
-        colour: "%{BKY_VARIABLES_HUE}",
-        custom: "VARIABLE",
-    }
-
     const dslsCategories = arrayConcatMany(
         dsls.map(dsl =>
             dsl?.createCategory?.({ theme, source, program, liveServices })
@@ -374,14 +367,7 @@ export default function useToolbox(props: {
 
     const toolboxConfiguration: ToolboxConfiguration = {
         kind: "categoryToolbox",
-        contents: [
-            commandsCategory,
-            variablesCategory,
-            <SeparatorDefinition>{
-                kind: "sep",
-            },
-            ...dslsCategories,
-        ]
+        contents: [commandsCategory, ...dslsCategories]
             .filter(cat => !!cat)
             .map(node =>
                 node.kind === "category"

@@ -6,6 +6,7 @@ import deviceTwinDSL from "./devicetwindsl"
 import servicesDSL from "./servicesdsl"
 import mathDSL from "./mathdsl"
 import logicDsl from "./logicdsl"
+import variablesDsl from "./variablesdsl"
 
 export interface DslProps {
     dsls: BlockDomainSpecificLanguage[]
@@ -28,6 +29,7 @@ export const DslProvider = ({ children }) => {
             toolsDSL,
             logicDsl,
             mathDSL,
+            variablesDsl,
         ],
         []
     )
