@@ -426,7 +426,7 @@ export default function workspaceJSONToVMProgram(
         try {
             if (dsl?.compileToVM) {
                 console.log(`compile to vm`, { dsl, top, definition })
-                const { expression, errors } =
+                const { expression, errors, event } =
                     dsl?.compileToVM({
                         block: top,
                         definition,
@@ -434,6 +434,7 @@ export default function workspaceJSONToVMProgram(
                     }) || {}
                 command = expression as jsep.CallExpression
                 topErrors = errors
+                topEvent = event
             }
 
             // if dsl didn't compile anything try again

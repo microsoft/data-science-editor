@@ -12,15 +12,15 @@ import { ExpressionWithErrors } from "../VMgenerator"
 
 export default interface BlockDomainSpecificLanguage {
     id: string
-    createBlocks(options: {
+    createBlocks?: (options: {
         theme: Theme
         supportedServices: jdspec.ServiceSpec[]
-    }): BlockDefinition[]
+    }) => BlockDefinition[]
 
-    createCategory(options: {
+    createCategory?: (options: {
         theme: Theme
         source: WorkspaceJSON
-    }): CategoryDefinition[]
+    }) => CategoryDefinition[]
 
     convertToJSON?: (options: {
         workspace: Workspace
@@ -36,6 +36,7 @@ export default interface BlockDomainSpecificLanguage {
             block: BlockJSON
         ) => ExpressionWithErrors
     }) => {
+        event?: RoleEvent
         expression?: jsep.Expression
         errors?: VMError[]
     }
