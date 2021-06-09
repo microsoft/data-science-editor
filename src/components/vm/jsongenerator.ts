@@ -138,13 +138,6 @@ export function domToJSON(
                 const dsl =
                     definition?.dsl && dsls.find(d => d.id === definition.dsl)
                 value = dsl?.blockToValue?.(block)
-                console.log(`blocktovalue`, {
-                    type,
-                    definition,
-                    dsl,
-                    block,
-                    value,
-                })
             }
             const element: BlockJSON = {
                 type: block.type,

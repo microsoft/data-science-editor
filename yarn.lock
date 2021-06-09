@@ -10307,6 +10307,11 @@ jsdom@15.2.1:
     ws "^7.0.0"
     xml-name-validator "^3.0.0"
 
+jsep@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/jsep/-/jsep-0.4.0.tgz#2191c41bde180c27551bb550abb407d88976ed4a"
+  integrity sha512-UDkrzhJK8hmgXeGK8WIiecc/cuW4Vnx5nnrRma7yaxK0WXlvZ4VerGrcxPzifd/CA6QdcI1hpXqr22tHKXpcQA==
+
 jsesc@^2.5.1:
   version "2.5.2"
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-2.5.2.tgz#80564d2e483dacf6e8ef209650a67df3f0c283a4"

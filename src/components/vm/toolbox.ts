@@ -72,18 +72,14 @@ export type RegisterTemplate =
 
 export type CommandTemplate = "command"
 
-export type CustomTemplate = "custom"
-
 export type BlockTemplate =
     | EventTemplate
     | EventFieldTemplate
     | RegisterTemplate
     | CommandTemplate
-    | CustomTemplate
     | "shadow"
-    | "connection"
-    | "connected"
     | "meta"
+    | string
 
 export interface BlockDefinition extends BlockReference {
     message0?: string
