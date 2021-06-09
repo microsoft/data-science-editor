@@ -8,8 +8,6 @@ import VMRunnerButtons from "./VMRunnerButtons"
 import VMStartSimulatorButton from "./VMStartSimulatorButton"
 import { WorkspaceSvg } from "blockly"
 import VMFileButtons from "./VMFileButtons"
-import useChange from "../../jacdac/useChange"
-import useDevices from "../hooks/useDevices"
 
 export default function VMToolbar(props: {
     roleManager: RoleManager
@@ -21,9 +19,6 @@ export default function VMToolbar(props: {
     workspace?: WorkspaceSvg
 }) {
     const { roleManager, runner, run, cancel, xml, program, workspace } = props
-    const roles = useChange(roleManager, _ => _?.roles)
-    const devices = useDevices({ ignoreSelf: true })
-    const noRoles = !roles?.length && !devices?.length
     return (
         <Grid
             container

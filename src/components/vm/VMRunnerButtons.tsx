@@ -105,7 +105,6 @@ export default function VMRunnerButtons(props: {
                 VM_EVENT,
                 (code: VMCode, _?: VMHandler, sourceId?: string) => {
                     if (code === VMCode.Breakpoint) {
-                        console.log("breakpoint", { sourceId, mounted: mounted() })
                         if (mounted()) setBreakpoint(sourceId)
                     }
                 }
@@ -128,6 +127,7 @@ export default function VMRunnerButtons(props: {
                 <IconButtonWithTooltip
                     title={paused ? "resume" : stopped ? "start" : "stop"}
                     disabled={disabled}
+                    color={stopped ? "primary" : "default"}
                     onClick={
                         paused
                             ? handleResume
