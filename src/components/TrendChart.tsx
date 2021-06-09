@@ -1,5 +1,6 @@
-import React from "react"
+import React, { useContext, useState } from "react"
 import { makeStyles, createStyles, useTheme } from "@material-ui/core"
+import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -10,10 +11,28 @@ const useStyles = makeStyles(() =>
     })
 )
 
+export function useTrendChartData(maxLength = 25) {
+    const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const [trendData, setTrendData] = useState<[number, number][]>([])
+
+    const addTrendValue = (value: number) => {
+        if (isNaN(value)) return
+
+        const { timestamp } = bus
+        const entry: [number, number] = [timestamp, value]
+        setTrendData(trendData => [...trendData.slice(-(maxLength - 1)), entry])
+    }
+
+    return {
+        trendData,
+        addTrendValue,
+    }
+}
+
 export default function TrendChart(props: {
     data: [number, number][]
-    useGradient: boolean
-    unit: string
+    useGradient?: boolean
+    unit?: string
     width?: number
     height?: number
     dot?: number
@@ -32,19 +51,22 @@ export default function TrendChart(props: {
     const theme = useTheme()
     const classes = useStyles()
 
+    // nothing to show for
+    if (data?.length < 2) return null
+
     const vpw = width
     const vph = height
 
     const color = theme.palette.secondary.main
-    const shape = unit == "#" ? "step" : "line"
-    const symmetric = unit == "g" ? true : false
+    const shape = unit === "#" ? "step" : "line"
+    const symmetric = unit === "g" ? true : false
 
     const values = data.map(r => r[1])
     const mint = data[0][0]
     const maxt = data[data.length - 1][0]
-    let minv = unit == "/" ? 0 : Math.min.apply(null, values)
-    let maxv = unit == "/" ? 1 : Math.max.apply(null, values)
-    const opposite = unit != "/" && Math.sign(minv) != Math.sign(maxv)
+    let minv = unit === "/" ? 0 : Math.min.apply(null, values)
+    let maxv = unit === "/" ? 1 : Math.max.apply(null, values)
+    const opposite = unit !== "/" && Math.sign(minv) != Math.sign(maxv)
     if (isNaN(minv) && isNaN(maxv)) {
         minv = 0
         maxv = 1

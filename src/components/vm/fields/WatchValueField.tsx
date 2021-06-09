@@ -7,6 +7,7 @@ import { PointerBoundary } from "./PointerBoundary"
 import { WatchValueType } from "../../../../jacdac-ts/src/vm/runner"
 import { VM_EVENT, VMCode } from "../../../../jacdac-ts/src/vm/events"
 import { roundWithPrecision } from "../../../../jacdac-ts/src/jdom/utils"
+import TrendChart, { useTrendChartData } from "../../TrendChart"
 
 function WatchValueWidget() {
     const { runner, sourceId } = useContext(WorkspaceContext)
@@ -16,14 +17,20 @@ function WatchValueWidget() {
     const [value, setValue] = useState<WatchValueType>(
         runner?.lookupWatch(sourceId)
     )
+    const { trendData, addTrendValue } = useTrendChartData()
+
     useEffect(() => {
         setValue(undefined)
-        return runner?.subscribe(VM_EVENT, (code: VMCode, watchSourceId?: string) => {
-            if (code === VMCode.WatchChange && watchSourceId === sourceId) {
-                const newValue = runner.lookupWatch(sourceId)
-                setValue(newValue)
+        return runner?.subscribe(
+            VM_EVENT,
+            (code: VMCode, watchSourceId?: string) => {
+                if (code === VMCode.WatchChange && watchSourceId === sourceId) {
+                    const newValue = runner.lookupWatch(sourceId)
+                    setValue(newValue)
+                    addTrendValue(newValue)
+                }
             }
-        })
+        )
     }, [runner, sourceId])
 
     let valueNumber = typeof value === "number" ? (value as number) : undefined
@@ -59,6 +66,11 @@ function WatchValueWidget() {
                                 {value === undefined ? "..." : value + ""}
                             </Typography>
                         )}
+                    </PointerBoundary>
+                </Grid>
+                <Grid item>
+                    <PointerBoundary>
+                        <TrendChart data={trendData} mini={true} dot={2} useGradient={true} />
                     </PointerBoundary>
                 </Grid>
             </Grid>
