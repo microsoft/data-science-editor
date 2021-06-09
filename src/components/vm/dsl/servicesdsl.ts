@@ -417,7 +417,7 @@ export class ServicesBlockDomainSpecificLanguage
                 service =>
                     <CustomBlockDefinition>{
                         kind: "block",
-                        type: `_show_leds`,
+                        type: `show_leds`,
                         message0: `show %1 leds %2`,
                         args0: [
                             fieldVariable(service),

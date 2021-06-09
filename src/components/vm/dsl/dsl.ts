@@ -9,7 +9,7 @@ import {
     ContentDefinition,
     ServiceBlockDefinition,
 } from "../toolbox"
-import { ExpressionWithErrors } from "../VMgenerator"
+import { CmdWithErrors, ExpressionWithErrors } from "../VMgenerator"
 
 export interface CreateBlocksOptions {
     theme: Theme
@@ -41,6 +41,13 @@ export interface CompileExpressionToVMOptions {
     blockToExpressionInner: (ev: RoleEvent, block: BlockJSON) => jsep.Expression
 }
 
+export interface CompileCommandToVMOptions {
+    event: RoleEvent
+    block: BlockJSON
+    definition: ServiceBlockDefinition
+    blockToExpression: (ev: RoleEvent, block: BlockJSON) => ExpressionWithErrors
+}
+
 export default interface BlockDomainSpecificLanguage {
     id: string
     createBlocks?: (options: CreateBlocksOptions) => BlockDefinition[]
@@ -52,6 +59,10 @@ export default interface BlockDomainSpecificLanguage {
     compileEventToVM?: (
         options: CompileEventToVMOptions
     ) => CompileEventToVMResult
+
+    compileCommandToVM?: (
+        options: CompileCommandToVMOptions
+    ) => CmdWithErrors
 
     compileExpressionToVM?: (
         options: CompileExpressionToVMOptions

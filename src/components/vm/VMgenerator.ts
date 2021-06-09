@@ -6,7 +6,6 @@ import {
     VMRole,
     VMIfThenElse,
     VMError,
-    VMCommand,
 } from "../../../jacdac-ts/src/vm/ir"
 import {
     toMemberExpression,
@@ -18,10 +17,8 @@ import { assert } from "../../../jacdac-ts/src/jdom/utils"
 import {
     BUILTIN_TYPES,
     CommandBlockDefinition,
-    EventFieldDefinition,
     RegisterBlockDefinition,
     resolveServiceBlockDefinition,
-    WAIT_BLOCK,
 } from "./toolbox"
 import Blockly from "blockly"
 import BlockDomainSpecificLanguage from "./dsl/dsl"
@@ -44,6 +41,11 @@ const ops = {
 
 export interface ExpressionWithErrors {
     expr: jsep.Expression
+    errors: VMError[]
+}
+
+export interface CmdWithErrors {
+    cmd: VMBase
     errors: VMError[]
 }
 
@@ -165,7 +167,7 @@ export default function workspaceJSONToVMProgram(
                         // try any DSL
                         const { dsl: dslName } = definition
                         const dsl = dsls.find(d => d.id === dslName)
-                        const res = dsl?.compileExpressionToVM({
+                        const res = dsl?.compileExpressionToVM?.({
                             event: ev,
                             definition,
                             block,
@@ -177,16 +179,15 @@ export default function workspaceJSONToVMProgram(
                             return res.expr
                         }
 
-                        // try built-in
                         const { template } = definition
                         switch (template) {
                             case "shadow": {
                                 const field = inputs[0].fields["value"]
-                                const { value } = field
+                                const v = field.value
                                 return <jsep.Literal>{
                                     type: "Literal",
-                                    value: value,
-                                    raw: value + "",
+                                    value: v,
+                                    raw: v + "",
                                 }
                             }
                             default: {
@@ -209,37 +210,13 @@ export default function workspaceJSONToVMProgram(
         }
     }
 
-    type CmdWithErrors = {
-        cmd: VMBase
-        errors: VMError[]
-    }
-
-    const makeWait = (event: RoleEvent, block: BlockJSON) => {
-        const { inputs } = block
-        {
-            const { expr: time, errors } = blockToExpression(
-                event,
-                inputs[0].child
-            )
-            return {
-                cmd: makeVMBase(block, {
-                    type: "CallExpression",
-                    arguments: [time],
-                    callee: toIdentifier("wait"),
-                }),
-                errors: processErrors(block, errors),
-            }
-        }
-    }
-
     const blockToCommand = (
         event: RoleEvent,
         block: BlockJSON
     ): CmdWithErrors => {
         const { type, inputs } = block
+        console.debug(`block2c`, { event, type, block, inputs })
         switch (type) {
-            case WAIT_BLOCK:
-                return makeWait(event, block)
             case "dynamic_if": {
                 const thenHandler: VMHandler = {
                     commands: [],
@@ -303,12 +280,22 @@ export default function workspaceJSONToVMProgram(
             }
             // more builts
             default: {
-                const def = resolveServiceBlockDefinition(type)
-                if (def) {
-                    const { template } = def
+                const definition = resolveServiceBlockDefinition(type)
+                if (definition) {
+                    const { dsl: dslName, template } = definition
+                    const dsl = dsls.find(dsl => dsl.id === dslName)
+                    const dslRes = dsl?.compileCommandToVM?.({
+                        event,
+                        block,
+                        definition,
+                        blockToExpression,
+                    })
+                    if (dslRes) return dslRes
+
                     switch (template) {
                         case "register_set": {
-                            const { register } = def as RegisterBlockDefinition
+                            const { register } =
+                                definition as RegisterBlockDefinition
                             const { expr, errors } = blockToExpression(
                                 event,
                                 inputs[0].child
@@ -331,7 +318,7 @@ export default function workspaceJSONToVMProgram(
                         }
                         case "command": {
                             const { command: serviceCommand } =
-                                def as CommandBlockDefinition
+                                definition as CommandBlockDefinition
                             const { value: role } = inputs[0].fields.role
                             const exprsErrors = inputs.map(a =>
                                 blockToExpression(event, a.child)
@@ -391,6 +378,8 @@ export default function workspaceJSONToVMProgram(
                             type: "cmd",
                             command: nop,
                         } as VMBase)
+                    } else {
+                        console.debug(e)
                     }
                 }
             }

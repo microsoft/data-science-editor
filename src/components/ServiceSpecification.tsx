@@ -19,8 +19,6 @@ import useServiceProviderFromServiceClass from "./hooks/useServiceProviderFromSe
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import useChange from "../jacdac/useChange"
 import DashbardDeviceItem from "./dashboard/DashboardDeviceItem"
-import VMBlockEditor from "./vm/VMBlockEditor"
-import PaperBox from "./ui/PaperBox"
 
 function DashboardServiceDevices(props: { serviceClass: number }) {
     const { serviceClass } = props
@@ -99,9 +97,6 @@ export default function ServiceSpecification(props: {
                 </p>
             )}
             <Markdown key="noteslong" source={node.notes.long || ""} />
-            <PaperBox>
-                <VMBlockEditor />
-            </PaperBox>
             <DashboardServiceDevices serviceClass={classIdentifier} />
             <EnumSpecification key="enums" serviceClass={classIdentifier} />
             {[

@@ -102,5 +102,26 @@ const loopsDsl: BlockDomainSpecificLanguage = {
         }
         return undefined
     },
+    compileCommandToVM: ({ event, block, blockToExpression }) => {
+        const { type } = block
+        if (type === WAIT_BLOCK) {
+            const { inputs } = block
+            {
+                const { expr: time, errors } = blockToExpression(
+                    event,
+                    inputs[0].child
+                )
+                return {
+                    cmd: makeVMBase(block, {
+                        type: "CallExpression",
+                        arguments: [time],
+                        callee: toIdentifier("wait"),
+                    }),
+                    errors: processErrors(block, errors),
+                }
+            }
+        }
+        return undefined
+    },
 }
 export default loopsDsl

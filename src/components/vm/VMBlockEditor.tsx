@@ -29,11 +29,12 @@ import RoleManager from "../../../jacdac-ts/src/servers/rolemanager"
 import { arrayConcatMany, toMap } from "../../../jacdac-ts/src/jdom/utils"
 import { withPrefix } from "gatsby"
 import DslContext from "./dsl/DslContext"
+import Flags from "../../../jacdac-ts/src/jdom/flags"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         editor: {
-            height: "calc(100vh - 10rem)",
+            height: `calc(100vh - ${Flags.diagnostics ? 15 : 10}rem)`,
             "& .blocklyTreeLabel": {
                 fontFamily: theme.typography.fontFamily,
             },
@@ -53,7 +54,6 @@ export default function VMBlockEditor(props: {
     onVMProgramChange?: (program: VMProgram) => void
     runner?: VMProgramRunner
     roleManager?: RoleManager
-    serviceClass?: number
     workspaceRef?: MutableRefObject<WorkspaceSvg>
 }) {
     const {
@@ -62,7 +62,6 @@ export default function VMBlockEditor(props: {
         onJSONChange,
         onVMProgramChange,
         initialXml,
-        serviceClass,
         runner,
         roleManager,
         workspaceRef,
@@ -74,7 +73,6 @@ export default function VMBlockEditor(props: {
     const [source, setSource] = useState<WorkspaceJSON>()
     const [program, setProgram] = useState<VMProgram>()
     const { toolboxConfiguration, newProjectXml } = useToolbox({
-        serviceClass,
         source,
         program,
     })
