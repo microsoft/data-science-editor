@@ -4,7 +4,7 @@ import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import useServiceServer from "../hooks/useServiceServer"
 import useChange from "../../jacdac/useChange"
-import LEDMatrixDisplayWidget from "../widgets/LEDMatrixWidget"
+import LEDMatrixWidget from "../widgets/LEDMatrixWidget"
 import useRegister from "../hooks/useRegister"
 
 export default function DashboardLEDMatrixDisplay(
@@ -31,7 +31,7 @@ export default function DashboardLEDMatrixDisplay(
         ledsRegister.sendSetAsync(newLeds, true)
     }
     return (
-        <LEDMatrixDisplayWidget
+        <LEDMatrixWidget
             leds={leds}
             brightness={brightness}
             rows={rows}

@@ -20,7 +20,7 @@ export default class LEDMatrixField extends ReactImageField<LEDMatrixFieldValue>
 
         this.events.on(VALUE_CHANGE, () => {
             const { rows, columns } = this.value
-            this.setSize(32, (32 / columns) * rows)    
+            this.setSize(32, (32 / columns) * rows)
         })
     }
 
@@ -30,7 +30,7 @@ export default class LEDMatrixField extends ReactImageField<LEDMatrixFieldValue>
 
     get defaultValue() {
         return {
-            leds: toHex(new Uint8Array(4)),
+            leds: toHex(new Uint8Array(0)),
             rows: 5,
             columns: 5,
         }
@@ -75,6 +75,7 @@ export default class LEDMatrixField extends ReactImageField<LEDMatrixFieldValue>
     renderField(): ReactNode {
         const { leds, rows, columns } = this.value
         const ledsBytes = fromHex(leds)
+        console.log(`led bytes`, { leds, ledsBytes })
         const onChange = (newLeds: Uint8Array) =>
             (this.value = {
                 leds: toHex(newLeds),

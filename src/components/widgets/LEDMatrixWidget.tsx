@@ -48,9 +48,18 @@ export default function LEDMatrixWidget(props: {
     const handleLedClick =
         (bitindex: number) => (ev: React.PointerEvent<SVGRectElement>) => {
             if (ev && !ev.buttons) return
-            const newLeds = currentLeds.slice(0)
+            let newLeds = currentLeds.slice(0)
+            // ensure that newLeds has the right size
+            const n = rows * columnspadded
+            if (newLeds.length !== n) {
+                if (newLeds.length > n) newLeds = newLeds.slice(0, n)
+                else {
+                    const temp = new Uint8Array(n)
+                    temp.set(newLeds, 0)
+                    newLeds = temp
+                }
+            }
             toggle(newLeds, bitindex)
-
             setCurrentLeds(newLeds)
             onChange?.(newLeds)
         }
