@@ -343,13 +343,14 @@ export default function workspaceJSONToVMProgram(
             let command: jsep.CallExpression
             let topEvent: RoleEvent
             let topErrors: VMError[]
+            let topMeta = false
             const definition = resolveServiceBlockDefinition(type)
             assert(!!definition)
             const { template, dsl: dslName } = definition
             const dsl = dslName && dsls?.find(d => d.id === dslName)
 
             try {
-                const { expression, errors, event } =
+                const { expression, errors, event, meta } =
                     dsl?.compileEventToVM?.({
                         block: top,
                         definition,
@@ -358,6 +359,7 @@ export default function workspaceJSONToVMProgram(
                 command = expression as jsep.CallExpression
                 topErrors = errors
                 topEvent = event
+                topMeta = meta
 
                 // if dsl didn't compile anything try again
                 if (!command && !topErrors?.length) {
@@ -395,6 +397,7 @@ export default function workspaceJSONToVMProgram(
                     } as VMBase,
                 ],
                 errors: topErrors || [],
+                meta: !!topMeta
             }
 
             addCommands(topEvent, top.children, handler)

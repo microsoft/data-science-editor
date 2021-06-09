@@ -32,6 +32,7 @@ export interface CompileEventToVMResult {
     event?: RoleEvent
     expression?: jsep.Expression
     errors?: VMError[]
+    meta?: boolean
 }
 
 export interface CompileExpressionToVMOptions {

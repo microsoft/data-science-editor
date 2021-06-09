@@ -138,6 +138,7 @@ const toolsDSL: BlockDomainSpecificLanguage = {
                     callee: toIdentifier("watch"),
                 },
                 errors,
+                meta: true
             }
         }
 

@@ -20,7 +20,9 @@ function useWorkspaceBreakpoints(program: VMProgram, workspace: WorkspaceSvg) {
     const breakpoints = useMemo(
         () =>
             arrayConcatMany(
-                program?.handlers?.map(h => h.commands.map(cmd => cmd.sourceId))
+                program?.handlers
+                    ?.filter(h => !h.meta) // don't debug watch statements
+                    .map(h => h.commands.map(cmd => cmd.sourceId))
             )?.filter(id => !!id) || [],
         [program]
     )

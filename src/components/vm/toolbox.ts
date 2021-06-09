@@ -136,7 +136,7 @@ export interface CommandBlockDefinition extends ServiceBlockDefinition {
 
 export interface CustomBlockDefinition extends ServiceBlockDefinition {
     kind: "block"
-    template: CustomTemplate
+    template: "custom"
     expression?: string
 }
 
