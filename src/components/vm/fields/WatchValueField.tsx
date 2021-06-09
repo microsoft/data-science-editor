@@ -68,11 +68,18 @@ function WatchValueWidget() {
                         )}
                     </PointerBoundary>
                 </Grid>
-                <Grid item>
-                    <PointerBoundary>
-                        <TrendChart data={trendData} mini={true} dot={2} useGradient={true} />
-                    </PointerBoundary>
-                </Grid>
+                {!isNaN(valueNumber) && (
+                    <Grid item>
+                        <PointerBoundary>
+                            <TrendChart
+                                data={trendData}
+                                mini={true}
+                                dot={2}
+                                useGradient={true}
+                            />
+                        </PointerBoundary>
+                    </Grid>
+                )}
             </Grid>
         </Box>
     )
