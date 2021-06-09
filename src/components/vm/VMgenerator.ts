@@ -282,7 +282,7 @@ export default function workspaceJSONToVMProgram(
             default: {
                 const definition = resolveServiceBlockDefinition(type)
                 if (definition) {
-                    const { dsl: dslName, template } = definition
+                    const { dsl: dslName } = definition
                     const dsl = dsls.find(dsl => dsl.id === dslName)
                     const dslRes = dsl?.compileCommandToVM?.({
                         event,
@@ -295,10 +295,7 @@ export default function workspaceJSONToVMProgram(
                         return dslRes
                     }
 
-                    console.warn(
-                        `unsupported block ${type}`,
-                        { block }
-                    )
+                    console.warn(`unsupported block ${type}`, { block })
                     return {
                         cmd: undefined,
                         errors: [],
