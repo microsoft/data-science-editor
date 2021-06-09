@@ -290,64 +290,18 @@ export default function workspaceJSONToVMProgram(
                         definition,
                         blockToExpression,
                     })
-                    if (dslRes) return dslRes
+                    if (dslRes) {
+                        dslRes.errors = processErrors(block, dslRes.errors)
+                        return dslRes
+                    }
 
-                    switch (template) {
-                        case "register_set": {
-                            const { register } =
-                                definition as RegisterBlockDefinition
-                            const { expr, errors } = blockToExpression(
-                                event,
-                                inputs[0].child
-                            )
-                            const { value: role } = inputs[0].fields.role
-                            return {
-                                cmd: makeVMBase(block, {
-                                    type: "CallExpression",
-                                    arguments: [
-                                        toMemberExpression(
-                                            role as string,
-                                            register.name
-                                        ),
-                                        expr,
-                                    ],
-                                    callee: toIdentifier("writeRegister"),
-                                }),
-                                errors: processErrors(block, errors),
-                            }
-                        }
-                        case "command": {
-                            const { command: serviceCommand } =
-                                definition as CommandBlockDefinition
-                            const { value: role } = inputs[0].fields.role
-                            const exprsErrors = inputs.map(a =>
-                                blockToExpression(event, a.child)
-                            )
-                            return {
-                                cmd: makeVMBase(block, {
-                                    type: "CallExpression",
-                                    arguments: exprsErrors.map(p => p.expr),
-                                    callee: toMemberExpression(
-                                        role as string,
-                                        serviceCommand.name
-                                    ),
-                                }),
-                                errors: processErrors(
-                                    block,
-                                    exprsErrors.flatMap(p => p.errors)
-                                ),
-                            }
-                        }
-                        default: {
-                            console.warn(
-                                `unsupported block template ${template} for ${type}`,
-                                { block }
-                            )
-                            return {
-                                cmd: undefined,
-                                errors: [],
-                            }
-                        }
+                    console.warn(
+                        `unsupported block ${type}`,
+                        { block }
+                    )
+                    return {
+                        cmd: undefined,
+                        errors: [],
                     }
                 }
             }

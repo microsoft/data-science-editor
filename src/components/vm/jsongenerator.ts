@@ -130,12 +130,22 @@ export function domToJSON(
                 else return undefined
             }
 
+            const { type } = block
             // allow DSL to handle conversion
-            const definition = resolveServiceBlockDefinition(block.type)
-            const dsl =
-                definition?.dsl && dsls.find(d => d.id === definition.dsl)
-            const value =
-                dsl?.blockToValue?.(block) || builtins[block.type]?.(block)
+            let value = builtins[block.type]?.(block)
+            if (value === undefined) {
+                const definition = resolveServiceBlockDefinition(type)
+                const dsl =
+                    definition?.dsl && dsls.find(d => d.id === definition.dsl)
+                value = dsl?.blockToValue?.(block)
+                console.log(`blocktovalue`, {
+                    type,
+                    definition,
+                    dsl,
+                    block,
+                    value,
+                })
+            }
             const element: BlockJSON = {
                 type: block.type,
                 id: block.id,

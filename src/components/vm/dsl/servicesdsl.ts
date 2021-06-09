@@ -69,8 +69,9 @@ import {
     ValueInputDefinition,
     VariableInputDefinition,
 } from "../toolbox"
-import { ExpressionWithErrors } from "../VMgenerator"
+import { ExpressionWithErrors, makeVMBase } from "../VMgenerator"
 import BlockDomainSpecificLanguage, {
+    CompileCommandToVMOptions,
     CompileEventToVMOptions,
     CompileEventToVMResult,
     CompileExpressionToVMOptions,
@@ -1057,6 +1058,54 @@ export class ServicesBlockDomainSpecificLanguage
             default:
                 return undefined
         }
+    }
+
+    compileCommandToVM(options: CompileCommandToVMOptions) {
+        const { event, block, definition, blockToExpression } = options
+        const { template } = definition
+        const { inputs } = block
+        switch (template) {
+            case "register_set": {
+                const { register } = definition as RegisterBlockDefinition
+                const { expr, errors } = blockToExpression(
+                    event,
+                    inputs[0].child
+                )
+                const { value: role } = inputs[0].fields.role
+                return {
+                    cmd: makeVMBase(block, {
+                        type: "CallExpression",
+                        arguments: [
+                            toMemberExpression(role as string, register.name),
+                            expr,
+                        ],
+                        callee: toIdentifier("writeRegister"),
+                    }),
+                    errors,
+                }
+            }
+            case "command": {
+                const { command: serviceCommand } =
+                    definition as CommandBlockDefinition
+                const { value: role } = inputs[0].fields.role
+                const exprsErrors = inputs.map(a =>
+                    blockToExpression(event, a.child)
+                )
+                return {
+                    cmd: makeVMBase(block, {
+                        type: "CallExpression",
+                        arguments: exprsErrors.map(p => p.expr),
+                        callee: toMemberExpression(
+                            role as string,
+                            serviceCommand.name
+                        ),
+                    }),
+                    errors: exprsErrors.flatMap(p => p.errors),
+                }
+            }
+        }
+
+        return undefined
     }
 }
 const servicesDSL = new ServicesBlockDomainSpecificLanguage()
