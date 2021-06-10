@@ -16,9 +16,8 @@ import { useId } from "react-use-id-hook"
 import useEvent from "../hooks/useEvent"
 import useChange from "../../jacdac/useChange"
 import CmdButton from "../CmdButton"
-import { jdpack, jdunpack } from "../../../jacdac-ts/src/jdom/pack"
+import { jdunpack } from "../../../jacdac-ts/src/jdom/pack"
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward"
-import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward"
 import { EVENT } from "../../../jacdac-ts/src/jdom/constants"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import GridHeader from "../ui/GridHeader"
@@ -94,17 +93,6 @@ export default function DashboardAzureIoTHub(props: DashboardServiceProps) {
         )
     }
     const handleSendCloudMessage = async () => server.emitMessage(cdMessage)
-    const handleSendDeviceMessage = async () => {
-        await service.sendCmdAsync(
-            AzureIotHubCmd.SendMessage,
-            jdpack<[string]>("s", [
-                JSON.stringify({
-                    timestamp: service.device.bus.timestamp,
-                    message: "hello from device",
-                }),
-            ])
-        )
-    }
     const handleCDMessageChange = (ev: ChangeEvent<HTMLInputElement>) => {
         setCDMessage(ev.target.value || "")
     }
@@ -159,17 +147,7 @@ export default function DashboardAzureIoTHub(props: DashboardServiceProps) {
             </Grid>
             {deviceToCloudMessages && (
                 <>
-                    <GridHeader
-                        title="device to cloud"
-                        action={
-                            <CmdButton
-                                title="Send device to cloud message"
-                                icon={<ArrowUpwardIcon />}
-                                onClick={handleSendDeviceMessage}
-                                disabled={!connected}
-                            />
-                        }
-                    />
+                    <GridHeader title="device to cloud" />
                     <Grid item xs={12}>
                         <pre>
                             {deviceToCloudMessages
