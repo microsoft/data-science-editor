@@ -148,7 +148,9 @@ export default function DashboardAzureIoTHub(props: DashboardServiceProps) {
                 </Grid>
             )}
             <Grid item xs={12}>
-                <pre>{cdMessages?.map(m => m.body).join("\n")}</pre>
+                <pre>
+                    {cdMessages?.map(m => `${m.counter}: ${m.body}`).join("\n")}
+                </pre>
             </Grid>
             {deviceToCloudMessages && (
                 <>
@@ -165,7 +167,9 @@ export default function DashboardAzureIoTHub(props: DashboardServiceProps) {
                     />
                     <Grid item xs={12}>
                         <pre>
-                            {deviceToCloudMessages.map(m => m.body).join("\n")}
+                            {deviceToCloudMessages
+                                .map(m => `${m.counter}: ${m.body}`)
+                                .join("\n")}
                         </pre>
                     </Grid>
                 </>
