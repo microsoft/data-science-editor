@@ -1,6 +1,5 @@
 import { Block } from "blockly"
 import { SMap } from "../../../../jacdac-ts/src/jdom/utils"
-import { fieldShadows } from "../fields/fields"
 import {
     ColorInputDefnition,
     NumberInputDefinition,
@@ -20,7 +19,6 @@ const builtins: SMap<(block: Block) => string | number | boolean> = {
 const shadowDsl: BlockDomainSpecificLanguage = {
     id: "shadow",
     createBlocks: () => [
-        ...fieldShadows(),
         {
             kind: "block",
             type: `jacdac_on_off`,

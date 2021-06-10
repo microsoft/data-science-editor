@@ -16,6 +16,7 @@ import logicDsl from "../blockly/dsl/logicdsl"
 import mathDSL from "../blockly/dsl/mathdsl"
 import variablesDsl from "../blockly/dsl/variablesdsl"
 import shadowDsl from "../blockly/dsl/shadowdsl"
+import fieldsDsl from "../blockly/dsl/fieldsdsl"
 import workspaceJSONToVMProgram from "./VMgenerator"
 import { BlocklyWorkspaceWithServices } from "../blockly/WorkspaceContext"
 import BlockEditor from "../blockly/BlockEditor"
@@ -82,6 +83,7 @@ export default function VMEditor() {
             mathDSL,
             variablesDsl,
             shadowDsl,
+            fieldsDsl,
         ]
     }, [])
 
