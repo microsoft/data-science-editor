@@ -49,11 +49,24 @@ export interface CompileCommandToVMOptions {
 }
 
 export default interface BlockDomainSpecificLanguage {
+    /**
+     * A unique identifier used to route blocks back to the DSL
+     */
     id: string
+
+    /**
+     * Creates blocks for the DSL
+     */
     createBlocks?: (options: CreateBlocksOptions) => BlockDefinition[]
 
+    /***
+     * Creates a JSON category to populate the toolbox
+     */
     createCategory?: (options: CreateCategoryOptions) => ContentDefinition[]
 
+    /**
+     * Shorthand to convert block JSON into a primitive value
+     */
     blockToValue?: (block: Block) => string | number | boolean
 
     // VM support

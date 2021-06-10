@@ -101,8 +101,8 @@ export default function useToolbox(
     source: WorkspaceJSON
 ): ToolboxConfiguration {
     const liveServices = useServices({ specification: true })
-
     const theme = useTheme()
+
     useMemo(() => loadBlocks(dsls, theme), [theme, dsls])
 
     const dslsCategories = arrayConcatMany(
