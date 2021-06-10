@@ -16,7 +16,7 @@ import {
 } from "./WorkspaceContext"
 
 export interface BlockWarning {
-    blockId: string
+    sourceId?: string
     message: string
 }
 
@@ -108,7 +108,7 @@ export function BlockProvider(props: {
         if (!workspace) return
         const allErrors = toMap(
             warnings || [],
-            e => e.blockId,
+            e => e.sourceId || "",
             e => e.message
         )
         workspace

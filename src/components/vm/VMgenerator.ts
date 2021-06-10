@@ -290,12 +290,11 @@ export default function workspaceJSONToVMProgram(
                         dslRes.errors = processErrors(block, dslRes.errors)
                         return dslRes
                     }
-
-                    console.warn(`unsupported block ${type}`, { block })
-                    return {
-                        cmd: undefined,
-                        errors: [],
-                    }
+                }
+                console.warn(`unsupported block ${type}`, { block })
+                return {
+                    cmd: undefined,
+                    errors: [],
                 }
             }
         }
