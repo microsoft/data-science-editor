@@ -117,6 +117,7 @@ export default function CmdButton(props: {
 
     const handleClick = async (ev: React.MouseEvent<HTMLButtonElement>) => {
         ev.stopPropagation()
+        ev.preventDefault()
         run()
     }
 
