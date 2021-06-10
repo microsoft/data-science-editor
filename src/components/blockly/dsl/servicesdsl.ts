@@ -376,7 +376,6 @@ export class ServicesBlockDomainSpecificLanguage
                             speed: {
                                 kind: "block",
                                 type: "jacdac_ratio",
-                                shadow: true,
                             },
                         },
                         colour: serviceColor(service),
@@ -706,16 +705,22 @@ export class ServicesBlockDomainSpecificLanguage
 
         const eventFieldGroups = [
             {
-                output: "Number",
+                output: NUMBER_TYPE,
                 filter: isNumericType,
             },
             {
-                output: "Boolean",
+                output: BOOLEAN_TYPE,
                 filter: isBooleanField,
             },
             {
-                output: "String",
-                filter: isStringField,
+                output: STRING_TYPE,
+                filter: (f: jdspec.PacketMember) =>
+                    isStringField(f) && f.encoding !== "JSON",
+            },
+            {
+                output: JSON_TYPE,
+                filter: (f: jdspec.PacketMember) =>
+                    isStringField(f) && f.encoding === "JSON",
             },
         ]
         // generate accessor blocks for event data with numbers

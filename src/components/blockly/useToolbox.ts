@@ -88,7 +88,10 @@ function patchCategoryJSONtoXML(cat: CategoryDefinition): CategoryDefinition {
             )
                 .map(name => {
                     const { type } = block.values[name]
-                    return `<value name="${name}"><shadow type="${type}" /></value>`
+                    const shadow = type !== "variables_get"
+                    return `<value name="${name}"><${
+                        shadow ? "shadow" : "field"
+                    } type="${type}" /></value>`
                 })
                 .join("\n")}</block>`
             delete block.type
