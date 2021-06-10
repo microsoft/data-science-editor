@@ -111,10 +111,16 @@ export default function workspaceJSONToVMProgram(
                         raw: v + "",
                     }
                 }
-                console.warn(
-                    `unsupported block template ${template} for ${type}`,
-                    { ev, block, definition }
-                )
+
+                errors.push({
+                    sourceId: block.id,
+                    message: `unknown block ${type}`,
+                })
+                console.warn(`unsupported block ${type}`, {
+                    ev,
+                    block,
+                    definition,
+                })
             }
             throw new EmptyExpression()
         }
@@ -212,7 +218,12 @@ export default function workspaceJSONToVMProgram(
                 console.warn(`unsupported block ${type}`, { block })
                 return {
                     cmd: undefined,
-                    errors: [],
+                    errors: [
+                        {
+                            sourceId: block.id,
+                            message: `unsupported block ${type}`,
+                        },
+                    ],
                 }
             }
         }
@@ -229,8 +240,9 @@ export default function workspaceJSONToVMProgram(
         blocks: BlockJSON[],
         handler: VMHandler
     ) => {
-        blocks?.forEach(child => {
-            if (child) {
+        blocks
+            ?.filter(child => !!child)
+            .forEach(child => {
                 try {
                     const { cmd, errors } = blockToCommand(event, child)
                     if (cmd) handler.commands.push(cmd)
@@ -246,8 +258,7 @@ export default function workspaceJSONToVMProgram(
                         console.debug(e)
                     }
                 }
-            }
-        })
+            })
     }
 
     const handlers: VMHandler[] = workspace.blocks
