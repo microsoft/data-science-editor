@@ -104,6 +104,9 @@ const toolsDSL: BlockDomainSpecificLanguage = {
     ],
     createCategory: () => [
         {
+            kind: "sep",
+        },
+        {
             kind: "category",
             name: "Tools",
             colour: colour,
