@@ -21,18 +21,23 @@ import KindIcon from "../components/KindIcon"
 import { serviceProviderDefinitionFromServiceClass } from "../../jacdac-ts/src/servers/servers"
 import JacdacIcon from "../components/icons/JacdacIcon"
 import SpeedIcon from "@material-ui/icons/Speed"
-import { VIRTUAL_DEVICE_NODE_NAME } from "../../jacdac-ts/src/jdom/constants"
+import {
+    SERVICE_MIXIN_NODE_NAME,
+    VIRTUAL_DEVICE_NODE_NAME,
+} from "../../jacdac-ts/src/jdom/constants"
 import { useId } from "react-use-id-hook"
 import { Link } from "gatsby-theme-material-ui"
 import { resolveMakecodeServiceFromClassIdentifier } from "../../jacdac-ts/src/jdom/makecode"
 import CheckCircleIcon from "@material-ui/icons/CheckCircle"
 import { serviceTestFromServiceClass } from "../../jacdac-ts/src/test/testspec"
+import { isMixinService } from "../../jacdac-ts/jacdac-spec/spectool/jdutils"
 
 interface ServiceFilter {
     query: string
     tag?: string
     sensors?: boolean
     makeCode?: boolean
+    mixin?: boolean
     simulators?: boolean
     devices?: boolean
     test?: boolean
@@ -67,7 +72,8 @@ export default function ServiceCatalog() {
     })
     const [deboundedFilter] = useDebounce(filter, 200)
     const searchId = useId()
-    const { query, tag, makeCode, simulators, devices, sensors, test } = filter
+    const { query, tag, makeCode, mixin, simulators, devices, sensors, test } =
+        filter
     const allTags = useMemo(
         () =>
             unique(
@@ -94,9 +100,13 @@ export default function ServiceCatalog() {
                         srv.classIdentifier
                     )
             )
+        if (mixin) r = r.filter(srv => isMixinService(srv.classIdentifier))
         if (simulators)
             r = r.filter(
-                srv => !!serviceProviderDefinitionFromServiceClass(srv.classIdentifier)
+                srv =>
+                    !!serviceProviderDefinitionFromServiceClass(
+                        srv.classIdentifier
+                    )
             )
         if (devices)
             r = r.filter(
@@ -122,6 +132,7 @@ export default function ServiceCatalog() {
     }
     const handleMakeCodeClick = () =>
         setFilter({ ...filter, makeCode: !makeCode })
+    const handleMixinClick = () => setFilter({ ...filter, mixin: !mixin })
     const handleTestClick = () => setFilter({ ...filter, test: !test })
     const handleSimulatorClick = () =>
         setFilter({ ...filter, simulators: !simulators })
@@ -179,6 +190,12 @@ export default function ServiceCatalog() {
                             icon={<JacdacIcon />}
                             onClick={handleDevicesClick}
                             value={devices}
+                        />
+                        <FilterChip
+                            label="Mixin"
+                            icon={<KindIcon kind={SERVICE_MIXIN_NODE_NAME} />}
+                            value={mixin}
+                            onClick={handleMixinClick}
                         />
                         <FilterChip
                             label="MakeCode"

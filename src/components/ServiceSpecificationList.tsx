@@ -9,7 +9,10 @@ import { arrayShuffle } from "../../jacdac-ts/src/jdom/utils"
 import GridHeader from "./ui/GridHeader"
 import { Link } from "gatsby-theme-material-ui"
 import MakeCodeIcon from "./icons/MakeCodeIcon"
-import { VIRTUAL_DEVICE_NODE_NAME } from "../../jacdac-ts/src/jdom/constants"
+import {
+    SERVICE_MIXIN_NODE_NAME,
+    VIRTUAL_DEVICE_NODE_NAME,
+} from "../../jacdac-ts/src/jdom/constants"
 import { serviceProviderDefinitionFromServiceClass } from "../../jacdac-ts/src/servers/servers"
 import KindIcon from "./KindIcon"
 import ChipList from "./ui/ChipList"
@@ -17,6 +20,7 @@ import JacdacIcon from "./icons/JacdacIcon"
 import Markdown from "./ui/Markdown"
 import CheckCircleIcon from "@material-ui/icons/CheckCircle"
 import { resolveMakecodeServiceFromClassIdentifier } from "../../jacdac-ts/src/jdom/makecode"
+import { isMixinService } from "../../jacdac-ts/jacdac-spec/spectool/jdutils"
 
 function ServiceSpecificatinListItem(props: { service: jdspec.ServiceSpec }) {
     const { service } = props
@@ -25,6 +29,7 @@ function ServiceSpecificatinListItem(props: { service: jdspec.ServiceSpec }) {
     const simulator = serviceProviderDefinitionFromServiceClass(classIdentifier)
     const device = !!deviceSpecificationsForService(classIdentifier)?.length
     const test = serviceTestFromServiceClass(classIdentifier)
+    const mixin = isMixinService(classIdentifier)
 
     return (
         <Link to={`/services/${shortId}`} style={{ textDecoration: "none" }}>
@@ -37,6 +42,15 @@ function ServiceSpecificatinListItem(props: { service: jdspec.ServiceSpec }) {
                         {tags?.map(tag => (
                             <Chip key={tag} size="small" label={tag} />
                         ))}
+                        {mixin && (
+                            <Chip
+                                icon={
+                                    <KindIcon kind={SERVICE_MIXIN_NODE_NAME} />
+                                }
+                                size="small"
+                                label="mixin"
+                            />
+                        )}
                         {simulator && (
                             <Chip
                                 icon={

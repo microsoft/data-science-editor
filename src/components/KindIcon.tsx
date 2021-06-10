@@ -28,7 +28,7 @@ import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import CheckCircleIcon from "@material-ui/icons/CheckCircle"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import SettingsIcon from "@material-ui/icons/Settings"
+import GradientIcon from "@material-ui/icons/Gradient"
 
 import {
     PACKET_KIND_RO,
@@ -50,7 +50,11 @@ import {
 } from "../../jacdac-ts/src/jdom/constants"
 import JacdacIcon from "./icons/JacdacIcon"
 
-export default function KindIcon(props: { kind: string; className?: string, fontSize?: "small" | "default" | "inherit" | "large" }) {
+export default function KindIcon(props: {
+    kind: string
+    className?: string
+    fontSize?: "small" | "default" | "inherit" | "large"
+}) {
     const { kind, ...rest } = props
     let icon: JSX.Element
     switch (kind) {
@@ -88,7 +92,7 @@ export default function KindIcon(props: { kind: string; className?: string, font
             icon = <BubbleChartIcon {...rest} />
             break
         case SERVICE_MIXIN_NODE_NAME:
-            icon = <SettingsIcon {...rest} />
+            icon = <GradientIcon {...rest} />
             break
         case PIPE_NODE_NAME:
             icon = <BlurLinearIcon {...rest} />
