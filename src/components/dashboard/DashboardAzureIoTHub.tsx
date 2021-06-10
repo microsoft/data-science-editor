@@ -1,7 +1,9 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import useServiceServer from "../hooks/useServiceServer"
-import AzureIoTHubServer from "../../../jacdac-ts/src/servers/azureiothubserver"
+import AzureIoTHubServer, {
+    AzureIoTHubMessage,
+} from "../../../jacdac-ts/src/servers/azureiothubserver"
 import { Grid, Switch, Typography } from "@material-ui/core"
 import useRegister from "../hooks/useRegister"
 import {
@@ -14,12 +16,18 @@ import { useId } from "react-use-id-hook"
 import useEvent from "../hooks/useEvent"
 import useChange from "../../jacdac/useChange"
 import CmdButton from "../CmdButton"
-import AddIcon from "@material-ui/icons/Add"
-import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
+import { jdpack, jdunpack } from "../../../jacdac-ts/src/jdom/pack"
+import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward"
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward"
+import { EVENT } from "../../../jacdac-ts/src/jdom/constants"
+
+const HORIZON = 10
 
 export default function DashboardAzureIoTHub(props: DashboardServiceProps) {
     const { service } = props
     const connectId = useId()
+
+    const [cdMessages, setCDMessages] = useState<AzureIoTHubMessage[]>([])
 
     const hubNameRegister = useRegister(service, AzureIotHubReg.HubName)
     const deviceIdRegister = useRegister(service, AzureIotHubReg.DeviceId)
@@ -37,26 +45,57 @@ export default function DashboardAzureIoTHub(props: DashboardServiceProps) {
         connectionStatusRegister,
         props
     )
-    const changeEvent = useEvent(service, AzureIotHubEvent.Change)
-    useChange(changeEvent, () => hubNameRegister?.refresh())
+    const connectedEvent = useEvent(service, AzureIotHubEvent.Connected)
+    const disconnectedEvent = useEvent(service, AzureIotHubEvent.Disconnected)
+    const messageEvent = useEvent(service, AzureIotHubEvent.Message)
+
+    useChange(connectedEvent, () => connectionStatusRegister?.refresh())
+    useChange(disconnectedEvent, () => connectionStatusRegister?.refresh())
+
+    // sniff cloud-to-device events
+    useEffect(
+        () =>
+            messageEvent?.subscribe(EVENT, () => {
+                const { data, lastDataTimestamp: timestamp } = messageEvent
+                if (!data) return
+                const [body] = jdunpack<[string]>(messageEvent.data, "s")
+                setCDMessages(prevMsgs => {
+                    const newMsgs = prevMsgs.slice(0, HORIZON - 1)
+                    newMsgs.unshift({ timestamp, body })
+                    return newMsgs
+                })
+            }),
+        [messageEvent]
+    )
 
     const connected = connectionStatus === "ok"
     const server = useServiceServer<AzureIoTHubServer>(service)
-    const messages = useChange(server, _ => _?.messages || [])
+    const deviceToCloudMessages = useChange(
+        server,
+        _ => _?.deviceToCloudMessages
+    )
 
     const handleConnect = async () => {
         await service.sendCmdAsync(
             connected ? AzureIotHubCmd.Disconnect : AzureIotHubCmd.Connect
         )
     }
-
-    const handleSendMessage = async () => {
-        const msg = {
-            timestamp: service.device.bus.timestamp,
-        }
+    const handleSendCloudMessage = async () =>
+        server.emitMessage(
+            JSON.stringify({
+                timestamp: service.device.bus.timestamp,
+                message: "hello from cloud",
+            })
+        )
+    const handleSendDeviceMessage = async () => {
         await service.sendCmdAsync(
             AzureIotHubCmd.SendMessage,
-            jdpack<[string]>("s", [JSON.stringify(msg)])
+            jdpack<[string]>("s", [
+                JSON.stringify({
+                    timestamp: service.device.bus.timestamp,
+                    message: "hello from device",
+                }),
+            ])
         )
     }
 
@@ -72,17 +111,39 @@ export default function DashboardAzureIoTHub(props: DashboardServiceProps) {
                     onClick={handleConnect}
                 />
                 <label id={connectId}>
-                    {connected ? "connected" : "disconnected"}
+                    {connected ? "connected" : "disconnected"}{" "}
                 </label>
+                {server && (
+                    <CmdButton
+                        title="Send cloud to device message"
+                        icon={<ArrowDownwardIcon />}
+                        onClick={handleSendCloudMessage}
+                        disabled={!connected}
+                    />
+                )}
                 <CmdButton
-                    title="Send timestamp message"
-                    icon={<AddIcon />}
-                    onClick={handleSendMessage}
+                    title="Send device to cloud message"
+                    icon={<ArrowUpwardIcon />}
+                    onClick={handleSendDeviceMessage}
+                    disabled={!connected}
                 />
             </Grid>
             <Grid item xs={12}>
-                <pre>{messages?.map(m => m.body).join("\n")}</pre>
+                <Typography variant="caption">
+                    cloud to device messages
+                </Typography>
+                <pre>{cdMessages?.map(m => m.body).join("\n")}</pre>
             </Grid>
+            {deviceToCloudMessages && (
+                <Grid item xs={12}>
+                    <Typography variant="caption">
+                        device to cloud messages
+                    </Typography>
+                    <pre>
+                        {deviceToCloudMessages.map(m => m.body).join("\n")}
+                    </pre>
+                </Grid>
+            )}
         </Grid>
     )
 }
