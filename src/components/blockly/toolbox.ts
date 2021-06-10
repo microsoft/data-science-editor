@@ -150,7 +150,11 @@ export const REPEAT_EVERY_BLOCK = "jacdac_repeat_every"
 export const CONNECTION_BLOCK = "jacdac_connection"
 export const CONNECTED_BLOCK = "jacdac_connected"
 
-export const PRIMITIVE_TYPES = ["String", "Boolean", "Number"]
+export const JSON_TYPE = "JSON"
+export const STRING_TYPE = "String"
+export const BOOLEAN_TYPE = "Boolean"
+export const NUMBER_TYPE = "Number"
+export const PRIMITIVE_TYPES = [STRING_TYPE, BOOLEAN_TYPE, NUMBER_TYPE]
 export const BUILTIN_TYPES = ["", ...PRIMITIVE_TYPES]
 
 export const CODE_STATEMENT_TYPE = "Code"

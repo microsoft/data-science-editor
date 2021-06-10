@@ -52,6 +52,7 @@ import ServoAngleField from "../fields/ServoAngleField"
 import {
     BlockDefinition,
     BlockReference,
+    BOOLEAN_TYPE,
     CategoryDefinition,
     CODE_STATEMENT_TYPE,
     CommandBlockDefinition,
@@ -61,12 +62,15 @@ import {
     EventBlockDefinition,
     EventFieldDefinition,
     InputDefinition,
+    JSON_TYPE,
+    NUMBER_TYPE,
     OptionsInputDefinition,
     RegisterBlockDefinition,
     resolveServiceBlockDefinition,
     SeparatorDefinition,
     ServiceBlockDefinition,
     SET_STATUS_LIGHT_BLOCK,
+    STRING_TYPE,
     ValueInputDefinition,
     VariableInputDefinition,
 } from "../toolbox"
@@ -88,11 +92,13 @@ function isStringField(field: jdspec.PacketMember) {
 }
 function toBlocklyType(field: jdspec.PacketMember) {
     return isBooleanField(field)
-        ? "Boolean"
+        ? BOOLEAN_TYPE
         : isStringField(field)
-        ? "String"
+        ? field.encoding === "JSON"
+            ? JSON_TYPE
+            : STRING_TYPE
         : isNumericType(field)
-        ? "Number"
+        ? NUMBER_TYPE
         : undefined
 }
 function enumInfo(srv: jdspec.ServiceSpec, field: jdspec.PacketMember) {

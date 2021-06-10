@@ -19,6 +19,7 @@ import workspaceJSONToVMProgram from "./VMgenerator"
 import { BlocklyWorkspaceWithServices } from "../blockly/WorkspaceContext"
 import BlockEditor from "../blockly/BlockEditor"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
+import jsonDSL from "../blockly/dsl/jsondsl"
 
 const VM_SOURCE_STORAGE_KEY = "tools:vmeditor"
 function VMEditorWithContext() {
@@ -79,13 +80,12 @@ export default function VMEditor() {
     const dsls = useMemo(() => {
         return [
             servicesDSL,
-            //azureIoTHubDSL,
-            //deviceTwinDSL,
-            toolsDSL,
             loopsDsl,
             logicDsl,
             mathDSL,
+            jsonDSL,
             variablesDsl,
+            toolsDSL,
             shadowDsl,
             fieldsDsl,
         ]
