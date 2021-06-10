@@ -698,40 +698,62 @@ export class ServicesBlockDomainSpecificLanguage
             ...commandBlocks,
         ]
 
+        const eventFieldGroups = [
+            {
+                output: "Number",
+                filter: isNumericType,
+            },
+            {
+                output: "Boolean",
+                filter: isBooleanField,
+            },
+            {
+                output: "String",
+                filter: isStringField,
+            },
+        ]
         // generate accessor blocks for event data with numbers
         this._eventFieldBlocks = arrayConcatMany(
-            events.map(({ service, events }) =>
-                events
-                    .filter(
-                        event => event.fields.filter(isNumericType).length > 0
+            arrayConcatMany(
+                eventFieldGroups.map(({ output, filter }) =>
+                    events.map(({ service, events }) =>
+                        events
+                            .filter(
+                                event => event.fields.filter(filter).length > 0
+                            )
+                            .map(event => ({ service, event }))
+                            .map(
+                                ({ service, event }) =>
+                                    <EventFieldDefinition>{
+                                        kind: "block",
+                                        type: `jacdac_event_field_${output.toLowerCase()}_${
+                                            service.shortId
+                                        }_${event.name}`,
+                                        message0: `${event.name} %1`,
+                                        args0: [
+                                            <InputDefinition>{
+                                                type: "field_dropdown",
+                                                name: "field",
+                                                options: event.fields.map(
+                                                    field => [
+                                                        humanify(field.name),
+                                                        field.name,
+                                                    ]
+                                                ),
+                                            },
+                                        ],
+                                        colour: serviceColor(service),
+                                        inputsInline: true,
+                                        tooltip: `Data fields of the ${event.name} event`,
+                                        helpUrl: serviceHelp(service),
+                                        service,
+                                        event,
+                                        output,
+                                        template: "event_field",
+                                    }
+                            )
                     )
-                    .map(event => ({ service, event }))
-                    .map(
-                        ({ service, event }) =>
-                            <EventFieldDefinition>{
-                                kind: "block",
-                                type: `jacdac_event_field_${service.shortId}_${event.name}`,
-                                message0: `${event.name} %1`,
-                                args0: [
-                                    <InputDefinition>{
-                                        type: "field_dropdown",
-                                        name: "field",
-                                        options: event.fields.map(field => [
-                                            humanify(field.name),
-                                            field.name,
-                                        ]),
-                                    },
-                                ],
-                                colour: serviceColor(service),
-                                inputsInline: true,
-                                tooltip: `Data fields of the ${event.name} event`,
-                                helpUrl: serviceHelp(service),
-                                service,
-                                event,
-                                output: "Number",
-                                template: "event_field",
-                            }
-                    )
+                )
             )
         )
 
