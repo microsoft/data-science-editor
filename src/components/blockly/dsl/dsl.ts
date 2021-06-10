@@ -55,6 +55,11 @@ export default interface BlockDomainSpecificLanguage {
     id: string
 
     /**
+     * A list of builtin block types, typically provided by Blockly
+     */
+    types?: string[]
+
+    /**
      * Creates blocks for the DSL
      */
     createBlocks?: (options: CreateBlocksOptions) => BlockDefinition[]

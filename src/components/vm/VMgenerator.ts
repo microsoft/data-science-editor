@@ -52,6 +52,14 @@ export default function workspaceJSONToVMProgram(
 
     if (!workspace) return undefined
 
+    const resolveDsl = (type: string) => {
+        const dsl = dsls.find(dsl => dsl.types?.indexOf(type) > -1)
+        if (dsl) return dsl
+
+        const { dsl: dslName } = resolveServiceBlockDefinition(type)
+        return dsls?.find(dsl => dsl.id === dslName)
+    }
+
     const roles: VMRole[] = workspace.variables
         .filter(v => BUILTIN_TYPES.indexOf(v.type) < 0)
         .map(v => ({ role: v.name, serviceShortId: v.type }))
@@ -79,18 +87,21 @@ export default function workspaceJSONToVMProgram(
                     raw: value + "",
                 }
 
-            const definition = resolveServiceBlockDefinition(type)
-            if (!definition) {
+            const dsl = resolveDsl(type)
+            if (!dsl) {
                 console.warn(`unknown block ${type}`, {
                     type,
                     ev,
                     block,
                     d: Blockly.Blocks[type],
                 })
+                errors.push({
+                    sourceId: block.id,
+                    message: `unknown block ${type}`,
+                })
             } else {
-                const { dsl: dslName } = definition
-                const dsl = dsls.find(d => d.id === dslName)
-                const res = dsl?.compileExpressionToVM?.({
+                const definition = resolveServiceBlockDefinition(type)
+                const res = dsl.compileExpressionToVM?.({
                     event: ev,
                     definition,
                     block,
@@ -200,11 +211,10 @@ export default function workspaceJSONToVMProgram(
             }
             // more builts
             default: {
-                const definition = resolveServiceBlockDefinition(type)
-                if (definition) {
-                    const { dsl: dslName } = definition
-                    const dsl = dsls.find(dsl => dsl.id === dslName)
-                    const dslRes = dsl?.compileCommandToVM?.({
+                const dsl = resolveDsl(type)
+                if (dsl) {
+                    const definition = resolveServiceBlockDefinition(type)
+                    const dslRes = dsl.compileCommandToVM?.({
                         event,
                         block,
                         definition,
@@ -268,12 +278,10 @@ export default function workspaceJSONToVMProgram(
             let topEvent: RoleEvent
             let topErrors: VMError[]
             let topMeta = false
-            const definition = resolveServiceBlockDefinition(type)
-            assert(!!definition)
-            const { template, dsl: dslName } = definition
-            const dsl = dslName && dsls?.find(d => d.id === dslName)
 
             try {
+                const dsl = resolveDsl(type)
+                const definition = resolveServiceBlockDefinition(type)
                 const { expression, errors, event, meta } =
                     dsl?.compileEventToVM?.({
                         block: top,
@@ -286,6 +294,7 @@ export default function workspaceJSONToVMProgram(
                 topMeta = meta
 
                 // if dsl didn't compile anything try again
+                const { template } = definition || {}
                 if (!command && !topErrors?.length) {
                     switch (template) {
                         case "meta": {

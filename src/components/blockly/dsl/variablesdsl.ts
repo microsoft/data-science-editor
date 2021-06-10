@@ -2,6 +2,7 @@ import BlockDomainSpecificLanguage from "./dsl"
 
 const variablesDsl: BlockDomainSpecificLanguage = {
     id: "variables",
+    types: ["variables_get", "variables_set"],
     createCategory: () => [
         {
             kind: "category",
@@ -14,6 +15,7 @@ const variablesDsl: BlockDomainSpecificLanguage = {
         const { type } = block
         if (type === "variables_get") {
             // TODO compile variables_get
+            console.log(`todo variables_get`)
         }
         return undefined
     },
@@ -21,6 +23,7 @@ const variablesDsl: BlockDomainSpecificLanguage = {
         const { type } = block
         if (type === "variables_set") {
             // TODO
+            console.log(`todo variables_get`)
         }
         return undefined
     },
