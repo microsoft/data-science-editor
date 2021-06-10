@@ -10,5 +10,19 @@ const variablesDsl: BlockDomainSpecificLanguage = {
             custom: "VARIABLE",
         },
     ],
+    compileExpressionToVM: ({ block, definition, blockToExpressionInner }) => {
+        const { type } = block
+        if (type === "variables_get") {
+            // TODO compile variables_get
+        }
+        return undefined
+    },
+    compileCommandToVM: ({ event, block, definition, blockToExpression }) => {
+        const { type } = block
+        if (type === "variables_set") {
+            // TODO
+        }
+        return undefined
+    },
 }
 export default variablesDsl

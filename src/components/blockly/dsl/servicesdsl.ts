@@ -110,7 +110,6 @@ const ignoredServices = [
     SRV_LOGGER,
     SRV_ROLE_MANAGER,
     SRV_PROTO_TEST,
-    SRV_SETTINGS,
     SRV_BOOTLOADER,
 ]
 const ignoredEvents = [SystemEvent.StatusCodeChanged]
