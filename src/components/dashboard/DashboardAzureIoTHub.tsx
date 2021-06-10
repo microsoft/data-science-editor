@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from "react"
+import React, { ChangeEvent, useEffect, useRef, useState } from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import useServiceServer from "../hooks/useServiceServer"
 import AzureIoTHubServer, {
@@ -30,6 +30,7 @@ export default function DashboardAzureIoTHub(props: DashboardServiceProps) {
     const connectId = useId()
     const cdMessageId = useId()
 
+    const cdMessageCounter = useRef(0)
     const [cdMessage, setCDMessage] = useState(
         JSON.stringify({ message: "hello from the cloud" })
     )
@@ -67,7 +68,11 @@ export default function DashboardAzureIoTHub(props: DashboardServiceProps) {
                 const [body] = jdunpack<[string]>(messageEvent.data, "s")
                 setCDMessages(prevMsgs => {
                     const newMsgs = prevMsgs.slice(0, HORIZON - 1)
-                    newMsgs.unshift({ timestamp, body })
+                    newMsgs.unshift({
+                        counter: cdMessageCounter.current++,
+                        timestamp,
+                        body,
+                    })
                     return newMsgs
                 })
             }),
