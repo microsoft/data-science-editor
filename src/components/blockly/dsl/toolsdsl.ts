@@ -4,6 +4,7 @@ import TwinField from "../fields/TwinField"
 import WatchValueField from "../fields/WatchValueField"
 import {
     BlockDefinition,
+    BlockReference,
     InputDefinition,
     INSPECT_BLOCK,
     TWIN_BLOCK,
@@ -107,15 +108,15 @@ const toolsDSL: BlockDomainSpecificLanguage = {
             name: "Tools",
             colour: colour,
             contents: [
-                <BlockDefinition>{
+                <BlockReference>{
                     kind: "block",
                     type: WATCH_BLOCK,
                 },
-                <BlockDefinition>{
+                <BlockReference>{
                     kind: "block",
                     type: TWIN_BLOCK,
                 },
-                <BlockDefinition>{
+                <BlockReference>{
                     kind: "block",
                     type: INSPECT_BLOCK,
                 },
@@ -138,7 +139,7 @@ const toolsDSL: BlockDomainSpecificLanguage = {
                     callee: toIdentifier("watch"),
                 },
                 errors,
-                meta: true
+                meta: true,
             }
         }
 

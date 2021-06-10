@@ -936,7 +936,7 @@ export class ServicesBlockDomainSpecificLanguage
                 name: service.name,
                 colour: serviceColor(service),
                 contents: [
-                    ...serviceBlocks.map<BlockDefinition>(block => ({
+                    ...serviceBlocks.map<BlockReference>(block => ({
                         kind: "block",
                         type: block.type,
                         values: block.values,
@@ -947,7 +947,7 @@ export class ServicesBlockDomainSpecificLanguage
                                 ev.service === service &&
                                 usedEvents.has(ev.event)
                         )
-                        .map<BlockDefinition>(block => ({
+                        .map<BlockReference>(block => ({
                             kind: "block",
                             type: block.type,
                             values: block.values,
@@ -967,15 +967,15 @@ export class ServicesBlockDomainSpecificLanguage
             name: "Services",
             colour: commandColor,
             contents: [
-                <BlockDefinition>{
+                <BlockReference>{
                     kind: "block",
                     type: CONNECTION_BLOCK,
                 },
-                <BlockDefinition>{
+                <BlockReference>{
                     kind: "block",
                     type: CONNECTED_BLOCK,
                 },
-                <BlockDefinition>{
+                <BlockReference>{
                     kind: "block",
                     type: SET_STATUS_LIGHT_BLOCK,
                     values: {

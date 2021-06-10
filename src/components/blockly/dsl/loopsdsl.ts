@@ -1,7 +1,7 @@
 import { toIdentifier } from "../../../../jacdac-ts/src/vm/compile"
 import { VMCommand } from "../../../../jacdac-ts/src/vm/ir"
 import {
-    BlockDefinition,
+    BlockReference,
     CategoryDefinition,
     CODE_STATEMENT_TYPE,
     InputDefinition,
@@ -75,18 +75,18 @@ const loopsDsl: BlockDomainSpecificLanguage = {
             name: "Events",
             colour,
             contents: [
-                <BlockDefinition>{
+                <BlockReference>{
                     kind: "block",
                     type: REPEAT_EVERY_BLOCK,
                     values: {
                         interval: { kind: "block", type: "jacdac_time_picker" },
                     },
                 },
-                <BlockDefinition>{
+                <BlockReference>{
                     kind: "block",
                     type: ON_START_BLOCK,
                 },
-                <BlockDefinition>{
+                <BlockReference>{
                     kind: "block",
                     type: WAIT_BLOCK,
                     values: {

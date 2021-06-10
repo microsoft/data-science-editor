@@ -1,5 +1,6 @@
 import {
     BlockDefinition,
+    BlockReference,
     DummyInputDefinition,
     JSON_TYPE,
     PRIMITIVE_TYPES,
@@ -84,11 +85,11 @@ const jsonDSL: BlockDomainSpecificLanguage = {
             name: "JSON",
             colour,
             contents: [
-                <BlockDefinition>{
+                <BlockReference>{
                     kind: "block",
                     type: JSON_OBJECT_BLOCK,
                 },
-                <BlockDefinition>{
+                <BlockReference>{
                     kind: "block",
                     type: JSON_FIELD_SET,
                     values: {
@@ -102,7 +103,7 @@ const jsonDSL: BlockDomainSpecificLanguage = {
                     kind: "block",
                     type: `json_field_get_as_${output.toLowerCase()}`,
                     values: {
-                        value: <BlockDefinition>{
+                        value: <BlockReference>{
                             kind: "block",
                             type: "variables_get",
                             check: JSON_TYPE,

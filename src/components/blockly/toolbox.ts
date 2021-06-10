@@ -160,18 +160,19 @@ export const BUILTIN_TYPES = ["", ...PRIMITIVE_TYPES]
 export const CODE_STATEMENT_TYPE = "Code"
 
 export interface ContentDefinition {
-    kind: "category" | "sep" | "button"
+    kind: "category" | "sep" | "button" | "label"
     order?: number
+    hidden?: boolean
 }
 
 export interface CategoryDefinition extends ContentDefinition {
     kind: "category"
     name: string
-    order?: number
-    custom?: string
+    custom?: "VARIABLE" | "PROCEDURE"
+    expanded?: boolean
     colour?: string
     categorystyle?: string
-    contents?: (BlockDefinition | ContentDefinition)[]
+    contents?: (BlockReference | ButtonDefinition | SeparatorDefinition | LabelDefinition)[]
     button?: ButtonDefinition
 }
 
@@ -184,6 +185,12 @@ export interface ButtonDefinition extends ContentDefinition {
 
 export interface SeparatorDefinition extends ContentDefinition {
     kind: "sep"
+    gap?: number
+}
+
+export interface LabelDefinition extends ContentDefinition {
+    kind: "label"
+    text: string
 }
 
 export interface ToolboxConfiguration {

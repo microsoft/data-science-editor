@@ -1,6 +1,7 @@
 import { DTDLUnits } from "../../../../jacdac-ts/src/azure-iot/dtdl"
 import {
     BlockDefinition,
+    BlockReference,
     CategoryDefinition,
     CODE_STATEMENT_TYPE,
     OptionsInputDefinition,
@@ -125,7 +126,7 @@ class DeviceTwinBlockDomainSpecificLanguage
                 contents: [
                     ...this._blocks.map(
                         ({ type }) =>
-                            <BlockDefinition>{
+                            <BlockReference>{
                                 kind: "block",
                                 type,
                             }
