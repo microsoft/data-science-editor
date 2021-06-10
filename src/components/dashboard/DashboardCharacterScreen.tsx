@@ -1,16 +1,19 @@
-import React from "react"
+import React, { ChangeEvent, useState } from "react"
 import {
+    CharacterScreenCmd,
     CharacterScreenReg,
     CharacterScreenTextDirection,
 } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import SvgWidget from "../widgets/SvgWidget"
-import { createStyles, makeStyles } from "@material-ui/core"
+import { createStyles, Grid, makeStyles, TextField } from "@material-ui/core"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import LoadingProgress from "../ui/LoadingProgress"
 import useRegister from "../hooks/useRegister"
-
+import CmdButton from "../CmdButton"
+import ClearIcon from "@material-ui/icons/Clear"
+import SendIcon from "@material-ui/icons/Send"
 const useStyles = makeStyles(() =>
     createStyles({
         text: {
@@ -38,8 +41,16 @@ export default function DashboardCharacterScreen(props: DashboardServiceProps) {
         textDirectionRegister,
         props
     )
+    const [fieldMessage, setFieldMessage] = useState("")
     const { textPrimary, background, controlBackground } =
         useWidgetTheme("primary")
+
+    const handleClear = async () =>
+        await service.sendCmdAsync(CharacterScreenCmd.Clear)
+    const handleMessage = async () =>
+        await messageRegister.sendSetStringAsync(fieldMessage, true)
+    const handleFieldMessageChange = (ev: ChangeEvent<HTMLTextAreaElement>) =>
+        setFieldMessage(ev.target.value)
 
     if (rows === undefined || columns === undefined) return <LoadingProgress /> // size unknown
 
@@ -93,23 +104,54 @@ export default function DashboardCharacterScreen(props: DashboardServiceProps) {
         y += ch + m
     }
     return (
-        <SvgWidget
-            tabIndex={0}
-            title={`character screen displaying "${message}"`}
-            width={w}
-            height={h}
-        >
-            <>
-                <rect
-                    x={0}
-                    y={0}
+        <Grid container spacing={1}>
+            <Grid item xs={12}>
+                <Grid container spacing={1}>
+                    <Grid item xs>
+                        <TextField
+                            value={fieldMessage}
+                            onChange={handleFieldMessageChange}
+                            multiline={true}
+                            rows={rows || 2}
+                            fullWidth={true}
+                        />
+                    </Grid>
+                    <Grid item>
+                        <CmdButton
+                            title="set message"
+                            onClick={handleMessage}
+                            icon={<SendIcon />}
+                        />
+                    </Grid>
+                    <Grid item>
+                        <CmdButton
+                            title="clear the entire display"
+                            onClick={handleClear}
+                            icon={<ClearIcon />}
+                        />
+                    </Grid>
+                </Grid>
+            </Grid>
+            <Grid item xs={12}>
+                <SvgWidget
+                    tabIndex={0}
+                    title={`character screen displaying "${message}"`}
                     width={w}
                     height={h}
-                    r={m / 2}
-                    fill={background}
-                />
-                {els}
-            </>
-        </SvgWidget>
+                >
+                    <>
+                        <rect
+                            x={0}
+                            y={0}
+                            width={w}
+                            height={h}
+                            r={m / 2}
+                            fill={background}
+                        />
+                        {els}
+                    </>
+                </SvgWidget>
+            </Grid>
+        </Grid>
     )
 }
