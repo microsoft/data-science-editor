@@ -292,7 +292,13 @@ export default function workspaceJSONToVMProgram(
                             break
                         }
                         default: {
-                            console.warn(
+                            topErrors = [
+                                {
+                                    sourceId: top.id,
+                                    message: `unsupported block ${type}`,
+                                },
+                            ]
+                            console.debug(
                                 `unsupported handler template ${template} for ${type}`,
                                 { top }
                             )
