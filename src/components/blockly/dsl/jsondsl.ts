@@ -8,13 +8,15 @@ import {
     TextInputDefinition,
     ValueInputDefinition,
 } from "../toolbox"
-import BlockDomainSpecificLanguage from "./dsl"
+import BlockDomainSpecificLanguage, {
+    CompileExpressionToVMOptions,
+} from "./dsl"
 
 const colour = "#654321"
 const JSON_FIELD_TYPE = "JSONField"
 const JSON_OBJECT_BLOCK = "json_object"
-const JSON_FIELD_SET = "json_field_set"
-
+const JSON_FIELD_SET_BLOCK = "json_field_set"
+const JSON_FIELD_GET_TEMPLATE = "jsonFieldGet"
 const JSON_FIELD_VALUE_TYPE = [...PRIMITIVE_TYPES, JSON_TYPE]
 
 const jsonDSL: BlockDomainSpecificLanguage = {
@@ -39,7 +41,7 @@ const jsonDSL: BlockDomainSpecificLanguage = {
         },
         <BlockDefinition>{
             kind: "block",
-            type: JSON_FIELD_SET,
+            type: JSON_FIELD_SET_BLOCK,
             message0: "%1: %2",
             args0: [
                 <TextInputDefinition>{
@@ -75,7 +77,7 @@ const jsonDSL: BlockDomainSpecificLanguage = {
                     ],
                     output,
                     colour,
-                    template: `jsonFieldGet`,
+                    template: JSON_FIELD_GET_TEMPLATE,
                 }
         ),
     ],
@@ -91,7 +93,7 @@ const jsonDSL: BlockDomainSpecificLanguage = {
                 },
                 <BlockReference>{
                     kind: "block",
-                    type: JSON_FIELD_SET,
+                    type: JSON_FIELD_SET_BLOCK,
                     values: {
                         value: {
                             kind: "block",
@@ -113,6 +115,28 @@ const jsonDSL: BlockDomainSpecificLanguage = {
             ],
         },
     ],
+
+    compileExpressionToVM(options: CompileExpressionToVMOptions) {
+        const { event, block, definition, blockToExpressionInner } = options
+        const { type } = block
+        const { template } = definition
+        if (type === JSON_OBJECT_BLOCK) {
+            // TODO
+        } else if (type === JSON_FIELD_SET_BLOCK) {
+            // TODO
+        } else if (template === JSON_FIELD_GET_TEMPLATE) {
+            // TODO: genearte JSON
+            console.log("json expr", {
+                event,
+                block,
+                definition,
+                blockToExpressionInner,
+            })
+            return undefined
+        }
+        // don't know
+        return undefined
+    },
 }
 
 export default jsonDSL
