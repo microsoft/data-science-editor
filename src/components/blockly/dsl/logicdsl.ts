@@ -1,4 +1,17 @@
+import { ExpressionWithErrors } from "../../vm/VMgenerator"
 import BlockDomainSpecificLanguage from "./dsl"
+
+const ops = {
+    AND: "&&",
+    OR: "||",
+    EQ: "===",
+    NEQ: "!==",
+    LT: "<",
+    GT: ">",
+    LTE: "<=",
+    GTE: ">=",
+    NEG: "-",
+}
 
 const logicDsl: BlockDomainSpecificLanguage = {
     id: "logic",
@@ -42,5 +55,55 @@ const logicDsl: BlockDomainSpecificLanguage = {
             ],
         },
     ],
+    compileExpressionToVM: ({
+        event,
+        block,
+        blockToExpressionInner,
+    }): ExpressionWithErrors => {
+        const { type, inputs } = block
+        switch (type) {
+            case "logic_operation": {
+                const left = blockToExpressionInner(event, inputs[0].child)
+                const right = blockToExpressionInner(event, inputs[1].child)
+                const op = inputs[1].fields["op"].value as string
+                return {
+                    expr: <jsep.LogicalExpression>{
+                        type: "LogicalExpression",
+                        operator: ops[op] || op,
+                        left,
+                        right,
+                    },
+                    errors: [],
+                }
+            }
+            case "logic_negate": {
+                const argument = blockToExpressionInner(event, inputs[0].child)
+                return {
+                    expr: <jsep.UnaryExpression>{
+                        type: "UnaryExpression",
+                        operator: "!",
+                        argument,
+                        prefix: false, // TODO:?
+                    },
+                    errors: [],
+                }
+            }
+            case "logic_compare": {
+                const left = blockToExpressionInner(event, inputs[0].child)
+                const right = blockToExpressionInner(event, inputs[1].child)
+                const op = inputs[1].fields["op"].value as string
+                return {
+                    expr: <jsep.BinaryExpression>{
+                        type: "BinaryExpression",
+                        operator: ops[op] || op,
+                        left,
+                        right,
+                    },
+                    errors: [],
+                }
+            }
+        }
+        return undefined
+    },
 }
 export default logicDsl

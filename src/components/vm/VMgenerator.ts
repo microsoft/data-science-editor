@@ -17,18 +17,6 @@ import {
 import Blockly from "blockly"
 import BlockDomainSpecificLanguage from "../blockly/dsl/dsl"
 
-const ops = {
-    AND: "&&",
-    OR: "||",
-    EQ: "===",
-    NEQ: "!==",
-    LT: "<",
-    GT: ">",
-    LTE: "<=",
-    GTE: ">=",
-    NEG: "-",
-}
-
 export interface ExpressionWithErrors {
     expr: jsep.Expression
     errors: VMError[]
@@ -91,85 +79,42 @@ export default function workspaceJSONToVMProgram(
                     raw: value + "",
                 }
 
-            switch (type) {
-                case "logic_operation": {
-                    const left = blockToExpressionInner(ev, inputs[0].child)
-                    const right = blockToExpressionInner(ev, inputs[1].child)
-                    const op = inputs[1].fields["op"].value as string
-                    return <jsep.LogicalExpression>{
-                        type: "LogicalExpression",
-                        operator: ops[op] || op,
-                        left,
-                        right,
-                    }
+            const definition = resolveServiceBlockDefinition(type)
+            if (!definition) {
+                console.warn(`unknown block ${type}`, {
+                    type,
+                    ev,
+                    block,
+                    d: Blockly.Blocks[type],
+                })
+            } else {
+                const { dsl: dslName } = definition
+                const dsl = dsls.find(d => d.id === dslName)
+                const res = dsl?.compileExpressionToVM?.({
+                    event: ev,
+                    definition,
+                    block,
+                    blockToExpressionInner,
+                })
+                if (res) {
+                    if (res.errors) res.errors.forEach(e => errors.push(e))
+                    return res.expr
                 }
-                case "logic_negate": {
-                    const argument = blockToExpressionInner(ev, inputs[0].child)
-                    return <jsep.UnaryExpression>{
-                        type: "UnaryExpression",
-                        operator: "!",
-                        argument,
-                        prefix: false, // TODO:?
-                    }
-                }
-                case "logic_compare": {
-                    const left = blockToExpressionInner(ev, inputs[0].child)
-                    const right = blockToExpressionInner(ev, inputs[1].child)
-                    const op = inputs[1].fields["op"].value as string
-                    return <jsep.BinaryExpression>{
-                        type: "BinaryExpression",
-                        operator: ops[op] || op,
-                        left,
-                        right,
-                    }
-                }
-                default: {
-                    const definition = resolveServiceBlockDefinition(type)
-                    if (!definition) {
-                        console.warn(`unknown block ${type}`, {
-                            type,
-                            ev,
-                            block,
-                            d: Blockly.Blocks[type],
-                        })
-                    } else {
-                        // try any DSL
-                        const { dsl: dslName } = definition
-                        const dsl = dsls.find(d => d.id === dslName)
-                        const res = dsl?.compileExpressionToVM?.({
-                            event: ev,
-                            definition,
-                            block,
-                            blockToExpressionInner,
-                        })
-                        if (res) {
-                            if (res.errors)
-                                res.errors.forEach(e => errors.push(e))
-                            return res.expr
-                        }
 
-                        const { template } = definition
-                        switch (template) {
-                            case "shadow": {
-                                const field = inputs[0].fields["value"]
-                                const v = field.value
-                                return <jsep.Literal>{
-                                    type: "Literal",
-                                    value: v,
-                                    raw: v + "",
-                                }
-                            }
-                            default: {
-                                console.warn(
-                                    `unsupported block template ${template} for ${type}`,
-                                    { ev, block }
-                                )
-                                break
-                            }
-                        }
-                        break
+                const { template } = definition
+                if (template === "shadow") {
+                    const field = inputs[0].fields["value"]
+                    const v = field.value
+                    return <jsep.Literal>{
+                        type: "Literal",
+                        value: v,
+                        raw: v + "",
                     }
                 }
+                console.warn(
+                    `unsupported block template ${template} for ${type}`,
+                    { ev, block, definition }
+                )
             }
             throw new EmptyExpression()
         }
