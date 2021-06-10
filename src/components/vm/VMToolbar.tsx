@@ -1,24 +1,17 @@
 import { Grid } from "@material-ui/core"
 import React from "react"
-import { VMProgram } from "../../../jacdac-ts/src/vm/ir"
-import RoleManager from "../../../jacdac-ts/src/servers/rolemanager"
 import { VMProgramRunner } from "../../../jacdac-ts/src/vm/runner"
-import VMRoles from "./VMRoles"
+import BlockRoles from "../blockly/BlockRoles"
 import VMRunnerButtons from "./VMRunnerButtons"
 import VMStartSimulatorButton from "./VMStartSimulatorButton"
-import { WorkspaceSvg } from "blockly"
-import VMFileButtons from "./VMFileButtons"
+import BlockFileButtons from "../blockly/BlockFileButtons"
 
 export default function VMToolbar(props: {
-    roleManager: RoleManager
     runner: VMProgramRunner
     run: () => Promise<void>
     cancel: () => Promise<void>
-    xml: string
-    program: VMProgram
-    workspace?: WorkspaceSvg
 }) {
-    const { roleManager, runner, run, cancel, xml, program, workspace } = props
+    const { runner, run, cancel } = props
     return (
         <Grid
             container
@@ -27,17 +20,12 @@ export default function VMToolbar(props: {
             alignItems="center"
             alignContent="center"
         >
-            <VMFileButtons xml={xml} program={program} workspace={workspace} />
-            <VMRunnerButtons
-                runner={runner}
-                run={run}
-                cancel={cancel}
-                workspace={workspace}
-            />
+            <BlockFileButtons />
+            <VMRunnerButtons runner={runner} run={run} cancel={cancel} />
             <Grid item>
                 <VMStartSimulatorButton />
             </Grid>
-            <VMRoles roleManager={roleManager} workspace={workspace} />
+            <BlockRoles />
         </Grid>
     )
 }

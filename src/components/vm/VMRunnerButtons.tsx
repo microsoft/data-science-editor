@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react"
+import React, { useContext, useEffect, useMemo, useState } from "react"
 import useChange from "../../jacdac/useChange"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import { VMProgramRunner, VMStatus } from "../../../jacdac-ts/src/vm/runner"
@@ -10,13 +10,14 @@ import PauseIcon from "@material-ui/icons/Pause"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
 import { VM_EVENT, VMCode } from "../../../jacdac-ts/src/vm/events"
 import { VMHandler, VMProgram } from "../../../jacdac-ts/src/vm/ir"
-import { WorkspaceSvg } from "blockly"
 import PlayForWorkIcon from "@material-ui/icons/PlayForWork"
 import useMounted from "../hooks/useMounted"
 import IconButtonWithProgress from "../ui/IconButtonWithProgress"
 import BugReportIcon from "@material-ui/icons/BugReport"
+import BlockContext from "../blockly/BlockContext"
 
-function useWorkspaceBreakpoints(program: VMProgram, workspace: WorkspaceSvg) {
+function useWorkspaceBreakpoints(program: VMProgram) {
+    const { workspace } = useContext(BlockContext)
     const breakpoints = useMemo(
         () =>
             arrayConcatMany(
@@ -40,9 +41,8 @@ export default function VMRunnerButtons(props: {
     runner: VMProgramRunner
     run: () => Promise<void>
     cancel: () => Promise<void>
-    workspace: WorkspaceSvg
 }) {
-    const { runner, run, cancel, workspace } = props
+    const { runner, run, cancel } = props
     const status = useChange(runner, t => t?.status)
     const stopped = !status || status === VMStatus.Stopped
     const program = runner?.program
@@ -52,10 +52,8 @@ export default function VMRunnerButtons(props: {
     const paused = !!breakpoint?.length
     const mounted = useMounted()
     const disabled = indeterminate || !runner
-    const { breakpoints, setBreakpointHighlight } = useWorkspaceBreakpoints(
-        program,
-        workspace
-    )
+    const { breakpoints, setBreakpointHighlight } =
+        useWorkspaceBreakpoints(program)
 
     //console.log("runner status", status)
 

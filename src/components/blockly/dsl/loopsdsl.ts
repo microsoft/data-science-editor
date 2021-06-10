@@ -10,7 +10,7 @@ import {
     ValueInputDefinition,
     WAIT_BLOCK,
 } from "../toolbox"
-import { makeVMBase, processErrors } from "../VMgenerator"
+import { makeVMBase, processErrors } from "../../vm/VMgenerator"
 import BlockDomainSpecificLanguage from "./dsl"
 
 const colour = "#4fbac9"

@@ -1,5 +1,5 @@
 import Blockly from "blockly"
-import { useContext, useEffect, useMemo } from "react"
+import { useEffect, useMemo } from "react"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
 import useServices from "../hooks/useServices"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
@@ -10,13 +10,11 @@ import {
     BlockReference,
     ButtonDefinition,
     CategoryDefinition,
-    NEW_PROJET_XML,
     ServiceBlockDefinitionFactory,
     ToolboxConfiguration,
 } from "./toolbox"
 import { WorkspaceJSON } from "./jsongenerator"
 import { VMProgram } from "../../../jacdac-ts/src/vm/ir"
-import DslContext from "./dsl/DslContext"
 import BlockDomainSpecificLanguage from "./dsl/dsl"
 
 // overrides blockly emboss filter for svg elements
@@ -98,25 +96,17 @@ function patchCategoryJSONtoXML(cat: CategoryDefinition): CategoryDefinition {
     return cat
 }
 
-export default function useToolbox(props: {
-    blockServices?: string[]
-    source?: WorkspaceJSON
-    program?: VMProgram
-}): {
-    toolboxConfiguration: ToolboxConfiguration
-    newProjectXml: string
-} {
-    const { source, program } = props
+export default function useToolbox(
+    dsls: BlockDomainSpecificLanguage[],
+    source: WorkspaceJSON
+): ToolboxConfiguration {
     const liveServices = useServices({ specification: true })
 
-    const { dsls } = useContext(DslContext)
     const theme = useTheme()
     useMemo(() => loadBlocks(dsls, theme), [theme, dsls])
 
     const dslsCategories = arrayConcatMany(
-        dsls.map(dsl =>
-            dsl?.createCategory?.({ theme, source, program, liveServices })
-        )
+        dsls.map(dsl => dsl?.createCategory?.({ theme, source, liveServices }))
     )
         .filter(cat => !!cat)
         .sort((l, r) => -(l.order - r.order))
@@ -132,11 +122,10 @@ export default function useToolbox(props: {
             ),
     }
 
-    return {
-        toolboxConfiguration,
-        newProjectXml: NEW_PROJET_XML,
-    }
+    return toolboxConfiguration
 }
+
+// do not use block context
 
 export function useToolboxButtons(
     workspace: Blockly.WorkspaceSvg,

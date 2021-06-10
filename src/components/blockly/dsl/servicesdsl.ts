@@ -30,6 +30,7 @@ import {
     isEvent,
     isRegister,
     isSensor,
+    serviceSpecificationFromName,
     serviceSpecifications,
 } from "../../../../jacdac-ts/src/jdom/spec"
 import {
@@ -69,7 +70,7 @@ import {
     ValueInputDefinition,
     VariableInputDefinition,
 } from "../toolbox"
-import { ExpressionWithErrors, makeVMBase } from "../VMgenerator"
+import { ExpressionWithErrors, makeVMBase } from "../../vm/VMgenerator"
 import BlockDomainSpecificLanguage, {
     CompileCommandToVMOptions,
     CompileEventToVMOptions,
@@ -839,13 +840,13 @@ export class ServicesBlockDomainSpecificLanguage
     }
 
     createCategory(options: CreateCategoryOptions) {
-        const { theme, program, source, liveServices } = options
+        const { theme, source, liveServices } = options
         const serviceColor = this.createServiceColor(theme)
 
         const blockServices =
-            program?.roles.map(r => r.serviceShortId) ||
-            source?.variables.map(v => v.type) ||
-            []
+            source?.variables
+                .map(v => v.type)
+                .filter(type => !!serviceSpecificationFromName(type)) || []
         const usedEvents: Set<jdspec.PacketInfo> = new Set(
             source?.blocks
                 ?.map(block => ({

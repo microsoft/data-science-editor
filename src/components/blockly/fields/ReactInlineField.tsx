@@ -6,7 +6,7 @@ import DarkModeProvider from "../../ui/DarkModeProvider"
 import { IdProvider } from "react-use-id-hook"
 import JacdacProvider from "../../../jacdac/Provider"
 import AppTheme from "../../ui/AppTheme"
-import Blockly, { Block } from "blockly"
+import Blockly from "blockly"
 import { WorkspaceProvider } from "../WorkspaceContext"
 
 export default class ReactInlineField extends ReactField<unknown> {

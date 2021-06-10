@@ -1,4 +1,4 @@
-import { BlockJSON, WorkspaceJSON } from "./jsongenerator"
+import { BlockJSON, WorkspaceJSON } from "../blockly/jsongenerator"
 import {
     VMBase,
     VMHandler,
@@ -7,21 +7,15 @@ import {
     VMIfThenElse,
     VMError,
 } from "../../../jacdac-ts/src/vm/ir"
-import {
-    toMemberExpression,
-    toIdentifier,
-    RoleEvent,
-} from "../../../jacdac-ts/src/vm/compile"
+import { toIdentifier, RoleEvent } from "../../../jacdac-ts/src/vm/compile"
 
 import { assert } from "../../../jacdac-ts/src/jdom/utils"
 import {
     BUILTIN_TYPES,
-    CommandBlockDefinition,
-    RegisterBlockDefinition,
     resolveServiceBlockDefinition,
-} from "./toolbox"
+} from "../blockly/toolbox"
 import Blockly from "blockly"
-import BlockDomainSpecificLanguage from "./dsl/dsl"
+import BlockDomainSpecificLanguage from "../blockly/dsl/dsl"
 
 const ops = {
     AND: "&&",
@@ -71,6 +65,8 @@ export default function workspaceJSONToVMProgram(
     dsls: BlockDomainSpecificLanguage[]
 ): VMProgram {
     console.debug(`compile vm`, { workspace, dsls })
+
+    if (!workspace) return undefined
 
     const roles: VMRole[] = workspace.variables
         .filter(v => BUILTIN_TYPES.indexOf(v.type) < 0)
@@ -397,7 +393,7 @@ export default function workspaceJSONToVMProgram(
                     } as VMBase,
                 ],
                 errors: topErrors || [],
-                meta: !!topMeta
+                meta: !!topMeta,
             }
 
             addCommands(topEvent, top.children, handler)

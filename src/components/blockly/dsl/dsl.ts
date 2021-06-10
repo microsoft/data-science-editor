@@ -2,14 +2,14 @@ import { Theme } from "@material-ui/core"
 import { Block } from "blockly"
 import { JDService } from "../../../../jacdac-ts/src/jdom/service"
 import { RoleEvent } from "../../../../jacdac-ts/src/vm/compile"
-import { VMError, VMProgram } from "../../../../jacdac-ts/src/vm/ir"
+import { VMError } from "../../../../jacdac-ts/src/vm/ir"
 import { BlockJSON, WorkspaceJSON } from "../jsongenerator"
 import {
     BlockDefinition,
     ContentDefinition,
     ServiceBlockDefinition,
 } from "../toolbox"
-import { CmdWithErrors, ExpressionWithErrors } from "../VMgenerator"
+import { CmdWithErrors, ExpressionWithErrors } from "../../vm/VMgenerator"
 
 export interface CreateBlocksOptions {
     theme: Theme
@@ -18,7 +18,6 @@ export interface CreateBlocksOptions {
 export interface CreateCategoryOptions {
     theme: Theme
     source: WorkspaceJSON
-    program: VMProgram
     liveServices: JDService[]
 }
 
@@ -57,13 +56,12 @@ export default interface BlockDomainSpecificLanguage {
 
     blockToValue?: (block: Block) => string | number | boolean
 
+    // VM support
     compileEventToVM?: (
         options: CompileEventToVMOptions
     ) => CompileEventToVMResult
 
-    compileCommandToVM?: (
-        options: CompileCommandToVMOptions
-    ) => CmdWithErrors
+    compileCommandToVM?: (options: CompileCommandToVMOptions) => CmdWithErrors
 
     compileExpressionToVM?: (
         options: CompileExpressionToVMOptions
