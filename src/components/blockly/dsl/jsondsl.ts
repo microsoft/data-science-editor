@@ -14,6 +14,8 @@ const JSON_FIELD_TYPE = "JSONField"
 const JSON_OBJECT_BLOCK = "json_object"
 const JSON_FIELD_SET = "json_field_set"
 
+const JSON_FIELD_VALUE_TYPE = [...PRIMITIVE_TYPES, JSON_TYPE]
+
 const jsonDSL: BlockDomainSpecificLanguage = {
     id: "json",
     createBlocks: () => [
@@ -46,6 +48,7 @@ const jsonDSL: BlockDomainSpecificLanguage = {
                 <ValueInputDefinition>{
                     type: "input_value",
                     name: "value",
+                    check: JSON_FIELD_VALUE_TYPE,
                 },
             ],
             previousStatement: JSON_FIELD_TYPE,
