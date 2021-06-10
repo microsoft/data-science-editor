@@ -20,6 +20,7 @@ import { jdpack, jdunpack } from "../../../jacdac-ts/src/jdom/pack"
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward"
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward"
 import { EVENT } from "../../../jacdac-ts/src/jdom/constants"
+import useWidgetTheme from "../widgets/useWidgetTheme"
 
 const HORIZON = 10
 
@@ -70,6 +71,8 @@ export default function DashboardAzureIoTHub(props: DashboardServiceProps) {
 
     const connected = connectionStatus === "ok"
     const server = useServiceServer<AzureIoTHubServer>(service)
+    const color = server ? "secondary" : "primary"
+    const { textPrimary } = useWidgetTheme(color)
     const deviceToCloudMessages = useChange(
         server,
         _ => _?.deviceToCloudMessages
@@ -100,17 +103,23 @@ export default function DashboardAzureIoTHub(props: DashboardServiceProps) {
     }
 
     return (
-        <Grid container spacing={1}>
+        <Grid
+            container
+            spacing={1}
+            style={{ color: textPrimary, minWidth: "16rem" }}
+        >
             <Grid item xs={12}>
-                <Typography component="span" variant="body1">
+                <Typography component="span" variant="subtitle1">
                     hub: {hubName}, device: {deviceId}
                 </Typography>
+            </Grid>
+            <Grid item xs={12}>
                 <Switch
                     checked={connected}
                     aria-labelledby={connectId}
                     onClick={handleConnect}
                 />
-                <label id={connectId}>
+                <label className=".no-pointer-events" id={connectId}>
                     {connected ? "connected" : "disconnected"}{" "}
                 </label>
                 {server && (

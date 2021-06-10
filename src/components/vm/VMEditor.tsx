@@ -75,8 +75,8 @@ export default function VMEditor() {
     const dsls = useMemo(() => {
         return [
             servicesDSL,
-            azureIoTHubDSL,
-            deviceTwinDSL,
+            //azureIoTHubDSL,
+            //deviceTwinDSL,
             toolsDSL,
             loopsDsl,
             logicDsl,
