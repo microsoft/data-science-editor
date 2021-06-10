@@ -27,10 +27,6 @@ const ops = {
     LTE: "<=",
     GTE: ">=",
     NEG: "-",
-    ADD: "+",
-    MULTIPLY: "*",
-    DIVIDE: "/",
-    MINUS: "-",
 }
 
 export interface ExpressionWithErrors {
@@ -96,29 +92,6 @@ export default function workspaceJSONToVMProgram(
                 }
 
             switch (type) {
-                case "math_single": // built-in blockly
-                case "jacdac_math_single": {
-                    const argument = blockToExpressionInner(ev, inputs[0].child)
-                    const op = inputs[0].fields["op"].value as string
-                    return <jsep.UnaryExpression>{
-                        type: "UnaryExpression",
-                        operator: ops[op] || op,
-                        argument,
-                        prefix: false, // TODO:?
-                    }
-                }
-                case "math_arithmetic": // built-in blockly
-                case "jacdac_math_arithmetic": {
-                    const left = blockToExpressionInner(ev, inputs[0].child)
-                    const right = blockToExpressionInner(ev, inputs[1].child)
-                    const op = inputs[1].fields["op"].value as string
-                    return <jsep.BinaryExpression>{
-                        type: "BinaryExpression",
-                        operator: ops[op] || op,
-                        left,
-                        right,
-                    }
-                }
                 case "logic_operation": {
                     const left = blockToExpressionInner(ev, inputs[0].child)
                     const right = blockToExpressionInner(ev, inputs[1].child)

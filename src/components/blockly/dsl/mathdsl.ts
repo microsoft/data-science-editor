@@ -1,9 +1,18 @@
+import { ExpressionWithErrors } from "../../vm/VMgenerator"
 import {
     CategoryDefinition,
     OptionsInputDefinition,
     ValueInputDefinition,
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
+
+const ops = {
+    NEG: "-",
+    ADD: "+",
+    MULTIPLY: "*",
+    DIVIDE: "/",
+    MINUS: "-",
+}
 
 const mathDSL: BlockDomainSpecificLanguage = {
     id: "jacdacmath",
@@ -182,6 +191,45 @@ const mathDSL: BlockDomainSpecificLanguage = {
             ],
         },
     ],
+    compileExpressionToVM: ({
+        event,
+        block,
+        blockToExpressionInner,
+    }): ExpressionWithErrors => {
+        const { type, inputs } = block
+        switch (type) {
+            case "math_single": // built-in blockly
+            case "jacdac_math_single": {
+                const argument = blockToExpressionInner(event, inputs[0].child)
+                const op = inputs[0].fields["op"].value as string
+                return {
+                    expr: <jsep.UnaryExpression>{
+                        type: "UnaryExpression",
+                        operator: ops[op] || op,
+                        argument,
+                        prefix: false, // TODO:?
+                    },
+                    errors: [],
+                }
+            }
+            case "math_arithmetic": // built-in blockly
+            case "jacdac_math_arithmetic": {
+                const left = blockToExpressionInner(event, inputs[0].child)
+                const right = blockToExpressionInner(event, inputs[1].child)
+                const op = inputs[1].fields["op"].value as string
+                return {
+                    expr: <jsep.BinaryExpression>{
+                        type: "BinaryExpression",
+                        operator: ops[op] || op,
+                        left,
+                        right,
+                    },
+                    errors: [],
+                }
+            }
+        }
+        return undefined
+    },
 }
 
 export default mathDSL
