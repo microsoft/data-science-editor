@@ -23,11 +23,13 @@ export default function DashboardBitRadio(props: DashboardServiceProps) {
         if (!data) return
 
         const [time, deviceSerial, rssi, ...payload] = data
-        const evs = lastEvents.slice(0)
-        const msg = { time, deviceSerial, rssi, payload }
-        evs.push(msg)
-        while (evs.length > HORIZON) evs.shift()
-        setLastEvents(evs)
+        setLastEvents(lastEvents => {
+            const evs = lastEvents.slice(0)
+            const msg = { time, deviceSerial, rssi, payload }
+            evs.push(msg)
+            while (evs.length > HORIZON) evs.shift()
+            return lastEvents
+        })
     }
 
     useEffect(
@@ -47,7 +49,9 @@ export default function DashboardBitRadio(props: DashboardServiceProps) {
                         break
                 }
                 if (values)
-                    appendMessage(values.filter(v => v !== undefined && v !== ""))
+                    appendMessage(
+                        values.filter(v => v !== undefined && v !== "")
+                    )
             }),
         [service, lastEvents]
     )

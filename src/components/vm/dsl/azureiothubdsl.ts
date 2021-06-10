@@ -20,7 +20,7 @@ class AzureIoTHubBlockDomainSpecificLanguage
         return (this._blocks = [
             {
                 kind: "block",
-                type: "device_twin_receive_telemetry",
+                type: "azureiothub_receive_telemetry",
                 message0: "on receive cloud-to-device message",
                 args0: [],
                 nextStatement: CODE_STATEMENT_TYPE,
@@ -28,7 +28,7 @@ class AzureIoTHubBlockDomainSpecificLanguage
             },
             {
                 kind: "block",
-                type: "device_twin_receive_telemetry_number",
+                type: "azureiothub_receive_telemetry_number",
                 message0: "received number %1",
                 args0: [
                     <TextInputDefinition>{
@@ -42,7 +42,7 @@ class AzureIoTHubBlockDomainSpecificLanguage
             },
             {
                 kind: "block",
-                type: "device_twin_receive_telemetry_string",
+                type: "azureiothub_receive_telemetry_string",
                 message0: "received string %1",
                 args0: [
                     <TextInputDefinition>{
@@ -56,7 +56,7 @@ class AzureIoTHubBlockDomainSpecificLanguage
             },
             {
                 kind: "block",
-                type: "device_twin_send_telemetry",
+                type: "azureiothub_send_telemetry",
                 message0: "send device-to-cloud message %1 %2",
                 args0: [
                     <DummyInputDefinition>{
@@ -73,7 +73,7 @@ class AzureIoTHubBlockDomainSpecificLanguage
             },
             {
                 kind: "block",
-                type: "device_twin_send_telemetry_value",
+                type: "azureiothub_send_telemetry_value",
                 message0: "with %1 = %2",
                 args0: [
                     <TextInputDefinition>{
