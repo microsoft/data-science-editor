@@ -147,8 +147,8 @@ export const INSPECT_BLOCK = "jacdac_inspect"
 export const WATCH_BLOCK = "jacdac_watch"
 export const ON_START_BLOCK = "jacdac_start"
 export const REPEAT_EVERY_BLOCK = "jacdac_repeat_every"
-export const CONNECTION_BLOCK = "jacdac_connection"
-export const CONNECTED_BLOCK = "jacdac_connected"
+export const ROLE_BOUND_EVENT_BLOCK = "jacdac_role_bound_event"
+export const ROLE_BOUND_BLOCK = "jacdac_role_bound"
 
 export const JSON_TYPE = "JSON"
 export const STRING_TYPE = "String"
@@ -172,7 +172,12 @@ export interface CategoryDefinition extends ContentDefinition {
     expanded?: boolean
     colour?: string
     categorystyle?: string
-    contents?: (BlockReference | ButtonDefinition | SeparatorDefinition | LabelDefinition)[]
+    contents?: (
+        | BlockReference
+        | ButtonDefinition
+        | SeparatorDefinition
+        | LabelDefinition
+    )[]
     button?: ButtonDefinition
 }
 

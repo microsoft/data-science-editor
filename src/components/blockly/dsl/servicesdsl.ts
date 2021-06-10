@@ -56,8 +56,7 @@ import {
     CategoryDefinition,
     CODE_STATEMENT_TYPE,
     CommandBlockDefinition,
-    CONNECTED_BLOCK,
-    CONNECTION_BLOCK,
+    ROLE_BOUND_BLOCK,
     CustomBlockDefinition,
     EventBlockDefinition,
     EventFieldDefinition,
@@ -67,12 +66,12 @@ import {
     OptionsInputDefinition,
     RegisterBlockDefinition,
     resolveServiceBlockDefinition,
-    SeparatorDefinition,
     ServiceBlockDefinition,
     SET_STATUS_LIGHT_BLOCK,
     STRING_TYPE,
     ValueInputDefinition,
     VariableInputDefinition,
+    ROLE_BOUND_EVENT_BLOCK,
 } from "../toolbox"
 import { ExpressionWithErrors, makeVMBase } from "../../vm/VMgenerator"
 import BlockDomainSpecificLanguage, {
@@ -91,12 +90,12 @@ function isStringField(field: jdspec.PacketMember) {
     return field.type === "string"
 }
 function toBlocklyType(field: jdspec.PacketMember) {
-    return isBooleanField(field)
+    return field.encoding === "JSON"
+        ? JSON_TYPE
+        : isBooleanField(field)
         ? BOOLEAN_TYPE
         : isStringField(field)
-        ? field.encoding === "JSON"
-            ? JSON_TYPE
-            : STRING_TYPE
+        ? STRING_TYPE
         : isNumericType(field)
         ? NUMBER_TYPE
         : undefined
@@ -771,7 +770,7 @@ export class ServicesBlockDomainSpecificLanguage
         this._runtimeBlocks = [
             {
                 kind: "block",
-                type: CONNECTION_BLOCK,
+                type: ROLE_BOUND_EVENT_BLOCK,
                 message0: "on %1 %2",
                 args0: [
                     <VariableInputDefinition>{
@@ -790,8 +789,8 @@ export class ServicesBlockDomainSpecificLanguage
                         type: "field_dropdown",
                         name: "event",
                         options: [
-                            ["connected", "connected"],
-                            ["disconnected", "disconnected"],
+                            ["bound", "bound"],
+                            ["unbound", "unbound"],
                         ],
                     },
                 ],
@@ -800,12 +799,12 @@ export class ServicesBlockDomainSpecificLanguage
                 colour: commandColor,
                 tooltip: "Runs code when a role is connected or disconnected",
                 helpUrl: "",
-                template: "connection",
+                template: "role_binding_event",
             },
             {
                 kind: "block",
-                type: CONNECTED_BLOCK,
-                message0: "%1 connected",
+                type: ROLE_BOUND_BLOCK,
+                message0: "%1 bound",
                 args0: [
                     <VariableInputDefinition>{
                         type: "field_variable",
@@ -825,7 +824,7 @@ export class ServicesBlockDomainSpecificLanguage
                 colour: commandColor,
                 tooltip: "Runs code when a role is connected or disconnected",
                 helpUrl: "",
-                template: "connected",
+                template: "role_bound",
             },
             {
                 kind: "block",
@@ -964,16 +963,16 @@ export class ServicesBlockDomainSpecificLanguage
 
         const commonCategory: CategoryDefinition = {
             kind: "category",
-            name: "Services",
+            name: "Roles",
             colour: commandColor,
             contents: [
                 <BlockReference>{
                     kind: "block",
-                    type: CONNECTION_BLOCK,
+                    type: ROLE_BOUND_EVENT_BLOCK,
                 },
                 <BlockReference>{
                     kind: "block",
-                    type: CONNECTED_BLOCK,
+                    type: ROLE_BOUND_BLOCK,
                 },
                 <BlockReference>{
                     kind: "block",
@@ -988,13 +987,7 @@ export class ServicesBlockDomainSpecificLanguage
             ],
         }
 
-        return [
-            ...servicesCategories,
-            commonCategory,
-            <SeparatorDefinition>{
-                kind: "sep",
-            },
-        ]
+        return [...servicesCategories, commonCategory]
     }
 
     compileEventToVM(options: CompileEventToVMOptions): CompileEventToVMResult {
