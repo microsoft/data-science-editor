@@ -35,5 +35,5 @@ export function visitWorkspace(
     workspace: WorkspaceJSON,
     visitor: WorkspaceVisitor
 ) {
-    workspace.blocks.forEach(block => visitBlock(block, visitor))
+    workspace?.blocks.forEach(block => visitBlock(block, visitor))
 }

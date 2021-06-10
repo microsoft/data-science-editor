@@ -10,6 +10,15 @@ export class DataScienceBlockDomainSpecificLanguage
         const blocks: BlockDefinition[] = [
             {
                 kind: "block",
+                type: "ds_some_event",
+                message0: "some event",
+                args0: [],
+                inputsInline: true,
+                nextStatement: null,
+                colour,
+            } as BlockDefinition,
+            {
+                kind: "block",
                 type: "ds_some_block",
                 message0: "some block data",
                 args0: [],
@@ -28,6 +37,10 @@ export class DataScienceBlockDomainSpecificLanguage
                 name: "Data Science",
                 colour,
                 contents: [
+                    {
+                        kind: "block",
+                        type: "ds_some_event",
+                    },
                     {
                         kind: "block",
                         type: "ds_some_block",
