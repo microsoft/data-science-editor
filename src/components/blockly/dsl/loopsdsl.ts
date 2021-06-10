@@ -5,6 +5,7 @@ import {
     CategoryDefinition,
     CODE_STATEMENT_TYPE,
     InputDefinition,
+    ON_START_BLOCK,
     REPEAT_EVERY_BLOCK,
     SeparatorDefinition,
     ValueInputDefinition,
@@ -37,6 +38,17 @@ const loopsDsl: BlockDomainSpecificLanguage = {
         },
         {
             kind: "block",
+            type: ON_START_BLOCK,
+            message0: `on start`,
+            args0: [],
+            colour,
+            inputsInline: true,
+            tooltip: `Runs code when the device starts`,
+            helpUrl: "",
+            nextStatement: CODE_STATEMENT_TYPE,
+        },
+        {
+            kind: "block",
             type: REPEAT_EVERY_BLOCK,
             message0: `repeat every %1s`,
             args0: [
@@ -60,8 +72,7 @@ const loopsDsl: BlockDomainSpecificLanguage = {
         },
         <CategoryDefinition>{
             kind: "category",
-            name: "Commands",
-            order: 4,
+            name: "Events",
             colour,
             contents: [
                 <BlockDefinition>{
@@ -70,6 +81,10 @@ const loopsDsl: BlockDomainSpecificLanguage = {
                     values: {
                         interval: { kind: "block", type: "jacdac_time_picker" },
                     },
+                },
+                <BlockDefinition>{
+                    kind: "block",
+                    type: ON_START_BLOCK,
                 },
                 <BlockDefinition>{
                     kind: "block",
@@ -83,7 +98,10 @@ const loopsDsl: BlockDomainSpecificLanguage = {
     ],
     compileEventToVM: ({ block, blockToExpression }) => {
         const { type } = block
-        if (type === REPEAT_EVERY_BLOCK) {
+        if (type === ON_START_BLOCK) {
+            // TODO
+            return undefined
+        } else if (type === REPEAT_EVERY_BLOCK) {
             const { inputs } = block
             const { expr: time, errors } = blockToExpression(
                 undefined,
