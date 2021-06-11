@@ -1,4 +1,4 @@
-import Blockly, { FieldVariable } from "blockly"
+import { Block, FieldVariable, WorkspaceSvg } from "blockly"
 import React, { createContext, ReactNode, useEffect, useState } from "react"
 import { CHANGE } from "../../../jacdac-ts/src/jdom/constants"
 import { JDEventSource } from "../../../jacdac-ts/src/jdom/eventsource"
@@ -40,7 +40,8 @@ export class WorkspaceServices extends JDEventSource {
 }
 
 export interface WorkspaceContextProps {
-    workspace?: Blockly.Workspace
+    workspace?: WorkspaceSvg
+    sourceBlock?: Block
     sourceId?: string
     services: WorkspaceServices
     flyout?: boolean
@@ -52,6 +53,7 @@ export interface WorkspaceContextProps {
 
 export const WorkspaceContext = createContext<WorkspaceContextProps>({
     workspace: undefined,
+    sourceBlock: undefined,
     flyout: false,
     sourceId: undefined,
     services: undefined,
@@ -64,7 +66,7 @@ WorkspaceContext.displayName = "Workspace"
 
 export default WorkspaceContext
 
-export interface BlocklyWorkspaceWithServices extends Blockly.Workspace {
+export interface BlocklyWorkspaceWithServices extends WorkspaceSvg {
     jacdacServices: WorkspaceServices
 }
 
@@ -74,7 +76,7 @@ export function WorkspaceProvider(props: {
     children: ReactNode
 }) {
     const { field, children } = props
-    const [sourceBlock, setSourceBlock] = useState<Blockly.Block>(
+    const [sourceBlock, setSourceBlock] = useState<Block>(
         field?.getSourceBlock()
     )
     const sourceId = sourceBlock?.id
@@ -135,6 +137,7 @@ export function WorkspaceProvider(props: {
         // eslint-disable-next-line react/react-in-jsx-scope
         <WorkspaceContext.Provider
             value={{
+                sourceBlock,
                 sourceId,
                 services,
                 role,
