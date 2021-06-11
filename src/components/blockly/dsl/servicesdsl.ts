@@ -56,7 +56,6 @@ import {
     CategoryDefinition,
     CODE_STATEMENT_TYPE,
     CommandBlockDefinition,
-    ROLE_BOUND_BLOCK,
     CustomBlockDefinition,
     EventBlockDefinition,
     EventFieldDefinition,
@@ -67,11 +66,9 @@ import {
     RegisterBlockDefinition,
     resolveServiceBlockDefinition,
     ServiceBlockDefinition,
-    SET_STATUS_LIGHT_BLOCK,
     STRING_TYPE,
     ValueInputDefinition,
     VariableInputDefinition,
-    ROLE_BOUND_EVENT_BLOCK,
 } from "../toolbox"
 import { ExpressionWithErrors, makeVMBase } from "../../vm/VMgenerator"
 import BlockDomainSpecificLanguage, {
@@ -82,6 +79,10 @@ import BlockDomainSpecificLanguage, {
     CreateBlocksOptions,
     CreateCategoryOptions,
 } from "./dsl"
+
+const SET_STATUS_LIGHT_BLOCK = "jacdac_set_status_light"
+const ROLE_BOUND_EVENT_BLOCK = "jacdac_role_bound_event"
+const ROLE_BOUND_BLOCK = "jacdac_role_bound"
 
 function isBooleanField(field: jdspec.PacketMember) {
     return field.type === "bool"

@@ -11,10 +11,10 @@ import {
 } from "../../../jacdac-ts/src/servers/servers"
 import useChange from "../../jacdac/useChange"
 import { BlockSvg, FieldVariable } from "blockly"
-import { TWIN_BLOCK } from "./toolbox"
 import useServiceServer from "../hooks/useServiceServer"
 import CancelIcon from "@material-ui/icons/Cancel"
 import BlockContext from "./BlockContext"
+import { TWIN_BLOCK } from "./dsl/toolsdsl"
 
 function RoleChip(props: {
     role: string
@@ -55,6 +55,7 @@ function RoleChip(props: {
             if (!twinBlock) {
                 twinBlock = workspace.newBlock(TWIN_BLOCK) as BlockSvg
                 const variable = workspace.getVariable(role, serviceShortId)
+                console.log(`new twin`, { twinBlock })
                 const field = twinBlock.inputList[0].fieldRow.find(
                     f => f.name === "role"
                 ) as FieldVariable
