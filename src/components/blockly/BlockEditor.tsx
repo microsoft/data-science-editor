@@ -39,7 +39,6 @@ export default function BlockEditor(props: { className?: string }) {
     const { darkMode } = useContext(DarkModeContext)
     const { setError } = useContext(AppContext)
     const theme = darkMode === "dark" ? DarkTheme : Theme
-    const gridColor = darkMode === "dark" ? "#555" : "#ccc"
 
     // ReactBlockly
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -54,12 +53,6 @@ export default function BlockEditor(props: { className?: string }) {
             css: true,
             trashcan: false,
             sounds: false,
-            grid: {
-                spacing: 25,
-                length: 1,
-                colour: gridColor,
-                snap: true,
-            },
             renderer: "zelos",
             theme,
             oneBasedIndex: false,
