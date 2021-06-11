@@ -329,9 +329,18 @@ export class ServicesBlockDomainSpecificLanguage
                     <CustomBlockDefinition>{
                         kind: "block",
                         type: `key`,
-                        message0: `send %1 key %2`,
+                        message0: `%1 %2 key %3`,
                         args0: [
                             fieldVariable(service),
+                            <OptionsInputDefinition>{
+                                type: "field_dropdown",
+                                name: "action",
+                                options: [
+                                    ["press", "press"],
+                                    ["down", "down"],
+                                    ["up", "up"],
+                                ],
+                            },
                             {
                                 type: KeyboardKeyField.KEY,
                                 name: "combo",
@@ -344,7 +353,7 @@ export class ServicesBlockDomainSpecificLanguage
                         tooltip: `Send a keyboard key combo`,
                         helpUrl: serviceHelp(service),
                         service,
-                        expression: `role.key(combo.selectors, combo.modifiers)`,
+                        expression: `role.key(combo.selectors, combo.modifiers, action)`,
                         template: "custom",
                     }
             ),
