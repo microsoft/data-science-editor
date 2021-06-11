@@ -142,9 +142,6 @@ export interface CustomBlockDefinition extends ServiceBlockDefinition {
 
 export const WAIT_BLOCK = "jacdac_wait"
 export const SET_STATUS_LIGHT_BLOCK = "jacdac_set_status_light"
-export const TWIN_BLOCK = "jacdac_twin"
-export const INSPECT_BLOCK = "jacdac_inspect"
-export const WATCH_BLOCK = "jacdac_watch"
 export const ON_START_BLOCK = "jacdac_start"
 export const REPEAT_EVERY_BLOCK = "jacdac_repeat_every"
 export const ROLE_BOUND_EVENT_BLOCK = "jacdac_role_bound_event"

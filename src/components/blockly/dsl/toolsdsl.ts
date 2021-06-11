@@ -1,20 +1,21 @@
 import { toIdentifier } from "../../../../jacdac-ts/src/vm/compile"
+import { CmdWithErrors, makeVMBase } from "../../vm/VMgenerator"
 import JDomTreeField from "../fields/JDomTreeField"
 import TwinField from "../fields/TwinField"
 import WatchValueField from "../fields/WatchValueField"
 import {
-    BlockDefinition,
     BlockReference,
     InputDefinition,
-    INSPECT_BLOCK,
-    TWIN_BLOCK,
     VariableInputDefinition,
-    WATCH_BLOCK,
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
 import servicesDSL from "./servicesdsl"
 
 const colour = "#888"
+const TWIN_BLOCK = "jacdac_tools_twin"
+const INSPECT_BLOCK = "jacdac_tools_inspect"
+const WATCH_BLOCK = "jacdac_tools_watch"
+const LOG_BLOCK = "jacdac_tools_log"
 
 const toolsDSL: BlockDomainSpecificLanguage = {
     id: "tools",
@@ -89,7 +90,6 @@ const toolsDSL: BlockDomainSpecificLanguage = {
                 <InputDefinition>{
                     type: "input_value",
                     name: "value",
-                    check: ["Number", "Boolean", "String"],
                 },
                 <InputDefinition>{
                     type: WatchValueField.KEY,
@@ -99,6 +99,23 @@ const toolsDSL: BlockDomainSpecificLanguage = {
             colour,
             inputsInline: true,
             tooltip: `Watch a value in the editor`,
+            helpUrl: "",
+        },
+        {
+            kind: "block",
+            type: LOG_BLOCK,
+            message0: `log %1`,
+            args0: [
+                <InputDefinition>{
+                    type: "input_value",
+                    name: "value",
+                },
+            ],
+            colour,
+            inputsInline: true,
+            previousStatement: null,
+            nextStatement: null,
+            tooltip: `Log an entry to the console`,
             helpUrl: "",
         },
     ],
@@ -115,6 +132,13 @@ const toolsDSL: BlockDomainSpecificLanguage = {
                     kind: "block",
                     type: WATCH_BLOCK,
                 },
+                {
+                    kind: "block",
+                    type: LOG_BLOCK,
+                    values: {
+                        value: { kind: "block", type: "text" },
+                    },
+                },
                 <BlockReference>{
                     kind: "block",
                     type: TWIN_BLOCK,
@@ -127,6 +151,25 @@ const toolsDSL: BlockDomainSpecificLanguage = {
         },
     ],
 
+    compileCommandToVM: ({ block, blockToExpression }): CmdWithErrors => {
+        const { type } = block
+        if (type === LOG_BLOCK) {
+            const { inputs } = block
+            const { expr, errors } = blockToExpression(
+                undefined,
+                inputs[0].child
+            )
+            return {
+                cmd: makeVMBase(block, {
+                    type: "CallExpression",
+                    arguments: [expr],
+                    callee: toIdentifier("log"),
+                }),
+                errors,
+            }
+        }
+        return undefined
+    },
     compileEventToVM: ({ block, blockToExpression }) => {
         const { type } = block
         if (type === WATCH_BLOCK) {
@@ -145,7 +188,6 @@ const toolsDSL: BlockDomainSpecificLanguage = {
                 meta: true,
             }
         }
-
         return undefined
     },
 }
