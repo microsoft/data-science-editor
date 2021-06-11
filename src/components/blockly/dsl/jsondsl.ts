@@ -1,8 +1,10 @@
 import {
     BlockDefinition,
     BlockReference,
+    BOOLEAN_TYPE,
     DummyInputDefinition,
     JSON_TYPE,
+    LabelDefinition,
     PRIMITIVE_TYPES,
     StatementInputDefinition,
     TextInputDefinition,
@@ -18,6 +20,7 @@ const JSON_OBJECT_BLOCK = "json_object"
 const JSON_FIELD_SET_BLOCK = "json_field_set"
 const JSON_FIELD_GET_TEMPLATE = "jsonFieldGet"
 const JSON_FIELD_VALUE_TYPE = [...PRIMITIVE_TYPES, JSON_TYPE]
+const JSON_FIELD_HAS_BLOCK = "json_field_has"
 
 const jsonDSL: BlockDomainSpecificLanguage = {
     id: "json",
@@ -78,8 +81,30 @@ const jsonDSL: BlockDomainSpecificLanguage = {
                     output,
                     colour,
                     template: JSON_FIELD_GET_TEMPLATE,
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    vm: (value: any, name: string) => value?.[name],
                 }
         ),
+        {
+            kind: "block",
+            type: JSON_FIELD_HAS_BLOCK,
+            message0: `has %1 [ %2 ]`,
+            args0: [
+                <ValueInputDefinition>{
+                    type: "input_value",
+                    name: "value",
+                    check: JSON_TYPE,
+                },
+                <TextInputDefinition>{
+                    type: "field_input",
+                    name: "name",
+                },
+            ],
+            output: BOOLEAN_TYPE,
+            colour,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            vm: (value: any, name: string) => !!value?.[name],
+        },
     ],
     createCategory: () => [
         {
@@ -87,6 +112,10 @@ const jsonDSL: BlockDomainSpecificLanguage = {
             name: "JSON",
             colour,
             contents: [
+                <LabelDefinition>{
+                    kind: "label",
+                    text: "Create",
+                },
                 <BlockReference>{
                     kind: "block",
                     type: JSON_OBJECT_BLOCK,
@@ -101,6 +130,10 @@ const jsonDSL: BlockDomainSpecificLanguage = {
                         },
                     },
                 },
+                <LabelDefinition>{
+                    kind: "label",
+                    text: "Read",
+                },
                 ...PRIMITIVE_TYPES.map(output => ({
                     kind: "block",
                     type: `json_field_get_as_${output.toLowerCase()}`,
@@ -112,6 +145,10 @@ const jsonDSL: BlockDomainSpecificLanguage = {
                         },
                     },
                 })),
+                {
+                    kind: "block",
+                    type: JSON_FIELD_HAS_BLOCK,
+                },
             ],
         },
     ],
