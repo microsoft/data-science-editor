@@ -184,7 +184,7 @@ const toolsDSL: BlockDomainSpecificLanguage = {
                 },
                 <LabelDefinition>{
                     kind: "label",
-                    text: "Dashboard",
+                    text: "Roles",
                 },
                 <BlockReference>{
                     kind: "block",
