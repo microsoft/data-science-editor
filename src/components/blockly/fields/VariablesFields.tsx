@@ -8,20 +8,17 @@ import ReactInlineField from "./ReactInlineField"
 function VariablesWidget() {
     const { runner } = useContext(WorkspaceContext)
     const theme = useTheme()
-    const variables = useChange(runner, _ => _?.globals(true))
+    const variables = useChange(runner, _ => _?.globals())
+
     return (
-        <>
-            {variables && (
-                <table style={{ color: theme.palette.text.primary }}>
-                    {variables.map(({ name, value }) => (
-                        <tr key={name}>
-                            <td>{name}</td>
-                            <td>{value}</td>
-                        </tr>
-                    ))}
-                </table>
-            )}
-        </>
+        <table style={{ color: theme.palette.text.primary }}>
+            {variables?.map(({ name, value }) => (
+                <tr key={name}>
+                    <td>{name}</td>
+                    <td>{value}</td>
+                </tr>
+            ))}
+        </table>
     )
 }
 
