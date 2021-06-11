@@ -35,9 +35,7 @@ const variablesDsl: BlockDomainSpecificLanguage = {
         /*definition,*/ blockToExpression,
     }) => {
         const { type, inputs } = block
-        if (type === "math_change") {
-            // TODO change by
-        } else if (type === "variables_set") {
+        if (type === "math_change" || type === "variables_set") {
             const { expr, errors } = blockToExpression(event, inputs[0].child)
             const { value: variable } = inputs[0].fields.var
             return {
@@ -45,7 +43,17 @@ const variablesDsl: BlockDomainSpecificLanguage = {
                     type: "CallExpression",
                     arguments: [
                         toMemberExpression("$", variable.toString()),
-                        expr,
+                        type === "variables_set"
+                            ? expr
+                            : ({
+                                  type: "BinaryExpression",
+                                  operator: "+",
+                                  left: toMemberExpression(
+                                      "$",
+                                      variable.toString()
+                                  ),
+                                  right: expr,
+                              } as jsep.BinaryExpression),
                     ],
                     callee: toIdentifier("writeLocal"),
                 }),
