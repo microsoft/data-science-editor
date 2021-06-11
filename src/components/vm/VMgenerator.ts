@@ -53,7 +53,7 @@ export default function workspaceJSONToVMProgram(
     if (!workspace) return undefined
 
     const resolveDsl = (type: string) => {
-        const dsl = dsls.find(dsl => dsl.types?.indexOf(type) > -1)
+        const dsl = dsls?.find(dsl => dsl.types?.indexOf(type) > -1)
         if (dsl) return dsl
 
         const { dsl: dslName } = resolveServiceBlockDefinition(type)
