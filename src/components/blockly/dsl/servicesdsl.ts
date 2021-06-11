@@ -885,7 +885,7 @@ export class ServicesBlockDomainSpecificLanguage
                     block,
                     definition: resolveServiceBlockDefinition(block.type),
                 }))
-                .filter(({ definition }) => definition.template === "event")
+                .filter(({ definition }) => definition?.template === "event")
                 .map(({ block, definition }) => {
                     const eventName = block.inputs[0].fields["event"]
                         .value as string
