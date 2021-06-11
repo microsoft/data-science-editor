@@ -10,11 +10,12 @@ function LogViewWidget() {
     const theme = useTheme()
     const [logs, setLogs] = useState<{ text: string; count: number }[]>([])
 
-    useEffect(() =>
+    useEffect(() => {
+        setLogs([])
         runner?.subscribe(VM_EVENT, code => {
             if (code === VMCode.LogEntry) setLogs(runner?.logData || [])
         })
-    )
+    }, [runner])
 
     return (
         <pre
