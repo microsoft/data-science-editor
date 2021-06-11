@@ -8,7 +8,7 @@ import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import { Chip, Grid } from "@material-ui/core"
 import PauseIcon from "@material-ui/icons/Pause"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
-import { VM_EVENT, VMCode } from "../../../jacdac-ts/src/vm/events"
+import { VM_BREAKPOINT } from "../../../jacdac-ts/src/vm/events"
 import { VMHandler, VMProgram } from "../../../jacdac-ts/src/vm/ir"
 import PlayForWorkIcon from "@material-ui/icons/PlayForWork"
 import useMounted from "../hooks/useMounted"
@@ -102,11 +102,9 @@ export default function VMRunnerButtons(props: {
     useEffect(
         () =>
             runner?.subscribe(
-                VM_EVENT,
-                (code: VMCode, _?: VMHandler, sourceId?: string) => {
-                    if (code === VMCode.Breakpoint) {
-                        if (mounted()) setBreakpoint(sourceId)
-                    }
+                VM_BREAKPOINT,
+                (_: VMHandler, sourceId?: string) => {
+                    if (mounted()) setBreakpoint(sourceId)
                 }
             ),
         [runner]

@@ -1,6 +1,6 @@
 import { useTheme } from "@material-ui/core"
 import React, { useContext, useEffect, useState } from "react"
-import { VMCode, VM_EVENT } from "../../../../jacdac-ts/src/vm/events"
+import { VM_LOG_ENTRY } from "../../../../jacdac-ts/src/vm/events"
 import WorkspaceContext from "../WorkspaceContext"
 import { ReactFieldJSON } from "./ReactField"
 import ReactInlineField from "./ReactInlineField"
@@ -12,8 +12,8 @@ function LogViewWidget() {
 
     useEffect(() => {
         setLogs([])
-        runner?.subscribe(VM_EVENT, code => {
-            if (code === VMCode.LogEntry) setLogs(runner?.logData || [])
+        runner?.subscribe(VM_LOG_ENTRY, () => {
+            setLogs(runner?.logData || [])
         })
     }, [runner])
 
