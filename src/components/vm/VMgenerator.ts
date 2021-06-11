@@ -57,6 +57,10 @@ export default function workspaceJSONToVMProgram(
         if (dsl) return dsl
 
         const { dsl: dslName } = resolveServiceBlockDefinition(type)
+        if (!dslName) {
+            console.warn(`unknown dsl for ${type}`)
+            return undefined
+        }
         return dsls?.find(dsl => dsl.id === dslName)
     }
 

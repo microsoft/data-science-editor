@@ -7,7 +7,7 @@ import { makeVMBase } from "../../vm/VMgenerator"
 
 const variablesDsl: BlockDomainSpecificLanguage = {
     id: "variables",
-    types: ["variables_get", "variables_set"],
+    types: ["variables_get", "variables_set", "math_change"],
     createCategory: () => [
         {
             kind: "category",
@@ -35,7 +35,9 @@ const variablesDsl: BlockDomainSpecificLanguage = {
         /*definition,*/ blockToExpression,
     }) => {
         const { type, inputs } = block
-        if (type === "variables_set") {
+        if (type === "math_change") {
+            // TODO change by
+        } else if (type === "variables_set") {
             const { expr, errors } = blockToExpression(event, inputs[0].child)
             const { value: variable } = inputs[0].fields.var
             return {
