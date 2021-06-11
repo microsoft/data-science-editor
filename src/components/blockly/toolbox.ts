@@ -95,6 +95,10 @@ export interface BlockDefinition extends BlockReference {
     extensions?: string[]
     template?: BlockTemplate
     dsl?: string
+
+    // js implementation to be called by VM
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    vm?: (...args: any[]) => any
 }
 
 export interface ServiceBlockDefinition extends BlockDefinition {
