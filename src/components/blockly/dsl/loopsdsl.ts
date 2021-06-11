@@ -99,8 +99,16 @@ const loopsDsl: BlockDomainSpecificLanguage = {
     compileEventToVM: ({ block, blockToExpression }) => {
         const { type } = block
         if (type === ON_START_BLOCK) {
-            // TODO
-            return undefined
+            return {
+                expression: (
+                    makeVMBase(block, {
+                        type: "CallExpression",
+                        arguments: [],
+                        callee: toIdentifier("start"),
+                    }) as VMCommand
+                ).command,
+                errors: processErrors(block, []),
+            }
         } else if (type === REPEAT_EVERY_BLOCK) {
             const { inputs } = block
             const { expr: time, errors } = blockToExpression(
