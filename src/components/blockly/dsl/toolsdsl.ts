@@ -3,10 +3,12 @@ import { CmdWithErrors, makeVMBase } from "../../vm/VMgenerator"
 import JDomTreeField from "../fields/JDomTreeField"
 import LogViewField from "../fields/LogViewField"
 import TwinField from "../fields/TwinField"
+import VariablesField from "../fields/VariablesFields"
 import WatchValueField from "../fields/WatchValueField"
 import {
     BlockReference,
     InputDefinition,
+    LabelDefinition,
     VariableInputDefinition,
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
@@ -17,6 +19,7 @@ const INSPECT_BLOCK = "jacdac_tools_inspect"
 const WATCH_BLOCK = "jacdac_tools_watch"
 const LOG_BLOCK = "jacdac_tools_log"
 const VIEW_LOG_BLOCK = "jacdac_tools_log_view"
+const VARIABLES_BLOCK = "jacdac_variables_view"
 export const TWIN_BLOCK = "jacdac_tools_twin"
 
 const toolsDSL: BlockDomainSpecificLanguage = {
@@ -86,6 +89,25 @@ const toolsDSL: BlockDomainSpecificLanguage = {
         },
         {
             kind: "block",
+            type: VARIABLES_BLOCK,
+            message0: `variables %1 %2`,
+            args0: [
+                {
+                    type: "input_dummy",
+                },
+                {
+                    type: VariablesField.KEY,
+                    name: "variables",
+                },
+            ],
+            colour,
+            inputsInline: false,
+            tooltip: `Watch variables values`,
+            helpUrl: "",
+            template: "meta"
+        },
+        {
+            kind: "block",
             type: WATCH_BLOCK,
             message0: `watch %1 %2`,
             args0: [
@@ -148,9 +170,21 @@ const toolsDSL: BlockDomainSpecificLanguage = {
             name: "Tools",
             colour: colour,
             contents: [
+                <LabelDefinition>{
+                    kind: "label",
+                    text: "Variables",
+                },
+                <BlockReference>{
+                    kind: "block",
+                    type: VARIABLES_BLOCK,
+                },
                 <BlockReference>{
                     kind: "block",
                     type: WATCH_BLOCK,
+                },
+                <LabelDefinition>{
+                    kind: "label",
+                    text: "Dashboard",
                 },
                 <BlockReference>{
                     kind: "block",
@@ -159,6 +193,10 @@ const toolsDSL: BlockDomainSpecificLanguage = {
                 <BlockReference>{
                     kind: "block",
                     type: INSPECT_BLOCK,
+                },
+                <LabelDefinition>{
+                    kind: "label",
+                    text: "Logging",
                 },
                 {
                     kind: "block",

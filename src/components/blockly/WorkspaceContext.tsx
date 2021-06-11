@@ -7,13 +7,24 @@ import RoleManager from "../../../jacdac-ts/src/servers/rolemanager"
 import { VMProgramRunner } from "../../../jacdac-ts/src/vm/runner"
 import useChange from "../../jacdac/useChange"
 import ReactField from "./fields/ReactField"
+import { WorkspaceJSON } from "./jsongenerator"
 
 export class WorkspaceServices extends JDEventSource {
+    private _workspaceJSON: WorkspaceJSON
     private _runner: VMProgramRunner
     private _roleManager: RoleManager
 
     constructor() {
         super()
+    }
+
+    get workspaceJSON() {
+        return this._workspaceJSON
+    }
+
+    set workspaceJSON(value: WorkspaceJSON) {
+        this._workspaceJSON = value;
+        this.emit(CHANGE)
     }
 
     get runner() {
@@ -41,6 +52,7 @@ export class WorkspaceServices extends JDEventSource {
 
 export interface WorkspaceContextProps {
     workspace?: WorkspaceSvg
+    workspaceJSON?: WorkspaceJSON
     sourceBlock?: Block
     sourceId?: string
     services: WorkspaceServices
@@ -53,6 +65,7 @@ export interface WorkspaceContextProps {
 
 export const WorkspaceContext = createContext<WorkspaceContextProps>({
     workspace: undefined,
+    workspaceJSON: undefined,
     sourceBlock: undefined,
     flyout: false,
     sourceId: undefined,
@@ -84,6 +97,7 @@ export function WorkspaceProvider(props: {
     const services = (workspace as BlocklyWorkspaceWithServices)?.jacdacServices
     const roleManager = useChange(services, _ => _?.roleManager)
     const runner = useChange(services, _ => _?.runner)
+    const workspaceJSON = useChange(services, _ => _?.workspaceJSON)
 
     const resolveRole = () => {
         const newSourceBlock = field.getSourceBlock()
@@ -138,6 +152,7 @@ export function WorkspaceProvider(props: {
         <WorkspaceContext.Provider
             value={{
                 sourceBlock,
+                workspaceJSON,
                 sourceId,
                 services,
                 role,
