@@ -56,7 +56,7 @@ export default function workspaceJSONToVMProgram(
         const dsl = dsls?.find(dsl => dsl.types?.indexOf(type) > -1)
         if (dsl) return dsl
 
-        const { dsl: dslName } = resolveServiceBlockDefinition(type)
+        const { dsl: dslName } = resolveServiceBlockDefinition(type) || {}
         if (!dslName) {
             console.warn(`unknown dsl for ${type}`)
             return undefined
@@ -203,6 +203,8 @@ export default function workspaceJSONToVMProgram(
                     then: thenHandler.commands,
                     else: elseHandler.commands,
                 }
+
+                console.log("dynamic if")
                 return {
                     cmd: ifThenElse,
                     errors: processErrors(

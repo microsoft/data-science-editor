@@ -15,6 +15,13 @@ const ops = {
 
 const logicDsl: BlockDomainSpecificLanguage = {
     id: "logic",
+    types: [
+        "variable_if",
+        "logic_compare",
+        "logic_operation",
+        "logic_negate",
+        "logic_boolean",
+    ],
     createCategory: () => [
         {
             kind: "category",
