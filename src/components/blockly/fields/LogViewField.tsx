@@ -19,6 +19,9 @@ function LogViewWidget() {
     return (
         <pre
             style={{
+                padding: "0",
+                marginBottom: "0",
+                background: "none",
                 color: theme.palette.text.primary,
                 maxHeight: "80vh",
                 overflowY: "auto",
