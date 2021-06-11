@@ -1,6 +1,7 @@
 import { useTheme } from "@material-ui/core"
-import React, { useContext } from "react"
-import useChange from "../../../jacdac/useChange"
+import React, { useContext, useEffect, useState } from "react"
+import { GLOBAL_CHANGE } from "../../../../jacdac-ts/src/vm/environment"
+import { atomic } from "../../../../jacdac-ts/src/vm/runner"
 import WorkspaceContext from "../WorkspaceContext"
 import { ReactFieldJSON } from "./ReactField"
 import ReactInlineField from "./ReactInlineField"
@@ -8,7 +9,16 @@ import ReactInlineField from "./ReactInlineField"
 function VariablesWidget() {
     const { runner } = useContext(WorkspaceContext)
     const theme = useTheme()
-    const variables = useChange(runner, _ => _?.globals())
+    const [variables, setVariables] = useState<
+        { name: string; value: atomic }[]
+    >(runner?.globals())
+    useEffect(
+        () =>
+            runner?.subscribe(GLOBAL_CHANGE, () =>
+                setVariables(runner.globals())
+            ),
+        [runner]
+    )
 
     return (
         <table style={{ color: theme.palette.text.primary }}>
