@@ -1,6 +1,7 @@
 import { toIdentifier } from "../../../../jacdac-ts/src/vm/compile"
 import { CmdWithErrors, makeVMBase } from "../../vm/VMgenerator"
 import JDomTreeField from "../fields/JDomTreeField"
+import LogViewField from "../fields/LogViewField"
 import TwinField from "../fields/TwinField"
 import WatchValueField from "../fields/WatchValueField"
 import {
@@ -12,10 +13,11 @@ import BlockDomainSpecificLanguage from "./dsl"
 import servicesDSL from "./servicesdsl"
 
 const colour = "#888"
-const TWIN_BLOCK = "jacdac_tools_twin"
 const INSPECT_BLOCK = "jacdac_tools_inspect"
 const WATCH_BLOCK = "jacdac_tools_watch"
 const LOG_BLOCK = "jacdac_tools_log"
+const VIEW_LOG_BLOCK = "jacdac_tools_log_view"
+export const TWIN_BLOCK = "jacdac_tools_twin"
 
 const toolsDSL: BlockDomainSpecificLanguage = {
     id: "tools",
@@ -118,6 +120,24 @@ const toolsDSL: BlockDomainSpecificLanguage = {
             tooltip: `Log an entry to the console`,
             helpUrl: "",
         },
+        {
+            kind: "block",
+            type: VIEW_LOG_BLOCK,
+            message0: `console %1 %2`,
+            args0: [
+                {
+                    type: "input_dummy",
+                },
+                <InputDefinition>{
+                    type: LogViewField.KEY,
+                    name: "watch",
+                },
+            ],
+            colour,
+            inputsInline: false,
+            tooltip: `View console content`,
+            template: "meta",
+        },
     ],
     createCategory: () => [
         {
@@ -132,13 +152,6 @@ const toolsDSL: BlockDomainSpecificLanguage = {
                     kind: "block",
                     type: WATCH_BLOCK,
                 },
-                {
-                    kind: "block",
-                    type: LOG_BLOCK,
-                    values: {
-                        value: { kind: "block", type: "text" },
-                    },
-                },
                 <BlockReference>{
                     kind: "block",
                     type: TWIN_BLOCK,
@@ -146,6 +159,17 @@ const toolsDSL: BlockDomainSpecificLanguage = {
                 <BlockReference>{
                     kind: "block",
                     type: INSPECT_BLOCK,
+                },
+                {
+                    kind: "block",
+                    type: LOG_BLOCK,
+                    values: {
+                        value: { kind: "block", type: "text" },
+                    },
+                },
+                {
+                    kind: "block",
+                    type: VIEW_LOG_BLOCK,
                 },
             ],
         },

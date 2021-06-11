@@ -5,14 +5,15 @@ import {
     CategoryDefinition,
     CODE_STATEMENT_TYPE,
     InputDefinition,
-    ON_START_BLOCK,
-    REPEAT_EVERY_BLOCK,
     SeparatorDefinition,
     ValueInputDefinition,
-    WAIT_BLOCK,
 } from "../toolbox"
 import { makeVMBase, processErrors } from "../../vm/VMgenerator"
 import BlockDomainSpecificLanguage from "./dsl"
+
+const WAIT_BLOCK = "jacdac_wait"
+const ON_START_BLOCK = "jacdac_start"
+const REPEAT_EVERY_BLOCK = "jacdac_repeat_every"
 
 const colour = "#4fbac9"
 const loopsDsl: BlockDomainSpecificLanguage = {
