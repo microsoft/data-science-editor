@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react"
+import React, { ChangeEvent, useEffect, useState } from "react"
 import {
     CharacterScreenCmd,
     CharacterScreenReg,
@@ -13,7 +13,7 @@ import LoadingProgress from "../ui/LoadingProgress"
 import useRegister from "../hooks/useRegister"
 import CmdButton from "../CmdButton"
 import ClearIcon from "@material-ui/icons/Clear"
-import SendIcon from "@material-ui/icons/Send"
+
 const useStyles = makeStyles(() =>
     createStyles({
         text: {
@@ -41,16 +41,25 @@ export default function DashboardCharacterScreen(props: DashboardServiceProps) {
         textDirectionRegister,
         props
     )
-    const [fieldMessage, setFieldMessage] = useState("")
+    const [fieldMessage, setFieldMessage] = useState(message)
     const { textPrimary, background, controlBackground } =
         useWidgetTheme("primary")
 
-    const handleClear = async () =>
+    const handleClear = async () => {
+        setFieldMessage("")
         await service.sendCmdAsync(CharacterScreenCmd.Clear)
-    const handleMessage = async () =>
-        await messageRegister.sendSetStringAsync(fieldMessage, true)
-    const handleFieldMessageChange = (ev: ChangeEvent<HTMLTextAreaElement>) =>
+    }
+    const handleFieldMessageChange = async (
+        ev: ChangeEvent<HTMLTextAreaElement>
+    ) => {
         setFieldMessage(ev.target.value)
+        await messageRegister.sendSetStringAsync(ev.target.value, true)
+    }
+
+    // set first value of message
+    useEffect(() => {
+        if (!fieldMessage && message) setFieldMessage(message)
+    }, [message])
 
     if (rows === undefined || columns === undefined) return <LoadingProgress /> // size unknown
 
@@ -114,13 +123,6 @@ export default function DashboardCharacterScreen(props: DashboardServiceProps) {
                             multiline={true}
                             rows={rows || 2}
                             fullWidth={true}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <CmdButton
-                            title="set message"
-                            onClick={handleMessage}
-                            icon={<SendIcon />}
                         />
                     </Grid>
                     <Grid item>
