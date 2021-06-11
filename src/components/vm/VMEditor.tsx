@@ -26,7 +26,7 @@ function VMEditorWithContext() {
     const { dsls, workspace, workspaceJSON, roleManager, setWarnings } =
         useContext(BlockContext)
     const [program, setProgram] = useState<VMProgram>()
-    const autoStart = true
+    const autoStart = false
     const { runner, run, cancel } = useVMRunner(roleManager, program, autoStart)
 
     useEffect(() => {
