@@ -82,12 +82,12 @@ function ChartWidget() {
     )
 }
 
-export default class ChartField extends ReactInlineField {
-    static KEY = "jacdac_field_chart"
+export default class ScatterPlotField extends ReactInlineField {
+    static KEY = "jacdac_field_scatter_plot"
     static EDITABLE = false
 
     static fromJson(options: ReactFieldJSON) {
-        return new ChartField(options)
+        return new ScatterPlotField(options)
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

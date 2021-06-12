@@ -1,4 +1,4 @@
-import ChartField from "../fields/ChartField"
+import ScatterPlotField from "../fields/ScatterPlotField"
 import DataTableField from "../fields/DataTableField"
 import {
     BlockReference,
@@ -54,7 +54,7 @@ const chartDSL: BlockDomainSpecificLanguage = {
                     type: "input_dummy",
                 },
                 {
-                    type: ChartField.KEY,
+                    type: ScatterPlotField.KEY,
                     name: "plot",
                 },
             ],
