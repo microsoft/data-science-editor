@@ -6,9 +6,46 @@ import WorkspaceContext from "../WorkspaceContext"
 import ReactInlineField from "./ReactInlineField"
 import NoServiceAlert from "./NoServiceAlert"
 import { PointerBoundary } from "./PointerBoundary"
+import useBestRegister from "../../hooks/useBestRegister"
+import { useEffect } from "react"
+import { REPORT_UPDATE } from "../../../../jacdac-ts/src/jdom/constants"
+import useBlockData from "../useBlockData"
+import JacdacContext, { JacdacContextProps } from "../../../jacdac/Context"
+import { toMap } from "../../../../jacdac-ts/src/jdom/utils"
 
+const HORIZON = 10
 function TwinWidget() {
-    const { roleService, flyout } = useContext(WorkspaceContext)
+    const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const { roleService, flyout, sourceId, sourceBlock } =
+        useContext(WorkspaceContext)
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    const { data, setData } = useBlockData<object>(sourceBlock, [])
+
+    // data collection
+    const register = useBestRegister(roleService)
+    useEffect(
+        () =>
+            register?.subscribe(REPORT_UPDATE, () => {
+                const newValue = register.unpackedValue
+                if (newValue !== undefined) {
+                    const newRow = toMap(
+                        register.fields,
+                        f => f.name,
+                        (f, i) => newValue[i]
+                    )
+                    const newData = [
+                        ...(data || []),
+                        {
+                            ...{ time: bus.timestamp / 1000 },
+                            ...newRow,
+                        },
+                    ].slice(-HORIZON)
+                    setData(newData)
+                }
+            }),
+        [register, sourceId, data]
+    )
+
     if (flyout) return null
     if (!roleService) return <NoServiceAlert />
 

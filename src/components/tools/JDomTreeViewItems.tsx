@@ -9,10 +9,7 @@ import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { JDRegister } from "../../../jacdac-ts/src/jdom/register"
 import useChange from "../../jacdac/useChange"
 import { isRegister, isEvent } from "../../../jacdac-ts/src/jdom/spec"
-import {
-    useRegisterHumanValue,
-    useRegisterUnpackedValue,
-} from "../../jacdac/useRegisterValue"
+import { useRegisterHumanValue } from "../../jacdac/useRegisterValue"
 import useEventCount from "../../jacdac/useEventCount"
 import DeviceActions from "../DeviceActions"
 import {
@@ -21,7 +18,6 @@ import {
     SRV_CONTROL,
     SRV_LOGGER,
     GET_ATTEMPT,
-    BaseReg,
     SERVICE_NODE_NAME,
     REGISTER_NODE_NAME,
     EVENT_NODE_NAME,
@@ -44,6 +40,7 @@ import {
 import useMediaQueries from "../hooks/useMediaQueries"
 import useRegister from "../hooks/useRegister"
 import useInstanceName from "../services/useInstanceName"
+import useBestRegister from "../hooks/useBestRegister"
 
 export interface JDomTreeViewProps extends StyledTreeViewProps {
     deviceFilter?: (devices: JDDevice) => boolean
@@ -184,7 +181,7 @@ export function ServiceTreeItem(
     const { service } = props
     const { isMixin, name, id } = useMemo(() => service, [service])
     const instanceName = useInstanceName(service)
-    const readingRegister = useRegister(service, SystemReg.Reading)
+    const readingRegister = useBestRegister(service)
     const reading = useRegisterHumanValue(readingRegister)
 
     const labelText = name + (instanceName ? ` ${instanceName}` : "")

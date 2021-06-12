@@ -55,8 +55,10 @@ const toolsDSL: BlockDomainSpecificLanguage = {
             colour,
             inputsInline: false,
             tooltip: `Twin of the selected service`,
+            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             helpUrl: "",
             template: "meta",
+            transformData: identityTransformData,
         },
         {
             kind: "block",
