@@ -27,6 +27,8 @@ function LineChartWidget() {
         yScale: { type: "linear", min: "auto", max: "auto" },
         axisTop: null,
         axisRight: null,
+        enablePoints: false,
+        isInteractive: false,
         axisBottom: {
             tickSize: 5,
             tickPadding: 5,
