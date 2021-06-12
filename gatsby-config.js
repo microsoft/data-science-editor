@@ -15,6 +15,7 @@ module.exports = {
         PRESERVE_WEBPACK_CACHE: true,
     },
     plugins: [
+        `gatsby-plugin-no-sourcemaps`,
         `gatsby-transformer-plaintext`,
         {
             resolve: `gatsby-source-filesystem`,
