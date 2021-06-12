@@ -14,6 +14,7 @@ const AVATAR_SIZE = 64
 const LAZY_SIZE = 96
 
 async function createServicePages(graphql, actions, reporter) {
+    console.log(`generating service pages`)
     const { createPage, createRedirect } = actions
     const result = await graphql(`
         {
@@ -87,6 +88,7 @@ async function createServicePages(graphql, actions, reporter) {
 }
 
 async function createDevicePages(graphql, actions, reporter) {
+    console.log(`generating device pages`)
     const { createPage, createRedirect } = actions
     const result = await graphql(`
         {
@@ -199,6 +201,7 @@ async function createDevicePages(graphql, actions, reporter) {
 }
 
 async function createSpecPages(graphql, actions, reporter) {
+    console.log(`generating spec pages`)
     const { createPage } = actions
     const result = await graphql(`
         {
@@ -351,6 +354,7 @@ exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
 
 // generate a full list of pages for compliance
 exports.onPostBuild = async ({ graphql }) => {
+    console.log(`compliance step`)
     const { data } = await graphql(`
         {
             pages: allSitePage {
