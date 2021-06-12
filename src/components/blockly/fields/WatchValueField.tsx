@@ -15,7 +15,7 @@ function WatchValueWidget() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { runner, sourceId, sourceBlock } = useContext(WorkspaceContext)
     const { data, setData } = useBlockData<{
-        timestamp: number
+        time: number
         value: number
     }>(sourceBlock, [])
     const theme = useTheme()
@@ -34,7 +34,7 @@ function WatchValueWidget() {
                     if (!isNaN(newValue)) {
                         const newData = [
                             ...(data || []),
-                            { timestamp: bus.timestamp, value: newValue },
+                            { time: bus.timestamp / 1000, value: newValue },
                         ].slice(-HORIZON)
                         setData(newData)
                     }

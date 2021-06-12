@@ -23,6 +23,7 @@ function ChartWidget() {
     renaming[x] = "x"
     renaming[y] = "y"
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // todo handle time
     let index = 0
     const tidied: Datum[] = data
         ? (tidy(
@@ -68,6 +69,9 @@ function ChartWidget() {
     )
     if (chartProps) chartProps.data = series
     if (!chartProps?.data?.length) return null
+
+    chartProps.axisBottom.legend = x
+    chartProps.axisLeft.legend = y
 
     return (
         <div style={{ background: "#fff", borderRadius: "0.5rem" }}>
