@@ -11,8 +11,14 @@ export default class DataColumnChooserField extends FieldDropdown {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    constructor(options?: any) {
-        super([["", ""]], undefined, options)
+    // the first argument is a dummy and never used
+    constructor(options?: unknown) {
+        super(() => [["", ""]], undefined, options)
+    }
+
+    fromXml(fieldElement: Element) {
+        console.log("fromXml", fieldElement)
+        this.setValue(fieldElement.textContent)
     }
 
     getOptions(): string[][] {
@@ -21,7 +27,12 @@ export default class DataColumnChooserField extends FieldDropdown {
         const data = services?.data
         const headers = tidyHeaders(data)
         const options = headers?.map(h => [h, h]) || []
-        console.log({ options })
-        return options.length < 1 ? [["", ""]] : options
+        const value = this.getValue()
+        return options.length < 1 ? [[value, value]] : options
+    }
+
+    doClassValidation_(newValue?: string) {
+        console.log(`validate`, { newValue })
+        return newValue
     }
 }
