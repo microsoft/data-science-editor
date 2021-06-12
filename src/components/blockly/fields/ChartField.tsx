@@ -1,17 +1,13 @@
-import React, { useContext } from "react"
+import React, { lazy, useContext } from "react"
 import WorkspaceContext from "../WorkspaceContext"
 import { ReactFieldJSON } from "./ReactField"
 import ReactInlineField from "./ReactInlineField"
-import {
-    ScatterPlot,
-    ScatterPlotSvgProps,
-    Serie,
-    Datum,
-} from "@nivo/scatterplot"
 import useBlockChartProps from "../useBlockChartProps"
 import useBlockData from "../useBlockData"
 import { tidy, select, rename, mutate } from "@tidyjs/tidy"
 import { PointerBoundary } from "./PointerBoundary"
+import Suspense from "../../ui/Suspense"
+const ScatterPlot = lazy(() => import("./ScatterPlot"))
 
 function ChartWidget() {
     const { sourceBlock } = useContext(WorkspaceContext)
@@ -25,7 +21,7 @@ function ChartWidget() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     // todo handle time
     let index = 0
-    const tidied: Datum[] = data
+    const tidied: { x: number; y: number }[] = data
         ? (tidy(
               data,
               mutate({ index: () => index++ }),
@@ -33,40 +29,38 @@ function ChartWidget() {
               rename(renaming)
           ) as any)
         : []
-    const series: Serie[] = [
+    const series: { id: string; data: { x: number; y: number }[] }[] = [
         {
             id: "data",
             data: tidied,
         },
     ]
-    const { chartProps } = useBlockChartProps<ScatterPlotSvgProps>(
-        sourceBlock,
-        {
-            colors: { scheme: "category10" },
-            data: series,
-            margin: { top: 8, right: 8, bottom: 38, left: 64 },
-            xScale: { type: "linear", min: "auto", max: "auto" },
-            yScale: { type: "linear", min: "auto", max: "auto" },
-            axisTop: null,
-            axisRight: null,
-            axisBottom: {
-                tickSize: 5,
-                tickPadding: 5,
-                tickRotation: 0,
-                legend: x,
-                legendPosition: "middle",
-                legendOffset: 34,
-            },
-            axisLeft: {
-                tickSize: 5,
-                tickPadding: 5,
-                tickRotation: 0,
-                legend: y,
-                legendPosition: "middle",
-                legendOffset: -32,
-            },
-        }
-    )
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { chartProps } = useBlockChartProps<any>(sourceBlock, {
+        colors: { scheme: "category10" },
+        data: series,
+        margin: { top: 8, right: 8, bottom: 38, left: 64 },
+        xScale: { type: "linear", min: "auto", max: "auto" },
+        yScale: { type: "linear", min: "auto", max: "auto" },
+        axisTop: null,
+        axisRight: null,
+        axisBottom: {
+            tickSize: 5,
+            tickPadding: 5,
+            tickRotation: 0,
+            legend: x,
+            legendPosition: "middle",
+            legendOffset: 34,
+        },
+        axisLeft: {
+            tickSize: 5,
+            tickPadding: 5,
+            tickRotation: 0,
+            legend: y,
+            legendPosition: "middle",
+            legendOffset: -32,
+        },
+    })
     if (chartProps) chartProps.data = series
     if (!chartProps?.data?.length) return null
 
@@ -76,7 +70,9 @@ function ChartWidget() {
     return (
         <div style={{ background: "#fff", borderRadius: "0.5rem" }}>
             <PointerBoundary>
-                <ScatterPlot width={400} height={400} {...chartProps} />
+                <Suspense>
+                    <ScatterPlot width={400} height={400} {...chartProps} />
+                </Suspense>
             </PointerBoundary>
         </div>
     )
