@@ -8,11 +8,16 @@ import { WatchValueType } from "../../../../jacdac-ts/src/vm/runner"
 import { VM_WATCH_CHANGE } from "../../../../jacdac-ts/src/vm/events"
 import { roundWithPrecision } from "../../../../jacdac-ts/src/jdom/utils"
 import useBlockData from "../useBlockData"
+import JacdacContext, { JacdacContextProps } from "../../../jacdac/Context"
 
 const HORIZON = 10
 function WatchValueWidget() {
+    const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { runner, sourceId, sourceBlock } = useContext(WorkspaceContext)
-    const { data, setData } = useBlockData<{ value: number }>(sourceBlock, [])
+    const { data, setData } = useBlockData<{
+        timestamp: number
+        value: number
+    }>(sourceBlock, [])
     const theme = useTheme()
 
     // track changes
@@ -29,7 +34,7 @@ function WatchValueWidget() {
                     if (!isNaN(newValue)) {
                         const newData = [
                             ...(data || []),
-                            { value: newValue },
+                            { timestamp: bus.timestamp, value: newValue },
                         ].slice(-HORIZON)
                         setData(newData)
                     }
