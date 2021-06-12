@@ -63,7 +63,8 @@ function ChartWidget() {
         },
     })
     if (chartProps) chartProps.data = series
-    if (!chartProps?.data?.length) return null
+    const hasData = !!chartProps?.data?.[0].data?.length
+    if (!hasData) return null
 
     chartProps.axisBottom.legend = x
     chartProps.axisLeft.legend = y
