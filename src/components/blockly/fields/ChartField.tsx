@@ -7,6 +7,7 @@ import useBlockData from "../useBlockData"
 import { tidy, select, rename, mutate } from "@tidyjs/tidy"
 import { PointerBoundary } from "./PointerBoundary"
 import Suspense from "../../ui/Suspense"
+import { NoSsr } from "@material-ui/core"
 const ScatterPlot = lazy(() => import("./ScatterPlot"))
 
 function ChartWidget() {
@@ -68,13 +69,15 @@ function ChartWidget() {
     chartProps.axisLeft.legend = y
 
     return (
-        <div style={{ background: "#fff", borderRadius: "0.5rem" }}>
-            <PointerBoundary>
-                <Suspense>
-                    <ScatterPlot width={400} height={400} {...chartProps} />
-                </Suspense>
-            </PointerBoundary>
-        </div>
+        <NoSsr>
+            <div style={{ background: "#fff", borderRadius: "0.5rem" }}>
+                <PointerBoundary>
+                    <Suspense>
+                        <ScatterPlot width={400} height={400} {...chartProps} />
+                    </Suspense>
+                </PointerBoundary>
+            </div>
+        </NoSsr>
     )
 }
 
