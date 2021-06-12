@@ -4,50 +4,11 @@ import { ReactFieldJSON } from "./ReactField"
 import ReactInlineField from "./ReactInlineField"
 import useBlockChartProps from "../useBlockChartProps"
 import useBlockData from "../useBlockData"
-import { tidy, select, rename, mutate } from "@tidyjs/tidy"
 import { PointerBoundary } from "./PointerBoundary"
 import Suspense from "../../ui/Suspense"
 import { NoSsr } from "@material-ui/core"
-import { toMap } from "../../../../jacdac-ts/src/jdom/utils"
-import { values } from "core-js/library/js/array"
+import { tidyToNivo } from "./nivo"
 const ScatterPlot = lazy(() => import("./ScatterPlot"))
-
-// eslint-disable-next-line @typescript-eslint/ban-types
-function toNivo(
-    data: object[],
-    columns: string[],
-    toColumns: string[]
-): {
-    series: any
-    labels: string[]
-} {
-    const headers = Object.keys(data?.[0] || {})
-    let k = 0
-    const renaming = toMap(
-        columns,
-        (c, i) => columns[i] || headers?.[k++],
-        (c, i) => toColumns[i]
-    )
-    const labels = Object.keys(renaming)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    // todo handle time
-    let index = 0
-    const tidied: { x: number; y: number }[] = data
-        ? (tidy(
-              data,
-              mutate({ index: () => index++ }),
-              select(labels),
-              rename(renaming)
-          ) as any)
-        : []
-    const series: { id: string; data: { x: number; y: number }[] }[] = [
-        {
-            id: "data",
-            data: tidied,
-        },
-    ]
-    return { series, labels }
-}
 
 function ChartWidget() {
     const { sourceBlock } = useContext(WorkspaceContext)
@@ -56,7 +17,7 @@ function ChartWidget() {
     // need to map data to nivo
     const x = sourceBlock?.getFieldValue("x")
     const y = sourceBlock?.getFieldValue("y")
-    const { series, labels } = toNivo(data, [x, y], ["x", "y"])
+    const { series, labels } = tidyToNivo(data, [x, y], ["x", "y"])
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { chartProps } = useBlockChartProps<any>(sourceBlock, {
         colors: { scheme: "category10" },
