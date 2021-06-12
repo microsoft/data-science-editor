@@ -107,7 +107,7 @@
     "clean": "node node_modules/gatsby/cli.js clean",
     "blocklymedia": "mkdir -p static/blockly && cp -r -f node_modules/blockly/media static/blockly",
     "predistdocs": "yarn clean && yarn blocklymedia && cd jacdac-ts/tools && node ./prepare.js",
-    "distdocs": "npx process-top ./node_modules/gatsby/cli.js build --prefix-paths --no-uglify",
+    "distdocs": "node ./node_modules/gatsby/cli.js build --prefix-paths --no-uglify",
     "tools": "npx http-server . -c-1",
     "develop": "node node_modules/gatsby/cli.js develop",
     "docsbuild": "node node_modules/gatsby/cli.js build",
