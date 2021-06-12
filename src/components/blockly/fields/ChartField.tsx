@@ -67,7 +67,7 @@ function ChartWidget() {
         }
     )
     if (chartProps) chartProps.data = series
-    if (!chartProps?.data) return null
+    if (!chartProps?.data?.length) return null
 
     return (
         <div style={{ background: "#fff", borderRadius: "0.5rem" }}>
