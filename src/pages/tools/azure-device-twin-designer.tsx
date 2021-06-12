@@ -7,16 +7,13 @@ import DeleteIcon from "@material-ui/icons/Delete"
 import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec"
 import AddServiceIconButton from "../../components/AddServiceIconButton"
 import ServiceSpecificationSelect from "../../components/ServiceSpecificationSelect"
-import {
-    DTDL_CONTEXT,
-    escapeName,
-    serviceSpecificationToComponent,
-} from "../../../jacdac-ts/src/azure-iot/dtdl"
+import { DTDL_CONTEXT, escapeName } from "../../../jacdac-ts/src/azure-iot/dtdl"
 import IconButtonWithTooltip from "../../components/ui/IconButtonWithTooltip"
 import Snippet from "../../components/ui/Snippet"
 import PaperBox from "../../components/ui/PaperBox"
 import { useId } from "react-use-id-hook"
 import { Link } from "gatsby-theme-material-ui"
+import { serviceSpecificationToComponent } from "../../../jacdac-ts/src/azure-iot/dtdlspec"
 
 interface DigitalTwinComponent {
     name: string
@@ -45,9 +42,8 @@ function ComponentRow(props: {
         onUpdate()
     }
     const handleSetService = (serviceClass: number) => {
-        component.service = serviceSpecificationFromClassIdentifier(
-            serviceClass
-        )
+        component.service =
+            serviceSpecificationFromClassIdentifier(serviceClass)
         onUpdate()
     }
     const handleComponentDelete = () => {
