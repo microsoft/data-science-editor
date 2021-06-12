@@ -71,10 +71,10 @@ function ChartWidget() {
 
     return (
         <NoSsr>
-            <div style={{ background: "#fff", borderRadius: "0.5rem" }}>
+            <div style={{ background: "#fff", borderRadius: "0.25rem" }}>
                 <PointerBoundary>
                     <Suspense>
-                        <ScatterPlot width={400} height={400} {...chartProps} />
+                        <ScatterPlot width={388} height={240} {...chartProps} />
                     </Suspense>
                 </PointerBoundary>
             </div>

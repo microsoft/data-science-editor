@@ -3,16 +3,21 @@ import { ReactFieldJSON } from "./ReactField"
 import WorkspaceContext from "../WorkspaceContext"
 import ReactInlineField from "./ReactInlineField"
 import useBlockData from "../useBlockData"
-import { createStyles, makeStyles, Theme } from "@material-ui/core"
+import { createStyles, makeStyles } from "@material-ui/core"
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
     createStyles({
+        root: {
+            paddingLeft: "0.5rem",
+            paddingRight: "0.5rem",
+            background: "#fff",
+            color: "#000",
+            borderRadius: "0.25rem",
+        },
         table: {
-            padding: 0,
             margin: 0,
             fontSize: "0.8rem",
             lineHeight: "1rem",
-            color: theme.palette.text.primary,
 
             "& th": {
                 fontWeight: "normal",
@@ -36,24 +41,26 @@ function DataTableWidget() {
     const columns = Object.keys(data[0] || {})
 
     return (
-        <table className={classes.table}>
-            <thead>
-                <tr>
-                    {columns.map(c => (
-                        <th key={c}>{c}</th>
-                    ))}
-                </tr>
-            </thead>
-            <tbody>
-                {data.map((r, i) => (
-                    <tr key={r.id || i}>
+        <div className={classes.root}>
+            <table className={classes.table}>
+                <thead>
+                    <tr>
                         {columns.map(c => (
-                            <td key={c}>{r[c]}</td>
+                            <th key={c}>{c}</th>
                         ))}
                     </tr>
-                ))}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {data.map((r, i) => (
+                        <tr key={r.id || i}>
+                            {columns.map(c => (
+                                <td key={c}>{r[c]}</td>
+                            ))}
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
     )
 }
 
