@@ -3,14 +3,13 @@ import useChange from "../../jacdac/useChange"
 import { Block } from "blockly"
 import { useCallback, useEffect } from "react"
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export default function useBlockData<T = object>(block: Block, initialValue?: T[]) {
+export default function useBlockChartProps<T>(block: Block, initialChartProps?: T) {
     const services = (block as unknown as BlockWithServices)?.jacdacServices
     // data on the current node
-    const data = useChange<BlockServices, T[]>(services, _ => _?.data)
-    const setData = useCallback(
+    const chartProps = useChange<BlockServices, T>(services, _ => _?.chartProps)
+    const setChartProps = useCallback(
         (value: T[]) => {
-            if (services) services.data = value
+            if (services) services.chartProps = value
         },
         [services]
     )
@@ -19,11 +18,11 @@ export default function useBlockData<T = object>(block: Block, initialValue?: T[
     useEffect(() => {
         if (
             services &&
-            initialValue !== undefined &&
-            services.data === undefined
+            initialChartProps !== undefined &&
+            services.chartProps === undefined
         )
-            services.data = initialValue
+            services.chartProps = initialChartProps
     }, [services])
 
-    return { data, setData }
+    return { chartProps, setChartProps }
 }

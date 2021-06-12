@@ -12,6 +12,7 @@ import WatchValueField from "./WatchValueField"
 import LogViewField from "./LogViewField"
 import VariablesField from "./VariablesFields"
 import DataTableField from "./DataTableField"
+import ChartField from "./ChartField"
 
 let reactFieldShadows: BlockDefinition[]
 export function registerFields() {
@@ -41,7 +42,8 @@ export function registerFields() {
         WatchValueField,
         LogViewField,
         VariablesField,
-        DataTableField
+        DataTableField,
+        ChartField
     ]
     fieldTypes.forEach(registerType)
 }

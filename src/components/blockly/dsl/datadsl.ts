@@ -37,7 +37,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            transformData: async (b: BlockSvg, data: any[]) => {
+            transformData: (b: BlockSvg, data: any[]) => {
                 const column = b.getFieldValue("column")
                 const order = b.getFieldValue("order")
                 const descending = order === "descending"

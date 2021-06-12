@@ -63,7 +63,7 @@ export class BlockServices extends JDEventSource {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private _data: any
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private _chart: any
+    private _chartProps: any
 
     get data() {
         return this._data
@@ -76,13 +76,13 @@ export class BlockServices extends JDEventSource {
         }
     }
 
-    get chart() {
-        return this._chart
+    get chartProps() {
+        return this._chartProps
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    set chart(value: any) {
-        if (this._chart !== value) {
-            this._chart = value
+    set chartProps(value: any) {
+        if (this._chartProps !== value) {
+            this._chartProps = value
             this.emit(CHANGE)
         }
     }
