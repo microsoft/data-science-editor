@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import React, { useCallback, useContext, useState } from "react"
 import { makeStyles, createStyles, useTheme } from "@material-ui/core"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 
@@ -15,13 +15,13 @@ export function useTrendChartData(maxLength = 25) {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const [trendData, setTrendData] = useState<[number, number][]>([])
 
-    const addTrendValue = (value: number) => {
+    const addTrendValue = useCallback((value: number) => {
         if (isNaN(value)) return
 
         const { timestamp } = bus
         const entry: [number, number] = [timestamp, value]
         setTrendData(trendData => [...trendData.slice(-(maxLength - 1)), entry])
-    }
+    }, [])
 
     return {
         trendData,

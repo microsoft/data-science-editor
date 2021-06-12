@@ -7,6 +7,7 @@ import VariablesField from "../fields/VariablesFields"
 import WatchValueField from "../fields/WatchValueField"
 import {
     BlockReference,
+    DATA_SCIENCE_STATEMENT_TYPE,
     InputDefinition,
     LabelDefinition,
     VariableInputDefinition,
@@ -104,7 +105,7 @@ const toolsDSL: BlockDomainSpecificLanguage = {
             inputsInline: false,
             tooltip: `Watch variables values`,
             helpUrl: "",
-            template: "meta"
+            template: "meta",
         },
         {
             kind: "block",
@@ -124,6 +125,8 @@ const toolsDSL: BlockDomainSpecificLanguage = {
             inputsInline: true,
             tooltip: `Watch a value in the editor`,
             helpUrl: "",
+            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            transformData: (b, data) => data,
         },
         {
             kind: "block",

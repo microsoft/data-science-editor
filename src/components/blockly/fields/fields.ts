@@ -11,6 +11,7 @@ import JDomTreeField from "./JDomTreeField"
 import WatchValueField from "./WatchValueField"
 import LogViewField from "./LogViewField"
 import VariablesField from "./VariablesFields"
+import DataTableField from "./DataTableField"
 
 let reactFieldShadows: BlockDefinition[]
 export function registerFields() {
@@ -40,6 +41,7 @@ export function registerFields() {
         WatchValueField,
         LogViewField,
         VariablesField,
+        DataTableField
     ]
     fieldTypes.forEach(registerType)
 }

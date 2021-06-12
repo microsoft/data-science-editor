@@ -1,9 +1,8 @@
 import Blockly from "blockly"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import { SMap, toMap } from "../../../jacdac-ts/src/jdom/utils"
-import BlockDomainSpecificLanguage from "./dsl/dsl"
+import BlockDomainSpecificLanguage, { resolveDsl } from "./dsl/dsl"
 import ReactField from "./fields/ReactField"
-import { resolveServiceBlockDefinition } from "./toolbox"
 
 export interface VariableJSON {
     // Boolean, Number, String, or service short id
@@ -134,9 +133,7 @@ export function domToJSON(
             // allow DSL to handle conversion
             let value = builtins[block.type]?.(block)
             if (value === undefined) {
-                const definition = resolveServiceBlockDefinition(type)
-                const dsl =
-                    definition?.dsl && dsls.find(d => d.id === definition.dsl)
+                const dsl = resolveDsl(dsls, type)
                 value = dsl?.blockToValue?.(block)
             }
             const element: BlockJSON = {

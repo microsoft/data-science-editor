@@ -64,7 +64,7 @@ import {
     NUMBER_TYPE,
     OptionsInputDefinition,
     RegisterBlockDefinition,
-    resolveServiceBlockDefinition,
+    resolveBlockDefinition,
     ServiceBlockDefinition,
     STRING_TYPE,
     ValueInputDefinition,
@@ -892,7 +892,7 @@ export class ServicesBlockDomainSpecificLanguage
             source?.blocks
                 ?.map(block => ({
                     block,
-                    definition: resolveServiceBlockDefinition(block.type),
+                    definition: resolveBlockDefinition(block.type),
                 }))
                 .filter(({ definition }) => definition?.template === "event")
                 .map(({ block, definition }) => {

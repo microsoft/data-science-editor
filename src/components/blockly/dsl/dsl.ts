@@ -7,9 +7,11 @@ import { BlockJSON, WorkspaceJSON } from "../jsongenerator"
 import {
     BlockDefinition,
     ContentDefinition,
+    resolveBlockDefinition,
     ServiceBlockDefinition,
 } from "../toolbox"
 import { CmdWithErrors, ExpressionWithErrors } from "../../vm/VMgenerator"
+import { BlockWithServices } from "../WorkspaceContext"
 
 export interface CreateBlocksOptions {
     theme: Theme
@@ -74,6 +76,11 @@ export default interface BlockDomainSpecificLanguage {
      */
     blockToValue?: (block: Block) => string | number | boolean
 
+    /**
+     * Allow to register for block changes
+     */
+    onBlockCreated?: (block: BlockWithServices) => void
+
     // VM support
     compileEventToVM?: (
         options: CompileEventToVMOptions
@@ -84,4 +91,16 @@ export default interface BlockDomainSpecificLanguage {
     compileExpressionToVM?: (
         options: CompileExpressionToVMOptions
     ) => ExpressionWithErrors
+}
+
+export function resolveDsl(dsls: BlockDomainSpecificLanguage[], type: string) {
+    const dsl = dsls?.find(dsl => dsl.types?.indexOf(type) > -1)
+    if (dsl) return dsl
+
+    const { dsl: dslName } = resolveBlockDefinition(type) || {}
+    if (!dslName) {
+        console.warn(`unknown dsl for ${type}`)
+        return undefined
+    }
+    return dsls?.find(dsl => dsl.id === dslName)
 }

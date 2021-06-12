@@ -8,14 +8,13 @@ import {
     VMError,
 } from "../../../jacdac-ts/src/vm/ir"
 import { toIdentifier, RoleEvent } from "../../../jacdac-ts/src/vm/compile"
-
-import { assert } from "../../../jacdac-ts/src/jdom/utils"
 import {
     BUILTIN_TYPES,
-    resolveServiceBlockDefinition,
+    resolveBlockDefinition,
+    ServiceBlockDefinition,
 } from "../blockly/toolbox"
 import Blockly from "blockly"
-import BlockDomainSpecificLanguage from "../blockly/dsl/dsl"
+import BlockDomainSpecificLanguage, { resolveDsl } from "../blockly/dsl/dsl"
 
 export interface ExpressionWithErrors {
     expr: jsep.Expression
@@ -52,18 +51,6 @@ export default function workspaceJSONToVMProgram(
 
     if (!workspace) return undefined
 
-    const resolveDsl = (type: string) => {
-        const dsl = dsls?.find(dsl => dsl.types?.indexOf(type) > -1)
-        if (dsl) return dsl
-
-        const { dsl: dslName } = resolveServiceBlockDefinition(type) || {}
-        if (!dslName) {
-            console.warn(`unknown dsl for ${type}`)
-            return undefined
-        }
-        return dsls?.find(dsl => dsl.id === dslName)
-    }
-
     const roles: VMRole[] = workspace.variables
         .filter(v => BUILTIN_TYPES.indexOf(v.type) < 0)
         .map(v => ({ role: v.name, serviceShortId: v.type }))
@@ -91,7 +78,7 @@ export default function workspaceJSONToVMProgram(
                     raw: value + "",
                 }
 
-            const dsl = resolveDsl(type)
+            const dsl = resolveDsl(dsls, type)
             if (!dsl) {
                 console.warn(`unknown block ${type}`, {
                     type,
@@ -104,7 +91,8 @@ export default function workspaceJSONToVMProgram(
                     message: `unknown block ${type}`,
                 })
             } else {
-                const definition = resolveServiceBlockDefinition(type)
+                const definition =
+                    resolveBlockDefinition<ServiceBlockDefinition>(type)
                 const res = dsl.compileExpressionToVM?.({
                     event: ev,
                     definition,
@@ -131,7 +119,7 @@ export default function workspaceJSONToVMProgram(
                     sourceId: block.id,
                     message: `unknown block ${type}`,
                 })
-                console.warn(`unsupported block ${type}`, {
+                console.warn(`unsupported expression block ${type}`, {
                     ev,
                     block,
                     definition,
@@ -217,9 +205,12 @@ export default function workspaceJSONToVMProgram(
             }
             // more builts
             default: {
-                const dsl = resolveDsl(type)
+                const dsl = resolveDsl(dsls, type)
                 if (dsl) {
-                    const definition = resolveServiceBlockDefinition(type)
+                    const definition =
+                        resolveBlockDefinition<ServiceBlockDefinition>(type)
+                    const template = definition?.template
+                    if (template === "meta") return undefined
                     const dslRes = dsl.compileCommandToVM?.({
                         event,
                         block,
@@ -231,13 +222,13 @@ export default function workspaceJSONToVMProgram(
                         return dslRes
                     }
                 }
-                console.warn(`unsupported block ${type}`, { block })
+                console.warn(`unsupported command block ${type}`, { block })
                 return {
                     cmd: undefined,
                     errors: [
                         {
                             sourceId: block.id,
-                            message: `unsupported block ${type}`,
+                            message: `unsupported command block ${type}`,
                         },
                     ],
                 }
@@ -260,9 +251,9 @@ export default function workspaceJSONToVMProgram(
             ?.filter(child => !!child)
             .forEach(child => {
                 try {
-                    const { cmd, errors } = blockToCommand(event, child)
+                    const { cmd, errors } = blockToCommand(event, child) || {}
                     if (cmd) handler.commands.push(cmd)
-                    errors.forEach(e => handler.errors.push(e))
+                    errors?.forEach(e => handler.errors.push(e))
                 } catch (e) {
                     if (e instanceof EmptyExpression) {
                         handler.commands.push({
@@ -286,8 +277,9 @@ export default function workspaceJSONToVMProgram(
             let topMeta = false
 
             try {
-                const dsl = resolveDsl(type)
-                const definition = resolveServiceBlockDefinition(type)
+                const dsl = resolveDsl(dsls, type)
+                const definition =
+                    resolveBlockDefinition<ServiceBlockDefinition>(type)
                 const { expression, errors, event, meta } =
                     dsl?.compileEventToVM?.({
                         block: top,
@@ -310,7 +302,7 @@ export default function workspaceJSONToVMProgram(
                             topErrors = [
                                 {
                                     sourceId: top.id,
-                                    message: `unsupported block ${type}`,
+                                    message: `unsupported handler block ${type}`,
                                 },
                             ]
                             console.debug(
