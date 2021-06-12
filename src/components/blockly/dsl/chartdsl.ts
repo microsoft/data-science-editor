@@ -62,7 +62,8 @@ const chartDSL: BlockDomainSpecificLanguage = {
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             colour,
             template: "meta",
-            inputsInline: true,
+            inputsInline: false,
+            transformData: identityTransformData,
         },
     ],
 
