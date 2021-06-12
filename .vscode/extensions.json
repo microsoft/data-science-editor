@@ -2,6 +2,7 @@
     "recommendations": [
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
-        "silvenon.mdx"
+        "silvenon.mdx",
+        "wix.vscode-import-cost"
     ]
 }
