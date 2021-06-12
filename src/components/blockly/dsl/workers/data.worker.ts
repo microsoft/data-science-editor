@@ -24,7 +24,11 @@ const handlers: { [index: string]: (props: any) => object[] } = {
 export async function transformData(message: DataMessage): Promise<object[]> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
-    // TODO move to web worker
-    const handler = handlers[message.type]
-    return handler?.(message)
+    try {
+        // TODO move to web worker
+        const handler = handlers[message.type]
+        return handler?.(message)
+    } catch (e) {
+        console.debug(e)
+    }
 }
