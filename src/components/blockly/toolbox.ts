@@ -1,5 +1,5 @@
 import { SMap } from "../../../jacdac-ts/src/jdom/utils"
-import Blockly, { BlockSvg } from "blockly"
+import Blockly, { Block, BlockSvg } from "blockly"
 
 export const NEW_PROJET_XML = '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>'
 
@@ -101,9 +101,13 @@ export interface BlockDefinition extends BlockReference {
     vm?: (...args: any[]) => any
 
     // data transformation
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    transformData?: (block: BlockSvg, data: any[]) => Promise<any[]>
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    transformData?: (block: BlockSvg, data: object[]) => Promise<object[]>
 }
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+export const identityTransformData = async (block: Block, data: object[]) =>
+    data
 
 export interface ServiceBlockDefinition extends BlockDefinition {
     template: BlockTemplate

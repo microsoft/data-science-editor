@@ -4,6 +4,7 @@ import {
     CategoryDefinition,
     DATA_SCIENCE_STATEMENT_TYPE,
     DummyInputDefinition,
+    identityTransformData,
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
 
@@ -31,7 +32,7 @@ const chartDSL: BlockDomainSpecificLanguage = {
             colour,
             template: "meta",
             inputsInline: false,
-            transformData: async (b, data) => data,
+            transformData: identityTransformData,
         },
     ],
 

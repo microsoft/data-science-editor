@@ -8,6 +8,7 @@ import WatchValueField from "../fields/WatchValueField"
 import {
     BlockReference,
     DATA_SCIENCE_STATEMENT_TYPE,
+    identityTransformData,
     InputDefinition,
     LabelDefinition,
     VariableInputDefinition,
@@ -126,7 +127,7 @@ const toolsDSL: BlockDomainSpecificLanguage = {
             tooltip: `Watch a value in the editor`,
             helpUrl: "",
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            transformData: async (b, data) => data,
+            transformData: identityTransformData,
         },
         {
             kind: "block",

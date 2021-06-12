@@ -1,4 +1,3 @@
-import { arrange, desc, tidy } from "@tidyjs/tidy"
 import { BlockSvg } from "blockly"
 import {
     BlockReference,
@@ -8,6 +7,7 @@ import {
     TextInputDefinition,
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
+import { ArrangeMessage, transformData } from "./workers/data.worker"
 
 const DATA_SCIENCE_ARRANGE_BLOCK = "data_science_arrange"
 
@@ -40,9 +40,13 @@ const dataDsl: BlockDomainSpecificLanguage = {
             transformData: async (b: BlockSvg, data: any[]) => {
                 const column = b.getFieldValue("column")
                 const order = b.getFieldValue("order")
-                const sort = order === "descending" ? desc(column) : column
-                const newData = tidy(data, arrange(sort))
-                return newData
+                const descending = order === "descending"
+                return transformData(<ArrangeMessage>{
+                    type: "arrange",
+                    column,
+                    descending,
+                    data,
+                })
             },
             template: "meta",
         },
