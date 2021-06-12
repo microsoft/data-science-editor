@@ -8,17 +8,27 @@ import { tidy, select, rename, mutate } from "@tidyjs/tidy"
 import { PointerBoundary } from "./PointerBoundary"
 import Suspense from "../../ui/Suspense"
 import { NoSsr } from "@material-ui/core"
+import { toMap } from "../../../../jacdac-ts/src/jdom/utils"
+import { values } from "core-js/library/js/array"
 const ScatterPlot = lazy(() => import("./ScatterPlot"))
 
-function ChartWidget() {
-    const { sourceBlock } = useContext(WorkspaceContext)
-    const { data } = useBlockData(sourceBlock)
-
-    const x = sourceBlock?.getFieldValue("x")
-    const y = sourceBlock?.getFieldValue("y")
-    const renaming = {}
-    renaming[x] = "x"
-    renaming[y] = "y"
+// eslint-disable-next-line @typescript-eslint/ban-types
+function toNivo(
+    data: object[],
+    columns: string[],
+    toColumns: string[]
+): {
+    series: any
+    labels: string[]
+} {
+    const headers = Object.keys(data?.[0] || {})
+    let k = 0
+    const renaming = toMap(
+        columns,
+        (c, i) => columns[i] || headers?.[k++],
+        (c, i) => toColumns[i]
+    )
+    const labels = Object.keys(renaming)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     // todo handle time
     let index = 0
@@ -26,7 +36,7 @@ function ChartWidget() {
         ? (tidy(
               data,
               mutate({ index: () => index++ }),
-              select([x, y]),
+              select(labels),
               rename(renaming)
           ) as any)
         : []
@@ -36,6 +46,17 @@ function ChartWidget() {
             data: tidied,
         },
     ]
+    return { series, labels }
+}
+
+function ChartWidget() {
+    const { sourceBlock } = useContext(WorkspaceContext)
+    const { data } = useBlockData(sourceBlock)
+
+    // need to map data to nivo
+    const x = sourceBlock?.getFieldValue("x")
+    const y = sourceBlock?.getFieldValue("y")
+    const { series, labels } = toNivo(data, [x, y], ["x", "y"])
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { chartProps } = useBlockChartProps<any>(sourceBlock, {
         colors: { scheme: "category10" },
@@ -66,8 +87,8 @@ function ChartWidget() {
     const hasData = !!chartProps?.data?.[0].data?.length
     if (!hasData) return null
 
-    chartProps.axisBottom.legend = x
-    chartProps.axisLeft.legend = y
+    chartProps.axisBottom.legend = labels[0]
+    chartProps.axisLeft.legend = labels[1]
 
     return (
         <NoSsr>
