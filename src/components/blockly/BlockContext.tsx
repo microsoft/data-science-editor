@@ -86,13 +86,20 @@ export function BlockProvider(props: {
         // register data transforms
         const { transformData } = resolveBlockDefinition(block.type) || {}
         if (transformData) {
-            services.on(CHANGE, () => {
+            services.on(CHANGE, async () => {
                 const next = (block.nextConnection?.targetBlock() ||
                     block.childBlocks_?.[0]) as BlockWithServices
                 const nextServices = next?.jacdacServices
                 if (nextServices) {
-                    const newData = transformData(block, services.data)
-                    nextServices.data = newData
+                    try {
+                        const newData = await transformData(
+                            block,
+                            services.data
+                        )
+                        nextServices.data = newData
+                    } catch (e) {
+                        console.debug(e)
+                    }
                 }
             })
         }

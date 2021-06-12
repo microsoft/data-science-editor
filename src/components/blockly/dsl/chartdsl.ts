@@ -31,7 +31,7 @@ const chartDSL: BlockDomainSpecificLanguage = {
             colour,
             template: "meta",
             inputsInline: false,
-            transformData: (b, data) => data,
+            transformData: async (b, data) => data,
         },
     ],
 

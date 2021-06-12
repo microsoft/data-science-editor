@@ -102,7 +102,7 @@ export interface BlockDefinition extends BlockReference {
 
     // data transformation
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    transformData?: (block: BlockSvg, data: any[]) => any[]
+    transformData?: (block: BlockSvg, data: any[]) => Promise<any[]>
 }
 
 export interface ServiceBlockDefinition extends BlockDefinition {
