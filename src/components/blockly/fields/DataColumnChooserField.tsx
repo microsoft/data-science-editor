@@ -28,7 +28,7 @@ export default class DataColumnChooserField extends FieldDropdown {
         const headers = tidyHeaders(data)
         const options = headers?.map(h => [h, h]) || []
         const value = this.getValue()
-        return options.length < 1 ? [[value, value]] : options
+        return options.length < 1 ? [[value || "", value || ""]] : options
     }
 
     doClassValidation_(newValue?: string) {

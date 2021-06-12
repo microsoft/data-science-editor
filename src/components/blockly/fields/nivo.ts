@@ -1,5 +1,5 @@
 import { tidy, select, rename, mutate } from "@tidyjs/tidy"
-import { toMap } from "../../../../jacdac-ts/src/jdom/utils"
+import { toMap, unique } from "../../../../jacdac-ts/src/jdom/utils"
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function tidyHeaders(data: object[]) {
@@ -17,6 +17,8 @@ export function tidyToNivo(
     series: any
     labels: string[]
 } {
+    // avoid duplicates in column
+    columns = unique(columns)
     const headers = tidyHeaders(data)
     let k = 0
     const renaming = toMap(

@@ -14,6 +14,7 @@ import VariablesField from "./VariablesFields"
 import DataTableField from "./DataTableField"
 import ScatterPlotField from "./ScatterPlotField"
 import DataColumnChooserField from "./DataColumnChooserField"
+import LinePlotField from "./LinePlotField"
 
 let reactFieldShadows: BlockDefinition[]
 export function registerFields() {
@@ -46,6 +47,7 @@ export function registerFields() {
         DataTableField,
         ScatterPlotField,
         DataColumnChooserField,
+        LinePlotField,
     ]
     fieldTypes.forEach(registerType)
 }

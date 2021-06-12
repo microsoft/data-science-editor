@@ -9,9 +9,11 @@ import {
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
 import DataColumnChooserField from "../fields/DataColumnChooserField"
+import LinePlotField from "../fields/LinePlotField"
 
 const SHOW_TABLE_BLOCK = "chart_show_table"
 const SCATTERPLOT_BLOCK = "chart_scatterplot"
+const LINEPLOT_BLOCK = "chart_lineplot"
 
 const colour = "#999"
 const chartDSL: BlockDomainSpecificLanguage = {
@@ -65,6 +67,34 @@ const chartDSL: BlockDomainSpecificLanguage = {
             inputsInline: false,
             transformData: identityTransformData,
         },
+        {
+            kind: "block",
+            type: LINEPLOT_BLOCK,
+            message0: "line x %1 y %2 %3 %4",
+            args0: [
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "x",
+                },
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "y",
+                },
+                <DummyInputDefinition>{
+                    type: "input_dummy",
+                },
+                {
+                    type: LinePlotField.KEY,
+                    name: "plot",
+                },
+            ],
+            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            colour,
+            template: "meta",
+            inputsInline: false,
+            transformData: identityTransformData,
+        },
     ],
 
     createCategory: () => [
@@ -74,6 +104,7 @@ const chartDSL: BlockDomainSpecificLanguage = {
             contents: [
                 <BlockReference>{ kind: "block", type: SHOW_TABLE_BLOCK },
                 <BlockReference>{ kind: "block", type: SCATTERPLOT_BLOCK },
+                <BlockReference>{ kind: "block", type: LINEPLOT_BLOCK },
             ],
             colour,
         },

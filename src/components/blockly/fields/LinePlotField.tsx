@@ -8,9 +8,9 @@ import { PointerBoundary } from "./PointerBoundary"
 import Suspense from "../../ui/Suspense"
 import { NoSsr } from "@material-ui/core"
 import { tidyToNivo } from "./nivo"
-const ScatterPlot = lazy(() => import("./ScatterPlot"))
+const Line = lazy(() => import("./Line"))
 
-function ScatterChartWidget() {
+function LineChartWidget() {
     const { sourceBlock } = useContext(WorkspaceContext)
     const { data } = useBlockData(sourceBlock)
 
@@ -47,6 +47,8 @@ function ScatterChartWidget() {
     if (chartProps) chartProps.data = series
     const hasData = !!chartProps?.data?.[0].data?.length
     if (!hasData) return null
+    // avoid using same column, creates rendering issues
+    if (x === y && x) return null
 
     chartProps.axisBottom.legend = labels[0]
     chartProps.axisLeft.legend = labels[1]
@@ -56,7 +58,7 @@ function ScatterChartWidget() {
             <div style={{ background: "#fff", borderRadius: "0.25rem" }}>
                 <PointerBoundary>
                     <Suspense>
-                        <ScatterPlot width={388} height={240} {...chartProps} />
+                        <Line width={388} height={240} {...chartProps} />
                     </Suspense>
                 </PointerBoundary>
             </div>
@@ -64,12 +66,12 @@ function ScatterChartWidget() {
     )
 }
 
-export default class ScatterPlotField extends ReactInlineField {
-    static KEY = "jacdac_field_scatter_plot"
+export default class LinePlotField extends ReactInlineField {
+    static KEY = "jacdac_field_line_plot"
     static EDITABLE = false
 
     static fromJson(options: ReactFieldJSON) {
-        return new ScatterPlotField(options)
+        return new LinePlotField(options)
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -78,6 +80,6 @@ export default class ScatterPlotField extends ReactInlineField {
     }
 
     renderInlineField() {
-        return <ScatterChartWidget />
+        return <LineChartWidget />
     }
 }
