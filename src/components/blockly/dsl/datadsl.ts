@@ -1,10 +1,10 @@
 import { BlockSvg } from "blockly"
+import DataColumnChooserField from "../fields/DataColumnChooserField"
 import {
     BlockReference,
     CategoryDefinition,
     DATA_SCIENCE_STATEMENT_TYPE,
     OptionsInputDefinition,
-    TextInputDefinition,
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
 import { ArrangeMessage, transformData } from "./workers/data.worker"
@@ -21,8 +21,8 @@ const dataDsl: BlockDomainSpecificLanguage = {
             message0: "arrange %1 %2",
             colour,
             args0: [
-                <TextInputDefinition>{
-                    type: "field_input",
+                {
+                    type: DataColumnChooserField.KEY,
                     name: "column",
                 },
                 <OptionsInputDefinition>{

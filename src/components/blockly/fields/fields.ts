@@ -13,6 +13,7 @@ import LogViewField from "./LogViewField"
 import VariablesField from "./VariablesFields"
 import DataTableField from "./DataTableField"
 import ScatterPlotField from "./ScatterPlotField"
+import DataColumnChooserField from "./DataColumnChooserField"
 
 let reactFieldShadows: BlockDefinition[]
 export function registerFields() {
@@ -44,6 +45,7 @@ export function registerFields() {
         VariablesField,
         DataTableField,
         ScatterPlotField,
+        DataColumnChooserField,
     ]
     fieldTypes.forEach(registerType)
 }

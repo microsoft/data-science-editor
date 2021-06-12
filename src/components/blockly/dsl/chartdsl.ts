@@ -6,9 +6,9 @@ import {
     DATA_SCIENCE_STATEMENT_TYPE,
     DummyInputDefinition,
     identityTransformData,
-    TextInputDefinition,
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
+import DataColumnChooserField from "../fields/DataColumnChooserField"
 
 const SHOW_TABLE_BLOCK = "chart_show_table"
 const SCATTERPLOT_BLOCK = "chart_scatterplot"
@@ -42,12 +42,12 @@ const chartDSL: BlockDomainSpecificLanguage = {
             type: SCATTERPLOT_BLOCK,
             message0: "scatterplot x %1 y %2 %3 %4",
             args0: [
-                <TextInputDefinition>{
-                    type: "field_input",
+                {
+                    type: DataColumnChooserField.KEY,
                     name: "x",
                 },
-                <TextInputDefinition>{
-                    type: "field_input",
+                {
+                    type: DataColumnChooserField.KEY,
                     name: "y",
                 },
                 <DummyInputDefinition>{

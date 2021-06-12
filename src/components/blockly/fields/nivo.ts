@@ -1,6 +1,12 @@
 import { tidy, select, rename, mutate } from "@tidyjs/tidy"
 import { toMap } from "../../../../jacdac-ts/src/jdom/utils"
 
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function tidyHeaders(data: object[]) {
+    const headers = Object.keys(data?.[0] || {})
+    return headers
+}
+
 export function tidyToNivo(
     // eslint-disable-next-line @typescript-eslint/ban-types
     data: object[],
@@ -11,7 +17,7 @@ export function tidyToNivo(
     series: any
     labels: string[]
 } {
-    const headers = Object.keys(data?.[0] || {})
+    const headers = tidyHeaders(data)
     let k = 0
     const renaming = toMap(
         columns,
