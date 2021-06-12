@@ -15,7 +15,7 @@ const ops = {
     MINUS: "-",
 }
 
-const mathDSL: BlockDomainSpecificLanguage = {
+const mathDsl: BlockDomainSpecificLanguage = {
     id: "jacdacmath",
     createBlocks: () => [
         {
@@ -226,4 +226,4 @@ const mathDSL: BlockDomainSpecificLanguage = {
     },
 }
 
-export default mathDSL
+export default mathDsl

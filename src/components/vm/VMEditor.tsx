@@ -8,10 +8,10 @@ import { VMProgram } from "../../../jacdac-ts/src/vm/ir"
 import BlockContext, { BlockProvider } from "../blockly/BlockContext"
 import BlockDiagnostics from "../blockly/BlockDiagnostics"
 import servicesDSL from "../blockly/dsl/servicesdsl"
-import toolsDSL from "../blockly/dsl/toolsdsl"
+import toolsDsl from "../blockly/dsl/toolsdsl"
 import loopsDsl from "../blockly/dsl/loopsdsl"
 import logicDsl from "../blockly/dsl/logicdsl"
-import mathDSL from "../blockly/dsl/mathdsl"
+import mathDsl from "../blockly/dsl/mathdsl"
 import variablesDsl from "../blockly/dsl/variablesdsl"
 import shadowDsl from "../blockly/dsl/shadowdsl"
 import fieldsDsl from "../blockly/dsl/fieldsdsl"
@@ -19,9 +19,9 @@ import workspaceJSONToVMProgram from "./VMgenerator"
 import { BlocklyWorkspaceWithServices } from "../blockly/WorkspaceContext"
 import BlockEditor from "../blockly/BlockEditor"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
-import jsonDSL from "../blockly/dsl/jsondsl"
-import chartDSL from "../blockly/dsl/chartdsl"
-import dataScienceDSL from "../blockly/dsl/datadsl"
+import jsonDsl from "../blockly/dsl/jsondsl"
+import chartDsl from "../blockly/dsl/chartdsl"
+import dataDsl from "../blockly/dsl/datadsl"
 
 const VM_SOURCE_STORAGE_KEY = "tools:vmeditor"
 function VMEditorWithContext() {
@@ -84,12 +84,12 @@ export default function VMEditor() {
             servicesDSL,
             loopsDsl,
             logicDsl,
-            mathDSL,
-            jsonDSL,
+            mathDsl,
+            jsonDsl,
             variablesDsl,
-            toolsDSL,
-            chartDSL,
-            dataScienceDSL,
+            toolsDsl,
+            chartDsl,
+            dataDsl,
             shadowDsl,
             fieldsDsl,
         ]

@@ -12,7 +12,7 @@ import BlockDomainSpecificLanguage from "./dsl"
 const DATA_SCIENCE_ARRANGE_BLOCK = "data_science_arrange"
 
 const colour = "#777"
-const dataScienceDSL: BlockDomainSpecificLanguage = {
+const dataDsl: BlockDomainSpecificLanguage = {
     id: "dataScience",
     createBlocks: () => [
         {
@@ -61,4 +61,4 @@ const dataScienceDSL: BlockDomainSpecificLanguage = {
         },
     ],
 }
-export default dataScienceDSL
+export default dataDsl
