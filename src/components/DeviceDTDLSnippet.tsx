@@ -1,6 +1,6 @@
 import { Link } from "gatsby-theme-material-ui";
 import React, { useMemo } from "react";
-import { deviceSpecificationToDTDL } from "../../jacdac-ts/src/azure-iot/dtdl";
+import { deviceSpecificationToDTDL } from "../../jacdac-ts/src/azure-iot/dtdlspec";
 import Snippet from "./ui/Snippet";
 
 export function DeviceDTDLSnippet(props: { dev: jdspec.DeviceSpec, inlineServices?: boolean }) {
