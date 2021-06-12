@@ -62,6 +62,11 @@ export default interface BlockDomainSpecificLanguage {
     types?: string[]
 
     /**
+     * Optional API to be called when mounted in the React context, returns unmounted
+     */
+    mount?: () => () => void
+
+    /**
      * Creates blocks for the DSL
      */
     createBlocks?: (options: CreateBlocksOptions) => BlockDefinition[]

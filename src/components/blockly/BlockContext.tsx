@@ -182,6 +182,12 @@ export function BlockProvider(props: {
         return () => workspace?.removeChangeListener(handleNewBlock)
     }, [workspace])
 
+    // mounting dsts
+    useEffect(() => {
+        const unmounnts = dsls.map(dsl => dsl.mount?.()).filter(u => !!u)
+        return () => unmounnts.forEach(u => u())
+    }, [])
+
     return (
         <BlockContext.Provider
             value={{
