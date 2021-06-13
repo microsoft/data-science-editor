@@ -22,7 +22,9 @@ const handlers: { [index: string]: (props: any) => object[] } = {
     },
 }
 
-export async function postTransformData(message: DataMessage): Promise<object[]> {
+export async function postTransformData(
+    message: DataMessage
+): Promise<object[]> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
     try {
@@ -49,6 +51,8 @@ export async function postLoadCSV(url: string): Promise<CsvFile> {
         Papa.parse(url, {
             download: true,
             header: true,
+            dynamicTyping: true,
+            transformHeader: (h: string) => h.trim().toLocaleLowerCase(),
             complete: (r: CsvFile) => resolve(r),
         })
     })
