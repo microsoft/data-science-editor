@@ -31,7 +31,7 @@ export default class DataColumnChooserField extends FieldDropdown {
     }
 
     doClassValidation_(newValue?: string) {
-        console.log(`validate`, { newValue })
+        // skip super class validationervices chan
         return newValue
     }
 }

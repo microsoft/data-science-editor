@@ -30,12 +30,10 @@ export default class BuiltinDataSetField
         // load dataset as needed
         const sourceBlock = this.getSourceBlock() as BlockWithServices
         const services = sourceBlock?.jacdacServices
-        console.log("update data", { sourceBlock, services })
         if (!services) return
 
         if (services.cache[BuiltinDataSetField.KEY] === url) return // already downloaded
 
-        console.log(`downloading ${url}`)
         postLoadCSV(url).then(({ data, errors }) => {
             console.debug(`csv parse`, { data, errors })
             services.data = data
@@ -54,7 +52,6 @@ export default class BuiltinDataSetField
     }
 
     notifyServicesChanged() {
-        console.log(`services changed`)
         this.updateData()
     }
 }

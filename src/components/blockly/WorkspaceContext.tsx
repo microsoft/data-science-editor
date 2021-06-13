@@ -175,7 +175,6 @@ export function WorkspaceProvider(props: {
     useEffect(() => {
         return field?.events.subscribe(CHANGE, () => {
             const newSourceBlock = field.getSourceBlock()
-            console.log(`field change`, { newSourceBlock })
             setSourceBlock(newSourceBlock)
             setRole(resolveRole())
             setFlyout(!!newSourceBlock?.isInFlyout)

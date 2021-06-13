@@ -132,7 +132,7 @@ export function BlockProvider(props: {
     }) => {
         const { type, workspaceId } = event
         if (workspaceId !== workspace.id) return
-        console.log(`blockly event ${type}`, event)
+        //console.log(`blockly event ${type}`, event)
         if (type === Blockly.Events.FINISHED_LOADING) {
             workspace
                 .getAllBlocks(false)

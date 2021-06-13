@@ -54,8 +54,6 @@ function BarChartWidget() {
     chartProps.axisBottom.legend = labels[0]
     chartProps.axisLeft.legend = labels[1]
 
-    console.log("bar", chartProps)
-
     return (
         <NoSsr>
             <div style={{ background: "#fff", borderRadius: "0.25rem" }}>
