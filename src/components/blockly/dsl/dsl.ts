@@ -1,5 +1,5 @@
 import { Theme } from "@material-ui/core"
-import { Block } from "blockly"
+import Blockly, { Block, WorkspaceSvg } from "blockly"
 import { JDService } from "../../../../jacdac-ts/src/jdom/service"
 import { RoleEvent } from "../../../../jacdac-ts/src/vm/compile"
 import { VMError } from "../../../../jacdac-ts/src/vm/ir"
@@ -11,7 +11,6 @@ import {
     ServiceBlockDefinition,
 } from "../toolbox"
 import { CmdWithErrors, ExpressionWithErrors } from "../../vm/VMgenerator"
-import { BlockWithServices } from "../WorkspaceContext"
 
 export interface CreateBlocksOptions {
     theme: Theme
@@ -82,9 +81,11 @@ export default interface BlockDomainSpecificLanguage {
     blockToValue?: (block: Block) => string | number | boolean
 
     /**
-     * Allow to register for block changes
+     * Returns a change listener if needed
      */
-    onBlockCreated?: (block: BlockWithServices) => void
+    createWorkspaceChangeListener?: (
+        workspace: WorkspaceSvg
+    ) => (event: Blockly.Events.Abstract) => void
 
     // VM support
     compileEventToVM?: (

@@ -115,9 +115,6 @@ export function BlockProvider(props: {
                 }
             })
         }
-        // notify dsl
-        const dsl = resolveDsl(dsls, block.type)
-        dsl?.onBlockCreated?.(block)
     }
 
     const handleBlockChange = (blockId: string) => {
@@ -215,9 +212,16 @@ export function BlockProvider(props: {
 
     // register block creation
     useEffect(() => {
-        workspace?.addChangeListener(handleWorkspaceEvent)
-        return () => workspace?.removeChangeListener(handleWorkspaceEvent)
-    }, [workspace])
+        const handlers = [
+            handleWorkspaceEvent,
+            ...dsls.map(dsl => dsl.createWorkspaceChangeListener?.(workspace)),
+        ].filter(c => !!c)
+        handlers.forEach(handler => workspace?.addChangeListener(handler))
+        return () =>
+            handlers?.forEach(handler =>
+                workspace?.removeChangeListener(handler)
+            )
+    }, [workspace, dsls])
 
     // mounting dsts
     useEffect(() => {
