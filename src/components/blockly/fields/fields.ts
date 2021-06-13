@@ -15,6 +15,7 @@ import DataTableField from "./DataTableField"
 import ScatterPlotField from "./ScatterPlotField"
 import DataColumnChooserField from "./DataColumnChooserField"
 import LinePlotField from "./LinePlotField"
+import GaugeWidgetField from "./GaugeWidgetField"
 
 let reactFieldShadows: BlockDefinition[]
 export function registerFields() {
@@ -39,10 +40,15 @@ export function registerFields() {
         LEDMatrixField,
         ServoAngleField,
         LEDColorField,
+
         TwinField,
         JDomTreeField,
+
+        GaugeWidgetField,
+
         WatchValueField,
         LogViewField,
+
         VariablesField,
         DataTableField,
         ScatterPlotField,

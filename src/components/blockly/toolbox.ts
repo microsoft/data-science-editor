@@ -40,6 +40,7 @@ export interface OptionsInputDefinition extends InputDefinition {
 }
 
 export interface NumberInputDefinition extends InputDefinition {
+    type: "field_number"
     min?: number
     max?: number
     precision?: number

@@ -1,10 +1,15 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { tidy, select, rename, mutate } from "@tidyjs/tidy"
 import { toMap, unique } from "../../../../jacdac-ts/src/jdom/utils"
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export function tidyHeaders(data: object[]) {
     const headers = Object.keys(data?.[0] || {})
     return headers
+}
+
+export function tidyFindLastValue(data: object[], column: string) {
+    if (!data?.length) return undefined
+    return data[data.length - 1][column]
 }
 
 export function tidyToNivo(

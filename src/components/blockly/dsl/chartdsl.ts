@@ -6,14 +6,17 @@ import {
     DATA_SCIENCE_STATEMENT_TYPE,
     DummyInputDefinition,
     identityTransformData,
+    NumberInputDefinition,
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
 import DataColumnChooserField from "../fields/DataColumnChooserField"
 import LinePlotField from "../fields/LinePlotField"
+import GaugeWidgetField from "../fields/GaugeWidgetField"
 
 const SHOW_TABLE_BLOCK = "chart_show_table"
 const SCATTERPLOT_BLOCK = "chart_scatterplot"
 const LINEPLOT_BLOCK = "chart_lineplot"
+const DASHBOARD_GAUGE_BLOCK = "jacdac_dashboard_gauge"
 
 const colour = "#999"
 const chartDSL: BlockDomainSpecificLanguage = {
@@ -95,6 +98,39 @@ const chartDSL: BlockDomainSpecificLanguage = {
             inputsInline: false,
             transformData: identityTransformData,
         },
+        {
+            kind: "block",
+            type: DASHBOARD_GAUGE_BLOCK,
+            message0: "gauge min %1 max %2 %3 %4 %5",
+            args0: [
+                <NumberInputDefinition>{
+                    type: "field_number",
+                    name: "min",
+                },
+                <NumberInputDefinition>{
+                    type: "field_number",
+                    name: "max",
+                    value: 100,
+                },
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "field",
+                },
+                <DummyInputDefinition>{
+                    type: "input_dummy",
+                },
+                {
+                    type: GaugeWidgetField.KEY,
+                    name: "widget",
+                },
+            ],
+            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            colour,
+            template: "meta",
+            inputsInline: false,
+            transformData: identityTransformData,
+        },
     ],
 
     createCategory: () => [
@@ -105,6 +141,7 @@ const chartDSL: BlockDomainSpecificLanguage = {
                 <BlockReference>{ kind: "block", type: SHOW_TABLE_BLOCK },
                 <BlockReference>{ kind: "block", type: SCATTERPLOT_BLOCK },
                 <BlockReference>{ kind: "block", type: LINEPLOT_BLOCK },
+                <BlockReference>{ kind: "block", type: DASHBOARD_GAUGE_BLOCK },
             ],
             colour,
         },
