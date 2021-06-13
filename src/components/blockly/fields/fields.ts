@@ -17,6 +17,7 @@ import DataColumnChooserField from "./DataColumnChooserField"
 import LinePlotField from "./LinePlotField"
 import GaugeWidgetField from "./GaugeWidgetField"
 import BuiltinDataSetField from "./BuiltinDataSetField"
+import BarChartField from "./BarField"
 
 let reactFieldShadows: BlockDefinition[]
 export function registerFields() {
@@ -52,11 +53,13 @@ export function registerFields() {
 
         VariablesField,
         DataTableField,
-        ScatterPlotField,
         DataColumnChooserField,
-        LinePlotField,
 
         BuiltinDataSetField,
+
+        ScatterPlotField,
+        LinePlotField,
+        BarChartField,
     ]
     fieldTypes.forEach(registerType)
 }

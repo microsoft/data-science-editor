@@ -19,7 +19,7 @@ export function tidyToNivo(
     toColumns: string[]
 ): {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    series: any
+    series: { id: string; data: object[] }[]
     labels: string[]
 } {
     // avoid duplicates in column
