@@ -1,4 +1,4 @@
-import { BlockSvg } from "blockly"
+import { BlockSvg, Events, FieldVariable } from "blockly"
 import BuiltinDataSetField from "../fields/BuiltinDataSetField"
 import DataColumnChooserField from "../fields/DataColumnChooserField"
 import DataTableField from "../fields/DataTableField"
@@ -182,5 +182,43 @@ const dataDsl: BlockDomainSpecificLanguage = {
             ],
         },
     ],
+    createWorkspaceChangeListener: () => (event: Events.Abstract) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { type, blockId } = event as any
+        const isBlockChange =
+            type === Events.BLOCK_CHANGE || type === Events.BLOCK_MOVE
+
+        if (isBlockChange || type === Events.FINISHED_LOADING) {
+            const workspace = event.getEventWorkspace_()
+            if (isBlockChange) {
+                const block = workspace.getBlockById(blockId)
+                if (block?.type !== DATA_DATAVARIABLE_WRITE_BLOCK) return // nothing so see here
+            }
+
+            // collect set variables blocks,
+            // and make sure only 1 of them is enabled
+            const setvars = workspace
+                .getBlocksByType(DATA_DATAVARIABLE_WRITE_BLOCK, true)
+                .filter(b => b.isEnabled())
+
+            // mark and sweep variables, leaving one 1 enabled per kind
+            const marked = {}
+            while (setvars.length) {
+                const block = setvars.shift()
+                const variable = (
+                    block.getField("data") as FieldVariable
+                ).getVariable()
+                if (variable) {
+                    const name = variable.name
+                    if (marked[name]) {
+                        if (block.isEnabled()) {
+                            block.setEnabled(false)
+                            block.unplug(true)
+                        }
+                    } else marked[name] = true
+                }
+            }
+        }
+    },
 }
 export default dataDsl
