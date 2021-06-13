@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { arrange, desc, tidy } from "@tidyjs/tidy"
 import Papa from "papaparse"
+import { SMap } from "../../../../../jacdac-ts/src/jdom/utils"
 
 export interface DataMessage {
     id?: string // added for worker comms
@@ -46,7 +47,11 @@ export interface CsvFile {
     }[]
 }
 
-export async function postLoadCSV(url: string): Promise<CsvFile> {
+const cachedCSVs: SMap<CsvFile> = {}
+export function postLoadCSV(url: string): Promise<CsvFile> {
+    const cached = cachedCSVs[url]
+    if (cached) return Promise.resolve(cached)
+
     return new Promise<CsvFile>(resolve => {
         Papa.parse(url, {
             download: true,
@@ -55,5 +60,8 @@ export async function postLoadCSV(url: string): Promise<CsvFile> {
             transformHeader: (h: string) => h.trim().toLocaleLowerCase(),
             complete: (r: CsvFile) => resolve(r),
         })
+    }).then(r => {
+        cachedCSVs[url] = r
+        return r
     })
 }
