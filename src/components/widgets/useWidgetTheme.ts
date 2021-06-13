@@ -1,18 +1,23 @@
-import { createStyles, makeStyles, useTheme } from "@material-ui/core";
-import { SVGProps, useContext } from "react";
+import { useTheme } from "@material-ui/core"
+import { SVGProps, useContext } from "react"
 import DarkModeContext from "../ui/DarkModeContext"
 
 export default function useWidgetTheme(color?: "primary" | "secondary") {
-    const theme = useTheme();
-    const { palette } = theme;
-    const { background } = palette;
-    const { darkMode } = useContext(DarkModeContext);
+    const theme = useTheme()
+    const { palette } = theme
+    const { background } = palette
+    const { darkMode } = useContext(DarkModeContext)
 
-    const active: string = color === "primary" ? palette.primary.main
-        : color === "secondary" ? palette.secondary.main
-            : palette.info.main;
-    const backgroundColor = darkMode === "dark" ? background.default : palette.grey[800];
-    const controlBackground = darkMode === "dark" ? palette.grey[800] : palette.grey[400]
+    const active: string =
+        color === "primary"
+            ? palette.primary.main
+            : color === "secondary"
+            ? palette.secondary.main
+            : palette.info.main
+    const backgroundColor =
+        darkMode === "dark" ? background.default : palette.grey[800]
+    const controlBackground =
+        darkMode === "dark" ? palette.grey[800] : palette.grey[400]
     const textPrimary = palette.text.primary
     const textProps: SVGProps<SVGTextElement> = {
         fill: textPrimary,
@@ -23,8 +28,8 @@ export default function useWidgetTheme(color?: "primary" | "secondary") {
         letterSpacing: 0,
         style: {
             userSelect: "none",
-            pointerEvents: "none"
-        }
+            pointerEvents: "none",
+        },
     }
 
     return {
@@ -32,6 +37,6 @@ export default function useWidgetTheme(color?: "primary" | "secondary") {
         controlBackground,
         active,
         textPrimary,
-        textProps
+        textProps,
     }
 }

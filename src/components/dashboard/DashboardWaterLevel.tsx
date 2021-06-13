@@ -79,7 +79,13 @@ export default function DashbaordWaterLevel(props: DashboardServiceProps) {
                                 />
                             ))}
                     {tvalue && (
-                        <text key="text" x={w >> 1} y={mty >> 1} {...textProps}>
+                        <text
+                            key="text"
+                            x={w >> 1}
+                            y={mty >> 1}
+                            {...textProps}
+                            fill={"#fff"}
+                        >
                             {tvalue}
                         </text>
                     )}
