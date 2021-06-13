@@ -87,6 +87,8 @@ export function BlockProvider(props: {
         const { transformData } = resolveBlockDefinition(block.type) || {}
         if (transformData) {
             services.on(CHANGE, async () => {
+                if (!block.isEnabled()) return
+
                 const next = (block.nextConnection?.targetBlock() ||
                     block.childBlocks_?.[0]) as BlockWithServices
                 const nextServices = next?.jacdacServices
