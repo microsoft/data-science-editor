@@ -19,9 +19,6 @@ const useStyles = makeStyles(() =>
             fontSize: "0.8rem",
             lineHeight: "1rem",
 
-            "& th": {
-                fontWeight: "normal",
-            },
             "& td": {
                 borderColor: "#ccc",
                 borderRightStyle: "solid 1px",

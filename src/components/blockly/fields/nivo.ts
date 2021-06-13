@@ -35,15 +35,15 @@ export function tidyToNivo(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     // todo handle time
     let index = 0
-    const tidied: { x: number; y: number }[] = data
+    const tidied: object[] = data
         ? (tidy(
               data,
               mutate({ index: () => index++ }),
               select(labels),
               rename(renaming)
-          ) as any)
+          ) as object[])
         : []
-    const series: { id: string; data: { x: number; y: number }[] }[] = [
+    const series: { id: string; data: object[] }[] = [
         {
             id: "data",
             data: tidied,

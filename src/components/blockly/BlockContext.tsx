@@ -120,12 +120,20 @@ export function BlockProvider(props: {
         dsl?.onBlockCreated?.(block)
     }
 
-    const handleNewBlock = (event: { type: string; workspaceId: string }) => {
+    const handleBlockChange = (blockId: string) => {
+        const block = workspace.getBlockById(blockId) as BlockWithServices
+        const services = block?.jacdacServices
+        services?.emit(CHANGE)
+    }
+
+    const handleWorkspaceEvent = (event: {
+        type: string
+        workspaceId: string
+    }) => {
         const { type, workspaceId } = event
         if (workspaceId !== workspace.id) return
-        console.log(`blockly event ${type}`)
+        console.log(`blockly event ${type}`, event)
         if (type === Blockly.Events.FINISHED_LOADING) {
-            console.log(`register blocks`)
             workspace
                 .getAllBlocks(false)
                 .forEach(b => initializeBlockServices(b as BlockWithServices))
@@ -135,6 +143,23 @@ export function BlockProvider(props: {
                 bev.blockId
             ) as BlockWithServices
             initializeBlockServices(block)
+        } else if (type === Blockly.Events.BLOCK_MOVE) {
+            const cev = event as unknown as Blockly.Events.BlockMove
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const parentId = (cev as any).newParentId
+            if (parentId) {
+                handleBlockChange(parentId)
+            } else {
+                // unplugged, clear data
+                const block = workspace.getBlockById(
+                    cev.blockId
+                ) as BlockWithServices
+                const services = block?.jacdacServices
+                if (services) services.data = undefined
+            }
+        } else if (type === Blockly.Events.BLOCK_CHANGE) {
+            const cev = event as unknown as Blockly.Events.BlockChange
+            handleBlockChange(cev.blockId)
         }
     }
 
@@ -190,8 +215,8 @@ export function BlockProvider(props: {
 
     // register block creation
     useEffect(() => {
-        workspace?.addChangeListener(handleNewBlock)
-        return () => workspace?.removeChangeListener(handleNewBlock)
+        workspace?.addChangeListener(handleWorkspaceEvent)
+        return () => workspace?.removeChangeListener(handleWorkspaceEvent)
     }, [workspace])
 
     // mounting dsts
