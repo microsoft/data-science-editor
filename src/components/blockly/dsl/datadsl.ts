@@ -103,7 +103,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
         <BlockDefinition>{
             kind: "block",
             type: DATA_DATAVARIABLE_READ_BLOCK,
-            message0: "data table %1",
+            message0: "data variable %1",
             args0: [
                 <VariableInputDefinition>{
                     type: "field_variable",
@@ -122,7 +122,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
         <BlockDefinition>{
             kind: "block",
             type: DATA_DATAVARIABLE_WRITE_BLOCK,
-            message0: "store in data table %1",
+            message0: "store in data variable %1",
             args0: [
                 <VariableInputDefinition>{
                     type: "field_variable",
