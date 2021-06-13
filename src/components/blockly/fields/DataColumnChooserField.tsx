@@ -17,7 +17,6 @@ export default class DataColumnChooserField extends FieldDropdown {
     }
 
     fromXml(fieldElement: Element) {
-        console.log("fromXml", fieldElement)
         this.setValue(fieldElement.textContent)
     }
 

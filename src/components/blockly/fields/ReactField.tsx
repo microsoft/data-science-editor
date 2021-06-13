@@ -16,6 +16,7 @@ import { CHANGE } from "../../../../jacdac-ts/src/jdom/constants"
 import {
     BlockServices,
     BlockWithServices,
+    FieldWithServices,
     WorkspaceProvider,
 } from "../WorkspaceContext"
 
@@ -103,7 +104,16 @@ export default class ReactField<T> extends Blockly.Field {
         super.setSourceBlock(block)
         if (changed) {
             const bs = block as unknown as BlockWithServices
-            if (!bs.jacdacServices) bs.jacdacServices = new BlockServices()
+            if (!bs.jacdacServices) {
+                bs.jacdacServices = new BlockServices()
+                bs.inputList?.forEach(i =>
+                    i.fieldRow?.forEach(f =>
+                        (
+                            f as unknown as FieldWithServices
+                        ).notifyServicesChanged?.()
+                    )
+                )
+            }
             this.events.emit(SOURCE_BLOCK_CHANGE, block)
             this.emitChange()
         }

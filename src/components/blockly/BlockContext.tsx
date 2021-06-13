@@ -19,6 +19,7 @@ import {
     BlocklyWorkspaceWithServices,
     BlockServices,
     BlockWithServices,
+    FieldWithServices,
     WorkspaceServices,
 } from "./WorkspaceContext"
 
@@ -80,8 +81,17 @@ export function BlockProvider(props: {
     const initializeBlockServices = (block: BlockWithServices) => {
         if (block.jacdacServices?.initialized) return
 
-        const services =
-            block.jacdacServices || (block.jacdacServices = new BlockServices())
+        let services = block.jacdacServices
+        if (!services) {
+            services = block.jacdacServices = new BlockServices()
+            block.inputList?.forEach(i =>
+                i.fieldRow?.forEach(f =>
+                    (
+                        f as unknown as FieldWithServices
+                    ).notifyServicesChanged?.()
+                )
+            )
+        }
         services.initialized = true
         // register data transforms
         const { transformData } = resolveBlockDefinition(block.type) || {}

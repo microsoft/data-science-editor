@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { arrange, desc, tidy } from "@tidyjs/tidy"
+import Papa from "papaparse"
 
 export interface DataMessage {
     id?: string // added for worker comms
@@ -21,7 +22,7 @@ const handlers: { [index: string]: (props: any) => object[] } = {
     },
 }
 
-export async function transformData(message: DataMessage): Promise<object[]> {
+export async function postTransformData(message: DataMessage): Promise<object[]> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
     try {
@@ -31,4 +32,24 @@ export async function transformData(message: DataMessage): Promise<object[]> {
     } catch (e) {
         console.debug(e)
     }
+}
+
+export interface CsvFile {
+    data?: object[]
+    errors?: {
+        type: string // A generalization of the error
+        code: string // Standardized error code
+        message: string // Human-readable details
+        row: number // Row index of parsed data where error is
+    }[]
+}
+
+export async function postLoadCSV(url: string): Promise<CsvFile> {
+    return new Promise<CsvFile>(resolve => {
+        Papa.parse(url, {
+            download: true,
+            header: true,
+            complete: (r: CsvFile) => resolve(r),
+        })
+    })
 }

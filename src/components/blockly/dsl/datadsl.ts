@@ -1,21 +1,25 @@
 import { BlockSvg } from "blockly"
+import BuiltinDataSetField from "../fields/BuiltinDataSetField"
 import DataColumnChooserField from "../fields/DataColumnChooserField"
 import {
     BlockDefinition,
     BlockReference,
+    ButtonDefinition,
     CategoryDefinition,
     DATA_SCIENCE_STATEMENT_TYPE,
+    identityTransformData,
     LabelDefinition,
     OptionsInputDefinition,
     VariableInputDefinition,
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
-import { ArrangeMessage, transformData } from "./workers/data.worker"
+import { ArrangeMessage, postTransformData } from "./workers/data.worker"
 
 const DATA_SCIENCE_ARRANGE_BLOCK = "data_science_arrange"
 const DATA_SCIENCE_ADD_VARIABLE_CALLBACK = "data_science_add_variable"
 const DATA_SCIENCE_DATAVARIABLE_READ_BLOCK = "data_science_dataset_read"
 const DATA_SCIENCE_DATAVARIABLE_WRITE_BLOCK = "data_science_dataset_write"
+const DATA_SCIENCE_DATASET_BUILTIN_BLOCK = "data_science_dataset_builtin"
 const DATA_TABLE_TYPE = "DataTable"
 
 const colour = "#777"
@@ -48,7 +52,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 const column = b.getFieldValue("column")
                 const order = b.getFieldValue("order")
                 const descending = order === "descending"
-                return transformData(<ArrangeMessage>{
+                return postTransformData(<ArrangeMessage>{
                     type: "arrange",
                     column,
                     descending,
@@ -56,6 +60,22 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 })
             },
             template: "meta",
+        },
+        <BlockDefinition>{
+            kind: "block",
+            type: DATA_SCIENCE_DATASET_BUILTIN_BLOCK,
+            message0: "dataset %1",
+            args0: [
+                {
+                    type: BuiltinDataSetField.KEY,
+                    name: "dateset",
+                },
+            ],
+            inputsInline: false,
+            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            colour,
+            template: "meta",
+            transformData: identityTransformData,
         },
         <BlockDefinition>{
             kind: "block",
@@ -101,12 +121,11 @@ const dataDsl: BlockDomainSpecificLanguage = {
             kind: "category",
             name: "Data Science",
             colour,
-            button: {
-                kind: "button",
-                text: `Add data variable`,
-                callbackKey: DATA_SCIENCE_ADD_VARIABLE_CALLBACK,
-            },
             contents: [
+                <BlockReference>{
+                    kind: "block",
+                    type: DATA_SCIENCE_DATASET_BUILTIN_BLOCK,
+                },
                 <BlockReference>{
                     kind: "block",
                     type: DATA_SCIENCE_ARRANGE_BLOCK,
@@ -114,6 +133,11 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 <LabelDefinition>{
                     kind: "label",
                     text: "DataSets",
+                },
+                <ButtonDefinition>{
+                    kind: "button",
+                    text: `Add dataset variable`,
+                    callbackKey: DATA_SCIENCE_ADD_VARIABLE_CALLBACK,
                 },
                 <BlockReference>{
                     kind: "block",

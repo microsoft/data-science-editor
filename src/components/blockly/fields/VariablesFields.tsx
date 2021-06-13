@@ -1,4 +1,4 @@
-import { createStyles, makeStyles, Theme, useTheme } from "@material-ui/core"
+import { createStyles, makeStyles, Theme } from "@material-ui/core"
 import React, { useContext, useEffect, useState } from "react"
 import { VM_GLOBAL_CHANGE } from "../../../../jacdac-ts/src/vm/events"
 import { atomic } from "../../../../jacdac-ts/src/vm/runner"
