@@ -1,0 +1,9 @@
+{
+  "name": "jacdac-docs-workers",
+  "type": "module",
+  "source": "workers.ts",
+  "main": "./dist/node_modules/jacdac-docs-workers.umd.js",
+  "module": "./dist/node_modules/jacdac-docs-workers.cjs.js",
+  "exports": "./dist/node_modules/jacdac-docs-workers.js",
+  "license": "MIT"
+}

@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "lib": ["webworker", "es2020", "scripthost"],
+        "types": [],
+        "module": "ESNext",
+        "moduleResolution": "node"
+    },
+    "exclude": ["node_modules"]
+}

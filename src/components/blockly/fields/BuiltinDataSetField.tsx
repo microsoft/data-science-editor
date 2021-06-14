@@ -1,7 +1,7 @@
 import { BlockWithServices, FieldWithServices } from "../WorkspaceContext"
 import { Block, FieldDropdown } from "blockly"
 import { withPrefix } from "gatsby"
-import { postLoadCSV } from "../dsl/workers/data.worker"
+import postLoadCSV from "../dsl/workers/csv.proxy"
 
 const builtins = {
     dummy: withPrefix("/datasets/dummy.csv"),
