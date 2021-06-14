@@ -11,7 +11,7 @@ import workspaceJSONToVMProgram from "./VMgenerator"
 import { BlocklyWorkspaceWithServices } from "../blockly/WorkspaceContext"
 import BlockEditor from "../blockly/BlockEditor"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
-import { vmDsls } from "./vmdsls"
+import vmDsls from "./vmdsls"
 
 const VM_SOURCE_STORAGE_KEY = "tools:vmeditor"
 function VMEditorWithContext() {
