@@ -46,14 +46,14 @@ function ScatterChartWidget() {
     })
     if (chartProps) chartProps.data = series
 
-
-    const hasData =  labels?.length === 2 && !!chartProps?.data?.[0].data?.length
-    console.log(`chart props`, { chartProps, hasData })
+    const hasData =
+        labels?.length === 2 &&
+        labels[0] !== labels[1] &&
+        !!chartProps?.data?.[0].data?.length
     if (!hasData) return null
 
     chartProps.axisBottom.legend = labels[0]
     chartProps.axisLeft.legend = labels[1]
-
 
     return (
         <NoSsr>

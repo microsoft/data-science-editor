@@ -47,10 +47,11 @@ function LineChartWidget() {
         },
     })
     if (chartProps) chartProps.data = series
-    const hasData = !!chartProps?.data?.[0].data?.length
+    const hasData =
+        labels?.length === 2 &&
+        labels[0] !== labels[1] &&
+        !!chartProps?.data?.[0].data?.length
     if (!hasData) return null
-    // avoid using same column, creates rendering issues
-    if (x === y && x) return null
 
     chartProps.axisBottom.legend = labels[0]
     chartProps.axisLeft.legend = labels[1]
