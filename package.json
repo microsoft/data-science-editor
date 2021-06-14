@@ -114,7 +114,7 @@
     "distdocs": "node ./node_modules/gatsby/cli.js build --prefix-paths --no-uglify",
     "tools": "npx http-server . -c-1",
     "watchdocs": "node node_modules/gatsby/cli.js develop",
-    "develop": "node node_modules/concurrently/bin/concurrently.js \"npm:watch*\"",
+    "develop": "node node_modules/concurrently/bin/concurrently.js --kill-others \"npm:watch*\"",
     "docsbuild": "node node_modules/gatsby/cli.js build",
     "docsserve": "node node_modules/gatsby/cli.js serve",
     "dockerdocs": "node node_modules/gatsby/cli.js develop --host:0.0.0.0",
