@@ -21,7 +21,7 @@ const variablesDsl: BlockDomainSpecificLanguage = {
         if (type === "variables_get") {
             const { value: variable } = inputs[0].fields.var
             const ret = {
-                expr: toMemberExpression("$", variable.toString()),
+                expr: toMemberExpression("$var", variable.toString()),
                 errors: [],
             }
             console.log(ret)
@@ -42,14 +42,14 @@ const variablesDsl: BlockDomainSpecificLanguage = {
                 cmd: makeVMBase(block, {
                     type: "CallExpression",
                     arguments: [
-                        toMemberExpression("$", variable.toString()),
+                        toMemberExpression("$var", variable.toString()),
                         type === "variables_set"
                             ? expr
                             : ({
                                   type: "BinaryExpression",
                                   operator: "+",
                                   left: toMemberExpression(
-                                      "$",
+                                      "$var",
                                       variable.toString()
                                   ),
                                   right: expr,

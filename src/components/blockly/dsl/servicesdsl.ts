@@ -1000,6 +1000,35 @@ export class ServicesBlockDomainSpecificLanguage
     }
 
     compileEventToVM(options: CompileEventToVMOptions): CompileEventToVMResult {
+        const makeAwaitEvent = (
+            cmd: string,
+            role: string,
+            eventName: string
+        ) => {
+            return <CompileEventToVMResult>{
+                expression: <jsep.CallExpression>{
+                    type: "CallExpression",
+                    arguments:
+                        cmd == "awaitEvent"
+                            ? [
+                                  toMemberExpression(
+                                      role.toString(),
+                                      eventName.toString()
+                                  ),
+                              ]
+                            : [
+                                  toIdentifier(role.toString()),
+                                  toIdentifier(eventName.toString()),
+                              ],
+                    callee: toIdentifier(cmd),
+                },
+                event: {
+                    role: role.toString(),
+                    event: eventName.toString(),
+                },
+            }
+        }
+
         const { block, definition, blockToExpression } = options
         const { inputs } = block
         const { template } = definition
@@ -1008,22 +1037,11 @@ export class ServicesBlockDomainSpecificLanguage
             case "event": {
                 const { value: role } = inputs[0].fields["role"]
                 const { value: eventName } = inputs[0].fields["event"]
-                return <CompileEventToVMResult>{
-                    expression: <jsep.CallExpression>{
-                        type: "CallExpression",
-                        arguments: [
-                            toMemberExpression(
-                                role.toString(),
-                                eventName.toString()
-                            ),
-                        ],
-                        callee: toIdentifier("awaitEvent"),
-                    },
-                    event: {
-                        role: role.toString(),
-                        event: eventName.toString(),
-                    },
-                }
+                return makeAwaitEvent(
+                    "awaitEvent",
+                    role.toString(),
+                    eventName.toString()
+                )
             }
             case "register_change_event": {
                 const { value: role } = inputs[0].fields["role"]
@@ -1044,8 +1062,21 @@ export class ServicesBlockDomainSpecificLanguage
                     errors,
                 }
             }
+            default: {
+                const { type } = block
+                switch (type) {
+                    case ROLE_BOUND_EVENT_BLOCK: {
+                        const { value: role } = inputs[0].fields["role"]
+                        const { value: eventName } = inputs[0].fields["event"]
+                        return makeAwaitEvent(
+                            "roleBound",
+                            role.toString(),
+                            eventName.toString()
+                        )
+                    }
+                }
+            }
         }
-
         return undefined
     }
 
@@ -1091,9 +1122,25 @@ export class ServicesBlockDomainSpecificLanguage
                     errors,
                 }
             }
-            default:
-                return undefined
+            default: {
+                const { type } = block
+                const errors: VMError[] = []
+                switch (type) {
+                    case ROLE_BOUND_BLOCK: {
+                        const { value: role } = inputs[0].fields["role"]
+                        return {
+                                expr: {
+                                type: "CallExpression",
+                                arguments: [ toIdentifier(role.toString()) ],
+                                callee: toMemberExpression("$fun","roleBoundExpression"),
+                            } as jsep.Expression,
+                            errors,
+                        }
+                    }
+                }
+            }
         }
+        return undefined
     }
 
     compileCommandToVM(options: CompileCommandToVMOptions) {
@@ -1137,6 +1184,14 @@ export class ServicesBlockDomainSpecificLanguage
                         ),
                     }),
                     errors: exprsErrors.flatMap(p => p.errors),
+                }
+            }
+            default: {
+                const { type } = block
+                switch (type) {
+                    case SET_STATUS_LIGHT_BLOCK: {
+                        console.log("SET_STATUS")
+                    }
                 }
             }
         }
