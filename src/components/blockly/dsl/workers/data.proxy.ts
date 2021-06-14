@@ -8,7 +8,7 @@ export default async function postTransformData(
     // check for missing data
     if (!message.data) return undefined
     const ws = workerProxy()
-    message.jacdacdata = true
+    message.worker = "data"
     const res = await ws.postMessage<DataMessage, DataMessage>(message)
     return res?.data
 }

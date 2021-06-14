@@ -1,11 +1,11 @@
 import Blockly, { WorkspaceSvg } from "blockly"
 import React, { createContext, ReactNode, useEffect, useState } from "react"
 import { CHANGE } from "../../../jacdac-ts/src/jdom/constants"
-import { assert, toMap } from "../../../jacdac-ts/src/jdom/utils"
+import { toMap } from "../../../jacdac-ts/src/jdom/utils"
 import RoleManager from "../../../jacdac-ts/src/servers/rolemanager"
 import useRoleManager from "../hooks/useRoleManager"
 import useLocalStorage from "../useLocalStorage"
-import BlockDomainSpecificLanguage, { resolveDsl } from "./dsl/dsl"
+import BlockDomainSpecificLanguage from "./dsl/dsl"
 import { domToJSON, WorkspaceJSON } from "./jsongenerator"
 import {
     NEW_PROJET_XML,

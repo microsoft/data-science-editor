@@ -3,12 +3,11 @@ import Papa from "papaparse"
 import { WorkerMessage } from "./message"
 
 export interface CsvMessage extends WorkerMessage {
-    jacdaccsv: true
+    worker: "csv"
     url: string
 }
 
 export interface CsvFile {
-    jacdaccsv: true
     url: string
     data?: object[]
     errors?: {
@@ -20,6 +19,7 @@ export interface CsvFile {
 }
 
 export interface CsvResponse extends WorkerMessage {
+    worker: "csv"
     file: CsvFile
 }
 
@@ -43,12 +43,13 @@ function downloadCSV(url: string): Promise<CsvFile> {
 }
 
 async function handleMessage(event: MessageEvent) {
-    const { data: message } = event as { data: CsvMessage }
-    if (!message.jacdaccsv) return
-    const { url } = message as CsvMessage
+    const message: CsvMessage = event.data
+    const { worker, url } = message
+    if (worker !== "csv") return
     const file = await downloadCSV(url)
     self.postMessage({
         id: message.id,
+        worker: "csv",
         file,
     })
 }

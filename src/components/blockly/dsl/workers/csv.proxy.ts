@@ -9,7 +9,7 @@ export default async function downloadCSV(url: string): Promise<CsvFile> {
     console.log(`download csv`, { url })
     const ws = workerProxy()
     const res = await ws.postMessage<CsvMessage, CsvResponse>({
-        jacdaccsv: true,
+        worker: "csv",
         url,
     })
     console.log(`downloaded csv`, res)

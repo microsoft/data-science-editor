@@ -73,7 +73,7 @@ export class BlockServices extends JDEventSource {
         return this._data
     }
     set data(value: object[]) {
-        if (JSON.stringify(this._data) !== JSON.stringify(value)) {
+        if (this._data !== value) {
             this._data = value
             this.emit(CHANGE)
         }
