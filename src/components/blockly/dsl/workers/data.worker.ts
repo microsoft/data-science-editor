@@ -27,9 +27,9 @@ export async function postTransformData(
     message: DataMessage
 ): Promise<object[]> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-
     try {
-        // TODO move to web worker
+        const { data } = message
+        if (!data) return undefined
         const handler = handlers[message.type]
         return handler?.(message)
     } catch (e) {
