@@ -120,7 +120,9 @@ export function BlockProvider(props: {
     const handleBlockChange = (blockId: string) => {
         const block = workspace.getBlockById(blockId) as BlockWithServices
         const services = block?.jacdacServices
-        services?.emit(CHANGE)
+        if (block && !block.isEnabled()) {
+            services?.clearData()
+        } else services?.emit(CHANGE)
     }
 
     const handleWorkspaceEvent = (event: {
@@ -128,6 +130,7 @@ export function BlockProvider(props: {
         workspaceId: string
     }) => {
         const { type, workspaceId } = event
+        console.log(`blockly: ${type}`, event)
         if (workspaceId !== workspace.id) return
         //console.log(`blockly event ${type}`, event)
         if (type === Blockly.Events.FINISHED_LOADING) {
@@ -144,16 +147,7 @@ export function BlockProvider(props: {
             const cev = event as unknown as Blockly.Events.BlockMove
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const parentId = (cev as any).newParentId
-            if (parentId) {
-                handleBlockChange(parentId)
-            } else {
-                // unplugged, clear data
-                const block = workspace.getBlockById(
-                    cev.blockId
-                ) as BlockWithServices
-                const services = block?.jacdacServices
-                if (services) services.data = undefined
-            }
+            if (parentId) handleBlockChange(parentId)
         } else if (type === Blockly.Events.BLOCK_CHANGE) {
             const cev = event as unknown as Blockly.Events.BlockChange
             handleBlockChange(cev.blockId)

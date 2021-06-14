@@ -73,10 +73,13 @@ export class BlockServices extends JDEventSource {
         return this._data
     }
     set data(value: object[]) {
-        if (this._data !== value) {
+        if (JSON.stringify(this._data) !== JSON.stringify(value)) {
             this._data = value
             this.emit(CHANGE)
         }
+    }
+    clearData() {
+        this.data = undefined
     }
 
     get chartProps() {
