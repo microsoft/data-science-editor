@@ -11,6 +11,9 @@ This repository contains sources of [Jacdac](https://aka.ms/jacdac).
 The rest of this page is for developers of the jacdac-ts library.
 
 ## Developer setup
+
+All command line instructions assume a bash-like terminal.
+
 ### Codespaces
 
 Edit this project directly from your browser using GitHub Codespaces. If you have access to them,
