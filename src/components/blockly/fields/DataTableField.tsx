@@ -77,7 +77,8 @@ export default class DataTableField extends ReactInlineField {
     protected createContainer(): HTMLDivElement {
         const c = document.createElement("div")
         c.style.display = "block"
-        c.style.minWidth = "14rem"
+        c.style.minWidth = "388px"
+        c.style.maxWidth = "80vh"
         c.style.maxHeight = "60vh"
         c.style.overflowY = "auto"
         return c
