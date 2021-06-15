@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { BlockSvg, Events, FieldVariable } from "blockly"
 import BuiltinDataSetField from "../fields/BuiltinDataSetField"
 import DataColumnChooserField from "../fields/DataColumnChooserField"
@@ -16,8 +17,11 @@ import {
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
 import postTransformData from "./workers/data.proxy"
-import { DataArrangeMessage } from "../../../workers/dist/node_modules/data.worker"
-import { DataDropMessage } from "../../../workers/dist/node_modules/data.worker"
+import {
+    DataDropRequest,
+    DataArrangeRequest,
+} from "../../../workers/data/dist/node_modules/data.worker"
+import { BlockWithServices } from "../WorkspaceContext"
 
 const DATA_ARRANGE_BLOCK = "data_arrange"
 const DATA_DROP_BLOCK = "data_drop"
@@ -78,7 +82,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 const column = b.getFieldValue("column")
                 const order = b.getFieldValue("order")
                 const descending = order === "descending"
-                return postTransformData(<DataArrangeMessage>{
+                return postTransformData(<DataArrangeRequest>{
                     type: "arrange",
                     column,
                     descending,
@@ -104,7 +108,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             transformData: (b: BlockSvg, data: any[]) => {
                 const column = b.getFieldValue("column")
                 console.log("Drop: ", { column })
-                return postTransformData(<DataDropMessage>{
+                return postTransformData(<DataDropRequest>{
                     type: "drop",
                     column,
                     data,
@@ -131,7 +135,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
         <BlockDefinition>{
             kind: "block",
             type: DATA_DATAVARIABLE_READ_BLOCK,
-            message0: "data variable %1",
+            message0: "dataset variable %1",
             args0: [
                 <VariableInputDefinition>{
                     type: "field_variable",
@@ -145,12 +149,16 @@ const dataDsl: BlockDomainSpecificLanguage = {
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             colour,
             template: "meta",
+            transformData: (block: BlockSvg) => {
+                const services = (block as BlockWithServices).jacdacServices
+                const data = services?.data
+                return Promise.resolve(data)
+            },
         },
-        // only 1 allowed to prevent cycles
         <BlockDefinition>{
             kind: "block",
             type: DATA_DATAVARIABLE_WRITE_BLOCK,
-            message0: "store in data variable %1",
+            message0: "store in dataset variable %1",
             args0: [
                 <VariableInputDefinition>{
                     type: "field_variable",
@@ -165,6 +173,22 @@ const dataDsl: BlockDomainSpecificLanguage = {
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             colour,
             template: "meta",
+            transformData: (block: BlockSvg, data: object[]) => {
+                // grab the variable from the block
+                const variable = block.getFieldValue("data")
+                if (!variable) return Promise.resolve(undefined)
+                const readBlocks = block.workspace.getBlocksByType(
+                    DATA_DATAVARIABLE_READ_BLOCK,
+                    false
+                )
+                readBlocks
+                    .filter(b => b.isEnabled())
+                    .filter(b => b.getFieldValue("data") === variable)
+                    .map(b => (b as BlockWithServices).jacdacServices)
+                    .filter(services => !!services)
+                    .forEach(services => (services.data = data))
+                return Promise.resolve(data)
+            },
         },
     ],
     createCategory: () => [
