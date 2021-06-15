@@ -10,9 +10,11 @@ import BlockDomainSpecificLanguage from "./dsl"
 import DataColumnChooserField from "../fields/DataColumnChooserField"
 import LinePlotField from "../fields/LinePlotField"
 import BarChartField from "../fields/BarField"
+import PiePlotField from "../fields/PieField"
 
 const SCATTERPLOT_BLOCK = "chart_scatterplot"
 const LINEPLOT_BLOCK = "chart_lineplot"
+const PIEPLOT_BLOCK = "chart_pieplot"
 const BARCHART_BLOCK = "chart_bar"
 
 const colour = "#999"
@@ -103,6 +105,34 @@ const chartDSL: BlockDomainSpecificLanguage = {
             inputsInline: false,
             transformData: identityTransformData,
         },
+        {
+            kind: "block",
+            type: PIEPLOT_BLOCK,
+            message0: "pie name %1 value %2 %3 %4",
+            args0: [
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "id",
+                },
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "value",
+                },
+                <DummyInputDefinition>{
+                    type: "input_dummy",
+                },
+                {
+                    type: PiePlotField.KEY,
+                    name: "plot",
+                },
+            ],
+            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            colour,
+            template: "meta",
+            inputsInline: false,
+            transformData: identityTransformData,
+        },
     ],
 
     createCategory: () => [
@@ -113,6 +143,7 @@ const chartDSL: BlockDomainSpecificLanguage = {
                 <BlockReference>{ kind: "block", type: SCATTERPLOT_BLOCK },
                 <BlockReference>{ kind: "block", type: BARCHART_BLOCK },
                 <BlockReference>{ kind: "block", type: LINEPLOT_BLOCK },
+                <BlockReference>{ kind: "block", type: PIEPLOT_BLOCK },
             ],
             colour,
         },
