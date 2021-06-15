@@ -69,6 +69,7 @@ import {
     ServiceBlockDefinition,
     STRING_TYPE,
     toolsColour,
+    TWIN_BLOCK,
     ValueInputDefinition,
     VariableInputDefinition,
 } from "../toolbox"
@@ -88,7 +89,6 @@ const SET_STATUS_LIGHT_BLOCK = "jacdac_set_status_light"
 const ROLE_BOUND_EVENT_BLOCK = "jacdac_role_bound_event"
 const ROLE_BOUND_BLOCK = "jacdac_role_bound"
 const INSPECT_BLOCK = "jacdac_tools_inspect"
-const TWIN_BLOCK = "jacdac_tools_twin"
 
 function isBooleanField(field: jdspec.PacketMember) {
     return field.type === "bool"

@@ -14,7 +14,7 @@ import { BlockSvg, FieldVariable } from "blockly"
 import useServiceServer from "../hooks/useServiceServer"
 import CancelIcon from "@material-ui/icons/Cancel"
 import BlockContext from "./BlockContext"
-import { TWIN_BLOCK } from "./dsl/toolsdsl"
+import { TWIN_BLOCK } from "./toolbox"
 
 function RoleChip(props: {
     role: string
