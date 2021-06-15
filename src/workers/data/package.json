@@ -1,0 +1,9 @@
+{
+  "name": "data-worker",
+  "type": "module",
+  "source": "data.worker.ts",
+  "main": "./dist/node_modules/data-worker.umd.js",
+  "module": "./dist/node_modules/data-worker.cjs.js",
+  "exports": "./dist/node_modules/data-worker.js",
+  "license": "MIT"
+}

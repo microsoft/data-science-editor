@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import Papa from "papaparse"
-import { WorkerMessage } from "./message"
 
-export interface CsvMessage extends WorkerMessage {
+export interface CsvMessage {
     worker: "csv"
+    id?: string
+}
+
+export interface CsvRequest extends CsvMessage {
     url: string
 }
 
@@ -18,7 +21,7 @@ export interface CsvFile {
     }[]
 }
 
-export interface CsvResponse extends WorkerMessage {
+export interface CsvResponse extends CsvMessage {
     worker: "csv"
     file: CsvFile
 }
@@ -43,7 +46,7 @@ function downloadCSV(url: string): Promise<CsvFile> {
 }
 
 async function handleMessage(event: MessageEvent) {
-    const message: CsvMessage = event.data
+    const message: CsvRequest = event.data
     const { worker, url } = message
     if (worker !== "csv") return
     const file = await downloadCSV(url)

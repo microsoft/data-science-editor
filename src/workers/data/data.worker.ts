@@ -1,15 +1,17 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { arrange, desc, tidy } from "@tidyjs/tidy"
-import { WorkerMessage } from "./message"
 
-export interface DataMessage extends WorkerMessage {
+export interface DataMessage {
     worker: "data"
-    type: "arrange"
+    id?: string
     data: object[]
 }
 
-export interface DataArrangeMessage extends DataMessage {
-    worker: "data"
+export interface DataRequest extends DataMessage {
+    type?: string
+}
+
+export interface DataArrangeRequest extends DataRequest {
     type: "arrange"
     column: string
     descending: boolean
@@ -17,13 +19,13 @@ export interface DataArrangeMessage extends DataMessage {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handlers: { [index: string]: (props: any) => object[] } = {
-    arrange: (props: DataArrangeMessage) => {
+    arrange: (props: DataArrangeRequest) => {
         const { column, descending, data } = props
         return tidy(data, arrange(descending ? desc(column) : column))
     },
 }
 
-function transformData(message: DataMessage): object[] {
+function transformData(message: DataRequest): object[] {
     try {
         const handler = handlers[message.type]
         return handler?.(message)
@@ -34,7 +36,7 @@ function transformData(message: DataMessage): object[] {
 }
 
 async function handleMessage(event: MessageEvent) {
-    const message: DataMessage = event.data
+    const message: DataRequest = event.data
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { worker, data, ...rest } = message
     if (worker !== "data") return

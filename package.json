@@ -106,7 +106,7 @@
   "license": "MIT",
   "scripts": {
     "setup": "git submodule update --init --recursive && git pull && yarn install --frozen-lockfile",
-    "postinstall": "yarn buildworker && cd jacdac-ts && yarn install --frozen-lockfile && yarn dist",
+    "postinstall": "yarn buildworkers && cd jacdac-ts && yarn install --frozen-lockfile && yarn dist",
     "pullsubmodules": "git submodule update --init --recursive",
     "lint": "node node_modules/eslint/bin/eslint.js src/**/*.ts src/**/*.tsx",
     "clean": "node node_modules/gatsby/cli.js clean",
@@ -123,8 +123,11 @@
     "buildspecs": "cd jacdac-ts && yarn buildspecs",
     "watchts": "cd jacdac-ts && yarn watch",
     "buildpxt": "cd jacdac-ts/pxt-jacdac && sh mk.sh",
-    "buildworker": "cd src/workers && node ../../node_modules/microbundle/dist/cli.js build -f modern --no-compress --types --ts-config tsconfig.json",
-    "watchworker": "cd src/workers && node ../../node_modules/microbundle/dist/cli.js watch -f modern --no-compress --types --ts-config tsconfig.json"
+    "buildworkercsv": "cd src/workers/csv && node ../../../node_modules/microbundle/dist/cli.js build -f modern --no-compress --types --ts-config tsconfig.json",
+    "buildworkerdata": "cd src/workers/data && node ../../../node_modules/microbundle/dist/cli.js build -f modern --no-compress --types --ts-config tsconfig.json",
+    "buildworkers": "yarn buildworkercsv && yarn buildworkerdata",
+    "watchworkercsv": "cd src/workers/csv && node ../../../node_modules/microbundle/dist/cli.js watch -f modern --no-compress --types --ts-config tsconfig.json",
+    "watchworkerdata": "cd src/workers/csv && node ../../../node_modules/microbundle/dist/cli.js watch -f modern --no-compress --types --ts-config tsconfig.json"
   },
   "repository": {
     "type": "git",

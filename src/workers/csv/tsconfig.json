@@ -4,7 +4,8 @@
         "lib": ["webworker", "es2020", "scripthost"],
         "types": [],
         "module": "ESNext",
-        "moduleResolution": "node"
+        "moduleResolution": "node",
+        "declaration": true
     },
     "exclude": ["node_modules"]
 }

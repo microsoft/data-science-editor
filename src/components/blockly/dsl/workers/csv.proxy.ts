@@ -1,14 +1,14 @@
 import workerProxy from "./proxy"
 import {
-    CsvMessage,
+    CsvRequest,
     CsvFile,
     CsvResponse,
-} from "../../../../workers/dist/node_modules/csv.worker"
+} from "../../../../workers/csv/dist/node_modules/csv.worker"
 
 export default async function downloadCSV(url: string): Promise<CsvFile> {
     console.log(`download csv`, { url })
-    const ws = workerProxy()
-    const res = await ws.postMessage<CsvMessage, CsvResponse>({
+    const worker = workerProxy("csv")
+    const res = await worker.postMessage<CsvRequest, CsvResponse>({
         worker: "csv",
         url,
     })
