@@ -16,7 +16,7 @@ import {
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
 import postTransformData from "./workers/data.proxy"
-import { ArrangeMessage } from "../../../workers/dist/node_modules/data.worker"
+import { DataArrangeMessage } from "../../../workers/dist/node_modules/data.worker"
 
 const DATA_ARRANGE_BLOCK = "data_arrange"
 const DATA_ADD_VARIABLE_CALLBACK = "data_add_variable"
@@ -76,8 +76,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 const column = b.getFieldValue("column")
                 const order = b.getFieldValue("order")
                 const descending = order === "descending"
-                return postTransformData(<ArrangeMessage>{
-                    jacdacdata: true,
+                return postTransformData(<DataArrangeMessage>{
                     type: "arrange",
                     column,
                     descending,
