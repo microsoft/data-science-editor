@@ -19,7 +19,6 @@ import {
     SRV_PROTO_TEST,
     SRV_ROLE_MANAGER,
     SRV_SERVO,
-    SRV_SETTINGS,
     SRV_SEVEN_SEGMENT_DISPLAY,
     SystemEvent,
     SystemReg,
@@ -57,8 +56,10 @@ import {
     CODE_STATEMENT_TYPE,
     CommandBlockDefinition,
     CustomBlockDefinition,
+    DATA_SCIENCE_STATEMENT_TYPE,
     EventBlockDefinition,
     EventFieldDefinition,
+    identityTransformData,
     InputDefinition,
     JSON_TYPE,
     NUMBER_TYPE,
@@ -67,6 +68,7 @@ import {
     resolveBlockDefinition,
     ServiceBlockDefinition,
     STRING_TYPE,
+    toolsColour,
     ValueInputDefinition,
     VariableInputDefinition,
 } from "../toolbox"
@@ -79,10 +81,14 @@ import BlockDomainSpecificLanguage, {
     CreateBlocksOptions,
     CreateCategoryOptions,
 } from "./dsl"
+import JDomTreeField from "../fields/JDomTreeField"
+import TwinField from "../fields/TwinField"
 
 const SET_STATUS_LIGHT_BLOCK = "jacdac_set_status_light"
 const ROLE_BOUND_EVENT_BLOCK = "jacdac_role_bound_event"
 const ROLE_BOUND_BLOCK = "jacdac_role_bound"
+const INSPECT_BLOCK = "jacdac_tools_inspect"
+const TWIN_BLOCK = "jacdac_tools_twin"
 
 function isBooleanField(field: jdspec.PacketMember) {
     return field.type === "bool"
@@ -873,10 +879,78 @@ export class ServicesBlockDomainSpecificLanguage
             },
         ]
 
+        const toolsBlocks: BlockDefinition[] = [
+            {
+                kind: "block",
+                type: TWIN_BLOCK,
+                message0: `view %1 %2 %3`,
+                args0: [
+                    <VariableInputDefinition>{
+                        type: "field_variable",
+                        name: "role",
+                        variable: "none",
+                        variableTypes: [
+                            "client",
+                            ...servicesDSL.supportedServices.map(
+                                service => service.shortId
+                            ),
+                        ],
+                        defaultType: "client",
+                    },
+                    {
+                        type: "input_dummy",
+                    },
+                    <InputDefinition>{
+                        type: TwinField.KEY,
+                        name: "twin",
+                    },
+                ],
+                colour: toolsColour,
+                inputsInline: false,
+                tooltip: `Twin of the selected service`,
+                nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+                helpUrl: "",
+                template: "meta",
+                transformData: identityTransformData,
+            },
+            {
+                kind: "block",
+                type: INSPECT_BLOCK,
+                message0: `inspect %1 %2 %3`,
+                args0: [
+                    <VariableInputDefinition>{
+                        type: "field_variable",
+                        name: "role",
+                        variable: "none",
+                        variableTypes: [
+                            "client",
+                            ...servicesDSL.supportedServices.map(
+                                service => service.shortId
+                            ),
+                        ],
+                        defaultType: "client",
+                    },
+                    {
+                        type: "input_dummy",
+                    },
+                    <InputDefinition>{
+                        type: JDomTreeField.KEY,
+                        name: "twin",
+                    },
+                ],
+                colour: toolsColour,
+                inputsInline: false,
+                tooltip: `Inspect a service`,
+                helpUrl: "",
+                template: "meta",
+            },
+        ]
+
         return [
             ...this._serviceBlocks,
             ...this._eventFieldBlocks,
             ...this._runtimeBlocks,
+            ...toolsBlocks,
         ]
     }
 
@@ -996,7 +1070,23 @@ export class ServicesBlockDomainSpecificLanguage
             ],
         }
 
-        return [...servicesCategories, commonCategory]
+        const toolsCategory: CategoryDefinition = {
+            kind: "category",
+            name: "Tools",
+            colour: toolsColour,
+            contents: [
+                <BlockReference>{
+                    kind: "block",
+                    type: TWIN_BLOCK,
+                },
+                <BlockReference>{
+                    kind: "block",
+                    type: INSPECT_BLOCK,
+                },
+            ],
+        }
+
+        return [...servicesCategories, commonCategory, toolsCategory]
     }
 
     compileEventToVM(options: CompileEventToVMOptions): CompileEventToVMResult {
@@ -1129,10 +1219,13 @@ export class ServicesBlockDomainSpecificLanguage
                     case ROLE_BOUND_BLOCK: {
                         const { value: role } = inputs[0].fields["role"]
                         return {
-                                expr: {
+                            expr: {
                                 type: "CallExpression",
-                                arguments: [ toIdentifier(role.toString()) ],
-                                callee: toMemberExpression("$fun","roleBoundExpression"),
+                                arguments: [toIdentifier(role.toString())],
+                                callee: toMemberExpression(
+                                    "$fun",
+                                    "roleBoundExpression"
+                                ),
                             } as jsep.Expression,
                             errors,
                         }

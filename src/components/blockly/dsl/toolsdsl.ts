@@ -1,8 +1,6 @@
 import { toIdentifier } from "../../../../jacdac-ts/src/vm/compile"
 import { CmdWithErrors, makeVMBase } from "../../vm/VMgenerator"
-import JDomTreeField from "../fields/JDomTreeField"
 import LogViewField from "../fields/LogViewField"
-import TwinField from "../fields/TwinField"
 import VariablesField from "../fields/VariablesFields"
 import WatchValueField from "../fields/WatchValueField"
 import {
@@ -11,86 +9,19 @@ import {
     identityTransformData,
     InputDefinition,
     LabelDefinition,
-    VariableInputDefinition,
+    toolsColour,
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
-import servicesDSL from "./servicesdsl"
 
-const colour = "#888"
-const INSPECT_BLOCK = "jacdac_tools_inspect"
 const WATCH_BLOCK = "jacdac_tools_watch"
 const LOG_BLOCK = "jacdac_tools_log"
 const VIEW_LOG_BLOCK = "jacdac_tools_log_view"
 const VARIABLES_BLOCK = "jacdac_variables_view"
-export const TWIN_BLOCK = "jacdac_tools_twin"
+const colour = toolsColour
 
 const toolsDSL: BlockDomainSpecificLanguage = {
     id: "tools",
     createBlocks: () => [
-        {
-            kind: "block",
-            type: TWIN_BLOCK,
-            message0: `view %1 %2 %3`,
-            args0: [
-                <VariableInputDefinition>{
-                    type: "field_variable",
-                    name: "role",
-                    variable: "none",
-                    variableTypes: [
-                        "client",
-                        ...servicesDSL.supportedServices.map(
-                            service => service.shortId
-                        ),
-                    ],
-                    defaultType: "client",
-                },
-                {
-                    type: "input_dummy",
-                },
-                <InputDefinition>{
-                    type: TwinField.KEY,
-                    name: "twin",
-                },
-            ],
-            colour,
-            inputsInline: false,
-            tooltip: `Twin of the selected service`,
-            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            helpUrl: "",
-            template: "meta",
-            transformData: identityTransformData,
-        },
-        {
-            kind: "block",
-            type: INSPECT_BLOCK,
-            message0: `inspect %1 %2 %3`,
-            args0: [
-                <VariableInputDefinition>{
-                    type: "field_variable",
-                    name: "role",
-                    variable: "none",
-                    variableTypes: [
-                        "client",
-                        ...servicesDSL.supportedServices.map(
-                            service => service.shortId
-                        ),
-                    ],
-                    defaultType: "client",
-                },
-                {
-                    type: "input_dummy",
-                },
-                <InputDefinition>{
-                    type: JDomTreeField.KEY,
-                    name: "twin",
-                },
-            ],
-            colour,
-            inputsInline: false,
-            tooltip: `Inspect a service`,
-            helpUrl: "",
-            template: "meta",
-        },
         {
             kind: "block",
             type: VARIABLES_BLOCK,
@@ -169,11 +100,8 @@ const toolsDSL: BlockDomainSpecificLanguage = {
     ],
     createCategory: () => [
         {
-            kind: "sep",
-        },
-        {
             kind: "category",
-            name: "Tools",
+            name: "Debugger",
             colour: colour,
             contents: [
                 <LabelDefinition>{
@@ -187,18 +115,6 @@ const toolsDSL: BlockDomainSpecificLanguage = {
                 <BlockReference>{
                     kind: "block",
                     type: WATCH_BLOCK,
-                },
-                <LabelDefinition>{
-                    kind: "label",
-                    text: "Roles",
-                },
-                <BlockReference>{
-                    kind: "block",
-                    type: TWIN_BLOCK,
-                },
-                <BlockReference>{
-                    kind: "block",
-                    type: INSPECT_BLOCK,
                 },
                 <LabelDefinition>{
                     kind: "label",
@@ -216,6 +132,9 @@ const toolsDSL: BlockDomainSpecificLanguage = {
                     type: VIEW_LOG_BLOCK,
                 },
             ],
+        },
+        {
+            kind: "sep",
         },
     ],
 

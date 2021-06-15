@@ -165,6 +165,8 @@ export const BUILTIN_TYPES = ["", ...PRIMITIVE_TYPES]
 export const CODE_STATEMENT_TYPE = "Code"
 export const DATA_SCIENCE_STATEMENT_TYPE = "DataScienceStatement"
 
+export const toolsColour = "#888"
+
 export interface ContentDefinition {
     kind: "category" | "sep" | "button" | "label"
     order?: number
