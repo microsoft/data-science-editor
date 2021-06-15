@@ -10,9 +10,9 @@ import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import { CHANGE, PROGRESS } from "../../jacdac-ts/src/jdom/constants"
 import Trace from "../../jacdac-ts/src/jdom/trace"
 import TracePlayer from "../../jacdac-ts/src/jdom/traceplayer"
-import useDbValue from "./useDbValue"
 import TraceRecorder from "../../jacdac-ts/src/jdom/tracerecorder"
 import TraceView, { TracePacketProps } from "../../jacdac-ts/src/jdom/traceview"
+import useLocalStorage from "./useLocalStorage"
 
 export interface PacketsProps {
     trace: Trace
@@ -65,10 +65,8 @@ export default PacketsContext
 
 // eslint-disable-next-line react/prop-types
 export const PacketsProvider = ({ children }) => {
-    const { bus } = useContext<JacdacContextProps>(
-        JacdacContext
-    )
-    const { value: filter, setValue: _setFilter } = useDbValue(
+    const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const [filter, _setFilter] = useLocalStorage(
         "packetfilter",
         "announce:false reset-in:false min-priority:false"
     )

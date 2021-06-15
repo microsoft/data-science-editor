@@ -14,7 +14,6 @@ import {
     useTheme,
 } from "@material-ui/core"
 import { Link } from "gatsby-theme-material-ui"
-import useDbValue from "../../components/useDbValue"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import useChange from "../../jacdac/useChange"
 import useGridBreakpoints from "../../components/useGridBreakpoints"
@@ -59,6 +58,7 @@ import { AlertTitle } from "@material-ui/lab"
 import { serviceName } from "../../../jacdac-ts/src/jdom/pretty"
 import ConnectAlert from "../../components/alert/ConnectAlert"
 import ApiKeyAccordion from "../../components/ApiKeyAccordion"
+import { useSecret } from "../../components/hooks/useSecret"
 
 const EDGE_IMPULSE_API_KEY = "edgeimpulseapikey"
 
@@ -247,10 +247,10 @@ class EdgeImpulseClient extends JDClient {
         const { device } = service
 
         // fetch device spec
-        const firmwareIdentifier = await service.device.resolveFirmwareIdentifier()
-        const deviceSpec = deviceSpecificationFromFirmwareIdentifier(
-            firmwareIdentifier
-        )
+        const firmwareIdentifier =
+            await service.device.resolveFirmwareIdentifier()
+        const deviceSpec =
+            deviceSpecificationFromFirmwareIdentifier(firmwareIdentifier)
 
         this._hello = {
             version: 2,
@@ -331,7 +331,8 @@ class EdgeImpulseClient extends JDClient {
         const { timestamp } = bus
         // first sample, notify we're started
         if (this.samplingState == STARTING) {
-            this._sample.startTimestamp = this._sample.lastProgressTimestamp = timestamp
+            this._sample.startTimestamp = this._sample.lastProgressTimestamp =
+                timestamp
             this.send({ sampleStarted: true })
             this.setSamplingState(SAMPLING)
         }
@@ -503,9 +504,7 @@ class EdgeImpulseClient extends JDClient {
         )
     }
 
-    static async currentProjectInfo(
-        apiKey: string
-    ): Promise<{
+    static async currentProjectInfo(apiKey: string): Promise<{
         valid: boolean
         errorStatus?: number
         project?: EdgeImpulseProject
@@ -812,9 +811,10 @@ function Acquisition(props: {
         [client]
     )
     // listen to errors
-    useEffect(() => client?.subscribe(ERROR, (e: string) => setError(e)), [
-        client,
-    ])
+    useEffect(
+        () => client?.subscribe(ERROR, (e: string) => setError(e)),
+        [client]
+    )
     // progress
     useEffect(
         () =>
@@ -880,7 +880,7 @@ function Acquisition(props: {
 }
 
 export default function EdgeImpulse() {
-    const { value: apiKey } = useDbValue(EDGE_IMPULSE_API_KEY, "")
+    const { value: apiKey } = useSecret(EDGE_IMPULSE_API_KEY)
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const [model, setModel] = useState<Uint8Array>(undefined)
     const [registerIdsChecked, setRegisterIdsChecked] = useState<string[]>([])

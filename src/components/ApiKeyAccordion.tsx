@@ -1,5 +1,4 @@
 import React, { useState } from "react"
-import useDbValue from "./useDbValue"
 import useEffectAsync from "./useEffectAsync"
 import Alert from "./ui/Alert"
 import {
@@ -18,6 +17,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline"
 import { useSnackbar } from "notistack"
 import { useId } from "react-use-id-hook"
+import { useSecret } from "./hooks/useSecret"
 
 export default function ApiKeyAccordion(props: {
     apiName: string
@@ -26,7 +26,7 @@ export default function ApiKeyAccordion(props: {
     instructions: JSX.Element | JSX.Element[]
 }) {
     const { apiName, validateKey, instructions, title } = props
-    const { value: apiKey, setValue: setApiKey } = useDbValue(apiName, "")
+    const { value: apiKey, setValue: setApiKey } = useSecret(apiName)
     const apiKeyId = useId()
     const [key, setKey] = useState("")
     const [expanded, setExpanded] = useState(!apiKey)
