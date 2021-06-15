@@ -53,7 +53,7 @@ function createBus(): JDBus {
     const worker =
         typeof window !== "undefined" &&
         new Worker(
-            withPrefix(`/jacdac-serviceworker-${jacdacTsPackage.version}.js`)
+            withPrefix(`/jacdac-worker-${jacdacTsPackage.version}.js`)
         )
     const b = new JDBus(
         [
