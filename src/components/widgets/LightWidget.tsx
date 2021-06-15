@@ -4,7 +4,6 @@ import {
     LedPixelVariant,
     RENDER,
 } from "../../../jacdac-ts/src/jdom/constants"
-import useServiceServer from "../hooks/useServiceServer"
 import LedPixelServer from "../../../jacdac-ts/src/servers/ledpixelserver"
 import SvgWidget from "../widgets/SvgWidget"
 import useWidgetTheme from "../widgets/useWidgetTheme"
@@ -166,7 +165,7 @@ function LightStripWidget(props: {
         const n = numPixels - (isJewel ? 1 : 0)
         const neoperimeter = n * (2.7 * neoradius)
         const margin = 2 * neoradius
-        const ringradius = neoperimeter / (2 * Math.PI)
+        const ringradius = 1.5 * neoperimeter / (2 * Math.PI)
         width = 2 * (margin + ringradius)
         height = width
         const wm = width - 2 * margin
