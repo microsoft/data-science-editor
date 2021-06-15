@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { arrange, desc, tidy } from "@tidyjs/tidy"
+import { select, arrange, desc, tidy } from "@tidyjs/tidy"
 
 export interface DataMessage {
     worker: "data"
@@ -17,11 +17,21 @@ export interface DataArrangeRequest extends DataRequest {
     descending: boolean
 }
 
+export interface DataDropRequest extends DataRequest {
+    type: "drop"
+    column: string
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handlers: { [index: string]: (props: any) => object[] } = {
     arrange: (props: DataArrangeRequest) => {
         const { column, descending, data } = props
         return tidy(data, arrange(descending ? desc(column) : column))
+    },
+    drop: (props: DataDropRequest) => {
+        const { column, data } = props
+        if (!column) return data
+        else return tidy(data, select([`-${column}`])) 
     },
 }
 
@@ -40,9 +50,10 @@ async function handleMessage(event: MessageEvent) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { worker, data, ...rest } = message
     if (worker !== "data") return
-
+    console.debug("Jacdac data in:", {message})
     const newData = await transformData(message)
-    const resp = { jacdacdata: true, ...rest, data: newData }
+    console.debug("Jacdac data out:", {message})
+    const resp = { worker, ...rest, data: newData }
     self.postMessage(resp)
 }
 

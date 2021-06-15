@@ -127,7 +127,7 @@
     "buildworkerdata": "cd src/workers/data && node ../../../node_modules/microbundle/dist/cli.js build -f modern --no-compress --types --ts-config tsconfig.json",
     "buildworkers": "yarn buildworkercsv && yarn buildworkerdata",
     "watchworkercsv": "cd src/workers/csv && node ../../../node_modules/microbundle/dist/cli.js watch -f modern --no-compress --types --ts-config tsconfig.json",
-    "watchworkerdata": "cd src/workers/csv && node ../../../node_modules/microbundle/dist/cli.js watch -f modern --no-compress --types --ts-config tsconfig.json"
+    "watchworkerdata": "cd src/workers/data && node ../../../node_modules/microbundle/dist/cli.js watch -f modern --no-compress --types --ts-config tsconfig.json"
   },
   "repository": {
     "type": "git",

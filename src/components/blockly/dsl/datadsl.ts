@@ -17,8 +17,10 @@ import {
 import BlockDomainSpecificLanguage from "./dsl"
 import postTransformData from "./workers/data.proxy"
 import { DataArrangeMessage } from "../../../workers/dist/node_modules/data.worker"
+import { DataDropMessage } from "../../../workers/dist/node_modules/data.worker"
 
 const DATA_ARRANGE_BLOCK = "data_arrange"
+const DATA_DROP_BLOCK = "data_drop"
 const DATA_ADD_VARIABLE_CALLBACK = "data_add_variable"
 const DATA_DATAVARIABLE_READ_BLOCK = "data_dataset_read"
 const DATA_DATAVARIABLE_WRITE_BLOCK = "data_dataset_write"
@@ -80,6 +82,31 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     type: "arrange",
                     column,
                     descending,
+                    data,
+                })
+            },
+            template: "meta",
+        },
+        {
+            kind: "block",
+            type: DATA_DROP_BLOCK,
+            message0: "drop %1",
+            colour,
+            args0: [
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "column",
+                },
+            ],
+            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            transformData: (b: BlockSvg, data: any[]) => {
+                const column = b.getFieldValue("column")
+                console.log("Drop: ", { column })
+                return postTransformData(<DataDropMessage>{
+                    type: "drop",
+                    column,
                     data,
                 })
             },
@@ -162,6 +189,10 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 <BlockReference>{
                     kind: "block",
                     type: DATA_ARRANGE_BLOCK,
+                },
+                <BlockReference>{
+                    kind: "block",
+                    type: DATA_DROP_BLOCK,
                 },
                 <LabelDefinition>{
                     kind: "label",
