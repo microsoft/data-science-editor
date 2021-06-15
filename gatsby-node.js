@@ -3,6 +3,7 @@ const fs = require(`fs-extra`)
 const sharp = require(`sharp`)
 const { slash } = require(`gatsby-core-utils`)
 const { createFilePath } = require(`gatsby-source-filesystem`)
+const Papa = require("papaparse")
 const {
     serviceSpecifications,
     identifierToUrlPath,
@@ -85,6 +86,27 @@ async function createServicePages(graphql, actions, reporter) {
             toPath: p,
         })
     })
+}
+
+async function createDeviceQRPages(actions) {
+    console.log(`generating device QR pages`)
+    const { createRedirect } = actions
+    const csv = fs.readFileSync(
+        "./jacdac-ts/jacdac-spec/devices/microsoft/research/qr-url-device-map.csv",
+        "utf-8"
+    )
+    const designidcol = "designid"
+    const vanitycol = "vanityname"
+    const csvData = Papa.parse(csv, { header: true })
+    const data = csvData.data.filter(d => !!d[designidcol])
+    for (const qr of data) {
+        const vanity = qr[vanitycol].trim()
+        const p = `/devices/codes/${vanity}/`
+        const r = { fromPath: p, toPath: `/devices/` }
+        await createRedirect(r)
+        console.log(r)
+    }
+    console.log(`devices qr code redirect created`)
 }
 
 async function createDevicePages(graphql, actions, reporter) {
@@ -295,6 +317,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     await createServicePages(graphql, actions, reporter)
     await createSpecPages(graphql, actions, reporter)
     await createDevicePages(graphql, actions, reporter)
+    await createDeviceQRPages(actions, reporter)
     // generate JSON for Services/DTMI models
     await generateServicesJSON()
     await createWorkers()
