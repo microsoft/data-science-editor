@@ -14,6 +14,8 @@ The rest of this page is for developers of the jacdac-ts library.
 
 All command line instructions assume a bash-like terminal.
 
+On Windows, you may need to run these commands within Git Bash or Windows Subsystem for Linux (WSL), unless you have bash-like tools available locally.
+
 ### Codespaces
 
 Edit this project directly from your browser using GitHub Codespaces. If you have access to them,
@@ -54,6 +56,7 @@ code .
 
 * install the recommended extensions (**MDX**, **ESLint** and **Prettier** extensions)
 * in the Git view, click on the ``jacdac`` branch and select ``main`` so that changes are automatically synched
+* remember that you need a bash-like terminal to run some of these commands - VS Code allows you to start a Git Bash terminal from the new terminals dropdown
 
 ### Specs build
 
