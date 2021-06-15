@@ -23,28 +23,28 @@ function TwinWidget() {
 
     // data collection
     const register = useBestRegister(roleService)
-    useEffect(
-        () =>
-            register?.subscribe(REPORT_UPDATE, () => {
-                const newValue = register.unpackedValue
-                if (newValue !== undefined) {
-                    const newRow = toMap(
-                        register.fields,
-                        f => f.name,
-                        (f, i) => newValue[i]
-                    )
-                    const newData = [
-                        ...(data || []),
-                        {
-                            ...{ time: bus.timestamp / 1000 },
-                            ...newRow,
-                        },
-                    ].slice(-HORIZON)
-                    setData(newData)
-                }
-            }),
-        [register, sourceId, data]
-    )
+    const setRegisterData = () => {
+        const newValue = register?.unpackedValue
+        if (newValue !== undefined) {
+            const newRow = toMap(
+                register.fields,
+                f => f.name,
+                (f, i) => newValue[i]
+            )
+            const newData = [
+                ...(data || []),
+                {
+                    ...{ time: bus.timestamp / 1000 },
+                    ...newRow,
+                },
+            ].slice(-HORIZON)
+            setData(newData)
+        }
+    }
+    useEffect(() => {
+        setRegisterData()
+        return register?.subscribe(REPORT_UPDATE, setRegisterData)
+    }, [register, sourceId, data])
 
     if (flyout) return null
     if (!roleService) return <NoServiceAlert />
