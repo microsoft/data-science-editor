@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
 import { assert, SMap } from "../../../../../jacdac-ts/src/jdom/utils"
-import { createCsvWorker, createDataWorker } from "./workerloader"
+import createCsvWorker from "../../../../workers/csv/workerloader"
+import createDataWorker from "../../../../workers/data/workerloader"
 
 export interface WorkerMessage {
     worker: "data" | "csv"
