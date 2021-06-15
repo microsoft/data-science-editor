@@ -102,7 +102,7 @@ async function createDeviceQRPages(actions) {
     for (const qr of data) {
         const vanity = qr[vanitycol].trim()
         const p = `/devices/codes/${vanity}/`
-        const r = { fromPath: p, toPath: `/devices/` }
+        const r = { fromPath: p, toPath: `/devices/microsoft/research/` }
         await createRedirect(r)
         console.log(r)
     }
