@@ -46,9 +46,10 @@ export default function SoilMoistureWidget(props: {
             <text
                 x={w / 2}
                 y="1.4"
-                fontSize="1.058"
+                fontSize="1"
                 strokeWidth=".026"
                 {...textProps}
+                fill={"#fff"}
             >
                 {tvalue}
             </text>
