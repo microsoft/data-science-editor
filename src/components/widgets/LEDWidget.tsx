@@ -1,10 +1,9 @@
 import React from "react"
 import SvgWidget from "../widgets/SvgWidget"
-import { Grid, IconButton } from "@material-ui/core"
+import { Grid } from "@material-ui/core"
 import useWidgetTheme from "../widgets/useWidgetTheme"
-import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord"
-import { rgbToHtmlColor } from "../../../jacdac-ts/src/jdom/utils"
 import SliderWithLabel from "../ui/SliderWithLabel"
+import ColorButtons from "./ColorButtons"
 
 // https://academo.org/demos/wavelength-to-colour-relationship/#:~:text=According%20to%20your%20tool%2C%20light%20at%20405nm%20corresponds,%280%2C0%2C255%29%2C%20has%20a%20quite%20longer%20wavelength%20of%20440nm.
 function nmToRGB(wavelength: number): number {
@@ -85,7 +84,6 @@ export default function LEDWidget(props: {
     const b = (ledColor >> 0) & 0xff
 
     const { active } = useWidgetTheme(color)
-    const handleSetColor = (col: number) => () => onLedColorChange(col)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleSpeedChange: any = (event: unknown, newSpeed: number) =>
         onSpeedChange(newSpeed)
@@ -176,17 +174,15 @@ export default function LEDWidget(props: {
                         ))}
                 </SvgWidget>
             </Grid>
-            {onLedColorChange &&
-                buttonColors.map(col => (
-                    <Grid key={col} item xs={buttonColors.length === 2 ? 4 : 2}>
-                        <IconButton
-                            style={{ color: rgbToHtmlColor(col) }}
-                            onClick={handleSetColor(col)}
-                        >
-                            <FiberManualRecordIcon />
-                        </IconButton>
-                    </Grid>
-                ))}
+            {onLedColorChange && (
+                <Grid item xs={12}>
+                    <ColorButtons
+                        colors={buttonColors}
+                        color={ledColor}
+                        onColorChange={onLedColorChange}
+                    />
+                </Grid>
+            )}
             {onSpeedChange && (
                 <Grid item xs={12}>
                     <SliderWithLabel

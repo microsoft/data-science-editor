@@ -16,6 +16,7 @@ import useServiceServer from "../hooks/useServiceServer"
 import LedPixelServer from "../../../jacdac-ts/src/servers/ledpixelserver"
 import LightWidget from "../widgets/LightWidget"
 import { LedPixelCmd } from "../../../jacdac-ts/src/jdom/constants"
+import ColorButtons from "../widgets/ColorButtons"
 /*
 0xD6: range P=0 N=length W=1 S=0- range from pixel P, Npixels long (currently unsupported: every Wpixels skip Spixels)
 */
@@ -256,19 +257,31 @@ function LightCommand(props: { service: JDService; expanded: boolean }) {
 
 export default function DashboardLEDPixel(props: DashboardServiceProps) {
     const { service, services, expanded } = props
+    const [penColor, setPenColor] = useState<number>(0x020202)
     const server = useServiceServer<LedPixelServer>(
         service,
         () => new LedPixelServer()
     )
+    const handleColorChange = (newColor: number) => setPenColor(newColor)
+    const handleLedClick: (index: number) => void = async (index: number) => {
+        const encoded = lightEncode(
+`setone % #
+show 20`,
+            [index, penColor]
+        )
+        await service?.sendCmdAsync(LedPixelCmd.Run, encoded)
+    }
     return (
         <>
             {server && (
                 <LightWidget
                     server={server}
                     widgetCount={services.length}
+                    onLedClick={handleLedClick}
                     {...props}
                 />
             )}
+            <ColorButtons color={penColor} onColorChange={handleColorChange} />
             {expanded && <LightCommand service={service} expanded={expanded} />}
         </>
     )
