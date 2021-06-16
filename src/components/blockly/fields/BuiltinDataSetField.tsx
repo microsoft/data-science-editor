@@ -4,8 +4,10 @@ import { withPrefix } from "gatsby"
 import postLoadCSV from "../dsl/workers/csv.proxy"
 
 const builtins = {
-    dummy: withPrefix("/datasets/dummy.csv"),
+    cereal: withPrefix("/datasets/cereal.csv"),
+    penguins: withPrefix("/datasets/penguins.csv"),
     mt: withPrefix("/datasets/mt.csv"),
+    
 }
 
 export default class BuiltinDataSetField
