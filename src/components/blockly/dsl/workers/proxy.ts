@@ -3,9 +3,12 @@
 import { assert, SMap } from "../../../../../jacdac-ts/src/jdom/utils"
 import createCsvWorker from "../../../../workers/csv/workerloader"
 import createDataWorker from "../../../../workers/data/workerloader"
+import createVMWorker from "../../../../workers/vm/workerloader"
+
+export type VMType = "data" | "csv" | "vm"
 
 export interface WorkerMessage {
-    worker: "data" | "csv"
+    worker: VMType
     id?: string
 }
 
@@ -14,7 +17,7 @@ export class WorkerProxy {
         resolve: (res: any) => void
         reject: (err: any) => void
     }> = {}
-    constructor(readonly worker: Worker, readonly workerid: "data" | "csv") {
+    constructor(readonly worker: Worker, readonly workerid: VMType) {
         this.worker.addEventListener("message", this.handleMessage.bind(this))
     }
 
@@ -42,8 +45,9 @@ const _workers: SMap<WorkerProxy> = {}
 const loaders = {
     data: createDataWorker,
     csv: createCsvWorker,
+    vm: createVMWorker,
 }
-export default function workerProxy(workerid: "data" | "csv") {
+export default function workerProxy(workerid: VMType) {
     const worker =
         _workers[workerid] ||
         (_workers[workerid] = new WorkerProxy(loaders[workerid](), workerid))
