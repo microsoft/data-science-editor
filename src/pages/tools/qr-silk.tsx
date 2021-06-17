@@ -85,7 +85,7 @@ export default function DeviceQRCodeGenerator(props: {
                 </Grid>
                 <Grid item>
                     <TextField
-                        label="block size (mm)"
+                        label="block size (cm)"
                         type="number"
                         value={size}
                         onChange={handleSizeChange}
