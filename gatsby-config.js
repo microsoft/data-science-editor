@@ -69,11 +69,19 @@ module.exports = {
         {
             resolve: `gatsby-source-filesystem`,
             options: {
+                name: `akalinks`,
+                path: `${__dirname}/jacdac-ts/jacdac-spec/devices/microsoft/research/qr-url-device-map.csv`,
+            },
+        },
+        {
+            resolve: `gatsby-source-filesystem`,
+            options: {
                 name: `traces`,
                 path: `${__dirname}/jacdac-ts/jacdac-spec/traces`,
             },
         },
         `gatsby-transformer-json`,
+        `gatsby-transformer-csv`,
         `gatsby-theme-material-ui`,
         `gatsby-plugin-react-helmet`,
         `gatsby-plugin-image`,

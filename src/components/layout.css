@@ -706,3 +706,9 @@ footer {
     height: 8rem;
     width: 28rem;
 }
+
+img.pixelated {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+}
