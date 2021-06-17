@@ -20,9 +20,11 @@ function useQRCodeSCR(
     mirror: boolean,
     margin: number
 ) {
-    const fmt = (v: number) => v.toFixed(3)
     const [image, setImage] = useState<string>(undefined)
     const [scr, setScr] = useState<string>(undefined)
+    const [kicad, setKicad] = useState<string>(undefined)
+    const [altium, setAltium] = useState<string>(undefined)
+    const [numBlocks, setNumBlocks] = useState<number>(undefined)
     const [error, setError] = useState<string>(undefined)
     const deps = [url, layer, size, mirror, margin]
 
@@ -33,75 +35,126 @@ function useQRCodeSCR(
         setScr(undefined)
         setError(undefined)
         try {
+            if (!mounted()) return
+
+            const qr = QRCode.create(url, {
+                errorCorrectionLevel: "medium",
+            })
+            let numBlocks = qr.modules.size
+            let ptr = 0
+            const code = {}
+            for (let y = 0; y < numBlocks; ++y) {
+                for (let x = 0; x < numBlocks; ++x) {
+                    const xx = !mirror ? numBlocks - x - 1 : x
+                    code[`${xx + margin},${numBlocks - y - 1 + margin}`] = !!qr
+                        .modules.data[ptr++]
+                }
+            }
+            setNumBlocks(numBlocks)
+
             const utfcode: string = await QRCode.toString(url, {
-                margin: 0,
+                margin: 1,
                 scale: 1,
                 errorCorrectionLevel: "medium",
                 type: "utf8",
             })
-            if (!mounted()) return
             setImage(utfcode)
-            console.debug(`utfcode`, { utfcode })
-            const lines = utfcode.split(/\n/).filter(s => !!s)
-            let sz = lines[0].length
-            const code = {}
-            for (let y = 0; y < sz; y += 2) {
-                const line = lines[y >> 1]
-                for (let x = 0; x < sz; ++x) {
-                    const ch = line.charCodeAt(x)
-                    let upper = false,
-                        lower = false
-                    switch (ch) {
-                        case 32:
-                            break
-                        case 9600:
-                            upper = true
-                            break
-                        case 9604:
-                            lower = true
-                            break
-                        case 9608:
-                            upper = true
-                            lower = true
-                            break
-                        default:
-                            throw new Error("bad char: " + ch)
-                    }
-                    const xx = !mirror ? sz - x - 1 : x
-                    code[`${xx + margin},${sz - y - 1 + margin}`] = upper
-                    code[`${xx + margin},${sz - y - 2 + margin}`] = lower
-                }
-            }
 
-            let scr = `# QRCode for ${url} (${sz}x${sz} at ${size}mm)\n`
+            const f = (v: number) => v.toFixed(3)
+
+            let scr = `# QRCode for ${url} (${numBlocks}x${numBlocks} at ${size}mm)\n`
             scr += `LAYER ${layer};\n`
             scr += `GRID mm;\n`
 
-            sz += 2 * margin
+            const kicadTimestamp = ((Date.now() / 1000) | 0)
+                .toString(16)
+                .toUpperCase()
+            let kicad = `(module QrCode (layer F.Cu) (tedit ${kicadTimestamp})\n`
 
-            for (let y = 0; y < sz; y++) {
+            let altium =
+                "Object Kind\tLayer\tNet\tX1\tY1\tX2\tY2\tKeepout\tLocked\tRotation\tSolder Mask Expansion\tSolder Mask Expansion Mode\tPaste Mask Expansion\tPaste Mask Expansion Mode\r\n"
+
+            numBlocks += 2 * margin
+            const mid = (numBlocks * size) / 2
+
+            /*
+            kicad +=
+                `(fp_text reference QR***** (at 0 ${f(
+                    mid
+                )}) (layer F.SilkS) hide\n` +
+                `(effects (font (size 1 1) (thickness 0.15))))\n` +
+                `(fp_text value QrCode (at 0 ${f(
+                    -mid
+                )}) (layer F.SilkS) hide\n` +
+                `(effects (font (size 1 1) (thickness 0.15))))\n`
+                */
+
+            for (let y = 0; y < numBlocks; y++) {
                 let x = 0
-                while (x < sz) {
+                while (x < numBlocks) {
                     while (code[`${x},${y}`]) x++
                     let xe = x
-                    while (xe < sz && !code[`${xe},${y}`]) xe++
-                    scr += `RECT (R ${fmt(x * size)} ${fmt(y * size)}) (R ${fmt(
-                        xe * size
-                    )} ${fmt((y + 1) * size)})\n`
+                    while (xe < numBlocks && !code[`${xe},${y}`]) xe++
+                    const x0 = x * size
+                    const y0 = y * size
+                    const x1 = xe * size
+                    const y1 = (y + 1) * size
+                    scr += `RECT (R ${f(x0)} ${f(y0)}) (R ${f(x1)} ${f(y1)})\n`
+
+                    const alt = [
+                        "Fill",
+                        mirror ? "TopOverlay" : "BottomOverlay",
+                        "No Net",
+                        f(x0),
+                        f(y0),
+                        f(x1),
+                        f(y1),
+                        "false",
+                        "false",
+                        "0.0",
+                        "0",
+                        "none",
+                        "0",
+                        "none",
+                    ]
+
+                    altium += alt.join("\t") + "\r\n"
+
+                    const kx0 = f(x0 - mid)
+                    const ky0 = f(-(y0 - mid))
+                    const kx1 = f(x1 - mid)
+                    const ky1 = f(-(y1 - mid))
+                    kicad += `(fp_poly (pts (xy ${kx0} ${ky0}) (xy ${kx0} ${ky1}) (xy ${kx1} ${ky1}) (xy ${kx1} ${ky0})) (layer F.SilkS) (width 0))\n`
+
                     x = xe
                 }
             }
 
-            const max_x = fmt(sz * size)
-            const max_y = fmt(sz * size)
+            function frame(x0: number, y0: number, x1: number, y1: number) {
+                const q = (n: number) =>
+                    (n * ((numBlocks * size) / 2 + 0.0001)).toFixed(4)
+                kicad +=
+                    `(fp_line (start ${q(x0)} ${q(y0)}) ` +
+                    `(end ${q(x1)} ${q(y1)}) ` +
+                    `(layer F.CrtYd) (width 0.05))\n`
+            }
+            frame(-1, -1, -1, 1)
+            frame(-1, -1, 1, -1)
+            frame(1, 1, -1, 1)
+            frame(1, 1, 1, -1)
+            kicad += ")\n"
+
+            const max_x = f(numBlocks * size)
+            const max_y = f(numBlocks * size)
 
             scr += `GRID LAST;\n`
             scr += `DISPLAY NONE ?? ${layer};\n`
             scr += `GROUP (0 0) (${max_x} 0) (${max_x} ${max_y}) (0 ${max_y}) (> 0 0);\n`
             scr += `DISPLAY LAST;\n`
 
-            console.log("scr", scr)
             setScr(scr)
+            setKicad(kicad)
+            setAltium(altium)
         } catch (e) {
             if (mounted()) {
                 setError(e + "")
@@ -109,7 +162,7 @@ function useQRCodeSCR(
         }
     }, deps)
 
-    return { scr, image, error }
+    return { altium, kicad, scr, image, error, numBlocks }
 }
 
 export default function SilkQRCode(props: {
@@ -119,8 +172,15 @@ export default function SilkQRCode(props: {
     mirror?: boolean
     margin?: number
 }) {
-    const { url, layer = 22, mirror = true, size = 3, margin = 1 } = props
-    const { scr, image, error } = useQRCodeSCR(url, layer, size, mirror, margin)
+    const { url, layer, mirror = true, size = 0.3, margin = 1 } = props
+    const eagleLayer = layer ?? mirror ? 22 : 21
+    const { altium, kicad, scr, image, error, numBlocks } = useQRCodeSCR(
+        url,
+        eagleLayer,
+        size,
+        mirror,
+        margin
+    )
 
     if (!url) return null
 
@@ -128,6 +188,10 @@ export default function SilkQRCode(props: {
         image && `data:image/svg+xml;utf8,${encodeURIComponent(image)}`
     const scrUri =
         scr && `data:text/plain;charset=UTF-8,${encodeURIComponent(scr)}`
+    const kicadUri =
+        kicad && `data:text/plain;charset=UTF-8,${encodeURIComponent(kicad)}`
+    const altiumUri =
+        altium && `data:text/plain;charset=UTF-8,${encodeURIComponent(altium)}`
     return (
         <>
             {error && <Alert severity="warning">{error}</Alert>}
@@ -150,7 +214,29 @@ export default function SilkQRCode(props: {
                             variant="outlined"
                             download="qrcode.scr"
                         >
-                            Download SCR
+                            Download SCR for Eagle
+                        </Button>
+                    </Grid>
+                )}
+                {kicad && (
+                    <Grid item>
+                        <Button
+                            href={kicadUri}
+                            variant="outlined"
+                            download="QrCode.kicad_mod"
+                        >
+                            Download kicad_mod
+                        </Button>
+                    </Grid>
+                )}
+                {altium && (
+                    <Grid item>
+                        <Button
+                            href={altiumUri}
+                            variant="outlined"
+                            download="QrCode.txt"
+                        >
+                            Download CSV for Altium
                         </Button>
                     </Grid>
                 )}
@@ -160,7 +246,7 @@ export default function SilkQRCode(props: {
                     <h3>Original size</h3>
                     <img
                         className="pixelated"
-                        style={{ width: `${size}mm` }}
+                        style={{ width: `${size * numBlocks}mm` }}
                         src={imageUri}
                         alt={`QR code of ${url}`}
                     />
