@@ -134,7 +134,7 @@ export default function DeviceQRCodeGenerator(props: {
                         <ListItem
                             button
                             key={vanityname}
-                            onClick={handleVanity(vanity)}
+                            onClick={handleVanity(vanityname)}
                         >
                             <ListItemText
                                 primary={`${designid}: ${modulename} v${revision}`}
