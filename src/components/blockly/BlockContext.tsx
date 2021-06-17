@@ -3,6 +3,7 @@ import React, { createContext, ReactNode, useEffect, useState } from "react"
 import { CHANGE } from "../../../jacdac-ts/src/jdom/constants"
 import { toMap } from "../../../jacdac-ts/src/jdom/utils"
 import RoleManager from "../../../jacdac-ts/src/servers/rolemanager"
+import bus from "../../jacdac/providerbus"
 import useRoleManager from "../hooks/useRoleManager"
 import useLocalStorage from "../useLocalStorage"
 import BlockDomainSpecificLanguage from "./dsl/dsl"
@@ -221,7 +222,10 @@ export function BlockProvider(props: {
                 workspace?.removeChangeListener(handler)
             )
     }, [workspace, dsls])
-
+    // don't refresh registers while dragging
+    useEffect(() => {
+        bus.backgroundRefreshRegisters = !dragging
+    }, [dragging])
     // mounting dsts
     useEffect(() => {
         const unmounnts = dsls.map(dsl => dsl.mount?.()).filter(u => !!u)

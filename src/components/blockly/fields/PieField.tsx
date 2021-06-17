@@ -11,7 +11,7 @@ import { tidyToNivo } from "./nivo"
 const Pie = lazy(() => import("./Pie"))
 
 function PieChartWidget() {
-    const { sourceBlock } = useContext(WorkspaceContext)
+    const { sourceBlock, dragging } = useContext(WorkspaceContext)
     const { data } = useBlockData(sourceBlock)
 
     // need to map data to nivo
@@ -26,6 +26,8 @@ function PieChartWidget() {
         padAngle: 0.7,
         cornerRadius: 3,
         sortByValue: false,
+        animate: !dragging,
+        isInteractive: !dragging,
         activeOuterRadiusOffset: 8,
         borderWidth: 1,
         borderColor: { from: "color", modifiers: [["darker", 0.2]] },

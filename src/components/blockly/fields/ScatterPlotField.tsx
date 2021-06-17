@@ -11,7 +11,7 @@ import { tidyToNivo } from "./nivo"
 const ScatterPlot = lazy(() => import("./ScatterPlot"))
 
 function ScatterChartWidget() {
-    const { sourceBlock } = useContext(WorkspaceContext)
+    const { sourceBlock, dragging } = useContext(WorkspaceContext)
     const { data } = useBlockData(sourceBlock)
 
     // need to map data to nivo
@@ -27,6 +27,8 @@ function ScatterChartWidget() {
         yScale: { type: "linear", min: "auto", max: "auto" },
         axisTop: null,
         axisRight: null,
+        animate: !dragging,
+        isInteractive: !dragging,
         axisBottom: {
             tickSize: 5,
             tickPadding: 5,

@@ -11,7 +11,7 @@ import { tidyToNivo } from "./nivo"
 const Line = lazy(() => import("./Line"))
 
 function LineChartWidget() {
-    const { sourceBlock } = useContext(WorkspaceContext)
+    const { sourceBlock, dragging } = useContext(WorkspaceContext)
     const { data } = useBlockData(sourceBlock)
 
     // need to map data to nivo
@@ -28,7 +28,8 @@ function LineChartWidget() {
         axisTop: null,
         axisRight: null,
         enablePoints: false,
-        isInteractive: false,
+        animate: !dragging,
+        isInteractive: !dragging,
         axisBottom: {
             tickSize: 5,
             tickPadding: 5,
