@@ -46,8 +46,8 @@ function useQRCodeSCR(
             for (let y = 0; y < numBlocks; ++y) {
                 for (let x = 0; x < numBlocks; ++x) {
                     const xx = !mirror ? numBlocks - x - 1 : x
-                    code[`${xx + margin},${numBlocks - y - 1 + margin}`] = !!qr
-                        .modules.data[ptr++]
+                    code[`${xx + margin},${numBlocks - y - 1 + margin}`] =
+                        !!qr.modules.data[ptr++]
                 }
             }
             setNumBlocks(numBlocks)
@@ -58,6 +58,7 @@ function useQRCodeSCR(
                 errorCorrectionLevel: "medium",
                 type: "utf8",
             })
+            if (!mounted()) return
             setImage(utfcode)
 
             const f = (v: number) => v.toFixed(3)
@@ -130,7 +131,7 @@ function useQRCodeSCR(
                 }
             }
 
-            function frame(x0: number, y0: number, x1: number, y1: number) {
+            const frame = (x0: number, y0: number, x1: number, y1: number) => {
                 const q = (n: number) =>
                     (n * ((numBlocks * size) / 2 + 0.0001)).toFixed(4)
                 kicad +=
