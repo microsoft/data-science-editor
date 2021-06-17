@@ -14,7 +14,7 @@ The rest of this page is for developers of the jacdac-ts library.
 
 All command line instructions assume a bash-like terminal.
 
-On Windows, you may need to run these commands within Git Bash or Windows Subsystem for Linux (WSL), unless you have bash-like tools available locally.
+On Windows, you may need to run these commands within Git Bash or Windows Subsystem for Linux (WSL), unless you have bash-like tools available locally. Previous installs have worked on WSL2 with Ubuntu-20.04.
 
 ### Codespaces
 
@@ -32,6 +32,8 @@ yarn docs
 ### Local Setup
 
 * install node.js
+** Have successfully tested with node 14.17.0. There were some errors when using node 16.3.0 (note made on 6/2021, please update if errors with node v16.3.0 are resolved.)
+* install python 2 (if you don't have it already)
 * install yarn
 
 ```
