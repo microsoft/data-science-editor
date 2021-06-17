@@ -1,9 +1,9 @@
-import { Button } from "@material-ui/core"
-import { Alert } from "@material-ui/lab"
+import { Button, Grid } from "@material-ui/core"
 import QRCode from "qrcode"
 import React, { useState } from "react"
 import { useEffect } from "react"
 import useEffectAsync from "../useEffectAsync"
+import Alert from "../ui/Alert"
 
 export interface QRCodeProps {
     url: string
@@ -131,11 +131,30 @@ export default function SilkQRCode(props: {
     return (
         <>
             {error && <Alert severity="warning">{error}</Alert>}
-            {scr && (
-                <Button href={scrUri} download="qrcode.scr">
-                    Download SCR
-                </Button>
-            )}
+            <Grid container spacing={1}>
+                {imageUri && (
+                    <Grid item>
+                        <Button
+                            href={imageUri}
+                            variant="outlined"
+                            download="qrcode.svg"
+                        >
+                            Download SVG
+                        </Button>
+                    </Grid>
+                )}
+                {scr && (
+                    <Grid item>
+                        <Button
+                            href={scrUri}
+                            variant="outlined"
+                            download="qrcode.scr"
+                        >
+                            Download SCR
+                        </Button>
+                    </Grid>
+                )}
+            </Grid>
             {image && (
                 <>
                     <h3>Original size</h3>
