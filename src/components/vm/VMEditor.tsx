@@ -12,15 +12,26 @@ import { BlocklyWorkspaceWithServices } from "../blockly/WorkspaceContext"
 import BlockEditor from "../blockly/BlockEditor"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
 import vmDsls from "./vmdsls"
+import { VMStatus } from "../../../jacdac-ts/src/vm/runner"
 
 const VM_SOURCE_STORAGE_KEY = "tools:vmeditor"
 function VMEditorWithContext() {
-    const { dsls, workspace, workspaceJSON, roleManager, setWarnings } =
-        useContext(BlockContext)
+    const {
+        dsls,
+        workspace,
+        workspaceJSON,
+        roleManager,
+        setWarnings,
+        dragging,
+    } = useContext(BlockContext)
     const [program, setProgram] = useState<VMProgram>()
     const autoStart = true
     const { runner, run, cancel } = useVMRunner(roleManager, program, autoStart)
 
+    // don't run the VM while dragging as it glitches the Ui
+    useEffect(() => {
+        if (runner?.status === VMStatus.Running) cancel()
+    }, [runner, dragging])
     useEffect(() => {
         try {
             const newProgram = workspaceJSONToVMProgram(workspaceJSON, dsls)

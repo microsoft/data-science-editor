@@ -1,4 +1,4 @@
-import Blockly, { WorkspaceSvg } from "blockly"
+import { Events, WorkspaceSvg } from "blockly"
 import React, { createContext, ReactNode, useEffect, useState } from "react"
 import { CHANGE } from "../../../jacdac-ts/src/jdom/constants"
 import { toMap } from "../../../jacdac-ts/src/jdom/utils"
@@ -35,6 +35,7 @@ export interface BlockProps {
     workspaceJSON: WorkspaceJSON
     toolboxConfiguration: ToolboxConfiguration
     roleManager: RoleManager
+    dragging: boolean
     setWorkspace: (ws: WorkspaceSvg) => void
     setWorkspaceXml: (value: string) => void
     setWarnings: (warnings: BlockWarning[]) => void
@@ -47,6 +48,7 @@ const BlockContext = createContext<BlockProps>({
     workspaceJSON: undefined,
     toolboxConfiguration: undefined,
     roleManager: undefined,
+    dragging: false,
     setWarnings: () => {},
     setWorkspace: () => {},
     setWorkspaceXml: () => {},
@@ -71,6 +73,7 @@ export function BlockProvider(props: {
     const [workspaceXml, _setWorkspaceXml] = useState<string>(storedXml)
     const [workspaceJSON, setWorkspaceJSON] = useState<WorkspaceJSON>(undefined)
     const [warnings, setWarnings] = useState<BlockWarning[]>([])
+    const [dragging, setDragging] = useState(false)
 
     const setWorkspaceXml = (xml: string) => {
         setStoredXml(xml)
@@ -130,26 +133,28 @@ export function BlockProvider(props: {
         workspaceId: string
     }) => {
         const { type, workspaceId } = event
-        console.log(`blockly: ${type}`, event)
         if (workspaceId !== workspace.id) return
-        //console.log(`blockly event ${type}`, event)
-        if (type === Blockly.Events.FINISHED_LOADING) {
+        console.log(`blockly: ${type}`, event)
+        if (type === Events.BLOCK_DRAG) {
+            const dragEvent = event as Events.BlockDrag
+            setDragging(!!dragEvent.isStart)
+        } else if (type === Events.FINISHED_LOADING) {
             workspace
                 .getAllBlocks(false)
                 .forEach(b => initializeBlockServices(b as BlockWithServices))
-        } else if (type === Blockly.Events.BLOCK_CREATE) {
-            const bev = event as unknown as Blockly.Events.BlockCreate
+        } else if (type === Events.BLOCK_CREATE) {
+            const bev = event as unknown as Events.BlockCreate
             const block = workspace.getBlockById(
                 bev.blockId
             ) as BlockWithServices
             initializeBlockServices(block)
-        } else if (type === Blockly.Events.BLOCK_MOVE) {
-            const cev = event as unknown as Blockly.Events.BlockMove
+        } else if (type === Events.BLOCK_MOVE) {
+            const cev = event as unknown as Events.BlockMove
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const parentId = (cev as any).newParentId
             if (parentId) handleBlockChange(parentId)
-        } else if (type === Blockly.Events.BLOCK_CHANGE) {
-            const cev = event as unknown as Blockly.Events.BlockChange
+        } else if (type === Events.BLOCK_CHANGE) {
+            const cev = event as unknown as Events.BlockChange
             handleBlockChange(cev.blockId)
         }
     }
@@ -175,7 +180,7 @@ export function BlockProvider(props: {
         }
     }, [workspace])
     useEffect(() => {
-        if (!workspace || workspace.isDragging()) return
+        if (!workspace || dragging) return
 
         const newWorkspaceJSON = domToJSON(workspace, dsls)
         if (
@@ -183,7 +188,7 @@ export function BlockProvider(props: {
         ) {
             setWorkspaceJSON(newWorkspaceJSON)
         }
-    }, [dsls, workspace, workspaceXml])
+    }, [dsls, workspace, dragging, workspaceXml])
     useEffect(() => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const ws = workspace as unknown as BlocklyWorkspaceWithServices
@@ -232,6 +237,7 @@ export function BlockProvider(props: {
                 workspaceJSON,
                 toolboxConfiguration,
                 roleManager,
+                dragging,
                 setWarnings,
                 setWorkspace,
                 setWorkspaceXml,
