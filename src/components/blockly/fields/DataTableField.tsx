@@ -4,6 +4,8 @@ import WorkspaceContext from "../WorkspaceContext"
 import ReactInlineField from "./ReactInlineField"
 import useBlockData from "../useBlockData"
 import { createStyles, makeStyles } from "@material-ui/core"
+import { TABLE_HEIGHT, TABLE_WIDTH } from "../toolbox"
+import { PointerBoundary } from "./PointerBoundary"
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -13,6 +15,9 @@ const useStyles = makeStyles(() =>
             background: "#fff",
             color: "#000",
             borderRadius: "0.25rem",
+            width: `calc(${TABLE_WIDTH}px - 0.25rem)`,
+            height: `calc(${TABLE_HEIGHT}px - 0.25rem)`,
+            overflow: "auto",
         },
         table: {
             margin: 0,
@@ -38,7 +43,7 @@ function DataTableWidget() {
     const columns = Object.keys(data[0] || {})
 
     return (
-        <div className={classes.root}>
+        <PointerBoundary className={classes.root}>
             <table className={classes.table}>
                 <thead>
                     <tr>
@@ -57,7 +62,7 @@ function DataTableWidget() {
                     ))}
                 </tbody>
             </table>
-        </div>
+        </PointerBoundary>
     )
 }
 
@@ -80,7 +85,6 @@ export default class DataTableField extends ReactInlineField {
         c.style.minWidth = "388px"
         c.style.maxWidth = "80vh"
         c.style.maxHeight = "60vh"
-        c.style.overflowY = "auto"
         return c
     }
 

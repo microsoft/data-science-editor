@@ -169,6 +169,11 @@ export const TWIN_BLOCK = "jacdac_tools_twin"
 
 export const toolsColour = "#888"
 
+export const CHART_WIDTH = 388
+export const CHART_HEIGHT = 240
+export const TABLE_WIDTH = CHART_WIDTH
+export const TABLE_HEIGHT = 480
+
 export interface ContentDefinition {
     kind: "category" | "sep" | "button" | "label"
     order?: number
