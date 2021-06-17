@@ -130,15 +130,15 @@ export default function DeviceQRCodeGenerator(props: {
             <List>
                 {nodes
                     .filter(({ designid }) => !!designid)
-                    .map(({ vanityname, designid, revision }) => (
+                    .map(({ vanityname, modulename, designid, revision }) => (
                         <ListItem
                             button
                             key={vanityname}
                             onClick={handleVanity(vanity)}
                         >
                             <ListItemText
-                                primary={`${vanityname} v${revision}`}
-                                secondary={designid}
+                                primary={`${designid}: ${modulename} v${revision}`}
+                                secondary={`aka.ms/${vanityname}`}
                             />
                         </ListItem>
                     ))}
