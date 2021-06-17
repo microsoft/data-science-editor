@@ -48,7 +48,7 @@ export default function DeviceQRCodeGenerator(props: {
         n => n
     )
     const [vanity, setVanity] = useState(`AAAAAB`)
-    const [mirror, setMirror] = useState(true)
+    const [mirror, setMirror] = useState(false)
     const [size, setSize] = useState(0.3)
     const handleUrlChange = (ev: ChangeEvent<HTMLInputElement>) => {
         const vanity = ev.target.value?.toUpperCase()
