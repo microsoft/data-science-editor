@@ -123,7 +123,7 @@ export default function DeviceQRCodeGenerator(props: {
             </p>
             <iframe
                 style={{ width: "100%", height: "14rem", border: "none" }}
-                src={url}
+                src={url?.replace(/^http:/i, "HTTPS:")}
                 sandbox="allow-scripts"
             />
             <h2>Known devices</h2>
