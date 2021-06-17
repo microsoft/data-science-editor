@@ -5,6 +5,7 @@ import VariablesField from "../fields/VariablesFields"
 import WatchValueField from "../fields/WatchValueField"
 import {
     BlockReference,
+    CODE_STATEMENT_TYPE,
     DATA_SCIENCE_STATEMENT_TYPE,
     identityTransformData,
     InputDefinition,
@@ -74,8 +75,8 @@ const toolsDSL: BlockDomainSpecificLanguage = {
             ],
             colour,
             inputsInline: true,
-            previousStatement: null,
-            nextStatement: null,
+            previousStatement: CODE_STATEMENT_TYPE,
+            nextStatement: CODE_STATEMENT_TYPE,
             tooltip: `Log an entry to the console`,
             helpUrl: "",
         },
