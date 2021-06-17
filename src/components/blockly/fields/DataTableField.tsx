@@ -24,6 +24,11 @@ const useStyles = makeStyles(() =>
             fontSize: "0.8rem",
             lineHeight: "1rem",
 
+            "& th": {
+                position: "sticky",
+                top: 0,
+                background: "white",
+            },
             "& td": {
                 borderColor: "#ccc",
                 borderRightStyle: "solid 1px",
