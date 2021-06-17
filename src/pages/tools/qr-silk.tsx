@@ -13,6 +13,7 @@ import { toMap } from "../../../jacdac-ts/src/jdom/utils"
 const SilkQRCode = lazy(() => import("../../components/widgets/SilkQrCode"))
 
 import { graphql } from "gatsby"
+import { Button } from "gatsby-theme-material-ui"
 
 export const query = graphql`
     {
@@ -42,7 +43,7 @@ export default function DeviceQRCodeGenerator(props: {
     const { data } = props
     const { nodes } = data.allQrUrlDeviceMapCsv
     const knowns = toMap(
-        nodes.filter(({ designid }) => !!designid),
+        nodes,
         n => n.vanityname.toUpperCase(),
         n => n
     )
@@ -64,13 +65,23 @@ export default function DeviceQRCodeGenerator(props: {
     const url = !!vanity && `HTTP://AKA.MS/${vanity}`
     const known = knowns[vanity]
     const { modulename, designid, revision } = known || {}
-    const handleVanity = (vanityname: string) => () => setVanity(vanityname.toUpperCase())
+    const handleVanity = (vanityname: string) => () =>
+        setVanity(vanityname.toUpperCase())
+    const handleNextVanity = () => {
+        const next = Object.values(nodes).find(({ designid }) => !designid)
+        if (next) setVanity(next.vanityname.toUpperCase())
+    }
     return (
         <>
             <h1>Silk QR Code generator</h1>
             <p>
                 Enter a short URL HTTP://AKA.MS/<strong>vanity name</strong> to
-                be encoded as a silk compatible QR code.
+                be encoded as a silk compatible QR code. If you use a link, make
+                sure to update{" "}
+                <a href="https://github.com/microsoft/jacdac/blob/main/devices/microsoft/research/qr-url-device-map.csv">
+                    GitHub
+                </a>
+                .
             </p>
             <Grid container spacing={1}>
                 <Grid item xs>
@@ -80,7 +91,7 @@ export default function DeviceQRCodeGenerator(props: {
                         value={vanity}
                         placeholder="AAAAA"
                         onChange={handleUrlChange}
-                        helperText={"HTTP://AKA.MS/"}
+                        helperText={"HTTP://AKA.MS/..."}
                     />
                 </Grid>
                 <Grid item>
@@ -99,6 +110,11 @@ export default function DeviceQRCodeGenerator(props: {
                     />
                     <label id={mirrorid}>mirror</label>
                 </Grid>
+                <Grid item xs>
+                    <Button variant="contained" onClick={handleNextVanity}>
+                        Pick Unassigned
+                    </Button>
+                </Grid>
             </Grid>
             <h2>URL</h2>
             <pre>
@@ -106,9 +122,11 @@ export default function DeviceQRCodeGenerator(props: {
             </pre>
             {known && (
                 <>
-                    <h2>Existing device entry</h2>
+                    <h2>Reserved device entry</h2>
                     <p>
-                        {designid}: {modulename} v{revision}
+                        {designid
+                            ? `${designid}: ${modulename} v${revision}`
+                            : `unassigned`}
                     </p>
                 </>
             )}
