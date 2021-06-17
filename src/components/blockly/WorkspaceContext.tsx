@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import {
-    Block,
-    BlockSvg,
-    FieldVariable,
-    Workspace,
-    WorkspaceSvg,
-} from "blockly"
-import React, { createContext, ReactNode, useEffect, useState } from "react"
+import { Block, BlockSvg, Events, FieldVariable, WorkspaceSvg } from "blockly"
+import React, {
+    createContext,
+    ReactNode,
+    useCallback,
+    useEffect,
+    useState,
+} from "react"
 import { CHANGE } from "../../../jacdac-ts/src/jdom/constants"
 import { JDEventSource } from "../../../jacdac-ts/src/jdom/eventsource"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
@@ -15,6 +15,7 @@ import { VMProgramRunner } from "../../../jacdac-ts/src/vm/runner"
 import useChange from "../../jacdac/useChange"
 import ReactField from "./fields/ReactField"
 import { WorkspaceJSON } from "./jsongenerator"
+import useWorkspaceEvent from "./useWorkspaceEvent"
 
 export class WorkspaceServices extends JDEventSource {
     private _workspaceJSON: WorkspaceJSON
@@ -57,7 +58,7 @@ export class WorkspaceServices extends JDEventSource {
     }
 }
 
-export interface BlocklyWorkspaceWithServices extends Workspace {
+export interface BlocklyWorkspaceWithServices extends WorkspaceSvg {
     jacdacServices: WorkspaceServices
 }
 
@@ -103,6 +104,7 @@ export interface BlockWithServices extends BlockSvg {
 export interface WorkspaceContextProps {
     workspace?: WorkspaceSvg
     workspaceJSON?: WorkspaceJSON
+    dragging?: boolean
     sourceBlock?: Block
     sourceId?: string
     services: WorkspaceServices
@@ -116,6 +118,7 @@ export interface WorkspaceContextProps {
 export const WorkspaceContext = createContext<WorkspaceContextProps>({
     workspace: undefined,
     workspaceJSON: undefined,
+    dragging: false,
     sourceBlock: undefined,
     flyout: false,
     sourceId: undefined,
@@ -139,11 +142,12 @@ export function WorkspaceProvider(props: {
         field?.getSourceBlock()
     )
     const sourceId = sourceBlock?.id
-    const workspace = sourceBlock?.workspace
+    const workspace = sourceBlock?.workspace as WorkspaceSvg
     const services = (workspace as BlocklyWorkspaceWithServices)?.jacdacServices
     const roleManager = useChange(services, _ => _?.roleManager)
     const runner = useChange(services, _ => _?.runner)
     const workspaceJSON = useChange(services, _ => _?.workspaceJSON)
+    const [dragging, setDragging] = useState(!!workspace?.isDragging())
 
     const resolveRole = () => {
         const newSourceBlock = field.getSourceBlock()
@@ -192,12 +196,27 @@ export function WorkspaceProvider(props: {
         )
     }, [role, runner])
 
+    const handleWorkspaceEvent = useCallback(
+        (event: Events.Abstract & { type: string }) => {
+            const { workspaceId, type } = event
+            if (workspaceId !== workspace?.id) return
+            if (type === Events.BLOCK_DRAG) {
+                const drag = event as Events.BlockDrag
+                setDragging(!!drag?.isStart)
+            }
+        },
+        [workspace]
+    )
+    useWorkspaceEvent(workspace, handleWorkspaceEvent)
+
     return (
         // eslint-disable-next-line react/react-in-jsx-scope
         <WorkspaceContext.Provider
             value={{
                 sourceBlock,
+                workspace,
                 workspaceJSON,
+                dragging,
                 sourceId,
                 services,
                 role,
