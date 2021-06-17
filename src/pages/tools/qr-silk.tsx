@@ -64,7 +64,7 @@ export default function DeviceQRCodeGenerator(props: {
     const url = !!vanity && `HTTP://AKA.MS/${vanity}`
     const known = knowns[vanity]
     const { modulename, designid, revision } = known || {}
-    const handleVanity = (vanityname: string) => () => setVanity(vanityname)
+    const handleVanity = (vanityname: string) => () => setVanity(vanityname.toUpperCase())
     return (
         <>
             <h1>Silk QR Code generator</h1>
