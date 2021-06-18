@@ -123,9 +123,9 @@ async function handleMessage(event: MessageEvent) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { worker, data, previousData, ...rest } = message
     if (worker !== "data") return
-    console.debug("Jacdac data in:", { message })
+    //console.debug("Jacdac data in:", { message })
     const newData = await transformData(message)
-    console.debug("Jacdac data out:", { message })
+    //console.debug("Jacdac data out:", { message })
     const resp = { worker, ...rest, data: newData }
     self.postMessage(resp)
 }
