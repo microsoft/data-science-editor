@@ -110,7 +110,8 @@ export function BlockProvider(props: {
                     try {
                         const newData = await transformData(
                             block,
-                            services.data
+                            services.data,
+                            nextServices.data
                         )
                         nextServices.data = newData
                     } catch (e) {

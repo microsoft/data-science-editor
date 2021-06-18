@@ -103,7 +103,7 @@ export interface BlockDefinition extends BlockReference {
 
     // data transformation
     // eslint-disable-next-line @typescript-eslint/ban-types
-    transformData?: (block: BlockSvg, data: object[]) => Promise<object[]>
+    transformData?: (block: BlockSvg, data: object[], previousData: object[]) => Promise<object[]>
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
