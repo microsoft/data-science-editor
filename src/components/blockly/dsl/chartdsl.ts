@@ -29,10 +29,12 @@ const chartDSL: BlockDomainSpecificLanguage = {
                 {
                     type: DataColumnChooserField.KEY,
                     name: "x",
+                    dataType: "number",
                 },
                 {
                     type: DataColumnChooserField.KEY,
                     name: "y",
+                    dataType: "number",
                 },
                 <DummyInputDefinition>{
                     type: "input_dummy",
@@ -57,10 +59,12 @@ const chartDSL: BlockDomainSpecificLanguage = {
                 {
                     type: DataColumnChooserField.KEY,
                     name: "index",
+                    dataType: "number",
                 },
                 {
                     type: DataColumnChooserField.KEY,
                     name: "value",
+                    dataType: "number",
                 },
                 <DummyInputDefinition>{
                     type: "input_dummy",
@@ -85,10 +89,12 @@ const chartDSL: BlockDomainSpecificLanguage = {
                 {
                     type: DataColumnChooserField.KEY,
                     name: "x",
+                    dataType: "number",
                 },
                 {
                     type: DataColumnChooserField.KEY,
                     name: "y",
+                    dataType: "number",
                 },
                 <DummyInputDefinition>{
                     type: "input_dummy",
@@ -113,10 +119,12 @@ const chartDSL: BlockDomainSpecificLanguage = {
                 {
                     type: DataColumnChooserField.KEY,
                     name: "id",
+                    dataType: "string",
                 },
                 {
                     type: DataColumnChooserField.KEY,
                     name: "value",
+                    dataType: "number",
                 },
                 <DummyInputDefinition>{
                     type: "input_dummy",
