@@ -1,5 +1,8 @@
 import React from "react"
-import { PowerReg } from "../../../jacdac-ts/src/jdom/constants"
+import {
+    PowerPowerStatus,
+    PowerReg,
+} from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import {
     useRegisterBoolValue,
@@ -11,16 +14,21 @@ import ReflectedLightServer from "../../../jacdac-ts/src/servers/reflectedlights
 import PowerButton from "../widgets/PowerButton"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import useRegister from "../hooks/useRegister"
+import LoadingProgress from "../ui/LoadingProgress"
+import { humanify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 
 export default function DashboardPower(props: DashboardServiceProps) {
     const { service } = props
 
-    const enabledRegister = useRegister(service, PowerReg.Enabled)
-    const overloadRegister = useRegister(service, PowerReg.Overload)
+    const allowedRegister = useRegister(service, PowerReg.Allowed)
+    const powerStatusRegister = useRegister(service, PowerReg.PowerStatus)
     const batteryChargeRegister = useRegister(service, PowerReg.BatteryCharge)
 
-    const enabled = useRegisterBoolValue(enabledRegister, props)
-    const overload = useRegisterBoolValue(overloadRegister, props)
+    const allowed = useRegisterBoolValue(allowedRegister, props)
+    const [powerStatus] = useRegisterUnpackedValue<[PowerPowerStatus]>(
+        powerStatusRegister,
+        props
+    )
     const [batteryCharge] = useRegisterUnpackedValue<[number]>(
         batteryChargeRegister,
         props
@@ -30,19 +38,24 @@ export default function DashboardPower(props: DashboardServiceProps) {
     const color = server ? "secondary" : "primary"
     const { background, active, textProps } = useWidgetTheme(color)
 
+    if (powerStatus === undefined) return <LoadingProgress />
+
     const w = 64
-    const h = w
-    const r = (h - 4) >> 1
+    const h = w + 16
+    const r = (w - 4) >> 1
     const ro = r - 4
     const ri = ro - 8
-    const label = overload ? "overload" : enabled ? "on" : "off"
+    const off = powerStatus === PowerPowerStatus.Disallowed
+    const label = off
+        ? "off"
+        : humanify(PowerPowerStatus[powerStatus]?.toLowerCase())
 
     const mw = 2
     const bw = 12
     const hw = 4
     const rw = mw / 2
 
-    const toggleEnabled = () => enabledRegister.sendSetBoolAsync(!enabled, true)
+    const toggleEnabled = () => allowedRegister.sendSetBoolAsync(!allowed, true)
     const widgetSize = `clamp(3rem, 10vw, 16vw)`
 
     return (
@@ -50,13 +63,17 @@ export default function DashboardPower(props: DashboardServiceProps) {
             <g>
                 <PowerButton
                     cx={w / 2}
-                    cy={h / 2}
+                    cy={w / 2}
                     r={ro}
                     ri={ri}
-                    off={!enabled}
+                    off={off}
                     color={color}
-                    aria-label={label}
-                    borderStroke={!!overload && "red"}
+                    label={label}
+                    borderStroke={
+                        (powerStatus === PowerPowerStatus.Overload ||
+                            powerStatus === PowerPowerStatus.Overprovision) &&
+                        "red"
+                    }
                     onClick={toggleEnabled}
                 />
                 {batteryCharge !== undefined && (
