@@ -28,8 +28,7 @@ function ScatterChartWidget() {
         yScale: { type: "linear", min: "auto", max: "auto" },
         axisTop: null,
         axisRight: null,
-        animate: !dragging,
-        isInteractive: !dragging,
+        isInteractive: false,
         axisBottom: {
             tickSize: 5,
             tickPadding: 5,
@@ -47,7 +46,10 @@ function ScatterChartWidget() {
             legendOffset: -32,
         },
     })
-    if (chartProps) chartProps.data = series
+    if (chartProps) {
+        chartProps.animate = !dragging
+        chartProps.data = series
+    }
 
     const hasData =
         labels?.length === 2 &&

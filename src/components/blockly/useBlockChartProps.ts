@@ -3,10 +3,17 @@ import useChange from "../../jacdac/useChange"
 import { Block } from "blockly"
 import { useCallback, useEffect } from "react"
 
-export default function useBlockChartProps<T>(block: Block, initialChartProps?: T) {
+// eslint-disable-next-line @typescript-eslint/ban-types
+export default function useBlockChartProps<T extends object>(
+    block: Block,
+    initialChartProps?: T
+) {
     const services = (block as unknown as BlockWithServices)?.jacdacServices
     // data on the current node
-    const chartProps = useChange<BlockServices, T>(services, _ => _?.chartProps)
+    const chartProps = useChange<BlockServices, T>(
+        services,
+        _ => _?.chartProps as unknown as T
+    )
     const setChartProps = useCallback(
         (value: T[]) => {
             if (services) services.chartProps = value
