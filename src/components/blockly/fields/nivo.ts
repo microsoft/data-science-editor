@@ -26,6 +26,10 @@ export function tidyToNivo(
 } {
     // avoid duplicates in column
     columns = unique(columns)
+
+    // missing data
+    if (columns.some(c => !c)) return { series: undefined, labels: undefined }
+
     const { headers } = tidyHeaders(data)
     let k = 0
     const renaming = toMap(
