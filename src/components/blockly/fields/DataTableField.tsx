@@ -24,6 +24,10 @@ const useStyles = makeStyles(() =>
             fontSize: "0.8rem",
             lineHeight: "1rem",
 
+            "& th, td": {
+                backgroundClip: "padding-box",
+                "scroll-snap-align": "start",
+            },
             "& th": {
                 position: "sticky",
                 top: 0,
