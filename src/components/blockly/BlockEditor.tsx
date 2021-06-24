@@ -11,6 +11,7 @@ import clsx from "clsx"
 import { withPrefix } from "gatsby"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import BlockContext from "./BlockContext"
+import { useBlockMinimap } from "./BlockMinimap"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -65,11 +66,11 @@ export default function BlockEditor(props: { className?: string }) {
             media: withPrefix("blockly/media/"),
             zoom: {
                 controls: true,
-                wheel: true,
+                wheel: false,
                 startScale: 1.0,
                 maxScale: 3,
-                minScale: 0.1,
-                scaleSpeed: 1.2,
+                minScale: 0.08,
+                scaleSpeed: 1.1,
                 pinch: true,
             },
         },
@@ -88,10 +89,13 @@ export default function BlockEditor(props: { className?: string }) {
         return () => observer.disconnect()
     }, [workspace, blocklyRef.current])
 
+    // minimap 
+    useBlockMinimap(workspace)
+
     return (
-        <>
+        <div>
             <div className={clsx(classes.editor, className)} ref={blocklyRef} />
             <BlocklyModalDialogs />
-        </>
+        </div>
     )
 }

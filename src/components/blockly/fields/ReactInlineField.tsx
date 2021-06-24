@@ -6,7 +6,7 @@ import DarkModeProvider from "../../ui/DarkModeProvider"
 import { IdProvider } from "react-use-id-hook"
 import JacdacProvider from "../../../jacdac/Provider"
 import AppTheme from "../../ui/AppTheme"
-import Blockly from "blockly"
+import Blockly, { Events, utils } from "blockly"
 import { WorkspaceProvider } from "../WorkspaceContext"
 
 export default class ReactInlineField extends ReactField<unknown> {
@@ -46,6 +46,12 @@ export default class ReactInlineField extends ReactField<unknown> {
                 fo.setAttribute("width", this.size_.width + "")
                 fo.setAttribute("height", this.size_.height + "")
                 this.forceRerender()
+                const b = this.sourceBlock_
+                if (b?.workspace) {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    const ev = new (Events.get(Events.BLOCK_MOVE) as any)(b)
+                    Events.fire(ev)
+                }
             }
         )
         this.resizeObserver.observe(this.container)
