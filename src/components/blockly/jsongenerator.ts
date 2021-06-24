@@ -34,6 +34,7 @@ export interface BlockJSON {
     value?: string | number | boolean
     inputs?: InputJSON[]
     next?: BlockJSON
+    warning?: string
 }
 
 export interface WorkspaceJSON {
@@ -176,6 +177,7 @@ export function domToJSON(
             variables: variables.map(variableToJSON),
             blocks: blocks.map(blockToJSON).filter(b => !!b),
         }
+        dsls.forEach(dsl => dsl.visitWorkspaceJSON?.(workspace, json))
         return json
     } catch (e) {
         console.error(e)

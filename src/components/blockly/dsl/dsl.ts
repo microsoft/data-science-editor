@@ -1,5 +1,5 @@
 import { Theme } from "@material-ui/core"
-import Blockly, { Block, WorkspaceSvg } from "blockly"
+import Blockly, { Block, Workspace, WorkspaceSvg } from "blockly"
 import { JDService } from "../../../../jacdac-ts/src/jdom/service"
 import { RoleEvent } from "../../../../jacdac-ts/src/vm/compile"
 import { VMError } from "../../../../jacdac-ts/src/vm/ir"
@@ -86,6 +86,15 @@ export default interface BlockDomainSpecificLanguage {
     createWorkspaceChangeListener?: (
         workspace: WorkspaceSvg
     ) => (event: Blockly.Events.Abstract) => void
+
+    /**
+     * After a successfull parse and save, opportunity to walk the JSON tree
+     * and attach warnings
+     */
+    visitWorkspaceJSON?: (
+        workspace: Workspace,
+        workspaceJSON: WorkspaceJSON
+    ) => void
 
     // VM support
     compileEventToVM?: (

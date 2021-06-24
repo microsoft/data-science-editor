@@ -13,6 +13,7 @@ import BlockEditor from "../blockly/BlockEditor"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
 import vmDsls from "./vmdsls"
 import { VMStatus } from "../../../jacdac-ts/src/vm/runner"
+import { VM_WARNINGS_CATEGORY } from "../blockly/toolbox"
 
 const VM_SOURCE_STORAGE_KEY = "tools:vmeditor"
 function VMEditorWithContext() {
@@ -48,7 +49,10 @@ function VMEditorWithContext() {
     )
     useEffect(
         () =>
-            setWarnings(arrayConcatMany(program?.handlers.map(h => h.errors))),
+            setWarnings(
+                VM_WARNINGS_CATEGORY,
+                arrayConcatMany(program?.handlers.map(h => h.errors))
+            ),
         [program]
     )
 
