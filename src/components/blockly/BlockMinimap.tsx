@@ -16,7 +16,7 @@ import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
 import { svgPointerPoint } from "../widgets/svgutils"
 import useWorkspaceEvent from "./useWorkspaceEvent"
 
-const MINI_RADIUS = 8
+const MINI_RADIUS = 16
 const MARGIN_VERTICAL_ = 20
 const MARGIN_HORIZONTAL_ = 20
 const MIN_SCALE = 0.05
@@ -62,7 +62,7 @@ function MiniViewport(props: {
             height={height}
             strokeWidth={MINI_RADIUS >> 1}
             stroke={palette.text.primary}
-            fill={palette.text.secondary}
+            fill={palette.grey[400]}
             opacity={0.2}
             rx={MINI_RADIUS}
             ry={MINI_RADIUS}
