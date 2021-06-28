@@ -1,14 +1,15 @@
-import React from "react"
+import React, { lazy } from "react"
 import { ColorReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import useServiceServer from "../hooks/useServiceServer"
 import SensorServer from "../../../jacdac-ts/src/servers/sensorserver"
-import { BlockPicker } from "react-color"
 import SvgWidget from "../widgets/SvgWidget"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import LoadingProgress from "../ui/LoadingProgress"
 import useRegister from "../hooks/useRegister"
+import Suspense from "../ui/Suspense"
+const ColorInput = lazy(() => import("../ui/ColorInput"))
 
 export default function DashboardColor(props: DashboardServiceProps) {
     const { service } = props
@@ -27,23 +28,22 @@ export default function DashboardColor(props: DashboardServiceProps) {
     const value = `rgb(${(r * 0xff) >> 0}, ${(g * 0xff) >> 0}, ${
         (b * 0xff) >> 0
     })`
-    const handleChange = (color: {
-        rgb: { r: number; g: number; b: number }
-    }) => {
-        console.log({ color })
-        const { rgb } = color
-        server.reading.setValues([rgb.r / 0xff, rgb.g / 0xff, rgb.b / 0xff])
+    const handleChange = (color: string) => {
+        const hex = color.slice(0)
+        const rgb = parseInt(hex, 16)
+        const r = (rgb >> 16) & 0xff
+        const g = (rgb >> 8) & 0xff
+        const b = (rgb >> 0) & 0xff
+        server.reading.setValues([r / 0xff, g / 0xff, b / 0xff])
         register.refresh()
     }
     const w = 64
     const rx = 4
     if (server)
         return (
-            <BlockPicker
-                color={value}
-                triangle="hide"
-                onChangeComplete={server && handleChange}
-            />
+            <Suspense>
+                <ColorInput value={value} onChange={handleChange} />
+            </Suspense>
         )
     else
         return (
