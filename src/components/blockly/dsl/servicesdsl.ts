@@ -52,6 +52,7 @@ import {
     BlockDefinition,
     BlockReference,
     BOOLEAN_TYPE,
+    ButtonDefinition,
     CategoryDefinition,
     CODE_STATEMENT_TYPE,
     CommandBlockDefinition,
@@ -84,6 +85,7 @@ import BlockDomainSpecificLanguage, {
 } from "./dsl"
 import JDomTreeField from "../fields/JDomTreeField"
 import TwinField from "../fields/TwinField"
+import { Variables } from "blockly"
 
 const SET_STATUS_LIGHT_BLOCK = "jacdac_set_status_light"
 const ROLE_BOUND_EVENT_BLOCK = "jacdac_role_bound_event"
@@ -1018,6 +1020,17 @@ export class ServicesBlockDomainSpecificLanguage
                 name: service.name,
                 colour: serviceColor(service),
                 contents: [
+                    <ButtonDefinition>{
+                        kind: "button",
+                        text: `Add ${service.name} role`,
+                        callbackKey: `jacdac_add_role_callback_${service.shortId}`,
+                        callback: workspace =>
+                            Variables.createVariableButtonHandler(
+                                workspace,
+                                null,
+                                service.shortId
+                            ),
+                    },
                     ...serviceBlocks.map<BlockReference>(block => ({
                         kind: "block",
                         type: block.type,
@@ -1035,12 +1048,6 @@ export class ServicesBlockDomainSpecificLanguage
                             values: block.values,
                         })),
                 ],
-                button: {
-                    kind: "button",
-                    text: `Add ${service.name} role`,
-                    callbackKey: `jacdac_add_role_callback_${service.shortId}`,
-                    service,
-                },
             }))
             .filter(cat => !!cat.contents?.length)
 

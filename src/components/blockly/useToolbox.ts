@@ -12,9 +12,9 @@ import {
     CategoryDefinition,
     ServiceBlockDefinitionFactory,
     ToolboxConfiguration,
+    visitToolbox,
 } from "./toolbox"
 import { WorkspaceJSON } from "./jsongenerator"
-import { VMProgram } from "../../../jacdac-ts/src/vm/ir"
 import BlockDomainSpecificLanguage from "./dsl/dsl"
 
 // overrides blockly emboss filter for svg elements
@@ -52,7 +52,9 @@ function loadBlocks(
     // re-register blocks with blocklys
     blocks.forEach(
         block =>
-            (Blockly.Blocks[block.type] = <ServiceBlockDefinitionFactory>{
+            (Blockly.Blocks[block.type] = <
+                ServiceBlockDefinitionFactory<BlockDefinition>
+            >{
                 jacdacDefinition: block,
                 init: function () {
                     this.jsonInit(block)
@@ -66,10 +68,6 @@ function loadBlocks(
 }
 
 function patchCategoryJSONtoXML(cat: CategoryDefinition): CategoryDefinition {
-    if (cat.button) {
-        if (!cat.contents) cat.contents = []
-        cat.contents.unshift(cat.button)
-    }
     cat.contents
         ?.filter(node => node.kind === "block")
         .map(node => <BlockReference>node)
@@ -139,18 +137,20 @@ export function useToolboxButtons(
         if (!workspace) return
 
         // collect buttons
-        const buttons: ButtonDefinition[] = toolboxConfiguration?.contents
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            .map(cat => (cat as CategoryDefinition).button)
-            .filter(btn => !!btn)
-        buttons?.forEach(button =>
+        const buttons: ButtonDefinition[] = []
+        visitToolbox(toolboxConfiguration, {
+            visitButton: btn => buttons.push(btn),
+        })
+        // register buttons
+        buttons.forEach(button =>
             workspace.registerButtonCallback(button.callbackKey, () =>
-                Blockly.Variables.createVariableButtonHandler(
-                    workspace,
-                    null,
-                    button.service.shortId
-                )
+                button.callback(workspace)
             )
         )
+        // cleanup
+        return () =>
+            buttons.forEach(button =>
+                workspace.removeButtonCallback(button.callbackKey)
+            )
     }, [workspace, JSON.stringify(toolboxConfiguration)])
 }

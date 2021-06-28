@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { BlockSvg, Events, FieldVariable } from "blockly"
+import { BlockSvg, Events, FieldVariable, Variables } from "blockly"
 import BuiltinDataSetField from "../fields/BuiltinDataSetField"
 import DataColumnChooserField from "../fields/DataColumnChooserField"
 import DataTableField from "../fields/DataTableField"
@@ -585,6 +585,12 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     kind: "button",
                     text: `Add dataset variable`,
                     callbackKey: DATA_ADD_VARIABLE_CALLBACK,
+                    callback: workspace =>
+                        Variables.createVariableButtonHandler(
+                            workspace,
+                            null,
+                            DATA_TABLE_TYPE
+                        ),
                 },
                 <BlockReference>{
                     kind: "block",
