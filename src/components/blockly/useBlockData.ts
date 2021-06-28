@@ -5,7 +5,7 @@ import useChangeThrottled from "../../jacdac/useChangeThrottled"
 import useDragDebounce from "./useDragDebounce"
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export default function useBlockData<T extends object[]>(
+export default function useBlockData<T extends object>(
     block: Block,
     initialValue?: T[]
 ) {

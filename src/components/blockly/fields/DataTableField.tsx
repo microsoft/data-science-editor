@@ -43,13 +43,16 @@ const useStyles = makeStyles(() =>
 
 function DataTableWidget() {
     const { sourceBlock } = useContext(WorkspaceContext)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data } = useBlockData<any>(sourceBlock)
+    const { data } = useBlockData<{ id?: string } & unknown>(sourceBlock)
     const classes = useStyles()
 
     if (!data?.length) return null
 
     const columns = Object.keys(data[0] || {})
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const renderCell = (v: any) =>
+        typeof v === "boolean" ? (v ? "true" : "false") : v + ""
 
     return (
         <PointerBoundary className={classes.root}>
@@ -65,7 +68,7 @@ function DataTableWidget() {
                     {data.map((r, i) => (
                         <tr key={r.id || i}>
                             {columns.map(c => (
-                                <td key={c}>{r[c]}</td>
+                                <td key={c}>{renderCell(r[c])}</td>
                             ))}
                         </tr>
                     ))}
