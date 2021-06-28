@@ -150,7 +150,7 @@ export function BlockProvider(props: {
     }) => {
         const { type, workspaceId } = event
         if (workspaceId !== workspace.id) return
-        console.log(`blockly: ${type}`, event)
+        //console.log(`blockly: ${type}`, event)
         if (type === Events.BLOCK_DRAG) {
             const dragEvent = event as Events.BlockDrag
             setDragging(!!dragEvent.isStart)
