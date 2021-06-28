@@ -4,7 +4,6 @@ import { BitRadioCmd } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import { REPORT_RECEIVE } from "../../../jacdac-ts/src/jdom/constants"
 import { jdunpack, PackedValues } from "../../../jacdac-ts/src/jdom/pack"
 import Packet from "../../../jacdac-ts/src/jdom/packet"
-import CodeBlock from "../CodeBlock"
 
 const HORIZON = 10
 
@@ -62,5 +61,5 @@ export default function DashboardBitRadio(props: DashboardServiceProps) {
         )
         .filter(el => !!el)
         .join("\n")
-    return <CodeBlock>{text}</CodeBlock>
+    return <pre>{text}</pre>
 }
