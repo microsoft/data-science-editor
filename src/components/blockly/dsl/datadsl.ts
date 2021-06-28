@@ -510,7 +510,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             ) => {
                 const horizon = block.getFieldValue("horizon") || 10
                 return postTransformData(<DataRecordWindowRequest>{
-                    type: "recordwindow",
+                    type: "record_window",
                     data,
                     previousData,
                     horizon,

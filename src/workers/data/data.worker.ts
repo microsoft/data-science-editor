@@ -1,5 +1,18 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { groupBy, summarize, mean, median, min, max, filter, select, arrange, desc, tidy, mutate } from "@tidyjs/tidy"
+import {
+    groupBy,
+    summarize,
+    mean,
+    median,
+    min,
+    max,
+    filter,
+    select,
+    arrange,
+    desc,
+    tidy,
+    mutate,
+} from "@tidyjs/tidy"
 
 export interface DataMessage {
     worker: "data"
@@ -65,7 +78,7 @@ export interface DataSummarizeByGroupRequest extends DataRequest {
 }
 
 export interface DataRecordWindowRequest extends DataRequest {
-    type: "recordwindow"
+    type: "record_window"
     horizon: number
     data: { time?: number }[]
     previousData?: { time?: number }[]
@@ -97,40 +110,33 @@ const handlers: { [index: string]: (props: any) => object[] } = {
                     data,
                     filter(d => d[column] > rhs)
                 )
-                break
             case "lt":
                 return tidy(
                     data,
                     filter(d => d[column] < rhs)
                 )
-                break
             case "ge":
                 return tidy(
                     data,
                     filter(d => d[column] >= rhs)
                 )
-                break
             case "le":
                 return tidy(
                     data,
                     filter(d => d[column] <= rhs)
                 )
-                break
             case "eq":
                 return tidy(
                     data,
                     filter(d => d[column] == rhs)
                 )
-                break
             case "ne":
                 return tidy(
                     data,
                     filter(d => d[column] != rhs)
                 )
-                break
             default:
                 return data
-                break
         }
     },
     filter_columns: (props: DataFilterColumnsRequest) => {
@@ -144,148 +150,120 @@ const handlers: { [index: string]: (props: any) => object[] } = {
                     data,
                     filter(d => d[columns[0]] > d[columns[1]])
                 )
-                break
             case "lt":
                 return tidy(
                     data,
                     filter(d => d[columns[0]] < d[columns[1]])
                 )
-                break
             case "ge":
                 return tidy(
                     data,
                     filter(d => d[columns[0]] >= d[columns[1]])
                 )
-                break
             case "le":
                 return tidy(
                     data,
                     filter(d => d[columns[0]] <= d[columns[1]])
                 )
-                break
             case "eq":
                 return tidy(
                     data,
                     filter(d => d[columns[0]] === d[columns[1]])
                 )
-                break
             case "ne":
                 return tidy(
                     data,
                     filter(d => d[columns[0]] !== d[columns[1]])
                 )
-                break
             default:
                 return data
-                break
         }
     },
     mutate_columns: (props: DataMutateColumnsRequest) => {
         const { newcolumn, lhs, rhs, logic, data } = props
         if (newcolumn === undefined || !lhs || !rhs || !logic) return data
-        
+
         const calc = {}
 
         switch (logic) {
             case "plus":
-                calc[newcolumn] = (d) => d[lhs] + d[rhs]
+                calc[newcolumn] = d => d[lhs] + d[rhs]
                 return tidy(data, mutate(calc))
-                break
             case "minus":
-                calc[newcolumn] = (d) => d[lhs] - d[rhs]
+                calc[newcolumn] = d => d[lhs] - d[rhs]
                 return tidy(data, mutate(calc))
-                break
             case "mult":
-                calc[newcolumn] = (d) => d[lhs] * d[rhs]
+                calc[newcolumn] = d => d[lhs] * d[rhs]
                 return tidy(data, mutate(calc))
-                break
             case "div":
-                calc[newcolumn] = (d) => d[lhs] / d[rhs]
+                calc[newcolumn] = d => d[lhs] / d[rhs]
                 return tidy(data, mutate(calc))
-                break
             case "gt":
-                calc[newcolumn] = (d) => (d[lhs] > d[rhs]).toString()
+                calc[newcolumn] = d => d[lhs] > d[rhs]
                 return tidy(data, mutate(calc))
-                break
             case "lt":
-                calc[newcolumn] = (d) => (d[lhs] < d[rhs]).toString()
+                calc[newcolumn] = d => d[lhs] < d[rhs]
                 return tidy(data, mutate(calc))
-                break
             case "ge":
-                calc[newcolumn] = (d) => (d[lhs] >= d[rhs]).toString()
+                calc[newcolumn] = d => d[lhs] >= d[rhs]
                 return tidy(data, mutate(calc))
-                break
             case "le":
-                calc[newcolumn] = (d) => (d[lhs] <= d[rhs]).toString()
+                calc[newcolumn] = d => d[lhs] <= d[rhs]
                 return tidy(data, mutate(calc))
-                break
             case "eq":
-                calc[newcolumn] = (d) => (d[lhs] == d[rhs]).toString()
+                calc[newcolumn] = d => d[lhs] == d[rhs]
                 return tidy(data, mutate(calc))
-                break
             case "ne":
-                calc[newcolumn] = (d) => (d[lhs] != d[rhs]).toString()
+                calc[newcolumn] = d => d[lhs] != d[rhs]
                 return tidy(data, mutate(calc))
-                break
             default:
                 return data
-                break
         }
     },
     mutate_number: (props: DataMutateNumberRequest) => {
         const { newcolumn, lhs, rhs, logic, data } = props
-        if (newcolumn === undefined || !lhs || rhs === undefined || !logic) return data
-        
+        if (newcolumn === undefined || !lhs || rhs === undefined || !logic)
+            return data
+
         const calc = {}
 
         switch (logic) {
             case "plus":
-                calc[newcolumn] = (d) => d[lhs] + rhs
+                calc[newcolumn] = d => d[lhs] + rhs
                 return tidy(data, mutate(calc))
-                break
             case "minus":
-                calc[newcolumn] = (d) => d[lhs] - rhs
+                calc[newcolumn] = d => d[lhs] - rhs
                 return tidy(data, mutate(calc))
-                break
             case "mult":
-                calc[newcolumn] = (d) => d[lhs] * rhs
+                calc[newcolumn] = d => d[lhs] * rhs
                 return tidy(data, mutate(calc))
-                break
             case "div":
-                calc[newcolumn] = (d) => d[lhs] / rhs
+                calc[newcolumn] = d => d[lhs] / rhs
                 return tidy(data, mutate(calc))
-                break
             case "gt":
-                calc[newcolumn] = (d) => (d[lhs] > rhs).toString()
+                calc[newcolumn] = d => d[lhs] > rhs
                 return tidy(data, mutate(calc))
-                break
             case "lt":
-                calc[newcolumn] = (d) => (d[lhs] < rhs).toString()
+                calc[newcolumn] = d => d[lhs] < rhs
                 return tidy(data, mutate(calc))
-                break
             case "ge":
-                calc[newcolumn] = (d) => (d[lhs] >= rhs).toString()
+                calc[newcolumn] = d => d[lhs] >= rhs
                 return tidy(data, mutate(calc))
-                break
             case "le":
-                calc[newcolumn] = (d) => (d[lhs] <= rhs).toString()
+                calc[newcolumn] = d => d[lhs] <= rhs
                 return tidy(data, mutate(calc))
-                break
             case "eq":
-                calc[newcolumn] = (d) => (d[lhs] == rhs).toString()
+                calc[newcolumn] = d => d[lhs] == rhs
                 return tidy(data, mutate(calc))
-                break
             case "ne":
-                calc[newcolumn] = (d) => (d[lhs] != rhs).toString()
+                calc[newcolumn] = d => d[lhs] != rhs
                 return tidy(data, mutate(calc))
-                break
             default:
                 return data
-                break
         }
     },
-    summarize_by_group: (props: DataSummarizeByGroupRequest) => { 
-        const { column , by, calc, data } = props
+    summarize_by_group: (props: DataSummarizeByGroupRequest) => {
+        const { column, by, calc, data } = props
         if (!column || !by || !calc) return data
 
         switch (calc) {
@@ -293,36 +271,37 @@ const handlers: { [index: string]: (props: any) => object[] } = {
                 return tidy(
                     data,
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    groupBy(by as any, [ summarize({ Mean: mean(column as any) }) ])
-                  )
-                break
+                    groupBy(by as any, [
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        summarize({ Mean: mean(column as any) }),
+                    ])
+                )
             case "med":
                 return tidy(
                     data,
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    groupBy(by as any, [ summarize({ Median: median(column as any) }) ])
+                    groupBy(by as any, [
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        summarize({ Median: median(column as any) }),
+                    ])
                 )
-                break
             case "min":
                 return tidy(
                     data,
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    groupBy(by as any, [ summarize({ Min: min(column as any) }) ])
+                    groupBy(by as any, [summarize({ Min: min(column as any) })])
                 )
-                break
             case "max":
                 return tidy(
                     data,
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    groupBy(by as any, [ summarize({ Max: max(column as any) }) ])
+                    groupBy(by as any, [summarize({ Max: max(column as any) })])
                 )
-                break
             default:
                 return data
-                break
         }
     },
-    recordwindow: (props: DataRecordWindowRequest) => {
+    record_window: (props: DataRecordWindowRequest) => {
         const { data, previousData, horizon } = props
         if (!data?.length) return data
         const now = data[data.length - 1].time
