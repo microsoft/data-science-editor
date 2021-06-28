@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { BlockSvg, Events, FieldVariable, Variables } from "blockly"
+import { Block, BlockSvg, Events, FieldVariable, Variables } from "blockly"
 import BuiltinDataSetField from "../fields/BuiltinDataSetField"
 import DataColumnChooserField from "../fields/DataColumnChooserField"
 import DataTableField from "../fields/DataTableField"
@@ -643,3 +643,27 @@ const dataDsl: BlockDomainSpecificLanguage = {
     },
 }
 export default dataDsl
+
+export function resolveUsedDataVariables(block: Block): {
+    reads?: string[]
+    write?: string
+} {
+    const { type } = block
+    if (type === DATA_DATAVARIABLE_READ_BLOCK) {
+        const field = block.getField("data") as FieldVariable
+        const variable = field.getVariable()
+        if (variable)
+            return {
+                reads: [variable.name],
+            }
+    } else if (type === DATA_DATAVARIABLE_WRITE_BLOCK) {
+        const field = block.getField("data") as FieldVariable
+        const variable = field.getVariable()
+        if (variable)
+            return {
+                write: variable.name,
+            }
+    }
+
+    return {}
+}

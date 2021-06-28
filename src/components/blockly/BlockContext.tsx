@@ -7,12 +7,12 @@ import bus from "../../jacdac/providerbus"
 import useRoleManager from "../hooks/useRoleManager"
 import useLocalStorage from "../useLocalStorage"
 import { BlockWarning, collectWarnings } from "./blockwarning"
+import { registerDataSolver } from "./dsl/datasolver"
 import BlockDomainSpecificLanguage from "./dsl/dsl"
 import { domToJSON, WorkspaceJSON } from "./jsongenerator"
 import {
     JSON_WARNINGS_CATEGORY,
     NEW_PROJET_XML,
-    resolveBlockDefinition,
     ToolboxConfiguration,
 } from "./toolbox"
 import useBlocklyEvents from "./useBlocklyEvents"
@@ -111,29 +111,7 @@ export function BlockProvider(props: {
             )
         }
         services.initialized = true
-        // register data transforms
-        const { transformData } = resolveBlockDefinition(block.type) || {}
-        if (transformData) {
-            services.on(CHANGE, async () => {
-                if (!block.isEnabled()) return
-
-                const next = (block.nextConnection?.targetBlock() ||
-                    block.childBlocks_?.[0]) as BlockWithServices
-                const nextServices = next?.jacdacServices
-                if (nextServices) {
-                    try {
-                        const newData = await transformData(
-                            block,
-                            services.data,
-                            nextServices.data
-                        )
-                        nextServices.data = newData
-                    } catch (e) {
-                        console.debug(e)
-                    }
-                }
-            })
-        }
+        registerDataSolver(block)
     }
 
     const handleBlockChange = (blockId: string) => {
