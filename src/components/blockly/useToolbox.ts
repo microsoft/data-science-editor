@@ -105,24 +105,26 @@ export default function useToolbox(
     const theme = useTheme()
 
     useMemo(() => loadBlocks(dsls, theme), [theme, dsls])
-
-    const dslsCategories = arrayConcatMany(
-        dsls.map(dsl => dsl?.createCategory?.({ theme, source, liveServices }))
-    )
-        .filter(cat => !!cat)
-        .sort((l, r) => -(l.order - r.order))
-
-    const toolboxConfiguration: ToolboxConfiguration = {
-        kind: "categoryToolbox",
-        contents: dslsCategories
+    const toolboxConfiguration = useMemo(() => {
+        const dslsCategories = arrayConcatMany(
+            dsls.map(dsl =>
+                dsl?.createCategory?.({ theme, source, liveServices })
+            )
+        )
             .filter(cat => !!cat)
-            .map(node =>
-                node.kind === "category"
-                    ? patchCategoryJSONtoXML(node as CategoryDefinition)
-                    : node
-            ),
-    }
+            .sort((l, r) => -(l.order - r.order))
 
+        return <ToolboxConfiguration>{
+            kind: "categoryToolbox",
+            contents: dslsCategories
+                .filter(cat => !!cat)
+                .map(node =>
+                    node.kind === "category"
+                        ? patchCategoryJSONtoXML(node as CategoryDefinition)
+                        : node
+                ),
+        }
+    }, [theme, dsls, source, (liveServices || []).map(srv => srv.id).join(",")])
     return toolboxConfiguration
 }
 
@@ -152,5 +154,5 @@ export function useToolboxButtons(
             buttons.forEach(button =>
                 workspace.removeButtonCallback(button.callbackKey)
             )
-    }, [workspace, JSON.stringify(toolboxConfiguration)])
+    }, [workspace, toolboxConfiguration])
 }
