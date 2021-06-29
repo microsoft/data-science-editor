@@ -298,7 +298,7 @@ export default function ProtocolTest() {
         <>
             <h1>Protocol Test</h1>
             <p>
-                A helper page to test the Jacdac protocol against a
+                A helper page to test the Jacdac protocol against a &nbsp;
                 <Link to="/services/prototest/">protocol test</Link> service.
             </p>
             <Grid container direction="row" spacing={2}>
