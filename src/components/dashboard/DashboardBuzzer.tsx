@@ -1,11 +1,10 @@
 import { Grid, Slider } from "@material-ui/core"
-import React, { lazy, useEffect } from "react"
+import React, { lazy, useContext, useEffect } from "react"
 import { BuzzerCmd, BuzzerReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import useServiceServer from "../hooks/useServiceServer"
-import usePlayTone from "../hooks/usePlayTone"
 import BuzzerServer from "../../../jacdac-ts/src/servers/buzzerserver"
 import VolumeDownIcon from "@material-ui/icons/VolumeDown"
 import Suspense from "../ui/Suspense"
@@ -13,6 +12,7 @@ import useRegister from "../hooks/useRegister"
 import { Alert } from "@material-ui/lab"
 import { IconButton } from "gatsby-theme-material-ui"
 import VolumeUpIcon from "@material-ui/icons/VolumeUp"
+import WebAudioContext from "../ui/WebAudioContext"
 const PianoWidget = lazy(() => import("../widgets/PianoWidget"))
 
 export default function DashboardBuzzer(props: DashboardServiceProps) {
@@ -21,17 +21,18 @@ export default function DashboardBuzzer(props: DashboardServiceProps) {
     const color = server ? "secondary" : "primary"
     const volumeRegister = useRegister(service, BuzzerReg.Volume)
     const [volume] = useRegisterUnpackedValue<[number]>(volumeRegister, props)
-    const { playTone, setVolume, onClickActivateAudioContext, activated } =
-        usePlayTone(volume)
+    const { playTone, onClickActivateAudioContext, activated } =
+        useContext(WebAudioContext)
 
     // listen for playTone commands from the buzzer
     useEffect(
         () =>
-            server?.subscribe<[number, number]>(
-                BuzzerServer.PLAY_TONE,
-                args => {
-                    playTone?.(args[0], args[1])
-                }
+            server?.subscribe<{
+                frequency: number
+                duration: number
+                volume: number
+            }>(BuzzerServer.PLAY_TONE, ({ frequency, duration, volume }) =>
+                playTone?.(frequency, duration, volume)
             ),
         [server]
     )
@@ -53,7 +54,6 @@ export default function DashboardBuzzer(props: DashboardServiceProps) {
         volumeRegister.sendSetPackedAsync("u0.8", [newValue], true)
     }
     const handleUnlock = () => sendPlayTone(400)
-    useEffect(() => setVolume?.(volume), [volume])
 
     return (
         <>

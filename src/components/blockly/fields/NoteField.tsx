@@ -1,5 +1,5 @@
 import React, { lazy, ReactNode } from "react"
-import { createToneContext, ToneContext } from "../../hooks/toneContext"
+import { createToneContext, ToneContext } from "../../ui/WebAudioContext"
 import Suspense from "../../ui/Suspense"
 import ReactField, {
     ReactFieldJSON,
@@ -38,7 +38,7 @@ export default class NoteField extends ReactField<number> {
         const handlePlayTone = async (newFrequency: number) => {
             this.value = newFrequency
             if (!this.toneContext) this.toneContext = createToneContext()
-            this.toneContext?.playTone(newFrequency, 400)
+            this.toneContext?.playTone(newFrequency, 400, 0.5)
         }
         return (
             <Suspense>
