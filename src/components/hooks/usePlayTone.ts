@@ -1,8 +1,9 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { createToneContext, ToneContext } from "./toneContext"
 
 export default function usePlayTone(defaultVolume?: number) {
     const context = useRef<ToneContext>()
+    const [activated, setActivated] = useState(false)
 
     // final cleanup
     useEffect(() => {
@@ -17,6 +18,7 @@ export default function usePlayTone(defaultVolume?: number) {
 
         try {
             context.current = createToneContext(defaultVolume)
+            setActivated(true)
         } catch (e) {
             console.warn(e)
         }
@@ -29,5 +31,6 @@ export default function usePlayTone(defaultVolume?: number) {
         onClickActivateAudioContext,
         setVolume,
         playTone,
+        activated,
     }
 }

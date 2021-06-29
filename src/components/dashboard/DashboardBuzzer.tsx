@@ -8,9 +8,11 @@ import useServiceServer from "../hooks/useServiceServer"
 import usePlayTone from "../hooks/usePlayTone"
 import BuzzerServer from "../../../jacdac-ts/src/servers/buzzerserver"
 import VolumeDownIcon from "@material-ui/icons/VolumeDown"
-import VolumeUpIcon from "@material-ui/icons/VolumeUp"
 import Suspense from "../ui/Suspense"
 import useRegister from "../hooks/useRegister"
+import { Alert } from "@material-ui/lab"
+import { IconButton } from "gatsby-theme-material-ui"
+import VolumeUpIcon from "@material-ui/icons/VolumeUp"
 const PianoWidget = lazy(() => import("../widgets/PianoWidget"))
 
 export default function DashboardBuzzer(props: DashboardServiceProps) {
@@ -19,7 +21,7 @@ export default function DashboardBuzzer(props: DashboardServiceProps) {
     const color = server ? "secondary" : "primary"
     const volumeRegister = useRegister(service, BuzzerReg.Volume)
     const [volume] = useRegisterUnpackedValue<[number]>(volumeRegister, props)
-    const { playTone, setVolume, onClickActivateAudioContext } =
+    const { playTone, setVolume, onClickActivateAudioContext, activated } =
         usePlayTone(volume)
 
     // listen for playTone commands from the buzzer
@@ -50,10 +52,24 @@ export default function DashboardBuzzer(props: DashboardServiceProps) {
     const handleChange = async (ev: unknown, newValue: number | number[]) => {
         volumeRegister.sendSetPackedAsync("u0.8", [newValue], true)
     }
+    const handleUnlock = () => sendPlayTone(400)
     useEffect(() => setVolume?.(volume), [volume])
 
     return (
         <>
+            {server && !activated && (
+                <Grid item xs>
+                    <Alert severity="warning">
+                        Click to activate sounds. &nbsp;
+                        <IconButton
+                            aria-label="unlock sounds"
+                            onClick={handleUnlock}
+                        >
+                            <VolumeUpIcon />
+                        </IconButton>
+                    </Alert>
+                </Grid>
+            )}
             <Grid item xs>
                 <Suspense>
                     <PianoWidget playTone={sendPlayTone} />
