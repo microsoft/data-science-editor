@@ -151,20 +151,11 @@ function BlockMiniMap(props: {
     // nothing to see
     if (!metrics || !view) return null
 
-    const { scroll, contents, blocks } = metrics
+    const { scroll, blocks } = metrics
     const cleft = scroll.left
     const ctop = scroll.top
     const cwidth = scroll.width
     const cheight = scroll.height
-
-    // all blocks visible
-    if (
-        contents.left >= view.left &&
-        contents.top >= view.top &&
-        contents.left + contents.width <= view.left + view.width &&
-        contents.top + contents.height <= view.top + view.height
-    )
-        return null
 
     return (
         <svg
