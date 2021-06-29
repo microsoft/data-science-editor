@@ -56,8 +56,8 @@ function BinaryButton(props: { pressed: boolean } & DashboardServiceProps) {
         <ButtonWidget
             checked={!!pressed}
             color={color}
-            onDown={server && handleDown}
-            onUp={server && handleUp}
+            onDown={server ? handleDown : undefined}
+            onUp={server ? handleUp : undefined}
             label={label}
             size={widgetSize}
         />
