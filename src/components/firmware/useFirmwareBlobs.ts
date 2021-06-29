@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect } from "react"
+import { useCallback, useContext } from "react"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import {
     FirmwareBlob,
@@ -7,7 +7,7 @@ import {
 import DbContext, { DbContextProps } from "../DbContext"
 import { useChangeAsync } from "../../jacdac/useChange"
 import { deviceSpecifications } from "../../../jacdac-ts/src/jdom/spec"
-import { delay, unique } from "../../../jacdac-ts/src/jdom/utils"
+import { unique } from "../../../jacdac-ts/src/jdom/utils"
 import { fetchLatestRelease, fetchReleaseBinary } from "../github"
 import useIdleCallback from "../hooks/useIdleCallback"
 
@@ -50,7 +50,7 @@ export default function useFirmwareBlobs() {
                 firmwares.set(slug, fw)
             }
             // throttle github queries
-            await delay(5000)
+            await bus.delay(5000)
         }
     }, [db, firmwares]);
     useIdleCallback(loadFirmwares, 30000, [db, firmwares]);

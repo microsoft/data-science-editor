@@ -16,11 +16,11 @@ import React, {
 import AppContext from "./AppContext"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import ErrorIcon from "@material-ui/icons/Error"
-import { delay } from "../../jacdac-ts/src/jdom/utils"
 import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
 import useAnalytics from "./hooks/useAnalytics"
 import useMounted from "./hooks/useMounted"
 import clsx from "clsx"
+import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 
 const ACK_RESET_DELAY = 500
 const ERROR_RESET_DELAY = 2000
@@ -74,7 +74,7 @@ export default function CmdButton(props: {
         color,
         ...others
     } = props
-
+    const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { setError: setAppError } = useContext(AppContext)
     const classes = useStyles()
     const [working, setWorking] = useState(false)
@@ -97,7 +97,7 @@ export default function CmdButton(props: {
             if (!mounted()) return
             setAck(true)
             if (!disableReset) {
-                await delay(ackResetDelay || ACK_RESET_DELAY)
+                await bus.delay(ackResetDelay || ACK_RESET_DELAY)
                 if (!mounted) return
                 setAck(false)
             }
@@ -106,7 +106,7 @@ export default function CmdButton(props: {
             setAppError(e)
             setError(e)
             if (!disableReset) {
-                await delay(ERROR_RESET_DELAY)
+                await bus.delay(ERROR_RESET_DELAY)
                 if (!mounted()) return
                 setError(undefined)
             }

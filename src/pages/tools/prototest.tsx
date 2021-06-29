@@ -2,7 +2,6 @@ import { Grid, Switch, Typography } from "@material-ui/core"
 import React, { useContext, useEffect, useState } from "react"
 import {
     bufferEq,
-    delay,
     pick,
     randomRange,
     toHex,
@@ -107,6 +106,7 @@ function RegisterProtocolTest(props: {
     ev: JDEvent
 }) {
     const { rw, ro, ev } = props
+    const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { specification, fields } = rw
     const name = specification.name.replace(/^rw_/, "")
 
@@ -133,7 +133,7 @@ function RegisterProtocolTest(props: {
         // read packet
         await rw.sendGetAsync()
         // wait for response
-        await delay(100)
+        await bus.delay(100)
         // check read
         log({ rwdata: toHex(rw.data) })
         const rwpayload = jdunpack(rw.data, packFormat)
@@ -145,7 +145,7 @@ function RegisterProtocolTest(props: {
         log(`-- testing ro`)
         await ro.sendGetAsync()
         // wait for response
-        await delay(100)
+        await bus.delay(100)
         const ropayload = jdunpack(ro.data, packFormat)
         log({ ropayload })
         if (!jdpackEqual(packFormat, payload, ropayload))
@@ -170,7 +170,7 @@ function RegisterProtocolTest(props: {
         // read packet
         await rw.sendGetAsync()
         // wait for response
-        await delay(100)
+        await bus.delay(100)
         // check read
         log({ rwdata: toHex(rw.data) })
         const rwpayload = jdunpack(rw.data, packFormat)
@@ -202,6 +202,7 @@ function RegisterProtocolTest(props: {
 function ServiceProtocolTest(props: { service: JDService }) {
     const { service } = props
     const { device } = service
+    const { bus } = useContext<JacdacContextProps>(JacdacContext)
 
     const regs = service.registers()
     const rws = service
@@ -228,7 +229,7 @@ function ServiceProtocolTest(props: { service: JDService }) {
         await rw.sendSetAsync(data)
         await rw.sendGetAsync()
         // wait for response
-        await delay(100)
+        await bus.delay(100)
         log(`data recv: ${toHex(rw.data)}`)
         if (!bufferEq(data, rw.data))
             throw new Error(

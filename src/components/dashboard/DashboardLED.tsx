@@ -8,12 +8,13 @@ import LoadingProgress from "../ui/LoadingProgress"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
 import AppContext from "../AppContext"
 import useChange from "../../jacdac/useChange"
-import { delay } from "../../../jacdac-ts/src/jdom/utils"
 import LEDWidget from "../widgets/LEDWidget"
 import useRegister from "../hooks/useRegister"
+import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 
 export default function DashboardLED(props: DashboardServiceProps) {
     const { service } = props
+    const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { setError } = useContext(AppContext)
     const server = useServiceServer<LEDServer>(service)
     const color = server ? "secondary" : "primary"
@@ -55,7 +56,7 @@ export default function DashboardLED(props: DashboardServiceProps) {
                     speed,
                 ])
             )
-            await delay(500)
+            await bus.delay(500)
             await busColorRegister.sendGetAsync()
         } catch (e) {
             setError(e)
