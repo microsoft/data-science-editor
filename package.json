@@ -33,6 +33,7 @@
     "blockly": "^5.20210325.1",
     "compare-versions": "^3.6.0",
     "concurrently": "^6.2.0",
+    "d3-array": "^3.0.1",
     "dns-packet": "^5.2.4",
     "eslint": "^7.29.0",
     "eslint-plugin-react": "^7.24.0",

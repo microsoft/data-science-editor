@@ -13,6 +13,7 @@ import {
     tidy,
     mutate,
 } from "@tidyjs/tidy"
+import { bin } from "d3-array"
 
 export interface DataMessage {
     worker: "data"
@@ -82,6 +83,11 @@ export interface DataRecordWindowRequest extends DataRequest {
     horizon: number
     data: { time?: number }[]
     previousData?: { time?: number }[]
+}
+
+export interface DataBinRequest extends DataRequest {
+    type: "bin"
+    column: string
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -312,6 +318,13 @@ const handlers: { [index: string]: (props: any) => object[] } = {
             ...previousData.filter(r => now - r.time < horizon),
             ...data.filter(r => now - r.time < horizon && r.time > previousNow),
         ]
+    },
+    bin: (props: DataBinRequest) => {
+        const { data, column } = props
+        const binner = bin().value(d => d[column])
+        const binned: (object[] & { x0: number; x1: number })[] = binner(data)
+        // convert back to objects
+        return binned.map(b => ({ length: b.length, x0: b.x0, x1: b.x1 }))
     },
 }
 
