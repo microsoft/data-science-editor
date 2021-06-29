@@ -40,17 +40,19 @@ export default function AccelerometerTheremin() {
                 // don't trigger more than every 100ms
                 throttle(async () => {
                     const [x] = accelerometer.readingRegister.unpackedValue
-                    for (const buzzer of buzzers) {
-                        const pkt = Packet.from(
-                            BuzzerCmd.PlayTone,
-                            tonePayload(
-                                1000 + Math.abs(x) * 1000,
-                                TONE_DURATION,
-                                1
+                    await Promise.all(
+                        buzzers.map(async buzzer => {
+                            const pkt = Packet.from(
+                                BuzzerCmd.PlayTone,
+                                tonePayload(
+                                    1000 + Math.abs(x) * 1000,
+                                    TONE_DURATION,
+                                    1
+                                )
                             )
-                        )
-                        await buzzer.sendPacketAsync(pkt)
-                    }
+                            await buzzer.sendPacketAsync(pkt)
+                        })
+                    )
                 }, TONE_THROTTLE)
             )
         )
