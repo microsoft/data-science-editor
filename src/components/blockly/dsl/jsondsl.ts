@@ -14,7 +14,7 @@ import BlockDomainSpecificLanguage, {
     CompileExpressionToVMOptions,
 } from "./dsl"
 
-const colour = "#654321"
+const colour = "#ff8c00"
 const JSON_FIELD_TYPE = "JSONField"
 const JSON_OBJECT_BLOCK = "json_object"
 const JSON_FIELD_SET_BLOCK = "json_field_set"
