@@ -1,7 +1,3 @@
----
-hideToc: true
----
-
 # JDRegister
 
 > A **register** is a [JDOM](/clients/javascript/jdom/) [node](/clients/javascript/jdom/node/) that represents an addressed data location
@@ -17,6 +13,22 @@ Returns register raw data state as a ``Uint8Array``.
 
 ```typescript
 const data = register.data;
+```
+
+### ``unpackedValue``
+
+Unpacks the register data into a packed array.
+
+```typescript
+const [x, y, z] = register.unpackedValue as [number, number, number]
+```
+
+### ```objectValue```
+
+Unpacks the register data into an object and fields.
+
+```typescript
+const { x, y, z } = register.objectValue
 ```
 
 ### ``intValue``
