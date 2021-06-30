@@ -38,17 +38,31 @@ const TONE_DURATION = 50
 const TONE_THROTTLE = 100
 
 export default function AccelerometerTheremin() {
-    // collect accelerometers and buzzers on the bus
+    // bus is a variable that is shared across the entire site.
+    // it represents the transport to the physical Jacdac bus (USB/BLE)
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
+
+    // useServices accepts a number of filters and returns any services that match
+    // get all accelerometer + buzzer services
     const accelerometers = useServices({ serviceClass: SRV_ACCELEROMETER })
     const buzzers = useServices({ serviceClass: SRV_BUZZER })
+
+    // create two variables to hold the service selected as our accelerometer
+    // and the virtual buzzerServer created when someone turns audio on on the page.
     const [accelService, setAccelService] = useState<JDService>()
     const [buzzerServer, setBuzzerServer] = useState<BuzzerServer>()
 
     const { playTone, onClickActivateAudioContext, activated } =
         useContext(WebAudioContext)
 
-    // listen for playTone commands from the buzzer
+    // useEffect invokes a function call whenever the variables
+    // (passed as an array) change.
+    // if clean up is required, return a clean up callback
+    //
+    // listen for playTone commands from the buzzer via subscribe
+    // subscribe returns a clean up function that is invoked when the user
+    // browses away from the page.
+    // playtone uses the audio context set in handleBrowserAudioEnable
     useEffect(
         () =>
             buzzerServer?.subscribe<BuzzerTone>(
@@ -58,7 +72,9 @@ export default function AccelerometerTheremin() {
             ),
         [buzzerServer]
     )
-    // make sure to clean out buzzer server
+    // clean out buzzer server on page close.
+    // defines an empty function that returns a function.
+    // invoked each time buzzerServer changes
     useEffect(
         () => () =>
             buzzerServer?.device &&
@@ -66,10 +82,15 @@ export default function AccelerometerTheremin() {
         [buzzerServer]
     )
 
+    // use a closure to capture accel variable
+    // act as a toggle for the button the indicates streaming state.
     const handleSelectAccelerometerService = accel => () => {
         accelService == accel ? setAccelService(null) : setAccelService(accel)
     }
 
+    // when start browser audio button is clicked:
+    // get a browser audio context
+    // spin up a virtual buzzer that we latermap to the browser audio engine
     const handleBrowserAudioEnable = () => {
         onClickActivateAudioContext()
         if (!buzzerServer) {
@@ -89,8 +110,12 @@ export default function AccelerometerTheremin() {
             REPORT_UPDATE,
             // don't trigger more than every 100ms
             throttle(async () => {
+                // get x acceleration data
                 const [x] = accelService.readingRegister.unpackedValue
+                // get all acceleration data
+                // const [x, y, z] = accelService.readingRegister.unpackedValue
                 await Promise.all(
+                    // for each buzzer, map x acceleration to buzzer output
                     buzzers.map(async buzzer => {
                         const pkt = Packet.from(
                             BuzzerCmd.PlayTone,
@@ -106,7 +131,6 @@ export default function AccelerometerTheremin() {
         return () => unsubs?.()
     }, [accelService, buzzers]) // re-register if accelerometers, buzzers change
 
-    // TODO any specific rendering needed here?
     return (
         <Grid container spacing={2}>
             <Grid item xs={12}>
