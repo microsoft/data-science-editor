@@ -90,12 +90,17 @@ export interface BlockDefinition extends BlockReference {
     vm?: (...args: any[]) => any
 
     // data transformation
-    // eslint-disable-next-line @typescript-eslint/ban-types
     transformData?: (
         block: BlockSvg,
+        // eslint-disable-next-line @typescript-eslint/ban-types
         data: object[],
+        // eslint-disable-next-line @typescript-eslint/ban-types
         previousData: object[]
+        // eslint-disable-next-line @typescript-eslint/ban-types
     ) => Promise<object[]>
+
+    // run data transformation even when no follower
+    alwaysTransformData?: boolean
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types

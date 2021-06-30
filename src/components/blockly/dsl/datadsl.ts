@@ -472,6 +472,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             colour,
             template: "meta",
+            alwaysTransformData: true,
             transformData: (block: BlockSvg, data: object[]) => {
                 // grab the variable from the block
                 const variable = block.getFieldValue("data")
@@ -480,12 +481,12 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     DATA_DATAVARIABLE_READ_BLOCK,
                     false
                 )
-                readBlocks
+                const readServices = readBlocks
                     .filter(b => b.isEnabled())
                     .filter(b => b.getFieldValue("data") === variable)
                     .map(b => (b as BlockWithServices).jacdacServices)
                     .filter(services => !!services)
-                    .forEach(services => (services.data = data))
+                readServices.forEach(services => (services.data = data))
                 return Promise.resolve(data)
             },
         },

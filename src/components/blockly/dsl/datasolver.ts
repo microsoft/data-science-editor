@@ -5,7 +5,7 @@ import { BlockWithServices } from "../WorkspaceContext"
 export function registerDataSolver(block: BlockWithServices) {
     const { jacdacServices: services } = block
     // register data transforms
-    const { transformData } = resolveBlockDefinition(block.type) || {}
+    const { transformData, alwaysTransformData } = resolveBlockDefinition(block.type) || {}
     if (!transformData) return
 
     services.on(CHANGE, async () => {
@@ -15,14 +15,15 @@ export function registerDataSolver(block: BlockWithServices) {
         const next = (block.nextConnection?.targetBlock() ||
             block.childBlocks_?.[0]) as BlockWithServices
         const nextServices = next?.jacdacServices
-        if (nextServices) {
+        if (nextServices || alwaysTransformData) {
             try {
                 const newData = await transformData(
                     block,
                     services.data,
-                    nextServices.data
+                    nextServices?.data
                 )
-                nextServices.data = newData
+                if (nextServices)
+                    nextServices.data = newData
             } catch (e) {
                 console.debug(e)
             }
