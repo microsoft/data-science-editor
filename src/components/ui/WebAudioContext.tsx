@@ -1,15 +1,8 @@
-import React, {
-    createContext,
-    ReactNode,
-    useEffect,
-    useRef,
-    useState,
-} from "react"
+import React, { createContext, ReactNode, useRef, useState } from "react"
 
 const VOLUME_GAIN = 0.4
 
 export interface ToneContext {
-    close: () => void
     playTone: (frequency: number, duration: number, volume: number) => void
     setVolume: (vol: number) => void
 }
@@ -31,7 +24,10 @@ WebAudioContext.displayName = "WebAudio"
 
 export default WebAudioContext
 
+let _globalCtx: ToneContext
 export function createToneContext(): ToneContext {
+    if (_globalCtx) return _globalCtx
+
     try {
         console.log(`create tone context`)
         const ctx = new (window.AudioContext ||
@@ -80,21 +76,12 @@ export function createToneContext(): ToneContext {
             }
         }
 
-        const close = () => {
-            try {
-                if (ctx.state === "running") ctx.close()
-            } catch (e) {
-                console.warn(e)
-            }
-        }
-
         console.log(`tone context created`)
 
-        return {
+        return (_globalCtx = {
             setVolume,
             playTone,
-            close,
-        }
+        })
     } catch (e) {
         return undefined
     }
@@ -102,26 +89,15 @@ export function createToneContext(): ToneContext {
 
 export function WebAudioProvider(props: { children: ReactNode }) {
     const { children } = props
-    const context = useRef<ToneContext>()
-    const [activated, setActivated] = useState(false)
-
-    // final cleanup
-    useEffect(() => {
-        return () => {
-            context.current?.close()
-        }
-    }, [])
+    const context = useRef<ToneContext>(createToneContext())
+    const [activated, setActivated] = useState(!!context.current)
 
     // needs to be initiated in onClick on safari mobile
     const onClickActivateAudioContext = () => {
         if (context.current) return
 
-        try {
-            context.current = createToneContext()
-            setActivated(true)
-        } catch (e) {
-            console.warn(e)
-        }
+        context.current = createToneContext()
+        if (context.current) setActivated(true)
     }
     const setVolume = (volume: number) => context.current?.setVolume(volume)
     const playTone = (frequency: number, duration: number, volume: number) =>

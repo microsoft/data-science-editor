@@ -6,8 +6,9 @@ import DarkModeProvider from "../../ui/DarkModeProvider"
 import { IdProvider } from "react-use-id-hook"
 import JacdacProvider from "../../../jacdac/Provider"
 import AppTheme from "../../ui/AppTheme"
-import Blockly, { Events, utils } from "blockly"
+import Blockly, { Events } from "blockly"
 import { WorkspaceProvider } from "../WorkspaceContext"
+import { WebAudioProvider } from "../../ui/WebAudioContext"
 
 export default class ReactInlineField extends ReactField<unknown> {
     protected container: HTMLDivElement
@@ -85,9 +86,11 @@ export default class ReactInlineField extends ReactField<unknown> {
             <WorkspaceProvider field={this}>
                 <DarkModeProvider fixedDarkMode="dark">
                     <IdProvider>
-                        <JacdacProvider>
-                            <AppTheme>{this.renderInlineField()}</AppTheme>
-                        </JacdacProvider>
+                        <WebAudioProvider>
+                            <JacdacProvider>
+                                <AppTheme>{this.renderInlineField()}</AppTheme>
+                            </JacdacProvider>
+                        </WebAudioProvider>
                     </IdProvider>
                 </DarkModeProvider>
             </WorkspaceProvider>

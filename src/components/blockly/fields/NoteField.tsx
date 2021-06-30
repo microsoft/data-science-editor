@@ -4,7 +4,6 @@ import Suspense from "../../ui/Suspense"
 import ReactField, {
     ReactFieldJSON,
     toShadowDefinition,
-    UNMOUNT,
 } from "./ReactField"
 const PianoWidget = lazy(() => import("../../widgets/PianoWidget"))
 
@@ -20,10 +19,6 @@ export default class NoteField extends ReactField<number> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     constructor(options?: any) {
         super(options?.value, undefined, options)
-        this.events.on(UNMOUNT, () => {
-            this.toneContext?.close()
-            this.toneContext = undefined
-        })
     }
 
     get defaultValue() {

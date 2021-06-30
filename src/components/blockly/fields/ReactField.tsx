@@ -19,6 +19,7 @@ import {
     FieldWithServices,
     WorkspaceProvider,
 } from "../WorkspaceContext"
+import { WebAudioProvider } from "../../ui/WebAudioContext"
 
 declare module "blockly" {
     interface Block {
@@ -177,22 +178,24 @@ export default class ReactField<T> extends Blockly.Field {
             <WorkspaceProvider field={this}>
                 <DarkModeProvider fixedDarkMode={"dark"}>
                     <IdProvider>
-                        <JacdacProvider>
-                            <AppTheme>
-                                <ValueProvider
-                                    value={this.value}
-                                    onValueChange={onValueChange}
-                                >
-                                    <Box
-                                        m={0.5}
-                                        borderRadius={"0.25rem"}
-                                        bgcolor="background.paper"
+                        <WebAudioProvider>
+                            <JacdacProvider>
+                                <AppTheme>
+                                    <ValueProvider
+                                        value={this.value}
+                                        onValueChange={onValueChange}
                                     >
-                                        {this.renderField()}
-                                    </Box>
-                                </ValueProvider>
-                            </AppTheme>
-                        </JacdacProvider>
+                                        <Box
+                                            m={0.5}
+                                            borderRadius={"0.25rem"}
+                                            bgcolor="background.paper"
+                                        >
+                                            {this.renderField()}
+                                        </Box>
+                                    </ValueProvider>
+                                </AppTheme>
+                            </JacdacProvider>
+                        </WebAudioProvider>
                     </IdProvider>
                 </DarkModeProvider>
             </WorkspaceProvider>
