@@ -3,7 +3,7 @@ import { Grid } from "@material-ui/core"
 import { parseServiceSpecificationMarkdownToJSON } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import { serviceMap } from "../../../jacdac-ts/src/jdom/spec"
 import RandomGenerator from "../RandomGenerator"
-import useLocalStorage from "../useLocalStorage"
+import useLocalStorage from "../hooks/useLocalStorage"
 import HighlightTextField from "../ui/HighlightTextField"
 import ServiceSpecification from "../ServiceSpecification"
 

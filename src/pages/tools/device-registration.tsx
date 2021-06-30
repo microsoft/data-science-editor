@@ -1,6 +1,6 @@
 import React, { lazy, useMemo, useState } from "react"
 import { Grid, Link } from "@material-ui/core"
-import useLocalStorage from "../../components/useLocalStorage"
+import useLocalStorage from "../../components/hooks/useLocalStorage"
 import { clone, unique } from "../../../jacdac-ts/src/jdom/utils"
 import {
     Box,
@@ -117,10 +117,8 @@ export default function DeviceRegistration() {
     const updateDevice = () => {
         setDevice(clone(device))
     }
-    const [
-        firmwaresAnchorEl,
-        setFirmwaresAnchorEl,
-    ] = React.useState<null | HTMLElement>(null)
+    const [firmwaresAnchorEl, setFirmwaresAnchorEl] =
+        React.useState<null | HTMLElement>(null)
     const [imageBase64, setImageBase64] = useState<string>(undefined)
     const nameId = useId()
     const firmwareMenuId = useId()

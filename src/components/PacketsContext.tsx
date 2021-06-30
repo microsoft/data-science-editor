@@ -12,7 +12,7 @@ import Trace from "../../jacdac-ts/src/jdom/trace"
 import TracePlayer from "../../jacdac-ts/src/jdom/traceplayer"
 import TraceRecorder from "../../jacdac-ts/src/jdom/tracerecorder"
 import TraceView, { TracePacketProps } from "../../jacdac-ts/src/jdom/traceview"
-import useLocalStorage from "./useLocalStorage"
+import useLocalStorage from "./hooks/useLocalStorage"
 
 export interface PacketsProps {
     trace: Trace

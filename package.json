@@ -28,6 +28,7 @@
     "@react-three/drei": "^7.0.2",
     "@react-three/fiber": "^7.0.1",
     "@tidyjs/tidy": "^2.4.2",
+    "@types/wicg-file-system-access": "^2020.9.1",
     "@typescript-eslint/eslint-plugin": "^4.28.0",
     "@typescript-eslint/parser": "^4.28.0",
     "blockly": "^5.20210325.1",

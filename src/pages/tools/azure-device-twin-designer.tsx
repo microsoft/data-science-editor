@@ -1,7 +1,7 @@
 import { Grid, TextField } from "@material-ui/core"
 import React, { ChangeEvent, useMemo } from "react"
 import { clone, uniqueName } from "../../../jacdac-ts/src/jdom/utils"
-import useLocalStorage from "../../components/useLocalStorage"
+import useLocalStorage from "../../components/hooks/useLocalStorage"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import DeleteIcon from "@material-ui/icons/Delete"
 import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec"

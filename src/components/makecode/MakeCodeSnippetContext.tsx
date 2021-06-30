@@ -1,5 +1,5 @@
 import React, { createContext } from "react";
-import useLocalStorage from "../useLocalStorage"
+import useLocalStorage from "../hooks/useLocalStorage"
 
 const editors = {
     arcade: "https://arcade.makecode.com/beta/",
