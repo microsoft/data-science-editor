@@ -1,5 +1,6 @@
 import { SMap } from "../../../jacdac-ts/src/jdom/utils"
-import Blockly, { Block, BlockSvg, Workspace } from "blockly"
+import Blockly, { Block, Workspace } from "blockly"
+import { BlockWithServices } from "./WorkspaceContext"
 
 export const NEW_PROJET_XML = '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>'
 
@@ -91,7 +92,7 @@ export interface BlockDefinition extends BlockReference {
 
     // data transformation
     transformData?: (
-        block: BlockSvg,
+        block: BlockWithServices,
         // eslint-disable-next-line @typescript-eslint/ban-types
         data: object[],
         // eslint-disable-next-line @typescript-eslint/ban-types

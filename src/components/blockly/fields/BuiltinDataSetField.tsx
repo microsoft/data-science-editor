@@ -1,13 +1,12 @@
 import { BlockWithServices, FieldWithServices } from "../WorkspaceContext"
 import { Block, FieldDropdown } from "blockly"
 import { withPrefix } from "gatsby"
-import postLoadCSV from "../dsl/workers/csv.proxy"
+import { downloadCSV } from "../dsl/workers/csv.proxy"
 
 const builtins = {
     cereal: withPrefix("/datasets/cereal.csv"),
     penguins: withPrefix("/datasets/penguins.csv"),
     mt: withPrefix("/datasets/mt.csv"),
-    
 }
 
 export default class BuiltinDataSetField
@@ -26,22 +25,19 @@ export default class BuiltinDataSetField
         super(() => Object.keys(builtins).map(k => [k, k]), undefined, options)
     }
 
-    private updateData() {
+    private async updateData() {
         const url = builtins[this.getValue()]
         if (!url) return
 
         // load dataset as needed
         const sourceBlock = this.getSourceBlock() as BlockWithServices
         const services = sourceBlock?.jacdacServices
-        if (!services) return
+        if (!services || services.cache[BuiltinDataSetField.KEY] === url) return // already downloaded
 
-        if (services.cache[BuiltinDataSetField.KEY] === url) return // already downloaded
-
-        postLoadCSV(url).then(({ data, errors }) => {
-            console.debug(`csv parse`, { data, errors })
-            services.data = data
-            services.cache[BuiltinDataSetField.KEY] = url
-        })
+        const { data, errors } = await downloadCSV(url)
+        console.debug(`csv parse`, { data, errors })
+        services.cache[BuiltinDataSetField.KEY] = url
+        services.data = data
     }
 
     setSourceBlock(block: Block) {

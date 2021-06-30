@@ -79,6 +79,9 @@ export class BlockServices extends JDEventSource {
             this.emit(CHANGE)
         }
     }
+    setDataNoEvent(value: object[]) {
+        this._data = value;
+    }
     clearData() {
         this.data = undefined
     }

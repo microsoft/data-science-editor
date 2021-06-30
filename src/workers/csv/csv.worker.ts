@@ -4,10 +4,31 @@ import Papa from "papaparse"
 export interface CsvMessage {
     worker: "csv"
     id?: string
+    type: string
 }
 
 export interface CsvRequest extends CsvMessage {
+    type: string
+}
+
+export interface CsvDownloadRequest extends CsvRequest {
     url: string
+    type: "download"
+}
+
+export interface CsvFileRequest extends CsvRequest {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    fileHandle: any /* FileSystemFileHandle */
+}
+
+export interface CsvSaveRequest extends CsvFileRequest {
+    type: "save"
+    data: object[]
+}
+
+export interface CsvParseRequest extends CsvRequest {
+    type: "parse"
+    source: string
 }
 
 export interface CsvFile {
@@ -36,6 +57,8 @@ function downloadCSV(url: string): Promise<CsvFile> {
             download: true,
             header: true,
             dynamicTyping: true,
+            skipEmptyLines: true,
+            comments: "#",
             transformHeader: (h: string) => h.trim().toLocaleLowerCase(),
             complete: (r: CsvFile) => resolve(r),
         })
@@ -45,15 +68,53 @@ function downloadCSV(url: string): Promise<CsvFile> {
     })
 }
 
+const handlers: { [index: string]: (msg: CsvRequest) => Promise<object> } = {
+    download: async (msg: CsvDownloadRequest) => {
+        const { url } = msg
+        const file = await downloadCSV(url)
+        return { file }
+    },
+    save: async (msg: CsvSaveRequest) => {
+        const { fileHandle, data } = msg
+
+        // convert to CSV
+        const contents = Papa.unparse(data)
+        // Create a FileSystemWritableFileStream to write to.
+        const writable = await fileHandle.createWritable()
+        // Write the contents of the file to the stream.
+        await writable.write(contents)
+        // Close the file and write the contents to disk.
+        await writable.close()
+
+        return {}
+    },
+    parse: async (msg: CsvParseRequest) => {
+        const { source } = msg
+
+        return new Promise<{ file: CsvFile }>(resolve => {
+            Papa.parse(source, {
+                header: true,
+                dynamicTyping: true,
+                skipEmptyLines: true,
+                comments: "#",
+                transformHeader: (h: string) => h.trim().toLocaleLowerCase(),
+                complete: (r: CsvFile) => resolve({ file: r }),
+            })
+        })
+    },
+}
+
 async function handleMessage(event: MessageEvent) {
     const message: CsvRequest = event.data
-    const { worker, url } = message
+    const { worker, type } = message
     if (worker !== "csv") return
-    const file = await downloadCSV(url)
+
+    const handler = handlers[type]
+    const resp = await handler(message)
     self.postMessage({
         id: message.id,
         worker: "csv",
-        file,
+        ...resp,
     })
 }
 
