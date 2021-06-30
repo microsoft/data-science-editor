@@ -6,10 +6,11 @@ import {
     DialogTitle,
     Grid,
 } from "@material-ui/core"
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useState } from "react"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import useDeviceSpecification from "../../jacdac/useDeviceSpecification"
 import useDeviceImage from "../devices/useDeviceImage"
+import useInterval from "../hooks/useInterval"
 import Alert from "../ui/Alert"
 
 function LazyDeviceImage(props: { device: JDDevice }) {
@@ -55,13 +56,7 @@ export default function IdentifyDialog(props: {
     const { device, open, onClose } = props
     const handleSendIdentify = async () => await device.identify()
     const handleCloseIdentify = () => onClose()
-
-    useEffect(() => {
-        if (open) {
-            const timerId = setInterval(() => handleSendIdentify(), 3500)
-            return () => clearInterval(timerId)
-        }
-    }, [open])
+    useInterval(open, handleSendIdentify, 3500, [device])
 
     return (
         <Dialog open={open} onClose={handleCloseIdentify}>

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from "react"
+import React, { useCallback, useContext, useEffect, useMemo } from "react"
 import { REPORT_RECEIVE } from "../../jacdac-ts/src/jdom/constants"
 import { JDRegister } from "../../jacdac-ts/src/jdom/register"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
@@ -6,6 +6,7 @@ import FieldDataSet from "./FieldDataSet"
 import Trend from "./Trend"
 import useChartPalette from "./useChartPalette"
 import useChange from "../jacdac/useChange"
+import useInterval from "./hooks/useInterval"
 
 const DEFAULT_HORIZON = 50
 const DEFAULT_HEIGHT = 12
@@ -21,28 +22,23 @@ export default function RegisterTrend(props: {
     const { register, mini, horizon, height, interval } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const palette = useChartPalette()
-    const dataSet = useRef(
-        FieldDataSet.create(bus, [register], "output", palette, 100)
+    const dataSet = useMemo(
+        () => FieldDataSet.create(bus, [register], "output", palette, 100),
+        [register, palette]
     )
-
-    useChange(dataSet.current)
-
-    const addRow = () => dataSet.current.addRow()
+    useChange(dataSet)
+    const addRow = () => dataSet.addRow()
     // register on change if no intervals
     useEffect(
         () =>
             interval ? undefined : register?.subscribe(REPORT_RECEIVE, addRow),
-        [interval, register]
+        [interval, register, dataSet]
     )
-    // keep logging
-    useEffect(() => {
-        const id = interval && setInterval(addRow, interval)
-        return () => id && clearInterval(id)
-    }, [interval])
+    useInterval(!!interval, addRow, interval, [dataSet])
 
     return (
         <Trend
-            dataSet={dataSet.current}
+            dataSet={dataSet}
             horizon={horizon || DEFAULT_HORIZON}
             gradient={true}
             height={height || DEFAULT_HEIGHT}
