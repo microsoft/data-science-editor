@@ -37,6 +37,11 @@ function tonePayload(frequency: number, ms: number, volume: number) {
 const TONE_DURATION = 50
 const TONE_THROTTLE = 100
 
+// this is a React component that gets run numerous time,
+// whenever a change is detected in the React state
+// for example, useServices is a hook that tracks the accelerometer services,
+// so it will render again and update the accelerometers array whenever the bus connects/disconnects
+// an accelerometer
 export default function AccelerometerTheremin() {
     // bus is a variable that is shared across the entire site.
     // it represents the transport to the physical Jacdac bus (USB/BLE)
@@ -44,11 +49,13 @@ export default function AccelerometerTheremin() {
 
     // useServices accepts a number of filters and returns any services that match
     // get all accelerometer + buzzer services
+    // under the hood, it uses the bus and events.
     const accelerometers = useServices({ serviceClass: SRV_ACCELEROMETER })
     const buzzers = useServices({ serviceClass: SRV_BUZZER })
 
-    // create two variables to hold the service selected as our accelerometer
-    // and the virtual buzzerServer created when someone turns audio on on the page.
+    // create two state variables to hold the service selected as our accelerometer
+    // and the virtual buzzerServer created when someone turns audio on on the page
+    // when using setAccelService/setBuzzerServer, React will render again this component
     const [accelService, setAccelService] = useState<JDService>()
     const [buzzerServer, setBuzzerServer] = useState<BuzzerServer>()
 
@@ -85,14 +92,16 @@ export default function AccelerometerTheremin() {
     // use a closure to capture accel variable
     // act as a toggle for the button the indicates streaming state.
     const handleSelectAccelerometerService = accel => () => {
-        accelService == accel ? setAccelService(null) : setAccelService(accel)
+        accelService == accel ? setAccelService(undefined) : setAccelService(accel)
     }
 
     // when start browser audio button is clicked:
     // get a browser audio context
     // spin up a virtual buzzer that we latermap to the browser audio engine
     const handleBrowserAudioEnable = () => {
-        onClickActivateAudioContext()
+        // browser security dictates that the audio context be used within a click event
+        // must be done once to allow background sounds
+        onClickActivateAudioContext() 
         if (!buzzerServer) {
             const dev = startServiceProviderFromServiceClass(bus, SRV_BUZZER)
             const srv = dev
@@ -106,6 +115,7 @@ export default function AccelerometerTheremin() {
 
     // register for accelerometer data events
     useEffect(() => {
+        // ?. checks that the callee is defined
         const unsubs = accelService?.readingRegister.subscribe(
             REPORT_UPDATE,
             // don't trigger more than every 100ms
