@@ -24,7 +24,6 @@ const variablesDsl: BlockDomainSpecificLanguage = {
                 expr: toMemberExpression("$var", variable.toString()),
                 errors: [],
             }
-            console.log(ret)
             return ret
         }
         return undefined

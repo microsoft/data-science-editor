@@ -55,17 +55,24 @@ export type EventTemplate = "event"
 
 export type EventFieldTemplate = "event_field"
 
+export type RegisterValueTemplate = "register_value"
+
 export type RegisterTemplate =
+    // client blocks
     | "register_change_event"
     | "register_set"
     | "register_get"
+    // server blocks
+    | "register_set_server"   // register name, expr hole for return value
+    | "register_get_server"   // register name, special expr block
 
-export type CommandTemplate = "command"
+export type CommandTemplate = "command" | "server" | "raiseNo" | "raiseArgs"
 
 export type BlockTemplate =
     | EventTemplate
     | EventFieldTemplate
     | RegisterTemplate
+    | RegisterValueTemplate
     | CommandTemplate
     | "shadow"
     | "meta"
@@ -206,7 +213,7 @@ export interface CategoryDefinition extends ContentDefinition {
 export interface ButtonDefinition extends ContentDefinition {
     kind: "button"
     text: string
-    callbackKey: string
+    callbackKey: string,
     callback: (workspace: Workspace) => void
 }
 

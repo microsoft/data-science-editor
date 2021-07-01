@@ -16,7 +16,6 @@ export default function useVMRunner(
     program: VMProgram,
     autoRun: boolean
 ) {
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { setError } = useContext(AppContext)
     const [runner, setRunner] = useState<VMProgramRunner>()
     const [_autoStart, _setAutoStart] = useState<boolean>(!!autoRun)
@@ -40,7 +39,7 @@ export default function useVMRunner(
     useEffect(() => {
         try {
             const newTestRunner =
-                program && new VMProgramRunner(bus, roleManager, program)
+                program && new VMProgramRunner(roleManager, program)
             setRunner(newTestRunner)
 
             return () => newTestRunner?.unmount()

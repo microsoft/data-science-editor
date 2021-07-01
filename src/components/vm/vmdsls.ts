@@ -1,4 +1,5 @@
 import servicesDSL from "../blockly/dsl/servicesdsl"
+import serverServicesDSL from "../blockly/dsl/serverservicesdsl"
 import toolsDsl from "../blockly/dsl/toolsdsl"
 import loopsDsl from "../blockly/dsl/loopsdsl"
 import logicDsl from "../blockly/dsl/logicdsl"
@@ -13,6 +14,7 @@ import widgetDSL from "../blockly/dsl/widgetdsl"
 
 const vmDsls = [
     servicesDSL,
+    serverServicesDSL,
     loopsDsl,
     logicDsl,
     mathDsl,
