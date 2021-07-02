@@ -7,7 +7,6 @@ import {
     serviceSpecificationFromName,
 } from "../../../jacdac-ts/src/jdom/spec"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
-import JDServiceServer from "../../../jacdac-ts/src/jdom/serviceserver"
 import {
     addServiceProvider,
     serviceProviderDefinitionFromServiceClass,

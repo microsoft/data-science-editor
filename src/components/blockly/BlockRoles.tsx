@@ -16,7 +16,6 @@ export default function BlockClientRoles() {
                         role={role}
                         service={service}
                         serviceShortId={serviceShortId}
-                        server={undefined}
                     />
                 </Grid>
             ))}
