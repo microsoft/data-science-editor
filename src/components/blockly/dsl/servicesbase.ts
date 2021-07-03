@@ -189,8 +189,7 @@ const fieldToShadow = (
           })
 
 const variableName = (srv: jdspec.ServiceSpec, client: boolean) =>
-    `${humanify(srv.camelName).toLowerCase()}${client ? "" : "Srv"} 1`
-
+    `${humanify(srv.camelName).toLowerCase()}${client ? "" : " server"} 1`
 
 const isEnabledRegister = (info: jdspec.PacketInfo) =>
     info.fields.length === 1 &&
@@ -698,12 +697,12 @@ export class ServicesBaseDSL {
         ) => {
             return {
                 kind: "category",
-                name: service.name + (isClient ? "" : ":S"),
+                name: service.name + (isClient ? "" : " Server"),
                 colour: this.serviceColor(service),
                 contents: [
                     <ButtonDefinition>{
                         kind: "button",
-                        text: `Add ${service.name} role`,
+                        text: `Add ${service.name} ${isClient ? "role" : "server"}`,
                         callbackKey: `jacdac_add_role_callback_${toRoleType(
                             service,
                             isClient
