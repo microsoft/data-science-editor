@@ -4,14 +4,14 @@ import AddIcon from "@material-ui/icons/Add"
 import { startServiceProviderFromServiceClass } from "../../../../jacdac-ts/src/servers/servers"
 import JacdacContext, { JacdacContextProps } from "../../../jacdac/Context"
 import WorkspaceContext from "../WorkspaceContext"
-import { serviceSpecificationFromName } from "../../../../jacdac-ts/src/jdom/spec"
+import { serviceSpecificationFromClassIdentifier } from "../../../../jacdac-ts/src/jdom/spec"
 import { Alert } from "@material-ui/lab"
 
 export default function NoServiceAlert() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const { roleService, roleServiceShortId, flyout } =
+    const { roleService, roleServiceClass, flyout } =
         useContext(WorkspaceContext)
-    const spec = serviceSpecificationFromName(roleServiceShortId)
+    const spec = serviceSpecificationFromClassIdentifier(roleServiceClass)
     const handleStartSimulator = () =>
         startServiceProviderFromServiceClass(bus, spec.classIdentifier)
 
@@ -19,7 +19,7 @@ export default function NoServiceAlert() {
     if (roleService || flyout) return null
 
     // unresolved, unknown service
-    if (!roleService && !roleServiceShortId) return null
+    if (!roleService && !roleServiceClass) return null
 
     // unknown spec
     if (!spec) return <Alert severity="warning">Unknown service</Alert>

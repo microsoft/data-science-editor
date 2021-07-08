@@ -28,7 +28,7 @@ export default function DashboardSwitch(props: DashboardServiceProps) {
     const color = server ? "secondary" : "primary"
     const widgetSize = `clamp(5em, 25vw, 100%)`
 
-    const handleToggle = () => server?.toggle()
+    const handleToggle = () => server?.toggle?.()
 
     if (on === undefined) return <LoadingProgress />
 

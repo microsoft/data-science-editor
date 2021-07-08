@@ -1,7 +1,9 @@
 import { humanify } from "../../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import {
+    CategoryDefinition,
     CODE_STATEMENT_TYPE,
     CommandBlockDefinition,
+    ContentDefinition,
     EventBlockDefinition,
     InputDefinition,
     LabelDefinition,
@@ -205,15 +207,24 @@ export class ServerServicesBlockDomainSpecificLanguage
             false
         )
 
+        const inlineCategory =
+            serverServicesCategories.flatMap<ContentDefinition>(cd => [
+                <LabelDefinition>{
+                    kind: "label",
+                    text: cd.name,
+                },
+                ...cd.contents
+            ])
+
         return [
             <SeparatorDefinition>{
                 kind: "sep",
             },
-            <LabelDefinition>{
-                kind: "label",
-                text: "Servers",
-            },
-            ...serverServicesCategories,
+            {
+                kind: "category",
+                name: "Servers",
+                contents: inlineCategory,
+            } as CategoryDefinition
         ]
     }
 }

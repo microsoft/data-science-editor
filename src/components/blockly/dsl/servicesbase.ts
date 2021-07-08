@@ -24,8 +24,8 @@ import {
     isHighLevelRegister,
     isCommand,
     isSensor,
-    serviceSpecificationFromName,
     serviceSpecifications,
+    serviceSpecificationFromClassIdentifier,
 } from "../../../../jacdac-ts/src/jdom/spec"
 import {
     arrayConcatMany,
@@ -61,7 +61,7 @@ import {
     VariableInputDefinition,
 } from "../toolbox"
 import { ExpressionWithErrors, makeVMBase } from "../../vm/VMgenerator"
-import  {
+import {
     CompileCommandToVMOptions,
     CompileEventToVMOptions,
     CompileEventToVMResult,
@@ -234,17 +234,17 @@ type ServicePackets = {
     packets: jdspec.PacketInfo[]
 }
 
-// exports 
+// exports
 
 export function toRoleType(service: jdspec.ServiceSpec, client = true) {
-    return `${service.shortId}:${client ? "client" : "server"}`
+    return `${service.classIdentifier}:${client ? "client" : "server"}`
 }
 
 export function parseRoleType(v: VariableJSON) {
     const split = v.type.split(":")
     return {
         role: v.name,
-        serviceShortId: split[0],
+        serviceClass: parseInt(split[0]),
         client: split.length === 2 ? split[1] === "client" : true,
     }
 }
@@ -309,12 +309,9 @@ export const getServiceInfo = () => {
     const supportedServices = allServices
         .filter(
             service =>
-                !/^_/.test(service.shortId) &&
-                service.status !== "deprecated"
+                !/^_/.test(service.shortId) && service.status !== "deprecated"
         )
-        .filter(
-            service => ignoredServices.indexOf(service.classIdentifier) < 0
-        )
+        .filter(service => ignoredServices.indexOf(service.classIdentifier) < 0)
     const registers = arrayConcatMany(
         supportedServices.map(service =>
             service.packets.filter(isHighLevelRegister).map(register => ({
@@ -333,8 +330,7 @@ export const getServiceInfo = () => {
     )
     const registerSimpleEnumTypes = registerSimpleOthers
         .filter(
-            ({ service, register }) =>
-                !!enumInfo(service, register.fields[0])
+            ({ service, register }) => !!enumInfo(service, register.fields[0])
         )
         .map(({ service, register }) => ({
             service,
@@ -394,7 +390,10 @@ export class ServicesBaseDSL {
     protected _eventFieldBlocks: EventFieldDefinition[]
     protected serviceColor: (srv: jdspec.ServiceSpec) => string
 
-    protected makeRegisterSimpleGetBlocks(registers: ServiceRegister[], client = true) {
+    protected makeRegisterSimpleGetBlocks(
+        registers: ServiceRegister[],
+        client = true
+    ) {
         return registers.map<RegisterBlockDefinition>(
             ({ service, register }) => ({
                 kind: "block",
@@ -419,7 +418,10 @@ export class ServicesBaseDSL {
         )
     }
 
-    protected makeRegisterSetBlocks(registers: ServiceRegister[], client = true) {
+    protected makeRegisterSetBlocks(
+        registers: ServiceRegister[],
+        client = true
+    ) {
         return registers
             .filter(({ register }) => !client || register.kind === "rw")
             .filter(({ register }) => fieldsSupported(register))
@@ -488,7 +490,10 @@ export class ServicesBaseDSL {
             }))
     }
 
-    protected makeRegisterNumericsGetBlocks(registers: ServiceRegister[], client = true) {
+    protected makeRegisterNumericsGetBlocks(
+        registers: ServiceRegister[],
+        client = true
+    ) {
         return registers
             .filter(re => re.register.fields.some(isNumericType))
             .map<RegisterBlockDefinition>(({ service, register }) => ({
@@ -622,11 +627,14 @@ export class ServicesBaseDSL {
         const { theme, source, liveServices } = options
         this.serviceColor = createServiceColor(theme)
 
-        const blockServices: { serviceShortId: string }[] =
+        const blockServices: { serviceClass: number }[] =
             source?.variables
                 .map(parseRoleType)
                 .filter(
-                    vt => !!serviceSpecificationFromName(vt.serviceShortId)
+                    vt =>
+                        !!serviceSpecificationFromClassIdentifier(
+                            vt.serviceClass
+                        )
                 ) || []
         const usedEvents: Set<jdspec.PacketInfo> = new Set(
             source?.blocks
@@ -661,7 +669,8 @@ export class ServicesBaseDSL {
                           .map(pair =>
                               services.find(
                                   service =>
-                                      service.shortId === pair.serviceShortId
+                                      service.classIdentifier ===
+                                      pair.serviceClass
                               )
                           )
                           .filter(srv => !!srv),
@@ -702,7 +711,9 @@ export class ServicesBaseDSL {
                 contents: [
                     <ButtonDefinition>{
                         kind: "button",
-                        text: `Add ${service.name} ${isClient ? "role" : "server"}`,
+                        text: `Add ${service.name} ${
+                            isClient ? "role" : "server"
+                        }`,
                         callbackKey: `jacdac_add_role_callback_${toRoleType(
                             service,
                             isClient

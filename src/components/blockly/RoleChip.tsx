@@ -3,9 +3,7 @@ import BlockContext from "./BlockContext"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import DeviceAvatar from "../devices/DeviceAvatar"
-import {
-    serviceSpecificationFromName,
-} from "../../../jacdac-ts/src/jdom/spec"
+import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import {
     addServiceProvider,
@@ -16,22 +14,23 @@ import { BlockSvg, FieldVariable } from "blockly"
 import useServiceServer from "../hooks/useServiceServer"
 import CancelIcon from "@material-ui/icons/Cancel"
 import { Chip, Tooltip } from "@material-ui/core"
-
 import { TWIN_BLOCK } from "./toolbox"
 
 export default function RoleChip(props: {
     role: string
-    serviceShortId: string
+    serviceClass: number
     service: JDService
+    preferredDeviceId: string
 }) {
     const { workspace } = useContext(BlockContext)
-    const { role, service, serviceShortId } = props
+    const { role, service, serviceClass, preferredDeviceId } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const serviceServer = useServiceServer(service)
     const handleRoleClick = () => {
         // spin off simulator
-        if (!service) {
-            const specification = serviceSpecificationFromName(serviceShortId)
+        if (!service && !preferredDeviceId ) {
+            const specification =
+                serviceSpecificationFromClassIdentifier(serviceClass)
             if (specification) {
                 addServiceProvider(
                     bus,
@@ -57,9 +56,14 @@ export default function RoleChip(props: {
                 ) as BlockSvg
             if (!twinBlock) {
                 twinBlock = workspace.newBlock(TWIN_BLOCK) as BlockSvg
-                const variable = workspace.getVariable(
+                let variable = workspace.getVariable(
                     role,
-                    `${serviceShortId}:client`
+                    `${serviceClass}:client`
+                )
+                if (!variable)
+                    variable = workspace.getVariable(
+                        role,
+                        `${serviceClass}:server`
                 )
                 console.log(`new twin`, { twinBlock, variable })
                 const field = twinBlock.inputList[0].fieldRow.find(
