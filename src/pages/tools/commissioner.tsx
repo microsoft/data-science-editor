@@ -363,13 +363,13 @@ export default function Commissioner() {
     return (
         <>
             <h1>Commissioner</h1>
+            <Dashboard
+                showAvatar={true}
+                showHeader={true}
+                showConnect={true}
+                showStartSimulators={false}
+            />
             <Grid container spacing={1}>
-                <Dashboard
-                    showAvatar={true}
-                    showHeader={true}
-                    showConnect={true}
-                    showStartSimulators={false}
-                />
                 <GridHeader title={"Commissioning data"} />
                 <Grid item xs={1}>
                     <Button
@@ -403,11 +403,13 @@ export default function Commissioner() {
                             : "Start filtering brains"}
                     </Button>
                 </Grid>
-                <DataSetTable
-                    key="datasettable"
-                    className={classes.segment}
-                    dataSet={table}
-                />
+                <Grid item xs={12}>
+                    <DataSetTable
+                        key="datasettable"
+                        className={classes.segment}
+                        dataSet={table}
+                    />
+                </Grid>
             </Grid>
         </>
     )
