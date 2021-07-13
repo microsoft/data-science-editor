@@ -101,7 +101,7 @@ export const PacketsProvider = ({ children }) => {
         clearPackets()
         bus.clear()
     }
-    const setReplayTrace = (trace: Trace) => {
+    const setReplayTrace = async (trace: Trace) => {
         clearPackets()
         player.current.trace = trace
     }
@@ -120,7 +120,6 @@ export const PacketsProvider = ({ children }) => {
             player.current.stop()
         } else {
             clearPackets()
-            await bus.disconnect()
             player.current.start()
         }
     }
@@ -161,15 +160,17 @@ export const PacketsProvider = ({ children }) => {
             })
         )
         player.current.mount(
-            player.current.subscribe(CHANGE, () => {
+            player.current.subscribe(CHANGE, async () => {
                 setTracing(player.current.running)
                 _setReplayTrace(player.current.trace)
+                if (player.current.trace) await bus.stop()
+                else await bus.start()
             })
         )
         player.current.mount(
-            player.current.subscribe(PROGRESS, () => {
+            player.current.subscribe(PROGRESS, () =>
                 setProgress(player.current.progress)
-            })
+            )
         )
 
         return () => {
