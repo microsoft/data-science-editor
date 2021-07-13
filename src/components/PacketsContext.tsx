@@ -120,6 +120,7 @@ export const PacketsProvider = ({ children }) => {
             player.current.stop()
         } else {
             clearPackets()
+            bus.clear() // clear all devices
             player.current.start()
         }
     }
