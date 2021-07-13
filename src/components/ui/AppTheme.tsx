@@ -1,5 +1,5 @@
 import {
-    createMuiTheme,
+    createTheme,
     responsiveFontSizes,
     ThemeOptions,
     ThemeProvider,
@@ -23,7 +23,7 @@ export default function AppTheme(props: any) {
             type: darkMode,
         },
     }
-    const rawTheme = createMuiTheme(themeDef)
+    const rawTheme = createTheme(themeDef)
     const theme = responsiveFontSizes(rawTheme)
     return <ThemeProvider theme={theme} {...props} />
 }

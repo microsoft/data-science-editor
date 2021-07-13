@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react"
 import {
     Box,
     Button,
-    createMuiTheme,
+    createTheme,
     responsiveFontSizes,
 } from "@material-ui/core"
 import ThemedLayout from "../../components/ui/ThemedLayout"
@@ -81,7 +81,7 @@ function Carousel() {
 
 export default function Page() {
     const { toggleDarkMode, darkModeMounted } = useContext(DarkModeContext)
-    const rawTheme = createMuiTheme({
+    const rawTheme = createTheme({
         palette: {
             primary: {
                 main: "#63c",

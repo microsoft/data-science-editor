@@ -15,7 +15,7 @@ import "./layout.css"
 import SEO from "./seo"
 // tslint:disable-next-line: no-submodule-imports
 import {
-    createMuiTheme,
+    createTheme,
     responsiveFontSizes,
     createStyles,
     ThemeOptions,
@@ -216,7 +216,7 @@ function LayoutWithMdx(props: LayoutProps) {
             type: darkMode,
         },
     }
-    const rawTheme = createMuiTheme(themeDef)
+    const rawTheme = createTheme(themeDef)
     const theme = responsiveFontSizes(rawTheme)
 
     return (

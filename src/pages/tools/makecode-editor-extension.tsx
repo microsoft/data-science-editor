@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react"
 import {
-    createMuiTheme,
+    createTheme,
     createStyles,
     responsiveFontSizes,
 } from "@material-ui/core"
@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme =>
 
 export default function MakeCodeEditorExtensionPage() {
     const { toggleDarkMode, darkModeMounted } = useContext(DarkModeContext)
-    const rawTheme = createMuiTheme({
+    const rawTheme = createTheme({
         palette: {
             primary: {
                 main: "#2e7d32",
