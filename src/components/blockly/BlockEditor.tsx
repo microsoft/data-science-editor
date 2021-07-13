@@ -24,6 +24,9 @@ const useStyles = makeStyles((theme: Theme) =>
                 fontWeight: `normal !important`,
                 fontFamily: `${theme.typography.fontFamily} !important`,
             },
+            "& .blocklyTreeIconOpen, & .blocklyTreeIconClosed": {
+                opacity: 0.5,
+            },
         },
     })
 )
@@ -89,7 +92,6 @@ export default function BlockEditor(props: { className?: string }) {
         return () => observer.disconnect()
     }, [workspace, blocklyRef.current])
 
-    // minimap 
     useBlockMinimap(workspace)
 
     return (

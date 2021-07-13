@@ -207,14 +207,7 @@ export class ServerServicesBlockDomainSpecificLanguage
             false
         )
 
-        const inlineCategory =
-            serverServicesCategories.flatMap<ContentDefinition>(cd => [
-                <LabelDefinition>{
-                    kind: "label",
-                    text: cd.name,
-                },
-                ...cd.contents
-            ])
+        if (!serverServicesCategories?.length) return []
 
         return [
             <SeparatorDefinition>{
@@ -223,8 +216,8 @@ export class ServerServicesBlockDomainSpecificLanguage
             {
                 kind: "category",
                 name: "Servers",
-                contents: inlineCategory,
-            } as CategoryDefinition
+                contents: serverServicesCategories,
+            } as CategoryDefinition,
         ]
     }
 }
