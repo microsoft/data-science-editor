@@ -38,15 +38,14 @@ export default function PacketRecorder() {
             )}
             <TraceImportButton icon={true} disabled={tracing || recording} />
             <SaveTraceButton disabled={tracing || !replayTrace} />
-            {!!replayTrace && (
-                <IconButtonWithTooltip
-                    title="Clear Trace"
-                    size="small"
-                    onClick={clearTrace}
-                >
-                    <ClearIcon />
-                </IconButtonWithTooltip>
-            )}
+            <IconButtonWithTooltip
+                title="Clear Trace"
+                size="small"
+                onClick={clearTrace}
+                disabled={!replayTrace}
+            >
+                <ClearIcon />
+            </IconButtonWithTooltip>
             |
             <TracePlayButton size="small" />
             <TraceRecordButton size="small" />|
