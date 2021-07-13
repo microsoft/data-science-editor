@@ -257,6 +257,7 @@ function MainAppBar() {
                             )}
                             showToc={true}
                             showCurrent={true}
+                            showTrace={true}
                         />
                         <Hidden implementation="css" xsDown={true}>
                             <Typography component="h1" variant="h6">

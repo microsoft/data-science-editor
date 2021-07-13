@@ -26,7 +26,7 @@ import useChange from "../jacdac/useChange"
 import DeviceName from "./devices/DeviceName"
 import { useDebounce } from "use-debounce"
 import { arrayConcatMany, uniqueMap } from "../../jacdac-ts/src/jdom/utils"
-import TraceTimeFilterRangeSlider from "./TraceTimeFilterRangeSlider"
+import TraceTimeFilterRangeSlider from "./trace/TraceTimeFilterRangeSlider"
 import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
 import { IconButton } from "gatsby-theme-material-ui"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports

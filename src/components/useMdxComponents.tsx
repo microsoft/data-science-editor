@@ -14,7 +14,7 @@ import {
 import Suspense from "./ui/Suspense"
 const CodeBlock = lazy(() => import("./CodeBlock"))
 const RandomGenerator = lazy(() => import("./RandomGenerator"))
-const TraceList = lazy(() => import("./TraceList"))
+const TraceList = lazy(() => import("./trace/TraceList"))
 const SpecificationUnitList = lazy(() => import("./SpecificationUnitList"))
 
 export default function useMdxComponents() {

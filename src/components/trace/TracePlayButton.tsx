@@ -3,13 +3,15 @@ import PlayArrowIcon from "@material-ui/icons/PlayArrow"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import StopIcon from "@material-ui/icons/Stop"
 import React, { useContext } from "react"
-import PacketsContext from "./PacketsContext"
+import PacketsContext from "../PacketsContext"
 import IconButtonWithProgress, {
     IconButtonWithProgressProps,
-} from "./ui/IconButtonWithProgress"
+} from "../ui/IconButtonWithProgress"
 
 export default function TracePlayButton(
-    props: { component?: string } & IconButtonWithProgressProps
+    props: {
+        component?: string
+    } & IconButtonWithProgressProps
 ) {
     const { disabled, ...others } = props
     const { toggleTracing, tracing, recording, replayTrace, progress } =
@@ -23,6 +25,8 @@ export default function TracePlayButton(
             title={tracing ? "Stop trace" : "Play trace"}
             onClick={toggleTracing}
             progress={progress !== undefined && progress * 100}
+            progressColor={"secondary"}
+            color={"inherit"}
         >
             {tracing ? <StopIcon /> : <PlayArrowIcon />}
         </IconButtonWithProgress>

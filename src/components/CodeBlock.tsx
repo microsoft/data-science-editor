@@ -18,7 +18,7 @@ import Tooltip from "./ui/Tooltip"
 import MakeCodeSnippet from "./makecode/MakeCodeSnippet"
 import Suspense from "./ui/Suspense"
 
-const TraceSnippet = lazy(() => import("./TraceSnippet"))
+const TraceSnippet = lazy(() => import("./trace/TraceSnippet"))
 const CodeSandboxButton = lazy(() => import("./ui/CodeSandboxButton"))
 
 function HighlightedCode(props: {

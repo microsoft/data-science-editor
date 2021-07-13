@@ -3,10 +3,10 @@ import { Typography } from "@material-ui/core"
 import ClearIcon from "@material-ui/icons/Clear"
 import React, { useContext } from "react"
 import PacketsContext from "./PacketsContext"
-import TraceImportButton from "./TraceImportButton"
-import SaveTraceButton from "./SaveTraceButton"
-import TraceRecordButton from "./TraceRecordButton"
-import TracePlayButton from "./TracePlayButton"
+import TraceImportButton from "./trace/TraceImportButton"
+import TraceSaveButton from "./trace/TraceSaveButton"
+import TraceRecordButton from "./trace/TraceRecordButton"
+import TracePlayButton from "./trace/TracePlayButton"
 import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import ReplayIcon from "@material-ui/icons/Replay"
@@ -14,6 +14,7 @@ import ReplayIcon from "@material-ui/icons/Replay"
 import PauseIcon from "@material-ui/icons/Pause"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import LiveTvIcon from "@material-ui/icons/LiveTv"
+import TraceClearButton from "./trace/TraceClearButton"
 
 export default function PacketRecorder() {
     const {
@@ -24,10 +25,7 @@ export default function PacketRecorder() {
         tracing,
         paused,
         setPaused,
-        setReplayTrace,
     } = useContext(PacketsContext)
-
-    const clearTrace = () => setReplayTrace(undefined)
 
     return (
         <>
@@ -37,18 +35,11 @@ export default function PacketRecorder() {
                 </Typography>
             )}
             <TraceImportButton icon={true} disabled={tracing || recording} />
-            <SaveTraceButton disabled={tracing || !replayTrace} />
-            <IconButtonWithTooltip
-                title="Clear Trace"
-                size="small"
-                onClick={clearTrace}
-                disabled={!replayTrace}
-            >
-                <ClearIcon />
-            </IconButtonWithTooltip>
+            <TraceSaveButton disabled={tracing || !replayTrace} />
             |
+            <TraceRecordButton size="small" />
             <TracePlayButton size="small" />
-            <TraceRecordButton size="small" />|
+            <TraceClearButton size="small" />|
             <IconButtonWithTooltip
                 title={paused ? "Resume packets" : "pause packets"}
                 size="small"

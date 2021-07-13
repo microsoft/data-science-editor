@@ -6,11 +6,11 @@ import {
     CardHeader,
 } from "@material-ui/core"
 import React, { useContext } from "react"
-import { prettyDuration } from "../../jacdac-ts/src/jdom/pretty"
-import Trace from "../../jacdac-ts/src/jdom/trace"
-import AppContext, { DrawerType } from "./AppContext"
-import Markdown from "./ui/Markdown"
-import PacketsContext from "./PacketsContext"
+import { prettyDuration } from "../../../jacdac-ts/src/jdom/pretty"
+import Trace from "../../../jacdac-ts/src/jdom/trace"
+import AppContext, { DrawerType } from "../AppContext"
+import Markdown from "../ui/Markdown"
+import PacketsContext from "../PacketsContext"
 
 export default function TraceCard(props: { name: string; trace: Trace }) {
     const { name, trace } = props

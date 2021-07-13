@@ -9,17 +9,20 @@ import AccountTreeIcon from "@material-ui/icons/AccountTree"
 import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
 import ConnectButtons from "./buttons/ConnectButtons"
 import PacketsContext from "./PacketsContext"
-import { Badge } from "@material-ui/core"
+import TraceClearButton from "./trace/TraceClearButton"
+import TracePlayButton from "./trace/TracePlayButton"
+import TraceRecordButton from "./trace/TraceRecordButton"
 
 export default function DrawerToolsButtonGroup(props: {
     className?: string
     showToc?: boolean
     showCurrent?: boolean
     showConnect?: boolean
+    showTrace?: boolean
 }) {
-    const { className, showToc, showCurrent, showConnect } = props
+    const { className, showToc, showCurrent, showConnect, showTrace } = props
     const { drawerType, setDrawerType } = useContext(AppContext)
-    const { recording } = useContext(PacketsContext)
+    const { replayTrace } = useContext(PacketsContext)
 
     const handleDrawer = (drawer: DrawerType) => () => setDrawerType(drawer)
     const drawers = [
@@ -37,7 +40,6 @@ export default function DrawerToolsButtonGroup(props: {
             drawer: DrawerType.Packets,
             label: "open packet console",
             icon: <HistoryIcon />,
-            badge: recording,
         },
     ]
         .filter(d => !!d)
@@ -54,10 +56,15 @@ export default function DrawerToolsButtonGroup(props: {
                     onClick={handleDrawer(drawer.drawer)}
                     edge="start"
                 >
-                    {" "}
-                    {drawer.badge ? <Badge color="error" variant="dot">{drawer.icon}</Badge> : drawer.icon}
+                    {drawer.icon}
                 </IconButtonWithTooltip>
             ))}
+            {showTrace && replayTrace && (
+                <TracePlayButton size="small" color="inherit" />
+            )}
+            {showTrace && replayTrace && (
+                <TraceClearButton size="small" color="inherit" />
+            )}
             {showConnect && <ConnectButtons transparent={true} full={false} />}
         </>
     )
