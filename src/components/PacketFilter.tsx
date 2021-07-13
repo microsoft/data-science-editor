@@ -214,6 +214,13 @@ function FilterMenu(props: {
                     <Typography>Disable grouping</Typography>&nbsp;
                     <Typography variant="subtitle2">grouping:false</Typography>
                 </MenuItem>
+                <MenuItem key="self" onClick={handleAdd("self:false")}>
+                    <ListItemIcon>
+                        <GroupWorkIcon />
+                    </ListItemIcon>
+                    <Typography>Disable self device</Typography>&nbsp;
+                    <Typography variant="subtitle2">self:false</Typography>
+                </MenuItem>
                 {devices?.map(device => (
                     <MenuItem
                         key={`dev:` + device.id}
@@ -263,9 +270,8 @@ function FilterMenu(props: {
 }
 
 export default function PacketFilter() {
-    const { trace, timeRange, toggleTimeRange, filter, setFilter } = useContext(
-        PacketsContext
-    )
+    const { trace, timeRange, toggleTimeRange, filter, setFilter } =
+        useContext(PacketsContext)
     const classes = useStyles()
     const [text, setText] = useState(filter)
     const [debouncedText] = useDebounce(text, 1000)
