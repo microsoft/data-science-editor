@@ -24,7 +24,10 @@ export default function PacketRecorder() {
         tracing,
         paused,
         setPaused,
+        setReplayTrace,
     } = useContext(PacketsContext)
+
+    const clearTrace = () => setReplayTrace(undefined)
 
     return (
         <>
@@ -35,6 +38,15 @@ export default function PacketRecorder() {
             )}
             <TraceImportButton icon={true} disabled={tracing || recording} />
             <SaveTraceButton disabled={tracing || !replayTrace} />
+            {!!replayTrace && (
+                <IconButtonWithTooltip
+                    title="Clear Trace"
+                    size="small"
+                    onClick={clearTrace}
+                >
+                    <ClearIcon />
+                </IconButtonWithTooltip>
+            )}
             |
             <TracePlayButton size="small" />
             <TraceRecordButton size="small" />|
