@@ -45,8 +45,10 @@ export default function DashboardRotaryEncoder(props: DashboardServiceProps) {
     const throttled = useThrottledValue(position, clicksPerTurn, 1.5)
     const angle = (throttled / clicksPerTurn) * 360
 
-    const min = Math.floor(position / clicksPerTurn - 1) * clicksPerTurn
-    const max = Math.ceil(position / clicksPerTurn + 1) * clicksPerTurn
+    const range = Math.abs(Math.round(position / clicksPerTurn))
+    const min = (-range - 1) * clicksPerTurn
+    const max = (range + 1) * clicksPerTurn
+    const marks = [{ value: 0 }]
 
     return (
         <Grid container direction="column">
@@ -84,6 +86,7 @@ export default function DashboardRotaryEncoder(props: DashboardServiceProps) {
                         value={position}
                         valueLabelDisplay="off"
                         onChange={handleChange}
+                        marks={marks}
                     />
                 </Grid>
             )}
