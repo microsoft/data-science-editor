@@ -109,8 +109,8 @@ export const PacketsProvider = ({ children }) => {
         if (recorder.current.recording) {
             player.current.trace = recorder.current.stop()
         } else {
-            player.current.trace = undefined
             recorder.current.start()
+            player.current.trace = undefined
             setProgress(undefined)
         }
     }
@@ -165,7 +165,11 @@ export const PacketsProvider = ({ children }) => {
                 setTracing(player.current.running)
                 _setReplayTrace(player.current.trace)
                 if (player.current.trace) await bus.stop()
-                else await bus.start()
+                else {
+                    if (!recorder.current.trace)
+                        bus.clear()
+                    await bus.start()
+                }
             })
         )
         player.current.mount(
