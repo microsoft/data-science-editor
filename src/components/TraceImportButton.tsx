@@ -1,16 +1,19 @@
 import React, { useState, useContext, lazy } from "react"
 import { parseLogicLog, parseTrace } from "../../jacdac-ts/src/jdom/logparser"
 import PacketsContext from "./PacketsContext"
-import Packet from "../../jacdac-ts/src/jdom/packet";
-import { arrayConcatMany } from "../../jacdac-ts/src/jdom/utils";
+import Packet from "../../jacdac-ts/src/jdom/packet"
+import { arrayConcatMany } from "../../jacdac-ts/src/jdom/utils"
 import AppContext from "./AppContext"
-import Trace from "../../jacdac-ts/src/jdom/trace";
+import Trace from "../../jacdac-ts/src/jdom/trace"
 
 import Suspense from "./ui/Suspense"
 const ImportButton = lazy(() => import("./ImportButton"))
 
-export default function TraceImportButton(props: { icon?: boolean, disabled?: boolean }) {
-    const { icon, disabled } = props;
+export default function TraceImportButton(props: {
+    icon?: boolean
+    disabled?: boolean
+}) {
+    const { icon, disabled } = props
     const { recording, setReplayTrace } = useContext(PacketsContext)
     const { setError } = useContext(AppContext)
     const [importing, setImporting] = useState(false)
@@ -22,7 +25,7 @@ export default function TraceImportButton(props: { icon?: boolean, disabled?: bo
                 setImporting(true)
                 const txt = await file.text()
 
-                let trace: Trace;
+                let trace: Trace
                 // let's try a few format and see if we're lucky
                 try {
                     trace = parseTrace(txt)
@@ -34,9 +37,12 @@ export default function TraceImportButton(props: { icon?: boolean, disabled?: bo
                 if (!trace) {
                     try {
                         const frames = parseLogicLog(txt) // ensure format is ok
-                        const packets = arrayConcatMany(frames.map(frame => Packet.fromFrame(frame.data, frame.timestamp)))
-                        if (packets?.length)
-                            trace = new Trace(packets);
+                        const packets = arrayConcatMany(
+                            frames.map(frame =>
+                                Packet.fromFrame(frame.data, frame.timestamp)
+                            )
+                        )
+                        if (packets?.length) trace = new Trace(packets)
                     } catch (e) {
                         console.log(`logic parse error`, e)
                     }
@@ -45,20 +51,22 @@ export default function TraceImportButton(props: { icon?: boolean, disabled?: bo
                 // found anything?
                 if (trace) {
                     console.log(`importing ${trace.packets.length} packets`)
-                    setReplayTrace(trace);
-                }
-                else
-                    setError("could not parse file")
+                    setReplayTrace(trace)
+                } else setError("could not parse file")
             } finally {
                 setImporting(false)
             }
         }
     }
 
-    return <Suspense>
-        <ImportButton icon={icon}
-            disabled={importing || recording || disabled}
-            text="Import Trace File"
-            onFilesUploaded={handleFiles} />
-    </Suspense>
+    return (
+        <Suspense>
+            <ImportButton
+                icon={icon}
+                disabled={importing || recording || disabled}
+                text="Import Trace File"
+                onFilesUploaded={handleFiles}
+            />
+        </Suspense>
+    )
 }

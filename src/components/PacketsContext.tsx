@@ -63,12 +63,14 @@ PacketsContext.displayName = "packets"
 
 export default PacketsContext
 
+const DEFAULT_PACKET_FILTER = "announce:false reset-in:false min-priority:false"
+
 // eslint-disable-next-line react/prop-types
 export const PacketsProvider = ({ children }) => {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const [filter, _setFilter] = useLocalStorage(
         "packetfilter",
-        "announce:false reset-in:false min-priority:false"
+        DEFAULT_PACKET_FILTER
     )
 
     const recorder = useRef<TraceRecorder>(undefined)
