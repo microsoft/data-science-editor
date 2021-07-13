@@ -42,7 +42,7 @@ export default function DashboardRotaryEncoder(props: DashboardServiceProps) {
         clicksPerTurnRegister.refresh()
     }
 
-    const throttled = useThrottledValue(position, clicksPerTurn)
+    const throttled = useThrottledValue(position, clicksPerTurn, 1.5)
     const angle = (throttled / clicksPerTurn) * 360
 
     const min = Math.floor(position / clicksPerTurn - 1) * clicksPerTurn
