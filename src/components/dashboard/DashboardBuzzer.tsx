@@ -70,7 +70,7 @@ export default function DashboardBuzzer(props: DashboardServiceProps) {
                     </Alert>
                 </Grid>
             )}
-            <Grid item xs   >
+            <Grid item xs aria-hidden={true}>
                 <Suspense>
                     <PianoWidget playTone={sendPlayTone} />
                 </Suspense>

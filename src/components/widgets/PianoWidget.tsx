@@ -2,6 +2,7 @@ import { Box } from "@material-ui/core"
 import React, { useMemo } from "react"
 import { Piano, KeyboardShortcuts, MidiNumbers } from "react-piano"
 import "react-piano/dist/styles.css"
+import { useId } from "react-use-id-hook"
 
 export default function PianoWidget(props: {
     playTone: (frequency: number) => Promise<void>
@@ -21,10 +22,12 @@ export default function PianoWidget(props: {
                 .map((_, x) => (440 / 32) * Math.pow(2, (x - 9) / 12)),
         []
     )
+    const pianoId = useId()
 
     return (
         <Box mb={1} mt={1}>
             <Piano
+                id={pianoId}
                 width={400}
                 noteRange={{ first: firstNote, last: lastNote }}
                 playNote={midiNumber => {
