@@ -70,7 +70,7 @@ export default function DashboardBuzzer(props: DashboardServiceProps) {
                     </Alert>
                 </Grid>
             )}
-            <Grid item xs>
+            <Grid item xs   >
                 <Suspense>
                     <PianoWidget playTone={sendPlayTone} />
                 </Suspense>
@@ -86,7 +86,7 @@ export default function DashboardBuzzer(props: DashboardServiceProps) {
                                 valueLabelDisplay="off"
                                 min={0}
                                 max={1}
-                                step={0.05}
+                                step={0.1}
                                 aria-label="volume"
                                 value={volume}
                                 color={color}
