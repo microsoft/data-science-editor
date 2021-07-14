@@ -13,16 +13,20 @@ import LoadingProgress from "../ui/LoadingProgress"
 import Suspense from "../ui/Suspense"
 import SliderWithLabel from "../ui/SliderWithLabel"
 import useRegister from "../hooks/useRegister"
+import { useId } from "react-use-id-hook"
 
 const CanvasWidget = lazy(() => import("../widgets/CanvasWidget"))
 
 const valueDisplay = (v: number) => roundWithPrecision(v, 1)
 function Sliders(props: {
-    server: SensorServer<[number, number, number]>
+    server?: SensorServer<[number, number, number]>
     register: JDRegister
     visible?: boolean
 }) {
     const { server, register } = props
+    const xId = useId()
+    const yId = useId()
+    const zId = useId()
     const forces = useRegisterUnpackedValue<[number, number, number]>(
         register,
         props
@@ -53,7 +57,8 @@ function Sliders(props: {
     }
 
     if (!forces?.length) return <LoadingProgress />
-    const [x, y] = forces
+
+    const [x, y, z] = forces
     const min = -2
     const max = 2
     const step = 0.1
@@ -72,6 +77,7 @@ function Sliders(props: {
         <>
             <Grid item xs={12}>
                 <SliderWithLabel
+                    id={xId}
                     label="X"
                     valueLabelDisplay="auto"
                     valueLabelFormat={valueDisplay}
@@ -80,12 +86,13 @@ function Sliders(props: {
                     max={max}
                     step={step}
                     value={x}
-                    onChange={handleChangeX}
+                    onChange={server ? handleChangeX : undefined}
                     marks={marks}
                 />
             </Grid>
             <Grid item xs={12}>
                 <SliderWithLabel
+                    id={yId}
                     label="Y"
                     valueLabelDisplay="auto"
                     valueLabelFormat={valueDisplay}
@@ -94,7 +101,21 @@ function Sliders(props: {
                     max={max}
                     step={step}
                     value={y}
-                    onChange={handleChangeY}
+                    onChange={server ? handleChangeY : undefined}
+                    marks={marks}
+                />
+            </Grid>
+            <Grid item xs={12}>
+                <SliderWithLabel
+                    id={zId}
+                    label="Z"
+                    valueLabelDisplay="auto"
+                    valueLabelFormat={valueDisplay}
+                    aria-label="z"
+                    min={min}
+                    max={max}
+                    step={step}
+                    value={z}
                     marks={marks}
                 />
             </Grid>
@@ -144,13 +165,7 @@ export default function DashboardAccelerometer(props: DashboardServiceProps) {
                     </Suspense>
                 </NoSsr>
             </Grid>
-            {server && (
-                <Sliders
-                    server={server}
-                    register={register}
-                    visible={visible}
-                />
-            )}
+            <Sliders server={server} register={register} visible={visible} />
         </Grid>
     )
 }
