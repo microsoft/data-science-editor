@@ -85,7 +85,7 @@ export default function DashboardDevice(
                 component="div"
                 container
                 spacing={2}
-                justify="center"
+                justifyContent="center"
                 alignItems="flex-end"
                 alignContent="space-between"
             >

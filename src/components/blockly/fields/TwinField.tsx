@@ -53,7 +53,7 @@ function TwinWidget() {
             container
             alignItems="center"
             alignContent="center"
-            justify="center"
+            justifyContent="center"
             spacing={1}
         >
             <Grid item>

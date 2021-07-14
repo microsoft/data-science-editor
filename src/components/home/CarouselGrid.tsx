@@ -7,7 +7,7 @@ export default function CarouselGrid(props: { children: ReactNode }) {
         <Grid item>
             <Grid
                 container
-                justify="center"
+                justifyContent="center"
                 direction="row"
                 spacing={2}
                 alignContent="center"

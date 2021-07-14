@@ -151,7 +151,7 @@ function LightCommand(props: { service: JDService; expanded: boolean }) {
                     spacing={1}
                     direction="row"
                     alignItems="center"
-                    justify="flex-start"
+                    justifyContent="flex-start"
                 >
                     <Grid item key="descr" xs={12}>
                         <Typography variant="caption">{description}</Typography>
@@ -202,7 +202,7 @@ function LightCommand(props: { service: JDService; expanded: boolean }) {
                     direction="row"
                     alignItems="center"
                     alignContent="flex-start"
-                    justify="flex-start"
+                    justifyContent="flex-start"
                 >
                     {(args === "K" || args === "PC") && (
                         <Grid item key="K">

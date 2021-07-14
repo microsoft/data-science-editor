@@ -9,7 +9,7 @@ export default function CenterGrid(props: FeatureItemProps) {
                 container
                 spacing={2}
                 direction="column"
-                justify="center"
+                justifyContent="center"
                 alignContent="center"
                 alignItems="center"
             >

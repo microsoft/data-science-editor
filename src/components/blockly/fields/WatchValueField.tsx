@@ -61,7 +61,7 @@ function WatchValueWidget() {
                 container
                 alignItems="flex-end"
                 alignContent="center"
-                justify="center"
+                justifyContent="center"
                 spacing={1}
             >
                 <Grid item>
