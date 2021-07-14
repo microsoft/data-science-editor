@@ -22,6 +22,7 @@ export default function SelectEvent(props: {
             value={eventId}
             onChange={handleChange}
             disabled={!events?.length}
+            none={"None"}
         >
             {events?.map(ev => (
                 <MenuItem key={ev.id} value={ev.id}>

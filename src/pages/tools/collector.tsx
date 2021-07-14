@@ -53,6 +53,7 @@ import DashboardDeviceItem from "../../components/dashboard/DashboardDeviceItem"
 import IconButtonWithTooltip from "../../components/ui/IconButtonWithTooltip"
 import AppContext from "../../components/AppContext"
 import AddIcon from "@material-ui/icons/Add"
+import { useSnackbar } from "notistack"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -104,6 +105,7 @@ function createDataSet(
 
 export default function Collector() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const { enqueueSnackbar } = useSnackbar()
     const { toggleShowDeviceHostsDialog } = useContext(AppContext)
     const classes = useStyles()
     const { fileStorage } = useContext(ServiceManagerContext)
@@ -208,10 +210,11 @@ export default function Collector() {
     }
     const stopRecording = () => {
         if (recording) {
-            //console.log(`stop recording`, liveDataSet)
             setTables([liveDataSet, ...tables])
             setLiveDataSet(newDataSet(registerIdsChecked, true))
             setRecording(false)
+
+            enqueueSnackbar(`recording stopped`)
         }
     }
     const startRecording = async () => {
@@ -223,6 +226,7 @@ export default function Collector() {
                 await client.setInputs(createSensorConfig())
                 client.collect(samplingCount)
             }
+            enqueueSnackbar(`recording started`)
         }
     }
     const startStreamingRegisters = () => {
@@ -358,8 +362,7 @@ export default function Collector() {
             )}
             <section id={sensorsId}>
                 <h3>
-                    Choose sensors
-                    &nbsp;
+                    Choose sensors &nbsp;
                     <IconButtonWithTooltip
                         title="start simulator"
                         onClick={toggleShowDeviceHostsDialog}
@@ -395,8 +398,7 @@ export default function Collector() {
                         size="large"
                         variant="contained"
                         color={recording ? "secondary" : "primary"}
-                        aria-label="start/stop recording"
-                        title="start/stop recording"
+                        title={recording ? "stop recording" : "start recording"}
                         onClick={toggleRecording}
                         startIcon={recording ? <StopIcon /> : <PlayArrowIcon />}
                         disabled={!startEnabled}
@@ -461,6 +463,7 @@ export default function Collector() {
                         eventId={triggerEventId}
                         onChange={handleTriggerChange}
                         label={"Start Event"}
+                        friendlyName={true}
                     />
                 </div>
             </section>
@@ -471,6 +474,8 @@ export default function Collector() {
                             <DashboardDeviceItem
                                 key={device.id}
                                 device={device}
+                                showAvatar={true}
+                                showHeader={true}
                             />
                         ))}
                     </Grid>

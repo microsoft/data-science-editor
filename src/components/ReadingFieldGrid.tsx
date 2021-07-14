@@ -6,16 +6,15 @@ import {
     createStyles,
     Grid,
     makeStyles,
-    Switch,
 } from "@material-ui/core"
 import React from "react"
 import { JDRegister } from "../../jacdac-ts/src/jdom/register"
-import DeviceActions from "./DeviceActions"
 import useGridBreakpoints from "./useGridBreakpoints"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord"
 import FieldDataSet from "./FieldDataSet"
 import useDeviceName from "./devices/useDeviceName"
+import SwitchWithLabel from "./ui/SwitchWithLabel"
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -39,9 +38,11 @@ function ReadingFieldGridItem(props: {
         registerChecked,
         liveDataSet,
     } = props
+    const { service } = register
+    const { device } = service
     const gridBreakpoints = useGridBreakpoints()
     const classes = useStyles()
-    const deviceName = useDeviceName(register.service.device)
+    const deviceName = useDeviceName(device)
     const handleCheck = () => handleRegisterCheck(register)
 
     return (
@@ -50,12 +51,6 @@ function ReadingFieldGridItem(props: {
                 <CardHeader
                     subheader={register.service.name}
                     title={`${deviceName}/${register.name}`}
-                    action={
-                        <DeviceActions
-                            device={register.service.device}
-                            showReset={true}
-                        />
-                    }
                 />
                 <CardContent>
                     {register.fields.map(field => (
@@ -75,10 +70,11 @@ function ReadingFieldGridItem(props: {
                     ))}
                 </CardContent>
                 <CardActions>
-                    <Switch
+                    <SwitchWithLabel
                         disabled={recording}
                         onChange={handleCheck}
                         checked={registerChecked}
+                        label={`record ${deviceName}/${register.name}`}
                     />
                 </CardActions>
             </Card>

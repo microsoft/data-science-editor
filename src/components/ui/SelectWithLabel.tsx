@@ -40,6 +40,7 @@ export default function SelectWithLabel(props: {
     } = props
     const labelId = useId()
     const descrId = useId()
+    const id = useId()
     const hasDescr = !!helperText || !!error
 
     return (
@@ -48,6 +49,7 @@ export default function SelectWithLabel(props: {
                 {required ? `${label} *` : label}
             </InputLabel>
             <Select
+                id={id}
                 disabled={disabled}
                 label={label}
                 value={value}
@@ -60,7 +62,7 @@ export default function SelectWithLabel(props: {
                 onChange={onChange}
                 onClose={onClose}
             >
-                {none && (
+                {none !== undefined && (
                     <MenuItem key={"none"} value={""}>
                         {none}
                     </MenuItem>
