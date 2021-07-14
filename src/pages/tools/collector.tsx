@@ -31,7 +31,11 @@ import {
     REPORT_UPDATE,
     SRV_SENSOR_AGGREGATOR,
 } from "../../../jacdac-ts/src/jdom/constants"
-import { arrayConcatMany, throttle } from "../../../jacdac-ts/src/jdom/utils"
+import {
+    arrayConcatMany,
+    throttle,
+    uniqueMap,
+} from "../../../jacdac-ts/src/jdom/utils"
 import DataSetGrid from "../../components/DataSetGrid"
 import { JDRegister } from "../../../jacdac-ts/src/jdom/register"
 import ReadingFieldGrid from "../../components/ReadingFieldGrid"
@@ -43,6 +47,12 @@ import ServiceManagerContext from "../../components/ServiceManagerContext"
 import useChartPalette from "../../components/useChartPalette"
 import { isSensor } from "../../../jacdac-ts/src/jdom/spec"
 import useEvents from "../../components/hooks/useEvents"
+import useDevices from "../../components/hooks/useDevices"
+import { useId } from "react-use-id-hook"
+import DashboardDeviceItem from "../../components/dashboard/DashboardDeviceItem"
+import IconButtonWithTooltip from "../../components/ui/IconButtonWithTooltip"
+import AppContext from "../../components/AppContext"
+import AddIcon from "@material-ui/icons/Add"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -94,6 +104,7 @@ function createDataSet(
 
 export default function Collector() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const { toggleShowDeviceHostsDialog } = useContext(AppContext)
     const classes = useStyles()
     const { fileStorage } = useContext(ServiceManagerContext)
     const [registerIdsChecked, setRegisterIdsChecked] = useState<string[]>([])
@@ -108,18 +119,22 @@ export default function Collector() {
     const [, setLiveDataTimestamp] = useState(0)
     const [triggerEventId, setTriggerEventId] = useState<string>("")
     const chartPalette = useChartPalette()
-    const readingRegisters = useChange(bus, bus =>
-        arrayConcatMany(
-            bus.devices().map(device =>
-                device
-                    .services()
-                    .filter(srv => isSensor(srv.specification))
-                    .map(srv => srv.readingRegister)
-            )
+    const devices = useDevices({ ignoreSelf: true, announced: true })
+    const readingRegisters = arrayConcatMany(
+        devices.map(device =>
+            device
+                .services()
+                .filter(srv => isSensor(srv.specification))
+                .map(srv => srv.readingRegister)
         )
     )
     const recordingRegisters = readingRegisters.filter(
         reg => registerIdsChecked.indexOf(reg.id) > -1
+    )
+    const recordingDevices = uniqueMap(
+        recordingRegisters,
+        reg => reg.service.device.deviceId,
+        reg => reg.service.device
     )
     const aggregators: JDService[] = useChange(bus, bus =>
         bus.services({ serviceClass: SRV_SENSOR_AGGREGATOR })
@@ -137,7 +152,12 @@ export default function Collector() {
     const error = errorSamplingDuration || errorSamplingIntervalDelay
     const triggerEvent = bus.node(triggerEventId) as JDEvent
     const startEnabled = !!recordingRegisters?.length
-    const events = useEvents()
+    const events = useEvents({ ignoreChange: true })
+    const aggregatorsId = useId()
+    const sensorsId = useId()
+    const recordId = useId()
+    const recordingsId = useId()
+    const dashboardId = useId()
 
     useEffect(() => {
         //console.log(`trigger event`, triggerEventId, triggerEvent)
@@ -304,7 +324,7 @@ export default function Collector() {
                 various output formats.
             </p>
             {!!aggregators.length && (
-                <div key="aggregators">
+                <section id={aggregatorsId}>
                     <h3>(Optional) Choose a data aggregator</h3>
                     <p>
                         A <Link to="/services/aggregator">data aggregator</Link>{" "}
@@ -334,10 +354,19 @@ export default function Collector() {
                             </Grid>
                         ))}
                     </Grid>
-                </div>
+                </section>
             )}
-            <div key="sensors">
-                <h3>Choose sensors</h3>
+            <section id={sensorsId}>
+                <h3>
+                    Choose sensors
+                    &nbsp;
+                    <IconButtonWithTooltip
+                        title="start simulator"
+                        onClick={toggleShowDeviceHostsDialog}
+                    >
+                        <AddIcon />
+                    </IconButtonWithTooltip>
+                </h3>
                 {!readingRegisters.length && (
                     <Alert className={classes.grow} severity="info">
                         Waiting for sensor...
@@ -352,8 +381,8 @@ export default function Collector() {
                         handleRegisterCheck={handleRegisterCheck}
                     />
                 )}
-            </div>
-            <div key="record">
+            </section>
+            <section id={recordId}>
                 <h3>Record data</h3>
                 {aggregator && (
                     <p>
@@ -434,7 +463,19 @@ export default function Collector() {
                         label={"Start Event"}
                     />
                 </div>
-            </div>
+            </section>
+            {!!recordingDevices?.length && (
+                <section id={dashboardId}>
+                    <Grid container spacing={1}>
+                        {recordingDevices?.map(device => (
+                            <DashboardDeviceItem
+                                key={device.id}
+                                device={device}
+                            />
+                        ))}
+                    </Grid>
+                </section>
+            )}
             {liveDataSet && (
                 <Trend
                     key="trends"
@@ -446,13 +487,13 @@ export default function Collector() {
                 />
             )}
             {!!tables.length && (
-                <div key="recordings">
+                <section id={recordingsId}>
                     <h3>Recordings</h3>
                     <DataSetGrid
                         tables={tables}
                         handleDeleteTable={handleDeleteTable}
                     />
-                </div>
+                </section>
             )}
         </div>
     )

@@ -3,7 +3,7 @@ import { CHANGE } from "../../jacdac-ts/src/jdom/constants";
 import { JDEventSource } from "../../jacdac-ts/src/jdom/eventsource";
 import { JDField } from "../../jacdac-ts/src/jdom/field";
 import { JDRegister } from "../../jacdac-ts/src/jdom/register";
-import { arrayConcatMany } from "../../jacdac-ts/src/jdom/utils";
+import { arrayConcatMany, roundWithPrecision } from "../../jacdac-ts/src/jdom/utils";
 
 export class Example {
     label: string;
@@ -16,7 +16,8 @@ export class Example {
 
     toVector(startTimestamp?: number): number[] {
         const t = this.timestamp - (startTimestamp || 0)
-        return [t].concat(this.data)
+        const s = roundWithPrecision(t / 1000, 3)
+        return [s].concat(this.data)
     }
 }
 
@@ -139,7 +140,7 @@ export default class FieldDataSet extends JDEventSource {
         const start = this.startTimestamp
         const csv: string[] = [allheaders]
         if (options?.units)
-            csv.push(["ms", ...this.units].join(sep))
+            csv.push(["s", ...this.units].join(sep))
         this.rows.forEach(row => csv.push(
             row.toVector(start).map(cell => cell !== undefined ? cell.toString() : "").join(sep)
         ))
