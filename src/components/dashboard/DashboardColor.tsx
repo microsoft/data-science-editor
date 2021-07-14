@@ -59,7 +59,6 @@ export default function DashboardColor(props: DashboardServiceProps) {
                     stroke={background}
                     strokeWidth={2}
                     tabIndex={0}
-                    aria-live="polite"
                     aria-label={`color ${value} detected`}
                 />
             </SvgWidget>

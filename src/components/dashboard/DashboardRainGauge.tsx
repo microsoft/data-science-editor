@@ -45,7 +45,7 @@ export default function DashbaordRainGauge(props: DashboardServiceProps) {
         await precipitationRegister.refresh()
     }
     const buttonProps = useSvgButtonProps<SVGRectElement>(
-        `rain gauge at level ${Math.round(25 + level * 100)}%`,
+        `rain level ${Math.round(25 + level * 100)}%`,
         handleClick
     )
 
@@ -84,7 +84,6 @@ export default function DashbaordRainGauge(props: DashboardServiceProps) {
                     strokeWidth={sw}
                     stroke={active}
                     fill={background}
-                    aria-live="polite"
                     {...buttonProps}
                     className={clickeable ? "clickeable" : undefined}
                     role={clickeable ? "button" : undefined}

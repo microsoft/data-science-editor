@@ -20,6 +20,7 @@ import { describeArc } from "../widgets/svgutils"
 import useAnimationFrame from "../hooks/useAnimationFrame"
 import useRegister from "../hooks/useRegister"
 import useEvent from "../hooks/useEvent"
+import { roundWithPrecision } from "../../../jacdac-ts/src/jdom/utils"
 
 export default function DashboardButton(props: DashboardServiceProps) {
     const { service } = props
@@ -66,6 +67,7 @@ function BinaryButton(props: { pressed: boolean } & DashboardServiceProps) {
 
 const ACTIVE_SPEED = 0.05
 const INACTIVE_SPEED = 0.1
+const LABEL_PRECISION = 2
 
 function AnalogButton(props: { pressed: boolean } & DashboardServiceProps) {
     const { service, pressed, visible } = props
@@ -87,7 +89,10 @@ function AnalogButton(props: { pressed: boolean } & DashboardServiceProps) {
     const widgetSize = `clamp(3rem, 10vw, 16vw)`
     const server = useServiceServer<ButtonServer>(service)
     const color = server ? "secondary" : "primary"
-    const label = `button pressure ${pressure}`
+    const label = `button pressure ${roundWithPrecision(
+        pressure,
+        LABEL_PRECISION
+    )}`
     const { background, controlBackground, active } = useWidgetTheme(color)
     const [down, setDown] = useState(false)
     const handleDown = () => {
@@ -164,7 +169,10 @@ function AnalogButton(props: { pressed: boolean } & DashboardServiceProps) {
                     cx={cx}
                     cy={mo}
                     r={mo / 3}
-                    aria-label={`active threshold ${threshold}`}
+                    aria-label={`active threshold ${roundWithPrecision(
+                        threshold,
+                        LABEL_PRECISION
+                    )}`}
                     fill={controlBackground}
                     transform={`rotate(${range * threshold}, ${cx}, ${cy})`}
                 />
@@ -173,7 +181,6 @@ function AnalogButton(props: { pressed: boolean } & DashboardServiceProps) {
                 cx={cx}
                 cy={cy}
                 r={ri}
-                aria-live="polite"
                 fill={pressed ? active : controlBackground}
                 {...buttonProps}
             />

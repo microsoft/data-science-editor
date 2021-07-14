@@ -46,7 +46,6 @@ export default function ButtonWidget(props: {
                 cx={cx}
                 cy={cy}
                 r={ri}
-                aria-live="polite"
                 fill={checked ? active : controlBackground}
                 {...buttonProps}
             />
