@@ -5,7 +5,7 @@ import {
     useRegisterUnpackedValue,
 } from "../../jacdac/useRegisterValue"
 import useServiceServer from "../hooks/useServiceServer"
-import { Grid, Slider } from "@material-ui/core"
+import { Grid } from "@material-ui/core"
 import MicIcon from "@material-ui/icons/Mic"
 import { REFRESH, SoundLevelReg } from "../../../jacdac-ts/src/jdom/constants"
 import AnalogSensorServer from "../../../jacdac-ts/src/servers/analogsensorserver"
@@ -62,7 +62,6 @@ function HostMicrophoneButton(props: {
 
     return (
         <IconButtonWithProgress
-            aria-label={title}
             title={title}
             indeterminate={enabled}
             onClick={handleClick}
@@ -80,13 +79,6 @@ export default function DashboardSoundLevel(props: DashboardServiceProps) {
         props
     )
     const server = useServiceServer<AnalogSensorServer>(service)
-    const color = server ? "secondary" : "primary"
-
-    const onChange = (event: unknown, newValue: number | number[]): void => {
-        const svalue = newValue as number
-        server?.reading.setValues([svalue])
-        soundLevelRegister.sendGetAsync() // refresh
-    }
 
     if (soundLevel === undefined) return <LoadingProgress />
 
@@ -101,27 +93,11 @@ export default function DashboardSoundLevel(props: DashboardServiceProps) {
                 />
             </Grid>
             <Grid item>
-                <Grid container spacing={2} alignItems="center">
-                    <Grid item>
-                        <HostMicrophoneButton
-                            service={service}
-                            server={server}
-                            visible={visible}
-                        />
-                    </Grid>
-                    <Grid item xs>
-                        <Slider
-                            disabled={!server}
-                            valueLabelDisplay="off"
-                            min={0}
-                            max={1}
-                            step={0.1}
-                            value={soundLevel}
-                            onChange={onChange}
-                            color={color}
-                        />
-                    </Grid>
-                </Grid>
+                <HostMicrophoneButton
+                    service={service}
+                    server={server}
+                    visible={visible}
+                />
             </Grid>
         </Grid>
     )
