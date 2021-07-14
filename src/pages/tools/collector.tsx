@@ -160,6 +160,9 @@ export default function Collector() {
     const recordId = useId()
     const recordingsId = useId()
     const dashboardId = useId()
+    const samplingIntervalId = useId()
+    const samplingDurationId = useId()
+    const prefixId = useId()
 
     useEffect(() => {
         //console.log(`trigger event`, triggerEventId, triggerEvent)
@@ -419,6 +422,7 @@ export default function Collector() {
                 </div>
                 <div className={classes.row}>
                     <TextField
+                        id={samplingIntervalId}
                         className={classes.field}
                         error={errorSamplingIntervalDelay}
                         disabled={recording}
@@ -435,6 +439,7 @@ export default function Collector() {
                         onChange={handleSamplingIntervalChange}
                     />
                     <TextField
+                        id={samplingDurationId}
                         className={classes.field}
                         error={errorSamplingDuration}
                         disabled={recording}
@@ -451,6 +456,7 @@ export default function Collector() {
                         onChange={handleSamplingDurationChange}
                     />
                     <TextField
+                        id={prefixId}
                         className={classes.field}
                         disabled={recording}
                         label="File name prefix"
