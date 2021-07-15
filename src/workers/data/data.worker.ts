@@ -14,6 +14,10 @@ import {
     mutate,
 } from "@tidyjs/tidy"
 import { bin } from "d3-array"
+import { 
+    sampleCorrelation, 
+    linearRegression,
+} from "simple-statistics"
 
 export interface DataMessage {
     worker: "data"
@@ -88,6 +92,18 @@ export interface DataRecordWindowRequest extends DataRequest {
 export interface DataBinRequest extends DataRequest {
     type: "bin"
     column: string
+}
+
+export interface DataCorrelationRequest extends DataRequest {
+    type: "correlation"
+    column1: string
+    column2: string
+}
+
+export interface DataLinearRegressionRequest extends DataRequest {
+    type: "linear_regression"
+    column1: string
+    column2: string
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -325,6 +341,23 @@ const handlers: { [index: string]: (props: any) => object[] } = {
         const binned: (object[] & { x0: number; x1: number })[] = binner(data)
         // convert back to objects
         return binned.map(b => ({ count: b.length, x0: b.x0, x1: b.x1 }))
+    },
+    correlation: (props: DataCorrelationRequest) => {
+        const { data, column1, column2 } = props
+        if (!column1 || !column2) return data
+
+        const x = data.map((obj) => obj[column1])
+        const y = data.map((obj) => obj[column2])
+        return [{correlation: sampleCorrelation(x, y).toFixed(3)}]
+    },
+    linear_regression: (props: DataCorrelationRequest) => {
+        const { data, column1, column2 } = props
+        if (!column1 || !column2) return data
+
+        const x = data.map((obj) => obj[column1])
+        const y = data.map((obj) => obj[column2])
+        const linregmb = linearRegression([x, y])
+        return [{slope: linregmb.m.toFixed(3), intercept: linregmb.b.toFixed(3)}]
     },
 }
 

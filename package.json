@@ -97,6 +97,7 @@
     "react-window": "^1.8.6",
     "regenerator-runtime": "^0.13.7",
     "sanitize-html": "^2.4.0",
+    "simple-statistics": "^7.7.0",
     "slug": "^5.1.0",
     "three": "^0.130.1",
     "trim": "^1.0.1",
