@@ -19,7 +19,7 @@ export default function Page() {
                 Configure settings in a{" "}
                 <Link to="/services/settings/">settings</Link> service.
             </p>
-            {<ConnectAlert serviceClass={SRV_SETTINGS} />}
+            <ConnectAlert serviceClass={SRV_SETTINGS} />
             <Grid container spacing={2}>
                 {services.map(service => (
                     <Grid key={service.id} item xs={12} lg={6}>

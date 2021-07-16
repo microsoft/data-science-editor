@@ -119,7 +119,7 @@ export default function AppDrawer(props: { pagePath: string }) {
                 </Suspense>
             ) : drawerType === DrawerType.Dom ? (
                 <>
-                    <ConnectAlert />
+                    <ConnectAlert closeable={true} />
                     <Suspense>
                         <JDomTreeView />
                     </Suspense>

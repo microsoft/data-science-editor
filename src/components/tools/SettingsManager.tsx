@@ -10,7 +10,7 @@ export default function SettingsManager() {
 
     return (
         <>
-            {<ConnectAlert serviceClass={SRV_SETTINGS} />}
+            <ConnectAlert serviceClass={SRV_SETTINGS} />
             <Grid container spacing={2}>
                 {services.map(service => (
                     <Grid key={service.id} item xs={12}>

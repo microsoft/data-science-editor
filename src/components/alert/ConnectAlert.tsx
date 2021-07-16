@@ -17,12 +17,17 @@ const useStyles = makeStyles(theme =>
     })
 )
 
-function NoSsrConnectAlert(props: { serviceClass?: number }) {
+function NoSsrConnectAlert(props: {
+    serviceClass?: number
+    closeable?: boolean
+}) {
     const classes = useStyles()
-    const { serviceClass } = props
+    const { serviceClass, closeable } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { transports } = bus
-    const devices = useChange(bus, b => b.devices({ serviceClass, ignoreSelf: true }))
+    const devices = useChange(bus, b =>
+        b.devices({ serviceClass, ignoreSelf: true })
+    )
     const spec = serviceSpecificationFromClassIdentifier(serviceClass)
 
     // don't show if no transport, some devices
@@ -30,7 +35,7 @@ function NoSsrConnectAlert(props: { serviceClass?: number }) {
 
     return (
         <Box displayPrint="none">
-            <Alert severity="info" closeable={true}>
+            <Alert severity="info" closeable={closeable}>
                 {!spec && <span>Did you connect your device?</span>}
                 {spec && <span>Did you connect a {spec.name} device?</span>}
                 {transports.map(transport => (
@@ -47,7 +52,10 @@ function NoSsrConnectAlert(props: { serviceClass?: number }) {
     )
 }
 
-export default function ConnectAlert(props: { serviceClass?: number }) {
+export default function ConnectAlert(props: {
+    serviceClass?: number
+    closeable?: boolean
+}) {
     return (
         <NoSsr>
             <NoSsrConnectAlert {...props} />

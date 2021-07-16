@@ -145,7 +145,7 @@ export default function Dashboard(props: DashboardProps) {
             >
                 {showConnect && !physicals.length && (
                     <Grid item xs={12}>
-                        <ConnectAlert />
+                        <ConnectAlert closeable={true} />
                     </Grid>
                 )}
             </DashboardDeviceGroup>
