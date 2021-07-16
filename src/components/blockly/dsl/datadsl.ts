@@ -25,9 +25,11 @@ import {
     DataArrangeRequest,
     DataFilterColumnsRequest,
     DataFilterStringRequest,
+    DataSummarizeRequest,
     DataSummarizeByGroupRequest,
     DataMutateColumnsRequest,
     DataMutateNumberRequest,
+    DataCountRequest,
     DataRecordWindowRequest,
     DataBinRequest,
     DataCorrelationRequest,
@@ -45,7 +47,9 @@ const DATA_FILTER_COLUMNS_BLOCK = "data_filter_columns"
 const DATA_FILTER_STRING_BLOCK = "data_filter_string"
 const DATA_MUTATE_COLUMNS_BLOCK = "data_mutate_columns"
 const DATA_MUTATE_NUMBER_BLOCK = "data_mutate_number"
+const DATA_SUMMARIZE_BLOCK = "data_summarize"
 const DATA_SUMMARIZE_BY_GROUP_BLOCK = "data_summarize_by_group"
+const DATA_COUNT_BLOCK = "data_count"
 const DATA_ADD_VARIABLE_CALLBACK = "data_add_variable"
 const DATA_DATAVARIABLE_READ_BLOCK = "data_dataset_read"
 const DATA_DATAVARIABLE_WRITE_BLOCK = "data_dataset_write"
@@ -384,6 +388,42 @@ const dataDsl: BlockDomainSpecificLanguage = {
         },
         {
             kind: "block",
+            type: DATA_SUMMARIZE_BLOCK,
+            message0: "summarize %1 calculate %2",
+            colour,
+            args0: [
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "column",
+                },
+                <OptionsInputDefinition>{
+                    type: "field_dropdown",
+                    name: "calc",
+                    options: [
+                        ["mean", "mean"],
+                        ["median", "med"],
+                        ["min", "min"],
+                        ["max", "max"],
+                    ],
+                },
+            ],
+            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            transformData: (b: BlockSvg, data: any[]) => {
+                const column = b.getFieldValue("column")
+                const calc = b.getFieldValue("calc")
+                return postTransformData(<DataSummarizeRequest>{
+                    type: "summarize",
+                    column,
+                    calc,
+                    data,
+                })
+            },
+            template: "meta",
+        },
+        {
+            kind: "block",
             type: DATA_SUMMARIZE_BY_GROUP_BLOCK,
             message0: "group %1 by %2 calculate %3",
             colour,
@@ -419,6 +459,30 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     column,
                     by,
                     calc,
+                    data,
+                })
+            },
+            template: "meta",
+        },
+        {
+            kind: "block",
+            type: DATA_COUNT_BLOCK,
+            message0: "count %1",
+            colour,
+            args0: [
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "column",
+                },
+            ],
+            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            transformData: (b: BlockSvg, data: any[]) => {
+                const column = b.getFieldValue("column")
+                return postTransformData(<DataCountRequest>{
+                    type: "count",
+                    column,
                     data,
                 })
             },
@@ -710,7 +774,15 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 },
                 <BlockReference>{
                     kind: "block",
+                    type: DATA_SUMMARIZE_BLOCK,
+                },
+                <BlockReference>{
+                    kind: "block",
                     type: DATA_SUMMARIZE_BY_GROUP_BLOCK,
+                },
+                <BlockReference>{
+                    kind: "block",
+                    type: DATA_COUNT_BLOCK,
                 },
                 <BlockReference>{
                     kind: "block",

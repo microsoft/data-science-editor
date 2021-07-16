@@ -12,6 +12,7 @@ import {
     desc,
     tidy,
     mutate,
+    count
 } from "@tidyjs/tidy"
 import { bin } from "d3-array"
 import { 
@@ -75,11 +76,22 @@ export interface DataMutateNumberRequest extends DataRequest {
     logic: string
 }
 
+export interface DataSummarizeRequest extends DataRequest {
+    type: "summarize"
+    column: string
+    calc: string
+}
+
 export interface DataSummarizeByGroupRequest extends DataRequest {
     type: "summarize_by_group"
     column: string
     by: string
     calc: string
+}
+
+export interface DataCountRequest extends DataRequest {
+    type: "count"
+    column: string
 }
 
 export interface DataRecordWindowRequest extends DataRequest {
@@ -284,6 +296,39 @@ const handlers: { [index: string]: (props: any) => object[] } = {
                 return data
         }
     },
+    summarize: (props: DataSummarizeRequest) => {
+        const { column, calc, data } = props
+        if (!column || !calc) return data
+
+        switch (calc) {
+            case "mean":
+                return tidy(
+                    data,
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    summarize({ mean: mean(column as any) }),
+                )
+            case "med":
+                return tidy(
+                    data,
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    summarize({ median: median(column as any) }),
+                )
+            case "min":
+                return tidy(
+                    data,
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    summarize({ min: min(column as any) })
+                )
+            case "max":
+                return tidy(
+                    data,
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    summarize({ max: max(column as any) })
+                )
+            default:
+                return data
+        }
+    },
     summarize_by_group: (props: DataSummarizeByGroupRequest) => {
         const { column, by, calc, data } = props
         if (!column || !by || !calc) return data
@@ -322,6 +367,13 @@ const handlers: { [index: string]: (props: any) => object[] } = {
             default:
                 return data
         }
+    },
+    count: (props: DataCountRequest) => {
+        const { column,  data } = props
+        if (!column) return data
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return tidy(data, count(column as any))
     },
     record_window: (props: DataRecordWindowRequest) => {
         const { data, previousData, horizon } = props
