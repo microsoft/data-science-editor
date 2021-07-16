@@ -26,7 +26,9 @@ export function SimulateDeviceHint() {
                 title="button"
                 aria-label="start button simulator"
             >
-                🔘
+                <span aria-label="button emoji" role="img">
+                    🔘
+                </span>
             </IconButtonWithTooltip>
             ,
             <IconButtonWithTooltip
@@ -34,14 +36,18 @@ export function SimulateDeviceHint() {
                 title="buzzer"
                 aria-label="start buzzer simulator"
             >
-                🎹
+                <span aria-label="piano emoji" role="img">
+                    🎹
+                </span>
             </IconButtonWithTooltip>
             <IconButtonWithTooltip
                 onClick={handleStartSimulator(SRV_JOYSTICK)}
                 title="joystick"
                 aria-label="start joystick simulator"
             >
-                🕹️
+                <span aria-label="joystick emoji" role="img">
+                    🕹️
+                </span>
             </IconButtonWithTooltip>
             ,
             <IconButtonWithTooltip
@@ -49,7 +55,9 @@ export function SimulateDeviceHint() {
                 title="LED"
                 aria-label="start LED simulator"
             >
-                💡
+                <span aria-label="lightbulb emoji" role="img">
+                    💡
+                </span>
             </IconButtonWithTooltip>
             ,
             <IconButtonWithTooltip
@@ -57,7 +65,9 @@ export function SimulateDeviceHint() {
                 title="traffic light"
                 aria-label="start traffic light simulator"
             >
-                🚦
+                <span aria-label="traffic light emoji" role="img">
+                    🚦
+                </span>
             </IconButtonWithTooltip>
             , ...) by clicking &nbsp;
             <IconButtonWithTooltip

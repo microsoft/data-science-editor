@@ -47,6 +47,7 @@ export interface IDb extends IEventSource {
     readonly blobs: DbStore<Blob>
     readonly values: DbStore<string>
     readonly firmwares: DbStore<Blob>
+    readonly directories: DbStore<FileSystemDirectoryHandle>
 }
 
 class IDBDb extends JDEventSource implements IDbStorage, IDb {
@@ -56,12 +57,17 @@ class IDBDb extends JDEventSource implements IDbStorage, IDb {
     readonly blobs: DbStore<Blob>
     readonly values: DbStore<string>
     readonly firmwares: DbStore<Blob>
+    readonly directories: DbStore<FileSystemDirectoryHandle>
 
     constructor() {
         super()
         this.blobs = new DbStore<Blob>(this, IDBDb.STORE_BLOBS)
         this.values = new DbStore<string>(this, IDBDb.STORE_STORAGE)
         this.firmwares = new DbStore<Blob>(this, IDBDb.STORE_FIRMWARE_BLOBS)
+        this.directories = new DbStore<FileSystemDirectoryHandle>(
+            this,
+            IDBDb.STORE_DIRECTORIES
+        )
     }
 
     private get db() {
@@ -76,11 +82,13 @@ class IDBDb extends JDEventSource implements IDbStorage, IDb {
             }
     }
 
-    static DB_VERSION = 17
+    static DB_VERSION = 18
     static DB_NAME = "JACDAC"
     static STORE_BLOBS = "BLOBS"
     static STORE_FIRMWARE_BLOBS = "STORE_FIRMWARE_BLOBS"
     static STORE_STORAGE = "STORAGE"
+    static STORE_DIRECTORIES = "FILE_SYSTEM_ACCESS_DIRECTORIES"
+
     public static create(): Promise<IDBDb> {
         return new Promise(resolve => {
             // create or upgrade database
@@ -102,6 +110,8 @@ class IDBDb extends JDEventSource implements IDbStorage, IDb {
                         db.createObjectStore(IDBDb.STORE_FIRMWARE_BLOBS)
                     if (!stores.contains(IDBDb.STORE_BLOBS))
                         db.createObjectStore(IDBDb.STORE_BLOBS)
+                    if (!stores.contains(IDBDb.STORE_DIRECTORIES))
+                        db.createObjectStore(IDBDb.STORE_DIRECTORIES)
                     db.onerror = function (event) {
                         console.log("idb error", event)
                     }
@@ -235,16 +245,22 @@ class MemoryDb extends JDEventSource implements IDb, IDbStorage {
         [IDBDb.STORE_BLOBS]: {},
         [IDBDb.STORE_STORAGE]: {},
         [IDBDb.STORE_FIRMWARE_BLOBS]: {},
+        [IDBDb.STORE_DIRECTORIES]: {},
     }
     readonly blobs: DbStore<Blob>
     readonly values: DbStore<string>
     readonly firmwares: DbStore<Blob>
+    readonly directories: DbStore<FileSystemDirectoryHandle>
 
     constructor() {
         super()
         this.blobs = new DbStore<Blob>(this, IDBDb.STORE_BLOBS)
         this.values = new DbStore<string>(this, IDBDb.STORE_STORAGE)
         this.firmwares = new DbStore<Blob>(this, IDBDb.STORE_FIRMWARE_BLOBS)
+        this.directories = new DbStore<FileSystemDirectoryHandle>(
+            this,
+            IDBDb.STORE_DIRECTORIES
+        )
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

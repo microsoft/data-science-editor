@@ -11,8 +11,9 @@ import React, { ChangeEvent, useEffect, useRef, useState } from "react"
 import { useId } from "react-use-id-hook"
 
 export default function BlocklyModalDialogs() {
-    const [dialogType, setDialogType] =
-        useState<"alert" | "confirm" | "prompt">()
+    const [dialogType, setDialogType] = useState<
+        "alert" | "confirm" | "prompt"
+    >()
     const [message, setMessage] = useState("")
     const [value, setValue] = useState("")
     const valueId = useId()
@@ -48,7 +49,6 @@ export default function BlocklyModalDialogs() {
 
         // cleanup
         return () => {
-            console.log("cleanup")
             Blockly.alert = previous.alert
             Blockly.confirm = previous.confirm
             Blockly.prompt = previous.prompt
@@ -83,7 +83,13 @@ export default function BlocklyModalDialogs() {
             <DialogContent>
                 <DialogContentText>{message}</DialogContentText>
                 {dialogType === "prompt" && (
-                    <TextField id={valueId} value={value} label="Value" fullWidth={true} onChange={handleValueChange} />
+                    <TextField
+                        id={valueId}
+                        value={value}
+                        label="Value"
+                        fullWidth={true}
+                        onChange={handleValueChange}
+                    />
                 )}
             </DialogContent>
             <DialogActions>

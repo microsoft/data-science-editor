@@ -2,7 +2,6 @@ import { useState, useEffect } from "react"
 import { CHANGE } from "../../jacdac-ts/src/jdom/constants"
 import { IEventSource } from "../../jacdac-ts/src/jdom/eventsource"
 import useEffectAsync from "../components/useEffectAsync"
-import { useThrottledCallback } from "use-debounce"
 
 export default function useChange<TNode extends IEventSource, TValue>(
     node: TNode,

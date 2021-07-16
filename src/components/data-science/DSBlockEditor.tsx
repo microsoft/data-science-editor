@@ -10,6 +10,7 @@ import Flags from "../../../jacdac-ts/src/jdom/flags"
 import BlockDiagnostics from "../blockly/BlockDiagnostics"
 import { visitWorkspace } from "../blockly/jsonvisitor"
 
+const DS_EDITOR_ID = "ds"
 const DS_SOURCE_STORAGE_KEY = "data-science-blockly-xml"
 
 function DSEditorWithContext() {
@@ -28,7 +29,7 @@ function DSEditorWithContext() {
 
     return (
         <>
-            <BlockEditor />
+            <BlockEditor editorId={DS_EDITOR_ID} />
             {Flags.diagnostics && <BlockDiagnostics />}
         </>
     )

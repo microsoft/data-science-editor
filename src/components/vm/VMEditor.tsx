@@ -14,8 +14,16 @@ import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
 import vmDsls from "./vmdsls"
 import { VMStatus } from "../../../jacdac-ts/src/vm/runner"
 import { VM_WARNINGS_CATEGORY } from "../blockly/toolbox"
+import FileTabs from "../fs/FileTabs"
+import BlockFile from "../blockly/blockfile"
 
+const VM_EDITOR_ID = "vm"
 const VM_SOURCE_STORAGE_KEY = "tools:vmeditor"
+const VM_NEW_FILE_CONTENT = JSON.stringify({
+    editor: VM_EDITOR_ID,
+    xml: "",
+} as BlockFile)
+
 function VMEditorWithContext() {
     const {
         dsls,
@@ -24,6 +32,8 @@ function VMEditorWithContext() {
         roleManager,
         setWarnings,
         dragging,
+        workspaceFileHandle,
+        setWorkspaceFileHandle,
     } = useContext(BlockContext)
     const [program, setProgram] = useState<VMProgram>()
     const autoStart = true
@@ -48,7 +58,11 @@ function VMEditorWithContext() {
             program &&
             roleManager?.setRoles([
                 ...program.roles,
-                ...(program.serverRoles.map(r => ({role: r.role, serviceClass: r.serviceClass, preferredDeviceId: "TBD"}))),
+                ...program.serverRoles.map(r => ({
+                    role: r.role,
+                    serviceClass: r.serviceClass,
+                    preferredDeviceId: "TBD",
+                })),
             ]),
         [roleManager, program]
     )
@@ -72,11 +86,22 @@ function VMEditorWithContext() {
 
     return (
         <Grid container direction="column" spacing={1}>
+            {!!setWorkspaceFileHandle && (
+                <Grid item xs={12}>
+                    <FileTabs
+                        storageKey={VM_SOURCE_STORAGE_KEY}
+                        selectedFileHandle={workspaceFileHandle}
+                        onFileHandleSelected={setWorkspaceFileHandle}
+                        onFileHandleCreated={setWorkspaceFileHandle}
+                        newFileContent={VM_NEW_FILE_CONTENT}
+                    />
+                </Grid>
+            )}
             <Grid item xs={12}>
                 <VMToolbar runner={runner} run={run} cancel={cancel} />
             </Grid>
             <Grid item xs={12}>
-                <BlockEditor />
+                <BlockEditor editorId={VM_EDITOR_ID} />
             </Grid>
             {Flags.diagnostics && (
                 <>

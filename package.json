@@ -121,6 +121,7 @@
     "distdocs": "node ./node_modules/gatsby/cli.js build --prefix-paths --no-uglify",
     "tools": "npx http-server . -c-1",
     "watchdocs": "node node_modules/gatsby/cli.js develop",
+    "prettier": "prettier --write src/**/*.ts src/**/*.tsx",
     "develop": "node node_modules/concurrently/bin/concurrently.js --kill-others \"npm:watch*\"",
     "docsbuild": "node node_modules/gatsby/cli.js build",
     "docsserve": "node node_modules/gatsby/cli.js serve",

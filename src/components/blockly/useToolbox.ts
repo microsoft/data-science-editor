@@ -45,7 +45,6 @@ function loadBlocks(
             })
         )
     )
-    console.log(`blocks`, { blocks })
 
     // register field editors
     registerFields()
