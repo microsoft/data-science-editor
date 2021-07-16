@@ -620,7 +620,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
         <BlockDefinition>{
             kind: "block",
             type: DATA_CORRELATION_BLOCK,
-            message0: "Correlation %1 %2",
+            message0: "correlation %1 %2",
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
@@ -650,7 +650,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
         <BlockDefinition>{
             kind: "block",
             type: DATA_LINEAR_REGRESSION_BLOCK,
-            message0: "Linear Regression %1 %2",
+            message0: "linear regression %1 %2",
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
