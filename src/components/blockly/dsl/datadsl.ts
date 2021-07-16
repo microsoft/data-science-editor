@@ -11,11 +11,11 @@ import {
     DATA_SCIENCE_STATEMENT_TYPE,
     DummyInputDefinition,
     identityTransformData,
-    LabelDefinition,
     NumberInputDefinition,
     OptionsInputDefinition,
     VariableInputDefinition,
     TextInputDefinition,
+    SeparatorDefinition,
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
 import postTransformData from "./workers/data.proxy"
@@ -718,15 +718,14 @@ const dataDsl: BlockDomainSpecificLanguage = {
         },
     ],
     createCategory: () => [
+        <SeparatorDefinition>{
+            kind: "sep",
+        },
         <CategoryDefinition>{
             kind: "category",
-            name: "Data",
+            name: "Data sets",
             colour,
             contents: [
-                <LabelDefinition>{
-                    kind: "label",
-                    text: "Data sets",
-                },
                 <BlockReference>{
                     kind: "block",
                     type: DATA_DATASET_BUILTIN_BLOCK,
@@ -739,10 +738,13 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     kind: "block",
                     type: DATA_SAVE_FILE_BLOCK,
                 },
-                <LabelDefinition>{
-                    kind: "label",
-                    text: "Operators",
-                },
+            ],
+        },
+        <CategoryDefinition>{
+            kind: "category",
+            name: "Operators",
+            colour,
+            contents: [
                 <BlockReference>{ kind: "block", type: DATA_SHOW_TABLE_BLOCK },
                 <BlockReference>{
                     kind: "block",
@@ -788,10 +790,17 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     kind: "block",
                     type: DATA_BIN_BLOCK,
                 },
-                <LabelDefinition>{
-                    kind: "label",
-                    text: "Statistics",
+                <BlockDefinition>{
+                    kind: "block",
+                    type: DATA_RECORD_WINDOW_BLOCK,
                 },
+            ],
+        },
+        <CategoryDefinition>{
+            kind: "category",
+            name: "Statistics",
+            colour,
+            contents: [
                 <BlockReference>{
                     kind: "block",
                     type: DATA_CORRELATION_BLOCK,
@@ -800,18 +809,13 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     kind: "block",
                     type: DATA_LINEAR_REGRESSION_BLOCK,
                 },
-                <LabelDefinition>{
-                    kind: "label",
-                    text: "Live",
-                },
-                <BlockDefinition>{
-                    kind: "block",
-                    type: DATA_RECORD_WINDOW_BLOCK,
-                },
-                <LabelDefinition>{
-                    kind: "label",
-                    text: "Data variables",
-                },
+            ],
+        },
+        <CategoryDefinition>{
+            kind: "category",
+            name: "Data variables",
+            colour,
+            contents: [
                 <ButtonDefinition>{
                     kind: "button",
                     text: `Add dataset variable`,
