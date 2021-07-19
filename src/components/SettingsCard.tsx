@@ -3,7 +3,6 @@ import {
     CardActions,
     CardContent,
     Grid,
-    Switch,
     TextField,
 } from "@material-ui/core"
 import React, { ChangeEvent, useState } from "react"
@@ -19,6 +18,8 @@ import AddIcon from "@material-ui/icons/Add"
 import CmdButton from "./CmdButton"
 import { useId } from "react-use-id-hook"
 import LoadingProgress from "./ui/LoadingProgress"
+import SwitchWithLabel from "./ui/SwitchWithLabel"
+import { bufferToString } from "../../jacdac-ts/src/jdom/utils"
 
 function SettingRow(props: {
     client: SettingsClient
@@ -32,6 +33,8 @@ function SettingRow(props: {
     const handleComponentDelete = async () => {
         await client.deleteValue(name)
     }
+    const keyId = useId()
+    const valueId = useId()
     const nameError = ""
     const valueError = ""
     return (
@@ -39,6 +42,7 @@ function SettingRow(props: {
             <Grid container spacing={1}>
                 <Grid item>
                     <TextField
+                        id={keyId}
                         error={!!nameError}
                         variant="outlined"
                         label="key"
@@ -49,6 +53,7 @@ function SettingRow(props: {
                 </Grid>
                 <Grid item xs>
                     <TextField
+                        id={valueId}
                         fullWidth={true}
                         error={!!valueError}
                         variant="outlined"
@@ -77,7 +82,8 @@ function AddSettingRow(props: { client: SettingsClient }) {
     const [name, setName] = useState("")
     const [value, setValue] = useState("")
     const [secret, setSecret] = useState(true)
-    const secretLabelId = useId()
+    const keyId = useId()
+    const valueId = useId()
 
     const handleNameChange = (ev: ChangeEvent<HTMLInputElement>) => {
         setName(ev.target.value.trim())
@@ -102,6 +108,7 @@ function AddSettingRow(props: { client: SettingsClient }) {
             <Grid container spacing={1} alignContent="center">
                 <Grid item>
                     <TextField
+                        id={keyId}
                         error={!!keyError}
                         variant="outlined"
                         label="Add key"
@@ -112,6 +119,7 @@ function AddSettingRow(props: { client: SettingsClient }) {
                 </Grid>
                 <Grid item xs>
                     <TextField
+                        id={valueId}
                         fullWidth={true}
                         error={!!valueError}
                         variant="outlined"
@@ -122,12 +130,11 @@ function AddSettingRow(props: { client: SettingsClient }) {
                     />
                 </Grid>
                 <Grid item>
-                    <Switch
+                    <SwitchWithLabel
                         checked={secret}
                         onChange={handleChecked}
-                        aria-labelledby={secretLabelId}
+                        label="Secret"
                     />
-                    <label id={secretLabelId}>Secret</label>
                 </Grid>
                 <Grid item>
                     <CmdButton
@@ -173,7 +180,7 @@ export default function SettingsCard(props: {
                         <SettingRow
                             key={key}
                             name={key}
-                            value={value}
+                            value={bufferToString(value)}
                             client={client}
                             mutable={mutable}
                         />
@@ -187,7 +194,7 @@ export default function SettingsCard(props: {
                         <SettingRow
                             key={key}
                             name={key}
-                            value={value}
+                            value={bufferToString(value)}
                             client={client}
                             mutable={mutable}
                         />
