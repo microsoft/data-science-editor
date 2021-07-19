@@ -1,6 +1,6 @@
 import { Box, Tab, Tabs } from "@material-ui/core"
 import React, { useState } from "react"
-import TabPanel, { a11yProps } from "../ui/TabPanel"
+import TabPanel from "../ui/TabPanel"
 import ConnectAlert from "../alert/ConnectAlert"
 import FirmwareCardGrid from "../firmware/FirmwareCardGrid"
 // tslint:disable-next-line: no-submodule-imports
@@ -25,8 +25,8 @@ export default function Flash() {
                 onChange={handleTabChange}
                 aria-label="View specification formats"
             >
-                <Tab label={`Updates`} {...a11yProps(1)} />
-                <Tab label={`Firmwares`} {...a11yProps(0)} />
+                <Tab label={`Updates`} />
+                <Tab label={`Firmwares`} />
             </Tabs>
             <TabPanel value={tab} index={0}>
                 <UpdateDeviceList />

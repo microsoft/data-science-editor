@@ -4,7 +4,7 @@ import Tabs from '@material-ui/core/Tabs';
 // tslint:disable-next-line: no-submodule-imports
 import Tab from '@material-ui/core/Tab';
 import { Paper, createStyles, makeStyles, Theme } from '@material-ui/core';
-import TabPanel, { a11yProps } from './ui/TabPanel';
+import TabPanel from './ui/TabPanel';
 import Snippet from './ui/Snippet';
 import DeviceSpecification from './DeviceSpecification';
 import { DeviceDTDLSnippet } from './DeviceDTDLSnippet';
@@ -48,7 +48,7 @@ export default function DeviceSpecificationSource(props: {
                         showJSON && "JSON",
                         showDTDL && "Device Twin",
                     ].filter(n => !!n)
-                        .map((n, i) => <Tab key={n} label={n} {...a11yProps(i)} />)}
+                        .map((n, i) => <Tab key={n} label={n} />)}
                 </Tabs>
                 {showSpecification && <TabPanel key="spec" value={tab} index={index++}>
                     <DeviceSpecification device={spec} />
