@@ -7,5 +7,6 @@ export default function LoadingProgress(props: { size?: string }) {
         disableShrink
         variant="indeterminate"
         size={size || "1em"}
+        aria-label="loading"
     />
 }

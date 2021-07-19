@@ -131,6 +131,7 @@ export default function ValueWithUnitWidget(props: {
                         step={step}
                         value={value}
                         onChange={onChange}
+                        aria-label={label || secondaryLabel}
                     />
                 </Grid>
             )}
