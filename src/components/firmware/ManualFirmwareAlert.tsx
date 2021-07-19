@@ -11,6 +11,7 @@ import { FirmwareBlob } from "../../../jacdac-ts/src/jdom/flashing"
 import { FlashDeviceButton } from "./FlashDeviceButton"
 import { unique } from "../../../jacdac-ts/src/jdom/utils"
 import SelectDevice from "../select/SelectDevice"
+import SwitchWithLabel from "../ui/SwitchWithLabel"
 
 const fwid = (fw: FirmwareBlob) =>
     fw ? `${fw.store},${fw.firmwareIdentifier},${fw.version}` : ""
@@ -113,10 +114,15 @@ export default function ManualFirmwareAlert() {
     return (
         <>
             <Alert severity="info">
-                <Switch value={enabled} onChange={handleToggle} />
-                <Typography component="span" variant="body1">
-                    manual mode
-                </Typography>
+                <SwitchWithLabel
+                    value={enabled}
+                    onChange={handleToggle}
+                    label={
+                        <Typography component="span" variant="body1">
+                            manual mode
+                        </Typography>
+                    }
+                />
                 <Box mr={1}>
                     <Typography component="span" variant="caption">
                         Manually select which firmware to upload on your device.
