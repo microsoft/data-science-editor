@@ -45,7 +45,10 @@ function NewFileDialogButton(props: {
     const [value, setValue] = useState("")
     const valueId = useId()
 
-    const handleOpen = () => setOpen(true)
+    const handleOpen = () => {
+        setValue("")
+        setOpen(true)
+    }
     const handleOk = async () => {
         setOpen(false)
         const filename = value.toLocaleLowerCase().replace(/\s+/g, "") + ".json"
