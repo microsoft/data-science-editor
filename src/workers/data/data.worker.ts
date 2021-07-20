@@ -12,13 +12,10 @@ import {
     desc,
     tidy,
     mutate,
-    count
+    count,
 } from "@tidyjs/tidy"
 import { bin } from "d3-array"
-import { 
-    sampleCorrelation, 
-    linearRegression,
-} from "simple-statistics"
+import { sampleCorrelation, linearRegression } from "simple-statistics"
 
 export interface DataMessage {
     worker: "data"
@@ -305,13 +302,13 @@ const handlers: { [index: string]: (props: any) => object[] } = {
                 return tidy(
                     data,
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    summarize({ mean: mean(column as any) }),
+                    summarize({ mean: mean(column as any) })
                 )
             case "med":
                 return tidy(
                     data,
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    summarize({ median: median(column as any) }),
+                    summarize({ median: median(column as any) })
                 )
             case "min":
                 return tidy(
@@ -369,7 +366,7 @@ const handlers: { [index: string]: (props: any) => object[] } = {
         }
     },
     count: (props: DataCountRequest) => {
-        const { column,  data } = props
+        const { column, data } = props
         if (!column) return data
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -398,18 +395,20 @@ const handlers: { [index: string]: (props: any) => object[] } = {
         const { data, column1, column2 } = props
         if (!column1 || !column2) return data
 
-        const x = data.map((obj) => obj[column1])
-        const y = data.map((obj) => obj[column2])
-        return [{correlation: sampleCorrelation(x, y).toFixed(3)}]
+        const x = data.map(obj => obj[column1])
+        const y = data.map(obj => obj[column2])
+        return [{ correlation: sampleCorrelation(x, y).toFixed(3) }]
     },
     linear_regression: (props: DataCorrelationRequest) => {
         const { data, column1, column2 } = props
         if (!column1 || !column2) return data
 
-        const x = data.map((obj) => obj[column1])
-        const y = data.map((obj) => obj[column2])
+        const x = data.map(obj => obj[column1])
+        const y = data.map(obj => obj[column2])
         const linregmb = linearRegression([x, y])
-        return [{slope: linregmb.m.toFixed(3), intercept: linregmb.b.toFixed(3)}]
+        return [
+            { slope: linregmb.m.toFixed(3), intercept: linregmb.b.toFixed(3) },
+        ]
     },
 }
 
@@ -426,13 +425,22 @@ function transformData(message: DataRequest): object[] {
 async function handleMessage(event: MessageEvent) {
     const message: DataRequest = event.data
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { worker, data, previousData, ...rest } = message
+    const { id, worker, data, previousData, ...rest } = message
     if (worker !== "data") return
-    //console.debug("Jacdac data in:", { message })
-    const newData = await transformData(message)
-    //console.debug("Jacdac data out:", { message })
-    const resp = { worker, ...rest, data: newData }
-    self.postMessage(resp)
+
+    try {
+        //console.debug("Jacdac data in:", { message })
+        const newData = await transformData(message)
+        //console.debug("Jacdac data out:", { message })
+        const resp = { id, worker, ...rest, data: newData }
+        self.postMessage(resp)
+    } catch (e) {
+        self.postMessage({
+            id,
+            worker,
+            error: e + "",
+        })
+    }
 }
 
 self.addEventListener("message", handleMessage)

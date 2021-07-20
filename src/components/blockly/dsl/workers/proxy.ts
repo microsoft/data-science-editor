@@ -12,6 +12,10 @@ export interface WorkerMessage {
     id?: string
 }
 
+export interface WorkerResponse {
+    error?: string
+}
+
 export class WorkerProxy {
     readonly pendings: SMap<{
         resolve: (res: any) => void
@@ -31,7 +35,7 @@ export class WorkerProxy {
         }
     }
 
-    postMessage<T, R>(message: WorkerMessage & T): Promise<R> {
+    postMessage<T, R>(message: WorkerMessage & T): Promise<WorkerResponse & R> {
         message.id = message.id || Math.random() + ""
         message.worker = this.workerid
         return new Promise<R>((resolve, reject) => {

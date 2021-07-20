@@ -106,16 +106,24 @@ const handlers: { [index: string]: (msg: CsvRequest) => Promise<object> } = {
 
 async function handleMessage(event: MessageEvent) {
     const message: CsvRequest = event.data
-    const { worker, type } = message
+    const { id, worker, type } = message
     if (worker !== "csv") return
 
-    const handler = handlers[type]
-    const resp = await handler(message)
-    self.postMessage({
-        id: message.id,
-        worker: "csv",
-        ...resp,
-    })
+    try {
+        const handler = handlers[type]
+        const resp = await handler(message)
+        self.postMessage({
+            id,
+            worker,
+            ...resp,
+        })
+    } catch (e) {
+        self.postMessage({
+            id,
+            worker,
+            error: e + "",
+        })
+    }
 }
 
 self.addEventListener("message", handleMessage)
