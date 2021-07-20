@@ -33,7 +33,6 @@ import {
     DEVICE_NODE_NAME,
     SERVICE_NODE_NAME,
     VIRTUAL_DEVICE_NODE_NAME,
-    SERVICE_TEST_NODE_NAME,
 } from "../../jacdac-ts/src/jdom/constants"
 import { UIFlags } from "../jacdac/providerbus"
 
@@ -170,11 +169,6 @@ export default function ToolsDrawer() {
             text: "Service Editor",
             url: "/tools/service-editor/",
             icon: <KindIcon kind={SERVICE_NODE_NAME} />,
-        },
-        {
-            text: "Service Test Editor",
-            url: "/tools/service-test-editor/",
-            icon: <KindIcon kind={SERVICE_TEST_NODE_NAME} />,
         },
         {
             text: "Device registration",

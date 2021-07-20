@@ -46,6 +46,7 @@ import Suspense from "../../components/ui/Suspense"
 import { ControlReg } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import useGridBreakpoints from "../../components/useGridBreakpoints"
+import Alert from "../../components/ui/Alert"
 
 const GithubPullRequestButton = lazy(
     () => import("../../components/buttons/GithubPullRequestButton")
@@ -124,6 +125,7 @@ export default function DeviceRegistration() {
     const firmwareMenuId = useId()
     const repoId = useId()
     const identifierId = useId()
+    const descriptionId = useId()
     const homepageId = useId()
     const handleServiceAdd = (srv: jdspec.ServiceSpec) => {
         console.log(`add`, srv.classIdentifier)
@@ -414,6 +416,7 @@ export default function DeviceRegistration() {
                 </Grid>
                 <Grid item xs={12}>
                     <TextField
+                        id={identifierId}
                         disabled
                         error={!!idError}
                         fullWidth={true}
@@ -427,7 +430,7 @@ export default function DeviceRegistration() {
                 </Grid>
                 <Grid item xs={12}>
                     <TextField
-                        id={identifierId}
+                        id={descriptionId}
                         fullWidth={true}
                         required
                         label="Description"
@@ -454,21 +457,18 @@ export default function DeviceRegistration() {
                 </Grid>
                 <Grid item xs={12}>
                     <PaperBox>
-                        <Typography color={imageError ? "error" : "inherit"}>
-                            Catalog image
-                        </Typography>
+                        <Typography>Catalog image</Typography>
                         <ImportImageCanvas
                             width={DEVICE_IMAGE_WIDTH}
                             height={DEVICE_IMAGE_HEIGHT}
                             onImageImported={handleImageImported}
                         />
-                        <Typography
-                            variant="caption"
-                            color={imageError ? "error" : "inherit"}
-                            component="div"
-                        >
+                        <Typography variant="caption" component="div">
                             {`Import a ${DEVICE_IMAGE_WIDTH}x${DEVICE_IMAGE_HEIGHT} image of the device.`}
                         </Typography>
+                        {imageError && (
+                            <Alert severity="error">{imageError}</Alert>
+                        )}
                     </PaperBox>
                 </Grid>
                 <Grid item xs={12}>
