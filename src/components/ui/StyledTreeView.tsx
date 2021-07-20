@@ -9,8 +9,6 @@ import Typography from "@material-ui/core/Typography"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import KindIcon from "../KindIcon"
-// tslint:disable-next-line: no-submodule-imports match-default-export-name
-import SignalCellularConnectedNoInternet0BarIcon from "@material-ui/icons/SignalCellularConnectedNoInternet0Bar"
 import { useId } from "react-use-id-hook"
 
 declare module "csstype" {
@@ -28,7 +26,7 @@ const useTreeItemStyles = makeStyles((theme: Theme) =>
                 backgroundColor: theme.palette.action.hover,
             },
             "&:focus > $content, &$selected > $content": {
-                backgroundColor: `var(--tree-view-bg-color, ${theme.palette.grey[400]})`,
+                backgroundColor: `var(--tree-view-bg-color, ${theme.palette.grey})`,
                 color: "var(--tree-view-color)",
             },
             "&:focus > $content $label, &:hover > $content $label, &$selected > $content $label":

@@ -116,14 +116,13 @@ function FilterMenu(props: {
         <Box className={className} component="span">
             <Tooltip title={text}>
                 <span>
-                    <IconButton
+                    <IconButtonWithTooltip
                         className={classes.iconButton}
-                        aria-controls="simple-menu"
-                        aria-haspopup="true"
                         onClick={handleClick}
+                        title="open filter menu"
                     >
                         {icon || <FilterListIcon />}
-                    </IconButton>
+                    </IconButtonWithTooltip>
                 </span>
             </Tooltip>
             <Menu

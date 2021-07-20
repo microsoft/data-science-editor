@@ -25,7 +25,6 @@ import {
     ControlAnnounceFlags,
     SRV_ROLE_MANAGER,
     SRV_SETTINGS,
-    SystemReg,
 } from "../../../jacdac-ts/src/jdom/constants"
 import useEventRaised from "../../jacdac/useEventRaised"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
@@ -38,7 +37,6 @@ import {
 } from "../ui/StyledTreeView"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import useMediaQueries from "../hooks/useMediaQueries"
-import useRegister from "../hooks/useRegister"
 import useInstanceName from "../services/useInstanceName"
 import useBestRegister from "../hooks/useBestRegister"
 
