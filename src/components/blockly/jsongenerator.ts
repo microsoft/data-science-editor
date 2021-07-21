@@ -2,7 +2,7 @@ import Blockly from "blockly"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import { SMap, toMap } from "../../../jacdac-ts/src/jdom/utils"
 import BlockDomainSpecificLanguage, { resolveDsl } from "./dsl/dsl"
-import ReactField from "./fields/ReactField"
+import { ReactFieldBase } from "./fields/ReactFieldBase"
 
 export interface VariableJSON {
     // Boolean, Number, String, or service short id
@@ -94,9 +94,9 @@ export function domToJSON(
     const fieldToJSON = (field: Blockly.Field) => {
         if (field.isSerializable()) {
             // custom field can just return the value
-            if (field instanceof ReactField) {
+            if (field instanceof ReactFieldBase) {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const value = (field as ReactField<any>).value
+                const value = (field as ReactFieldBase<any>).value
                 return { value }
             } else {
                 const container = Blockly.utils.xml.createElement("field")
