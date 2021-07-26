@@ -70,6 +70,7 @@ import {
 } from "./dsl"
 import { VariableJSON } from "../jsongenerator"
 import { Variables } from "blockly"
+import { paletteColorByIndex } from "./palette"
 
 const SET_STATUS_LIGHT_BLOCK = "jacdac_set_status_light"
 const ROLE_BOUND_EVENT_BLOCK = "jacdac_role_bound_event"
@@ -283,9 +284,10 @@ export const serviceHelp = (service: jdspec.ServiceSpec) => {
     return withPrefix(`/services/${service.shortId}`)
 }
 
+const sensorColor = paletteColorByIndex(1)
+const otherColor = paletteColorByIndex(3)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const createServiceColor = (theme: Theme) => {
-    const sensorColor = theme.palette.success.main
-    const otherColor = theme.palette.info.main
     const serviceColor = (srv: jdspec.ServiceSpec) =>
         isSensor(srv) ? sensorColor : otherColor
     return serviceColor

@@ -1,6 +1,7 @@
 import { SMap } from "../../../jacdac-ts/src/jdom/utils"
 import Blockly, { Block, Workspace } from "blockly"
 import { BlockWithServices } from "./WorkspaceContext"
+import { paletteColorByIndex } from "./dsl/palette"
 
 export const NEW_PROJET_XML = '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>'
 
@@ -63,8 +64,8 @@ export type RegisterTemplate =
     | "register_set"
     | "register_get"
     // server blocks
-    | "register_set_server"   // register name, expr hole for return value
-    | "register_get_server"   // register name, special expr block
+    | "register_set_server" // register name, expr hole for return value
+    | "register_get_server" // register name, special expr block
 
 export type CommandTemplate = "command" | "server" | "raiseNo" | "raiseArgs"
 
@@ -172,7 +173,7 @@ export const DATA_SCIENCE_STATEMENT_TYPE = "DataScienceStatement"
 
 export const TWIN_BLOCK = "jacdac_tools_twin"
 
-export const toolsColour = "#888"
+export const toolsColour = paletteColorByIndex(-1)
 
 export const CHART_WIDTH = 388
 export const CHART_HEIGHT = 240
@@ -213,7 +214,7 @@ export interface CategoryDefinition extends ContentDefinition {
 export interface ButtonDefinition extends ContentDefinition {
     kind: "button"
     text: string
-    callbackKey: string,
+    callbackKey: string
     callback: (workspace: Workspace) => void
 }
 

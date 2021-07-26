@@ -5,6 +5,7 @@ import {
     DummyInputDefinition,
     identityTransformData,
     NumberInputDefinition,
+    toolsColour,
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
 import DataColumnChooserField from "../fields/DataColumnChooserField"
@@ -12,7 +13,7 @@ import GaugeWidgetField from "../fields/GaugeWidgetField"
 
 const DASHBOARD_GAUGE_BLOCK = "jacdac_widget_gauge"
 
-const colour = "#999"
+const colour = toolsColour
 const widgetDSL: BlockDomainSpecificLanguage = {
     id: "widget",
     createBlocks: () => [

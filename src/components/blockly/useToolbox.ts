@@ -118,7 +118,6 @@ export default function useToolbox(
         return <ToolboxConfiguration>{
             kind: "categoryToolbox",
             contents: dslsCategories
-                .filter(cat => !!cat)
                 .map(node =>
                     node.kind === "category"
                         ? patchCategoryJSONtoXML(node as CategoryDefinition)

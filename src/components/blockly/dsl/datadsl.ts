@@ -37,6 +37,7 @@ import { BlockWithServices } from "../WorkspaceContext"
 import FileSaveField from "../fields/FileSaveField"
 import { saveCSV } from "./workers/csv.proxy"
 import FileOpenField from "../fields/FileOpenField"
+import palette from "./palette"
 
 const DATA_ARRANGE_BLOCK = "data_arrange"
 const DATA_SELECT_BLOCK = "data_select"
@@ -60,7 +61,9 @@ const DATA_LINEAR_REGRESSION_BLOCK = "data_linear_regression"
 const DATA_LOAD_FILE_BLOCK = "data_load_file"
 const DATA_SAVE_FILE_BLOCK = "data_save_file"
 
-const colour = "#777"
+const [datasetColour, operatorsColour, statisticsColour] = palette()
+const dataVariablesColour = "%{BKY_VARIABLES_HUE}"
+
 const dataDsl: BlockDomainSpecificLanguage = {
     id: "dataScience",
     createBlocks: () => [
@@ -68,7 +71,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_ARRANGE_BLOCK,
             message0: "arrange %1 %2",
-            colour,
+            colour: operatorsColour,
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
@@ -104,7 +107,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_DROP_BLOCK,
             message0: "drop %1 %2 %3",
-            colour,
+            colour: operatorsColour,
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
@@ -139,7 +142,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_SELECT_BLOCK,
             message0: "select %1 %2 %3",
-            colour,
+            colour: operatorsColour,
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
@@ -174,7 +177,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_FILTER_COLUMNS_BLOCK,
             message0: "filter %1 %2 %3",
-            colour,
+            colour: operatorsColour,
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
@@ -219,7 +222,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_FILTER_STRING_BLOCK,
             message0: "filter %1 %2 %3",
-            colour,
+            colour: operatorsColour,
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
@@ -264,7 +267,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_MUTATE_COLUMNS_BLOCK,
             message0: "mutate %1 %2 %3 %4",
-            colour,
+            colour: operatorsColour,
             args0: [
                 <TextInputDefinition>{
                     type: "field_input",
@@ -319,7 +322,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_MUTATE_NUMBER_BLOCK,
             message0: "mutate %1 %2 %3 %4",
-            colour,
+            colour: operatorsColour,
             args0: [
                 <TextInputDefinition>{
                     type: "field_input",
@@ -374,7 +377,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_SUMMARIZE_BLOCK,
             message0: "summarize %1 calculate %2",
-            colour,
+            colour: operatorsColour,
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
@@ -411,7 +414,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_SUMMARIZE_BY_GROUP_BLOCK,
             message0: "group %1 by %2 calculate %3",
-            colour,
+            colour: operatorsColour,
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
@@ -454,7 +457,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_COUNT_BLOCK,
             message0: "count %1",
-            colour,
+            colour: operatorsColour,
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
@@ -487,7 +490,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             ],
             inputsInline: false,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            colour,
+            colour: datasetColour,
             template: "meta",
             dataPreviewField: true,
             transformData: identityTransformData,
@@ -507,7 +510,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             ],
             inputsInline: false,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            colour,
+            colour: dataVariablesColour,
             template: "meta",
             dataPreviewField: true,
             transformData: (block: BlockSvg) => {
@@ -532,7 +535,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             inputsInline: false,
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            colour,
+            colour: dataVariablesColour,
             template: "meta",
             dataPreviewField: true,
             transformData: (block: BlockSvg, data: object[]) => {
@@ -566,7 +569,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             inputsInline: false,
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            colour,
+            colour: operatorsColour,
             template: "meta",
             dataPreviewField: true,
             transformData: async (
@@ -596,7 +599,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             inputsInline: false,
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            colour,
+            colour: operatorsColour,
             template: "meta",
             dataPreviewField: true,
             transformData: async (block: BlockSvg, data: object[]) => {
@@ -625,7 +628,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             inputsInline: false,
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            colour,
+            colour: statisticsColour,
             template: "meta",
             dataPreviewField: true,
             transformData: async (block: BlockSvg, data: object[]) => {
@@ -656,7 +659,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             inputsInline: false,
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            colour,
+            colour: statisticsColour,
             template: "meta",
             dataPreviewField: true,
             transformData: async (block: BlockSvg, data: object[]) => {
@@ -681,7 +684,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 },
             ],
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            colour,
+            colour: datasetColour,
             template: "meta",
             inputsInline: false,
             dataPreviewField: true,
@@ -699,7 +702,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             ],
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            colour,
+            colour: datasetColour,
             template: "meta",
             inputsInline: false,
             dataPreviewField: true,
@@ -718,7 +721,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
         <CategoryDefinition>{
             kind: "category",
             name: "Data sets",
-            colour,
+            colour: datasetColour,
             contents: [
                 <BlockReference>{
                     kind: "block",
@@ -737,7 +740,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
         <CategoryDefinition>{
             kind: "category",
             name: "Operators",
-            colour,
+            colour: operatorsColour,
             contents: [
                 <BlockReference>{
                     kind: "block",
@@ -792,7 +795,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
         <CategoryDefinition>{
             kind: "category",
             name: "Statistics",
-            colour,
+            colour: statisticsColour,
             contents: [
                 <BlockReference>{
                     kind: "block",
@@ -807,7 +810,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
         <CategoryDefinition>{
             kind: "category",
             name: "Data variables",
-            colour,
+            colour: dataVariablesColour,
             contents: [
                 <ButtonDefinition>{
                     kind: "button",

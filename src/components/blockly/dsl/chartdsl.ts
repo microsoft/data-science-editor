@@ -12,6 +12,7 @@ import LinePlotField from "../fields/LinePlotField"
 import BarChartField from "../fields/BarField"
 import PiePlotField from "../fields/PieField"
 import DataTableField from "../fields/DataTableField"
+import { paletteColorByIndex } from "./palette"
 
 const SCATTERPLOT_BLOCK = "chart_scatterplot"
 const LINEPLOT_BLOCK = "chart_lineplot"
@@ -19,7 +20,7 @@ const PIEPLOT_BLOCK = "chart_pieplot"
 const BARCHART_BLOCK = "chart_bar"
 const CHART_SHOW_TABLE_BLOCK = "chart_show_table"
 
-const colour = "#999"
+const colour = paletteColorByIndex(3)
 const chartDSL: BlockDomainSpecificLanguage = {
     id: "chart",
     createBlocks: () => [

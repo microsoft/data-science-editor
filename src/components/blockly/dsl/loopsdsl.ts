@@ -10,12 +10,13 @@ import {
 } from "../toolbox"
 import { makeVMBase, processErrors } from "../../vm/VMgenerator"
 import BlockDomainSpecificLanguage from "./dsl"
+import { paletteColorByIndex } from "./palette"
 
 const WAIT_BLOCK = "jacdac_wait"
 const ON_START_BLOCK = "jacdac_start"
 const REPEAT_EVERY_BLOCK = "jacdac_repeat_every"
 
-const colour = "#4fbac9"
+const colour = paletteColorByIndex(0)
 const loopsDsl: BlockDomainSpecificLanguage = {
     id: "loops",
     createBlocks: () => [
