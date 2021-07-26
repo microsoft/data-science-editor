@@ -114,14 +114,18 @@ export default function useToolbox(
         )
             .filter(cat => !!cat)
             .sort((l, r) => -(l.order - r.order))
-
+        const contents = dslsCategories.map(node =>
+            node.kind === "category"
+                ? patchCategoryJSONtoXML(node as CategoryDefinition)
+                : node
+        )
+        // remove trailing separators
+        while (contents[0]?.kind === "sep") contents.shift()
+        while (contents[contents.length - 1]?.kind === "sep") contents.pop()
+        //
         return <ToolboxConfiguration>{
             kind: "categoryToolbox",
-            contents: dslsCategories.map(node =>
-                node.kind === "category"
-                    ? patchCategoryJSONtoXML(node as CategoryDefinition)
-                    : node
-            ),
+            contents,
         }
     }, [theme, dsls, source, (liveServices || []).map(srv => srv.id).join(",")])
     return toolboxConfiguration
