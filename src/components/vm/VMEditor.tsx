@@ -15,14 +15,14 @@ import vmDsls from "./vmdsls"
 import { VMStatus } from "../../../jacdac-ts/src/vm/runner"
 import { VM_WARNINGS_CATEGORY } from "../blockly/toolbox"
 import FileTabs from "../fs/FileTabs"
-import BlockFile from "../blockly/blockfile"
+import { WorkspaceFile } from "../../../jacdac-ts/src/dsl/workspacejson"
 
 const VM_EDITOR_ID = "vm"
 const VM_SOURCE_STORAGE_KEY = "tools:vmeditor"
 const VM_NEW_FILE_CONTENT = JSON.stringify({
     editor: VM_EDITOR_ID,
     xml: "",
-} as BlockFile)
+} as WorkspaceFile)
 
 function VMEditorWithContext() {
     const {

@@ -34,8 +34,7 @@ import {
 import AppContext from "../AppContext"
 import { fileSystemHandleSupported } from "../hooks/useDirectoryHandle"
 import useFileStorage from "../hooks/useFileStorage"
-import BlockFile from "./blockfile"
-import { WorkspaceJSON } from "../../../jacdac-ts/src/dsl/workspacejson"
+import { WorkspaceFile, WorkspaceJSON } from "../../../jacdac-ts/src/dsl/workspacejson"
 
 export interface BlockProps {
     editorId: string
@@ -116,7 +115,7 @@ export function BlockProvider(props: {
     const setWorkspaceJSON = async (json: WorkspaceJSON) => {
         _setWorkspaceJSON(json)
         if (setWorkspaceFileContent) {
-            const file: BlockFile = {
+            const file: WorkspaceFile = {
                 editor: editorId,
                 xml: workspaceXml,
                 json,
@@ -208,7 +207,7 @@ export function BlockProvider(props: {
                       console.debug(`reading ${f.name}`)
                       const file = await f.getFile()
                       const text = await file.text()
-                      const json: BlockFile = JSON.parse(text) as BlockFile
+                      const json = JSON.parse(text) as WorkspaceFile
                       const { editor, xml } = json || {}
                       if (editor !== editorId)
                           throw new Error("Wrong block editor")
