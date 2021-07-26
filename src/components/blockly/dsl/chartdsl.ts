@@ -21,7 +21,7 @@ const BARCHART_BLOCK = "chart_bar"
 const CHART_SHOW_TABLE_BLOCK = "chart_show_table"
 
 const colour = paletteColorByIndex(3)
-const chartDSL: BlockDomainSpecificLanguage = {
+const chartDsl: BlockDomainSpecificLanguage = {
     id: "chart",
     createBlocks: () => [
         {
@@ -182,4 +182,4 @@ const chartDSL: BlockDomainSpecificLanguage = {
     ],
 }
 
-export default chartDSL
+export default chartDsl

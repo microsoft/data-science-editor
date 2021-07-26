@@ -1,44 +1,52 @@
-import React, { useContext, useEffect, useMemo } from "react"
-import { NoSsr } from "@material-ui/core"
-import BlockContext, { BlockProvider } from "../blockly/BlockContext"
-import BlockEditor from "../blockly/BlockEditor"
-import dataDsl from "../blockly/dsl/datadsl"
-import variablesDsl from "../blockly/dsl/variablesdsl"
-import shadowDsl from "../blockly/dsl/shadowdsl"
-import fieldsDsl from "../blockly/dsl/fieldsdsl"
+import { Grid, NoSsr } from "@material-ui/core"
+import React, { useContext, useMemo } from "react"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
+import BlockContext, { BlockProvider } from "../blockly/BlockContext"
 import BlockDiagnostics from "../blockly/BlockDiagnostics"
-import { visitWorkspace } from "../../../jacdac-ts/src/dsl/workspacevisitor"
+import BlockEditor from "../blockly/BlockEditor"
+import FileTabs from "../fs/FileTabs"
+import { WorkspaceFile } from "../../../jacdac-ts/src/dsl/workspacejson"
+import dataDsl from "../blockly/dsl/datadsl"
+import chartDsl from "../blockly/dsl/chartdsl"
+import fieldsDsl from "../blockly/dsl/fieldsdsl"
 
 const DS_EDITOR_ID = "ds"
-const DS_SOURCE_STORAGE_KEY = "data-science-blockly-xml"
+const DS_SOURCE_STORAGE_KEY = "tools:dseditor"
+const DS_NEW_FILE_CONTENT = JSON.stringify({
+    editor: DS_EDITOR_ID,
+    xml: "",
+} as WorkspaceFile)
 
 function DSEditorWithContext() {
-    // block context handles hosting blockly
-    const { workspaceJSON } = useContext(BlockContext)
-
-    // run this when workspaceJSON changes
-    useEffect(() => {
-        visitWorkspace(workspaceJSON, {
-            visitBlock: block => console.log(`block ${block.type}`, { block }),
-            visitInput: input => console.log(`input ${input.name}`, { input }),
-            visitField: (name, field) =>
-                console.log(`field ${name}: ${field.value}`, { field }),
-        })
-    }, [workspaceJSON])
+    const { workspaceFileHandle, setWorkspaceFileHandle } =
+        useContext(BlockContext)
 
     return (
-        <>
-            <BlockEditor editorId={DS_EDITOR_ID} />
+        <Grid container direction="column" spacing={1}>
+            {!!setWorkspaceFileHandle && (
+                <Grid item xs={12}>
+                    <FileTabs
+                        storageKey={DS_SOURCE_STORAGE_KEY}
+                        selectedFileHandle={workspaceFileHandle}
+                        onFileHandleSelected={setWorkspaceFileHandle}
+                        onFileHandleCreated={setWorkspaceFileHandle}
+                        newFileContent={DS_NEW_FILE_CONTENT}
+                    />
+                </Grid>
+            )}
+            <Grid item xs={12}>
+                <BlockEditor editorId={DS_EDITOR_ID} />
+            </Grid>
             {Flags.diagnostics && <BlockDiagnostics />}
-        </>
+        </Grid>
     )
 }
 
-export default function DScienceEditor() {
+export default function DSBlockEditor() {
     const dsls = useMemo(() => {
-        return [dataDsl, variablesDsl, shadowDsl, fieldsDsl]
+        return [dataDsl, chartDsl, fieldsDsl]
     }, [])
+
     return (
         <NoSsr>
             <BlockProvider storageKey={DS_SOURCE_STORAGE_KEY} dsls={dsls}>

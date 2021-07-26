@@ -42,6 +42,7 @@ import { UIFlags } from "../jacdac/providerbus"
 import { useSnackbar } from "notistack"
 import { HideOnScroll } from "./ui/HideOnScroll"
 import OpenVMEditorButton from "./buttons/OpenVMEditorButton"
+import { IdProvider } from "react-use-id-hook"
 
 const WebDiagnostics = lazy(() => import("./WebDiagnostics"))
 const AppDrawer = lazy(() => import("./AppDrawer"))
@@ -326,9 +327,10 @@ function LayoutWithContext(props: LayoutProps) {
     const { pageContext, path, location } = pageProps
     const { frontmatter } = pageContext || {}
     const makeCodeTool = /tools\/makecode-/.test(path)
-    const fullWidthTools = /^\/(tools\/(makecode-|vm-editor)|dashboard)/.test(
-        path
-    )
+    const fullWidthTools =
+        /^\/(tools\/(makecode-|vm-editor|data-science-editor)|dashboard)/.test(
+            path
+        )
     const {
         hideMainMenu = false,
         hideUnderConstruction = false,

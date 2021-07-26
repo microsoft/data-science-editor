@@ -4,6 +4,6 @@ import RoleManager from "../../../jacdac-ts/src/servers/rolemanager"
 
 export default function useRoleManager() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const roleManager = useMemo(() => new RoleManager(bus), [bus])
+    const roleManager = useMemo(() => bus && new RoleManager(bus), [bus])
     return roleManager
 }

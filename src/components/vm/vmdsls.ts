@@ -22,8 +22,8 @@ const vmDsls = [
     variablesDsl,
     toolsDsl,
     widgetDSL,
-    chartDsl,
     dataDsl,
+    chartDsl,
     shadowDsl,
     fieldsDsl,
 ]
