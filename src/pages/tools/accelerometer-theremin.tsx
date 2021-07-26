@@ -50,14 +50,10 @@ export default function AccelerometerTheremin() {
     // when using setAccelService, React will render again this component
     const [accelService, setAccelService] = useState<JDService>()
     // used to hold the value for the axis selected by the radio group. This is also used to set the axis of the accelerometer to sonify. Default value is X. meaning the X axis will be sonified by default.
-    const [axisToSonify, setAxisToSonify] = useState("x")
+    const [axisToSonify, setAxisToSonify] = useState<"x" | "y" | "z">("x")
     //used to hold user selection of the property of the sound to vary. Default is the frequency.
     const [sonificationProperty, setSonificationProperty] =
         useState("frequency")
-    //used to store frequency modifier/offset for tones. setting default state to 0 as this will eventually be set to the accelerometer value of the axis that is selected and be added to 1000 to be sonified.
-    const [toneFrequencyOffset, setToneFrequencyOfset] = useState(0)
-    //used to store  volume of tones. assuming the range is 0 to 1. need to double check. setting default to 1 based on code sample.
-    const [volume, setVolume] = useState(1)
 
     // event handeler for radio button selection change for axis to sonify
     const handleAccessChange = event => {
@@ -91,22 +87,24 @@ export default function AccelerometerTheremin() {
                 // get x acceleration data
                 // const [x] = accelService.readingRegister.unpackedValue
                 // get all acceleration data
+                let volume = 1
+                let toneFrequencyOffset = 0
                 const [x, y, z] = accelService.readingRegister.unpackedValue
                 if (sonificationProperty == "frequency") {
                     if (axisToSonify == "x") {
-                        setToneFrequencyOfset(x)
+                        toneFrequencyOffset = x
                     } else if (axisToSonify == "y") {
-                        setToneFrequencyOfset(y)
+                        toneFrequencyOffset = y
                     } else {
-                        setToneFrequencyOfset(z)
+                        toneFrequencyOffset = z
                     }
                 } else {
                     if (axisToSonify == "x") {
-                        setVolume((Math.abs(x) * 99) / 100.0)
+                        volume = (Math.abs(x) * 99) / 100.0
                     } else if (axisToSonify == "y") {
-                        setVolume((Math.abs(y) * 99) / 100.0)
+                        volume = (Math.abs(y) * 99) / 100.0
                     } else {
-                        setVolume((Math.abs(z) * 99) / 100.0)
+                        volume = (Math.abs(z) * 99) / 100.0
                     }
                 }
 
