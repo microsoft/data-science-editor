@@ -61,6 +61,7 @@ export interface DashboardDeviceProps {
 }
 
 export interface DashboardProps extends DashboardDeviceProps {
+    hideSimulators?: boolean
     showStartSimulators?: boolean
     showConnect?: boolean
     deviceFilter?: (d: JDDevice) => boolean
@@ -69,6 +70,7 @@ export interface DashboardProps extends DashboardDeviceProps {
 
 export default function Dashboard(props: DashboardProps) {
     const {
+        hideSimulators,
         showConnect,
         showStartSimulators,
         deviceSort = defaultDeviceSort,
@@ -94,43 +96,45 @@ export default function Dashboard(props: DashboardProps) {
 
     return (
         <>
-            <DashboardDeviceGroup
-                title="Simulators"
-                action={
-                    <>
-                        {showStartSimulators && !!roleManager && (
+            {!hideSimulators && (
+                <DashboardDeviceGroup
+                    title="Simulators"
+                    action={
+                        <>
+                            {showStartSimulators && !!roleManager && (
+                                <IconButtonWithTooltip
+                                    title="start missing simulators"
+                                    onClick={handleStartSimulators}
+                                >
+                                    <DevicesIcon />
+                                </IconButtonWithTooltip>
+                            )}
                             <IconButtonWithTooltip
-                                title="start missing simulators"
-                                onClick={handleStartSimulators}
+                                title="start simulator"
+                                onClick={toggleShowDeviceHostsDialog}
                             >
-                                <DevicesIcon />
+                                <AddIcon />
                             </IconButtonWithTooltip>
-                        )}
-                        <IconButtonWithTooltip
-                            title="start simulator"
-                            onClick={toggleShowDeviceHostsDialog}
-                        >
-                            <AddIcon />
-                        </IconButtonWithTooltip>
-                        <IconButtonWithTooltip
-                            title="clear simulators"
-                            onClick={handleClearSimulators}
-                        >
-                            <ClearIcon />
-                        </IconButtonWithTooltip>{" "}
-                    </>
-                }
-                devices={simulators}
-                expanded={selected}
-                toggleExpanded={toggleSelected}
-                {...other}
-            >
-                {showStartSimulators && !simulators?.length && (
-                    <Grid item xs={12}>
-                        <SimulateDeviceAlert />
-                    </Grid>
-                )}
-            </DashboardDeviceGroup>
+                            <IconButtonWithTooltip
+                                title="clear simulators"
+                                onClick={handleClearSimulators}
+                            >
+                                <ClearIcon />
+                            </IconButtonWithTooltip>{" "}
+                        </>
+                    }
+                    devices={simulators}
+                    expanded={selected}
+                    toggleExpanded={toggleSelected}
+                    {...other}
+                >
+                    {showStartSimulators && !simulators?.length && (
+                        <Grid item xs={12}>
+                            <SimulateDeviceAlert />
+                        </Grid>
+                    )}
+                </DashboardDeviceGroup>
+            )}
             <DashboardDeviceGroup
                 title="Devices"
                 action={

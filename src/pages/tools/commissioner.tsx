@@ -1,46 +1,20 @@
 import React, { useState, useContext, useEffect } from "react"
-import useEffectAsync from "../../components/useEffectAsync"
 // tslint:disable-next-line: no-submodule-imports
 import { makeStyles, Theme } from "@material-ui/core/styles"
-import {
-    Grid,
-    Button,
-    TextField,
-    InputAdornment,
-    createStyles,
-    Switch,
-    Card,
-    CardActions,
-    Typography,
-} from "@material-ui/core"
+import { Grid, Button, createStyles } from "@material-ui/core"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
-import ConnectAlert from "../../components/alert/ConnectAlert"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import PlayArrowIcon from "@material-ui/icons/PlayArrow"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import StopIcon from "@material-ui/icons/Stop"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import SaveIcon from "@material-ui/icons/Save"
 import CheckCircle from "@material-ui/icons/CheckCircle"
 // tslint:disable-next-line: no-submodule-imports
-import useChange from "../../jacdac/useChange"
 import useDevices from "../../components/hooks/useDevices"
 import {
-    CHANGE,
-    EVENT,
     PACKET_RECEIVE,
-    REPORT_UPDATE,
     SRV_CONTROL,
     SRV_ROLE_MANAGER,
-    SRV_SENSOR_AGGREGATOR,
 } from "../../../jacdac-ts/src/jdom/constants"
-import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
-import DataSetGrid from "../../components/DataSetGrid"
-import { JDRegister } from "../../../jacdac-ts/src/jdom/register"
-import ReadingFieldGrid from "../../components/ReadingFieldGrid"
-import DeviceCardHeader from "../../components/DeviceCardHeader"
-import { SensorAggregatorClient } from "../../../jacdac-ts/src/jdom/sensoraggregatorclient"
-import { Link } from "gatsby-theme-material-ui"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import { Packet } from "../../../jacdac-ts/src/jdom/packet"
@@ -58,11 +32,8 @@ import TableHead from "@material-ui/core/TableHead"
 import TableRow from "@material-ui/core/TableRow"
 // tslint:disable-next-line: no-submodule-imports
 import Paper from "@material-ui/core/Paper"
-import PaperBox from "../../components/ui/PaperBox"
 import GridHeader from "../../components/ui/GridHeader"
-import ConnectButtons from "../../components/buttons/ConnectButtons"
 import Dashboard from "../../components/dashboard/Dashboard"
-import { FastRewindTwoTone } from "@material-ui/icons"
 import ServiceManagerContext from "../../components/ServiceManagerContext"
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -147,7 +118,7 @@ export function DataSetTable(props: {
     className?: string
 }) {
     const { dataSet, maxRows, minRows, className } = props
-    const { headers, descriptors } = dataSet
+    const { headers } = dataSet
     const classes = useStyles()
 
     const data = dataSet.descriptors?.slice(
@@ -364,6 +335,7 @@ export default function Commissioner() {
         <>
             <h1>Commissioner</h1>
             <Dashboard
+                hideSimulators={true}
                 showAvatar={true}
                 showHeader={true}
                 showConnect={true}
