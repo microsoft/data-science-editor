@@ -1,5 +1,5 @@
-import { WorkspaceJSON } from "./jsongenerator"
-import { visitWorkspace } from "./jsonvisitor"
+import { WorkspaceJSON } from "../../../jacdac-ts/src/dsl/workspacejson"
+import { visitWorkspace } from "../../../jacdac-ts/src/dsl/workspacevisitor"
 
 export interface BlockWarning {
     sourceId?: string

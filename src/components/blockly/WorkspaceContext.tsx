@@ -7,6 +7,7 @@ import React, {
     useEffect,
     useState,
 } from "react"
+import { WorkspaceJSON } from "../../../jacdac-ts/src/dsl/workspacejson"
 import { CHANGE } from "../../../jacdac-ts/src/jdom/constants"
 import { JDEventSource } from "../../../jacdac-ts/src/jdom/eventsource"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
@@ -14,7 +15,6 @@ import RoleManager from "../../../jacdac-ts/src/servers/rolemanager"
 import { VMProgramRunner } from "../../../jacdac-ts/src/vm/runner"
 import useChange from "../../jacdac/useChange"
 import ReactField from "./fields/ReactField"
-import { WorkspaceJSON } from "./jsongenerator"
 import useWorkspaceEvent from "./useWorkspaceEvent"
 
 export class WorkspaceServices extends JDEventSource {

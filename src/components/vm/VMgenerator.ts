@@ -1,4 +1,3 @@
-import { BlockJSON, WorkspaceJSON } from "../blockly/jsongenerator"
 import {
     VMBase,
     VMHandler,
@@ -17,6 +16,7 @@ import Blockly from "blockly"
 import BlockDomainSpecificLanguage, { resolveDsl } from "../blockly/dsl/dsl"
 import { parseRoleType } from "../blockly/dsl/servicesbase"
 import { splitFilter } from "../../../jacdac-ts/src/jdom/utils"
+import { BlockJSON, WorkspaceJSON } from "../../../jacdac-ts/src/dsl/workspacejson"
 
 export interface ExpressionWithErrors {
     expr: jsep.Expression

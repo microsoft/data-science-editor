@@ -8,7 +8,7 @@ import shadowDsl from "../blockly/dsl/shadowdsl"
 import fieldsDsl from "../blockly/dsl/fieldsdsl"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import BlockDiagnostics from "../blockly/BlockDiagnostics"
-import { visitWorkspace } from "../blockly/jsonvisitor"
+import { visitWorkspace } from "../../../jacdac-ts/src/dsl/workspacevisitor"
 
 const DS_EDITOR_ID = "ds"
 const DS_SOURCE_STORAGE_KEY = "data-science-blockly-xml"

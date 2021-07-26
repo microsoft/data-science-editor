@@ -14,9 +14,9 @@ import {
     ToolboxConfiguration,
     visitToolbox,
 } from "./toolbox"
-import { WorkspaceJSON } from "./jsongenerator"
 import BlockDomainSpecificLanguage from "./dsl/dsl"
 import { addDataPreviewField } from "./fields/DataPreviewField"
+import { WorkspaceJSON } from "../../../jacdac-ts/src/dsl/workspacejson"
 
 // overrides blockly emboss filter for svg elements
 Blockly.BlockSvg.prototype.setHighlighted = function (highlighted) {
@@ -117,12 +117,11 @@ export default function useToolbox(
 
         return <ToolboxConfiguration>{
             kind: "categoryToolbox",
-            contents: dslsCategories
-                .map(node =>
-                    node.kind === "category"
-                        ? patchCategoryJSONtoXML(node as CategoryDefinition)
-                        : node
-                ),
+            contents: dslsCategories.map(node =>
+                node.kind === "category"
+                    ? patchCategoryJSONtoXML(node as CategoryDefinition)
+                    : node
+            ),
         }
     }, [theme, dsls, source, (liveServices || []).map(srv => srv.id).join(",")])
     return toolboxConfiguration

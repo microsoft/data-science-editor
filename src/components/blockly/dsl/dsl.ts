@@ -3,7 +3,6 @@ import Blockly, { Block, Workspace, WorkspaceSvg } from "blockly"
 import { JDService } from "../../../../jacdac-ts/src/jdom/service"
 import { RoleEvent } from "../../../../jacdac-ts/src/vm/compile"
 import { VMError } from "../../../../jacdac-ts/src/vm/ir"
-import { BlockJSON, WorkspaceJSON } from "../jsongenerator"
 import {
     BlockDefinition,
     ContentDefinition,
@@ -11,6 +10,7 @@ import {
     ServiceBlockDefinition,
 } from "../toolbox"
 import { CmdWithErrors, ExpressionWithErrors } from "../../vm/VMgenerator"
+import { BlockJSON, WorkspaceJSON } from "../../../../jacdac-ts/src/dsl/workspacejson"
 
 export interface CreateBlocksOptions {
     theme: Theme

@@ -1,4 +1,4 @@
-import { WorkspaceJSON } from "./jsongenerator";
+import { WorkspaceJSON } from "../../../jacdac-ts/src/dsl/workspacejson";
 
 export default interface BlockFile {
     editor: string

@@ -68,9 +68,9 @@ import {
     CompileExpressionToVMOptions,
     CreateCategoryOptions,
 } from "./dsl"
-import { VariableJSON } from "../jsongenerator"
 import { Variables } from "blockly"
 import { paletteColorByIndex } from "./palette"
+import { VariableJSON } from "../../../../jacdac-ts/src/dsl/workspacejson"
 
 const SET_STATUS_LIGHT_BLOCK = "jacdac_set_status_light"
 const ROLE_BOUND_EVENT_BLOCK = "jacdac_role_bound_event"

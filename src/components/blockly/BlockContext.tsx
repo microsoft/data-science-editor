@@ -15,7 +15,7 @@ import useLocalStorage from "../hooks/useLocalStorage"
 import { BlockWarning, collectWarnings } from "./blockwarning"
 import { registerDataSolver } from "./dsl/datasolver"
 import BlockDomainSpecificLanguage from "./dsl/dsl"
-import { domToJSON, WorkspaceJSON } from "./jsongenerator"
+import { domToJSON } from "./jsongenerator"
 import {
     JSON_WARNINGS_CATEGORY,
     NEW_PROJET_XML,
@@ -35,6 +35,7 @@ import AppContext from "../AppContext"
 import { fileSystemHandleSupported } from "../hooks/useDirectoryHandle"
 import useFileStorage from "../hooks/useFileStorage"
 import BlockFile from "./blockfile"
+import { WorkspaceJSON } from "../../../jacdac-ts/src/dsl/workspacejson"
 
 export interface BlockProps {
     editorId: string
