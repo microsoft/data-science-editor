@@ -96,7 +96,8 @@ export function BlockProvider(props: {
     const roleManager = useRoleManager()
     const [workspace, setWorkspace] = useState<WorkspaceSvg>(undefined)
     const [workspaceXml, _setWorkspaceXml] = useState<string>(storedXml)
-    const [workspaceJSON, setWorkspaceJSON] = useState<WorkspaceJSON>(undefined)
+    const [workspaceJSON, _setWorkspaceJSON] =
+        useState<WorkspaceJSON>(undefined)
     const [warnings, _setWarnings] = useState<
         {
             category: string
@@ -106,13 +107,18 @@ export function BlockProvider(props: {
     const [dragging, setDragging] = useState(false)
     const [editorId, setEditorId] = useState("")
 
-    const setWorkspaceXml = async (xml: string) => {
-        setStoredXml(xml)
+    const setWorkspaceXml = (xml: string) => {
         _setWorkspaceXml(xml)
+        setStoredXml(xml)
+    }
+
+    const setWorkspaceJSON = async (json: WorkspaceJSON) => {
+        _setWorkspaceJSON(json)
         if (setWorkspaceFileContent) {
-            const file = {
+            const file: BlockFile = {
                 editor: editorId,
-                xml,
+                xml: workspaceXml,
+                json,
             }
             const fileContent = JSON.stringify(file)
             await setWorkspaceFileContent(fileContent)
