@@ -8,8 +8,7 @@ export default function useChange<TNode extends IEventSource, TValue>(
     query?: (n: TNode) => TValue,
     deps?: React.DependencyList
 ): TValue {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [version, setVersion] = useState(node?.changeId || 0)
+    const [, setVersion] = useState(node?.changeId || 0)
     const value = query ? query(node) : undefined
 
     useEffect(

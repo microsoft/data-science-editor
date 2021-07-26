@@ -36,8 +36,8 @@ export default function useBlockData<T extends object>(
     }, [services])
 
     // debounce with dragging
-    const { data: debounced, transformedData: debouncedTransformedData } =
-        useDragDebounce({ data, transformedData })
+    const debounced = useDragDebounce(data)
+    const debouncedTransformedData = useDragDebounce(transformedData)
 
     return {
         data: debounced,
