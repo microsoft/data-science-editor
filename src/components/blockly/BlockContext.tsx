@@ -34,7 +34,11 @@ import {
 import AppContext from "../AppContext"
 import { fileSystemHandleSupported } from "../hooks/useDirectoryHandle"
 import useFileStorage from "../hooks/useFileStorage"
-import { WorkspaceFile, WorkspaceJSON } from "../../../jacdac-ts/src/dsl/workspacejson"
+import {
+    WorkspaceFile,
+    WorkspaceJSON,
+} from "../../../jacdac-ts/src/dsl/workspacejson"
+import useEffectAsync from "../useEffectAsync"
 
 export interface BlockProps {
     editorId: string
@@ -96,8 +100,7 @@ export function BlockProvider(props: {
     const roleManager = useRoleManager()
     const [workspace, setWorkspace] = useState<WorkspaceSvg>(undefined)
     const [workspaceXml, _setWorkspaceXml] = useState<string>(storedXml)
-    const [workspaceJSON, _setWorkspaceJSON] =
-        useState<WorkspaceJSON>(undefined)
+    const [workspaceJSON, setWorkspaceJSON] = useState<WorkspaceJSON>(undefined)
     const [warnings, _setWarnings] = useState<
         {
             category: string
@@ -110,19 +113,6 @@ export function BlockProvider(props: {
     const setWorkspaceXml = (xml: string) => {
         _setWorkspaceXml(xml)
         setStoredXml(xml)
-    }
-
-    const setWorkspaceJSON = async (json: WorkspaceJSON) => {
-        _setWorkspaceJSON(json)
-        if (setWorkspaceFileContent) {
-            const file: WorkspaceFile = {
-                editor: editorId,
-                xml: workspaceXml,
-                json,
-            }
-            const fileContent = JSON.stringify(file)
-            await setWorkspaceFileContent(fileContent)
-        }
     }
 
     const setWarnings = (category: string, entries: BlockWarning[]) => {
@@ -248,14 +238,20 @@ export function BlockProvider(props: {
         if (!workspace || dragging) return
 
         const newWorkspaceJSON = domToJSON(workspace, dsls)
-        if (
-            JSON.stringify(newWorkspaceJSON) !== JSON.stringify(workspaceJSON)
-        ) {
-            setWorkspaceJSON(newWorkspaceJSON)
-            const newWarnings = collectWarnings(newWorkspaceJSON)
-            setWarnings(JSON_WARNINGS_CATEGORY, newWarnings)
-        }
+        setWorkspaceJSON(newWorkspaceJSON)
+        const newWarnings = collectWarnings(newWorkspaceJSON)
+        setWarnings(JSON_WARNINGS_CATEGORY, newWarnings)
     }, [dsls, workspace, dragging, workspaceXml])
+    useEffectAsync(async () => {
+        if (!workspaceFileHandle) return
+        const file: WorkspaceFile = {
+            editor: editorId,
+            xml: workspaceXml,
+            json: workspaceJSON,
+        }
+        const fileContent = JSON.stringify(file)
+        await setWorkspaceFileContent(fileContent)
+    }, [editorId, workspaceFileHandle, workspaceJSON])
     useEffect(() => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const ws = workspace as unknown as BlocklyWorkspaceWithServices
