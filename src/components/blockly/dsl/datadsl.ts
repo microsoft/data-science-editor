@@ -124,9 +124,9 @@ const dataDsl: BlockDomainSpecificLanguage = {
             dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             transformData: (b: BlockSvg, data: any[]) => {
-                const columns = [1, 2, 3].map(column =>
-                    b.getFieldValue(`column${column}`)
-                )
+                const columns = [1, 2, 3]
+                    .map(column => b.getFieldValue(`column${column}`))
+                    .filter(c => !!c)
                 return postTransformData(<DataDropRequest>{
                     type: "drop",
                     columns,
@@ -159,9 +159,9 @@ const dataDsl: BlockDomainSpecificLanguage = {
             dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             transformData: (b: BlockSvg, data: any[]) => {
-                const columns = [1, 2, 3].map(column =>
-                    b.getFieldValue(`column${column}`)
-                )
+                const columns = [1, 2, 3]
+                    .map(column => b.getFieldValue(`column${column}`))
+                    .filter(c => !!c)
                 return postTransformData(<DataSelectRequest>{
                     type: "select",
                     columns,
@@ -202,9 +202,9 @@ const dataDsl: BlockDomainSpecificLanguage = {
             dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             transformData: (b: BlockSvg, data: any[]) => {
-                const columns = [1, 2].map(column => {
-                    return b.getFieldValue(`column${column}`)
-                })
+                const columns = [1, 2]
+                    .map(column => b.getFieldValue(`column${column}`))
+                    .filter(c => !!c)
                 const logic = b.getFieldValue("logic")
                 return postTransformData(<DataFilterColumnsRequest>{
                     type: "filter_columns",

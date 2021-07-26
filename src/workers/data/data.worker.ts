@@ -123,12 +123,12 @@ const handlers: { [index: string]: (props: any) => object[] } = {
     },
     select: (props: DataSelectRequest) => {
         const { columns, data } = props
-        if (!columns) return data
+        if (!columns?.length) return data
         else return tidy(data, select(columns.map(column => `${column}`)))
     },
     drop: (props: DataDropRequest) => {
         const { columns, data } = props
-        if (!columns) return data
+        if (!columns?.length) return data
         else return tidy(data, select(columns.map(column => `-${column}`)))
     },
     filter_string: (props: DataFilterStringRequest) => {
