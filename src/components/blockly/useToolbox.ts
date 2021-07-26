@@ -16,6 +16,7 @@ import {
 } from "./toolbox"
 import { WorkspaceJSON } from "./jsongenerator"
 import BlockDomainSpecificLanguage from "./dsl/dsl"
+import { addDataPreviewField } from "./fields/DataPreviewField"
 
 // overrides blockly emboss filter for svg elements
 Blockly.BlockSvg.prototype.setHighlighted = function (highlighted) {
@@ -40,6 +41,7 @@ function loadBlocks(
     const blocks = arrayConcatMany(
         dsls.map(dsl =>
             dsl?.createBlocks?.({ theme }).map(b => {
+                addDataPreviewField(b)
                 b.dsl = dsl.id // ensure DSL is set
                 return b
             })

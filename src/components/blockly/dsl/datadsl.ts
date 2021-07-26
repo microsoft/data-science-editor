@@ -2,14 +2,12 @@
 import { Block, BlockSvg, Events, FieldVariable, Variables } from "blockly"
 import BuiltinDataSetField from "../fields/BuiltinDataSetField"
 import DataColumnChooserField from "../fields/DataColumnChooserField"
-import DataTableField from "../fields/DataTableField"
 import {
     BlockDefinition,
     BlockReference,
     ButtonDefinition,
     CategoryDefinition,
     DATA_SCIENCE_STATEMENT_TYPE,
-    DummyInputDefinition,
     identityTransformData,
     NumberInputDefinition,
     OptionsInputDefinition,
@@ -37,7 +35,7 @@ import {
 } from "../../../workers/data/dist/node_modules/data.worker"
 import { BlockWithServices } from "../WorkspaceContext"
 import FileSaveField from "../fields/FileSaveField"
-import { saveCSV, openCSV } from "./workers/csv.proxy"
+import { saveCSV } from "./workers/csv.proxy"
 import FileOpenField from "../fields/FileOpenField"
 
 const DATA_ARRANGE_BLOCK = "data_arrange"
@@ -55,7 +53,6 @@ const DATA_DATAVARIABLE_READ_BLOCK = "data_dataset_read"
 const DATA_DATAVARIABLE_WRITE_BLOCK = "data_dataset_write"
 const DATA_DATASET_BUILTIN_BLOCK = "data_dataset_builtin"
 const DATA_TABLE_TYPE = "DataTable"
-const DATA_SHOW_TABLE_BLOCK = "data_show_table"
 const DATA_RECORD_WINDOW_BLOCK = "data_record_window"
 const DATA_BIN_BLOCK = "data_bin"
 const DATA_CORRELATION_BLOCK = "data_correlation"
@@ -67,26 +64,6 @@ const colour = "#777"
 const dataDsl: BlockDomainSpecificLanguage = {
     id: "dataScience",
     createBlocks: () => [
-        {
-            kind: "block",
-            type: DATA_SHOW_TABLE_BLOCK,
-            message0: "show table %1 %2",
-            args0: [
-                <DummyInputDefinition>{
-                    type: "input_dummy",
-                },
-                {
-                    type: DataTableField.KEY,
-                    name: "table",
-                },
-            ],
-            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            colour,
-            template: "meta",
-            inputsInline: false,
-            transformData: identityTransformData,
-        },
         {
             kind: "block",
             type: DATA_ARRANGE_BLOCK,
@@ -108,6 +85,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             ],
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             transformData: (b: BlockSvg, data: any[]) => {
                 const column = b.getFieldValue("column")
@@ -143,6 +121,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             ],
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             transformData: (b: BlockSvg, data: any[]) => {
                 const columns = [1, 2, 3].map(column =>
@@ -177,6 +156,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             ],
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             transformData: (b: BlockSvg, data: any[]) => {
                 const columns = [1, 2, 3].map(column =>
@@ -219,6 +199,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             ],
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             transformData: (b: BlockSvg, data: any[]) => {
                 const columns = [1, 2].map(column => {
@@ -263,6 +244,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             ],
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             transformData: (b: BlockSvg, data: any[]) => {
                 const column = b.getFieldValue("column")
@@ -315,6 +297,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             ],
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             transformData: (b: BlockSvg, data: any[]) => {
                 const newcolumn = b.getFieldValue("newcolumn")
@@ -369,6 +352,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             ],
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             transformData: (b: BlockSvg, data: any[]) => {
                 const newcolumn = b.getFieldValue("newcolumn")
@@ -409,6 +393,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             ],
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             transformData: (b: BlockSvg, data: any[]) => {
                 const column = b.getFieldValue("column")
@@ -449,6 +434,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             ],
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             transformData: (b: BlockSvg, data: any[]) => {
                 const column = b.getFieldValue("column")
@@ -477,6 +463,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             ],
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             transformData: (b: BlockSvg, data: any[]) => {
                 const column = b.getFieldValue("column")
@@ -502,6 +489,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             colour,
             template: "meta",
+            dataPreviewField: true,
             transformData: identityTransformData,
         },
         <BlockDefinition>{
@@ -521,6 +509,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             colour,
             template: "meta",
+            dataPreviewField: true,
             transformData: (block: BlockSvg) => {
                 const services = (block as BlockWithServices).jacdacServices
                 const data = services?.data
@@ -545,7 +534,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             colour,
             template: "meta",
-            alwaysTransformData: true,
+            dataPreviewField: true,
             transformData: (block: BlockSvg, data: object[]) => {
                 // grab the variable from the block
                 const variable = block.getFieldValue("data")
@@ -579,6 +568,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             colour,
             template: "meta",
+            dataPreviewField: true,
             transformData: async (
                 block: BlockSvg,
                 data: { time: number }[],
@@ -608,6 +598,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             colour,
             template: "meta",
+            dataPreviewField: true,
             transformData: async (block: BlockSvg, data: object[]) => {
                 const column = block.getFieldValue("column")
                 return postTransformData(<DataBinRequest>{
@@ -636,6 +627,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             colour,
             template: "meta",
+            dataPreviewField: true,
             transformData: async (block: BlockSvg, data: object[]) => {
                 const column1 = block.getFieldValue("column1")
                 const column2 = block.getFieldValue("column2")
@@ -666,6 +658,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             colour,
             template: "meta",
+            dataPreviewField: true,
             transformData: async (block: BlockSvg, data: object[]) => {
                 const column1 = block.getFieldValue("column1")
                 const column2 = block.getFieldValue("column2")
@@ -691,6 +684,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             colour,
             template: "meta",
             inputsInline: false,
+            dataPreviewField: true,
             transformData: identityTransformData,
         },
         {
@@ -708,7 +702,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             colour,
             template: "meta",
             inputsInline: false,
-            alwaysTransformData: true,
+            dataPreviewField: true,
             transformData: async (block, data) => {
                 const file = block.getField("file") as FileSaveField
                 if (file?.fileHandle && data)
@@ -745,7 +739,6 @@ const dataDsl: BlockDomainSpecificLanguage = {
             name: "Operators",
             colour,
             contents: [
-                <BlockReference>{ kind: "block", type: DATA_SHOW_TABLE_BLOCK },
                 <BlockReference>{
                     kind: "block",
                     type: DATA_ARRANGE_BLOCK,

@@ -27,6 +27,12 @@ const useStyles = makeStyles((theme: Theme) =>
             "& .blocklyTreeIconOpen, & .blocklyTreeIconClosed": {
                 opacity: 0.5,
             },
+            "& .blocklyFieldButton.blocklyEditableText": {
+                cursor: "pointer",
+            },
+            "& .blocklyFieldButton.blocklyEditableText > .blocklyFieldRect": {
+                fill: "transparent !important",
+            },
         },
     })
 )
