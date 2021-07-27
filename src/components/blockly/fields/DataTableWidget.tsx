@@ -7,7 +7,7 @@ import { PointerBoundary } from "./PointerBoundary"
 import CopyButton from "../../ui/CopyButton"
 import { unparseCSV } from "../dsl/workers/csv.proxy"
 import { roundWithPrecision, toMap } from "../../../../jacdac-ts/src/jdom/utils"
-import { tidyHeaders } from "./nivo"
+import { tidyHeaders } from "./tidy"
 
 interface StylesProps {
     tableHeight: number

@@ -38,7 +38,7 @@ import FileSaveField from "../fields/FileSaveField"
 import { saveCSV } from "./workers/csv.proxy"
 import FileOpenField from "../fields/FileOpenField"
 import palette from "./palette"
-import { tidyHeaders } from "../fields/nivo"
+import { tidyHeaders } from "../fields/tidy"
 
 const DATA_ARRANGE_BLOCK = "data_arrange"
 const DATA_SELECT_BLOCK = "data_select"

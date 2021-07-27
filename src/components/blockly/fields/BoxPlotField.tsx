@@ -7,19 +7,21 @@ import type { VisualizationSpec } from "react-vega"
 import VegaLiteWidget from "./VegaLiteWidget"
 import { tidyResolveHeader } from "./tidy"
 
-function HistogramWidget() {
+function BoxPlotWidget() {
     const { sourceBlock } = useContext(WorkspaceContext)
     const { data } = useBlockData(sourceBlock)
     const index = tidyResolveHeader(data, sourceBlock?.getFieldValue("index"))
+    const value = tidyResolveHeader(data, sourceBlock?.getFieldValue("value"))
 
     if (!index) return null
 
     const spec: VisualizationSpec = {
-        description: `Histogram of ${index}`,
-        mark: { type: "bar", tooltip: false },
+        description: `Box plot of ${index}`,
+        mark: "boxplot",
         encoding: {
-            x: { bin: true, field: index },
-            y: { aggregate: "count" },
+            x: { field: index, type: "nominal" },
+            color: { field: index, type: "nominal", legend: null },
+            y: { field: value, type: "quantitative", scale: { zero: false } },
         },
         data: { name: "values" },
     }
@@ -27,12 +29,12 @@ function HistogramWidget() {
     return <VegaLiteWidget spec={spec} />
 }
 
-export default class HistogramField extends ReactInlineField {
-    static KEY = "jacdac_field_histogram"
+export default class BoxPlotField extends ReactInlineField {
+    static KEY = "jacdac_field_box_plot"
     static EDITABLE = false
 
     static fromJson(options: ReactFieldJSON) {
-        return new HistogramField(options)
+        return new BoxPlotField(options)
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -41,6 +43,6 @@ export default class HistogramField extends ReactInlineField {
     }
 
     renderInlineField() {
-        return <HistogramWidget />
+        return <BoxPlotWidget />
     }
 }
