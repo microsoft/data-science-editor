@@ -35,6 +35,7 @@ import Paper from "@material-ui/core/Paper"
 import GridHeader from "../../components/ui/GridHeader"
 import Dashboard from "../../components/dashboard/Dashboard"
 import ServiceManagerContext from "../../components/ServiceManagerContext"
+import useChanges from "../../jacdac/useChanges"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -197,6 +198,8 @@ export default function Commissioner() {
             return false
         return true
     })
+    // trigger render whenever a device has a change event
+    useChanges(devices) 
     const [dataSet, setDataSet] = useState<DeviceDescriptor[]>()
     const tableHeaders = [
         "Device identifier",
