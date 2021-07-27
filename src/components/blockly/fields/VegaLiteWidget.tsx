@@ -8,7 +8,7 @@ import { CHART_HEIGHT, CHART_WIDTH } from "../toolbox"
 import type { VisualizationSpec } from "react-vega"
 const VegaLite = lazy(() => import("./VegaLite"))
 
-export default function VegaLiteWidget(props: { spec: VisualizationSpec }) {
+export default function VegaLiteWidget(props: { spec: VisualizationSpec  }) {
     const { spec } = props
     const { sourceBlock } = useContext(WorkspaceContext)
     const { data } = useBlockData(sourceBlock)
@@ -29,6 +29,7 @@ export default function VegaLiteWidget(props: { spec: VisualizationSpec }) {
                             height={CHART_HEIGHT}
                             spec={spec}
                             data={vegaData}
+                            renderer="svg"
                         />
                     </Suspense>
                 </PointerBoundary>
