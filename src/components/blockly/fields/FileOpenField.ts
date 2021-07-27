@@ -39,6 +39,7 @@ interface FileOpenFieldValue {
     source: string
 }
 
+const MAX_SIZE = 100_000 // 100kb
 export default class FileOpenField extends Field implements FieldWithServices {
     static KEY = "jacdac_field_file_open"
     SERIALIZABLE = true
@@ -54,7 +55,9 @@ export default class FileOpenField extends Field implements FieldWithServices {
     }
 
     toXml(fieldElement: Element) {
-        fieldElement.textContent = JSON.stringify(this.value_)
+        const text = JSON.stringify(this.value_)
+        if (text.length < MAX_SIZE) fieldElement.textContent = text
+        else fieldElement.textContent = ""
         return fieldElement
     }
 
