@@ -1,7 +1,7 @@
 import React, { ReactNode, useContext } from "react"
 import WorkspaceContext from "../WorkspaceContext"
 import useBlockData from "../useBlockData"
-import { Grid, makeStyles } from "@material-ui/core"
+import { Grid, makeStyles, Typography } from "@material-ui/core"
 import { TABLE_HEIGHT, TABLE_WIDTH } from "../toolbox"
 import { PointerBoundary } from "./PointerBoundary"
 import CopyButton from "../../ui/CopyButton"
@@ -83,13 +83,20 @@ export function DataTableWidget(props: {
 
     return (
         <PointerBoundary className={classes.root}>
-            <Grid container spacing={1}>
+            <Grid container direction="column" spacing={1}>
                 <Grid item xs={12}>
-                    <CopyButton
-                        size="small"
-                        className={classes.button}
-                        onCopy={handleCopy}
-                    />
+                    <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
+                        <Grid item>
+                            <CopyButton
+                                size="small"
+                                className={classes.button}
+                                onCopy={handleCopy}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Typography variant="caption">{table.length} rows x {columns.length} columns</Typography>
+                        </Grid>
+                    </Grid>
                 </Grid>
                 <Grid item xs={12}>
                     <table className={classes.table}>
