@@ -294,7 +294,7 @@ export default function Commissioner() {
                 firmwareIdentifier: await d.resolveFirmwareIdentifier(3),
                 services,
                 servicesSeen: [],
-                pass: false,
+                pass: true,
                 comment: "",
             })
             // launch tests
