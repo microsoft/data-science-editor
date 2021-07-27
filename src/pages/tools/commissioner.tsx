@@ -16,7 +16,6 @@ import {
     SRV_ROLE_MANAGER,
 } from "../../../jacdac-ts/src/jdom/constants"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
-import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import { Packet } from "../../../jacdac-ts/src/jdom/packet"
 // tslint:disable-next-line: no-submodule-imports
 import Table from "@material-ui/core/Table"
@@ -35,45 +34,8 @@ import Paper from "@material-ui/core/Paper"
 import GridHeader from "../../components/ui/GridHeader"
 import Dashboard from "../../components/dashboard/Dashboard"
 import ServiceManagerContext from "../../components/ServiceManagerContext"
-import useChanges from "../../jacdac/useChanges"
-
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        table: {
-            minWidth: "10rem",
-        },
-        root: {
-            marginBottom: theme.spacing(1),
-        },
-        grow: {
-            flexGrow: 1,
-        },
-        field: {
-            marginRight: theme.spacing(1),
-            marginBottom: theme.spacing(1.5),
-        },
-        segment: {
-            marginTop: theme.spacing(2),
-            marginBottom: theme.spacing(2),
-        },
-        row: {
-            marginBottom: theme.spacing(0.5),
-        },
-        buttons: {
-            marginRight: theme.spacing(1),
-            marginBottom: theme.spacing(2),
-        },
-        trend: {
-            width: theme.spacing(10),
-        },
-        vmiddle: {
-            verticalAlign: "middle",
-        },
-        check: {
-            color: "green",
-        },
-    })
-)
+import useEffectAsync from "../../components/useEffectAsync"
+import { dependencyId } from "../../../jacdac-ts/src/jdom/eventsource"
 
 interface ServiceDescriptor {
     name: string
@@ -112,44 +74,32 @@ function dateString() {
     return date.toDateString().replace(/ /g, "-")
 }
 
-export function DataSetTable(props: {
+function DataSetTable(props: {
     dataSet: DeviceDescriptorTable
-    maxRows?: number
-    minRows?: number
     className?: string
 }) {
-    const { dataSet, maxRows, minRows, className } = props
-    const { headers } = dataSet
-    const classes = useStyles()
-
-    const data = dataSet.descriptors?.slice(
-        maxRows !== undefined ? -maxRows : 0
-    )
-    while (minRows !== undefined && data.length < minRows) data.push(undefined)
+    const { dataSet } = props
+    const { descriptors, headers } = dataSet
 
     return (
-        <TableContainer className={className} component={Paper}>
-            <Table
-                className={classes.table}
-                aria-label="simple table"
-                size="small"
-            >
+        <TableContainer component={Paper}>
+            <Table aria-label="device table" size="small">
                 <TableHead>
                     <TableRow>
                         {headers.map(header => (
-                            <TableCell align="right" key={`header` + header}>
+                            <TableCell align="right" key={header}>
                                 {header}
                             </TableCell>
                         ))}
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {data?.map((descriptor, index) => (
-                        <TableRow key={`row` + index}>
-                            <TableCell key={"cell0"} align="center">
+                    {descriptors?.map(descriptor => (
+                        <TableRow key={descriptor.deviceIdentifier}>
+                            <TableCell align="center">
                                 {descriptor.deviceIdentifier}
                             </TableCell>
-                            <TableCell key={"cell1"} align="center">
+                            <TableCell align="center">
                                 {descriptor.firmwareIdentifier &&
                                     descriptor.firmwareIdentifier.toString(16)}
                                 {descriptor.services.filter(service => {
@@ -158,22 +108,22 @@ export function DataSetTable(props: {
                                     )
                                 })?.length && "BRAIN"}
                             </TableCell>
-                            <TableCell key={"cell2"} align="center">
+                            <TableCell align="center">
                                 {descriptor.services.map(
                                     service => service.name + " "
                                 )}
                             </TableCell>
-                            <TableCell key={"cell3"} align="center">
+                            <TableCell align="center">
                                 {descriptor.servicesSeen.map(
                                     service => service.name + " "
                                 )}
                             </TableCell>
-                            <TableCell key={"cell4"} align="center">
+                            <TableCell align="center">
                                 {serviceArrayMatched(descriptor) && (
-                                    <div className={classes.check}>
-                                        <CheckCircle />
-                                        {"PASS"}
-                                    </div>
+                                    <span style={{ color: "green" }}>
+                                        <CheckCircle fontSize="small" />
+                                        PASS
+                                    </span>
                                 )}
                             </TableCell>
                         </TableRow>
@@ -188,18 +138,10 @@ export default function Commissioner() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const [filterBrains, setFilterBrains] = useState<boolean>(false) // todo allow remove brains
     const devices = useDevices({
+        announced: true,
         ignoreSelf: true,
         ignoreSimulators: true,
-    }).filter((d: JDDevice) => {
-        if (
-            filterBrains &&
-            d.services({ serviceClass: SRV_ROLE_MANAGER })?.length
-        )
-            return false
-        return true
-    })
-    // trigger render whenever a device has a change event
-    useChanges(devices) 
+    }).filter(d => !filterBrains || !d.hasService(SRV_ROLE_MANAGER))
     const [dataSet, setDataSet] = useState<DeviceDescriptor[]>()
     const tableHeaders = [
         "Device identifier",
@@ -208,24 +150,17 @@ export default function Commissioner() {
         "Services seen",
         "Functional test pass",
     ]
-    const [table, setTable] = useState<DeviceDescriptorTable>({
-        descriptors: [],
-        headers: tableHeaders,
-    })
-
     const { fileStorage } = useContext(ServiceManagerContext)
-    const classes = useStyles()
 
-    useEffect(() => {
-        const usubArray = []
-        const newDataSet = dataSet || []
+    useEffectAsync(async () => {
+        const newDataSet = dataSet?.slice(0) || []
 
-        devices.forEach(d => {
+        for (const d of devices) {
             if (
                 newDataSet.filter(entry => entry.deviceIdentifier == d.deviceId)
                     ?.length
             )
-                return
+                continue
 
             const services = []
             d.services()
@@ -241,57 +176,52 @@ export default function Commissioner() {
                 })
             newDataSet.push({
                 deviceIdentifier: d.deviceId,
-                firmwareIdentifier: d.firmwareIdentifier,
+                firmwareIdentifier: await d.resolveFirmwareIdentifier(3),
                 services,
                 servicesSeen: [],
             })
-        })
-
+        }
         setDataSet(newDataSet)
+    }, [dependencyId(devices)])
 
-        return () => {
-            usubArray.forEach(usub => usub())
-        }
-    }, [devices])
+    const table = {
+        headers: tableHeaders,
+        descriptors: dataSet,
+    }
 
-    useEffect(() => {
-        console.log("UPDATE")
-        const newObj = {
-            headers: tableHeaders,
-            descriptors: dataSet,
-        }
-        setTable(newObj)
-    }, [dataSet])
+    useEffect(
+        () =>
+            bus.subscribe(PACKET_RECEIVE, (packet: Packet) => {
+                const newDataSet = dataSet?.slice(0) || []
+                const contains = newDataSet
+                    .find(
+                        descriptor =>
+                            descriptor.deviceIdentifier ==
+                            packet.deviceIdentifier
+                    )
+                    .servicesSeen.filter(
+                        service =>
+                            service.serviceClass == packet.serviceClass &&
+                            service.serviceIndex == packet.serviceIndex
+                    )
 
-    useEffect(() => {
-        return bus.subscribe(PACKET_RECEIVE, (packet: Packet) => {
-            const newDataSet = dataSet.slice(0)
-            const contains = newDataSet
-                .find(
-                    descriptor =>
-                        descriptor.deviceIdentifier == packet.deviceIdentifier
-                )
-                .servicesSeen.filter(
-                    service =>
-                        service.serviceClass == packet.serviceClass &&
-                        service.serviceIndex == packet.serviceIndex
-                )
+                if (contains.length) return
 
-            if (contains.length) return
-
-            newDataSet
-                .find(
-                    descriptor =>
-                        descriptor.deviceIdentifier == packet.deviceIdentifier
-                )
-                ?.servicesSeen.push({
-                    name: packet.friendlyServiceName,
-                    serviceClass: packet.serviceClass,
-                    serviceIndex: packet.serviceIndex,
-                })
-            setDataSet(newDataSet)
-        })
-    }, [bus, dataSet])
+                newDataSet
+                    .find(
+                        descriptor =>
+                            descriptor.deviceIdentifier ==
+                            packet.deviceIdentifier
+                    )
+                    ?.servicesSeen.push({
+                        name: packet.friendlyServiceName,
+                        serviceClass: packet.serviceClass,
+                        serviceIndex: packet.serviceIndex,
+                    })
+                setDataSet(newDataSet)
+            }),
+        [bus, dataSet]
+    )
 
     const handleOnClearClick = () => {
         setDataSet(undefined)
@@ -373,17 +303,11 @@ export default function Commissioner() {
                         variant="contained"
                         onClick={handleFilterBrains}
                     >
-                        {filterBrains
-                            ? "Stop filtering brains"
-                            : "Start filtering brains"}
+                        {filterBrains ? "Show brains" : "Hide brains"}
                     </Button>
                 </Grid>
                 <Grid item xs={12}>
-                    <DataSetTable
-                        key="datasettable"
-                        className={classes.segment}
-                        dataSet={table}
-                    />
+                    <DataSetTable dataSet={table} />
                 </Grid>
             </Grid>
         </>
