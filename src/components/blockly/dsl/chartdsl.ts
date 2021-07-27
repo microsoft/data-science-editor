@@ -10,7 +10,6 @@ import BlockDomainSpecificLanguage from "./dsl"
 import DataColumnChooserField from "../fields/DataColumnChooserField"
 import LinePlotField from "../fields/LinePlotField"
 import BarChartField from "../fields/BarField"
-import PiePlotField from "../fields/PieField"
 import HistogramField from "../fields/HistogramField"
 import DataTableField from "../fields/DataTableField"
 import { paletteColorByIndex } from "./palette"
@@ -19,7 +18,6 @@ import BoxPlotField from "../fields/BoxPlotField"
 
 const SCATTERPLOT_BLOCK = "chart_scatterplot"
 const LINEPLOT_BLOCK = "chart_lineplot"
-const PIEPLOT_BLOCK = "chart_pieplot"
 const BARCHART_BLOCK = "chart_bar"
 const HISTOGRAM_BLOCK = "chart_histogram"
 const BOX_PLOT_BLOCK = "chart_box_plot"
@@ -91,7 +89,6 @@ const chartDsl: BlockDomainSpecificLanguage = {
                 {
                     type: DataColumnChooserField.KEY,
                     name: "index",
-                    dataType: "number",
                 },
                 {
                     type: DataColumnChooserField.KEY,
@@ -141,40 +138,6 @@ const chartDsl: BlockDomainSpecificLanguage = {
                 },
                 {
                     type: LinePlotField.KEY,
-                    name: "plot",
-                },
-            ],
-            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            colour,
-            template: "meta",
-            inputsInline: false,
-            transformData: identityTransformData,
-        },
-        {
-            kind: "block",
-            type: PIEPLOT_BLOCK,
-            message0: "pie name %1 value %2 %3 %4 %5",
-            args0: [
-                {
-                    type: DataColumnChooserField.KEY,
-                    name: "id",
-                    dataType: "string",
-                },
-                {
-                    type: DataColumnChooserField.KEY,
-                    name: "value",
-                    dataType: "number",
-                },
-                {
-                    type: DataPreviewField.KEY,
-                    name: "preview",
-                },
-                <DummyInputDefinition>{
-                    type: "input_dummy",
-                },
-                {
-                    type: PiePlotField.KEY,
                     name: "plot",
                 },
             ],
@@ -251,7 +214,6 @@ const chartDsl: BlockDomainSpecificLanguage = {
                 <BlockReference>{ kind: "block", type: BOX_PLOT_BLOCK },
                 <BlockReference>{ kind: "block", type: BARCHART_BLOCK },
                 <BlockReference>{ kind: "block", type: LINEPLOT_BLOCK },
-                <BlockReference>{ kind: "block", type: PIEPLOT_BLOCK },
                 <BlockReference>{ kind: "block", type: CHART_SHOW_TABLE_BLOCK },
             ],
             colour,

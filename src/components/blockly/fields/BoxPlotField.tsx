@@ -20,7 +20,6 @@ function BoxPlotWidget() {
         mark: "boxplot",
         encoding: {
             x: { field: index, type: "nominal" },
-            color: { field: index, type: "nominal", legend: null },
             y: { field: value, type: "quantitative", scale: { zero: false } },
         },
         data: { name: "values" },
