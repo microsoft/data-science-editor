@@ -1,4 +1,5 @@
 import { CHANGE } from "../../../../jacdac-ts/src/jdom/constants"
+import { roundWithPrecision } from "../../../../jacdac-ts/src/jdom/utils"
 import { resolveBlockDefinition } from "../toolbox"
 import { BlockWithServices } from "../WorkspaceContext"
 
@@ -11,17 +12,27 @@ export function registerDataSolver(block: BlockWithServices) {
     const applyTransform = async () => {
         if (!block.isEnabled() || block.isInFlyout) return
 
-        console.debug(`data transform [${block.id}]#${services.changeId}`)
         // transfer data
         const next = (block.nextConnection?.targetBlock() ||
             block.childBlocks_?.[0]) as BlockWithServices
         const nextServices = next?.jacdacServices
         try {
+            const start = performance.now()
+            // operation
             const newData = await transformData(
                 block,
                 services.data,
                 nextServices?.data
             )
+            const end = performance.now()
+            console.debug(
+                `data ${block.type}: ${roundWithPrecision(
+                    (end - start) / 1000,
+                    3
+                )}s`
+            )
+
+            // propagte
             services.transformedData = newData
             if (nextServices) nextServices.data = newData
         } catch (e) {

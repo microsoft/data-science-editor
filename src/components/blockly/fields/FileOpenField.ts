@@ -118,7 +118,10 @@ export default class FileOpenField extends Field implements FieldWithServices {
             multiple: false,
         })
         if (!file) return
+
+        console.debug(`file: loading ${file.name}`)
         const source = await file.text()
+        console.debug(`file: loaded ${(source?.length || 0) / 1024}kb`)
         this.setValue(<FileOpenFieldValue>{
             name: file.name,
             source,

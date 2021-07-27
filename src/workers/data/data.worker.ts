@@ -14,6 +14,11 @@ import {
     mutate,
     count,
     SummarizeSpec,
+    sliceHead,
+    sliceTail,
+    sliceMin,
+    sliceMax,
+    rename,
 } from "@tidyjs/tidy"
 import { bin } from "d3-array"
 import { sampleCorrelation, linearRegression } from "simple-statistics"
@@ -114,6 +119,16 @@ export interface DataLinearRegressionRequest extends DataRequest {
     type: "linear_regression"
     column1: string
     column2: string
+}
+
+export interface DataTidyRequest extends DataRequest {
+    type: "tidy"
+    renaming: { [name: string]: string }
+    sliceHead?: number
+    sliceTail?: number
+    sliceMax?: number
+    sliceMin?: number
+    sliceColumn?: string
 }
 
 const summarizers = {
@@ -371,6 +386,30 @@ const handlers: { [index: string]: (props: any) => object[] } = {
         return [
             { slope: linregmb.m.toFixed(3), intercept: linregmb.b.toFixed(3) },
         ]
+    },
+    tidy: (props: DataTidyRequest) => {
+        const { data, renaming } = props
+        const labels = Object.keys(renaming)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // todo handle time
+        let index = 0
+        const tidied: object[] = data
+            ? (tidy(
+                  data,
+                  props.sliceHead ? sliceHead(props.sliceHead) : undefined,
+                  props.sliceTail ? sliceTail(props.sliceTail) : undefined,
+                  props.sliceMin
+                      ? sliceMin(props.sliceMin, props.sliceColumn)
+                      : undefined,
+                  props.sliceMax
+                      ? sliceMax(props.sliceMax, props.sliceColumn)
+                      : undefined,
+                  mutate({ index: () => index++ }),
+                  select(labels),
+                  rename(renaming)
+              ) as object[])
+            : []
+        return tidied
     },
 }
 
