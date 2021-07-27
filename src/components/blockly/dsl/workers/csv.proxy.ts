@@ -5,12 +5,15 @@ import {
     CsvSaveRequest,
     CsvParseRequest,
     CsvFile,
-    CsvResponse,
+    CsvFileResponse,
+    CsvUnparseRequest,
+    CsvUnparseResponse,
+    CsvMessage,
 } from "../../../../workers/csv/dist/node_modules/csv.worker"
 
 export async function downloadCSV(url: string): Promise<CsvFile> {
     const worker = workerProxy("csv")
-    const res = await worker.postMessage<CsvDownloadRequest, CsvResponse>({
+    const res = await worker.postMessage<CsvDownloadRequest, CsvFileResponse>({
         worker: "csv",
         type: "download",
         url,
@@ -23,7 +26,7 @@ export async function saveCSV(
     data: object[]
 ): Promise<void> {
     const worker = workerProxy("csv")
-    await worker.postMessage<CsvSaveRequest, CsvResponse>({
+    await worker.postMessage<CsvSaveRequest, CsvMessage>({
         worker: "csv",
         type: "save",
         fileHandle,
@@ -31,9 +34,22 @@ export async function saveCSV(
     })
 }
 
+export async function unparseCSV(data: object[]): Promise<string> {
+    const worker = workerProxy("csv")
+    const resp = await worker.postMessage<
+        CsvUnparseRequest,
+        CsvUnparseResponse
+    >({
+        worker: "csv",
+        type: "unparse",
+        data,
+    })
+    return resp?.text
+}
+
 export async function parseCSV(source: string): Promise<CsvFile> {
     const worker = workerProxy("csv")
-    const resp = await worker.postMessage<CsvParseRequest, CsvResponse>({
+    const resp = await worker.postMessage<CsvParseRequest, CsvFileResponse>({
         worker: "csv",
         type: "parse",
         source,

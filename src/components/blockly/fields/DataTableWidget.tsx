@@ -1,9 +1,11 @@
 import React, { ReactNode, useContext } from "react"
 import WorkspaceContext from "../WorkspaceContext"
 import useBlockData from "../useBlockData"
-import { makeStyles } from "@material-ui/core"
+import { Grid, makeStyles } from "@material-ui/core"
 import { TABLE_HEIGHT, TABLE_WIDTH } from "../toolbox"
 import { PointerBoundary } from "./PointerBoundary"
+import CopyButton from "../../ui/CopyButton"
+import { unparseCSV } from "../dsl/workers/csv.proxy"
 
 interface StylesProps {
     tableHeight: number
@@ -17,7 +19,11 @@ const useStyles = makeStyles(() => ({
         color: "#000",
         borderRadius: "0.25rem",
     },
+    button: {
+        color: "grey",
+    },
     root: (props: StylesProps) => ({
+        marginTop: "0.25rem",
         paddingLeft: "0.5rem",
         paddingRight: "0.5rem",
         background: "#fff",
@@ -58,7 +64,7 @@ export function DataTableWidget(props: {
     const { data, transformedData } = useBlockData<{ id?: string } & unknown>(
         sourceBlock
     )
-    const table = transformed ? transformedData : data 
+    const table = transformed ? transformedData : data
     const classes = useStyles({ tableHeight })
 
     if (!table?.length)
@@ -70,26 +76,42 @@ export function DataTableWidget(props: {
     const renderCell = (v: any) =>
         typeof v === "boolean" ? (v ? "true" : "false") : v + ""
 
+    const handleCopy = async () => {
+        const text = unparseCSV(table)
+        return text
+    }
+
     return (
         <PointerBoundary className={classes.root}>
-            <table className={classes.table}>
-                <thead>
-                    <tr>
-                        {columns.map(c => (
-                            <th key={c}>{c}</th>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>
-                    {table.map((r, i) => (
-                        <tr key={r.id || i}>
-                            {columns.map(c => (
-                                <td key={c}>{renderCell(r[c])}</td>
+            <Grid container spacing={1}>
+                <Grid item xs={12}>
+                    <CopyButton
+                        size="small"
+                        className={classes.button}
+                        onCopy={handleCopy}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <table className={classes.table}>
+                        <thead>
+                            <tr>
+                                {columns.map(c => (
+                                    <th key={c}>{c}</th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {table.map((r, i) => (
+                                <tr key={r.id || i}>
+                                    {columns.map(c => (
+                                        <td key={c}>{renderCell(r[c])}</td>
+                                    ))}
+                                </tr>
                             ))}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+                        </tbody>
+                    </table>
+                </Grid>
+            </Grid>
         </PointerBoundary>
     )
 }
