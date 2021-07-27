@@ -179,7 +179,9 @@ export const CHART_WIDTH = 388
 export const CHART_HEIGHT = 240
 export const TABLE_WIDTH = CHART_WIDTH
 export const TABLE_HEIGHT = 480
+export const ANIMATE_MAX_ITEMS = 128
 export const PIE_MAX_ITEMS = 12
+export const SCATTER_MAX_ITEMS = 1 << 13
 
 export const VM_WARNINGS_CATEGORY = "vm"
 export const JSON_WARNINGS_CATEGORY = "json"

@@ -8,7 +8,12 @@ import { PointerBoundary } from "./PointerBoundary"
 import Suspense from "../../ui/Suspense"
 import { NoSsr } from "@material-ui/core"
 import { tidyToNivo } from "./nivo"
-import { CHART_HEIGHT, CHART_WIDTH } from "../toolbox"
+import {
+    ANIMATE_MAX_ITEMS,
+    CHART_HEIGHT,
+    CHART_WIDTH,
+    SCATTER_MAX_ITEMS,
+} from "../toolbox"
 const ScatterPlot = lazy(() => import("./ScatterPlot"))
 
 function ScatterChartWidget() {
@@ -18,7 +23,9 @@ function ScatterChartWidget() {
     // need to map data to nivo
     const x = sourceBlock?.getFieldValue("x")
     const y = sourceBlock?.getFieldValue("y")
-    const { series, labels } = tidyToNivo(data, [x, y], ["x", "y"])
+    const { series, labels } = tidyToNivo(data, [x, y], ["x", "y"], {
+        sliceSample: SCATTER_MAX_ITEMS,
+    })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { chartProps } = useBlockChartProps<any>(sourceBlock, {
         colors: { scheme: "category10" },
@@ -47,7 +54,8 @@ function ScatterChartWidget() {
         },
     })
     if (chartProps) {
-        chartProps.animate = !dragging
+        chartProps.animate =
+            !dragging && series?.[0]?.data?.length < ANIMATE_MAX_ITEMS
         chartProps.data = series
     }
 
