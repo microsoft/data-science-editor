@@ -90,7 +90,6 @@ export default function ApiKeyAccordion(props: {
                 {instructions}
                 <TextField
                     id={apiKeyId}
-                    autoFocus
                     label="API key"
                     fullWidth
                     value={key}

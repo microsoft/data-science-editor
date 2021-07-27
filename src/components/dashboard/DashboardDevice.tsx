@@ -54,28 +54,29 @@ export default function DashboardDevice(
         showAvatar,
         showHeader,
     } = props
-    const name = useDeviceName(device)
-    const services = useChange(device, () =>
-        device
-            .services({ specification: true })
-            .filter(
-                service => ignoredServices.indexOf(service.serviceClass) < 0
-            )
-    )
-    const specification = useDeviceSpecification(device)
+    const { enqueueSnackbar } = useContext(AppContext)
     const { xs: mobile } = useMediaQueries()
+
+    const name = useDeviceName(device)
+    const specification = useDeviceSpecification(device)
+    const services = useChange(device, _ =>
+        _?.services({ specification: true }).filter(
+            service => ignoredServices.indexOf(service.serviceClass) < 0
+        )
+    )
+
+    // refresh when visible
     const serviceGridRef = useRef<HTMLDivElement>()
     const intersection = useIntersectionObserver(serviceGridRef)
     const visible = !!intersection?.isIntersecting
-    const { enqueueSnackbar } = useContext(AppContext)
 
-    useEffect(() =>
-        device?.subscribe(RESTART, () => {
-            console.debug(`${device.shortId} restarted...`)
-            enqueueSnackbar(`${device.shortId} restarted...`, {
-                variant: "warning",
-            })
-        })
+    // track restart events
+    useEffect(
+        () =>
+            device?.subscribe(RESTART, () =>
+                enqueueSnackbar(`${device.shortId} restarted...`, "info")
+            ),
+        [device]
     )
 
     const ServiceWidgets = useCallback(
