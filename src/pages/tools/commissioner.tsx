@@ -12,6 +12,7 @@ import useDevices from "../../components/hooks/useDevices"
 import {
     PACKET_RECEIVE,
     SRV_CONTROL,
+    SRV_LED_PIXEL,
     SRV_ROLE_MANAGER,
 } from "../../../jacdac-ts/src/jdom/constants"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
@@ -157,6 +158,15 @@ export default function Commissioner() {
     ]
     const { fileStorage } = useContext(ServiceManagerContext)
 
+    const testDevice = async (d: JDDevice) => {
+        for (const srv of d.services()) {
+            switch (srv.serviceClass) {
+                case SRV_LED_PIXEL:
+                    break
+            }
+        }
+    }
+
     useEffectAsync(async () => {
         const newDataSet = (dataSet?.slice(0) || []).filter(
             d => !filterBrains || !d.brain
@@ -188,6 +198,8 @@ export default function Commissioner() {
                 services,
                 servicesSeen: [],
             })
+            // launch tests
+            testDevice(d)
         }
         setDataSet(newDataSet)
     }, [dependencyId(devices), filterBrains])
