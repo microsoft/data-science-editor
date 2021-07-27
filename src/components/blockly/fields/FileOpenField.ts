@@ -56,7 +56,7 @@ export default class FileOpenField extends Field implements FieldWithServices {
 
     toXml(fieldElement: Element) {
         const text = JSON.stringify(this.value_)
-        if (text.length < MAX_SIZE) fieldElement.textContent = text
+        if (text?.length < MAX_SIZE) fieldElement.textContent = text
         else fieldElement.textContent = ""
         return fieldElement
     }
