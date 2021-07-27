@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 import useEffectAsync from "./useEffectAsync"
 import Alert from "./ui/Alert"
 import {
@@ -15,9 +15,9 @@ import { Button } from "gatsby-theme-material-ui"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline"
-import { useSnackbar } from "notistack"
 import { useId } from "react-use-id-hook"
 import { useSecret } from "./hooks/useSecret"
+import AppContext from "./AppContext"
 
 export default function ApiKeyAccordion(props: {
     apiName: string
@@ -31,7 +31,7 @@ export default function ApiKeyAccordion(props: {
     const [key, setKey] = useState("")
     const [expanded, setExpanded] = useState(!apiKey)
     const [validated, setValidated] = useState(false)
-    const { enqueueSnackbar } = useSnackbar()
+    const { enqueueSnackbar } = useContext(AppContext)
 
     useEffectAsync(
         async mounted => {

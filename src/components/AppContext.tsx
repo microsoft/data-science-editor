@@ -3,6 +3,7 @@ import { useSnackbar } from "notistack"
 import React, {
     createContext,
     lazy,
+    ReactNode,
     useContext,
     useEffect,
     useState,
@@ -35,6 +36,10 @@ export interface AppProps {
     setToolsMenu: (visible: boolean) => void
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setError: (error: any) => void
+    enqueueSnackbar: (
+        message: string | ReactNode,
+        variant?: "success" | "warning" | "info"
+    ) => void
     toggleShowDeviceHostsDialog: () => void
     showSelectRoleDialog: (srv: JDService) => void
 }
@@ -47,6 +52,7 @@ const AppContext = createContext<AppProps>({
     toolsMenu: false,
     setToolsMenu: () => {},
     setError: () => {},
+    enqueueSnackbar: () => {},
     toggleShowDeviceHostsDialog: () => {},
     showSelectRoleDialog: () => {},
 })
@@ -64,7 +70,7 @@ export const AppProvider = ({ children }) => {
     const [showSelectRoleDialogService, setShowSelectRoleDialogService] =
         useState<JDService>(undefined)
 
-    const { enqueueSnackbar } = useSnackbar()
+    const { enqueueSnackbar: _enqueueSnackbar } = useSnackbar()
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const setError = (e: any) => {
@@ -72,7 +78,7 @@ export const AppProvider = ({ children }) => {
         const msg = e?.message || e + ""
         const code = errorPath(e)
 
-        enqueueSnackbar(msg, {
+        _enqueueSnackbar(msg, {
             variant: "error",
             autoHideDuration: code ? 8000 : 4000,
             preventDuplicate: true,
@@ -87,6 +93,11 @@ export const AppProvider = ({ children }) => {
             ),
         })
     }
+
+    const enqueueSnackbar = (
+        message: string | ReactNode,
+        variant?: "success" | "warning" | "info"
+    ) => _enqueueSnackbar(message, { variant })
 
     const setDrawerType = (type: DrawerType) => {
         if (type !== DrawerType.None) _setToolsMenu(false)
@@ -129,6 +140,7 @@ export const AppProvider = ({ children }) => {
                 toolsMenu,
                 setToolsMenu,
                 setError,
+                enqueueSnackbar,
                 toggleShowDeviceHostsDialog,
                 showSelectRoleDialog,
             }}

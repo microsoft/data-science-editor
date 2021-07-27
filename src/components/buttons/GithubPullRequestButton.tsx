@@ -11,9 +11,8 @@ import {
     TextField,
     Typography,
 } from "@material-ui/core"
-import AppContext from "../AppContext"
 import { GITHUB_API_KEY } from "../github"
-import { useSnackbar } from "notistack"
+import AppContext from "../AppContext"
 import GitHubIcon from "@material-ui/icons/GitHub"
 import ApiKeyAccordion from "../ApiKeyAccordion"
 import { useId } from "react-use-id-hook"
@@ -47,8 +46,7 @@ export default function GithubPullRequestButton(
     const { value: token } = useSecret(GITHUB_API_KEY)
     const [, setResponse] = useState(undefined)
     const [busy, setBusy] = useState(false)
-    const { setError: setAppError } = useContext(AppContext)
-    const { enqueueSnackbar } = useSnackbar()
+    const { setError: setAppError, enqueueSnackbar } = useContext(AppContext)
     const [confirmDialog, setConfirmDialog] = useState(false)
     const bodyId = useId()
     const [body, setBody] = useState(description)
@@ -104,9 +102,7 @@ export default function GithubPullRequestButton(
                         </Link>{" "}
                         created...
                     </Typography>,
-                    {
-                        variant: "success",
-                    }
+                    "success"
                 )
             } else {
                 setResponse(undefined)

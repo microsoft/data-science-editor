@@ -6,7 +6,7 @@ import {
     Grid,
     MenuItem,
 } from "@material-ui/core"
-import { useSnackbar } from "notistack"
+import AppContext from "../AppContext"
 import React, { useContext, useMemo, useState } from "react"
 import { useId } from "react-use-id-hook"
 import servers, {
@@ -26,11 +26,11 @@ export default function StartSimulatorDialog(props: {
 }) {
     const { open, onClose } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const { enqueueSnackbar } = useContext(AppContext)
     const deviceHostDialogId = useId()
     const deviceHostLabelId = useId()
 
     const [selected, setSelected] = useState("button")
-    const { enqueueSnackbar } = useSnackbar()
     const providerDefinitions = useMemo(() => servers(), [])
     const { mobile } = useMediaQueries()
 
@@ -53,10 +53,7 @@ export default function StartSimulatorDialog(props: {
         )
         enqueueSnackbar(
             `starting ${allProviderDefinitions.length} simulators...`,
-            {
-                variant: "info",
-                key: "startdevicehosts",
-            }
+            `info`
         )
         onClose()
         for (const provider of allProviderDefinitions) {

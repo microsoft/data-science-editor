@@ -39,10 +39,8 @@ import Breadcrumbs from "./ui/Breadcrumbs"
 import ForumIcon from "@material-ui/icons/Forum"
 import useMediaQueries from "./hooks/useMediaQueries"
 import { UIFlags } from "../jacdac/providerbus"
-import { useSnackbar } from "notistack"
 import { HideOnScroll } from "./ui/HideOnScroll"
 import OpenVMEditorButton from "./buttons/OpenVMEditorButton"
-import { IdProvider } from "react-use-id-hook"
 
 const WebDiagnostics = lazy(() => import("./WebDiagnostics"))
 const AppDrawer = lazy(() => import("./AppDrawer"))
@@ -344,8 +342,7 @@ function LayoutWithContext(props: LayoutProps) {
     const classes = useStyles()
 
     const { darkMode } = useContext(DarkModeContext)
-    const { drawerType, toolsMenu } = useContext(AppContext)
-    const { enqueueSnackbar } = useSnackbar()
+    const { drawerType, toolsMenu, enqueueSnackbar } = useContext(AppContext)
     const drawerOpen = drawerType !== DrawerType.None
     const { medium } = useMediaQueries()
     const container = !medium && !fullWidthTools
@@ -363,9 +360,7 @@ function LayoutWithContext(props: LayoutProps) {
             enqueueSnackbar(
                 `UNDER CONSTRUCTION - We are still working and changing the
             Jacdac specification. Do not build devices using Jacdac.`,
-                {
-                    variant: "warning",
-                }
+                `warning`
             )
     }, [])
 

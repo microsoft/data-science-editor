@@ -6,13 +6,13 @@ import Alert from "../ui/Alert"
 import DbContext, { DbContextProps } from "../DbContext"
 // tslint:disable-next-line: match-default-export-name tslint:disable-next-line: no-submodule-imports
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever"
-import { useSnackbar } from "notistack"
+import AppContext from "../AppContext"
 import SwitchWithLabel from "../ui/SwitchWithLabel"
 
 export default function SafeBootAlert() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { db } = useContext<DbContextProps>(DbContext)
-    const { enqueueSnackbar } = useSnackbar()
+    const { enqueueSnackbar } = useContext(AppContext)
     const [safeBoot, setSafeBoot] = useState(bus.safeBoot)
     const firmwares = db?.firmwares
 
@@ -22,9 +22,7 @@ export default function SafeBootAlert() {
     }
     const handleClear = async () => {
         await firmwares.clear()
-        enqueueSnackbar("firmwares cleared", {
-            variant: "info",
-        })
+        enqueueSnackbar("firmwares cleared", "info")
     }
 
     // turn on and off safeboot mode
@@ -42,10 +40,7 @@ export default function SafeBootAlert() {
                     value={safeBoot}
                     onChange={handleRecovery}
                     label={
-                        <Typography
-                            component="span"
-                            variant="body1"
-                        >
+                        <Typography component="span" variant="body1">
                             recovery mode
                         </Typography>
                     }

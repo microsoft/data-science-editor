@@ -53,7 +53,6 @@ import DashboardDeviceItem from "../../components/dashboard/DashboardDeviceItem"
 import IconButtonWithTooltip from "../../components/ui/IconButtonWithTooltip"
 import AppContext from "../../components/AppContext"
 import AddIcon from "@material-ui/icons/Add"
-import { useSnackbar } from "notistack"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -105,8 +104,8 @@ function createDataSet(
 
 export default function Collector() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const { enqueueSnackbar } = useSnackbar()
-    const { toggleShowDeviceHostsDialog } = useContext(AppContext)
+    const { toggleShowDeviceHostsDialog, enqueueSnackbar } =
+        useContext(AppContext)
     const classes = useStyles()
     const { fileStorage } = useContext(ServiceManagerContext)
     const [registerIdsChecked, setRegisterIdsChecked] = useState<string[]>([])
