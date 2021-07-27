@@ -6,7 +6,8 @@ import { TABLE_HEIGHT, TABLE_WIDTH } from "../toolbox"
 import { PointerBoundary } from "./PointerBoundary"
 import CopyButton from "../../ui/CopyButton"
 import { unparseCSV } from "../dsl/workers/csv.proxy"
-import { roundWithPrecision } from "../../../../jacdac-ts/src/jdom/utils"
+import { roundWithPrecision, toMap } from "../../../../jacdac-ts/src/jdom/utils"
+import { tidyHeaders } from "./nivo"
 
 interface StylesProps {
     tableHeight: number
@@ -59,19 +60,31 @@ export function DataTableWidget(props: {
     transformed?: boolean
     tableHeight?: number
     empty?: ReactNode
+    maxItems?: number
 }): JSX.Element {
-    const { transformed, tableHeight = TABLE_HEIGHT, empty } = props
+    const { transformed, tableHeight = TABLE_HEIGHT, empty, maxItems } = props
     const { sourceBlock } = useContext(WorkspaceContext)
     const { data, transformedData } = useBlockData<{ id?: string } & unknown>(
         sourceBlock
     )
-    const table = transformed ? transformedData : data
+    const raw = transformed ? transformedData : data
     const classes = useStyles({ tableHeight })
 
-    if (!table?.length)
+    if (!raw?.length)
         return empty ? <span className={classes.empty}>{empty}</span> : null
 
-    const columns = Object.keys(table[0] || {})
+    const columns = tidyHeaders(raw).headers
+    const table =
+        raw.length > maxItems
+            ? [
+                  ...raw.slice(0, maxItems),
+                  toMap(
+                      columns,
+                      c => c,
+                      () => "..."
+                  ),
+              ]
+            : raw
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const renderCell = (v: any) =>
@@ -108,7 +121,7 @@ export function DataTableWidget(props: {
                         </Grid>
                         <Grid item>
                             <Typography variant="caption">
-                                {table.length} rows x {columns.length} columns
+                                {raw.length} rows x {columns.length} columns
                             </Typography>
                         </Grid>
                     </Grid>
