@@ -3,6 +3,8 @@ import ReactField, { ReactFieldJSON } from "./ReactField"
 import { DataTableWidget } from "./DataTableWidget"
 import { BlockDefinition } from "../toolbox"
 
+const MAX_ITEMS = 64
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default class DataPreviewField extends ReactField<ReactFieldJSON> {
     static KEY = "jacdac_field_data_preview"
@@ -28,6 +30,7 @@ export default class DataPreviewField extends ReactField<ReactFieldJSON> {
                 tableHeight={295}
                 empty={"no data"}
                 transformed={true}
+                maxItems={MAX_ITEMS}
             />
         )
     }

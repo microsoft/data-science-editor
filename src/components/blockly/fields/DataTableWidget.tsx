@@ -1,9 +1,13 @@
 import React, { ReactNode, useContext } from "react"
 import WorkspaceContext from "../WorkspaceContext"
 import useBlockData from "../useBlockData"
-import { makeStyles } from "@material-ui/core"
+import { Grid, makeStyles, Typography } from "@material-ui/core"
 import { TABLE_HEIGHT, TABLE_WIDTH } from "../toolbox"
 import { PointerBoundary } from "./PointerBoundary"
+import CopyButton from "../../ui/CopyButton"
+import { unparseCSV } from "../dsl/workers/csv.proxy"
+import { roundWithPrecision, toMap } from "../../../../jacdac-ts/src/jdom/utils"
+import { tidyHeaders } from "./nivo"
 
 interface StylesProps {
     tableHeight: number
@@ -17,7 +21,11 @@ const useStyles = makeStyles(() => ({
         color: "#000",
         borderRadius: "0.25rem",
     },
+    button: {
+        color: "grey",
+    },
     root: (props: StylesProps) => ({
+        marginTop: "0.25rem",
         paddingLeft: "0.5rem",
         paddingRight: "0.5rem",
         background: "#fff",
@@ -52,44 +60,93 @@ export function DataTableWidget(props: {
     transformed?: boolean
     tableHeight?: number
     empty?: ReactNode
+    maxItems?: number
 }): JSX.Element {
-    const { transformed, tableHeight = TABLE_HEIGHT, empty } = props
+    const { transformed, tableHeight = TABLE_HEIGHT, empty, maxItems } = props
     const { sourceBlock } = useContext(WorkspaceContext)
     const { data, transformedData } = useBlockData<{ id?: string } & unknown>(
         sourceBlock
     )
-    const table = transformed ? transformedData : data 
+    const raw = transformed ? transformedData : data
     const classes = useStyles({ tableHeight })
 
-    if (!table?.length)
+    if (!raw?.length)
         return empty ? <span className={classes.empty}>{empty}</span> : null
 
-    const columns = Object.keys(table[0] || {})
+    const columns = tidyHeaders(raw).headers
+    const table =
+        raw.length > maxItems
+            ? [
+                  ...raw.slice(0, maxItems),
+                  toMap(
+                      columns,
+                      c => c,
+                      () => "..."
+                  ),
+              ]
+            : raw
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const renderCell = (v: any) =>
-        typeof v === "boolean" ? (v ? "true" : "false") : v + ""
+        typeof v === "boolean"
+            ? v
+                ? "true"
+                : "false"
+            : typeof v === "number"
+            ? roundWithPrecision(v, 3)
+            : v + ""
+
+    const handleCopy = async () => {
+        const text = unparseCSV(table)
+        return text
+    }
 
     return (
         <PointerBoundary className={classes.root}>
-            <table className={classes.table}>
-                <thead>
-                    <tr>
-                        {columns.map(c => (
-                            <th key={c}>{c}</th>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>
-                    {table.map((r, i) => (
-                        <tr key={r.id || i}>
-                            {columns.map(c => (
-                                <td key={c}>{renderCell(r[c])}</td>
+            <Grid container direction="column" spacing={1}>
+                <Grid item xs={12}>
+                    <Grid
+                        container
+                        direction="row"
+                        justifyContent="flex-start"
+                        alignItems="center"
+                        spacing={1}
+                    >
+                        <Grid item>
+                            <CopyButton
+                                size="small"
+                                className={classes.button}
+                                onCopy={handleCopy}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Typography variant="caption">
+                                {raw.length} rows x {columns.length} columns
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                </Grid>
+                <Grid item xs={12}>
+                    <table className={classes.table}>
+                        <thead>
+                            <tr>
+                                {columns.map(c => (
+                                    <th key={c}>{c}</th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {table.map((r, i) => (
+                                <tr key={r.id || i}>
+                                    {columns.map(c => (
+                                        <td key={c}>{renderCell(r[c])}</td>
+                                    ))}
+                                </tr>
                             ))}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+                        </tbody>
+                    </table>
+                </Grid>
+            </Grid>
         </PointerBoundary>
     )
 }

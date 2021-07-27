@@ -13,6 +13,7 @@ import BarChartField from "../fields/BarField"
 import PiePlotField from "../fields/PieField"
 import DataTableField from "../fields/DataTableField"
 import { paletteColorByIndex } from "./palette"
+import DataPreviewField from "../fields/DataPreviewField"
 
 const SCATTERPLOT_BLOCK = "chart_scatterplot"
 const LINEPLOT_BLOCK = "chart_lineplot"
@@ -47,7 +48,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: SCATTERPLOT_BLOCK,
-            message0: "scatterplot x %1 y %2 %3 %4",
+            message0: "scatterplot x %1 y %2 %3 %4 %5",
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
@@ -58,6 +59,10 @@ const chartDsl: BlockDomainSpecificLanguage = {
                     type: DataColumnChooserField.KEY,
                     name: "y",
                     dataType: "number",
+                },
+                {
+                    type: DataPreviewField.KEY,
+                    name: "preview",
                 },
                 <DummyInputDefinition>{
                     type: "input_dummy",
@@ -77,7 +82,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: BARCHART_BLOCK,
-            message0: "bar index %1 value %2 %3 %4",
+            message0: "bar index %1 value %2 %3 %4 %5",
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
@@ -88,6 +93,10 @@ const chartDsl: BlockDomainSpecificLanguage = {
                     type: DataColumnChooserField.KEY,
                     name: "value",
                     dataType: "number",
+                },
+                {
+                    type: DataPreviewField.KEY,
+                    name: "preview",
                 },
                 <DummyInputDefinition>{
                     type: "input_dummy",
@@ -107,7 +116,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: LINEPLOT_BLOCK,
-            message0: "line x %1 y %2 %3 %4",
+            message0: "line x %1 y %2 %3 %4 %5",
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
@@ -118,6 +127,10 @@ const chartDsl: BlockDomainSpecificLanguage = {
                     type: DataColumnChooserField.KEY,
                     name: "y",
                     dataType: "number",
+                },
+                {
+                    type: DataPreviewField.KEY,
+                    name: "preview",
                 },
                 <DummyInputDefinition>{
                     type: "input_dummy",
@@ -137,7 +150,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: PIEPLOT_BLOCK,
-            message0: "pie name %1 value %2 %3 %4",
+            message0: "pie name %1 value %2 %3 %4 %5",
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
@@ -148,6 +161,10 @@ const chartDsl: BlockDomainSpecificLanguage = {
                     type: DataColumnChooserField.KEY,
                     name: "value",
                     dataType: "number",
+                },
+                {
+                    type: DataPreviewField.KEY,
+                    name: "preview",
                 },
                 <DummyInputDefinition>{
                     type: "input_dummy",

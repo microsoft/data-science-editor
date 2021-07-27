@@ -2,9 +2,10 @@
 import { tidy, select, rename, mutate } from "@tidyjs/tidy"
 import { toMap, unique } from "../../../../jacdac-ts/src/jdom/utils"
 
-export function tidyHeaders(data: object[]) {
+export function tidyHeaders(data: object[], type?: "number" | "string") {
     const row = data?.[0] || {}
-    const headers = Object.keys(row)
+    let headers = Object.keys(row)
+    if (type) headers = headers.filter(header => type === typeof row[header])
     const types = headers.map(header => typeof row[header])
     return { headers, types }
 }

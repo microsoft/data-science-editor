@@ -8,6 +8,7 @@ import { PointerBoundary } from "./PointerBoundary"
 import Suspense from "../../ui/Suspense"
 import { NoSsr } from "@material-ui/core"
 import { tidyToNivo } from "./nivo"
+import { CHART_HEIGHT, CHART_WIDTH } from "../toolbox"
 const Line = lazy(() => import("./Line"))
 
 function LineChartWidget() {
@@ -62,7 +63,7 @@ function LineChartWidget() {
             <div style={{ background: "#fff", borderRadius: "0.25rem" }}>
                 <PointerBoundary>
                     <Suspense>
-                        <Line width={388} height={240} {...chartProps} />
+                        <Line width={CHART_WIDTH} height={CHART_HEIGHT} {...chartProps} />
                     </Suspense>
                 </PointerBoundary>
             </div>

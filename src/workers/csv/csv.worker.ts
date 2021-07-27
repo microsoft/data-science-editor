@@ -26,6 +26,15 @@ export interface CsvSaveRequest extends CsvFileRequest {
     data: object[]
 }
 
+export interface CsvUnparseRequest extends CsvRequest {
+    type: "unparse"
+    data: object[]
+}
+
+export interface CsvUnparseResponse extends CsvMessage {
+    text: string
+}
+
 export interface CsvParseRequest extends CsvRequest {
     type: "parse"
     source: string
@@ -42,8 +51,7 @@ export interface CsvFile {
     }[]
 }
 
-export interface CsvResponse extends CsvMessage {
-    worker: "csv"
+export interface CsvFileResponse extends CsvMessage {
     file: CsvFile
 }
 
@@ -101,6 +109,11 @@ const handlers: { [index: string]: (msg: CsvRequest) => Promise<object> } = {
                 complete: (r: CsvFile) => resolve({ file: r }),
             })
         })
+    },
+    unparse: async (msg: CsvUnparseRequest) => {
+        const { data } = msg
+        const text = Papa.unparse(data)
+        return { text }
     },
 }
 

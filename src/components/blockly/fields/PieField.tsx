@@ -8,6 +8,7 @@ import { PointerBoundary } from "./PointerBoundary"
 import Suspense from "../../ui/Suspense"
 import { NoSsr } from "@material-ui/core"
 import { tidyToNivo } from "./nivo"
+import { CHART_HEIGHT, CHART_WIDTH } from "../toolbox"
 const Pie = lazy(() => import("./Pie"))
 
 function PieChartWidget() {
@@ -52,7 +53,7 @@ function PieChartWidget() {
             <div style={{ background: "#fff", borderRadius: "0.25rem" }}>
                 <PointerBoundary>
                     <Suspense>
-                        <Pie width={388} height={240} {...chartProps} />
+                        <Pie width={CHART_WIDTH} height={CHART_HEIGHT} {...chartProps} />
                     </Suspense>
                 </PointerBoundary>
             </div>
