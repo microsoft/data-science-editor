@@ -11,9 +11,12 @@ function BoxPlotWidget() {
     const { sourceBlock } = useContext(WorkspaceContext)
     const { data } = useBlockData(sourceBlock)
     const index = tidyResolveHeader(data, sourceBlock?.getFieldValue("index"))
-    const value = tidyResolveHeader(data, sourceBlock?.getFieldValue("value"))
-
-    if (!index) return null
+    const value = tidyResolveHeader(
+        data,
+        sourceBlock?.getFieldValue("value"),
+        "number"
+    )
+    if (!index || !value) return null
 
     const spec: VisualizationSpec = {
         description: `Box plot of ${index}`,

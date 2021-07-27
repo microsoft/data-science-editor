@@ -13,6 +13,7 @@ function LinePlotWidget() {
     const x = tidyResolveHeader(data, sourceBlock?.getFieldValue("x"), "number")
     const y = tidyResolveHeader(data, sourceBlock?.getFieldValue("y"), "number")
     if (!x || !y) return null
+
     const spec: VisualizationSpec = {
         description: `Line plot of ${x}x${y}`,
         mark: "line",

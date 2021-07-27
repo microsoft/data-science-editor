@@ -17,6 +17,7 @@ function BarWidget() {
         "number"
     )
     if (!index || !value) return null
+    
     const spec: VisualizationSpec = {
         description: `Bar plot of ${index} x ${value}`,
         mark: "bar",
