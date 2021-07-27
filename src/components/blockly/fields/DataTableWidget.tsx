@@ -6,6 +6,7 @@ import { TABLE_HEIGHT, TABLE_WIDTH } from "../toolbox"
 import { PointerBoundary } from "./PointerBoundary"
 import CopyButton from "../../ui/CopyButton"
 import { unparseCSV } from "../dsl/workers/csv.proxy"
+import { roundWithPrecision } from "../../../../jacdac-ts/src/jdom/utils"
 
 interface StylesProps {
     tableHeight: number
@@ -74,7 +75,13 @@ export function DataTableWidget(props: {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const renderCell = (v: any) =>
-        typeof v === "boolean" ? (v ? "true" : "false") : v + ""
+        typeof v === "boolean"
+            ? v
+                ? "true"
+                : "false"
+            : typeof v === "number"
+            ? roundWithPrecision(v, 3)
+            : v + ""
 
     const handleCopy = async () => {
         const text = unparseCSV(table)
@@ -85,7 +92,13 @@ export function DataTableWidget(props: {
         <PointerBoundary className={classes.root}>
             <Grid container direction="column" spacing={1}>
                 <Grid item xs={12}>
-                    <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
+                    <Grid
+                        container
+                        direction="row"
+                        justifyContent="flex-start"
+                        alignItems="center"
+                        spacing={1}
+                    >
                         <Grid item>
                             <CopyButton
                                 size="small"
@@ -94,7 +107,9 @@ export function DataTableWidget(props: {
                             />
                         </Grid>
                         <Grid item>
-                            <Typography variant="caption">{table.length} rows x {columns.length} columns</Typography>
+                            <Typography variant="caption">
+                                {table.length} rows x {columns.length} columns
+                            </Typography>
                         </Grid>
                     </Grid>
                 </Grid>
