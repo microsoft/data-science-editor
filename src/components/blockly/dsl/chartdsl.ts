@@ -151,12 +151,16 @@ const chartDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: HISTOGRAM_BLOCK,
-            message0: "histogram of %1 %2 %3",
+            message0: "histogram of %1 %2 %3 %4",
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
                     name: "index",
                     dataType: "number",
+                },
+                {
+                    type: DataPreviewField.KEY,
+                    name: "preview",
                 },
                 <DummyInputDefinition>{
                     type: "input_dummy",
@@ -176,7 +180,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: BOX_PLOT_BLOCK,
-            message0: "box plot of %1 by %2 %3 %4",
+            message0: "box plot of %1 by %2 %3 %4 %5",
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
@@ -186,6 +190,10 @@ const chartDsl: BlockDomainSpecificLanguage = {
                     type: DataColumnChooserField.KEY,
                     name: "value",
                     dataType: "number",
+                },
+                {
+                    type: DataPreviewField.KEY,
+                    name: "preview",
                 },
                 <DummyInputDefinition>{
                     type: "input_dummy",
