@@ -1,7 +1,6 @@
-import React, { useState, useContext, useEffect } from "react"
+import React, { useState, useContext, useEffect, useCallback } from "react"
 // tslint:disable-next-line: no-submodule-imports
-import { makeStyles, Theme } from "@material-ui/core/styles"
-import { Grid, Button, createStyles } from "@material-ui/core"
+import { Grid, Button } from "@material-ui/core"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
@@ -269,10 +268,11 @@ export default function Commissioner() {
         fileStorage.saveText(`commissioning-${dateString()}.csv`, str)
     }
 
-    const handleFilterBrains = () => {
-        filterBrains ? setFilterBrains(false) : setFilterBrains(true)
-    }
-
+    const handleFilterBrains = () => setFilterBrains(!filterBrains)
+    const deviceFilter = useCallback(
+        d => !filterBrains || !isBrain(d),
+        [filterBrains]
+    )
     return (
         <>
             <h1>Commissioner</h1>
@@ -282,38 +282,43 @@ export default function Commissioner() {
                 showHeader={true}
                 showConnect={true}
                 showStartSimulators={false}
+                deviceFilter={deviceFilter}
             />
             <Grid container spacing={1}>
                 <GridHeader title={"Commissioning data"} />
-                <Grid item xs={1}>
-                    <Button
-                        aria-label="Clear data"
-                        variant="contained"
-                        color="primary"
-                        onClick={handleOnClearClick}
-                    >
-                        Clear
-                    </Button>
-                </Grid>
-                <Grid item xs={2}>
-                    <Button
-                        aria-label="Clear data"
-                        variant="contained"
-                        color="secondary"
-                        onClick={handleDownloadCSV}
-                        startIcon={<SaveIcon />}
-                    >
-                        Download CSV
-                    </Button>
-                </Grid>
-                <Grid item xs={2}>
-                    <Button
-                        aria-label="Clear data"
-                        variant="contained"
-                        onClick={handleFilterBrains}
-                    >
-                        {filterBrains ? "Show brains" : "Hide brains"}
-                    </Button>
+                <Grid item xs={12}>
+                    <Grid container spacing={1}>
+                        <Grid item>
+                            <Button
+                                aria-label="Clear data"
+                                variant="contained"
+                                color="primary"
+                                onClick={handleOnClearClick}
+                            >
+                                Clear
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button
+                                aria-label="Clear data"
+                                variant="contained"
+                                color="secondary"
+                                onClick={handleDownloadCSV}
+                                startIcon={<SaveIcon />}
+                            >
+                                Download CSV
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button
+                                aria-label="Clear data"
+                                variant="contained"
+                                onClick={handleFilterBrains}
+                            >
+                                {filterBrains ? "Show brains" : "Hide brains"}
+                            </Button>
+                        </Grid>
+                    </Grid>
                 </Grid>
                 <Grid item xs={12}>
                     <DataSetTable dataSet={table} />
