@@ -1,12 +1,13 @@
 import React, { useState, useContext, useEffect, useCallback } from "react"
 // tslint:disable-next-line: no-submodule-imports
-import { Grid, Button } from "@material-ui/core"
+import { Grid, Button, TextField } from "@material-ui/core"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import SaveIcon from "@material-ui/icons/Save"
 import CheckCircle from "@material-ui/icons/CheckCircle"
+import CancelIcon from '@material-ui/icons/Cancel';
 // tslint:disable-next-line: no-submodule-imports
 import useDevices from "../../components/hooks/useDevices"
 import {
@@ -37,6 +38,20 @@ import ServiceManagerContext from "../../components/ServiceManagerContext"
 import useEffectAsync from "../../components/useEffectAsync"
 import { dependencyId } from "../../../jacdac-ts/src/jdom/eventsource"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
+import { lightEncode } from "../../../jacdac-ts/src/jdom/light"
+import { LedPixelCmd } from "../../../jacdac-ts/src/jdom/constants"
+import { createStyles, makeStyles } from "@material-ui/core"
+
+const useStyles = makeStyles(() => createStyles({
+    buttonFail: {
+        color:"white",
+        backgroundColor:"red"
+    },
+    buttonSuccess: {
+        color:"white",
+        backgroundColor:"green"
+    },
+}));
 
 interface ServiceDescriptor {
     name: string
@@ -50,6 +65,8 @@ interface DeviceDescriptor {
     firmwareIdentifier: number
     services: ServiceDescriptor[]
     servicesSeen: ServiceDescriptor[]
+    pass: boolean
+    comment: string
 }
 
 interface DeviceDescriptorTable {
@@ -82,10 +99,26 @@ function isBrain(d: JDDevice) {
 
 function DataSetTable(props: {
     dataSet: DeviceDescriptorTable
+    updateDescriptor: (DeviceDescriptor) => void
     className?: string
 }) {
-    const { dataSet } = props
+    const classes = useStyles();
+    const { dataSet, updateDescriptor } = props
     const { descriptors, headers } = dataSet
+
+    const setPass =
+        (deviceDescriptor: DeviceDescriptor, state: boolean) => () => {
+            deviceDescriptor.pass = state
+            updateDescriptor(deviceDescriptor)
+        }
+
+    const handleCommentChange = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const descriptor = descriptors.find(d => d.deviceIdentifier = event.target.id)
+        descriptor.comment = event.target.value;
+        updateDescriptor(descriptor);
+    }
 
     return (
         <TableContainer component={Paper}>
@@ -132,12 +165,73 @@ function DataSetTable(props: {
                                     </span>
                                 )}
                             </TableCell>
+                            <TableCell align="center">
+                                {descriptor.pass && (
+                                    <Button
+                                        aria-label="Toggle pass state"
+                                        variant="contained"
+                                        className={classes.buttonSuccess}
+                                        onClick={setPass(descriptor, false)}
+                                        startIcon={<CheckCircle fontSize="small" />}
+                                    >
+                                        Pass
+                                    </Button>
+                                )}
+                                {!descriptor.pass && (
+                                    <Button
+                                        aria-label="Toggle pass state"
+                                        variant="contained"
+                                        className={classes.buttonFail}
+                                        onClick={setPass(descriptor, true)}
+                                        startIcon={<CancelIcon fontSize="small" />}
+                                    >
+                                        FAIL
+                                    </Button>
+                                )}
+                            </TableCell>
+                            <TableCell align="center">
+                                <TextField
+                                    onChange={handleCommentChange}
+                                    id={descriptor.deviceIdentifier}
+                                    label="Comment"
+                                    fullWidth
+                                    value={descriptor.comment}
+                                />
+                            </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
         </TableContainer>
     )
+}
+
+async function LEDTest(service: JDService) {
+    for (let i = 0; i < 8; i++) {
+        const encoded = lightEncode(
+            `setone % #
+                show 20`,
+            [i, 0xff0000]
+        )
+
+        if (service.device.connected)
+            await service?.sendCmdAsync(LedPixelCmd.Run, encoded)
+
+        await delay(50)
+    }
+}
+
+async function SingleRGBLEDTest(service: JDService) {
+    for (let i = 0; i < 8; i++) {
+        const encoded = lightEncode(
+            `setone % #
+                show 20`,
+            [i, 0xff0000]
+        )
+
+        if (service.device.connected)
+            await service?.sendCmdAsync(LedPixelCmd.Run, encoded)
+    }
 }
 
 export default function Commissioner() {
@@ -154,7 +248,9 @@ export default function Commissioner() {
         "Firmware identifier",
         "Services advertised",
         "Services seen",
+        "Packets seen",
         "Functional test pass",
+        "Comment"
     ]
     const { fileStorage } = useContext(ServiceManagerContext)
 
@@ -162,6 +258,7 @@ export default function Commissioner() {
         for (const srv of d.services()) {
             switch (srv.serviceClass) {
                 case SRV_LED_PIXEL:
+                    LEDTest(srv)
                     break
             }
         }
@@ -197,6 +294,8 @@ export default function Commissioner() {
                 firmwareIdentifier: await d.resolveFirmwareIdentifier(3),
                 services,
                 servicesSeen: [],
+                pass: false,
+                comment: "",
             })
             // launch tests
             testDevice(d)
@@ -256,12 +355,16 @@ export default function Commissioner() {
             sep +
             "services" +
             sep +
-            "functional test pass" +
+            "Packets seen" +
+            sep +
+            "Functional test pass" +
+            sep +
+            "Comment" +
             lineEnding
         dataSet.forEach(descriptor => {
-            str += `${descriptor.deviceIdentifier}${sep}`
+            str += `0x${descriptor.deviceIdentifier}${sep}`
             if (descriptor.firmwareIdentifier)
-                str += `${descriptor.firmwareIdentifier}${sep}`
+                str += `0x${descriptor.firmwareIdentifier.toString(16)}${sep}`
             else if (
                 descriptor.services.find(
                     service => service.serviceClass == SRV_ROLE_MANAGER
@@ -274,9 +377,15 @@ export default function Commissioner() {
                 .map(service => service.name)
                 .join(" ")}${sep}`
 
-            if (serviceArrayMatched(descriptor)) str += `PASS${lineEnding}`
-            else str += `FAIL${lineEnding}`
+            if (serviceArrayMatched(descriptor)) str += `YES${sep}`
+            else str += `NO${sep}`
+
+            if (descriptor.pass) str += `PASS${sep}`
+            else str += `FAIL${sep}`
+
+            str += descriptor.comment + lineEnding
         })
+
         fileStorage.saveText(`commissioning-${dateString()}.csv`, str)
     }
 
@@ -285,6 +394,19 @@ export default function Commissioner() {
         d => !filterBrains || !isBrain(d),
         [filterBrains]
     )
+
+    const handleUpdateDescriptor = descriptor => {
+        const newDataSet = dataSet?.slice(0) || []
+        const el = newDataSet.find(
+            d => d.deviceIdentifier == descriptor.deviceIdentifier
+        )
+        if (el) {
+            el.comment = descriptor.comment
+            el.pass = descriptor.pass
+            setDataSet(newDataSet)
+        }
+    }
+
     return (
         <>
             <h1>Commissioner</h1>
@@ -333,7 +455,10 @@ export default function Commissioner() {
                     </Grid>
                 </Grid>
                 <Grid item xs={12}>
-                    <DataSetTable dataSet={table} />
+                    <DataSetTable
+                        dataSet={table}
+                        updateDescriptor={handleUpdateDescriptor}
+                    />
                 </Grid>
             </Grid>
         </>
