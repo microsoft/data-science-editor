@@ -6,7 +6,6 @@ import { downloadCSV } from "../dsl/workers/csv.proxy"
 const builtins = {
     cereal: withPrefix("/datasets/cereal.csv"),
     penguins: withPrefix("/datasets/penguins.csv"),
-    mt: withPrefix("/datasets/mt.csv"),
 }
 
 export default class BuiltinDataSetField
