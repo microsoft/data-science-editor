@@ -36,6 +36,7 @@ import Dashboard from "../../components/dashboard/Dashboard"
 import ServiceManagerContext from "../../components/ServiceManagerContext"
 import useEffectAsync from "../../components/useEffectAsync"
 import { dependencyId } from "../../../jacdac-ts/src/jdom/eventsource"
+import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 
 interface ServiceDescriptor {
     name: string
@@ -44,6 +45,7 @@ interface ServiceDescriptor {
 }
 
 interface DeviceDescriptor {
+    brain: boolean
     deviceIdentifier: string
     firmwareIdentifier: number
     services: ServiceDescriptor[]
@@ -72,6 +74,10 @@ function serviceArrayMatched(descriptor: DeviceDescriptor) {
 function dateString() {
     const date = new Date()
     return date.toDateString().replace(/ /g, "-")
+}
+
+function isBrain(d: JDDevice) {
+    return !!d?.hasService(SRV_ROLE_MANAGER)
 }
 
 function DataSetTable(props: {
@@ -136,12 +142,12 @@ function DataSetTable(props: {
 
 export default function Commissioner() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const [filterBrains, setFilterBrains] = useState<boolean>(false) // todo allow remove brains
+    const [filterBrains, setFilterBrains] = useState<boolean>(true)
     const devices = useDevices({
         announced: true,
         ignoreSelf: true,
         ignoreSimulators: true,
-    }).filter(d => !filterBrains || !d.hasService(SRV_ROLE_MANAGER))
+    }).filter(d => !filterBrains || !isBrain(d))
     const [dataSet, setDataSet] = useState<DeviceDescriptor[]>()
     const tableHeaders = [
         "Device identifier",
@@ -153,7 +159,9 @@ export default function Commissioner() {
     const { fileStorage } = useContext(ServiceManagerContext)
 
     useEffectAsync(async () => {
-        const newDataSet = dataSet?.slice(0) || []
+        const newDataSet = (dataSet?.slice(0) || []).filter(
+            d => !filterBrains || !d.brain
+        )
 
         for (const d of devices) {
             if (
@@ -175,6 +183,7 @@ export default function Commissioner() {
                     })
                 })
             newDataSet.push({
+                brain: isBrain(d),
                 deviceIdentifier: d.deviceId,
                 firmwareIdentifier: await d.resolveFirmwareIdentifier(3),
                 services,
@@ -182,7 +191,7 @@ export default function Commissioner() {
             })
         }
         setDataSet(newDataSet)
-    }, [dependencyId(devices)])
+    }, [dependencyId(devices), filterBrains])
 
     const table = {
         headers: tableHeaders,
