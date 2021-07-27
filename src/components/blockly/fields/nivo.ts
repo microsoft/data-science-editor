@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { tidy, select, rename, mutate } from "@tidyjs/tidy"
+import { tidy, select, rename, mutate, sliceHead, sliceTail, sliceMin, sliceMax } from "@tidyjs/tidy"
 import { toMap, unique } from "../../../../jacdac-ts/src/jdom/utils"
 
 export function tidyHeaders(data: object[], type?: "number" | "string") {
@@ -19,7 +19,14 @@ export function tidyToNivo(
     // eslint-disable-next-line @typescript-eslint/ban-types
     data: object[],
     columns: string[],
-    toColumns: string[]
+    toColumns: string[],
+    options: {
+        sliceHead?: number
+        sliceTail?: number
+        sliceMax?: number
+        sliceMin?: number
+        sliceColumn?: string
+    } = {}
 ): {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     series: { id: string; data: object[] }[]
@@ -45,6 +52,10 @@ export function tidyToNivo(
     const tidied: object[] = data
         ? (tidy(
               data,
+              options.sliceHead ? sliceHead(options.sliceHead) : undefined,
+              options.sliceTail ? sliceTail(options.sliceTail) : undefined,
+              options.sliceMin ? sliceMin(options.sliceMin, options.sliceColumn) : undefined,
+              options.sliceMax ? sliceMax(options.sliceMax, options.sliceColumn) : undefined,
               mutate({ index: () => index++ }),
               select(labels),
               rename(renaming)

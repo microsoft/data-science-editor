@@ -8,7 +8,7 @@ import { PointerBoundary } from "./PointerBoundary"
 import Suspense from "../../ui/Suspense"
 import { NoSsr } from "@material-ui/core"
 import { tidyToNivo } from "./nivo"
-import { CHART_HEIGHT, CHART_WIDTH } from "../toolbox"
+import { CHART_HEIGHT, CHART_WIDTH, PIE_MAX_ITEMS } from "../toolbox"
 const Pie = lazy(() => import("./Pie"))
 
 function PieChartWidget() {
@@ -18,7 +18,10 @@ function PieChartWidget() {
     // need to map data to nivo
     const id = sourceBlock?.getFieldValue("id")
     const value = sourceBlock?.getFieldValue("value")
-    const { series, labels } = tidyToNivo(data, [id, value], ["id", "value"])
+    const { series, labels } = tidyToNivo(data, [id, value], ["id", "value"], {
+        sliceMax: PIE_MAX_ITEMS,
+        sliceColumn: value
+    })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { chartProps } = useBlockChartProps<any>(sourceBlock, {
         data: series,
@@ -53,7 +56,11 @@ function PieChartWidget() {
             <div style={{ background: "#fff", borderRadius: "0.25rem" }}>
                 <PointerBoundary>
                     <Suspense>
-                        <Pie width={CHART_WIDTH} height={CHART_HEIGHT} {...chartProps} />
+                        <Pie
+                            width={CHART_WIDTH}
+                            height={CHART_HEIGHT}
+                            {...chartProps}
+                        />
                     </Suspense>
                 </PointerBoundary>
             </div>
