@@ -11,6 +11,7 @@ import DataColumnChooserField from "../fields/DataColumnChooserField"
 import LinePlotField from "../fields/LinePlotField"
 import BarChartField from "../fields/BarField"
 import PiePlotField from "../fields/PieField"
+import HistogramField from "../fields/HistogramField"
 import DataTableField from "../fields/DataTableField"
 import { paletteColorByIndex } from "./palette"
 import DataPreviewField from "../fields/DataPreviewField"
@@ -19,6 +20,7 @@ const SCATTERPLOT_BLOCK = "chart_scatterplot"
 const LINEPLOT_BLOCK = "chart_lineplot"
 const PIEPLOT_BLOCK = "chart_pieplot"
 const BARCHART_BLOCK = "chart_bar"
+const HISTOGRAM_BLOCK = "chart_histogram"
 const CHART_SHOW_TABLE_BLOCK = "chart_show_table"
 
 const colour = paletteColorByIndex(3)
@@ -181,6 +183,31 @@ const chartDsl: BlockDomainSpecificLanguage = {
             inputsInline: false,
             transformData: identityTransformData,
         },
+        {
+            kind: "block",
+            type: HISTOGRAM_BLOCK,
+            message0: "histogram of %1 %2 %3",
+            args0: [
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "index",
+                    dataType: "number",
+                },
+                <DummyInputDefinition>{
+                    type: "input_dummy",
+                },
+                {
+                    type: HistogramField.KEY,
+                    name: "plot",
+                },
+            ],
+            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            colour,
+            template: "meta",
+            inputsInline: false,
+            transformData: identityTransformData,
+        },
     ],
 
     createCategory: () => [
@@ -192,6 +219,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
                 <BlockReference>{ kind: "block", type: BARCHART_BLOCK },
                 <BlockReference>{ kind: "block", type: LINEPLOT_BLOCK },
                 <BlockReference>{ kind: "block", type: PIEPLOT_BLOCK },
+                <BlockReference>{ kind: "block", type: HISTOGRAM_BLOCK },
                 <BlockReference>{ kind: "block", type: CHART_SHOW_TABLE_BLOCK },
             ],
             colour,

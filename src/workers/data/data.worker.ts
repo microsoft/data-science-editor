@@ -132,7 +132,7 @@ export interface DataTidyRequest extends DataRequest {
 }
 
 const summarizers = {
-    mean: mean,
+    average: mean,
     med: median,
     min: min,
     max: max,

@@ -267,7 +267,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: DATA_MUTATE_COLUMNS_BLOCK,
-            message0: "mutate %1 %2 %3 %4",
+            message0: "compute column %1 as %2 %3 %4",
             colour: operatorsColour,
             args0: [
                 <TextInputDefinition>{
@@ -322,7 +322,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: DATA_MUTATE_NUMBER_BLOCK,
-            message0: "mutate %1 %2 %3 %4",
+            message0: "compute column %1 as %2 %3 %4",
             colour: operatorsColour,
             args0: [
                 <TextInputDefinition>{
@@ -388,7 +388,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     type: "field_dropdown",
                     name: "calc",
                     options: [
-                        ["mean", "mean"],
+                        ["average", "average"],
                         ["median", "med"],
                         ["min", "min"],
                         ["max", "max"],
@@ -430,7 +430,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     type: "field_dropdown",
                     name: "calc",
                     options: [
-                        ["mean", "mean"],
+                        ["average", "average"],
                         ["median", "med"],
                         ["min", "min"],
                         ["max", "max"],
