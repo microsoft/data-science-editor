@@ -7,7 +7,7 @@ import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import SaveIcon from "@material-ui/icons/Save"
 import CheckCircle from "@material-ui/icons/CheckCircle"
-import CancelIcon from '@material-ui/icons/Cancel';
+import CancelIcon from "@material-ui/icons/Cancel"
 // tslint:disable-next-line: no-submodule-imports
 import useDevices from "../../components/hooks/useDevices"
 import {
@@ -42,16 +42,18 @@ import { lightEncode } from "../../../jacdac-ts/src/jdom/light"
 import { LedPixelCmd } from "../../../jacdac-ts/src/jdom/constants"
 import { createStyles, makeStyles } from "@material-ui/core"
 
-const useStyles = makeStyles(() => createStyles({
-    buttonFail: {
-        color:"white",
-        backgroundColor:"red"
-    },
-    buttonSuccess: {
-        color:"white",
-        backgroundColor:"green"
-    },
-}));
+const useStyles = makeStyles(() =>
+    createStyles({
+        buttonFail: {
+            color: "white",
+            backgroundColor: "red",
+        },
+        buttonSuccess: {
+            color: "white",
+            backgroundColor: "green",
+        },
+    })
+)
 
 interface ServiceDescriptor {
     name: string
@@ -102,7 +104,7 @@ function DataSetTable(props: {
     updateDescriptor: (DeviceDescriptor) => void
     className?: string
 }) {
-    const classes = useStyles();
+    const classes = useStyles()
     const { dataSet, updateDescriptor } = props
     const { descriptors, headers } = dataSet
 
@@ -115,9 +117,11 @@ function DataSetTable(props: {
     const handleCommentChange = (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
-        const descriptor = descriptors.find(d => d.deviceIdentifier = event.target.id)
-        descriptor.comment = event.target.value;
-        updateDescriptor(descriptor);
+        const descriptor = descriptors.find(
+            d => d.deviceIdentifier == event.target.id
+        )
+        descriptor.comment = event.target.value
+        updateDescriptor(descriptor)
     }
 
     return (
@@ -172,7 +176,9 @@ function DataSetTable(props: {
                                         variant="contained"
                                         className={classes.buttonSuccess}
                                         onClick={setPass(descriptor, false)}
-                                        startIcon={<CheckCircle fontSize="small" />}
+                                        startIcon={
+                                            <CheckCircle fontSize="small" />
+                                        }
                                     >
                                         Pass
                                     </Button>
@@ -183,7 +189,9 @@ function DataSetTable(props: {
                                         variant="contained"
                                         className={classes.buttonFail}
                                         onClick={setPass(descriptor, true)}
-                                        startIcon={<CancelIcon fontSize="small" />}
+                                        startIcon={
+                                            <CancelIcon fontSize="small" />
+                                        }
                                     >
                                         FAIL
                                     </Button>
@@ -216,17 +224,15 @@ async function LEDTest(service: JDService) {
 
         if (service.device.connected)
             await service?.sendCmdAsync(LedPixelCmd.Run, encoded)
-
-        await delay(50)
     }
 }
 
 async function SingleRGBLEDTest(service: JDService) {
     for (let i = 0; i < 8; i++) {
         const encoded = lightEncode(
-            `setone % #
-                show 20`,
-            [i, 0xff0000]
+            `setall #
+            show 20`,
+            [0xff0000]
         )
 
         if (service.device.connected)
@@ -250,7 +256,7 @@ export default function Commissioner() {
         "Services seen",
         "Packets seen",
         "Functional test pass",
-        "Comment"
+        "Comment",
     ]
     const { fileStorage } = useContext(ServiceManagerContext)
 
