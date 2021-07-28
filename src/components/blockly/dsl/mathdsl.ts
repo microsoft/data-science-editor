@@ -1,6 +1,7 @@
 import { ExpressionWithErrors } from "../../vm/VMgenerator"
 import {
     BlockDefinition,
+    BlockReference,
     CategoryDefinition,
     OptionsInputDefinition,
     ValueInputDefinition,
@@ -179,7 +180,7 @@ const mathDsl: BlockDomainSpecificLanguage = {
                         },
                     },
                 },
-                { kind: "block", type: "jacdac_math_random" },
+                <BlockReference>{ kind: "block", type: "jacdac_math_random" },
                 { kind: "block", type: "jacdac_math_map" },
                 { kind: "block", type: "math_number" },
             ],

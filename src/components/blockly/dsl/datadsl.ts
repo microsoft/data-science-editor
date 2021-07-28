@@ -38,7 +38,11 @@ import FileSaveField from "../fields/FileSaveField"
 import { saveCSV } from "./workers/csv.proxy"
 import FileOpenField from "../fields/FileOpenField"
 import palette from "./palette"
-import { tidyResolveFieldColumn, tidyResolveFieldColumns } from "../fields/tidy"
+import {
+    tidyResolveFieldColumn,
+    tidyResolveFieldColumns,
+    tidySlice,
+} from "../fields/tidy"
 
 const DATA_ARRANGE_BLOCK = "data_arrange"
 const DATA_SELECT_BLOCK = "data_select"
@@ -47,6 +51,7 @@ const DATA_FILTER_COLUMNS_BLOCK = "data_filter_columns"
 const DATA_FILTER_STRING_BLOCK = "data_filter_string"
 const DATA_MUTATE_COLUMNS_BLOCK = "data_mutate_columns"
 const DATA_MUTATE_NUMBER_BLOCK = "data_mutate_number"
+const DATA_SLICE_BLOCK = "data_slice"
 const DATA_SUMMARIZE_BLOCK = "data_summarize"
 const DATA_SUMMARIZE_BY_GROUP_BLOCK = "data_summarize_by_group"
 const DATA_COUNT_BLOCK = "data_count"
@@ -476,6 +481,42 @@ const dataDsl: BlockDomainSpecificLanguage = {
         },
         {
             kind: "block",
+            type: DATA_SLICE_BLOCK,
+            message0: "slice %1 rows from %2",
+            colour: operatorsColour,
+            args0: [
+                <NumberInputDefinition>{
+                    type: "field_number",
+                    name: "count",
+                    min: 1
+                },
+                <OptionsInputDefinition>{
+                    type: "field_dropdown",
+                    name: "operator",
+                    options: [
+                        ["head", "head"],
+                        ["tail", "tail"],
+                        ["sample", "sample"],
+                    ],
+                },
+            ],
+            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            dataPreviewField: true,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            transformData: (b: BlockSvg, data: any[]) => {
+                const count = b.getFieldValue("count")
+                const operator = b.getFieldValue("operator")
+                return tidySlice(data, {
+                    sliceHead: operator === "head" ? count : undefined,
+                    sliceTail: operator === "tail" ? count : undefined,
+                    sliceSample: operator === "sample" ? count : undefined,
+                })
+            },
+            template: "meta",
+        },
+        {
+            kind: "block",
             type: DATA_COUNT_BLOCK,
             message0: "count distinct %1",
             colour: computeColour,
@@ -785,6 +826,10 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 <BlockReference>{
                     kind: "block",
                     type: DATA_FILTER_STRING_BLOCK,
+                },
+                <BlockReference>{
+                    kind: "block",
+                    type: DATA_SLICE_BLOCK,
                 },
             ],
         },
