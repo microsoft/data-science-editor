@@ -14,6 +14,7 @@ import {
     PACKET_RECEIVE,
     SRV_CONTROL,
     SRV_LED_PIXEL,
+    SRV_LED,
     SRV_ROLE_MANAGER,
 } from "../../../jacdac-ts/src/jdom/constants"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
@@ -36,11 +37,13 @@ import GridHeader from "../../components/ui/GridHeader"
 import Dashboard from "../../components/dashboard/Dashboard"
 import ServiceManagerContext from "../../components/ServiceManagerContext"
 import useEffectAsync from "../../components/useEffectAsync"
+import { delay } from "../../../jacdac-ts/src/jdom/utils"
 import { dependencyId } from "../../../jacdac-ts/src/jdom/eventsource"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import { lightEncode } from "../../../jacdac-ts/src/jdom/light"
-import { LedPixelCmd } from "../../../jacdac-ts/src/jdom/constants"
+import { LedPixelCmd, LedCmd } from "../../../jacdac-ts/src/jdom/constants"
 import { createStyles, makeStyles } from "@material-ui/core"
+import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -215,28 +218,34 @@ function DataSetTable(props: {
 }
 
 async function LEDTest(service: JDService) {
-    for (let i = 0; i < 8; i++) {
-        const encoded = lightEncode(
-            `setone % #
-                show 20`,
-            [i, 0xff0000]
-        )
+    while (service.device.connected) {
+        for (let i = 0; i < 8; i++) {
+            const encoded = lightEncode(
+                `setone % #
+                    show 20`,
+                [i, 0xff0000]
+            )
 
-        if (service.device.connected)
-            await service?.sendCmdAsync(LedPixelCmd.Run, encoded)
+            if (service.device.connected)
+                await service?.sendCmdAsync(LedPixelCmd.Run, encoded)
+            await delay(200)
+        }
     }
 }
 
 async function SingleRGBLEDTest(service: JDService) {
-    for (let i = 0; i < 8; i++) {
-        const encoded = lightEncode(
-            `setall #
-            show 20`,
-            [0xff0000]
-        )
+    const pack = (r, g, b, animDelay) => {
+        const unpacked: [number, number, number, number] = [r, g, b, animDelay]
+        return jdpack("u8 u8 u8 u8", unpacked)
+    }
 
-        if (service.device.connected)
-            await service?.sendCmdAsync(LedPixelCmd.Run, encoded)
+    while (service.device.connected) {
+        await service.sendCmdAsync(LedCmd.Animate, pack(255, 0, 0, 200))
+        await delay(500)
+        await service.sendCmdAsync(LedCmd.Animate, pack(0, 255, 0, 200))
+        await delay(500)
+        await service.sendCmdAsync(LedCmd.Animate, pack(0, 0, 255, 200))
+        await delay(500)
     }
 }
 
@@ -248,6 +257,7 @@ export default function Commissioner() {
         ignoreSelf: true,
         ignoreSimulators: true,
     }).filter(d => !filterBrains || !isBrain(d))
+    const [title, setTitle] = useState("")
     const [dataSet, setDataSet] = useState<DeviceDescriptor[]>()
     const tableHeaders = [
         "Device identifier",
@@ -261,10 +271,15 @@ export default function Commissioner() {
     const { fileStorage } = useContext(ServiceManagerContext)
 
     const testDevice = async (d: JDDevice) => {
+        d.identify()
+
         for (const srv of d.services()) {
             switch (srv.serviceClass) {
                 case SRV_LED_PIXEL:
                     LEDTest(srv)
+                    break
+                case SRV_LED:
+                    SingleRGBLEDTest(srv)
                     break
             }
         }
@@ -312,6 +327,10 @@ export default function Commissioner() {
     const table = {
         headers: tableHeaders,
         descriptors: dataSet,
+    }
+
+    const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setTitle(event.target.value)
     }
 
     useEffect(
@@ -392,7 +411,11 @@ export default function Commissioner() {
             str += descriptor.comment + lineEnding
         })
 
-        fileStorage.saveText(`commissioning-${dateString()}.csv`, str)
+        const fileTitle = title.length ? `${title}-` : "" 
+        fileStorage.saveText(
+            `${fileTitle}commissioning-${dateString()}.csv`,
+            str
+        )
     }
 
     const handleFilterBrains = () => setFilterBrains(!filterBrains)
@@ -457,6 +480,14 @@ export default function Commissioner() {
                             >
                                 {filterBrains ? "Show brains" : "Hide brains"}
                             </Button>
+                        </Grid>
+                        <Grid item>
+                            <TextField
+                                onChange={handleTitleChange}
+                                label="Title"
+                                fullWidth
+                                value={title}
+                            />
                         </Grid>
                     </Grid>
                 </Grid>
