@@ -260,8 +260,8 @@ const dataDsl: BlockDomainSpecificLanguage = {
                         ["!=", "ne"],
                     ],
                 },
-                <TextInputDefinition>{
-                    type: "field_input",
+                <NumberInputDefinition>{
+                    type: "field_number",
                     name: "rhs",
                 },
             ],
@@ -374,7 +374,6 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 <NumberInputDefinition>{
                     type: "field_number",
                     name: "rhs",
-                    dataType: "number",
                 },
             ],
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
