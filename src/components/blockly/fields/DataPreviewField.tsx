@@ -5,10 +5,9 @@ import {
     BlockDefinition,
     DataPreviewInputDefinition,
     identityTransformData,
+    TABLE_PREVIEW_MAX_ITEMS,
 } from "../toolbox"
 import { Grid } from "@material-ui/core"
-
-const MAX_ITEMS = 64
 
 export interface DataPreviewOptions extends ReactFieldJSON {
     compare?: boolean
@@ -48,7 +47,7 @@ export default class DataPreviewField extends ReactField<ReactFieldJSON> {
                     tableHeight={295}
                     empty={"no data"}
                     transformed={false}
-                    maxItems={MAX_ITEMS}
+                    maxItems={TABLE_PREVIEW_MAX_ITEMS}
                 />
             )
         return (
@@ -59,7 +58,7 @@ export default class DataPreviewField extends ReactField<ReactFieldJSON> {
                         tableHeight={295}
                         empty={"no data"}
                         transformed={false}
-                        maxItems={MAX_ITEMS}
+                        maxItems={TABLE_PREVIEW_MAX_ITEMS}
                     />
                 </Grid>
                 <Grid item xs={6}>
@@ -68,7 +67,7 @@ export default class DataPreviewField extends ReactField<ReactFieldJSON> {
                         tableHeight={295}
                         empty={"no data"}
                         transformed={true}
-                        maxItems={MAX_ITEMS}
+                        maxItems={TABLE_PREVIEW_MAX_ITEMS}
                     />
                 </Grid>
             </Grid>
@@ -77,7 +76,8 @@ export default class DataPreviewField extends ReactField<ReactFieldJSON> {
 }
 
 export function addDataPreviewField(block: BlockDefinition): BlockDefinition {
-    if (block?.dataPreviewField) {
+    const preview = block?.dataPreviewField
+    if (preview) {
         // don't add twice
         block.dataPreviewField = false
         // parse args and add one more arg
@@ -87,7 +87,8 @@ export function addDataPreviewField(block: BlockDefinition): BlockDefinition {
         block.message0 += ` %${index + 1}`
 
         // does this mutate the data?
-        const identity = block.transformData === identityTransformData
+        const identity =
+            preview === "after" || block.transformData === identityTransformData
 
         // add field
         block.args0.push({

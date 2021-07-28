@@ -19,6 +19,9 @@ import {
     sliceMin,
     sliceMax,
     rename,
+    deviation,
+    sum,
+    variance,
 } from "@tidyjs/tidy"
 import { bin } from "d3-array"
 import { sampleCorrelation, linearRegression } from "simple-statistics"
@@ -133,9 +136,13 @@ export interface DataTidyRequest extends DataRequest {
 
 const summarizers = {
     average: mean,
-    med: median,
-    min: min,
-    max: max,
+    mean,
+    median,
+    min,
+    max,
+    sum,
+    deviation,
+    variance,
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -347,7 +354,7 @@ const handlers: { [index: string]: (props: any) => object[] } = {
         if (!column) return data
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return tidy(data, count(column as any))
+        return tidy(data, count(column as any, { name: "count" }))
     },
     record_window: (props: DataRecordWindowRequest) => {
         const { data, previousData, horizon } = props

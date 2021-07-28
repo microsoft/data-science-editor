@@ -117,7 +117,7 @@ export interface BlockDefinition extends BlockReference {
     ) => Promise<object[]>
 
     // show data preview field
-    dataPreviewField?: boolean
+    dataPreviewField?: boolean | "after"
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -187,6 +187,7 @@ export const CHART_WIDTH = 388
 export const CHART_HEIGHT = 240
 export const TABLE_WIDTH = CHART_WIDTH
 export const TABLE_HEIGHT = 480
+export const TABLE_PREVIEW_MAX_ITEMS = 48
 export const ANIMATE_MAX_ITEMS = 128
 export const PIE_MAX_ITEMS = 12
 export const BAR_MAX_ITEMS = 1 << 10
