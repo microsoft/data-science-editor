@@ -23,7 +23,7 @@ function ScatterPlotWidget() {
         description: `Scatter plot of ${x}x${y}`,
         mark: "point",
         encoding: {
-            x: { field: x, type: "quantitative" },
+            x: { field: x, type: "quantitative", scale: { zero: false } },
             y: { field: y, type: "quantitative" },
         },
         data: { name: "values" },

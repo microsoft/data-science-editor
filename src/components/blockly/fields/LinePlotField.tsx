@@ -22,7 +22,7 @@ function LinePlotWidget() {
         description: `Line plot of ${x}x${y}`,
         mark: "line",
         encoding: {
-            x: { field: x, type: "quantitative" },
+            x: { field: x, type: "quantitative", scale: { zero: false } },
             y: { field: y, type: "quantitative" },
         },
         data: { name: "values" },

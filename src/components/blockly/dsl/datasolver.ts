@@ -1,6 +1,6 @@
 import { CHANGE } from "../../../../jacdac-ts/src/jdom/constants"
 import { roundWithPrecision } from "../../../../jacdac-ts/src/jdom/utils"
-import { resolveBlockDefinition } from "../toolbox"
+import { identityTransformData, resolveBlockDefinition } from "../toolbox"
 import { BlockWithServices } from "../WorkspaceContext"
 
 export function registerDataSolver(block: BlockWithServices) {
@@ -17,20 +17,24 @@ export function registerDataSolver(block: BlockWithServices) {
             block.childBlocks_?.[0]) as BlockWithServices
         const nextServices = next?.jacdacServices
         try {
-            const start = performance.now()
-            // operation
-            const newData = await transformData(
-                block,
-                services.data,
-                nextServices?.data
-            )
-            const end = performance.now()
-            console.debug(
-                `data ${block.type}: ${roundWithPrecision(
-                    (end - start) / 1000,
-                    3
-                )}s`
-            )
+            // eslint-disable-next-line @typescript-eslint/ban-types
+            let newData: object[]
+            if (transformData === identityTransformData) newData = services.data
+            else {
+                //const start = performance.now()
+                newData = await transformData(
+                    block,
+                    services.data,
+                    nextServices?.data
+                )
+                //const end = performance.now()
+                //console.debug(
+                //    `data ${block.type}: ${roundWithPrecision(
+                //        (end - start) / 1000,
+                //        3
+                //    )}s`
+                //)
+            }
 
             // propagte
             services.transformedData = newData
