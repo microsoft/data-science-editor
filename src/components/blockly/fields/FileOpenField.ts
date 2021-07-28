@@ -45,6 +45,7 @@ export default class FileOpenField extends Field implements FieldWithServices {
     SERIALIZABLE = true
     // eslint-disable-next-line @typescript-eslint/ban-types
     private _data: object[]
+    private initialized = false
 
     constructor(options?: any) {
         super("...", null, options)
@@ -76,6 +77,12 @@ export default class FileOpenField extends Field implements FieldWithServices {
         return (this.value_ as FileOpenFieldValue)?.name || "..."
     }
 
+    init() {
+        super.init()
+        this.initialized = true
+        this.updateData()
+    }
+
     setSourceBlock(block: Block) {
         super.setSourceBlock(block)
         this.updateData()
@@ -86,6 +93,10 @@ export default class FileOpenField extends Field implements FieldWithServices {
         this.parseSource()
     }
 
+    notifyServicesChanged() {
+        this.updateData()
+    }
+
     private async parseSource() {
         const source = (this.value_ as FileOpenFieldValue)?.source
         if (source) {
@@ -93,10 +104,6 @@ export default class FileOpenField extends Field implements FieldWithServices {
             this._data = csv?.data
             this.updateData()
         }
-    }
-
-    notifyServicesChanged() {
-        this.updateData()
     }
 
     private async updateData() {

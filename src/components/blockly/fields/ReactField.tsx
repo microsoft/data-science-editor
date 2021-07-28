@@ -77,7 +77,7 @@ export default class ReactField<T> extends ReactFieldBase<T> {
     setSourceBlock(block: Blockly.Block) {
         const changed = block !== this.sourceBlock_
         super.setSourceBlock(block)
-        if (changed) {
+        if (changed && !block?.isInsertionMarker()) {
             const bs = block as unknown as BlockWithServices
             if (!bs.jacdacServices) {
                 bs.jacdacServices = new BlockServices()

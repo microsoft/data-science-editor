@@ -13,6 +13,7 @@ export default class BuiltinDataSetField
     implements FieldWithServices
 {
     static KEY = "jacdac_field_data_builtin_dataset"
+    private initialized = false
 
     // eslint-disable-next-line @typescript-eslint/ban-types
     static fromJson(options: object) {
@@ -24,18 +25,37 @@ export default class BuiltinDataSetField
         super(() => Object.keys(builtins).map(k => [k, k]), undefined, options)
     }
 
+    init() {
+        super.init()
+        this.initialized = true
+        this.updateData()
+    }
+
     private async updateData() {
+        if (!this.initialized) return
+
         const url = builtins[this.getValue()]
         if (!url) return
 
         // load dataset as needed
         const sourceBlock = this.getSourceBlock() as BlockWithServices
-        const services = sourceBlock?.jacdacServices
+        const marker = !!sourceBlock?.isInsertionMarker()
+        if (!sourceBlock || marker) return
+
+        const services = sourceBlock.jacdacServices
         if (!services || services.cache[BuiltinDataSetField.KEY] === url) return // already downloaded
+        // avoid races
+        services.cache[BuiltinDataSetField.KEY] = url
 
         const { data, errors } = await downloadCSV(url)
-        console.debug(`csv parse`, { data, errors })
-        services.cache[BuiltinDataSetField.KEY] = url
+        console.debug(`csv parse`, {
+            id: sourceBlock.id,
+            marker,
+            data,
+            errors,
+            services,
+            url,
+        })
         services.data = data
     }
 
