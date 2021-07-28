@@ -48,8 +48,12 @@ export interface NumberInputDefinition extends InputDefinition {
     precision?: number
 }
 
-export interface ColorInputDefnition extends InputDefinition {
+export interface ColorInputDefinition extends InputDefinition {
     color?: string
+}
+
+export interface DataColumnInputDefinition extends InputDefinition {
+    dataType?: "string" | "number" | "boolean"
 }
 
 export type EventTemplate = "event"

@@ -34,6 +34,7 @@ const widgetDSL: BlockDomainSpecificLanguage = {
                 {
                     type: DataColumnChooserField.KEY,
                     name: "field",
+                    dataType: "number",
                 },
                 <DummyInputDefinition>{
                     type: "input_dummy",

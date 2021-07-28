@@ -14,6 +14,7 @@ import {
     VariableInputDefinition,
     TextInputDefinition,
     SeparatorDefinition,
+    DataColumnInputDefinition,
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
 import postTransformData from "./workers/data.proxy"
@@ -38,7 +39,11 @@ import FileSaveField from "../fields/FileSaveField"
 import { saveCSV } from "./workers/csv.proxy"
 import FileOpenField from "../fields/FileOpenField"
 import palette from "./palette"
-import { tidyHeaders } from "../fields/tidy"
+import {
+    tidyResolveFieldColumn,
+    tidyResolveFieldColumns,
+    tidyResolveHeader,
+} from "../fields/tidy"
 
 const DATA_ARRANGE_BLOCK = "data_arrange"
 const DATA_SELECT_BLOCK = "data_select"
@@ -92,7 +97,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             transformData: (b: BlockSvg, data: any[]) => {
-                const column = b.getFieldValue("column")
+                const column = tidyResolveFieldColumn(data, b, "column")
                 const order = b.getFieldValue("order")
                 const descending = order === "descending"
                 return postTransformData(<DataArrangeRequest>{
@@ -129,7 +134,9 @@ const dataDsl: BlockDomainSpecificLanguage = {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             transformData: (b: BlockSvg, data: any[]) => {
                 const columns = [1, 2, 3]
-                    .map(column => b.getFieldValue(`column${column}`))
+                    .map(column =>
+                        tidyResolveFieldColumn(data, b, `column${column}`)
+                    )
                     .filter(c => !!c)
                 return postTransformData(<DataDropRequest>{
                     type: "drop",
@@ -142,7 +149,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: DATA_SELECT_BLOCK,
-            message0: "select %1 %2 %3",
+            message0: "select %1 %2 %3 %4",
             colour: operatorsColour,
             args0: [
                 {
@@ -157,14 +164,20 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     type: DataColumnChooserField.KEY,
                     name: "column3",
                 },
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "column4",
+                },
             ],
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             transformData: (b: BlockSvg, data: any[]) => {
-                const columns = [1, 2, 3]
-                    .map(column => b.getFieldValue(`column${column}`))
+                const columns = [1, 2, 3, 4]
+                    .map(column =>
+                        tidyResolveFieldColumn(data, b, `column${column}`)
+                    )
                     .filter(c => !!c)
                 return postTransformData(<DataSelectRequest>{
                     type: "select",
@@ -207,7 +220,9 @@ const dataDsl: BlockDomainSpecificLanguage = {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             transformData: (b: BlockSvg, data: any[]) => {
                 const columns = [1, 2]
-                    .map(column => b.getFieldValue(`column${column}`))
+                    .map(column =>
+                        tidyResolveFieldColumn(data, b, `column${column}`)
+                    )
                     .filter(c => !!c)
                 const logic = b.getFieldValue("logic")
                 return postTransformData(<DataFilterColumnsRequest>{
@@ -251,7 +266,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             transformData: (b: BlockSvg, data: any[]) => {
-                const column = b.getFieldValue("column")
+                const column = tidyResolveFieldColumn(data, b, "column")
                 const logic = b.getFieldValue("logic")
                 const rhs = b.getFieldValue("rhs")
                 return postTransformData(<DataFilterStringRequest>{
@@ -305,8 +320,8 @@ const dataDsl: BlockDomainSpecificLanguage = {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             transformData: (b: BlockSvg, data: any[]) => {
                 const newcolumn = b.getFieldValue("newcolumn")
-                const lhs = b.getFieldValue("lhs")
-                const rhs = b.getFieldValue("rhs")
+                const lhs = tidyResolveFieldColumn(data, b, "lhs")
+                const rhs = tidyResolveFieldColumn(data, b, "rhs")
                 const logic = b.getFieldValue("logic")
                 return postTransformData(<DataMutateColumnsRequest>{
                     type: "mutate_columns",
@@ -332,6 +347,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 {
                     type: DataColumnChooserField.KEY,
                     name: "lhs",
+                    dataType: "number",
                 },
                 <OptionsInputDefinition>{
                     type: "field_dropdown",
@@ -352,6 +368,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 <NumberInputDefinition>{
                     type: "field_number",
                     name: "rhs",
+                    dataType: "number",
                 },
             ],
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
@@ -360,7 +377,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             transformData: (b: BlockSvg, data: any[]) => {
                 const newcolumn = b.getFieldValue("newcolumn")
-                const lhs = b.getFieldValue("lhs")
+                const lhs = tidyResolveFieldColumn(data, b, "lhs")
                 const rhs = b.getFieldValue("rhs")
                 const logic = b.getFieldValue("logic")
                 return postTransformData(<DataMutateNumberRequest>{
@@ -383,6 +400,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 {
                     type: DataColumnChooserField.KEY,
                     name: "column",
+                    dataType: "number",
                 },
                 <OptionsInputDefinition>{
                     type: "field_dropdown",
@@ -400,8 +418,12 @@ const dataDsl: BlockDomainSpecificLanguage = {
             dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             transformData: (b: BlockSvg, data: any[]) => {
-                const column = b.getFieldValue("column")
-                const columns = column ? [column] : tidyHeaders(data, "number")?.headers
+                const columns = tidyResolveFieldColumns(
+                    data,
+                    b,
+                    "column",
+                    "number"
+                )
                 const calc = b.getFieldValue("calc")
                 return postTransformData(<DataSummarizeRequest>{
                     type: "summarize",
@@ -442,8 +464,8 @@ const dataDsl: BlockDomainSpecificLanguage = {
             dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             transformData: (b: BlockSvg, data: any[]) => {
-                const column = b.getFieldValue("column")
-                const by = b.getFieldValue("by")
+                const column = tidyResolveFieldColumn(data, b, "column")
+                const by = tidyResolveFieldColumn(data, b, "by")
                 const calc = b.getFieldValue("calc")
                 return postTransformData(<DataSummarizeByGroupRequest>{
                     type: "summarize_by_group",
@@ -471,7 +493,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             transformData: (b: BlockSvg, data: any[]) => {
-                const column = b.getFieldValue("column")
+                const column = tidyResolveFieldColumn(data, b, "column")
                 return postTransformData(<DataCountRequest>{
                     type: "count",
                     column,
@@ -618,13 +640,15 @@ const dataDsl: BlockDomainSpecificLanguage = {
             type: DATA_CORRELATION_BLOCK,
             message0: "correlation %1 %2",
             args0: [
-                {
+                <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
                     name: "column1",
+                    dataType: "number",
                 },
                 {
                     type: DataColumnChooserField.KEY,
                     name: "column2",
+                    dataType: "number",
                 },
             ],
             inputsInline: false,
@@ -649,13 +673,15 @@ const dataDsl: BlockDomainSpecificLanguage = {
             type: DATA_LINEAR_REGRESSION_BLOCK,
             message0: "linear regression %1 %2",
             args0: [
-                {
+                <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
                     name: "column1",
+                    dataType: "number",
                 },
                 {
                     type: DataColumnChooserField.KEY,
                     name: "column2",
+                    dataType: "number",
                 },
             ],
             inputsInline: false,
