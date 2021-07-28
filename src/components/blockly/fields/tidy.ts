@@ -1,4 +1,9 @@
 import { Block } from "blockly"
+import {
+    DataSliceOptions,
+    DataSliceRequest,
+} from "../../../workers/data/dist/node_modules/data.worker"
+import postTransformData from "../dsl/workers/data.proxy"
 
 /* eslint-disable @typescript-eslint/ban-types */
 export function tidyHeaders(
@@ -51,4 +56,38 @@ export function tidyResolveFieldColumns(
         if (header) return [header]
         else return []
     }
+}
+
+export function tidySlice(
+    data: object[],
+    options: DataSliceOptions
+): Promise<object[]> {
+    if (!options || !data?.length) return Promise.resolve(data)
+
+    const { length } = data
+    const {
+        sliceMin = Infinity,
+        sliceMax = Infinity,
+        sliceHead = Infinity,
+        sliceTail = Infinity,
+        sliceSample = Infinity,
+    } = options
+
+    // shortcut
+    if (
+        length < sliceMin &&
+        length < sliceMax &&
+        length < sliceHead &&
+        length < sliceTail &&
+        length < sliceSample
+    )
+        return Promise.resolve(data)
+
+    // crunch in webworker
+    console.debug(`slice data`, { data, options })
+    return postTransformData(<DataSliceRequest>{
+        type: "slice",
+        data,
+        ...options,
+    })
 }

@@ -6,6 +6,7 @@ import useBlockData from "../useBlockData"
 import type { VisualizationSpec } from "react-vega"
 import VegaLiteWidget from "./VegaLiteWidget"
 import { tidyResolveHeader } from "./tidy"
+import { BAR_MAX_ITEMS } from "../toolbox"
 
 function BarWidget() {
     const { sourceBlock } = useContext(WorkspaceContext)
@@ -17,7 +18,10 @@ function BarWidget() {
         "number"
     )
     if (!index || !value) return null
-    
+
+    const sliceOptions = {
+        sliceMax: BAR_MAX_ITEMS,
+    }
     const spec: VisualizationSpec = {
         description: `Bar plot of ${index} x ${value}`,
         mark: "bar",
@@ -27,7 +31,7 @@ function BarWidget() {
         },
         data: { name: "values" },
     }
-    return <VegaLiteWidget spec={spec} />
+    return <VegaLiteWidget spec={spec} slice={sliceOptions} />
 }
 
 export default class BarField extends ReactInlineField {
