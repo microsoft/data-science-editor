@@ -23,7 +23,7 @@ const HISTOGRAM_BLOCK = "chart_histogram"
 const BOX_PLOT_BLOCK = "chart_box_plot"
 const CHART_SHOW_TABLE_BLOCK = "chart_show_table"
 
-const colour = paletteColorByIndex(3)
+const colour = paletteColorByIndex(4)
 const chartDsl: BlockDomainSpecificLanguage = {
     id: "chart",
     createBlocks: () => [

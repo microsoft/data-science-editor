@@ -29,7 +29,6 @@ import {
     DataMutateColumnsRequest,
     DataMutateNumberRequest,
     DataCountRequest,
-    DataRecordWindowRequest,
     DataBinRequest,
     DataCorrelationRequest,
     DataLinearRegressionRequest,
@@ -39,11 +38,7 @@ import FileSaveField from "../fields/FileSaveField"
 import { saveCSV } from "./workers/csv.proxy"
 import FileOpenField from "../fields/FileOpenField"
 import palette from "./palette"
-import {
-    tidyResolveFieldColumn,
-    tidyResolveFieldColumns,
-    tidyResolveHeader,
-} from "../fields/tidy"
+import { tidyResolveFieldColumn, tidyResolveFieldColumns } from "../fields/tidy"
 
 const DATA_ARRANGE_BLOCK = "data_arrange"
 const DATA_SELECT_BLOCK = "data_select"
@@ -60,14 +55,14 @@ const DATA_DATAVARIABLE_READ_BLOCK = "data_dataset_read"
 const DATA_DATAVARIABLE_WRITE_BLOCK = "data_dataset_write"
 const DATA_DATASET_BUILTIN_BLOCK = "data_dataset_builtin"
 const DATA_TABLE_TYPE = "DataTable"
-const DATA_RECORD_WINDOW_BLOCK = "data_record_window"
 const DATA_BIN_BLOCK = "data_bin"
 const DATA_CORRELATION_BLOCK = "data_correlation"
 const DATA_LINEAR_REGRESSION_BLOCK = "data_linear_regression"
 const DATA_LOAD_FILE_BLOCK = "data_load_file"
 const DATA_SAVE_FILE_BLOCK = "data_save_file"
 
-const [datasetColour, operatorsColour, statisticsColour] = palette()
+const [datasetColour, operatorsColour, computeColour, statisticsColour] =
+    palette()
 const dataVariablesColour = "%{BKY_VARIABLES_HUE}"
 
 const dataDsl: BlockDomainSpecificLanguage = {
@@ -283,7 +278,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_MUTATE_COLUMNS_BLOCK,
             message0: "compute column %1 as %2 %3 %4",
-            colour: operatorsColour,
+            colour: computeColour,
             args0: [
                 <TextInputDefinition>{
                     type: "field_input",
@@ -338,7 +333,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_MUTATE_NUMBER_BLOCK,
             message0: "compute column %1 as %2 %3 %4",
-            colour: operatorsColour,
+            colour: computeColour,
             args0: [
                 <TextInputDefinition>{
                     type: "field_input",
@@ -395,7 +390,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_SUMMARIZE_BLOCK,
             message0: "summarize %1 calculate %2",
-            colour: operatorsColour,
+            colour: computeColour,
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
@@ -438,7 +433,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_SUMMARIZE_BY_GROUP_BLOCK,
             message0: "group %1 by %2 calculate %3",
-            colour: operatorsColour,
+            colour: computeColour,
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
@@ -480,8 +475,8 @@ const dataDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: DATA_COUNT_BLOCK,
-            message0: "count %1",
-            colour: operatorsColour,
+            message0: "count distinct %1",
+            colour: computeColour,
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
@@ -581,49 +576,19 @@ const dataDsl: BlockDomainSpecificLanguage = {
         },
         <BlockDefinition>{
             kind: "block",
-            type: DATA_RECORD_WINDOW_BLOCK,
-            message0: "record last %1 s",
-            args0: [
-                <NumberInputDefinition>{
-                    type: "field_number",
-                    name: "horizon",
-                    value: 10,
-                },
-            ],
-            inputsInline: false,
-            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            colour: operatorsColour,
-            template: "meta",
-            dataPreviewField: true,
-            transformData: async (
-                block: BlockSvg,
-                data: { time: number }[],
-                previousData: { time: number }[]
-            ) => {
-                const horizon = block.getFieldValue("horizon") || 10
-                return postTransformData(<DataRecordWindowRequest>{
-                    type: "record_window",
-                    data,
-                    previousData,
-                    horizon,
-                })
-            },
-        },
-        <BlockDefinition>{
-            kind: "block",
             type: DATA_BIN_BLOCK,
-            message0: "bin %1",
+            message0: "bin by %1",
             args0: [
-                {
+                <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
                     name: "column",
+                    dataType: "number",
                 },
             ],
             inputsInline: false,
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            colour: operatorsColour,
+            colour: computeColour,
             template: "meta",
             dataPreviewField: true,
             transformData: async (block: BlockSvg, data: object[]) => {
@@ -767,7 +732,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
         },
         <CategoryDefinition>{
             kind: "category",
-            name: "Operators",
+            name: "Organize",
             colour: operatorsColour,
             contents: [
                 <BlockReference>{
@@ -790,6 +755,13 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     kind: "block",
                     type: DATA_FILTER_STRING_BLOCK,
                 },
+            ],
+        },
+        <CategoryDefinition>{
+            kind: "category",
+            name: "Compute",
+            colour: computeColour,
+            contents: [
                 <BlockReference>{
                     kind: "block",
                     type: DATA_MUTATE_COLUMNS_BLOCK,
@@ -813,10 +785,6 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 <BlockReference>{
                     kind: "block",
                     type: DATA_BIN_BLOCK,
-                },
-                <BlockDefinition>{
-                    kind: "block",
-                    type: DATA_RECORD_WINDOW_BLOCK,
                 },
             ],
         },
