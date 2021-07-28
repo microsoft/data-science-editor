@@ -1,6 +1,6 @@
 import { BlockWithServices } from "../WorkspaceContext"
 import { ReactFieldJSON } from "./ReactField"
-import { tidyHeaders } from "./nivo"
+import { tidyHeaders } from "./tidy"
 import { FieldDropdown } from "blockly"
 
 export interface DataColumnChooseOptions extends ReactFieldJSON {

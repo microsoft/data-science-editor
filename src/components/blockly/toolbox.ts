@@ -48,8 +48,16 @@ export interface NumberInputDefinition extends InputDefinition {
     precision?: number
 }
 
-export interface ColorInputDefnition extends InputDefinition {
+export interface ColorInputDefinition extends InputDefinition {
     color?: string
+}
+
+export interface DataColumnInputDefinition extends InputDefinition {
+    dataType?: "string" | "number" | "boolean"
+}
+
+export interface DataPreviewInputDefinition extends InputDefinition {
+    compare?: boolean
 }
 
 export type EventTemplate = "event"
@@ -109,7 +117,7 @@ export interface BlockDefinition extends BlockReference {
     ) => Promise<object[]>
 
     // show data preview field
-    dataPreviewField?: boolean
+    dataPreviewField?: boolean | "after"
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -177,8 +185,14 @@ export const toolsColour = paletteColorByIndex(-1)
 
 export const CHART_WIDTH = 388
 export const CHART_HEIGHT = 240
+export const CHART_SVG_MAX_ITEMS = 256
+export const BAR_MAX_ITEMS = 1 << 10
+export const SCATTER_MAX_ITEMS = 1 << 13
+export const LINE_MAX_ITEMS = 1 << 10
+
 export const TABLE_WIDTH = CHART_WIDTH
 export const TABLE_HEIGHT = 480
+export const TABLE_PREVIEW_MAX_ITEMS = 48
 
 export const VM_WARNINGS_CATEGORY = "vm"
 export const JSON_WARNINGS_CATEGORY = "json"

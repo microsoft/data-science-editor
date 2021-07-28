@@ -1,74 +1,33 @@
-import React, { lazy, useContext } from "react"
+import React, { useContext } from "react"
 import WorkspaceContext from "../WorkspaceContext"
 import { ReactFieldJSON } from "./ReactField"
 import ReactInlineField from "./ReactInlineField"
-import useBlockChartProps from "../useBlockChartProps"
 import useBlockData from "../useBlockData"
-import { PointerBoundary } from "./PointerBoundary"
-import Suspense from "../../ui/Suspense"
-import { NoSsr } from "@material-ui/core"
-import { tidyToNivo } from "./nivo"
-import { CHART_HEIGHT, CHART_WIDTH } from "../toolbox"
-const Line = lazy(() => import("./Line"))
+import type { VisualizationSpec } from "react-vega"
+import VegaLiteWidget from "./VegaLiteWidget"
+import { tidyResolveHeader } from "./tidy"
+import { LINE_MAX_ITEMS } from "../toolbox"
 
-function LineChartWidget() {
-    const { sourceBlock, dragging } = useContext(WorkspaceContext)
+function LinePlotWidget() {
+    const { sourceBlock } = useContext(WorkspaceContext)
     const { data } = useBlockData(sourceBlock)
+    const x = tidyResolveHeader(data, sourceBlock?.getFieldValue("x"), "number")
+    const y = tidyResolveHeader(data, sourceBlock?.getFieldValue("y"), "number")
+    if (!x || !y) return null
 
-    // need to map data to nivo
-    const x = sourceBlock?.getFieldValue("x")
-    const y = sourceBlock?.getFieldValue("y")
-    const { series, labels } = tidyToNivo(data, [x, y], ["x", "y"])
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { chartProps } = useBlockChartProps<any>(sourceBlock, {
-        colors: { scheme: "category10" },
-        data: series,
-        margin: { top: 8, right: 8, bottom: 38, left: 64 },
-        xScale: { type: "linear", min: "auto", max: "auto" },
-        yScale: { type: "linear", min: "auto", max: "auto" },
-        axisTop: null,
-        axisRight: null,
-        enablePoints: false,
-        animate: !dragging,
-        isInteractive: !dragging,
-        axisBottom: {
-            tickSize: 5,
-            tickPadding: 5,
-            tickRotation: 0,
-            legend: x,
-            legendPosition: "middle",
-            legendOffset: 34,
+    const sliceOptions = {
+        sliceHead: LINE_MAX_ITEMS,
+    }
+    const spec: VisualizationSpec = {
+        description: `Line plot of ${x}x${y}`,
+        mark: "line",
+        encoding: {
+            x: { field: x, type: "quantitative", scale: { zero: false } },
+            y: { field: y, type: "quantitative" },
         },
-        axisLeft: {
-            tickSize: 5,
-            tickPadding: 5,
-            tickRotation: 0,
-            legend: y,
-            legendPosition: "middle",
-            legendOffset: -32,
-        },
-    })
-    if (chartProps) chartProps.data = series
-    const hasData =
-        labels?.length === 2 &&
-        labels[0] !== labels[1] &&
-        !!chartProps?.data?.[0].data?.length
-    if (!hasData) return null
-
-    chartProps.axisBottom.legend = labels[0]
-    chartProps.axisLeft.legend = labels[1]
-
-    return (
-        <NoSsr>
-            <div style={{ background: "#fff", borderRadius: "0.25rem" }}>
-                <PointerBoundary>
-                    <Suspense>
-                        <Line width={CHART_WIDTH} height={CHART_HEIGHT} {...chartProps} />
-                    </Suspense>
-                </PointerBoundary>
-            </div>
-        </NoSsr>
-    )
+        data: { name: "values" },
+    }
+    return <VegaLiteWidget spec={spec} slice={sliceOptions} />
 }
 
 export default class LinePlotField extends ReactInlineField {
@@ -85,6 +44,6 @@ export default class LinePlotField extends ReactInlineField {
     }
 
     renderInlineField() {
-        return <LineChartWidget />
+        return <LinePlotWidget />
     }
 }

@@ -32,7 +32,7 @@ export class WorkspaceServices extends JDEventSource {
 
     set workspaceJSON(value: WorkspaceJSON) {
         this._workspaceJSON = value
-        this.emit(CHANGE)
+        //this.emit(CHANGE)
     }
 
     get runner() {

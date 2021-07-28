@@ -1,23 +1,30 @@
+import { BlockSvg } from "blockly"
 import { toIdentifier } from "../../../../jacdac-ts/src/vm/compile"
 import { CmdWithErrors, makeVMBase } from "../../vm/VMgenerator"
 import LogViewField from "../fields/LogViewField"
 import VariablesField from "../fields/VariablesFields"
 import WatchValueField from "../fields/WatchValueField"
 import {
+    BlockDefinition,
     BlockReference,
     CODE_STATEMENT_TYPE,
     DATA_SCIENCE_STATEMENT_TYPE,
     identityTransformData,
     InputDefinition,
     LabelDefinition,
+    NumberInputDefinition,
     toolsColour,
 } from "../toolbox"
+import { DataRecordWindowRequest } from "../../../workers/data/dist/node_modules/data.worker"
 import BlockDomainSpecificLanguage from "./dsl"
+import postTransformData from "./workers/data.proxy"
 
-const WATCH_BLOCK = "jacdac_tools_watch"
-const LOG_BLOCK = "jacdac_tools_log"
-const VIEW_LOG_BLOCK = "jacdac_tools_log_view"
-const VARIABLES_BLOCK = "jacdac_variables_view"
+const WATCH_BLOCK = "tools_watch"
+const LOG_BLOCK = "tools_log"
+const VIEW_LOG_BLOCK = "tools_log_view"
+const VARIABLES_BLOCK = "tools_variables_view"
+const RECORD_WINDOW_BLOCK = "tools_record_window"
+
 const colour = toolsColour
 
 const toolsDSL: BlockDomainSpecificLanguage = {
@@ -98,6 +105,37 @@ const toolsDSL: BlockDomainSpecificLanguage = {
             tooltip: `View console content`,
             template: "meta",
         },
+        <BlockDefinition>{
+            kind: "block",
+            type: RECORD_WINDOW_BLOCK,
+            message0: "record last %1 s",
+            args0: [
+                <NumberInputDefinition>{
+                    type: "field_number",
+                    name: "horizon",
+                    value: 10,
+                },
+            ],
+            inputsInline: false,
+            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            colour: colour,
+            template: "meta",
+            dataPreviewField: true,
+            transformData: async (
+                block: BlockSvg,
+                data: { time: number }[],
+                previousData: { time: number }[]
+            ) => {
+                const horizon = block.getFieldValue("horizon") || 10
+                return postTransformData(<DataRecordWindowRequest>{
+                    type: "record_window",
+                    data,
+                    previousData,
+                    horizon,
+                })
+            },
+        },
     ],
     createCategory: () => [
         {
@@ -131,6 +169,10 @@ const toolsDSL: BlockDomainSpecificLanguage = {
                 {
                     kind: "block",
                     type: VIEW_LOG_BLOCK,
+                },
+                <BlockDefinition>{
+                    kind: "block",
+                    type: RECORD_WINDOW_BLOCK,
                 },
             ],
         },

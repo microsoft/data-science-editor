@@ -6,40 +6,33 @@ import useBlockData from "../useBlockData"
 import type { VisualizationSpec } from "react-vega"
 import VegaLiteWidget from "./VegaLiteWidget"
 import { tidyResolveHeader } from "./tidy"
-import { BAR_MAX_ITEMS } from "../toolbox"
 
-function BarWidget() {
+function HistogramWidget() {
     const { sourceBlock } = useContext(WorkspaceContext)
     const { data } = useBlockData(sourceBlock)
     const index = tidyResolveHeader(data, sourceBlock?.getFieldValue("index"))
-    const value = tidyResolveHeader(
-        data,
-        sourceBlock?.getFieldValue("value"),
-        "number"
-    )
-    if (!index || !value) return null
 
-    const sliceOptions = {
-        sliceMax: BAR_MAX_ITEMS,
-    }
+    if (!index) return null
+
     const spec: VisualizationSpec = {
-        description: `Bar plot of ${index} x ${value}`,
-        mark: "bar",
+        description: `Histogram of ${index}`,
+        mark: { type: "bar", tooltip: false },
         encoding: {
-            x: { field: index, type: "nominal" },
-            y: { field: value, type: "quantitative" },
+            x: { bin: true, field: index },
+            y: { aggregate: "count" },
         },
         data: { name: "values" },
     }
-    return <VegaLiteWidget spec={spec} slice={sliceOptions} />
+
+    return <VegaLiteWidget spec={spec} />
 }
 
-export default class BarField extends ReactInlineField {
-    static KEY = "jacdac_field_bar_plot"
+export default class HistogramField extends ReactInlineField {
+    static KEY = "jacdac_field_histogram"
     static EDITABLE = false
 
     static fromJson(options: ReactFieldJSON) {
-        return new BarField(options)
+        return new HistogramField(options)
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -48,6 +41,6 @@ export default class BarField extends ReactInlineField {
     }
 
     renderInlineField() {
-        return <BarWidget />
+        return <HistogramWidget />
     }
 }

@@ -14,6 +14,14 @@ import {
     mutate,
     count,
     SummarizeSpec,
+    sliceHead,
+    sliceTail,
+    sliceMin,
+    sliceMax,
+    deviation,
+    sum,
+    variance,
+    sliceSample,
 } from "@tidyjs/tidy"
 import { bin } from "d3-array"
 import { sampleCorrelation, linearRegression } from "simple-statistics"
@@ -116,11 +124,29 @@ export interface DataLinearRegressionRequest extends DataRequest {
     column2: string
 }
 
+export interface DataSliceOptions {
+    sliceHead?: number
+    sliceTail?: number
+    sliceSample?: number
+    
+    sliceMax?: number
+    sliceMin?: number
+    sliceColumn?: string
+}
+
+export interface DataSliceRequest extends DataRequest, DataSliceOptions {
+    type: "slice"
+}
+
 const summarizers = {
-    mean: mean,
-    med: median,
-    min: min,
-    max: max,
+    average: mean,
+    mean,
+    median,
+    min,
+    max,
+    sum,
+    deviation,
+    variance,
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -332,7 +358,7 @@ const handlers: { [index: string]: (props: any) => object[] } = {
         if (!column) return data
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return tidy(data, count(column as any))
+        return tidy(data, count(column as any, { name: "count" }))
     },
     record_window: (props: DataRecordWindowRequest) => {
         const { data, previousData, horizon } = props
@@ -371,6 +397,28 @@ const handlers: { [index: string]: (props: any) => object[] } = {
         return [
             { slope: linregmb.m.toFixed(3), intercept: linregmb.b.toFixed(3) },
         ]
+    },
+    slice: (props: DataSliceRequest) => {
+        const { data } = props
+        let index = 0
+        const tidied: object[] = data
+            ? (tidy(
+                  data,
+                  props.sliceHead ? sliceHead(props.sliceHead) : undefined,
+                  props.sliceTail ? sliceTail(props.sliceTail) : undefined,
+                  props.sliceSample
+                      ? sliceSample(props.sliceSample)
+                      : undefined,
+                  props.sliceMin
+                      ? sliceMin(props.sliceMin, props.sliceColumn)
+                      : undefined,
+                  props.sliceMax
+                      ? sliceMax(props.sliceMax, props.sliceColumn)
+                      : undefined,
+                  mutate({ index: () => index++ })
+              ) as object[])
+            : []
+        return tidied
     },
 }
 

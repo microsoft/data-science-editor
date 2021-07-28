@@ -18,10 +18,11 @@ import LinePlotField from "./LinePlotField"
 import GaugeWidgetField from "./GaugeWidgetField"
 import BuiltinDataSetField from "./BuiltinDataSetField"
 import BarChartField from "./BarField"
-import PiePlotField from "./PieField"
+import HistogramField from "./HistogramField"
 import FileSaveField from "./FileSaveField"
 import FileOpenField from "./FileOpenField"
 import DataPreviewField from "./DataPreviewField"
+import BoxPlotField from "./BoxPlotField"
 
 let reactFieldShadows: BlockDefinition[]
 export function registerFields() {
@@ -65,7 +66,9 @@ export function registerFields() {
         ScatterPlotField,
         LinePlotField,
         BarChartField,
-        PiePlotField,
+
+        HistogramField,
+        BoxPlotField,
 
         FileSaveField,
         FileOpenField,
