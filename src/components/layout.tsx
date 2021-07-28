@@ -326,7 +326,7 @@ function LayoutWithContext(props: LayoutProps) {
     const { frontmatter } = pageContext || {}
     const makeCodeTool = /tools\/makecode-/.test(path)
     const fullWidthTools =
-        /^\/(tools\/(makecode-|vm-editor|data-science-editor)|dashboard)/.test(
+        /^\/(editors\/|tools\/makecode-|dashboard)/.test(
             path
         )
     const {

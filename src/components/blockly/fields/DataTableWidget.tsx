@@ -56,13 +56,20 @@ const useStyles = makeStyles(() => ({
     },
 }))
 
-export function DataTableWidget(props: {
+export default function DataTableWidget(props: {
+    label?: string
     transformed?: boolean
     tableHeight?: number
     empty?: ReactNode
     maxItems?: number
 }): JSX.Element {
-    const { transformed, tableHeight = TABLE_HEIGHT, empty, maxItems } = props
+    const {
+        label,
+        transformed,
+        tableHeight = TABLE_HEIGHT,
+        empty,
+        maxItems,
+    } = props
     const { sourceBlock } = useContext(WorkspaceContext)
     const { data, transformedData } = useBlockData<{ id?: string } & unknown>(
         sourceBlock
@@ -112,6 +119,11 @@ export function DataTableWidget(props: {
                         alignItems="center"
                         spacing={1}
                     >
+                        {label && (
+                            <Grid item>
+                                <Typography variant="h6">{label}</Typography>
+                            </Grid>
+                        )}
                         <Grid item>
                             <CopyButton
                                 size="small"

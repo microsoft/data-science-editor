@@ -11,7 +11,7 @@ export default function OpenVMEditorButton(props: { className?: string }) {
             title="Block Editor"
             edge="start"
             color="inherit"
-            to="/tools/vm-editor/"
+            to="/editors/vm/"
         >
             <ExtensionIcon />
         </IconButtonWithTooltip>

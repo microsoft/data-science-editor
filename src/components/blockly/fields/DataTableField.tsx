@@ -1,7 +1,7 @@
 import React from "react"
 import { ReactFieldJSON } from "./ReactField"
 import ReactInlineField from "./ReactInlineField"
-import { DataTableWidget } from "./DataTableWidget"
+import DataTableWidget from "./DataTableWidget"
 
 const MAX_ITEMS = 256
 export default class DataTableField extends ReactInlineField {

@@ -56,6 +56,10 @@ export interface DataColumnInputDefinition extends InputDefinition {
     dataType?: "string" | "number" | "boolean"
 }
 
+export interface DataPreviewInputDefinition extends InputDefinition {
+    compare?: boolean
+}
+
 export type EventTemplate = "event"
 
 export type EventFieldTemplate = "event_field"
