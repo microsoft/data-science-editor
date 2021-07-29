@@ -33,7 +33,7 @@ export default function Page() {
                 showDescription={true}
             />
 
-            <h3> Platforms</h3>
+            <h3> Embedded Platforms</h3>
 
             <GithubRepositoryList
                 repos={[
@@ -44,7 +44,7 @@ export default function Page() {
                 showDescription={true}
             />
 
-            <h2>Embedded clients</h2>
+            <h2>Embedded Firmware</h2>
 
             <GithubRepositoryList
                 repos={[
@@ -54,10 +54,10 @@ export default function Page() {
                 showDescription={true}
             />
 
-            <h2>Web libraries</h2>
+            <h2>Libraries</h2>
 
             <GithubRepositoryList
-                repos={["microsoft/jacdac-ts"]}
+                repos={["microsoft/jacdac-ts", "microsoft/jacdac-dotnet"]}
                 showDescription={true}
             />
 
