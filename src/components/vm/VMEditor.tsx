@@ -1,5 +1,11 @@
 import { Grid, NoSsr } from "@material-ui/core"
-import React, { useContext, useEffect, useMemo, useState } from "react"
+import React, {
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useState,
+} from "react"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import useVMRunner from "./useVMRunner"
 import VMDiagnostics from "./VMDiagnostics"
@@ -117,10 +123,26 @@ export default function VMEditor() {
     const dsls = useMemo(() => {
         return vmDsls
     }, [])
+    const handleOnBeforeSaveWorkspaceFile = useCallback(
+        (file: WorkspaceFile) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const f = file as any
+            f.vm = workspaceJSONToVMProgram(file.json, dsls)
+        },
+        []
+    )
 
     return (
         <NoSsr>
-            <BlockProvider storageKey={VM_SOURCE_STORAGE_KEY} dsls={dsls}>
+            <BlockProvider
+                storageKey={VM_SOURCE_STORAGE_KEY}
+                dsls={dsls}
+                onBeforeSaveWorkspaceFile={
+                    Flags.diagnostics
+                        ? handleOnBeforeSaveWorkspaceFile
+                        : undefined
+                }
+            >
                 <VMEditorWithContext />
             </BlockProvider>
         </NoSsr>

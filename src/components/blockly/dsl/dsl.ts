@@ -10,7 +10,11 @@ import {
     ServiceBlockDefinition,
 } from "../toolbox"
 import { CmdWithErrors, ExpressionWithErrors } from "../../vm/VMgenerator"
-import { BlockJSON, WorkspaceJSON } from "../../../../jacdac-ts/src/dsl/workspacejson"
+import {
+    BlockJSON,
+    WorkspaceFile,
+    WorkspaceJSON,
+} from "../../../../jacdac-ts/src/dsl/workspacejson"
 
 export interface CreateBlocksOptions {
     theme: Theme
@@ -106,6 +110,8 @@ export default interface BlockDomainSpecificLanguage {
     compileExpressionToVM?: (
         options: CompileExpressionToVMOptions
     ) => ExpressionWithErrors
+
+    onBeforeSaveWorkspaceFile?: (file: WorkspaceFile) => void
 }
 
 export function resolveDsl(dsls: BlockDomainSpecificLanguage[], type: string) {

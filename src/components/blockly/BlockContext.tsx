@@ -86,9 +86,10 @@ export default BlockContext
 export function BlockProvider(props: {
     storageKey?: string
     dsls: BlockDomainSpecificLanguage[]
+    onBeforeSaveWorkspaceFile?: (file: WorkspaceFile) => void
     children: ReactNode
 }) {
-    const { storageKey, dsls, children } = props
+    const { storageKey, dsls, children, onBeforeSaveWorkspaceFile } = props
     const { setError } = useContext(AppContext)
     const [workspaceFileHandle, setFileHandle] =
         useState<FileSystemFileHandle>()
@@ -249,6 +250,9 @@ export function BlockProvider(props: {
             xml: workspaceXml,
             json: workspaceJSON,
         }
+        // allow dsls to add data
+        dsls.forEach(dsl => dsl.onBeforeSaveWorkspaceFile?.(file))
+        onBeforeSaveWorkspaceFile?.(file)
         const fileContent = JSON.stringify(file)
         await setWorkspaceFileContent(fileContent)
     }, [editorId, workspaceFileHandle, workspaceJSON])
