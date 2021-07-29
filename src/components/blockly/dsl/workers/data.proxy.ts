@@ -1,4 +1,4 @@
-import {
+import type {
     DataRequest,
     DataMessage,
 } from "../../../../workers/data/dist/node_modules/data.worker"

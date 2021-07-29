@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import workerProxy from "./proxy"
-import {
+import type {
     CsvDownloadRequest,
     CsvSaveRequest,
     CsvParseRequest,
