@@ -18,6 +18,8 @@ import ReactField from "./fields/ReactField"
 import useWorkspaceEvent from "./useWorkspaceEvent"
 
 export class WorkspaceServices extends JDEventSource {
+    static readonly WORKSPACE_CHANGE = "workspaceChange"
+
     private _workspaceJSON: WorkspaceJSON
     private _runner: VMProgramRunner
     private _roleManager: RoleManager
@@ -31,8 +33,10 @@ export class WorkspaceServices extends JDEventSource {
     }
 
     set workspaceJSON(value: WorkspaceJSON) {
-        this._workspaceJSON = value
-        //this.emit(CHANGE)
+        if (value !== this._workspaceJSON) {
+            this._workspaceJSON = value
+            this.emit(WorkspaceServices.WORKSPACE_CHANGE)
+        }
     }
 
     get runner() {
@@ -118,7 +122,6 @@ export interface BlockWithServices extends BlockSvg {
 
 export interface WorkspaceContextProps {
     workspace?: WorkspaceSvg
-    workspaceJSON?: WorkspaceJSON
     dragging?: boolean
     sourceBlock?: Block
     sourceId?: string
@@ -132,7 +135,6 @@ export interface WorkspaceContextProps {
 
 export const WorkspaceContext = createContext<WorkspaceContextProps>({
     workspace: undefined,
-    workspaceJSON: undefined,
     dragging: false,
     sourceBlock: undefined,
     flyout: false,
@@ -161,7 +163,6 @@ export function WorkspaceProvider(props: {
     const services = (workspace as BlocklyWorkspaceWithServices)?.jacdacServices
     const roleManager = useChange(services, _ => _?.roleManager)
     const runner = useChange(services, _ => _?.runner)
-    const workspaceJSON = useChange(services, _ => _?.workspaceJSON)
     const [dragging, setDragging] = useState(!!workspace?.isDragging())
 
     const resolveRole = () => {
@@ -230,7 +231,6 @@ export function WorkspaceProvider(props: {
             value={{
                 sourceBlock,
                 workspace,
-                workspaceJSON,
                 dragging,
                 sourceId,
                 services,

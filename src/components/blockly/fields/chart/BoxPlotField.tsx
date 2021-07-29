@@ -1,11 +1,11 @@
 import React, { useContext } from "react"
-import WorkspaceContext from "../WorkspaceContext"
-import { ReactFieldJSON } from "./ReactField"
-import ReactInlineField from "./ReactInlineField"
-import useBlockData from "../useBlockData"
+import WorkspaceContext from "../../WorkspaceContext"
+import { ReactFieldJSON } from "../ReactField"
+import ReactInlineField from "../ReactInlineField"
+import useBlockData from "../../useBlockData"
 import type { VisualizationSpec } from "react-vega"
 import VegaLiteWidget from "./VegaLiteWidget"
-import { tidyResolveHeader } from "./tidy"
+import { tidyResolveHeader } from "../tidy"
 
 function BoxPlotWidget() {
     const { sourceBlock } = useContext(WorkspaceContext)
