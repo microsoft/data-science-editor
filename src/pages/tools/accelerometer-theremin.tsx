@@ -26,7 +26,7 @@ import { usePlayTone } from "../../components/hooks/usePlayTone"
 import Dashboard from "../../components/dashboard/Dashboard"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import { useId } from "react-use-id-hook"
-import { LiveAnnouncer, LiveMessage } from "react-aria-live"
+import { LiveMessage } from "react-aria-live"
 
 const TONE_DURATION = 50
 const TONE_THROTTLE = 100
@@ -63,7 +63,7 @@ export default function AccelerometerTheremin() {
         setSRAnnouncement(
             `changing ${sonificationProperty} based on ${event.target.value} of accelerometer.`
         ) // using the value that is being set in the previous line results in the value pre-update being announced. I suspect this has to do with how react re-renders. using event.target.value to mittegate this.
-        
+
         // in progress: make sure an Aria alert gets generated indecating the access that has been selected when streaming starts, or when radio button selection changes.
     }
 
@@ -77,17 +77,17 @@ export default function AccelerometerTheremin() {
     // use a closure to capture accel variable
     // act as a toggle for the button the indicates streaming state.
     const handleSelectAccelerometerService = accel => () => {
-        setSRAnnouncement('') // clearing the live region for the text to be announced when streaming starts. I don't have a good feeling about this approach.
+        setSRAnnouncement("") // clearing the live region for the text to be announced when streaming starts. I don't have a good feeling about this approach.
         accelService == accel
             ? setAccelService(undefined)
             : setAccelService(accel)
-            if(accelService !== accel) {
+        if (accelService !== accel) {
             setSRAnnouncement(
                 `changing ${sonificationProperty} based on ${axisToSonify} of accelerometer.`
             ) // to investigate: this announcement does not happen after the user changes the selection of the axis and hits the start streaming button. hitting stop streaming and then start streaming however announces that axis being sonified and the property.
-            } else{
-                setSRAnnouncement('')
-            }
+        } else {
+            setSRAnnouncement("")
+        }
     }
 
     // filter to only show accelerometers in dashboard
@@ -138,144 +138,138 @@ export default function AccelerometerTheremin() {
     }, [accelService, playTone]) // re-register if accelerometers, buzzers change
 
     return (
-        <LiveAnnouncer>
-            <>
-                <section id={sectionId}>
-                    <Grid container spacing={2}>
-                        <GridHeader title="Audio controls" />
-                        <Grid item xs={12}>
-                            <Button
-                                variant={"outlined"}
-                                onClick={toggleBrowserAudio}
-                            >
-                                {browserAudio
-                                    ? "Stop browser audio"
-                                    : "Start browser audio"}
-                            </Button>
-                            <LiveMessage
-                                message={srAnnouncement}
-                                aria-live="assertive"
-                            />
-                        </Grid>
-                        {!accelerometers.length && (
-                            <>
-                                <GridHeader title="Connect a device" />
-                                <Grid item xs>
-                                    <ConnectAlert
-                                        serviceClass={SRV_ACCELEROMETER}
-                                    />
-                                </Grid>
-                            </>
-                        )}
-                        {!!accelerometers.length && (
-                            <>
-                                <GridHeader title="Available accelerometers" />
-                                {accelerometers.map(accelerometer => (
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={6}
-                                        lg={4}
-                                        xl={3}
-                                        key={accelerometer.id}
-                                    >
-                                        <Card>
-                                            <DeviceCardHeader
-                                                device={accelerometer.device}
-                                                showAvatar={true}
-                                                showMedia={true}
-                                            />
-                                            <CardContent>
-                                                <Typography variant="h5">
-                                                    {(accelerometer ===
-                                                    accelService
-                                                        ? "Streaming from "
-                                                        : "") +
-                                                        (accelerometer.device
-                                                            .physical
-                                                            ? "Physical "
-                                                            : "Virtual ") +
-                                                        `Accelerometer ${accelerometer.friendlyName}`}
-                                                </Typography>
-                                            </CardContent>
-                                            <CardActions>
-                                                <FormControl component="fieldset">
-                                                    <FormLabel component="legend">
-                                                        Select axis of the
-                                                        accelerometer to sonify
-                                                    </FormLabel>
-                                                    <RadioGroup
-                                                        aria-label="axis"
-                                                        name="axisToSonify"
-                                                        value={axisToSonify}
-                                                        onChange={
-                                                            handleAccessChange
-                                                        }
-                                                    >
-                                                        <FormControlLabel
-                                                            value="x"
-                                                            control={<Radio />}
-                                                            label="X axis"
-                                                        />
-                                                        <FormControlLabel
-                                                            value="y"
-                                                            control={<Radio />}
-                                                            label="Y axis"
-                                                        />
-                                                        <FormControlLabel
-                                                            value="z"
-                                                            control={<Radio />}
-                                                            label="Z axis"
-                                                        />
-                                                    </RadioGroup>
-                                                    <FormLabel component="legend">
-                                                        Select property of the
-                                                        sound to change
-                                                    </FormLabel>
-                                                    <RadioGroup
-                                                        aria-label="sonification property"
-                                                        name="soundProperty"
-                                                        value={
-                                                            sonificationProperty
-                                                        }
-                                                        onChange={
-                                                            handelPropertySelectionChange
-                                                        }
-                                                    >
-                                                        <FormControlLabel
-                                                            value="frequency"
-                                                            control={<Radio />}
-                                                            label="buzzer frequency"
-                                                        />
-                                                        <FormControlLabel
-                                                            value="volume"
-                                                            control={<Radio />}
-                                                            label="buzzer volume"
-                                                        />
-                                                    </RadioGroup>
-                                                </FormControl>
-
-                                                <Button
-                                                    variant={"outlined"}
-                                                    onClick={handleSelectAccelerometerService(
-                                                        accelerometer
-                                                    )}
-                                                >
-                                                    {accelerometer ===
-                                                    accelService
-                                                        ? "Stop streaming"
-                                                        : "Start streaming"}
-                                                </Button>
-                                            </CardActions>
-                                        </Card>
-                                    </Grid>
-                                ))}
-                            </>
-                        )}
+        <>
+            <section id={sectionId}>
+                <Grid container spacing={2}>
+                    <GridHeader title="Audio controls" />
+                    <Grid item xs={12}>
+                        <Button
+                            variant={"outlined"}
+                            onClick={toggleBrowserAudio}
+                        >
+                            {browserAudio
+                                ? "Stop browser audio"
+                                : "Start browser audio"}
+                        </Button>
+                        <LiveMessage
+                            message={srAnnouncement}
+                            aria-live="assertive"
+                        />
                     </Grid>
-                </section>
-                <Dashboard deviceFilter={dashboardDeviceFilter} />
-            </>
-        </LiveAnnouncer>
+                    {!accelerometers.length && (
+                        <>
+                            <GridHeader title="Connect a device" />
+                            <Grid item xs>
+                                <ConnectAlert
+                                    serviceClass={SRV_ACCELEROMETER}
+                                />
+                            </Grid>
+                        </>
+                    )}
+                    {!!accelerometers.length && (
+                        <>
+                            <GridHeader title="Available accelerometers" />
+                            {accelerometers.map(accelerometer => (
+                                <Grid
+                                    item
+                                    xs={12}
+                                    sm={6}
+                                    lg={4}
+                                    xl={3}
+                                    key={accelerometer.id}
+                                >
+                                    <Card>
+                                        <DeviceCardHeader
+                                            device={accelerometer.device}
+                                            showAvatar={true}
+                                            showMedia={true}
+                                        />
+                                        <CardContent>
+                                            <Typography variant="h5">
+                                                {(accelerometer === accelService
+                                                    ? "Streaming from "
+                                                    : "") +
+                                                    (accelerometer.device
+                                                        .physical
+                                                        ? "Physical "
+                                                        : "Virtual ") +
+                                                    `Accelerometer ${accelerometer.friendlyName}`}
+                                            </Typography>
+                                        </CardContent>
+                                        <CardActions>
+                                            <FormControl component="fieldset">
+                                                <FormLabel component="legend">
+                                                    Select axis of the
+                                                    accelerometer to sonify
+                                                </FormLabel>
+                                                <RadioGroup
+                                                    aria-label="axis"
+                                                    name="axisToSonify"
+                                                    value={axisToSonify}
+                                                    onChange={
+                                                        handleAccessChange
+                                                    }
+                                                >
+                                                    <FormControlLabel
+                                                        value="x"
+                                                        control={<Radio />}
+                                                        label="X axis"
+                                                    />
+                                                    <FormControlLabel
+                                                        value="y"
+                                                        control={<Radio />}
+                                                        label="Y axis"
+                                                    />
+                                                    <FormControlLabel
+                                                        value="z"
+                                                        control={<Radio />}
+                                                        label="Z axis"
+                                                    />
+                                                </RadioGroup>
+                                                <FormLabel component="legend">
+                                                    Select property of the sound
+                                                    to change
+                                                </FormLabel>
+                                                <RadioGroup
+                                                    aria-label="sonification property"
+                                                    name="soundProperty"
+                                                    value={sonificationProperty}
+                                                    onChange={
+                                                        handelPropertySelectionChange
+                                                    }
+                                                >
+                                                    <FormControlLabel
+                                                        value="frequency"
+                                                        control={<Radio />}
+                                                        label="buzzer frequency"
+                                                    />
+                                                    <FormControlLabel
+                                                        value="volume"
+                                                        control={<Radio />}
+                                                        label="buzzer volume"
+                                                    />
+                                                </RadioGroup>
+                                            </FormControl>
+
+                                            <Button
+                                                variant={"outlined"}
+                                                onClick={handleSelectAccelerometerService(
+                                                    accelerometer
+                                                )}
+                                            >
+                                                {accelerometer === accelService
+                                                    ? "Stop streaming"
+                                                    : "Start streaming"}
+                                            </Button>
+                                        </CardActions>
+                                    </Card>
+                                </Grid>
+                            ))}
+                        </>
+                    )}
+                </Grid>
+            </section>
+            <Dashboard deviceFilter={dashboardDeviceFilter} />
+        </>
     )
 }
