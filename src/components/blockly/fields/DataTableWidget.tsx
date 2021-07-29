@@ -104,7 +104,7 @@ export default function DataTableWidget(props: {
             : v + ""
 
     const handleCopy = async () => {
-        const text = unparseCSV(table)
+        const text = unparseCSV(raw)
         return text
     }
 
