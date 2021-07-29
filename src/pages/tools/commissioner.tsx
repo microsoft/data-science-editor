@@ -249,6 +249,11 @@ async function SingleRGBLEDTest(service: JDService) {
     }
 }
 
+async function StatusLEDTest(device: JDDevice) {
+    await delay(1000);
+    device.identify();
+}
+
 export default function Commissioner() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const [filterBrains, setFilterBrains] = useState<boolean>(true)
@@ -271,8 +276,7 @@ export default function Commissioner() {
     const { fileStorage } = useContext(ServiceManagerContext)
 
     const testDevice = async (d: JDDevice) => {
-        d.identify()
-
+        StatusLEDTest(d);
         for (const srv of d.services()) {
             switch (srv.serviceClass) {
                 case SRV_LED_PIXEL:
