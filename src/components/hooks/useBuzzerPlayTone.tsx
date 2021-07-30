@@ -10,7 +10,7 @@ import BuzzerServer, {
 } from "../../../jacdac-ts/src/servers/buzzerserver"
 import WebAudioContext from "../ui/WebAudioContext"
 
-export function usePlayTone() {
+export default function useBuzzerPlayTone() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const buzzers = useServices({ serviceClass: SRV_BUZZER })
     const [buzzerServer, setBuzzerServer] = useState<BuzzerServer>()
