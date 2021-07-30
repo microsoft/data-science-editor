@@ -22,7 +22,7 @@ import {
 import ConnectAlert from "../../components/alert/ConnectAlert"
 import DeviceCardHeader from "../../components/DeviceCardHeader"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
-import { usePlayTone } from "../../components/hooks/usePlayTone"
+import useBuzzerPlayTone from "../../components/hooks/useBuzzerPlayTone"
 import Dashboard from "../../components/dashboard/Dashboard"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import { useId } from "react-use-id-hook"
@@ -36,7 +36,7 @@ const TONE_THROTTLE = 100
 // so it will render again and update the light array whenever the bus connects/disconnects
 // a light sensor
 export default function LightsensorAccessible() {
-    const { playTone, toggleBrowserAudio, browserAudio } = usePlayTone()
+    const { playTone, toggleBrowserAudio, browserAudio } = useBuzzerPlayTone()
 
     // identifiers for accessibility
     const sectionId = useId()
