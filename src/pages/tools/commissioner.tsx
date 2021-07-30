@@ -250,8 +250,15 @@ async function SingleRGBLEDTest(service: JDService) {
 }
 
 async function StatusLEDTest(device: JDDevice) {
-    await delay(1000);
-    device.identify();
+    const l = device.statusLight;
+    while(device.connected) {
+        l.blink(0xff0000,0x000000,250, 3);
+        await delay(1000);
+        l.blink(0x00ff00,0x000000,250, 3);
+        await delay(1000);
+        l.blink(0x0000ff,0x000000,250, 3);
+        await delay(1000);
+    }
 }
 
 export default function Commissioner() {
