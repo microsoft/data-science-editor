@@ -56,7 +56,7 @@ function VariablesWidget() {
 
 export default class VariablesField extends ReactInlineField {
     static KEY = "jacdac_field_variables_view"
-    static EDITABLE = false
+    EDITABLE = false
 
     static fromJson(options: ReactFieldJSON) {
         return new VariablesField(options)

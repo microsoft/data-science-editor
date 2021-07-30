@@ -33,7 +33,7 @@ function BoxPlotWidget() {
 
 export default class BoxPlotField extends ReactInlineField {
     static KEY = "jacdac_field_box_plot"
-    static EDITABLE = false
+    EDITABLE = false
 
     static fromJson(options: ReactFieldJSON) {
         return new BoxPlotField(options)

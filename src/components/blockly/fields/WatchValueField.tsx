@@ -92,7 +92,7 @@ function WatchValueWidget() {
 
 export default class WatchValueField extends ReactInlineField {
     static KEY = "jacdac_field_watch_value"
-    static EDITABLE = false
+    EDITABLE = false
 
     static fromJson(options: ReactFieldJSON) {
         return new WatchValueField(options)

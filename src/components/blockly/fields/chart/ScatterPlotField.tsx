@@ -33,7 +33,7 @@ function ScatterPlotWidget() {
 
 export default class ScatterPlotField extends ReactInlineField {
     static KEY = "jacdac_field_scatter_plot"
-    static EDITABLE = false
+    EDITABLE = false
 
     static fromJson(options: ReactFieldJSON) {
         return new ScatterPlotField(options)
