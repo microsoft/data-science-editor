@@ -1,21 +1,21 @@
 import React, { lazy, useContext } from "react"
 import { Drawer, Divider, makeStyles, createStyles } from "@material-ui/core"
-import Suspense from "./ui/Suspense"
+import Suspense from "../ui/Suspense"
 import { IconButton } from "gatsby-theme-material-ui"
 // tslint:disable-next-line: no-submodule-imports
-import { DRAWER_WIDTH, MOBILE_BREAKPOINT, TOC_DRAWER_WIDTH } from "./layout"
+import { DRAWER_WIDTH, MOBILE_BREAKPOINT, TOC_DRAWER_WIDTH } from "../layout"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft"
-import AppContext, { DrawerType } from "./AppContext"
-import PacketRecorder from "./PacketRecorder"
-import DrawerToolsButtonGroup from "./DrawerToolsButtonGroup"
-import ConnectAlert from "./alert/ConnectAlert"
+import AppContext, { DrawerType } from "../AppContext"
+import PacketRecorder from "../PacketRecorder"
+import DrawerToolsButtonGroup from "../DrawerToolsButtonGroup"
+import ConnectAlert from "../alert/ConnectAlert"
 
-const Toc = lazy(() => import("./Toc"))
-const PacketView = lazy(() => import("./tools/PacketView"))
-const JDomTreeView = lazy(() => import("./tools/JDomTreeView"))
-const DrawerSearchResults = lazy(() => import("./DrawerSearchResults"))
-const DrawerSearchInput = lazy(() => import("./DrawerSearchInput"))
+const Toc = lazy(() => import("../Toc"))
+const PacketView = lazy(() => import("../tools/PacketView"))
+const JDomTreeView = lazy(() => import("../tools/JDomTreeView"))
+const DrawerSearchResults = lazy(() => import("../DrawerSearchResults"))
+const DrawerSearchInput = lazy(() => import("../DrawerSearchInput"))
 
 const useStyles = makeStyles(theme =>
     createStyles({

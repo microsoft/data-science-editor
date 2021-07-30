@@ -1,19 +1,9 @@
 import React, { lazy, useContext, useEffect } from "react"
 import clsx from "clsx"
-import { makeStyles, Container, Hidden, Box } from "@material-ui/core"
-// tslint:disable-next-line: no-submodule-imports
-// tslint:disable-next-line: no-submodule-imports
-import AppBar from "@material-ui/core/AppBar"
-// tslint:disable-next-line: no-submodule-imports
-import Toolbar from "@material-ui/core/Toolbar"
-// tslint:disable-next-line: no-submodule-imports
+import { makeStyles, Container } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography"
-// tslint:disable-next-line: no-submodule-imports match-default-export-name
-import MoreIcon from "@material-ui/icons/MoreVert"
-// tslint:disable-next-line: no-import-side-effect
 import "./layout.css"
 import SEO from "./seo"
-// tslint:disable-next-line: no-submodule-imports
 import {
     createTheme,
     responsiveFontSizes,
@@ -24,27 +14,18 @@ import AppContext, { DrawerType } from "./AppContext"
 import DarkModeProvider from "./ui/DarkModeProvider"
 import DarkModeContext from "./ui/DarkModeContext"
 import Alert from "./ui/Alert"
-import GitHubButton from "./buttons/GitHubButton"
-import Footer from "./ui/Footer"
-import DrawerToolsButtonGroup from "./DrawerToolsButtonGroup"
-import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
+import Footer from "./shell/Footer"
 import Flags from "../../jacdac-ts/src/jdom/flags"
-import OpenDashboardButton from "./buttons/OpenDashboardButton"
-import PacketStats from "./PacketStats"
 import { WindowLocation } from "@reach/router"
 import Suspense from "./ui/Suspense"
 import ThemedMdxLayout from "./ui/ThemedMdxLayout"
-import { Link } from "gatsby-theme-material-ui"
 import Breadcrumbs from "./ui/Breadcrumbs"
-import ForumIcon from "@material-ui/icons/Forum"
 import useMediaQueries from "./hooks/useMediaQueries"
-import { UIFlags } from "../jacdac/providerbus"
-import { HideOnScroll } from "./ui/HideOnScroll"
-import OpenVMEditorButton from "./buttons/OpenVMEditorButton"
+import MainAppBar from "./shell/MainAppBar"
 
-const WebDiagnostics = lazy(() => import("./WebDiagnostics"))
-const AppDrawer = lazy(() => import("./AppDrawer"))
-const ToolsDrawer = lazy(() => import("./ToolsDrawer"))
+const WebDiagnostics = lazy(() => import("./shell/WebDiagnostics"))
+const AppDrawer = lazy(() => import("./shell/AppDrawer"))
+const ToolsDrawer = lazy(() => import("./shell/ToolsDrawer"))
 
 export const TOC_DRAWER_WIDTH = 18
 export const DRAWER_WIDTH = 40
@@ -59,50 +40,6 @@ const useStyles = makeStyles(theme =>
         root: {
             display: "flex",
             flexGrow: 1,
-        },
-        grow: {
-            flexGrow: 1,
-        },
-        appBar: {
-            transition: theme.transitions.create(["margin", "width"], {
-                easing: theme.transitions.easing.sharp,
-                duration: theme.transitions.duration.leavingScreen,
-            }),
-        },
-        appBarShift: {
-            width: `calc(100% - ${DRAWER_WIDTH}rem)`,
-            marginLeft: `${DRAWER_WIDTH}rem`,
-            [theme.breakpoints.down(MOBILE_BREAKPOINT)]: {
-                width: `calc(100% - ${MOBILE_DRAWER_WIDTH}rem)`,
-                marginLeft: `${MOBILE_DRAWER_WIDTH}rem`,
-            },
-            transition: theme.transitions.create(["margin", "width"], {
-                easing: theme.transitions.easing.easeOut,
-                duration: theme.transitions.duration.enteringScreen,
-            }),
-        },
-        tocBarShift: {
-            width: `calc(100% - ${TOC_DRAWER_WIDTH}rem)`,
-            marginLeft: `${TOC_DRAWER_WIDTH}rem`,
-            transition: theme.transitions.create(["margin", "width"], {
-                easing: theme.transitions.easing.easeOut,
-                duration: theme.transitions.duration.enteringScreen,
-            }),
-        },
-        toolBarShift: {
-            width: `calc(100% - ${TOOLS_DRAWER_WIDTH}rem)`,
-            marginRight: `${TOOLS_DRAWER_WIDTH}rem`,
-            [theme.breakpoints.down(MOBILE_BREAKPOINT)]: {
-                width: `calc(100% - ${MOBILE_TOOLS_DRAWER_WIDTH}rem)`,
-                marginRight: `${MOBILE_TOOLS_DRAWER_WIDTH}rem`,
-            },
-            transition: theme.transitions.create(["margin", "width"], {
-                easing: theme.transitions.easing.easeOut,
-                duration: theme.transitions.duration.enteringScreen,
-            }),
-        },
-        menuButton: {
-            marginRight: theme.spacing(1),
         },
         hideMobile: {
             [theme.breakpoints.down("md")]: {
@@ -153,14 +90,6 @@ const useStyles = makeStyles(theme =>
             marginLeft: `-${TOOLS_DRAWER_WIDTH}rem`,
             [theme.breakpoints.down(MOBILE_BREAKPOINT)]: {
                 marginLeft: `-${MOBILE_TOOLS_DRAWER_WIDTH}rem`,
-            },
-        },
-        fab: {
-            position: "fixed",
-            bottom: theme.spacing(3),
-            right: theme.spacing(3),
-            "& > *": {
-                margin: theme.spacing(1),
             },
         },
     })
@@ -225,110 +154,14 @@ function LayoutWithMdx(props: LayoutProps) {
     )
 }
 
-function MainAppBar() {
-    const classes = useStyles()
-    const { drawerType, toolsMenu, setToolsMenu } = useContext(AppContext)
-    const { darkMode } = useContext(DarkModeContext)
-    const drawerOpen = drawerType !== DrawerType.None
-    const appBarColor =
-        darkMode === "dark" ? "inherit" : UIFlags.widget ? "default" : undefined
-
-    const toggleToolsMenu = () => setToolsMenu(!toolsMenu)
-
-    return (
-        <Box displayPrint="none">
-            <HideOnScroll>
-                <AppBar
-                    position="fixed"
-                    color={appBarColor}
-                    className={clsx(classes.appBar, {
-                        [classes.tocBarShift]: drawerType === DrawerType.Toc,
-                        [classes.appBarShift]:
-                            drawerOpen && drawerType !== DrawerType.Toc,
-                        [classes.toolBarShift]: toolsMenu,
-                    })}
-                >
-                    <Toolbar>
-                        <DrawerToolsButtonGroup
-                            className={clsx(
-                                classes.menuButton,
-                                drawerOpen && classes.hideMobile
-                            )}
-                            showToc={true}
-                            showCurrent={true}
-                            showTrace={true}
-                        />
-                        <Hidden implementation="css" xsDown={true}>
-                            <Typography component="h1" variant="h6">
-                                <Link
-                                    style={{
-                                        color: UIFlags.widget
-                                            ? "black"
-                                            : "white",
-                                    }}
-                                    to="/"
-                                >
-                                    Jacdac
-                                </Link>
-                            </Typography>
-                        </Hidden>
-                        <div className={classes.grow} />
-                        <PacketStats />
-                        <OpenDashboardButton
-                            className={clsx(classes.menuButton)}
-                        />
-                        <OpenVMEditorButton
-                            className={clsx(classes.menuButton)}
-                        />
-                        <IconButtonWithTooltip
-                            className={clsx(
-                                classes.menuButton,
-                                drawerOpen && classes.hideMobile
-                            )}
-                            aria-label="Discussions"
-                            title="Discussions"
-                            edge="start"
-                            color="inherit"
-                            to="https://github.com/microsoft/jacdac/discussions"
-                        >
-                            <ForumIcon />
-                        </IconButtonWithTooltip>
-                        <GitHubButton
-                            className={clsx(
-                                classes.menuButton,
-                                drawerOpen && classes.hideMobile
-                            )}
-                            repo={"/github"}
-                        />
-                        <IconButtonWithTooltip
-                            className={clsx(
-                                classes.menuButton,
-                                drawerOpen && classes.hideMobile
-                            )}
-                            aria-label="More tools"
-                            title="More"
-                            edge="start"
-                            color="inherit"
-                            onClick={toggleToolsMenu}
-                        >
-                            <MoreIcon />
-                        </IconButtonWithTooltip>
-                    </Toolbar>
-                </AppBar>
-            </HideOnScroll>
-        </Box>
-    )
-}
-
 function LayoutWithContext(props: LayoutProps) {
     const { element, props: pageProps } = props
     const { pageContext, path, location } = pageProps
     const { frontmatter } = pageContext || {}
     const makeCodeTool = /tools\/makecode-/.test(path)
-    const fullWidthTools =
-        /^\/(editors\/|tools\/makecode-|dashboard)/.test(
-            path
-        )
+    const fullWidthTools = /^\/(editors\/|tools\/makecode-|dashboard)/.test(
+        path
+    )
     const {
         hideMainMenu = false,
         hideUnderConstruction = false,
