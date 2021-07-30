@@ -286,7 +286,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: VEGA_ENCODING_BLOCK,
-            message0: "encoding %1 as %2",
+            message0: "encoding %1 as %2 title %3",
             args0: [
                 <OptionsInputDefinition>{
                     type: "field_dropdown",
@@ -310,6 +310,10 @@ const chartDsl: BlockDomainSpecificLanguage = {
                     type: DataColumnChooserField.KEY,
                     name: "field",
                 },
+                <TextInputDefinition>{
+                    type: "field_input",
+                    name: "title"
+                }
             ],
             previousStatement: VEGA_STATEMENT_TYPE,
             nextStatement: VEGA_STATEMENT_TYPE,
@@ -374,14 +378,21 @@ export function blockToVisualizationSpec(
     while (child) {
         switch (child.type) {
             case VEGA_ENCODING_BLOCK: {
-                const channel = child.getFieldValue("channel")
+                const channel: string = child.getFieldValue("channel")
                 const field = tidyResolveFieldColumn(data, child, "field")
+                const title: string = child.getFieldValue("title")
                 console.log({ child, channel, field })
                 if (channel && field) {
                     const type = types[headers.indexOf(field)]
-                    spec.encoding[channel] = {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    const encoding: any = (spec.encoding[channel] = {
                         field,
                         type: type === "number" ? "quantitative" : "nominal",
+                    })
+                    if (title) {
+                        encoding.axis = {
+                            title,
+                        }
                     }
                 }
                 break
