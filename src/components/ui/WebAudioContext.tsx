@@ -52,23 +52,25 @@ export function createToneContext(): ToneContext {
             }
         }
 
-        const playTone = (frequency: number, duration: number, vol: number) => {
+        const playTone = async (
+            frequency: number,
+            duration: number,
+            vol: number
+        ) => {
+            if (ctx.state === "suspended") await ctx.resume()
             if (ctx.state !== "running") {
-                console.debug(`playTone on closed context`)
+                console.debug(`playTone on closed context`, { ctx })
                 return
             }
+            if (isNaN(frequency) || isNaN(vol) || isNaN(duration)) return
             try {
                 const tone = ctx.createOscillator()
                 tone.type = "sawtooth"
-                tone.frequency.value = frequency // update frequency
-
-                const volume = ctx.createGain()
-                volume.gain.value = vol
-
-                // tone -> volume -> globalVolume
-                tone.connect(volume)
-                volume.connect(globalVolume)
-
+                const toneVolume = ctx.createGain()
+                tone.connect(toneVolume)
+                toneVolume.connect(globalVolume)
+                tone.frequency.value = frequency
+                toneVolume.gain.value = vol
                 tone.start() // start and stop
                 tone.stop(ctx.currentTime + duration / 1000)
             } catch (e) {
