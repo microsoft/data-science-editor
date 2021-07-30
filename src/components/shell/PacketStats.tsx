@@ -1,10 +1,10 @@
 import { Typography } from "@material-ui/core"
 import React, { useContext } from "react"
-import Flags from "../../jacdac-ts/src/jdom/flags"
-import { prettySize } from "../../jacdac-ts/src/jdom/pretty"
-import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
-import useChange from "../jacdac/useChange"
-import useMediaQueries from "./hooks/useMediaQueries"
+import Flags from "../../../jacdac-ts/src/jdom/flags"
+import { prettySize } from "../../../jacdac-ts/src/jdom/pretty"
+import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
+import useChange from "../../jacdac/useChange"
+import useMediaQueries from "../hooks/useMediaQueries"
 
 export default function PacketStats() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)

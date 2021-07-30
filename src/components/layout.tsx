@@ -3,7 +3,7 @@ import clsx from "clsx"
 import { makeStyles, Container } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography"
 import "./layout.css"
-import SEO from "./seo"
+import SEO from "./shell/SEO"
 import {
     createTheme,
     responsiveFontSizes,
@@ -22,6 +22,7 @@ import ThemedMdxLayout from "./ui/ThemedMdxLayout"
 import Breadcrumbs from "./ui/Breadcrumbs"
 import useMediaQueries from "./hooks/useMediaQueries"
 import MainAppBar from "./shell/MainAppBar"
+import DataEditorAppBar from "./shell/DataEditorAppBar"
 
 const WebDiagnostics = lazy(() => import("./shell/WebDiagnostics"))
 const AppDrawer = lazy(() => import("./shell/AppDrawer"))
@@ -172,6 +173,11 @@ function LayoutWithContext(props: LayoutProps) {
         hideBreadcrumbs: fullWidthTools,
     }
 
+    const isDataEditor = /^\/editors\/data/.test(path)
+    const appBar = isDataEditor ? <DataEditorAppBar /> : <MainAppBar />
+    const title = isDataEditor
+        ? "Data Science Editor (Experimental)"
+        : undefined
     const classes = useStyles()
 
     const { darkMode } = useContext(DarkModeContext)
@@ -242,11 +248,11 @@ function LayoutWithContext(props: LayoutProps) {
     return (
         <div className={clsx(darkMode, classes.root)}>
             <header>
-                <SEO lang="en" />
+                <SEO lang="en" title={title} />
             </header>
             {!hideMainMenu && (
                 <nav>
-                    <MainAppBar />
+                    {appBar}
                     {drawerType !== DrawerType.None && (
                         <Suspense>
                             <AppDrawer pagePath={path} />
