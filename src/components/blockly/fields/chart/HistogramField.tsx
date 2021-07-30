@@ -1,11 +1,11 @@
 import React, { useContext } from "react"
-import WorkspaceContext from "../WorkspaceContext"
-import { ReactFieldJSON } from "./ReactField"
-import ReactInlineField from "./ReactInlineField"
-import useBlockData from "../useBlockData"
+import WorkspaceContext from "../../WorkspaceContext"
+import { ReactFieldJSON } from "../ReactField"
+import ReactInlineField from "../ReactInlineField"
+import useBlockData from "../../useBlockData"
 import type { VisualizationSpec } from "react-vega"
 import VegaLiteWidget from "./VegaLiteWidget"
-import { tidyResolveHeader } from "./tidy"
+import { tidyResolveHeader } from "../tidy"
 
 function HistogramWidget() {
     const { sourceBlock } = useContext(WorkspaceContext)
@@ -29,7 +29,7 @@ function HistogramWidget() {
 
 export default class HistogramField extends ReactInlineField {
     static KEY = "jacdac_field_histogram"
-    static EDITABLE = false
+    EDITABLE = false
 
     static fromJson(options: ReactFieldJSON) {
         return new HistogramField(options)

@@ -14,8 +14,8 @@ import {
     MOBILE_BREAKPOINT,
     MOBILE_TOOLS_DRAWER_WIDTH,
     TOOLS_DRAWER_WIDTH,
-} from "./layout"
-import AppContext from "./AppContext"
+} from "../layout"
+import AppContext from "../AppContext"
 import { OpenInNew } from "@material-ui/icons"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import ChevronRightIcon from "@material-ui/icons/ChevronRight"
@@ -27,14 +27,16 @@ import SystemUpdateAltIcon from "@material-ui/icons/SystemUpdateAlt"
 import WifiIcon from "@material-ui/icons/Wifi"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import SettingsIcon from "@material-ui/icons/Settings"
-import DarkModeContext from "./ui/DarkModeContext"
-import KindIcon from "./KindIcon"
+// tslint:disable-next-line: no-submodule-imports match-default-export-name
+import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord"
+import DarkModeContext from "../ui/DarkModeContext"
+import KindIcon from "../KindIcon"
 import {
     DEVICE_NODE_NAME,
     SERVICE_NODE_NAME,
     VIRTUAL_DEVICE_NODE_NAME,
-} from "../../jacdac-ts/src/jdom/constants"
-import { UIFlags } from "../jacdac/providerbus"
+} from "../../../jacdac-ts/src/jdom/constants"
+import { UIFlags } from "../../jacdac/providerbus"
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -120,6 +122,11 @@ export default function ToolsDrawer() {
             text: "Start simulator",
             action: toggleShowDeviceHostsDialog,
             icon: <KindIcon kind={VIRTUAL_DEVICE_NODE_NAME} />,
+        },
+        {
+            text: "Data Collector",
+            url: "/tools/collector/",
+            icon: <FiberManualRecordIcon />,
         },
         UIFlags.peers && {
             text: "Peers",

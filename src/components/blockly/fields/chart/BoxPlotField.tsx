@@ -1,14 +1,13 @@
 import React, { useContext } from "react"
-import WorkspaceContext from "../WorkspaceContext"
-import { ReactFieldJSON } from "./ReactField"
-import ReactInlineField from "./ReactInlineField"
-import useBlockData from "../useBlockData"
+import WorkspaceContext from "../../WorkspaceContext"
+import { ReactFieldJSON } from "../ReactField"
+import ReactInlineField from "../ReactInlineField"
+import useBlockData from "../../useBlockData"
 import type { VisualizationSpec } from "react-vega"
 import VegaLiteWidget from "./VegaLiteWidget"
-import { tidyResolveHeader } from "./tidy"
-import { BAR_MAX_ITEMS } from "../toolbox"
+import { tidyResolveHeader } from "../tidy"
 
-function BarWidget() {
+function BoxPlotWidget() {
     const { sourceBlock } = useContext(WorkspaceContext)
     const { data } = useBlockData(sourceBlock)
     const index = tidyResolveHeader(data, sourceBlock?.getFieldValue("index"))
@@ -19,27 +18,25 @@ function BarWidget() {
     )
     if (!index || !value) return null
 
-    const sliceOptions = {
-        sliceMax: BAR_MAX_ITEMS,
-    }
     const spec: VisualizationSpec = {
-        description: `Bar plot of ${index} x ${value}`,
-        mark: "bar",
+        description: `Box plot of ${index}`,
+        mark: "boxplot",
         encoding: {
             x: { field: index, type: "nominal" },
-            y: { field: value, type: "quantitative" },
+            y: { field: value, type: "quantitative", scale: { zero: false } },
         },
         data: { name: "values" },
     }
-    return <VegaLiteWidget spec={spec} slice={sliceOptions} />
+
+    return <VegaLiteWidget spec={spec} />
 }
 
-export default class BarField extends ReactInlineField {
-    static KEY = "jacdac_field_bar_plot"
-    static EDITABLE = false
+export default class BoxPlotField extends ReactInlineField {
+    static KEY = "jacdac_field_box_plot"
+    EDITABLE = false
 
     static fromJson(options: ReactFieldJSON) {
-        return new BarField(options)
+        return new BoxPlotField(options)
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -48,6 +45,6 @@ export default class BarField extends ReactInlineField {
     }
 
     renderInlineField() {
-        return <BarWidget />
+        return <BoxPlotWidget />
     }
 }

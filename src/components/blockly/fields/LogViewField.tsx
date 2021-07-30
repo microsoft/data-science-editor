@@ -38,7 +38,7 @@ function LogViewWidget() {
 
 export default class LogViewField extends ReactInlineField {
     static KEY = "jacdac_field_log_view"
-    static EDITABLE = false
+    EDITABLE = false
 
     static fromJson(options: ReactFieldJSON) {
         return new LogViewField(options)

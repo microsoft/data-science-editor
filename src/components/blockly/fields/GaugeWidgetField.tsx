@@ -56,7 +56,7 @@ function GaugeWidgetView() {
 
 export default class GaugeWidgetField extends ReactInlineField {
     static KEY = "jacdac_field_gauge_widget"
-    static EDITABLE = false
+    EDITABLE = false
 
     static fromJson(options: ReactFieldJSON) {
         return new GaugeWidgetField(options)

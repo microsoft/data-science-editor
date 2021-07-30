@@ -26,6 +26,7 @@ import { usePlayTone } from "../../components/hooks/usePlayTone"
 import Dashboard from "../../components/dashboard/Dashboard"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import { useId } from "react-use-id-hook"
+import { LiveMessage } from "react-aria-live"
 
 const TONE_DURATION = 50
 const TONE_THROTTLE = 100
@@ -54,23 +55,39 @@ export default function AccelerometerTheremin() {
     //used to hold user selection of the property of the sound to vary. Default is the frequency.
     const [sonificationProperty, setSonificationProperty] =
         useState("frequency")
+    const [srAnnouncement, setSRAnnouncement] = useState("")
 
     // event handeler for radio button selection change for axis to sonify
     const handleAccessChange = event => {
         setAxisToSonify(event.target.value)
-        // todo: make sure an Aria alert gets generated indecating the access that has been selected when streaming starts, or when radio button selection changes.
+        setSRAnnouncement(
+            `changing ${sonificationProperty} based on ${event.target.value} of accelerometer.`
+        ) // using the value that is being set in the previous line results in the value pre-update being announced. I suspect this has to do with how react re-renders. using event.target.value to mittegate this.
+
+        // in progress: make sure an Aria alert gets generated indecating the access that has been selected when streaming starts, or when radio button selection changes.
     }
 
     //handler for property selection to sonify.
     const handelPropertySelectionChange = event => {
         setSonificationProperty(event.target.value)
+        setSRAnnouncement(
+            `changing ${event.target.value} based on ${axisToSonify} of accelerometer.`
+        )
     }
     // use a closure to capture accel variable
     // act as a toggle for the button the indicates streaming state.
     const handleSelectAccelerometerService = accel => () => {
+        setSRAnnouncement("") // clearing the live region for the text to be announced when streaming starts. I don't have a good feeling about this approach.
         accelService == accel
             ? setAccelService(undefined)
             : setAccelService(accel)
+        if (accelService !== accel) {
+            setSRAnnouncement(
+                `changing ${sonificationProperty} based on ${axisToSonify} of accelerometer.`
+            ) // to investigate: this announcement does not happen after the user changes the selection of the axis and hits the start streaming button. hitting stop streaming and then start streaming however announces that axis being sonified and the property.
+        } else {
+            setSRAnnouncement("")
+        }
     }
 
     // filter to only show accelerometers in dashboard
@@ -134,6 +151,10 @@ export default function AccelerometerTheremin() {
                                 ? "Stop browser audio"
                                 : "Start browser audio"}
                         </Button>
+                        <LiveMessage
+                            message={srAnnouncement}
+                            aria-live="assertive"
+                        />
                     </Grid>
                     {!accelerometers.length && (
                         <>
@@ -229,6 +250,7 @@ export default function AccelerometerTheremin() {
                                                     />
                                                 </RadioGroup>
                                             </FormControl>
+
                                             <Button
                                                 variant={"outlined"}
                                                 onClick={handleSelectAccelerometerService(

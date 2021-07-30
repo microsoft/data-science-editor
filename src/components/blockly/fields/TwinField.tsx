@@ -71,7 +71,7 @@ function TwinWidget() {
 
 export default class TwinField extends ReactInlineField {
     static KEY = "jacdac_field_twin"
-    static EDITABLE = false
+    EDITABLE = false
 
     static fromJson(options: ReactFieldJSON) {
         return new TwinField(options)

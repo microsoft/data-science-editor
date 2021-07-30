@@ -2,6 +2,7 @@ import { CssBaseline, Theme, ThemeProvider } from "@material-ui/core"
 import { SnackbarProvider } from "notistack"
 import React, { ReactNode } from "react"
 import { IdProvider } from "react-use-id-hook"
+import { LiveAnnouncer } from "react-aria-live"
 import JacdacProvider from "../../jacdac/Provider"
 import { AppProvider } from "../AppContext"
 import { DbProvider } from "../DbContext"
@@ -21,38 +22,40 @@ export default function ThemedLayout(props: {
         <ThemeProvider theme={theme}>
             <SnackbarProvider maxSnack={maxSnack || 1} dense={true}>
                 <IdProvider>
-                    <DbProvider>
-                        <WebAudioProvider>
-                            <JacdacProvider connectOnStart={true}>
-                                <ServiceManagerProvider>
-                                    <PacketsProvider>
-                                        <AppProvider>
-                                            <MakeCodeSnippetProvider>
-                                                <CssBaseline />
-                                                <Helmet>
-                                                    <link
-                                                        rel="preconnect"
-                                                        href="https://fonts.googleapis.com"
-                                                        crossOrigin="anonymous"
-                                                    />
-                                                    <link
-                                                        rel="preconnect"
-                                                        href="https://raw.githubusercontent.com"
-                                                        crossOrigin="anonymous"
-                                                    />
-                                                    <meta
-                                                        name="viewport"
-                                                        content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
-                                                    />
-                                                </Helmet>
-                                                {children}
-                                            </MakeCodeSnippetProvider>
-                                        </AppProvider>
-                                    </PacketsProvider>
-                                </ServiceManagerProvider>
-                            </JacdacProvider>
-                        </WebAudioProvider>
-                    </DbProvider>
+                    <LiveAnnouncer>
+                        <DbProvider>
+                            <WebAudioProvider>
+                                <JacdacProvider connectOnStart={true}>
+                                    <ServiceManagerProvider>
+                                        <PacketsProvider>
+                                            <AppProvider>
+                                                <MakeCodeSnippetProvider>
+                                                    <CssBaseline />
+                                                    <Helmet>
+                                                        <link
+                                                            rel="preconnect"
+                                                            href="https://fonts.googleapis.com"
+                                                            crossOrigin="anonymous"
+                                                        />
+                                                        <link
+                                                            rel="preconnect"
+                                                            href="https://raw.githubusercontent.com"
+                                                            crossOrigin="anonymous"
+                                                        />
+                                                        <meta
+                                                            name="viewport"
+                                                            content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
+                                                        />
+                                                    </Helmet>
+                                                    {children}
+                                                </MakeCodeSnippetProvider>
+                                            </AppProvider>
+                                        </PacketsProvider>
+                                    </ServiceManagerProvider>
+                                </JacdacProvider>
+                            </WebAudioProvider>
+                        </DbProvider>
+                    </LiveAnnouncer>
                 </IdProvider>
             </SnackbarProvider>
         </ThemeProvider>

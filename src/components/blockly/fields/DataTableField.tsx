@@ -6,7 +6,7 @@ import DataTableWidget from "./DataTableWidget"
 const MAX_ITEMS = 256
 export default class DataTableField extends ReactInlineField {
     static KEY = "jacdac_field_data_table"
-    static EDITABLE = false
+    EDITABLE = false
 
     static fromJson(options: ReactFieldJSON) {
         return new DataTableField(options)

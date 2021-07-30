@@ -1,14 +1,14 @@
-import React, { lazy, useContext, useMemo, useState } from "react"
-import WorkspaceContext from "../WorkspaceContext"
-import useBlockData from "../useBlockData"
-import { PointerBoundary } from "./PointerBoundary"
-import Suspense from "../../ui/Suspense"
+import React, { lazy, useContext, useState } from "react"
+import WorkspaceContext from "../../WorkspaceContext"
+import useBlockData from "../../useBlockData"
+import { PointerBoundary } from "../PointerBoundary"
+import Suspense from "../../../ui/Suspense"
 import { NoSsr } from "@material-ui/core"
-import { CHART_HEIGHT, CHART_SVG_MAX_ITEMS, CHART_WIDTH } from "../toolbox"
+import { CHART_HEIGHT, CHART_SVG_MAX_ITEMS, CHART_WIDTH } from "../../toolbox"
 import type { VisualizationSpec } from "react-vega"
-import { DataSliceOptions } from "../../../workers/data/dist/node_modules/data.worker"
-import useEffectAsync from "../../useEffectAsync"
-import { tidySlice } from "./tidy"
+import type { DataSliceOptions } from "../../../../workers/data/dist/node_modules/data.worker"
+import useEffectAsync from "../../../useEffectAsync"
+import { tidySlice } from "./../tidy"
 const VegaLite = lazy(() => import("./VegaLite"))
 
 export default function VegaLiteWidget(props: {

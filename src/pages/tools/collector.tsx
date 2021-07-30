@@ -18,7 +18,8 @@ import PlayArrowIcon from "@material-ui/icons/PlayArrow"
 import StopIcon from "@material-ui/icons/Stop"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import SaveIcon from "@material-ui/icons/Save"
-import useChange from "../../jacdac/useChange"
+// tslint:disable-next-line: no-submodule-imports match-default-export-name
+import HourglassEmptyIcon from "@material-ui/icons/HourglassEmpty"
 import { JDBus } from "../../../jacdac-ts/src/jdom/bus"
 import FieldDataSet from "../../components/FieldDataSet"
 import Trend from "../../components/Trend"
@@ -53,6 +54,9 @@ import DashboardDeviceItem from "../../components/dashboard/DashboardDeviceItem"
 import IconButtonWithTooltip from "../../components/ui/IconButtonWithTooltip"
 import AppContext from "../../components/AppContext"
 import AddIcon from "@material-ui/icons/Add"
+import useServices from "../../components/hooks/useServices"
+import { delay } from "../../../jacdac-ts/src/jdom/utils"
+import useLocalStorage from "../../components/hooks/useLocalStorage"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -102,6 +106,11 @@ function createDataSet(
     return set
 }
 
+const COLLECTOR_PREFIX = "jacdac:collector:prefix"
+const COLLECTOR_SAMPLING_INTERVAL = "jacdac:collector:samplinginterval"
+const COLLECTOR_SAMPLING_DURATION = "jacdac:collector:samplingduration"
+const COLLECTOR_START_DELAY = "jacdac:collector:startdelay"
+
 export default function Collector() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { toggleShowDeviceHostsDialog, enqueueSnackbar } =
@@ -113,12 +122,26 @@ export default function Collector() {
     const [recording, setRecording] = useState(false)
     const [tables, setTables] = useState<FieldDataSet[]>([])
     const [, setRecordingLength] = useState(0)
-    const [prefix, setPrefix] = useState("data")
-    const [samplingIntervalDelay, setSamplingIntervalDelay] = useState("100")
-    const [samplingDuration, setSamplingDuration] = useState("10")
+
+    const [prefix, setPrefix] = useLocalStorage(COLLECTOR_PREFIX, "data")
+    const [samplingIntervalDelay, setSamplingIntervalDelay] = useLocalStorage(
+        COLLECTOR_SAMPLING_INTERVAL,
+        100
+    )
+    const [samplingDuration, setSamplingDuration] = useLocalStorage(
+        COLLECTOR_SAMPLING_DURATION,
+        10
+    )
+    const [startDelay, setStartDelay] = useLocalStorage(
+        COLLECTOR_START_DELAY,
+        0
+    )
+
     const [liveDataSet, setLiveDataSet] = useState<FieldDataSet>(undefined)
     const [, setLiveDataTimestamp] = useState(0)
     const [triggerEventId, setTriggerEventId] = useState<string>("")
+    const [countdown, setCountdown] = useState(-1)
+    const starting = countdown > 0
     const chartPalette = useChartPalette()
     const devices = useDevices({ ignoreSelf: true, announced: true })
     const readingRegisters = arrayConcatMany(
@@ -137,22 +160,17 @@ export default function Collector() {
         reg => reg.service.device.deviceId,
         reg => reg.service.device
     )
-    const aggregators: JDService[] = useChange(bus, bus =>
-        bus.services({ serviceClass: SRV_SENSOR_AGGREGATOR })
-    )
+    const aggregators: JDService[] = useServices({
+        serviceClass: SRV_SENSOR_AGGREGATOR,
+    })
     const aggregator: JDService = aggregators.find(
         srv => srv.id == aggregatorId
     )
-    const samplingIntervalDelayi = parseInt(samplingIntervalDelay)
     const samplingCount = Math.ceil(
-        (parseFloat(samplingDuration) * 1000) / samplingIntervalDelayi
+        (samplingDuration * 1000) / samplingIntervalDelay
     )
-    const errorSamplingIntervalDelay =
-        isNaN(samplingIntervalDelayi) || !/\d+/.test(samplingIntervalDelay)
-    const errorSamplingDuration = isNaN(samplingCount)
-    const error = errorSamplingDuration || errorSamplingIntervalDelay
     const triggerEvent = bus.node(triggerEventId) as JDEvent
-    const startEnabled = !!recordingRegisters?.length
+    const startEnabled = !starting && !!recordingRegisters?.length
     const events = useEvents({ ignoreChange: true })
     const aggregatorsId = useId()
     const sensorsId = useId()
@@ -161,6 +179,7 @@ export default function Collector() {
     const dashboardId = useId()
     const samplingIntervalId = useId()
     const samplingDurationId = useId()
+    const startDelayId = useId()
     const prefixId = useId()
 
     useEffect(() => {
@@ -177,7 +196,7 @@ export default function Collector() {
     }, [triggerEvent, recording, registerIdsChecked, liveDataSet])
 
     const createSensorConfig = () => ({
-        samplingInterval: samplingIntervalDelayi,
+        samplingInterval: samplingIntervalDelay,
         samplesInWindow: 10,
         inputs: recordingRegisters.map(reg => ({
             serviceClass: reg.service.serviceClass,
@@ -220,7 +239,17 @@ export default function Collector() {
         }
     }
     const startRecording = async () => {
-        if (!recording && recordingRegisters.length) {
+        if (!starting && !recording && recordingRegisters.length) {
+            // do countdown
+            if (startDelay > 0) {
+                let countdown = Math.ceil(startDelay)
+                while (countdown > 0) {
+                    setCountdown(countdown)
+                    await delay(1000)
+                    countdown--
+                }
+            }
+            setCountdown(-1)
             setLiveDataSet(newDataSet(registerIdsChecked, false))
             setRecording(true)
             if (aggregator) {
@@ -248,12 +277,20 @@ export default function Collector() {
     const handleSamplingIntervalChange = (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
-        setSamplingIntervalDelay(event.target.value.trim())
+        const v = parseInt(event.target.value)
+        if (!isNaN(v)) setSamplingIntervalDelay(v)
     }
     const handleSamplingDurationChange = (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
-        setSamplingDuration(event.target.value.trim())
+        const v = parseInt(event.target.value)
+        if (!isNaN(v)) setSamplingDuration(v)
+    }
+    const handleStartDelayChange = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const v = parseInt(event.target.value)
+        if (!isNaN(v)) setStartDelay(v)
     }
     const handlePrefixChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPrefix(event.target.value.trim())
@@ -292,16 +329,15 @@ export default function Collector() {
     }
     // setting interval
     useEffect(() => {
-        if (error) return
-        console.log(`set interval to ${samplingIntervalDelayi}`)
+        console.log(`set interval to ${samplingIntervalDelay}`)
         recordingRegisters.forEach(reg =>
-            reg.sendSetIntAsync(samplingIntervalDelayi)
+            reg.sendSetIntAsync(samplingIntervalDelay)
         )
-    }, [samplingIntervalDelayi, registerIdsChecked, errorSamplingIntervalDelay])
+    }, [samplingIntervalDelay, registerIdsChecked])
     // collecting
     useEffect(() => {
-        if (error || (aggregator && recording)) return undefined
-        const interval = setInterval(() => addRow(), samplingIntervalDelayi)
+        if (aggregator && recording) return undefined
+        const interval = setInterval(() => addRow(), samplingIntervalDelay)
         const stopStreaming = startStreamingRegisters()
         return () => {
             clearInterval(interval)
@@ -309,7 +345,7 @@ export default function Collector() {
         }
     }, [
         recording,
-        samplingIntervalDelayi,
+        samplingIntervalDelay,
         samplingCount,
         registerIdsChecked,
         aggregator,
@@ -337,9 +373,9 @@ export default function Collector() {
                         service collects collects sensor data on the bus and
                         returns an aggregated at regular intervals.
                     </p>
-                    <Grid container>
+                    <Grid container spacing={1}>
                         {aggregators.map(aggregator => (
-                            <Grid key={"aggregate" + aggregator.id} item xs={4}>
+                            <Grid key={aggregator.id} item xs={4}>
                                 <Card>
                                     <DeviceCardHeader
                                         device={aggregator.device}
@@ -400,12 +436,30 @@ export default function Collector() {
                         size="large"
                         variant="contained"
                         color={recording ? "secondary" : "primary"}
-                        title={recording ? "stop recording" : "start recording"}
+                        title={
+                            starting
+                                ? `starting in ${countdown}`
+                                : recording
+                                ? "stop recording"
+                                : "start recording"
+                        }
                         onClick={toggleRecording}
-                        startIcon={recording ? <StopIcon /> : <PlayArrowIcon />}
+                        startIcon={
+                            starting ? (
+                                <HourglassEmptyIcon />
+                            ) : recording ? (
+                                <StopIcon />
+                            ) : (
+                                <PlayArrowIcon />
+                            )
+                        }
                         disabled={!startEnabled}
                     >
-                        {recording ? "Stop" : "Start"}
+                        {starting
+                            ? countdown + ""
+                            : recording
+                            ? "Stop"
+                            : "Start"}
                     </Button>
                     {aggregator && (
                         <Button
@@ -423,8 +477,8 @@ export default function Collector() {
                     <TextField
                         id={samplingIntervalId}
                         className={classes.field}
-                        error={errorSamplingIntervalDelay}
                         disabled={recording}
+                        type="number"
                         label="Sampling interval"
                         value={samplingIntervalDelay}
                         variant="outlined"
@@ -440,7 +494,7 @@ export default function Collector() {
                     <TextField
                         id={samplingDurationId}
                         className={classes.field}
-                        error={errorSamplingDuration}
+                        type="number"
                         disabled={recording}
                         label="Sampling duration"
                         value={samplingDuration}
@@ -453,6 +507,23 @@ export default function Collector() {
                             ),
                         }}
                         onChange={handleSamplingDurationChange}
+                    />
+                    <TextField
+                        id={startDelayId}
+                        className={classes.field}
+                        type="number"
+                        disabled={recording}
+                        label="Start delay"
+                        value={startDelay}
+                        variant="outlined"
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    s
+                                </InputAdornment>
+                            ),
+                        }}
+                        onChange={handleStartDelayChange}
                     />
                     <TextField
                         id={prefixId}

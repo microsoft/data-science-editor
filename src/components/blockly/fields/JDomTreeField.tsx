@@ -40,7 +40,7 @@ function JDomTreeWidget() {
 
 export default class JDomTreeField extends ReactInlineField {
     static KEY = "jacdac_field_jdom_service_tree"
-    static EDITABLE = false
+    EDITABLE = false
 
     static fromJson(options: ReactFieldJSON) {
         return new JDomTreeField(options)
