@@ -65,7 +65,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: SCATTERPLOT_BLOCK,
-            message0: "scatterplot x %1 y %2 %3 %4 %5",
+            message0: "scatterplot with x %1 y %2 %3 %4 %5",
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
@@ -99,7 +99,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: BARCHART_BLOCK,
-            message0: "bar index %1 value %2 %3 %4 %5",
+            message0: "bar chart with index %1 value %2 %3 %4 %5",
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
@@ -132,7 +132,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: LINEPLOT_BLOCK,
-            message0: "line x %1 y %2 %3 %4 %5",
+            message0: "line chart with x %1 y %2 %3 %4 %5",
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
@@ -195,7 +195,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: BOX_PLOT_BLOCK,
-            message0: "box plot of %1 by %2 %3 %4 %5",
+            message0: "boxplot of %1 by %2 %3 %4 %5",
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
