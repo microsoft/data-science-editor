@@ -6,10 +6,12 @@ import BluetoothIcon from "@material-ui/icons/Bluetooth"
 import {
     BLUETOOTH_TRANSPORT,
     PACKETIO_TRANSPORT,
+    SERIAL_TRANSPORT,
     USB_TRANSPORT,
     VIRTUAL_DEVICE_NODE_NAME,
 } from "../../../jacdac-ts/src/jdom/constants"
 import KindIcon from "../KindIcon"
+import SerialIcon from "./SerialIcon"
 
 export default function TransportIcon(props: {
     type: string
@@ -22,6 +24,8 @@ export default function TransportIcon(props: {
             return <UsbIcon className={className} />
         case BLUETOOTH_TRANSPORT:
             return <BluetoothIcon className={className} />
+        case SERIAL_TRANSPORT:
+            return <SerialIcon className={className} />
         default:
             return (
                 <KindIcon

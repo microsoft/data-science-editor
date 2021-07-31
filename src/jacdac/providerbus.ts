@@ -6,6 +6,10 @@ import {
     createBluetoothTransport,
     isWebBluetoothSupported,
 } from "../../jacdac-ts/src/jdom/transport/bluetooth"
+import {
+    createWebSerialTransport,
+    isWebSerialSupported,
+} from "../../jacdac-ts/src/jdom/transport/webserial"
 import IFrameBridgeClient from "../../jacdac-ts/src/jdom/iframebridgeclient"
 import Flags from "../../jacdac-ts/src/jdom/flags"
 import GamepadServerManager from "../../jacdac-ts/src/servers/gamepadservermanager"
@@ -31,10 +35,14 @@ function sniffQueryArguments() {
             isWebBluetoothSupported() &&
             params.get(`webble`) !== "0" &&
             !toolsMakecode,
+        webSerial:
+            isWebSerialSupported() &&
+            params.get(`webserial`) !== "0" &&
+            !toolsMakecode,
         peers: params.get(`peers`) === "1",
         parentOrigin: params.get("parentOrigin"),
         frameId: window.location.hash?.slice(1),
-        widget: params.get("widget") === "1"
+        widget: params.get("widget") === "1",
     }
 }
 
@@ -42,6 +50,7 @@ const args = sniffQueryArguments()
 Flags.diagnostics = args.diagnostics
 Flags.webUSB = args.webUSB
 Flags.webBluetooth = args.webBluetooth
+Flags.webSerial = args.webSerial
 
 export class UIFlags {
     static widget = args.widget
@@ -52,12 +61,11 @@ export class UIFlags {
 function createBus(): JDBus {
     const worker =
         typeof window !== "undefined" &&
-        new Worker(
-            withPrefix(`/jacdac-worker-${jacdacTsPackage.version}.js`)
-        )
+        new Worker(withPrefix(`/jacdac-worker-${jacdacTsPackage.version}.js`))
     const b = new JDBus(
         [
             Flags.webUSB && worker && createUSBWorkerTransport(worker),
+            Flags.webSerial && createWebSerialTransport(),
             Flags.webBluetooth && createBluetoothTransport(),
         ],
         {
