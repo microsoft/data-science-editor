@@ -43,12 +43,18 @@ export default function VegaLiteWidget(props: {
                 <PointerBoundary>
                     <Suspense>
                         <VegaLite
-                            actions={false}
+                            actions={{
+                                export: { png: true },
+                                source: false,
+                                compiled: false,
+                                editor: false,
+                            }}
                             width={CHART_WIDTH}
                             height={CHART_HEIGHT}
                             spec={spec}
                             data={vegaData}
                             renderer={renderer}
+                            tooltip={true}
                         />
                     </Suspense>
                 </PointerBoundary>
