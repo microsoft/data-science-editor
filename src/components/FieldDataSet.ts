@@ -1,18 +1,19 @@
-import { JDBus } from "../../jacdac-ts/src/jdom/bus";
-import { CHANGE } from "../../jacdac-ts/src/jdom/constants";
-import { JDEventSource } from "../../jacdac-ts/src/jdom/eventsource";
-import { JDField } from "../../jacdac-ts/src/jdom/field";
-import { JDRegister } from "../../jacdac-ts/src/jdom/register";
-import { arrayConcatMany, roundWithPrecision } from "../../jacdac-ts/src/jdom/utils";
+import { JDBus } from "../../jacdac-ts/src/jdom/bus"
+import { CHANGE } from "../../jacdac-ts/src/jdom/constants"
+import { JDEventSource } from "../../jacdac-ts/src/jdom/eventsource"
+import { JDField } from "../../jacdac-ts/src/jdom/field"
+import { JDRegister } from "../../jacdac-ts/src/jdom/register"
+import {
+    arrayConcatMany,
+    roundWithPrecision,
+} from "../../jacdac-ts/src/jdom/utils"
 
 export class Example {
-    label: string;
+    label: string
     constructor(
         public readonly timestamp: number,
         public readonly data: number[]
-    ) {
-
-    }
+    ) {}
 
     toVector(startTimestamp?: number): number[] {
         const t = this.timestamp - (startTimestamp || 0)
@@ -21,40 +22,73 @@ export class Example {
     }
 }
 
-export default class FieldDataSet extends JDEventSource {
+export class Recording {
+    constructor(
+        public readonly name: string,
+        public readonly colors: string[],
+        public readonly headers: string[],
+        public readonly rows: Example[],
+        public readonly units: string[]
+    ) {}
+}
+
+export default class FielddataSet extends JDEventSource {
     readonly id = Math.random().toString()
-    readonly rows: Example[];
-    readonly headers: string[];
-    readonly units: string[];
-    maxRows = -1;
+    readonly rows: Example[]
+    headers: string[]
+    units: string[]
+    maxRows = -1
 
     // maintain computed min/max to avoid recomputation
-    mins: number[];
-    maxs: number[];
+    mins: number[]
+    maxs: number[]
 
-    static create(bus: JDBus,
+    static create(
+        bus: JDBus,
         registers: JDRegister[],
         name: string,
         palette: string[],
-        maxRows?: number): FieldDataSet {
+        maxRows?: number
+    ): FielddataSet {
         const fields = arrayConcatMany(registers.map(reg => reg.fields))
         const colors = fields.map((f, i) => palette[i % palette.length])
-        const set = new FieldDataSet(bus, name, fields, colors)
-        if (maxRows !== undefined)
-            set.maxRows = maxRows
-        return set;
+        const set = new FielddataSet(bus, name, fields, colors)
+        if (maxRows !== undefined) set.maxRows = maxRows
+        return set
+    }
+
+    static createFromFile(dataSet: {
+        name: string
+        rows: Example[]
+        headers: string[]
+        units: string[]
+        colors?: string[]
+    }): FielddataSet {
+        const set = new FielddataSet(null, dataSet.name, null, dataSet.colors)
+
+        dataSet.rows.forEach(row => {
+            const { timestamp, data } = row
+            set.addExample(timestamp, data)
+        })
+        set.units = dataSet.units
+        set.headers = dataSet.headers
+        set.colors = dataSet.colors
+
+        return set
     }
 
     constructor(
         public readonly bus: JDBus,
         public readonly name: string,
-        public readonly fields: JDField[],
-        public readonly colors: string[] = ["#000"]
+        public readonly fields?: JDField[],
+        public colors: string[] = ["#000"]
     ) {
-        super();
-        this.rows = [];
-        this.headers = fields.map(field => field.friendlyName)
-        this.units = fields.map(field => field.unit)
+        super()
+        this.rows = []
+        if (fields !== undefined && fields !== null) {
+            this.headers = fields.map(field => field.dataTypeName)
+            this.units = fields.map(field => field.unit)
+        }
     }
 
     get startTimestamp() {
@@ -72,42 +106,54 @@ export default class FieldDataSet extends JDEventSource {
         return this.rows.length
     }
 
+    get width() {
+        return this.headers.length
+    }
+
+    get headerList() {
+        return this.headers
+    }
+
     data(flatten?: boolean) {
         if (flatten && this.headers.length == 1)
             return this.rows.map(row => row.data[0])
-        else
-            return this.rows.map(row => row.data);
+        else return this.rows.map(row => row.data)
     }
 
     indexOf(field: JDField) {
         return this.fields.indexOf(field)
     }
 
-    colorOf(field: JDField) {
-        return this.colors[this.indexOf(field)]
+    colorOf(field?: JDField, header?: string) {
+        if (field) return this.colors[this.indexOf(field)]
+        if (header) return this.colors[this.headers.indexOf(header)]
+        return ["#000"]
     }
 
     addRow(data?: number[]) {
-        const timestamp = this.bus.timestamp;
-        if (!data)
-            data = this.fields.map(f => f.value)
+        const timestamp = this.bus.timestamp
+        if (!data) data = this.fields.map(f => f.value)
         this.addExample(timestamp, data)
+    }
+
+    addData(data: number[]) {
+        this.addExample(Date.now(), data)
     }
 
     private addExample(timestamp: number, data: number[]) {
         this.rows.push(new Example(timestamp, data))
 
         // drop rows if needed
-        let refreshminmax = false;
+        let refreshminmax = false
         while (this.maxRows > 0 && this.rows.length > this.maxRows * 1.1) {
-            const d = this.rows.shift();
-            refreshminmax = true;
+            const d = this.rows.shift()
+            refreshminmax = true
         }
 
         if (refreshminmax) {
             // refresh entire mins/max
             for (let r = 0; r < this.rows.length; ++r) {
-                const row = this.rows[r];
+                const row = this.rows[r]
                 if (r == 0) {
                     this.mins = row.data.slice(0)
                     this.maxs = row.data.slice(0)
@@ -118,8 +164,7 @@ export default class FieldDataSet extends JDEventSource {
                     }
                 }
             }
-        }
-        else {
+        } else {
             // incremental update
             if (!this.mins) {
                 this.mins = data.slice(0)
@@ -132,18 +177,32 @@ export default class FieldDataSet extends JDEventSource {
             }
         }
 
-        this.emit(CHANGE);
+        this.emit(CHANGE)
     }
 
     toCSV(sep = ",", options?: { units?: boolean }) {
         const allheaders = ["time", ...this.headers].join(sep)
         const start = this.startTimestamp
         const csv: string[] = [allheaders]
-        if (options?.units)
-            csv.push(["s", ...this.units].join(sep))
-        this.rows.forEach(row => csv.push(
-            row.toVector(start).map(cell => cell !== undefined ? cell.toString() : "").join(sep)
-        ))
-        return csv.join('\n');
+        if (options?.units) csv.push(["s", ...this.units].join(sep))
+        this.rows.forEach(row =>
+            csv.push(
+                row
+                    .toVector(start)
+                    .map(cell => (cell !== undefined ? cell.toString() : ""))
+                    .join(sep)
+            )
+        )
+        return csv.join("\n")
+    }
+
+    toJSON() {
+        return {
+            name: this.name,
+            rows: this.rows,
+            headers: this.headers,
+            units: this.units,
+            colors: this.colors,
+        }
     }
 }

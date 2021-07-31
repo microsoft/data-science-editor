@@ -18,7 +18,7 @@ import {
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
 import postTransformData from "./workers/data.proxy"
-import {
+import type {
     DataSelectRequest,
     DataDropRequest,
     DataArrangeRequest,

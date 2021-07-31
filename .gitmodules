@@ -10,3 +10,6 @@
 [submodule "node-red-contrib-jacdac"]
 	path = node-red-contrib-jacdac
 	url = https://github.com/microsoft/node-red-contrib-jacdac
+[submodule "ml4f"]
+	path = ml4f
+	url = https://github.com/microsoft/ml4f

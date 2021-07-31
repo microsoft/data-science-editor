@@ -1,11 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
+import { MESSAGE } from "../../../../../jacdac-ts/src/jdom/constants"
+import { JDEventSource } from "../../../../../jacdac-ts/src/jdom/eventsource"
 import { assert, SMap } from "../../../../../jacdac-ts/src/jdom/utils"
 import createCsvWorker from "../../../../workers/csv/workerloader"
 import createDataWorker from "../../../../workers/data/workerloader"
+import createTFWorker from "../../../../workers/tf/workerloader"
 import createVMWorker from "../../../../workers/vm/workerloader"
 
-export type VMType = "data" | "csv" | "vm"
+export type VMType = "data" | "csv" | "tf" | "vm"
 
 export interface WorkerMessage {
     worker: VMType
@@ -16,12 +19,13 @@ export interface WorkerResponse {
     error?: string
 }
 
-export class WorkerProxy {
+export class WorkerProxy extends JDEventSource {
     readonly pendings: SMap<{
         resolve: (res: any) => void
         reject: (err: any) => void
     }> = {}
     constructor(readonly worker: Worker, readonly workerid: VMType) {
+        super()
         this.worker.addEventListener("message", this.handleMessage.bind(this))
     }
 
@@ -32,6 +36,8 @@ export class WorkerProxy {
         if (pending) {
             assert(worker === message.worker)
             pending.resolve(message)
+        } else {
+            this.emit(MESSAGE, event.data)
         }
     }
 
@@ -49,6 +55,7 @@ const _workers: SMap<WorkerProxy> = {}
 const loaders = {
     data: createDataWorker,
     csv: createCsvWorker,
+    tf: createTFWorker,
     vm: createVMWorker,
 }
 export default function workerProxy(workerid: VMType) {

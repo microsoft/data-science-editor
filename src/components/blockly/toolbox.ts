@@ -179,6 +179,10 @@ export const BUILTIN_TYPES = ["", ...PRIMITIVE_TYPES]
 export const CODE_STATEMENT_TYPE = "Code"
 export const DATA_SCIENCE_STATEMENT_TYPE = "DataScienceStatement"
 
+export const MODEL_BLOCK_CLASS_STATEMENT_TYPE = "ModelBlockClassStatement"
+export const MODEL_BLOCK_PREPROCESS_STATEMENT_TYPE = "ModelBlockPreprocessStatement"
+export const MODEL_BLOCK_LAYER_STATEMENT_TYPE = "ModelBlockLayerStatement"
+
 export const TWIN_BLOCK = "jacdac_tools_twin"
 
 export const toolsColour = paletteColorByIndex(-1)
@@ -196,6 +200,7 @@ export const TABLE_PREVIEW_MAX_ITEMS = 48
 
 export const VM_WARNINGS_CATEGORY = "vm"
 export const JSON_WARNINGS_CATEGORY = "json"
+export const MB_WARNINGS_CATEGORY = "mb"
 
 export interface ContentDefinition {
     kind: "category" | "sep" | "button" | "label" | "block"

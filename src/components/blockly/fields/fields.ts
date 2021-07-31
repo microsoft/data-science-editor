@@ -25,6 +25,18 @@ import FileOpenField from "./FileOpenField"
 import DataPreviewField from "./DataPreviewField"
 import VegaChartField from "./chart/VegaChartField"
 
+import ExpandModelBlockField from "./mb/ExpandModelBlockField"
+import DataSetBlockField from "./mb/DataSetBlockField"
+import RecordingBlockField from "./mb/RecordingBlockField"
+import SmoothingBlockField from "./mb/SmoothingBlockField"
+import KNNBlockField from "./mb/KNNBlockField"
+import NeuralNetworkBlockField from "./mb/NeuralNetworkBlockField"
+import ConvLayerBlockField from "./mb/ConvLayerBlockField"
+import PoolingLayerBlockField from "./mb/PoolingLayerBlockField"
+import DropoutLayerBlockField from "./mb/DropoutLayerBlockField"
+import FlattenLayerBlockField from "./mb/FlattenLayerBlockField"
+import DenseLayerBlockField from "./mb/DenseLayerBlockField"
+
 let reactFieldShadows: BlockDefinition[]
 export function registerFields() {
     if (reactFieldShadows) return
@@ -71,6 +83,18 @@ export function registerFields() {
         HistogramField,
         BoxPlotField,
         VegaChartField,
+
+        ExpandModelBlockField,
+        DataSetBlockField,
+        RecordingBlockField,
+        SmoothingBlockField,
+        KNNBlockField,
+        NeuralNetworkBlockField,
+        ConvLayerBlockField,
+        PoolingLayerBlockField,
+        DropoutLayerBlockField,
+        FlattenLayerBlockField,
+        DenseLayerBlockField,
 
         FileSaveField,
         FileOpenField,

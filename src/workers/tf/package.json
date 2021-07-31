@@ -1,0 +1,9 @@
+{
+  "name": "tf-worker",
+  "type": "module",
+  "source": "tf.worker.ts",
+  "main": "./dist/node_modules/tf-worker.umd.js",
+  "module": "./dist/node_modules/tf-worker.cjs.js",
+  "exports": "./dist/node_modules/tf-worker.js",
+  "license": "MIT"
+}

@@ -15,7 +15,7 @@ import {
     NumberInputDefinition,
     toolsColour,
 } from "../toolbox"
-import { DataRecordWindowRequest } from "../../../workers/data/dist/node_modules/data.worker"
+import type { DataRecordWindowRequest } from "../../../workers/data/dist/node_modules/data.worker"
 import BlockDomainSpecificLanguage from "./dsl"
 import postTransformData from "./workers/data.proxy"
 

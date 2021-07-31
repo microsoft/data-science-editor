@@ -1,5 +1,5 @@
 import { Block } from "blockly"
-import {
+import type {
     DataSliceOptions,
     DataSliceRequest,
 } from "../../../workers/data/dist/node_modules/data.worker"
