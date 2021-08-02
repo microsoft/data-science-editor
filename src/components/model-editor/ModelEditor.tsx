@@ -193,8 +193,11 @@ export default function ModelPlayground() {
                     disabled={dataset.labels.length < 2}
                 />
                 <Tab
-                    label={`3 - Test and Deploy`}
-                    disabled={tfModel.status !== "completed"}
+                    label={`3 - Test Model`}
+                    disabled={
+                        dataset.labels.length < 2 ||
+                        tfModel.status !== "completed"
+                    }
                 />
             </Tabs>
             <TabPanel value={tab} index={0}>

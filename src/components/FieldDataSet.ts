@@ -86,9 +86,14 @@ export default class FielddataSet extends JDEventSource {
         super()
         this.rows = []
         if (fields !== undefined && fields !== null) {
-            this.headers = fields.map(field => field.dataTypeName)
+            this.headers = fields.map(field => this.dataTypeName(field))
             this.units = fields.map(field => field.unit)
         }
+    }
+
+    dataTypeName(field: JDField): string {
+        const parts = [field.member.service.specification.shortName, field.name]
+        return parts.join(".")
     }
 
     get startTimestamp() {

@@ -25,7 +25,7 @@ import type {
 } from "../../workers/tf/dist/node_modules/tf.worker"
 
 import FieldDataSet from "../FieldDataSet"
-import ModelDataSet from "./ModelDataSet"
+import ModelDataSet, { arraysEqual } from "./ModelDataSet"
 import MBModel from "./MBModel"
 import workerProxy from "../blockly/dsl/workers/proxy"
 
@@ -95,16 +95,24 @@ export default function TrainModel(props: {
     }
 
     const prepareModel = (mod: MBModel) => {
-        // Use a standard architecture for models made on this page
+        // If this is a brand new model, get it setup with a standard CNN architecture
         if (mod.modelJSON == "") {
-            // this model has no architecture, use default arch
             mod.modelJSON = "default"
-
-            // Update model
             mod.labels = dataset.labels
             mod.inputShape = [dataset.length, dataset.width]
             mod.inputTypes = dataset.inputTypes
             mod.outputShape = dataset.labels.length
+
+            setModel(mod)
+            handleModelUpdate(mod)
+        } else if (
+            !arraysEqual(mod.labels, dataset.labels) ||
+            !arraysEqual(mod.inputTypes, dataset.inputTypes)
+        ) {
+            // If there is already a model, make sure it matches the current dataset
+            //   if it does not, reset the model
+            const newModel = new MBModel(model.name)
+            prepareModel(newModel)
         }
     }
 

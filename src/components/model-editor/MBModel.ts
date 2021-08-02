@@ -1,12 +1,13 @@
 import { JDEventSource } from "../../../jacdac-ts/src/jdom/eventsource"
 
 export default class MBModel extends JDEventSource {
-    // maintain computed number of examples and input data types to avoid recomputation
+    // maintain info about the dataset this model was created for
     inputShape: number[]
     inputTypes: string[]
     outputShape: number
-    trainingAcc: number
 
+    // maintain training info about the model
+    trainingAcc: number
     weightData: ArrayBuffer
 
     static async createFromFile(modelObj: {
