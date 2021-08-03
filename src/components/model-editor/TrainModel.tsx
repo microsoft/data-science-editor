@@ -16,7 +16,7 @@ import NavigateNextIcon from "@material-ui/icons/NavigateNext"
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 
 import { trainRequest } from "../blockly/dsl/workers/tf.proxy"
 import type {
@@ -28,6 +28,7 @@ import FieldDataSet from "../FieldDataSet"
 import ModelDataSet, { arraysEqual } from "./ModelDataSet"
 import MBModel from "./MBModel"
 import workerProxy from "../blockly/dsl/workers/proxy"
+import useChange from "../../jacdac/useChange"
 
 const NUM_EPOCHS = 250
 const LOSS_COLOR = "#8b0000"
@@ -49,7 +50,6 @@ export default function TrainModel(props: {
         if (!pageReady) {
             prepareDataSet(dataset)
             prepareModel(model)
-            prepareTrainingLogs()
             setPageReady(true)
         }
     }, [])
@@ -125,9 +125,7 @@ export default function TrainModel(props: {
             units: ["/", "/"],
             colors: [LOSS_COLOR, ACC_COLOR],
         }
-        const set = FieldDataSet.createFromFile(trainingLogDataSet)
-        set.addData([0, 0])
-        setTrainingLogs(set)
+        return FieldDataSet.createFromFile(trainingLogDataSet)
     }
 
     const deleteTFModel = () => {
@@ -141,7 +139,8 @@ export default function TrainModel(props: {
 
     /* For training model */
     const [trainEnabled, setTrainEnabled] = useState(dataset.labels.length >= 2)
-    const [trainingLogs, setTrainingLogs] = useState<FieldDataSet>(undefined)
+    const trainingLogs = useMemo(prepareTrainingLogs, [])
+    useChange(trainingLogs)
 
     const trainTFModel = async () => {
         model.status = "running"
