@@ -24,6 +24,7 @@
     "@react-three/fiber": "^7.0.4",
     "@tensorflow/tfjs": "~3.8.0",
     "@tidyjs/tidy": "^2.4.2",
+    "@types/json-schema": "^7.0.8",
     "@types/react-aria-live": "^2.0.1",
     "@types/wicg-file-system-access": "^2020.9.2",
     "@typescript-eslint/eslint-plugin": "^4.28.5",

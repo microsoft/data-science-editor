@@ -1,6 +1,6 @@
 import ReactField from "./ReactField"
-import Blockly from "blockly"
 import { child } from "../../widgets/svg"
+import { utils } from "blockly"
 
 export default class ReactImageField<T> extends ReactField<T> {
     constructor(value: string, width = 32, height = 32) {
@@ -8,7 +8,7 @@ export default class ReactImageField<T> extends ReactField<T> {
     }
 
     setSize(width: number, height: number) {
-        this.size_ = new Blockly.utils.Size(width, height)
+        this.size_ = new utils.Size(width, height)
         const img = this.view as SVGImageElement
         if (img) {
             img.setAttribute("width", width + "")

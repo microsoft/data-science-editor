@@ -41,6 +41,7 @@ export default class ReactField<T> extends ReactFieldBase<T> {
     public readonly events = new JDEventSource()
     protected div_: Element
     protected view: SVGElement
+    protected darkMode: "light" | "dark" = "dark"
 
 
     // override to support custom view
@@ -150,7 +151,7 @@ export default class ReactField<T> extends ReactFieldBase<T> {
         const onValueChange = (newValue: any) => (this.value = newValue)
         return (
             <WorkspaceProvider field={this}>
-                <DarkModeProvider fixedDarkMode={"dark"}>
+                <DarkModeProvider fixedDarkMode={this.darkMode}>
                     <IdProvider>
                         <WebAudioProvider>
                             <JacdacProvider>

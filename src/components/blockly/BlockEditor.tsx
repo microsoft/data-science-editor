@@ -30,6 +30,9 @@ const useStyles = makeStyles((theme: Theme) =>
             "& .blocklyFieldButton.blocklyEditableText": {
                 cursor: "pointer",
             },
+            "& .blocklyFieldButton.blocklyEditableText > text": {
+                fill: "#ffffff",
+            },
             "& .blocklyFieldButton.blocklyEditableText > .blocklyFieldRect": {
                 fill: "transparent !important",
             },

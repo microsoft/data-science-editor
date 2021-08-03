@@ -10,7 +10,6 @@ import {
     OptionsInputDefinition,
     SeparatorDefinition,
     StatementInputDefinition,
-    TextInputDefinition,
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
 import DataColumnChooserField from "../fields/DataColumnChooserField"
@@ -19,13 +18,16 @@ import BarChartField from "../fields/chart/BarField"
 import HistogramField from "../fields/chart/HistogramField"
 import DataTableField from "../fields/DataTableField"
 import { paletteColorByIndex } from "./palette"
-import DataPreviewField from "../fields/DataPreviewField"
 import BoxPlotField from "../fields/chart/BoxPlotField"
 import VegaChartField from "../fields/chart/VegaChartField"
 import type { VisualizationSpec } from "react-vega"
 import type { AnyMark } from "vega-lite/build/src/mark"
 import { tidyHeaders, tidyResolveFieldColumn } from "../fields/tidy"
 import { Block } from "blockly"
+import type { JSONSchema4 } from "json-schema"
+import JSONSettingsField, {
+    JSONSettingsInputDefinition,
+} from "../fields/JSONSettingsField"
 
 const SCATTERPLOT_BLOCK = "chart_scatterplot"
 const LINEPLOT_BLOCK = "chart_lineplot"
@@ -37,6 +39,95 @@ const CHART_SHOW_TABLE_BLOCK = "chart_show_table"
 const VEGA_LAYER_BLOCK = "vega_layer"
 const VEGA_ENCODING_BLOCK = "vega_encoding"
 const VEGA_STATEMENT_TYPE = "vegaStatementType"
+
+const chartSettingsSchema: JSONSchema4 = {
+    type: "object",
+    properties: {
+        title: {
+            type: "string",
+            title: "Chart title",
+        },
+    },
+}
+const axisSchema: JSONSchema4 = {
+    type: "object",
+    properties: {
+        title: {
+            type: "string",
+            title: "Title",
+        },
+    },
+}
+const axisNumberSchema: JSONSchema4 = {
+    type: "object",
+    properties: {
+        title: {
+            type: "string",
+            title: "Title",
+        },
+        min: {
+            type: "number",
+            title: "Domain minimum",
+        },
+        max: {
+            type: "number",
+            title: "Domain maximum",
+        },
+    },
+}
+const encodingSettingsSchema: JSONSchema4 = {
+    type: "object",
+    properties: {
+        axis: axisSchema,
+    },
+}
+const encodingNumberSettingsSchema: JSONSchema4 = {
+    type: "object",
+    properties: {
+        axis: axisNumberSchema,
+    },
+}
+const char2DSettingsSchema: JSONSchema4 = {
+    type: "object",
+    properties: {
+        title: {
+            type: "string",
+            title: "Chart title",
+        },
+        encoding: {
+            type: "object",
+            properties: {
+                x: {
+                    title: "X",
+                    ...encodingNumberSettingsSchema,
+                },
+                y: {
+                    title: "Y",
+                    ...encodingNumberSettingsSchema,
+                },
+            },
+        },
+    },
+}
+const charMapSettingsSchema: JSONSchema4 = {
+    type: "object",
+    properties: {
+        title: {
+            type: "string",
+            title: "Chart title",
+        },
+        encoding: {
+            index: {
+                title: "Index",
+                ...encodingSettingsSchema,
+            },
+            value: {
+                title: "Value",
+                ...encodingNumberSettingsSchema,
+            },
+        },
+    },
+}
 
 const colour = paletteColorByIndex(4)
 const chartDsl: BlockDomainSpecificLanguage = {
@@ -60,6 +151,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
             colour,
             template: "meta",
             inputsInline: false,
+            dataPreviewField: false,
             transformData: identityTransformData,
         },
         {
@@ -77,9 +169,10 @@ const chartDsl: BlockDomainSpecificLanguage = {
                     name: "y",
                     dataType: "number",
                 },
-                {
-                    type: DataPreviewField.KEY,
-                    name: "preview",
+                <JSONSettingsInputDefinition>{
+                    type: JSONSettingsField.KEY,
+                    name: "settings",
+                    schema: char2DSettingsSchema,
                 },
                 <DummyInputDefinition>{
                     type: "input_dummy",
@@ -94,6 +187,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
             colour,
             template: "meta",
             inputsInline: false,
+            dataPreviewField: false,
             transformData: identityTransformData,
         },
         {
@@ -110,9 +204,10 @@ const chartDsl: BlockDomainSpecificLanguage = {
                     name: "value",
                     dataType: "number",
                 },
-                {
-                    type: DataPreviewField.KEY,
-                    name: "preview",
+                <JSONSettingsInputDefinition>{
+                    type: JSONSettingsField.KEY,
+                    name: "settings",
+                    schema: charMapSettingsSchema,
                 },
                 <DummyInputDefinition>{
                     type: "input_dummy",
@@ -127,6 +222,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
             colour,
             template: "meta",
             inputsInline: false,
+            dataPreviewField: false,
             transformData: identityTransformData,
         },
         {
@@ -144,9 +240,10 @@ const chartDsl: BlockDomainSpecificLanguage = {
                     name: "y",
                     dataType: "number",
                 },
-                {
-                    type: DataPreviewField.KEY,
-                    name: "preview",
+                <JSONSettingsInputDefinition>{
+                    type: JSONSettingsField.KEY,
+                    name: "settings",
+                    schema: char2DSettingsSchema,
                 },
                 <DummyInputDefinition>{
                     type: "input_dummy",
@@ -161,6 +258,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
             colour,
             template: "meta",
             inputsInline: false,
+            dataPreviewField: false,
             transformData: identityTransformData,
         },
         {
@@ -173,9 +271,10 @@ const chartDsl: BlockDomainSpecificLanguage = {
                     name: "index",
                     dataType: "number",
                 },
-                {
-                    type: DataPreviewField.KEY,
-                    name: "preview",
+                <JSONSettingsInputDefinition>{
+                    type: JSONSettingsField.KEY,
+                    name: "settings",
+                    schema: chartSettingsSchema,
                 },
                 <DummyInputDefinition>{
                     type: "input_dummy",
@@ -190,6 +289,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
             colour,
             template: "meta",
             inputsInline: false,
+            dataPreviewField: false,
             transformData: identityTransformData,
         },
         {
@@ -206,9 +306,10 @@ const chartDsl: BlockDomainSpecificLanguage = {
                     name: "value",
                     dataType: "number",
                 },
-                {
-                    type: DataPreviewField.KEY,
-                    name: "preview",
+                <JSONSettingsInputDefinition>{
+                    type: JSONSettingsField.KEY,
+                    name: "settings",
+                    schema: charMapSettingsSchema,
                 },
                 <DummyInputDefinition>{
                     type: "input_dummy",
@@ -223,12 +324,13 @@ const chartDsl: BlockDomainSpecificLanguage = {
             colour,
             template: "meta",
             inputsInline: false,
+            dataPreviewField: false,
             transformData: identityTransformData,
         },
         {
             kind: "block",
             type: VEGA_LAYER_BLOCK,
-            message0: "chart %1 title %2 %3 %4 %5 %6 %7",
+            message0: "chart %1 %2 %3 %4 %5 %6",
             args0: [
                 <OptionsInputDefinition>{
                     type: "field_dropdown",
@@ -251,13 +353,10 @@ const chartDsl: BlockDomainSpecificLanguage = {
                     ].map(s => [s, s]),
                     name: "mark",
                 },
-                <TextInputDefinition>{
-                    type: "field_input",
-                    name: "title",
-                },
-                {
-                    type: DataPreviewField.KEY,
-                    name: "preview",
+                <JSONSettingsInputDefinition>{
+                    type: JSONSettingsField.KEY,
+                    name: "settings",
+                    schema: chartSettingsSchema,
                 },
                 <DummyInputDefinition>{
                     type: "input_dummy",
@@ -286,7 +385,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: VEGA_ENCODING_BLOCK,
-            message0: "encoding %1 as %2 title %3",
+            message0: "encoding %1 as %2",
             args0: [
                 <OptionsInputDefinition>{
                     type: "field_dropdown",
@@ -310,10 +409,6 @@ const chartDsl: BlockDomainSpecificLanguage = {
                     type: DataColumnChooserField.KEY,
                     name: "field",
                 },
-                <TextInputDefinition>{
-                    type: "field_input",
-                    name: "title"
-                }
             ],
             previousStatement: VEGA_STATEMENT_TYPE,
             nextStatement: VEGA_STATEMENT_TYPE,
