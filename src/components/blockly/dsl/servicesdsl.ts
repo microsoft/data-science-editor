@@ -4,6 +4,7 @@ import {
     SRV_LED_MATRIX,
     SRV_SEVEN_SEGMENT_DISPLAY,
 } from "../../../../jacdac-ts/src/jdom/constants"
+import type { DataRecordWindowRequest } from "../../../workers/data/dist/node_modules/data.worker"
 
 import KeyboardKeyField from "../fields/KeyboardKeyField"
 import LEDColorField from "../fields/LEDColorField"
@@ -19,6 +20,7 @@ import {
     EventBlockDefinition,
     identityTransformData,
     InputDefinition,
+    NumberInputDefinition,
     OptionsInputDefinition,
     toolsColour,
     TWIN_BLOCK,
@@ -43,10 +45,13 @@ import {
     toRoleType,
 } from "./servicesbase"
 import { humanify } from "../../../../jacdac-ts/jacdac-spec/spectool/jdspec"
+import { Block } from "blockly"
+import postTransformData from "./workers/data.proxy"
 
 const SET_STATUS_LIGHT_BLOCK = "jacdac_set_status_light"
 const ROLE_BOUND_EVENT_BLOCK = "jacdac_role_bound_event"
 const ROLE_BOUND_BLOCK = "jacdac_role_bound"
+const RECORD_WINDOW_BLOCK = "jacdac_record_window"
 const INSPECT_BLOCK = "jacdac_tools_inspect"
 const commandColor = "#8c6a1d"
 
@@ -447,6 +452,37 @@ export class ServicesBlockDomainSpecificLanguage
                 helpUrl: "",
                 template: "meta",
             },
+            <BlockDefinition>{
+                kind: "block",
+                type: RECORD_WINDOW_BLOCK,
+                message0: "record last %1 s",
+                args0: [
+                    <NumberInputDefinition>{
+                        type: "field_number",
+                        name: "horizon",
+                        value: 10,
+                    },
+                ],
+                inputsInline: false,
+                previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
+                nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+                colour: toolsColour,
+                template: "meta",
+                dataPreviewField: true,
+                transformData: async (
+                    block: Block,
+                    data: { time: number }[],
+                    previousData: { time: number }[]
+                ) => {
+                    const horizon = block.getFieldValue("horizon") || 10
+                    return postTransformData(<DataRecordWindowRequest>{
+                        type: "record_window",
+                        data,
+                        previousData,
+                        horizon,
+                    })
+                },
+            },
         ]
 
         return [
@@ -499,6 +535,10 @@ export class ServicesBlockDomainSpecificLanguage
                 <BlockReference>{
                     kind: "block",
                     type: TWIN_BLOCK,
+                },
+                <BlockDefinition>{
+                    kind: "block",
+                    type: RECORD_WINDOW_BLOCK,
                 },
                 <BlockReference>{
                     kind: "block",
