@@ -8,7 +8,7 @@ import { CHART_HEIGHT, CHART_SVG_MAX_ITEMS, CHART_WIDTH } from "../../toolbox"
 import type { VisualizationSpec } from "react-vega"
 import type { DataSliceOptions } from "../../../../workers/data/dist/node_modules/data.worker"
 import useEffectAsync from "../../../useEffectAsync"
-import { tidySlice } from "./../tidy"
+import { tidyResolveHeader, tidySlice } from "./../tidy"
 import { JSONTryParse } from "../../../../../jacdac-ts/src/jdom/utils"
 
 const VegaLite = lazy(() => import("./VegaLite"))
@@ -39,7 +39,10 @@ export default function VegaLiteWidget(props: {
     const { data } = useBlockData(sourceBlock)
     // eslint-disable-next-line @typescript-eslint/ban-types
     const [vegaData, setVegaData] = useState<{ values: object[] }>(undefined)
+
+    const group = tidyResolveHeader(data, sourceBlock?.getFieldValue("group"))
     const settings = JSONTryParse(sourceBlock?.getFieldValue("settings"))
+
     // TODO merge json
     const fullSpec = useMemo(() => {
         if (!settings) return spec
@@ -53,13 +56,14 @@ export default function VegaLiteWidget(props: {
                     encoding?.scale?.domainMax !== undefined
             )
         ) {
-            if (typeof s.mark === "string") s.mark = { type: s.mark }
             s.mark.clip = true
         }
+        if (group) {
+            s.encoding.color = { field: group, type: "nominal" }
+            s.encoding.strokeDash = { field: group, type: "nominal" }
+        }
         return s
-    }, [spec, settings])
-
-    console.log("vega", { spec, settings, fullSpec })
+    }, [spec, group, settings])
 
     useEffectAsync(
         async mounted => {

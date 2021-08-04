@@ -7,7 +7,7 @@ import { PointerBoundary } from "./PointerBoundary"
 import CopyButton from "../../ui/CopyButton"
 import { unparseCSV } from "../dsl/workers/csv.proxy"
 import { roundWithPrecision, toMap } from "../../../../jacdac-ts/src/jdom/utils"
-import { tidyHeaders } from "./tidy"
+import { tidyHeaders, tidyResolveHeader } from "./tidy"
 
 interface StylesProps {
     tableHeight: number
@@ -80,7 +80,13 @@ export default function DataTableWidget(props: {
     if (!raw?.length)
         return empty ? <span className={classes.empty}>{empty}</span> : null
 
-    const columns = tidyHeaders(raw).headers
+    const selectedColumns = [0, 1, 2, 3]
+        .map(i => `column${i}`)
+        .map(n => tidyResolveHeader(raw, sourceBlock?.getFieldValue(n)))
+        .filter(c => !!c)
+    const columns = selectedColumns.length
+        ? selectedColumns
+        : tidyHeaders(raw).headers
     const table =
         raw.length > maxItems
             ? [

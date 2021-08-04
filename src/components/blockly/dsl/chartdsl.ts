@@ -135,8 +135,24 @@ const chartDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: CHART_SHOW_TABLE_BLOCK,
-            message0: "show table %1 %2",
+            message0: "show table %1 %2 %3 %4 %5 %6",
             args0: [
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "column0",
+                },
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "column1",
+                },
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "column2",
+                },
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "column3",
+                },
                 <DummyInputDefinition>{
                     type: "input_dummy",
                 },
@@ -156,7 +172,8 @@ const chartDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: SCATTERPLOT_BLOCK,
-            message0: "scatterplot with x %1 y %2 %3 %4 %5",
+            message0:
+                "scatterplot of x %1 y %2 size %3 group %4 %5 %6 %7",
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
@@ -167,6 +184,15 @@ const chartDsl: BlockDomainSpecificLanguage = {
                     type: DataColumnChooserField.KEY,
                     name: "y",
                     dataType: "number",
+                },
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "size",
+                    dataType: "number",
+                },
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "group",
                 },
                 <JSONSettingsInputDefinition>{
                     type: JSONSettingsField.KEY,
@@ -192,7 +218,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: BARCHART_BLOCK,
-            message0: "bar chart with index %1 value %2 %3 %4 %5",
+            message0: "bar chart of index %1 value %2 %3 %4 %5",
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
@@ -227,7 +253,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: LINEPLOT_BLOCK,
-            message0: "line chart with x %1 y %2 %3 %4 %5",
+            message0: "line chart of x %1 y %2 group %3 %4 %5 %6",
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
@@ -238,6 +264,10 @@ const chartDsl: BlockDomainSpecificLanguage = {
                     type: DataColumnChooserField.KEY,
                     name: "y",
                     dataType: "number",
+                },
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "group",
                 },
                 <JSONSettingsInputDefinition>{
                     type: JSONSettingsField.KEY,
@@ -263,12 +293,16 @@ const chartDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: HISTOGRAM_BLOCK,
-            message0: "histogram of %1 %2 %3 %4",
+            message0: "histogram of %1 group %2 %3 %4 %5",
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
                     name: "index",
                     dataType: "number",
+                },
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "group",
                 },
                 <JSONSettingsInputDefinition>{
                     type: JSONSettingsField.KEY,
@@ -294,7 +328,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: BOX_PLOT_BLOCK,
-            message0: "boxplot of %1 by %2 %3 %4 %5",
+            message0: "boxplot of index %1 value %2 group %3 %4 %5 %6",
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
@@ -305,6 +339,10 @@ const chartDsl: BlockDomainSpecificLanguage = {
                     name: "value",
                     dataType: "number",
                 },
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "group",
+                },                
                 <JSONSettingsInputDefinition>{
                     type: JSONSettingsField.KEY,
                     name: "settings",
@@ -433,6 +471,13 @@ const chartDsl: BlockDomainSpecificLanguage = {
                 <SeparatorDefinition>{
                     kind: "sep",
                 },
+            ],
+            colour,
+        },
+    ],
+}
+
+/*
                 <LabelDefinition>{
                     kind: "label",
                     text: "Custom",
@@ -445,11 +490,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
                     kind: "block",
                     type: VEGA_ENCODING_BLOCK,
                 },
-            ],
-            colour,
-        },
-    ],
-}
+*/
 
 export default chartDsl
 
