@@ -58,20 +58,18 @@ const axisSchema: JSONSchema4 = {
         },
     },
 }
-const axisNumberSchema: JSONSchema4 = {
+const scaleSchema: JSONSchema4 = {
     type: "object",
     properties: {
-        title: {
-            type: "string",
-            title: "Title",
-        },
-        min: {
+        domainMin: {
             type: "number",
-            title: "Domain minimum",
+            title: "minimum",
+            description: "Sets the minimum value in the scale domain",
         },
-        max: {
+        domainMax: {
             type: "number",
-            title: "Domain maximum",
+            title: "maximum",
+            description: "Sets the maximum value in the scale domain",
         },
     },
 }
@@ -84,7 +82,8 @@ const encodingSettingsSchema: JSONSchema4 = {
 const encodingNumberSettingsSchema: JSONSchema4 = {
     type: "object",
     properties: {
-        axis: axisNumberSchema,
+        scale: scaleSchema,
+        axis: axisSchema,
     },
 }
 const char2DSettingsSchema: JSONSchema4 = {
