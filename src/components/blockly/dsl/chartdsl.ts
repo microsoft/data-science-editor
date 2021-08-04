@@ -463,7 +463,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: VEGA_ENCODING_BLOCK,
-            message0: "encoding %1 as %2",
+            message0: "encoding %1 as %2 type %3",
             args0: [
                 <OptionsInputDefinition>{
                     type: "field_dropdown",
@@ -480,12 +480,32 @@ const chartDsl: BlockDomainSpecificLanguage = {
                         "theta2",
                         "radius",
                         "radius2",
+                        "color",
+                        "angle",
+                        "opacity",
+                        "fillOpacity",
+                        "strokeOpacity",
+                        "shape",
+                        "size",
+                        "strokeDash",
+                        "strokeWidth",
+                        "text",
                     ].map(s => [s, s]),
                     name: "channel",
                 },
                 <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
                     name: "field",
+                },
+                <OptionsInputDefinition>{
+                    type: "field_dropdown",
+                    options: [
+                        "quantitative",
+                        "ordinal",
+                        "nominal",
+                        "temporal",
+                    ].map(s => [s, s]),
+                    name: "type",
                 },
             ],
             previousStatement: VEGA_STATEMENT_TYPE,
@@ -554,19 +574,17 @@ export function blockToVisualizationSpec(
             case VEGA_ENCODING_BLOCK: {
                 const channel: string = child.getFieldValue("channel")
                 const field = tidyResolveFieldColumn(data, child, "field")
-                const title: string = child.getFieldValue("title")
-                console.log({ child, channel, field })
+                const type: string = child.getFieldValue("type")
                 if (channel && field) {
-                    const type = types[headers.indexOf(field)]
+                    const fieldType = types[headers.indexOf(field)]
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    const encoding: any = (spec.encoding[channel] = {
+                    spec.encoding[channel] = {
                         field,
-                        type: type === "number" ? "quantitative" : "nominal",
-                    })
-                    if (title) {
-                        encoding.axis = {
-                            title,
-                        }
+                        type:
+                            type ||
+                            (fieldType === "number"
+                                ? "quantitative"
+                                : "nominal"),
                     }
                 }
                 break
