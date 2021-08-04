@@ -21,7 +21,7 @@ import { paletteColorByIndex } from "./palette"
 import BoxPlotField from "../fields/chart/BoxPlotField"
 import VegaChartField from "../fields/chart/VegaChartField"
 import type { VisualizationSpec } from "react-vega"
-import type { AnyMark } from "vega-lite/build/src/mark"
+import type { AnyMark, Mark } from "vega-lite/build/src/mark"
 import { tidyHeaders, tidyResolveFieldColumn } from "../fields/tidy"
 import { Block } from "blockly"
 import type { JSONSchema4 } from "json-schema"
@@ -535,7 +535,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
                 },
                 <LabelDefinition>{
                     kind: "label",
-                    text: "Custom",
+                    text: "Advanced",
                 },
                 <BlockReference>{
                     kind: "block",
@@ -559,11 +559,11 @@ export function blockToVisualizationSpec(
     data: object[]
 ): VisualizationSpec {
     const { headers, types } = tidyHeaders(data)
-    const mark: AnyMark = sourceBlock.getFieldValue("mark")
+    const mark: Mark = sourceBlock.getFieldValue("mark")
     const title: string = sourceBlock.getFieldValue("title")
     const spec: VisualizationSpec = {
         title,
-        mark,
+        mark: { type: mark, tooltip: true },
         encoding: {},
         data: { name: "values" },
     }
