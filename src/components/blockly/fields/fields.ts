@@ -13,17 +13,20 @@ import LogViewField from "./LogViewField"
 import VariablesField from "./VariablesFields"
 import DataTableField from "./DataTableField"
 import DataColumnChooserField from "./DataColumnChooserField"
+import BuiltinDataSetField from "./BuiltinDataSetField"
+import DataPreviewField from "./DataPreviewField"
+
 import LinePlotField from "./chart/LinePlotField"
 import GaugeWidgetField from "./GaugeWidgetField"
-import BuiltinDataSetField from "./BuiltinDataSetField"
 import ScatterPlotField from "./chart/ScatterPlotField"
 import BarChartField from "./chart/BarField"
 import HistogramField from "./chart/HistogramField"
 import BoxPlotField from "./chart/BoxPlotField"
+import HeatMapPlotField from "./chart/HeatMapField"
+import VegaChartField from "./chart/VegaChartField"
+
 import FileSaveField from "./FileSaveField"
 import FileOpenField from "./FileOpenField"
-import DataPreviewField from "./DataPreviewField"
-import VegaChartField from "./chart/VegaChartField"
 
 import ExpandModelBlockField from "./mb/ExpandModelBlockField"
 import DataSetBlockField from "./mb/DataSetBlockField"
@@ -36,6 +39,7 @@ import PoolingLayerBlockField from "./mb/PoolingLayerBlockField"
 import DropoutLayerBlockField from "./mb/DropoutLayerBlockField"
 import FlattenLayerBlockField from "./mb/FlattenLayerBlockField"
 import DenseLayerBlockField from "./mb/DenseLayerBlockField"
+
 import JSONSettingsField from "./JSONSettingsField"
 
 let reactFieldShadows: BlockDefinition[]
@@ -80,9 +84,9 @@ export function registerFields() {
         ScatterPlotField,
         LinePlotField,
         BarChartField,
-
         HistogramField,
         BoxPlotField,
+        HeatMapPlotField,
         VegaChartField,
 
         ExpandModelBlockField,

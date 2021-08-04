@@ -28,9 +28,11 @@ import type { JSONSchema4 } from "json-schema"
 import JSONSettingsField, {
     JSONSettingsInputDefinition,
 } from "../fields/JSONSettingsField"
+import HeatMapPlotField from "../fields/chart/HeatMapField"
 
 const SCATTERPLOT_BLOCK = "chart_scatterplot"
 const LINEPLOT_BLOCK = "chart_lineplot"
+const HEATMAP_BLOCK = "chart_heatmap"
 const BARCHART_BLOCK = "chart_bar"
 const HISTOGRAM_BLOCK = "chart_histogram"
 const BOX_PLOT_BLOCK = "chart_box_plot"
@@ -172,8 +174,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: SCATTERPLOT_BLOCK,
-            message0:
-                "scatterplot of x %1 y %2 size %3 group %4 %5 %6 %7",
+            message0: "scatterplot of x %1 y %2 size %3 group %4 %5 %6 %7",
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
@@ -292,6 +293,46 @@ const chartDsl: BlockDomainSpecificLanguage = {
         },
         {
             kind: "block",
+            type: HEATMAP_BLOCK,
+            message0: "heatmap of x %1 y %2 color %3 %4 %5 %6",
+            args0: [
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "x",
+                    dataType: "number",
+                },
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "y",
+                    dataType: "number",
+                },
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "color",
+                },
+                <JSONSettingsInputDefinition>{
+                    type: JSONSettingsField.KEY,
+                    name: "settings",
+                    schema: char2DSettingsSchema,
+                },
+                <DummyInputDefinition>{
+                    type: "input_dummy",
+                },
+                {
+                    type: HeatMapPlotField.KEY,
+                    name: "plot",
+                },
+            ],
+            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            colour,
+            template: "meta",
+            inputsInline: false,
+            dataPreviewField: false,
+            transformData: identityTransformData,
+        },
+        {
+            kind: "block",
             type: HISTOGRAM_BLOCK,
             message0: "histogram of %1 group %2 %3 %4 %5",
             args0: [
@@ -342,7 +383,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
                 {
                     type: DataColumnChooserField.KEY,
                     name: "group",
-                },                
+                },
                 <JSONSettingsInputDefinition>{
                     type: JSONSettingsField.KEY,
                     name: "settings",
@@ -467,17 +508,11 @@ const chartDsl: BlockDomainSpecificLanguage = {
                 <BlockReference>{ kind: "block", type: BOX_PLOT_BLOCK },
                 <BlockReference>{ kind: "block", type: BARCHART_BLOCK },
                 <BlockReference>{ kind: "block", type: LINEPLOT_BLOCK },
+                <BlockReference>{ kind: "block", type: HEATMAP_BLOCK },
                 <BlockReference>{ kind: "block", type: CHART_SHOW_TABLE_BLOCK },
                 <SeparatorDefinition>{
                     kind: "sep",
                 },
-            ],
-            colour,
-        },
-    ],
-}
-
-/*
                 <LabelDefinition>{
                     kind: "label",
                     text: "Custom",
@@ -490,7 +525,11 @@ const chartDsl: BlockDomainSpecificLanguage = {
                     kind: "block",
                     type: VEGA_ENCODING_BLOCK,
                 },
-*/
+            ],
+            colour,
+        },
+    ],
+}
 
 export default chartDsl
 
