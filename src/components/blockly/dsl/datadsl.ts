@@ -15,6 +15,7 @@ import {
     TextInputDefinition,
     SeparatorDefinition,
     DataColumnInputDefinition,
+    DummyInputDefinition,
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
 import postTransformData from "./workers/data.proxy"
@@ -43,6 +44,8 @@ import {
     tidyResolveFieldColumns,
     tidySlice,
 } from "../fields/tidy"
+import DataTableField from "../fields/DataTableField"
+import DataPreviewField from "../fields/DataPreviewField"
 
 const DATA_ARRANGE_BLOCK = "data_arrange"
 const DATA_SELECT_BLOCK = "data_select"
@@ -488,7 +491,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 <NumberInputDefinition>{
                     type: "field_number",
                     name: "count",
-                    min: 1
+                    min: 1,
                 },
                 <OptionsInputDefinition>{
                     type: "field_dropdown",
@@ -653,7 +656,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
         <BlockDefinition>{
             kind: "block",
             type: DATA_CORRELATION_BLOCK,
-            message0: "correlation %1 %2",
+            message0: "correlation %1 %2 %3 %4 %5",
             args0: [
                 <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
@@ -665,13 +668,27 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     name: "column2",
                     dataType: "number",
                 },
+                {
+                    type: DataPreviewField.KEY,
+                    name: "preview",
+                    compare: true,
+                },
+                <DummyInputDefinition>{
+                    type: "input_dummy",
+                },
+                {
+                    type: DataTableField.KEY,
+                    name: "table",
+                    transformed: true,
+                    small: true,
+                },
             ],
             inputsInline: false,
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             colour: statisticsColour,
             template: "meta",
-            dataPreviewField: true,
+            dataPreviewField: false,
             transformData: async (b: BlockSvg, data: object[]) => {
                 const column1 = tidyResolveFieldColumn(
                     data,
@@ -697,7 +714,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
         <BlockDefinition>{
             kind: "block",
             type: DATA_LINEAR_REGRESSION_BLOCK,
-            message0: "linear regression %1 %2",
+            message0: "linear regression %1 %2 %3 %4 %5",
             args0: [
                 <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
@@ -709,13 +726,27 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     name: "column2",
                     dataType: "number",
                 },
+                {
+                    type: DataPreviewField.KEY,
+                    name: "preview",
+                    compare: true,
+                },
+                <DummyInputDefinition>{
+                    type: "input_dummy",
+                },
+                {
+                    type: DataTableField.KEY,
+                    name: "table",
+                    transformed: true,
+                    small: true,
+                },
             ],
             inputsInline: false,
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             colour: statisticsColour,
             template: "meta",
-            dataPreviewField: true,
+            dataPreviewField: false,
             transformData: async (b: BlockSvg, data: object[]) => {
                 const column1 = tidyResolveFieldColumn(
                     data,

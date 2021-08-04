@@ -18,7 +18,7 @@ export default class DataPreviewField extends ReactField<ReactFieldJSON> {
     static KEY = "jacdac_field_data_preview"
     compare: boolean
 
-    static fromJson(options: ReactFieldJSON) {
+    static fromJson(options: DataPreviewOptions) {
         return new DataPreviewField(options?.value, undefined, options)
     }
 

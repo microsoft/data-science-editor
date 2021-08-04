@@ -137,11 +137,13 @@ export default function DataTableWidget(props: {
                                 onCopy={handleCopy}
                             />
                         </Grid>
-                        <Grid item>
-                            <Typography variant="caption">
-                                {raw.length} rows x {columns.length} columns
-                            </Typography>
-                        </Grid>
+                        {raw.length > 1 && (
+                            <Grid item>
+                                <Typography variant="caption">
+                                    {raw.length} rows x {columns.length} columns
+                                </Typography>
+                            </Grid>
+                        )}
                     </Grid>
                 </Grid>
                 <Grid item xs={12}>
