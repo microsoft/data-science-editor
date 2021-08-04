@@ -45,6 +45,17 @@ export default function VegaLiteWidget(props: {
         if (!settings) return spec
         const s = clone(spec)
         jsonMergeFrom(s, settings)
+        if (
+            Object.values(s.encoding || {}).some(
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (encoding: any) =>
+                    encoding?.scale?.domainMin !== undefined ||
+                    encoding?.scale?.domainMax !== undefined
+            )
+        ) {
+            if (typeof s.mark === "string") s.mark = { type: s.mark }
+            s.mark.clip = true
+        }
         return s
     }, [spec, settings])
 
