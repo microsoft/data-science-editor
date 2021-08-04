@@ -5,10 +5,8 @@ import Toolbar from "@material-ui/core/Toolbar"
 import Typography from "@material-ui/core/Typography"
 // tslint:disable-next-line: no-submodule-imports
 import DarkModeContext from "../ui/DarkModeContext"
-import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
-import { Link } from "gatsby-theme-material-ui"
-import ForumIcon from "@material-ui/icons/Forum"
 import { HideOnScroll } from "../ui/HideOnScroll"
+import { Link } from "gatsby-theme-material-ui"
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -54,16 +52,15 @@ export default function DataEditorAppBar() {
                             </Typography>
                         </Hidden>
                         <div className={classes.grow} />
-                        <IconButtonWithTooltip
+                        <Link
                             className={classes.menuButton}
-                            aria-label="Discussions"
-                            title="Discussions"
-                            edge="start"
+                            aria-label="Send feedback in our forums"
+                            title="Send feedback in our forums"
                             color="inherit"
-                            to="https://github.com/microsoft/jacdac/discussions/categories/data-editor"
+                            href="https://github.com/microsoft/jacdac/discussions/categories/data-editor"
                         >
-                            <ForumIcon />
-                        </IconButtonWithTooltip>
+                            Feedback
+                        </Link>
                     </Toolbar>
                 </AppBar>
             </HideOnScroll>
