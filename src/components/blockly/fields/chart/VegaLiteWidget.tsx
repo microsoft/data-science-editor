@@ -30,6 +30,12 @@ function jsonMergeFrom(trg: object, src: object) {
     })
 }
 
+const ACTIONS = {
+    export: { png: true, svg: true },
+    source: false,
+    compiled: false,
+    editor: false,
+}
 export default function VegaLiteWidget(props: {
     spec: VisualizationSpec
     slice?: DataSliceOptions
@@ -87,13 +93,13 @@ export default function VegaLiteWidget(props: {
                 <PointerBoundary>
                     <Suspense>
                         <VegaLite
-                            actions={false}
+                            actions={ACTIONS}
                             width={CHART_WIDTH}
                             height={CHART_HEIGHT}
                             spec={fullSpec}
                             data={vegaData}
                             renderer={renderer}
-                            tooltip={false}
+                            tooltip={true}
                         />
                     </Suspense>
                 </PointerBoundary>
