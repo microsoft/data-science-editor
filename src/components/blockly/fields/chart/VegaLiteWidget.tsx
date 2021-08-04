@@ -88,7 +88,7 @@ export default function VegaLiteWidget(props: {
                     <Suspense>
                         <VegaLite
                             actions={{
-                                export: { png: true },
+                                export: { png: true, svg: true },
                                 source: false,
                                 compiled: false,
                                 editor: false,
