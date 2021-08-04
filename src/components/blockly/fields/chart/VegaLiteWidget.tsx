@@ -87,18 +87,13 @@ export default function VegaLiteWidget(props: {
                 <PointerBoundary>
                     <Suspense>
                         <VegaLite
-                            actions={{
-                                export: { png: true, svg: true },
-                                source: false,
-                                compiled: false,
-                                editor: false,
-                            }}
+                            actions={false}
                             width={CHART_WIDTH}
                             height={CHART_HEIGHT}
                             spec={fullSpec}
                             data={vegaData}
                             renderer={renderer}
-                            tooltip={true}
+                            tooltip={false}
                         />
                     </Suspense>
                 </PointerBoundary>
@@ -106,3 +101,13 @@ export default function VegaLiteWidget(props: {
         </NoSsr>
     )
 }
+
+/**
+ * https://github.com/vega/vega-embed/issues/733
+actions {
+                                export: { png: true, svg: true },
+                                source: false,
+                                compiled: false,
+                                editor: false,
+                            }
+ */
