@@ -548,6 +548,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_DATASET_BUILTIN_BLOCK,
             message0: "dataset %1",
+            tooltip: "Loads a builtin dataset",
             args0: [
                 {
                     type: BuiltinDataSetField.KEY,
