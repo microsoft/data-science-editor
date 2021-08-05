@@ -1,6 +1,7 @@
 import { useContext, useMemo, useState } from "react"
 import { useChangeAsync } from "../../jacdac/useChange"
 import DbContext from "../DbContext"
+import { fileSystemHandleSupported } from "../fs/fs"
 
 async function verifyPermission(fileHandle: FileSystemHandle) {
     if (!fileHandle) return false
@@ -20,26 +21,12 @@ async function verifyPermission(fileHandle: FileSystemHandle) {
     return false
 }
 
-export function fileSystemHandleSupported() {
-    return typeof window !== "undefined" && !!window.showDirectoryPicker
-}
-
 export default function useDirectoryHandle(storageKey: string) {
     const { db } = useContext(DbContext)
     const directories = useMemo(() => db?.directories, [db])
     const [directory, setDirectory] = useState<FileSystemDirectoryHandle>()
 
     const supported = fileSystemHandleSupported()
-    const showDirectoryPicker = supported
-        ? async (options?: DirectoryPickerOptions) => {
-              try {
-                  const dir = await window.showDirectoryPicker(options)
-                  if (dir !== directory) directories.set(storageKey, dir)
-              } catch (e) {
-                  console.debug(e)
-              }
-          }
-        : undefined
     const clearDirectory = () => directories?.set(storageKey, undefined)
 
     // reload directory from DB
@@ -58,13 +45,15 @@ export default function useDirectoryHandle(storageKey: string) {
                     dir = undefined
                 }
             }
-            if (dir !== directory) setDirectory(dir)
+            if (dir !== directory) {
+                console.debug(`set directory`, { storageKey, dir })
+                setDirectory(dir)
+            }
         },
         [storageKey]
     )
     return {
         supported,
-        showDirectoryPicker,
         directory,
         clearDirectory,
     }

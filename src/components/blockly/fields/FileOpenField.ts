@@ -1,85 +1,43 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Block, Field } from "blockly"
+import { Block, FieldDropdown } from "blockly"
 import { parseCSV } from "../dsl/workers/csv.proxy"
-import { BlockWithServices, FieldWithServices } from "../WorkspaceContext"
+import { BlockWithServices, WorkspaceWithServices } from "../WorkspaceContext"
+import { ReactFieldJSON } from "./ReactField"
 
-// inline browser-fs-access until issue of ssr is fixed
-const getFileWithHandle = async handle => {
-    const file = await handle.getFile()
-    file.handle = handle
-    return file
-}
-const fileOpen = async (options: any = {}) => {
-    const accept = {}
-    if (options.mimeTypes) {
-        options.mimeTypes.map(mimeType => {
-            accept[mimeType] = options.extensions || []
-        })
-    } else {
-        accept["*/*"] = options.extensions || []
-    }
-    const handleOrHandles = await window.showOpenFilePicker({
-        types: [
-            {
-                description: options.description || "",
-                accept: accept,
-            },
-        ],
-        multiple: options.multiple || false,
-    })
-    const files = await Promise.all(handleOrHandles.map(getFileWithHandle))
-    if (options.multiple) {
-        return files
-    }
-    return files[0]
-}
-
-interface FileOpenFieldValue {
-    name: string
-    source: string
-}
-
-const MAX_SIZE = 100_000 // 100kb
-export default class FileOpenField extends Field implements FieldWithServices {
+export default class FileOpenField extends FieldDropdown {
     static KEY = "jacdac_field_file_open"
     SERIALIZABLE = true
     // eslint-disable-next-line @typescript-eslint/ban-types
     private _data: object[]
-    private initialized = false
 
-    constructor(options?: any) {
-        super("...", null, options)
-    }
-
-    static fromJson(options: any) {
+    static fromJson(options: ReactFieldJSON) {
         return new FileOpenField(options)
     }
 
-    toXml(fieldElement: Element) {
-        const text = JSON.stringify(this.value_)
-        if (text?.length < MAX_SIZE) fieldElement.textContent = text
-        else fieldElement.textContent = ""
-        return fieldElement
+    constructor(options?: ReactFieldJSON) {
+        super(() => [["", ""]], undefined, options)
     }
-
+    
     fromXml(fieldElement: Element) {
-        try {
-            const v = JSON.parse(fieldElement.textContent)
-            this.value_ = v
-            this.parseSource()
-        } catch (e) {
-            console.log(e, { text: fieldElement.textContent })
-            this.value_ = undefined
-        }
+        this.setValue(fieldElement.textContent)
     }
 
-    getText_() {
-        return (this.value_ as FileOpenFieldValue)?.name || "..."
+    getOptions(): string[][] {
+        const options = this.resolveFiles()?.map(f => [f.name, f.name]) || []
+        const value = this.getValue()
+
+        return options.length < 1
+            ? [[value || "", value || ""]]
+            : [...options, ["", ""]]
+    }
+
+    doClassValidation_(newValue?: string) {
+        // skip super class validationervices chan
+        return newValue
     }
 
     init() {
         super.init()
-        this.initialized = true
         this.updateData()
     }
 
@@ -97,12 +55,31 @@ export default class FileOpenField extends Field implements FieldWithServices {
         this.updateData()
     }
 
+    private resolveFiles() {
+        const sourceBlock = this.getSourceBlock() as BlockWithServices
+        const workspace = sourceBlock?.workspace as WorkspaceWithServices
+        const services = workspace?.jacdacServices
+        const directory = services?.workingDirectory
+        return directory?.files.filter(f => /\.csv$/i.test(f.name))
+    }
+
     private async parseSource() {
-        const source = (this.value_ as FileOpenFieldValue)?.source
-        if (source) {
-            const csv = await parseCSV(source)
-            this._data = csv?.data
-            this.updateData()
+        const filename = this.getValue()
+        const file = this.resolveFiles()?.find(f => f.name === filename)
+        if (file) {
+            try {
+                console.debug(`file: loading ${file.name}`)
+                const source = await file.textAsync()
+                console.debug(`file: loaded ${(source?.length || 0) / 1024}kb`)
+                if (source) {
+                    const csv = await parseCSV(source)
+                    this._data = csv?.data
+                    this.updateData()
+                }
+            } catch (e) {
+                console.log(e)
+                this.value_ = undefined
+            }
         }
     }
 
@@ -111,27 +88,5 @@ export default class FileOpenField extends Field implements FieldWithServices {
         const services = block?.jacdacServices
         if (!services) return
         services.data = this._data
-    }
-
-    showEditor_() {
-        this.openFileHandle()
-    }
-
-    private async openFileHandle() {
-        const file = await fileOpen({
-            mimeTypes: ["text/csv"],
-            extensions: [".csv"],
-            description: "CSV data sets",
-            multiple: false,
-        })
-        if (!file) return
-
-        console.debug(`file: loading ${file.name}`)
-        const source = await file.text()
-        console.debug(`file: loaded ${(source?.length || 0) / 1024}kb`)
-        this.setValue(<FileOpenFieldValue>{
-            name: file.name,
-            source,
-        })
     }
 }

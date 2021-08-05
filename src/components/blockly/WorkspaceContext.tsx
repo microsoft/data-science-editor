@@ -14,11 +14,14 @@ import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import RoleManager from "../../../jacdac-ts/src/servers/rolemanager"
 import { VMProgramRunner } from "../../../jacdac-ts/src/vm/runner"
 import useChange from "../../jacdac/useChange"
+import { FileSystemDirectory } from "../fs/fsdom"
 import ReactField from "./fields/ReactField"
 import useWorkspaceEvent from "./useWorkspaceEvent"
 
 export class WorkspaceServices extends JDEventSource {
     static readonly WORKSPACE_CHANGE = "workspaceChange"
+
+    private _directory: FileSystemDirectory
 
     private _workspaceJSON: WorkspaceJSON
     private _runner: VMProgramRunner
@@ -60,9 +63,19 @@ export class WorkspaceServices extends JDEventSource {
             this.emit(CHANGE)
         }
     }
+
+    get workingDirectory() {
+        return this._directory
+    }
+    set workingDirectory(value: FileSystemDirectory) {
+        if (this._directory !== value) {
+            this._directory = value
+            // don't notify
+        }
+    }
 }
 
-export interface BlocklyWorkspaceWithServices extends WorkspaceSvg {
+export interface WorkspaceWithServices extends WorkspaceSvg {
     jacdacServices: WorkspaceServices
 }
 
@@ -160,7 +173,7 @@ export function WorkspaceProvider(props: {
     )
     const sourceId = sourceBlock?.id
     const workspace = sourceBlock?.workspace as WorkspaceSvg
-    const services = (workspace as BlocklyWorkspaceWithServices)?.jacdacServices
+    const services = (workspace as WorkspaceWithServices)?.jacdacServices
     const roleManager = useChange(services, _ => _?.roleManager)
     const runner = useChange(services, _ => _?.runner)
     const [dragging, setDragging] = useState(!!workspace?.isDragging())

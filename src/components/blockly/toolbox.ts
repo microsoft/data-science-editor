@@ -209,6 +209,8 @@ export const VM_WARNINGS_CATEGORY = "vm"
 export const JSON_WARNINGS_CATEGORY = "json"
 export const MB_WARNINGS_CATEGORY = "mb"
 
+export const WORKSPACE_FILENAME = `blocks.json`
+
 export interface ContentDefinition {
     kind: "category" | "sep" | "button" | "label" | "block"
     order?: number

@@ -14,14 +14,15 @@ import { VMProgram } from "../../../jacdac-ts/src/vm/ir"
 import BlockContext, { BlockProvider } from "../blockly/BlockContext"
 import BlockDiagnostics from "../blockly/BlockDiagnostics"
 import workspaceJSONToVMProgram from "./VMgenerator"
-import { BlocklyWorkspaceWithServices } from "../blockly/WorkspaceContext"
 import BlockEditor from "../blockly/BlockEditor"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
 import vmDsls from "./vmdsls"
 import { VMStatus } from "../../../jacdac-ts/src/vm/runner"
-import { VM_WARNINGS_CATEGORY } from "../blockly/toolbox"
+import { VM_WARNINGS_CATEGORY, WORKSPACE_FILENAME } from "../blockly/toolbox"
 import FileTabs from "../fs/FileTabs"
 import { WorkspaceFile } from "../../../jacdac-ts/src/dsl/workspacejson"
+import FileSystemContext, { FileSystemProvider } from "../FileSystemContext"
+import { WorkspaceWithServices } from "../blockly/WorkspaceContext"
 
 const VM_EDITOR_ID = "vm"
 const VM_SOURCE_STORAGE_KEY = "tools:vmeditor"
@@ -38,9 +39,8 @@ function VMEditorWithContext() {
         roleManager,
         setWarnings,
         dragging,
-        workspaceFileHandle,
-        setWorkspaceFileHandle,
     } = useContext(BlockContext)
+    const { fileSystem } = useContext(FileSystemContext)
     const [program, setProgram] = useState<VMProgram>()
     const autoStart = true
     const { runner, run, cancel } = useVMRunner(roleManager, program, autoStart)
@@ -83,7 +83,7 @@ function VMEditorWithContext() {
 
     useEffect(() => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const ws = workspace as any as BlocklyWorkspaceWithServices
+        const ws = workspace as any as WorkspaceWithServices
         const services = ws?.jacdacServices
         if (services) {
             services.runner = runner
@@ -92,13 +92,10 @@ function VMEditorWithContext() {
 
     return (
         <Grid container direction="column" spacing={1}>
-            {!!setWorkspaceFileHandle && (
+            {!!fileSystem && (
                 <Grid item xs={12}>
                     <FileTabs
-                        storageKey={VM_SOURCE_STORAGE_KEY}
-                        selectedFileHandle={workspaceFileHandle}
-                        onFileHandleSelected={setWorkspaceFileHandle}
-                        onFileHandleCreated={setWorkspaceFileHandle}
+                        newFileName={WORKSPACE_FILENAME}
                         newFileContent={VM_NEW_FILE_CONTENT}
                     />
                 </Grid>
@@ -134,17 +131,19 @@ export default function VMEditor() {
 
     return (
         <NoSsr>
-            <BlockProvider
-                storageKey={VM_SOURCE_STORAGE_KEY}
-                dsls={dsls}
-                onBeforeSaveWorkspaceFile={
-                    Flags.diagnostics
-                        ? handleOnBeforeSaveWorkspaceFile
-                        : undefined
-                }
-            >
-                <VMEditorWithContext />
-            </BlockProvider>
+            <FileSystemProvider>
+                <BlockProvider
+                    storageKey={VM_SOURCE_STORAGE_KEY}
+                    dsls={dsls}
+                    onBeforeSaveWorkspaceFile={
+                        Flags.diagnostics
+                            ? handleOnBeforeSaveWorkspaceFile
+                            : undefined
+                    }
+                >
+                    <VMEditorWithContext />
+                </BlockProvider>
+            </FileSystemProvider>
         </NoSsr>
     )
 }

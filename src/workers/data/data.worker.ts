@@ -139,7 +139,6 @@ export interface DataSliceRequest extends DataRequest, DataSliceOptions {
 }
 
 const summarizers = {
-    average: mean,
     mean,
     median,
     min,

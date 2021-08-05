@@ -8,20 +8,22 @@ import {
     DialogActions,
     Button,
 } from "@material-ui/core"
-import React, { ChangeEvent, useRef, useState } from "react"
-import useDirectoryFileHandles from "../hooks/useDirectoryFileHandles"
+import React, { ChangeEvent, useContext, useRef, useState } from "react"
 import OpenInBrowserIcon from "@material-ui/icons/OpenInBrowser"
 import AddIcon from "@material-ui/icons/Add"
 import { useId } from "react-use-id-hook"
 import useKeyboardNavigationProps from "../hooks/useKeyboardNavigationProps"
+import FileSystemContext from "../FileSystemContext"
+import useChange from "../../jacdac/useChange"
+import { FileSystemDirectory } from "./fsdom"
 
-function FileChip(props: {
-    file: FileSystemHandle
+function FileSystemHandleChip(props: {
+    directory: FileSystemDirectory
     selected?: boolean
     onClick: () => void
 }) {
-    const { file, selected, onClick } = props
-    const { name } = file
+    const { directory, selected, onClick } = props
+    const { name } = directory
     return (
         <Chip
             clickable
@@ -33,14 +35,11 @@ function FileChip(props: {
 }
 
 function NewFileDialogButton(props: {
-    createFile: (
-        filename: string,
-        content: string
-    ) => Promise<FileSystemFileHandle>
+    newFileName: string
     newFileContent: string
-    onFileHandleCreated: (file: FileSystemFileHandle) => void
 }) {
-    const { createFile, newFileContent, onFileHandleCreated } = props
+    const { newFileName, newFileContent } = props
+    const { fileSystem } = useContext(FileSystemContext)
     const [open, setOpen] = useState(false)
     const [value, setValue] = useState("")
     const valueId = useId()
@@ -51,9 +50,12 @@ function NewFileDialogButton(props: {
     }
     const handleOk = async () => {
         setOpen(false)
-        const filename = value.toLocaleLowerCase().replace(/\s+/g, "") + ".json"
-        const fileHandle = await createFile(filename, newFileContent)
-        if (fileHandle) onFileHandleCreated(fileHandle)
+        const name = value.toLocaleLowerCase().replace(/\s+/g, "")
+        await fileSystem.createWorkingDirectory(
+            name,
+            newFileName,
+            newFileContent
+        )
     }
     const handleCancel = () => setOpen(false)
     const handleValueChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -64,13 +66,13 @@ function NewFileDialogButton(props: {
         <>
             <Chip
                 clickable
-                label="new file..."
+                label="new project..."
                 icon={<AddIcon />}
                 onClick={handleOpen}
             />
-            <Dialog open={open}>
+            <Dialog open={open} fullWidth={true}>
                 <DialogContent>
-                    <DialogContentText>Choose a file name</DialogContentText>
+                    <DialogContentText>Choose a project name</DialogContentText>
                     <TextField
                         id={valueId}
                         value={value}
@@ -98,61 +100,48 @@ function NewFileDialogButton(props: {
 }
 
 export default function FileTabs(props: {
-    storageKey: string
-    selectedFileHandle: FileSystemFileHandle
-    onFileHandleSelected: (file: FileSystemFileHandle) => void
-    newFileContent: string
-    onFileHandleCreated: (file: FileSystemFileHandle) => void
+    newFileName?: string
+    newFileContent?: string
 }) {
-    const {
-        storageKey,
-        selectedFileHandle,
-        onFileHandleSelected,
-        newFileContent,
-        onFileHandleCreated,
-    } = props
-    const {
-        files,
-        directory,
-        supported,
-        showDirectoryPicker,
-        clearDirectory,
-        createFile,
-    } = useDirectoryFileHandles(storageKey)
-
+    const { newFileName, newFileContent } = props
+    const { fileSystem, showDirectoryPicker } = useContext(FileSystemContext)
+    const root = useChange(fileSystem, _ => _?.root)
+    const workingDirectory = useChange(fileSystem, _ => _?.workingDirectory)
+    const directories = useChange(root, _ => _?.directories)
     const gridRef = useRef()
     const keyboardProps = useKeyboardNavigationProps(gridRef.current)
-    const handleOpenDirectory = () => showDirectoryPicker()
-    const handleCloseDirectory = () => clearDirectory()
-    const handleFileHandleSelected = file => () => onFileHandleSelected(file)
+    const handleOpenDirectory = showDirectoryPicker
+    const handleCloseDirectory = () => (fileSystem.root = undefined)
+    const handleDirectoryHandleSelected = handle => () =>
+        (fileSystem.workingDirectory = handle)
 
-    if (!supported) return null
+    if (!fileSystem) return null
+
     return (
         <Grid ref={gridRef} container spacing={1} {...keyboardProps}>
             <Grid item>
                 <Chip
                     clickable
                     avatar={<OpenInBrowserIcon />}
-                    label={directory?.name || "open directory"}
+                    label={root?.name || "open directory"}
                     onClick={handleOpenDirectory}
-                    onDelete={directory ? handleCloseDirectory : undefined}
+                    onDelete={root ? handleCloseDirectory : undefined}
                 />
             </Grid>
-            {files?.map(file => (
-                <Grid item key={file.name}>
-                    <FileChip
-                        file={file}
-                        selected={file === selectedFileHandle}
-                        onClick={handleFileHandleSelected(file)}
+            {directories?.map(directory => (
+                <Grid item key={directory.name}>
+                    <FileSystemHandleChip
+                        directory={directory}
+                        selected={directory === workingDirectory}
+                        onClick={handleDirectoryHandleSelected(directory)}
                     />
                 </Grid>
             ))}
-            {directory && (
+            {root && newFileName && newFileContent && (
                 <Grid item>
                     <NewFileDialogButton
-                        createFile={createFile}
+                        newFileName={newFileName}
                         newFileContent={newFileContent}
-                        onFileHandleCreated={onFileHandleCreated}
                     />
                 </Grid>
             )}
