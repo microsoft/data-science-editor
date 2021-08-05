@@ -8,6 +8,7 @@ import CopyButton from "../../ui/CopyButton"
 import { unparseCSV } from "../dsl/workers/csv.proxy"
 import { roundWithPrecision, toMap } from "../../../../jacdac-ts/src/jdom/utils"
 import { tidyHeaders, tidyResolveHeader } from "./tidy"
+import { humanify } from "../../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 
 interface StylesProps {
     tableHeight: number
@@ -151,7 +152,7 @@ export default function DataTableWidget(props: {
                         <thead>
                             <tr>
                                 {columns.map(c => (
-                                    <th key={c}>{c}</th>
+                                    <th key={c}>{humanify(c)}</th>
                                 ))}
                             </tr>
                         </thead>
