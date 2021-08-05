@@ -1,5 +1,6 @@
 import ScatterPlotField from "../fields/chart/ScatterPlotField"
 import {
+    BlockDefinition,
     BlockReference,
     CategoryDefinition,
     DataColumnInputDefinition,
@@ -134,9 +135,10 @@ const colour = paletteColorByIndex(4)
 const chartDsl: BlockDomainSpecificLanguage = {
     id: "chart",
     createBlocks: () => [
-        {
+        <BlockDefinition>{
             kind: "block",
             type: CHART_SHOW_TABLE_BLOCK,
+            tooltip: "Displays the block data as a table",
             message0: "show table %1 %2 %3 %4 %5 %6",
             args0: [
                 {
@@ -171,27 +173,28 @@ const chartDsl: BlockDomainSpecificLanguage = {
             dataPreviewField: false,
             transformData: identityTransformData,
         },
-        {
+        <BlockDefinition>{
             kind: "block",
             type: SCATTERPLOT_BLOCK,
+            tooltip: "Renders the block data in a scatter plot",
             message0: "scatterplot of x %1 y %2 size %3 group %4 %5 %6 %7",
             args0: [
-                {
+                <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
                     name: "x",
                     dataType: "number",
                 },
-                {
+                <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
                     name: "y",
                     dataType: "number",
                 },
-                {
+                <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
                     name: "size",
                     dataType: "number",
                 },
-                {
+                <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
                     name: "group",
                 },
@@ -216,16 +219,17 @@ const chartDsl: BlockDomainSpecificLanguage = {
             dataPreviewField: false,
             transformData: identityTransformData,
         },
-        {
+        <BlockDefinition>{
             kind: "block",
             type: BARCHART_BLOCK,
+            tooltip: "Renders the block data in a bar chart",
             message0: "bar chart of index %1 value %2 %3 %4 %5",
             args0: [
-                {
+                <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
                     name: "index",
                 },
-                {
+                <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
                     name: "value",
                     dataType: "number",
@@ -251,22 +255,23 @@ const chartDsl: BlockDomainSpecificLanguage = {
             dataPreviewField: false,
             transformData: identityTransformData,
         },
-        {
+        <BlockDefinition>{
             kind: "block",
             type: LINEPLOT_BLOCK,
+            tooltip: "Renders the block data in a line chart",
             message0: "line chart of x %1 y %2 group %3 %4 %5 %6",
             args0: [
-                {
+                <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
                     name: "x",
                     dataType: "number",
                 },
-                {
+                <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
                     name: "y",
                     dataType: "number",
                 },
-                {
+                <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
                     name: "group",
                 },
@@ -291,22 +296,23 @@ const chartDsl: BlockDomainSpecificLanguage = {
             dataPreviewField: false,
             transformData: identityTransformData,
         },
-        {
+        <BlockDefinition>{
             kind: "block",
             type: HEATMAP_BLOCK,
+            tooltip: "Renders the block data in a 2D heatmap",
             message0: "heatmap of x %1 y %2 color %3 %4 %5 %6",
             args0: [
-                {
+                <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
                     name: "x",
                     dataType: "number",
                 },
-                {
+                <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
                     name: "y",
                     dataType: "number",
                 },
-                {
+                <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
                     name: "color",
                 },
@@ -331,9 +337,10 @@ const chartDsl: BlockDomainSpecificLanguage = {
             dataPreviewField: false,
             transformData: identityTransformData,
         },
-        {
+        <BlockDefinition>{
             kind: "block",
             type: HISTOGRAM_BLOCK,
+            tooltip: "Renders the block data as a histogram",
             message0: "histogram of %1 group %2 %3 %4 %5",
             args0: [
                 {

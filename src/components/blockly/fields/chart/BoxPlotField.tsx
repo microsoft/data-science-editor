@@ -20,7 +20,6 @@ function BoxPlotWidget() {
     if (!index || !value) return null
 
     const spec: VisualizationSpec = {
-        description: `Box plot of ${index}`,
         mark: {
             type: "boxplot",
             cornerRadius: BAR_CORNER_RADIUS,

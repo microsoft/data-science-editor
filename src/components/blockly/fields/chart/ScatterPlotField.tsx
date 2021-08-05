@@ -3,14 +3,15 @@ import WorkspaceContext from "../../WorkspaceContext"
 import { ReactFieldJSON } from "../ReactField"
 import ReactInlineField from "../ReactInlineField"
 import useBlockData from "../../useBlockData"
-import type { VisualizationSpec } from "react-vega"
 import VegaLiteWidget from "./VegaLiteWidget"
 import { tidyResolveHeader } from "../tidy"
 import { SCATTER_MAX_ITEMS } from "../../toolbox"
+import { humanify } from "../../../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 
-function ScatterPlotWidget() {
+function ScatterPlotWidget(props: { linearRegression?: boolean }) {
+    const { linearRegression } = props
     const { sourceBlock } = useContext(WorkspaceContext)
-    const { data } = useBlockData(sourceBlock)
+    const { data, transformedData } = useBlockData(sourceBlock)
     const x = tidyResolveHeader(data, sourceBlock?.getFieldValue("x"), "number")
     const y = tidyResolveHeader(data, sourceBlock?.getFieldValue("y"), "number")
     const size = tidyResolveHeader(
@@ -24,18 +25,23 @@ function ScatterPlotWidget() {
     const sliceOptions = {
         sliceSample: SCATTER_MAX_ITEMS,
     }
-    const spec: VisualizationSpec = {
-        description: `Scatter plot of ${x}x${y}`,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let spec: any = {
         mark: { type: "point", filled: true, tooltip: true },
         encoding: {
             x: {
                 field: x,
                 type: "quantitative",
                 scale: { zero: false },
+                title: humanify(x),
             },
-            y: { field: y, type: "quantitative", scale: { zero: false } },
+            y: {
+                field: y,
+                title: humanify(y),
+                type: "quantitative",
+                scale: { zero: false },
+            },
         },
-        data: { name: "values" },
     }
     if (size)
         spec.encoding.size = {
@@ -44,23 +50,65 @@ function ScatterPlotWidget() {
             scale: { zero: false },
         }
 
+    if (linearRegression) {
+        const { slope, intercept } = (transformedData?.[0] || {}) as any
+        spec = {
+            title:
+                slope !== undefined
+                    ? `slope: ${slope}, intercept: ${intercept}`
+                    : undefined,
+            layer: [
+                spec,
+                {
+                    mark: {
+                        type: "line",
+                        color: "firebrick",
+                    },
+                    transform: [
+                        {
+                            regression: y,
+                            on: x,
+                        },
+                    ],
+                    encoding: {
+                        x: {
+                            field: x,
+                            type: "quantitative",
+                        },
+                        y: {
+                            field: y,
+                            type: "quantitative",
+                        },
+                    },
+                },
+            ],
+        }
+    }
+    spec.data = { name: "values" }
+
     return <VegaLiteWidget spec={spec} slice={sliceOptions} />
+}
+
+export interface ScatterPlotFieldProps {
+    linearRegression?: boolean
 }
 
 export default class ScatterPlotField extends ReactInlineField {
     static KEY = "jacdac_field_scatter_plot"
     EDITABLE = false
+    linearRegression: boolean
 
     static fromJson(options: ReactFieldJSON) {
         return new ScatterPlotField(options)
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    constructor(options?: any) {
+    constructor(options?: ScatterPlotFieldProps) {
         super(options)
+        this.linearRegression = !!options?.linearRegression
     }
 
     renderInlineField() {
-        return <ScatterPlotWidget />
+        return <ScatterPlotWidget linearRegression={this.linearRegression} />
     }
 }

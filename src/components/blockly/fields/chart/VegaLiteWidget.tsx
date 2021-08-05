@@ -10,6 +10,7 @@ import type { DataSliceOptions } from "../../../../workers/data/dist/node_module
 import useEffectAsync from "../../../useEffectAsync"
 import { tidyResolveHeader, tidySlice } from "./../tidy"
 import { JSONTryParse } from "../../../../../jacdac-ts/src/jdom/utils"
+import { humanify } from "../../../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 
 const VegaLite = lazy(() => import("./VegaLite"))
 
@@ -53,6 +54,12 @@ export default function VegaLiteWidget(props: {
     const fullSpec = useMemo(() => {
         if (!settings) return spec
         const s = clone(spec)
+        if (s.encoding)
+            Object.values(s.encoding)
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                .filter((e: any) => !e.title)
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                .forEach((e: any) => (e.title = humanify(e.field)))
         jsonMergeFrom(s, settings)
         if (
             Object.values(s.encoding || {}).some(

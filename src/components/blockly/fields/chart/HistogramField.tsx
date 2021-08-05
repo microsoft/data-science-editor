@@ -16,7 +16,6 @@ function HistogramWidget() {
     if (!index) return null
 
     const spec: VisualizationSpec = {
-        description: `Histogram of ${index}`,
         mark: { type: "bar", cornerRadius: BAR_CORNER_RADIUS, tooltip: true },
         encoding: {
             x: { bin: true, field: index },

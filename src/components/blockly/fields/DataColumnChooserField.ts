@@ -2,6 +2,7 @@ import { BlockWithServices } from "../WorkspaceContext"
 import { ReactFieldJSON } from "./ReactField"
 import { tidyHeaders } from "./tidy"
 import { FieldDropdown } from "blockly"
+import { humanify } from "../../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 
 export interface DataColumnChooseOptions extends ReactFieldJSON {
     dataType?: "number" | "string"
@@ -34,10 +35,10 @@ export default class DataColumnChooserField extends FieldDropdown {
         const options =
             headers
                 .filter((h, i) => !this.dataType || types[i] === this.dataType)
-                .map(h => [h, h]) || []
+                .map(h => [humanify(h), h]) || []
         const value = this.getValue()
         return options.length < 1
-            ? [[value || "", value || ""]]
+            ? [[humanify(value || ""), value || ""]]
             : [...options, ["", ""]]
     }
 

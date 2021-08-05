@@ -51,6 +51,7 @@ const jsonDSL: BlockDomainSpecificLanguage = {
                 <TextInputDefinition>{
                     type: "field_input",
                     name: "name",
+                    spellcheck: false,
                 },
                 <ValueInputDefinition>{
                     type: "input_value",
@@ -77,6 +78,7 @@ const jsonDSL: BlockDomainSpecificLanguage = {
                         <TextInputDefinition>{
                             type: "field_input",
                             name: "name",
+                            spellcheck: false,
                         },
                     ],
                     output,
@@ -99,6 +101,7 @@ const jsonDSL: BlockDomainSpecificLanguage = {
                 <TextInputDefinition>{
                     type: "field_input",
                     name: "name",
+                    spellcheck: false,
                 },
             ],
             output: BOOLEAN_TYPE,

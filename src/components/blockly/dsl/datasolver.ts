@@ -1,5 +1,4 @@
 import { CHANGE } from "../../../../jacdac-ts/src/jdom/constants"
-import { roundWithPrecision } from "../../../../jacdac-ts/src/jdom/utils"
 import { identityTransformData, resolveBlockDefinition } from "../toolbox"
 import { BlockWithServices } from "../WorkspaceContext"
 
@@ -36,8 +35,13 @@ export function registerDataSolver(block: BlockWithServices) {
                 //)
             }
 
-            // propagte
+            // propagate
             services.transformedData = newData
+
+            // check if pass through
+            const def = resolveBlockDefinition(block.type)
+            if (def?.passthroughData) newData = services.data
+
             if (nextServices) nextServices.data = newData
         } catch (e) {
             console.debug(e)

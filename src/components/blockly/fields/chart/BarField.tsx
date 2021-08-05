@@ -23,7 +23,6 @@ function BarWidget() {
         sliceMax: BAR_MAX_ITEMS,
     }
     const spec: VisualizationSpec = {
-        description: `Bar plot of ${index} x ${value}`,
         mark: { type: "bar", cornerRadius: BAR_CORNER_RADIUS, tooltip: true },
         encoding: {
             x: { field: index, type: "nominal" },
