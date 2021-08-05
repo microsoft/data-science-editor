@@ -72,8 +72,16 @@ export default function VegaLiteWidget(props: {
             s.mark.clip = true
         }
         if (group) {
-            s.encoding.color = { field: group, type: "nominal" }
-            s.encoding.strokeDash = { field: group, type: "nominal" }
+            s.encoding.color = {
+                field: group,
+                title: humanify(group),
+                type: "nominal",
+            }
+            s.encoding.strokeDash = {
+                field: group,
+                title: humanify(group),
+                type: "nominal",
+            }
         }
         return s
     }, [spec, group, settings])
