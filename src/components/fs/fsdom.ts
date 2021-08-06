@@ -67,6 +67,7 @@ export class FileSystem extends FileSystemNode {
     set workingFile(d: FileSystemFile) {
         if (d !== this._workingFile) {
             this._workingFile = d
+            this._workingDirectory = this._workingFile?.parentDirectory
             this.emit(CHANGE)
         }
     }
