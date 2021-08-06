@@ -202,7 +202,7 @@ export const BAR_CORNER_RADIUS = 2
 
 export const TABLE_WIDTH = CHART_WIDTH
 export const TABLE_HEIGHT = 480
-export const SMALL_TABLE_HEIGHT = 128
+export const SMALL_TABLE_HEIGHT = 136
 export const TABLE_PREVIEW_MAX_ITEMS = 48
 
 export const VM_WARNINGS_CATEGORY = "vm"
