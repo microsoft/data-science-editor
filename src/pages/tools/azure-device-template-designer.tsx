@@ -1,4 +1,4 @@
-import { Grid, TextField } from "@material-ui/core"
+import { Grid, TextField, Typography } from "@material-ui/core"
 import React, { ChangeEvent, useMemo } from "react"
 import { clone, uniqueName } from "../../../jacdac-ts/src/jdom/utils"
 import useLocalStorage from "../../components/hooks/useLocalStorage"
@@ -13,21 +13,24 @@ import Snippet from "../../components/ui/Snippet"
 import PaperBox from "../../components/ui/PaperBox"
 import { useId } from "react-use-id-hook"
 import { Link } from "gatsby-theme-material-ui"
-import { serviceSpecificationToComponent } from "../../../jacdac-ts/src/azure-iot/dtdlspec"
+import {
+    serviceSpecificationToComponent,
+    serviceSpecificationToDTDL,
+} from "../../../jacdac-ts/src/azure-iot/dtdlspec"
 
-interface DigitalTwinComponent {
+interface TemplateComponent {
     name: string
     service: jdspec.ServiceSpec
 }
 
-interface DigitalTwinSpec {
+interface TemplateSpec {
     displayName: string
-    components: DigitalTwinComponent[]
+    components: TemplateComponent[]
 }
 
 function ComponentRow(props: {
-    twin: DigitalTwinSpec
-    component: DigitalTwinComponent
+    twin: TemplateSpec
+    component: TemplateComponent
     onUpdate: () => void
 }) {
     const { component, onUpdate, twin } = props
@@ -88,8 +91,8 @@ function ComponentRow(props: {
 }
 
 function validateTwinComponent(
-    twin: DigitalTwinSpec,
-    component: DigitalTwinComponent
+    twin: TemplateSpec,
+    component: TemplateComponent
 ) {
     let serviceError: string = undefined
     const nameError: string = undefined
@@ -100,19 +103,19 @@ function validateTwinComponent(
     return { serviceError, nameError }
 }
 
-export default function AzureDeviceTwinDesigner() {
+export default function AzureDeviceTemplateDesigner() {
     const variant = "outlined"
-    const [twin, setTwin] = useLocalStorage<DigitalTwinSpec>(
+    const [twin, setTwin] = useLocalStorage<TemplateSpec>(
         "jacdac:digitaltwin;1",
         {
             displayName: "mydesigner",
             components: [],
-        } as DigitalTwinSpec
+        } as TemplateSpec
     )
 
     const dtdl = {
         "@type": "Interface",
-        "@id": `dtmi:jacdac:devices:${escapeName(twin.displayName)},1`,
+        "@id": `dtmi:jacdac:devices:${escapeName(twin.displayName)};1`,
         displayName: twin.displayName,
         contents: twin.components.map(c =>
             serviceSpecificationToComponent(c.service, c.name)
@@ -139,14 +142,13 @@ export default function AzureDeviceTwinDesigner() {
 
     return (
         <>
-            <h1>Azure Device Twin Designer</h1>
+            <h1>Azure Device Template Designer</h1>
             <p>
                 An{" "}
                 <Link href="https://github.com/Azure/opendigitaltwins-dtdl/">
                     device twin
                 </Link>{" "}
-                is to be used in IoT solutions such as with Azure IoT Hubs,
-                Azure IoT Plug And Play. The repository of{" "}
+                is to be used in Azure IoT Central. The repository of{" "}
                 <Link to="/dtmi/">Azure IoT Plug And Play models</Link> for
                 services can be used to resolve models.
             </p>
@@ -163,7 +165,7 @@ export default function AzureDeviceTwinDesigner() {
                         variant={variant}
                     />
                 </Grid>
-                {twin.components.map((c, i) => (
+                {twin.components.map(c => (
                     <ComponentRow
                         key={c.name}
                         twin={twin}
@@ -177,12 +179,29 @@ export default function AzureDeviceTwinDesigner() {
                 <Grid item xs={12}>
                     <PaperBox>
                         <Snippet
+                            caption={"template"}
                             value={dtdlSource}
                             mode="json"
                             download="model"
                         />
                     </PaperBox>
                 </Grid>
+                {twin.components?.map(c => (
+                    <Grid item xs={12} key={c.name}>
+                        <PaperBox>
+                            <Snippet
+                                caption={c.name}
+                                value={JSON.stringify(
+                                    serviceSpecificationToDTDL(c.service),
+                                    null,
+                                    4
+                                )}
+                                mode="json"
+                                download={c.name}
+                            />
+                        </PaperBox>
+                    </Grid>
+                ))}
             </Grid>
         </>
     )
