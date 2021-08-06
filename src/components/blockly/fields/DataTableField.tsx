@@ -7,6 +7,7 @@ import { SMALL_TABLE_HEIGHT } from "../toolbox"
 export interface DataPreviewOptions extends ReactFieldJSON {
     transformed?: boolean
     small?: boolean
+    selectColumns?: boolean
 }
 
 const MAX_ITEMS = 256
@@ -15,6 +16,7 @@ export default class DataTableField extends ReactInlineField {
     EDITABLE = false
     transformed: boolean
     small: boolean
+    selectColumns: boolean
 
     static fromJson(options: DataPreviewOptions) {
         return new DataTableField(options)
@@ -25,6 +27,7 @@ export default class DataTableField extends ReactInlineField {
         super(options)
         this.transformed = !!options?.transformed
         this.small = !!options?.small
+        this.selectColumns = !!options?.selectColumns
     }
 
     protected createContainer(): HTMLDivElement {
@@ -43,6 +46,7 @@ export default class DataTableField extends ReactInlineField {
                 maxItems={MAX_ITEMS}
                 tableHeight={tableHeight}
                 transformed={this.transformed}
+                selectColumns={this.selectColumns}
             />
         )
     }

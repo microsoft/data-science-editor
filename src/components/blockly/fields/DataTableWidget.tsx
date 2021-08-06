@@ -63,6 +63,7 @@ export default function DataTableWidget(props: {
     tableHeight?: number
     empty?: ReactNode
     maxItems?: number
+    selectColumns?: boolean
 }): JSX.Element {
     const {
         label,
@@ -70,6 +71,7 @@ export default function DataTableWidget(props: {
         tableHeight = TABLE_HEIGHT,
         empty,
         maxItems,
+        selectColumns,
     } = props
     const { sourceBlock } = useContext(WorkspaceContext)
     const { data, transformedData } = useBlockData<{ id?: string } & unknown>(
@@ -81,10 +83,12 @@ export default function DataTableWidget(props: {
     if (!raw?.length)
         return empty ? <span className={classes.empty}>{empty}</span> : null
 
-    const selectedColumns = [0, 1, 2, 3]
-        .map(i => `column${i}`)
-        .map(n => tidyResolveHeader(raw, sourceBlock?.getFieldValue(n)))
-        .filter(c => !!c)
+    const selectedColumns = selectColumns
+        ? [0, 1, 2, 3]
+              .map(i => `column${i}`)
+              .map(n => tidyResolveHeader(raw, sourceBlock?.getFieldValue(n)))
+              .filter(c => !!c)
+        : []
     const columns = selectedColumns.length
         ? selectedColumns
         : tidyHeaders(raw).headers
@@ -99,6 +103,16 @@ export default function DataTableWidget(props: {
                   ),
               ]
             : raw
+
+    console.log({
+        raw,
+        transformed,
+        transformedData,
+        data,
+        table,
+        selectedColumns,
+        columns,
+    })
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const renderCell = (v: any) =>

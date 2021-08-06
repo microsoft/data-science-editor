@@ -44,6 +44,7 @@ import type {
 } from "../../../workers/data/dist/node_modules/data.worker"
 import {
     BlockWithServices,
+    resolveBlockServices,
     resolveWorkspaceServices,
 } from "../WorkspaceContext"
 import FileSaveField from "../fields/FileSaveField"
@@ -121,7 +122,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            transformData: (b: BlockSvg, data: any[]) => {
+            transformData: (b: Block, data: any[]) => {
                 const column = tidyResolveFieldColumn(data, b, "column")
                 const order = b.getFieldValue("order")
                 const descending = order === "descending"
@@ -157,7 +158,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             dataPreviewField: true,
-            transformData: (b: BlockSvg, data: object[]) => {
+            transformData: (b: Block, data: object[]) => {
                 const columns = [1, 2, 3]
                     .map(column =>
                         tidyResolveFieldColumn(data, b, `column${column}`)
@@ -198,7 +199,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             dataPreviewField: true,
-            transformData: (b: BlockSvg, data: object[]) => {
+            transformData: (b: Block, data: object[]) => {
                 const columns = [1, 2, 3, 4]
                     .map(column =>
                         tidyResolveFieldColumn(data, b, `column${column}`)
@@ -243,7 +244,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             dataPreviewField: true,
-            transformData: (b: BlockSvg, data: object[]) => {
+            transformData: (b: Block, data: object[]) => {
                 const columns = [1, 2]
                     .map(column =>
                         tidyResolveFieldColumn(data, b, `column${column}`)
@@ -292,7 +293,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             dataPreviewField: true,
-            transformData: (b: BlockSvg, data: object[]) => {
+            transformData: (b: Block, data: object[]) => {
                 const column = tidyResolveFieldColumn(data, b, "column")
                 const logic = b.getFieldValue("logic")
                 const rhs = b.getFieldValue("rhs")
@@ -348,7 +349,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             dataPreviewField: true,
-            transformData: (b: BlockSvg, data: object[]) => {
+            transformData: (b: Block, data: object[]) => {
                 const newcolumn = b.getFieldValue("newcolumn")
                 const lhs = tidyResolveFieldColumn(data, b, "lhs", "number")
                 const rhs = tidyResolveFieldColumn(data, b, "rhs", "number")
@@ -406,7 +407,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            transformData: (b: BlockSvg, data: object[]) => {
+            transformData: (b: Block, data: object[]) => {
                 const newcolumn = b.getFieldValue("newcolumn")
                 const lhs = tidyResolveFieldColumn(data, b, "lhs", "number")
                 const rhs = b.getFieldValue("rhs")
@@ -444,7 +445,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            transformData: (b: BlockSvg, data: any[]) => {
+            transformData: (b: Block, data: any[]) => {
                 const columns = tidyResolveFieldColumns(
                     data,
                     b,
@@ -485,7 +486,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            transformData: (b: BlockSvg, data: any[]) => {
+            transformData: (b: Block, data: any[]) => {
                 const column = tidyResolveFieldColumn(data, b, "column")
                 const by = tidyResolveFieldColumn(data, b, "by")
                 const calc = b.getFieldValue("calc")
@@ -527,7 +528,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            transformData: (b: BlockSvg, data: any[]) => {
+            transformData: (b: Block, data: any[]) => {
                 const count = b.getFieldValue("count")
                 const operator = b.getFieldValue("operator")
                 return tidySlice(data, {
@@ -553,7 +554,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            transformData: (b: BlockSvg, data: any[]) => {
+            transformData: (b: Block, data: any[]) => {
                 const column = tidyResolveFieldColumn(data, b, "column")
                 if (!column) return Promise.resolve([])
                 return postTransformData(<DataCountRequest>{
@@ -600,8 +601,8 @@ const dataDsl: BlockDomainSpecificLanguage = {
             colour: dataVariablesColour,
             template: "meta",
             dataPreviewField: "after",
-            transformData: (block: BlockSvg) => {
-                const services = (block as BlockWithServices).jacdacServices
+            transformData: (b: Block) => {
+                const services = resolveBlockServices(b)
                 const data = services?.data
                 return Promise.resolve(data)
             },
@@ -625,7 +626,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             colour: dataVariablesColour,
             template: "meta",
             dataPreviewField: "after",
-            transformData: (b: BlockSvg, data: object[]) => {
+            transformData: (b: Block, data: object[]) => {
                 // grab the variable from the block
                 const variable = b.getFieldValue("data")
                 if (!variable) return Promise.resolve(undefined)
@@ -659,7 +660,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             colour: computeColour,
             template: "meta",
             dataPreviewField: true,
-            transformData: async (b: BlockSvg, data: object[]) => {
+            transformData: async (b: Block, data: object[]) => {
                 const column = tidyResolveFieldColumn(
                     data,
                     b,
@@ -711,7 +712,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             template: "meta",
             dataPreviewField: false,
             passthroughData: true,
-            transformData: async (b: BlockSvg, data: object[]) => {
+            transformData: async (b: Block, data: object[]) => {
                 const column1 = tidyResolveFieldColumn(data, b, "x", "number")
                 const column2 = tidyResolveFieldColumn(data, b, "y", "number")
                 if (!column1 || !column2) return Promise.resolve([])
@@ -759,7 +760,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             template: "meta",
             dataPreviewField: false,
             passthroughData: true,
-            transformData: async (b: BlockSvg, data: object[]) => {
+            transformData: async (b: Block, data: object[]) => {
                 const column1 = tidyResolveFieldColumn(data, b, "x", "number")
                 const column2 = tidyResolveFieldColumn(data, b, "y", "number")
                 if (!column1 || !column2) return Promise.resolve([])
