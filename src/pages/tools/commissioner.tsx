@@ -457,6 +457,11 @@ function Page() {
 
         // save JSON
         await workingFile.write(JSON.stringify(dataSet))
+        const csvFile = await workingFile.parentDirectory.fileAsync(
+            workingFile.name.replace(/\.json$/i, ".csv"),
+            { create: true }
+        )
+        await csvFile.write(renderCSV())
         // generate CSV
     }, [workingFile, dataSet])
 

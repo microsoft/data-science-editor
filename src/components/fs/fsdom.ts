@@ -112,6 +112,9 @@ export class FileSystemFile extends FileSystemNode {
     get parent(): JDNode {
         return this._parent
     }
+    get parentDirectory(): FileSystemDirectory {
+        return this._parent
+    }
     get children(): JDNode[] {
         return []
     }
