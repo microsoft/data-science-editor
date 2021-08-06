@@ -220,26 +220,29 @@ export class FileSystemDirectory extends FileSystemNode {
         return undefined
     }
 
+    async fileAsync(
+        name: string,
+        options?: { create?: boolean }
+    ): Promise<FileSystemFile> {
+        let f = this._files.find(f => f.name === name)
+        if (!f && options?.create) {
+            const handle = await this.handle.getFileHandle(name, {
+                create: true,
+            })
+            f = new FileSystemFile(this, handle)
+            this._files.push(f)
+            this._files.sort((l, r) => l.name.localeCompare(r.name))
+            this.emitPropagated(CHANGE)
+        }
+        return f
+    }
+
     file(name: string, options?: { create?: boolean }): FileSystemFile {
         const existing = this._files.find(f => f.name === name)
-        if (existing) return existing
-
-        if (options?.create) {
-            // create file in the background
-            this.handle
-                .getFileHandle(name, {
-                    create: true,
-                })
-                .then(nf => {
-                    const nfn = new FileSystemFile(this, nf)
-                    this._files.push(nfn)
-                    this._files.sort((l, r) => l.name.localeCompare(r.name))
-                    this.emitPropagated(CHANGE)
-                })
+        if (!existing) {
+            if (options?.create) this.fileAsync(name, options)
         }
-
-        // no file yet
-        return undefined
+        return existing
     }
 
     async sync() {

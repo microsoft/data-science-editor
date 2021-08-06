@@ -9,7 +9,9 @@ import FileSystemNodeChip from "./FileSystemNodeChip"
 
 export default function FileTabs(props: {
     newFileName?: string
+    newFileExtension?: string
     newFileContent?: string
+    newFileLabel?: string
     hideDirectories?: boolean
     hideFiles?: boolean
     directoryFilter?: (directory: string) => boolean
@@ -22,6 +24,8 @@ export default function FileTabs(props: {
         hideFiles,
         directoryFilter,
         fileFilter,
+        newFileLabel,
+        newFileExtension
     } = props
     const { fileSystem } = useContext(FileSystemContext)
     const root = useChange(fileSystem, _ => _?.root)
@@ -66,11 +70,13 @@ export default function FileTabs(props: {
                         />
                     </Grid>
                 ))}
-            {root && newFileName && newFileContent && (
+            {root && newFileContent && (
                 <Grid item>
                     <FileNewFileChip
-                        newFileName={newFileName}
-                        newFileContent={newFileContent}
+                        name={newFileName}
+                        content={newFileContent}
+                        label={newFileLabel}
+                        extension={newFileExtension}
                     />
                 </Grid>
             )}

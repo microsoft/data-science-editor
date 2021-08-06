@@ -13,10 +13,17 @@ import { useId } from "react-use-id-hook"
 import FileSystemContext from "../FileSystemContext"
 
 export default function FileNewFileChip(props: {
-    newFileName: string
-    newFileContent: string
+    name?: string
+    content: string
+    label?: string
+    extension?: string
 }) {
-    const { newFileName, newFileContent } = props
+    const {
+        name: newFileName,
+        content: newFileContent,
+        label,
+        extension,
+    } = props
     const { fileSystem } = useContext(FileSystemContext)
     const [open, setOpen] = useState(false)
     const [value, setValue] = useState("")
@@ -28,12 +35,20 @@ export default function FileNewFileChip(props: {
     }
     const handleOk = async () => {
         setOpen(false)
-        const name = value.toLocaleLowerCase().replace(/\s+/g, "")
-        await fileSystem.createWorkingDirectory(
-            name,
-            newFileName,
-            newFileContent
-        )
+        let name = value.toLocaleLowerCase().replace(/\s+/g, "")
+        if (newFileName)
+            await fileSystem.createWorkingDirectory(
+                name,
+                newFileName,
+                newFileContent
+            )
+        else {
+            if (extension) name += `.${extension}`
+            const d = fileSystem.workingDirectory || fileSystem.root
+            const f = await d.fileAsync(name, { create: true })
+            await f.write(newFileContent)
+            fileSystem.workingFile = f
+        }
     }
     const handleCancel = () => setOpen(false)
     const handleValueChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -44,7 +59,7 @@ export default function FileNewFileChip(props: {
         <>
             <Chip
                 clickable
-                label="new project..."
+                label={label || "new..."}
                 icon={<AddIcon />}
                 onClick={handleOpen}
             />

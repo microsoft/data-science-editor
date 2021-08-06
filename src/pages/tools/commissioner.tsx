@@ -505,7 +505,12 @@ function Page() {
             <Grid container spacing={1}>
                 <GridHeader title={"Commissioning data"} />
                 <Grid item xs={12}>
-                    <FileTabs hideDirectories={true} fileFilter={fileFilter} />
+                    <FileTabs
+                        hideDirectories={true}
+                        fileFilter={fileFilter}
+                        newFileContent={"[]"}
+                        newFileExtension="json"
+                    />
                 </Grid>
                 <Grid item xs={12}>
                     <Grid container spacing={1}>
