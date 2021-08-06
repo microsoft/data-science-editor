@@ -12,14 +12,27 @@ export default function FileTabs(props: {
     newFileContent?: string
     hideDirectories?: boolean
     hideFiles?: boolean
+    directoryFilter?: (directory: string) => boolean
+    fileFilter?: (file: string) => boolean
 }) {
-    const { newFileName, newFileContent, hideDirectories, hideFiles } = props
+    const {
+        newFileName,
+        newFileContent,
+        hideDirectories,
+        hideFiles,
+        directoryFilter,
+        fileFilter,
+    } = props
     const { fileSystem } = useContext(FileSystemContext)
     const root = useChange(fileSystem, _ => _?.root)
     const workingDirectory = useChange(fileSystem, _ => _?.workingDirectory)
     const workingFile = useChange(fileSystem, _ => _?.workingFile)
-    const directories = useChange(root, _ => _?.directories)
-    const files = useChange(root, _ => _?.files)
+    const directories = useChange(root, _ =>
+        _?.directories?.filter(d => !directoryFilter || directoryFilter(d.name))
+    )
+    const files = useChange(root, _ =>
+        _?.files?.filter(d => !fileFilter || fileFilter(d.name))
+    )
     const gridRef = useRef()
     const keyboardProps = useKeyboardNavigationProps(gridRef.current)
     const handleDirectorySelected = handle => () =>

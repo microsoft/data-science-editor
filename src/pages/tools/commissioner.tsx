@@ -49,6 +49,7 @@ import FileSystemContext, {
 } from "../../components/FileSystemContext"
 import FileTabs from "../../components/fs/FileTabs"
 import useChange from "../../jacdac/useChange"
+import AppContext from "../../components/AppContext"
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -276,6 +277,7 @@ export default function Commissioner() {
 
 function Page() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const { setError, enqueueSnackbar } = useContext(AppContext)
     const { fileSystem } = useContext(FileSystemContext)
     const workingFile = useChange(fileSystem, _ => _?.workingFile)
     const [filterBrains, setFilterBrains] = useState<boolean>(true)
@@ -313,7 +315,16 @@ function Page() {
 
     // file handling
     useEffectAsync(async () => {
-        console.debug(`todo: load data in dataset?`)
+        if (!workingFile) return
+
+        try {
+            const text = await workingFile.textAsync()
+            const newDataSet = JSON.parse(text)
+            console.debug(newDataSet)
+            enqueueSnackbar(`${workingFile.name} loaded...`)
+        } catch (e) {
+            setError(e)
+        }
     }, [workingFile])
 
     useEffectAsync(async () => {
@@ -398,10 +409,7 @@ function Page() {
         [bus, dataSet]
     )
 
-    const handleOnClearClick = () => {
-        setDataSet(undefined)
-    }
-    const handleDownloadCSV = async () => {
+    const renderCSV = () => {
         const sep = ","
         const lineEnding = "\r\n"
         let str =
@@ -441,15 +449,27 @@ function Page() {
 
             str += descriptor.comment + lineEnding
         })
+        return str
+    }
 
-        if (workingFile) await workingFile.write(str)
-        else {
-            const fileTitle = title.length ? `${title}-` : ""
-            fileStorage.saveText(
-                `${fileTitle}commissioning-${dateString()}.csv`,
-                str
-            )
-        }
+    useEffectAsync(async () => {
+        if (!workingFile || !dataSet) return
+
+        // save JSON
+        await workingFile.write(JSON.stringify(dataSet))
+        // generate CSV
+    }, [workingFile, dataSet])
+
+    const handleOnClearClick = () => {
+        setDataSet(undefined)
+    }
+    const handleDownloadCSV = async () => {
+        const str = renderCSV()
+        const fileTitle = title.length ? `${title}-` : ""
+        fileStorage.saveText(
+            `${fileTitle}commissioning-${dateString()}.csv`,
+            str
+        )
     }
 
     const handleFilterBrains = () => setFilterBrains(!filterBrains)
@@ -469,6 +489,7 @@ function Page() {
             setDataSet(newDataSet)
         }
     }
+    const fileFilter = (f: string) => /\.json$/i.test(f)
 
     return (
         <>
@@ -484,7 +505,7 @@ function Page() {
             <Grid container spacing={1}>
                 <GridHeader title={"Commissioning data"} />
                 <Grid item xs={12}>
-                    <FileTabs hideDirectories={true} />
+                    <FileTabs hideDirectories={true} fileFilter={fileFilter} />
                 </Grid>
                 <Grid item xs={12}>
                     <Grid container spacing={1}>
@@ -500,15 +521,13 @@ function Page() {
                         </Grid>
                         <Grid item>
                             <Button
-                                aria-label={
-                                    workingFile ? "Save data" : "Download data"
-                                }
+                                aria-label={"Download data"}
                                 variant="contained"
                                 color="secondary"
                                 onClick={handleDownloadCSV}
                                 startIcon={<SaveIcon />}
                             >
-                                {workingFile ? "Save CSV" : "Download CSV"}
+                                Download CSV
                             </Button>
                         </Grid>
                         <Grid item>
