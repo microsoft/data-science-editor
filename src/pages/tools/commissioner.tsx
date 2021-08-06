@@ -44,9 +44,7 @@ import { lightEncode } from "../../../jacdac-ts/src/jdom/light"
 import { LedPixelCmd, LedCmd } from "../../../jacdac-ts/src/jdom/constants"
 import { createStyles, makeStyles } from "@material-ui/core"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
-import FileSystemContext, {
-    FileSystemProvider,
-} from "../../components/FileSystemContext"
+import FileSystemContext from "../../components/FileSystemContext"
 import FileTabs from "../../components/fs/FileTabs"
 import useChange from "../../jacdac/useChange"
 import AppContext from "../../components/AppContext"
@@ -268,14 +266,6 @@ async function StatusLEDTest(device: JDDevice) {
 }
 
 export default function Commissioner() {
-    return (
-        <FileSystemProvider>
-            <Page />
-        </FileSystemProvider>
-    )
-}
-
-function Page() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { setError, enqueueSnackbar } = useContext(AppContext)
     const { fileSystem } = useContext(FileSystemContext)
