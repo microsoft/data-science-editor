@@ -96,7 +96,7 @@ export default class FileOpenField extends FieldDropdown {
         const sourceBlock = this.getSourceBlock()
         // update current data
         const blockServices = resolveBlockServices(sourceBlock)
-        if (!blockServices) blockServices.data = this._data
+        if (blockServices) blockServices.data = this._data
 
         // register file system changes
         this.unmount()
