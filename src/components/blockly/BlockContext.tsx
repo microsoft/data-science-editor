@@ -29,6 +29,7 @@ import {
     BlockServices,
     BlockWithServices,
     FieldWithServices,
+    resolveWorkspaceServices,
     WorkspaceServices,
     WorkspaceWithServices,
 } from "./WorkspaceContext"
@@ -189,9 +190,7 @@ export function BlockProvider(props: {
 
     // role manager
     useEffect(() => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const ws = workspace as unknown as WorkspaceWithServices
-        const services = ws?.jacdacServices
+        const services = resolveWorkspaceServices(workspace)
         if (services) services.roleManager = roleManager
     }, [workspace, roleManager])
     useEffect(() => {
@@ -203,9 +202,7 @@ export function BlockProvider(props: {
         }
     }, [workspace])
     useEffect(() => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const wws = workspace as unknown as WorkspaceWithServices
-        const services = wws?.jacdacServices
+        const services = resolveWorkspaceServices(workspace)
         if (services) services.workingDirectory = workspaceDirectory
     }, [workspace, workspaceDirectory])
     useEffect(() => {
@@ -252,9 +249,7 @@ export function BlockProvider(props: {
         workspaceFile?.write(fileContent)
     }, [editorId, workspaceFile, workspaceJSON])
     useEffect(() => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const ws = workspace as unknown as WorkspaceWithServices
-        const services = ws?.jacdacServices
+        const services = resolveWorkspaceServices(workspace)
         if (services) services.workspaceJSON = workspaceJSON
     }, [workspace, workspaceJSON])
 

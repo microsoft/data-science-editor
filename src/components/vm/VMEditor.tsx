@@ -22,7 +22,7 @@ import { VM_WARNINGS_CATEGORY, WORKSPACE_FILENAME } from "../blockly/toolbox"
 import FileTabs from "../fs/FileTabs"
 import { WorkspaceFile } from "../../../jacdac-ts/src/dsl/workspacejson"
 import FileSystemContext, { FileSystemProvider } from "../FileSystemContext"
-import { WorkspaceWithServices } from "../blockly/WorkspaceContext"
+import { resolveWorkspaceServices } from "../blockly/WorkspaceContext"
 
 const VM_EDITOR_ID = "vm"
 const VM_SOURCE_STORAGE_KEY = "tools:vmeditor"
@@ -82,9 +82,7 @@ function VMEditorWithContext() {
     )
 
     useEffect(() => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const ws = workspace as any as WorkspaceWithServices
-        const services = ws?.jacdacServices
+        const services = resolveWorkspaceServices(workspace)
         if (services) {
             services.runner = runner
         }

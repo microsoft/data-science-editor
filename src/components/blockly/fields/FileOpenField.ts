@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Block, FieldDropdown } from "blockly"
+import { CHANGE } from "../../../../jacdac-ts/src/jdom/constants"
 import { parseCSV } from "../dsl/workers/csv.proxy"
-import { BlockWithServices, WorkspaceWithServices } from "../WorkspaceContext"
+import {
+    resolveBlockServices,
+    resolveWorkspaceServices,
+} from "../WorkspaceContext"
 import { ReactFieldJSON } from "./ReactField"
 
 export default class FileOpenField extends FieldDropdown {
@@ -9,6 +13,7 @@ export default class FileOpenField extends FieldDropdown {
     SERIALIZABLE = true
     // eslint-disable-next-line @typescript-eslint/ban-types
     private _data: object[]
+    private _unmount: () => void
 
     static fromJson(options: ReactFieldJSON) {
         return new FileOpenField(options)
@@ -17,7 +22,7 @@ export default class FileOpenField extends FieldDropdown {
     constructor(options?: ReactFieldJSON) {
         super(() => [["", ""]], undefined, options)
     }
-    
+
     fromXml(fieldElement: Element) {
         this.setValue(fieldElement.textContent)
     }
@@ -55,10 +60,14 @@ export default class FileOpenField extends FieldDropdown {
         this.updateData()
     }
 
+    dispose() {
+        super.dispose()
+        this.unmount()
+    }
+
     private resolveFiles() {
-        const sourceBlock = this.getSourceBlock() as BlockWithServices
-        const workspace = sourceBlock?.workspace as WorkspaceWithServices
-        const services = workspace?.jacdacServices
+        const sourceBlock = this.getSourceBlock()
+        const services = resolveWorkspaceServices(sourceBlock?.workspace)
         const directory = services?.workingDirectory
         return directory?.files.filter(f => /\.csv$/i.test(f.name))
     }
@@ -84,9 +93,26 @@ export default class FileOpenField extends FieldDropdown {
     }
 
     private async updateData() {
-        const block = this.getSourceBlock() as BlockWithServices
-        const services = block?.jacdacServices
-        if (!services) return
-        services.data = this._data
+        const sourceBlock = this.getSourceBlock()
+        // update current data
+        const blockServices = resolveBlockServices(sourceBlock)
+        if (!blockServices) blockServices.data = this._data
+
+        // register file system changes
+        this.unmount()
+        const wsServices = resolveWorkspaceServices(sourceBlock?.workspace)
+        if (wsServices) {
+            const { workingDirectory } = wsServices
+            this._unmount = workingDirectory.subscribe(CHANGE, () =>
+                this.updateData()
+            )
+        }
+    }
+
+    private unmount() {
+        if (this._unmount) {
+            this._unmount()
+            this._unmount = undefined
+        }
     }
 }

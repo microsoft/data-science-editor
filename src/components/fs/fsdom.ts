@@ -1,13 +1,39 @@
 import { CHANGE } from "../../../jacdac-ts/src/jdom/constants"
-import { JDEventSource } from "../../../jacdac-ts/src/jdom/eventsource"
+import { JDNode } from "../../../jacdac-ts/src/jdom/node"
 import { readFileText, writeFileText } from "./fs"
 
-export class FileSystem extends JDEventSource {
+export const FILE_SYSTEM_NODE = "fs"
+export const FILE_SYSTEM_DIRECTORY_NODE = "directory"
+export const FILE_SYSTEM_FILE_NODE = "file"
+
+export class FileSystem extends JDNode {
     private _root: FileSystemDirectory
     private _workingDirectory: FileSystemDirectory
 
     constructor() {
         super()
+    }
+
+    get id(): string {
+        return FILE_SYSTEM_NODE
+    }
+    get nodeKind(): string {
+        return FILE_SYSTEM_NODE
+    }
+    get name(): string {
+        return FILE_SYSTEM_NODE
+    }
+    get friendlyName(): string {
+        return this.name
+    }
+    get qualifiedName(): string {
+        return this.name
+    }
+    get parent(): JDNode {
+        return undefined
+    }
+    get children(): JDNode[] {
+        return [this.root]
     }
 
     get root(): FileSystemDirectory {
@@ -50,11 +76,30 @@ export class FileSystem extends JDEventSource {
     }
 }
 
-export class FileSystemFile extends JDEventSource {
+export class FileSystemFile extends JDNode {
     private _text: string
 
-    constructor(public handle: FileSystemFileHandle) {
+    constructor(
+        readonly _parent: FileSystemDirectory,
+        public handle: FileSystemFileHandle
+    ) {
         super()
+    }
+
+    get id(): string {
+        return `${this.parent.id}/${this.name}`
+    }
+    get nodeKind(): string {
+        return FILE_SYSTEM_FILE_NODE
+    }
+    get qualifiedName(): string {
+        return this.id
+    }
+    get parent(): JDNode {
+        return this._parent
+    }
+    get children(): JDNode[] {
+        return []
     }
 
     get name() {
@@ -94,13 +139,32 @@ function sortHandles(handles: FileSystemHandle[]) {
     return handles
 }
 
-export class FileSystemDirectory extends JDEventSource {
+export class FileSystemDirectory extends JDNode {
     private _directories: FileSystemDirectory[] = []
     private _files: FileSystemFile[] = []
 
-    constructor(readonly handle: FileSystemDirectoryHandle) {
+    constructor(
+        readonly _parent: JDNode,
+        readonly handle: FileSystemDirectoryHandle
+    ) {
         super()
         this.sync()
+    }
+
+    get id(): string {
+        return `${this._parent?.id || ""}/${this.name}`
+    }
+    get nodeKind(): string {
+        return FILE_SYSTEM_DIRECTORY_NODE
+    }
+    get qualifiedName(): string {
+        return this.id
+    }
+    get parent(): JDNode {
+        return this._parent
+    }
+    get children(): JDNode[] {
+        return [...this._directories, ...this._files]
     }
 
     get name() {
@@ -129,12 +193,12 @@ export class FileSystemDirectory extends JDEventSource {
                     create: true,
                 })
                 .then(nf => {
-                    const nfn = new FileSystemDirectory(nf)
+                    const nfn = new FileSystemDirectory(this, nf)
                     this._directories.push(nfn)
                     this._directories.sort((l, r) =>
                         l.name.localeCompare(r.name)
                     )
-                    this.emit(CHANGE)
+                    this.emitPropagated(CHANGE)
                 })
         }
 
@@ -153,10 +217,10 @@ export class FileSystemDirectory extends JDEventSource {
                     create: true,
                 })
                 .then(nf => {
-                    const nfn = new FileSystemFile(nf)
+                    const nfn = new FileSystemFile(this, nf)
                     this._files.push(nfn)
                     this._files.sort((l, r) => l.name.localeCompare(r.name))
-                    this.emit(CHANGE)
+                    this.emitPropagated(CHANGE)
                 })
         }
 
@@ -186,7 +250,7 @@ export class FileSystemDirectory extends JDEventSource {
             // some of the file changed
             const patched = files.map(f => {
                 const oldf = this._files.find(oldf => oldf.name === f.name)
-                return oldf || new FileSystemFile(f)
+                return oldf || new FileSystemFile(this, f)
             })
             this._files = patched
             changed = true
@@ -201,12 +265,12 @@ export class FileSystemDirectory extends JDEventSource {
                 const oldf = this._directories.find(
                     oldf => oldf.name === f.name
                 )
-                return oldf || new FileSystemDirectory(f)
+                return oldf || new FileSystemDirectory(this, f)
             })
             this._directories = patched
             changed = true
         }
 
-        if (changed) this.emit(CHANGE)
+        if (changed) this.emitPropagated(CHANGE)
     }
 }

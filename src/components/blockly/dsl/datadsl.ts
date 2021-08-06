@@ -42,7 +42,10 @@ import type {
     DataCorrelationRequest,
     DataLinearRegressionRequest,
 } from "../../../workers/data/dist/node_modules/data.worker"
-import { BlockWithServices, WorkspaceWithServices } from "../WorkspaceContext"
+import {
+    BlockWithServices,
+    resolveWorkspaceServices,
+} from "../WorkspaceContext"
 import FileSaveField from "../fields/FileSaveField"
 import { saveCSV } from "./workers/csv.proxy"
 import FileOpenField from "../fields/FileOpenField"
@@ -835,8 +838,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     text: "Import dataset",
                     callbackKey: DATA_ADD_DATASET_CALLBACK,
                     callback: (workspace: Workspace) => {
-                        const services = (workspace as WorkspaceWithServices)
-                            ?.jacdacServices
+                        const services = resolveWorkspaceServices(workspace)
                         const directory = services?.workingDirectory
                         if (!directory)
                             alert(
