@@ -6,9 +6,12 @@ export const FILE_SYSTEM_NODE = "fs"
 export const FILE_SYSTEM_DIRECTORY_NODE = "directory"
 export const FILE_SYSTEM_FILE_NODE = "file"
 
-export class FileSystem extends JDNode {
+export abstract class FileSystemNode extends JDNode {}
+
+export class FileSystem extends FileSystemNode {
     private _root: FileSystemDirectory
     private _workingDirectory: FileSystemDirectory
+    private _workingFile: FileSystemFile
 
     constructor() {
         super()
@@ -57,6 +60,16 @@ export class FileSystem extends JDNode {
         }
     }
 
+    get workingFile(): FileSystemFile {
+        return this._workingFile
+    }
+    set workingFile(d: FileSystemFile) {
+        if (d !== this._workingFile) {
+            this._workingFile = d
+            this.emit(CHANGE)
+        }
+    }
+
     async createWorkingDirectory(
         name: string,
         filename?: string,
@@ -76,7 +89,7 @@ export class FileSystem extends JDNode {
     }
 }
 
-export class FileSystemFile extends JDNode {
+export class FileSystemFile extends FileSystemNode {
     private _text: string
 
     constructor(
@@ -139,7 +152,7 @@ function sortHandles(handles: FileSystemHandle[]) {
     return handles
 }
 
-export class FileSystemDirectory extends JDNode {
+export class FileSystemDirectory extends FileSystemNode {
     private _directories: FileSystemDirectory[] = []
     private _files: FileSystemFile[] = []
 

@@ -95,6 +95,7 @@ function VMEditorWithContext() {
                     <FileTabs
                         newFileName={WORKSPACE_FILENAME}
                         newFileContent={VM_NEW_FILE_CONTENT}
+                        hideFiles={true}
                     />
                 </Grid>
             )}

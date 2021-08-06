@@ -44,6 +44,11 @@ import { lightEncode } from "../../../jacdac-ts/src/jdom/light"
 import { LedPixelCmd, LedCmd } from "../../../jacdac-ts/src/jdom/constants"
 import { createStyles, makeStyles } from "@material-ui/core"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
+import FileSystemContext, {
+    FileSystemProvider,
+} from "../../components/FileSystemContext"
+import FileTabs from "../../components/fs/FileTabs"
+import useChange from "../../jacdac/useChange"
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -250,19 +255,29 @@ async function SingleRGBLEDTest(service: JDService) {
 }
 
 async function StatusLEDTest(device: JDDevice) {
-    const l = device.statusLight;
-    while(device.connected) {
-        l.blink(0xff0000,0x000000,250, 3);
-        await delay(1000);
-        l.blink(0x00ff00,0x000000,250, 3);
-        await delay(1000);
-        l.blink(0x0000ff,0x000000,250, 3);
-        await delay(1000);
+    const l = device.statusLight
+    while (device.connected) {
+        l.blink(0xff0000, 0x000000, 250, 3)
+        await delay(1000)
+        l.blink(0x00ff00, 0x000000, 250, 3)
+        await delay(1000)
+        l.blink(0x0000ff, 0x000000, 250, 3)
+        await delay(1000)
     }
 }
 
 export default function Commissioner() {
+    return (
+        <FileSystemProvider>
+            <Page />
+        </FileSystemProvider>
+    )
+}
+
+function Page() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const { fileSystem } = useContext(FileSystemContext)
+    const workingFile = useChange(fileSystem, _ => _?.workingFile)
     const [filterBrains, setFilterBrains] = useState<boolean>(true)
     const devices = useDevices({
         announced: true,
@@ -283,7 +298,7 @@ export default function Commissioner() {
     const { fileStorage } = useContext(ServiceManagerContext)
 
     const testDevice = async (d: JDDevice) => {
-        StatusLEDTest(d);
+        StatusLEDTest(d)
         for (const srv of d.services()) {
             switch (srv.serviceClass) {
                 case SRV_LED_PIXEL:
@@ -295,6 +310,11 @@ export default function Commissioner() {
             }
         }
     }
+
+    // file handling
+    useEffectAsync(async () => {
+        console.debug(`todo: load data in dataset?`)
+    }, [workingFile])
 
     useEffectAsync(async () => {
         const newDataSet = (dataSet?.slice(0) || []).filter(
@@ -381,7 +401,7 @@ export default function Commissioner() {
     const handleOnClearClick = () => {
         setDataSet(undefined)
     }
-    const handleDownloadCSV = () => {
+    const handleDownloadCSV = async () => {
         const sep = ","
         const lineEnding = "\r\n"
         let str =
@@ -422,11 +442,14 @@ export default function Commissioner() {
             str += descriptor.comment + lineEnding
         })
 
-        const fileTitle = title.length ? `${title}-` : "" 
-        fileStorage.saveText(
-            `${fileTitle}commissioning-${dateString()}.csv`,
-            str
-        )
+        if (workingFile) await workingFile.write(str)
+        else {
+            const fileTitle = title.length ? `${title}-` : ""
+            fileStorage.saveText(
+                `${fileTitle}commissioning-${dateString()}.csv`,
+                str
+            )
+        }
     }
 
     const handleFilterBrains = () => setFilterBrains(!filterBrains)
@@ -461,6 +484,9 @@ export default function Commissioner() {
             <Grid container spacing={1}>
                 <GridHeader title={"Commissioning data"} />
                 <Grid item xs={12}>
+                    <FileTabs hideDirectories={true} />
+                </Grid>
+                <Grid item xs={12}>
                     <Grid container spacing={1}>
                         <Grid item>
                             <Button
@@ -474,13 +500,15 @@ export default function Commissioner() {
                         </Grid>
                         <Grid item>
                             <Button
-                                aria-label="Clear data"
+                                aria-label={
+                                    workingFile ? "Save data" : "Download data"
+                                }
                                 variant="contained"
                                 color="secondary"
                                 onClick={handleDownloadCSV}
                                 startIcon={<SaveIcon />}
                             >
-                                Download CSV
+                                {workingFile ? "Save CSV" : "Download CSV"}
                             </Button>
                         </Grid>
                         <Grid item>

@@ -29,6 +29,7 @@ function DSEditorWithContext() {
                     <FileTabs
                         newFileName={WORKSPACE_FILENAME}
                         newFileContent={DS_NEW_FILE_CONTENT}
+                        hideFiles={true}
                     />
                 </Grid>
             )}

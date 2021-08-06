@@ -28,7 +28,7 @@ export function FileSystemProvider(props: { children: ReactNode }) {
               try {
                   const handle = await window.showDirectoryPicker(options)
                   if (handle !== fileSystem.root?.handle)
-                      fileSystem.root = new FileSystemDirectory(handle)
+                      fileSystem.root = new FileSystemDirectory(this, handle)
               } catch (e) {
                   console.debug(e)
               }
