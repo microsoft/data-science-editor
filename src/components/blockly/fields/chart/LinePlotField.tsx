@@ -19,7 +19,7 @@ function LinePlotWidget() {
         sliceHead: LINE_MAX_ITEMS,
     }
     const spec: VisualizationSpec = {
-        mark: { type: "line", point: true, tooltip: true },
+        mark: { type: "line", tooltip: true },
         encoding: {
             x: { field: x, type: "quantitative", scale: { zero: false } },
             y: { field: y, type: "quantitative", scale: { zero: false } },
