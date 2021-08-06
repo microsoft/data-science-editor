@@ -46,6 +46,7 @@ export class FileSystem extends FileSystemNode {
         if (d !== this._root) {
             this._root = d
             this._workingDirectory = undefined
+            this._workingFile = undefined
             this.emit(CHANGE)
         }
     }
