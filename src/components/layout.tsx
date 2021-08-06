@@ -160,9 +160,9 @@ function LayoutWithContext(props: LayoutProps) {
     const { pageContext, path, location } = pageProps
     const { frontmatter } = pageContext || {}
     const makeCodeTool = /tools\/makecode-/.test(path)
-    const fullWidthTools = /^\/(editors\/|tools\/makecode-|dashboard)/.test(
-        path
-    )
+    const fullWidthTools =
+        /^\/editors\/\w+\/$/.test(path) ||
+        /^\/(tools\/makecode-|dashboard)/.test(path)
     const {
         hideMainMenu = false,
         hideUnderConstruction = false,

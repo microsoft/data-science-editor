@@ -54,6 +54,15 @@ export default function DataEditorAppBar() {
                         <div className={classes.grow} />
                         <Link
                             className={classes.menuButton}
+                            aria-label="Learn about the data editor"
+                            title="Learn about the data editor"
+                            color="inherit"
+                            to="/editors/data/about"
+                        >
+                            About
+                        </Link>
+                        <Link
+                            className={classes.menuButton}
                             aria-label="Send feedback in our forums"
                             title="Send feedback in our forums"
                             color="inherit"
