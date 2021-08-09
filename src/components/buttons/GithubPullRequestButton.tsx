@@ -159,21 +159,18 @@ export default function GithubPullRequestButton(
                     <ApiKeyAccordion
                         apiName={GITHUB_API_KEY}
                         title="GitHub Developer Token"
-                        instructions={
-                            <Typography component="span" variant="caption">
-                                Open{" "}
-                                <Link
-                                    target="_blank"
-                                    href="https://github.com/settings/tokens/new"
-                                    rel="noreferrer nofollower"
-                                >
-                                    https://github.com/settings/tokens/new
-                                </Link>{" "}
-                                and generate a new personal access token with
-                                **repo** scope.
-                            </Typography>
-                        }
-                    />
+                    >
+                        Open{" "}
+                        <Link
+                            target="_blank"
+                            href="https://github.com/settings/tokens/new"
+                            rel="noreferrer nofollower"
+                        >
+                            https://github.com/settings/tokens/new
+                        </Link>{" "}
+                        and generate a new personal access token with **repo**
+                        scope.
+                    </ApiKeyAccordion>
                 </DialogContent>
                 <DialogActions>
                     <Button

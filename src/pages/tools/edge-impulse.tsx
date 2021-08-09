@@ -608,26 +608,23 @@ function ApiKeyManager() {
     const validateKey = async (key: string) => {
         const r = await EdgeImpulseClient.currentProjectInfo(key)
         return {
-            statusCode: (r?.valid && 200) || r?.errorStatus || 500,
+            status: (r?.valid && 200) || r?.errorStatus || 500,
         }
     }
     return (
         <ApiKeyAccordion
             apiName={EDGE_IMPULSE_API_KEY}
             validateKey={validateKey}
-            instructions={
-                <p>
-                    To get an <b>API key</b>, navigate to &nbsp;
-                    <Link
-                        to="https://studio.edgeimpulse.com/studio/8698/keys"
-                        target="_blank"
-                    >
-                        https://studio.edgeimpulse.com/studio/8698/keys
-                    </Link>
-                    &nbsp; and generate a new key.
-                </p>
-            }
-        />
+        >
+            To get an <b>API key</b>, navigate to &nbsp;
+            <Link
+                to="https://studio.edgeimpulse.com/studio/8698/keys"
+                target="_blank"
+            >
+                https://studio.edgeimpulse.com/studio/8698/keys
+            </Link>
+            &nbsp; and generate a new key.
+        </ApiKeyAccordion>
     )
 }
 

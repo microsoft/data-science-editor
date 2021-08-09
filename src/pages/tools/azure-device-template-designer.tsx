@@ -17,6 +17,9 @@ import {
     serviceSpecificationToComponent,
     serviceSpecificationToDTDL,
 } from "../../../jacdac-ts/src/azure-iot/dtdlspec"
+import ApiKeyAccordion from "../../components/ApiKeyAccordion"
+import GridHeader from "../../components/ui/GridHeader"
+import { useSecret } from "../../components/hooks/useSecret"
 
 interface TemplateComponent {
     name: string
@@ -103,8 +106,51 @@ function validateTwinComponent(
     return { serviceError, nameError }
 }
 
+const AZURE_IOT_CENTRAL_DOMAIN = "azureiotcentraldomain"
+const AZURE_IOT_CENTRAL_API_KEY = "azureiotcentraliotkey"
+
+function ApiKeyManager() {
+    const [domain] = useLocalStorage<string>(AZURE_IOT_CENTRAL_DOMAIN)
+    const validateKey = async (key: string) => {
+        const res = await fetch(
+            `${domain}/api/deviceTemplates?api-version=1.0`,
+            {
+                headers: {
+                    authorization: key,
+                },
+            }
+        )
+        return res
+    }
+    return (
+        <ApiKeyAccordion
+            apiName={AZURE_IOT_CENTRAL_API_KEY}
+            title="API token"
+            validateKey={validateKey}
+        >
+            Open <strong>Administration</strong>,{" "}
+            <strong>
+                {domain ? (
+                    <Link target="_blank" href={`${domain}admin/tokens`}>
+                        API tokens
+                    </Link>
+                ) : (
+                    "API tokens"
+                )}
+            </strong>
+            , create a new Token and copy the value here.
+        </ApiKeyAccordion>
+    )
+}
+
 export default function AzureDeviceTemplateDesigner() {
     const variant = "outlined"
+    const domainId = useId()
+    const [domain, setDomain] = useLocalStorage<string>(
+        AZURE_IOT_CENTRAL_DOMAIN,
+        ""
+    )
+    const { value: apiToken } = useSecret(AZURE_IOT_CENTRAL_API_KEY)
     const [twin, setTwin] = useLocalStorage<TemplateSpec>(
         "jacdac:digitaltwin;1",
         {
@@ -124,6 +170,8 @@ export default function AzureDeviceTemplateDesigner() {
     }
     const dtdlSource = JSON.stringify(dtdl, null, 2)
 
+    const handleDomainChange = (ev: ChangeEvent<HTMLInputElement>) =>
+        setDomain(ev.target.value)
     const update = () => {
         setTwin(clone(twin))
     }
@@ -139,7 +187,6 @@ export default function AzureDeviceTemplateDesigner() {
         })
         update()
     }
-
     return (
         <>
             <h1>Azure Device Template Designer</h1>
@@ -152,8 +199,23 @@ export default function AzureDeviceTemplateDesigner() {
                 <Link to="/dtmi/">Azure IoT Plug And Play models</Link> for
                 services can be used to resolve models.
             </p>
-
             <Grid container direction="row" spacing={2}>
+                <GridHeader title="Connection" />
+                <Grid item xs={12}>
+                    <TextField
+                        id={domainId}
+                        value={domain}
+                        fullWidth={true}
+                        variant="outlined"
+                        onChange={handleDomainChange}
+                        helperText="Azure IoT Central domain"
+                        placeholder="https://.....azureiotcentral.com/"
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <ApiKeyManager />
+                </Grid>
+                <GridHeader title="Model" />
                 <Grid item xs={12}>
                     <TextField
                         required

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import React, { ReactNode, useContext, useState } from "react"
 import useEffectAsync from "./useEffectAsync"
 import Alert from "./ui/Alert"
 import {
@@ -22,10 +22,10 @@ import AppContext from "./AppContext"
 export default function ApiKeyAccordion(props: {
     apiName: string
     title?: string
-    validateKey?: (key: string) => Promise<{ statusCode: number }>
-    instructions: JSX.Element | JSX.Element[]
+    validateKey?: (key: string) => Promise<{ status: number }>
+    children: ReactNode
 }) {
-    const { apiName, validateKey, instructions, title } = props
+    const { apiName, validateKey, title, children } = props
     const { value: apiKey, setValue: setApiKey } = useSecret(apiName)
     const apiKeyId = useId()
     const [key, setKey] = useState("")
@@ -38,16 +38,16 @@ export default function ApiKeyAccordion(props: {
             if (!apiKey) {
                 setValidated(false)
             } else {
-                const { statusCode } = validateKey
+                const { status } = validateKey
                     ? await validateKey(apiKey)
-                    : { statusCode: 200 }
+                    : { status: 200 }
                 if (!mounted()) return
-                if (statusCode === 200) {
+                if (status === 200) {
                     setValidated(true)
                     setExpanded(false)
                 } else {
                     setValidated(false)
-                    if (statusCode === 403) setApiKey(undefined)
+                    if (status === 403) setApiKey(undefined)
                 }
             }
         },
@@ -87,7 +87,9 @@ export default function ApiKeyAccordion(props: {
                 {validated && (
                     <Alert severity={"success"}>API key ready!</Alert>
                 )}
-                {instructions}
+                <Typography component="span" variant="caption">
+                    {children}
+                </Typography>
                 <TextField
                     id={apiKeyId}
                     label="API key"
