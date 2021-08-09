@@ -39,6 +39,7 @@ import {
     SRV_PROTO_TEST,
     SRV_ROLE_MANAGER,
 } from "../../../jacdac-ts/src/jdom/constants"
+import { dashify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 
 interface TemplateComponent {
     name: string
@@ -175,7 +176,7 @@ function twinToDTDL(twin: TemplateSpec, merged: boolean) {
         twin.components.forEach(({ name, service }) => {
             const srvDTDL = serviceSpecificationToDTDL(service)
             srvDTDL.contents.forEach(ctn => {
-                ctn.name = `${name}${ctn.name}`
+                ctn.name = dashify(`${name}_${ctn.name}`)
             })
             dtdl.contents = [...dtdl.contents, srvDTDL.contents]
         })
@@ -379,7 +380,8 @@ export default function AzureDeviceTemplateDesigner() {
                                                 srv.serviceClass
                                             ) < 0
                                     )
-                                    .map(srv => srv.name).join(", ")}
+                                    .map(srv => srv.name)
+                                    .join(", ")}
                             </CardContent>
                             <CardActions>
                                 <Button
