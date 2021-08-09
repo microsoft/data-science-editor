@@ -1,8 +1,7 @@
-import { useState } from "react"
+import useDbValue from "../useDbValue"
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function useSecret(id: string) {
-    const [value, setValue] = useState("")
+    const { value, setValue } = useDbValue("secret:" + id, "")
     return {
         value,
         setValue,

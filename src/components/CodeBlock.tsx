@@ -1,4 +1,4 @@
-import React, { lazy, useContext } from "react"
+import React, { lazy, ReactNode, useContext } from "react"
 import Highlight, {
     defaultProps,
     Language,
@@ -27,6 +27,7 @@ function HighlightedCode(props: {
     className?: string
     downloadName?: string
     downloadText?: string
+    actions?: ReactNode
     url?: string
 }) {
     const {
@@ -35,6 +36,7 @@ function HighlightedCode(props: {
         className,
         downloadName,
         downloadText,
+        actions,
         url,
     } = props
     const { darkMode } = useContext(DarkModeContext)
@@ -84,6 +86,7 @@ function HighlightedCode(props: {
                             </Suspense>
                         </div>
                     )}
+                    {actions && <div style={{ float: "right" }}>{actions}</div>}
                     {tokens?.map((line, index) => {
                         const lineProps = getLineProps({ line, key: index })
                         return (
@@ -108,6 +111,7 @@ export default function CodeBlock(props: {
     className?: string
     downloadName?: string
     downloadText?: string
+    actions?: ReactNode
     url?: string
 }) {
     const { children, className } = props

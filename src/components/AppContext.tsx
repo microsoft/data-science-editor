@@ -63,6 +63,7 @@ export default AppContext
 // eslint-disable-next-line react/prop-types
 export const AppProvider = ({ children }) => {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const [secrets, setSecrets] = useState<Record<string, string>>({})
     const [type, setType] = useState(DrawerType.None)
     const [searchQuery, setSearchQuery] = useState("")
     const [toolsMenu, _setToolsMenu] = useState(false)
