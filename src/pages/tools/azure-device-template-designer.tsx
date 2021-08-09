@@ -6,14 +6,18 @@ import {
     TextField,
 } from "@material-ui/core"
 import React, { ChangeEvent, useContext, useMemo, useState } from "react"
-import { clone, uniqueName } from "../../../jacdac-ts/src/jdom/utils"
+import { clone, uniqueMap, uniqueName } from "../../../jacdac-ts/src/jdom/utils"
 import useLocalStorage from "../../components/hooks/useLocalStorage"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import DeleteIcon from "@material-ui/icons/Delete"
 import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec"
 import AddServiceIconButton from "../../components/AddServiceIconButton"
 import ServiceSpecificationSelect from "../../components/ServiceSpecificationSelect"
-import { DTDL_CONTEXT, escapeName } from "../../../jacdac-ts/src/azure-iot/dtdl"
+import {
+    DTDLInterface,
+    DTDL_CONTEXT,
+    escapeName,
+} from "../../../jacdac-ts/src/azure-iot/dtdl"
 import IconButtonWithTooltip from "../../components/ui/IconButtonWithTooltip"
 import Snippet from "../../components/ui/Snippet"
 import PaperBox from "../../components/ui/PaperBox"
@@ -39,7 +43,6 @@ import {
     SRV_PROTO_TEST,
     SRV_ROLE_MANAGER,
 } from "../../../jacdac-ts/src/jdom/constants"
-import { dashify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 
 interface TemplateComponent {
     name: string
@@ -117,12 +120,8 @@ function validateTwinComponent(
     twin: TemplateSpec,
     component: TemplateComponent
 ) {
-    let serviceError: string = undefined
+    const serviceError: string = undefined
     const nameError: string = undefined
-    const count = twin.components.filter(
-        c => c.service.classIdentifier === component.service.classIdentifier
-    ).length
-    if (count > 1) serviceError = `Multiple same service not supported.`
     return { serviceError, nameError }
 }
 
@@ -164,34 +163,6 @@ function ApiKeyManager() {
     )
 }
 
-function twinToDTDL(twin: TemplateSpec, merged: boolean) {
-    const dtdl = {
-        "@type": "Interface",
-        "@id": `dtmi:jacdac:device:${escapeName(twin.displayName)};1`,
-        displayName: twin.displayName,
-        contents: [],
-        "@context": DTDL_CONTEXT,
-    }
-    if (merged) {
-        twin.components.forEach(({ name, service }) => {
-            const srvDTDL = serviceSpecificationToDTDL(service)
-            srvDTDL.contents.forEach(ctn => {
-                ctn.name = dashify(`${name}_${ctn.name}`)
-            })
-            dtdl.contents = [...dtdl.contents, srvDTDL.contents]
-        })
-    } else {
-        dtdl.contents = [
-            ...dtdl.contents,
-            ...twin.components.map(c =>
-                serviceSpecificationToComponent(c.service, c.name)
-            ),
-        ]
-    }
-
-    return dtdl
-}
-
 const ignoredServices = [
     SRV_CONTROL,
     SRV_LOGGER,
@@ -201,7 +172,6 @@ const ignoredServices = [
 ]
 export default function AzureDeviceTemplateDesigner() {
     const variant = "outlined"
-    const merged = true
     const domainId = useId()
     const devices = useDevices({ ignoreSelf: true, announced: true })
     const { enqueueSnackbar, setError } = useContext(AppContext)
@@ -217,11 +187,35 @@ export default function AzureDeviceTemplateDesigner() {
             components: [],
         } as TemplateSpec
     )
+    const dtmi = `dtmi:jacdac:devicemodel:${escapeName(twin.displayName)};1`
     const [apiWorking, setApiWorking] = useState(false)
     const [apiError, setApiError] = useState("")
 
-    const dtdl = twinToDTDL(twin, merged)
-    const dtdlSource = JSON.stringify(dtdl, null, 2)
+    const { dtdl, dtdlSource } = useMemo(() => {
+        const capabilityModel: DTDLInterface = {
+            "@type": "Interface",
+            "@id": `dtmi:jacdac:device:${escapeName(twin.displayName)};1`,
+            displayName: twin.displayName,
+            contents: twin.components.map(c =>
+                serviceSpecificationToComponent(c.service, c.name)
+            ),
+            "@context": DTDL_CONTEXT,
+        }
+        const contents = uniqueMap(
+            twin.components.map(c => c.service),
+            service => service.classIdentifier + "",
+            service => service
+        ).map(serviceSpecificationToDTDL)
+        const dtdl = {
+            "@type": ["ModelDefinition", "DeviceModel"],
+            displayName: twin.displayName,
+            capabilityModel,
+            contents,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } as any
+        const dtdlSource = JSON.stringify(dtdl, null, 2)
+        return { dtdl, dtdlSource }
+    }, [twin])
 
     const handleDomainChange = (ev: ChangeEvent<HTMLInputElement>) =>
         setDomain(ev.target.value)
@@ -266,33 +260,18 @@ export default function AzureDeviceTemplateDesigner() {
         return res
     }
 
-    const uploadTemplate = async (
-        dtmi: string,
-        displayName: string,
-        // eslint-disable-next-line @typescript-eslint/ban-types
-        capabilityModel: object
-    ) => {
+    const handleUploadModel = async () => {
         try {
             setApiWorking(true)
             setApiError("")
             setError("")
             const path = `deviceTemplates/${dtmi}`
-            const current = await apiFetch("GET", path)
-            const exists = current.status === 200
-            console.log(
-                `iotc: template ${dtmi} ${exists ? "exists" : "missing"}`
-            )
-            const body = {
-                "@type": ["ModelDefinition", "DeviceModel"],
-                displayName,
-                capabilityModel,
-            }
-            const res = await apiFetch(exists ? "PATCH" : "PUT", path, body)
+            const res = await apiFetch("PUT", path, dtdl)
             const success = res.status === 200
             const resj = await res.json()
             console.log(`iotc: upload template ${res.status}`, {
                 resj,
-                body,
+                dtdl,
             })
             if (!success) {
                 setApiError(resj.error?.message)
@@ -303,21 +282,6 @@ export default function AzureDeviceTemplateDesigner() {
         } finally {
             setApiWorking(false)
         }
-    }
-
-    const handleUploadModel = async () => {
-        await uploadTemplate(
-            `dtmi:jacdac:devicemodel:${escapeName(twin.displayName)};1`,
-            twin.displayName,
-            dtdl
-        )
-    }
-    const handleUploadTemplate = (template: TemplateComponent) => async () => {
-        const { service } = template
-        const { shortId } = service
-        const dtmi = serviceSpecificationDTMI(service, "servicemodel")
-        const capabilityModel = serviceSpecificationToDTDL(service)
-        await uploadTemplate(dtmi, shortId, capabilityModel)
     }
 
     const handleSelectDevice = (device: JDDevice) => async () => {
@@ -444,37 +408,6 @@ export default function AzureDeviceTemplateDesigner() {
                         />
                     </PaperBox>
                 </Grid>
-                {!merged &&
-                    twin.components?.map(c => (
-                        <Grid item xs={12} key={c.name}>
-                            <PaperBox>
-                                <Snippet
-                                    caption={c.name}
-                                    value={JSON.stringify(
-                                        serviceSpecificationToDTDL(c.service),
-                                        null,
-                                        4
-                                    )}
-                                    mode="json"
-                                    actions={
-                                        <Button
-                                            variant="outlined"
-                                            size="small"
-                                            disabled={
-                                                apiWorking ||
-                                                !domain ||
-                                                !apiToken
-                                            }
-                                            onClick={handleUploadTemplate(c)}
-                                            title="Import the service template into your Azure IoT Central application (requires domain and API token)."
-                                        >
-                                            Import template
-                                        </Button>
-                                    }
-                                />
-                            </PaperBox>
-                        </Grid>
-                    ))}
             </Grid>
         </>
     )
