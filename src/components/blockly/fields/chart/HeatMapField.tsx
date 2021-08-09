@@ -8,33 +8,43 @@ import VegaLiteWidget from "./VegaLiteWidget"
 import { tidyResolveHeader } from "../tidy"
 import { LINE_MAX_ITEMS } from "../../toolbox"
 
-function LinePlotWidget() {
+function HeatMapWidget() {
     const { sourceBlock } = useContext(WorkspaceContext)
     const { data } = useBlockData(sourceBlock)
-    const x = tidyResolveHeader(data, sourceBlock?.getFieldValue("x"), "number")
-    const y = tidyResolveHeader(data, sourceBlock?.getFieldValue("y"), "number")
-    if (!x || !y) return null
+    const x = tidyResolveHeader(data, sourceBlock?.getFieldValue("x"))
+    const y = tidyResolveHeader(data, sourceBlock?.getFieldValue("y"))
+    const color = tidyResolveHeader(
+        data,
+        sourceBlock?.getFieldValue("color"),
+        "number"
+    )
+    if (!x || !y || !color) return null
 
     const sliceOptions = {
         sliceHead: LINE_MAX_ITEMS,
     }
     const spec: VisualizationSpec = {
-        mark: { type: "line", tooltip: true },
+        mark: { type: "rect", tooltip: true },
         encoding: {
-            x: { field: x, type: "quantitative", scale: { zero: false } },
-            y: { field: y, type: "quantitative", scale: { zero: false } },
+            x: { field: x, type: "ordinal" },
+            y: { field: y, type: "ordinal" },
+            color: {
+                field: color,
+                type: "quantitative",
+                scale: { zero: false },
+            },
         },
         data: { name: "values" },
     }
     return <VegaLiteWidget spec={spec} slice={sliceOptions} />
 }
 
-export default class LinePlotField extends ReactInlineField {
-    static KEY = "jacdac_field_line_plot"
+export default class HeatMapPlotField extends ReactInlineField {
+    static KEY = "jacdac_field_heat_map"
     EDITABLE = false
 
     static fromJson(options: ReactFieldJSON) {
-        return new LinePlotField(options)
+        return new HeatMapPlotField(options)
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -43,6 +53,6 @@ export default class LinePlotField extends ReactInlineField {
     }
 
     renderInlineField() {
-        return <LinePlotWidget />
+        return <HeatMapWidget />
     }
 }

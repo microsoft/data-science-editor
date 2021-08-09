@@ -6,7 +6,7 @@ import useBlockData from "../../useBlockData"
 import type { VisualizationSpec } from "react-vega"
 import VegaLiteWidget from "./VegaLiteWidget"
 import { tidyResolveHeader } from "../tidy"
-import { BAR_MAX_ITEMS } from "../../toolbox"
+import { BAR_CORNER_RADIUS, BAR_MAX_ITEMS } from "../../toolbox"
 
 function BarWidget() {
     const { sourceBlock } = useContext(WorkspaceContext)
@@ -23,8 +23,7 @@ function BarWidget() {
         sliceMax: BAR_MAX_ITEMS,
     }
     const spec: VisualizationSpec = {
-        description: `Bar plot of ${index} x ${value}`,
-        mark: "bar",
+        mark: { type: "bar", cornerRadius: BAR_CORNER_RADIUS, tooltip: true },
         encoding: {
             x: { field: index, type: "nominal" },
             y: { field: value, type: "quantitative" },

@@ -23,6 +23,7 @@ import Breadcrumbs from "./ui/Breadcrumbs"
 import useMediaQueries from "./hooks/useMediaQueries"
 import MainAppBar from "./shell/MainAppBar"
 import DataEditorAppBar from "./shell/DataEditorAppBar"
+import { AlertTitle } from "@material-ui/lab"
 
 const WebDiagnostics = lazy(() => import("./shell/WebDiagnostics"))
 const AppDrawer = lazy(() => import("./shell/AppDrawer"))
@@ -155,14 +156,17 @@ function LayoutWithMdx(props: LayoutProps) {
     )
 }
 
+const UNDER_CONSTRUCTION_BODY = `Jacdac is currently in preview. If you would like to join as a pre-release test partner, please email jacdac-tap@microsoft.com.`
+const UNDER_CONSTRUCTION_MESSAGE = `Partner Preview: ${UNDER_CONSTRUCTION_BODY}.`
+
 function LayoutWithContext(props: LayoutProps) {
     const { element, props: pageProps } = props
     const { pageContext, path, location } = pageProps
     const { frontmatter } = pageContext || {}
     const makeCodeTool = /tools\/makecode-/.test(path)
-    const fullWidthTools = /^\/(editors\/|tools\/makecode-|dashboard)/.test(
-        path
-    )
+    const fullWidthTools =
+        /^\/editors\/\w+\/$/.test(path) ||
+        /^\/(tools\/makecode-|dashboard)/.test(path)
     const {
         hideMainMenu = false,
         hideUnderConstruction = false,
@@ -196,19 +200,15 @@ function LayoutWithContext(props: LayoutProps) {
     // show under construction warning
     useEffect(() => {
         if (!hideUnderConstruction)
-            enqueueSnackbar(
-                `UNDER CONSTRUCTION - We are still working and changing the
-            Jacdac specification. Do not build devices using Jacdac.`,
-                `warning`
-            )
+            enqueueSnackbar(UNDER_CONSTRUCTION_MESSAGE, `warning`)
     }, [])
 
     const InnerMainSection = () => (
         <>
             {!hideUnderConstruction && (
                 <Alert closeable={true} severity="warning">
-                    UNDER CONSTRUCTION - We are still working and changing the
-                    Jacdac specification. Do not build devices using Jacdac.
+                    <AlertTitle>Partner Preview</AlertTitle>
+                    {UNDER_CONSTRUCTION_BODY}
                 </Alert>
             )}
             {Flags.diagnostics && (

@@ -128,7 +128,7 @@ export interface DataSliceOptions {
     sliceHead?: number
     sliceTail?: number
     sliceSample?: number
-    
+
     sliceMax?: number
     sliceMin?: number
     sliceColumn?: string
@@ -139,7 +139,6 @@ export interface DataSliceRequest extends DataRequest, DataSliceOptions {
 }
 
 const summarizers = {
-    average: mean,
     mean,
     median,
     min,
@@ -344,14 +343,15 @@ const handlers: { [index: string]: (props: any) => object[] } = {
         const summarizer = summarizers[calc]
         if (!summarizer) return data
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const items: SummarizeSpec<Object> = {}
         items[column] = summarizer(column)
-        return tidy(
+        const res = tidy(
             data,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            groupBy(by as any, [summarize(summarizer)])
+            groupBy(by as any, [summarize(items)])
         )
+        console.debug(`summarize by group`, { res })
+        return res
     },
     count: (props: DataCountRequest) => {
         const { column, data } = props

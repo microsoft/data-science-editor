@@ -29,6 +29,9 @@ import WifiIcon from "@material-ui/icons/Wifi"
 import SettingsIcon from "@material-ui/icons/Settings"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord"
+// tslint:disable-next-line: no-submodule-imports match-default-export-name
+import CloudIcon from "@material-ui/icons/Cloud"
+
 import DarkModeContext from "../ui/DarkModeContext"
 import KindIcon from "../KindIcon"
 import {
@@ -144,10 +147,15 @@ export default function ToolsDrawer() {
             url: "/tools/updater/",
             icon: <SystemUpdateAltIcon />,
         },
-        /*
         {
             // separator
         },
+        {
+            text: "Azure Device Template",
+            url: "/tools/azure-device-template-designer",
+            icon: <CloudIcon />,
+        },
+        /*
         {
             text: "MakeCode",
             url: "/tools/makecode",
@@ -162,11 +170,6 @@ export default function ToolsDrawer() {
                 text: "Edge Impulse",
                 url: "/tools/edge-impulse",
                 icon: <EdgeImpulseIcon />
-            },
-            {
-            text: "Azure IoT Hub",
-                    url: "/tools/azure-iot-hub",
-                    icon: <CloudIcon />
             },
         */
         {

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { Block, BlockSvg, Events, FieldVariable, WorkspaceSvg } from "blockly"
+import { Block, Events, FieldVariable, Workspace, WorkspaceSvg } from "blockly"
 import React, {
     createContext,
     ReactNode,
@@ -14,11 +14,14 @@ import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import RoleManager from "../../../jacdac-ts/src/servers/rolemanager"
 import { VMProgramRunner } from "../../../jacdac-ts/src/vm/runner"
 import useChange from "../../jacdac/useChange"
+import { FileSystemDirectory } from "../fs/fsdom"
 import ReactField from "./fields/ReactField"
 import useWorkspaceEvent from "./useWorkspaceEvent"
 
 export class WorkspaceServices extends JDEventSource {
     static readonly WORKSPACE_CHANGE = "workspaceChange"
+
+    private _directory: FileSystemDirectory
 
     private _workspaceJSON: WorkspaceJSON
     private _runner: VMProgramRunner
@@ -60,10 +63,26 @@ export class WorkspaceServices extends JDEventSource {
             this.emit(CHANGE)
         }
     }
+
+    get workingDirectory() {
+        return this._directory
+    }
+    set workingDirectory(value: FileSystemDirectory) {
+        if (this._directory !== value) {
+            this._directory = value
+            // don't notify
+        }
+    }
 }
 
-export interface BlocklyWorkspaceWithServices extends WorkspaceSvg {
+export interface WorkspaceWithServices extends Workspace {
     jacdacServices: WorkspaceServices
+}
+
+export function resolveWorkspaceServices(workspace: Workspace) {
+    const workspaceWithServices = workspace as WorkspaceWithServices
+    const services = workspaceWithServices?.jacdacServices
+    return services
 }
 
 export interface FieldWithServices {
@@ -116,8 +135,14 @@ export class BlockServices extends JDEventSource {
 
     initialized = false
 }
-export interface BlockWithServices extends BlockSvg {
+export interface BlockWithServices extends Block {
     jacdacServices: BlockServices
+}
+
+export function resolveBlockServices(block: Block) {
+    const blockWithServices = block as BlockWithServices
+    const services = blockWithServices?.jacdacServices
+    return services
 }
 
 export interface WorkspaceContextProps {
@@ -160,7 +185,7 @@ export function WorkspaceProvider(props: {
     )
     const sourceId = sourceBlock?.id
     const workspace = sourceBlock?.workspace as WorkspaceSvg
-    const services = (workspace as BlocklyWorkspaceWithServices)?.jacdacServices
+    const services = resolveWorkspaceServices(workspace)
     const roleManager = useChange(services, _ => _?.roleManager)
     const runner = useChange(services, _ => _?.runner)
     const [dragging, setDragging] = useState(!!workspace?.isDragging())

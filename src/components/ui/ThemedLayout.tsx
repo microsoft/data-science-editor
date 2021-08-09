@@ -11,6 +11,7 @@ import { ServiceManagerProvider } from "../ServiceManagerContext"
 import Helmet from "react-helmet"
 import { MakeCodeSnippetProvider } from "../makecode/MakeCodeSnippetContext"
 import { WebAudioProvider } from "./WebAudioContext"
+import { FileSystemProvider } from "../FileSystemContext"
 
 export default function ThemedLayout(props: {
     theme: Theme
@@ -24,36 +25,38 @@ export default function ThemedLayout(props: {
                 <IdProvider>
                     <LiveAnnouncer>
                         <DbProvider>
-                            <WebAudioProvider>
-                                <JacdacProvider connectOnStart={true}>
-                                    <ServiceManagerProvider>
-                                        <PacketsProvider>
-                                            <AppProvider>
-                                                <MakeCodeSnippetProvider>
-                                                    <CssBaseline />
-                                                    <Helmet>
-                                                        <link
-                                                            rel="preconnect"
-                                                            href="https://fonts.googleapis.com"
-                                                            crossOrigin="anonymous"
-                                                        />
-                                                        <link
-                                                            rel="preconnect"
-                                                            href="https://raw.githubusercontent.com"
-                                                            crossOrigin="anonymous"
-                                                        />
-                                                        <meta
-                                                            name="viewport"
-                                                            content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
-                                                        />
-                                                    </Helmet>
-                                                    {children}
-                                                </MakeCodeSnippetProvider>
-                                            </AppProvider>
-                                        </PacketsProvider>
-                                    </ServiceManagerProvider>
-                                </JacdacProvider>
-                            </WebAudioProvider>
+                            <FileSystemProvider>
+                                <WebAudioProvider>
+                                    <JacdacProvider connectOnStart={true}>
+                                        <ServiceManagerProvider>
+                                            <PacketsProvider>
+                                                <AppProvider>
+                                                    <MakeCodeSnippetProvider>
+                                                        <CssBaseline />
+                                                        <Helmet>
+                                                            <link
+                                                                rel="preconnect"
+                                                                href="https://fonts.googleapis.com"
+                                                                crossOrigin="anonymous"
+                                                            />
+                                                            <link
+                                                                rel="preconnect"
+                                                                href="https://raw.githubusercontent.com"
+                                                                crossOrigin="anonymous"
+                                                            />
+                                                            <meta
+                                                                name="viewport"
+                                                                content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
+                                                            />
+                                                        </Helmet>
+                                                        {children}
+                                                    </MakeCodeSnippetProvider>
+                                                </AppProvider>
+                                            </PacketsProvider>
+                                        </ServiceManagerProvider>
+                                    </JacdacProvider>
+                                </WebAudioProvider>
+                            </FileSystemProvider>
                         </DbProvider>
                     </LiveAnnouncer>
                 </IdProvider>

@@ -6,6 +6,7 @@ import useBlockData from "../../useBlockData"
 import type { VisualizationSpec } from "react-vega"
 import VegaLiteWidget from "./VegaLiteWidget"
 import { tidyResolveHeader } from "../tidy"
+import { BAR_CORNER_RADIUS } from "../../toolbox"
 
 function BoxPlotWidget() {
     const { sourceBlock } = useContext(WorkspaceContext)
@@ -19,10 +20,14 @@ function BoxPlotWidget() {
     if (!index || !value) return null
 
     const spec: VisualizationSpec = {
-        description: `Box plot of ${index}`,
-        mark: "boxplot",
+        mark: {
+            type: "boxplot",
+            cornerRadius: BAR_CORNER_RADIUS,
+            tooltip: true,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } as any,
         encoding: {
-            x: { field: index, type: "nominal" },
+            x: { field: index, type: "nominal", scale: { zero: false } },
             y: { field: value, type: "quantitative", scale: { zero: false } },
         },
         data: { name: "values" },

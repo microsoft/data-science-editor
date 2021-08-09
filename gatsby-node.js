@@ -347,13 +347,16 @@ exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
             resourceRegExp: /^canvas|@axe-core\/react$/,
         }),
     ]
+    const fallback = {
+        util: require.resolve("util/"),
+    }
     if (stage.startsWith("develop")) {
         setWebpackConfig({
             resolve: {
                 alias: {
                     "react-dom": "@hot-loader/react-dom",
                 },
-                fallback: { util: require.resolve("util/") },
+                fallback,
             },
             plugins,
         })
@@ -362,7 +365,7 @@ exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
         console.log(`enabling ignore filters`)
         setWebpackConfig({
             resolve: {
-                fallback: { util: require.resolve("util/") },
+                fallback,
             },
             plugins,
         })

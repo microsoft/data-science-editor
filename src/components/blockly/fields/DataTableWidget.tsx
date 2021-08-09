@@ -7,7 +7,8 @@ import { PointerBoundary } from "./PointerBoundary"
 import CopyButton from "../../ui/CopyButton"
 import { unparseCSV } from "../dsl/workers/csv.proxy"
 import { roundWithPrecision, toMap } from "../../../../jacdac-ts/src/jdom/utils"
-import { tidyHeaders } from "./tidy"
+import { tidyHeaders, tidyResolveHeader } from "./tidy"
+import { humanify } from "../../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 
 interface StylesProps {
     tableHeight: number
@@ -62,6 +63,7 @@ export default function DataTableWidget(props: {
     tableHeight?: number
     empty?: ReactNode
     maxItems?: number
+    selectColumns?: boolean
 }): JSX.Element {
     const {
         label,
@@ -69,6 +71,7 @@ export default function DataTableWidget(props: {
         tableHeight = TABLE_HEIGHT,
         empty,
         maxItems,
+        selectColumns,
     } = props
     const { sourceBlock } = useContext(WorkspaceContext)
     const { data, transformedData } = useBlockData<{ id?: string } & unknown>(
@@ -80,7 +83,15 @@ export default function DataTableWidget(props: {
     if (!raw?.length)
         return empty ? <span className={classes.empty}>{empty}</span> : null
 
-    const columns = tidyHeaders(raw).headers
+    const selectedColumns = selectColumns
+        ? [0, 1, 2, 3]
+              .map(i => `column${i}`)
+              .map(n => tidyResolveHeader(raw, sourceBlock?.getFieldValue(n)))
+              .filter(c => !!c)
+        : []
+    const columns = selectedColumns.length
+        ? selectedColumns
+        : tidyHeaders(raw).headers
     const table =
         raw.length > maxItems
             ? [
@@ -92,6 +103,16 @@ export default function DataTableWidget(props: {
                   ),
               ]
             : raw
+
+    console.log({
+        raw,
+        transformed,
+        transformedData,
+        data,
+        table,
+        selectedColumns,
+        columns,
+    })
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const renderCell = (v: any) =>
@@ -131,11 +152,13 @@ export default function DataTableWidget(props: {
                                 onCopy={handleCopy}
                             />
                         </Grid>
-                        <Grid item>
-                            <Typography variant="caption">
-                                {raw.length} rows x {columns.length} columns
-                            </Typography>
-                        </Grid>
+                        {raw.length > 1 && (
+                            <Grid item>
+                                <Typography variant="caption">
+                                    {raw.length} rows x {columns.length} columns
+                                </Typography>
+                            </Grid>
+                        )}
                     </Grid>
                 </Grid>
                 <Grid item xs={12}>
@@ -143,7 +166,7 @@ export default function DataTableWidget(props: {
                         <thead>
                             <tr>
                                 {columns.map(c => (
-                                    <th key={c}>{c}</th>
+                                    <th key={c}>{humanify(c)}</th>
                                 ))}
                             </tr>
                         </thead>

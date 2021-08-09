@@ -44,6 +44,10 @@ import { lightEncode } from "../../../jacdac-ts/src/jdom/light"
 import { LedPixelCmd, LedCmd } from "../../../jacdac-ts/src/jdom/constants"
 import { createStyles, makeStyles } from "@material-ui/core"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
+import FileSystemContext from "../../components/FileSystemContext"
+import FileTabs from "../../components/fs/FileTabs"
+import useChange from "../../jacdac/useChange"
+import AppContext from "../../components/AppContext"
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -250,19 +254,22 @@ async function SingleRGBLEDTest(service: JDService) {
 }
 
 async function StatusLEDTest(device: JDDevice) {
-    const l = device.statusLight;
-    while(device.connected) {
-        l.blink(0xff0000,0x000000,250, 3);
-        await delay(1000);
-        l.blink(0x00ff00,0x000000,250, 3);
-        await delay(1000);
-        l.blink(0x0000ff,0x000000,250, 3);
-        await delay(1000);
+    const l = device.statusLight
+    while (device.connected) {
+        l.blink(0xff0000, 0x000000, 250, 3)
+        await delay(1000)
+        l.blink(0x00ff00, 0x000000, 250, 3)
+        await delay(1000)
+        l.blink(0x0000ff, 0x000000, 250, 3)
+        await delay(1000)
     }
 }
 
 export default function Commissioner() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const { setError, enqueueSnackbar } = useContext(AppContext)
+    const { fileSystem } = useContext(FileSystemContext)
+    const workingFile = useChange(fileSystem, _ => _?.workingFile)
     const [filterBrains, setFilterBrains] = useState<boolean>(true)
     const devices = useDevices({
         announced: true,
@@ -283,7 +290,7 @@ export default function Commissioner() {
     const { fileStorage } = useContext(ServiceManagerContext)
 
     const testDevice = async (d: JDDevice) => {
-        StatusLEDTest(d);
+        StatusLEDTest(d)
         for (const srv of d.services()) {
             switch (srv.serviceClass) {
                 case SRV_LED_PIXEL:
@@ -295,6 +302,20 @@ export default function Commissioner() {
             }
         }
     }
+
+    // file handling
+    useEffectAsync(async () => {
+        if (!workingFile) return
+
+        try {
+            const text = await workingFile.textAsync()
+            const newDataSet = JSON.parse(text)
+            console.debug(newDataSet)
+            enqueueSnackbar(`${workingFile.name} loaded...`)
+        } catch (e) {
+            setError(e)
+        }
+    }, [workingFile])
 
     useEffectAsync(async () => {
         const newDataSet = (dataSet?.slice(0) || []).filter(
@@ -378,10 +399,7 @@ export default function Commissioner() {
         [bus, dataSet]
     )
 
-    const handleOnClearClick = () => {
-        setDataSet(undefined)
-    }
-    const handleDownloadCSV = () => {
+    const renderCSV = () => {
         const sep = ","
         const lineEnding = "\r\n"
         let str =
@@ -421,8 +439,28 @@ export default function Commissioner() {
 
             str += descriptor.comment + lineEnding
         })
+        return str
+    }
 
-        const fileTitle = title.length ? `${title}-` : "" 
+    useEffectAsync(async () => {
+        if (!workingFile || !dataSet) return
+
+        // save JSON
+        await workingFile.write(JSON.stringify(dataSet))
+        const csvFile = await workingFile.parentDirectory.fileAsync(
+            workingFile.name.replace(/\.json$/i, ".csv"),
+            { create: true }
+        )
+        await csvFile.write(renderCSV())
+        // generate CSV
+    }, [workingFile, dataSet])
+
+    const handleOnClearClick = () => {
+        setDataSet(undefined)
+    }
+    const handleDownloadCSV = async () => {
+        const str = renderCSV()
+        const fileTitle = title.length ? `${title}-` : ""
         fileStorage.saveText(
             `${fileTitle}commissioning-${dateString()}.csv`,
             str
@@ -446,6 +484,7 @@ export default function Commissioner() {
             setDataSet(newDataSet)
         }
     }
+    const fileFilter = (f: string) => /\.json$/i.test(f)
 
     return (
         <>
@@ -461,6 +500,14 @@ export default function Commissioner() {
             <Grid container spacing={1}>
                 <GridHeader title={"Commissioning data"} />
                 <Grid item xs={12}>
+                    <FileTabs
+                        hideDirectories={true}
+                        fileFilter={fileFilter}
+                        newFileContent={"[]"}
+                        newFileExtension="json"
+                    />
+                </Grid>
+                <Grid item xs={12}>
                     <Grid container spacing={1}>
                         <Grid item>
                             <Button
@@ -474,7 +521,7 @@ export default function Commissioner() {
                         </Grid>
                         <Grid item>
                             <Button
-                                aria-label="Clear data"
+                                aria-label={"Download data"}
                                 variant="contained"
                                 color="secondary"
                                 onClick={handleDownloadCSV}

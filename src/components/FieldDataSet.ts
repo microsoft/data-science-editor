@@ -86,7 +86,7 @@ export default class FielddataSet extends JDEventSource {
         super()
         this.rows = []
         if (fields !== undefined && fields !== null) {
-            this.headers = fields.map(field => field.dataTypeName)
+            this.headers = fields.map(field => field.name)
             this.units = fields.map(field => field.unit)
         }
     }

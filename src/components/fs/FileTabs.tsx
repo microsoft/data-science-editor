@@ -1,158 +1,82 @@
-import {
-    Grid,
-    Chip,
-    Dialog,
-    DialogContent,
-    DialogContentText,
-    TextField,
-    DialogActions,
-    Button,
-} from "@material-ui/core"
-import React, { ChangeEvent, useRef, useState } from "react"
-import useDirectoryFileHandles from "../hooks/useDirectoryFileHandles"
-import OpenInBrowserIcon from "@material-ui/icons/OpenInBrowser"
-import AddIcon from "@material-ui/icons/Add"
-import { useId } from "react-use-id-hook"
+import { Grid } from "@material-ui/core"
+import React, { useContext, useRef } from "react"
 import useKeyboardNavigationProps from "../hooks/useKeyboardNavigationProps"
-
-function FileChip(props: {
-    file: FileSystemHandle
-    selected?: boolean
-    onClick: () => void
-}) {
-    const { file, selected, onClick } = props
-    const { name } = file
-    return (
-        <Chip
-            clickable
-            label={name.replace(/\.json$/i, "")}
-            color={selected ? "primary" : undefined}
-            onClick={onClick}
-        />
-    )
-}
-
-function NewFileDialogButton(props: {
-    createFile: (
-        filename: string,
-        content: string
-    ) => Promise<FileSystemFileHandle>
-    newFileContent: string
-    onFileHandleCreated: (file: FileSystemFileHandle) => void
-}) {
-    const { createFile, newFileContent, onFileHandleCreated } = props
-    const [open, setOpen] = useState(false)
-    const [value, setValue] = useState("")
-    const valueId = useId()
-
-    const handleOpen = () => {
-        setValue("")
-        setOpen(true)
-    }
-    const handleOk = async () => {
-        setOpen(false)
-        const filename = value.toLocaleLowerCase().replace(/\s+/g, "") + ".json"
-        const fileHandle = await createFile(filename, newFileContent)
-        if (fileHandle) onFileHandleCreated(fileHandle)
-    }
-    const handleCancel = () => setOpen(false)
-    const handleValueChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setValue(event.target.value)
-    }
-
-    return (
-        <>
-            <Chip
-                clickable
-                label="new file..."
-                icon={<AddIcon />}
-                onClick={handleOpen}
-            />
-            <Dialog open={open}>
-                <DialogContent>
-                    <DialogContentText>Choose a file name</DialogContentText>
-                    <TextField
-                        id={valueId}
-                        value={value}
-                        label="Value"
-                        fullWidth={true}
-                        onChange={handleValueChange}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button variant="contained" onClick={handleCancel}>
-                        Cancel
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        disabled={!value}
-                        onClick={handleOk}
-                    >
-                        Ok
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </>
-    )
-}
+import FileSystemContext from "../FileSystemContext"
+import useChange from "../../jacdac/useChange"
+import FileSystemChip from "./FileSystemChip"
+import FileNewFileChip from "./FileNewFileChip"
+import FileSystemNodeChip from "./FileSystemNodeChip"
 
 export default function FileTabs(props: {
-    storageKey: string
-    selectedFileHandle: FileSystemFileHandle
-    onFileHandleSelected: (file: FileSystemFileHandle) => void
-    newFileContent: string
-    onFileHandleCreated: (file: FileSystemFileHandle) => void
+    newFileName?: string
+    newFileExtension?: string
+    newFileContent?: string
+    newFileLabel?: string
+    hideDirectories?: boolean
+    hideFiles?: boolean
+    directoryFilter?: (directory: string) => boolean
+    fileFilter?: (file: string) => boolean
 }) {
     const {
-        storageKey,
-        selectedFileHandle,
-        onFileHandleSelected,
+        newFileName,
         newFileContent,
-        onFileHandleCreated,
+        hideDirectories,
+        hideFiles,
+        directoryFilter,
+        fileFilter,
+        newFileLabel,
+        newFileExtension
     } = props
-    const {
-        files,
-        directory,
-        supported,
-        showDirectoryPicker,
-        clearDirectory,
-        createFile,
-    } = useDirectoryFileHandles(storageKey)
-
+    const { fileSystem } = useContext(FileSystemContext)
+    const root = useChange(fileSystem, _ => _?.root)
+    const workingDirectory = useChange(fileSystem, _ => _?.workingDirectory)
+    const workingFile = useChange(fileSystem, _ => _?.workingFile)
+    const directories = useChange(root, _ =>
+        _?.directories?.filter(d => !directoryFilter || directoryFilter(d.name))
+    )
+    const files = useChange(root, _ =>
+        _?.files?.filter(d => !fileFilter || fileFilter(d.name))
+    )
     const gridRef = useRef()
     const keyboardProps = useKeyboardNavigationProps(gridRef.current)
-    const handleOpenDirectory = () => showDirectoryPicker()
-    const handleCloseDirectory = () => clearDirectory()
-    const handleFileHandleSelected = file => () => onFileHandleSelected(file)
+    const handleDirectorySelected = handle => () =>
+        (fileSystem.workingDirectory = handle)
+    const handleFileSelected = handle => () => (fileSystem.workingFile = handle)
 
-    if (!supported) return null
+    if (!fileSystem) return null
+
     return (
         <Grid ref={gridRef} container spacing={1} {...keyboardProps}>
             <Grid item>
-                <Chip
-                    clickable
-                    avatar={<OpenInBrowserIcon />}
-                    label={directory?.name || "open directory"}
-                    onClick={handleOpenDirectory}
-                    onDelete={directory ? handleCloseDirectory : undefined}
-                />
+                <FileSystemChip />
             </Grid>
-            {files?.map(file => (
-                <Grid item key={file.name}>
-                    <FileChip
-                        file={file}
-                        selected={file === selectedFileHandle}
-                        onClick={handleFileHandleSelected(file)}
-                    />
-                </Grid>
-            ))}
-            {directory && (
+            {!hideDirectories &&
+                directories?.map(node => (
+                    <Grid item key={node.name}>
+                        <FileSystemNodeChip
+                            node={node}
+                            selected={node === workingDirectory}
+                            onClick={handleDirectorySelected(node)}
+                        />
+                    </Grid>
+                ))}
+            {!hideFiles &&
+                files?.map(node => (
+                    <Grid item key={node.name}>
+                        <FileSystemNodeChip
+                            node={node}
+                            selected={node === workingFile}
+                            onClick={handleFileSelected(node)}
+                        />
+                    </Grid>
+                ))}
+            {root && newFileContent && (
                 <Grid item>
-                    <NewFileDialogButton
-                        createFile={createFile}
-                        newFileContent={newFileContent}
-                        onFileHandleCreated={onFileHandleCreated}
+                    <FileNewFileChip
+                        name={newFileName}
+                        content={newFileContent}
+                        label={newFileLabel}
+                        extension={newFileExtension}
                     />
                 </Grid>
             )}

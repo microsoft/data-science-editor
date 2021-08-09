@@ -57,6 +57,9 @@ import AddIcon from "@material-ui/icons/Add"
 import useServices from "../../components/hooks/useServices"
 import { delay } from "../../../jacdac-ts/src/jdom/utils"
 import useLocalStorage from "../../components/hooks/useLocalStorage"
+import FileTabs from "../../components/fs/FileTabs"
+import FileSystemContext from "../../components/FileSystemContext"
+import useChange from "../../jacdac/useChange"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -116,6 +119,8 @@ export default function Collector() {
     const { toggleShowDeviceHostsDialog, enqueueSnackbar } =
         useContext(AppContext)
     const classes = useStyles()
+    const { fileSystem } = useContext(FileSystemContext)
+    const root = useChange(fileSystem, _ => _?.root)
     const { fileStorage } = useContext(ServiceManagerContext)
     const [registerIdsChecked, setRegisterIdsChecked] = useState<string[]>([])
     const [aggregatorId, setAggregatorId] = useState<string>("")
@@ -231,6 +236,16 @@ export default function Collector() {
     }
     const stopRecording = () => {
         if (recording) {
+            if (root) {
+                const csv = liveDataSet.toCSV()
+                // write async
+                const now = new Date()
+                const name = `data-${now.getFullYear()}-${
+                    now.getMonth() + 1
+                }-${now.getDate()}-${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}.csv`
+                root.fileAsync(name, { create: true })
+                    .then(f => f.write(csv))
+            }
             setTables([liveDataSet, ...tables])
             setLiveDataSet(newDataSet(registerIdsChecked, true))
             setRecording(false)
@@ -567,6 +582,7 @@ export default function Collector() {
                     gradient={true}
                 />
             )}
+            <FileTabs hideFiles={true} hideDirectories={true} />
             {!!tables.length && (
                 <section id={recordingsId}>
                     <h3>Recordings</h3>

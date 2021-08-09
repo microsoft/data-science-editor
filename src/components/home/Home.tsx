@@ -97,7 +97,7 @@ export default function Home() {
             <SplitGrid
                 right={true}
                 subtitle="Client Software."
-                description="Integrate Jacdac in your web or Node.JS using our Javascript/TypeScript library."
+                description="Integrate Jacdac in the Web or Node.JS using our Javascript/TypeScript library."
                 buttonText="Add Jacdac to your apps"
                 buttonVariant="link"
                 buttonUrl="/software/"

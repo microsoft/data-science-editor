@@ -6,6 +6,7 @@ import useBlockData from "../../useBlockData"
 import type { VisualizationSpec } from "react-vega"
 import VegaLiteWidget from "./VegaLiteWidget"
 import { tidyResolveHeader } from "../tidy"
+import { BAR_CORNER_RADIUS } from "../../toolbox"
 
 function HistogramWidget() {
     const { sourceBlock } = useContext(WorkspaceContext)
@@ -15,8 +16,7 @@ function HistogramWidget() {
     if (!index) return null
 
     const spec: VisualizationSpec = {
-        description: `Histogram of ${index}`,
-        mark: { type: "bar", tooltip: false },
+        mark: { type: "bar", cornerRadius: BAR_CORNER_RADIUS, tooltip: true },
         encoding: {
             x: { bin: true, field: index },
             y: { aggregate: "count" },
