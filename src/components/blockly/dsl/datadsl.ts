@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import {
     Block,
-    BlockSvg,
     Events,
     FieldVariable,
     Variables,
@@ -83,6 +82,7 @@ const DATA_CORRELATION_BLOCK = "data_correlation"
 const DATA_LINEAR_REGRESSION_BLOCK = "data_linear_regression"
 const DATA_LOAD_FILE_BLOCK = "data_load_file"
 const DATA_SAVE_FILE_BLOCK = "data_save_file"
+const DATA_COMMENT_BLOCK = "data_comment_block"
 
 const [datasetColour, operatorsColour, computeColour, statisticsColour] =
     palette()
@@ -812,6 +812,33 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 return data
             },
         },
+        {
+            kind: "block",
+            type: DATA_COMMENT_BLOCK,
+            message0: "comment %1 %2 %3",
+            args0: [
+                {
+                    type: DataPreviewField.KEY,
+                    name: "preview",
+                },
+                <DummyInputDefinition>{
+                    type: "input_dummy",
+                },
+                {
+                    type: "field_multilinetext",
+                    name: "text",
+                    text: "And then...",
+                    spellcheck: true,
+                },
+            ],
+            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            colour: operatorsColour,
+            template: "meta",
+            inputsInline: false,
+            dataPreviewField: false,
+            transformData: identityTransformData,
+        },
     ],
     createCategory: () => [
         <SeparatorDefinition>{
@@ -859,6 +886,10 @@ const dataDsl: BlockDomainSpecificLanguage = {
             name: "Organize",
             colour: operatorsColour,
             contents: [
+                <BlockReference>{
+                    kind: "block",
+                    type: DATA_COMMENT_BLOCK,
+                },
                 <BlockReference>{
                     kind: "block",
                     type: DATA_ARRANGE_BLOCK,

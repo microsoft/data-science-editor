@@ -4704,10 +4704,10 @@ concat-with-sourcemaps@^1.1.0:
   dependencies:
     source-map "^0.6.1"
 
-concurrently@^6.2.0:
-  version "6.2.0"
-  resolved "https://registry.yarnpkg.com/concurrently/-/concurrently-6.2.0.tgz#587e2cb8afca7234172d8ea55176088632c4c56d"
-  integrity sha512-v9I4Y3wFoXCSY2L73yYgwA9ESrQMpRn80jMcqMgHx720Hecz2GZAvTI6bREVST6lkddNypDKRN22qhK0X8Y00g==
+concurrently@^6.2.1:
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/concurrently/-/concurrently-6.2.1.tgz#d880fc1d77559084732fa514092a3d5109a0d5bf"
+  integrity sha512-emgwhH+ezkuYKSHZQ+AkgEpoUZZlbpPVYCVv7YZx0r+T7fny1H03r2nYRebpi2DudHR4n1Rgbo2YTxKOxVJ4+g==
   dependencies:
     chalk "^4.1.0"
     date-fns "^2.16.1"
@@ -8086,10 +8086,10 @@ gatsby-worker@^0.2.0:
   dependencies:
     "@babel/core" "^7.14.6"
 
-gatsby@^3.11.0:
-  version "3.11.0"
-  resolved "https://registry.yarnpkg.com/gatsby/-/gatsby-3.11.0.tgz#302c43468aca56460ff64d6e8304451e053de341"
-  integrity sha512-bESvnN7BJFshzHUnMx2qUSWTe6uBUHjuj1hn+V9mi19wxR7GH1ZCERGtzBi3lezwRtotYb/jed933mJ8Emg2UA==
+gatsby@^3.11.1:
+  version "3.11.1"
+  resolved "https://registry.yarnpkg.com/gatsby/-/gatsby-3.11.1.tgz#888973ee1f97b63d8cb549921b4c2624b152f36b"
+  integrity sha512-KDMdMBrqPiS50CNjlhOdEZLz2PWewgDNbjnfSTYCxxFifTdi09wbNynnbAQ879nbhRTd0tGsNv6YGRsVEIbSQA==
   dependencies:
     "@babel/code-frame" "^7.14.0"
     "@babel/core" "^7.14.6"
