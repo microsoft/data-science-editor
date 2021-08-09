@@ -417,30 +417,30 @@ export default function AzureDeviceTemplateDesigner() {
                 <Grid item xs={12}>
                     <AddServiceIconButton onAdd={handleAddService} />
                 </Grid>
+                <GridHeader title="DTDL" />
                 {apiError && (
                     <Grid item xs={12}>
                         <Alert severity="error">{apiError}</Alert>
                     </Grid>
                 )}
                 <Grid item xs={12}>
+                    <Button
+                        variant="outlined"
+                        size="small"
+                        disabled={apiWorking || !domain || !apiToken}
+                        onClick={handleUploadModel}
+                        title="Import the device template into your Azure IoT Central application (requires domain and API token)."
+                    >
+                        Upload template into your Azure IoT Central application
+                    </Button>
+                </Grid>
+                <Grid item xs={12}>
                     <PaperBox>
                         <Snippet
                             caption={"template"}
                             value={dtdlSource}
                             mode="json"
-                            actions={
-                                <Button
-                                    variant="outlined"
-                                    size="small"
-                                    disabled={
-                                        apiWorking || !domain || !apiToken
-                                    }
-                                    onClick={handleUploadModel}
-                                    title="Import the device template into your Azure IoT Central application (requires domain and API token)."
-                                >
-                                    Import template
-                                </Button>
-                            }
+                            download="model"
                         />
                     </PaperBox>
                 </Grid>
@@ -460,7 +460,11 @@ export default function AzureDeviceTemplateDesigner() {
                                         <Button
                                             variant="outlined"
                                             size="small"
-                                            disabled={!domain || !apiToken}
+                                            disabled={
+                                                apiWorking ||
+                                                !domain ||
+                                                !apiToken
+                                            }
                                             onClick={handleUploadTemplate(c)}
                                             title="Import the service template into your Azure IoT Central application (requires domain and API token)."
                                         >
