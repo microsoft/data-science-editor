@@ -12,7 +12,8 @@ import { tidyResolveHeader, tidySlice } from "./../tidy"
 import { JSONTryParse } from "../../../../../jacdac-ts/src/jdom/utils"
 import { humanify } from "../../../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import CopyButton from "../../../ui/CopyButton"
-
+import FullscreenIcon from "@material-ui/icons/Fullscreen"
+import IconButtonWithTooltip from "../../../ui/IconButtonWithTooltip"
 const VegaLite = lazy(() => import("./VegaLite"))
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -108,8 +109,25 @@ export default function VegaLiteWidget(props: {
         vegaData.values.length < CHART_SVG_MAX_ITEMS ? "svg" : "canvas"
     const handleCopy = async () => {
         const view = viewRef.current
-        const canvas = await view.toCanvas(2)
+        const canvas = await view?.toCanvas(2)
         return canvas
+    }
+    const handleFullScreen = async () => {
+        const view = viewRef.current
+        const container = view?.container()
+        if (!container) return
+        const svg = container.firstElementChild as HTMLElement
+        if (svg.getAttribute("width")) {
+            container.style.width = svg.getAttribute("width") + "px"
+            container.style.height = svg.getAttribute("height") + "px"
+            svg.style.width = "100%"
+            svg.style.height = "100%"
+            svg.removeAttribute("width")
+            svg.removeAttribute("height")
+        }
+        await container?.requestFullscreen({
+            navigationUI: "hide",
+        })
     }
 
     return (
@@ -131,6 +149,15 @@ export default function VegaLiteWidget(props: {
                                         className={classes.button}
                                         onCopy={handleCopy}
                                     />
+                                </Grid>
+                                <Grid item>
+                                    <IconButtonWithTooltip
+                                        title="show full screen"
+                                        className={classes.button}
+                                        onClick={handleFullScreen}
+                                    >
+                                        <FullscreenIcon />
+                                    </IconButtonWithTooltip>
                                 </Grid>
                             </Grid>
                         </Grid>
