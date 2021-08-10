@@ -55,6 +55,7 @@ export interface ColorInputDefinition extends InputDefinition {
 
 export interface DataColumnInputDefinition extends InputDefinition {
     dataType?: "string" | "number" | "boolean"
+    parentData?: boolean
 }
 
 export interface DataPreviewInputDefinition extends InputDefinition {

@@ -1,4 +1,4 @@
-import { BlockWithServices } from "../WorkspaceContext"
+import { resolveBlockServices } from "../WorkspaceContext"
 import { ReactFieldJSON } from "./ReactField"
 import { tidyHeaders } from "./tidy"
 import { FieldDropdown } from "blockly"
@@ -6,12 +6,14 @@ import { humanify } from "../../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 
 export interface DataColumnChooseOptions extends ReactFieldJSON {
     dataType?: "number" | "string"
+    parentData?: boolean
 }
 
 export default class DataColumnChooserField extends FieldDropdown {
     static KEY = "jacdac_field_data_column_chooser"
     SERIALIZABLE = true
     dataType: string
+    parentData: boolean
 
     static fromJson(options: ReactFieldJSON) {
         return new DataColumnChooserField(options)
@@ -22,6 +24,7 @@ export default class DataColumnChooserField extends FieldDropdown {
     constructor(options?: DataColumnChooseOptions) {
         super(() => [["", ""]], undefined, options)
         this.dataType = options?.dataType
+        this.parentData = options?.parentData
     }
 
     fromXml(fieldElement: Element) {
@@ -29,9 +32,12 @@ export default class DataColumnChooserField extends FieldDropdown {
     }
 
     getOptions(): string[][] {
-        const sourceBlock = this.getSourceBlock() as BlockWithServices
-        const services = sourceBlock?.jacdacServices
+        const sourceBlock = this.getSourceBlock()
+        const services = resolveBlockServices(
+            this.parentData ? sourceBlock?.getSurroundParent() : sourceBlock
+        )
         const data = services?.data
+        console.log(`source block`, { sourceBlock, services, data })
         const { headers, types } = tidyHeaders(data)
         const options =
             headers
