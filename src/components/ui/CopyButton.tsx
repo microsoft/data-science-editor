@@ -7,10 +7,28 @@ import { Button } from "@material-ui/core"
 import useMounted from "../hooks/useMounted"
 import { delay } from "../../../jacdac-ts/src/jdom/utils"
 
+declare class ClipboardItem {
+    constructor(input: { [contentType: string]: Blob })
+}
+
+declare type AsyncClipboardWriteFunction = (
+    input: ClipboardItem
+) => Promise<void>
+
+declare global {
+    interface Window {
+        ClipboardItem: ClipboardItem | undefined
+    }
+
+    interface Clipboard {
+        write?: AsyncClipboardWriteFunction
+    }
+}
+
 export default function CopyButton(props: {
     label?: string
     title?: string
-    onCopy: () => Promise<string>
+    onCopy: () => Promise<string | HTMLCanvasElement>
     className?: string
     size?: "small"
 }) {
@@ -23,8 +41,18 @@ export default function CopyButton(props: {
 
         try {
             setCopied(null)
-            const text = await onCopy()
-            await navigator.clipboard.writeText(text)
+            const copied = await onCopy()
+            if (typeof copied === "string") {
+                const text = copied as string
+                await navigator.clipboard.writeText(text)
+            } else {
+                const canvas = copied as HTMLCanvasElement
+                const blob = await new Promise<Blob>(resolve =>
+                    canvas.toBlob(blob => resolve(blob))
+                )
+                const item = new ClipboardItem({ "image/png": blob })
+                navigator.clipboard.write([item])
+            }
             if (mounted()) setCopied(true)
         } catch (e) {
             console.debug(e)

@@ -3,7 +3,7 @@ import WorkspaceContext from "../../WorkspaceContext"
 import useBlockData from "../../useBlockData"
 import { PointerBoundary } from "../PointerBoundary"
 import Suspense from "../../../ui/Suspense"
-import { NoSsr } from "@material-ui/core"
+import { Grid, makeStyles, NoSsr } from "@material-ui/core"
 import { CHART_HEIGHT, CHART_SVG_MAX_ITEMS, CHART_WIDTH } from "../../toolbox"
 import type { View, VisualizationSpec } from "react-vega"
 import type { DataSliceOptions } from "../../../../workers/data/dist/node_modules/data.worker"
@@ -11,6 +11,7 @@ import useEffectAsync from "../../../useEffectAsync"
 import { tidyResolveHeader, tidySlice } from "./../tidy"
 import { JSONTryParse } from "../../../../../jacdac-ts/src/jdom/utils"
 import { humanify } from "../../../../../jacdac-ts/jacdac-spec/spectool/jdspec"
+import CopyButton from "../../../ui/CopyButton"
 
 const VegaLite = lazy(() => import("./VegaLite"))
 
@@ -31,12 +32,12 @@ function jsonMergeFrom(trg: object, src: object) {
     })
 }
 
-const ACTIONS = {
-    export: { png: true, svg: true },
-    source: false,
-    compiled: false,
-    editor: false,
-}
+const useStyles = makeStyles(() => ({
+    button: {
+        color: "grey",
+    },
+}))
+
 export default function VegaLiteWidget(props: {
     spec: VisualizationSpec
     slice?: DataSliceOptions
@@ -44,6 +45,7 @@ export default function VegaLiteWidget(props: {
     const { spec, slice } = props
     const { sourceBlock } = useContext(WorkspaceContext)
     const { data } = useBlockData(sourceBlock)
+    const classes = useStyles()
     // eslint-disable-next-line @typescript-eslint/ban-types
     const [vegaData, setVegaData] = useState<{ values: object[] }>(undefined)
     const viewRef = useRef<View>()
@@ -104,24 +106,51 @@ export default function VegaLiteWidget(props: {
 
     const renderer =
         vegaData.values.length < CHART_SVG_MAX_ITEMS ? "svg" : "canvas"
+    const handleCopy = async () => {
+        const view = viewRef.current
+        const canvas = await view.toCanvas(2)
+        return canvas
+    }
+
     return (
         <NoSsr>
-            <div style={{ background: "#fff", borderRadius: "0.25rem" }}>
-                <PointerBoundary>
-                    <Suspense>
-                        <VegaLite
-                            actions={ACTIONS}
-                            width={CHART_WIDTH}
-                            height={CHART_HEIGHT}
-                            spec={fullSpec}
-                            data={vegaData}
-                            renderer={renderer}
-                            tooltip={true}
-                            onNewView={handleNewView}
-                        />
-                    </Suspense>
-                </PointerBoundary>
-            </div>
+            <PointerBoundary>
+                <div style={{ background: "#fff", borderRadius: "0.25rem" }}>
+                    <Grid container direction="column" spacing={1}>
+                        <Grid item xs={12}>
+                            <Grid
+                                container
+                                direction="row"
+                                justifyContent="flex-start"
+                                alignItems="center"
+                                spacing={1}
+                            >
+                                <Grid item>
+                                    <CopyButton
+                                        size="small"
+                                        className={classes.button}
+                                        onCopy={handleCopy}
+                                    />
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Suspense>
+                                <VegaLite
+                                    actions={false}
+                                    width={CHART_WIDTH}
+                                    height={CHART_HEIGHT}
+                                    spec={fullSpec}
+                                    data={vegaData}
+                                    renderer={renderer}
+                                    tooltip={true}
+                                    onNewView={handleNewView}
+                                />
+                            </Suspense>
+                        </Grid>
+                    </Grid>
+                </div>
+            </PointerBoundary>
         </NoSsr>
     )
 }
