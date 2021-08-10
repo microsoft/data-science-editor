@@ -1,13 +1,12 @@
-import React, { ReactNode } from "react"
+import React, { lazy, ReactNode } from "react"
 import ReactField, { ReactFieldJSON } from "./ReactField"
-import DataTableWidget from "./DataTableWidget"
 import {
     BlockDefinition,
     DataPreviewInputDefinition,
     identityTransformData,
-    TABLE_PREVIEW_MAX_ITEMS,
 } from "../toolbox"
-import { Grid } from "@material-ui/core"
+import Suspense from "../../ui/Suspense"
+const DataTablePreviewWidget = lazy(() => import("./DataTablePreviewWidget"))
 
 export interface DataPreviewOptions extends ReactFieldJSON {
     compare?: boolean
@@ -40,36 +39,10 @@ export default class DataPreviewField extends ReactField<ReactFieldJSON> {
     }
 
     renderField(): ReactNode {
-        if (!this.compare)
-            return (
-                <DataTableWidget
-                    tableHeight={295}
-                    empty={"no data"}
-                    transformed={false}
-                    maxItems={TABLE_PREVIEW_MAX_ITEMS}
-                />
-            )
         return (
-            <Grid container spacing={1} style={{ background: "#fff" }}>
-                <Grid item xs={6}>
-                    <DataTableWidget
-                        label="before"
-                        tableHeight={295}
-                        empty={"no data"}
-                        transformed={false}
-                        maxItems={TABLE_PREVIEW_MAX_ITEMS}
-                    />
-                </Grid>
-                <Grid item xs={6}>
-                    <DataTableWidget
-                        label="after"
-                        tableHeight={295}
-                        empty={"no data"}
-                        transformed={true}
-                        maxItems={TABLE_PREVIEW_MAX_ITEMS}
-                    />
-                </Grid>
-            </Grid>
+            <Suspense>
+                <DataTablePreviewWidget compare={this.compare} />
+            </Suspense>
         )
     }
 }
