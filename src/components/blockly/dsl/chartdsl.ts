@@ -163,6 +163,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
                 {
                     type: DataTableField.KEY,
                     name: "table",
+                    selectColumns: true,
                 },
             ],
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
