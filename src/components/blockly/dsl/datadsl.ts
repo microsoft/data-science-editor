@@ -354,7 +354,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 const lhs = tidyResolveFieldColumn(data, b, "lhs", "number")
                 const rhs = tidyResolveFieldColumn(data, b, "rhs", "number")
                 const logic = b.getFieldValue("logic")
-                if (newcolumn || !lhs || !rhs) return Promise.resolve(data)
+                if (!newcolumn || !lhs || !rhs) return Promise.resolve(data)
                 return postTransformData(<DataMutateColumnsRequest>{
                     type: "mutate_columns",
                     newcolumn,
@@ -412,7 +412,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 const lhs = tidyResolveFieldColumn(data, b, "lhs", "number")
                 const rhs = b.getFieldValue("rhs")
                 const logic = b.getFieldValue("logic")
-                if (newcolumn || !lhs) return Promise.resolve(data)
+                if (!newcolumn || !lhs) return Promise.resolve(data)
                 return postTransformData(<DataMutateNumberRequest>{
                     type: "mutate_number",
                     newcolumn,
