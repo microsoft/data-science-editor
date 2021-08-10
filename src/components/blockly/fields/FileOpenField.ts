@@ -103,7 +103,7 @@ export default class FileOpenField extends FieldDropdown {
         const wsServices = resolveWorkspaceServices(sourceBlock?.workspace)
         if (wsServices) {
             const { workingDirectory } = wsServices
-            this._unmount = workingDirectory.subscribe(CHANGE, () =>
+            this._unmount = workingDirectory?.subscribe(CHANGE, () =>
                 this.updateData()
             )
         }
