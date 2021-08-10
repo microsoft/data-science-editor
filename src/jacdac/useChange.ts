@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react"
 import { CHANGE } from "../../jacdac-ts/src/jdom/constants"
 import { IEventSource } from "../../jacdac-ts/src/jdom/eventsource"
+import { assert } from "../../jacdac-ts/src/jdom/utils"
 import useEffectAsync from "../components/useEffectAsync"
 
 export default function useChange<TNode extends IEventSource, TValue>(
@@ -8,6 +9,8 @@ export default function useChange<TNode extends IEventSource, TValue>(
     query?: (n: TNode) => TValue,
     deps?: React.DependencyList
 ): TValue {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    assert(node as any !== false)
     const [version, setVersion] = useState(node?.changeId || 0)
     const value = useMemo(
         () => (query ? query(node) : undefined),

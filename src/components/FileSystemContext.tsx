@@ -19,7 +19,7 @@ export default FileSystemContext
 export function FileSystemProvider(props: { children: ReactNode }) {
     const { children } = props
     const fileSystem = useMemo(
-        () => fileSystemHandleSupported() && new FileSystem(),
+        () => fileSystemHandleSupported() ? new FileSystem() : undefined,
         []
     )
     const supported = !!fileSystem

@@ -48,7 +48,7 @@ export default class BuiltinDataSetField
         services.cache[BuiltinDataSetField.KEY] = url
 
         const { data, errors } = await downloadCSV(url)
-        if (errors)
+        if (errors?.length)
             console.debug(`csv parse errors`, {
                 id: sourceBlock.id,
                 marker,

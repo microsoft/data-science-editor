@@ -12,6 +12,7 @@ import { withPrefix } from "gatsby"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import BlockContext from "./BlockContext"
 import { useBlockMinimap } from "./BlockMinimap"
+import BrowserCompatibilityAlert from "../ui/BrowserCompatibilityAlert"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -115,6 +116,14 @@ export default function BlockEditor(props: {
 
     return (
         <div>
+            <BrowserCompatibilityAlert
+                filter={{
+                    chrome: "> 90",
+                    edge: "> 90",
+                    firefox: "> 90"
+                }}
+                label="Please use Microsoft Edge 90+ or Google Chrome 90+ for this page."
+            />
             <div className={clsx(classes.editor, className)} ref={blocklyRef} />
             <BlocklyModalDialogs />
         </div>
