@@ -39,9 +39,15 @@ export function FlashDeviceButton(props: {
             setProgress(0)
             device.flashing = true // don't refresh registers while flashing
             const updateCandidates = [firmwareInfo]
-            await flashFirmwareBlob(bus, blob, updateCandidates, ignoreFirmwareCheck, prog => {
-                if (mounted()) setProgress(prog)
-            })
+            await flashFirmwareBlob(
+                bus,
+                blob,
+                updateCandidates,
+                ignoreFirmwareCheck,
+                prog => {
+                    if (mounted()) setProgress(prog)
+                }
+            )
             // trigger info
             device.firmwareInfo = undefined
         } catch (e) {
@@ -54,18 +60,19 @@ export function FlashDeviceButton(props: {
     // tslint:disable-next-line: react-this-binding-issue
     return missing ? null : flashing ? (
         <CircularProgressWithLabel value={progress} />
-    ) : update ? (
-        <Button
-            aria-label="flash firmware to device"
-            disabled={disabled}
-            variant="contained"
-            color={"primary"}
-            onClick={handleFlashing}
-        >
-            Flash
-        </Button>
-    ) : firmwareInfo ? (
-        <Alert severity="success">Up to date!</Alert>
+    ) : firmwareInfo || update ? (
+        <>
+            {firmwareInfo && <Alert severity="success">Up to date!</Alert>}
+            <Button
+                aria-label="flash firmware to device"
+                disabled={disabled}
+                variant="contained"
+                color={"primary"}
+                onClick={handleFlashing}
+            >
+                Flash
+            </Button>
+        </>
     ) : (
         <Alert severity="info">No firmware available</Alert>
     )

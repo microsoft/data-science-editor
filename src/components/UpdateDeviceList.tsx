@@ -48,7 +48,13 @@ export default function UpdateDeviceList() {
             firmwareIdentifier: true,
         },
         [safeBoot]
-    ).filter(dev => safeBoot || !dev.hasService(SRV_BOOTLOADER))
+    )
+        .filter(dev => safeBoot || !dev.hasService(SRV_BOOTLOADER))
+        .sort(
+            (l, r) =>
+                (l.firmwareInfo?.firmwareIdentifier || 0) -
+                (r.firmwareInfo?.firmwareIdentifier || 0)
+        )
     const isFlashing = useChange(bus, () => devices.some(dev => dev.flashing))
     const blobs = useFirmwareBlobs()
     async function scan() {
