@@ -4,6 +4,7 @@ import type {
     DataSliceRequest,
 } from "../../../workers/data/dist/node_modules/data.worker"
 import postTransformData from "../dsl/workers/data.proxy"
+import { setBlockDataWarning } from "../WorkspaceContext"
 
 /* eslint-disable @typescript-eslint/ban-types */
 export function tidyHeaders(
@@ -37,10 +38,19 @@ export function tidyResolveFieldColumn(
     data: object[],
     b: Block,
     fieldName: string,
-    type?: "string" | "number" | "boolean"
+    options?: {
+        type?: "string" | "number" | "boolean"
+        required?: boolean
+    }
 ) {
     const name = b.getFieldValue(fieldName)
-    return tidyResolveHeader(data, name, type)
+    const { type, required } = options || {}
+    const column = tidyResolveHeader(data, name, type)
+    if (!column) {
+        if (required && !name) setBlockDataWarning(b, `missing columns`)
+        else if (name) setBlockDataWarning(b, `${name} not found in dataset`)
+    }
+    return column
 }
 
 export function tidyResolveFieldColumns(

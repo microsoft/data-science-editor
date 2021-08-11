@@ -37,7 +37,6 @@ export default class DataColumnChooserField extends FieldDropdown {
             this.parentData ? sourceBlock?.getSurroundParent() : sourceBlock
         )
         const data = services?.data
-        console.log(`source block`, { sourceBlock, services, data })
         const { headers, types } = tidyHeaders(data)
         const options =
             headers

@@ -41,6 +41,7 @@ import {
 import useEffectAsync from "../useEffectAsync"
 import useChange from "../../jacdac/useChange"
 import FileSystemContext from "../FileSystemContext"
+import { resolveBlockWarnings } from "./WorkspaceContext"
 
 export interface BlockProps {
     editorId: string
@@ -267,7 +268,9 @@ export function BlockProvider(props: {
         )
         workspace
             .getAllBlocks(false)
-            .forEach(b => b.setWarningText(allErrors[b.id] || null))
+            .forEach(b =>
+                b.setWarningText(allErrors[b.id] || resolveBlockWarnings(b))
+            )
     }, [workspace, warnings])
 
     // register block creation

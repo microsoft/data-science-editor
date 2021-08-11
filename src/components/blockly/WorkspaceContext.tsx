@@ -89,10 +89,11 @@ export interface FieldWithServices {
     notifyServicesChanged?: () => void
 }
 
+export const DATA_WARNING_KEY = "data"
 export class BlockServices extends JDEventSource {
     private _data: object[]
     private _transformedData: object[]
-    private _chartProps: object
+    private _warnings: Record<string, string>
 
     get data() {
         return this._data
@@ -115,20 +116,32 @@ export class BlockServices extends JDEventSource {
         }
     }
 
+    setDataWarning(value: string) {
+        this.setWarning(DATA_WARNING_KEY, value)
+    }
+
+    get warnings() {
+        return this._warnings
+    }
+
+    setWarning(key: string, value: string) {
+        if (!value) {
+            if (this._warnings) {
+                delete this._warnings[key]
+                if (!Object.keys(this._warnings).length)
+                    this._warnings = undefined
+            }
+        } else {
+            if (!this._warnings) this._warnings = {}
+            this._warnings[key] = value
+        }
+    }
+
     clearData() {
         this._data = undefined
         this._transformedData = undefined
+        this.setWarning(DATA_WARNING_KEY, undefined)
         this.emit(CHANGE)
-    }
-
-    get chartProps() {
-        return this._chartProps
-    }
-    set chartProps(value: object) {
-        if (this._chartProps !== value) {
-            this._chartProps = value
-            this.emit(CHANGE)
-        }
     }
 
     readonly cache = {}
@@ -143,6 +156,24 @@ export function resolveBlockServices(block: Block) {
     const blockWithServices = block as BlockWithServices
     const services = blockWithServices?.jacdacServices
     return services
+}
+
+export function setBlockWarning(block: Block, key: string, value: string) {
+    const services = resolveBlockServices(block)
+    services?.setWarning(key, value)
+}
+
+export function setBlockDataWarning(block: Block, value: string) {
+    setBlockWarning(block, DATA_WARNING_KEY, value)
+}
+
+export function resolveBlockWarnings(block: Block) {
+    const services = resolveBlockServices(block)
+    if (services) {
+        const { warnings } = services
+        if (warnings) return Object.values(warnings).join("\n")
+    }
+    return null
 }
 
 export interface WorkspaceContextProps {

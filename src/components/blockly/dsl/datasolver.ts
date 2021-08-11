@@ -12,8 +12,11 @@ export function registerDataSolver(block: BlockWithServices) {
         if (!block.isEnabled() || block.isInFlyout) return
 
         // transfer data to the next block
-        const nextServices = resolveBlockServices(block.nextConnection?.targetBlock())
+        const nextServices = resolveBlockServices(
+            block.nextConnection?.targetBlock()
+        )
         try {
+            services.setDataWarning(undefined)
             // eslint-disable-next-line @typescript-eslint/ban-types
             let newData: object[]
             if (transformData === identityTransformData) newData = services.data
