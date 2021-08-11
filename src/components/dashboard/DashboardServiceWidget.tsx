@@ -267,9 +267,13 @@ function ValueWidget(
 ) {
     const { valueRegister, intensityRegister, ...others } = props
     const { visible } = others
-    const intensity = useRegisterBoolValue(intensityRegister, others)
-    const hasIntensity = intensity !== undefined
-    const off = hasIntensity ? !intensity : undefined
+    const hasIntensityBool =
+        intensityRegister?.specification?.fields[0]?.type === "bool"
+    const intensity = useRegisterBoolValue(
+        hasIntensityBool && intensityRegister,
+        others
+    )
+    const off = hasIntensityBool ? !intensity : undefined
     const toggleOff = async () => {
         await intensityRegister.sendSetBoolAsync(off, true)
     }
@@ -282,7 +286,7 @@ function ValueWidget(
             showRegisterName={false}
             hideMissingValues={true}
             off={off}
-            toggleOff={hasIntensity ? toggleOff : undefined}
+            toggleOff={hasIntensityBool ? toggleOff : undefined}
             visible={visible}
         />
     )
@@ -293,11 +297,14 @@ function IntensityWidget(
 ) {
     const { intensityRegister, ...others } = props
     const { visible } = others
+
+    const hasIntensityBool =
+        intensityRegister?.specification?.fields[0]?.type === "bool"
     const [intensity] = useRegisterUnpackedValue<[number | boolean]>(
         intensityRegister,
         others
     )
-    const off = intensity !== undefined && !intensity
+    const off = hasIntensityBool ? !intensity : undefined
 
     return (
         <RegisterInput

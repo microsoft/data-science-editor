@@ -29,7 +29,7 @@ export function createToneContext(): ToneContext {
     if (_globalCtx) return _globalCtx
 
     try {
-        console.log(`create tone context`)
+        console.debug(`create tone context`)
         const ctx = new (window.AudioContext ||
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (window as any).webkitAudioContext)()
@@ -78,7 +78,7 @@ export function createToneContext(): ToneContext {
             }
         }
 
-        console.log(`tone context created`)
+        console.debug(`tone context created`)
 
         return (_globalCtx = {
             setVolume,
