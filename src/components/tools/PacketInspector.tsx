@@ -6,7 +6,7 @@ import HistoryIcon from "@material-ui/icons/History"
 import KindChip from "../KindChip"
 import { Typography } from "@material-ui/core"
 import PacketSpecification from "../PacketSpecification"
-import { printPacket } from "../../../jacdac-ts/src/jdom/pretty"
+import { prettyDuration, printPacket } from "../../../jacdac-ts/src/jdom/pretty"
 import PacketHeaderLayout from "../PacketHeaderLayout"
 import {
     META_ACK,
@@ -44,8 +44,8 @@ export default function PacketInspector() {
                 } ${packet.friendlyDeviceName}/${packet.friendlyServiceName}`}
             </h2>
             <div>
-                {packet.timestamp}ms, <KindChip kind={info?.kind} />, size{" "}
-                {packet.size}
+                {prettyDuration(packet.timestamp)},{" "}
+                <KindChip kind={info?.kind} />, size {packet.size}
             </div>
             <Typography variant="body2">{printPacket(packet)}</Typography>
             {packet.sender && (
