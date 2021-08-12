@@ -23,13 +23,14 @@ export default function ApiKeyAccordion(props: {
     apiName: string
     title?: string
     validateKey?: (key: string) => Promise<{ status: number }>
+    defaultExpanded?: boolean
     children: ReactNode
 }) {
-    const { apiName, validateKey, title, children } = props
+    const { apiName, validateKey, title, children, defaultExpanded } = props
     const { value: apiKey, setValue: setApiKey } = useSecret(apiName)
     const apiKeyId = useId()
     const [key, setKey] = useState("")
-    const [expanded, setExpanded] = useState(!apiKey)
+    const [expanded, setExpanded] = useState(!apiKey || defaultExpanded)
     const [validated, setValidated] = useState(false)
     const { enqueueSnackbar } = useContext(AppContext)
 

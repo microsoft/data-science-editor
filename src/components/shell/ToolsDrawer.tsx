@@ -151,8 +151,8 @@ export default function ToolsDrawer() {
             // separator
         },
         {
-            text: "Azure Device Template",
-            url: "/tools/azure-device-template-designer",
+            text: "Azure Device Templates",
+            url: "/tools/azure-devices",
             icon: <CloudIcon />,
         },
         /*
