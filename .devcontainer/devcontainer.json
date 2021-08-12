@@ -5,28 +5,24 @@
 	"build": {
 		"dockerfile": "Dockerfile",
 		// Update 'VARIANT' to pick a Node version: 10, 12, 14
-		"args": { "VARIANT": "12" }
+		"args": {
+			"VARIANT": "12"
+		}
 	},
-
 	// Set *default* container specific settings.json values on container create.
-	"settings": { 
-		"terminal.integrated.shell.linux": "/bin/bash"
-	},
-
+	"settings": {},
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
-        "dbaeumer.vscode-eslint",
-        "eamodio.gitlens",
-        "graphql.vscode-graphql",
-        "silvenon.mdx"
+		"dbaeumer.vscode-eslint",
+		"esbenp.prettier-vscode"
 	],
-	
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": [8080, 8000],
-
+	"forwardPorts": [
+		8080,
+		8000
+	],
 	// Specifies a command that should be run after the container has been created.
 	"postCreateCommand": "yarn install --frozen-lockfile",
-
 	// Comment out the next line to run as root instead.
 	"remoteUser": "node"
 }
