@@ -14,6 +14,8 @@ The rest of this page is for developers of the jacdac-ts library.
 
 ## Developer setup
 
+* Open this repository online at https://github.dev/microsoft/jacdac-docs
+
 All command line instructions assume a bash-like terminal.
 
 On Windows, you may need to run these commands within Git Bash or Windows Subsystem for Linux (WSL), unless you have bash-like tools available locally. Previous installs have worked on WSL2 with Ubuntu-20.04.
@@ -22,7 +24,7 @@ On Windows, you may need to run these commands within Git Bash or Windows Subsys
 
 Edit this project directly from your browser using GitHub Codespaces. If you have access to them,
 
-* open project in a new codespace
+* open project in a new codespace (https://github.dev/microsoft/jacdac-docs)
 * launch the docs server
 
 ```
