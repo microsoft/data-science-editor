@@ -101,7 +101,7 @@ export default function PacketHeaderLayout(props: {
             offset: 13,
             size: 1,
             format: NumberFormat.UInt8LE,
-            name: "service_number",
+            name: "service_index",
             know: {
                 [JD_SERVICE_INDEX_PIPE.toString(16)]: "pipe",
                 [JD_SERVICE_INDEX_CRC_ACK.toString(16)]: "crc ack",
