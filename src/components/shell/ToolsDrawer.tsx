@@ -17,6 +17,7 @@ import {
 } from "../layout"
 import AppContext from "../AppContext"
 import { OpenInNew } from "@material-ui/icons"
+import { useUnitConverters } from "../ui/useUnitConverter"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import ChevronRightIcon from "@material-ui/icons/ChevronRight"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
@@ -40,6 +41,7 @@ import {
     VIRTUAL_DEVICE_NODE_NAME,
 } from "../../../jacdac-ts/src/jdom/constants"
 import { UIFlags } from "../../jacdac/providerbus"
+import { resolveUnit } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -108,7 +110,19 @@ export default function ToolsDrawer() {
     const classes = useStyles()
     const { toolsMenu, setToolsMenu, toggleShowDeviceHostsDialog } =
         useContext(AppContext)
+    const { enqueueSnackbar } = useContext(AppContext)
     const { toggleDarkMode, darkMode } = useContext(DarkModeContext)
+    const { converters, setConverter } = useUnitConverters()
+    const handleUnitClick =
+        (unit: string, name: string, names: string[]) => () => {
+            const index = (names.indexOf(name) + 1) % names.length
+            const newName = names[index]
+            setConverter(unit, newName)
+            enqueueSnackbar(
+                `Using ${newName} for ${resolveUnit(unit).name}`,
+                "success"
+            )
+        }
     const handleClick = link => () => {
         setToolsMenu(false)
         link?.action()
@@ -185,6 +199,15 @@ export default function ToolsDrawer() {
             url: "/tools/device-registration/",
             icon: <KindIcon kind={DEVICE_NODE_NAME} />,
         },
+        {
+            // separator
+        },
+        ...converters.map(({ unit, name, names }) => ({
+            text: `${name} (change to ${names
+                .filter(n => n !== name)
+                .join(", ")})`,
+            action: handleUnitClick(unit, name, names),
+        })),
     ].filter(l => !!l)
 
     if (!toolsMenu) return null

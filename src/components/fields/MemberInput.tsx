@@ -273,7 +273,7 @@ export default function MemberInput(props: {
             return (
                 <ValueWithUnitWidget
                     tabIndex={0}
-                    label={specification.unit}
+                    unit={specification.unit}
                     value={value as number}
                     min={minValue}
                     max={maxValue}
@@ -325,7 +325,7 @@ export default function MemberInput(props: {
                 <ValueWithUnitWidget
                     tabIndex={0}
                     value={roundWithPrecision(value as number, 1)}
-                    label={specification.unit}
+                    unit={specification.unit}
                     color={color}
                     size={widgetSize}
                 />
