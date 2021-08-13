@@ -166,7 +166,7 @@ export default function ToolsDrawer() {
         },
         {
             text: "Azure Device Templates",
-            url: "/tools/azure-devices",
+            url: "/tools/azure-device-templates",
             icon: <CloudIcon />,
         },
         /*
