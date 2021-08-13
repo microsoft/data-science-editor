@@ -22,7 +22,7 @@
 		8000
 	],
 	// Specifies a command that should be run after the container has been created.
-	"postCreateCommand": "yarn install --frozen-lockfile",
+	"postCreateCommand": "yarn setup",
 	// Comment out the next line to run as root instead.
 	"remoteUser": "node"
 }
