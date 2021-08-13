@@ -28,7 +28,7 @@ Edit this project directly from your browser using GitHub Codespaces. If you hav
 * launch the docs server
 
 ```
-yarn docs
+yarn develop
 ```
 
 * click on the generated URL in the terminal output and voila!
@@ -156,7 +156,7 @@ The releases are automatically created by the build system based on the title of
 
  - `yarn watch`: Run `yarn build` in watch mode
  - `yarn lint`: Lints code
- - `yarn docs`: Launch docs web service
+ - `yarn develop`: Launch docs web service
 
 ## Microsoft Open Source Code of Conduct
 
