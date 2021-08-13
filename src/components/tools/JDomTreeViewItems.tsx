@@ -39,6 +39,7 @@ import {
 import useMediaQueries from "../hooks/useMediaQueries"
 import useInstanceName from "../services/useInstanceName"
 import useBestRegister from "../hooks/useBestRegister"
+import { humanify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 
 export interface JDomTreeViewProps extends StyledTreeViewProps {
     deviceFilter?: (devices: JDDevice) => boolean
@@ -207,7 +208,9 @@ export function RegisterTreeItem(
     const [attempts, setAttempts] = useState(lastGetAttempts)
     const optional = !!specification?.optional
     const failedGet = attempts > 2
-    const labelText = `${specification?.name || id}${optional ? "?" : ""}`
+    const labelText = humanify(
+        `${specification?.name || id}${optional ? "?" : ""}`
+    )
     const humanValue = useRegisterHumanValue(register, { visible: true })
     const handleClick = useCallback(() => register.sendGetAsync(), [register])
 
@@ -240,11 +243,12 @@ export function EventTreeItem(
     const { event } = props
     const { specification, id } = event
     const count = useEventCount(event)
+    const labelText = humanify(specification?.name || event.id)
 
     return (
         <StyledTreeItem
             nodeId={id}
-            labelText={specification?.name || event.id}
+            labelText={labelText}
             labelInfo={(count || "") + ""}
             kind={EVENT_NODE_NAME}
         />

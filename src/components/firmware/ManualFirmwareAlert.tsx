@@ -14,7 +14,7 @@ import SelectDevice from "../select/SelectDevice"
 import SwitchWithLabel from "../ui/SwitchWithLabel"
 
 const fwid = (fw: FirmwareBlob) =>
-    fw ? `${fw.store},${fw.firmwareIdentifier},${fw.version}` : ""
+    fw ? `${fw.store},${fw.productIdentifier},${fw.version}` : ""
 
 function ManualFirmware() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
@@ -83,7 +83,7 @@ function ManualFirmware() {
                                         {fw.name} &nbsp;
                                         <Typography variant="caption">
                                             {fw.version}, &nbsp;
-                                            {`0x${fw.firmwareIdentifier.toString(
+                                            {`0x${fw.productIdentifier.toString(
                                                 16
                                             )}`}
                                         </Typography>

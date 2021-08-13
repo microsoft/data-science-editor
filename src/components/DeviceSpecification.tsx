@@ -46,15 +46,15 @@ export default function DeviceSpecification(props: {
             }
             {device.description && <Markdown source={device.description} />}
             {device.repo && <FirmwareCard slug={device.repo} />}
-            {!!device.firmwares.length && (
+            {!!device.productIdentifiers?.length && (
                 <>
-                    <h3>Firmware identifiers</h3>
+                    <h3>Product identifiers</h3>
                     <ul>
-                        {device.firmwares.map(firmware => (
-                            <li key={firmware}>
+                        {device.productIdentifiers.map(identifier => (
+                            <li key={identifier}>
                                 <IDChip
-                                    id={firmware}
-                                    filter={`fw:0x${firmware.toString(16)}`}
+                                    id={identifier}
+                                    filter={`pid:0x${identifier.toString(16)}`}
                                 />
                             </li>
                         ))}

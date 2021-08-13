@@ -36,7 +36,7 @@ import {
 } from "../../../jacdac-ts/src/jdom/constants"
 import FieldDataSet from "../../components/FieldDataSet"
 import {
-    deviceSpecificationFromFirmwareIdentifier,
+    deviceSpecificationFromProductIdentifier,
     isSensor,
 } from "../../../jacdac-ts/src/jdom/spec"
 import CircularProgressWithLabel from "../../components/ui/CircularProgressWithLabel"
@@ -247,10 +247,10 @@ class EdgeImpulseClient extends JDClient {
         const { device } = service
 
         // fetch device spec
-        const firmwareIdentifier =
-            await service.device.resolveFirmwareIdentifier()
+        const productIdentifier =
+            await service.device.resolveProductIdentifier()
         const deviceSpec =
-            deviceSpecificationFromFirmwareIdentifier(firmwareIdentifier)
+            deviceSpecificationFromProductIdentifier(productIdentifier)
 
         this._hello = {
             version: 2,
@@ -258,7 +258,7 @@ class EdgeImpulseClient extends JDClient {
             deviceId: device.deviceId,
             deviceType:
                 deviceSpec?.name ||
-                firmwareIdentifier?.toString(16) ||
+                productIdentifier?.toString(16) ||
                 "Jacdac device",
             connection: "ip", // direct connection
             sensors: [

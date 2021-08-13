@@ -109,16 +109,16 @@ export default function FirmwareCard(props: { slug: string }) {
                             <AccordionDetails>
                                 <List dense>
                                     {firmwareBlobs.map(blob => (
-                                        <ListItem key={blob.firmwareIdentifier}>
+                                        <ListItem key={blob.productIdentifier}>
                                             <ListItemText
                                                 primary={blob.name}
                                                 secondary={
                                                     <Link
-                                                        to={`/firmwares/0x${blob.firmwareIdentifier.toString(
+                                                        to={`/firmwares/0x${blob.productIdentifier.toString(
                                                             16
                                                         )}`}
                                                     >
-                                                        {`0x${blob.firmwareIdentifier.toString(
+                                                        {`0x${blob.productIdentifier.toString(
                                                             16
                                                         )}`}
                                                     </Link>

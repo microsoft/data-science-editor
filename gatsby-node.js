@@ -9,6 +9,7 @@ const {
     identifierToUrlPath,
     serviceSpecificationToDTDL,
     DTMIToRoute,
+    deviceSpecificationFromProductIdentifier,
 } = require(`./jacdac-ts/dist/jacdac.cjs`)
 const { IgnorePlugin } = require("webpack")
 const AVATAR_SIZE = 64
@@ -96,13 +97,20 @@ async function createDeviceQRPages(actions) {
         "utf-8"
     )
     const designidcol = "designid"
+    const productidcol = "productid"
     const vanitycol = "vanityname"
     const csvData = Papa.parse(csv, { header: true })
     const data = csvData.data.filter(d => !!d[designidcol])
     for (const qr of data) {
         const vanity = qr[vanitycol].trim()
+        const productid = parseInt(qr[productidcol], 16)
+        const spec = deviceSpecificationFromProductIdentifier(productid)
         const p = `/devices/codes/${vanity}/`
-        const r = { fromPath: p, toPath: `/devices/microsoft/research/` }
+        const toPath = spec
+            ? `/devices/0x${productid.toString(16)}/`
+            : `/devices/microsoft/research/`
+        const r = { fromPath: p, toPath }
+        console.debug(r)
         await createRedirect(r)
     }
     console.log(`devices qr code redirect created`)
@@ -118,7 +126,7 @@ async function createDevicePages(graphql, actions, reporter) {
                     id
                     name
                     company
-                    firmwares
+                    productIdentifiers
                 }
             }
         }
@@ -146,16 +154,9 @@ async function createDevicePages(graphql, actions, reporter) {
             },
         })
         // adding firmware identifier redirects
-        if (node.firmwares)
-            node.firmwares.forEach(fw => {
-                const fp = `/firmwares/0x${fw.toString(16)}`
+        if (node.productIdentifiers)
+            node.productIdentifiers.forEach(fw => {
                 const dp = `/devices/0x${fw.toString(16)}`
-                //console.log(`firmware redirect`, { from: fp, to: p })
-                //console.log(`device redirect`, { from: dp, to: p })
-                createRedirect({
-                    fromPath: fp,
-                    toPath: p,
-                })
                 createRedirect({
                     fromPath: dp,
                     toPath: p,

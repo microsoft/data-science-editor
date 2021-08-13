@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { deviceSpecificationFromFirmwareIdentifier, deviceSpecifications } from "../../../jacdac-ts/src/jdom/spec";
+import { deviceSpecificationFromProductIdentifier, deviceSpecifications } from "../../../jacdac-ts/src/jdom/spec";
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context";
 import useEffectAsync from "../useEffectAsync";
 import { unique } from "../../../jacdac-ts/src/jdom/utils";
@@ -15,7 +15,7 @@ export default function useFirmwareRepos(showAllRepos?: boolean) {
     const bootloaders = devices.filter(device => device.hasService(SRV_BOOTLOADER));
     const registers = devices
         .filter(device => !device.hasService(SRV_BOOTLOADER)) // not a bootloader
-        .map(device => device.service(0)?.register(ControlReg.FirmwareIdentifier))
+        .map(device => device.service(0)?.register(ControlReg.ProductIdentifier))
         .filter(reg => !!reg);
 
     useEffectAsync(async (mounted) => {
@@ -23,13 +23,13 @@ export default function useFirmwareRepos(showAllRepos?: boolean) {
         if (showAllRepos)
             repos = deviceSpecifications().map(spec => spec.repo);
         else {
-            const firmwares: number[] = [];
+            const productIdentifiers: number[] = [];
             // ask firmware registers
             for (const register of registers) {
                 await register.refresh(true)
-                const firmwareIdentifier = register.intValue;
-                if (firmwareIdentifier !== undefined && firmwares.indexOf(firmwareIdentifier) < 0)
-                    firmwares.push(firmwareIdentifier);
+                const productIdentifier = register.intValue;
+                if (productIdentifier !== undefined && productIdentifiers.indexOf(productIdentifier) < 0)
+                    productIdentifiers.push(productIdentifier);
             }
 
             // ask bootloaders
@@ -38,15 +38,15 @@ export default function useFirmwareRepos(showAllRepos?: boolean) {
                 const bl_announce = Packet.onlyHeader(BootloaderCmd.Info)
                 try {
                     const resp = await boot.sendCmdAwaitResponseAsync(bl_announce);
-                    const [, , , firmwareIdentifier] = resp.jdunpack<[number, number, number, number]>("u32 u32 u32 u32");
-                    if (firmwareIdentifier !== undefined && firmwares.indexOf(firmwareIdentifier) < 0)
-                        firmwares.push(firmwareIdentifier);
+                    const [, , , productIdentifier] = resp.jdunpack<[number, number, number, number]>("u32 u32 u32 u32");
+                    if (productIdentifier !== undefined && productIdentifiers.indexOf(productIdentifier) < 0)
+                        productIdentifiers.push(productIdentifier);
                 }
                 catch (e) {
-                    console.warn(`bootloader firmware identifier failed`, e)
+                    console.warn(`bootloader product identifier failed`, e)
                 }
             }
-            repos = firmwares.map(fw => deviceSpecificationFromFirmwareIdentifier(fw)?.repo)
+            repos = productIdentifiers.map(fw => deviceSpecificationFromProductIdentifier(fw)?.repo)
                 .filter(repo => !!repo);
         }
         if (mounted) {

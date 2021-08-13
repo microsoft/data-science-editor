@@ -22,7 +22,7 @@ function UpdateDeviceCard(props: { device: JDDevice }) {
     const blob =
         firmwareInfo &&
         blobs?.find(
-            b => firmwareInfo.firmwareIdentifier == b.firmwareIdentifier
+            b => firmwareInfo.productIdentifier == b.productIdentifier
         )
 
     return (
@@ -45,15 +45,15 @@ export default function UpdateDeviceList() {
             announced: true,
             ignoreSelf: true,
             ignoreSimulators: true,
-            firmwareIdentifier: true,
+            productIdentifier: true,
         },
         [safeBoot]
     )
         .filter(dev => safeBoot || !dev.hasService(SRV_BOOTLOADER))
         .sort(
             (l, r) =>
-                (l.firmwareInfo?.firmwareIdentifier || 0) -
-                (r.firmwareInfo?.firmwareIdentifier || 0)
+                (l.firmwareInfo?.productIdentifier || 0) -
+                (r.firmwareInfo?.productIdentifier || 0)
         )
     const isFlashing = useChange(bus, () => devices.some(dev => dev.flashing))
     const blobs = useFirmwareBlobs()

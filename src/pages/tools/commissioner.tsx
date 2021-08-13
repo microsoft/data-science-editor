@@ -71,7 +71,7 @@ interface ServiceDescriptor {
 interface DeviceDescriptor {
     brain: boolean
     deviceIdentifier: string
-    firmwareIdentifier: number
+    productIdentifier: number
     services: ServiceDescriptor[]
     servicesSeen: ServiceDescriptor[]
     pass: boolean
@@ -150,8 +150,8 @@ function DataSetTable(props: {
                                 {descriptor.deviceIdentifier}
                             </TableCell>
                             <TableCell align="center">
-                                {descriptor.firmwareIdentifier &&
-                                    descriptor.firmwareIdentifier.toString(16)}
+                                {descriptor.productIdentifier &&
+                                    descriptor.productIdentifier.toString(16)}
                                 {descriptor.services.filter(service => {
                                     return (
                                         service.serviceClass == SRV_ROLE_MANAGER
@@ -280,7 +280,7 @@ export default function Commissioner() {
     const [dataSet, setDataSet] = useState<DeviceDescriptor[]>()
     const tableHeaders = [
         "Device identifier",
-        "Firmware identifier",
+        "Product identifier",
         "Services advertised",
         "Services seen",
         "Packets seen",
@@ -344,7 +344,7 @@ export default function Commissioner() {
             newDataSet.push({
                 brain: isBrain(d),
                 deviceIdentifier: d.deviceId,
-                firmwareIdentifier: await d.resolveFirmwareIdentifier(3),
+                productIdentifier: await d.resolveProductIdentifier(3),
                 services,
                 servicesSeen: [],
                 pass: true,
@@ -405,7 +405,7 @@ export default function Commissioner() {
         let str =
             "device identifier" +
             sep +
-            "firmware identifier" +
+            "product identifier" +
             sep +
             "services" +
             sep +
@@ -417,8 +417,8 @@ export default function Commissioner() {
             lineEnding
         dataSet.forEach(descriptor => {
             str += `0x${descriptor.deviceIdentifier}${sep}`
-            if (descriptor.firmwareIdentifier)
-                str += `0x${descriptor.firmwareIdentifier.toString(16)}${sep}`
+            if (descriptor.productIdentifier)
+                str += `0x${descriptor.productIdentifier.toString(16)}${sep}`
             else if (
                 descriptor.services.find(
                     service => service.serviceClass == SRV_ROLE_MANAGER

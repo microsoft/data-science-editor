@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import {
-    deviceSpecificationFromFirmwareIdentifier,
+    deviceSpecificationFromProductIdentifier,
     serviceSpecificationFromClassIdentifier,
 } from "../../jacdac-ts/src/jdom/spec"
 import {
@@ -65,7 +65,7 @@ export function uniqueFirmwareId() {
     let id = genFirmwareId()
     while (
         id !== undefined &&
-        (!looksRandom(id) || deviceSpecificationFromFirmwareIdentifier(id))
+        (!looksRandom(id) || deviceSpecificationFromProductIdentifier(id))
     ) {
         id = genFirmwareId()
     }
@@ -117,7 +117,7 @@ export default function RandomGenerator(props: {
     const title = device
         ? "Random Device Identifier"
         : firmware
-        ? "Random Firmware Identifier"
+        ? "Random Product Identifier"
         : "Random Service Identifier"
     return (
         <NoSsr>
