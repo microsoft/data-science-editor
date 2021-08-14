@@ -9,9 +9,7 @@ import {
 import useChange from "../../jacdac/useChange"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import DeleteIcon from "@material-ui/icons/Delete"
-import {
-    serviceSpecifications,
-} from "../../../jacdac-ts/src/jdom/spec"
+import { serviceSpecifications } from "../../../jacdac-ts/src/jdom/spec"
 import AddServiceIconButton from "../AddServiceIconButton"
 import ServiceSpecificationSelect from "../ServiceSpecificationSelect"
 import { escapeName } from "../../../jacdac-ts/src/azure-iot/dtdl"
@@ -25,7 +23,10 @@ import CmdButton from "../CmdButton"
 import SaveIcon from "@material-ui/icons/Save"
 import { camelize } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import { useId } from "react-use-id-hook"
-import { resolveMakecodeService, resolveMakecodeServiceFromClassIdentifier } from "../../../jacdac-ts/src/jdom/makecode"
+import {
+    resolveMakecodeService,
+    resolveMakecodeServiceFromClassIdentifier,
+} from "../../../jacdac-ts/src/jdom/makecode"
 
 interface ClientRole {
     name: string
