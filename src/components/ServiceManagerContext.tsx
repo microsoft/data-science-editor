@@ -104,7 +104,7 @@ export const ServiceManagerProvider = ({ children }) => {
         let modelStore: ModelStore = undefined
         if (isHosted) {
             console.log(`starting hosted services`)
-            const transport = new IFrameTransport(bus)
+            const transport = new IFrameTransport(bus.parentOrigin)
             fileStorage = new HostedFileStorage(transport)
             modelStore = new HostedModelStore(transport)
 
