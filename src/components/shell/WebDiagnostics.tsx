@@ -15,7 +15,7 @@ import {
     NEW_LISTENER,
     REMOVE_LISTENER,
 } from "../../../jacdac-ts/src/jdom/constants"
-import { JDNode, visitNodes } from "../../../jacdac-ts/src/jdom/node"
+import JDNode from "../../../jacdac-ts/src/jdom/node"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import PaperBox from "../ui/PaperBox"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
@@ -23,6 +23,15 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import Alert from "../ui/Alert"
 import { AlertTitle } from "@material-ui/lab"
 import { SMap } from "../../../jacdac-ts/src/jdom/utils"
+
+function visitNodes(node: JDNode, vis: (node: JDNode) => void) {
+    const todo = [node]
+    while (todo.length) {
+        const node = todo.pop()
+        vis(node)
+        node.children.forEach(child => todo.push(child))
+    }
+}
 
 function NodeCallRow(props: { node: JDNode }) {
     const { node } = props

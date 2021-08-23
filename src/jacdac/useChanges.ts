@@ -1,9 +1,14 @@
 import { useState, useEffect } from "react"
 import { CHANGE } from "../../jacdac-ts/src/jdom/constants"
-import {
-    dependencyChangeId,
-    IEventSource,
-} from "../../jacdac-ts/src/jdom/eventsource"
+import { IEventSource } from "../../jacdac-ts/src/jdom/eventsource"
+
+function dependencyChangeId(nodes: IEventSource[]) {
+    return (
+        nodes
+            ?.map(node => (node ? `${node.nodeId}:${node.changeId}` : "?"))
+            .join(",") || ""
+    )
+}
 
 export default function useChanges<TNode extends IEventSource, TValue>(
     nodes: TNode[],
