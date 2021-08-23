@@ -19,7 +19,7 @@ import ChipList from "./ui/ChipList"
 import JacdacIcon from "./icons/JacdacIcon"
 import Markdown from "./ui/Markdown"
 import CheckCircleIcon from "@material-ui/icons/CheckCircle"
-import { resolveMakecodeServiceFromClassIdentifier } from "../../jacdac-ts/src/jdom/makecode"
+import { resolveMakecodeServiceFromClassIdentifier } from "./makecode/services"
 import { isMixinService } from "../../jacdac-ts/jacdac-spec/spectool/jdutils"
 
 function ServiceSpecificatinListItem(props: { service: jdspec.ServiceSpec }) {

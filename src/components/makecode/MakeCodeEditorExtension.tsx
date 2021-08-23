@@ -26,7 +26,7 @@ import { useId } from "react-use-id-hook"
 import {
     resolveMakecodeService,
     resolveMakecodeServiceFromClassIdentifier,
-} from "../../../jacdac-ts/src/jdom/makecode"
+} from "./services"
 
 interface ClientRole {
     name: string

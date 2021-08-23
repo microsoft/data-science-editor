@@ -27,7 +27,7 @@ import {
 } from "../../jacdac-ts/src/jdom/constants"
 import { useId } from "react-use-id-hook"
 import { Link } from "gatsby-theme-material-ui"
-import { resolveMakecodeServiceFromClassIdentifier } from "../../jacdac-ts/src/jdom/makecode"
+import { resolveMakecodeServiceFromClassIdentifier } from "../components/makecode/services"
 import CheckCircleIcon from "@material-ui/icons/CheckCircle"
 import { serviceTestFromServiceClass } from "../../jacdac-ts/src/test/testspec"
 import { isMixinService } from "../../jacdac-ts/jacdac-spec/spectool/jdutils"

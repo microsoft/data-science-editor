@@ -23,7 +23,7 @@ import JacdacIcon from "./icons/JacdacIcon"
 import SpeedIcon from "@material-ui/icons/Speed"
 import { VIRTUAL_DEVICE_NODE_NAME } from "../../jacdac-ts/src/jdom/constants"
 import { useId } from "react-use-id-hook"
-import { resolveMakecodeServiceFromClassIdentifier } from "../../jacdac-ts/src/jdom/makecode"
+import { resolveMakecodeServiceFromClassIdentifier } from "./makecode/services"
 
 interface ServiceFilter {
     query: string
