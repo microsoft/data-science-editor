@@ -4,7 +4,7 @@ import {
     PACKET_PROCESS,
     PACKET_SEND,
 } from "../../../jacdac-ts/src/jdom/constants"
-import { PacketMessage } from "../../../jacdac-ts/src/jdom/iframebridgeclient"
+import { PacketMessage } from "./iframebridgeclient"
 import Packet from "../../../jacdac-ts/src/jdom/packet"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import PaperBox from "../ui/PaperBox"
@@ -70,7 +70,7 @@ export default function MakeCodeSimulator(props: {
                         ref={frameRef}
                         className={classes.iframe}
                         src={url}
-                        aria-label="MakeCode rendering iframe to generate blocks images."
+                        title="MakeCode rendering iframe to generate blocks images."
                     />
                 </div>
             </div>

@@ -15,6 +15,7 @@ import Dashboard from "../../components/dashboard/Dashboard"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import useChange from "../../jacdac/useChange"
 import DarkModeContext from "../../components/ui/DarkModeContext"
+import IFrameBridgeClient from "../../components/makecode/iframebridgeclient"
 
 function deviceSort(l: JDDevice, r: JDDevice): number {
     const srvScore = (srv: jdspec.ServiceSpec) =>
@@ -46,7 +47,9 @@ function deviceSort(l: JDDevice, r: JDDevice): number {
 
 function Carousel() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const { iframeBridge } = bus
+    const iframeBridge = bus.nodeData[
+        IFrameBridgeClient.DATA_ID
+    ] as IFrameBridgeClient
     const deviceFilter = iframeBridge.deviceFilter.bind(iframeBridge)
     const serviceFilter = iframeBridge.serviceFilter.bind(iframeBridge)
     const extensions = useChange(iframeBridge, _ => _?.candidateExtensions)

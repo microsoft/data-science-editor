@@ -10,7 +10,7 @@ import {
     createWebSerialTransport,
     isWebSerialSupported,
 } from "../../jacdac-ts/src/jdom/transport/webserial"
-import IFrameBridgeClient from "../../jacdac-ts/src/jdom/iframebridgeclient"
+import IFrameBridgeClient from "../components/makecode/iframebridgeclient"
 import Flags from "../../jacdac-ts/src/jdom/flags"
 import GamepadServerManager from "../../jacdac-ts/src/servers/gamepadservermanager"
 import jacdacTsPackage from "../../jacdac-ts/package.json"
