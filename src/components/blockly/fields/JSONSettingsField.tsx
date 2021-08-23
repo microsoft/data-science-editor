@@ -6,7 +6,7 @@ import type { JSONSchema4 } from "json-schema"
 import Suspense from "../../ui/Suspense"
 import { InputDefinition } from "../toolbox"
 import { assert } from "../../../../jacdac-ts/src/jdom/utils"
-import { JDEventSource } from "../../../../jacdac-ts/src/jdom/eventsource"
+import JDEventSource from "../../../../jacdac-ts/src/jdom/eventsource"
 const JSONSchemaForm = lazy(() => import("../../ui/JSONSchemaForm"))
 
 export interface JSONSettingsOptions extends ReactFieldJSON {

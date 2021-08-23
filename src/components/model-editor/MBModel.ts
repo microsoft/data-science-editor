@@ -1,4 +1,4 @@
-import { JDEventSource } from "../../../jacdac-ts/src/jdom/eventsource"
+import JDEventSource from "../../../jacdac-ts/src/jdom/eventsource"
 
 export default class MBModel extends JDEventSource {
     // maintain info about the dataset this model was created for

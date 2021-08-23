@@ -147,7 +147,8 @@ export default function LightsensorAccessible() {
                                                 {(lightSensor === lightService
                                                     ? "Streaming from "
                                                     : "") +
-                                                    (lightSensor.device.physical
+                                                    (lightSensor.device
+                                                        .isPhysical
                                                         ? "Physical"
                                                         : "Virtual") +
                                                     `LightSensor ${lightSensor.friendlyName}`}

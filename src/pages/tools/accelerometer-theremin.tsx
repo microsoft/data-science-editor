@@ -190,7 +190,7 @@ export default function AccelerometerTheremin() {
                                                     ? "Streaming from "
                                                     : "") +
                                                     (accelerometer.device
-                                                        .physical
+                                                        .isPhysical
                                                         ? "Physical "
                                                         : "Virtual ") +
                                                     `Accelerometer ${accelerometer.friendlyName}`}

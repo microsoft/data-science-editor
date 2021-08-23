@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
 import { MESSAGE } from "../../../../../jacdac-ts/src/jdom/constants"
-import { JDEventSource } from "../../../../../jacdac-ts/src/jdom/eventsource"
+import JDEventSource from "../../../../../jacdac-ts/src/jdom/eventsource"
 import { assert, SMap } from "../../../../../jacdac-ts/src/jdom/utils"
 import createCsvWorker from "../../../../workers/csv/workerloader"
 import createDataWorker from "../../../../workers/data/workerloader"

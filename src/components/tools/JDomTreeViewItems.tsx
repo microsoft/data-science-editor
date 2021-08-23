@@ -63,7 +63,7 @@ export function DeviceTreeItem(
     )
     const { mobile } = useMediaQueries()
     const showActions = !mobile
-    const dropped = useChange(device.qualityOfService, _ => _.dropped)
+    const dropped = useChange(device.packetStats, _ => _.dropped)
 
     const serviceNames = ellipseJoin(
         services
