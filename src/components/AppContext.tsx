@@ -10,7 +10,7 @@ import React, {
 } from "react"
 import { ERROR } from "../../jacdac-ts/src/jdom/constants"
 import errorPath from "../../jacdac-ts/src/jdom/error"
-import { JDService } from "../../jacdac-ts/src/jdom/service"
+import JDService from "../../jacdac-ts/src/jdom/service"
 import { isCancelError } from "../../jacdac-ts/src/jdom/utils"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 

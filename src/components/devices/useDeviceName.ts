@@ -1,4 +1,4 @@
-import { JDDevice } from "../../../jacdac-ts/src/jdom/device";
+import JDDevice from "../../../jacdac-ts/src/jdom/device";
 
 export default function useDeviceName(device: JDDevice, includeShortId?: boolean) {
     const name = device.friendlyName

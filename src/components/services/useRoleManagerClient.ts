@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 import { ROLE_MANAGER_CHANGE } from "../../../jacdac-ts/src/jdom/constants"
-import { RoleManagerClient } from "../../../jacdac-ts/src/jdom/rolemanagerclient"
+import RoleManagerClient from "../../../jacdac-ts/src/jdom/clients/rolemanagerclient"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 
 export default function useRoleManagerClient(): RoleManagerClient {

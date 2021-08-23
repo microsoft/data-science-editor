@@ -14,7 +14,7 @@ import {
     SRV_PROTO_TEST,
     SRV_SETTINGS,
 } from "../../../jacdac-ts/src/jdom/constants"
-import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
+import JDDevice from "../../../jacdac-ts/src/jdom/device"
 import useChange from "../../jacdac/useChange"
 import DeviceName from "../devices/DeviceName"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"

@@ -1,10 +1,13 @@
 import React, { useState, useContext, lazy } from "react"
-import { parseLogicLog, parseTrace } from "../../../jacdac-ts/src/jdom/logparser"
+import {
+    parseLogicLog,
+    parseTrace,
+} from "../../../jacdac-ts/src/jdom/logparser"
 import PacketsContext from "../PacketsContext"
 import Packet from "../../../jacdac-ts/src/jdom/packet"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
 import AppContext from "../AppContext"
-import Trace from "../../../jacdac-ts/src/jdom/trace"
+import Trace from "../../../jacdac-ts/src/jdom/trace/trace"
 
 import Suspense from "../ui/Suspense"
 const ImportButton = lazy(() => import("../ImportButton"))

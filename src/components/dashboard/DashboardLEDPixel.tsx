@@ -3,7 +3,7 @@ import React, { ChangeEvent, lazy, useMemo, useState } from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { lightEncode } from "../../../jacdac-ts/src/jdom/light"
 import SelectWithLabel from "../ui/SelectWithLabel"
-import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import JDService from "../../../jacdac-ts/src/jdom/service"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import RemoveIcon from "@material-ui/icons/Remove"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name

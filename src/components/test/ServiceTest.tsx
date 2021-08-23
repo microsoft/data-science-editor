@@ -12,7 +12,7 @@ import {
     serviceProviderDefinitionFromServiceClass,
 } from "../../../jacdac-ts/src/servers/servers"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
-import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import JDService from "../../../jacdac-ts/src/jdom/service"
 import { serviceTestFromServiceClass } from "../../../jacdac-ts/src/test/testspec"
 import SelectServiceGrid from "../select/SelectServiceGrid"
 import ServiceTestRunner from "./ServiceTestRunner"

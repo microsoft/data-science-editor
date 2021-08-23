@@ -1,6 +1,6 @@
 import { Theme } from "@material-ui/core"
 import Blockly, { Block, Workspace, WorkspaceSvg } from "blockly"
-import { JDService } from "../../../../jacdac-ts/src/jdom/service"
+import JDService from "../../../../jacdac-ts/src/jdom/service"
 import { RoleEvent } from "../../../../jacdac-ts/src/vm/compile"
 import { VMError } from "../../../../jacdac-ts/src/vm/ir"
 import {

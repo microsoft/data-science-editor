@@ -1,4 +1,4 @@
-import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
+import JDDevice from "../../../jacdac-ts/src/jdom/device"
 
 const statusHue = 32
 const statusSaturation = 255

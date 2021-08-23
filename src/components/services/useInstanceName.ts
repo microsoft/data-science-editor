@@ -1,5 +1,5 @@
 import { SystemReg } from "../../../jacdac-ts/src/jdom/constants"
-import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import JDService from "../../../jacdac-ts/src/jdom/service"
 import {
     RegisterOptions,
     useRegisterUnpackedValue,

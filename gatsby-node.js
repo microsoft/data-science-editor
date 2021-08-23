@@ -110,7 +110,6 @@ async function createDeviceQRPages(actions) {
             ? `/devices/0x${productid.toString(16)}/`
             : `/devices/microsoft/research/`
         const r = { fromPath: p, toPath }
-        console.debug(r)
         await createRedirect(r)
     }
     console.log(`devices qr code redirect created`)

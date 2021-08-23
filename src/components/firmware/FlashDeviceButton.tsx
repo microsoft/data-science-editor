@@ -1,7 +1,7 @@
 import { Button } from "@material-ui/core"
 import { Alert } from "@material-ui/lab"
 import React, { useContext, useState } from "react"
-import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
+import JDDevice from "../../../jacdac-ts/src/jdom/device"
 import {
     flashFirmwareBlob,
     updateApplicable,

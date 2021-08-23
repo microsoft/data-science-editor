@@ -6,10 +6,10 @@ import {
     TextField,
 } from "@material-ui/core"
 import React, { ChangeEvent, useState } from "react"
-import { JDService } from "../../jacdac-ts/src/jdom/service"
+import JDService from "../../jacdac-ts/src/jdom/service"
 import DeviceCardHeader from "./DeviceCardHeader"
 import useServiceClient from "./useServiceClient"
-import SettingsClient from "../../jacdac-ts/src/jdom/settingsclient"
+import SettingsClient from "../../jacdac-ts/src/jdom/clients/settingsclient"
 import { useChangeAsync } from "../jacdac/useChange"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import DeleteIcon from "@material-ui/icons/Delete"

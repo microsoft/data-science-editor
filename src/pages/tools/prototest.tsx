@@ -14,10 +14,10 @@ import {
     SRV_PROTO_TEST,
 } from "../../../jacdac-ts/src/jdom/constants"
 import useChange from "../../jacdac/useChange"
-import { JDService } from "../../../jacdac-ts/src/jdom/service"
-import { JDRegister } from "../../../jacdac-ts/src/jdom/register"
+import JDService from "../../../jacdac-ts/src/jdom/service"
+import JDRegister from "../../../jacdac-ts/src/jdom/register"
 import ConnectAlert from "../../components/alert/ConnectAlert"
-import { JDField } from "../../../jacdac-ts/src/jdom/field"
+import JDField from "../../../jacdac-ts/src/jdom/field"
 import {
     jdpack,
     jdpackEqual,
@@ -29,7 +29,7 @@ import DeviceActions from "../../components/DeviceActions"
 import useEffectAsync from "../../components/useEffectAsync"
 import TestCard from "../../components/TestCard"
 import Packet from "../../../jacdac-ts/src/jdom/packet"
-import { JDEvent } from "../../../jacdac-ts/src/jdom/event"
+import JDEvent from "../../../jacdac-ts/src/jdom/event"
 import { AlertTitle } from "@material-ui/lab"
 import Alert from "../../components/ui/Alert"
 import JDServiceProvider from "../../../jacdac-ts/src/jdom/serviceprovider"

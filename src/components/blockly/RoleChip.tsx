@@ -4,7 +4,7 @@ import BlockContext from "./BlockContext"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import DeviceAvatar from "../devices/DeviceAvatar"
 import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec"
-import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import JDService from "../../../jacdac-ts/src/jdom/service"
 import {
     addServiceProvider,
     serviceProviderDefinitionFromServiceClass,

@@ -1,6 +1,6 @@
 import { Badge } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { JDEvent } from "../../../jacdac-ts/src/jdom/event";
+import JDEvent from "../../../jacdac-ts/src/jdom/event";
 import useEventCount from "../../jacdac/useEventCount";
 
 export default function EventBadge(props: { event: JDEvent, color?: "primary" | "secondary" }) {

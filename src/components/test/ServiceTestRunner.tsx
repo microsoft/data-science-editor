@@ -17,7 +17,7 @@ import {
 } from "@material-ui/core"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import Alert from "../ui/Alert"
-import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import JDService from "../../../jacdac-ts/src/jdom/service"
 import {
     JDServiceTestRunner,
     JDTestRunner,

@@ -6,7 +6,7 @@ import {
     responsiveFontSizes,
 } from "@material-ui/core"
 import ThemedLayout from "../../components/ui/ThemedLayout"
-import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
+import JDDevice from "../../../jacdac-ts/src/jdom/device"
 import { isReading, isValueOrIntensity } from "../../../jacdac-ts/src/jdom/spec"
 import { strcmp } from "../../../jacdac-ts/src/jdom/utils"
 import MakeCodeIcon from "../../components/icons/MakeCodeIcon"

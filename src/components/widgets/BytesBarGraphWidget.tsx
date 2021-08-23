@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react"
 import { REPORT_UPDATE } from "../../../jacdac-ts/src/jdom/constants"
-import { JDRegister } from "../../../jacdac-ts/src/jdom/register"
+import JDRegister from "../../../jacdac-ts/src/jdom/register"
 import useServiceServer from "../hooks/useServiceServer"
 import SvgWidget from "./SvgWidget"
 import useWidgetTheme from "./useWidgetTheme"

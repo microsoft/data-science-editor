@@ -1,11 +1,11 @@
 import { Dialog, DialogContent, DialogTitle, List } from "@material-ui/core"
 import React from "react"
 import { useId } from "react-use-id-hook"
-import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import JDService from "../../../jacdac-ts/src/jdom/service"
 import useRoleManagerClient from "../services/useRoleManagerClient"
 import useChange from "../../jacdac/useChange"
 import { RoleListItem } from "../services/RoleListItem"
-import { Role } from "../../../jacdac-ts/src/jdom/rolemanagerclient"
+import { Role } from "../../../jacdac-ts/src/jdom/clients/rolemanagerclient"
 
 export default function SelectRoleDialog(props: {
     service: JDService

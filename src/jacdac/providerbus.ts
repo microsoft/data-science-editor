@@ -1,4 +1,4 @@
-import { JDBus } from "../../jacdac-ts/src/jdom/bus"
+import JDBus from "../../jacdac-ts/src/jdom/bus"
 import { withPrefix } from "gatsby"
 import { isWebUSBSupported } from "../../jacdac-ts/src/jdom/transport/usb"
 import { createUSBWorkerTransport } from "../../jacdac-ts/src/jdom/transport/workertransport"

@@ -44,10 +44,10 @@ import {
     SRV_HID_MOUSE,
     SRV_AZURE_IOT_HUB,
 } from "../../../jacdac-ts/src/jdom/constants"
-import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import JDService from "../../../jacdac-ts/src/jdom/service"
 import { isRegister } from "../../../jacdac-ts/src/jdom/spec"
 import RegisterInput from "../RegisterInput"
-import { JDRegister } from "../../../jacdac-ts/src/jdom/register"
+import JDRegister from "../../../jacdac-ts/src/jdom/register"
 import {
     useRegisterBoolValue,
     useRegisterUnpackedValue,

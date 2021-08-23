@@ -2,7 +2,7 @@ import { ControlReg } from "../../jacdac-ts/src/jdom/constants"
 import { CardHeader, Chip, Typography } from "@material-ui/core"
 // tslint:disable-next-line: no-submodule-imports
 import { Link } from "gatsby-theme-material-ui"
-import { JDDevice } from "../../jacdac-ts/src/jdom/device"
+import JDDevice from "../../jacdac-ts/src/jdom/device"
 import React from "react"
 import { useRegisterUnpackedValue } from "../jacdac/useRegisterValue"
 import DeviceActions from "./DeviceActions"

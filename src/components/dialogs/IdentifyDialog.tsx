@@ -6,8 +6,8 @@ import {
     DialogTitle,
     Grid,
 } from "@material-ui/core"
-import React, { useCallback, useState } from "react"
-import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
+import React, { useState } from "react"
+import JDDevice from "../../../jacdac-ts/src/jdom/device"
 import useDeviceSpecification from "../../jacdac/useDeviceSpecification"
 import useDeviceImage from "../devices/useDeviceImage"
 import useInterval from "../hooks/useInterval"

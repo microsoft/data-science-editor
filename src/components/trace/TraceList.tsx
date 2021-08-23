@@ -1,7 +1,7 @@
 import React from "react"
 import { graphql, useStaticQuery } from "gatsby"
 import { parseTrace } from "../../../jacdac-ts/src/jdom/logparser"
-import Trace from "../../../jacdac-ts/src/jdom/trace"
+import Trace from "../../../jacdac-ts/src/jdom/trace/trace"
 import { Grid } from "@material-ui/core"
 import TraceCard from "./TraceCard"
 import useGridBreakpoints from "../useGridBreakpoints"

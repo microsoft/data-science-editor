@@ -20,13 +20,13 @@ import StopIcon from "@material-ui/icons/Stop"
 import SaveIcon from "@material-ui/icons/Save"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import HourglassEmptyIcon from "@material-ui/icons/HourglassEmpty"
-import { JDBus } from "../../../jacdac-ts/src/jdom/bus"
+import JDBus from "../../../jacdac-ts/src/jdom/bus"
 import FieldDataSet from "../../components/FieldDataSet"
 import Trend from "../../components/Trend"
 // tslint:disable-next-line: no-submodule-imports
 import Alert from "../../components/ui/Alert"
 import SelectEvent from "../../components/select/SelectEvent"
-import { JDEvent } from "../../../jacdac-ts/src/jdom/event"
+import JDEvent from "../../../jacdac-ts/src/jdom/event"
 import {
     EVENT,
     REPORT_UPDATE,
@@ -38,12 +38,12 @@ import {
     uniqueMap,
 } from "../../../jacdac-ts/src/jdom/utils"
 import DataSetGrid from "../../components/DataSetGrid"
-import { JDRegister } from "../../../jacdac-ts/src/jdom/register"
+import JDRegister from "../../../jacdac-ts/src/jdom/register"
 import ReadingFieldGrid from "../../components/ReadingFieldGrid"
 import DeviceCardHeader from "../../components/DeviceCardHeader"
-import { SensorAggregatorClient } from "../../../jacdac-ts/src/jdom/sensoraggregatorclient"
+import SensorAggregatorClient from "../../../jacdac-ts/src/jdom/clients/sensoraggregatorclient"
 import { Link } from "gatsby-theme-material-ui"
-import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import JDService from "../../../jacdac-ts/src/jdom/service"
 import ServiceManagerContext from "../../components/ServiceManagerContext"
 import useChartPalette from "../../components/useChartPalette"
 import { isSensor } from "../../../jacdac-ts/src/jdom/spec"

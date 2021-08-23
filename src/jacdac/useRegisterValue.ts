@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { REPORT_UPDATE } from "../../jacdac-ts/src/jdom/constants"
 import { PackedValues } from "../../jacdac-ts/src/jdom/pack"
-import { JDRegister } from "../../jacdac-ts/src/jdom/register"
+import JDRegister from "../../jacdac-ts/src/jdom/register"
 export interface RegisterOptions {
     // Indicates if the HTML element is visible in view. If not, updates may be slowed or stopped.
     visible?: boolean

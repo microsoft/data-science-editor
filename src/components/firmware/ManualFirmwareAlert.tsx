@@ -1,10 +1,10 @@
-import { Box, Grid, MenuItem, Switch, Typography } from "@material-ui/core"
+import { Box, Grid, MenuItem, Typography } from "@material-ui/core"
 import React, { ChangeEvent, useContext, useState } from "react"
 // tslint:disable-next-line: no-submodule-imports
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import Alert from "../ui/Alert"
 import useDevices from "../hooks/useDevices"
-import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
+import JDDevice from "../../../jacdac-ts/src/jdom/device"
 import SelectWithLabel from "../ui/SelectWithLabel"
 import useFirmwareBlobs from "./useFirmwareBlobs"
 import { FirmwareBlob } from "../../../jacdac-ts/src/jdom/flashing"

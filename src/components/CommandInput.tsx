@@ -1,7 +1,7 @@
 import React, { useContext } from "react"
 import { Typography } from "@material-ui/core"
 import { InPipeReader } from "../../jacdac-ts/src/jdom/pipes"
-import { JDService } from "../../jacdac-ts/src/jdom/service"
+import JDService from "../../jacdac-ts/src/jdom/service"
 import DeviceName from "./devices/DeviceName"
 import { hasPipeReport, isReportOf } from "../../jacdac-ts/src/jdom/spec"
 import { packArguments } from "../../jacdac-ts/src/jdom/command"

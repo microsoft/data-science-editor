@@ -11,7 +11,7 @@ import useChange from "../jacdac/useChange"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import useGridBreakpoints from "./useGridBreakpoints"
 import DeviceCardHeader from "./DeviceCardHeader"
-import { JDService } from "../../jacdac-ts/src/jdom/service"
+import JDService from "../../jacdac-ts/src/jdom/service"
 import { DeviceLostAlert } from "./alert/DeviceLostAlert"
 import Alert from "./ui/Alert"
 

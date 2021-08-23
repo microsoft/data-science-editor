@@ -44,7 +44,7 @@ import useDevices from "../../components/hooks/useDevices"
 import DeviceCardHeader from "../../components/DeviceCardHeader"
 import Suspense from "../../components/ui/Suspense"
 import { ControlReg } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
-import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
+import JDDevice from "../../../jacdac-ts/src/jdom/device"
 import useGridBreakpoints from "../../components/useGridBreakpoints"
 import Alert from "../../components/ui/Alert"
 

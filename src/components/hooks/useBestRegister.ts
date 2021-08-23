@@ -1,6 +1,6 @@
 import { useMemo } from "react"
 import { SystemReg } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
-import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import JDService from "../../../jacdac-ts/src/jdom/service"
 import {
     isReading,
     isValue,

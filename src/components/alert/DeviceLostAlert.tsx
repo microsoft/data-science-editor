@@ -1,6 +1,6 @@
 import React from "react";
 import { LOST, FOUND } from "../../../jacdac-ts/src/jdom/constants";
-import { JDDevice } from "../../../jacdac-ts/src/jdom/device";
+import JDDevice from "../../../jacdac-ts/src/jdom/device";
 import useEventRaised from "../../jacdac/useEventRaised";
 import Alert from "../ui/Alert";
 

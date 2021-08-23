@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { JDService } from "../../jacdac-ts/src/jdom/service"
+import JDService from "../../jacdac-ts/src/jdom/service"
 // tslint:disable-next-line: no-submodule-imports
 import { makeStyles } from "@material-ui/core/styles"
 // tslint:disable-next-line: no-submodule-imports

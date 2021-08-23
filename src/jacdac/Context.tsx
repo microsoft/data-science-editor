@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { JDBus } from "../../jacdac-ts/src/jdom/bus";
+import JDBus from "../../jacdac-ts/src/jdom/bus";
 export interface JacdacContextProps {
     bus: JDBus,
 }

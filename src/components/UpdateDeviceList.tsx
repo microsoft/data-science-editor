@@ -5,7 +5,7 @@ import {
     FIRMWARE_BLOBS_CHANGE,
     SRV_BOOTLOADER,
 } from "../../jacdac-ts/src/jdom/constants"
-import { JDDevice } from "../../jacdac-ts/src/jdom/device"
+import JDDevice from "../../jacdac-ts/src/jdom/device"
 import { scanFirmwares } from "../../jacdac-ts/src/jdom/flashing"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import DeviceCard from "./DeviceCard"

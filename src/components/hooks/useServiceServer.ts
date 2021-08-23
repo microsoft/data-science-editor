@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import JDService from "../../../jacdac-ts/src/jdom/service"
 import JDServiceServer from "../../../jacdac-ts/src/jdom/serviceserver"
 import useServiceProvider from "./useServiceProvider"
 

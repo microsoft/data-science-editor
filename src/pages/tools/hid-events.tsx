@@ -11,7 +11,7 @@ import {
     Typography,
 } from "@material-ui/core"
 import useChange from "../../jacdac/useChange"
-import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import JDService from "../../../jacdac-ts/src/jdom/service"
 import {
     HidKeyboardModifiers,
     SRV_CONTROL,
@@ -21,11 +21,11 @@ import {
     SRV_SETTINGS,
     SystemEvent,
 } from "../../../jacdac-ts/src/jdom/constants"
-import { JDEvent } from "../../../jacdac-ts/src/jdom/event"
+import JDEvent from "../../../jacdac-ts/src/jdom/event"
 import KeyboardKeyInput from "../../components/ui/KeyboardKeyInput"
 import IconButtonWithTooltip from "../../components/ui/IconButtonWithTooltip"
 import DeleteIcon from "@material-ui/icons/Delete"
-import SettingsClient from "../../../jacdac-ts/src/jdom/settingsclient"
+import SettingsClient from "../../../jacdac-ts/src/jdom/clients/settingsclient"
 import useServiceClient from "../../components/useServiceClient"
 import {
     arrayConcatMany,
@@ -35,7 +35,7 @@ import {
 } from "../../../jacdac-ts/src/jdom/utils"
 import { jdpack, jdunpack } from "../../../jacdac-ts/src/jdom/pack"
 import { randomDeviceId } from "../../../jacdac-ts/src/jdom/random"
-import { JDBus } from "../../../jacdac-ts/src/jdom/bus"
+import JDBus from "../../../jacdac-ts/src/jdom/bus"
 import useServices from "../../components/hooks/useServices"
 import { Button } from "gatsby-theme-material-ui"
 import Alert from "../../components/ui/Alert"

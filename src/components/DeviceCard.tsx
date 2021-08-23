@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core/styles"
 import Card from "@material-ui/core/Card"
 // tslint:disable-next-line: no-submodule-imports
 import CardContent from "@material-ui/core/CardContent"
-import { JDDevice } from "../../jacdac-ts/src/jdom/device"
+import JDDevice from "../../jacdac-ts/src/jdom/device"
 import {
     SRV_CONTROL,
     SRV_LOGGER,
@@ -14,7 +14,7 @@ import {
 import ServiceButton from "./ServiceButton"
 import useChange from "../jacdac/useChange"
 import { navigate } from "gatsby"
-import { JDService } from "../../jacdac-ts/src/jdom/service"
+import JDService from "../../jacdac-ts/src/jdom/service"
 import { CardActions, createStyles } from "@material-ui/core"
 import DeviceCardHeader from "./DeviceCardHeader"
 import { useRegisterUnpackedValue } from "../jacdac/useRegisterValue"

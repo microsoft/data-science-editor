@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react"
-import { JDNode } from "../../jacdac-ts/src/jdom/node"
+import JDNode from "../../jacdac-ts/src/jdom/node"
 
 export default function useSelectedNodes<TNode extends JDNode>(singleSelection?: boolean) {
     const nodes = useRef<Set<string>>(new Set<string>())

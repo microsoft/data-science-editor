@@ -1,6 +1,6 @@
 import { MenuItem } from "@material-ui/core"
 import React, { ChangeEvent } from "react"
-import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import JDService from "../../../jacdac-ts/src/jdom/service"
 import SelectWithLabel from "../ui/SelectWithLabel"
 
 export default function SelectService(props: {

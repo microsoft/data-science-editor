@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { JDDevice } from "../../../jacdac-ts/src/jdom/device";
+import JDDevice from "../../../jacdac-ts/src/jdom/device";
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context";
 import useChange from "../../jacdac/useChange";
 

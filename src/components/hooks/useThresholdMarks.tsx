@@ -2,7 +2,7 @@ import React from "react"
 import { Mark } from "@material-ui/core"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import EventBadge from "../ui/EventBadge"
-import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import JDService from "../../../jacdac-ts/src/jdom/service"
 import { SystemEvent, SystemReg } from "../../../jacdac-ts/src/jdom/constants"
 import useRegister from "./useRegister"
 

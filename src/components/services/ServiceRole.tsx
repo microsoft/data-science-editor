@@ -1,6 +1,6 @@
 import { Button } from "@material-ui/core"
 import React, { useContext } from "react"
-import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import JDService from "../../../jacdac-ts/src/jdom/service"
 import useChange from "../../jacdac/useChange"
 import AppContext from "../AppContext"
 import useRoleManagerClient from "./useRoleManagerClient"

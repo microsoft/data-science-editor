@@ -2,7 +2,7 @@ import { ListItem, ListItemText } from "@material-ui/core"
 import React, { useContext } from "react"
 import useChange from "../../jacdac/useChange"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
-import { Role } from "../../../jacdac-ts/src/jdom/rolemanagerclient"
+import { Role } from "../../../jacdac-ts/src/jdom/clients/rolemanagerclient"
 
 export function RoleListItem(props: {
     role: Role

@@ -9,7 +9,7 @@ import {
 import React, { ChangeEvent, useState } from "react"
 import useDevices from "../../components/hooks/useDevices"
 import DeviceCardHeader from "../../components/DeviceCardHeader"
-import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
+import JDDevice from "../../../jacdac-ts/src/jdom/device"
 import CmdButton from "../../components/CmdButton"
 import { ControlCmd } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"

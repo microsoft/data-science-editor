@@ -11,7 +11,7 @@ import { SG90_RESPONSE_SPEED } from "../../../jacdac-ts/src/servers/servers"
 import { Grid } from "@material-ui/core"
 import ServoServer from "../../../jacdac-ts/src/servers/servoserver"
 import RegisterInput from "../RegisterInput"
-import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import JDService from "../../../jacdac-ts/src/jdom/service"
 import ServoWidget from "../widgets/ServoWidget"
 import useRegister from "../hooks/useRegister"
 

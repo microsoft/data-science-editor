@@ -7,7 +7,7 @@ import PacketsContext from '../PacketsContext';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer'
 import PacketFilter from '../PacketFilter';
-import { TracePacketProps } from '../../../jacdac-ts/src/jdom/traceview';
+import { TracePacketProps } from '../../../jacdac-ts/src/jdom/trace/traceview';
 
 const useStyles = makeStyles(() =>
     createStyles({

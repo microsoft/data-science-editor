@@ -7,7 +7,7 @@ import {
 } from "@material-ui/core"
 import React, { useContext } from "react"
 import { prettyDuration } from "../../../jacdac-ts/src/jdom/pretty"
-import Trace from "../../../jacdac-ts/src/jdom/trace"
+import Trace from "../../../jacdac-ts/src/jdom/trace/trace"
 import AppContext, { DrawerType } from "../AppContext"
 import Markdown from "../ui/Markdown"
 import PacketsContext from "../PacketsContext"

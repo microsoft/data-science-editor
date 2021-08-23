@@ -13,7 +13,7 @@ import {
 } from "../../../jacdac-ts/src/jdom/constants"
 import useMicrophoneSpectrum from "../hooks/useMicrophoneSpectrum"
 import IconButtonWithProgress from "../ui/IconButtonWithProgress"
-import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import JDService from "../../../jacdac-ts/src/jdom/service"
 import SensorServer from "../../../jacdac-ts/src/servers/sensorserver"
 import BytesBarGraphWidget from "../widgets/BytesBarGraphWidget"
 import useRegister from "../hooks/useRegister"
