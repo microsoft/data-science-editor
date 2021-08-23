@@ -349,7 +349,6 @@ exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
     ]
     const fallback = {
         util: require.resolve("util/"),
-        assert: require.resolve("assert/"),
     }
     if (stage.startsWith("develop")) {
         setWebpackConfig({
