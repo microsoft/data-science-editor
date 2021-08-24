@@ -7,11 +7,13 @@ import DevicesOtherIcon from "@material-ui/icons/DevicesOther"
 
 function BridgeButton(props: { bridge: JDBridge; className: string }) {
     const { bridge, className } = props
+    const handleClick = () => (bridge.bus = undefined)
     return (
         <IconButtonWithTooltip
             className={className}
             color="inherit"
-            title={bridge.bridgeId}
+            title={`disconnect ${bridge.bridgeId}`}
+            onClick={handleClick}
         >
             <DevicesOtherIcon />
         </IconButtonWithTooltip>
