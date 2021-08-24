@@ -20,7 +20,7 @@ export default function CodeSandboxButton(props: {
 
         const indexJs = `
 import "milligram";
-import { createUSBBus, CHANGE, CONNECTION_STATE } from "jacdac-ts";
+import { createUSBBus, CONNECTION_STATE } from "jacdac-ts";
 ${imports}
 const connectEl = document.getElementById("connectbtn");
 const logEl = document.getElementById("log")

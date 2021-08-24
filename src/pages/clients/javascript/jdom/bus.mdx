@@ -61,7 +61,7 @@ bus.on(CONNECTION_STATE, () => {
     console.log(`connected: ${bus.connected}`)
 })
 -----
-import { CONNECTION_STATE } from "jacdac-ts"
+import { } from "jacdac-ts"
 
 // am i connected?
 log(`connected: ${bus.connected}`)
@@ -73,7 +73,7 @@ bus.on(CONNECTION_STATE, () => log(`connected: ${bus.connected}`))
 
 ### Listing devices
 
-You can query the bus at any to receive a snapshot of the [devices](/clients/javascript/jdom/device) JDOM.
+You can query the bus at receive a snapshot of the [devices](/clients/javascript/jdom/device).
 
 ```vanilla
 const devices = bus.devices()
@@ -93,6 +93,57 @@ bus.on(DEVICE_ANNOUNCE, () => {
         log(device)
 })
 ```
+
+
+### Filtering devices
+
+One can apply various filters to select devices. For example, using the ``serviceClass`` filters
+to collect devices with buttons.
+
+```vanilla
+import { SRV_BUTTON } from "jacdac-ts"
+
+const devicesWithButtons = bus.devices({ serviceClass: SRV_BUTTON })
+for(const device of devicesWithButtons)
+    console.log(device)
+-----
+import { DEVICE_ANNOUNCE, SRV_BUTTON } from "jacdac-ts"
+
+log(`connect to see buttons`)
+// listen for device announcing services
+bus.on(DEVICE_ANNOUNCE, () => {
+    // query the current list of devices
+    const devicesWithButtons = bus.devices({ serviceClass: SRV_BUTTON })
+    log("")
+    for(const device of devicesWithButtons)
+        console.log(device)
+})
+```
+
+### Filtering services
+
+One can apply various filters to select devices. For example, using the ``serviceClass`` filters
+to collect devices with buttons.
+
+```vanilla
+import { SRV_BUTTON } from "jacdac-ts"
+
+const services = bus.services({ serviceClass: SRV_BUTTON })
+for(const service of services)
+    console.log(service)
+-----
+import { DEVICE_ANNOUNCE, SRV_BUTTON } from "jacdac-ts"
+
+log(`connect to see buttons`)
+// listen for device announcing services
+bus.on(DEVICE_ANNOUNCE, () => {
+    // query button services
+    const services = bus.services({ serviceClass: SRV_BUTTON })
+    for(const service of services)
+        console.log(service)
+})
+```
+
 
 ## Events
 
