@@ -38,19 +38,21 @@ export default function DrawerSearchInput() {
             onFocus={handleFocus}
             onBlur={handleBlur}
             InputProps={
-                focused && {
-                    endAdornment: (
-                        <InputAdornment position="end">
-                            <IconButtonWithTooltip
-                                title="clear"
-                                size="small"
-                                onClick={handleClear}
-                            >
-                                <ClearIcon />
-                            </IconButtonWithTooltip>
-                        </InputAdornment>
-                    ),
-                }
+                focused
+                    ? {
+                          endAdornment: (
+                              <InputAdornment position="end">
+                                  <IconButtonWithTooltip
+                                      title="clear"
+                                      size="small"
+                                      onClick={handleClear}
+                                  >
+                                      <ClearIcon />
+                                  </IconButtonWithTooltip>
+                              </InputAdornment>
+                          ),
+                      }
+                    : undefined
             }
         />
     )
