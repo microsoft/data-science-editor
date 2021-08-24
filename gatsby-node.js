@@ -7,10 +7,12 @@ const Papa = require("papaparse")
 const {
     serviceSpecifications,
     identifierToUrlPath,
-    serviceSpecificationToDTDL,
-    DTMIToRoute,
     deviceSpecificationFromProductIdentifier,
 } = require(`./jacdac-ts/dist/jacdac.cjs`)
+const {
+    serviceSpecificationToDTDL,
+    DTMIToRoute,
+} = require(`./jacdac-ts/dist/jacdac-azure-iot.cjs`)
 const { IgnorePlugin } = require("webpack")
 const AVATAR_SIZE = 64
 const LAZY_SIZE = 96
@@ -349,7 +351,7 @@ exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
     ]
     const fallback = {
         util: require.resolve("util/"),
-        assert: require.resolve("assert/")
+        assert: require.resolve("assert/"),
     }
     if (stage.startsWith("develop")) {
         setWebpackConfig({
