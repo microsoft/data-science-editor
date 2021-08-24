@@ -49,13 +49,15 @@ export default function PacketListItem(props: {
         packet.serviceClass === SRV_LOGGER && packet.isReport && packet.isEvent
     const pipePackets = packet.meta[META_PIPE] as Packet[]
 
+    const name = decoded?.info?.name || packet.friendlyCommandName
     const primary =
-        (packet.isCRCAck && `crc ack ${packet.friendlyCommandName}`) ||
-        (packet.isAnnounce && `announce from ${packet.friendlyDeviceName}`) ||
+        (packet.isCRCAck && `crc ack ${name}`) ||
+        (packet.isAnnounce && `announce from ${name}`) ||
+        (packet.isRegisterGet && `get ${name}`) ||
         (pipePackets &&
             `pipe port:${packet.pipePort} ${pipePackets.length} packets`) ||
         (logMessage && jdunpack<[string]>(packet.data, "s")[0]) ||
-        `${decoded?.info.name || packet.friendlyCommandName} ${
+        `${packet.isRegisterSet ? "set " : ""}${name} ${
             decoded
                 ? ellipseJoin(
                       decoded.decoded.map(f => f.humanValue),

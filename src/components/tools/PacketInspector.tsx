@@ -31,6 +31,7 @@ export default function PacketInspector() {
 
     const { decoded } = packet
     const info = decoded?.info
+    const name = info?.name || packet.friendlyCommandName
     const ack = packet.meta[META_ACK] as Packet
     const pipePackets = packet.meta[META_PIPE] as Packet[]
     const get = packet.meta[META_GET] as Packet
@@ -39,7 +40,7 @@ export default function PacketInspector() {
         <>
             <h2>
                 <PacketBadge packet={packet} />
-                {`${packet.friendlyCommandName} ${
+                {`${name} ${
                     packet.isCommand ? "to" : "from"
                 } ${packet.friendlyDeviceName}/${packet.friendlyServiceName}`}
             </h2>
