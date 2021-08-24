@@ -12,6 +12,7 @@ import {
     META_ACK,
     META_GET,
     META_PIPE,
+    META_SENT_TRACE,
 } from "../../../jacdac-ts/src/jdom/constants"
 import Packet from "../../../jacdac-ts/src/jdom/packet"
 import PacketBadge from "../PacketBadge"
@@ -35,14 +36,15 @@ export default function PacketInspector() {
     const ack = packet.meta[META_ACK] as Packet
     const pipePackets = packet.meta[META_PIPE] as Packet[]
     const get = packet.meta[META_GET] as Packet
+    const sentTrace = packet.meta[META_SENT_TRACE] as string
 
     return (
         <>
             <h2>
                 <PacketBadge packet={packet} />
-                {`${name} ${
-                    packet.isCommand ? "to" : "from"
-                } ${packet.friendlyDeviceName}/${packet.friendlyServiceName}`}
+                {`${name} ${packet.isCommand ? "to" : "from"} ${
+                    packet.friendlyDeviceName
+                }/${packet.friendlyServiceName}`}
             </h2>
             <div>
                 {prettyDuration(packet.timestamp)},{" "}
@@ -96,6 +98,12 @@ export default function PacketInspector() {
                         serviceClass={packet.serviceClass}
                         packetInfo={info}
                     />
+                </>
+            )}
+            {sentTrace && (
+                <>
+                    <h3>Sent trace</h3>
+                    <pre>{sentTrace}</pre>
                 </>
             )}
         </>

@@ -14,7 +14,6 @@ import IFrameBridgeClient from "../components/makecode/iframebridgeclient"
 import Flags from "../../jacdac-ts/src/jdom/flags"
 import GamepadServerManager from "../../jacdac-ts/src/servers/gamepadservermanager"
 import jacdacTsPackage from "../../jacdac-ts/package.json"
-import { PACKET_SEND } from "../../jacdac-ts/src/jdom/constants"
 
 function sniffQueryArguments() {
     if (typeof window === "undefined" || typeof URLSearchParams === "undefined")
@@ -53,11 +52,11 @@ Flags.diagnostics = args.diagnostics
 Flags.webUSB = args.webUSB
 Flags.webBluetooth = args.webBluetooth
 Flags.webSerial = args.webSerial
+Flags.trace = args.trace
 
 export class UIFlags {
     static widget = args.widget
     static peers = args.peers
-    static trace = args.trace
 }
 
 // defeat react fast-refresh
@@ -86,9 +85,6 @@ function createBus(): JDBus {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ;(<any>window).__jacdacBus = b
     }
-
-    if (UIFlags.trace)
-        b.on(PACKET_SEND, pkt => console.trace(`pkt: send`, { pkt }))
 
     return b
 }
