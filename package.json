@@ -29,6 +29,7 @@
     "@types/wicg-file-system-access": "^2020.9.2",
     "@typescript-eslint/eslint-plugin": "^4.29.2",
     "@typescript-eslint/parser": "^4.29.2",
+    "assert": "^2.0.0",
     "blockly": "^6.20210701.0",
     "bowser": "^2.11.0",
     "compare-versions": "^3.6.0",

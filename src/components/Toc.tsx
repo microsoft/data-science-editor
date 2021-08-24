@@ -19,6 +19,7 @@ interface TocNode {
     name: string
     path: string
     order: number
+    collapse?: boolean
     children?: TocNode[]
 }
 
@@ -127,8 +128,8 @@ export default function Toc(props: { pagePath: string }) {
       }
    */
 
-    const handleClick = () => {
-        setDrawerType(DrawerType.None)
+    const handleClick = (node: TocNode) => () => {
+        if (node.collapse) setDrawerType(DrawerType.None)
     }
 
     const tree = useMemo(() => {
@@ -138,31 +139,37 @@ export default function Toc(props: { pagePath: string }) {
                 name: "Home",
                 path: "/",
                 order: 0,
+                collapse: true,
             },
             {
                 name: "Dashboard",
                 path: "/dashboard/",
                 order: 0.5,
+                collapse: true,
             },
             {
                 name: "Protocol",
                 path: "/protocol/",
                 order: 0.55,
+                collapse: true,
             },
             {
                 name: "Hardware",
                 path: "/hardware/",
                 order: 0.6,
+                collapse: true,
             },
             {
                 name: "Software",
                 path: "/software/",
                 order: 0.6,
+                collapse: true,
             },
             {
                 name: "Tools",
                 path: "/tools/",
                 order: 0.7,
+                collapse: true,
             },
             {
                 name: "Reference",
@@ -179,7 +186,6 @@ export default function Toc(props: { pagePath: string }) {
                 path: "/devices/",
                 order: 0.95,
             },
-
             {
                 name: "Clients",
                 path: "/clients/",
@@ -240,7 +246,7 @@ export default function Toc(props: { pagePath: string }) {
                 <ListItem button selected={selected} key={"tocitem" + path}>
                     <Link
                         style={{ color: theme.palette.text.primary }}
-                        onClick={handleClick}
+                        onClick={handleClick(entry)}
                         to={path}
                     >
                         <ListItemText
@@ -258,7 +264,7 @@ export default function Toc(props: { pagePath: string }) {
                     <Box ml={level > 0 ? 1 : 0}>
                         {children?.map(child => (
                             <TocListItem
-                                key={"tocitem" + child.path}
+                                key={child.path}
                                 entry={child}
                                 level={level + 1}
                             />
@@ -272,6 +278,7 @@ export default function Toc(props: { pagePath: string }) {
     return (
         <List dense className={classes.root}>
             {tree.map(entry => (
+                // eslint-disable-next-line react/prop-types
                 <TocListItem key={entry.path} entry={entry} level={0} />
             ))}
         </List>
