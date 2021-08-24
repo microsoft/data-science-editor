@@ -32,8 +32,22 @@ ${js}
         <div>
         <button id="connectbtn">connect</button>
         </div>    
+
 ${html}
-        <script src="./index.js" />
+
+    <footer>
+        <small>
+        Need to learn more about Jacdac?
+        <a target="_blank" href="https://aka.ms/jacdac">Read the docs</a>
+        or
+        <a
+            target="_blank"
+            href="https://github.com/microsoft/jacdac/discussions"
+            >start a discussion</a
+        >.
+        </small>
+    </footer>
+    <script src="./index.js" />
     </body>
 </html>    
         `
