@@ -152,5 +152,6 @@
   },
   "bugs": {
     "url": "https://github.com/microsoft/jacdac-docs/issues"
-  }
+  },
+  "browserslist": ["supports es6-module", "Edge > 80", "Chrome > 80", "Firefox > 80"]
 }
