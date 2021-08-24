@@ -4,3 +4,4 @@ static/images/makecode
 public
 .DS_Store
 src/workers/dist
+yarn-error.log
