@@ -28,7 +28,11 @@ export default class PeerJSBridge extends JDBridge {
             this.log(`peer: disconnected`)
             this.bus = undefined
         })
-        this._peer.on("error", console.error)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        this._peer.on("error", (e: any) => {
+            console.error(e)
+            this.bus = undefined
+        })
 
         this.mount(() => {
             if (!this._peer.destroyed) {
