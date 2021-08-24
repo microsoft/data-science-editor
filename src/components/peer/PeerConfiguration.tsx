@@ -16,6 +16,7 @@ import PeerJSBridge, { PeerConnection } from "./peerjsbridge"
 import GridHeader from "../ui/GridHeader"
 import Alert from "../ui/Alert"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
+import { UIFlags } from "../../jacdac/providerbus"
 
 function PeerItem(props: { peer: PeerJSBridge }) {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
@@ -129,7 +130,7 @@ function ConnectionItem(props: { connection: PeerConnection }) {
 
 export default function Peers() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const { peers: enabled } = Flags
+    const { peers: enabled } = UIFlags
     const peer = useChange(
         bus,
         _ => _.bridges.find(b => b instanceof PeerJSBridge) as PeerJSBridge
