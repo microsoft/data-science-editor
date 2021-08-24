@@ -15,7 +15,6 @@ import { Button, Link } from "gatsby-theme-material-ui"
 import PeerJSBridge, { PeerConnection } from "./peerjsbridge"
 import GridHeader from "../ui/GridHeader"
 import Alert from "../ui/Alert"
-import Flags from "../../../jacdac-ts/src/jdom/flags"
 import { UIFlags } from "../../jacdac/providerbus"
 
 function PeerItem(props: { peer: PeerJSBridge }) {
@@ -93,6 +92,7 @@ function ConnectItem(props: { peer: PeerJSBridge }) {
                         fullWidth
                         type="text"
                         label="Peer identifier"
+                        helperText="Copy the remote connection identifier"
                     />
                 </CardContent>
                 <CardActions>
@@ -147,7 +147,7 @@ export default function Peers() {
                 the &nbsp;
                 <Link href="https://peerjs.com/peerserver.html">
                     PeerServer Cloud Service
-                </Link>
+                </Link> &nbsp;
                 to establish connections. No data is sent through the server.
             </p>
             {!enabled && (

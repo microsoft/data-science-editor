@@ -4,8 +4,8 @@ import JDBridge from "../../../jacdac-ts/src/jdom/bridge"
 import Peer, { DataConnection } from "peerjs"
 
 export interface PeerConnection {
-    label: string;
-    close: () => void;
+    label: string
+    close: () => void
 }
 
 export default class PeerJSBridge extends JDBridge {
@@ -17,13 +17,13 @@ export default class PeerJSBridge extends JDBridge {
 
         this._peer = new Peer()
         this._peer.on("open", () => {
-            this.log(`open`)
+            this.log(`peer: connected`)
             this.emit(CHANGE)
         })
         this._peer.on("connection", this.addConnection.bind(this))
         this._peer.on("disconnected", () => {
-            this.log(`disconnected`)
-            this.bus = undefined;
+            this.log(`peer: disconnected`)
+            this.bus = undefined
         })
         this._peer.on("error", console.error)
 
@@ -36,10 +36,10 @@ export default class PeerJSBridge extends JDBridge {
     }
 
     private addConnection(conn: DataConnection) {
-        this.log(`connection`)
+        this.log(`peer: connection`)
         this._connections.push(conn)
         conn.on("open", () => {
-            this.log("open")
+            this.log("peer: opened")
             this.emit(CHANGE)
         })
         conn.on("data", buf => {
@@ -58,7 +58,7 @@ export default class PeerJSBridge extends JDBridge {
     }
 
     get connections(): PeerConnection[] {
-        return this._connections;
+        return this._connections
     }
 
     protected sendPacket(data: Uint8Array) {
