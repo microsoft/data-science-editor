@@ -5,6 +5,8 @@ It processes the incoming and outcoming packets,
 handles the connection to the underlying communiction transport
 and maintains a set of active [devices](/clients/javascript/jdom/device/) nodes.
 
+* [API reference](https://microsoft.github.io/jacdac-ts/classes/JDBus.html)
+
 ## WebUSB bus
 
 The most common use is to create a bus that uses WebUSB to
@@ -67,11 +69,11 @@ log(`connected: ${bus.connected}`)
 bus.on(CONNECTION_STATE, () => log(`connected: ${bus.connected}`))
 ```
 
-## Methods
+## Recipes
 
-### Devices
+### Listing devices
 
-You can query the bus at any to receive a snapshot of the [devices](./device) JDOM.
+You can query the bus at any to receive a snapshot of the [devices](/clients/javascript/jdom/device) JDOM.
 
 ```vanilla
 const devices = bus.devices()
