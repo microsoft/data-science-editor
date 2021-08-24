@@ -1,5 +1,6 @@
 import { useContext } from "react"
-import { DeviceFilter, ServiceFilter } from "../../../jacdac-ts/src/jdom/bus"
+import DeviceFilter from "../../../jacdac-ts/src/jdom/filters/devicefilter"
+import ServiceFilter from "../../../jacdac-ts/src/jdom/filters/servicefilter"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import useChange from "../../jacdac/useChange"
 

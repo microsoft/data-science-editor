@@ -1,5 +1,5 @@
 import { DependencyList, useContext } from "react"
-import { DeviceFilter } from "../../../jacdac-ts/src/jdom/bus"
+import DeviceFilter from "../../../jacdac-ts/src/jdom/filters/devicefilter"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import useChange from "../../jacdac/useChange"
 
