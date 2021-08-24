@@ -3,7 +3,7 @@ import {
     createStyles,
     GridList,
     GridListTile,
-    GridListTileBar,
+    ImageListItemBar,
     makeStyles,
     Theme,
     Typography,
@@ -76,7 +76,7 @@ export default function DeviceSpecificationList(props: {
                 return (
                     <GridListTile key={spec.id}>
                         <img src={imageUrl} alt={spec.name} loading="lazy" />
-                        <GridListTileBar
+                        <ImageListItemBar
                             title={spec.name}
                             subtitle={
                                 <Markdown

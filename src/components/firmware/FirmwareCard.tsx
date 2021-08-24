@@ -43,7 +43,6 @@ export default function FirmwareCard(props: { slug: string }) {
         !!tag &&
         !!version &&
         tag !== version.replace(/^v/, "").substr(0, tag.length)
-    console.log({ version, tag, updateAvailable })
     const downloadColor = updateAvailable ? "primary" : "inherit"
     const downloadVariant = updateAvailable ? "contained" : "text"
 
