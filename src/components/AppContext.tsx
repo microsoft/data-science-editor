@@ -9,7 +9,7 @@ import React, {
     useState,
 } from "react"
 import { ERROR } from "../../jacdac-ts/src/jdom/constants"
-import errorPath from "../../jacdac-ts/src/jdom/error"
+import { errorCode } from "../../jacdac-ts/src/jdom/error"
 import JDService from "../../jacdac-ts/src/jdom/service"
 import { isCancelError } from "../../jacdac-ts/src/jdom/utils"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
@@ -63,7 +63,6 @@ export default AppContext
 // eslint-disable-next-line react/prop-types
 export const AppProvider = ({ children }) => {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const [secrets, setSecrets] = useState<Record<string, string>>({})
     const [type, setType] = useState(DrawerType.None)
     const [searchQuery, setSearchQuery] = useState("")
     const [toolsMenu, _setToolsMenu] = useState(false)
@@ -77,7 +76,7 @@ export const AppProvider = ({ children }) => {
     const setError = (e: any) => {
         if (!e || isCancelError(e)) return
         const msg = e?.message || e + ""
-        const code = errorPath(e)
+        const code = errorCode(e)
 
         _enqueueSnackbar(msg, {
             variant: "error",
