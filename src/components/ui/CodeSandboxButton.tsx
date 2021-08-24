@@ -3,27 +3,33 @@ import AppContext from "../AppContext"
 import EditIcon from "@material-ui/icons/Edit"
 import IconButtonWithTooltip from "./IconButtonWithTooltip"
 
-const HTML_TEMPLATE = `<p>Open Javascript console to see messages...</p>`
-
 export default function CodeSandboxButton(props: {
     title?: string
     source: { js: string; html: string }
 }) {
     const { title, source } = props
-    const { js = "", html = HTML_TEMPLATE } = source
+    const { js = "", html = "" } = source
     const { setError } = useContext(AppContext)
     const [importing, setImporting] = useState(false)
 
     const handleClick = async () => {
+        // find imports
+        const i = js.indexOf("\n\n")
+        const imports = js.slice(0, i)
+        const code = js.slice(i + 2).trim()
+
         const indexJs = `
 import "milligram";
 import { createUSBBus, CHANGE } from "jacdac-ts";
-const btn = document.getElementById("connectbtn");
+${imports}
+const connectEl = document.getElementById("connectbtn");
+const logEl = document.getElementById("log")
+const log = (msg) => logEl.innerText += msg + "\\n"
 const bus = createUSBBus();
-bus.on(CHANGE, () => { btn.innerText = bus.connected ? "connected 🎉" : "connect" })
-btn.onclick = async () => bus.connect();
+bus.on(CHANGE, () => { connectEl.innerText = bus.connected ? "connected 🎉" : "connect" })
+connectEl.onclick = async () => bus.connect();
 
-${js}
+${code}
 `
         const indexHtml = `
 <html>
@@ -34,6 +40,7 @@ ${js}
         </div>    
 
 ${html}
+        <pre id="log"></pre>
 
     <footer>
         <small>
