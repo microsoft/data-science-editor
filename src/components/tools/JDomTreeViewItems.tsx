@@ -114,9 +114,10 @@ export function DeviceTreeItem(
 
 export function AnnounceFlagsTreeItem(props: { device: JDDevice }) {
     const { device } = props
-    const { announceFlags, id } = device
+    const { announceFlags, id, deviceId } = device
 
     const text = [
+        deviceId,
         announceFlags & ControlAnnounceFlags.IsClient && "client",
         announceFlags & ControlAnnounceFlags.SupportsACK && "acks",
         announceFlags & ControlAnnounceFlags.SupportsBroadcast && "broadcast",
