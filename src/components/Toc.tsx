@@ -169,7 +169,6 @@ export default function Toc(props: { pagePath: string }) {
                 name: "Tools",
                 path: "/tools/",
                 order: 0.7,
-                collapse: true,
             },
             {
                 name: "Reference",
@@ -239,7 +238,8 @@ export default function Toc(props: { pagePath: string }) {
         const { entry, level } = props
         const { path, children, name } = entry
         const selected = pagePath === path
-        const sub = level === 1 || (!!children && !!children.length)
+        const sub = level === 1 || !!children?.length
+        const showSub = sub && !!children?.length && pagePath.startsWith(path)
 
         return (
             <>
@@ -260,7 +260,7 @@ export default function Toc(props: { pagePath: string }) {
                         />
                     </Link>
                 </ListItem>
-                {sub && !!children?.length && (
+                {showSub && (
                     <Box ml={level > 0 ? 1 : 0}>
                         {children?.map(child => (
                             <TocListItem
