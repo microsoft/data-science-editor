@@ -16,6 +16,7 @@ import PeerJSBridge, { PeerConnection } from "./peerjsbridge"
 import GridHeader from "../ui/GridHeader"
 import Alert from "../ui/Alert"
 import { UIFlags } from "../../jacdac/providerbus"
+import LoadingProgress from "../ui/LoadingProgress"
 
 function PeerItem(props: { peer: PeerJSBridge }) {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
@@ -111,7 +112,7 @@ function ConnectItem(props: { peer: PeerJSBridge }) {
 
 function ConnectionItem(props: { connection: PeerConnection }) {
     const { connection } = props
-    const { label } = connection
+    const { label, open } = connection
     const handleDisconnect = () => connection.close()
 
     return (
@@ -119,9 +120,13 @@ function ConnectionItem(props: { connection: PeerConnection }) {
             <Card>
                 <CardHeader title={label} />
                 <CardActions>
-                    <Button variant="outlined" onClick={handleDisconnect}>
-                        Disconnect
-                    </Button>
+                    {open ? (
+                        <Button variant="outlined" onClick={handleDisconnect}>
+                            Disconnect
+                        </Button>
+                    ) : (
+                        <LoadingProgress />
+                    )}
                 </CardActions>
             </Card>
         </Grid>
@@ -147,8 +152,9 @@ export default function Peers() {
                 the &nbsp;
                 <Link href="https://peerjs.com/peerserver.html">
                     PeerServer Cloud Service
-                </Link> &nbsp;
-                to establish connections. No data is sent through the server.
+                </Link>{" "}
+                &nbsp; to establish connections. No data is sent through the
+                server.
             </p>
             {!enabled && (
                 <Alert severity="error">

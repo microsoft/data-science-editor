@@ -2,9 +2,11 @@
 import { CHANGE } from "../../../jacdac-ts/src/jdom/constants"
 import JDBridge from "../../../jacdac-ts/src/jdom/bridge"
 import Peer, { DataConnection } from "peerjs"
+import Flags from "../../../jacdac-ts/src/jdom/flags"
 
 export interface PeerConnection {
     label: string
+    open: boolean
     close: () => void
 }
 
@@ -15,7 +17,8 @@ export default class PeerJSBridge extends JDBridge {
     constructor() {
         super()
 
-        this._peer = new Peer()
+        const { diagnostics } = Flags
+        this._peer = new Peer({ secure: true, debug: diagnostics ? 4 : 0 })
         this._peer.on("open", () => {
             this.log(`peer: connected`)
             this.emit(CHANGE)
@@ -72,7 +75,7 @@ export default class PeerJSBridge extends JDBridge {
     }
 
     connect(id: string) {
-        const conn = this._peer.connect(id)
+        const conn = this._peer.connect(id, { reliable: false })
         this.addConnection(conn)
     }
 }
