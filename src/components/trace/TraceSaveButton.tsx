@@ -5,17 +5,19 @@ import ServiceManagerContext from "../ServiceManagerContext"
 import PacketsContext from "../PacketsContext"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 
-export default function TraceSaveButton(props: { disabled?: boolean }) {
-    const { disabled } = props
-    const { replayTrace, recording } = useContext(PacketsContext)
+export default function TraceSaveButton() {
+    const { replayTrace, trace, recording, tracing } =
+        useContext(PacketsContext)
     const { fileStorage } = useContext(ServiceManagerContext)
+    const savedTrace = replayTrace || trace
     const saveTrace = () => {
-        fileStorage.saveText("trace.jd.txt", replayTrace.serializeToText())
+        const text = savedTrace.serializeToText()
+        fileStorage.saveText("trace.jd.txt", text)
     }
     return (
         <IconButtonWithTooltip
             title="save trace"
-            disabled={disabled || recording || !replayTrace?.packets.length}
+            disabled={recording || tracing || !savedTrace?.packets.length}
             size="small"
             key="save"
             onClick={saveTrace}

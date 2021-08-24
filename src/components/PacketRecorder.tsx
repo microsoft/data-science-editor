@@ -35,7 +35,7 @@ export default function PacketRecorder() {
                 </Typography>
             )}
             <TraceImportButton icon={true} disabled={tracing || recording} />
-            <TraceSaveButton disabled={tracing || !replayTrace} />
+            <TraceSaveButton />
             |
             <TraceRecordButton size="small" />
             <TracePlayButton size="small" />
