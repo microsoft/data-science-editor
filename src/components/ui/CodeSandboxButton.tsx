@@ -20,14 +20,18 @@ export default function CodeSandboxButton(props: {
 
         const indexJs = `
 import "milligram";
-import { createUSBBus, CHANGE } from "jacdac-ts";
+import { createUSBBus, CHANGE, CONNECTION_STATE } from "jacdac-ts";
 ${imports}
 const connectEl = document.getElementById("connectbtn");
 const logEl = document.getElementById("log")
 const log = (msg) => logEl.innerText += msg + "\\n"
+// create WebUSB bus
 const bus = createUSBBus();
-bus.on(CHANGE, () => { connectEl.innerText = bus.connected ? "connected 🎉" : "connect" })
-connectEl.onclick = async () => bus.connect();
+// track connection state and update button
+bus.on(CONNECTION_STATE, () => { connectEl.innerText = bus.connected ? "connected 🎉" : "connect" })
+// connect must be triggered by a user interaction
+connectEl.onclick = async () =>
+  bus.connected ? bus.disconnect() : bus.connect();
 
 ${code}
 `

@@ -10,10 +10,15 @@ and maintains a set of active [devices](/clients/javascript/jdom/device/) nodes.
 The most common use is to create a bus that uses WebUSB to
 communicate to a physical Jacdac device. This is done with ``createUSBBus``.
 
-```javascript
+```vanilla
 import { createUSBBus } from "jacdac-ts"
 
 const bus = createUSBBus();
+-----
+import {} from "jacdac-ts"
+
+// listen for changes
+bus.on(CHANGE, () => log(bus))
 ```
 
 ## Connection and disconnection
@@ -22,8 +27,13 @@ By default, the WebUSB bus will try to reconnect
 to any known connected physical device. The Jacdac physical device hasn't been paired yet,
 you can initiate the connection from a user interaction handler (security measure as the user must manually pick the device).
 
-```javascript
+```vanilla
 await bus.connect();
+-----
+import {} from "jacdac-ts"
+
+// listen for changes
+bus.on(CHANGE, () => log(bus))
 ```
 
 The bus will detect that the physical device is disconnected automatically. If you wish to disconnect manually, use
@@ -41,10 +51,18 @@ You can query the status of the connection using ``bus.connectionState``. The co
 
 Using the ``CONNECTION_STATE`` event, you can track changes of the state.
 
-```javascript
-// am i in connected state?
+```vanilla
+// am i connected?
 const connected = bus.connected
-bus.on(CONNECTION_STATE, state => console.log(state))
+// track connection state
+bus.on(CONNECTION_STATE, () => log(`connected: ${bus.connected}`))
+-----
+import { CONNECTION_STATE } from "jacdac-ts"
+
+// am i connected?
+log(`connected: ${bus.connected}`)
+// track connection state
+bus.on(CONNECTION_STATE, () => log(`connected: ${bus.connected}`))
 ```
 
 ## Methods
