@@ -23,7 +23,7 @@ const CodeSandboxButton = lazy(() => import("./ui/CodeSandboxButton"))
 
 function HighlightedCode(props: {
     children: string
-    codeSandbox?: boolean
+    codeSandbox?: { js: string; html: string }
     className?: string
     downloadName?: string
     downloadText?: string
@@ -82,7 +82,7 @@ function HighlightedCode(props: {
                     {codeSandbox && (
                         <div style={{ float: "right" }}>
                             <Suspense>
-                                <CodeSandboxButton source={children} />
+                                <CodeSandboxButton source={codeSandbox} />
                             </Suspense>
                         </div>
                     )}
@@ -114,9 +114,10 @@ export default function CodeBlock(props: {
     actions?: ReactNode
     url?: string
 }) {
-    const { children, className } = props
+    const { children, className, ...rest } = props
     const language = className?.replace(/language-/, "") || ""
 
+    console.log(`snippet`, props)
     switch (language) {
         case "trace":
             return (
@@ -126,14 +127,19 @@ export default function CodeBlock(props: {
             )
         case "blocks":
             return <MakeCodeSnippet renderedSource={children} />
-        case "vanilla":
+        case "vanilla": {
+            const [source, js, html] = children.split(/\n-{5,}\n/gi)
+            console.log({ children, source, js, html })
             return (
                 <HighlightedCode
-                    {...props}
+                    {...rest}
                     className={"javascript"}
-                    codeSandbox={true}
-                />
+                    codeSandbox={{ js, html }}
+                >
+                    {source}
+                </HighlightedCode>
             )
+        }
         default:
             return <HighlightedCode {...props} />
     }

@@ -29,6 +29,8 @@ const bus = createUSBBus();
 bus.on(CHANGE, () => console.log(bus.devices()))
 // call connect from a user interaction
 bus.connect();
+-----
+bus.on(CHANGE, () => console.log(bus.devices()));
 ```
 
 ## Node.JS CommonJS/ES6
@@ -36,7 +38,7 @@ bus.connect();
 In Node.JS, you can use the ``require`` (CommonJS) or ``import`` (ES6) approach to use JDOM.
 Since JDOM is using the [node-usb](https://www.npmjs.com/package/usb) npm package, make sure to configure your machine to use USB.
 
-```vanilla
+```typescript
 import { createUSBBus, createNodeUSBOptions, ... } from "jacdac-ts"
 
 const options = createNodeUSBOptions()

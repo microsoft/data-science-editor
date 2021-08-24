@@ -3,20 +3,36 @@ import AppContext from "../AppContext"
 import EditIcon from "@material-ui/icons/Edit"
 import IconButtonWithTooltip from "./IconButtonWithTooltip"
 
-export default function CodeSandboxButton(props: { source: string }) {
-    const { source } = props
+const HTML_TEMPLATE = `<p>Open Javascript console to see messages...</p>`
+
+export default function CodeSandboxButton(props: {
+    title?: string
+    source: { js: string; html: string }
+}) {
+    const { title, source } = props
+    const { js = "", html = HTML_TEMPLATE } = source
     const { setError } = useContext(AppContext)
     const [importing, setImporting] = useState(false)
 
     const handleClick = async () => {
-        const content = source
-        const html = `
+        const indexJs = `
+import "milligram";
+import { createUSBBus, CHANGE } from "jacdac-ts";
+const btn = document.getElementById("connectbtn");
+const bus = createUSBBus();
+bus.on(CHANGE, () => { btn.innerText = bus.connected ? "connected 🎉" : "connect" })
+btn.onclick = async () => bus.connect();
+
+${js}
+`
+        const indexHtml = `
 <html>
-    <script src="./node_modules/jacdac-ts/dist/jacdac-umd.js" />
     <body>
-        <p>
-            Open console to see messages...
-        </p>
+        <h1>Jacdac ${title || "demo"}</h1>
+        <div>
+        <button id="connectbtn">connect</button>
+        </div>    
+${html}
         <script src="./index.js" />
     </body>
 </html>    
@@ -37,14 +53,15 @@ export default function CodeSandboxButton(props: { source: string }) {
                                 content: {
                                     dependencies: {
                                         "jacdac-ts": "latest",
+                                        milligram: "latest",
                                     },
                                 },
                             },
                             "index.js": {
-                                content,
+                                content: indexJs,
                             },
                             "index.html": {
-                                content: html,
+                                content: indexHtml,
                             },
                         },
                     }),
