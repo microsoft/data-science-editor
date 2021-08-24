@@ -26,6 +26,7 @@ import {
     TOOLS_DRAWER_WIDTH,
     MOBILE_TOOLS_DRAWER_WIDTH,
 } from "../layout"
+import BridgeButtons from "../ui/BridgeButtons"
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -130,6 +131,7 @@ export default function MainAppBar() {
                         </Hidden>
                         <div className={classes.grow} />
                         <PacketStats />
+                        <BridgeButtons className={clsx(classes.menuButton)} />
                         <OpenDashboardButton
                             className={clsx(classes.menuButton)}
                         />
