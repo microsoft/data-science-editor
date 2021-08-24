@@ -55,7 +55,9 @@ Using the ``CONNECTION_STATE`` event, you can track changes of the state.
 // am i connected?
 const connected = bus.connected
 // track connection state
-bus.on(CONNECTION_STATE, () => log(`connected: ${bus.connected}`))
+bus.on(CONNECTION_STATE, () => {
+    console.log(`connected: ${bus.connected}`)
+})
 -----
 import { CONNECTION_STATE } from "jacdac-ts"
 
@@ -71,10 +73,23 @@ bus.on(CONNECTION_STATE, () => log(`connected: ${bus.connected}`))
 
 You can query the bus at any to receive a snapshot of the [devices](./device) JDOM.
 
-```javascript
+```vanilla
 const devices = bus.devices()
 for(const device of devices)
     console.log(device)
+-----
+import { DEVICE_ANNOUNCE } from "jacdac-ts"
+
+log(`connect to see devices`)
+// listen for device announcing services
+bus.on(DEVICE_ANNOUNCE, () => {
+    // query the current list of devices
+    const devices = bus.devices()
+    // print to console
+    log("")
+    for(const device of devices)
+        log(device)
+})
 ```
 
 ## Events
@@ -86,7 +101,7 @@ All bus state mutation are advertised by events. You can listen or subscribe to 
 Catch all event raised when some change happened to the bus, whether it is a connection change or a change in the list of services
 or the error state changed.
 
-```javascript
+```vanilla
 import { CHANGE } from "jacdac-ts"
 
 bus.on(CHANGE, () => {
@@ -94,26 +109,21 @@ bus.on(CHANGE, () => {
     for(const device of devices)
         console.log(device)
 })
+-----
+import { } from "jacdac-ts"
+
+log(`connect to see devices`)
+// listen for device announcing services
+bus.on(CHANGE, () => {
+    // query the current list of devices
+    const devices = bus.devices()
+    // print to console
+    log(`connected: ${bus.connected}`)
+    for(const device of devices)
+        log(device)
+})
 ```
 
-### ``CONNECTION_STATE``
-
-Raised when the connection state of the bus has changed.
-
-```javascript
-bus.on(CONNECTION_STATE, state => console.log(`bus connection state: ${state}`))
-```
-
-### ``CONNECT``, ``CONNECTING``, ``DISCONNECTING``, ``DISCONNECT``
-
-Raised on each connection state changes.
-
-```javascript
-bus.on(CONNECT, state => console.log(`bus connected`))
-bus.on(CONNECTING, state => console.log(`bus connecting`))
-bus.on(DISCONNECTING, state => console.log(`bus disconnecting`))
-bus.on(DISCONNECT, state => console.log(`bus disconnected`))
-```
 
 ### ``ERROR``
 

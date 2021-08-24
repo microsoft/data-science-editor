@@ -24,7 +24,10 @@ import { createUSBBus, CHANGE, CONNECTION_STATE } from "jacdac-ts";
 ${imports}
 const connectEl = document.getElementById("connectbtn");
 const logEl = document.getElementById("log")
-const log = (msg) => logEl.innerText += msg + "\\n"
+const log = (msg) => {
+    console.log(msg)
+    logEl.innerText += msg + "\\n"
+}
 // create WebUSB bus
 const bus = createUSBBus();
 // track connection state and update button
