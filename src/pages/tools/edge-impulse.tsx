@@ -52,7 +52,7 @@ import ReadingFieldGrid from "../../components/ReadingFieldGrid"
 import useChartPalette from "../../components/useChartPalette"
 import SensorAggregatorClient, {
     SensorAggregatorConfig,
-} from "../../../jacdac-ts/src/jdom/clients/sensoraggregatorclient"
+} from "../../../jacdac-ts/src/clients/sensoraggregatorclient"
 import { AlertTitle } from "@material-ui/lab"
 import { serviceName } from "../../../jacdac-ts/src/jdom/pretty"
 import ConnectAlert from "../../components/alert/ConnectAlert"

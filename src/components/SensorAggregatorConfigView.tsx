@@ -4,7 +4,7 @@ import { serviceName } from "../../jacdac-ts/src/jdom/pretty"
 import {
     SensorAggregatorConfig,
     SensorAggregatorInputConfig,
-} from "../../jacdac-ts/src/jdom/clients/sensoraggregatorclient"
+} from "../../jacdac-ts/src/clients/sensoraggregatorclient"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import DeviceName from "./devices/DeviceName"
 
