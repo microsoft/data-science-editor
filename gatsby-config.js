@@ -20,7 +20,6 @@ module.exports = {
         FAST_DEV: true,
     },
     plugins: [
-        `gatsby-plugin-no-sourcemaps`,
         `gatsby-transformer-plaintext`,
         {
             resolve: `gatsby-source-filesystem`,

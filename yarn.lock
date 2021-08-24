@@ -7958,11 +7958,6 @@ gatsby-plugin-meta-redirect@^1.1.1:
   dependencies:
     fs-extra "^7.0.0"
 
-gatsby-plugin-no-sourcemaps@^3.12.0:
-  version "3.12.0"
-  resolved "https://registry.yarnpkg.com/gatsby-plugin-no-sourcemaps/-/gatsby-plugin-no-sourcemaps-3.12.0.tgz#6e874aa5fdcffc3b2703af805f6c39190ec4c1ef"
-  integrity sha512-kf+W5yudXX4GqojQ5OEB4dvSRxSnk4qcdyWTx2lI2kmZE63G0AuSplK8cskvNikWOjaHJNJuGsK4fOiiMe5Z+Q==
-
 gatsby-plugin-nprogress@^3.12.0:
   version "3.12.0"
   resolved "https://registry.yarnpkg.com/gatsby-plugin-nprogress/-/gatsby-plugin-nprogress-3.12.0.tgz#ec94d7601da5daad38377f2cdda96b4af39a55f7"
