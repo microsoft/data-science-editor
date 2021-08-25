@@ -117,7 +117,6 @@ export default function CodeBlock(props: {
     const { children, className, ...rest } = props
     const language = className?.replace(/language-/, "") || ""
 
-    console.log(`snippet`, props)
     switch (language) {
         case "trace":
             return (
@@ -129,7 +128,6 @@ export default function CodeBlock(props: {
             return <MakeCodeSnippet renderedSource={children} />
         case "vanilla": {
             const [source, js, html] = children.split(/\n-{5,}\n/gi)
-            console.log({ children, source, js, html })
             return (
                 <HighlightedCode
                     {...rest}
