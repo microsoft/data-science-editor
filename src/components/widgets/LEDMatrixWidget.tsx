@@ -3,8 +3,8 @@ import SvgWidget from "./SvgWidget"
 import useWidgetTheme from "./useWidgetTheme"
 import useFireKey from "../hooks/useFireKey"
 import useKeyboardNavigationProps from "../hooks/useKeyboardNavigationProps"
-import { toggle } from "../../../jacdac-ts/src/servers/ledmatrixserver"
 import LoadingProgress from "../ui/LoadingProgress"
+import { toggleBit } from "../../../jacdac-ts/src/jdom/utils"
 
 export default function LEDMatrixWidget(props: {
     leds: Uint8Array
@@ -59,7 +59,7 @@ export default function LEDMatrixWidget(props: {
                     newLeds = temp
                 }
             }
-            toggle(newLeds, bitindex)
+            toggleBit(newLeds, bitindex)
             setCurrentLeds(newLeds)
             onChange?.(newLeds)
         }
