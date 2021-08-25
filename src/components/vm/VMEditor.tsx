@@ -62,7 +62,7 @@ function VMEditorWithContext() {
     useEffect(
         () =>
             program &&
-            roleManager?.setRoles([
+            roleManager?.updateRoles([
                 ...program.roles,
                 ...program.serverRoles.map(r => ({
                     role: r.role,

@@ -5,11 +5,10 @@ import {
     VMProgramRunner,
     VMTraceContext,
 } from "../../../jacdac-ts/src/vm/runner"
-import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import AppContext from "../AppContext"
 import { ERROR, TRACE } from "../../../jacdac-ts/src/jdom/constants"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
-import RoleManager from "../../../jacdac-ts/src/servers/rolemanager"
+import RoleManager from "../../../jacdac-ts/src/jdom/rolemanager"
 
 export default function useVMRunner(
     roleManager: RoleManager,
