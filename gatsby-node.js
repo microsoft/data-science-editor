@@ -8,6 +8,7 @@ const {
     serviceSpecifications,
     identifierToUrlPath,
     deviceSpecificationFromProductIdentifier,
+    isInfrastructure,
 } = require(`./jacdac-ts/dist/jacdac.cjs`)
 const {
     serviceSpecificationToDTDL,
@@ -269,7 +270,9 @@ async function createSpecPages(graphql, actions, reporter) {
 
 async function generateServicesJSON() {
     const dir = "./public"
-    const services = serviceSpecifications()
+    const services = serviceSpecifications().filter(
+        srv => !isInfrastructure(srv)
+    )
 
     // JSON
     for (const srv of services) {
