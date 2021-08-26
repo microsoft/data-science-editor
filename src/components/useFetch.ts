@@ -12,14 +12,19 @@ export default function useFetch<T>(url: RequestInfo, options?: RequestInit) {
         async mounted => {
             setLoading(true)
             try {
-                const res = await fetch(url, options)
-                if (!mounted()) return
-                const status = res.status
-                setStatus(status)
-                if (status >= 200 && status <= 204) {
-                    const json = await res.json()
+                if (!url) {
+                    setStatus(404)
+                    setResponse(undefined)
+                } else {
+                    const res = await fetch(url, options)
                     if (!mounted()) return
-                    setResponse(json)
+                    const status = res.status
+                    setStatus(status)
+                    if (status >= 200 && status <= 204) {
+                        const json = await res.json()
+                        if (!mounted()) return
+                        setResponse(json)
+                    }
                 }
             } catch (error) {
                 if (!mounted()) return
