@@ -165,27 +165,21 @@ async function createDevicePages(graphql, actions, reporter) {
                 })
             })
         // copy device image to static
-        const imgpath = identifierToUrlPath(node.id) + ".jpg"
+        const nodePath = identifierToUrlPath(node.id)
+        const imgpath = nodePath + ".jpg"
         const imgsrc = `./jacdac-ts/jacdac-spec/devices/${imgpath}`
+        console.log(`image ${nodePath} -> ${imgpath}`)
         await fs.copy(imgsrc, `./public/images/devices/${imgpath}`)
         await sharp(imgsrc)
             .resize(null, LAZY_SIZE, {
                 fit: sharp.fit.cover,
             })
             .toFormat("jpeg")
-            .toFile(
-                `./public/images/devices/${
-                    identifierToUrlPath(node.id) + ".lazy.jpg"
-                }`
-            )
+            .toFile(`./public/images/devices/${nodePath}.lazy.jpg`)
         await sharp(imgsrc)
             .resize(AVATAR_SIZE, AVATAR_SIZE, { fit: sharp.fit.cover })
             .toFormat("jpeg")
-            .toFile(
-                `./public/images/devices/${
-                    identifierToUrlPath(node.id) + ".avatar.jpg"
-                }`
-            )
+            .toFile(`./public/images/devices/${nodePath}.avatar.jpg`)
     }
 
     const snakify = name => {
