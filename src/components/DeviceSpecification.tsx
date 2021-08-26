@@ -16,7 +16,7 @@ import useDeviceImage from "./devices/useDeviceImage"
 
 export default function DeviceSpecification(props: {
     device: jdspec.DeviceSpec
-    showSource?: string
+    showSource?: boolean
 }) {
     const { device, showSource } = props
     const gridBreakpoints = useGridBreakpoints()
@@ -24,9 +24,7 @@ export default function DeviceSpecification(props: {
 
     return (
         <>
-            <h2 key="title">
-                <Link to={device.link}>{device.name}</Link>
-            </h2>
+            <h2 key="title">{device.name}</h2>
             <Typography variant="subtitle1">
                 by{" "}
                 <Link
