@@ -42,14 +42,18 @@ export default function DeviceSpecificationList(props: {
     count?: number
     shuffle?: boolean
     company?: string
+    deprecated?: boolean
     requiredServiceClasses?: number[]
 }) {
-    const { count, shuffle, requiredServiceClasses, company } = props
+    const { count, shuffle, requiredServiceClasses, company, deprecated } =
+        props
     const classes = useStyles()
     const { mobile, medium } = useMediaQueries()
     const cols = mobile ? 1 : medium ? 3 : 4
     const specs = useMemo(() => {
-        let r = deviceSpecifications()
+        let r = deviceSpecifications().filter(
+            spec => deprecated || !spec.deprecated
+        )
         if (company) r = r.filter(spec => spec.company === company)
         if (requiredServiceClasses)
             r = r.filter(
@@ -62,7 +66,7 @@ export default function DeviceSpecificationList(props: {
         if (shuffle) arrayShuffle(r)
         if (count !== undefined) r = r.slice(0, count)
         return r
-    }, [requiredServiceClasses, shuffle, count])
+    }, [requiredServiceClasses, shuffle, count, deprecated])
 
     if (!specs.length)
         return (

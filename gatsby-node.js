@@ -142,12 +142,8 @@ async function createDevicePages(graphql, actions, reporter) {
     // Create image post pages.
     const deviceTemplate = path.resolve(`src/templates/device.tsx`)
     const companyTemplate = path.resolve(`src/templates/device-company.tsx`)
-    // We want to create a detailed page for each
-    // Instagram post. Since the scraped Instagram data
-    // already includes an ID field, we just use that for
-    // each page's path.
     for (const node of result.data.allDevicesJson.nodes) {
-        const p = `/devices/${node.id.replace(/-/g, "/")}/`
+        const p = `/devices/${identifierToUrlPath(node.id)}/`
         createPage({
             path: p,
             component: slash(deviceTemplate),
