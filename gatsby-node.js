@@ -13,6 +13,8 @@ const {
 const {
     serviceSpecificationToDTDL,
     DTMIToRoute,
+    serviceSpecificationsWithDeviceTwinSpecification,
+    serviceSpecificationToDeviceTwinSpecification,
 } = require(`./jacdac-ts/dist/jacdac-azure-iot.cjs`)
 const { IgnorePlugin } = require("webpack")
 const AVATAR_SIZE = 64
@@ -274,6 +276,18 @@ async function generateServicesJSON() {
         //console.log(`json x${srv.classIdentifier.toString(16)} => ${f}`)
         await fs.outputFile(f, JSON.stringify(srv, null, 2))
     }
+
+    // DeviceTwins
+    for (const srv of serviceSpecificationsWithDeviceTwinSpecification()) {
+        const f = path.join(
+            dir,
+            "services",
+            "devicetwins",
+            `x${srv.classIdentifier.toString(16)}.json`
+        )
+        const devicetwin = serviceSpecificationToDeviceTwinSpecification(srv)
+        await fs.outputFile(f, JSON.stringify(devicetwin, null, 2))
+    }    
 
     // DTMI
     {

@@ -67,7 +67,7 @@ export default function ServiceSpecification(props: {
         pipeReports.find(rep => isPipeReportOf(pkt, rep))
 
     return (
-        <Fragment key={`servicespec${shortId}`}>
+        <>
             <h1 key="title">
                 {name}
                 <Box ml={1} component="span">
@@ -140,6 +140,6 @@ export default function ServiceSpecification(props: {
                             ))}
                     </Fragment>
                 ))}
-        </Fragment>
+        </>
     )
 }

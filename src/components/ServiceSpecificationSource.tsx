@@ -6,7 +6,10 @@ import TabPanel from "./ui/TabPanel"
 import Snippet from "./ui/Snippet"
 import { converters } from "../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import ServiceSpecification from "./ServiceSpecification"
-import { Link } from "gatsby-theme-material-ui"
+import { DTDLSnippet } from "./azure/DTDLSnippet"
+import { serviceSpecificationToDTDL } from "../../jacdac-ts/src/azure-iot/dtdlspec"
+import { serviceSpecificationToDeviceTwinSpecification } from "../../jacdac-ts/src/azure-iot/devicetwin"
+import { withPrefix } from "gatsby"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -36,7 +39,8 @@ export default function ServiceSpecificationSource(props: {
         serviceSpecification ||
         serviceSpecificationFromClassIdentifier(classIdentifier)
     const convs = converters()
-    const showDTDL = spec?.camelName !== "system"
+    const showDTDL = spec && spec?.camelName !== "system"
+    const showDeviceTwin = spec && spec?.camelName !== "sytem"
 
     const handleTabChange = (
         event: React.ChangeEvent<unknown>,
@@ -60,7 +64,8 @@ export default function ServiceSpecificationSource(props: {
                         "TypeScript",
                         "C",
                         "JSON",
-                        showDTDL && "Module Twin",
+                        showDTDL && "DTDL",
+                        showDeviceTwin && "Device Twin",
                     ]
                         .filter(n => !!n)
                         .map((n, i) => (
@@ -79,27 +84,25 @@ export default function ServiceSpecificationSource(props: {
                 ))}
                 {showDTDL && (
                     <TabPanel key="dtdl" value={tab} index={index++}>
+                        <DTDLSnippet node={serviceSpecificationToDTDL(spec)} />
+                    </TabPanel>
+                )}
+                {showDeviceTwin && (
+                    <TabPanel key="dtdl" value={tab} index={index++}>
                         <Snippet
-                            value={() =>
-                                JSON.stringify(
-                                    serviceSpecificationToDTDL(spec),
-                                    null,
-                                    2
-                                )
-                            }
-                            mode={"json"}
-                            download={`dtmi-${spec.shortId}.json`}
-                            url={
-                                "/" +
-                                DTMIToRoute(serviceSpecificationDTMI(spec))
-                            }
-                            caption={
-                                <>
-                                    <Link to="/dtmi">DTDL</Link> is an open
-                                    source modelling language developed by
-                                    Microsoft Azure.
-                                </>
-                            }
+                            mode="json"
+                            url={withPrefix(
+                                `/services/devicetwins/x${spec.classIdentifier.toString(
+                                    16
+                                )}.json`
+                            )}
+                            value={JSON.stringify(
+                                serviceSpecificationToDeviceTwinSpecification(
+                                    spec
+                                ),
+                                null,
+                                2
+                            )}
                         />
                     </TabPanel>
                 )}
