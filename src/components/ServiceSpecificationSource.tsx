@@ -8,7 +8,7 @@ import { converters } from "../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import ServiceSpecification from "./ServiceSpecification"
 import { DTDLSnippet } from "./azure/DTDLSnippet"
 import { serviceSpecificationToDTDL } from "../../jacdac-ts/src/azure-iot/dtdlspec"
-import { serviceSpecificationToDeviceTwinSpecification } from "../../jacdac-ts/src/azure-iot/devicetwin"
+import { serviceSpecificationToServiceTwinSpecification } from "../../jacdac-ts/src/azure-iot/devicetwin"
 import { withPrefix } from "gatsby"
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -65,7 +65,7 @@ export default function ServiceSpecificationSource(props: {
                         "C",
                         "JSON",
                         showDTDL && "DTDL",
-                        showDeviceTwin && "Device Twin",
+                        showDeviceTwin && "Twin",
                     ]
                         .filter(n => !!n)
                         .map((n, i) => (
@@ -92,12 +92,12 @@ export default function ServiceSpecificationSource(props: {
                         <Snippet
                             mode="json"
                             url={withPrefix(
-                                `/services/devicetwins/x${spec.classIdentifier.toString(
+                                `/services/twin/x${spec.classIdentifier.toString(
                                     16
                                 )}.json`
                             )}
                             value={JSON.stringify(
-                                serviceSpecificationToDeviceTwinSpecification(
+                                serviceSpecificationToServiceTwinSpecification(
                                     spec
                                 ),
                                 null,
