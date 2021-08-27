@@ -1,4 +1,11 @@
-import React, { lazy, useContext, useEffect, useRef, useState } from "react"
+import React, {
+    lazy,
+    useCallback,
+    useContext,
+    useEffect,
+    useRef,
+    useState,
+} from "react"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import {
     Card,
@@ -220,10 +227,8 @@ export default function HIDEvents() {
     const handleOpenAdd = () => setOpen(true)
     const handleCloseAdd = () => setOpen(false)
 
-    const settings = useServiceClient(
-        settingsService,
-        srv => new SettingsClient(srv)
-    )
+    const factory = useCallback(srv => new SettingsClient(srv), [])
+    const settings = useServiceClient(settingsService, factory)
 
     useServiceProviderFromServiceClass(SRV_SETTINGS)
     useChange(settings, async () => {

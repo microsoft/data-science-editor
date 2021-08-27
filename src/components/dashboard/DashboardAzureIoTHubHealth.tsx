@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useCallback } from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { Grid, Switch, Typography } from "@material-ui/core"
 import useChange from "../../jacdac/useChange"
@@ -14,10 +14,8 @@ export default function DashboardAzureIoTHubHealth(
     const { service } = props
     const connectId = useId()
 
-    const client = useServiceClient(
-        service,
-        () => new AzureIoTHubHealthClient(service)
-    )
+    const factory = useCallback(srv => new AzureIoTHubHealthClient(srv), [])
+    const client = useServiceClient(service, factory)
     const hubName = useChange(client, _ => _?.hubName)
     const connectionStatus = useChange(client, _ => _?.connectionStatus)
     const color = "primary"

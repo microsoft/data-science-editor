@@ -5,7 +5,7 @@ import {
     Grid,
     TextField,
 } from "@material-ui/core"
-import React, { ChangeEvent, useState } from "react"
+import React, { ChangeEvent, useCallback, useState } from "react"
 import JDService from "../../jacdac-ts/src/jdom/service"
 import DeviceCardHeader from "./DeviceCardHeader"
 import useServiceClient from "./useServiceClient"
@@ -156,7 +156,8 @@ export default function SettingsCard(props: {
     mutable?: boolean
 }) {
     const { service, mutable } = props
-    const client = useServiceClient(service, srv => new SettingsClient(srv))
+    const factory = useCallback(srv => new SettingsClient(srv), [])
+    const client = useServiceClient(service, factory)
     const values = useChangeAsync(client, c => c?.list())
     const handleClear = async () => await client?.clear()
 
