@@ -2,6 +2,7 @@ import JDBus from "../../jacdac-ts/src/jdom/bus"
 import { withPrefix } from "gatsby"
 import { isWebUSBSupported } from "../../jacdac-ts/src/jdom/transport/usb"
 import { createUSBWorkerTransport } from "../../jacdac-ts/src/jdom/transport/workertransport"
+import { createWebSocketTransport } from "../../jacdac-ts/src/jdom/transport/websockettransport"
 import {
     createBluetoothTransport,
     isWebBluetoothSupported,
@@ -39,6 +40,10 @@ function sniffQueryArguments() {
             isWebSerialSupported() &&
             params.get(`webserial`) !== "0" &&
             !toolsMakecode,
+        webSocket:
+            params.get(`ws`) === "1"
+                ? "ws://127.0.0.1:8080/"
+                : params.get("ws"),
         peers: params.get(`peers`) === "1",
         parentOrigin: params.get("parentOrigin"),
         frameId: window.location.hash?.slice(1),
@@ -69,6 +74,7 @@ function createBus(): JDBus {
             Flags.webUSB && worker && createUSBWorkerTransport(worker),
             Flags.webSerial && createWebSerialTransport(),
             Flags.webBluetooth && createBluetoothTransport(),
+            args.webSocket && createWebSocketTransport(args.webSocket),
         ],
         {
             parentOrigin: args.parentOrigin,

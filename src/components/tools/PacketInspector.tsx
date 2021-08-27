@@ -34,6 +34,7 @@ export default function PacketInspector() {
     const info = decoded?.info
     const name = info?.name || packet.friendlyCommandName
     const ack = packet.meta[META_ACK] as Packet
+    const data = packet.data
     const pipePackets = packet.meta[META_PIPE] as Packet[]
     const get = packet.meta[META_GET] as Packet
     const sentTrace = packet.meta[META_TRACE] as string
@@ -61,13 +62,15 @@ export default function PacketInspector() {
                 showFlags={true}
                 showCommands={true}
             />
-            <PacketDataLayout
-                packet={packet}
-                showHex={true}
-                showDecoded={true}
-                showJSON={true}
-                showUnpacked={true}
-            />
+            {data && (
+                <PacketDataLayout
+                    packet={packet}
+                    showHex={true}
+                    showDecoded={true}
+                    showJSON={true}
+                    showUnpacked={true}
+                />
+            )}
             {ack && (
                 <>
                     <h3>Ack received</h3>

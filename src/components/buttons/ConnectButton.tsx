@@ -1,8 +1,7 @@
 import React from "react"
 import { Button } from "gatsby-theme-material-ui"
-import {
+import Transport, {
     ConnectionState,
-    JDTransport,
 } from "../../../jacdac-ts/src/jdom/transport/transport"
 import { Badge } from "@material-ui/core"
 import IconButtonWithProgress from "../ui/IconButtonWithProgress"
@@ -14,7 +13,7 @@ export default function ConnectButton(props: {
     full?: boolean
     className?: string
     transparent?: boolean
-    transport: JDTransport
+    transport: Transport
 }) {
     const { full, className, transparent, transport } = props
     const { type } = transport

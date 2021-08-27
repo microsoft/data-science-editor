@@ -1,15 +1,17 @@
-import React from "react"
-import ReactMarkdown from "react-markdown"
-import {
-    NormalComponents,
-    SpecialComponents,
-} from "react-markdown/src/ast-to-react"
+import React, { lazy } from "react"
+import Suspense from "./Suspense"
+const ReactMarkdown = lazy(() => import("react-markdown"))
 
 export default function Markdown(props: {
     source: string
     className?: string
-    components?: Partial<NormalComponents | SpecialComponents>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    components?: Partial<any>
 }) {
     const { source, ...others } = props
-    return <ReactMarkdown {...others}>{source}</ReactMarkdown>
+    return (
+        <Suspense>
+            <ReactMarkdown {...others}>{source}</ReactMarkdown>
+        </Suspense>
+    )
 }

@@ -92,7 +92,8 @@ export default function DashboardAzureIoTHub(props: DashboardServiceProps) {
             connected ? AzureIotHubCmd.Disconnect : AzureIotHubCmd.Connect
         )
     }
-    const handleSendCloudMessage = async () => server.emitMessage(cdMessage)
+    const handleSendCloudMessage = async () =>
+        await server.emitMessage(cdMessage)
     const handleCDMessageChange = (ev: ChangeEvent<HTMLInputElement>) => {
         setCDMessage(ev.target.value || "")
     }

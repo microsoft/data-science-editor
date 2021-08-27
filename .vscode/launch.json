@@ -7,6 +7,19 @@
         {
             "type": "pwa-node",
             "request": "launch",
+            "name": "jacdac cli serial",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/jacdac-ts/dist/jacdac-cli.js",
+            "args": ["--version", "--serial=true"],
+            "outFiles": [
+                "${workspaceFolder}/jacdac-ts/dist/*.js"
+            ]
+        },
+        {
+            "type": "pwa-node",
+            "request": "launch",
             "name": "jacdac cli usb",
             "skipFiles": [
                 "<node_internals>/**"
