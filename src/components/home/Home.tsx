@@ -1,6 +1,6 @@
 import { Grid } from "@material-ui/core"
 import { StaticImage } from "gatsby-plugin-image"
-import React from "react"
+import React, { lazy, Suspense } from "react"
 import CarouselGrid from "./CarouselGrid"
 import CenterGrid from "./CenterGrid"
 import FeatureItem from "./FeatureItem"
@@ -9,8 +9,32 @@ import DirectionsBusIcon from "@material-ui/icons/DirectionsBus"
 import PlaylistAddCheckIcon from "@material-ui/icons/PlaylistAddCheck"
 import FindReplaceIcon from "@material-ui/icons/FindReplace"
 import SubscriptionsIcon from "@material-ui/icons/Subscriptions"
+import useMediaQueries from "../hooks/useMediaQueries"
+const DeviceSpecificationList = lazy(() => import("../DeviceSpecificationList"))
+
+/**
+            <Grid item xs={12}>
+                <StaticImage
+                    src="./gallery.png"
+                    alt="A gallery of Jacdac modules"
+                />
+            </Grid>
+            <CarouselGrid>
+                <Grid item xs={12} sm={6}>
+                    <StaticImage
+                        src="./tangled.png"
+                        alt="Tangled Jacdac cable"
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <StaticImage src="./hub.png" alt="A hub PCB" />
+                </Grid>
+            </CarouselGrid>
+ */
 
 export default function Home() {
+    const { mobile, medium } = useMediaQueries()
+    const cols = mobile ? 1 : medium ? 3 : 4
     return (
         <Grid
             container
@@ -35,22 +59,10 @@ export default function Home() {
                 description="Cheap, flexible and extensible."
             />
             <Grid item xs={12}>
-                <StaticImage
-                    src="./gallery.png"
-                    alt="A gallery of Jacdac modules"
-                />
+                <Suspense fallback={null}>
+                    <DeviceSpecificationList count={cols} shuffle={true} />
+                </Suspense>
             </Grid>
-            <CarouselGrid>
-                <Grid item xs={12} sm={6}>
-                    <StaticImage
-                        src="./tangled.png"
-                        alt="Tangled Jacdac cable"
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <StaticImage src="./hub.png" alt="A hub PCB" />
-                </Grid>
-            </CarouselGrid>
             <SplitGrid
                 right={false}
                 subtitle="Hardware."
