@@ -18,7 +18,7 @@ export default function DashboardAzureIoTHubHealth(
         service,
         () => new AzureIoTHubHealthClient(service)
     )
-    const hub = useChange(client, _ => _?.hub)
+    const hubName = useChange(client, _ => _?.hubName)
     const connectionStatus = useChange(client, _ => _?.connectionStatus)
     const color = "primary"
     const { textPrimary } = useWidgetTheme(color)
@@ -33,7 +33,7 @@ export default function DashboardAzureIoTHubHealth(
         >
             <Grid item xs={12}>
                 <Typography component="span" variant="subtitle1">
-                    hub: {hub}
+                    hub: {hubName}
                 </Typography>
                 <Switch checked={connected} aria-labelledby={connectId} />
                 <label className=".no-pointer-events" id={connectId}>
