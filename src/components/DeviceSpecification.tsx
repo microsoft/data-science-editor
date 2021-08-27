@@ -75,7 +75,6 @@ export default function DeviceSpecification(props: {
                     <DeviceSpecificationSource
                         deviceSpecification={device}
                         showJSON={true}
-                        showDTDL={true}
                     />
                 </>
             )}
