@@ -6,7 +6,7 @@ import RoleChip from "./RoleChip"
 
 export default function BlockClientRoles() {
     const { roleManager } = useContext(BlockContext)
-    const roles = useChange(roleManager, _ => _?.roles)
+    const roles = useChange(roleManager, _ => _?.roles())
 
     return (
         <>
