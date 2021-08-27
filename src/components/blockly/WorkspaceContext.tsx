@@ -236,7 +236,7 @@ export function WorkspaceProvider(props: {
         return undefined
     }
     const resolveRoleService = () => {
-        const newRoleService = role && roleManager?.getService(role)
+        const newRoleService = role && roleManager?.service(role)
         return newRoleService
     }
 
