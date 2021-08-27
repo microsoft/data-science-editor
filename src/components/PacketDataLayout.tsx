@@ -73,7 +73,15 @@ export default function PacketDataLayout(props: {
                                                 : member.info.name}
                                         </TableCell>
                                         <TableCell>
-                                            <code>{member.value}</code>
+                                            <code>
+                                                {member.value}
+                                                {typeof member.value ===
+                                                "number"
+                                                    ? ` (0x${(
+                                                          member.value as number
+                                                      ).toString(16)})`
+                                                    : ""}{" "}
+                                            </code>
                                         </TableCell>
                                         <TableCell>
                                             <code>{member.humanValue}</code>
