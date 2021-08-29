@@ -229,7 +229,7 @@ export default function CollectData(props: {
         if (error) return
         console.log(`set interval to ${samplingIntervalDelayi}`)
         recordingRegisters.forEach(reg =>
-            reg.sendSetIntAsync(samplingIntervalDelayi)
+            reg.sendSetPackedAsync("i32", [samplingIntervalDelayi])
         )
     }, [samplingIntervalDelayi, registerIdsChecked, errorSamplingIntervalDelay])
     // collecting

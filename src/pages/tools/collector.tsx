@@ -346,7 +346,7 @@ export default function Collector() {
     useEffect(() => {
         console.log(`set interval to ${samplingIntervalDelay}`)
         recordingRegisters.forEach(reg =>
-            reg.sendSetIntAsync(samplingIntervalDelay)
+            reg.sendSetPackedAsync("i32", [samplingIntervalDelay])
         )
     }, [samplingIntervalDelay, registerIdsChecked])
     // collecting
