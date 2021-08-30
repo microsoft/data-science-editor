@@ -1,12 +1,13 @@
 import React, { useCallback } from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { Grid, Switch, Typography } from "@material-ui/core"
-import useChange from "../../jacdac/useChange"
+import useChange, { useChangeAsync } from "../../jacdac/useChange"
 import useServiceClient from "../../jacdac/useServiceClient"
 import AzureIoTHubHealthClient from "../../../jacdac-ts/src/clients/azureiothubhealthclient"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import { AzureIotHubHealthConnectionStatus } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import { useId } from "react-use-id-hook"
+import Snippet from "../ui/Snippet"
 
 export default function DashboardAzureIoTHubHealth(
     props: DashboardServiceProps
@@ -22,6 +23,7 @@ export default function DashboardAzureIoTHubHealth(
     const { textPrimary } = useWidgetTheme(color)
     const connected =
         connectionStatus === AzureIotHubHealthConnectionStatus.Connected
+    const twin = useChangeAsync(client, _ => _?.twin())
 
     return (
         <Grid
@@ -38,6 +40,11 @@ export default function DashboardAzureIoTHubHealth(
                     {AzureIotHubHealthConnectionStatus[connectionStatus]}
                 </label>
             </Grid>
+            {twin && (
+                <Grid item xs={12}>
+                    <Snippet mode="json" value={twin} />
+                </Grid>
+            )}
         </Grid>
     )
 }
