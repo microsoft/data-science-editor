@@ -92,7 +92,6 @@ export default function Toc(props: { pagePath: string }) {
                             order
                             hideToc
                         }
-                        excerpt
                         fields {
                             slug
                         }
