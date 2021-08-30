@@ -17,6 +17,7 @@ module.exports = {
         PRESERVE_FILE_DOWNLOAD_CACHE: true,
         DEV_WEBPACK_CACHE: true,
         FAST_DEV: true,
+        PARALLEL_QUERY_RUNNING: false,
     },
     plugins: [
         `gatsby-transformer-plaintext`,
