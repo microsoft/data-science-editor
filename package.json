@@ -54,7 +54,6 @@
     "gatsby-plugin-webpack-bundle-analyser-v2": "^1.1.24",
     "gatsby-prismjs-dracula": "^0.1.15",
     "gatsby-remark-autolink-headers": "^4.9.0",
-    "gatsby-remark-check-links": "^2.1.0",
     "gatsby-remark-external-links": "0.0.4",
     "gatsby-remark-images": "^5.9.0",
     "gatsby-remark-makecode": "^1.0.9",
