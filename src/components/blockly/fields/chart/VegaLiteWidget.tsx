@@ -55,7 +55,6 @@ export default function VegaLiteWidget(props: {
     const settings = JSONTryParse(sourceBlock?.getFieldValue("settings"))
     const handleNewView = (view: View) => (viewRef.current = view)
 
-    // TODO merge json
     const fullSpec = useMemo(() => {
         if (!settings) return spec
         const s = clone(spec)

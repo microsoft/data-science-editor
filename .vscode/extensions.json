@@ -3,6 +3,7 @@
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "silvenon.mdx",
-        "wix.vscode-import-cost"
+        "wix.vscode-import-cost",
+        "gruntfuggly.todo-tree"
     ]
 }

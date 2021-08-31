@@ -162,11 +162,11 @@ const jsonDSL: BlockDomainSpecificLanguage = {
         const { type } = block
         const { template } = definition
         if (type === JSON_OBJECT_BLOCK) {
-            // TODO
+            // TODO: handle json field set block
         } else if (type === JSON_FIELD_SET_BLOCK) {
-            // TODO
+            // TODO: handle json field get block
         } else if (template === JSON_FIELD_GET_TEMPLATE) {
-            // TODO: genearte JSON
+            // TODO: generate json expression
             console.log("json expr", {
                 event,
                 block,

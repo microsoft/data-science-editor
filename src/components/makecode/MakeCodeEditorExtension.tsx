@@ -143,7 +143,7 @@ function ClientRoleRow(props: {
 function validateClientRole(config: Configuration, role: ClientRole) {
     const serviceError: string = undefined
     const nameError: string = undefined
-    // TODO
+    // TODO: properly validate client role
     return { serviceError, nameError }
 }
 
