@@ -118,7 +118,7 @@
                 const flags =
                     "?nestededitorsim=1&editorlayout=ide&nosandbox=1&parentOrigin=" +
                     encodeURIComponent(window.location.origin)
-                const ratio = 0.5
+                let ratio = 0.5
                 const dividerWidth = 14
 
                 window.onmessage = function (msg) {
@@ -171,8 +171,8 @@
                 function startDrag() {
                     left.style.visibility = "hidden"
                     right.style.visibility = "hidden"
-                    const n = divider.onmouseover
-                    const t = divider.onmouseout
+                    let n = divider.onmouseover
+                    let t = divider.onmouseout
                     divider.onmouseover = null
                     divider.onmouseout = null
                     document.body.onmousemove = function (n) {
