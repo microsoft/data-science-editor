@@ -11,6 +11,7 @@ import jsonDsl from "../blockly/dsl/jsondsl"
 import chartDsl from "../blockly/dsl/chartdsl"
 import dataDsl from "../blockly/dsl/datadsl"
 import widgetDSL from "../blockly/dsl/widgetdsl"
+import mlBlocksDsl from "../blockly/dsl/mlblocksdsl"
 
 const vmDsls = [
     servicesDSL,
@@ -26,5 +27,6 @@ const vmDsls = [
     chartDsl,
     shadowDsl,
     fieldsDsl,
+    mlBlocksDsl,
 ]
 export default vmDsls

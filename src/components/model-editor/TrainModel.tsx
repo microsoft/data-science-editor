@@ -1,151 +1,171 @@
-import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Button,
-    Grid,
-} from "@material-ui/core"
-import Trend from "../Trend"
+import { Button, Grid, LinearProgress } from "@material-ui/core"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import PlayArrowIcon from "@material-ui/icons/PlayArrow"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
-import DeleteIcon from "@material-ui/icons/Delete"
-// tslint:disable-next-line: match-default-export-name no-submodule-imports
 import NavigateNextIcon from "@material-ui/icons/NavigateNext"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
-import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord"
-// tslint:disable-next-line: match-default-export-name no-submodule-imports
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
-import React, { useEffect, useMemo, useState } from "react"
+import DownloadIcon from "@material-ui/icons/GetApp"
+// tslint:disable-next-line: no-submodule-imports match-default-export-name
+import DeleteAllIcon from "@material-ui/icons/DeleteSweep"
+import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
+import React, { lazy, useContext, useEffect, useState } from "react"
+import Suspense from "../ui/Suspense"
 
-import { trainRequest } from "../blockly/dsl/workers/tf.proxy"
+import ServiceManagerContext from "../ServiceManagerContext"
+
+import {
+    compileRequest,
+    trainRequest,
+    predictRequest,
+} from "../blockly/dsl/workers/tf.proxy"
 import type {
+    TFModelCompileRequest,
     TFModelTrainRequest,
     TFModelTrainResponse,
+    TFModelPredictRequest,
+    TFModelPredictResponse,
 } from "../../workers/tf/dist/node_modules/tf.worker"
-
-import FieldDataSet from "../FieldDataSet"
-import ModelDataSet, { arraysEqual } from "./ModelDataSet"
-import MBModel from "./MBModel"
 import workerProxy from "../blockly/dsl/workers/proxy"
-import useChange from "../../jacdac/useChange"
 
-const NUM_EPOCHS = 250
-const LOSS_COLOR = "#8b0000"
-const ACC_COLOR = "#77dd77"
+import MBDataSet, { arraysEqual } from "./MBDataSet"
+import MBModel, { DEFAULT_MODEL } from "./MBModel"
+
+const ConfusionMatrixHeatMap = lazy(
+    () => import("./components/ConfusionMatrixHeatMap")
+)
+const DataSetPlot = lazy(() => import("./components/DataSetPlot"))
+const LossAccChart = lazy(() => import("./components/LossAccChart"))
+const ModelSummaryDropdown = lazy(
+    () => import("./components/ModelSummaryDropdown")
+)
+
+export function prepareDataSet(set: MBDataSet) {
+    // Assumptions: the sampling rate, sampling duration, and sensors used are constant
+    let sampleLength = -1
+    let sampleChannels = -1
+    const xData = []
+    const yData = []
+
+    for (const label of set.labels) {
+        set.getRecordingsWithLabel(label).forEach(table => {
+            if (sampleLength < table.length) {
+                sampleLength = table.length
+                sampleChannels = table.width
+            } else if (table.width != sampleChannels) {
+                alert(
+                    "All input data must have the same shape: " +
+                        table.name +
+                        "\n Has " +
+                        table.width +
+                        " inputs instead of " +
+                        sampleChannels
+                )
+            } /* else if (table.length != sampleLength) {
+                // decide what to do about different sized data
+            } */
+            // For x data, just add each sample as a new row into x_data
+            xData.push(table.data())
+
+            yData.push(set.labels.indexOf(label))
+        })
+    }
+
+    // save tensors with dataset object
+    set.xs = xData
+    set.ys = yData
+    set.length = sampleLength
+    set.width = sampleChannels
+}
+
+export function prepareModel(
+    mod: MBModel,
+    set: MBDataSet,
+    callback: (model: MBModel) => void
+) {
+    // get model set up with dataset features
+    mod.labels = set.labels
+    mod.inputShape = [set.length, set.width]
+    mod.inputTypes = set.inputTypes
+    mod.inputInterval = set.interval
+    mod.outputShape = set.labels.length
+
+    /* compile model */
+    const compileMsg = {
+        worker: "tf",
+        type: "compile",
+        data: {
+            modelBlockJSON: mod.blockJSON || DEFAULT_MODEL,
+            model: mod.toJSON(),
+        },
+    } as TFModelCompileRequest
+
+    // TODO throw an error if this never returns, page needs refresh
+    compileRequest(compileMsg).then(result => {
+        if (result) {
+            mod.modelJSON = result.data.modelJSON || ""
+            const modelStats = result.data.modelStats
+            if (modelStats.length > 2)
+                mod.modelStats = { total: modelStats.pop(), layers: modelStats }
+            mod.trainingParams = result.data.trainingParams
+            mod.status = "untrained"
+        }
+        if (callback) callback(mod)
+    })
+}
 
 export default function TrainModel(props: {
+    chartProps: any
     reactStyle: any
-    dataset: ModelDataSet
+    dataset: MBDataSet
     model: MBModel
     onChange: (model) => void
     onNext: (model) => void
 }) {
     const classes = props.reactStyle
-    const { dataset, onChange, onNext } = props
-    const [model, setModel] = useState<MBModel>(props.model)
+    const chartProps = props.chartProps
+    const { fileStorage } = useContext(ServiceManagerContext)
 
-    const [pageReady, setPageReady] = useState(false)
+    const { dataset, model, onChange, onNext } = props
+
     useEffect(() => {
-        if (!pageReady) {
-            prepareDataSet(dataset)
-            prepareModel(model)
-            setPageReady(true)
-        }
-    }, [])
+        prepareDataSet(dataset)
 
-    /* For loading page */
-    const prepareDataSet = (set: ModelDataSet) => {
-        // Assumptions: the sampling rate, sampling duration, and sensors used are constant
-        let sampleLength = -1
-        let sampleChannels = -1
-        const xData = []
-        const yData = []
-
-        for (const label of set.labels) {
-            set.getRecordingsWithLabel(label).forEach(table => {
-                if (sampleLength < table.length) {
-                    sampleLength = table.length
-                    sampleChannels = table.width
-                } else if (table.width != sampleChannels) {
-                    setTrainEnabled(false)
-                    alert(
-                        "All input data must have the same shape: " +
-                            table.name +
-                            "\n Has " +
-                            table.width +
-                            " inputs instead of " +
-                            sampleChannels
-                    )
-                } /* else if (table.length != sampleLength) {
-                    // Randi decide what to do about different sized data
-                } */
-                // For x data, just add each sample as a new row into x_data
-                xData.push(table.data())
-
-                yData.push(set.labels.indexOf(label))
-            })
-        }
-
-        // save tensors with dataset object
-        set.xs = xData
-        set.ys = yData
-        set.length = sampleLength
-        set.width = sampleChannels
-    }
-
-    const prepareModel = (mod: MBModel) => {
-        // If this is a brand new model, get it setup with a standard CNN architecture
-        if (mod.modelJSON == "") {
-            mod.modelJSON = "default"
-            mod.labels = dataset.labels
-            mod.inputShape = [dataset.length, dataset.width]
-            mod.inputTypes = dataset.inputTypes
-            mod.outputShape = dataset.labels.length
-
-            setModel(mod)
-            handleModelUpdate(mod)
-        } else if (
-            !arraysEqual(mod.labels, dataset.labels) ||
-            !arraysEqual(mod.inputTypes, dataset.inputTypes)
+        if (
+            !arraysEqual(model.labels, dataset.labels) ||
+            !arraysEqual(model.inputTypes, dataset.inputTypes)
         ) {
             // If there is already a model, make sure it matches the current dataset
             //   if it does not, reset the model
             const newModel = new MBModel(model.name)
-            prepareModel(newModel)
-        }
-    }
-
-    const prepareTrainingLogs = () => {
-        // Create space to hold training log data
-        const trainingLogDataSet = {
-            name: "training-logs",
-            rows: [],
-            headers: ["loss", "acc"],
-            units: ["/", "/"],
-            colors: [LOSS_COLOR, ACC_COLOR],
-        }
-        return FieldDataSet.createFromFile(trainingLogDataSet)
-    }
-
-    const deleteTFModel = () => {
-        if (confirm("Are you sure you want to delete current model?")) {
-            const newModel = new MBModel(model.name)
-            prepareModel(newModel)
-            setModel(newModel)
+            prepareModel(newModel, dataset, undefined)
             handleModelUpdate(newModel)
+        } else {
+            prepareModel(model, dataset, undefined)
+            handleModelUpdate(model)
         }
-    }
+
+        // ready to train
+        setTrainEnabled(model.modelJSON != "empty")
+    }, [])
 
     /* For training model */
-    const [trainEnabled, setTrainEnabled] = useState(dataset.labels.length >= 2)
-    const trainingLogs = useMemo(prepareTrainingLogs, [])
-    useChange(trainingLogs)
+    const [trainEnabled, setTrainEnabled] = useState(false)
+    const [trainingProgress, setTrainingProgress] = useState(0)
+    const [trainingLossLog, setTrainingLossLog] = useState([])
+    const [trainingAccLog, setTrainingAccLog] = useState([])
+    const [trainingPredictionResult, setTrainingPredictionResult] = useState([])
+    const [trainTimestamp, setTrainTimestamp] = useState(0)
 
     const trainTFModel = async () => {
-        model.status = "running"
+        model.status = "training"
         model.inputTypes = dataset.inputTypes
         handleModelUpdate(model)
+
+        // reset logs and progress
+        trainingLossLog.splice(0, trainingLossLog.length)
+        trainingAccLog.splice(0, trainingAccLog.length)
+        setTrainingProgress(0)
+
         setTrainEnabled(false)
 
         // setup worker
@@ -153,8 +173,28 @@ export default function TrainModel(props: {
         const stopWorkerSubscribe = workerProxy("tf").subscribe(
             "message",
             (msg: any) => {
-                const newData = [msg.data.loss, msg.data.acc]
-                if (trainingLogs) trainingLogs.addData(newData)
+                const epoch = trainingLossLog.length / 2 + 1
+                trainingLossLog.push({
+                    epoch: epoch,
+                    loss: msg.data.loss,
+                    dataset: "training",
+                })
+                trainingLossLog.push({
+                    epoch: epoch,
+                    loss: msg.data.val_loss,
+                    dataset: "validation",
+                })
+                trainingAccLog.push({
+                    epoch: epoch,
+                    acc: msg.data.acc,
+                    dataset: "training",
+                })
+                trainingAccLog.push({
+                    epoch: epoch,
+                    acc: msg.data.val_acc,
+                    dataset: "validation",
+                })
+                setTrainingProgress((epoch * 100) / model.trainingParams.epochs)
             }
         )
 
@@ -162,47 +202,53 @@ export default function TrainModel(props: {
             worker: "tf",
             type: "train",
             data: {
+                trainingParams: model.trainingParams,
+                model: model.toJSON(),
                 xData: dataset.xs,
                 yData: dataset.ys,
-                model: model.toJSON(),
-                modelBlockJSON: "",
             },
         } as TFModelTrainRequest
         const trainResult = (await trainRequest(
             trainMsg
         )) as TFModelTrainResponse
-
         // stop subscriber after training
         stopWorkerSubscribe()
 
-        if (trainResult) {
+        if (trainResult && trainResult.data) {
             // handle result from training
-            const trainingHistory = trainResult.data.trainingInfo
+            const trainingHistory = trainResult.data.trainingLogs
             model.weightData = trainResult.data.modelWeights
-            model.modelJSON = trainResult.data.modelJSON
+            model.armModel = trainResult.data.armModel
 
-            console.log("Randi training result ", trainResult)
+            // evaluate on training dataset
+            const predictMsg = {
+                worker: "tf",
+                type: "predict",
+                data: {
+                    zData: dataset.xs,
+                    model: model.toJSON(),
+                },
+            } as TFModelPredictRequest
+            const predResult = (await predictRequest(
+                predictMsg
+            )) as TFModelPredictResponse
 
-            // Randi TODO decide when/how to compule arm code
-            // Compile code for MCU
-            /*const armcompiled = await compileAndTest(model.model, {
-                verbose: true,
-                includeTest: true,
-                float16weights: false,
-                optimize: true,
-            })
-            console.log(armcompiled)*/
-            // use armcompiled.machineCode
+            if (predResult) {
+                // Save probability for each class in model object
+                setTrainingPredictionResult(predResult.data.predictTop)
+                setTrainTimestamp(Date.now())
+            }
 
             // Update model status
-            model.status = "completed"
+            model.status = "trained"
             model.trainingAcc = trainingHistory[trainingHistory.length - 1]
             handleModelUpdate(model)
 
             setTrainEnabled(true)
         } else {
-            model.status = "idle"
+            model.status = "untrained"
             handleModelUpdate(model)
+            setTrainEnabled(true)
         }
     }
 
@@ -213,69 +259,48 @@ export default function TrainModel(props: {
     const handleModelUpdate = model => {
         onChange(model)
     }
+    const handleDownloadModel = () => {
+        // TODO also download arm model (as a zip file?)
+        fileStorage.saveText(`${model.name}.json`, JSON.stringify(model))
+    }
+    const deleteTFModel = () => {
+        if (confirm("Are you sure you want to delete current model?")) {
+            const newModel = new MBModel(model.name)
+            prepareModel(newModel, dataset, undefined)
 
-    const [expanded, setExpanded] = React.useState<string | false>(false)
-    const handleExpandedSummaryChange =
-        (panel: string) =>
-        (event: React.ChangeEvent<unknown>, isExpanded: boolean) => {
-            setExpanded(isExpanded ? panel : false)
+            handleModelUpdate(newModel)
+
+            setTrainingLossLog([])
+            setTrainingAccLog([])
         }
+    }
 
-    if (!pageReady) return null
     return (
         <Grid container direction={"column"}>
             <Grid item>
-                <h3>Model Summary</h3>
-                <Accordion
-                    expanded={expanded === "modelSummary"}
-                    onChange={handleExpandedSummaryChange("modelSummary")}
-                >
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                        <div>
-                            {expanded !== "modelSummary" && (
-                                <span>
-                                    Classes: {model.labels.join(", ")} <br />
-                                    Training Status: {model.status} <br />
-                                </span>
-                            )}
-                        </div>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <div>
-                            {dataset.summary.map((line, lineIdx) => {
-                                return (
-                                    <span key={"dataset-summary-" + lineIdx}>
-                                        {" "}
-                                        {line} <br />
-                                    </span>
-                                )
-                            })}
-                            {model.summary.map((line, lineIdx) => {
-                                return (
-                                    <span key={"model-summary-" + lineIdx}>
-                                        {" "}
-                                        {line} <br />
-                                    </span>
-                                )
-                            })}
-                        </div>
-                    </AccordionDetails>
-                </Accordion>
-                <div className={classes.buttons}>
-                    <Button
-                        size="large"
-                        variant="contained"
-                        aria-label="delete existing model"
-                        title={
-                            "Press to delete the machine learning model you have now"
-                        }
-                        onClick={deleteTFModel}
-                        startIcon={<DeleteIcon />}
-                        style={{ marginTop: 16 }}
+                <h3>
+                    Current Model
+                    <IconButtonWithTooltip
+                        onClick={handleDownloadModel}
+                        title="Download the trained model"
+                        disabled={model.status != "trained"}
                     >
-                        Delete Model
-                    </Button>
-                </div>
+                        <DownloadIcon />
+                    </IconButtonWithTooltip>
+                    <IconButtonWithTooltip
+                        onClick={deleteTFModel}
+                        title="Delete current model information"
+                    >
+                        <DeleteAllIcon />
+                    </IconButtonWithTooltip>
+                </h3>
+                <Suspense>
+                    <ModelSummaryDropdown
+                        reactStyle={classes}
+                        dataset={dataset}
+                        model={model}
+                    />
+                </Suspense>
                 <div className={classes.buttons}>
                     <Button
                         size="large"
@@ -298,48 +323,66 @@ export default function TrainModel(props: {
                 <br />
             </Grid>
             <Grid item>
-                <h3>Training Results</h3>
-                {!!trainingLogs.length && (
-                    <div key="liveData">
-                        <div>
-                            <FiberManualRecordIcon
-                                className={classes.vmiddle}
-                                fontSize="small"
-                                style={{
-                                    color: ACC_COLOR,
-                                }}
+                <h3>Training Progress</h3>
+                <LinearProgress
+                    variant="determinate"
+                    value={trainingProgress}
+                />
+                <span style={{ float: "right" }}>{trainingProgress} / 100</span>
+                <br />
+                {!!trainingLossLog.length && (
+                    <div key="vega-loss-acc-charts">
+                        <Suspense>
+                            <LossAccChart
+                                chartProps={chartProps}
+                                lossData={trainingLossLog}
+                                accData={trainingAccLog}
+                                timestamp={trainingProgress}
                             />
-                            Accuracy
-                            <FiberManualRecordIcon
-                                className={classes.vmiddle}
-                                fontSize="small"
-                                style={{
-                                    color: LOSS_COLOR,
-                                }}
-                            />
-                            Loss
-                            <Trend
-                                key="training-trends"
-                                height={12}
-                                dataSet={trainingLogs}
-                                horizon={NUM_EPOCHS}
-                                dot={true}
-                                gradient={true}
-                            />
-                        </div>
+                        </Suspense>
                     </div>
                 )}
-                <p>Final Training Accuracy: {model.trainingAcc}</p>
+                <p>
+                    Final training accuracy:{" "}
+                    {model.status == "trained"
+                        ? (model.trainingAcc || 0).toPrecision(2)
+                        : "Model has not been trained"}
+                </p>
+            </Grid>
+            <Grid item>
+                <h3>Training Results</h3>
+                {!!trainingPredictionResult.length && (
+                    <div key="vega-training-set-charts">
+                        <Suspense>
+                            <ConfusionMatrixHeatMap
+                                chartProps={chartProps}
+                                yActual={dataset.ys}
+                                yPredicted={trainingPredictionResult}
+                                labels={model.labels}
+                                timestamp={trainTimestamp}
+                            />
+                        </Suspense>
+                        <br />
+                        <Suspense>
+                            <DataSetPlot
+                                chartProps={chartProps}
+                                reactStyle={classes}
+                                dataset={dataset}
+                                predictedLabels={trainingPredictionResult}
+                                timestamp={trainTimestamp}
+                            />
+                        </Suspense>
+                    </div>
+                )}
                 <br />
             </Grid>
-
             <Grid item style={{ display: "flex", justifyContent: "flex-end" }}>
                 <div className={classes.buttons}>
                     <Button
                         variant="contained"
                         color="secondary"
                         endIcon={<NavigateNextIcon />}
-                        disabled={model.status !== "completed"}
+                        disabled={model.status !== "trained"}
                         onClick={handleNext}
                     >
                         Next

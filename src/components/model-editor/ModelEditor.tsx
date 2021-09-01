@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import { createStyles, Box, Tabs, Tab } from "@material-ui/core"
 import TabPanel from "../ui/TabPanel"
 
@@ -9,13 +9,12 @@ import CollectData from "./CollectData"
 import TrainModel from "./TrainModel"
 import ModelOutput from "./ModelOutput"
 
-import ModelDataSet from "./ModelDataSet"
+import MBDataSet from "./MBDataSet"
 import MBModel from "./MBModel"
-
-//Dashboard.tsx
 
 const MODEL_EDITOR = "model_editor" // create prefix for model editor page
 const MODEL_NAME = MODEL_EDITOR + "-model"
+export const DATASET_NAME = MODEL_EDITOR + "-dataset"
 export const MODEL_EDITOR_STORAGE_KEY = "model-editor-data-json"
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -53,40 +52,59 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 )
 
+function getDataSetFromLocalStorage() {
+    // check local storage for recording
+    const storedDataJSON = localStorage.getItem(MODEL_EDITOR_STORAGE_KEY)
+    if (storedDataJSON) {
+        const modelEditorData = JSON.parse(storedDataJSON)
+        if (modelEditorData["dataset"])
+            return MBDataSet.createFromFile(
+                DATASET_NAME,
+                modelEditorData["dataset"]
+            )
+    }
+    return new MBDataSet(DATASET_NAME)
+}
+
+function getModelFromLocalStorage() {
+    // check local storage for saved model
+    const storedDataJSON = localStorage.getItem(MODEL_EDITOR_STORAGE_KEY)
+    if (storedDataJSON) {
+        const modelEditorData = JSON.parse(storedDataJSON)
+        if (modelEditorData["model"])
+            return MBModel.createFromFile(modelEditorData["model"])
+    }
+
+    const newModel = new MBModel(MODEL_NAME)
+    return newModel
+}
+
+function getTabFromLocalStorage() {
+    // check local storage for saved model
+    const storedDataJSON = localStorage.getItem(MODEL_EDITOR_STORAGE_KEY)
+    if (storedDataJSON) {
+        const modelEditorData = JSON.parse(storedDataJSON)
+        if (modelEditorData["tab"]) return modelEditorData["tab"]
+    }
+    return 0
+}
+
 export default function ModelPlayground() {
     const classes = useStyles()
     const chartPalette = useChartPalette()
+    const chartProps = {
+        CHART_WIDTH: 300,
+        CHART_HEIGHT: 300,
+        MARK_SIZE: 75,
+        TOOLTIP_NUM_FORMAT: "0.2f",
+        PALETTE: chartPalette,
+    }
 
-    const [dataset, setDataSet] = useState<ModelDataSet>(new ModelDataSet())
-    const [tfModel, setTFModel] = useState<MBModel>(new MBModel(MODEL_NAME))
-    const [tab, setTab] = useState<number>(0)
-
-    const [pageReady, setPageReady] = useState(false)
-    useEffect(() => {
-        if (!pageReady) {
-            const storedDataJSON = localStorage.getItem(
-                MODEL_EDITOR_STORAGE_KEY
-            )
-            if (storedDataJSON) {
-                const modelEditorData = JSON.parse(storedDataJSON)
-                if (modelEditorData["dataset"])
-                    setDataSet(
-                        ModelDataSet.createFromFile(modelEditorData["dataset"])
-                    )
-                if (modelEditorData["tab"]) setTab(modelEditorData["tab"])
-                if (modelEditorData["model"]) {
-                    MBModel.createFromFile(modelEditorData["model"]).then(
-                        storedModel => {
-                            setTFModel(storedModel)
-                            setPageReady(true)
-                        }
-                    )
-                } else {
-                    setPageReady(true)
-                }
-            } else setPageReady(true)
-        }
-    }, [])
+    const [dataset, setDataSet] = useState<MBDataSet>(
+        getDataSetFromLocalStorage
+    )
+    const [tfModel, setTFModel] = useState<MBModel>(getModelFromLocalStorage)
+    const [tab, setTab] = useState<number>(getTabFromLocalStorage)
 
     /* Data and interface management */
     const handleTabChange = (
@@ -116,14 +134,17 @@ export default function ModelPlayground() {
     }
 
     const handleDataChange = newDataSet => {
-        console.log("Randi updated data from tab 0: ", newDataSet)
-
         const storedDataJSON = localStorage.getItem(MODEL_EDITOR_STORAGE_KEY)
+
         let modelEditorData
         if (storedDataJSON) {
             // keep previous model and tab data
             modelEditorData = JSON.parse(storedDataJSON)
             modelEditorData["dataset"] = newDataSet
+
+            // if dataset is changed, model should be reset too
+            modelEditorData["model"] = new MBModel(MODEL_NAME)
+            setTFModel(new MBModel(MODEL_NAME))
         } else {
             modelEditorData = {
                 dataset: newDataSet,
@@ -140,8 +161,6 @@ export default function ModelPlayground() {
     }
 
     const handleModelChange = async newModel => {
-        console.log("Randi updated model from tab 1: ", newModel)
-
         const storedDataJSON = localStorage.getItem(MODEL_EDITOR_STORAGE_KEY)
         let modelEditorData
         if (storedDataJSON) {
@@ -156,7 +175,6 @@ export default function ModelPlayground() {
             }
         }
         // save JSON string in local storage
-        console.log("Randi storing new model JSON: ", newModel)
         localStorage.setItem(
             MODEL_EDITOR_STORAGE_KEY,
             JSON.stringify(modelEditorData)
@@ -168,15 +186,14 @@ export default function ModelPlayground() {
     const nextTab = () => {
         if (tab == 0 && dataset.labels.length >= 2) {
             setTab(1)
-        } else if (tab == 1 && tfModel.status == "completed") {
+        } else if (tab == 1 && tfModel.status == "trained") {
             setTab(2)
         }
     }
 
-    if (!pageReady) return null
     return (
         <Box mb={2}>
-            <h1>ML Model Creator</h1>
+            <h1>ML Model Editor</h1>
             <p>
                 This page allows you to collect data from Jacdac sensors and use
                 them to train a neural network model that does classification.
@@ -196,12 +213,13 @@ export default function ModelPlayground() {
                     label={`3 - Test Model`}
                     disabled={
                         dataset.labels.length < 2 ||
-                        tfModel.status !== "completed"
+                        tfModel.status !== "trained"
                     }
                 />
             </Tabs>
             <TabPanel value={tab} index={0}>
                 <CollectData
+                    chartProps={chartProps}
                     reactStyle={classes}
                     chartPalette={chartPalette}
                     dataset={dataset}
@@ -211,6 +229,7 @@ export default function ModelPlayground() {
             </TabPanel>
             <TabPanel value={tab} index={1}>
                 <TrainModel
+                    chartProps={chartProps}
                     reactStyle={classes}
                     dataset={dataset}
                     model={tfModel}
@@ -220,6 +239,7 @@ export default function ModelPlayground() {
             </TabPanel>
             <TabPanel value={tab} index={2}>
                 <ModelOutput
+                    chartProps={chartProps}
                     reactStyle={classes}
                     chartPalette={chartPalette}
                     model={tfModel}
