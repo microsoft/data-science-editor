@@ -267,9 +267,6 @@ module.exports = {
         "gatsby-plugin-webpack-bundle-analyser-v2",
         {
             resolve: `gatsby-plugin-catch-links`,
-            options: {
-                excludePattern: /(dtmi)/,
-            },
         },
     ],
 }

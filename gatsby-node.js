@@ -307,7 +307,6 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     await createSpecPages(graphql, actions, reporter)
     await createDevicePages(graphql, actions, reporter)
     await createDeviceQRPages(actions, reporter)
-    // generate JSON for Services/DTMI models
     await generateServicesJSON()
     await createWorkers()
 }
