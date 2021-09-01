@@ -30,8 +30,6 @@ import WifiIcon from "@material-ui/icons/Wifi"
 import SettingsIcon from "@material-ui/icons/Settings"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord"
-// tslint:disable-next-line: no-submodule-imports match-default-export-name
-import CloudIcon from "@material-ui/icons/Cloud"
 
 import DarkModeContext from "../ui/DarkModeContext"
 import KindIcon from "../KindIcon"
