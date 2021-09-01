@@ -79,12 +79,7 @@ function ToolsListItem(props: {
 }) {
     const { text, to, href, icon, onClick, onClose } = props
     return to || href ? (
-        <Link
-            to={to}
-            href={href}
-            target={href ? "_blank" : undefined}
-            onClick={to ? onClose : undefined}
-        >
+        <Link to={to} href={href} onClick={to ? onClose : undefined}>
             <ListItem button={true}>
                 <ListItemIcon>{icon}</ListItemIcon>
                 <ListItemText
@@ -171,7 +166,7 @@ export default function ToolsDrawer() {
         },
         {
             text: "MakeCode",
-            href: withPrefix("/editors/makecode"),
+            href: "https://microsoft.github.com/jacdac-docs/editors/makecode",
             icon: <MakeCodeIcon />,
         },
         /*
