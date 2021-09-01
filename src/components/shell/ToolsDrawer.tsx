@@ -164,11 +164,6 @@ export default function ToolsDrawer() {
         {
             // separator
         },
-        {
-            text: "Azure Device Templates",
-            url: "/tools/azure-device-templates",
-            icon: <CloudIcon />,
-        },
         /*
         {
             text: "MakeCode",
