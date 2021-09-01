@@ -30,6 +30,7 @@ import WifiIcon from "@material-ui/icons/Wifi"
 import SettingsIcon from "@material-ui/icons/Settings"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord"
+import MakeCodeIcon from "../icons/MakeCodeIcon"
 
 import DarkModeContext from "../ui/DarkModeContext"
 import KindIcon from "../KindIcon"
@@ -69,15 +70,23 @@ const useStyles = makeStyles(theme =>
 
 function ToolsListItem(props: {
     text?: string
-    url?: string
+    to?: string
+    href?: string
     icon?: JSX.Element
     onClick?: () => void
     onClose: () => void
 }) {
-    const { text, url, icon, onClick, onClose } = props
+    const { text, to, href, icon, onClick, onClose } = props
 
-    return url ? (
-        <Link to={url} aria-label="Toggle Dark Mode" onClick={onClose}>
+    console.log({ text, to, href, icon })
+
+    return to || href ? (
+        <Link
+            to={to}
+            href={href}
+            aria-label="Toggle Dark Mode"
+            onClick={onClose}
+        >
             <ListItem button={true}>
                 <ListItemIcon>{icon}</ListItemIcon>
                 <ListItemText
@@ -85,7 +94,7 @@ function ToolsListItem(props: {
                     primary={
                         <>
                             <span>{text}</span>
-                            {/^https:\/\//.test(url) && (
+                            {/^https:\/\//.test(href) && (
                                 <OpenInNew fontSize="small" color="action" />
                             )}
                         </>
@@ -140,42 +149,42 @@ export default function ToolsDrawer() {
         },
         {
             text: "Data Collector",
-            url: "/tools/collector/",
+            to: "/tools/collector/",
             icon: <FiberManualRecordIcon />,
         },
         UIFlags.peers && {
             text: "Peers",
-            url: "/tools/peers/",
+            to: "/tools/peers/",
             icon: <WifiIcon />,
         },
         {},
         {
             text: "Device Settings",
-            url: "/tools/settings/",
+            to: "/tools/settings/",
             icon: <SettingsIcon />,
         },
         {
             text: "Firmware Update",
-            url: "/tools/updater/",
+            to: "/tools/updater/",
             icon: <SystemUpdateAltIcon />,
         },
         {
             // separator
         },
-        /*
         {
             text: "MakeCode",
-            url: "/tools/makecode",
+            href: "/editors/makecode.html",
             icon: <MakeCodeIcon />,
         },
+        /*
         {
             text: "Jupyter Lab",
-            url: "/tools/jupyterlab",
+            to: "/tools/jupyterlab",
             icon: <JupyterIcon />,
         },
             {
                 text: "Edge Impulse",
-                url: "/tools/edge-impulse",
+                to: "/tools/edge-impulse",
                 icon: <EdgeImpulseIcon />
             },
         */
@@ -184,12 +193,12 @@ export default function ToolsDrawer() {
         },
         {
             text: "Service Editor",
-            url: "/tools/service-editor/",
+            to: "/tools/service-editor/",
             icon: <KindIcon kind={SERVICE_NODE_NAME} />,
         },
         {
             text: "Device registration",
-            url: "/tools/device-registration/",
+            to: "/tools/device-registration/",
             icon: <KindIcon kind={DEVICE_NODE_NAME} />,
         },
         {
