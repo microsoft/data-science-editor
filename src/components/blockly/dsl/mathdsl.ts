@@ -1,3 +1,4 @@
+import jsep from "jsep"
 import { ExpressionWithErrors } from "../../vm/VMgenerator"
 import {
     BlockDefinition,

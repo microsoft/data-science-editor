@@ -1,3 +1,4 @@
+import jsep from "jsep"
 import { toIdentifier } from "../../../../jacdac-ts/src/vm/compile"
 import { CmdWithErrors, makeVMBase } from "../../vm/VMgenerator"
 import LogViewField from "../fields/LogViewField"

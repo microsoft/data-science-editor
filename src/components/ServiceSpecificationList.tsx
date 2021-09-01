@@ -4,7 +4,6 @@ import {
     deviceSpecificationsForService,
     isInfrastructure,
 } from "../../jacdac-ts/src/jdom/spec"
-import { serviceTestFromServiceClass } from "../../jacdac-ts/src/test/testspec"
 import { arrayShuffle } from "../../jacdac-ts/src/jdom/utils"
 import GridHeader from "./ui/GridHeader"
 import { Link } from "gatsby-theme-material-ui"
@@ -28,7 +27,6 @@ function ServiceSpecificatinListItem(props: { service: jdspec.ServiceSpec }) {
     const makecode = resolveMakecodeServiceFromClassIdentifier(classIdentifier)
     const simulator = serviceProviderDefinitionFromServiceClass(classIdentifier)
     const device = !!deviceSpecificationsForService(classIdentifier)?.length
-    const test = serviceTestFromServiceClass(classIdentifier)
     const mixin = isMixinService(classIdentifier)
 
     return (
@@ -72,13 +70,6 @@ function ServiceSpecificatinListItem(props: { service: jdspec.ServiceSpec }) {
                                 icon={<MakeCodeIcon />}
                                 size="small"
                                 label="MakeCode"
-                            />
-                        )}
-                        {test && (
-                            <Chip
-                                icon={<CheckCircleIcon />}
-                                size="small"
-                                label="test"
                             />
                         )}
                     </ChipList>

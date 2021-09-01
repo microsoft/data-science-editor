@@ -1,3 +1,4 @@
+import jsep from "jsep"
 import {
     VMBase,
     VMHandler,
