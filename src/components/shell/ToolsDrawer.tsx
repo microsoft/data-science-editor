@@ -78,15 +78,12 @@ function ToolsListItem(props: {
     onClose: () => void
 }) {
     const { text, to, href, icon, onClick, onClose } = props
-
-    console.log({ text, to, href, icon })
-
     return to || href ? (
         <Link
             to={to}
             href={href}
-            aria-label="Toggle Dark Mode"
-            onClick={onClose}
+            target={href ? "_blank" : undefined}
+            onClick={to ? onClose : undefined}
         >
             <ListItem button={true}>
                 <ListItemIcon>{icon}</ListItemIcon>
