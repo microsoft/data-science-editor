@@ -6,8 +6,6 @@ import TabPanel from "./ui/TabPanel"
 import Snippet from "./ui/Snippet"
 import { converters } from "../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import ServiceSpecification from "./ServiceSpecification"
-import { DTDLSnippet } from "./azure/DTDLSnippet"
-import { serviceSpecificationToDTDL } from "../../jacdac-ts/src/azure-iot/dtdlspec"
 import { serviceSpecificationToServiceTwinSpecification } from "../../jacdac-ts/src/azure-iot/devicetwin"
 import { withPrefix } from "gatsby"
 
@@ -39,7 +37,6 @@ export default function ServiceSpecificationSource(props: {
         serviceSpecification ||
         serviceSpecificationFromClassIdentifier(classIdentifier)
     const convs = converters()
-    const showDTDL = spec && spec?.camelName !== "system"
     const showDeviceTwin = spec && spec?.camelName !== "sytem"
 
     const handleTabChange = (
@@ -64,7 +61,6 @@ export default function ServiceSpecificationSource(props: {
                         "TypeScript",
                         "C",
                         "JSON",
-                        showDTDL && "DTDL",
                         showDeviceTwin && "Twin",
                     ]
                         .filter(n => !!n)
@@ -82,13 +78,8 @@ export default function ServiceSpecificationSource(props: {
                         <Snippet value={() => convs[lang](spec)} mode={lang} />
                     </TabPanel>
                 ))}
-                {showDTDL && (
-                    <TabPanel key="dtdl" value={tab} index={index++}>
-                        <DTDLSnippet node={serviceSpecificationToDTDL(spec)} />
-                    </TabPanel>
-                )}
                 {showDeviceTwin && (
-                    <TabPanel key="dtdl" value={tab} index={index++}>
+                    <TabPanel key="devicetwin" value={tab} index={index++}>
                         <Snippet
                             mode="json"
                             url={withPrefix(

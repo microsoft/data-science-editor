@@ -7,7 +7,6 @@ import { Paper, createStyles, makeStyles, Theme } from "@material-ui/core"
 import TabPanel from "./ui/TabPanel"
 import Snippet from "./ui/Snippet"
 import DeviceSpecification from "./DeviceSpecification"
-import { DeviceDTDLSnippet } from "./DeviceDTDLSnippet"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -28,10 +27,9 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function DeviceSpecificationSource(props: {
     deviceSpecification?: jdspec.DeviceSpec
     showSpecification?: boolean
-    showDTDL?: boolean
     showJSON?: boolean
 }) {
-    const { deviceSpecification, showSpecification, showDTDL, showJSON } = props
+    const { deviceSpecification, showSpecification, showJSON } = props
     const classes = useStyles()
     const [tab, setTab] = useState(0)
     const spec = deviceSpecification
@@ -55,10 +53,9 @@ export default function DeviceSpecificationSource(props: {
                     {[
                         showSpecification && "Specification",
                         showJSON && "JSON",
-                        showDTDL && "DTDL",
                     ]
                         .filter(n => !!n)
-                        .map((n) => (
+                        .map(n => (
                             <Tab key={n} label={n} />
                         ))}
                 </Tabs>
@@ -73,11 +70,6 @@ export default function DeviceSpecificationSource(props: {
                             value={JSON.stringify(spec, null, 2)}
                             mode={"json"}
                         />
-                    </TabPanel>
-                )}
-                {showDTDL && (
-                    <TabPanel key="dtdl" value={tab} index={index++}>
-                        <DeviceDTDLSnippet dev={deviceSpecification} />
                     </TabPanel>
                 )}
             </Paper>

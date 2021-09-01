@@ -1,4 +1,3 @@
-import { DTDLUnits } from "../../../../jacdac-ts/src/azure-iot/dtdl"
 import {
     BlockDefinition,
     BlockReference,
