@@ -12,7 +12,6 @@ import DeleteIcon from "@material-ui/icons/Delete"
 import { serviceSpecifications } from "../../../jacdac-ts/src/jdom/spec"
 import AddServiceIconButton from "../AddServiceIconButton"
 import ServiceSpecificationSelect from "../ServiceSpecificationSelect"
-import { escapeName } from "../../../jacdac-ts/src/azure-iot/dtdl"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import useMakeCodeEditorExtensionClient, {
     READ,
