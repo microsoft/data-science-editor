@@ -50,7 +50,6 @@ async function createServicePages(graphql, actions, reporter) {
     const servicePlaygroundTemplate = path.resolve(
         `src/templates/service-playground.tsx`
     )
-    const serviceTestTemplate = path.resolve(`src/templates/service-test.tsx`)
     result.data.allServicesJson.nodes.map(node => {
         const { classIdentifier, shortId } = node
         const p = `/services/${shortId}/`
@@ -73,13 +72,6 @@ async function createServicePages(graphql, actions, reporter) {
         createPage({
             path: pplay,
             component: slash(servicePlaygroundTemplate),
-            context: {
-                node,
-            },
-        })
-        createPage({
-            path: ptest,
-            component: slash(serviceTestTemplate),
             context: {
                 node,
             },

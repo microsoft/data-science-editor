@@ -1,3 +1,4 @@
+import jsep from "jsep"
 import { Theme } from "@material-ui/core"
 import Blockly, { Block, Workspace, WorkspaceSvg } from "blockly"
 import JDService from "../../../../jacdac-ts/src/jdom/service"

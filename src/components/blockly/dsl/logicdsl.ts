@@ -1,3 +1,4 @@
+import jsep from "jsep"
 import { ExpressionWithErrors } from "../../vm/VMgenerator"
 import BlockDomainSpecificLanguage from "./dsl"
 
@@ -74,8 +75,8 @@ const logicDsl: BlockDomainSpecificLanguage = {
                 const right = blockToExpressionInner(event, inputs[1].child)
                 const op = inputs[1].fields["op"].value as string
                 return {
-                    expr: <jsep.LogicalExpression>{
-                        type: "LogicalExpression",
+                    expr: <jsep.BinaryExpression>{
+                        type: "BinaryExpression",
                         operator: ops[op] || op,
                         left,
                         right,
