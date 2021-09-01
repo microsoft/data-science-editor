@@ -1,7 +1,6 @@
-import React, { useEffect, useContext, useState } from "react"
+import React, { lazy, useEffect, useContext, useState } from "react"
 
-import { Grid, TextField, InputAdornment } from "@material-ui/core"
-import { Button } from "gatsby-theme-material-ui"
+import { Button, Grid, TextField, InputAdornment } from "@material-ui/core"
 import { Autocomplete } from "@material-ui/lab"
 import PlayArrowIcon from "@material-ui/icons/PlayArrow"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
@@ -12,6 +11,8 @@ import DownloadIcon from "@material-ui/icons/GetApp"
 import DeleteAllIcon from "@material-ui/icons/DeleteSweep"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import NavigateNextIcon from "@material-ui/icons/NavigateNext"
+// tslint:disable-next-line: no-submodule-imports match-default-export-name
+import AddIcon from "@material-ui/icons/Add"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 
 import ServiceManagerContext from "../ServiceManagerContext"
@@ -29,7 +30,12 @@ import Trend from "../Trend"
 import ClassDataSetGrid from "../ClassDataSetGrid"
 import ReadingFieldGrid from "../ReadingFieldGrid"
 import FieldDataSet from "../FieldDataSet"
-import ModelDataSet, { arraysEqual } from "./ModelDataSet"
+import MBDataSet, { arraysEqual } from "./MBDataSet"
+import { DATASET_NAME } from "./ModelEditor"
+import Suspense from "../ui/Suspense"
+import AppContext from "../AppContext"
+
+const DataSetPlot = lazy(() => import("./components/DataSetPlot"))
 
 const LIVE_HORIZON = 24
 function createDataSet(
@@ -48,18 +54,22 @@ function createDataSet(
 }
 
 export default function CollectData(props: {
+    chartProps: any
     reactStyle: any
     chartPalette: string[]
-    dataset: ModelDataSet
+    dataset: MBDataSet
     onChange: (dataset) => void
     onNext: (dataset) => void
 }) {
     const { chartPalette, onChange, onNext } = props
-    const [dataset, setDataSet] = useState<ModelDataSet>(props.dataset)
+    const [dataset, setDataSet] = useState<MBDataSet>(props.dataset)
+    const [dataTimestamp, setDataTimestamp] = useState(0)
     const classes = props.reactStyle
+    const chartProps = props.chartProps
 
     const { fileStorage } = useContext(ServiceManagerContext)
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const { toggleShowDeviceHostsDialog } = useContext(AppContext)
     const readingRegisters = useChange(bus, bus =>
         arrayConcatMany(
             bus.devices().map(device =>
@@ -70,6 +80,7 @@ export default function CollectData(props: {
             )
         )
     )
+
     /* For choosing sensors */
     const [registerIdsChecked, setRegisterIdsChecked] = useState<string[]>([])
     const [totalRecordings, setTotalRecordings] = useState(0)
@@ -78,7 +89,6 @@ export default function CollectData(props: {
     )
 
     const [isRecording, setIsRecording] = useState(false)
-    const [, setRecordingLength] = useState(0)
     const [liveRecording, setLiveRecording] = useState<FieldDataSet>(undefined)
     const [, setLiveDataTimestamp] = useState(0)
 
@@ -89,7 +99,7 @@ export default function CollectData(props: {
                   readingRegisters.filter(
                       reg => registerIds.indexOf(reg.id) > -1
                   ),
-                  `${currentClassLabel}$${dataset.numRecordings}`,
+                  `${currentClassLabel}$${dataset.totalRecordings}`,
                   live,
                   chartPalette
               )
@@ -112,7 +122,7 @@ export default function CollectData(props: {
 
     /* For recording data*/
     const [currentClassLabel, setCurrentClassLabel] = useState("class1")
-    const [samplingIntervalDelay, setSamplingIntervalDelay] = useState("100")
+    const [samplingIntervalDelay, setSamplingIntervalDelay] = useState("50")
     const [samplingDuration, setSamplingDuration] = useState("2")
     const [datasetMatch, setDataSetMatch] = useState(false)
     const recordingRegisters = readingRegisters.filter(
@@ -143,12 +153,11 @@ export default function CollectData(props: {
         setCurrentClassLabel(newLabel)
     }
     const handleDownloadDataSet = async () => {
-        const csv = dataset.toCSV()
-        fileStorage.saveText(`${dataset.labelOptions.join("")}dataset.csv`, csv)
+        fileStorage.saveText(`${dataset.name}.csv`, dataset.toCSV())
     }
     const handleDeleteDataSet = () => {
         if (confirm("Are you sure you want to delete all recorded samples?")) {
-            const newDataSet = new ModelDataSet()
+            const newDataSet = new MBDataSet(DATASET_NAME)
             handleDataSetUpdate(newDataSet)
             setDataSet(newDataSet)
 
@@ -158,12 +167,13 @@ export default function CollectData(props: {
     const resetDataCollection = () => {
         setCurrentClassLabel("class1")
         setTotalRecordings(0)
-        setSamplingIntervalDelay("100")
+        setSamplingIntervalDelay("50")
         setSamplingDuration("2")
     }
     const stopRecording = () => {
         if (isRecording) {
             // add new data to the dataset
+            liveRecording.interval = samplingIntervalDelayi
             dataset.addRecording(
                 liveRecording,
                 currentClassLabel,
@@ -172,6 +182,7 @@ export default function CollectData(props: {
             setTotalRecordings(totalRecordings + 1)
             setDataSet(dataset)
             handleDataSetUpdate(dataset)
+            setDataTimestamp(Date.now())
 
             // create new live recording
             setLiveRecording(newRecording(registerIdsChecked, true))
@@ -202,12 +213,12 @@ export default function CollectData(props: {
     }
     const handleDeleteRecording = (recording: FieldDataSet) => {
         dataset.removeRecording(recording)
+        setDataTimestamp(Date.now())
         setDataSet(dataset)
         handleDataSetUpdate(dataset)
     }
     const updateLiveData = () => {
         setLiveRecording(liveRecording)
-        setRecordingLength(liveRecording.rows.length)
         setLiveDataTimestamp(bus.timestamp)
     }
     const throttleUpdate = throttle(() => updateLiveData(), 30)
@@ -255,7 +266,7 @@ export default function CollectData(props: {
             }
         }
         setDataSetMatch(matchingInputs)
-    }, [liveRecording])
+    }, [registerIdsChecked, liveRecording])
 
     const handleDataSetUpdate = dataset => {
         onChange(dataset)
@@ -268,24 +279,24 @@ export default function CollectData(props: {
         <Grid container direction={"column"}>
             <Grid item>
                 <h2>
-                    Current DataSet
+                    Current Dataset
                     <IconButtonWithTooltip
                         onClick={handleDownloadDataSet}
                         title="Download all recording data"
-                        disabled={dataset.numRecordings == 0}
+                        disabled={dataset.totalRecordings == 0}
                     >
                         <DownloadIcon />
                     </IconButtonWithTooltip>
                     <IconButtonWithTooltip
                         onClick={handleDeleteDataSet}
                         title="Delete all recording data"
-                        disabled={dataset.numRecordings == 0}
+                        disabled={dataset.totalRecordings == 0}
                     >
                         <DeleteAllIcon />
                     </IconButtonWithTooltip>
                 </h2>
                 <div key="recordedData">
-                    {dataset.numRecordings > 0 ? (
+                    {dataset.totalRecordings ? (
                         <div key="recordings">
                             <p>
                                 Input type(s): {dataset.inputTypes.join(",")}{" "}
@@ -300,6 +311,16 @@ export default function CollectData(props: {
                                     handleDeleteTable={handleDeleteRecording}
                                 />
                             ))}
+                            <br />
+                            <Suspense>
+                                <DataSetPlot
+                                    chartProps={chartProps}
+                                    reactStyle={classes}
+                                    dataset={dataset}
+                                    predictedLabels={null}
+                                    timestamp={dataTimestamp}
+                                />
+                            </Suspense>
                         </div>
                     ) : (
                         <p>Empty</p>
@@ -308,9 +329,17 @@ export default function CollectData(props: {
             </Grid>
             <Grid item>
                 <h2>Collect More Data</h2>
-                {/* RANDI TODO Toggle button to get data from sensors vs upload from file */}
+                {/* TODO Toggle button to get data from sensors vs upload from file */}
                 <div key="sensors">
-                    <h3>Select input sensors</h3>
+                    <h3>
+                        Select input sensors&nbsp;
+                        <IconButtonWithTooltip
+                            title="start simulator"
+                            onClick={toggleShowDeviceHostsDialog}
+                        >
+                            <AddIcon />
+                        </IconButtonWithTooltip>
+                    </h3>
                     {!readingRegisters.length && (
                         <span>Waiting for sensors...</span>
                     )}

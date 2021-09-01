@@ -1,168 +1,509 @@
-import React, { useContext, useEffect, useMemo, useState, lazy } from "react"
-import { NoSsr } from "@material-ui/core"
+import React, { useContext, useEffect, useMemo, useState } from "react"
+import { Grid, NoSsr } from "@material-ui/core"
+import FileTabs from "../fs/FileTabs"
+
 import BlockContext, { BlockProvider } from "../blockly/BlockContext"
 import BlockEditor from "../blockly/BlockEditor"
-import variablesDsl from "../blockly/dsl/variablesdsl"
-import shadowDsl from "../blockly/dsl/shadowdsl"
+import Blockly from "blockly"
 import modelBlockDsl, { MODEL_BLOCKS } from "./modelblockdsl"
-import { addNewDataSet, addNewClassifier } from "./ModelBlockModals"
+import shadowDsl from "../blockly/dsl/shadowdsl"
 import fieldsDsl from "../blockly/dsl/fieldsdsl"
-import Flags from "../../../jacdac-ts/src/jdom/flags"
 import BlockDiagnostics from "../blockly/BlockDiagnostics"
 import { visitWorkspace } from "../../../jacdac-ts/src/dsl/workspacevisitor"
 
-import Suspense from "../ui/Suspense"
-import { visitToolbox } from "../blockly/toolbox"
-import FieldDataSet from "../FieldDataSet"
+import {
+    BlockJSON,
+    WorkspaceFile,
+} from "../../../jacdac-ts/src/dsl/workspacejson"
+import { WORKSPACE_FILENAME } from "../blockly/toolbox"
+import FileSystemContext, { FileSystemProvider } from "../FileSystemContext"
+import ServiceManagerContext from "../ServiceManagerContext"
+import { resolveBlockServices } from "../blockly/WorkspaceContext"
 
-const RecordDataDialog = lazy(() => import("../dialogs/RecordDataDialog"))
+import Flags from "../../../jacdac-ts/src/jdom/flags"
+import Suspense from "../ui/Suspense"
+import { visitToolbox, MB_WARNINGS_CATEGORY } from "../blockly/toolbox"
+import FieldDataSet from "../FieldDataSet"
+import ModelBlockDialogs, {
+    addNewDataSet,
+} from "../dialogs/mb/ModelBlockDialogs"
+import MBModel, { MCU_FLOAT_SIZE, MCU_SPEED, validModelJSON } from "./MBModel"
+import MBDataSet, { validDataSetJSON } from "./MBDataSet"
+import { prepareModel, prepareDataSet } from "./TrainModel"
+import ExpandModelBlockField from "../blockly/fields/mb/ExpandModelBlockField"
 
 const MB_EDITOR_ID = "mb"
 const MB_SOURCE_STORAGE_KEY = "model-block-blockly-xml"
 const MB_DATA_STORAGE_KEY = "model-block-data-json"
+const MB_NEW_FILE_CONTENT = JSON.stringify({
+    editor: MB_EDITOR_ID,
+    xml: "",
+} as WorkspaceFile)
 
 function getRecordingsFromLocalStorage() {
+    // check local storage for blocks
     const dataObj = localStorage.getItem(MB_DATA_STORAGE_KEY)
     if (dataObj == null || dataObj == undefined) return {}
     const modelEditorData = JSON.parse(dataObj)
 
-    // construct new recordings object
-    const allRecordings = {}
+    // add recordings from local storage
+    const rBlocks = {}
     for (const id in modelEditorData["recordings"]) {
         const recordings = modelEditorData["recordings"][id]
-        allRecordings[id] = recordings.map(recording => {
+        rBlocks[id] = recordings.map(recording => {
             return FieldDataSet.createFromFile(recording)
         })
     }
-    return allRecordings
+    return rBlocks
 }
-
-function getDataSetsFromLocalStorage() {
-    return {}
-    /*const dataObj = localStorage.getItem(MB_DATA_STORAGE_KEY)
+function getTrainedModelsFromLocalStorage() {
+    // check local storage for blocks
+    const dataObj = localStorage.getItem(MB_DATA_STORAGE_KEY)
     if (dataObj == null || dataObj == undefined) return {}
     const modelEditorData = JSON.parse(dataObj)
-    return MBModel.createFromFile(modelEditorData["datasets"])*/
+
+    // add recordings from local storage
+    const mBlocks = {}
+    for (const id in modelEditorData["models"]) {
+        const model = modelEditorData["models"][id]
+        mBlocks[id] = MBModel.createFromFile(model)
+    }
+    return mBlocks
 }
 
-function getModelsFromLocalStorage() {
+function getEmptyMap() {
     return {}
-    /*const dataObj = localStorage.getItem(MB_DATA_STORAGE_KEY)
-    if (dataObj == null || dataObj == undefined) return {}
-    const modelEditorData = JSON.parse(dataObj)
-    return MBModel.createFromFile(modelEditorData["model"])*/
 }
 
-function ModelBlockEditorWithContext() {
-    // store recordings, datasets, and models
-    const [allRecordings, setAllRecordings] = useState(
-        getRecordingsFromLocalStorage() // Randi replace with useMemo(() => ..., [])
-    ) // dictionary of recording block ids and FieldDataSet arrays
-    const [allDataSets, setAllDataSets] = useState(getDataSetsFromLocalStorage) // dictionary of dataset vars and ModelDataSet objs
-    const [allModels, setAllModels] = useState(getModelsFromLocalStorage) // dictionary of model vars and MBModel objs
-
+function ModelBlockEditorWithContext(props: {
+    allRecordings: Record<string, FieldDataSet[]>
+    trainedModels: Record<string, MBModel>
+}) {
     // block context handles hosting blockly
     const { workspace, workspaceJSON, toolboxConfiguration } =
         useContext(BlockContext)
 
-    const [recordDataDialogVisible, setRecordDataDialogVisible] =
-        useState<boolean>(false)
-    const toggleRecordDataDialog = () => {
-        // update visibility of recording dialog
-        const b = !recordDataDialogVisible
-        setRecordDataDialogVisible(b)
-    }
-    const updateAllRecordings = (
-        recording: FieldDataSet[],
-        blockId: string
-    ) => {
-        // Add recording data to list of recordings
-        allRecordings[blockId] = recording
-        updateLocalStorage(allRecordings, null, null)
-    }
+    const { fileSystem } = useContext(FileSystemContext)
+    const { fileStorage } = useContext(ServiceManagerContext)
 
-    const updateLocalStorage = (newRecordings, newDataSets, newModels) => {
+    /* For data storage */
+    const { allRecordings, trainedModels } = props
+    const [currentDataSet, setCurrentDataSet] = useState(undefined)
+    const [currentModel, setCurrentModel] = useState(undefined)
+    // dictionary of model vars and MBModel objs
+    const allModels = useMemo(getEmptyMap, [])
+    const allDataSets = useMemo(getEmptyMap, [])
+    const updateLocalStorage = (newRecordings, newTrainedModels) => {
         const recordings = newRecordings || allRecordings
-        const datasets = newDataSets || allDataSets
-        const models = newModels || allModels
+        const models = newTrainedModels || trainedModels
 
         // convert dataset object to JSON string
         const modelBlocksDataJSON = JSON.stringify({
             recordings: recordings,
-            datasets: datasets,
-            models: models, // Randi TODO make sure you stringify this correctly
+            models: models,
         })
         // save JSON string in local storage
         localStorage.setItem(MB_DATA_STORAGE_KEY, modelBlocksDataJSON)
-        console.log("Randi updating saved data for blocks: ", {
-            recordings,
-            datasets,
-            models,
-        })
     }
 
-    // run this when workspaceJSON changes
+    /* For workspace changes */
+    const modelBlocks = {}
+    const dataSetBlocks = {}
+    const updateDataSetBlocks = (block: BlockJSON) => {
+        const dataSetName =
+            block.inputs[0].fields["dataset_name"].value?.toString()
+        if (dataSetName) {
+            if (dataSetName in dataSetBlocks) {
+                setWarning(
+                    workspace,
+                    block.id,
+                    "Two dataset blocks cannot have the same name"
+                )
+                setWarning(
+                    workspace,
+                    dataSetBlocks[dataSetName].id,
+                    "Two dataset blocks cannot have the same name"
+                )
+                delete dataSetBlocks[dataSetName]
+            } else dataSetBlocks[dataSetName] = block
+        }
+    }
+    const updateModelBlocks = (block: BlockJSON) => {
+        const modelName =
+            block.inputs[0].fields["classifier_name"].value?.toString()
+        if (modelName) {
+            if (modelName in modelBlocks) {
+                setWarning(
+                    workspace,
+                    block.id,
+                    "Two classifier blocks cannot have the same name"
+                )
+                setWarning(
+                    workspace,
+                    modelBlocks[modelName].id,
+                    "Two model blocks cannot have the same name"
+                )
+                delete modelBlocks[modelName]
+            } else modelBlocks[modelName] = block
+        }
+    }
+    // clear warnings, collect datasets and models
     useEffect(() => {
         visitWorkspace(workspaceJSON, {
             visitBlock: block => {
-                // Collect data for dataset blocks
-                // Randi TODO remove from allRecordings anything that is no longer present on the workspace
+                // clear warnings on block
+                setWarning(workspace, block.id, undefined)
+
+                // collect dataset blocks
                 if (block.type == MODEL_BLOCKS + "dataset") {
-                    console.log(`Randi dataset block: `, {
-                        name: block.inputs[0].fields["dataset_name"],
-                        id: block.id,
-                        block: block,
-                    })
-                    // get all nested recordings
-                    const recordingBlock = block.inputs.filter(
-                        input => input.name == "DATASET_RECORDINGS"
-                    )[0].child
-                    if (recordingBlock) {
-                        console.log(`Randi recording data: `, {
-                            recording: allRecordings[recordingBlock.id],
-                            block: recordingBlock,
-                        })
-                        recordingBlock.children?.forEach(childBlock =>
-                            console.log(`Randi recording data: `, {
-                                recording: allRecordings[childBlock.id],
-                                block: childBlock,
-                            })
-                        )
-                    }
+                    updateDataSetBlocks(block)
                 }
-                // Collect layers for neural network blocks
-                else if (block.type == MODEL_BLOCKS + "nn") {
-                    // Randi TODO delete recordings that are no longer present on the workspace
-                    console.log(`Randi neural network block: `, {
-                        name: block.inputs[0].fields["classifier_name"],
-                        id: block.id,
-                        block: block,
-                    })
-                    // get all nested layers
-                    const layerBlock = block?.inputs.filter(
-                        input => input.name == "NN_LAYERS"
-                    )[0].child
-                    if (layerBlock) {
-                        console.log(`Randi layer data: `, { block: layerBlock })
-                        layerBlock.children?.forEach(childBlock =>
-                            console.log(`Randi layer data: `, {
-                                block: childBlock,
-                            })
-                        )
-                    }
-                } else {
-                    console.log(`block ${block.type}`, { block })
+
+                // collect model blocks
+                if (block.type == MODEL_BLOCKS + "nn") {
+                    updateModelBlocks(block)
                 }
             },
         })
-    }, [workspaceJSON])
+    }, [workspace, workspaceJSON, modelBlocks, dataSetBlocks])
 
+    const assembleDataSet = (dataSetName: string) => {
+        // associate block with dataset
+        const dataSet: MBDataSet = new MBDataSet(dataSetName)
+        const dataSetBlock = dataSetBlocks[dataSetName]
+
+        // grab nested recording blocks and place them in the dataset
+        const recordingBlock = dataSetBlock?.inputs.filter(
+            input => input.name == "LAYER_INPUTS"
+        )[0].child
+        if (recordingBlock) {
+            let className = recordingBlock?.inputs[0].fields?.class_name?.value
+            allRecordings[recordingBlock.id].forEach(recording => {
+                dataSet.addRecording(recording, className, null)
+            })
+            recordingBlock.children?.forEach(childBlock => {
+                className = childBlock?.inputs[0].fields?.class_name?.value
+                allRecordings[childBlock.id].forEach(recording => {
+                    dataSet.addRecording(recording, className, null)
+                })
+            })
+        }
+
+        // store dataset in memory
+        allDataSets[dataSetName] = dataSet
+
+        return dataSet
+    }
+    const assembleModel = (modelName: string) => {
+        // associate block with model
+        const model: MBModel = allModels[modelName] || new MBModel(modelName)
+        const modelBlock = modelBlocks[modelName]
+
+        // if this model already existed from before
+        if (model.blockJSON) {
+            // make sure its contents line up with what's saved
+            // if not, mark the model as uncompiled / empty
+            if (JSON.stringify(modelBlock) != JSON.stringify(model.blockJSON)) {
+                model.parseBlockJSON = modelBlock
+                model.status = "empty"
+            }
+        } else model.parseBlockJSON = modelBlock
+
+        // store model in memory
+        allModels[modelName] = model
+
+        return model
+    }
+    const addParametersToDataSetBlock = (dataSet: MBDataSet) => {
+        const dataSetName = dataSet.name
+        const inputTypes = dataSet.inputTypes
+
+        const dataSetBlock = workspace.getBlockById(
+            dataSetBlocks[dataSetName].id
+        )
+
+        // update the parameters of the dataset
+        const paramField = dataSetBlock.getField(
+            "EXPAND_BUTTON"
+        ) as ExpandModelBlockField
+        paramField.updateFieldValue({
+            numSamples: dataSet.totalRecordings,
+            inputClasses: dataSet.labels,
+            inputTypes: inputTypes,
+            shape: [dataSet.length, dataSet.width],
+        })
+    }
+    const addParametersToModelBlock = (model: MBModel) => {
+        const modelName = model.name
+        const totalStats = model.modelStats.total
+        const layerStats = model.modelStats.layers
+
+        // update field parameters for each block in model
+        const modelBlock = workspace.getBlockById(modelBlocks[modelName].id)
+
+        if (modelBlock) {
+            const paramField = modelBlock.getField(
+                "EXPAND_BUTTON"
+            ) as ExpandModelBlockField
+
+            const totalModelSize = totalStats.codeBytes + totalStats.weightBytes
+            const totalModelParams = totalStats.weightBytes / MCU_FLOAT_SIZE
+            paramField.updateFieldValue({
+                totalLayers: layerStats.length,
+                inputShape: totalStats.inputShape,
+                runTimeInMs: totalStats.optimizedCycles / MCU_SPEED,
+                totalSize: totalModelSize,
+                totalParams: totalModelParams,
+            })
+
+            // go through layers
+            model.layerJSON.forEach((layer, idx) => {
+                const layerBlock = workspace.getBlockById(layer.id)
+
+                if (layerBlock) {
+                    const layerParamField = layerBlock.getField(
+                        "EXPAND_BUTTON"
+                    ) as ExpandModelBlockField
+
+                    const totalLayerSize =
+                        layerStats[idx].codeBytes + layerStats[idx].weightBytes
+                    const totalLayerParams =
+                        layerStats[idx].weightBytes / MCU_FLOAT_SIZE
+                    layerParamField.updateFieldValue({
+                        outputShape: layerStats[idx].outputShape,
+                        percentSize: (totalLayerSize * 100) / totalModelSize,
+                        percentParams:
+                            (totalLayerParams * 100) / totalModelParams,
+                        runTimeInMs:
+                            layerStats[idx].optimizedCycles / MCU_SPEED,
+                    })
+                }
+            })
+        } else
+            console.error(
+                "Could not locate block " +
+                    { modelName: modelName, id: modelBlocks[modelName].id }
+            )
+    }
+
+    useEffect(() => {
+        // compile datasets and set warnings if necessary
+        for (const dataSetName in dataSetBlocks) {
+            const dataSet: MBDataSet = assembleDataSet(dataSetName)
+
+            const dataSetWarnings = validDataSetJSON(dataSetBlocks[dataSetName])
+            if (dataSetWarnings) {
+                if (Object.keys(dataSetWarnings).length) {
+                    Object.keys(dataSetWarnings).forEach(blockId => {
+                        setWarning(workspace, blockId, dataSetWarnings[blockId])
+                    })
+                } else {
+                    prepareDataSet(dataSet)
+                    addParametersToDataSetBlock(dataSet)
+                }
+            }
+        }
+
+        // compile all models and set warnings if necessary
+        for (const modelName in modelBlocks) {
+            // grab the MBModel associated with a model name
+            const model: MBModel = assembleModel(modelName)
+
+            // grab the dataset that will be used to train the mbmodel
+            const dataSetName =
+                modelBlocks[modelName].inputs[1].fields[
+                    "nn_training"
+                ].value?.toString()
+            const trainingDataSet = allDataSets[dataSetName]
+
+            // make sure the dataset does not have warnings on it
+            const dataSetWarnings = validDataSetJSON(dataSetBlocks[dataSetName])
+            if (dataSetWarnings && !Object.keys(dataSetWarnings).length) {
+                // make sure the model (defined by the workspaceJSON) is valid
+                const modelWarnings = validModelJSON(model.blockJSON)
+
+                // if there are warnings, assign warnings to each block in the model
+                if (modelWarnings) {
+                    if (Object.keys(modelWarnings).length) {
+                        Object.keys(modelWarnings).forEach(blockId => {
+                            setWarning(
+                                workspace,
+                                blockId,
+                                modelWarnings[blockId]
+                            )
+                        })
+                    } else {
+                        // there are no warnings, compile the model
+                        prepareModel(
+                            model,
+                            trainingDataSet,
+                            addParametersToModelBlock
+                        )
+                    }
+                }
+            }
+        }
+    }, [workspace, workspaceJSON])
+
+    /* block services (warnings and data) */
+    const setWarning = (workspace, blockId: string, warningText: string) => {
+        const block = workspace.getBlockById(blockId)
+        const blockServices = resolveBlockServices(block)
+        if (blockServices)
+            blockServices.setWarning(MB_WARNINGS_CATEGORY, warningText)
+    }
+    const setData = (workspace, blockId: string, dataArray: any[]) => {
+        const block = workspace.getBlockById(blockId)
+        const blockServices = resolveBlockServices(block)
+        if (blockServices) blockServices.data = dataArray
+    }
+
+    /* For dialog handling */
+    const [recordDataDialogVisible, setRecordDataDialogVisible] =
+        useState<boolean>(false)
+    const [trainModelDialogVisible, setTrainModelDialogVisible] =
+        useState<boolean>(false)
+    const [viewDataSetDialogVisible, setViewDataSetDialogVisible] =
+        useState<boolean>(false)
+    const [newClassifierDialogVisible, setNewClassifierDialogVisible] =
+        useState<boolean>(false)
+    const toggleViewDataSetDialog = () => toggleDialog("dataset")
+    const toggleRecordDataDialog = () => toggleDialog("recording")
+    const toggleTrainModelDialog = () => toggleDialog("model")
+    const toggleNewClassifierDialog = () => toggleDialog("classifier")
+    const toggleDialog = (dialog: string) => {
+        if (dialog == "dataset") {
+            const b = !viewDataSetDialogVisible
+            setViewDataSetDialogVisible(b)
+        } else if (dialog == "recording") {
+            const b = !recordDataDialogVisible
+            setRecordDataDialogVisible(b)
+        } else if (dialog == "model") {
+            const b = !trainModelDialogVisible
+            setTrainModelDialogVisible(b)
+        } else if (dialog == "classifier") {
+            const b = !newClassifierDialogVisible
+            setNewClassifierDialogVisible(b)
+        }
+    }
+    const closeModal = (modal: string) => {
+        if (modal == "dataset") {
+            // reset dataset that gets passed to dialogs
+            setCurrentDataSet(undefined)
+
+            // close dialog
+            toggleViewDataSetDialog()
+        } else if (modal == "model") {
+            // reset dataset and model that gets passed to dialogs
+            setCurrentDataSet(undefined)
+            setCurrentModel(undefined)
+
+            // close dialog
+            toggleTrainModelDialog()
+        } else if (modal == "classifier") {
+            // close diaglog
+            toggleNewClassifierDialog()
+        }
+    }
     const buttonsWithDialogs = {
         createNewDataSetButton: addNewDataSet,
         createNewRecordingButton: toggleRecordDataDialog,
-        createNewClassifierButton: addNewClassifier,
+        createNewClassifierButton: toggleNewClassifierDialog,
     }
-    // set button callbacks
+    const openDataSetModal = (clickedBlock: Blockly.Block) => {
+        const dataSetName = clickedBlock.getField("DATASET_NAME").getText()
+        const selectedDataset = allDataSets[dataSetName]
+
+        const dataSetWarnings = validDataSetJSON(dataSetBlocks[dataSetName])
+        if (!dataSetWarnings || Object.keys(dataSetWarnings).length) {
+            Blockly.alert(
+                "This dataset cannot be opened. Address the warnings on the dataset definition block."
+            )
+        } else {
+            setCurrentDataSet(selectedDataset)
+
+            // open the view dataset modal
+            toggleViewDataSetDialog()
+        }
+    }
+
+    const closeRecordingModal = (
+        recording: FieldDataSet[],
+        blockId: string
+    ) => {
+        // save the new recording
+        if (recording && blockId) {
+            // Add recording data to list of recordings
+            allRecordings[blockId] = recording
+
+            updateLocalStorage(allRecordings, null)
+
+            // keep this info so this block can be duplicated
+            const newBlock = workspace.getBlockById(blockId)
+            const expandField = newBlock.getField(
+                "EXPAND_BUTTON"
+            ) as ExpandModelBlockField
+            expandField.updateFieldValue({ originalBlock: blockId })
+        }
+
+        // close dialog
+        toggleRecordDataDialog()
+    }
+
+    const openTrainingModal = (clickedBlock: Blockly.Block) => {
+        // setup model for training
+        const modelName = clickedBlock.getField("CLASSIFIER_NAME").getText()
+        const selectedModel: MBModel = allModels[modelName]
+
+        // setup dataset for training
+        const dataSetName = clickedBlock.getField("NN_TRAINING").getText()
+        const selectedDataset = allDataSets[dataSetName]
+
+        const dataSetWarnings = validDataSetJSON(dataSetBlocks[dataSetName])
+        if (!dataSetWarnings || Object.keys(dataSetWarnings).length) {
+            Blockly.alert(
+                "This model cannot be trained. Address the warnings on the dataset definition block."
+            )
+        } else {
+            const modelWarnings = validModelJSON(modelBlocks[modelName])
+            if (!modelWarnings || Object.keys(modelWarnings).length) {
+                Blockly.alert(
+                    "This model cannot be trained. Address the warnings on model architecture block."
+                )
+            } else {
+                // update the model and dataset to pass to the modal
+                setCurrentModel(selectedModel)
+                setCurrentDataSet(selectedDataset)
+
+                // open the training modal
+                toggleTrainModelDialog()
+            }
+        }
+    }
+    const updateModel = (model: MBModel, blockId: string) => {
+        // Add trained model to record of allModels
+        if (model) allModels[model.name] = model
+
+        // Model was trained, add model to list of trained models
+        if (blockId) {
+            trainedModels[blockId] = model
+
+            // add dataset and model to new block
+            const newBlock = workspace.getBlockById(blockId)
+            const services = resolveBlockServices(newBlock)
+            services.data = [currentDataSet, model]
+
+            // keep this info so this block can be duplicated
+            const expandField = newBlock.getField(
+                "TRAINED_MODEL_DISPLAY"
+            ) as ExpandModelBlockField
+            expandField.updateFieldValue({ originalBlock: blockId })
+
+            updateLocalStorage(null, trainedModels)
+        }
+    }
+
+    /* For button callbacks */
     useEffect(() => {
         // register callbacks buttons with custom dialogs
         visitToolbox(toolboxConfiguration, {
@@ -176,34 +517,251 @@ function ModelBlockEditorWithContext() {
         })
     }, [toolboxConfiguration])
 
+    /* For block button clicks */
+    const resolveRecordingBlockInfo = (recordingBlock: Blockly.Block) => {
+        // get recording
+        let recording: FieldDataSet[] = allRecordings[recordingBlock.id]
+        if (!recording) {
+            // this block must be a duplicate, get the original block id
+            const originalBlockId = JSON.parse(
+                recordingBlock.getFieldValue("EXPAND_BUTTON")
+            )["originalBlock"]
+            recording = allRecordings[originalBlockId]
+
+            // add duplicate block to list of trained models
+            allRecordings[recordingBlock.id] = recording
+            updateLocalStorage(allRecordings, null)
+
+            const expandField = recordingBlock.getField(
+                "EXPAND_BUTTON"
+            ) as ExpandModelBlockField
+            expandField.updateFieldValue({
+                originalBlock: recordingBlock.id,
+            })
+        }
+        // add recording data to block
+        setData(workspace, recordingBlock.id, recording)
+    }
+    const resolveTrainedModelBlockInfo = (trainedModelBlock: Blockly.Block) => {
+        // get model
+        let model: MBModel = trainedModels[trainedModelBlock.id]
+        if (!model) {
+            // this block must be a duplicate, get the original block id
+            const originalBlockId = JSON.parse(
+                trainedModelBlock.getFieldValue("TRAINED_MODEL_DISPLAY")
+            )["originalBlock"]
+            model = trainedModels[originalBlockId]
+
+            // add duplicate block to list of trained models
+            trainedModels[trainedModelBlock.id] = model
+            updateLocalStorage(null, trainedModels)
+
+            const expandField = trainedModelBlock.getField(
+                "TRAINED_MODEL_DISPLAY"
+            ) as ExpandModelBlockField
+            expandField.updateFieldValue({
+                originalBlock: trainedModelBlock.id,
+            })
+        }
+
+        // get dataset
+        const dataSetName = trainedModelBlock
+            .getField("MODEL_TEST_SET")
+            .getText()
+        let dataset = allDataSets[dataSetName]
+
+        if (dataset) {
+            const dataSetWarnings = validDataSetJSON(dataSetBlocks[dataSetName])
+            if (!dataSetWarnings || Object.keys(dataSetWarnings).length) {
+                setWarning(
+                    workspace,
+                    trainedModelBlock.id,
+                    "This dataset cannot be tested. Address the warnings on the dataset definition block."
+                )
+                dataset = undefined
+            }
+        }
+
+        if (dataset && model)
+            setData(workspace, trainedModelBlock.id, [
+                dataset,
+                model,
+                fileStorage,
+            ])
+    }
+    const handleWorkspaceChange = event => {
+        if (event.type == Blockly.Events.BLOCK_DELETE) {
+            event.ids.forEach(blockId => {
+                delete allRecordings[blockId]
+                delete trainedModels[blockId]
+            })
+            updateLocalStorage(allRecordings, trainedModels)
+        } else if (event.type == Blockly.Events.BLOCK_CREATE && event.ids) {
+            // add info to newly created recording and trained model blocks
+            event.ids.forEach(blockId => {
+                const createdBlock = workspace.getBlockById(blockId)
+                if (createdBlock.type == "model_block_trained_nn")
+                    resolveTrainedModelBlockInfo(createdBlock)
+                else if (createdBlock.type == "model_block_recording")
+                    resolveRecordingBlockInfo(createdBlock)
+            })
+        } else if (event.type == Blockly.Events.CLICK && event.blockId) {
+            const clickedBlock = workspace.getBlockById(event.blockId)
+            if (clickedBlock.data && clickedBlock.data.startsWith("click")) {
+                const command = clickedBlock.data.split(".")[1]
+                if (command == "download") {
+                    const recording = allRecordings[clickedBlock.id]
+                    // find the correct recording, dataset, or model to download
+                    if (recording) {
+                        // get recording, recording name, and class name
+                        const className = clickedBlock
+                            .getField("CLASS_NAME")
+                            .getText()
+                        downloadRecordings(recording, className)
+                    } else {
+                        // we have a model or dataset
+                        if (clickedBlock.type == MODEL_BLOCKS + "dataset") {
+                            const dataSetName = clickedBlock
+                                .getField("DATASET_NAME")
+                                .getText()
+                            const dataSet = allDataSets[dataSetName]
+                            downloadFile(dataSet.toCSV(), dataSetName, "csv")
+                        } else if (clickedBlock.type == MODEL_BLOCKS + "nn") {
+                            const modelName = clickedBlock
+                                .getField("CLASSIFIER_NAME")
+                                .getText()
+                            const model: MBModel = allModels[modelName]
+                            downloadFile(
+                                JSON.stringify(model),
+                                modelName,
+                                "json"
+                            )
+                        } else if (
+                            clickedBlock.type ==
+                            MODEL_BLOCKS + "trained_nn"
+                        ) {
+                            const model: MBModel =
+                                trainedModels[clickedBlock.id]
+                            downloadFile(
+                                JSON.stringify(model),
+                                model.name,
+                                "json"
+                            )
+                        }
+                    }
+                } else if (command == "edit") {
+                    openDataSetModal(clickedBlock)
+                } else if (command == "train") {
+                    openTrainingModal(clickedBlock)
+                }
+                // clear the command
+                clickedBlock.data = null
+            }
+        } else if (event.type == Blockly.Events.BLOCK_CHANGE && event.blockId) {
+            // update trained model blocks on dropdown changes
+            const changedBlock = workspace.getBlockById(event.blockId)
+            if (changedBlock.data && changedBlock.data.startsWith("click")) {
+                const command = changedBlock.data.split(".")[1]
+                if (command == "refreshdisplay") {
+                    resolveTrainedModelBlockInfo(changedBlock)
+                }
+                // clear the command
+                changedBlock.data = null
+            }
+        }
+    }
+    const downloadRecordings = (
+        recordings: FieldDataSet[],
+        className: string
+    ) => {
+        const recordingCountHeader = `Number of recordings,${recordings.length}`
+
+        const recordingData: string[] = []
+        recordings.forEach(sample => {
+            recordingData.push(
+                "Recording metadata," +
+                    sample.name +
+                    "," +
+                    sample.rows.length +
+                    "," +
+                    className
+            )
+            recordingData.push(sample.toCSV())
+        })
+        const recordData = recordingData.join("\n")
+
+        const csv: string[] = [recordingCountHeader, recordData]
+        downloadFile(csv.join("\n"), recordings[0].name, "csv")
+    }
+    const downloadFile = (
+        content: string,
+        fileName: string,
+        fileType: string
+    ) => {
+        fileStorage.saveText(`${fileName}.${fileType}`, content)
+    }
+    useEffect(() => {
+        if (workspace) workspace.addChangeListener(handleWorkspaceChange)
+
+        return () => {
+            if (workspace) workspace.removeChangeListener(handleWorkspaceChange)
+        }
+    }, [workspace, workspaceJSON])
+
     return (
-        <>
-            <BlockEditor editorId={MB_EDITOR_ID} />
-            {Flags.diagnostics && <BlockDiagnostics />}
-            {recordDataDialogVisible && (
+        <Grid container direction="column" spacing={1}>
+            {!!fileSystem && (
+                <Grid item xs={12}>
+                    <FileTabs
+                        newFileName={WORKSPACE_FILENAME}
+                        newFileContent={MB_NEW_FILE_CONTENT}
+                        hideFiles={true}
+                    />
+                </Grid>
+            )}
+            <Grid item xs={12}>
+                <BlockEditor editorId={MB_EDITOR_ID} />
+                {Flags.diagnostics && <BlockDiagnostics />}
                 <Suspense>
-                    <RecordDataDialog
-                        open={recordDataDialogVisible}
-                        onDone={updateAllRecordings}
-                        onClose={toggleRecordDataDialog}
-                        recordingCount={Object.keys(allRecordings).length}
+                    <ModelBlockDialogs
+                        viewDataSetDialogVisible={viewDataSetDialogVisible}
+                        recordDataDialogVisible={recordDataDialogVisible}
+                        trainModelDialogVisible={trainModelDialogVisible}
+                        newClassifierDialogVisible={newClassifierDialogVisible}
+                        onRecordingDone={closeRecordingModal}
+                        onModelUpdate={updateModel}
+                        closeModal={closeModal}
                         workspace={workspace}
+                        dataset={currentDataSet}
+                        model={currentModel}
+                        recordingCount={Object.keys(allRecordings).length}
+                        trainedModelCount={Object.keys(trainedModels).length}
                     />
                 </Suspense>
-            )}
-        </>
+            </Grid>
+            {Flags.diagnostics && <BlockDiagnostics />}
+        </Grid>
     )
 }
 
 export default function ModelBlockEditor() {
     const dsls = useMemo(() => {
-        return [modelBlockDsl, shadowDsl, fieldsDsl, variablesDsl]
+        return [modelBlockDsl, shadowDsl, fieldsDsl]
     }, [])
+
+    const recordings = getRecordingsFromLocalStorage()
+    const models = getTrainedModelsFromLocalStorage()
+
     return (
         <NoSsr>
-            <BlockProvider storageKey={MB_SOURCE_STORAGE_KEY} dsls={dsls}>
-                <ModelBlockEditorWithContext />
-            </BlockProvider>
+            <FileSystemProvider>
+                <BlockProvider storageKey={MB_SOURCE_STORAGE_KEY} dsls={dsls}>
+                    <ModelBlockEditorWithContext
+                        allRecordings={recordings}
+                        trainedModels={models}
+                    />
+                </BlockProvider>
+            </FileSystemProvider>
         </NoSsr>
     )
 }

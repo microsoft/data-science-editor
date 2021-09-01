@@ -10,9 +10,6 @@ import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import React, { useContext, useEffect, useState } from "react"
 
-import { BuzzerCmd } from "../../../jacdac-ts/src/jdom/constants"
-import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
-
 import { predictRequest } from "../blockly/dsl/workers/tf.proxy"
 import type {
     TFModelPredictRequest,
@@ -31,7 +28,7 @@ import { throttle } from "../../../jacdac-ts/src/jdom/utils"
 
 import ReadingFieldGrid from "../ReadingFieldGrid"
 import FieldDataSet from "../FieldDataSet"
-import { arraysEqual } from "./ModelDataSet"
+import { arraysEqual } from "./MBDataSet"
 import MBModel from "./MBModel"
 
 const LIVE_HORIZON = 100
@@ -51,13 +48,13 @@ function createDataSet(
 }
 
 export default function ModelOutput(props: {
+    chartProps: any
     reactStyle: any
     chartPalette: string[]
     model: MBModel
 }) {
     const classes = props.reactStyle
-    const { chartPalette } = props
-    const [model] = useState<MBModel>(props.model)
+    const { chartPalette, model } = props
 
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const readingRegisters = useChange(bus, bus =>
@@ -71,25 +68,8 @@ export default function ModelOutput(props: {
         )
     )
 
-    const isBuzzer = spec => {
-        return spec.shortId == "buzzer" //ledmatrix soundplayer
-    }
-    const buzzerServices = useChange(bus, bus =>
-        arrayConcatMany(
-            bus
-                .devices()
-                .map(device =>
-                    device.services().filter(srv => isBuzzer(srv.specification))
-                )
-        )
-    )
-
-    const [pageReady, setPageReady] = useState(false)
     useEffect(() => {
-        if (!pageReady) {
-            prepareTestingLogs()
-            setPageReady(true)
-        }
+        prepareTestingLogs()
     }, [])
 
     /* For loading page */
@@ -137,10 +117,8 @@ export default function ModelOutput(props: {
         }
         return false
     }
-    const predictionEnabled =
-        !!recordingRegisters?.length &&
-        liveRecordingMatchesModel() &&
-        model.status == "completed"
+    const sensorsMatch =
+        !!recordingRegisters?.length && liveRecordingMatchesModel()
 
     const handleRegisterCheck = (reg: JDRegister) => {
         const i = registerIdsChecked.indexOf(reg.id)
@@ -167,7 +145,7 @@ export default function ModelOutput(props: {
     const updateLiveData = () => {
         setLiveRecording(liveRecording)
         setLiveDataTimestamp(bus.timestamp)
-        if (model.status == "completed") updatePrediction()
+        updatePrediction()
     }
     const throttleUpdate = throttle(() => updateLiveData(), 30)
     // interval add data entry
@@ -189,17 +167,16 @@ export default function ModelOutput(props: {
     }
     const updatePrediction = async () => {
         // Use the model to do inference on a data point the model hasn't seen before:
-        if (!predictionEnabled) return
+        if (!sensorsMatch) return
 
         let data = liveRecording.data()
         data = data.slice(data.length - model.inputShape[0])
         const liveInput = [data]
 
-        let topIdx = 0
+        let topLabel = model.labels[0]
 
         if (data && data.length >= model.inputShape[0]) {
             const liveOutput = []
-
             // Get probability values from model
             const predictMsg = {
                 worker: "tf",
@@ -213,22 +190,24 @@ export default function ModelOutput(props: {
                 predictMsg
             )) as TFModelPredictResponse
 
-            // Save probability for each class in model object
-            const prediction = predResult.data.prediction
-            model.labels.forEach((label, idx) => {
-                liveOutput.push(prediction[idx])
+            if (predResult) {
+                // Save probability for each class in model object
+                const prediction = predResult.data.predictAll[0]
+                model.labels.forEach(label => {
+                    liveOutput.push(prediction[label])
 
-                // update which class has highest confidence
-                if (liveOutput[idx] > liveOutput[topIdx]) topIdx = idx
-            })
-
-            livePredictions.predictionData.addData(liveOutput)
-            livePredictions.topClass = model.labels[topIdx]
+                    // update which class has highest confidence
+                    if (liveOutput[label] > liveOutput[topLabel])
+                        topLabel = label
+                })
+                livePredictions.predictionData.addData(liveOutput)
+                livePredictions.topClass = topLabel
+            }
         }
     }
 
     useEffect(() => {
-        const interval = setInterval(() => addRow(), 100) // Randi TODO decide if sampling interval should be constant in dataset? dataset.samplingInterval)
+        const interval = setInterval(() => addRow(), model.inputInterval)
         const stopStreaming = startStreamingRegisters()
 
         return () => {
@@ -237,74 +216,13 @@ export default function ModelOutput(props: {
         }
     }, [registerIdsChecked])
 
-    /* For tying prediction to action */
-    useEffect(() => {
-        let interval
-        if (predictionEnabled) {
-            executePrediction()
-            interval = setInterval(() => executePrediction(), 1300)
-        }
-
-        return () => clearInterval(interval)
-    }, [predictionEnabled])
-
-    const playNote = note => {
-        const noteFreqs = {
-            C: 261,
-            E: 329,
-            F: 349,
-            G: 391,
-            A: 440,
-            B: 493,
-            C2: 523,
-            D2: 587,
-        }
-        if (buzzerServices.length) {
-            buzzerServices.forEach(service => {
-                const period = 1000000 / noteFreqs[note]
-                const duty = period / 2
-                const duration = 400
-                const data = jdpack<[number, number, number]>("u16 u16 u16", [
-                    period,
-                    duty,
-                    duration,
-                ])
-                service.sendCmdAsync(BuzzerCmd.PlayTone, data)
-            })
-        }
-    }
-    const executePrediction = () => {
-        if (predictionEnabled && livePredictions.predictionData.rows) {
-            switch (livePredictions.topClass) {
-                case "one":
-                    playNote("C")
-                    playNote("E")
-                    playNote("G")
-                    break
-                case "four":
-                    playNote("F")
-                    playNote("A")
-                    playNote("C2")
-                    break
-                case "five":
-                    playNote("G")
-                    playNote("B")
-                    playNote("D2")
-                    break
-                default:
-                    break
-            }
-        }
-    }
-
     const [expanded, setExpanded] = React.useState<string | false>(false)
-    const handleExpandedSummaryChange =
+    const handleExpandedSensorsChange =
         (panel: string) =>
         (event: React.ChangeEvent<unknown>, isExpanded: boolean) => {
             setExpanded(isExpanded ? panel : false)
         }
 
-    if (!pageReady) return null
     return (
         <Grid container direction={"column"}>
             <Grid item>
@@ -313,7 +231,7 @@ export default function ModelOutput(props: {
                     <span>
                         {" "}
                         Top Class:{" "}
-                        {model.status == "completed"
+                        {model.status == "trained"
                             ? livePredictions.topClass
                             : "--"}{" "}
                     </span>
@@ -360,12 +278,12 @@ export default function ModelOutput(props: {
                 </div>
                 <Accordion
                     expanded={expanded === "chooseSensors"}
-                    onChange={handleExpandedSummaryChange("chooseSensors")}
+                    onChange={handleExpandedSensorsChange("chooseSensors")}
                 >
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                         <div>
                             <h4>Select input sensors</h4>
-                            {!predictionEnabled && (
+                            {!sensorsMatch && (
                                 <p>
                                     Sensors should match:{" "}
                                     {model.inputTypes.join(", ")}{" "}

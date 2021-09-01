@@ -2,22 +2,14 @@ import {
     BlockDefinition,
     CategoryDefinition,
     MODEL_BLOCK_CLASS_STATEMENT_TYPE,
-    MODEL_BLOCK_PREPROCESS_STATEMENT_TYPE,
     MODEL_BLOCK_LAYER_STATEMENT_TYPE,
 } from "../blockly/toolbox"
 import BlockDomainSpecificLanguage from "../blockly/dsl/dsl"
 
 import ExpandModelBlockField from "../blockly/fields/mb/ExpandModelBlockField"
-import DataSetBlockField from "../blockly/fields/mb/DataSetBlockField"
-import RecordingBlockField from "../blockly/fields/mb/RecordingBlockField"
-import SmoothingBlockField from "../blockly/fields/mb/SmoothingBlockField"
-import KNNBlockField from "../blockly/fields/mb/KNNBlockField"
-import NeuralNetworkBlockField from "../blockly/fields/mb/NeuralNetworkBlockField"
-import ConvLayerBlockField from "../blockly/fields/mb/ConvLayerBlockField"
-import PoolingLayerBlockField from "../blockly/fields/mb/PoolingLayerBlockField"
-import DropoutLayerBlockField from "../blockly/fields/mb/DropoutLayerBlockField"
-import FlattenLayerBlockField from "../blockly/fields/mb/FlattenLayerBlockField"
-import DenseLayerBlockField from "../blockly/fields/mb/DenseLayerBlockField"
+import DataSetBlockButton from "../blockly/fields/mb/DataSetBlockButton"
+import NeuralNetworkBlockButton from "../blockly/fields/mb/NeuralNetworkBlockButtons"
+import TrainedModelBlockField from "../blockly/fields/mb/TrainedModelBlockField"
 
 export const MODEL_BLOCKS = "model_block_"
 export const MB_DATASET_VAR_TYPE = "ModelBlockDataSet"
@@ -26,7 +18,6 @@ export const MB_CLASSIFIER_VAR_TYPE = "ModelBlockClassifier"
 
 const dataset_color = "#123456"
 const class_color = "#2466A8"
-const processing_color = "#ac2469"
 const learning_color = "#561234"
 const layer_color = "#97207a"
 
@@ -57,15 +48,15 @@ export class ModelBlockDomainSpecificLanguage
                 message1: "%1",
                 args1: [
                     {
-                        type: DataSetBlockField.KEY,
-                        name: "BLOCK_PARAMS",
+                        type: DataSetBlockButton.KEY,
+                        name: "DATASET_BUTTONS",
                     },
                 ],
                 message2: "%1",
                 args2: [
                     {
                         type: "input_statement",
-                        name: "DATASET_RECORDINGS",
+                        name: "LAYER_INPUTS",
                         check: [MODEL_BLOCK_CLASS_STATEMENT_TYPE],
                     },
                 ],
@@ -98,67 +89,15 @@ export class ModelBlockDomainSpecificLanguage
                         name: "EXPAND_BUTTON",
                     },
                 ],
-                message1: "%1",
-                args1: [
-                    {
-                        type: RecordingBlockField.KEY,
-                        name: "BLOCK_PARAMS",
-                    },
-                ],
                 inputsInline: false,
                 previousStatement: MODEL_BLOCK_CLASS_STATEMENT_TYPE,
                 nextStatement: MODEL_BLOCK_CLASS_STATEMENT_TYPE,
                 colour: class_color,
                 tooltip:
-                    "Use this block to define your classes. Click on the inspector icon to view and edit a class",
+                    "Use this recording block to define your classes. Click on the plus icon to download this recording",
                 helpUrl: "",
             } as BlockDefinition,
-            /* Preprocessing Blocks */
-            {
-                kind: "block",
-                type: MODEL_BLOCKS + "standardize",
-                message0: "standardize dataset",
-                args0: [],
-                inputsInline: false,
-                previousStatement: MODEL_BLOCK_PREPROCESS_STATEMENT_TYPE,
-                nextStatement: [
-                    MODEL_BLOCK_PREPROCESS_STATEMENT_TYPE,
-                    MODEL_BLOCK_LAYER_STATEMENT_TYPE,
-                ],
-                colour: processing_color,
-                tooltip:
-                    "Use this block to normalize and scale your dataset values between 0 and 1. This kind of block can only go inside classifier blocks and before layer blocks",
-                helpUrl: "",
-            } as BlockDefinition,
-            {
-                kind: "block",
-                type: MODEL_BLOCKS + "smooth",
-                message0: "smooth data %1",
-                args0: [
-                    {
-                        type: ExpandModelBlockField.KEY,
-                        name: "EXPAND_BUTTON",
-                    },
-                ],
-                message1: "%1",
-                args1: [
-                    {
-                        type: SmoothingBlockField.KEY,
-                        name: "BLOCK_PARAMS",
-                    },
-                ],
-                inputsInline: false,
-                previousStatement: MODEL_BLOCK_PREPROCESS_STATEMENT_TYPE,
-                nextStatement: [
-                    MODEL_BLOCK_PREPROCESS_STATEMENT_TYPE,
-                    MODEL_BLOCK_LAYER_STATEMENT_TYPE,
-                ],
-                colour: processing_color,
-                tooltip:
-                    "Use this block to run a smoothing window filter over your data. This kind of block can only go inside classifier blocks and before layer blocks",
-                helpUrl: "",
-            } as BlockDefinition,
-            /* Learning Blocks */
+            /* Classifier Blocks */
             {
                 kind: "block",
                 type: MODEL_BLOCKS + "nn",
@@ -189,49 +128,82 @@ export class ModelBlockDomainSpecificLanguage
                 message2: "%1",
                 args2: [
                     {
-                        type: NeuralNetworkBlockField.KEY,
-                        name: "BLOCK_PARAMS",
+                        type: NeuralNetworkBlockButton.KEY,
+                        name: "NN_BUTTONS",
                     },
                 ],
                 message3: "%1",
                 args3: [
                     {
                         type: "input_statement",
-                        name: "NN_LAYERS",
-                        check: [
-                            MODEL_BLOCK_PREPROCESS_STATEMENT_TYPE,
-                            MODEL_BLOCK_LAYER_STATEMENT_TYPE,
-                        ],
+                        name: "LAYER_INPUTS",
+                        check: [MODEL_BLOCK_LAYER_STATEMENT_TYPE],
                     },
                 ],
                 inputsInline: false,
                 colour: learning_color,
                 tooltip:
-                    "Use this block to define a neural network classifier; it only takes preprocessing and layer blocks.",
+                    "Use this block to define a neural network classifier; it only takes layer blocks.",
                 helpUrl: "",
             } as BlockDefinition,
             {
                 kind: "block",
-                type: MODEL_BLOCKS + "conv_layer",
-                message0: "convolutional layer %1",
+                type: MODEL_BLOCKS + "trained_nn",
+                message0: "trained model %1",
+                args0: [
+                    {
+                        type: "field_input",
+                        name: "TRAINED_MODEL_NAME",
+                        text: "classifier1.t",
+                    },
+                ],
+                message1: "testing data %1",
+                args1: [
+                    {
+                        type: "field_variable",
+                        name: "MODEL_TEST_SET",
+                        variable: "dataset1",
+                        variableTypes: [MB_DATASET_VAR_TYPE],
+                        defaultType: MB_DATASET_VAR_TYPE,
+                    },
+                ],
+                message2: "display %1",
+                args2: [
+                    {
+                        type: "field_dropdown",
+                        options: [
+                            "model summary",
+                            "confusion matrix",
+                            "dataset plot",
+                        ].map(s => [s, s]),
+                        name: "SELECTED_CHART",
+                    },
+                ],
+                message3: "%1",
+                args3: [
+                    {
+                        type: TrainedModelBlockField.KEY,
+                        name: "TRAINED_MODEL_DISPLAY",
+                    },
+                ],
+                inputsInline: false,
+                colour: learning_color,
+                tooltip:
+                    "Use this block to test a trained model with different datasets.",
+                helpUrl: "",
+            } as BlockDefinition,
+            {
+                kind: "block",
+                type: MODEL_BLOCKS + "conv1d_layer",
+                message0: "convolution1d (16, 2, 1) %1",
                 args0: [
                     {
                         type: ExpandModelBlockField.KEY,
                         name: "EXPAND_BUTTON",
                     },
                 ],
-                message1: "%1",
-                args1: [
-                    {
-                        type: ConvLayerBlockField.KEY,
-                        name: "BLOCK_PARAMS",
-                    },
-                ],
                 inputsInline: false,
-                previousStatement: [
-                    MODEL_BLOCK_PREPROCESS_STATEMENT_TYPE,
-                    MODEL_BLOCK_LAYER_STATEMENT_TYPE,
-                ],
+                previousStatement: [MODEL_BLOCK_LAYER_STATEMENT_TYPE],
                 nextStatement: MODEL_BLOCK_LAYER_STATEMENT_TYPE,
                 colour: layer_color,
                 tooltip:
@@ -240,26 +212,86 @@ export class ModelBlockDomainSpecificLanguage
             } as BlockDefinition,
             {
                 kind: "block",
-                type: MODEL_BLOCKS + "max_pool_layer",
-                message0: "max pooling layer %1",
+                type: MODEL_BLOCKS + "maxpool1d_layer",
+                message0: "max pool1d (2, 1) %1",
                 args0: [
                     {
                         type: ExpandModelBlockField.KEY,
                         name: "EXPAND_BUTTON",
                     },
                 ],
-                message1: "%1",
-                args1: [
+                inputsInline: false,
+                previousStatement: [MODEL_BLOCK_LAYER_STATEMENT_TYPE],
+                nextStatement: MODEL_BLOCK_LAYER_STATEMENT_TYPE,
+                colour: layer_color,
+                tooltip: "",
+                helpUrl: "",
+            } as BlockDefinition,
+            {
+                kind: "block",
+                type: MODEL_BLOCKS + "avgpool1d_layer",
+                message0: "average pool1d (2, 1) %1",
+                args0: [
                     {
-                        type: PoolingLayerBlockField.KEY,
-                        name: "BLOCK_PARAMS",
+                        type: ExpandModelBlockField.KEY,
+                        name: "EXPAND_BUTTON",
                     },
                 ],
                 inputsInline: false,
-                previousStatement: [
-                    MODEL_BLOCK_PREPROCESS_STATEMENT_TYPE,
-                    MODEL_BLOCK_LAYER_STATEMENT_TYPE,
+                previousStatement: [MODEL_BLOCK_LAYER_STATEMENT_TYPE],
+                nextStatement: MODEL_BLOCK_LAYER_STATEMENT_TYPE,
+                colour: layer_color,
+                tooltip: "",
+                helpUrl: "",
+            } as BlockDefinition,
+
+            {
+                kind: "block",
+                type: MODEL_BLOCKS + "conv2d_layer",
+                message0: "convolution2d (16, 2, 1) %1",
+                args0: [
+                    {
+                        type: ExpandModelBlockField.KEY,
+                        name: "EXPAND_BUTTON",
+                    },
                 ],
+                inputsInline: false,
+                previousStatement: [MODEL_BLOCK_LAYER_STATEMENT_TYPE],
+                nextStatement: MODEL_BLOCK_LAYER_STATEMENT_TYPE,
+                colour: layer_color,
+                tooltip:
+                    "Use this block to add a 2D convolutional layer to a neural network classifier. Convolutional layers are often used to summarize key features from input data.",
+                helpUrl: "",
+            } as BlockDefinition,
+            {
+                kind: "block",
+                type: MODEL_BLOCKS + "maxpool2d_layer",
+                message0: "max pool2d (2, 1) %1",
+                args0: [
+                    {
+                        type: ExpandModelBlockField.KEY,
+                        name: "EXPAND_BUTTON",
+                    },
+                ],
+                inputsInline: false,
+                previousStatement: [MODEL_BLOCK_LAYER_STATEMENT_TYPE],
+                nextStatement: MODEL_BLOCK_LAYER_STATEMENT_TYPE,
+                colour: layer_color,
+                tooltip: "",
+                helpUrl: "",
+            } as BlockDefinition,
+            {
+                kind: "block",
+                type: MODEL_BLOCKS + "avgpool2d_layer",
+                message0: "average pool2d (2, 1) %1",
+                args0: [
+                    {
+                        type: ExpandModelBlockField.KEY,
+                        name: "EXPAND_BUTTON",
+                    },
+                ],
+                inputsInline: false,
+                previousStatement: [MODEL_BLOCK_LAYER_STATEMENT_TYPE],
                 nextStatement: MODEL_BLOCK_LAYER_STATEMENT_TYPE,
                 colour: layer_color,
                 tooltip: "",
@@ -268,25 +300,15 @@ export class ModelBlockDomainSpecificLanguage
             {
                 kind: "block",
                 type: MODEL_BLOCKS + "dropout_layer",
-                message0: "dropout layer %1",
+                message0: "dropout (0.1) %1",
                 args0: [
                     {
                         type: ExpandModelBlockField.KEY,
                         name: "EXPAND_BUTTON",
                     },
                 ],
-                message1: "%1",
-                args1: [
-                    {
-                        type: DropoutLayerBlockField.KEY,
-                        name: "BLOCK_PARAMS",
-                    },
-                ],
                 inputsInline: false,
-                previousStatement: [
-                    MODEL_BLOCK_PREPROCESS_STATEMENT_TYPE,
-                    MODEL_BLOCK_LAYER_STATEMENT_TYPE,
-                ],
+                previousStatement: [MODEL_BLOCK_LAYER_STATEMENT_TYPE],
                 nextStatement: MODEL_BLOCK_LAYER_STATEMENT_TYPE,
                 colour: layer_color,
                 tooltip: "",
@@ -302,18 +324,8 @@ export class ModelBlockDomainSpecificLanguage
                         name: "EXPAND_BUTTON",
                     },
                 ],
-                message1: "%1",
-                args1: [
-                    {
-                        type: FlattenLayerBlockField.KEY,
-                        name: "BLOCK_PARAMS",
-                    },
-                ],
                 inputsInline: false,
-                previousStatement: [
-                    MODEL_BLOCK_PREPROCESS_STATEMENT_TYPE,
-                    MODEL_BLOCK_LAYER_STATEMENT_TYPE,
-                ],
+                previousStatement: [MODEL_BLOCK_LAYER_STATEMENT_TYPE],
                 nextStatement: MODEL_BLOCK_LAYER_STATEMENT_TYPE,
                 colour: layer_color,
                 tooltip: "",
@@ -322,71 +334,17 @@ export class ModelBlockDomainSpecificLanguage
             {
                 kind: "block",
                 type: MODEL_BLOCKS + "dense_layer",
-                message0: "dense layer %1",
+                message0: "dense (4, relu) %1",
                 args0: [
                     {
                         type: ExpandModelBlockField.KEY,
                         name: "EXPAND_BUTTON",
                     },
                 ],
-                message1: "%1",
-                args1: [
-                    {
-                        type: DenseLayerBlockField.KEY,
-                        name: "BLOCK_PARAMS",
-                    },
-                ],
                 inputsInline: false,
-                previousStatement: [
-                    MODEL_BLOCK_PREPROCESS_STATEMENT_TYPE,
-                    MODEL_BLOCK_LAYER_STATEMENT_TYPE,
-                ],
+                previousStatement: [MODEL_BLOCK_LAYER_STATEMENT_TYPE],
                 nextStatement: MODEL_BLOCK_LAYER_STATEMENT_TYPE,
                 colour: layer_color,
-                tooltip: "",
-                helpUrl: "",
-            } as BlockDefinition,
-            {
-                kind: "block",
-                type: MODEL_BLOCKS + "knn",
-                message0: "K nearest neighbors classifier %1 %2",
-                args0: [
-                    {
-                        type: "field_variable",
-                        name: "CLASSIFIER_NAME",
-                        variable: "classifier2",
-                        variableTypes: [MB_CLASSIFIER_VAR_TYPE],
-                        defaultType: MB_CLASSIFIER_VAR_TYPE,
-                    },
-                    {
-                        type: ExpandModelBlockField.KEY,
-                        name: "EXPAND_BUTTON",
-                    },
-                ],
-                message1: "training data %1 k %2",
-                args1: [
-                    {
-                        type: "field_variable",
-                        name: "KNN_TRAINING",
-                        variable: "dataset1",
-                        variableTypes: [MB_DATASET_VAR_TYPE],
-                        defaultType: MB_DATASET_VAR_TYPE,
-                    },
-                    {
-                        type: "field_number",
-                        name: "KNN_K_VALUE",
-                        value: 3,
-                    },
-                ],
-                message2: "%1",
-                args2: [
-                    {
-                        type: KNNBlockField.KEY,
-                        name: "BLOCK_PARAMS",
-                    },
-                ],
-                inputsInline: false,
-                colour: learning_color,
                 tooltip: "",
                 helpUrl: "",
             } as BlockDefinition,
@@ -397,7 +355,7 @@ export class ModelBlockDomainSpecificLanguage
     createCategory() {
         return [<CategoryDefinition>(<unknown>{
                 kind: "category",
-                name: "DataSet",
+                name: "Data sets",
                 colour: dataset_color,
                 contents: [
                     {
@@ -411,11 +369,11 @@ export class ModelBlockDomainSpecificLanguage
                     },
                     {
                         kind: "label",
-                        text: "DataSets",
+                        text: "Datasets",
                     },
                     {
                         kind: "button",
-                        text: "Create new dataset...",
+                        text: "Create new dataset variable...",
                         callbackKey: "createNewDataSetButton",
                     },
                     {
@@ -425,63 +383,69 @@ export class ModelBlockDomainSpecificLanguage
                 ],
             }), <CategoryDefinition>(<unknown>{
                 kind: "category",
-                name: "Preprocessing",
-                colour: processing_color,
-                contents: [
-                    {
-                        kind: "block",
-                        type: MODEL_BLOCKS + "standardize",
-                    },
-                    {
-                        kind: "block",
-                        type: MODEL_BLOCKS + "smooth",
-                    },
-                ],
-            }), <CategoryDefinition>(<unknown>{
-                kind: "category",
-                name: "Learning",
+                name: "Models",
                 colour: learning_color,
                 contents: [
                     {
+                        kind: "label",
+                        text: "Classifiers",
+                    },
+                    {
                         kind: "button",
-                        text: "Create new ML classifier...",
+                        text: "Create new classifier variable...",
                         callbackKey: "createNewClassifierButton",
                     },
                     {
-                        kind: "label",
-                        text: "K Nearest Neighbors",
-                    },
-                    {
                         kind: "block",
-                        type: MODEL_BLOCKS + "knn",
+                        blockxml: `<block type="model_block_nn"><field name="CLASSIFIER_NAME" variabletype="ModelBlockClassifier">classifier1</field><field name="NN_TRAINING" variabletype="ModelBlockDataSet">dataset1</field><field name="EXPAND_BUTTON">{"parametersVisible":false,"totalParams":0,"totalLayers":0,"totalSize":0,"runTimeInMs":0,"inputShape":[0,0],"optimizer":"adam","numEpochs":200,"lossFn":"categoricalCrossentropy","metrics":"acc"}</field><field name="NN_BUTTONS">{}</field></block>`,
                     },
                     {
                         kind: "label",
-                        text: "Neural Networks",
+                        text: "Layers",
                     },
                     {
                         kind: "block",
-                        type: MODEL_BLOCKS + "nn",
+                        blockxml: `<block type="model_block_conv1d_layer"><field name="EXPAND_BUTTON">{"parametersVisible":false,"percentSize":0,"percentParams":0,"runTimeInMs":0,"outputShape":[0,0],"numFilters":16,"kernelSize":2,"strideSize":1,"activation":"relu"}</field></block>`,
                     },
                     {
                         kind: "block",
-                        type: MODEL_BLOCKS + "conv_layer",
+                        blockxml: `<block type="model_block_maxpool1d_layer"><field name="EXPAND_BUTTON">{"parametersVisible":false,"percentSize":0,"percentParams":0,"runTimeInMs":0,"outputShape":[0,0],"poolSize":2,"strideSize":1}</field></block>`,
                     },
                     {
                         kind: "block",
-                        type: MODEL_BLOCKS + "max_pool_layer",
+                        blockxml: `<block type="model_block_avgpool1d_layer"><field name="EXPAND_BUTTON">{"parametersVisible":false,"percentSize":0,"percentParams":0,"runTimeInMs":0,"outputShape":[0,0],"poolSize":2,"strideSize":1}</field></block>`,
                     },
                     {
                         kind: "block",
-                        type: MODEL_BLOCKS + "dropout_layer",
+                        blockxml: `<block type="model_block_conv2d_layer"><field name="EXPAND_BUTTON">{"parametersVisible":false,"percentSize":0,"percentParams":0,"runTimeInMs":0,"outputShape":[0,0,0],"numFilters":16,"kernelSize":2,"strideSize":1,"activation":"relu"}</field></block>`,
                     },
                     {
                         kind: "block",
-                        type: MODEL_BLOCKS + "flatten_layer",
+                        blockxml: `<block type="model_block_maxpool2d_layer"><field name="EXPAND_BUTTON">{"parametersVisible":false,"percentSize":0,"percentParams":0,"runTimeInMs":0,"outputShape":[0,0,0],"poolSize":2,"strideSize":1}</field></block>`,
                     },
                     {
                         kind: "block",
-                        type: MODEL_BLOCKS + "dense_layer",
+                        blockxml: `<block type="model_block_avgpool2d_layer"><field name="EXPAND_BUTTON">{"parametersVisible":false,"percentSize":0,"percentParams":0,"runTimeInMs":0,"outputShape":[0,0,0],"poolSize":2,"strideSize":1}</field></block>`,
+                    },
+                    {
+                        kind: "block",
+                        blockxml: `<block type="model_block_dropout_layer"><field name="EXPAND_BUTTON">{"parametersVisible":false,"percentSize":0,"percentParams":0,"runTimeInMs":0,"outputShape":[0,0],"rate":0.1}</field></block>`,
+                    },
+                    {
+                        kind: "block",
+                        blockxml: `<block type="model_block_flatten_layer"><field name="EXPAND_BUTTON">{"parametersVisible":false,"percentSize":0,"percentParams":0,"runTimeInMs":0,"outputShape":[0]}</field></block>`,
+                    },
+                    {
+                        kind: "block",
+                        blockxml: `<block type="model_block_dense_layer"><field name="EXPAND_BUTTON">{"parametersVisible":false,"percentSize":0,"percentParams":0,"runTimeInMs":0,"outputShape":[0],"numUnits":4,"activation":"relu"}</field></block>`,
+                    },
+                    {
+                        kind: "label",
+                        text: "Visualizations",
+                    },
+                    {
+                        kind: "block",
+                        type: MODEL_BLOCKS + "trained_nn",
                     },
                 ],
             })]

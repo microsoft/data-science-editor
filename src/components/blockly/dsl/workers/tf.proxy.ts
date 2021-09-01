@@ -1,5 +1,6 @@
 import type {
-    TFModelRequest,
+    TFModelCompileRequest,
+    TFModelCompileResponse,
     TFModelTrainRequest,
     TFModelTrainResponse,
     TFModelPredictRequest,
@@ -9,21 +10,52 @@ import type {
 import workerProxy from "./proxy"
 
 export async function postModelRequest(
-    message: TFModelRequest
+    message: TFModelMessage
     // eslint-disable-next-line @typescript-eslint/ban-types
 ): Promise<any> {
     const worker = workerProxy("tf")
-    const res = await worker.postMessage<TFModelRequest, TFModelMessage>(
+    const res = await worker.postMessage<TFModelMessage, TFModelMessage>(
         message
     )
     return res?.data
+}
+
+export async function compileRequest(
+    message: TFModelCompileRequest
+    // eslint-disable-next-line @typescript-eslint/ban-types
+): Promise<TFModelCompileResponse> {
+    if (!message.data.model || !message.data.modelBlockJSON) {
+        console.error(
+            "Missing piece of message data for compiling ",
+            message.data
+        )
+        return undefined
+    }
+
+    const worker = workerProxy("tf")
+    const res = await worker.postMessage<
+        TFModelCompileRequest,
+        TFModelCompileResponse
+    >(message)
+    return res
 }
 
 export async function trainRequest(
     message: TFModelTrainRequest
     // eslint-disable-next-line @typescript-eslint/ban-types
 ): Promise<TFModelTrainResponse> {
-    // Randi TODO check for missing data e.g. if (!message.trainingData) return undefined
+    if (
+        !message.data.model ||
+        !message.data.trainingParams ||
+        !message.data.xData ||
+        !message.data.yData
+    ) {
+        console.error(
+            "Missing piece of message data for training ",
+            message.data
+        )
+        return undefined
+    }
 
     const worker = workerProxy("tf")
     const res = await worker.postMessage<
@@ -37,7 +69,13 @@ export async function predictRequest(
     message: TFModelPredictRequest
     // eslint-disable-next-line @typescript-eslint/ban-types
 ): Promise<TFModelPredictResponse> {
-    // Randi TODO check for missing data e.g. if (!message.trainingData) return undefined
+    if (!message.data.model || !message.data.zData) {
+        console.error(
+            "Missing piece of message data for predicting ",
+            message.data
+        )
+        return undefined
+    }
 
     const worker = workerProxy("tf")
     const res = await worker.postMessage<

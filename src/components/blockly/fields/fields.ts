@@ -27,18 +27,20 @@ import VegaChartField from "./chart/VegaChartField"
 
 import FileSaveField from "./FileSaveField"
 import FileOpenField from "./FileOpenField"
+import UseModelField from "./UseModelField"
 
 import ExpandModelBlockField from "./mb/ExpandModelBlockField"
 import DataSetBlockField from "./mb/DataSetBlockField"
+import DataSetBlockButton from "./mb/DataSetBlockButton"
 import RecordingBlockField from "./mb/RecordingBlockField"
-import SmoothingBlockField from "./mb/SmoothingBlockField"
-import KNNBlockField from "./mb/KNNBlockField"
 import NeuralNetworkBlockField from "./mb/NeuralNetworkBlockField"
+import NeuralNetworkBlockButton from "./mb/NeuralNetworkBlockButtons"
 import ConvLayerBlockField from "./mb/ConvLayerBlockField"
 import PoolingLayerBlockField from "./mb/PoolingLayerBlockField"
 import DropoutLayerBlockField from "./mb/DropoutLayerBlockField"
 import FlattenLayerBlockField from "./mb/FlattenLayerBlockField"
 import DenseLayerBlockField from "./mb/DenseLayerBlockField"
+import TrainedModelBlockField from "./mb/TrainedModelBlockField"
 
 import JSONSettingsField from "./JSONSettingsField"
 
@@ -91,18 +93,20 @@ export function registerFields() {
 
         ExpandModelBlockField,
         DataSetBlockField,
+        DataSetBlockButton,
         RecordingBlockField,
-        SmoothingBlockField,
-        KNNBlockField,
         NeuralNetworkBlockField,
+        NeuralNetworkBlockButton,
         ConvLayerBlockField,
         PoolingLayerBlockField,
         DropoutLayerBlockField,
         FlattenLayerBlockField,
         DenseLayerBlockField,
+        TrainedModelBlockField,
 
         FileSaveField,
         FileOpenField,
+        UseModelField,
 
         JSONSettingsField,
     ]

@@ -346,6 +346,9 @@ exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
     if (stage === "build-javascript" || stage === "build-html") {
         console.log(`enabling ignore filters`)
         setWebpackConfig({
+            node: {
+                fs: 'empty'
+            },
             resolve: {
                 fallback,
             },
