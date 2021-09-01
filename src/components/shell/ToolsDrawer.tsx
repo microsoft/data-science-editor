@@ -16,7 +16,6 @@ import {
     TOOLS_DRAWER_WIDTH,
 } from "../layout"
 import AppContext from "../AppContext"
-import { OpenInNew } from "@material-ui/icons"
 import { useUnitConverters } from "../ui/useUnitConverter"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import ChevronRightIcon from "@material-ui/icons/ChevronRight"
@@ -41,7 +40,6 @@ import {
 } from "../../../jacdac-ts/src/jdom/constants"
 import { UIFlags } from "../../jacdac/providerbus"
 import { resolveUnit } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
-import { withPrefix } from "gatsby"
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -79,19 +77,17 @@ function ToolsListItem(props: {
 }) {
     const { text, to, href, icon, onClick, onClose } = props
     return to || href ? (
-        <Link to={to} href={href} onClick={to ? onClose : undefined}>
+        <Link
+            to={to}
+            href={href}
+            target={href ? "_blank" : undefined}
+            onClick={to ? onClose : undefined}
+        >
             <ListItem button={true}>
                 <ListItemIcon>{icon}</ListItemIcon>
                 <ListItemText
                     primaryTypographyProps={{ color: "textPrimary" }}
-                    primary={
-                        <>
-                            <span>{text}</span>
-                            {/^https:\/\//.test(href) && (
-                                <OpenInNew fontSize="small" color="action" />
-                            )}
-                        </>
-                    }
+                    primary={<span>{text}</span>}
                 />
             </ListItem>
         </Link>
