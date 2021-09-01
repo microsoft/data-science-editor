@@ -166,7 +166,7 @@ export default function ToolsDrawer() {
         },
         {
             text: "MakeCode",
-            href: "https://microsoft.github.com/jacdac-docs/editors/makecode",
+            href: "https://microsoft.github.io/jacdac-docs/editors/makecode",
             icon: <MakeCodeIcon />,
         },
         /*
