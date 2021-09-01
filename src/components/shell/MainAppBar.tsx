@@ -135,9 +135,11 @@ export default function MainAppBar() {
                         <OpenDashboardButton
                             className={clsx(classes.menuButton)}
                         />
-                        <OpenVMEditorButton
-                            className={clsx(classes.menuButton)}
-                        />
+                        {false && (
+                            <OpenVMEditorButton
+                                className={clsx(classes.menuButton)}
+                            />
+                        )}
                         <IconButtonWithTooltip
                             className={clsx(
                                 classes.menuButton,
