@@ -41,6 +41,7 @@ import {
 } from "../../../jacdac-ts/src/jdom/constants"
 import { UIFlags } from "../../jacdac/providerbus"
 import { resolveUnit } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
+import { withPrefix } from "gatsby"
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -173,7 +174,7 @@ export default function ToolsDrawer() {
         },
         {
             text: "MakeCode",
-            href: "/editors/makecode.html",
+            href: withPrefix("/editors/makecode"),
             icon: <MakeCodeIcon />,
         },
         /*
