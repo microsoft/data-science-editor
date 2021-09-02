@@ -9,7 +9,7 @@ import modelBlockDsl, { MODEL_BLOCKS } from "./modelblockdsl"
 import shadowDsl from "../blockly/dsl/shadowdsl"
 import fieldsDsl from "../blockly/dsl/fieldsdsl"
 import BlockDiagnostics from "../blockly/BlockDiagnostics"
-import { visitWorkspace } from "../../../jacdac-ts/src/dsl/workspacevisitor"
+import { visitWorkspace } from "../blockly/dsl/workspacevisitor"
 
 import {
     BlockJSON,
