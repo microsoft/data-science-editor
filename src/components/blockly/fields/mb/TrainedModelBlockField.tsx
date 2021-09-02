@@ -103,15 +103,14 @@ function TrainedModelDisplayWidget() {
 
                 if (!updatedModel || !updatedDataSet) return
 
-                // make sure dataset and model are compatible (same input and output data)
+                // make sure dataset and model are compatible (same input data)
                 if (
                     !arraysEqual(
                         updatedDataSet.inputTypes,
                         updatedModel.inputTypes
                     ) ||
                     updatedDataSet.length != updatedModel.inputShape[0] ||
-                    updatedDataSet.width != updatedModel.inputShape[1] ||
-                    !arraysEqual(updatedDataSet.labels, updatedModel.labels)
+                    updatedDataSet.width != updatedModel.inputShape[1]
                 ) {
                     setErrorMsg(
                         "The selected dataset does not have the same input/output type as the trained model"
