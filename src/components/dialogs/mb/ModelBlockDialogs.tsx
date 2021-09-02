@@ -23,6 +23,7 @@ import useChartPalette from "../../useChartPalette"
 const ViewDataDialog = lazy(() => import("./ViewDataDialog"))
 const RecordDataDialog = lazy(() => import("./RecordDataDialog"))
 const TrainModelDialog = lazy(() => import("./TrainModelDialog"))
+const TestModelDialog = lazy(() => import("./TestModelDialog"))
 const NewClassifierDialog = lazy(() => import("./NewClassifierDialog"))
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -138,13 +139,10 @@ export function addNewClassifier(workspace: WorkspaceSvg) {
 }
 
 export default function ModelBlockDialogs(props: {
-    viewDataSetDialogVisible: boolean
-    recordDataDialogVisible: boolean
-    trainModelDialogVisible: boolean
-    newClassifierDialogVisible: boolean
+    visibleDialog: string
     onRecordingDone: (recording: FieldDataSet[], blockId: string) => void
     onModelUpdate: (model: MBModel, blockId: string) => void
-    closeModal: (modal: string) => void
+    closeModal: () => void
     workspace: WorkspaceSvg
     dataset: MBDataSet
     model: MBModel
@@ -152,10 +150,7 @@ export default function ModelBlockDialogs(props: {
     trainedModelCount: number
 }) {
     const {
-        viewDataSetDialogVisible,
-        recordDataDialogVisible,
-        trainModelDialogVisible,
-        newClassifierDialogVisible,
+        visibleDialog,
         onRecordingDone,
         onModelUpdate,
         closeModal,
@@ -169,38 +164,38 @@ export default function ModelBlockDialogs(props: {
     const classes = useStyles()
     const chartPalette = useChartPalette()
 
-    if (viewDataSetDialogVisible) {
+    if (visibleDialog == "dataset") {
         return (
             <Suspense>
                 <ViewDataDialog
                     classes={classes}
                     chartPalette={chartPalette}
-                    open={viewDataSetDialogVisible}
+                    open={visibleDialog == "dataset"}
                     onDone={closeModal}
                     dataset={dataset}
                 />
             </Suspense>
         )
-    } else if (recordDataDialogVisible) {
+    } else if (visibleDialog == "recording") {
         return (
             <Suspense>
                 <RecordDataDialog
                     classes={classes}
                     chartPalette={chartPalette}
-                    open={recordDataDialogVisible}
+                    open={visibleDialog == "recording"}
                     onDone={onRecordingDone}
                     recordingCount={recordingCount}
                     workspace={workspace}
                 />
             </Suspense>
         )
-    } else if (trainModelDialogVisible) {
+    } else if (visibleDialog == "model") {
         return (
             <Suspense>
                 <TrainModelDialog
                     classes={classes}
                     chartPalette={chartPalette}
-                    open={trainModelDialogVisible}
+                    open={visibleDialog == "model"}
                     onModelUpdate={onModelUpdate}
                     onDone={closeModal}
                     dataset={dataset}
@@ -210,12 +205,24 @@ export default function ModelBlockDialogs(props: {
                 />
             </Suspense>
         )
-    } else if (newClassifierDialogVisible) {
+    } else if (visibleDialog == "trained_model") {
+        return (
+            <Suspense>
+                <TestModelDialog
+                    classes={classes}
+                    chartPalette={chartPalette}
+                    open={visibleDialog == "trained_model"}
+                    onDone={closeModal}
+                    model={model}
+                />
+            </Suspense>
+        )
+    } else if (visibleDialog == "classifier") {
         return (
             <Suspense>
                 <NewClassifierDialog
                     classes={classes}
-                    open={newClassifierDialogVisible}
+                    open={visibleDialog == "classifier"}
                     onDone={closeModal}
                     workspace={workspace}
                 />

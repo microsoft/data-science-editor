@@ -171,11 +171,10 @@ export class ModelBlockDomainSpecificLanguage
                 args2: [
                     {
                         type: "field_dropdown",
-                        options: [
-                            "model summary",
-                            "confusion matrix",
-                            "dataset plot",
-                        ].map(s => [s, s]),
+                        options: ["confusion matrix", "dataset plot"].map(s => [
+                            s,
+                            s,
+                        ]),
                         name: "SELECTED_CHART",
                     },
                 ],

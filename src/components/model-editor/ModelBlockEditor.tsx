@@ -280,10 +280,10 @@ function ModelBlockEditorWithContext(props: {
                 }
             })
         } else
-            console.error(
-                "Could not locate block " +
-                    { modelName: modelName, id: modelBlocks[modelName].id }
-            )
+            console.error("Could not locate block ", {
+                modelName: modelName,
+                id: modelBlocks[modelName].id,
+            })
     }
 
     useEffect(() => {
@@ -359,51 +359,32 @@ function ModelBlockEditorWithContext(props: {
     }
 
     /* For dialog handling */
-    const [recordDataDialogVisible, setRecordDataDialogVisible] =
-        useState<boolean>(false)
-    const [trainModelDialogVisible, setTrainModelDialogVisible] =
-        useState<boolean>(false)
-    const [viewDataSetDialogVisible, setViewDataSetDialogVisible] =
-        useState<boolean>(false)
-    const [newClassifierDialogVisible, setNewClassifierDialogVisible] =
-        useState<boolean>(false)
+    const [visibleDialog, setVisibleDialog] = useState<
+        | "dataset"
+        | "recording"
+        | "model"
+        | "trained_model"
+        | "classifier"
+        | "none"
+    >("none")
     const toggleViewDataSetDialog = () => toggleDialog("dataset")
     const toggleRecordDataDialog = () => toggleDialog("recording")
     const toggleTrainModelDialog = () => toggleDialog("model")
+    const toggleTestModelDialog = () => toggleDialog("trained_model")
     const toggleNewClassifierDialog = () => toggleDialog("classifier")
     const toggleDialog = (dialog: string) => {
-        if (dialog == "dataset") {
-            const b = !viewDataSetDialogVisible
-            setViewDataSetDialogVisible(b)
-        } else if (dialog == "recording") {
-            const b = !recordDataDialogVisible
-            setRecordDataDialogVisible(b)
-        } else if (dialog == "model") {
-            const b = !trainModelDialogVisible
-            setTrainModelDialogVisible(b)
-        } else if (dialog == "classifier") {
-            const b = !newClassifierDialogVisible
-            setNewClassifierDialogVisible(b)
-        }
+        if (dialog != "none") {
+            setVisibleDialog(dialog)
+            console.log("Randi toggle dialog ", dialog)
+        } else setVisibleDialog("none")
     }
-    const closeModal = (modal: string) => {
-        if (modal == "dataset") {
-            // reset dataset that gets passed to dialogs
-            setCurrentDataSet(undefined)
+    const closeModals = () => {
+        // reset dataset and model that gets passed to dialogs
+        setCurrentDataSet(undefined)
+        setCurrentModel(undefined)
 
-            // close dialog
-            toggleViewDataSetDialog()
-        } else if (modal == "model") {
-            // reset dataset and model that gets passed to dialogs
-            setCurrentDataSet(undefined)
-            setCurrentModel(undefined)
-
-            // close dialog
-            toggleTrainModelDialog()
-        } else if (modal == "classifier") {
-            // close diaglog
-            toggleNewClassifierDialog()
-        }
+        // close dialog
+        toggleDialog("none")
     }
     const buttonsWithDialogs = {
         createNewDataSetButton: addNewDataSet,
@@ -447,7 +428,7 @@ function ModelBlockEditorWithContext(props: {
         }
 
         // close dialog
-        toggleRecordDataDialog()
+        closeModals()
     }
 
     const openTrainingModal = (clickedBlock: Blockly.Block) => {
@@ -501,6 +482,19 @@ function ModelBlockEditorWithContext(props: {
             expandField.updateFieldValue({ originalBlock: blockId })
 
             updateLocalStorage(null, trainedModels)
+        }
+    }
+
+    const openTestingModal = (clickedBlock: Blockly.Block) => {
+        // setup model for training
+        const selectedModel: MBModel = trainedModels[clickedBlock.id]
+
+        if (selectedModel) {
+            // update the model and dataset to pass to the modal
+            setCurrentModel(selectedModel)
+
+            // open the training modal
+            toggleTestModelDialog()
         }
     }
 
@@ -654,6 +648,8 @@ function ModelBlockEditorWithContext(props: {
                     openDataSetModal(clickedBlock)
                 } else if (command == "train") {
                     openTrainingModal(clickedBlock)
+                } else if (command == "view") {
+                    openTestingModal(clickedBlock)
                 }
                 // clear the command
                 clickedBlock.data = null
@@ -725,13 +721,10 @@ function ModelBlockEditorWithContext(props: {
                 {Flags.diagnostics && <BlockDiagnostics />}
                 <Suspense>
                     <ModelBlockDialogs
-                        viewDataSetDialogVisible={viewDataSetDialogVisible}
-                        recordDataDialogVisible={recordDataDialogVisible}
-                        trainModelDialogVisible={trainModelDialogVisible}
-                        newClassifierDialogVisible={newClassifierDialogVisible}
+                        visibleDialog={visibleDialog}
                         onRecordingDone={closeRecordingModal}
                         onModelUpdate={updateModel}
-                        closeModal={closeModal}
+                        closeModal={closeModals}
                         workspace={workspace}
                         dataset={currentDataSet}
                         model={currentModel}

@@ -14,6 +14,8 @@ import { ReactFieldJSON } from "../ReactField"
 import ReactInlineField from "../ReactInlineField"
 import { PointerBoundary } from "../PointerBoundary"
 
+import ViewIcon from "@material-ui/icons/Visibility"
+// tslint:disable-next-line: no-submodule-imports match-default-export-name
 import DownloadIcon from "@material-ui/icons/GetApp"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 
@@ -26,9 +28,6 @@ import { CHANGE } from "../../../../../jacdac-ts/src/jdom/constants"
 import MBDataSet, { arraysEqual } from "../../../model-editor/MBDataSet"
 import MBModel from "../../../model-editor/MBModel"
 
-const ModelSummary = lazy(
-    () => import("../../../model-editor/components/ModelSummary")
-)
 const ConfusionMatrixHeatMap = lazy(
     () => import("../../../model-editor/components/ConfusionMatrixHeatMap")
 )
@@ -72,8 +71,8 @@ function TrainedModelDisplayWidget() {
     }
 
     const [chartType, setChartType] = useState<
-        "model summary" | "confusion matrix" | "dataset plot"
-    >("model summary")
+        "confusion matrix" | "dataset plot"
+    >("confusion matrix")
 
     const { sourceBlock } = useContext(WorkspaceContext)
     const services = resolveBlockServices(sourceBlock)
@@ -153,7 +152,11 @@ function TrainedModelDisplayWidget() {
         [services]
     )
 
-    const handleDownloadDataSet = () => {
+    const handleViewTrainedModel = () => {
+        // open modal to view model
+        sourceBlock.data = "click.view"
+    }
+    const handleDownloadModel = () => {
         // set the model name to what the user typed into the box
         const trainedModelName = sourceBlock
             .getField("TRAINED_MODEL_NAME")
@@ -181,44 +184,20 @@ function TrainedModelDisplayWidget() {
                     )}
                 </Grid>
                 <Grid item style={{ display: "inline-flex" }}>
-                    <Tooltip title="Download trained model file">
+                    <Tooltip title="View this model and perform actions like testing with live data">
                         <Button
-                            onClick={handleDownloadDataSet}
-                            startIcon={<DownloadIcon />}
+                            onClick={handleViewTrainedModel}
+                            startIcon={<ViewIcon />}
                             variant="outlined"
                             size="small"
                         >
-                            Download
+                            View
                         </Button>
                     </Tooltip>
-                </Grid>
-            </Grid>
-        )
-    else if (chartType == "model summary")
-        return (
-            <Grid container spacing={1} direction={"column"}>
-                {!!model && !!dataSet && (
-                    <Grid item>
-                        <Box
-                            color="text.secondary"
-                            className={classes.inlineItem}
-                        >
-                            <PointerBoundary>
-                                <Suspense>
-                                    <ModelSummary
-                                        reactStyle={classes}
-                                        dataset={dataSet}
-                                        model={model}
-                                    />
-                                </Suspense>
-                            </PointerBoundary>
-                        </Box>
-                    </Grid>
-                )}
-                <Grid item style={{ display: "inline-flex" }}>
+                    &ensp;
                     <Tooltip title="Download trained model file">
                         <Button
-                            onClick={handleDownloadDataSet}
+                            onClick={handleDownloadModel}
                             startIcon={<DownloadIcon />}
                             variant="outlined"
                             size="small"
@@ -248,9 +227,20 @@ function TrainedModelDisplayWidget() {
                     </Grid>
                 )}
                 <Grid item style={{ display: "inline-flex" }}>
+                    <Tooltip title="View this model and perform actions like testing with live data">
+                        <Button
+                            onClick={handleViewTrainedModel}
+                            startIcon={<ViewIcon />}
+                            variant="outlined"
+                            size="small"
+                        >
+                            View
+                        </Button>
+                    </Tooltip>
+                    &ensp;
                     <Tooltip title="Download trained model file">
                         <Button
-                            onClick={handleDownloadDataSet}
+                            onClick={handleDownloadModel}
                             startIcon={<DownloadIcon />}
                             variant="outlined"
                             size="small"
@@ -280,9 +270,20 @@ function TrainedModelDisplayWidget() {
                     </Grid>
                 )}
                 <Grid item style={{ display: "inline-flex" }}>
+                    <Tooltip title="View this model and perform actions like testing with live data">
+                        <Button
+                            onClick={handleViewTrainedModel}
+                            startIcon={<ViewIcon />}
+                            variant="outlined"
+                            size="small"
+                        >
+                            View
+                        </Button>
+                    </Tooltip>
+                    &ensp;
                     <Tooltip title="Download trained model file">
                         <Button
-                            onClick={handleDownloadDataSet}
+                            onClick={handleDownloadModel}
                             startIcon={<DownloadIcon />}
                             variant="outlined"
                             size="small"
