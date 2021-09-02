@@ -19,14 +19,19 @@ export default function ModelSummary(props: {
 
     return (
         <>
-            {dataset.summary.map((line, lineIdx) => {
-                return (
-                    <span key={"dataset-summary-" + lineIdx}>
-                        {" "}
-                        {line} <br />
-                    </span>
-                )
-            })}
+            {!!dataset && (
+                <>
+                    {" "}
+                    {dataset.summary.map((line, lineIdx) => {
+                        return (
+                            <span key={"dataset-summary-" + lineIdx}>
+                                {" "}
+                                {line} <br />
+                            </span>
+                        )
+                    })}{" "}
+                </>
+            )}
             {model.summary.map((line, lineIdx) => {
                 return (
                     <span
@@ -77,7 +82,8 @@ export default function ModelSummary(props: {
                                     {(
                                         ((layer.weightBytes + layer.codeBytes) *
                                             100) /
-                                        model.modelStats.total.weightBytes
+                                        (model.modelStats.total.weightBytes +
+                                            model.modelStats.total.codeBytes)
                                     ).toPrecision(3)}
                                     %)
                                 </TableCell>
