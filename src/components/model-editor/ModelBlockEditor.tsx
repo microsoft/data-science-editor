@@ -486,12 +486,13 @@ function ModelBlockEditorWithContext(props: {
 
         // Model was trained, add model to list of trained models
         if (blockId) {
-            trainedModels[blockId] = model
+            const trainedModel = MBModel.createFromFile(model.toJSON())
+            trainedModels[blockId] = trainedModel
 
             // add dataset and model to new block
             const newBlock = workspace.getBlockById(blockId)
             const services = resolveBlockServices(newBlock)
-            services.data = [currentDataSet, model]
+            services.data = [currentDataSet, trainedModel]
 
             // keep this info so this block can be duplicated
             const expandField = newBlock.getField(
