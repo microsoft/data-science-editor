@@ -26,7 +26,7 @@ export default function BlocklyViewDataDialog(props: {
     classes: any
     chartPalette: string[]
     open: boolean
-    onDone: (modal: string) => void
+    onDone: () => void
     dataset: MBDataSet
 }) {
     const { classes, chartPalette, open, onDone, dataset } = props
@@ -46,7 +46,7 @@ export default function BlocklyViewDataDialog(props: {
     /* For interface controls */
     const handleDone = () => {
         // close the modal
-        onDone("dataset")
+        onDone()
     }
 
     return (

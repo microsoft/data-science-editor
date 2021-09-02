@@ -47,7 +47,7 @@ export default function TrainModelDialog(props: {
     chartPalette: string[]
     open: boolean
     onModelUpdate: (model: MBModel, blockId: string) => void
-    onDone: (modal: string) => void
+    onDone: () => void
     dataset: MBDataSet
     model: MBModel
     trainedModelCount: number
@@ -173,7 +173,7 @@ export default function TrainModelDialog(props: {
 
         const newBlock = Blockly.Xml.domToBlock(
             Blockly.Xml.textToDom(
-                `<block type="model_block_trained_nn"><field name="TRAINED_MODEL_NAME">${trainedModelName}</field><field name="MODEL_TEST_SET" variabletype="ModelBlockDataSet">${dataSetName}</field><field name="SELECTED_CHART">model summary</field></block>`
+                `<block type="model_block_trained_nn"><field name="TRAINED_MODEL_NAME">${trainedModelName}</field><field name="MODEL_TEST_SET" variabletype="ModelBlockDataSet">${dataSetName}</field><field name="SELECTED_CHART">confusion matrix</field></block>`
             ),
             workspace
         )
@@ -182,12 +182,9 @@ export default function TrainModelDialog(props: {
     }
 
     /* For interface controls */
-    const resetInputs = () => {}
     const handleCancel = () => {
-        // reset the user inputs
-        resetInputs()
         // close the modal
-        onDone("model")
+        onDone()
     }
     const handleBack = () => {
         // go to the previous page

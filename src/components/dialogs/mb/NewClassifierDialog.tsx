@@ -27,7 +27,7 @@ const EMPTY = "empty"
 export default function NewClassifierDialog(props: {
     classes: any
     open: boolean
-    onDone: (modal: string) => void
+    onDone: () => void
     workspace: WorkspaceSvg
 }) {
     const { classes, open, onDone, workspace } = props
@@ -109,7 +109,7 @@ export default function NewClassifierDialog(props: {
 
     const handleCancel = () => {
         // call the done function
-        onDone("classifier")
+        onDone()
     }
 
     const handleDone = () => {
@@ -117,7 +117,7 @@ export default function NewClassifierDialog(props: {
         addNewClassifierBlock()
 
         // call the done function
-        onDone("classifier")
+        onDone()
     }
 
     return (
