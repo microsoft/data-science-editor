@@ -24,6 +24,7 @@ export default function DataSetPlot(props: {
         predictedLabel: string
     ) => {
         const features = {
+            name: recording.name,
             class: label,
             "predicted class": predictedLabel,
             correct: label == predictedLabel || predictedLabel == "",
@@ -100,6 +101,10 @@ export default function DataSetPlot(props: {
 
     const configTooltip = () => {
         const spec = [
+            {
+                field: "name",
+                type: "nominal",
+            },
             {
                 field: "class",
                 type: "nominal",
