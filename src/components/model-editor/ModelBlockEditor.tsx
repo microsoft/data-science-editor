@@ -373,10 +373,8 @@ function ModelBlockEditorWithContext(props: {
     const toggleTestModelDialog = () => toggleDialog("trained_model")
     const toggleNewClassifierDialog = () => toggleDialog("classifier")
     const toggleDialog = (dialog: string) => {
-        if (dialog != "none") {
-            setVisibleDialog(dialog)
-            console.log("Randi toggle dialog ", dialog)
-        } else setVisibleDialog("none")
+        if (dialog != "none") setVisibleDialog(dialog)
+        else setVisibleDialog("none")
     }
     const closeModals = () => {
         // reset dataset and model that gets passed to dialogs
