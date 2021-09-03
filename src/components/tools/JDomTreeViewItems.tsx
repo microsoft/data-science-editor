@@ -63,9 +63,7 @@ export function DeviceTreeItem(
     )
     const { mobile } = useMediaQueries()
     const showActions = !mobile
-    const dropped = useChange(device.stats, _ => _.dropped)
-    const restarts = useChange(device.stats, _ => _.dropped)
-
+    const { dropped, restarts } = useChange(device.stats, _ => _.current)
     const serviceNames = ellipseJoin(
         services
             .filter(
@@ -81,12 +79,13 @@ export function DeviceTreeItem(
 
     const alert = lost
         ? `lost device...`
-        : restarts > 0.25
-        ? `restarting...`
+        : restarts > 1
+        ? `malfunction...`
         : dropped > 2
         ? `${dropped} pkt lost`
         : undefined
-    const labelInfo = [dropped > 1 && `${dropped} lost`, serviceNames]
+    const warning = restarts > 1 || dropped > 2
+    const labelInfo = [dropped > 2 && `${dropped | 0} lost`, serviceNames]
         .filter(r => !!r)
         .join(", ")
 
@@ -95,6 +94,7 @@ export function DeviceTreeItem(
             nodeId={id}
             labelText={name}
             labelInfo={labelInfo}
+            warning={warning}
             alert={alert}
             kind={kind}
             actions={
@@ -117,7 +117,7 @@ export function DeviceTreeItem(
 
 export function AnnounceFlagsTreeItem(props: { device: JDDevice }) {
     const { device } = props
-    const { announceFlags, id, deviceId } = device
+    const { announceFlags, id, deviceId, restartCounter } = device
 
     const text = [
         deviceId,
@@ -132,6 +132,7 @@ export function AnnounceFlagsTreeItem(props: { device: JDDevice }) {
             "rgb no fade status LED",
         (announceFlags & ControlAnnounceFlags.StatusLightRgbFade) ===
             ControlAnnounceFlags.StatusLightRgbFade && "rgb fade status LED",
+        restartCounter < 0xf ? `restart#${restartCounter}` : undefined,
     ]
         .filter(f => !!f)
         .join(", ")
