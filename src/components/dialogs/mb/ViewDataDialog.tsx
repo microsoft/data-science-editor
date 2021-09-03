@@ -92,7 +92,7 @@ export default function BlocklyViewDataDialog(props: {
                                             chartProps={chartProps}
                                             reactStyle={classes}
                                             dataset={dataset}
-                                            predictedLabels={null}
+                                            predictedLabels={undefined}
                                             timestamp={undefined}
                                         />
                                     </Suspense>

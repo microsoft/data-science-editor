@@ -317,7 +317,7 @@ export default function CollectData(props: {
                                     chartProps={chartProps}
                                     reactStyle={classes}
                                     dataset={dataset}
-                                    predictedLabels={null}
+                                    predictedLabels={undefined}
                                     timestamp={dataTimestamp}
                                 />
                             </Suspense>
