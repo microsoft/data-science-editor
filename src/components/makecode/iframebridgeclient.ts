@@ -201,7 +201,6 @@ export class IFrameBridgeClient extends JDClient {
         if (!pkts) return
 
         this.packetProcessed += pkts.length
-
         for (const pkt of pkts) {
             // we're adding a little trace to avoid resending our own packets
             pkt.sender = this.bridgeId
@@ -237,10 +236,9 @@ export class IFrameBridgeClient extends JDClient {
     }
 
     get candidateExtensions(): string[] {
-        if (!this._runOptions) {
-            console.log(`no run options`)
+        if (!this.packetProcessed && !this._runOptions)
+            // bridge is not active
             return []
-        }
 
         const devices = this.bus
             .devices({ announced: true, ignoreSelf: true })
