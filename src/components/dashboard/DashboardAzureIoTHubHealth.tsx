@@ -23,7 +23,6 @@ export default function DashboardAzureIoTHubHealth(
     const { textPrimary } = useWidgetTheme(color)
     const connected =
         connectionStatus === AzureIotHubHealthConnectionStatus.Connected
-    const twin = useChangeAsync(client, _ => _?.twin())
 
     return (
         <Grid
@@ -40,11 +39,6 @@ export default function DashboardAzureIoTHubHealth(
                     {AzureIotHubHealthConnectionStatus[connectionStatus]}
                 </label>
             </Grid>
-            {twin && (
-                <Grid item xs={12}>
-                    <Snippet mode="json" value={twin} />
-                </Grid>
-            )}
         </Grid>
     )
 }
