@@ -8,7 +8,7 @@ import useMediaQueries from "../hooks/useMediaQueries"
 
 export default function PacketStats() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const { packetStats } = bus
+    const { stats: packetStats } = bus
     const { mobile } = useMediaQueries()
     const current = useChange(packetStats, _ => _.current)
     const { diagnostics } = Flags

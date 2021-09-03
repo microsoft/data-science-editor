@@ -52,9 +52,9 @@ export function DeviceTreeItem(
     props: { device: JDDevice } & StyledTreeViewItemProps & JDomTreeViewProps
 ) {
     const { device, serviceFilter, ...other } = props
-    const { id, physical } = useMemo(() => device, [device])
+    const { id, isPhysical } = useMemo(() => device, [device])
     const name = useDeviceName(device, true)
-    const kind = physical ? "device" : "virtualdevice"
+    const kind = isPhysical ? "device" : "virtualdevice"
     const lost = useEventRaised([LOST, FOUND], device, dev => !!dev?.lost)
     const services = useChange(device, () =>
         device
@@ -63,7 +63,8 @@ export function DeviceTreeItem(
     )
     const { mobile } = useMediaQueries()
     const showActions = !mobile
-    const dropped = useChange(device.packetStats, _ => _.dropped)
+    const dropped = useChange(device.stats, _ => _.dropped)
+    const restarts = useChange(device.stats, _ => _.dropped)
 
     const serviceNames = ellipseJoin(
         services
@@ -80,6 +81,8 @@ export function DeviceTreeItem(
 
     const alert = lost
         ? `lost device...`
+        : restarts > 0.25
+        ? `restarting...`
         : dropped > 2
         ? `${dropped} pkt lost`
         : undefined
