@@ -406,10 +406,10 @@ export class ModelBlockDomainSpecificLanguage
                         kind: "block",
                         blockxml: `<block type="model_block_maxpool1d_layer"><field name="EXPAND_BUTTON">{"parametersVisible":false,"percentSize":0,"percentParams":0,"runTimeInMs":0,"outputShape":[0,0],"poolSize":2,"strideSize":1}</field></block>`,
                     },
-                    {
+                    /*{
                         kind: "block",
                         blockxml: `<block type="model_block_avgpool1d_layer"><field name="EXPAND_BUTTON">{"parametersVisible":false,"percentSize":0,"percentParams":0,"runTimeInMs":0,"outputShape":[0,0],"poolSize":2,"strideSize":1}</field></block>`,
-                    },
+                    },*/
                     {
                         kind: "block",
                         blockxml: `<block type="model_block_conv2d_layer"><field name="EXPAND_BUTTON">{"parametersVisible":false,"percentSize":0,"percentParams":0,"runTimeInMs":0,"outputShape":[0,0,0],"numFilters":16,"kernelSize":2,"strideSize":1,"activation":"relu"}</field></block>`,
@@ -418,10 +418,10 @@ export class ModelBlockDomainSpecificLanguage
                         kind: "block",
                         blockxml: `<block type="model_block_maxpool2d_layer"><field name="EXPAND_BUTTON">{"parametersVisible":false,"percentSize":0,"percentParams":0,"runTimeInMs":0,"outputShape":[0,0,0],"poolSize":2,"strideSize":1}</field></block>`,
                     },
-                    {
+                    /*{
                         kind: "block",
                         blockxml: `<block type="model_block_avgpool2d_layer"><field name="EXPAND_BUTTON">{"parametersVisible":false,"percentSize":0,"percentParams":0,"runTimeInMs":0,"outputShape":[0,0,0],"poolSize":2,"strideSize":1}</field></block>`,
-                    },
+                    },*/
                     {
                         kind: "block",
                         blockxml: `<block type="model_block_dropout_layer"><field name="EXPAND_BUTTON">{"parametersVisible":false,"percentSize":0,"percentParams":0,"runTimeInMs":0,"outputShape":[0,0],"rate":0.1}</field></block>`,
@@ -433,10 +433,6 @@ export class ModelBlockDomainSpecificLanguage
                     {
                         kind: "block",
                         blockxml: `<block type="model_block_dense_layer"><field name="EXPAND_BUTTON">{"parametersVisible":false,"percentSize":0,"percentParams":0,"runTimeInMs":0,"outputShape":[0],"numUnits":4,"activation":"relu"}</field></block>`,
-                    },
-                    {
-                        kind: "label",
-                        text: "Visualizations",
                     },
                 ],
             })]
