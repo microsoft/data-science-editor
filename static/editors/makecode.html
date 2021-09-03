@@ -59,14 +59,23 @@
 
     <body>
         <select id="selectleft">
-            <option value="https://microsoft.github.io/jacdac-docs/clients/makecode/">
+            <option
+                value="https://microsoft.github.io/jacdac-docs/clients/makecode/"
+            >
                 Jacdac
             </option>
         </select>
         <select id="selectright">
-            <option value="https://makecode.microbit.org/">micro:bit</option>
+            <option value="https://makecode.microbit.org/beta">
+                micro:bit (beta)
+            </option>
             <option value="https://maker.makecode.com/">Maker</option>
-            <option value="https://arcade.makecode.com/">Arcade</option>
+            <option value="https://arcade.makecode.com/beta">
+                Arcade (beta)
+            </option>
+            <option value="https://microsoft.github.io/pxt-jacdac/">
+                Azure IoT Uploader
+            </option>
         </select>
         <iframe id="left" allow="usb;camera;serial"></iframe>
         <div id="divider"></div>
@@ -79,27 +88,6 @@
                 const selectLeft = document.getElementById("selectleft")
                 const selectRight = document.getElementById("selectright")
                 const localhost = /localhost=1/.test(window.location.href)
-                const beta = /beta=1/.test(window.location.href)
-                if (beta) {
-                    const betaEditors = [
-                        {
-                            name: "Arcade (beta)",
-                            url: "https://arcade.makecode.com/beta",
-                        },
-                        {
-                            name: "micro:bit (beta)",
-                            url: "https://makecode.microbit.org/beta",
-                        },
-                    ]
-                    ;[selectRight].forEach(function (sel) {
-                        betaEditors.forEach(function (betaEditor) {
-                            const opt = document.createElement("option")
-                            opt.value = betaEditor.url
-                            opt.innerText = betaEditor.name
-                            sel.appendChild(opt)
-                        })
-                    })
-                }
                 if (localhost) {
                     ;[selectRight].forEach(sel => {
                         const opt = document.createElement("option")
