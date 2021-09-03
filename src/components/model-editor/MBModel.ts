@@ -1,5 +1,8 @@
 import { JDEventSource } from "../../../jacdac-ts/src/jdom/eventsource"
-import type { TFModelTrainingParams, TFLayerStats } from "../../workers/tf/dist/node_modules/tf.worker"
+import type {
+    TFModelTrainingParams,
+    TFLayerStats,
+} from "../../workers/tf/dist/node_modules/tf.worker"
 
 export interface ModelStats {
     total: TFLayerStats
@@ -69,9 +72,12 @@ export function validModelJSON(blockJSON) {
         if (!minimumModel) minimumModel = true
         // 6. make sure that only dense layers come after flatten
         if (foundFlatten) {
-            if (childBlock.type != "model_block_dense_layer")
+            if (
+                childBlock.type != "model_block_dense_layer" &&
+                childBlock.type != "model_block_dropout_layer"
+            )
                 warnings[childBlock.id] =
-                    "Only dense layers can go after the flatten layer"
+                    "Only dense and dropout layers can go after the flatten layer"
         }
         if (!foundFlatten)
             foundFlatten = childBlock.type == "model_block_flatten_layer"
