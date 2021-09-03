@@ -12,6 +12,7 @@ import TransportIcon from "../icons/TransportIcon"
 import { rgbToHtmlColor } from "../../../jacdac-ts/src/jdom/utils"
 import useChange from "../../jacdac/useChange"
 import IdentifyDialog from "../dialogs/IdentifyDialog"
+import JDServerServiceProvider from "../../../jacdac-ts/src/jdom/servers/serverserviceprovider"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -45,13 +46,8 @@ export default function DeviceAvatar(props: {
             : size === "large"
             ? classes.large
             : undefined
-    const server = useServiceProvider(device)
+    const server = useServiceProvider<JDServerServiceProvider>(device)
     const source = device.source
-    //const {
-    //  className: statusLEDClassName,
-    //  helmetStyle: statusLEDHelmetStyle } = useDeviceStatusLightStyle(device)
-    //{statusLEDHelmetStyle && <Helmet><style>{statusLEDHelmetStyle}</style></Helmet>}
-    //className={statusLEDClassName}
     const ctrl = server?.controlService
     const color = useChange(ctrl, _ => _?.statusLightColor)
     const style: CSSProperties = color

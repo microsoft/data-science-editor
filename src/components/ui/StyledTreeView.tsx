@@ -1,14 +1,10 @@
 import React from "react"
-// tslint:disable-next-line: no-submodule-imports
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles"
-// tslint:disable-next-line: no-submodule-imports
-// tslint:disable-next-line: no-submodule-imports
 import TreeItem, { TreeItemProps } from "@material-ui/lab/TreeItem"
-// tslint:disable-next-line: no-submodule-imports
 import Typography from "@material-ui/core/Typography"
-// tslint:disable-next-line: no-submodule-imports match-default-export-name
-// tslint:disable-next-line: no-submodule-imports match-default-export-name
 import KindIcon from "../KindIcon"
+import WarningIcon from "@material-ui/icons/Warning"
+
 import { useId } from "react-use-id-hook"
 
 declare module "csstype" {
@@ -78,6 +74,7 @@ export function StyledTreeItem(
         color?: string
         kind?: string
         icon?: JSX.Element
+        warning?: boolean
         alert?: string
         labelInfo?: string
         labelText: string
@@ -94,6 +91,7 @@ export function StyledTreeItem(
         bgColor,
         actions,
         nodeId,
+        warning,
         alert,
         ...other
     } = props
@@ -110,6 +108,12 @@ export function StyledTreeItem(
                         <KindIcon kind={kind} className={classes.labelIcon} />
                     )}
                     {icon}
+                    {warning && (
+                        <WarningIcon
+                            color="error"
+                            className={classes.labelIcon}
+                        />
+                    )}
                     <Typography variant="body2" className={classes.labelText}>
                         {labelText}
                     </Typography>
