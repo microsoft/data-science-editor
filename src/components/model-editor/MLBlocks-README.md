@@ -22,9 +22,12 @@ _Workspace management_
         The only data that is stored are the recordings attached to blocks (see _allRecordings_ variable) and models that have been trained and are attached to trained model blocks (see _trainedModels_ variable).
     -   Compiling models and datasets. The _assembleDataSet_ function compiles stacks of recordings into a data set and places warnings on blocks. Warnings occur if the input types of a recording does not match the rest of the data set (see src/components/model-editor/MBDataSet.ts). The _assembleModel_ function compiles stacks of layer into a model architecture. It places warnings on a model if the model architecture is invalid (see src/components/model-editor/MBModel.ts).
     -   Dialog handling
-        **ModelBlockDialogs** (src/components/dialogs/mb/ModelBlockDialogs.tsx) A significant chunk of programming in model blocks happens in dialogs these dialogs include: 1. **RecordDataDialog** (src/components/dialogs/mb/RecordDataDialog.tsx)
-        This dialog allows users to colelct recordings. On the first page, they set the parameters for recordings (sensors, interval, duration, class label). On the second page they can record samples. 2. **ViewDataDialog** (src/components/dialogs/mb/ViewDataDialog.tsx)
-        This dialog allows users to see a compiled data set as mini Trend snapshots and in a data plot. 3. **AddNewClassifierDialog** (src/components/dialogs/mb/AddNewClassifierDialog.tsx)
+        **ModelBlockDialogs** (src/components/dialogs/mb/ModelBlockDialogs.tsx) A significant chunk of programming in model blocks happens in dialogs these dialogs include:
+        1. **RecordDataDialog** (src/components/dialogs/mb/RecordDataDialog.tsx)
+        This dialog allows users to collect recordings. On the first page, they set the parameters for recordings (sensors, interval, duration, class label). On the second page they can record samples.
+        2. **ViewDataDialog** (src/components/dialogs/mb/ViewDataDialog.tsx)
+        This dialog allows users to see a compiled data set as mini Trend snapshots and in a data plot.
+        3. **AddNewClassifierDialog** (src/components/dialogs/mb/AddNewClassifierDialog.tsx)
         This dialog allows the user to set the name of a new classifier variable and choose from a set of template model architectures to add to the workspace. 4. **TrainModelDialog** (src/components/dialogs/mb/TrainModelDialog.tsx)
         This dialog allows the user to train (or retrain) a model, view learning curves as the model trained, and then test the model on live data. 5. **TestModelDialog**
         (src/components/dialogs/mb/TestModelDialog.tsx)
@@ -33,21 +36,23 @@ _Workspace management_
 _Block defintions_
 
 -   **modelblockdsl.ts** (src/components/model-editor/modelblockdsl.ts)
-    This file contains the defintion of the blocks. There are two kinds of blocks: 1. Dataset blocks, including recording blocks and dataset blocks that group recordings together 2. Model blocks, including the different kinds of layer blocks and the classifier blocks that group layer blocks together
+    This file contains the defintion of the blocks. There are two kinds of blocks:
+    1. Dataset blocks, including recording blocks and dataset blocks that group recordings together
+    2. Model blocks, including the different kinds of layer blocks and the classifier blocks that group layer blocks together
 -   **ExpandModelBlockField** (src/components/blocksl.fields/mb/ExpandModelBlockField.tsx)
     Almost all model blocks contain an expansion field, however [different blocks contain different information](#block-defs). This is handled by adding a removable field based on the source block's type.
     As soon as information is updated on removable fields, it is written to the ExpandModelBlockField.
 
 _Block descriptions_
 Data Set Blocks
-Name | Parameters | Information |
---- | ------ | ------
+| Name              | Parameters                                                                                                                                                                               | Information                                                                                                                                                                                                        |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 Data set block | _User input:_ name for the data set (from variable dropdown). _Automatic:_ number of recordings, number of samples, list of classes, list of input types (button, sound_level, etc.) | Assemble stacks of recording blocks inside to make a data set. Blocks have a view and download button. The view button creates a dialog where you can see a grid of samples and a plot of data. The download button saves a CSV
 Recording block | _User input:_ name for recording, class label for recording (from variable dropdown). _Automatic:_ Number of samples, list of input types, timestamp that recording was taken | Blocks are attached to arrays of Field Data Sets that store recording data. Expandable field holds a download button that will save recording to CSV
 
 Model Blocks
-Name | Parameters | Information |
---- | ------ | ------
+| Name              | Parameters                                                                                                                                                                               | Information                                                                                                                                                                                                        |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 Neural network classifier block | _User input:_ classifier name (from variable dropdown), training data set name (from variable dropdown), optimizer (adam, SGD, adadelta, or adagrad), loss function (categorical crossentropy, mean squared error, or hinge loss), number of epochs to train. _Automatic:_ model input shape, number of layers in model, nubmer of parameters in model, compiled model size, compiled model runtime | Assemble sequences (order matters) of layer blocks inside to form a model architecture. Blocks have a train and download button. The train button opens a dialog where users can train the model and see learning curves. The download button downloads the model as a CSV
 Trained model block |_User input:_ trained model name, testing data (from variable dropdown), chart to display (either confusion matrix or data set plot)| This block is used to store a trained model and evaluate it with testing data sets. Blocks have a view button and a download button. The view button opens a dialog where users can live test the trained model. The download button downloads the model as JSON for importing into other tools.
 
