@@ -11,7 +11,7 @@ export default function DataSetPlot(props: {
     chartProps: any
     reactStyle: any
     dataset: MBDataSet
-    predictedLabels: number[]
+    predictedLabels: string[]
     timestamp: number
 }) {
     const { dataset, predictedLabels, timestamp } = props
@@ -54,13 +54,10 @@ export default function DataSetPlot(props: {
 
             for (const label of labels) {
                 dataset.getRecordingsWithLabel(label).forEach(recording => {
-                    // add info about whether point was correctly labelled
                     let predictedLabel = ""
-                    if (predictedLabels && predictedLabels.length) {
-                        // grab the predicted label associated with this data point
-                        const prediction = predictedLabels[setPoints.length]
-                        predictedLabel = labels[prediction]
-                    }
+                    // if it exists, grab the predicted label associated with this data point
+                    if (predictedLabels && predictedLabels.length)
+                        predictedLabel = predictedLabels[setPoints.length]
 
                     // add data point to chart
                     const recordingFeatures = calculateRecordingFeatures(

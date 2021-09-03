@@ -6,8 +6,8 @@ const VegaLite = lazy(() => import("../../blockly/fields/chart/VegaLite"))
 
 export default function ConfusionMatrixHeatMap(props: {
     chartProps: any
-    yActual: number[]
-    yPredicted: number[]
+    yActual: string[]
+    yPredicted: string[]
     labels: string[]
     timestamp: number
 }) {
@@ -15,8 +15,8 @@ export default function ConfusionMatrixHeatMap(props: {
     const chartProps = props.chartProps
 
     const compileConfusionMatrixData = (
-        actual: number[],
-        predicted: number[],
+        actualLabel: string[],
+        predictedLabel: string[],
         labels: string[]
     ) => {
         if (!yActual || !yPredicted) return []
@@ -24,6 +24,7 @@ export default function ConfusionMatrixHeatMap(props: {
 
         const data = []
 
+        // create list of all actual -> predicted label combos
         labels.forEach((actualVal, actualIdx) => {
             labels.forEach((predVal, predIdx) => {
                 const dataPoint = {}
@@ -36,13 +37,17 @@ export default function ConfusionMatrixHeatMap(props: {
             })
         })
 
+        // convert label names to indices
+        const actual = actualLabel.map(label => labels.indexOf(label))
+        const predicted = predictedLabel.map(label => labels.indexOf(label))
+
         // iterate through all of the combinations of actual and predicted labels
         actual.forEach((actualVal, idx) => {
             const predIdx = predicted[idx]
             const actualIdx = actual[idx]
 
             const dataIdx = actualIdx * labels.length + predIdx
-            data[dataIdx]["Count"] = data[dataIdx]["Count"] + 1
+            data[dataIdx]["Count"] += 1
         })
 
         return data
