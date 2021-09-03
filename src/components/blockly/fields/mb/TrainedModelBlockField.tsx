@@ -114,6 +114,8 @@ function TrainedModelDisplayWidget() {
                     setErrorMsg(
                         "The selected dataset does not have the same input/output type as the trained model"
                     )
+                    setDataSet(updatedDataSet)
+                    setModel(updatedModel)
                     return
                 }
                 setErrorMsg("")
@@ -137,9 +139,15 @@ function TrainedModelDisplayWidget() {
                         },
                     } as TFModelPredictRequest
                     predictRequest(predictMsg).then(result => {
-                        if (result) {
-                            // Save probability for each class in model object
-                            setTrainingPredictionResult(result.data.predictTop)
+                        if (result && result.data) {
+                            // convert prediction result to string
+                            const predictions = []
+                            result.data.predictTop.forEach(prediction => {
+                                predictions.push(
+                                    updatedModel.labels[prediction]
+                                )
+                            })
+                            setTrainingPredictionResult(predictions)
                             setTrainTimestamp(Date.now())
                         }
                     })
@@ -174,12 +182,21 @@ function TrainedModelDisplayWidget() {
                         Error: {errorMsg}
                         <br />
                     </Box>
+                    <br />
                     {!!model && (
                         <Box color="text.secondary">
-                            Input Types: {model.inputTypes.join(", ")}
+                            Model input types: {model.inputTypes.join(", ")}
                             <br />
-                            Input Shape: [{model.inputShape.join(", ")}]<br />
-                            Classes: {model.labels.join(", ")}
+                            Input shape: [{model.inputShape.join(", ")}]
+                        </Box>
+                    )}
+                    <br />
+                    {!!dataSet && (
+                        <Box color="text.secondary">
+                            Data set input types:{" "}
+                            {dataSet.inputTypes.join(", ")}
+                            <br />
+                            Input shape: [{dataSet.length}, {dataSet.width}]
                         </Box>
                     )}
                 </Grid>
@@ -217,7 +234,9 @@ function TrainedModelDisplayWidget() {
                             <Suspense>
                                 <ConfusionMatrixHeatMap
                                     chartProps={chartProps}
-                                    yActual={dataSet.ys}
+                                    yActual={dataSet.ys.map(
+                                        val => dataSet.labels[val]
+                                    )}
                                     yPredicted={trainingPredictionResult}
                                     labels={model.labels}
                                     timestamp={trainTimestamp}

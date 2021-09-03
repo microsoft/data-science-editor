@@ -48,10 +48,8 @@ export function prepareDataSet(set: MBDataSet) {
 
     for (const label of set.labels) {
         set.getRecordingsWithLabel(label).forEach(table => {
-            if (sampleLength < table.length) {
-                sampleLength = table.length
-                sampleChannels = table.width
-            } else if (table.width != sampleChannels) {
+            sampleChannels = table.width
+            if (table.width != sampleChannels) {
                 alert(
                     "All input data must have the same shape: " +
                         table.name +
@@ -61,7 +59,7 @@ export function prepareDataSet(set: MBDataSet) {
                         sampleChannels
                 )
             } /* else if (table.length != sampleLength) {
-                // decide what to do about different sized data
+                // TODO decide what to do about data with different weight
             } */
             // For x data, just add each sample as a new row into x_data
             xData.push(table.data())
@@ -73,8 +71,8 @@ export function prepareDataSet(set: MBDataSet) {
     // save tensors with dataset object
     set.xs = xData
     set.ys = yData
-    set.length = sampleLength
-    set.width = sampleChannels
+    set.length = xData[0].length
+    set.width = xData[0][0].length
 }
 
 export function prepareModel(
@@ -234,8 +232,13 @@ export default function TrainModel(props: {
             )) as TFModelPredictResponse
 
             if (predResult) {
-                // Save probability for each class in model object
-                setTrainingPredictionResult(predResult.data.predictTop)
+                // convert prediction result to string
+                const predictions = predResult.data.predictTop.map(
+                    prediction => {
+                        return model.labels[prediction]
+                    }
+                )
+                setTrainingPredictionResult(predictions)
                 setTrainTimestamp(Date.now())
             }
 
@@ -356,7 +359,9 @@ export default function TrainModel(props: {
                         <Suspense>
                             <ConfusionMatrixHeatMap
                                 chartProps={chartProps}
-                                yActual={dataset.ys}
+                                yActual={dataset.ys.map(
+                                    val => dataset.labels[val]
+                                )}
                                 yPredicted={trainingPredictionResult}
                                 labels={model.labels}
                                 timestamp={trainTimestamp}
