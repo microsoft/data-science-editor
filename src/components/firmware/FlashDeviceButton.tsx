@@ -58,7 +58,9 @@ export function FlashDeviceButton(props: {
     }
 
     // tslint:disable-next-line: react-this-binding-issue
-    return missing ? null : flashing ? (
+    return missing ? (
+        <Alert severity="info">No firmware information available</Alert>
+    ) : flashing ? (
         <CircularProgressWithLabel value={progress} />
     ) : firmwareInfo || update ? (
         <>
