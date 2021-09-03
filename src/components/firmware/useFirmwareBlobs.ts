@@ -23,7 +23,7 @@ export default function useFirmwareBlobs() {
 
         const missingSlugs = unique(
             deviceSpecifications()
-                .filter(spec => !!spec?.firmwares.length) // needs some firmwares
+                .filter(spec => !!spec?.productIdentifiers?.length) // needs some product identifiers
                 .map(spec => spec.repo)
                 .filter(repo => /^https:\/\/github.com\//.test(repo))
                 .map(repo => repo.substr("https://github.com/".length))
@@ -39,9 +39,7 @@ export default function useFirmwareBlobs() {
                 return
             }
 
-            console.log(
-                `db: fetch binary release ${slug} ${rel.version}`
-            )
+            console.log(`db: fetch binary release ${slug} ${rel.version}`)
             const fw = await fetchReleaseBinary(slug, rel.version)
             if (fw) {
                 console.log(
@@ -52,8 +50,8 @@ export default function useFirmwareBlobs() {
             // throttle github queries
             await bus.delay(5000)
         }
-    }, [db, firmwares]);
-    useIdleCallback(loadFirmwares, 30000, [db, firmwares]);
+    }, [db, firmwares])
+    useIdleCallback(loadFirmwares, 30000, [db, firmwares])
     useChangeAsync(
         firmwares,
         async fw => {
