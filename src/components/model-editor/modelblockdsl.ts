@@ -395,10 +395,6 @@ export class ModelBlockDomainSpecificLanguage
                         callbackKey: "createNewClassifierButton",
                     },
                     {
-                        kind: "block",
-                        blockxml: `<block type="model_block_nn"><field name="CLASSIFIER_NAME" variabletype="ModelBlockClassifier">classifier1</field><field name="NN_TRAINING" variabletype="ModelBlockDataSet">dataset1</field><field name="EXPAND_BUTTON">{"parametersVisible":false,"totalParams":0,"totalLayers":0,"totalSize":0,"runTimeInMs":0,"inputShape":[0,0],"optimizer":"adam","numEpochs":200,"lossFn":"categoricalCrossentropy","metrics":"acc"}</field><field name="NN_BUTTONS">{}</field></block>`,
-                    },
-                    {
                         kind: "label",
                         text: "Layers",
                     },
@@ -441,10 +437,6 @@ export class ModelBlockDomainSpecificLanguage
                     {
                         kind: "label",
                         text: "Visualizations",
-                    },
-                    {
-                        kind: "block",
-                        type: MODEL_BLOCKS + "trained_nn",
                     },
                 ],
             })]
