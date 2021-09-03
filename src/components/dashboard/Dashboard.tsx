@@ -20,6 +20,7 @@ import useRoleManagerClient from "../services/useRoleManagerClient"
 import useMediaQueries from "../hooks/useMediaQueries"
 import JDService from "../../../jacdac-ts/src/jdom/service"
 import SimulateDeviceAlert from "../alert/SimulateDeviceAlert"
+import MakeCodeAddBlocksButton from "../makecode/MakeCodeAddBlocksButton"
 
 function defaultDeviceSort(l: JDDevice, r: JDDevice): number {
     const srvScore = (srv: jdspec.ServiceSpec) =>
@@ -153,6 +154,7 @@ export default function Dashboard(props: DashboardProps) {
                     </Grid>
                 )}
             </DashboardDeviceGroup>
+            <MakeCodeAddBlocksButton />
         </>
     )
 }
