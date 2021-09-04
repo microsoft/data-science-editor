@@ -60,6 +60,8 @@ function ConnectionStringDialog(props: {
                     value={value}
                     label="Value"
                     fullWidth={true}
+                    type="password"
+                    placeholder="Connection string"
                     onChange={handleValueChange}
                 />
             </DialogContent>
