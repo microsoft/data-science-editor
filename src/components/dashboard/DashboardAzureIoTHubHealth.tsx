@@ -40,12 +40,12 @@ function ConnectionStringDialog(props: {
         setValue(event.target.value)
     }
     const handleOk = async () => {
-        await client.setConnectionString(value)
+        await client.setConnectionString(value || "")
         setValue("")
         setOpen(false)
     }
     return (
-        <Dialog open={open} fullWidth={true}>
+        <Dialog open={open} fullWidth={true} maxWidth={"lg"}>
             <DialogContent>
                 <DialogContentText>
                     Enter device connection string
@@ -70,7 +70,7 @@ function ConnectionStringDialog(props: {
                 <CmdButton
                     variant="contained"
                     color="primary"
-                    disabled={!client || !value}
+                    disabled={!client}
                     onClick={handleOk}
                 >
                     Save
