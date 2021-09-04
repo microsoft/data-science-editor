@@ -2,6 +2,7 @@ import React, { useContext } from "react"
 import {
     SRV_BUTTON,
     SRV_BUZZER,
+    SRV_HUMIDITY,
     SRV_JOYSTICK,
     SRV_LED,
     SRV_TRAFFIC_LIGHT,
@@ -28,6 +29,16 @@ export function SimulateDeviceHint() {
             >
                 <span aria-label="button emoji" role="img">
                     🔘
+                </span>
+            </IconButtonWithTooltip>
+            ,
+            <IconButtonWithTooltip
+                onClick={handleStartSimulator(SRV_HUMIDITY)}
+                title="humidity"
+                aria-label="start traffic humidity sensor"
+            >
+                <span aria-label="traffic light umbrella" role="img">
+                    ☂️
                 </span>
             </IconButtonWithTooltip>
             ,
