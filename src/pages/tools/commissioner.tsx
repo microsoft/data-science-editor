@@ -48,6 +48,8 @@ import FileSystemContext from "../../components/FileSystemContext"
 import FileTabs from "../../components/fs/FileTabs"
 import useChange from "../../jacdac/useChange"
 import AppContext from "../../components/AppContext"
+import { ControlReg } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
+import { LedPixelReg } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -76,6 +78,7 @@ interface DeviceDescriptor {
     servicesSeen: ServiceDescriptor[]
     pass: boolean
     comment: string
+    description: string
 }
 
 interface DeviceDescriptorTable {
@@ -205,6 +208,9 @@ function DataSetTable(props: {
                                 )}
                             </TableCell>
                             <TableCell align="center">
+                                {descriptor.description}
+                            </TableCell>
+                            <TableCell align="center">
                                 <TextField
                                     onChange={handleCommentChange}
                                     id={descriptor.deviceIdentifier}
@@ -221,19 +227,25 @@ function DataSetTable(props: {
     )
 }
 
+const INITIAL_COLOR = 0x0000ff
 async function LEDTest(service: JDService) {
+    const numPixels = service.register(LedPixelReg.NumPixels)
+    await numPixels.refresh(true)
+    const colors = [0x0000ff, 0x00ff00, 0xff0000];
     while (service.device.connected) {
-        for (let i = 0; i < 8; i++) {
-            const encoded = lightEncode(
-                `setone % #
-                    show 20`,
-                [i, 0xff0000]
-            )
 
-            if (service.device.connected)
-                await service?.sendCmdAsync(LedPixelCmd.Run, encoded)
-            await delay(200)
-        }
+        for (const color of colors)
+            for (let i = 0; i < numPixels.intValue; i++) {
+                const encoded = lightEncode(
+                    `setone % #
+                        show 20`,
+                    [i, color]
+                )
+
+                if (service.device.connected)
+                    await service?.sendCmdAsync(LedPixelCmd.Run, encoded)
+                await delay(50)
+            }
     }
 }
 
@@ -285,6 +297,7 @@ export default function Commissioner() {
         "Services seen",
         "Packets seen",
         "Functional test pass",
+        "Description",
         "Comment",
     ]
     const { fileStorage } = useContext(ServiceManagerContext)
@@ -341,6 +354,11 @@ export default function Commissioner() {
                         serviceIndex: s.serviceIndex,
                     })
                 })
+            const controlService = d.service(0)
+            const descrReg = controlService.register(
+                ControlReg.DeviceDescription
+            )
+            await descrReg.refresh(true)
             newDataSet.push({
                 brain: isBrain(d),
                 deviceIdentifier: d.deviceId,
@@ -349,6 +367,7 @@ export default function Commissioner() {
                 servicesSeen: [],
                 pass: true,
                 comment: "",
+                description: descrReg.stringValue,
             })
             // launch tests
             testDevice(d)
@@ -413,6 +432,8 @@ export default function Commissioner() {
             sep +
             "Functional test pass" +
             sep +
+            "Description" +
+            sep +
             "Comment" +
             lineEnding
         dataSet.forEach(descriptor => {
@@ -437,6 +458,7 @@ export default function Commissioner() {
             if (descriptor.pass) str += `PASS${sep}`
             else str += `FAIL${sep}`
 
+            str += descriptor.description + sep
             str += descriptor.comment + lineEnding
         })
         return str
