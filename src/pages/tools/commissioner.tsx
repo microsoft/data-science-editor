@@ -227,7 +227,6 @@ function DataSetTable(props: {
     )
 }
 
-const INITIAL_COLOR = 0x0000ff
 async function LEDTest(service: JDService) {
     const numPixels = service.register(LedPixelReg.NumPixels)
     await numPixels.refresh(true)
@@ -267,7 +266,7 @@ async function SingleRGBLEDTest(service: JDService) {
 
 async function StatusLEDTest(device: JDDevice) {
     const l = device.statusLight
-    while (device.connected) {
+    while (device.connected && l !== undefined) {
         l.blink(0xff0000, 0x000000, 250, 3)
         await delay(1000)
         l.blink(0x00ff00, 0x000000, 250, 3)
