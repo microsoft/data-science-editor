@@ -231,9 +231,8 @@ const INITIAL_COLOR = 0x0000ff
 async function LEDTest(service: JDService) {
     const numPixels = service.register(LedPixelReg.NumPixels)
     await numPixels.refresh(true)
-    const colors = [0x0000ff, 0x00ff00, 0xff0000];
+    const colors = [0x0000ff, 0x00ff00, 0xff0000]
     while (service.device.connected) {
-
         for (const color of colors)
             for (let i = 0; i < numPixels.intValue; i++) {
                 const encoded = lightEncode(
@@ -244,6 +243,7 @@ async function LEDTest(service: JDService) {
 
                 if (service.device.connected)
                     await service?.sendCmdAsync(LedPixelCmd.Run, encoded)
+                else break
                 await delay(50)
             }
     }
