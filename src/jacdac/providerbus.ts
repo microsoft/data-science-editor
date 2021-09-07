@@ -104,6 +104,7 @@ function createBus(): JDBus {
 
     const { trackEvent } = analytics
     if (trackEvent) {
+        let cleanCount = 0
         // track connections
         b.on(
             CONNECTION_STATE,
@@ -116,8 +117,10 @@ function createBus(): JDBus {
                     }))
         )
         b.on(DEVICE_CLEAN, () => {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            trackEvent(`jd.stats`, b.stats.current as any)
+            // log roughly every minute
+            if (!(cleanCount++ % 10))
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                trackEvent(`jd.stats`, b.stats.current as any)
         })
     }
 
