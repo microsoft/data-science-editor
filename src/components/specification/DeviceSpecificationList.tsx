@@ -11,14 +11,14 @@ import {
 import {
     deviceSpecifications,
     identifierToUrlPath,
-} from "../../jacdac-ts/src/jdom/spec"
+} from "../../../jacdac-ts/src/jdom/spec"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import InfoIcon from "@material-ui/icons/Info"
-import Markdown from "./ui/Markdown"
+import Markdown from "../ui/Markdown"
 import { IconButton } from "gatsby-theme-material-ui"
-import { arrayShuffle } from "../../jacdac-ts/src/jdom/utils"
-import useDeviceImage from "./devices/useDeviceImage"
-import useMediaQueries from "./hooks/useMediaQueries"
+import { arrayShuffle } from "../../../jacdac-ts/src/jdom/utils"
+import useDeviceImage from "../devices/useDeviceImage"
+import useMediaQueries from "../hooks/useMediaQueries"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
