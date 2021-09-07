@@ -8,17 +8,17 @@ import {
     isPipeReport,
     isReportOf,
     isPipeReportOf,
-} from "../../jacdac-ts/src/jdom/spec"
-import PacketSpecification from "../components/PacketSpecification"
-import IDChip from "./IDChip"
-import Markdown from "./ui/Markdown"
-import EnumSpecification from "./EnumSpecification"
+} from "../../../jacdac-ts/src/jdom/spec"
+import PacketSpecification from "./PacketSpecification"
+import IDChip from "../IDChip"
+import Markdown from "../ui/Markdown"
+import EnumSpecification from "../EnumSpecification"
 import { Box, Grid } from "@material-ui/core"
 import ServiceSpecificationStatusAlert from "./ServiceSpecificationStatusAlert"
-import useServiceProviderFromServiceClass from "./hooks/useServiceProviderFromServiceClass"
-import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
-import useChange from "../jacdac/useChange"
-import DashbardDeviceItem from "./dashboard/DashboardDeviceItem"
+import useServiceProviderFromServiceClass from "../hooks/useServiceProviderFromServiceClass"
+import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
+import useChange from "../../jacdac/useChange"
+import DashbardDeviceItem from "../dashboard/DashboardDeviceItem"
 
 function DashboardServiceDevices(props: { serviceClass: number }) {
     const { serviceClass } = props
@@ -128,9 +128,9 @@ export default function ServiceSpecification(props: {
                                 (l, r) =>
                                     (l.derived ? 1 : -1) - (r.derived ? 1 : -1)
                             )
-                            .map((pkt, i) => (
+                            .map(pkt => (
                                 <PacketSpecification
-                                    key={`pkt${pkt.name}`}
+                                    key={`pkt${pkt.identifier}`}
                                     serviceClass={node.classIdentifier}
                                     packetInfo={pkt}
                                     reportInfo={reportOf(pkt)}

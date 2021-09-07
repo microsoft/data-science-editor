@@ -1,12 +1,12 @@
 import React, { useState } from "react"
 import { Tabs, Tab } from "@material-ui/core"
-import { serviceSpecificationFromClassIdentifier } from "../../jacdac-ts/src/jdom/spec"
+import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec"
 import { Paper, createStyles, makeStyles, Theme } from "@material-ui/core"
-import TabPanel from "./ui/TabPanel"
-import Snippet from "./ui/Snippet"
-import { converters } from "../../jacdac-ts/jacdac-spec/spectool/jdspec"
+import TabPanel from "../ui/TabPanel"
+import Snippet from "../ui/Snippet"
+import { converters } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import ServiceSpecification from "./ServiceSpecification"
-import { serviceSpecificationToServiceTwinSpecification } from "../../jacdac-ts/src/azure-iot/devicetwin"
+import { serviceSpecificationToServiceTwinSpecification } from "../../../jacdac-ts/src/azure-iot/devicetwin"
 import { withPrefix } from "gatsby"
 
 const useStyles = makeStyles((theme: Theme) =>

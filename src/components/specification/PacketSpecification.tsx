@@ -2,19 +2,19 @@ import {
     isRegister,
     isEvent,
     isCommand,
-} from "../../jacdac-ts/src/jdom/spec"
+} from "../../../jacdac-ts/src/jdom/spec"
 // tslint:disable-next-line: no-submodule-imports
-import Alert from "./ui/Alert"
-import React, { useState } from "react"
+import Alert from "../ui/Alert"
+import React from "react"
 // tslint:disable-next-line: no-submodule-imports
 import Chip from "@material-ui/core/Chip"
-import DeviceList from "./DeviceList"
+import DeviceList from "../DeviceList"
 import { makeStyles, createStyles } from "@material-ui/core"
-import IDChip from "./IDChip"
-import KindChip from "./KindChip"
-import PacketMembersChip from "./PacketMembersChip"
-import Markdown from "./ui/Markdown"
-import { prettyMemberUnit } from "../../jacdac-ts/src/jdom/pretty"
+import IDChip from "../IDChip"
+import KindChip from "../KindChip"
+import PacketMembersChip from "../PacketMembersChip"
+import Markdown from "../ui/Markdown"
+import { prettyMemberUnit } from "../../../jacdac-ts/src/jdom/pretty"
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -100,7 +100,6 @@ export default function PacketSpecification(props: {
         pipeReportInfo,
         showDevices,
     } = props
-    const [args, setArgs] = useState<any[]>([])
     const classes = useStyles()
     if (!packetInfo)
         return (

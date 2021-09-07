@@ -1,11 +1,11 @@
 import React from "react"
 import Markdown from "./ui/Markdown"
-import ServiceSpecificationStatusAlert from "./ServiceSpecificationStatusAlert"
+import ServiceSpecificationStatusAlert from "./specification/ServiceSpecificationStatusAlert"
 import { Button, Link } from "gatsby-theme-material-ui"
-import DeviceSpecificationList from "./DeviceSpecificationList"
+import DeviceSpecificationList from "./specification/DeviceSpecificationList"
 import { serviceSpecificationFromClassIdentifier } from "../../jacdac-ts/src/jdom/spec"
 import { Grid } from "@material-ui/core"
-import ServiceSpecificationSource from "./ServiceSpecificationSource"
+import ServiceSpecificationSource from "./specification/ServiceSpecificationSource"
 
 export default function ServiceMarkdown(props: {
     classIdentifier: number

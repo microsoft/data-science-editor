@@ -1,11 +1,14 @@
 import { Grid } from "@material-ui/core"
 import { StaticImage } from "gatsby-plugin-image"
-import React from "react"
-import DeviceSpecificationList from "../DeviceSpecificationList"
+import React, { lazy } from "react"
+import Suspense from "../ui/Suspense"
 import CarouselGrid from "./CarouselGrid"
 import CenterGrid from "./CenterGrid"
 import FeatureItem from "./FeatureItem"
 import SplitGrid from "./SplitGrid"
+const DeviceSpecificationList = lazy(
+    () => import("../specification/DeviceSpecificationList")
+)
 
 export default function Protocol() {
     return (
@@ -130,7 +133,11 @@ export default function Protocol() {
                 subtitle="Device Catalog."
                 description="Jacdac identifies registered devices on the bus and can automatically find and upload the latest firmware for them."
                 imageColumns={6}
-                image={<DeviceSpecificationList count={6} />}
+                image={
+                    <Suspense>
+                        <DeviceSpecificationList count={6} />
+                    </Suspense>
+                }
                 buttonText={"Explore devices"}
                 buttonVariant="link"
                 buttonUrl="/devices/"

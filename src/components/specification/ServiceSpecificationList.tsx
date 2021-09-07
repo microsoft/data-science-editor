@@ -3,22 +3,22 @@ import React, { useMemo } from "react"
 import {
     deviceSpecificationsForService,
     isInfrastructure,
-} from "../../jacdac-ts/src/jdom/spec"
-import { arrayShuffle } from "../../jacdac-ts/src/jdom/utils"
-import GridHeader from "./ui/GridHeader"
+} from "../../../jacdac-ts/src/jdom/spec"
+import { arrayShuffle } from "../../../jacdac-ts/src/jdom/utils"
+import GridHeader from "../ui/GridHeader"
 import { Link } from "gatsby-theme-material-ui"
-import MakeCodeIcon from "./icons/MakeCodeIcon"
+import MakeCodeIcon from "../icons/MakeCodeIcon"
 import {
     SERVICE_MIXIN_NODE_NAME,
     VIRTUAL_DEVICE_NODE_NAME,
-} from "../../jacdac-ts/src/jdom/constants"
-import { serviceProviderDefinitionFromServiceClass } from "../../jacdac-ts/src/servers/servers"
-import KindIcon from "./KindIcon"
-import ChipList from "./ui/ChipList"
-import JacdacIcon from "./icons/JacdacIcon"
-import Markdown from "./ui/Markdown"
-import { resolveMakecodeServiceFromClassIdentifier } from "./makecode/services"
-import { isMixinService } from "../../jacdac-ts/jacdac-spec/spectool/jdutils"
+} from "../../../jacdac-ts/src/jdom/constants"
+import { serviceProviderDefinitionFromServiceClass } from "../../../jacdac-ts/src/servers/servers"
+import KindIcon from "../KindIcon"
+import ChipList from "../ui/ChipList"
+import JacdacIcon from "../icons/JacdacIcon"
+import Markdown from "../ui/Markdown"
+import { resolveMakecodeServiceFromClassIdentifier } from "../makecode/services"
+import { isMixinService } from "../../../jacdac-ts/jacdac-spec/spectool/jdutils"
 
 function ServiceSpecificatinListItem(props: { service: jdspec.ServiceSpec }) {
     const { service } = props

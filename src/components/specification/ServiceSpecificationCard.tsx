@@ -7,18 +7,18 @@ import {
     Chip,
     Typography,
 } from "@material-ui/core"
-import { serviceSpecificationFromClassIdentifier } from "../../jacdac-ts/src/jdom/spec"
-import IDChip from "./IDChip"
+import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec"
+import IDChip from "../IDChip"
 import { Button } from "gatsby-theme-material-ui"
-import Markdown from "./ui/Markdown"
+import Markdown from "../ui/Markdown"
 import ServiceSpecificationStatusAlert from "./ServiceSpecificationStatusAlert"
 import {
     addServiceProvider,
     serviceProviderDefinitionFromServiceClass,
-} from "../../jacdac-ts/src/servers/servers"
-import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
-import KindIcon from "./KindIcon"
-import { VIRTUAL_DEVICE_NODE_NAME } from "../../jacdac-ts/src/jdom/constants"
+} from "../../../jacdac-ts/src/servers/servers"
+import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
+import KindIcon from "../KindIcon"
+import { VIRTUAL_DEVICE_NODE_NAME } from "../../../jacdac-ts/src/jdom/constants"
 import { navigate } from "gatsby"
 
 export default function ServiceSpecificationCard(props: {

@@ -5,7 +5,7 @@ import PacketsContext from "../PacketsContext"
 import HistoryIcon from "@material-ui/icons/History"
 import KindChip from "../KindChip"
 import { Typography } from "@material-ui/core"
-import PacketSpecification from "../PacketSpecification"
+import PacketSpecification from "../specification/PacketSpecification"
 import { prettyDuration, printPacket } from "../../../jacdac-ts/src/jdom/pretty"
 import PacketHeaderLayout from "../PacketHeaderLayout"
 import {
@@ -18,7 +18,7 @@ import Packet from "../../../jacdac-ts/src/jdom/packet"
 import PacketBadge from "../PacketBadge"
 import PacketDataLayout from "../PacketDataLayout"
 import PacketList from "../PacketList"
-import ServiceSpecificationCard from "../ServiceSpecificationCard"
+import ServiceSpecificationCard from "../specification/ServiceSpecificationCard"
 
 export default function PacketInspector() {
     const { selectedPacket: packet } = useContext(PacketsContext)

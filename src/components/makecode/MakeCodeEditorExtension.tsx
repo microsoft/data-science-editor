@@ -11,7 +11,7 @@ import useChange from "../../jacdac/useChange"
 import DeleteIcon from "@material-ui/icons/Delete"
 import { serviceSpecifications } from "../../../jacdac-ts/src/jdom/spec"
 import AddServiceIconButton from "../AddServiceIconButton"
-import ServiceSpecificationSelect from "../ServiceSpecificationSelect"
+import ServiceSpecificationSelect from "../specification/ServiceSpecificationSelect"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import useMakeCodeEditorExtensionClient, {
     READ,
@@ -75,6 +75,11 @@ function toDependencies(config: Configuration) {
 
 function toJSON(config: Configuration) {
     return config && JSON.stringify(config, null, 4)
+}
+
+function escapeName(name: string) {
+    // TODO: makecode component escape name
+    return name
 }
 
 function ClientRoleRow(props: {

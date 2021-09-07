@@ -2,7 +2,7 @@ import { Box } from "@material-ui/core"
 import { AlertTitle } from "@material-ui/lab"
 import { Link } from "gatsby-theme-material-ui"
 import React from "react"
-import FilteredDeviceSpecificationList from "../components/FilteredDeviceSpecificationList"
+import FilteredDeviceSpecificationList from "../components/specification/FilteredDeviceSpecificationList"
 import Alert from "../components/ui/Alert"
 
 export default function Page() {

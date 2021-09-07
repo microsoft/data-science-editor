@@ -10,7 +10,7 @@ import PlaylistAddCheckIcon from "@material-ui/icons/PlaylistAddCheck"
 import FindReplaceIcon from "@material-ui/icons/FindReplace"
 import SubscriptionsIcon from "@material-ui/icons/Subscriptions"
 import useMediaQueries from "../hooks/useMediaQueries"
-const DeviceSpecificationList = lazy(() => import("../DeviceSpecificationList"))
+const DeviceSpecificationList = lazy(() => import("../specification/DeviceSpecificationList"))
 
 /**
             <Grid item xs={12}>

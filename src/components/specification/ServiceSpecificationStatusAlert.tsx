@@ -1,5 +1,5 @@
 import React from "react";
-import Alert from "./ui/Alert";
+import Alert from "../ui/Alert";
 
 export function StatusAlert(props: { specification: jdspec.ServiceSpec }) {
     const { specification } = props;

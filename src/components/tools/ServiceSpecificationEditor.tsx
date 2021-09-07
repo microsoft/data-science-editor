@@ -5,7 +5,7 @@ import { serviceMap } from "../../../jacdac-ts/src/jdom/spec"
 import RandomGenerator from "../RandomGenerator"
 import useLocalStorage from "../hooks/useLocalStorage"
 import HighlightTextField from "../ui/HighlightTextField"
-import ServiceSpecification from "../ServiceSpecification"
+import ServiceSpecification from "../specification/ServiceSpecification"
 
 const SERVICE_SPECIFICATION_STORAGE_KEY =
     "jacdac:servicespecificationeditorsource"
