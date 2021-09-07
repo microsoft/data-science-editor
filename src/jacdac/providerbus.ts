@@ -18,11 +18,13 @@ import jacdacTsPackage from "../../jacdac-ts/package.json"
 import { analytics } from "../components/hooks/useAnalytics"
 import {
     CONNECTION_STATE,
+    DEVICE_ANNOUNCE,
     DEVICE_CLEAN,
 } from "../../jacdac-ts/src/jdom/constants"
 import Transport, {
     ConnectionState,
 } from "../../jacdac-ts/src/jdom/transport/transport"
+import JDDevice from "../../jacdac-ts/src/jdom/device"
 
 function sniffQueryArguments() {
     if (typeof window === "undefined" || typeof URLSearchParams === "undefined")
@@ -116,6 +118,19 @@ function createBus(): JDBus {
                         connectionState: transport.connectionState,
                     }))
         )
+        // track services
+        b.on(DEVICE_ANNOUNCE, async (d: JDDevice) => {
+            const productId = d.isPhysical
+                ? await d.resolveProductIdentifier()
+                : undefined
+            trackEvent("jd.announce", {
+                deviceId: d.anonymizedDeviceId,
+                physical: d.isPhysical ? 1 : 0,
+                productId,
+                services: JSON.stringify(d.serviceClasses.slice(0)),
+            })
+        })
+        // general stats
         b.on(DEVICE_CLEAN, () => {
             // log roughly every minute
             if (!(cleanCount++ % 10))

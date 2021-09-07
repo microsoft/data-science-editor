@@ -17,7 +17,6 @@ import KindIcon from "./KindIcon"
 import ChipList from "./ui/ChipList"
 import JacdacIcon from "./icons/JacdacIcon"
 import Markdown from "./ui/Markdown"
-import CheckCircleIcon from "@material-ui/icons/CheckCircle"
 import { resolveMakecodeServiceFromClassIdentifier } from "./makecode/services"
 import { isMixinService } from "../../jacdac-ts/jacdac-spec/spectool/jdutils"
 

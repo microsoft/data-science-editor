@@ -13,7 +13,7 @@ function splitProperties(props: EventProperties) {
     for (const key of keys) {
         const value = props[key]
         if (typeof value === "number") measurements[key] = value
-        else properties[key] = value
+        else if (typeof value !== "undefined") properties[key] = value
     }
     return { measurements, properties }
 }
