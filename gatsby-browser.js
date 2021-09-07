@@ -3,7 +3,7 @@ import React from "react"
 import ReactDOM from "react-dom"
 
 export const onRouteUpdate = ({ location }, options) => {
-    if (window.analytics) window.analytics.page()
+    if (window.analytics && window.analytics.page) window.analytics.page()
     // try update on every internal navigation
     navigator.serviceWorker.getRegistration().then(reg => {
         if (reg) reg.update()
@@ -32,4 +32,3 @@ export const onInitialClientRender = () => {
     }
 }
 */
-

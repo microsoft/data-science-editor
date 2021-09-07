@@ -65,7 +65,7 @@ export default function CommandInput(props: {
 
     return (
         <CmdButton
-            trackName={`command.input`}
+            trackName="command.input"
             trackProperties={{
                 service: serviceName(service.serviceClass),
                 serviceClass: service.serviceClass,

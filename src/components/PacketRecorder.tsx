@@ -41,6 +41,7 @@ export default function PacketRecorder() {
             <TracePlayButton size="small" />
             <TraceClearButton size="small" />|
             <IconButtonWithTooltip
+                trackName={`recorder.${paused ? "resume" : "pause"}`}
                 title={paused ? "Resume packets" : "pause packets"}
                 size="small"
                 key="pausepackets"
@@ -49,6 +50,7 @@ export default function PacketRecorder() {
                 {paused ? <LiveTvIcon /> : <PauseIcon />}
             </IconButtonWithTooltip>
             <IconButtonWithTooltip
+                trackName={`recorder.packets.clear`}
                 title="Clear Packets"
                 size="small"
                 key="clearpackets"
@@ -58,6 +60,7 @@ export default function PacketRecorder() {
                 <ClearIcon />
             </IconButtonWithTooltip>
             <IconButtonWithTooltip
+                trackName={`recorder.bus.clear`}
                 title="Clear Devices"
                 size="small"
                 key="clearbus"

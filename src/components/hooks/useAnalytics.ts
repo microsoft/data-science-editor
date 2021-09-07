@@ -1,54 +1,121 @@
-/*
-requires "@microsoft/applicationinsights-web-basic": "^2.6.1",
+import { Component, ErrorInfo, ReactNode } from "react"
 import { ApplicationInsights } from "@microsoft/applicationinsights-web-basic"
 
-// YOUR_INSTRUMENTATION_KEY_GOES_HERE
-const instrumentationKey: string = undefined
+export type EventProperties = Record<string, string | number>
+
+function splitProperties(props: EventProperties) {
+    if (!props) return {}
+    const keys = Object.keys(props)
+    if (!keys.length) return {}
+
+    const measurements: Record<string, number> = {}
+    const properties: Record<string, string> = {}
+    for (const key of keys) {
+        const value = props[key]
+        if (typeof value === "number") measurements[key] = value
+        else properties[key] = value
+    }
+    return { measurements, properties }
+}
+
+const INSTRUMENTATION_KEY = "81ad7468-8585-4970-b027-4f9e7c3eb191"
 const appInsights =
-    instrumentationKey &&
+    typeof window !== "undefined" &&
+    INSTRUMENTATION_KEY &&
+    // TODO enable for all
+    /http:\/\/localhost/.test(window.location.href) &&
     new ApplicationInsights({
-        instrumentationKey,
+        instrumentationKey: INSTRUMENTATION_KEY,
         isStorageUseDisabled: true,
         isCookieUseDisabled: true,
+        disableCookiesUsage: true,
+        disableAjaxTracking: true,
+        enableSessionStorageBuffer: false,
     })
-const page =
-    typeof window !== "undefined"
-        ? () =>
-              appInsights?.track({
+const page: () => void = appInsights
+    ? () =>
+          appInsights.track({
+              name: "",
+              time: new Date().toUTCString(),
+              tags: [],
+              baseType: "PageviewData",
+              baseData: {
                   name: window.location.href,
+                  uri: window.location.href,
+              },
+          })
+    : () => {}
+
+const trackEvent: (name: string, properties?: EventProperties) => void =
+    appInsights
+        ? (name, properties) =>
+              appInsights.track({
+                  name: "",
                   time: new Date().toUTCString(),
-                  baseType: "PageData",
+                  data: {},
+                  baseType: "EventData",
+                  baseData: {
+                      name,
+                      ...splitProperties(properties),
+                  },
               })
         : () => {}
-const track =
-    typeof window !== "undefined"
-        ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (name: string, properties?: { [key: string]: any }) =>
-              appInsights?.track({
-                  name,
+
+const trackError: (error: unknown, properties?: EventProperties) => void =
+    appInsights
+        ? (error, properties) =>
+              appInsights.track({
+                  name: "",
                   time: new Date().toUTCString(),
-                  data: properties,
-                  baseType: "EventData",
+                  data: {},
+                  baseType: "ExceptionData",
+                  baseData: {
+                      error,
+                      ...splitProperties(properties),
+                  },
               })
-        : // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          (name, properties) => {}
+        : () => {}
+
+export const analytics = {
+    page,
+    trackEvent,
+    trackError,
+}
+
+// store instance
 if (typeof window !== "undefined") {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ;(window as any).analytics = {
-        page,
-        track,
-    }
+    window["analytics"] = analytics
 }
-*/
 
-export default function useAnalytics(): {
-    page: () => void
-    track: (name: string, properties?: { [key: string]: string | number }) => void
-} {
-    const page = () => {}
-    const track = () => {}
-    return {
-        page,
-        track,
+export default function useAnalytics() {
+    return analytics
+}
+
+export interface Props {
+    children: ReactNode
+}
+
+export interface State {
+    hasError: boolean
+}
+
+export class AppInsightsErrorBoundary extends Component<Props, State> {
+    public state: State = {
+        hasError: false,
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static getDerivedStateFromError(_: Error): State {
+        return { hasError: true }
+    }
+
+    public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+        trackError?.(error, errorInfo as unknown as EventProperties)
+        console.error("Uncaught error:", error, errorInfo)
+    }
+
+    public render() {
+        return this.props.children
     }
 }

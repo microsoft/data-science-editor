@@ -10,7 +10,6 @@ import { delay } from "../../../jacdac-ts/src/jdom/utils"
 declare class ClipboardItem {
     constructor(input: { [contentType: string]: Blob })
 }
-
 declare type AsyncClipboardWriteFunction = (
     input: ClipboardItem
 ) => Promise<void>
@@ -79,6 +78,7 @@ export default function CopyButton(props: {
         </Button>
     ) : (
         <IconButtonWithTooltip
+            trackName="ui.copy"
             title={text}
             {...rest}
             onClick={disabled ? undefined : handleClick}

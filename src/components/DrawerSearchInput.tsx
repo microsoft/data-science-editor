@@ -43,6 +43,7 @@ export default function DrawerSearchInput() {
                           endAdornment: (
                               <InputAdornment position="end">
                                   <IconButtonWithTooltip
+                                      trackName="search.clear"
                                       title="clear"
                                       size="small"
                                       onClick={handleClear}

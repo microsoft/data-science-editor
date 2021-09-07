@@ -117,6 +117,7 @@ function FilterMenu(props: {
             <Tooltip title={text}>
                 <span>
                     <IconButtonWithTooltip
+                        trackName="drawer.filter"
                         className={classes.iconButton}
                         onClick={handleClick}
                         title="open filter menu"
@@ -305,6 +306,9 @@ export default function PacketFilter() {
                         handleAddFilter={handleAddFilter}
                     />
                     <IconButtonWithTooltip
+                        trackName={`drawer.timer.${
+                            timeRange ? `clear` : "set"
+                        }}`}
                         className={classes.iconButton}
                         disabled={!timeRange && !trace?.length}
                         title={
@@ -326,6 +330,7 @@ export default function PacketFilter() {
                     />
                     {text && (
                         <IconButtonWithTooltip
+                            trackName="drawer.filter.clear"
                             className={classes.iconButton}
                             title={"clear filter"}
                             onClick={handleClearFilter}

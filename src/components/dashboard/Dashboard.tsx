@@ -104,6 +104,7 @@ export default function Dashboard(props: DashboardProps) {
                         <>
                             {showStartSimulators && !!roleManager && (
                                 <IconButtonWithTooltip
+                                    trackName="dashboard.simulators.missing"
                                     title="start missing simulators"
                                     onClick={handleStartSimulators}
                                 >
@@ -111,12 +112,14 @@ export default function Dashboard(props: DashboardProps) {
                                 </IconButtonWithTooltip>
                             )}
                             <IconButtonWithTooltip
+                                trackName="dashboard.simulators.start"
                                 title="start simulator"
                                 onClick={toggleShowDeviceHostsDialog}
                             >
                                 <AddIcon />
                             </IconButtonWithTooltip>
                             <IconButtonWithTooltip
+                                trackName="dashboard.simulators.clear"
                                 title="clear simulators"
                                 onClick={handleClearSimulators}
                             >

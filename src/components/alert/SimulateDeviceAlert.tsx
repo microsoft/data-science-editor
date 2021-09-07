@@ -23,6 +23,7 @@ export function SimulateDeviceHint() {
         <>
             Simulate devices (
             <IconButtonWithTooltip
+                trackName="simulator.hint.button"
                 onClick={handleStartSimulator(SRV_BUTTON)}
                 title="button"
                 aria-label="start button simulator"
@@ -33,6 +34,7 @@ export function SimulateDeviceHint() {
             </IconButtonWithTooltip>
             ,
             <IconButtonWithTooltip
+                trackName="simulator.hint.humidity"
                 onClick={handleStartSimulator(SRV_HUMIDITY)}
                 title="humidity"
                 aria-label="start traffic humidity sensor"
@@ -43,6 +45,7 @@ export function SimulateDeviceHint() {
             </IconButtonWithTooltip>
             ,
             <IconButtonWithTooltip
+                trackName="simulator.hint.buzzer"
                 onClick={handleStartSimulator(SRV_BUZZER)}
                 title="buzzer"
                 aria-label="start buzzer simulator"
@@ -52,6 +55,7 @@ export function SimulateDeviceHint() {
                 </span>
             </IconButtonWithTooltip>
             <IconButtonWithTooltip
+                trackName="simulator.hint.joystick"
                 onClick={handleStartSimulator(SRV_JOYSTICK)}
                 title="joystick"
                 aria-label="start joystick simulator"
@@ -62,6 +66,7 @@ export function SimulateDeviceHint() {
             </IconButtonWithTooltip>
             ,
             <IconButtonWithTooltip
+                trackName="simulator.hint.led"
                 onClick={handleStartSimulator(SRV_LED)}
                 title="LED"
                 aria-label="start LED simulator"
@@ -72,6 +77,7 @@ export function SimulateDeviceHint() {
             </IconButtonWithTooltip>
             ,
             <IconButtonWithTooltip
+                trackName="simulator.hint.traffic"
                 onClick={handleStartSimulator(SRV_TRAFFIC_LIGHT)}
                 title="traffic light"
                 aria-label="start traffic light simulator"
@@ -82,6 +88,7 @@ export function SimulateDeviceHint() {
             </IconButtonWithTooltip>
             , ...) by clicking &nbsp;
             <IconButtonWithTooltip
+                trackName="simulator.hint.start"
                 title="start simulator"
                 onClick={toggleShowDeviceHostsDialog}
             >

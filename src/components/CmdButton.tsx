@@ -17,7 +17,7 @@ import AppContext from "./AppContext"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import ErrorIcon from "@material-ui/icons/Error"
 import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
-import useAnalytics from "./hooks/useAnalytics"
+import useAnalytics, { EventProperties } from "./hooks/useAnalytics"
 import useMounted from "./hooks/useMounted"
 import clsx from "clsx"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
@@ -53,8 +53,7 @@ export default function CmdButton(props: {
     disableReset?: boolean
     autoRun?: boolean
     trackName?: string
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    trackProperties?: { [key: string]: any }
+    trackProperties?: EventProperties
     ackResetDelay?: number
     color?: "primary" | "secondary"
 }) {
@@ -80,7 +79,7 @@ export default function CmdButton(props: {
     const [working, setWorking] = useState(false)
     const [ack, setAck] = useState(false)
     const [error, setError] = useState(undefined)
-    const { track } = useAnalytics()
+    const { trackEvent } = useAnalytics()
     const mounted = useMounted()
 
     const _disabled = disabled || working
@@ -88,7 +87,7 @@ export default function CmdButton(props: {
     const run = async () => {
         if (working) return // already working
 
-        if (trackName) track("cmd." + trackName, trackProperties)
+        if (trackName) trackEvent("cmd." + trackName, trackProperties)
         try {
             setError(undefined)
             setAck(false)

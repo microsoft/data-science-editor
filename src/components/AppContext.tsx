@@ -13,6 +13,7 @@ import { errorCode } from "../../jacdac-ts/src/jdom/error"
 import JDService from "../../jacdac-ts/src/jdom/service"
 import { isCancelError } from "../../jacdac-ts/src/jdom/utils"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
+import useAnalytics from "./hooks/useAnalytics"
 
 import Suspense from "./ui/Suspense"
 const StartSimulatorDialog = lazy(
@@ -69,6 +70,7 @@ export const AppProvider = ({ children }) => {
     const [showDeviceHostsDialog, setShowDeviceHostsDialog] = useState(false)
     const [showSelectRoleDialogService, setShowSelectRoleDialogService] =
         useState<JDService>(undefined)
+    const { trackError } = useAnalytics()
 
     const { enqueueSnackbar: _enqueueSnackbar } = useSnackbar()
 
@@ -78,6 +80,9 @@ export const AppProvider = ({ children }) => {
         const msg = e?.message || e + ""
         const code = errorCode(e)
 
+        trackError?.(e, {
+            code,
+        })
         _enqueueSnackbar(msg, {
             variant: "error",
             autoHideDuration: code ? 8000 : 4000,

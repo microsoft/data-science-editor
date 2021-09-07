@@ -7,6 +7,7 @@ export default function OpenVMEditorButton(props: { className?: string }) {
 
     return (
         <IconButtonWithTooltip
+            trackName="menu.vm"
             className={className}
             title="Block Editor"
             edge="start"

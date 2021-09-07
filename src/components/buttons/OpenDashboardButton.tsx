@@ -10,6 +10,7 @@ export default function OpenDashboardButton(props: { className?: string }) {
 
     return (
         <IconButtonWithTooltip
+            trackName="menu.dashboard"
             className={className}
             title="Device Dashboard"
             edge="start"
