@@ -18,7 +18,7 @@ import { DeviceLostAlert } from "./alert/DeviceLostAlert"
 import CommandInput from "./CommandInput"
 import { DecodedPacket } from "../../jacdac-ts/src/jdom/pretty"
 import DecodedPacketItem from "./DecodedPacketItem"
-import ServiceSpecificationStatusAlert from "./ServiceSpecificationStatusAlert"
+import ServiceSpecificationStatusAlert from "./specification/ServiceSpecificationStatusAlert"
 import MembersInput from "./fields/MembersInput"
 
 const useStyles = makeStyles({
