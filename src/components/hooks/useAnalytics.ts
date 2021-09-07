@@ -1,7 +1,7 @@
 import { Component, ErrorInfo, ReactNode } from "react"
 import { ApplicationInsights } from "@microsoft/applicationinsights-web-basic"
 
-export type EventProperties = Record<string, string | number>
+export type EventProperties = Record<string, string | number | boolean>
 
 function splitProperties(props: EventProperties) {
     if (!props) return {}
@@ -9,10 +9,11 @@ function splitProperties(props: EventProperties) {
     if (!keys.length) return {}
 
     const measurements: Record<string, number> = {}
-    const properties: Record<string, string> = {}
+    const properties: Record<string, string | number> = {}
     for (const key of keys) {
         const value = props[key]
         if (typeof value === "number") measurements[key] = value
+        else if (typeof value === "boolean") properties[key] = value ? 1 : 0
         else if (typeof value !== "undefined") properties[key] = value
     }
     return { measurements, properties }

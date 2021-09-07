@@ -25,6 +25,7 @@ import Transport, {
     ConnectionState,
 } from "../../jacdac-ts/src/jdom/transport/transport"
 import JDDevice from "../../jacdac-ts/src/jdom/device"
+import { isInfrastructure } from "../../jacdac-ts/src/jdom/spec"
 
 function sniffQueryArguments() {
     if (typeof window === "undefined" || typeof URLSearchParams === "undefined")
@@ -123,11 +124,20 @@ function createBus(): JDBus {
             const productId = d.isPhysical
                 ? await d.resolveProductIdentifier()
                 : undefined
+            const services: Record<string, number> = {}
+            for (const srv of d
+                .services()
+                .filter(srv => !isInfrastructure(srv.specification))) {
+                const { name } = srv
+                services[name] = (services[name] || 0) + 1
+            }
             trackEvent("jd.announce", {
                 deviceId: d.anonymizedDeviceId,
-                physical: d.isPhysical ? 1 : 0,
-                productId,
-                services: JSON.stringify(d.serviceClasses.slice(0)),
+                source: d.source?.split("-", 1)[0]?.toLowerCase(),
+                physical: d.isPhysical,
+                productId: productId?.toString(16),
+                services: JSON.stringify(services),
+                serviceClasses: JSON.stringify(d.serviceClasses.slice(1)),
             })
         })
         // general stats
