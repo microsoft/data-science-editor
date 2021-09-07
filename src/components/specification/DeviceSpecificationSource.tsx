@@ -4,8 +4,8 @@ import Tabs from "@material-ui/core/Tabs"
 // tslint:disable-next-line: no-submodule-imports
 import Tab from "@material-ui/core/Tab"
 import { Paper, createStyles, makeStyles, Theme } from "@material-ui/core"
-import TabPanel from "./ui/TabPanel"
-import Snippet from "./ui/Snippet"
+import TabPanel from "../ui/TabPanel"
+import Snippet from "../ui/Snippet"
 import DeviceSpecification from "./DeviceSpecification"
 
 const useStyles = makeStyles((theme: Theme) =>

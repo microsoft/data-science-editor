@@ -6,7 +6,7 @@ import {
     TextField,
 } from "@material-ui/core"
 import React, { useMemo, useState } from "react"
-import ServiceSpecificationList from "../components/ServiceSpecificationList"
+import ServiceSpecificationList from "../components/specification/ServiceSpecificationList"
 import { useDebounce } from "use-debounce"
 import SearchIcon from "@material-ui/icons/Search"
 import ChipList from "../components/ui/ChipList"
