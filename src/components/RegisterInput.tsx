@@ -106,11 +106,7 @@ export default function RegisterInput(props: {
         try {
             setWorking(true)
             if (server) server.setValues(values)
-            await register.sendSetPackedAsync(
-                specification.packFormat,
-                values,
-                true
-            )
+            await register.sendSetPackedAsync(values, true)
         } catch (e) {
             setAppError(e)
         } finally {

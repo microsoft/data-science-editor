@@ -15,6 +15,7 @@ import KindChip from "../KindChip"
 import PacketMembersChip from "../PacketMembersChip"
 import Markdown from "../ui/Markdown"
 import { prettyMemberUnit } from "../../../jacdac-ts/src/jdom/pretty"
+import PacketSpecificationSource from "./PacketSpecificationSource"
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -155,6 +156,11 @@ export default function PacketSpecification(props: {
                     title="Pipe report"
                 />
             )}
+            <PacketSpecificationSource
+                serviceClass={serviceClass}
+                packetInfo={packetInfo}
+                reportInfo={reportInfo}
+            />
             {showDevices && isCommand(packetInfo) && (
                 <DeviceList
                     serviceClass={serviceClass}

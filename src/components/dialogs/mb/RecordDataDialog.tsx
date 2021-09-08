@@ -236,7 +236,7 @@ export default function BlocklyDataRecordingDialog(props: {
         if (error) return
         console.log(`set interval to ${samplingIntervalDelayi}`)
         recordingRegisters.forEach(reg =>
-            reg.sendSetPackedAsync("i32", [samplingIntervalDelayi])
+            reg.sendSetPackedAsync([samplingIntervalDelayi])
         )
     }, [samplingIntervalDelayi, registerIdsChecked, errorSamplingIntervalDelay])
     // collecting

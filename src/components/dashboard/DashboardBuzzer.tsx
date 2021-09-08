@@ -51,7 +51,7 @@ export default function DashboardBuzzer(props: DashboardServiceProps) {
         await service.sendCmdAsync(BuzzerCmd.PlayTone, data)
     }
     const handleChange = async (ev: unknown, newValue: number | number[]) => {
-        volumeRegister.sendSetPackedAsync("u0.8", [newValue], true)
+        volumeRegister.sendSetPackedAsync([newValue], true)
     }
     const handleUnlock = () => sendPlayTone(400)
 

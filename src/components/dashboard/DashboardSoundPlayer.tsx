@@ -60,7 +60,7 @@ export default function DashboardSoundPlayer(props: DashboardServiceProps) {
         ev: unknown,
         newValue: number | number[]
     ) => {
-        volumeRegister.sendSetPackedAsync("u0.16", [newValue], true)
+        volumeRegister.sendSetPackedAsync([newValue], true)
     }
     useEffect(() => {
         if (server && volume)
