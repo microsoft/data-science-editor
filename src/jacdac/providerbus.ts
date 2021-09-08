@@ -139,11 +139,13 @@ function createBus(): JDBus {
                 services: JSON.stringify(services),
                 serviceClasses: JSON.stringify(d.serviceClasses.slice(1)),
             })
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            trackEvent(`jd.stats`, b.stats.current as any)
         })
         // general stats
         b.on(DEVICE_CLEAN, () => {
             // log roughly every minute
-            if (!(cleanCount++ % 10))
+            if (!(cleanCount++ % 30))
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 trackEvent(`jd.stats`, b.stats.current as any)
         })
