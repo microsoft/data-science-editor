@@ -4,6 +4,7 @@ import TabPanel from "../ui/TabPanel"
 import Snippet from "../ui/Snippet"
 import { packInfo } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import {
+    isCommand,
     isRegister,
     serviceSpecificationFromClassIdentifier,
 } from "../../../jacdac-ts/src/jdom/spec"
@@ -27,8 +28,11 @@ export default function PacketSpecificationSource(props: {
     }
 
     // TODO: render commands
-    if (!packetInfo?.fields?.length || !isRegister(packetInfo)) return null
-    const { kind } = packetInfo
+    if (
+        !packetInfo?.fields?.length ||
+        !(isRegister(packetInfo) || isCommand(packetInfo))
+    )
+        return null
 
     let index = 0
     return (
@@ -47,24 +51,11 @@ export default function PacketSpecificationSource(props: {
             <TabPanel value={tab} index={index++}>
                 <Snippet
                     value={() =>
-                        [
-                            "// get (register to REPORT_UPDATE event to enable background refresh)",
-                            packInfo(info, packetInfo, {
-                                isStatic: false,
-                                useBooleans: false,
-                                useJDOM: true,
-                            }).buffers,
-                            kind == "rw" && "// set",
-                            kind == "rw" &&
-                                packInfo(info, packetInfo, {
-                                    isStatic: false,
-                                    useBooleans: false,
-                                    useJDOM: true,
-                                    useSet: true,
-                                }).buffers,
-                        ]
-                            .filter(l => !!l)
-                            .join("\n")
+                        packInfo(info, packetInfo, {
+                            isStatic: false,
+                            useBooleans: false,
+                            useJDOM: true,
+                        }).buffers
                     }
                     mode={"typescript"}
                 />
