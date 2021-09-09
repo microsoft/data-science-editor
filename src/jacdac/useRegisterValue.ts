@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { REPORT_UPDATE } from "../../jacdac-ts/src/jdom/constants"
 import { PackedValues } from "../../jacdac-ts/src/jdom/pack"
 import JDRegister from "../../jacdac-ts/src/jdom/register"
+import useAnalytics from "../components/hooks/useAnalytics"
 export interface RegisterOptions {
     // Indicates if the HTML element is visible in view. If not, updates may be slowed or stopped.
     visible?: boolean
@@ -13,13 +14,25 @@ export function useRegisterHumanValue(
 ): string {
     const [value, setValue] = useState<string>(register?.humanValue)
     const { visible } = options || { visible: true }
+    const { trackError } = useAnalytics()
+
     // update value
     useEffect(() => {
         setValue(register?.humanValue)
         return (
             visible &&
             register?.subscribe(REPORT_UPDATE, () => {
-                setValue(register?.humanValue)
+                try {
+                    const value = register?.humanValue
+                    setValue(value)
+                } catch (e) {
+                    trackError(e, {
+                        dev: register?.service?.device?.anonymizedDeviceId,
+                        srv: register?.service?.name,
+                        reg: register?.name,
+                    })
+                    setValue("???")
+                }
             })
         )
     }, [register, visible])
