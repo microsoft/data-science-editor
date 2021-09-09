@@ -24,7 +24,8 @@ const appInsights =
     typeof window !== "undefined" &&
     INSTRUMENTATION_KEY &&
     // TODO enable for all
-    /http:\/\/localhost/.test(window.location.href) &&
+    (/dbg=1/.test(window.location.href) ||
+        /http:\/\/localhost/.test(window.location.href)) &&
     new ApplicationInsights({
         instrumentationKey: INSTRUMENTATION_KEY,
         isStorageUseDisabled: true,
