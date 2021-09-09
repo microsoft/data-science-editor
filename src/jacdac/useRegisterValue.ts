@@ -2,10 +2,29 @@ import { useEffect, useState } from "react"
 import { REPORT_UPDATE } from "../../jacdac-ts/src/jdom/constants"
 import { PackedValues } from "../../jacdac-ts/src/jdom/pack"
 import JDRegister from "../../jacdac-ts/src/jdom/register"
-import useAnalytics from "../components/hooks/useAnalytics"
+import useAnalytics, { EventProperties } from "../components/hooks/useAnalytics"
 export interface RegisterOptions {
     // Indicates if the HTML element is visible in view. If not, updates may be slowed or stopped.
     visible?: boolean
+}
+
+function readRegisterValue<T>(
+    register: JDRegister,
+    reader: (reg: JDRegister) => T,
+    defaultValue: T,
+    trackError: (error: unknown, properties?: EventProperties) => void
+): T {
+    try {
+        const value = reader(register)
+        return value
+    } catch (e) {
+        trackError(e, {
+            dev: register?.service?.device?.anonymizedDeviceId,
+            srv: register?.service?.name,
+            reg: register?.name,
+        })
+        return defaultValue
+    }
 }
 
 export function useRegisterHumanValue(
@@ -18,22 +37,12 @@ export function useRegisterHumanValue(
 
     // update value
     useEffect(() => {
-        setValue(register?.humanValue)
+        const readValue = () =>
+            readRegisterValue(register, _ => _?.humanValue, "???", trackError)
+        setValue(readValue)
         return (
             visible &&
-            register?.subscribe(REPORT_UPDATE, () => {
-                try {
-                    const value = register?.humanValue
-                    setValue(value)
-                } catch (e) {
-                    trackError(e, {
-                        dev: register?.service?.device?.anonymizedDeviceId,
-                        srv: register?.service?.name,
-                        reg: register?.name,
-                    })
-                    setValue("???")
-                }
-            })
+            register?.subscribe(REPORT_UPDATE, () => setValue(readValue))
         )
     }, [register, visible])
     return value
@@ -45,12 +54,21 @@ export function useRegisterUnpackedValue<T extends PackedValues>(
 ): T {
     const [value, setValue] = useState<T>(register?.unpackedValue as T)
     const { visible } = options || { visible: true }
+    const { trackError } = useAnalytics()
+
     useEffect(() => {
-        setValue(register?.unpackedValue as T)
+        const readValue = () =>
+            readRegisterValue<T>(
+                register,
+                _ => _?.unpackedValue as T,
+                undefined,
+                trackError
+            )
+        setValue(readValue)
         return (
             visible &&
             register?.subscribe(REPORT_UPDATE, () => {
-                setValue(register?.unpackedValue as T)
+                setValue(readValue)
             })
         )
     }, [register, visible])
