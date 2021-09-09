@@ -4,7 +4,7 @@ import useChange from "../../jacdac/useChange"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import { Role } from "../../../jacdac-ts/src/jdom/clients/rolemanagerclient"
 
-export function RoleListItem(props: {
+export default function RoleListItem(props: {
     role: Role
     selected?: boolean
     onClick?: () => void
@@ -17,7 +17,7 @@ export function RoleListItem(props: {
     return (
         <ListItem button selected={selected} onClick={onClick}>
             <ListItemText
-                primary={roleName}
+                primary={roleName || "???"}
                 secondary={
                     bound
                         ? `assigned to ${bound.friendlyName}[${serviceIndex}]`

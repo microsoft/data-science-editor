@@ -19,6 +19,8 @@ import PacketBadge from "../PacketBadge"
 import PacketDataLayout from "../PacketDataLayout"
 import PacketList from "../PacketList"
 import ServiceSpecificationCard from "../specification/ServiceSpecificationCard"
+import CopyButton from "../ui/CopyButton"
+import { roundWithPrecision, toHex } from "../../../jacdac-ts/src/jdom/utils"
 
 export default function PacketInspector() {
     const { selectedPacket: packet } = useContext(PacketsContext)
@@ -39,6 +41,11 @@ export default function PacketInspector() {
     const get = packet.meta[META_GET] as Packet
     const sentTrace = packet.meta[META_TRACE] as string
 
+    const handleCopy = async () =>
+        `${roundWithPrecision(packet.timestamp, 3)}: ${toHex(
+            packet.toBuffer()
+        )}\t${printPacket(packet).replace(/\r?\n/g, " ")}`
+
     return (
         <>
             <h2>
@@ -46,6 +53,8 @@ export default function PacketInspector() {
                 {`${name} ${packet.isCommand ? "to" : "from"} ${
                     packet.friendlyDeviceName
                 }/${packet.friendlyServiceName}`}
+
+                <CopyButton title="copy packet" onCopy={handleCopy} />
             </h2>
             <div>
                 {prettyDuration(packet.timestamp)},{" "}
@@ -63,13 +72,16 @@ export default function PacketInspector() {
                 showCommands={true}
             />
             {data && (
-                <PacketDataLayout
-                    packet={packet}
-                    showHex={true}
-                    showDecoded={true}
-                    showJSON={true}
-                    showUnpacked={true}
-                />
+                <>
+                    <h3>Data</h3>
+                    <PacketDataLayout
+                        packet={packet}
+                        showHex={true}
+                        showDecoded={true}
+                        showJSON={true}
+                        showUnpacked={true}
+                    />
+                </>
             )}
             {ack && (
                 <>

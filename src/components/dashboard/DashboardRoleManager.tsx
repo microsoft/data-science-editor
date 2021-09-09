@@ -7,7 +7,7 @@ import { useRegisterBoolValue } from "../../jacdac/useRegisterValue"
 import LoadingProgress from "../ui/LoadingProgress"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import useChange from "../../jacdac/useChange"
-import { RoleListItem } from "../services/RoleListItem"
+import RoleListItem from "../services/RoleListItem"
 import useRegister from "../hooks/useRegister"
 
 export default function DashboardRoleManager(props: DashboardServiceProps) {
