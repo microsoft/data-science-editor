@@ -24,6 +24,7 @@ import { toHex } from "../../../jacdac-ts/src/jdom/utils"
 
 export default function PacketInspector() {
     const { selectedPacket: packet } = useContext(PacketsContext)
+    const { replayTrace, trace } = useContext(PacketsContext)
 
     if (!packet)
         return (
@@ -40,12 +41,15 @@ export default function PacketInspector() {
     const pipePackets = packet.meta[META_PIPE] as Packet[]
     const get = packet.meta[META_GET] as Packet
     const sentTrace = packet.meta[META_TRACE] as string
-
+    const savedTrace = replayTrace || trace
     const handleCopy = async () =>
-        `${toHex(packet.toBuffer())} ${printPacket(packet).replace(
+        `${toHex(packet.header)} ${toHex(packet.data)} ${printPacket(packet).replace(
             /\r?\n/g,
             " "
-        )}`
+        )}
+
+${savedTrace.serializeToText(-100)}
+`
 
     return (
         <>
@@ -61,7 +65,6 @@ export default function PacketInspector() {
                 {prettyDuration(packet.timestamp)},{" "}
                 <KindChip kind={info?.kind} />, size {packet.size}
             </div>
-            <Typography variant="body2">{printPacket(packet)}</Typography>
             {packet.sender && (
                 <Typography variant="body2">sender: {packet.sender}</Typography>
             )}

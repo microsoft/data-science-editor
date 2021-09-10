@@ -2,6 +2,8 @@ import { Component, ErrorInfo, ReactNode } from "react"
 import { ApplicationInsights } from "@microsoft/applicationinsights-web-basic"
 
 export type EventProperties = Record<string, string | number | boolean>
+const repo = process.env.GATSBY_GITHUB_REPOSITORY
+const sha = process.env.GATSBY_GITHUB_SHA
 
 function splitProperties(props: EventProperties) {
     if (!props) return {}
@@ -23,9 +25,10 @@ const INSTRUMENTATION_KEY = "81ad7468-8585-4970-b027-4f9e7c3eb191"
 const appInsights =
     typeof window !== "undefined" &&
     INSTRUMENTATION_KEY &&
+    // ignore dev environment
+    !/http:\/\/localhost/.test(window.location.href) &&
     // TODO enable for all
-    (/dbg=1/.test(window.location.href) ||
-        /http:\/\/localhost/.test(window.location.href)) &&
+    /dbg=1/.test(window.location.href) &&
     new ApplicationInsights({
         instrumentationKey: INSTRUMENTATION_KEY,
         isStorageUseDisabled: true,
@@ -40,6 +43,7 @@ const page: () => void = appInsights
               name: "",
               time: new Date().toUTCString(),
               tags: [],
+              data: { repo, sha },
               baseType: "PageviewData",
               baseData: {
                   name: window.location.href,
@@ -54,7 +58,7 @@ const trackEvent: (name: string, properties?: EventProperties) => void =
               appInsights.track({
                   name: "",
                   time: new Date().toUTCString(),
-                  data: {},
+                  data: { repo, sha },
                   baseType: "EventData",
                   baseData: {
                       name,
@@ -69,7 +73,7 @@ const trackError: (error: unknown, properties?: EventProperties) => void =
               appInsights.track({
                   name: "",
                   time: new Date().toUTCString(),
-                  data: {},
+                  data: { repo, sha },
                   baseType: "ExceptionData",
                   baseData: {
                       error,
