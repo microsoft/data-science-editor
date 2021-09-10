@@ -162,7 +162,7 @@ export default function ToolsDrawer() {
         },
         {
             text: "MakeCode",
-            href: "/clients/makecode/",
+            to: "/clients/makecode/",
             icon: <MakeCodeIcon />,
         },
         /*
