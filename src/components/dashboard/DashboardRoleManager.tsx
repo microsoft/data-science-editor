@@ -42,9 +42,10 @@ export default function DashboardRoleManager(props: DashboardServiceProps) {
                         id={switchId}
                         checked={autoBind}
                         onChange={handleChecked}
-                        aria-labelledby={labelId}
                     />
-                    <label id={labelId}>auto assign roles</label>
+                    <label id={labelId} htmlFor={switchId}>
+                        auto assign roles
+                    </label>
                 </Grid>
             )}
         </>
