@@ -42,9 +42,10 @@ export default function PacketInspector() {
     const sentTrace = packet.meta[META_TRACE] as string
 
     const handleCopy = async () =>
-        `${roundWithPrecision(packet.timestamp, 3)}: ${toHex(
-            packet.toBuffer()
-        )}\t${printPacket(packet).replace(/\r?\n/g, " ")}`
+        `${toHex(packet.toBuffer())} ${printPacket(packet).replace(
+            /\r?\n/g,
+            " "
+        )}`
 
     return (
         <>
