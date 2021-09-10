@@ -14,7 +14,7 @@ import AppContext, { DrawerType } from "./AppContext"
 import { META_PIPE, SRV_LOGGER } from "../../jacdac-ts/src/jdom/constants"
 import { prettyDuration } from "../../jacdac-ts/src/jdom/pretty"
 import { ellipseJoin } from "../../jacdac-ts/src/jdom/utils"
-import { jdunpack } from "../../jacdac-ts/src/jdom/pack"
+import { jdpack, jdunpack } from "../../jacdac-ts/src/jdom/pack"
 import { navigate } from "gatsby"
 import useMediaQueries from "./hooks/useMediaQueries"
 
@@ -38,6 +38,7 @@ export default function PacketListItem(props: {
     const classes = useStyles()
     const { mobile } = useMediaQueries()
     const { decoded } = packet
+    const { info } = decoded || {}
 
     const handleClick = () => {
         if (mobile) setDrawerType(DrawerType.None)
@@ -49,7 +50,7 @@ export default function PacketListItem(props: {
         packet.serviceClass === SRV_LOGGER && packet.isReport && packet.isEvent
     const pipePackets = packet.meta[META_PIPE] as Packet[]
 
-    const name = decoded?.info?.name || packet.friendlyCommandName
+    const name = info?.name || packet.friendlyCommandName
     const primary =
         (packet.isCRCAck && `crc ack ${name}`) ||
         (packet.isAnnounce && `announce from ${name}`) ||

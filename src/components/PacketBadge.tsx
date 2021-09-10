@@ -15,10 +15,12 @@ import {
 } from "../../jacdac-ts/src/jdom/constants"
 import CodeIcon from "@material-ui/icons/Code"
 import Tooltip from "./ui/Tooltip"
+import ErrorIcon from "@material-ui/icons/Error"
 
 export default function PacketBadge(props: { packet: Packet; count?: number }) {
     const { packet, count } = props
     const { decoded } = packet
+    const { error } = decoded || {}
     const requiredAck = !!packet.requiresAck
     const failedAck = !!packet.meta[META_ACK_FAILED]
     const receivedAck = !failedAck && !!packet.meta[META_ACK]
@@ -31,6 +33,13 @@ export default function PacketBadge(props: { packet: Packet; count?: number }) {
 
     return (
         <Badge badgeContent={count}>
+            {error && (
+                <Tooltip title={error}>
+                    <span>
+                        <ErrorIcon color="error" />
+                    </span>
+                </Tooltip>
+            )}
             {getPacket && !failedAck && !receivedAck && (
                 <Tooltip title={`to/from ${packet.friendlyDeviceName}`}>
                     <span>

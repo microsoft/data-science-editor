@@ -16,7 +16,7 @@ export default function PacketSpecificationSource(props: {
     reportInfo?: jdspec.PacketInfo
     pipeReportInfo?: jdspec.PacketInfo
 }) {
-    const { serviceClass, packetInfo, reportInfo, pipeReportInfo } = props
+    const { serviceClass, packetInfo } = props
     const [tab, setTab] = useState(0)
 
     const info = serviceSpecificationFromClassIdentifier(serviceClass)
@@ -29,6 +29,7 @@ export default function PacketSpecificationSource(props: {
 
     // TODO: render commands
     if (
+        !info ||
         !packetInfo?.fields?.length ||
         !(isRegister(packetInfo) || isCommand(packetInfo))
     )

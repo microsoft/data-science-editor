@@ -9,6 +9,7 @@ import React, { ReactNode, useState } from "react"
 const useStyles = makeStyles(theme =>
     createStyles({
         root: {
+            marginTop: theme.spacing(1),
             marginBottom: theme.spacing(2),
         },
         icon: {

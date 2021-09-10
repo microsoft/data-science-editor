@@ -26,11 +26,15 @@ export default function PacketDataLayout(props: {
 }) {
     const { packet, showHex, showDecoded, showUnpacked, showJSON } = props
     const { data, decoded } = packet
+
     const info = decoded?.info
     let unpacked: PackedValues
     let error: string
     try {
-        unpacked = info?.packFormat && jdunpack(data, info.packFormat)
+        unpacked =
+            !!info?.packFormat &&
+            !!data.length &&
+            jdunpack(data, info.packFormat)
     } catch (e) {
         error = e + ""
     }

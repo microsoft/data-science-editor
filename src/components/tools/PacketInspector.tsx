@@ -20,7 +20,7 @@ import PacketDataLayout from "../PacketDataLayout"
 import PacketList from "../PacketList"
 import ServiceSpecificationCard from "../specification/ServiceSpecificationCard"
 import CopyButton from "../ui/CopyButton"
-import { roundWithPrecision, toHex } from "../../../jacdac-ts/src/jdom/utils"
+import { toHex } from "../../../jacdac-ts/src/jdom/utils"
 
 export default function PacketInspector() {
     const { selectedPacket: packet } = useContext(PacketsContext)
@@ -33,7 +33,7 @@ export default function PacketInspector() {
         )
 
     const { decoded } = packet
-    const info = decoded?.info
+    const { info, error } = decoded || {}
     const name = info?.name || packet.friendlyCommandName
     const ack = packet.meta[META_ACK] as Packet
     const data = packet.data
@@ -65,6 +65,7 @@ export default function PacketInspector() {
             {packet.sender && (
                 <Typography variant="body2">sender: {packet.sender}</Typography>
             )}
+            {error && <Alert severity="error">{error}</Alert>}
             <h3>Header</h3>
             <PacketHeaderLayout
                 packet={packet}
