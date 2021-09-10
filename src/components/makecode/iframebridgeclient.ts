@@ -232,7 +232,7 @@ export class IFrameBridgeClient extends JDClient {
     }
 
     serviceFilter(srv: JDService) {
-        return ignoredServices.indexOf(srv.serviceClass) < 1
+        return ignoredServices.indexOf(srv.serviceClass) < 0
     }
 
     get candidateExtensions(): string[] {
