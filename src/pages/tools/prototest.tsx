@@ -32,10 +32,11 @@ import Packet from "../../../jacdac-ts/src/jdom/packet"
 import JDEvent from "../../../jacdac-ts/src/jdom/event"
 import { AlertTitle } from "@material-ui/lab"
 import Alert from "../../components/ui/Alert"
-import JDServiceProvider from "../../../jacdac-ts/src/jdom/servers/serviceprovider"
 import ProtocolTestServer from "../../../jacdac-ts/src/jdom/servers/protocoltestserver"
 import { Link } from "gatsby-theme-material-ui"
 import { cryptoRandomUint32 } from "../../../jacdac-ts/src/jdom/random"
+import JDServerServiceProvider from "../../../jacdac-ts/src/jdom/servers/serverserviceprovider"
+import { useId } from "react-use-id-hook"
 
 function randomFieldPayload(field: JDField) {
     const { specification } = field
@@ -278,6 +279,8 @@ function ServiceProtocolTest(props: { service: JDService }) {
 
 export default function ProtocolTest() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const labelId = useId()
+    const switchId = useId()
     const [host, setHost] = useState(false)
     const services = useChange(bus, b =>
         b.services({ serviceClass: SRV_PROTO_TEST })
@@ -289,7 +292,9 @@ export default function ProtocolTest() {
     useEffect(() => {
         if (!host) return () => {}
 
-        const d = new JDServiceProvider([new ProtocolTestServer()])
+        const d = new JDServerServiceProvider("test", [
+            new ProtocolTestServer(),
+        ])
         bus.addServiceProvider(d)
         return () => bus.removeServiceProvider(d)
     }, [host])
@@ -313,8 +318,14 @@ export default function ProtocolTest() {
                 <Grid item xs={12}>
                     <Alert severity="info">
                         <AlertTitle>Developer zone</AlertTitle>
-                        <Switch checked={host} onChange={toggleHost} />
-                        <label>Add simulator</label>
+                        <Switch
+                            id={switchId}
+                            checked={host}
+                            onChange={toggleHost}
+                        />
+                        <label id={labelId} htmlFor={switchId}>
+                            Add simulator
+                        </label>
                     </Alert>
                 </Grid>
             </Grid>
