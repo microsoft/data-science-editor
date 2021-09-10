@@ -48,7 +48,7 @@ function Carousel() {
 
     return (
         <Dashboard
-            showHeader={false}
+            showHeader={true}
             deviceSort={deviceSort}
             deviceFilter={deviceFilter}
             serviceFilter={serviceFilter}
