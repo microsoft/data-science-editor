@@ -77,9 +77,17 @@
                 Azure IoT Uploader
             </option>
         </select>
-        <iframe id="left" allow="usb;camera;serial"></iframe>
+        <iframe
+            id="left"
+            allow="usb;camera;serial"
+            sandbox="allow-scripts allow-same-origin allow-top-navigation allow-downloads allow-popups allow-popups-to-escape-sandbox allow-forms"
+        ></iframe>
         <div id="divider"></div>
-        <iframe id="right" allow="usb;camera;serial"></iframe>
+        <iframe
+            id="right"
+            allow="usb;camera;serial"
+            sandbox="allow-scripts allow-same-origin allow-top-navigation allow-downloads allow-popups allow-popups-to-escape-sandbox allow-forms"
+        ></iframe>
         <script>
             ;(function () {
                 const left = document.getElementById("left")

@@ -99,7 +99,7 @@ export const ServiceManagerProvider = ({ children }) => {
     )
 
     function createProps(): ServiceManagerContextProps {
-        const isHosted = inIFrame()
+        const isHosted = inIFrame() && /hosted=1/.test(window.location.href)
         let fileStorage: IFileStorage = new BrowserFileStorage()
         let modelStore: ModelStore = undefined
         if (isHosted) {
