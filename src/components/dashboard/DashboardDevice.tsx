@@ -53,6 +53,7 @@ export default function DashboardDevice(
         variant,
         showAvatar,
         showHeader,
+        hideNotifications,
     } = props
     const { enqueueSnackbar } = useContext(AppContext)
     const { xs: mobile } = useMediaQueries()
@@ -73,6 +74,7 @@ export default function DashboardDevice(
     // track restart events
     useEffect(
         () =>
+            !hideNotifications &&
             device?.subscribe(RESTART, () =>
                 enqueueSnackbar(`${device.shortId} restarted...`, "info")
             ),

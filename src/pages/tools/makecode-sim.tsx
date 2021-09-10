@@ -53,6 +53,7 @@ function Carousel() {
             deviceFilter={deviceFilter}
             serviceFilter={serviceFilter}
             showStartSimulators={false}
+            hideNotifications={true}
         />
     )
 }
