@@ -37,28 +37,31 @@ export default function Footer() {
             >
                 Contact Us
             </a>
-
+            |
             <a
                 href="https://go.microsoft.com/fwlink/?LinkId=521839"
                 target="_blank"
                 rel="noopener noreferrer"
             >
                 Privacy &amp; Cookies
-            </a>|
+            </a>
+            |
             <a
                 href="https://www.microsoft.com/en-us/legal/intellectualproperty/copyright"
                 target="_blank"
                 rel="noopener noreferrer"
             >
                 Terms Of Use
-            </a>|
+            </a>
+            |
             <a
                 href="https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general"
                 target="_blank"
                 rel="noopener noreferrer"
             >
                 Trademarks
-            </a>|
+            </a>
+            |
             {repo && sha && (
                 <a
                     href={`https://github.com/${repo}/commit/${sha}`}
