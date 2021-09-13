@@ -76,6 +76,7 @@ export class IFrameBridgeClient extends JDClient {
     static DATA_ID = "makecodeiframeclient"
     // this is a unique id used to trace packets sent by this bridge
     readonly bridgeId = "bridge" + Math.random()
+    readonly hosted = inIFrame()
     packetSent = 0
     packetProcessed = 0
     private _lastAspectRatio = 0
@@ -116,7 +117,7 @@ export class IFrameBridgeClient extends JDClient {
             window.removeEventListener("message", this.handleMessage, false)
         )
 
-        if (inIFrame()) {
+        if (this.hosted) {
             // periodically resize iframe to account for dashboard size changes
             // don't use bus.schedulere here
             const id = setInterval(this.handleResize, 1000)
@@ -216,7 +217,7 @@ export class IFrameBridgeClient extends JDClient {
 
     private postPacket(pkt: Packet) {
         // check if this packet was already sent from another spot
-        if (!!pkt.sender || !window.parent || window.parent === window) return
+        if (!!pkt.sender || !this.hosted) return
 
         this.packetSent++
         pkt.sender = this.bridgeId
@@ -276,6 +277,8 @@ export class IFrameBridgeClient extends JDClient {
     }
 
     public postAddExtensions() {
+        if (!this.hosted) return
+
         const extensions = this.candidateExtensions
         console.log(`addextensions`, {
             extensions,

@@ -75,7 +75,7 @@ export const PacketsProvider = ({ children }) => {
     const [recording, setRecording] = useState(false)
     const [replayTrace, _setReplayTrace] = useState<Trace>(undefined)
     const [tracing, setTracing] = useState(false)
-    const [paused, _setPaused] = useState(false)
+    const [paused, _setPaused] = useState(true)
 
     const clearPackets = () => {
         setProgress(undefined)
@@ -127,8 +127,10 @@ export const PacketsProvider = ({ children }) => {
         _setFilter(f)
     }
     const setPaused = (p: boolean) => {
-        _setPaused(p)
-        if (view.current) view.current.paused = p
+        if (p !== paused) {
+            _setPaused(p)
+            view.current.paused = p
+        }
     }
     // views
     useEffect(() => {

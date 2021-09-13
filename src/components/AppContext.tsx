@@ -15,6 +15,7 @@ import JDService from "../../jacdac-ts/src/jdom/service"
 import { isCancelError } from "../../jacdac-ts/src/jdom/utils"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import useAnalytics from "./hooks/useAnalytics"
+import PacketsContext from "./PacketsContext"
 
 import Suspense from "./ui/Suspense"
 const StartSimulatorDialog = lazy(
@@ -69,6 +70,7 @@ export default AppContext
 // eslint-disable-next-line react/prop-types
 export const AppProvider = ({ children }) => {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const { setPaused } = useContext(PacketsContext)
     const [type, setType] = useState(DrawerType.None)
     const [searchQuery, setSearchQuery] = useState("")
     const [toolsMenu, _setToolsMenu] = useState(false)
@@ -113,6 +115,7 @@ export const AppProvider = ({ children }) => {
     const setDrawerType = (type: DrawerType) => {
         if (type !== DrawerType.None) _setToolsMenu(false)
         setType(type)
+        if (type !== DrawerType.Packets) setPaused(true)
     }
 
     const setToolsMenu = (open: boolean) => {
