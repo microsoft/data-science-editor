@@ -223,14 +223,14 @@ function ArcadeButton(props: {
     const title = JoystickButtons[button]
     const label = buttonLabels[button] || title[0]
 
-    const handleDown = () => {
-        server?.down(button) //, 0.7)
+    const handleDown = server ? () => {
+        server.down(button) //, 0.7)
         onRefresh()
-    }
-    const handleUp = () => {
-        server?.up(button)
+    } : undefined
+    const handleUp = server ? () => {
+        server.up(button)
         onRefresh()
-    }
+    } : undefined
     const buttonProps = useSvgButtonProps<SVGCircleElement>(
         title,
         handleDown,
