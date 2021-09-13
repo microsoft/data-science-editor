@@ -10,6 +10,7 @@ import React, {
 } from "react"
 import { ERROR } from "../../jacdac-ts/src/jdom/constants"
 import { errorCode } from "../../jacdac-ts/src/jdom/error"
+import Packet from "../../jacdac-ts/src/jdom/packet"
 import JDService from "../../jacdac-ts/src/jdom/service"
 import { isCancelError } from "../../jacdac-ts/src/jdom/utils"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
@@ -43,6 +44,8 @@ export interface AppProps {
     ) => void
     toggleShowDeviceHostsDialog: () => void
     showSelectRoleDialog: (srv: JDService) => void
+    selectedPacket: Packet
+    setSelectedPacket: (pkt: Packet) => void
 }
 
 const AppContext = createContext<AppProps>({
@@ -56,6 +59,8 @@ const AppContext = createContext<AppProps>({
     enqueueSnackbar: () => {},
     toggleShowDeviceHostsDialog: () => {},
     showSelectRoleDialog: () => {},
+    selectedPacket: undefined,
+    setSelectedPacket: () => {},
 })
 AppContext.displayName = "app"
 
@@ -71,6 +76,7 @@ export const AppProvider = ({ children }) => {
     const [showSelectRoleDialogService, setShowSelectRoleDialogService] =
         useState<JDService>(undefined)
     const { trackError } = useAnalytics()
+    const [selectedPacket, setSelectedPacket] = useState<Packet>(undefined)
 
     const { enqueueSnackbar: _enqueueSnackbar } = useSnackbar()
 
@@ -148,6 +154,8 @@ export const AppProvider = ({ children }) => {
                 enqueueSnackbar,
                 toggleShowDeviceHostsDialog,
                 showSelectRoleDialog,
+                selectedPacket,
+                setSelectedPacket,
             }}
         >
             {children}

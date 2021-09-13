@@ -33,7 +33,7 @@ export default function PacketListItem(props: {
     count?: number
 }) {
     const { packet, count, showTime } = props
-    const { selectedPacket, setSelectedPacket } = useContext(PacketsContext)
+    const { selectedPacket, setSelectedPacket } = useContext(AppContext)
     const { setDrawerType } = useContext(AppContext)
     const classes = useStyles()
     const { mobile } = useMediaQueries()

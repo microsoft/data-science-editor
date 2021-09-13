@@ -21,6 +21,7 @@ import ServiceSpecificationCard from "../specification/ServiceSpecificationCard"
 import CopyButton from "../ui/CopyButton"
 import { toHex } from "../../../jacdac-ts/src/jdom/utils"
 import PaperBox from "../ui/PaperBox"
+import AppContext from "../AppContext"
 
 function TraceCopyButton(props: { packet: Packet }) {
     const { packet } = props
@@ -37,7 +38,7 @@ ${savedTrace.serializeToText(-100)}
 }
 
 export default function PacketInspector() {
-    const { selectedPacket: packet } = useContext(PacketsContext)
+    const { selectedPacket: packet } = useContext(AppContext)
     const theme = useTheme()
 
     if (!packet)

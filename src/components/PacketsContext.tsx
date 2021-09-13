@@ -5,20 +5,19 @@ import React, {
     useRef,
     useState,
 } from "react"
-import Packet from "../../jacdac-ts/src/jdom/packet"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import { CHANGE, PROGRESS } from "../../jacdac-ts/src/jdom/constants"
 import Trace from "../../jacdac-ts/src/jdom/trace/trace"
 import TracePlayer from "../../jacdac-ts/src/jdom/trace/traceplayer"
 import TraceRecorder from "../../jacdac-ts/src/jdom/trace/tracerecorder"
-import TraceView, { TracePacketProps } from "../../jacdac-ts/src/jdom/trace/traceview"
+import TraceView, {
+    TracePacketProps,
+} from "../../jacdac-ts/src/jdom/trace/traceview"
 import useLocalStorage from "./hooks/useLocalStorage"
 
 export interface PacketsProps {
     trace: Trace
     packets: TracePacketProps[]
-    selectedPacket: Packet
-    setSelectedPacket: (pkt: Packet) => void
     clearPackets: () => void
     clearBus: () => void
     filter: string
@@ -40,8 +39,6 @@ export interface PacketsProps {
 const PacketsContext = createContext<PacketsProps>({
     trace: undefined,
     packets: [],
-    selectedPacket: undefined,
-    setSelectedPacket: () => {},
     clearPackets: () => {},
     clearBus: () => {},
     filter: "",
@@ -78,7 +75,6 @@ export const PacketsProvider = ({ children }) => {
     const player = useRef<TracePlayer>(undefined)
 
     const [packets, setPackets] = useState<TracePacketProps[]>([])
-    const [selectedPacket, setSelectedPacket] = useState<Packet>(undefined)
     const [progress, setProgress] = useState(0)
     const [timeRange, setTimeRange] = useState<number[]>(undefined)
     const [recording, setRecording] = useState(false)
@@ -88,7 +84,6 @@ export const PacketsProvider = ({ children }) => {
     const [paused, _setPaused] = useState(false)
 
     const clearPackets = () => {
-        setSelectedPacket(undefined)
         setProgress(undefined)
         setTimeRange(undefined)
         player.current.stop()
@@ -166,8 +161,7 @@ export const PacketsProvider = ({ children }) => {
                 _setReplayTrace(player.current.trace)
                 if (player.current.trace) await bus.stop()
                 else {
-                    if (!recorder.current.trace)
-                        bus.clear()
+                    if (!recorder.current.trace) bus.clear()
                     await bus.start()
                 }
             })
@@ -199,8 +193,6 @@ export const PacketsProvider = ({ children }) => {
                 packets,
                 clearPackets,
                 clearBus,
-                selectedPacket,
-                setSelectedPacket,
                 filter,
                 setFilter,
                 replayTrace,
