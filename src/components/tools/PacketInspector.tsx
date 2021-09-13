@@ -22,9 +22,22 @@ import CopyButton from "../ui/CopyButton"
 import { toHex } from "../../../jacdac-ts/src/jdom/utils"
 import PaperBox from "../ui/PaperBox"
 
+function TraceCopyButton(props: { packet: Packet }) {
+    const { packet } = props
+    const { replayTrace, trace } = useContext(PacketsContext)
+    const savedTrace = replayTrace || trace
+    const handleCopy = async () =>
+        `${toHex(packet.header)} ${toHex(packet.data)} ${printPacket(
+            packet
+        ).replace(/\r?\n/g, " ")}
+
+${savedTrace.serializeToText(-100)}
+`
+    return <CopyButton title="copy packet" onCopy={handleCopy} />
+}
+
 export default function PacketInspector() {
     const { selectedPacket: packet } = useContext(PacketsContext)
-    const { replayTrace, trace } = useContext(PacketsContext)
     const theme = useTheme()
 
     if (!packet)
@@ -42,14 +55,6 @@ export default function PacketInspector() {
     const pipePackets = packet.meta[META_PIPE] as Packet[]
     const get = packet.meta[META_GET] as Packet
     const sentTrace = packet.meta[META_TRACE] as string
-    const savedTrace = replayTrace || trace
-    const handleCopy = async () =>
-        `${toHex(packet.header)} ${toHex(packet.data)} ${printPacket(
-            packet
-        ).replace(/\r?\n/g, " ")}
-
-${savedTrace.serializeToText(-100)}
-`
 
     return (
         <>
@@ -59,7 +64,7 @@ ${savedTrace.serializeToText(-100)}
                     packet.friendlyDeviceName
                 }/${packet.friendlyServiceName}`}
 
-                <CopyButton title="copy packet" onCopy={handleCopy} />
+                <TraceCopyButton packet={packet} />
             </h2>
             {packet.sender && (
                 <Typography variant="body2">sender: {packet.sender}</Typography>
