@@ -24,6 +24,7 @@ import {
     roundWithPrecision,
     unique,
 } from "../../../jacdac-ts/src/jdom/utils"
+import { inIFrame } from "../../../jacdac-ts/src/jdom/iframeclient"
 
 export interface PacketMessage {
     channel: "jacdac"
@@ -110,16 +111,18 @@ export class IFrameBridgeClient extends JDClient {
         this.mount(this.bus.subscribe(DEVICE_ANNOUNCE, this.handleResize))
         // force compute add blocks button
         this.mount(this.bus.subscribe(DEVICE_ANNOUNCE, () => this.emit(CHANGE)))
-        // don't use bus.schedulere here
-        const id = setInterval(this.handleResize, 1000)
-        this.mount(() => clearInterval(id))
-
         window.addEventListener("message", this.handleMessage, false)
         this.mount(() =>
             window.removeEventListener("message", this.handleMessage, false)
         )
 
-        if (window.parent && window.parent !== window) {
+        if (inIFrame()) {
+            // periodically resize iframe to account for dashboard size changes
+            // don't use bus.schedulere here
+            const id = setInterval(this.handleResize, 1000)
+            this.mount(() => clearInterval(id))
+
+            // handle received frame id
             const frameid = window.location.hash.slice(1)
             console.debug({ frameid })
             // notify makecode we are ready
