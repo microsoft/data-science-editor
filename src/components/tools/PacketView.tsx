@@ -23,14 +23,14 @@ interface VirtualListData {
     showTime: boolean
 }
 
-const VirtualPacketItem = (
+function VirtualPacketItem(
     props: { data: VirtualListData } & ListChildComponentProps
-) => {
+) {
     const { style, index, data } = props
-    const { packets, showTime } = data
+    const { packets, showTime } = data as VirtualListData
     const packet = packets[index]
 
-    if (!packet) return <div key={""} style={style}></div>
+    if (!packet) return null
 
     return (
         <div key={packet.key} style={style}>
