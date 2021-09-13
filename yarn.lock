@@ -1128,25 +1128,25 @@
     "@babel/helper-validator-identifier" "^7.14.9"
     to-fast-properties "^2.0.0"
 
-"@blockly/block-dynamic-connection@^0.1.11":
-  version "0.1.11"
-  resolved "https://registry.yarnpkg.com/@blockly/block-dynamic-connection/-/block-dynamic-connection-0.1.11.tgz#f88e1412735aa223d11f02a19bf491a28f8ccae0"
-  integrity sha512-cJh3VC6TjJWi7B5YO+WhohuXuQ6nD3a2CHWYneSLghx7QWEmGOV8dhl0A8BYQz/UCzogC/LfLp1JZLbMDYjLVA==
+"@blockly/block-dynamic-connection@^0.1.12":
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/@blockly/block-dynamic-connection/-/block-dynamic-connection-0.1.12.tgz#9fd76b9cdfc1fe2c2924a48f334aa2cf9f4ebfd7"
+  integrity sha512-VO8gCIsLtP+pLXsMLdi3Zcdj0JBVVv9myD8QKRiVL3Joc0qBdy5LvaYFTwzRJ3IZde2qLISi7jp4Rp4qmrZdng==
 
-"@blockly/continuous-toolbox@^1.0.16":
-  version "1.0.16"
-  resolved "https://registry.yarnpkg.com/@blockly/continuous-toolbox/-/continuous-toolbox-1.0.16.tgz#a590397faaf211ba67bc5d4ee112d4fb00c7acde"
-  integrity sha512-cmq1N9r5SOUDeX1fhADwn3iNnKGcON0UwjNAlkuqdBrPMN1qM52vdY2v8SDgz8Dqvjf1XaocaE8TVIMXc1Md+A==
+"@blockly/continuous-toolbox@^1.0.17":
+  version "1.0.17"
+  resolved "https://registry.yarnpkg.com/@blockly/continuous-toolbox/-/continuous-toolbox-1.0.17.tgz#6d958e9edc1532be79fcdb259e26f0a9db46c0ec"
+  integrity sha512-tnjgmOUN8QTctYeFg2y+tFjYmJ2cL/8gnB45UD19CQrHNJXAx7pX3mhsOeS6Yt31adBauTru24EVMbmEwo5eWQ==
 
-"@blockly/disable-top-blocks@^0.1.18":
-  version "0.1.18"
-  resolved "https://registry.yarnpkg.com/@blockly/disable-top-blocks/-/disable-top-blocks-0.1.18.tgz#19958118c2ea6c354e1f90e8b11d4fe2d4d46f22"
-  integrity sha512-dkhAWTCieC85jMvf9tfzQBr8FoOl1eVx0YFGSHg1V6MAUbQIJ5sgKtNy23UQllGuXE2UnpfBgIX2cxAfPZCQRQ==
+"@blockly/disable-top-blocks@^0.1.19":
+  version "0.1.19"
+  resolved "https://registry.yarnpkg.com/@blockly/disable-top-blocks/-/disable-top-blocks-0.1.19.tgz#d7e9461aa15d216ad796075fa210dd5e4090268e"
+  integrity sha512-gKulAhOGQj2ivh6/X5WbFrZQ0OqQVc4coHukS1szxclqRJmF+sNI2rhtYB3T+Vzh+nZnvZf7Y9n679pLqns0OQ==
 
-"@blockly/field-slider@^2.1.27":
-  version "2.1.27"
-  resolved "https://registry.yarnpkg.com/@blockly/field-slider/-/field-slider-2.1.27.tgz#07c862506153df176f1ab85f240c88c3be39e83e"
-  integrity sha512-2vUmbLS0ic8Lp/eeRJXgMxalWBJMtCSaAYm5WvqBPphD6v5DDzKS74GozcxEPiazIpFd0HMmZM2PnI4/YUcYBA==
+"@blockly/field-slider@^2.1.28":
+  version "2.1.28"
+  resolved "https://registry.yarnpkg.com/@blockly/field-slider/-/field-slider-2.1.28.tgz#cfea5b069e89564301bb6176f2bcac10c84cd0be"
+  integrity sha512-dxVDMazu50R7tgFAabcH2f6/i4BcSSzhAp6a4is8QcZCd8jJRupRrCNQ0s2MAhvfgId0ytz1MTlNN4DxweS+Tg==
 
 "@blockly/theme-dark@^2.0.6":
   version "2.0.6"
@@ -1895,29 +1895,29 @@
   resolved "https://registry.yarnpkg.com/@mdx-js/util/-/util-2.0.0-next.8.tgz#66ecc27b78e07a3ea2eb1a8fc5a99dfa0ba96690"
   integrity sha512-T0BcXmNzEunFkuxrO8BFw44htvTPuAoKbLvTG41otyZBDV1Rs+JMddcUuaP5vXpTWtgD3grhcrPEwyx88RUumQ==
 
-"@microsoft/applicationinsights-channel-js@2.6.5":
-  version "2.6.5"
-  resolved "https://registry.yarnpkg.com/@microsoft/applicationinsights-channel-js/-/applicationinsights-channel-js-2.6.5.tgz#eef6da5de808ba970c667fdbff03762c23908ad2"
-  integrity sha512-Njbeqn/Z1O8NZ10gdX1FXb4Z2TK7a9SCrjZ32ieTAr9HVefaZZCG9yKTTXkp8MnDUCnwjC2wZA9xN4u2BAi+lQ==
+"@microsoft/applicationinsights-channel-js@2.7.0":
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/@microsoft/applicationinsights-channel-js/-/applicationinsights-channel-js-2.7.0.tgz#8b8eedda05827037a81de9af32e2f9ebc9c8a70e"
+  integrity sha512-Fj7NufVntao++qE9W1VhNNZTMhS6bhDvwYqw1jIXiUthQ0i3KVSvqcR+8JrErib3P3CA1nGckR9ZeCsNSAaknQ==
   dependencies:
-    "@microsoft/applicationinsights-common" "2.6.5"
-    "@microsoft/applicationinsights-core-js" "2.6.5"
+    "@microsoft/applicationinsights-common" "2.7.0"
+    "@microsoft/applicationinsights-core-js" "2.7.0"
     "@microsoft/applicationinsights-shims" "2.0.0"
     "@microsoft/dynamicproto-js" "^1.1.4"
 
-"@microsoft/applicationinsights-common@2.6.5":
-  version "2.6.5"
-  resolved "https://registry.yarnpkg.com/@microsoft/applicationinsights-common/-/applicationinsights-common-2.6.5.tgz#4b475e388f8db600e32712ad78cd1a80f4ce3fef"
-  integrity sha512-nwJ0UO5WZbbdU6mgiN1oZ/NLTbT/oeMVmZJtlbuQ+xCz57LODi/mPAndd4+BA3xU+4u7MhLl6GyQqX5hcyUsow==
+"@microsoft/applicationinsights-common@2.7.0":
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/@microsoft/applicationinsights-common/-/applicationinsights-common-2.7.0.tgz#8946bd3c78b97216cc180dae930b5cf3e14935c7"
+  integrity sha512-UpDPXkJekKqo415RAbnr3cc6SiteflNdZZ8WgsKj2z2z3Qpo+lz5e72mB+XR1YcNPIw1ovL/QdxvrOPZZbKUIg==
   dependencies:
-    "@microsoft/applicationinsights-core-js" "2.6.5"
+    "@microsoft/applicationinsights-core-js" "2.7.0"
     "@microsoft/applicationinsights-shims" "2.0.0"
     "@microsoft/dynamicproto-js" "^1.1.4"
 
-"@microsoft/applicationinsights-core-js@2.6.5":
-  version "2.6.5"
-  resolved "https://registry.yarnpkg.com/@microsoft/applicationinsights-core-js/-/applicationinsights-core-js-2.6.5.tgz#34d07870dd5e4ff524ed38ddfa382186e1dc7ca0"
-  integrity sha512-+Vg8Cy06Z+Mwh4W7P5hqx03ThO+l5t7TfcP+ynuS1SGFIuYKaBOwxgt/uIIon8X12sk0dGkrPsTGZMiUtXJ5Zw==
+"@microsoft/applicationinsights-core-js@2.7.0":
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/@microsoft/applicationinsights-core-js/-/applicationinsights-core-js-2.7.0.tgz#4d53ffd0f836d4a03fa5ccf6c4f4651b31f32544"
+  integrity sha512-B21/5mbFIYpGo5YK6twRBV5NyJEZw3vMOGz3wzs5qKHi8q8+X/F6jp4evG5n2p40281oE3548v6HBgXmPpdwYQ==
   dependencies:
     "@microsoft/applicationinsights-shims" "2.0.0"
     "@microsoft/dynamicproto-js" "^1.1.4"
@@ -1927,14 +1927,14 @@
   resolved "https://registry.yarnpkg.com/@microsoft/applicationinsights-shims/-/applicationinsights-shims-2.0.0.tgz#ee622588f14e58ae3c055b12431da8ed55d71991"
   integrity sha512-OaKew7f7acuNFgKYjMSPrRTRQi93xUyONWeeCeBlJSx7oRNJaL0TqbTvW6j5GHnSr3mhinPtAQ+rCQWASBnOrg==
 
-"@microsoft/applicationinsights-web-basic@^2.6.5":
-  version "2.6.5"
-  resolved "https://registry.yarnpkg.com/@microsoft/applicationinsights-web-basic/-/applicationinsights-web-basic-2.6.5.tgz#19316e1c52b1ba42eb680e82abaaee5973bb4adb"
-  integrity sha512-qrzOtIzKrA5RdApFHylWoOY6AeizHBHgcOEDbTUUMm4TONQ4aKkWOBddvJpQVEmdVMvIu6ermnPIbcUxjgQ16w==
+"@microsoft/applicationinsights-web-basic@^2.7.0":
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/@microsoft/applicationinsights-web-basic/-/applicationinsights-web-basic-2.7.0.tgz#7bd1d39a3de0b3a81644e8cd6098a057aea1005e"
+  integrity sha512-pk+tIk9bJ8JJH7mbfLAFrSBofVDb6Y4TKxK38dDkzddgnMZ4SD0Tjp6ChDSuVB7SpV45fDxTUoGy4EwVHrxTgg==
   dependencies:
-    "@microsoft/applicationinsights-channel-js" "2.6.5"
-    "@microsoft/applicationinsights-common" "2.6.5"
-    "@microsoft/applicationinsights-core-js" "2.6.5"
+    "@microsoft/applicationinsights-channel-js" "2.7.0"
+    "@microsoft/applicationinsights-common" "2.7.0"
+    "@microsoft/applicationinsights-core-js" "2.7.0"
     "@microsoft/applicationinsights-shims" "2.0.0"
     "@microsoft/dynamicproto-js" "^1.1.4"
 
@@ -2697,10 +2697,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/wicg-file-system-access@^2020.9.2":
-  version "2020.9.2"
-  resolved "https://registry.yarnpkg.com/@types/wicg-file-system-access/-/wicg-file-system-access-2020.9.2.tgz#6433e5a1d7cfdc58558e15f69276e4f0034088c6"
-  integrity sha512-8ni2EyWi01DBuVqekudo2I+RTfq4Jq93iHmlzq0+eKPkG1uebQA9OUxIDRzOevvw9wF922XYRo4bqP0a6DBF5g==
+"@types/wicg-file-system-access@^2020.9.3":
+  version "2020.9.3"
+  resolved "https://registry.yarnpkg.com/@types/wicg-file-system-access/-/wicg-file-system-access-2020.9.3.tgz#b0a089f28f6a2b475c1a5b13b3c53bf62da0b33d"
+  integrity sha512-wfgRTY1e7/iIl58LkxcnR5OMom5zMfasYFh7fQwNILduE81AZqSpQoFK4JlJ0qAqu45EcbGAZWY1CsbF/j/oDg==
 
 "@types/yargs-parser@*":
   version "20.2.1"
@@ -12478,7 +12478,12 @@ prepend-http@^2.0.0:
   resolved "https://registry.yarnpkg.com/prepend-http/-/prepend-http-2.0.0.tgz#e92434bfa5ea8c19f41cdfd401d741a3c819d897"
   integrity sha1-6SQ0v6XqjBn0HN/UAddBo8gZ2Jc=
 
-prettier@2.3.2, prettier@^2.3.2:
+prettier@2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.4.0.tgz#85bdfe0f70c3e777cf13a4ffff39713ca6f64cba"
+  integrity sha512-DsEPLY1dE5HF3BxCRBmD4uYZ+5DCbvatnolqTqcxEgKVZnL2kUfyu7b8pPQ5+hTBkdhU9SLUmK0/pHb07RE4WQ==
+
+prettier@^2.3.2:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.3.2.tgz#ef280a05ec253712e486233db5c6f23441e7342d"
   integrity sha512-lnJzDfJ66zkMy58OL5/NY5zp70S7Nz6KqcKkXYzn2tMVrNxvbqaBpg7H3qHaLxCJ5lNMsGuM8+ohS7cZrthdLQ==
@@ -12975,10 +12980,10 @@ react-side-effect@^2.1.0:
   resolved "https://registry.yarnpkg.com/react-side-effect/-/react-side-effect-2.1.1.tgz#66c5701c3e7560ab4822a4ee2742dee215d72eb3"
   integrity sha512-2FoTQzRNTncBVtnzxFOk2mCpcfxQpenBMbk5kSVBg5UcPqV9fRbgY2zhb7GTWWOlpFmAxhClBDlIq8Rsubz1yQ==
 
-react-simple-keyboard@^3.2.72:
-  version "3.2.72"
-  resolved "https://registry.yarnpkg.com/react-simple-keyboard/-/react-simple-keyboard-3.2.72.tgz#440a68746bbd4b2fbd5559a31ee93c74fff234a3"
-  integrity sha512-/wqKZddyQ4Ii/zfiHpSmIFFJymgUF26XfWQ0hDEHDGPCKQZ6+7AajfAoRGdIJXYEu9KK4qwgUxAhwu44uHPbEQ==
+react-simple-keyboard@^3.2.78:
+  version "3.2.78"
+  resolved "https://registry.yarnpkg.com/react-simple-keyboard/-/react-simple-keyboard-3.2.78.tgz#4fe70a2ced682ce753ccbadb6317d8fd7309ca47"
+  integrity sha512-hq+vAmxDrG0nT5WBQr6w+xiuWt3u4NeOWyDYuQJ9hJM2NajJd9aRGpzr6pu6PZOFT0qJwZRB+impMPbyCt9c2g==
 
 react-three-fiber@0.0.0-deprecated:
   version "0.0.0-deprecated"
@@ -13854,10 +13859,10 @@ sanitize-html@^1.27.5:
     parse-srcset "^1.0.2"
     postcss "^7.0.27"
 
-sanitize-html@^2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/sanitize-html/-/sanitize-html-2.4.0.tgz#8da7524332eb210d968971621b068b53f17ab5a3"
-  integrity sha512-Y1OgkUiTPMqwZNRLPERSEi39iOebn2XJLbeiGOBhaJD/yLqtLGu6GE5w7evx177LeGgSE+4p4e107LMiydOf6A==
+sanitize-html@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/sanitize-html/-/sanitize-html-2.5.0.tgz#142f43524bc6dc8a5e3fb565528aa0d9679c56dd"
+  integrity sha512-smU67ODza8E0rJF7oY37qQqMF5srxwEkqsgV17PFfdYAtIxnicH8LIyDEGINJIso8bPaxRZS7zGhCjg6BeDoqQ==
   dependencies:
     deepmerge "^4.2.2"
     escape-string-regexp "^4.0.0"
@@ -16886,10 +16891,10 @@ ws@7.4.6, ws@~7.4.2:
   resolved "https://registry.yarnpkg.com/ws/-/ws-7.5.4.tgz#56bfa20b167427e138a7795de68d134fe92e21f9"
   integrity sha512-zP9z6GXm6zC27YtspwH99T3qTG7bBFv2VIkeHstMLrLlDJuzA7tQ5ls3OJ1hOGGCzTQPniNJoHXIAOS0Jljohg==
 
-ws@^8.2.1:
-  version "8.2.1"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-8.2.1.tgz#bdd92b3c56fdb47d2379b5ae534281922cc5bd12"
-  integrity sha512-XkgWpJU3sHU7gX8f13NqTn6KQ85bd1WU7noBHTT8fSohx7OS1TPY8k+cyRPCzFkia7C4mM229yeHr1qK9sM4JQ==
+ws@^8.2.2:
+  version "8.2.2"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.2.2.tgz#ca684330c6dd6076a737250ed81ac1606cb0a63e"
+  integrity sha512-Q6B6H2oc8QY3llc3cB8kVmQ6pnJWVQbP7Q5algTcIxx7YEpc0oU4NBVHlztA7Ekzfhw2r0rPducMUiCGWKQRzw==
 
 x-is-string@^0.1.0:
   version "0.1.0"
