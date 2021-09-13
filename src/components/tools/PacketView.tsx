@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React, { useContext, useState } from "react"
 import { makeStyles, createStyles } from "@material-ui/core"
 import PacketListItem from "../PacketListItem"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
@@ -8,6 +8,7 @@ import { FixedSizeList, ListChildComponentProps } from "react-window"
 import AutoSizer from "react-virtualized-auto-sizer"
 import PacketFilter from "../PacketFilter"
 import { TracePacketProps } from "../../../jacdac-ts/src/jdom/trace/traceview"
+import useChange from "../../jacdac/useChange"
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -45,7 +46,13 @@ const VirtualPacketItem = (
 function VirtualPacketList(props: { showTime?: boolean }) {
     const { showTime } = props
     const classes = useStyles()
-    const { packets } = useContext(PacketsContext)
+    const { view } = useContext(PacketsContext)
+    const [packets, setPackets] = useState<TracePacketProps[]>(
+        view.filteredPackets
+    )
+
+    useChange(view, _ => setPackets(_.filteredPackets))
+
     const itemData: VirtualListData = {
         showTime,
         packets,

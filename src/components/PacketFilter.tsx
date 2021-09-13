@@ -270,7 +270,7 @@ function FilterMenu(props: {
 }
 
 export default function PacketFilter() {
-    const { trace, timeRange, toggleTimeRange, filter, setFilter } =
+    const { timeRange, toggleTimeRange, filter, setFilter } =
         useContext(PacketsContext)
     const classes = useStyles()
     const [text, setText] = useState(filter)
@@ -310,7 +310,6 @@ export default function PacketFilter() {
                             timeRange ? `clear` : "set"
                         }}`}
                         className={classes.iconButton}
-                        disabled={!timeRange && !trace?.length}
                         title={
                             timeRange ? "clear time range" : "use time range"
                         }

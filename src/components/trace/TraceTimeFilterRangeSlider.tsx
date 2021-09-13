@@ -3,13 +3,18 @@ import PacketsContext from "../PacketsContext"
 import { Box, Slider, useTheme } from "@material-ui/core"
 import { useDebounce } from "use-debounce"
 import { prettyDuration } from "../../../jacdac-ts/src/jdom/pretty"
+import useChange from "../../jacdac/useChange"
 
 export default function TraceTimeFilterRangeSlider() {
-    const { trace, timeRange, setTimeRange } = useContext(PacketsContext)
+    const { view, timeRange, setTimeRange } = useContext(PacketsContext)
     const [minMax, setMinMax] = useState([0, 1000])
     const [value, setValue] = useState<number[]>(timeRange)
     const theme = useTheme()
     const [debouncedValue] = useDebounce(value, 1000)
+
+    const [trace, setTrace] = useState(view.trace)
+
+    useChange(view, _ => setTrace(_.trace))
 
     const handleChange = (event, newValue) => {
         setValue(newValue)

@@ -25,15 +25,16 @@ import AppContext from "../AppContext"
 
 function TraceCopyButton(props: { packet: Packet }) {
     const { packet } = props
-    const { replayTrace, trace } = useContext(PacketsContext)
-    const savedTrace = replayTrace || trace
-    const handleCopy = async () =>
-        `${toHex(packet.header)} ${toHex(packet.data)} ${printPacket(
+    const { replayTrace, view } = useContext(PacketsContext)
+    const handleCopy = async () => {
+        const savedTrace = replayTrace || view.trace
+        return `${toHex(packet.header)} ${toHex(packet.data)} ${printPacket(
             packet
         ).replace(/\r?\n/g, " ")}
 
 ${savedTrace.serializeToText(-100)}
 `
+    }
     return <CopyButton title="copy packet" onCopy={handleCopy} />
 }
 

@@ -10,14 +10,11 @@ import { CHANGE, PROGRESS } from "../../jacdac-ts/src/jdom/constants"
 import Trace from "../../jacdac-ts/src/jdom/trace/trace"
 import TracePlayer from "../../jacdac-ts/src/jdom/trace/traceplayer"
 import TraceRecorder from "../../jacdac-ts/src/jdom/trace/tracerecorder"
-import TraceView, {
-    TracePacketProps,
-} from "../../jacdac-ts/src/jdom/trace/traceview"
+import TraceView from "../../jacdac-ts/src/jdom/trace/traceview"
 import useLocalStorage from "./hooks/useLocalStorage"
 
 export interface PacketsProps {
-    trace: Trace
-    packets: TracePacketProps[]
+    view: TraceView
     clearPackets: () => void
     clearBus: () => void
     filter: string
@@ -37,8 +34,7 @@ export interface PacketsProps {
 }
 
 const PacketsContext = createContext<PacketsProps>({
-    trace: undefined,
-    packets: [],
+    view: undefined,
     clearPackets: () => {},
     clearBus: () => {},
     filter: "",
@@ -70,15 +66,13 @@ export const PacketsProvider = ({ children }) => {
         DEFAULT_PACKET_FILTER
     )
 
-    const recorder = useRef<TraceRecorder>(undefined)
-    const view = useRef<TraceView>(undefined)
-    const player = useRef<TracePlayer>(undefined)
+    const recorder = useRef<TraceRecorder>(new TraceRecorder(bus))
+    const view = useRef<TraceView>(new TraceView(bus, filter))
+    const player = useRef<TracePlayer>(new TracePlayer(bus))
 
-    const [packets, setPackets] = useState<TracePacketProps[]>([])
     const [progress, setProgress] = useState(0)
     const [timeRange, setTimeRange] = useState<number[]>(undefined)
     const [recording, setRecording] = useState(false)
-    const [trace, setTrace] = useState<Trace>(undefined)
     const [replayTrace, _setReplayTrace] = useState<Trace>(undefined)
     const [tracing, setTracing] = useState(false)
     const [paused, _setPaused] = useState(false)
@@ -138,18 +132,6 @@ export const PacketsProvider = ({ children }) => {
     }
     // views
     useEffect(() => {
-        recorder.current = new TraceRecorder(bus)
-        view.current = new TraceView(bus, filter)
-        player.current = new TracePlayer(bus)
-
-        setTrace(view.current.trace)
-
-        view.current.mount(
-            view.current.subscribe(CHANGE, () => {
-                setPackets(view.current.filteredPackets)
-                setTrace(view.current.trace)
-            })
-        )
         recorder.current.mount(
             recorder.current.subscribe(CHANGE, () => {
                 setRecording(recorder.current.recording)
@@ -189,8 +171,7 @@ export const PacketsProvider = ({ children }) => {
     return (
         <PacketsContext.Provider
             value={{
-                trace,
-                packets,
+                view: view.current,
                 clearPackets,
                 clearBus,
                 filter,

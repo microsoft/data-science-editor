@@ -6,18 +6,17 @@ import PacketsContext from "../PacketsContext"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 
 export default function TraceSaveButton() {
-    const { replayTrace, trace, recording, tracing } =
-        useContext(PacketsContext)
+    const { replayTrace, view, recording, tracing } = useContext(PacketsContext)
     const { fileStorage } = useContext(ServiceManagerContext)
-    const savedTrace = replayTrace || trace
     const saveTrace = () => {
+        const savedTrace = replayTrace || view.trace
         const text = savedTrace.serializeToText()
         fileStorage.saveText("trace.jd.txt", text)
     }
     return (
         <IconButtonWithTooltip
             title="save trace"
-            disabled={recording || tracing || !savedTrace?.packets.length}
+            disabled={recording || tracing}
             size="small"
             key="save"
             onClick={saveTrace}

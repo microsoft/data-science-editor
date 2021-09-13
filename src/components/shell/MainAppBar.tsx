@@ -27,6 +27,7 @@ import {
     MOBILE_TOOLS_DRAWER_WIDTH,
 } from "../layout"
 import BridgeButtons from "../ui/BridgeButtons"
+import Flags from "../../../jacdac-ts/src/jdom/flags"
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -130,7 +131,7 @@ export default function MainAppBar() {
                             </Typography>
                         </Hidden>
                         <div className={classes.grow} />
-                        <PacketStats />
+                        {Flags.diagnostics && <PacketStats />}
                         <BridgeButtons className={clsx(classes.menuButton)} />
                         <OpenDashboardButton
                             className={clsx(classes.menuButton)}
