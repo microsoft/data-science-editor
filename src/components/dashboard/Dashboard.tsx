@@ -1,7 +1,6 @@
 import { Grid } from "@material-ui/core"
 import React, { useContext } from "react"
 import JDDevice from "../../../jacdac-ts/src/jdom/device"
-import useSelectedNodes from "../../jacdac/useSelectedNodes"
 import { isReading, isValueOrIntensity } from "../../../jacdac-ts/src/jdom/spec"
 import { splitFilter, strcmp } from "../../../jacdac-ts/src/jdom/utils"
 import useDevices from "../hooks/useDevices"
@@ -17,7 +16,6 @@ import DevicesIcon from "@material-ui/icons/Devices"
 import ConnectAlert from "../alert/ConnectAlert"
 import ConnectButtons from "../buttons/ConnectButtons"
 import useRoleManagerClient from "../services/useRoleManagerClient"
-import useMediaQueries from "../hooks/useMediaQueries"
 import JDService from "../../../jacdac-ts/src/jdom/service"
 import SimulateDeviceAlert from "../alert/SimulateDeviceAlert"
 import MakeCodeAddBlocksButton from "../makecode/MakeCodeAddBlocksButton"
@@ -84,8 +82,6 @@ export default function Dashboard(props: DashboardProps) {
     const devices = useDevices({ announced: true, ignoreSelf: true })
         .filter(deviceFilter)
         .sort(deviceSort)
-    const { mobile } = useMediaQueries()
-    const { selected, toggleSelected } = useSelectedNodes(mobile)
     const [simulators, physicals] = splitFilter(
         devices,
         d => !!bus.findServiceProvider(d.deviceId)
@@ -129,8 +125,6 @@ export default function Dashboard(props: DashboardProps) {
                         </>
                     }
                     devices={simulators}
-                    expanded={selected}
-                    toggleExpanded={toggleSelected}
                     {...other}
                 >
                     {showStartSimulators && !simulators?.length && (
@@ -148,8 +142,6 @@ export default function Dashboard(props: DashboardProps) {
                     )
                 }
                 devices={physicals}
-                expanded={selected}
-                toggleExpanded={toggleSelected}
                 {...other}
             >
                 {showConnect && !physicals.length && (
