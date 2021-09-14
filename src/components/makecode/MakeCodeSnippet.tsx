@@ -4,9 +4,9 @@ import { Tab, Tabs } from "@material-ui/core"
 import CodeBlock from "../CodeBlock"
 import TabPanel from "../ui/TabPanel"
 import MakeCodeSnippetContext from "./MakeCodeSnippetContext"
-import { parseMakeCodeSnippet } from "./useMakeCodeRenderer"
 import MakeCodeSimulator from "./MakeCodeSimulator"
 import { withPrefix } from "gatsby"
+import parseMakeCodeSnippet from "./makecodesnippetparser"
 interface Rendered {
     url: string
     width: number

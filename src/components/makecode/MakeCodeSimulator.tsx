@@ -9,7 +9,7 @@ import Packet from "../../../jacdac-ts/src/jdom/packet"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import PaperBox from "../ui/PaperBox"
 import MakeCodeSnippetContext from "./MakeCodeSnippetContext"
-import { MakeCodeSnippetSource } from "./useMakeCodeRenderer"
+import { MakeCodeSnippetSource } from "./makecodesnippetparser"
 
 const useStyles = makeStyles(() =>
     createStyles({
