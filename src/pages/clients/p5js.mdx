@@ -1,0 +1,67 @@
+---
+title: p5.jacdac
+weight: 4
+---
+
+# p5.jacdac, a p5.js library for Jacdac
+
+**p5.jacdac** integrates Jacdac with [p5.js](https://p5js.org) to create creative coding with physical devices.
+
+-   in the online p5.js editor, https://editor.p5js.org/, only WebSerial is supported at the moment. To use
+    WebUSB or WebBluetooth, run p5js locally.
+
+## Usage
+
+Download the [p5.jacdac library](https://unpkg.com/jacdac-ts/dist/p5.jacdac.js) or use the online version (recommended) and add it to the head section of your HTML document.
+
+```
+<script src="https://unpkg.com/jacdac-ts/dist/p5.jacdac.js"></script>
+```
+
+or
+
+```
+<script src="./p5.jacdac.js"></script>
+```
+
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+        ...
+        <script src="https://unpkg.com/jacdac-ts/dist/p5.jacdac.js"></script>
+    </head>
+    ...
+</html>
+```
+
+That's it! p5.jacdac will automatically show a "connect" button to connect to your
+device and hide it when connected.
+
+## Sensors
+
+The state of all sensor readings connected to the bus can be access through the `jacdac.sensors` object.
+The readings are grouped into a `number[]` per service type and keyed with the service camel name (`button`, `potentiometer`, ...).
+
+To access the readings, start by extracting the [service](/services) data you want.
+
+```javascript
+// grabs an array with all potentiometer readings (number[]) connected to jacdac
+const { potentiometer } = jacdac.sensors
+```
+
+Then map the reading to local variables. Depending on the number of connected sensors,
+some value will be undefined so make sure to assign defaults.
+
+```javascript
+// destructure readings into r,g,b variables
+// if sensors are missing, default to 0
+const [r = 0, g = 0, b = 0] = potentiometer
+```
+
+Use those values any way you want!
+
+```javascript
+// rescale 0..1 to 0..255 and repaint background
+background(r * 255, g * 255, b * 255)
+```
