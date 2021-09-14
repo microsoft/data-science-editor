@@ -16,13 +16,16 @@ export default function P5JSCodeButton(props: { sketch: string }) {
         <meta charset="utf-8" />
     </head>
     <body>
-        <script src="sketch.js"></script>
+    <script src="sketch.js"></script>
     </body>
 </html>
 `,
             },
             "sketch.js": {
-                content: sketch,
+                content: `/* eslint-disable no-undef, no-unused-vars */
+
+${sketch}
+`,
             },
             "style.css": {
                 content: `html, body {
