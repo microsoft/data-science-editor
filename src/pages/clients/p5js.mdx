@@ -31,7 +31,7 @@ or
 <script src="./p5.jacdac.js"></script>
 ```
 
-```html
+```p5js
 <html>
   <head>
     <script src="https://unpkg.com/p5@1.4.0/lib/p5.js"></script>
@@ -43,6 +43,16 @@ or
     </main>
   </body>
 </html>
+-----
+function setup() {
+    createCanvas(400, 400)
+}
+function draw() {
+    // grabs sensor data
+    const { sensors } = jacdac
+    // add your code here!
+    
+}
 ```
 
 That's it! `p5.jacdac` will automatically show a button to connect to your

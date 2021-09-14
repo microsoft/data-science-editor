@@ -151,7 +151,7 @@ export default function CodeBlock(props: {
             return (
                 <HighlightedCode
                     {...rest}
-                    className={"javascript"}
+                    className={/<html>/.test(source) ? "html" : "javascript"}
                     codeSandbox={{ p5js }}
                 >
                     {source}
