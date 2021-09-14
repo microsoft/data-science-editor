@@ -25,7 +25,6 @@ or
 ```
 
 ```html
-<!DOCTYPE html>
 <html>
     <head>
         ...
@@ -35,15 +34,17 @@ or
 </html>
 ```
 
-That's it! p5.jacdac will automatically show a "connect" button to connect to your
+That's it! `p5.jacdac` will automatically show a button to connect to your
 device and hide it when connected.
 
 ## Sensors
 
 The state of all sensor readings connected to the bus can be access through the `jacdac.sensors` object.
-The readings are grouped into a `number[]` per service type and keyed with the service camel name (`button`, `potentiometer`, ...).
+The readings are grouped into per service type and keyed with the service camel name (`button`, `potentiometer`, ...).
 
-To access the readings, start by extracting the [service](/services) data you want.
+### Single value sensors
+
+For sensors with a single numerical value, like a thermometer, readings are grouped in a `number` array. To access the readings, start by extracting the [service](/services) data you want.
 
 ```javascript
 // grabs an array with all potentiometer readings (number[]) connected to jacdac
@@ -64,4 +65,29 @@ Use those values any way you want!
 ```javascript
 // rescale 0..1 to 0..255 and repaint background
 background(r * 255, g * 255, b * 255)
+```
+
+## Composite value sensors
+
+For sensors with multiple values, like an accelerometer returning a 3D force, readings are grouped in an object array
+indexed by the field names.
+
+```javascript
+const { accelerometer } = jacdac.sensors
+const [acceleration] = accelerometer
+// the acceleration is stored as a ``{ x: .., y: ..., z: ... }`` object
+// add ``|| {}`` to handle missing data
+const { x: ax, y: ay, z: az } = acceleration || {}
+```
+
+## Enumerating sensors
+
+If you do not know the number of sensors ahead of time, you can use a ``for`` loop
+to iterate the list of readings.
+
+```javascript
+for (const acceleration of accelerometer) {
+    const { x: ax = 0, y: ay = 0, z: az = 0 } = acceleration
+    ...
+}
 ```
