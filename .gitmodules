@@ -13,3 +13,6 @@
 [submodule "ml4f"]
 	path = ml4f
 	url = https://github.com/microsoft/ml4f
+[submodule "gatsby-remark-makecode"]
+	path = gatsby-remark-makecode
+	url = https://github.com/microsoft/gatsby-remark-makecode
