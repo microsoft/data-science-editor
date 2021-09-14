@@ -6,19 +6,19 @@ export default function P5JSCodeButton(props: { sketch: string }) {
     const files = useCallback(
         () => ({
             "index.html": {
-                content: `<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/addons/p5.sound.min.js"></script>
-        <script src="https://unpkg.com/jacdac-ts/dist/p5.jacdac.js"></script>
-        <link rel="stylesheet" type="text/css" href="style.css">
-        <meta charset="utf-8" />
-    </head>
-    <body>
+                content: `
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="https://unpkg.com/p5@1.4.0/lib/p5.js"></script>
+    <script src="https://unpkg.com/jacdac-ts/dist/p5.jacdac.js"></script>
     <script src="sketch.js"></script>
-    </body>
-</html>
+</head>
+<body>
+    <main>
+    </main>
+</body>
+</html>                
 `,
             },
             "sketch.js": {

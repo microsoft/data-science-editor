@@ -43,6 +43,7 @@ export default function CodeSandboxButton(props: {
 
     return (
         <IconButtonWithTooltip
+            color="primary"
             onClick={handleClick}
             disabled={importing}
             title="Try in CodeSandbox"
