@@ -13,6 +13,8 @@ export default function CodeSandboxButton(props: {
 
     const handleClick = async () => {
         const f = files()
+        const file =
+            Object.keys(f).filter(fn => /\.js$/.test(fn))[0] || "index.js"
         try {
             setImporting(true)
             const x = await fetch(
@@ -30,7 +32,7 @@ export default function CodeSandboxButton(props: {
             )
             const data = await x.json()
             console.log(data)
-            const url = `https://codesandbox.io/s/${data.sandbox_id}?file=/index.js`
+            const url = `https://codesandbox.io/s/${data.sandbox_id}?file=/${file}`
             window.location.href = url
         } catch (error) {
             setError(error)

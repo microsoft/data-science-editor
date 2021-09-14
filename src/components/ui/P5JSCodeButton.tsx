@@ -5,11 +5,6 @@ export default function P5JSCodeButton(props: { sketch: string }) {
     const { sketch } = props
     const files = useCallback(
         () => ({
-            "package.json": {
-                content: {
-                    dependencies: {},
-                },
-            },
             "index.html": {
                 content: `<!DOCTYPE html>
 <html lang="en">
@@ -31,11 +26,11 @@ export default function P5JSCodeButton(props: { sketch: string }) {
             },
             "style.css": {
                 content: `html, body {
-                    width:100%;
-                    height:100%;
-                    margin: 0;
-                    padding: 0;
-                  }`,
+    width:100%;
+    height:100%;
+    margin: 0;
+    padding: 0;
+}`,
             },
         }),
         [sketch]
