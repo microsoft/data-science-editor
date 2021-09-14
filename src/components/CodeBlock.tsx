@@ -19,11 +19,12 @@ import MakeCodeSnippet from "./makecode/MakeCodeSnippet"
 import Suspense from "./ui/Suspense"
 
 const TraceSnippet = lazy(() => import("./trace/TraceSnippet"))
-const CodeSandboxButton = lazy(() => import("./ui/CodeSandboxButton"))
+const VanillaCodeButton = lazy(() => import("./ui/VanillaCodeButton"))
+const P5JSCodeButton = lazy(() => import("./ui/P5JSCodeButton"))
 
 function HighlightedCode(props: {
     children: string
-    codeSandbox?: { js: string; html: string }
+    codeSandbox?: { p5js?: string; js?: string; html?: string }
     className?: string
     downloadName?: string
     downloadText?: string
@@ -79,10 +80,17 @@ function HighlightedCode(props: {
                             </Tooltip>
                         </Link>
                     )}
-                    {codeSandbox && (
+                    {codeSandbox?.js && (
                         <div style={{ float: "right" }}>
                             <Suspense>
-                                <CodeSandboxButton source={codeSandbox} />
+                                <VanillaCodeButton source={codeSandbox} />
+                            </Suspense>
+                        </div>
+                    )}
+                    {codeSandbox?.p5js && (
+                        <div style={{ float: "right" }}>
+                            <Suspense>
+                                <P5JSCodeButton sketch={codeSandbox?.p5js} />
                             </Suspense>
                         </div>
                     )}
@@ -133,6 +141,18 @@ export default function CodeBlock(props: {
                     {...rest}
                     className={"javascript"}
                     codeSandbox={{ js, html }}
+                >
+                    {source}
+                </HighlightedCode>
+            )
+        }
+        case "p5js": {
+            const [source, p5js] = children.split(/\n-{5,}\n/gi)
+            return (
+                <HighlightedCode
+                    {...rest}
+                    className={"javascript"}
+                    codeSandbox={{ p5js }}
                 >
                     {source}
                 </HighlightedCode>
