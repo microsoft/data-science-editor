@@ -53,9 +53,9 @@ export default function Software() {
 
             <SplitGrid
                 right={false}
-                subtitle="Web USB"
-                subtitle3="and Web Bluetooth"
-                description="No driver installation needed to access the Jacdac devices from your web applications thanks to Web USB or Web Bluetooth."
+                subtitle="No drivers needed"
+                subtitle3="WebUSB, WebSerial, WebBluetooth"
+                description="Access physical devices with builtin browser features, no installation needed."
                 image={
                     <StaticImage src="./bustopology.png" alt="Bus topology" />
                 }
@@ -94,8 +94,8 @@ export default function Software() {
             <SplitGrid
                 right={true}
                 subtitle="p5*js"
-                description="Physical Creative Coding without drivers."
-                buttonText="start creating"
+                description="Physical Creative Coding."
+                buttonText="p5.jacdac library"
                 buttonVariant="link"
                 buttonUrl="/clients/p5js"
                 image={
