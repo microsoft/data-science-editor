@@ -9,8 +9,6 @@ import FeatureItem from "./FeatureItem"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import AccountTreeIcon from "@material-ui/icons/AccountTree"
 import JacdacIcon from "../icons/JacdacIcon"
-import KindIcon from "../KindIcon"
-import { VIRTUAL_DEVICE_NODE_NAME } from "../../../jacdac-ts/src/jdom/constants"
 import HistoryIcon from "@material-ui/icons/History"
 
 export default function Software() {
@@ -89,6 +87,21 @@ export default function Software() {
                     <StaticImage
                         src="./nodered.png"
                         alt="Jacdac nodes for Node-RED"
+                    />
+                }
+            />
+
+            <SplitGrid
+                right={true}
+                subtitle="p5*js"
+                description="Physical Creative Coding without drivers."
+                buttonText="start creating"
+                buttonVariant="link"
+                buttonUrl="/clients/p5js"
+                image={
+                    <StaticImage
+                        src="./p5js.jpg"
+                        alt="A p5js program that controls color with potentiometers"
                     />
                 }
             />
