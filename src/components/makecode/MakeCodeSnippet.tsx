@@ -19,8 +19,8 @@ export default function MakeCodeSnippet(props: { renderedSource: string }) {
         source: string
         rendered: Rendered
     }
-    const { height, width, url } = rendered || {}
-    const tabs = ["blocks", "typescript", "sim"]
+    const { url } = rendered || {}
+    const tabs = ["blocks", "typescript"]
     const { editor, setEditor } = useContext(MakeCodeSnippetContext)
     const [tab, setTab] = useState(tabs.indexOf(editor) || 0)
     const handleTabChange = (
