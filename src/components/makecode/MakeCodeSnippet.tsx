@@ -4,9 +4,9 @@ import { Tab, Tabs } from "@material-ui/core"
 import CodeBlock from "../CodeBlock"
 import TabPanel from "../ui/TabPanel"
 import MakeCodeSnippetContext from "./MakeCodeSnippetContext"
-import MakeCodeSimulator from "./MakeCodeSimulator"
 import { withPrefix } from "gatsby"
 import parseMakeCodeSnippet from "./makecodesnippetparser"
+
 interface Rendered {
     url: string
     width: number
@@ -42,16 +42,12 @@ export default function MakeCodeSnippet(props: { renderedSource: string }) {
             >
                 <Tab label={"Blocks"} />
                 <Tab label={"JavaScript"} />
-                <Tab label={"Simulator"} />
             </Tabs>
             <TabPanel value={tab} index={0}>
                 <img src={withPrefix(url)} alt={source} loading="lazy" />
             </TabPanel>
             <TabPanel value={tab} index={1}>
                 <CodeBlock className="typescript">{code}</CodeBlock>
-            </TabPanel>
-            <TabPanel value={tab} index={2}>
-                <MakeCodeSimulator snippet={snippet} />
             </TabPanel>
         </PaperBox>
     )
