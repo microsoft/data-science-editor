@@ -28,6 +28,7 @@ export function FlashDeviceButton(props: {
         (blob?.version &&
             firmwareInfo?.version &&
             updateApplicable(firmwareInfo, blob))
+    const upToDate = blob?.version && blob.version === firmwareInfo.version
     const flashing = useChange(device, d => !!d?.flashing)
     const missing = !device || !blob
     const disabled = flashing
@@ -64,9 +65,9 @@ export function FlashDeviceButton(props: {
         <CircularProgressWithLabel value={progress} />
     ) : firmwareInfo || update ? (
         <>
-            {firmwareInfo && <Alert severity="success">Up to date!</Alert>}
+            {upToDate && <Alert severity="success">Up to date!</Alert>}
             <Button
-                aria-label="flash firmware to device"
+                aria-label={`flash ${firmwareInfo.version} to device`}
                 disabled={disabled}
                 variant="contained"
                 color={"primary"}
