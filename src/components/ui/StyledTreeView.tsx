@@ -6,6 +6,7 @@ import KindIcon from "../KindIcon"
 import WarningIcon from "@material-ui/icons/Warning"
 
 import { useId } from "react-use-id-hook"
+import { Link } from "gatsby-material-ui-components"
 
 declare module "csstype" {
     interface Properties {
@@ -78,12 +79,14 @@ export function StyledTreeItem(
         alert?: string
         labelInfo?: string
         labelText: string
+        labelTo?: string
         actions?: JSX.Element | JSX.Element[]
     }
 ) {
     const classes = useTreeItemStyles()
     const {
         labelText,
+        labelTo,
         kind,
         icon,
         labelInfo,
@@ -115,7 +118,11 @@ export function StyledTreeItem(
                         />
                     )}
                     <Typography variant="body2" className={classes.labelText}>
-                        {labelText}
+                        {labelTo ? (
+                            <Link color="textPrimary" to={labelTo}>{labelText}</Link>
+                        ) : (
+                            labelText
+                        )}
                     </Typography>
                     {alert && "!"}
                     <Typography variant="caption" color="inherit">

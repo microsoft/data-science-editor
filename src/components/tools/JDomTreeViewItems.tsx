@@ -8,7 +8,11 @@ import JDEvent from "../../../jacdac-ts/src/jdom/event"
 import JDService from "../../../jacdac-ts/src/jdom/service"
 import JDRegister from "../../../jacdac-ts/src/jdom/register"
 import useChange from "../../jacdac/useChange"
-import { isRegister, isEvent } from "../../../jacdac-ts/src/jdom/spec"
+import {
+    isRegister,
+    isEvent,
+    identifierToUrlPath,
+} from "../../../jacdac-ts/src/jdom/spec"
 import { useRegisterHumanValue } from "../../jacdac/useRegisterValue"
 import useEventCount from "../../jacdac/useEventCount"
 import DeviceActions from "../DeviceActions"
@@ -40,6 +44,9 @@ import useMediaQueries from "../hooks/useMediaQueries"
 import useInstanceName from "../services/useInstanceName"
 import useBestRegister from "../hooks/useBestRegister"
 import { humanify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
+import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
+import InfoIcon from "@material-ui/icons/Info"
+import useDeviceSpecification from "../../jacdac/useDeviceSpecification"
 
 export interface JDomTreeViewProps extends StyledTreeViewProps {
     deviceFilter?: (devices: JDDevice) => boolean
@@ -103,6 +110,7 @@ export function DeviceTreeItem(
                 )
             }
         >
+            <DeviceProductInformationTreeItem device={device} />
             <AnnounceFlagsTreeItem device={device} />
             {services?.map(service => (
                 <ServiceTreeItem
@@ -115,7 +123,24 @@ export function DeviceTreeItem(
     )
 }
 
-export function AnnounceFlagsTreeItem(props: { device: JDDevice }) {
+function DeviceProductInformationTreeItem(props: { device: JDDevice }) {
+    const { device } = props
+    const { id } = device
+    const specification = useDeviceSpecification(device)
+    if (!specification) return null
+
+    const to = `/devices/${identifierToUrlPath(specification.id)}`
+    return (
+        <StyledTreeItem
+            nodeId={`${id}:catalog`}
+            labelTo={to}
+            labelText={specification.name}
+            labelInfo={specification.company}
+        ></StyledTreeItem>
+    )
+}
+
+function AnnounceFlagsTreeItem(props: { device: JDDevice }) {
     const { device } = props
     const { announceFlags, id, deviceId, restartCounter } = device
 
@@ -136,6 +161,7 @@ export function AnnounceFlagsTreeItem(props: { device: JDDevice }) {
     ]
         .filter(f => !!f)
         .join(", ")
+
     return (
         <StyledTreeItem
             nodeId={`${id}:flags`}
@@ -206,10 +232,7 @@ export function RegisterTreeItem(
         JDomTreeViewProps
 ) {
     const { register } = props
-    const { specification, id, lastGetAttempts } = useMemo(
-        () => register,
-        [register]
-    )
+    const { specification, id, lastGetAttempts } = register
     const [attempts, setAttempts] = useState(lastGetAttempts)
     const optional = !!specification?.optional
     const failedGet = attempts > 2
