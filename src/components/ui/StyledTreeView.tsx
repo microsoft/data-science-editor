@@ -107,7 +107,7 @@ export function StyledTreeItem(
             nodeId={nodeId}
             label={
                 <div className={classes.labelRoot}>
-                    {kind && (
+                    {kind && !icon && (
                         <KindIcon kind={kind} className={classes.labelIcon} />
                     )}
                     {icon}
@@ -119,7 +119,9 @@ export function StyledTreeItem(
                     )}
                     <Typography variant="body2" className={classes.labelText}>
                         {labelTo ? (
-                            <Link color="textPrimary" to={labelTo}>{labelText}</Link>
+                            <Link color="textPrimary" to={labelTo}>
+                                {labelText}
+                            </Link>
                         ) : (
                             labelText
                         )}

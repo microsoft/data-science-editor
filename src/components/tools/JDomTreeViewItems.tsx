@@ -44,9 +44,8 @@ import useMediaQueries from "../hooks/useMediaQueries"
 import useInstanceName from "../services/useInstanceName"
 import useBestRegister from "../hooks/useBestRegister"
 import { humanify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
-import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
-import InfoIcon from "@material-ui/icons/Info"
 import useDeviceSpecification from "../../jacdac/useDeviceSpecification"
+import DeviceIcon from "../devices/DeviceIcon"
 
 export interface JDomTreeViewProps extends StyledTreeViewProps {
     deviceFilter?: (devices: JDDevice) => boolean
@@ -104,6 +103,7 @@ export function DeviceTreeItem(
             warning={warning}
             alert={alert}
             kind={kind}
+            icon={<DeviceIcon device={device} size="small" />}
             actions={
                 showActions && (
                     <DeviceActions device={device} showReset={true} />
