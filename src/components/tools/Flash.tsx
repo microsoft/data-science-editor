@@ -63,7 +63,7 @@ export default function Flash() {
             <Tabs
                 value={tab}
                 onChange={handleTabChange}
-                aria-label="View specification formats"
+                aria-label="Update firmware of modules"
             >
                 <Tab label={`Updates`} />
                 <Tab label={`Firmwares`} />
