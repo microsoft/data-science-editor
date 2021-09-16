@@ -22,18 +22,19 @@ export default function DashboardRoleManager(props: DashboardServiceProps) {
     const labelId = useId()
     const roleManager = useChange(bus, _ => _.roleManager)
     const roles = useChange(roleManager, _ => _?.roles)
-
     if (autoBind === undefined) return <LoadingProgress />
 
     return (
         <>
             {roles && (
                 <Grid item xs={12}>
-                    <List dense={true}>
+                    <Grid container spacing={1} direction="row">
                         {roles.map(role => (
-                            <RoleListItem key={role.name} role={role} />
+                            <Grid key={role.name} item xs>
+                                <RoleListItem role={role} />
+                            </Grid>
                         ))}
-                    </List>
+                    </Grid>
                 </Grid>
             )}
             {expanded && (

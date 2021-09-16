@@ -19,9 +19,7 @@ export default function RoleListItem(props: {
             <ListItemText
                 primary={roleName || "???"}
                 secondary={
-                    bound
-                        ? `assigned to ${bound.friendlyName}[${serviceIndex}]`
-                        : `not assigned`
+                    bound ? `${bound.friendlyName}[${serviceIndex}]` : `...`
                 }
             />
         </ListItem>

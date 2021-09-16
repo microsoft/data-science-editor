@@ -10,11 +10,11 @@ export default function useChange<TNode extends IEventSource, TValue>(
     deps?: React.DependencyList
 ): TValue {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    assert(node as any !== false)
+    assert((node as any) !== false)
     const [version, setVersion] = useState(node?.changeId || 0)
     const value = useMemo(
         () => (query ? query(node) : undefined),
-        [node, version]
+        [node, version, ...(deps || [])]
     )
 
     useEffect(() => {
