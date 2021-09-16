@@ -8,6 +8,7 @@ import {
 import { Button, Link } from "gatsby-theme-material-ui"
 import React, { ReactNode } from "react"
 import clsx from "clsx"
+import JacdacIcon from "../icons/JacdacIcon"
 
 export interface FeatureItemProps {
     startImage?: ReactNode
@@ -73,6 +74,7 @@ export default function FeatureItem(props: FeatureItemProps) {
             {title && (
                 <Grid item xs={12}>
                     <Typography variant="h1" className={cls}>
+                        <JacdacIcon fontSize="large" />
                         {title}
                     </Typography>
                 </Grid>

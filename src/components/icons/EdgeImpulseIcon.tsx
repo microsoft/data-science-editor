@@ -3,7 +3,7 @@ import { SvgIcon, SvgIconProps } from "@material-ui/core"
 
 export default function EdgeImpulse(props: SvgIconProps) {
     return (
-        <SvgIcon {...props}>
+        <SvgIcon titleAccess="EdgeImpulse logo" {...props}>
             <path d="M15.659 10.429a1.617 1.617 0 100 3.236h5.348l-1.23-3.235h-4.118z" />
             <path d="M3.28 13.663h7.85a1.617 1.617 0 100-3.236H3.28a1.617 1.617 0 100 3.236z" />
             <path d="M21.832 16.023H5.105a2.298 2.298 0 100 2.951h17.85z" />
