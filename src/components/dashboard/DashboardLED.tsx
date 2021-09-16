@@ -7,61 +7,66 @@ import { LedCmd, LedReg } from "../../../jacdac-ts/src/jdom/constants"
 import LoadingProgress from "../ui/LoadingProgress"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
 import AppContext from "../AppContext"
-import useChange from "../../jacdac/useChange"
 import LEDWidget from "../widgets/LEDWidget"
 import useRegister from "../hooks/useRegister"
-import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
+import useEffectAsync from "../useEffectAsync"
+import { rgbToHtmlColor } from "../../../jacdac-ts/src/jdom/utils"
 
 export default function DashboardLED(props: DashboardServiceProps) {
     const { service } = props
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { setError } = useContext(AppContext)
     const server = useServiceServer<LEDServer>(service)
     const color = server ? "secondary" : "primary"
+    const [rgb, setRgb] = useState(0)
     const [speed, setSpeed] = useState(32)
+    const [brightness, setBrightness] = useState(16)
 
     const waveLengthRegister = useRegister(service, LedReg.WaveLength)
     const [waveLength] = useRegisterUnpackedValue<[number]>(
         waveLengthRegister,
         props
     )
-    const busColorRegister = useRegister(service, LedReg.Color)
-    const busColor = useRegisterUnpackedValue<[number, number, number]>(
-        busColorRegister,
-        props
-    )
-    const serverColor = useChange(server?.color, _ => _?.values())
-
     const ledCountRegister = useRegister(service, LedReg.LedCount)
     const [ledCount] = useRegisterUnpackedValue<[number]>(
         ledCountRegister,
         props
     )
 
-    const [r, g, b] = serverColor || busColor
-    const rgb = (r << 16) | (g << 8) | b
-
-    // nothing to see
-    if (r === undefined) return <LoadingProgress />
+    const r = ((((rgb >> 16) & 0xff) << 8) / brightness) & 0xff
+    const g = ((((rgb >> 8) & 0xff) << 8) / brightness) & 0xff
+    const b = ((((rgb >> 0) & 0xff) << 8) / brightness) & 0xff
 
     // send animate command
-    const handleSetColor = async (col: number) => {
+    const animate = async () => {
         try {
             await service.sendCmdAsync(
                 LedCmd.Animate,
                 jdpack<[number, number, number, number]>("u8 u8 u8 u8", [
-                    (col >> 16) & 0xff,
-                    (col >> 8) & 0xff,
-                    col & 0xff,
+                    r,
+                    g,
+                    b,
                     speed,
                 ])
             )
-            await bus.delay(500)
-            await busColorRegister.sendGetAsync()
         } catch (e) {
             setError(e)
         }
     }
+
+    // handle brightness, speed changes
+    useEffectAsync(animate, [rgb, speed, brightness])
+
+    console.log({
+        rgb: rgbToHtmlColor(rgb),
+        brightness,
+        speed,
+        r,
+        g,
+        b,
+    })
+
+    // nothing to see
+    if (isNaN(rgb)) return <LoadingProgress />
 
     return (
         <LEDWidget
@@ -69,9 +74,11 @@ export default function DashboardLED(props: DashboardServiceProps) {
             ledColor={rgb}
             waveLength={waveLength}
             ledCount={ledCount}
-            onLedColorChange={handleSetColor}
+            onLedColorChange={setRgb}
             speed={speed}
             onSpeedChange={setSpeed}
+            brightness={brightness}
+            onBrightnessChange={setBrightness}
         />
     )
 }
