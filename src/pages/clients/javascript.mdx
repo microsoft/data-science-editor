@@ -9,21 +9,29 @@ There are various ways to integrate Jacdac into your web or Node.JS projects.
 
 ## JDOM
 
-The JDOM module is a dependency-free JavaScript object model 
-that reflects the state of the Jacdac elements and allows sending commands as well. JDOM also handles connection through WebUSB, WebBLE and other transports.
+The JDOM module is a dependency-free JavaScript object model
+that reflects the state of the Jacdac elements and allows sending commands as well. 
+JDOM also handles connection through WebUSB, WebSerial, WebBLE and other transports.
 
-* [API Reference](https://microsoft.github.io/jacdac-ts/)
-* [JDOM introduction](/clients/javascript/jdom)
+-   [API Reference](https://microsoft.github.io/jacdac-ts/)
+-   [JDOM introduction](/clients/javascript/jdom)
+    -   [Bus](/clients/javascript/jdom/bus/)
+    -   [Device](/clients/javascript/jdom/device/)
+    -   [Service](/clients/javascript/jdom/service/)
+    -   [Register](/clients/javascript/jdom/register/)
+    -   [Event](/clients/javascript/jdom/event/)
 
 ## NPM
 
-Add the [jacdac-ts npm package](https://www.npmjs.com/package/jacdac-ts) module 
+Add the [jacdac-ts npm package](https://www.npmjs.com/package/jacdac-ts) module
 to your project
 
 ```
 npm install --save jacdac-ts
 ```
+
 or
+
 ```
 yarn add jacdac-ts
 ```
@@ -37,11 +45,11 @@ const jd = createWebBus()
 
 ## CDN / UMD
 
-You can also use CDN services to import ``jacdac`` into your html page directly.
+You can also use CDN services to import `jacdac` into your html page directly.
 This will load the ES6 build of the library.
 
 ```html
 <script src="https://unpkg.com/jacdac-ts@VERSION/dist/jacdac.js"></script>
 ```
 
-where ``@VERSION`` is the desired version. 
+where `@VERSION` is the desired version.
