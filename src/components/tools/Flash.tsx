@@ -1,4 +1,12 @@
-import { Box, Tab, Tabs } from "@material-ui/core"
+import {
+    Box,
+    Card,
+    CardContent,
+    CardHeader,
+    Grid,
+    Tab,
+    Tabs,
+} from "@material-ui/core"
 import React, { useState } from "react"
 import TabPanel from "../ui/TabPanel"
 import ConnectAlert from "../alert/ConnectAlert"
@@ -7,6 +15,38 @@ import FirmwareCardGrid from "../firmware/FirmwareCardGrid"
 import UpdateDeviceList from "../UpdateDeviceList"
 import SafeBootAlert from "../firmware/SafeBootAlert"
 import ManualFirmwareAlert from "../firmware/ManualFirmwareAlert"
+import Flags from "../../../jacdac-ts/src/jdom/flags"
+import useFirmwareBlobs from "../firmware/useFirmwareBlobs"
+import GridHeader from "../ui/GridHeader"
+import { groupBy } from "../../../jacdac-ts/src/jdom/utils"
+
+function FlashDiagnostics() {
+    const blobs = useFirmwareBlobs()
+    const stores = groupBy(blobs, blob => blob.store)
+    return (
+        <Grid container spacing={2}>
+            {Object.entries(stores).map(([store, blobs]) => (
+                <>
+                    <GridHeader title={store} />
+                    {blobs?.map(blob => (
+                        <Grid item key={blob.store + blob.productIdentifier}>
+                            <Card>
+                                <CardHeader
+                                    title={blob.name}
+                                    subheader={blob.version}
+                                />
+                                <CardContent>
+                                    pid: 0x{blob.productIdentifier.toString(16)}
+                                    , {blob.pages.length} pages
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    ))}
+                </>
+            ))}
+        </Grid>
+    )
+}
 
 export default function Flash() {
     const [tab, setTab] = useState(0)
@@ -36,6 +76,7 @@ export default function Flash() {
             </TabPanel>
             <SafeBootAlert />
             <ManualFirmwareAlert />
+            {Flags.diagnostics && <FlashDiagnostics />}
         </Box>
     )
 }

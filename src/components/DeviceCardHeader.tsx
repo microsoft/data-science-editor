@@ -12,6 +12,23 @@ import useDeviceSpecification from "../jacdac/useDeviceSpecification"
 import { identifierToUrlPath } from "../../jacdac-ts/src/jdom/spec"
 import DeviceAvatar from "./devices/DeviceAvatar"
 import useChange from "../jacdac/useChange"
+import Flags from "../../jacdac-ts/src/jdom/flags"
+
+function DeviceProductIdentifierChip(props: { device: JDDevice }) {
+    const { device } = props
+    const register = useChange(device, _ =>
+        _?.service(0)?.register(ControlReg.ProductIdentifier)
+    )
+    const [productIdentifier] = useRegisterUnpackedValue<[number]>(register)
+    if (isNaN(productIdentifier)) return null
+
+    return (
+        <Chip
+            size="small"
+            label={`pid: 0x${productIdentifier.toString(16)}`}
+        />
+    )
+}
 
 function DeviceFirmwareVersionChip(props: { device: JDDevice }) {
     const { device } = props
@@ -21,12 +38,9 @@ function DeviceFirmwareVersionChip(props: { device: JDDevice }) {
     const [firmwareVersion] = useRegisterUnpackedValue<[string]>(
         firmwareVersionRegister
     )
+    if (!firmwareVersion) return null
 
-    return (
-        (firmwareVersion && <Chip size="small" label={firmwareVersion} />) || (
-            <></>
-        )
-    )
+    return <Chip size="small" label={firmwareVersion} />
 }
 
 function DeviceTemperatureChip(props: { device: JDDevice }) {
@@ -35,11 +49,8 @@ function DeviceTemperatureChip(props: { device: JDDevice }) {
         _?.service(0)?.register(ControlReg.McuTemperature)
     )
     const [temperature] = useRegisterUnpackedValue<[number]>(tempRegister)
-    return (
-        (temperature !== undefined && (
-            <Chip size="small" label={`${temperature}°`} />
-        )) || <></>
-    )
+    if (isNaN(temperature)) return null
+    return <Chip size="small" label={`${temperature}°`} />
 }
 
 export default function DeviceCardHeader(props: {
@@ -97,6 +108,9 @@ export default function DeviceCardHeader(props: {
                                 .filter(s => !!s)
                                 .join(", ")}
                         </Typography>
+                        {showFirmware && Flags.diagnostics && (
+                            <DeviceProductIdentifierChip device={device} />
+                        )}
                         {showFirmware && (
                             <DeviceFirmwareVersionChip device={device} />
                         )}

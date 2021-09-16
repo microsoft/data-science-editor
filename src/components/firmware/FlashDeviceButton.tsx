@@ -12,6 +12,7 @@ import CircularProgressWithLabel from "../ui/CircularProgressWithLabel"
 import AppContext from "../AppContext"
 import useChange from "../../jacdac/useChange"
 import useMounted from "./../hooks/useMounted"
+import useDeviceSpecification from "../../jacdac/useDeviceSpecification"
 
 export function FlashDeviceButton(props: {
     device: JDDevice
@@ -20,6 +21,7 @@ export function FlashDeviceButton(props: {
 }) {
     const { device, blob, ignoreFirmwareCheck } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const specification = useDeviceSpecification(device)
     const { setError } = useContext(AppContext)
     const [progress, setProgress] = useState(0)
     const firmwareInfo = useChange(device, d => d?.firmwareInfo)
@@ -30,6 +32,7 @@ export function FlashDeviceButton(props: {
             updateApplicable(firmwareInfo, blob))
     const upToDate = blob?.version && blob.version === firmwareInfo.version
     const flashing = useChange(device, d => !!d?.flashing)
+    const noFirmware = !specification?.repo
     const missing = !device || !blob
     const disabled = flashing
     const mounted = useMounted()
@@ -59,8 +62,10 @@ export function FlashDeviceButton(props: {
     }
 
     // tslint:disable-next-line: react-this-binding-issue
-    return missing ? (
-        <Alert severity="info">No firmware information available</Alert>
+    return noFirmware ? (
+        <Alert severity="info">Firmware update not supported</Alert>
+    ) : missing ? (
+        <Alert severity="info">No firmware available</Alert>
     ) : flashing ? (
         <CircularProgressWithLabel value={progress} />
     ) : firmwareInfo || update ? (
