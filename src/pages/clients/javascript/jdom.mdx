@@ -24,9 +24,9 @@ If you are using JavaScript/TypeScript ES6, import all APIs and spin off a WebUS
 The example below displays device that get announced on the bus.
 
 ```vanilla
-import { createUSBBus, DEVICE_ANNOUNCE } from "jacdac-ts"
+import { createWebBus, DEVICE_ANNOUNCE } from "jacdac-ts"
 
-const bus = createUSBBus();
+const bus = createWebBus();
 bus.on(DEVICE_ANNOUNCE, device => log(device))
 // call connect from a user interaction
 bus.connect();

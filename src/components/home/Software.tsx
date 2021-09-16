@@ -152,7 +152,7 @@ export default function Software() {
                 description="Absolutely! You can embed our dashboard or add our JavaScript package."
                 buttonText="Integrate Jacdac into your web app"
                 buttonVariant="link"
-                buttonUrl="/clients/web"
+                buttonUrl="/clients/embed/"
             />
         </Grid>
     )

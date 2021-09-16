@@ -164,7 +164,7 @@ export default function Tools() {
                 description="Absolutely! You can our JavaScript package to build your own Jacdac tooling."
                 buttonText="Integrate Jacdac into your web app"
                 buttonVariant="link"
-                buttonUrl="/clients/web"
+                buttonUrl="/clients/javascript/"
             />
         </Grid>
     )

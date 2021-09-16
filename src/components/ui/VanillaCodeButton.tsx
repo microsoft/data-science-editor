@@ -16,7 +16,7 @@ export default function VanillaCodeButton(props: {
 
         const indexJs = `
 import "milligram";
-import { createUSBBus, CONNECTION_STATE } from "jacdac-ts";
+import { createWebBus, CONNECTION_STATE } from "jacdac-ts";
 ${imports}
 const connectEl = document.getElementById("connectbtn");
 const logEl = document.getElementById("log")
@@ -25,7 +25,7 @@ const log = (msg) => {
     logEl.innerText += msg + "\\n"
 }
 // create WebUSB bus
-const bus = createUSBBus();
+const bus = createWebBus();
 // track connection state and update button
 bus.on(CONNECTION_STATE, () => { connectEl.innerText = bus.connected ? "connected 🎉" : "connect" })
 // connect must be triggered by a user interaction

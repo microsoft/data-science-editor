@@ -1,21 +1,20 @@
 # JDBus
 
 A **bus** is the top-level [JDOM](/clients/javascript/jdom/) [node](/clients/javascript/jdom/node/).
-It processes the incoming and outcoming packets, 
+It processes the incoming and outcoming packets,
 handles the connection to the underlying communiction transport
 and maintains a set of active [devices](/clients/javascript/jdom/device/) nodes.
 
-* [API reference](https://microsoft.github.io/jacdac-ts/classes/JDBus.html)
+-   [API reference](https://microsoft.github.io/jacdac-ts/classes/JDBus.html)
 
-## WebUSB bus
+## Web bus
 
-The most common use is to create a bus that uses WebUSB to
-communicate to a physical Jacdac device. This is done with ``createUSBBus``.
+The `createWebBus` helper will instantiate a Jacdac bus using available transports, from WebUSB, WebSerial and or Web Bluetooth.
 
 ```vanilla
-import { createUSBBus } from "jacdac-ts"
+import { createWebBus } from "jacdac-ts"
 
-const bus = createUSBBus();
+const bus = createWebBus();
 -----
 import {} from "jacdac-ts"
 
@@ -25,7 +24,7 @@ bus.on(CHANGE, () => log(bus))
 
 ## Connection and disconnection
 
-By default, the WebUSB bus will try to reconnect 
+By default, the WebUSB bus will try to reconnect
 to any known connected physical device. The Jacdac physical device hasn't been paired yet,
 you can initiate the connection from a user interaction handler (security measure as the user must manually pick the device).
 
@@ -41,17 +40,17 @@ bus.on(CHANGE, () => log(bus))
 The bus will detect that the physical device is disconnected automatically. If you wish to disconnect manually, use
 
 ```javascript
-await bus.disconnect();
+await bus.disconnect()
 ```
 
-You can query the status of the connection using ``bus.connectionState``. The connection has 4 states:
+You can query the status of the connection using `bus.connectionState`. The connection has 4 states:
 
-* connected: connected to a physical device over WebUSB and receiving packets
-* connection: connection in progress (for example, user is selecting the device)
-* disconnected: no active connection to a physical device
-* disconnecting: closing the connection to the physical device
+-   connected: connected to a physical device over WebUSB and receiving packets
+-   connection: connection in progress (for example, user is selecting the device)
+-   disconnected: no active connection to a physical device
+-   disconnecting: closing the connection to the physical device
 
-Using the ``CONNECTION_STATE`` event, you can track changes of the state.
+Using the `CONNECTION_STATE` event, you can track changes of the state.
 
 ```vanilla
 // am i connected?
@@ -94,10 +93,9 @@ bus.on(DEVICE_ANNOUNCE, () => {
 })
 ```
 
-
 ### Filtering devices
 
-One can apply various filters to select devices. For example, using the ``serviceClass`` filters
+One can apply various filters to select devices. For example, using the `serviceClass` filters
 to collect devices with buttons.
 
 ```vanilla
@@ -122,7 +120,7 @@ bus.on(DEVICE_ANNOUNCE, () => {
 
 ### Filtering services
 
-One can apply various filters to select devices. For example, using the ``serviceClass`` filters
+One can apply various filters to select devices. For example, using the `serviceClass` filters
 to collect devices with buttons.
 
 ```vanilla
@@ -144,12 +142,11 @@ bus.on(DEVICE_ANNOUNCE, () => {
 })
 ```
 
-
 ## Events
 
 All bus state mutation are advertised by events. You can listen or subscribe to those events.
 
-### ``CHANGE``
+### `CHANGE`
 
 Catch all event raised when some change happened to the bus, whether it is a connection change or a change in the list of services
 or the error state changed.
@@ -177,8 +174,7 @@ bus.on(CHANGE, () => {
 })
 ```
 
-
-### ``ERROR``
+### `ERROR`
 
 An error occured.
 
