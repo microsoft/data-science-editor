@@ -12,6 +12,7 @@ import CircularProgressWithLabel from "../ui/CircularProgressWithLabel"
 import AppContext from "../AppContext"
 import useChange from "../../jacdac/useChange"
 import useMounted from "./../hooks/useMounted"
+import useAnalytics from "../hooks/useAnalytics"
 
 export function FlashDeviceButton(props: {
     device: JDDevice
@@ -21,6 +22,7 @@ export function FlashDeviceButton(props: {
     const { device, blob, ignoreFirmwareCheck } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { setError } = useContext(AppContext)
+    const { trackEvent } = useAnalytics()
     const [progress, setProgress] = useState(0)
     const firmwareInfo = useChange(device, d => d?.firmwareInfo)
     const update =
@@ -39,6 +41,10 @@ export function FlashDeviceButton(props: {
 
     const handleFlashing = async () => {
         if (device.flashing) return
+        trackEvent("flash.start", {
+            firmware: firmwareInfo.productIdentifier,
+            version: firmwareInfo.version,
+        })
         try {
             setProgress(0)
             device.flashing = true // don't refresh registers while flashing
@@ -55,9 +61,17 @@ export function FlashDeviceButton(props: {
             // trigger info
             device.firmwareInfo = undefined
         } catch (e) {
+            trackEvent("flash.error", {
+                firmware: firmwareInfo.productIdentifier,
+                version: firmwareInfo.version,
+            })
             if (mounted()) setError(e)
         } finally {
             device.flashing = false
+            trackEvent("flash.success", {
+                firmware: firmwareInfo.productIdentifier,
+                version: firmwareInfo.version,
+            })
         }
     }
 
