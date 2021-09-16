@@ -1,0 +1,30 @@
+---
+title: User guide
+order: 0
+---
+# User guide
+
+## Mixing simulator and physical modules
+
+You can use a mix of simulators or physical services to work on your code.
+
+In this example, we remove the button simulator and connect a physical keyboard cap module which implements the button service.
+Automatically, the Micro:bit simulator connects to the physical button and uses it in the code.
+
+![Hardware button show large and small heart when pressed](./hardwareheartbeat.gif)
+
+## "Only one brain"
+
+To avoid having the micro:bit simulator **and** the physical micro:bit running code **at the same time**,
+Jacdac automatically puts one of the two micro:bit in a **proxy mode** when restarting the simulator or downloading code into the physical device.
+In proxy mode, the Jacdac messages are transmitted by the MakeCode code is not executed
+
+- in proxy mode, the micro:bit renders a proxy icon.
+
+![Proxy icon on micro:bit screen](./proxyscreen.png)
+
+-   when a physical micro:bit restarts, the simulator micro:bit enters proxy mode.
+-   when the simulator micro:bit restarts, the physical micro:bit enters proxy mode.
+-   in proxy mode, the physical micro:bit still transmits the Jacdac packets, so you can see physical services, but does not execute MakeCode code.
+
+![Switching proxy mode between simulator and hardware micro:bit](./onebrain.gif)
