@@ -13,6 +13,7 @@ export default function LEDMatrixWidget(props: {
     columns: number
     color?: "primary" | "secondary"
     onChange?: (newLeds: Uint8Array) => void
+    dots?: boolean
 }) {
     const {
         leds,
@@ -21,6 +22,7 @@ export default function LEDMatrixWidget(props: {
         columns,
         color = "primary",
         onChange,
+        dots,
     } = props
     const [currentLeds, setCurrentLeds] = useState(leds)
     const widgetRef = useRef<SVGGElement>()
@@ -38,7 +40,7 @@ export default function LEDMatrixWidget(props: {
     const pw = 8
     const ph = 8
     const ps = 0.5
-    const pr = 2
+    const pr = dots ? 4 : 2
     const m = 2
     const w = columns * pw + (columns + 1) * m
     const h = rows * ph + (rows + 1) * m

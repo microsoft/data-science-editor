@@ -15,7 +15,7 @@ import {
     SRV_GYROSCOPE,
     SRV_JOYSTICK,
     SRV_LED,
-    SRV_LED_MATRIX,
+    SRV_DOT_MATRIX,
     SRV_LED_PIXEL,
     SRV_MATRIX_KEYPAD,
     SRV_MOTION,
@@ -73,7 +73,7 @@ const DashboardCharacterScreen = lazy(
     () => import("./DashboardCharacterScreen")
 )
 const DashboardRainGauge = lazy(() => import("./DashboardRainGauge"))
-const DashboardLEDMatrix = lazy(() => import("./DashboardLEDMatrix"))
+const DashboardDotMatrix = lazy(() => import("./DashboardDotMatrix"))
 const DashboardWindDirection = lazy(() => import("./DashboardWindDirection"))
 const DashboardMatrixKeypad = lazy(() => import("./DashboardMatrixKeypad"))
 const DashboardReflectedLight = lazy(() => import("./DashboardReflectedLight"))
@@ -169,8 +169,8 @@ const serviceViews: {
     [SRV_RAIN_GAUGE]: {
         component: DashboardRainGauge,
     },
-    [SRV_LED_MATRIX]: {
-        component: DashboardLEDMatrix,
+    [SRV_DOT_MATRIX]: {
+        component: DashboardDotMatrix,
         weight: () => 3,
     },
     [SRV_WIND_DIRECTION]: {
