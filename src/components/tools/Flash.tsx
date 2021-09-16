@@ -7,7 +7,7 @@ import {
     Tab,
     Tabs,
 } from "@material-ui/core"
-import React, { useState } from "react"
+import React, { Fragment, useState } from "react"
 import TabPanel from "../ui/TabPanel"
 import ConnectAlert from "../alert/ConnectAlert"
 import FirmwareCardGrid from "../firmware/FirmwareCardGrid"
@@ -26,7 +26,7 @@ function FlashDiagnostics() {
     return (
         <Grid container spacing={2}>
             {Object.entries(stores).map(([store, blobs]) => (
-                <>
+                <Fragment key={store}>
                     <GridHeader title={store} />
                     {blobs?.map(blob => (
                         <Grid item key={blob.store + blob.productIdentifier}>
@@ -42,7 +42,7 @@ function FlashDiagnostics() {
                             </Card>
                         </Grid>
                     ))}
-                </>
+                </Fragment>
             ))}
         </Grid>
     )
