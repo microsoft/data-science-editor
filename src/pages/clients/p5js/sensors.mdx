@@ -99,3 +99,24 @@ function draw() {
     }
 }
 ```
+
+## Pro tip: add a document camera to your sketch!
+
+It can be very helpful to display a live stream of your document camera in the sketch: you can record the hardware interaction and the screen. This can be done with a couple lines of p5js code.
+
+```p5js
+capture = createCapture(VIDEO);
+capture.size(480, 320);
+-----
+function setup() {
+    createCanvas(400, 400)
+    // start a webcam to capture video
+    const capture = createCapture(VIDEO);
+    capture.size(400, 320);
+}
+function draw() {
+    const { potentiometer } = jacdac.sensors
+    const [r = 0, g = 0, b = 0] = potentiometer
+    background(r * 255, g * 255, b * 255)
+}
+```
