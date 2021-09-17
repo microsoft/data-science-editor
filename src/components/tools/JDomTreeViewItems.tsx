@@ -212,7 +212,10 @@ export function ServiceTreeItem(
     const { isMixin, name, id } = useMemo(() => service, [service])
     const instanceName = useInstanceName(service)
     const readingRegister = useBestRegister(service)
-    const reading = useRegisterHumanValue(readingRegister)
+    const reading = useRegisterHumanValue(readingRegister, {
+        visible: true,
+        maxLength: 18,
+    })
 
     const labelText = name + (instanceName ? ` ${instanceName}` : "")
     return (
@@ -239,7 +242,11 @@ export function RegisterTreeItem(
     const labelText = humanify(
         `${specification?.name || id}${optional ? "?" : ""}`
     )
-    const humanValue = useRegisterHumanValue(register, { visible: true })
+    const humanValue = useRegisterHumanValue(register, {
+        visible: true,
+        maxLength: 18,
+    })
+    console.log({ humanValue })
     const handleClick = useCallback(() => register.sendGetAsync(), [register])
 
     useEffect(

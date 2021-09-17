@@ -8,13 +8,12 @@ import {
     Box,
 } from "@material-ui/core"
 import Packet from "../../jacdac-ts/src/jdom/packet"
-import PacketsContext from "./PacketsContext"
 import PacketBadge from "./PacketBadge"
 import AppContext, { DrawerType } from "./AppContext"
 import { META_PIPE, SRV_LOGGER } from "../../jacdac-ts/src/jdom/constants"
 import { prettyDuration } from "../../jacdac-ts/src/jdom/pretty"
 import { ellipseJoin } from "../../jacdac-ts/src/jdom/utils"
-import { jdpack, jdunpack } from "../../jacdac-ts/src/jdom/pack"
+import { jdunpack } from "../../jacdac-ts/src/jdom/pack"
 import { navigate } from "gatsby"
 import useMediaQueries from "./hooks/useMediaQueries"
 

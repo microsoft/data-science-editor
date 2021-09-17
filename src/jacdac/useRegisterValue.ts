@@ -27,24 +27,37 @@ function readRegisterValue<T>(
     }
 }
 
+export interface HumanRegisterOptions extends RegisterOptions {
+    maxLength?: number
+}
+
 export function useRegisterHumanValue(
     register: JDRegister,
-    options?: RegisterOptions
+    options?: HumanRegisterOptions
 ): string {
     const [value, setValue] = useState<string>(register?.humanValue)
-    const { visible } = options || { visible: true }
+    const { visible, maxLength } = options || { visible: true }
     const { trackError } = useAnalytics()
 
     // update value
     useEffect(() => {
         const readValue = () =>
-            readRegisterValue(register, _ => _?.humanValue, "???", trackError)
+            readRegisterValue(
+                register,
+                _ => {
+                    let v = _?.humanValue
+                    if (v?.length > maxLength) v = v.slice(0, maxLength) + "..."
+                    return v
+                },
+                "???",
+                trackError
+            )
         setValue(readValue)
         return (
             visible &&
             register?.subscribe(REPORT_UPDATE, () => setValue(readValue))
         )
-    }, [register, visible])
+    }, [register, visible, maxLength])
     return value
 }
 
