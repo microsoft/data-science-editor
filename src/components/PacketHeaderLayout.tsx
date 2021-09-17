@@ -57,6 +57,7 @@ export default function PacketHeaderLayout(props: {
     const pkt = packet || Packet.fromBinary(fromHex(data))
     const { header } = pkt
     const frameFlags = header[3]
+    const multi = pkt.isMultiCommand
     const serviceCommand = pkt.serviceCommand
 
     const slots: SlotProps[] = [
@@ -81,14 +82,28 @@ export default function PacketHeaderLayout(props: {
             name: "frame_flags",
             description: "Flags specific to this frame.",
         },
-        {
+        multi && {
+            offset: 4,
+            size: 4,
+            format: NumberFormat.UInt32LE,
+            formatHex: true,
+            name: "service_identifier",
+            description: "multicast service identifier",
+        },
+        multi && {
+            offset: 8,
+            size: 4,
+            formatHex: true,
+            name: "...",
+            description: "multicast none",
+        },
+        !multi && {
             offset: 4,
             size: 8,
             formatHex: true,
             name: "device_identifiter",
             description: "64-bit device identifier",
         },
-
         {
             offset: 12,
             size: 1,
@@ -117,7 +132,7 @@ export default function PacketHeaderLayout(props: {
             name: "service_command",
             description: "Identifier for the command",
         },
-    ]
+    ].filter(c => !!c)
 
     const flags = [
         {
