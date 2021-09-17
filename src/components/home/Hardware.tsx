@@ -1,6 +1,6 @@
 import { Grid } from "@material-ui/core"
 import { StaticImage } from "gatsby-plugin-image"
-import React from "react"
+import React, { lazy, Suspense } from "react"
 import CarouselGrid from "./CarouselGrid"
 import CenterGrid from "./CenterGrid"
 import FeatureItem from "./FeatureItem"
@@ -8,7 +8,14 @@ import SplitGrid from "./SplitGrid"
 import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew"
 import CameraIcon from "@material-ui/icons/Camera"
 import TelegramIcon from "@material-ui/icons/Telegram"
+import useMediaQueries from "../hooks/useMediaQueries"
+const DeviceSpecificationList = lazy(
+    () => import("../specification/DeviceSpecificationList")
+)
+
 export default function Protocol() {
+    const { mobile, medium } = useMediaQueries()
+    const cols = mobile ? 1 : medium ? 3 : 4
     return (
         <Grid
             container
@@ -114,6 +121,12 @@ export default function Protocol() {
                 buttonVariant="link"
                 buttonUrl="/tools/device-registration/"
             />
+
+            <Grid item xs={12}>
+                <Suspense fallback={null}>
+                    <DeviceSpecificationList count={cols} shuffle={true} />
+                </Suspense>
+            </Grid>
 
             <CarouselGrid>
                 <Grid item xs={12} sm={4}>
