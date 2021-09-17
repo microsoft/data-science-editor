@@ -15,7 +15,7 @@ import {
     isSensor,
     serviceSpecifications,
 } from "../../jacdac-ts/src/jdom/spec"
-import { arrayConcatMany, unique } from "../../jacdac-ts/src/jdom/utils"
+import { arrayConcatMany, hexNum, unique } from "../../jacdac-ts/src/jdom/utils"
 import MakeCodeIcon from "../components/icons/MakeCodeIcon"
 import KindIcon from "../components/KindIcon"
 import { serviceProviderDefinitionFromServiceClass } from "../../jacdac-ts/src/servers/servers"
@@ -83,11 +83,16 @@ export default function ServiceCatalog() {
         []
     )
     const services = useMemo(() => {
-        const m = query.toLowerCase()
+        const m = query.toLowerCase().trim()
         let r = serviceSpecifications()
         if (m) {
             const filter = (s: string) => s?.toLowerCase().indexOf(m) > -1
-            r = r.filter(srv => filter(srv.name) || filter(srv.notes["short"]))
+            r = r.filter(
+                srv =>
+                    filter(srv.name) ||
+                    filter(srv.notes["short"]) ||
+                    hexNum(srv.classIdentifier) === query
+            )
         }
         if (tag) {
             r = r.filter(srv => srv.group === tag || srv.tags.indexOf(tag) > -1)
