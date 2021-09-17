@@ -31,7 +31,6 @@ export default function CodeSandboxButton(props: {
                 }
             )
             const data = await x.json()
-            console.log(data)
             const url = `https://codesandbox.io/s/${data.sandbox_id}?file=/${file}`
             window.location.href = url
         } catch (error) {
