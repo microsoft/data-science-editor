@@ -331,6 +331,7 @@ exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
     const fallback = {
         util: require.resolve("util/"),
         assert: require.resolve("assert/"),
+        fs: false,
     }
     if (stage.startsWith("develop")) {
         setWebpackConfig({
@@ -347,7 +348,7 @@ exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
         console.log(`enabling ignore filters`)
         setWebpackConfig({
             node: {
-                fs: 'empty'
+                fs: "empty",
             },
             resolve: {
                 fallback,
