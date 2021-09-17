@@ -57,7 +57,7 @@
     "gatsby-remark-autolink-headers": "^4.10.0",
     "gatsby-remark-external-links": "0.0.4",
     "gatsby-remark-images": "^5.10.0",
-    "gatsby-remark-makecode": "^1.0.13",
+    "gatsby-remark-makecode": "^1.0.14",
     "gatsby-remark-prismjs": "^5.10.0",
     "gatsby-remark-static-images": "^1.2.1",
     "gatsby-source-filesystem": "^3.13.0",
