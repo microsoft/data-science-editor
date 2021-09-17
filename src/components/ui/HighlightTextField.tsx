@@ -14,8 +14,10 @@ import DarkModeContext from "./DarkModeContext"
 import { useEditable } from "use-editable"
 import { Alert } from "@material-ui/lab"
 import { Grid, Tooltip, withStyles } from "@material-ui/core"
-import Suspense from "../ui/Suspense";
-const GithubPullRequestButton = lazy(() => import('../buttons/GithubPullRequestButton'));
+import Suspense from "../ui/Suspense"
+const GithubPullRequestButton = lazy(
+    () => import("../buttons/GithubPullRequestButton")
+)
 
 const AnnotationTooltip = withStyles(theme => ({
     arrow: {
@@ -74,6 +76,7 @@ export default function HighlightTextField(props: {
                                 ...{
                                     minHeight: "12rem",
                                     whiteSpace: "pre-wrap",
+                                    overflowWrap: "break-word",
                                 },
                             }}
                         >

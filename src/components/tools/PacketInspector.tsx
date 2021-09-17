@@ -81,6 +81,7 @@ export default function PacketInspector() {
                             </Tooltip>
                         </Box>
                     </code>
+                    <br />
                     <code>
                         <Box component="span" mr={theme.spacing(0.1)}>
                             <Tooltip title={"data"}>
