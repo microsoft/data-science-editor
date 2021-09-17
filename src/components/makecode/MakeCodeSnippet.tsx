@@ -72,7 +72,6 @@ function MakeCodeButton(props: { req: Request }) {
                 }),
             })
             const data = await x.json()
-            console.log(data)
             const url = `${editor}#pub:${data.shortid}`
             window.location.href = url
         } catch (error) {
@@ -100,7 +99,6 @@ export default function MakeCodeSnippet(props: { renderedSource: string }) {
         source: string
         rendered: Rendered
     }
-    console.log({ rendered })
     const { url, req } = rendered || {}
     const tabs = ["blocks", "typescript"]
     const { editor, setEditor } = useContext(MakeCodeSnippetContext)
