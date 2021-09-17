@@ -94,8 +94,8 @@ export default function PacketHeaderLayout(props: {
             offset: 8,
             size: 4,
             formatHex: true,
-            name: "...",
-            description: "multicast none",
+            name: "ignored",
+            description: "ignored in multicast",
         },
         !multi && {
             offset: 4,
