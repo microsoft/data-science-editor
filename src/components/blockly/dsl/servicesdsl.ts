@@ -1,7 +1,7 @@
 import {
     SRV_HID_KEYBOARD,
     SRV_LED,
-    SRV_LED_MATRIX,
+    SRV_DOT_MATRIX,
     SRV_SEVEN_SEGMENT_DISPLAY,
 } from "../../../../jacdac-ts/src/jdom/constants"
 import type { DataRecordWindowRequest } from "../../../workers/data/dist/node_modules/data.worker"
@@ -187,24 +187,24 @@ export class ServicesBlockDomainSpecificLanguage
                         template: "custom",
                     }
             ),
-            ...resolveService(SRV_LED_MATRIX).map(
+            ...resolveService(SRV_DOT_MATRIX).map(
                 service =>
                     <CustomBlockDefinition>{
                         kind: "block",
-                        type: `show_leds`,
-                        message0: `show %1 leds %2`,
+                        type: `show_dots`,
+                        message0: `show %1 dots %2`,
                         args0: [
                             roleVariable(service),
                             {
                                 type: LEDMatrixField.KEY,
-                                name: "leds",
+                                name: "dots",
                             },
                         ],
                         colour: this.serviceColor(service),
                         inputsInline: true,
                         previousStatement: CODE_STATEMENT_TYPE,
                         nextStatement: CODE_STATEMENT_TYPE,
-                        tooltip: `Display LEDs on the LED matrix`,
+                        tooltip: `Display dots on the dot matrix`,
                         helpUrl: serviceHelp(service),
                         service,
                         // encode digits

@@ -8,7 +8,7 @@ import Suspense from "../ui/Suspense"
 import {
     SRV_BUTTON,
     SRV_JOYSTICK,
-    SRV_LED_MATRIX,
+    SRV_DOT_MATRIX,
     SRV_LED_PIXEL,
     SRV_POTENTIOMETER,
     SRV_ROLE_MANAGER,
@@ -26,11 +26,11 @@ export default function Tools() {
     useServiceProviderFromServiceClass(SRV_SERVO)
     useServiceProviderFromServiceClass(SRV_POTENTIOMETER)
     useServiceProviderFromServiceClass(SRV_LED_PIXEL)
-    useServiceProviderFromServiceClass(SRV_LED_MATRIX)
+    useServiceProviderFromServiceClass(SRV_DOT_MATRIX)
     const { setDrawerType } = useContext(AppContext)
     const handleShowDeviceTree = () => setDrawerType(DrawerType.Dom)
     const handleShowPacketConsole = () => setDrawerType(DrawerType.Packets)
-    const simulatorClass = SRV_LED_MATRIX
+    const simulatorClass = SRV_DOT_MATRIX
     const dashboards = useDevices({ ignoreSelf: true, announced: true })
         .filter(
             dev =>
