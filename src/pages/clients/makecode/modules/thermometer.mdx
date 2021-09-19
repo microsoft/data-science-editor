@@ -1,8 +1,16 @@
 # Thermometer Client
 
+The thermometer client reports the temperature in degrees Celsius. 
+The `temperature` method returns the current temperature. As is
+the case with all sensors, an event handler is supplied for when
+the sensor value (temperature) changes by a specified amount.
+
+The program below prints the current temperature whenever it changes
+by one degree Celsius:
+
 ```blocks
 modules.thermometer1.onTemperatureChangedBy(1, function () {
-	
+    basic.showNumber(modules.thermometer1.temperature())
 })
-let temp = modules.thermometer1.temperature()
+
 ```
