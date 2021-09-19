@@ -32,7 +32,7 @@ The low-level state of the button is accesible via the the `pressure` register,
 which ranges in value from where 0 is open and 0xffff is fully pressed.
 
 ```blocks
-forever(() => {
+basic.forever(() => {
     if (modules.button1.pressure() === 0xffff) 
         basic.showString("D")
     else if (modules.button1.pressure() === 0)
