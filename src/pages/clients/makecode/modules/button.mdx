@@ -13,20 +13,18 @@ the three events, as shown in the small example below
 
 ```blocks
 let holdCount = 0
-
 modules.button1.onDown(() => {
     holdCount = 0
     basic.showString("D")
 })
-
 modules.button1.onHold(() => {
     holdCount++
     basic.showNumber(holdCount)
 })
-
 modules.button1.onUp(() => {
     basic.showString("U")
 })
+```
 
 ## Registers
 
@@ -42,6 +40,5 @@ forever(() => {
     else
         basic.showString("x")
 })
-
 ```
 
