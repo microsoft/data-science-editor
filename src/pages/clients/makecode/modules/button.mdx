@@ -1,2 +1,47 @@
 # MakeCode Client for Button Service
 
+The main way to work with a button is through event handlers for the events
+*down*, *up*, and *hold*. The (unbounced) *down* event is raised when the
+button is pressed, while the *up* event is raised when the button is released.
+The *hold* event is generated if the button is held for more than 1/2 second,
+and every 1/2 second after that until the button is released.
+
+There are three handlers (*onDown*, *onHold*, and *onHeld*) for each of
+the three events, as shown in the small example below
+
+## Events
+
+```blocks
+let holdCount = 0
+
+modules.button1.onDown(() => {
+    holdCount = 0
+    basic.showString("D")
+})
+
+modules.button1.onHold(() => {
+    holdCount++
+    basic.showNumber(holdCount)
+})
+
+modules.button1.onUp(() => {
+    basic.showString("U")
+})
+
+## Registers
+
+The low-level state of the button is accesible via the the `pressure` register,
+which ranges in value from where 0 is open and 0xffff is fully pressed.
+
+```blocks
+forever(() => {
+    if (modules.button1.pressure() === 0xffff) 
+        basic.showString("D")
+    else if (modules.button1.pressure() === 0)
+        basic.showString("U")
+    else
+        basic.showString("x")
+})
+
+```
+
