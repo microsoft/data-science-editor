@@ -13,7 +13,7 @@ export default function Kit() {
             alignItems="center"
         >
             <SplitGrid
-                title="Kit"
+                title="Hardware Kit"
                 subtitle3="Hardware Module Kit"
                 imageColumns={6}
                 image={
