@@ -63,7 +63,7 @@ export default function Software() {
 
             <SplitGrid
                 right={true}
-                subtitle="MakeCode."
+                subtitle="MakeCode"
                 description="Add Jacdac to your micro:bit V2, Arcade or Maker board."
                 buttonText="MakeCode library"
                 buttonVariant="link"
@@ -78,7 +78,7 @@ export default function Software() {
 
             <SplitGrid
                 right={false}
-                subtitle="Node-RED."
+                subtitle="Node-RED"
                 description="Add Jacdac to your Node-RED flows."
                 buttonText="Jacdac node"
                 buttonVariant="link"

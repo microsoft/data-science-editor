@@ -22,7 +22,7 @@ export default function Clients() {
 
             <SplitGrid
                 right={true}
-                subtitle="JavaScript and TypeScript."
+                subtitle="JavaScript and TypeScript"
                 description="From the browser or Node.JS, use our JavaScript/TypeScript library to interact with physical Jacdac devices. If you can build a web page, you can program Jacdac."
                 buttonText="JavaScript/TypeScript library"
                 buttonVariant="link"
@@ -38,7 +38,7 @@ export default function Clients() {
 
             <SplitGrid
                 right={false}
-                subtitle="MakeCode."
+                subtitle="MakeCode"
                 description="Code Jacdac into your micro:bit V2, Arcade or Maker board."
                 buttonText="MakeCode extension"
                 buttonVariant="link"
@@ -53,7 +53,7 @@ export default function Clients() {
 
             <SplitGrid
                 right={true}
-                subtitle="Node-RED."
+                subtitle="Node-RED"
                 description="Add Jacdac to your Node-RED flows."
                 buttonText="Jacdac node"
                 buttonVariant="link"

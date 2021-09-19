@@ -13,7 +13,7 @@ const DeviceSpecificationList = lazy(
     () => import("../specification/DeviceSpecificationList")
 )
 
-export default function Protocol() {
+export default function Hardware() {
     const { mobile, medium } = useMediaQueries()
     const cols = mobile ? 1 : medium ? 3 : 4
     return (
@@ -175,6 +175,20 @@ export default function Protocol() {
                 buttonText="Integrate Jacdac into your hardware"
                 buttonVariant="link"
                 buttonUrl="/hardware/connector"
+            />
+
+            <SplitGrid
+                subtitle="Kit"
+                subtitle3="Hardware Module Kit"
+                imageColumns={6}
+                image={
+                    <StaticImage
+                        src="./kittop.jpg"
+                        alt="Kit cardboard view from top"
+                    />
+                }
+                buttonText="Unbox"
+                buttonUrl="/hardware/kit/"
             />
         </Grid>
     )
