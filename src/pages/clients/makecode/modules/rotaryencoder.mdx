@@ -1,2 +1,19 @@
 # Rotary Encoder Client
 
+The rotary encoder client reports the position of an incremental
+rotary encoder in number of clicks from the initial position (0),
+where clockwise motion increases the position and counter-clockwise
+motion decreases the position. 
+The `position` method returns the current position. 
+
+As is the case with all sensors, an event handler is supplied for when
+the sensor value (position) changes by a specified amount.
+
+The program below uses the two rotary encoder APIs to print 
+the current position whenever it changes by one click:
+
+```blocks
+modules.rotaryEncoder1.onPositionChangedBy(1, () => {
+    basic.showNumber(modules.rotaryEncoder1.position())
+})
+```
