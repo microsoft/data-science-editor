@@ -31,8 +31,8 @@ export default function Kit() {
                 imageColumns={6}
                 image={
                     <StaticImage
-                        src="./kitdashboard.png"
-                        alt="Dashboard with a cartoonified laptop in front"
+                        src="./dashboardkit.png"
+                        alt="Jacdac devices connected to a computer with a dashboard"
                     />
                 }
                 buttonText="Dashboard"
