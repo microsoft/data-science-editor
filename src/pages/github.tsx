@@ -78,8 +78,9 @@ export default function Page() {
                     "microsoft/pxt-jacdac/tools/multitool",
                     "microsoft/pxt-jacdac/tools/hid-events",
                     "microsoft/pxt-jacdac/devices/microbit",
+                    "microsoft/pxt-jacdac/tools/microbit-oob",
                 ]}
-                showDescription={true}
+                showDescription={false}
             />
 
             <h2> Documentation</h2>
