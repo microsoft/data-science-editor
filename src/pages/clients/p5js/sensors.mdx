@@ -39,20 +39,28 @@ const [r = 0, g = 0, b = 0] = potentiometer
 
 Use those values any way you want!
 
-```p5js
+```javascript
 // rescale 0..1 to 0..255 and repaint background
 background(r * 255, g * 255, b * 255)
+```
+
+All together, our draw function looks like to control the background color with potentiometers
+
+```p5js
+function draw() {
+    const { potentiometer } = jacdac.sensors
+    const [r = 0, g = 0, b = 0] = potentiometer
+    background(r * 255, g * 255, b * 255)
+}
 -----
 function setup() {
     createCanvas(400, 400)
+    const capture = createCapture(VIDEO);
+    capture.size(400, 320);
 }
 function draw() {
-    // grabs an array with all potentiometer readings (number[]) connected to jacdac
     const { potentiometer } = jacdac.sensors
-    // destructure readings into r,g,b variables
-    // if sensors are missing, default to 0
     const [r = 0, g = 0, b = 0] = potentiometer
-    // rescale 0..1 to 0..255 to repaint background
     background(r * 255, g * 255, b * 255)
 }
 ```
