@@ -26,14 +26,14 @@ export default function Page() {
             />
             <h2>Module Development</h2>
 
-            <h3>Schematics and C SDK</h3>
+            <h3>Schematics and Server C SDK</h3>
 
             <GithubRepositoryList
                 repos={["microsoft/jacdac-ddk", "microsoft/jacdac-c"]}
                 showDescription={true}
             />
 
-            <h3> Embedded Platforms</h3>
+            <h3>Server SDKs</h3>
 
             <GithubRepositoryList
                 repos={[
@@ -44,30 +44,17 @@ export default function Page() {
                 showDescription={true}
             />
 
-            <h2>Embedded Firmware</h2>
+            <h2>Client SDKs</h2>
 
             <GithubRepositoryList
-                repos={[
-                    "microsoft/pxt-jacdac",
-                    "microsoft/jacdac-circuitpython",
-                ]}
-                showDescription={true}
-            />
-
-            <h2>Libraries</h2>
-
-            <GithubRepositoryList
-                repos={["microsoft/jacdac-ts", "microsoft/jacdac-dotnet"]}
+                repos={["microsoft/jacdac-ts", "microsoft/pxt-jacdac"]}
                 showDescription={true}
             />
 
             <h2>Integrations</h2>
 
             <GithubRepositoryList
-                repos={[
-                    "microsoft/node-red-contrib-jacdac",
-                    "microsoft/jupyter-jacdac",
-                ]}
+                repos={["microsoft/node-red-contrib-jacdac"]}
                 showDescription={true}
             />
 
@@ -87,6 +74,17 @@ export default function Page() {
 
             <GithubRepositoryList
                 repos={["microsoft/jacdac-docs"]}
+                showDescription={true}
+            />
+
+            <h2>Experimental</h2>
+
+            <GithubRepositoryList
+                repos={[
+                    "microsoft/jacdac-circuitpython",
+                    "microsoft/jacdac-dotnet",
+                    "microsoft/jupyter-jacdac",
+                ]}
                 showDescription={true}
             />
 
