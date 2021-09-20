@@ -1,15 +1,18 @@
 # Button Extension
 
-The main way to work with a button is through event handlers for the events
-*down*, *up*, and *hold*. The (unbounced) *down* event is raised when the
+The button extension provides event handlers for the events
+*down*, *up*, and *hold*, as well as methods for accessing the underlying
+state of a button. 
+
+## Events
+
+The (unbounced) *down* event is raised when the
 button is pressed, while the (unbounced) *up* event is raised when the button is released.
 The *hold* event is generated if the button is held for more than 1/2 second,
 and every 1/2 second after that until the button is released.
 
 There are three handlers (*onDown*, *onUp*, and *onHold*) for each of
 the three events, as shown in the small example below
-
-## Events
 
 ```blocks
 let holdCount = 0

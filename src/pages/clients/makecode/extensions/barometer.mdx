@@ -1,0 +1,19 @@
+# Barometer Extension
+
+The barometer extension reports the pressure in hPa 
+(the abbreviated name for a hectopascal pressure unit,
+which is exactly equal to a millibar).
+The `pressure` method returns the current barometric pressure.
+
+As is the case with all sensors, an event handler is supplied for when
+the sensor value (pressure) changes by a specified amount.
+
+The program below use the two barometer APIs to print
+the current pressure whenever it changes by 0.2 hPa
+
+
+```blocks
+modules.barometer1.onPressureChangedBy(0.2, function() {
+    basic.showNumber(modules.barometer1.pressure())
+})
+```
