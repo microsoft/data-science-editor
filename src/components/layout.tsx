@@ -185,7 +185,7 @@ function LayoutWithContext(props: LayoutProps) {
     const classes = useStyles()
 
     const { darkMode } = useContext(DarkModeContext)
-    const { drawerType, toolsMenu, enqueueSnackbar } = useContext(AppContext)
+    const { drawerType, toolsMenu } = useContext(AppContext)
     const drawerOpen = drawerType !== DrawerType.None
     const { medium } = useMediaQueries()
     const container = !medium && !fullWidthTools
@@ -196,12 +196,6 @@ function LayoutWithContext(props: LayoutProps) {
         [classes.contentShift]: drawerOpen,
         [classes.toolsContentShift]: toolsMenu,
     })
-
-    // show under construction warning
-    useEffect(() => {
-        if (!hideUnderConstruction)
-            enqueueSnackbar(UNDER_CONSTRUCTION_MESSAGE, `warning`)
-    }, [])
 
     const InnerMainSection = () => (
         <>
