@@ -253,14 +253,11 @@ export default function DeviceRegistration() {
         const controlService = dev.service(0)
         const descrReg = controlService.register(ControlReg.DeviceDescription)
         await descrReg.refresh(true)
-        const urlReg = controlService.register(ControlReg.DeviceUrl)
-        await urlReg.refresh(true)
 
         const fw = await dev.resolveProductIdentifier()
         if (fw) device.productIdentifiers = [fw]
         device.services = dev.serviceClasses.slice(1)
         device.description = descrReg.stringValue
-        device.link = urlReg.stringValue
         updateDevice()
     }
 
