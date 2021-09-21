@@ -35,7 +35,7 @@ export default function Kit() {
                             />
                         }
                         subtitle2="Unbox"
-                        description="Use the dashboard to interact with modules in the browser."
+                        description="Explore the contents of the kit."
                         buttonText="Modules"
                         buttonUrl="/hardware/kit/modules"
                     />
@@ -44,7 +44,7 @@ export default function Kit() {
                     <FeatureItem
                         startImage={
                             <StaticImage
-                                src="./dashboardkit.png"
+                                src="./kit/dashboard.jpg"
                                 alt="Jacdac devices connected to a computer with a dashboard"
                             />
                         }
@@ -58,7 +58,7 @@ export default function Kit() {
                     <FeatureItem
                         startImage={
                             <StaticImage
-                                src="./makecode.png"
+                                src="./kit/makecode.jpg"
                                 alt="Block code to swipe a servo"
                             />
                         }

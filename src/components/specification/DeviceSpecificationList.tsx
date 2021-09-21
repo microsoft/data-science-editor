@@ -43,8 +43,9 @@ export default function DeviceSpecificationList(props: {
     shuffle?: boolean
     company?: string
     requiredServiceClasses?: number[]
+    devices?: string[]
 }) {
-    const { count, shuffle, requiredServiceClasses, company } = props
+    const { count, shuffle, requiredServiceClasses, company, devices } = props
     const classes = useStyles()
     const { mobile, medium } = useMediaQueries()
     const cols = mobile ? 1 : medium ? 3 : 4
@@ -61,10 +62,11 @@ export default function DeviceSpecificationList(props: {
                         srv => spec.services.indexOf(srv) > -1
                     )
             )
+        if (devices) r = r.filter(spec => devices.indexOf(spec.id) > -1)
         if (shuffle) arrayShuffle(r)
         if (count !== undefined) r = r.slice(0, count)
         return r
-    }, [requiredServiceClasses, shuffle, count])
+    }, [requiredServiceClasses, shuffle, count, JSON.stringify(devices)])
 
     if (!specs.length)
         return (

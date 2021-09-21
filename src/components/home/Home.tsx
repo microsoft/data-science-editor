@@ -12,26 +12,6 @@ import SubscriptionsIcon from "@material-ui/icons/Subscriptions"
 import useMediaQueries from "../hooks/useMediaQueries"
 const DeviceSpecificationList = lazy(() => import("../specification/DeviceSpecificationList"))
 
-/**
-            <Grid item xs={12}>
-                <StaticImage
-                    src="./gallery.png"
-                    alt="A gallery of Jacdac modules"
-                />
-            </Grid>
-            <CarouselGrid>
-                <Grid item xs={12} sm={6}>
-                    <StaticImage
-                        src="./tangled.png"
-                        alt="Tangled Jacdac cable"
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <StaticImage src="./hub.png" alt="A hub PCB" />
-                </Grid>
-            </CarouselGrid>
- */
-
 export default function Home() {
     const { mobile, medium } = useMediaQueries()
     const cols = mobile ? 1 : medium ? 3 : 4
@@ -108,7 +88,7 @@ export default function Home() {
 
             <SplitGrid
                 right={true}
-                subtitle="Client Software."
+                subtitle="Client SDKs"
                 description="Integrate Jacdac in the Web or Node.JS using our Javascript/TypeScript library."
                 buttonText="Add Jacdac to your apps"
                 buttonVariant="link"
@@ -118,7 +98,7 @@ export default function Home() {
 
             <SplitGrid
                 right={false}
-                subtitle="Tools."
+                subtitle="Tools"
                 description="Visualize, debug, sniff, track, record, replay, update... from your browser."
                 buttonText="Get productive with Jacdac"
                 buttonVariant="link"
@@ -127,7 +107,7 @@ export default function Home() {
             />
 
             <CenterGrid
-                subtitle="Discover the benefits of Jacdac protocol."
+                subtitle="Discover the benefits of Jacdac protocol"
                 description="Jacdac devices communicate using packets over a bus, where each device can advertise itself and the set of services it provides. A service provides registers, events and commands to communicate with other devices."
                 buttonText="Protocol specification"
                 buttonVariant="link"
