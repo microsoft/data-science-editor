@@ -19,8 +19,6 @@ const modules = [
 ]
 
 export default function KitModules() {
-    const { mobile, medium } = useMediaQueries()
-    const cols = mobile ? 1 : medium ? 3 : 4
     return (
         <Grid
             container
@@ -60,7 +58,7 @@ export default function KitModules() {
             <CenterGrid subtitle="Modules" />
             <Grid item xs={12}>
                 <Suspense fallback={null}>
-                    <DeviceSpecificationList count={cols} devices={modules} />
+                    <DeviceSpecificationList devices={modules} />
                 </Suspense>
             </Grid>
 
