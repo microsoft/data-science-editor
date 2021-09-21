@@ -62,7 +62,7 @@ export default function Kit() {
                                 alt="Block code to swipe a servo"
                             />
                         }
-                        subtitle="Build"
+                        subtitle2="Build"
                         description="Code Jacdac into your micro:bit V2, Arcade or Maker board."
                         buttonText="MakeCode"
                         buttonUrl="/clients/makecode"
