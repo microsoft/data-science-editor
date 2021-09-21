@@ -4,8 +4,11 @@ import {
     MenuItem,
     TextField,
 } from "@material-ui/core"
-import React, { ChangeEvent, useState } from "react"
-import { serviceSpecifications } from "../../../jacdac-ts/src/jdom/spec"
+import React, { ChangeEvent, useMemo, useState } from "react"
+import {
+    deviceSpecificationsForService,
+    serviceSpecifications,
+} from "../../../jacdac-ts/src/jdom/spec"
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -22,13 +25,29 @@ export default function ServiceSpecificationSelect(props: {
     variant?: "outlined" | "filled" | "standard"
     fullWidth?: boolean
     error?: string
+    hasRegisteredDevice?: boolean
 }) {
-    const { label, serviceClass, setServiceClass, variant, fullWidth, error } =
-        props
+    const {
+        label,
+        serviceClass,
+        setServiceClass,
+        variant,
+        fullWidth,
+        error,
+        hasRegisteredDevice,
+    } = props
     const [labelId] = useState("select-" + Math.random())
     const classes = useStyles()
-    const specs = serviceSpecifications().filter(
-        spec => !/^_/.test(spec.shortId)
+    const specs = useMemo(
+        () =>
+            serviceSpecifications()
+                .filter(spec => !/^_/.test(spec.shortId))
+                .filter(
+                    spec =>
+                        !hasRegisteredDevice ||
+                        !!deviceSpecificationsForService(spec.classIdentifier)?.length
+                ),
+        [hasRegisteredDevice]
     )
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) =>
