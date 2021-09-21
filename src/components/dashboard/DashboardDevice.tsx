@@ -6,9 +6,8 @@ import {
     Paper,
     Typography,
 } from "@material-ui/core"
-import React, { useCallback, useContext, useEffect, useRef } from "react"
+import React, { useCallback, useRef } from "react"
 import {
-    RESTART,
     SRV_CONTROL,
     SRV_LOGGER,
     SRV_PROTO_TEST,
@@ -32,7 +31,6 @@ import { DashboardDeviceProps } from "./Dashboard"
 import useIntersectionObserver from "../hooks/useIntersectionObserver"
 import { dependencyId } from "../../../jacdac-ts/src/jdom/eventsource"
 import useMediaQueries from "../hooks/useMediaQueries"
-import AppContext from "../AppContext"
 import { DeviceLostAlert } from "../alert/DeviceLostAlert"
 
 const ignoredServices = [SRV_CONTROL, SRV_LOGGER, SRV_SETTINGS, SRV_PROTO_TEST]
@@ -53,9 +51,7 @@ export default function DashboardDevice(
         variant,
         showAvatar,
         showHeader,
-        hideNotifications,
     } = props
-    const { enqueueSnackbar } = useContext(AppContext)
     const { xs: mobile } = useMediaQueries()
 
     const name = useDeviceName(device)
@@ -70,16 +66,6 @@ export default function DashboardDevice(
     const serviceGridRef = useRef<HTMLDivElement>()
     const intersection = useIntersectionObserver(serviceGridRef)
     const visible = !!intersection?.isIntersecting
-
-    // track restart events
-    useEffect(
-        () =>
-            !hideNotifications &&
-            device?.subscribe(RESTART, () =>
-                enqueueSnackbar(`${device.shortId} restarted...`, "info")
-            ),
-        [device]
-    )
 
     const ServiceWidgets = useCallback(
         () => (

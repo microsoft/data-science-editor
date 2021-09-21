@@ -57,7 +57,6 @@ export interface DashboardDeviceProps {
     showHeader?: boolean
     showAvatar?: boolean
     serviceFilter?: (srv: JDService) => boolean
-    hideNotifications?: boolean
 }
 
 export interface DashboardProps extends DashboardDeviceProps {
