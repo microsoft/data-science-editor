@@ -30,6 +30,27 @@ In proxy mode, the Jacdac messages are transmitted by the MakeCode code is not e
 
 ![Switching proxy mode between simulator and hardware micro:bit](./onebrain.gif)
 
+## Role lifecycle
+
+Each role, like ``button1`` defined in the MakeCode program needs to be bound to a server (module) before it starts to operate. 
+When the micro:bit starts or when a new module is plugged, it may take a couple seconds before roles around bound (there is some time needed to discover modules on the bus).
+This means that typically roles are not yet bound when running the ``on start`` block.
+
+Instead of using ``on start``, you can use ``on connected`` and ``on disconnected``
+to start or stop using a role.
+
+```blocks
+modules.button1.onDisconnected(function () {
+    basic.showIcon(IconNames.No)
+})
+modules.button1.onConnected(function () {
+    basic.showIcon(IconNames.Heart)
+})
+```
+
+![An animation that shows how to create new roles](./multiroles.gif)
+
+
 ## Multiple Roles
 
 When running your code, Jacdac binds the modules detected on the bus with the **roles** defined in your program.
