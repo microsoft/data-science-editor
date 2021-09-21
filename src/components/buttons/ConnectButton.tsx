@@ -14,8 +14,9 @@ export default function ConnectButton(props: {
     className?: string
     transparent?: boolean
     transport: Transport
+    onClick?: () => void
 }) {
-    const { full, className, transparent, transport } = props
+    const { full, className, transparent, transport, onClick } = props
     const { type } = transport
     const connectionState = useChange(transport, t => t.connectionState)
     const showDisconnect =
@@ -29,9 +30,15 @@ export default function ConnectButton(props: {
     const disabled =
         connectionState != ConnectionState.Connected &&
         connectionState != ConnectionState.Disconnected
-    const onClick = showDisconnect
-        ? () => transport.disconnect()
-        : () => transport.connect()
+    const handleClick = showDisconnect
+        ? async () => {
+              onClick?.()
+              await transport.disconnect()
+          }
+        : async () => {
+              onClick?.()
+              await transport.connect()
+          }
     const icon = (
         <Badge color="primary" variant="dot" invisible={!showDisconnect}>
             <TransportIcon type={transport.type} />
@@ -56,7 +63,7 @@ export default function ConnectButton(props: {
                     className={className}
                     disabled={disabled}
                     indeterminate={inProgress}
-                    onClick={onClick}
+                    onClick={handleClick}
                 >
                     {icon}
                 </IconButtonWithProgress>
@@ -75,7 +82,7 @@ export default function ConnectButton(props: {
                 className={className}
                 startIcon={icon}
                 disabled={disabled}
-                onClick={onClick}
+                onClick={handleClick}
             >
                 {title}
             </Button>

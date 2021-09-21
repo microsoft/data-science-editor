@@ -1,27 +1,18 @@
 // tslint:disable-next-line: no-submodule-imports
-import { Box, createStyles, makeStyles } from "@material-ui/core"
+import { Box } from "@material-ui/core"
 // tslint:disable-next-line: no-submodule-imports
 import Alert from "../ui/Alert"
 import React, { useContext } from "react"
 import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
-import ConnectButton from "../buttons/ConnectButton"
 import { NoSsr } from "@material-ui/core"
 import useChange from "../../jacdac/useChange"
-
-const useStyles = makeStyles(theme =>
-    createStyles({
-        button: {
-            marginLeft: theme.spacing(2),
-        },
-    })
-)
+import ConnectButtons from "../buttons/ConnectButtons"
 
 function NoSsrConnectAlert(props: {
     serviceClass?: number
     closeable?: boolean
 }) {
-    const classes = useStyles()
     const { serviceClass, closeable } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { transports } = bus
@@ -38,15 +29,9 @@ function NoSsrConnectAlert(props: {
             <Alert severity="info" closeable={closeable}>
                 {!spec && <span>Did you connect your device?</span>}
                 {spec && <span>Did you connect a {spec.name} device?</span>}
-                {transports.map(transport => (
-                    <ConnectButton
-                        key={transport.type}
-                        transport={transport}
-                        className={classes.button}
-                        full={true}
-                        transparent={true}
-                    />
-                ))}
+                <Box component="span" ml={2}>
+                    <ConnectButtons full={true} transparent={true} />
+                </Box>
             </Alert>
         </Box>
     )

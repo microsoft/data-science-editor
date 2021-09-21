@@ -22,6 +22,9 @@ const StartSimulatorDialog = lazy(
     () => import("./dialogs/StartSimulatorDialog")
 )
 const SelectRoleDialog = lazy(() => import("./dialogs/SelectRoleDialog"))
+const ConnectTransportDialog = lazy(
+    () => import("./dialogs/ConnectTransportDialog")
+)
 
 export enum DrawerType {
     None,
@@ -45,6 +48,7 @@ export interface AppProps {
     ) => void
     toggleShowDeviceHostsDialog: () => void
     showSelectRoleDialog: (srv: JDService) => void
+    toggleShowConnectTransportDialog: () => void
     selectedPacket: Packet
     setSelectedPacket: (pkt: Packet) => void
 }
@@ -60,6 +64,7 @@ const AppContext = createContext<AppProps>({
     enqueueSnackbar: () => {},
     toggleShowDeviceHostsDialog: () => {},
     showSelectRoleDialog: () => {},
+    toggleShowConnectTransportDialog: () => {},
     selectedPacket: undefined,
     setSelectedPacket: () => {},
 })
@@ -75,6 +80,8 @@ export const AppProvider = ({ children }) => {
     const [searchQuery, setSearchQuery] = useState("")
     const [toolsMenu, _setToolsMenu] = useState(false)
     const [showDeviceHostsDialog, setShowDeviceHostsDialog] = useState(false)
+    const [showConnectTransportDialog, setShowConnectTransportDialog] =
+        useState(false)
     const [showSelectRoleDialogService, setShowSelectRoleDialogService] =
         useState<JDService>(undefined)
     const { trackError } = useAnalytics()
@@ -139,6 +146,12 @@ export const AppProvider = ({ children }) => {
         if (!b) setToolsMenu(false)
     }
 
+    const toggleShowConnectTransportDialog = () => {
+        const b = !showConnectTransportDialog
+        setShowConnectTransportDialog(b)
+        if (!b) setToolsMenu(false)
+    }
+
     const handleCloseRoleDialog = () =>
         setShowSelectRoleDialogService(undefined)
     const showSelectRoleDialog = (srv: JDService) =>
@@ -157,6 +170,7 @@ export const AppProvider = ({ children }) => {
                 enqueueSnackbar,
                 toggleShowDeviceHostsDialog,
                 showSelectRoleDialog,
+                toggleShowConnectTransportDialog,
                 selectedPacket,
                 setSelectedPacket,
             }}
@@ -175,6 +189,14 @@ export const AppProvider = ({ children }) => {
                     <SelectRoleDialog
                         service={showSelectRoleDialogService}
                         onClose={handleCloseRoleDialog}
+                    />
+                </Suspense>
+            )}
+            {showConnectTransportDialog && (
+                <Suspense>
+                    <ConnectTransportDialog
+                        open={showConnectTransportDialog}
+                        onClose={toggleShowConnectTransportDialog}
                     />
                 </Suspense>
             )}

@@ -27,6 +27,7 @@ function LazyDeviceImage(props: { device: JDDevice }) {
     return (
         <>
             <img
+                alt="photograph of the device"
                 style={{
                     width: "100%",
                     display: showLarge ? undefined : "none",
@@ -36,6 +37,7 @@ function LazyDeviceImage(props: { device: JDDevice }) {
             />
             {!showLarge && (
                 <img
+                    alt="large photograph of the device"
                     style={{
                         minHeight: "18rem",
                         width: "100%",
