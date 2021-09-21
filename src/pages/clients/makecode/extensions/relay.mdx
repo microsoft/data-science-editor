@@ -1,2 +1,27 @@
 # Relay Extension
 
+The relay extension exposes the state of the relay
+via the method `closed`, which returns the value
+true when the relay is closed and false otherwise.
+
+The events 'on' and 'off', with associated event handlers
+are fired when the relay transitions from closed to open,
+and from open to closely, respectively
+
+The following code shows the APIs available for the 
+relay:
+
+
+```blocks
+modules.relay1.onOn(() => {
+    // when relay transitions from closed to open
+    basic.showString("On")
+    control.assert(!modules.relay1.closed())
+})
+
+modules.relay1.onOff(() => {
+    // when relay transitions from open to closed
+    basic.showString("Off")
+    control.assert(modules.relay1.closed())
+})
+```
