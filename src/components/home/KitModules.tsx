@@ -64,29 +64,45 @@ export default function KitModules() {
 
             <Grid item xs={12}>
                 <Grid container spacing={1}>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={6} md={4}>
+                        <Grid>
+                            <StaticImage
+                                src="./kit/opentop.jpg"
+                                alt="Kit opened with micro:bit"
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
                         <StaticImage
                             src="./kit/sidetop.jpg"
                             alt="Side top image of the kit"
                         />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={6} md={4}>
                         <StaticImage
                             src="./kit/sidetop2.jpg"
                             alt="Reverse side top image of the kit"
                         />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={6} md={4}>
                         <StaticImage
                             src="./kit/top.jpg"
                             alt="Top image of the kit"
                         />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={6} md={4}>
                         <Grid>
                             <StaticImage
                                 src="./kit/topfront.jpg"
                                 alt="top front image of the kit"
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                        <Grid>
+                            <StaticImage
+                                src="./kit/bottom.jpg"
+                                alt="bottom of the kit"
                             />
                         </Grid>
                     </Grid>
