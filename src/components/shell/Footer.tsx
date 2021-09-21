@@ -1,4 +1,5 @@
 import { createStyles, makeStyles, Typography } from "@material-ui/core"
+import { Link } from "gatsby-theme-material-ui"
 import React from "react"
 
 const useStyles = makeStyles(theme =>
@@ -6,9 +7,12 @@ const useStyles = makeStyles(theme =>
         footer: {
             textAlign: "center",
             "& *": {
-                fontSize: `${theme.typography.fontSize * 0.7}px`,
+                fontSize: `${theme.typography.fontSize * 0.8}px`,
                 textDecoration: "none",
                 color: theme.palette.text.primary,
+            },
+            "& .note": {
+                fontSize: `${theme.typography.fontSize * 0.9}px`,
             },
             "& a:hover": {
                 textDecoration: "underline",
@@ -30,6 +34,10 @@ export default function Footer() {
 
     return (
         <footer role="contentinfo" className={classes.footer}>
+            <div className="note">
+                This web site collects anonymous usage analytics.{" "}
+                <Link to="/privacy/">Learn more...</Link>
+            </div>
             <a
                 href="https://github.com/microsoft/jacdac/discussions"
                 target="_blank"
