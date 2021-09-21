@@ -4,9 +4,9 @@ import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import useMediaQueries from "../hooks/useMediaQueries"
 import useChange from "../../jacdac/useChange"
-import DeveloperBoardIcon from "@material-ui/icons/DeveloperBoard"
 import Button from "../ui/Button"
 import AppContext from "../AppContext"
+import JacdacIcon from "../icons/JacdacIcon"
 
 function DisconnectedButton(props: {
     full?: boolean
@@ -23,12 +23,12 @@ function DisconnectedButton(props: {
         return (
             <span>
                 <IconButtonWithTooltip
-                    title={"Connect to physical device"}
+                    title={"Connect to a physical device"}
                     color={transparent ? "inherit" : "primary"}
                     className={className}
                     onClick={toggleShowConnectTransportDialog}
                 >
-                    <DeveloperBoardIcon />
+                    <JacdacIcon />
                 </IconButtonWithTooltip>
             </span>
         )
@@ -41,7 +41,7 @@ function DisconnectedButton(props: {
                 variant={transparent ? "outlined" : "contained"}
                 color={transparent ? "inherit" : "primary"}
                 className={className}
-                startIcon={<DeveloperBoardIcon />}
+                startIcon={<JacdacIcon />}
                 onClick={toggleShowConnectTransportDialog}
             >
                 Connect
