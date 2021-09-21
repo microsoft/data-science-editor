@@ -39,7 +39,7 @@ export default function Clients() {
             <SplitGrid
                 right={false}
                 subtitle="MakeCode"
-                description="Code Jacdac into your micro:bit V2, Arcade or Maker board."
+                description="Code Jacdac using a micro:bit V2, Arcade or Maker board."
                 buttonText="MakeCode extension"
                 buttonVariant="link"
                 buttonUrl="/clients/makecode"

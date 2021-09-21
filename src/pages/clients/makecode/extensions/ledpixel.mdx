@@ -16,11 +16,24 @@ let brightness = modules.ledPixel1.brightness()
 basic.showNumber(brightness)
 ```
 
-All the LEDs in the strip may be set to a given RGB color
-(encoded using )
+All the pixels on a strip can be set to a color using the `setAll` method:
 ```blocks
-input.onButtonPressed(Button.A, function () {
-    modules.ledPixel1.setAll(0xff0000)
-    modules.ledPixel1.setPixel(2, 0x00ffff)
+input.onButtonPressed(Button.A, function() {
+    modules.ledPixel1.setAll(0x00FF00)   // set all pixels green on button press
+})
+```
+
+Pixels can be individually set using the `setPixel` method as shown in the 
+example below (note that this code is contained in the `onConnected` handler
+so that it runs as soon as the device is connected to the Jacdac bus):
+
+```blocks
+modules.ledPixel1.onConnected(() => {
+    modules.ledPixel1.setBrightness(85)
+    modules.ledPixel1.setNumPixels(10)
+    for(let i=0; i<10; i++) {
+        modules.ledPixel1.setPixel(i, 0x00ff00)
+        basic.pause(200)
+    }    
 })
 ```
