@@ -52,7 +52,7 @@ function Carousel() {
             deviceSort={deviceSort}
             deviceFilter={deviceFilter}
             serviceFilter={serviceFilter}
-            showStartSimulators={true}
+            showStartRoleSimulators={true}
         />
     )
 }

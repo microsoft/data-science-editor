@@ -515,7 +515,6 @@ export default function Commissioner() {
                 showAvatar={true}
                 showHeader={true}
                 showConnect={true}
-                showStartSimulators={false}
                 deviceFilter={deviceFilter}
             />
             <Grid container spacing={1}>

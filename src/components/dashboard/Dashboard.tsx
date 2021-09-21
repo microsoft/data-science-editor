@@ -62,6 +62,7 @@ export interface DashboardDeviceProps {
 export interface DashboardProps extends DashboardDeviceProps {
     hideSimulators?: boolean
     showStartSimulators?: boolean
+    showStartRoleSimulators?: boolean
     showConnect?: boolean
     deviceFilter?: (d: JDDevice) => boolean
     deviceSort?: (l: JDDevice, r: JDDevice) => number
@@ -72,6 +73,7 @@ export default function Dashboard(props: DashboardProps) {
         hideSimulators,
         showConnect,
         showStartSimulators,
+        showStartRoleSimulators,
         deviceSort = defaultDeviceSort,
         deviceFilter = defaultDeviceFilter,
         ...other
@@ -98,11 +100,12 @@ export default function Dashboard(props: DashboardProps) {
                     title="Simulators"
                     action={
                         <>
-                            {showStartSimulators && !!roleManager && (
+                            {showStartRoleSimulators && (
                                 <IconButtonWithTooltip
                                     trackName="dashboard.simulators.missing"
-                                    title="start missing simulators"
+                                    title="start missing simulators for roles"
                                     onClick={handleStartSimulators}
+                                    disabled={!roleManager}
                                 >
                                     <DevicesIcon />
                                 </IconButtonWithTooltip>
