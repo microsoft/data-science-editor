@@ -6,7 +6,7 @@ import {
     serviceSpecificationFromClassIdentifier,
 } from "../../../jacdac-ts/src/jdom/spec"
 import ServiceSpecificationCard from "./ServiceSpecificationCard"
-import { Grid, Typography } from "@material-ui/core"
+import { Box, Grid, Typography } from "@material-ui/core"
 import useGridBreakpoints from "../useGridBreakpoints"
 import Markdown from "../ui/Markdown"
 import DeviceSpecificationSource from "./DeviceSpecificationSource"
@@ -34,31 +34,30 @@ export default function DeviceSpecification(props: {
                 >
                     {device.company}
                 </Link>
+                {!!device.productIdentifiers?.length && (
+                    <>
+                        &nbsp;
+                        {device.productIdentifiers.map(identifier => (
+                            <IDChip
+                                key={identifier}
+                                id={identifier}
+                                filter={`pid:0x${identifier.toString(16)}`}
+                            />
+                        ))}
+                    </>
+                )}
             </Typography>
             {
-                <img
-                    alt={`device ${device.name}`}
-                    src={imageUrl}
-                    loading="lazy"
-                />
+                <Box mt={1}>
+                    <img
+                        alt={`device ${device.name}`}
+                        src={imageUrl}
+                        loading="lazy"
+                    />
+                </Box>
             }
             {device.description && <Markdown source={device.description} />}
             {device.repo && <FirmwareCard slug={device.repo} />}
-            {!!device.productIdentifiers?.length && (
-                <>
-                    <h3>Product identifiers</h3>
-                    <ul>
-                        {device.productIdentifiers.map(identifier => (
-                            <li key={identifier}>
-                                <IDChip
-                                    id={identifier}
-                                    filter={`pid:0x${identifier.toString(16)}`}
-                                />
-                            </li>
-                        ))}
-                    </ul>
-                </>
-            )}
             <h3>Services</h3>
             <Grid container spacing={2}>
                 {device.services
@@ -71,7 +70,7 @@ export default function DeviceSpecification(props: {
             </Grid>
             {showSource && (
                 <>
-                    <h2>Specification</h2>
+                    <h3>Specification</h3>
                     <DeviceSpecificationSource
                         deviceSpecification={device}
                         showJSON={true}
