@@ -1,4 +1,4 @@
-import { Grid, ImageList, ImageListItem } from "@material-ui/core"
+import { Grid } from "@material-ui/core"
 import { StaticImage } from "gatsby-plugin-image"
 import React, { lazy, Suspense } from "react"
 import useMediaQueries from "../hooks/useMediaQueries"
@@ -9,11 +9,13 @@ const DeviceSpecificationList = lazy(
 )
 
 const modules = [
+    "microbit-foundation-microbitv2",
     "microsoft-research-jmrgbledringv21",
     "microsoft-research-jmkeyboardkey46v10",
     "microsoft-research-jmbutton10v13",
     "microsoft-research-jmrotaryctrlbtnv10",
     "microsoft-research-jmanalogjoystick44v02",
+    "microsoft-research-jmtemphumidity18v11",
 ]
 
 export default function KitModules() {
