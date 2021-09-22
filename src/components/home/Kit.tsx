@@ -14,16 +14,9 @@ export default function Kit() {
             alignContent="center"
             alignItems="center"
         >
-            <SplitGrid
+            <FeatureItem
                 title="Hardware Kit"
                 subtitle3="Start experimenting with Jacdac and the Hardware module kit."
-                imageColumns={3}
-                image={
-                    <StaticImage
-                        src="./kit/contents.jpg"
-                        alt="Kit cardboard view from top"
-                    />
-                }
             />
             <CarouselGrid>
                 <Grid item xs={12} sm={4}>
