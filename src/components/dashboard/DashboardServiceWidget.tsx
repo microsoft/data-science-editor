@@ -241,11 +241,11 @@ const serviceViews: {
     },
     [SRV_BIT_RADIO]: {
         component: DashboardBitRadio,
-        weight: () => 6,
+        weight: () => 4,
     },
     [SRV_HID_KEYBOARD]: {
         component: DashboardHIDKeyboard,
-        weight: () => 12,
+        weight: () => 4,
     },
     [SRV_HID_MOUSE]: {
         component: DashboardHIDMouse,
