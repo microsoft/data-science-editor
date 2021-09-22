@@ -8,20 +8,33 @@ The events 'on' and 'off', with associated event handlers
 are fired when the relay transitions from closed to open,
 and from open to closely, respectively
 
-The following code shows the APIs available for the 
-relay:
-
+The following example uses the `setClosed` method to 
+close the relay (on press of button A) and to open
+the relay (on press of button B). Event handlers for
+the relay are fired for the change in state. Finally,
+on press of buttons A and B simultaneously, the 
+state of the relay is queryed using the `closed`
+method:
 
 ```blocks
+input.onButtonPressed(Button.A, function () {
+    modules.relay1.setClosed(true)
+})
+
+input.onButtonPressed(Button.B, function () {
+    modules.relay1.setClosed(false)
+})
+
 modules.relay1.onOn(() => {
-    // when relay transitions from closed to open
-    basic.showString("On")
-    control.assert(!modules.relay1.closed())
+    basic.showString("Closed")
 })
 
 modules.relay1.onOff(() => {
-    // when relay transitions from open to closed
-    basic.showString("Off")
-    control.assert(modules.relay1.closed())
+    basic.showString("Open")
+})
+
+input.onButtonPressed(Button.AB, function () {
+    basic.showString(modules.relay1.closed() ? "Closed" : "Open")
 })
 ```
+

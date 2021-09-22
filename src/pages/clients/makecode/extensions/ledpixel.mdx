@@ -3,22 +3,18 @@
 The LED pixel extension provides APIs for working with
 an strip of RGB LEDs, as well as a built-in set of animations.
 
-The number of LEDs in the strip can be figured using the following
-method:
-```blocks
-modules.ledPixel1.configure(10)
-```
-
 The brightness of the strip can be set and retrieved as follows:
 ```blocks
-modules.ledPixel1.setBrightness(85)
-let brightness = modules.ledPixel1.brightness()
-basic.showNumber(brightness)
+modules.ledPixel1.onConnected(() => {
+    modules.ledPixel1.setBrightness(85)
+    let brightness = modules.ledPixel1.brightness()
+    basic.showNumber(brightness)
+}
 ```
 
 All the pixels on a strip can be set to a color using the `setAll` method:
 ```blocks
-input.onButtonPressed(Button.A, function() {
+modules.ledPixel1.onConnected(() => {
     modules.ledPixel1.setAll(0x00FF00)   // set all pixels green on button press
 })
 ```
@@ -40,3 +36,4 @@ modules.ledPixel1.onConnected(() => {
     }    
 })
 ```
+
