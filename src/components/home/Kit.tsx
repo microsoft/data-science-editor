@@ -3,7 +3,6 @@ import { StaticImage } from "gatsby-plugin-image"
 import React from "react"
 import CarouselGrid from "./CarouselGrid"
 import FeatureItem from "./FeatureItem"
-import SplitGrid from "./SplitGrid"
 
 export default function Kit() {
     return (
