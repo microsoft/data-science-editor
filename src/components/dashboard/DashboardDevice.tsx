@@ -16,16 +16,12 @@ import {
 import JDDevice from "../../../jacdac-ts/src/jdom/device"
 import useChange from "../../jacdac/useChange"
 import DeviceName from "../devices/DeviceName"
-import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import ExpandLessIcon from "@material-ui/icons/ExpandLess"
 import useDeviceSpecification from "../../jacdac/useDeviceSpecification"
 import DeviceAvatar from "../devices/DeviceAvatar"
 import DashboardServiceWidgetItem from "./DashboardServiceWidgetItem"
 import DeviceActions from "../DeviceActions"
-import DashboardServiceDetails from "./DashboardServiceDetails"
 import useDeviceName from "../devices/useDeviceName"
 import { DashboardDeviceProps } from "./Dashboard"
 import useIntersectionObserver from "../hooks/useIntersectionObserver"
@@ -38,20 +34,10 @@ const ignoredServices = [SRV_CONTROL, SRV_LOGGER, SRV_SETTINGS, SRV_PROTO_TEST]
 export default function DashboardDevice(
     props: {
         device: JDDevice
-        expanded?: boolean
-        toggleExpanded?: () => void
         variant?: "icon" | ""
     } & DashboardDeviceProps
 ) {
-    const {
-        device,
-        serviceFilter,
-        expanded,
-        toggleExpanded,
-        variant,
-        showAvatar,
-        showHeader,
-    } = props
+    const { device, serviceFilter, variant, showAvatar, showHeader } = props
     const { xs: mobile } = useMediaQueries()
 
     const name = useDeviceName(device)
@@ -79,13 +65,12 @@ export default function DashboardDevice(
                 alignContent="space-between"
             >
                 {services
-                    ?.filter(srv => expanded || !srv.isMixin)
+                    ?.filter(srv => !srv.isMixin)
                     ?.filter(srv => !serviceFilter || serviceFilter(srv))
                     ?.map(service => (
                         <DashboardServiceWidgetItem
                             key={service.id}
                             service={service}
-                            expanded={expanded}
                             services={services}
                             variant={variant}
                             visible={visible}
@@ -93,7 +78,7 @@ export default function DashboardDevice(
                     ))}
             </Grid>
         ),
-        [dependencyId(services), expanded, variant, visible]
+        [dependencyId(services), variant, visible]
     )
 
     if (!showHeader)
@@ -111,24 +96,11 @@ export default function DashboardDevice(
                 action={
                     <DeviceActions
                         device={device}
-                        showStop={expanded}
-                        hideIdentity={!expanded}
-                        showReset={expanded && !mobile}
-                        showSettings={expanded && !mobile}
-                    >
-                        {toggleExpanded && (
-                            <IconButtonWithTooltip
-                                onClick={toggleExpanded}
-                                title={expanded ? "Collapse" : "Expand"}
-                            >
-                                {expanded ? (
-                                    <ExpandLessIcon />
-                                ) : (
-                                    <ExpandMoreIcon />
-                                )}
-                            </IconButtonWithTooltip>
-                        )}
-                    </DeviceActions>
+                        showStop={true}
+                        hideIdentity={true}
+                        showReset={false}
+                        showSettings={false}
+                    />
                 }
                 title={<DeviceName showShortId={false} device={device} />}
                 subheader={
@@ -144,25 +116,6 @@ export default function DashboardDevice(
             <CardContent style={{ paddingTop: 0 }}>
                 <DeviceLostAlert device={device} />
                 <ServiceWidgets />
-                {expanded && (
-                    <Grid
-                        container
-                        direction="column"
-                        spacing={1}
-                        alignContent="stretch"
-                    >
-                        {services?.map(service => (
-                            <DashboardServiceDetails
-                                key={"details" + service.serviceIndex}
-                                service={service}
-                                services={services}
-                                expanded={expanded}
-                                variant={variant}
-                                visible={visible}
-                            />
-                        ))}
-                    </Grid>
-                )}
             </CardContent>
         </Card>
     )

@@ -1,5 +1,5 @@
 import { Grid } from "@material-ui/core"
-import React, { useContext, useState } from "react"
+import React, { useContext } from "react"
 import JDDevice from "../../../jacdac-ts/src/jdom/device"
 import DashboardDevice from "./DashboardDevice"
 import { GridBreakpoints } from "../useGridBreakpoints"
@@ -15,7 +15,6 @@ export default function DashboardDeviceItem(
     } & DashboardDeviceProps
 ) {
     const { device, variant, ...other } = props
-    const [expanded, setExpanded] = useState(false)
     const { drawerType } = useContext(AppContext)
     const breakpoints: GridBreakpoints = useChange(
         device,
@@ -42,27 +41,20 @@ export default function DashboardDeviceItem(
                 return { xs: 12, sm: 6, md: 4, lg: 3, xl: 4 }
             else
                 return {
-                    xs: expanded ? 12 : 6,
+                    xs: 6,
                     sm: 4,
                     md: 3,
                     lg: 2,
                     xl: "auto",
                 }
         },
-        [expanded, drawerType]
+        [drawerType]
     )
-    const handleExpanded = () => setExpanded(!expanded)
 
     // based on size, expanded or reduce widget size
     return (
         <Grid item {...breakpoints}>
-            <DashboardDevice
-                device={device}
-                expanded={expanded}
-                toggleExpanded={handleExpanded}
-                variant={variant}
-                {...other}
-            />
+            <DashboardDevice device={device} variant={variant} {...other} />
         </Grid>
     )
 }
