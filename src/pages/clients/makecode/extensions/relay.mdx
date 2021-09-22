@@ -4,7 +4,7 @@ The relay extension exposes the state of the relay
 via the method `closed`, which returns the value
 true when the relay is closed and false otherwise.
 
-The events 'on' and 'off', with associated event handlers
+The events `on` and `off`, with associated event handlers
 are fired when the relay transitions from closed to open,
 and from open to closely, respectively
 
@@ -34,7 +34,10 @@ modules.relay1.onOff(() => {
 })
 
 input.onButtonPressed(Button.AB, function () {
-    basic.showString(modules.relay1.closed() ? "Closed" : "Open")
+    if (modules.relay1.closed())
+        basic.showString("Closed")
+    else
+        basic.showString("Open")
 })
 ```
 
