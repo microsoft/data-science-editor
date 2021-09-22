@@ -1,4 +1,6 @@
-import React, { KeyboardEvent, MouseEvent, useState } from "react"
+/* eslint-disable jsx-a11y/no-noninteractive-tabindex */
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+import React, { KeyboardEvent, MouseEvent, useRef, useState } from "react"
 import { createStyles, Grid, makeStyles, Typography } from "@material-ui/core"
 import {
     HidMouseButton,
@@ -12,10 +14,12 @@ import HIDMouseServer, {
     renderHidMouseButtons,
 } from "../../../jacdac-ts/src/servers/hidmouseserver"
 import useChange from "../../jacdac/useChange"
+import MouseIcon from "@material-ui/icons/MouseOutlined"
 
 const useStyles = makeStyles(theme =>
     createStyles({
         capture: {
+            whiteSpace: "pre-wrap",
             cursor: "pointer",
             "&:hover": {
                 borderColor: theme.palette.primary.main,
@@ -30,6 +34,7 @@ const useStyles = makeStyles(theme =>
 export default function DashboardHIDMouse(props: DashboardServiceProps) {
     const { service } = props
     const classes = useStyles()
+    const preRef = useRef<HTMLPreElement>()
     const server = useServiceServer<HIDMouseServer>(service)
     const [observed, setObserved] = useState("")
     const sendButton = async (
@@ -55,10 +60,10 @@ export default function DashboardHIDMouse(props: DashboardServiceProps) {
         await service.sendCmdAsync(HidMouseCmd.Wheel, data)
     }
     const serverValue = useChange(server, _ => _?.lastCommand)
-    const value = serverValue || "..."
     const preview = serverValue || observed
     const handleMouseDown = (ev: MouseEvent<HTMLPreElement>) => {
         const { buttons } = ev
+        preRef.current.focus()
         setObserved(`set button ${renderHidMouseButtons(buttons)} down`)
     }
     const handleMouseUp = (ev: MouseEvent<HTMLPreElement>) => {
@@ -103,21 +108,22 @@ export default function DashboardHIDMouse(props: DashboardServiceProps) {
     return (
         <Grid container spacing={1}>
             <Grid item>
+                <MouseIcon fontSize="large" />
+            </Grid>
+            <Grid item xs>
                 <pre
+                    ref={preRef}
                     className={classes.capture}
                     tabIndex={0}
                     onMouseDown={handleMouseDown}
                     onMouseUp={handleMouseUp}
                     onKeyDown={handleKeyDown}
                 >
-                    {value || "..."}
-                </pre>
-                <Typography variant="caption">
                     focus and type l(eft), r(ight), m(iddle) for buttons, arrow
                     keys to move, w(heel up), d(wheel down) for the wheel
-                </Typography>
+                </pre>
             </Grid>
-            {preview && (
+            {server && preview && (
                 <Grid item xs={12}>
                     <Typography variant="caption" component="pre">
                         mouse preview: {preview || "..."}

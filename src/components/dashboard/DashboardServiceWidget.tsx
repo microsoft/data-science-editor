@@ -249,7 +249,7 @@ const serviceViews: {
     },
     [SRV_HID_MOUSE]: {
         component: DashboardHIDMouse,
-        weight: () => 2,
+        weight: () => 1,
     },
     /*
     [SRV_AZURE_IOT_HUB]: {
