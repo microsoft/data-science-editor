@@ -142,9 +142,6 @@ function LayoutWithMdx(props: LayoutProps) {
             secondary: {
                 main: "#ffc400",
             },
-            background: {
-                default: isDark ? undefined : "#fff",
-            },
             contrastThreshold: isDark ? 5.1 : 3.1,
             type: darkMode,
         },
