@@ -4,6 +4,7 @@ import {
     makeStyles,
     Typography,
     Theme,
+    Box,
 } from "@material-ui/core"
 import { Button, Link } from "gatsby-theme-material-ui"
 import React, { ReactNode } from "react"
@@ -12,7 +13,7 @@ import JacdacIcon from "../icons/JacdacIcon"
 
 export interface FeatureItemProps {
     startImage?: ReactNode
-    title?: string
+    title?: ReactNode
     subtitle?: string
     subtitle2?: string
     subtitle3?: string
@@ -68,14 +69,20 @@ export default function FeatureItem(props: FeatureItemProps) {
         <>
             {startImage && (
                 <Grid item xs={12}>
-                    {startImage}
+                    <Box mb={2}>{startImage}</Box>
                 </Grid>
             )}
             {title && (
                 <Grid item xs={12}>
                     <Typography variant="h1" className={cls}>
-                        <JacdacIcon fontSize="large" />
-                        {title}
+                        <JacdacIcon
+                            fontSize="large"
+                            style={{
+                                fontSize: "4rem",
+                                verticalAlign: "middle",
+                            }}
+                        />
+                        <span style={{ fontWeight: "bold" }}>{title}</span>
                     </Typography>
                 </Grid>
             )}
@@ -132,14 +139,16 @@ export default function FeatureItem(props: FeatureItemProps) {
                             {" >"}
                         </Link>
                     ) : (
-                        <Button
-                            variant="contained"
-                            color={buttonColor}
-                            to={buttonUrl}
-                            onClick={onButtonClick}
-                        >
-                            {buttonText}
-                        </Button>
+                        <Box mt={2}>
+                            <Button
+                                variant="contained"
+                                color={buttonColor}
+                                to={buttonUrl}
+                                onClick={onButtonClick}
+                            >
+                                {buttonText}
+                            </Button>
+                        </Box>
                     )}
                 </Grid>
             )}

@@ -27,7 +27,7 @@ export default function Kit() {
                             />
                         }
                         subtitle2="Unbox"
-                        description="Explore the contents of the kit."
+                        description="Power up the micro:bit and plug the cables and modules!"
                         buttonText="Modules"
                         buttonUrl="/hardware/kit/modules"
                     />
