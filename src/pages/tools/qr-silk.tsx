@@ -62,6 +62,7 @@ export default function DeviceQRCodeGenerator(props: {
         setMirror(!!ev.target.checked)
     }
     const mirrorid = useId()
+    const switchid = useId()
     const url = !!vanity && `HTTP://AKA.MS/${vanity}`
     const known = knowns[vanity]
     const { modulename, designid, revision } = known || {}
@@ -103,12 +104,10 @@ export default function DeviceQRCodeGenerator(props: {
                     />
                 </Grid>
                 <Grid item>
-                    <Switch
-                        checked={mirror}
-                        onChange={handleMirror}
-                        aria-labelby={mirrorid}
-                    />
-                    <label id={mirrorid}>mirror</label>
+                    <Switch checked={mirror} onChange={handleMirror} />
+                    <label id={mirrorid} htmlFor={switchid}>
+                        mirror
+                    </label>
                 </Grid>
                 <Grid item xs>
                     <Button variant="contained" onClick={handleNextVanity}>
@@ -140,6 +139,7 @@ export default function DeviceQRCodeGenerator(props: {
                 free.
             </p>
             <iframe
+                title="Link preview"
                 style={{ width: "100%", height: "14rem", border: "none" }}
                 src={url?.replace(/^http:/i, "HTTPS:")}
                 sandbox="allow-scripts"

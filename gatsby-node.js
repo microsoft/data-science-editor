@@ -23,7 +23,11 @@ async function createServicePages(graphql, actions, reporter) {
     const { createPage, createRedirect } = actions
     const result = await graphql(`
         {
-            allMdx {
+            allMdx(
+                filter: {
+                    fields: { slug: { glob: "/clients/makecode/extensions/*" } }
+                }
+            ) {
                 edges {
                     node {
                         fields {
@@ -54,11 +58,9 @@ async function createServicePages(graphql, actions, reporter) {
         return
     }
 
-    const makecodeExtensions = result.data.allMdx.edges
-        .map(edge => edge.node)
-        .filter(node =>
-            /^\/clients\/makecode\/extensions\/\w/.test(node.fields?.slug)
-        )
+    const makecodeSlugs = result.data.allMdx.edges.map(
+        edge => edge.node.fields.slug
+    )
 
     // Create image post pages.
     const serviceTemplate = path.resolve(`src/templates/service.tsx`)
@@ -74,10 +76,9 @@ async function createServicePages(graphql, actions, reporter) {
         const source = result.data.allServicesSourcesJson.nodes.find(
             node => node.classIdentifier === classIdentifier
         ).source
-        const makecodeSlug = makecodeExtensions.find(
-            node =>
-                node.fields.slug === `/clients/makecode/extensions/${shortId}/`
-        )?.fields.slug
+        const makecodeSlug = makecodeSlugs.find(
+            slug => slug === `/clients/makecode/extensions/${shortId}/`
+        )
 
         createPage({
             path: p,
