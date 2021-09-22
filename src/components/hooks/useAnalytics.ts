@@ -27,8 +27,6 @@ const appInsights =
     INSTRUMENTATION_KEY &&
     // ignore dev environment
     !/http:\/\/localhost/.test(window.location.href) &&
-    // TODO enable for all
-    /dbg=1/.test(window.location.href) &&
     new ApplicationInsights({
         instrumentationKey: INSTRUMENTATION_KEY,
         isStorageUseDisabled: true,
