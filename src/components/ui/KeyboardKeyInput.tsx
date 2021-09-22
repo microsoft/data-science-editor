@@ -10,6 +10,7 @@ import {
     renderKeyboardKey,
     selectors,
 } from "../../../jacdac-ts/src/servers/hidkeyboardserver"
+import useMediaQueries from "../hooks/useMediaQueries"
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -68,6 +69,8 @@ export default function KeyboardKeyInput(props: {
     const theme = `hg-theme-default hg-layout-default ${
         darkMode === "dark" ? classes.darkKeyboard : classes.keyboard
     }`
+    const { mobile } = useMediaQueries()
+    const layoutName = mobile ? "mobile" : "default"
     const keyboardId = useId()
 
     const layout = {
@@ -78,6 +81,20 @@ export default function KeyboardKeyInput(props: {
             "{capslock} a s d f g h j k l ; ' {enter}",
             "{shiftleft} z x c v b n m , . / {shiftright}",
             "{controlleft} {altleft} {metaleft} {space} {metaright} {altright}",
+        ],
+        mobile: [
+            "{escape} {f1} {f2} {f3} {f4} {f5}",
+            "{f6} {f7} {f8} {f9} {f10} {f11} {f12}",
+            "` 1 2 3 4 5 6",
+            "7 8 9 0 - = {backspace}",
+            "{tab} q w e r t",
+            "y u i o p [ ] \\",
+            "{capslock} a s d f g",
+            "h j k l ; ' {enter}",
+            "{shiftleft} z x c v b",
+            "n m , . / {shiftright}",
+            "{controlleft} {altleft} {metaleft} {space}",
+            "{metaright} {altright}",
         ],
     }
     const display = {
@@ -144,6 +161,7 @@ export default function KeyboardKeyInput(props: {
             keyboardRef={r => (keyboardRef.current = r)}
             onKeyPress={handleKeyboardKeyPress}
             layout={layout}
+            layoutName={layoutName}
             theme={theme}
             display={display}
             mergeDisplay={true}
