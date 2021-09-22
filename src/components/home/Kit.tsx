@@ -17,10 +17,10 @@ export default function Kit() {
             <SplitGrid
                 title="Hardware Kit"
                 subtitle3="Start experimenting with Jacdac and the Hardware module kit."
-                imageColumns={6}
+                imageColumns={3}
                 image={
                     <StaticImage
-                        src="./kit/topfront.jpg"
+                        src="./kit/contents.jpg"
                         alt="Kit cardboard view from top"
                     />
                 }
