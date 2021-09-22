@@ -31,12 +31,13 @@ modules.button1.onUp(() => {
 
 ## Registers
 
-The low-level state of the button is accesible via the the `pressure` register,
-which ranges in value from 0-100, where 0 is open and 100 is fully pressed.
+The low-level state of the button is accessible via the the `pressure` register,
+which ranges in value from 0-100. Depending on the type of button, the pressed state will be reached with a certain threshold,
+in the example below 70%.
 
 ```blocks
 basic.forever(() => {
-    if (modules.button1.pressure() >= 99)       // see https://github.com/microsoft/jacdac/issues/644
+    if (modules.button1.pressure() >= 70)
         basic.showString("D")
     else if (modules.button1.pressure() === 0)
         basic.showString("U")
