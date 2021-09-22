@@ -142,6 +142,9 @@ function LayoutWithMdx(props: LayoutProps) {
             secondary: {
                 main: "#ffc400",
             },
+            background: {
+                default: isDark ? undefined : "#fff",
+            },
             contrastThreshold: isDark ? 5.1 : 3.1,
             type: darkMode,
         },
@@ -157,7 +160,6 @@ function LayoutWithMdx(props: LayoutProps) {
 }
 
 const UNDER_CONSTRUCTION_BODY = `Jacdac is currently in preview. If you would like to join as a pre-release test partner, please email jacdac-tap@microsoft.com.`
-const UNDER_CONSTRUCTION_MESSAGE = `Partner Preview: ${UNDER_CONSTRUCTION_BODY}.`
 
 function LayoutWithContext(props: LayoutProps) {
     const { element, props: pageProps } = props

@@ -67,6 +67,9 @@ export default function Page() {
             secondary: {
                 main: "#ffc400",
             },
+            background: {
+                default: "#fff",
+            },
             type: "light",
             contrastThreshold: 3.1,
         },

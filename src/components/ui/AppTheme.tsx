@@ -19,6 +19,9 @@ export default function AppTheme(props: any) {
             secondary: {
                 main: "#ffc400",
             },
+            background: {
+                default: isDark ? undefined : "#fff",
+            },
             contrastThreshold: isDark ? 5.1 : 3.1,
             type: darkMode,
         },

@@ -37,8 +37,11 @@ export default function MakeCodeEditorExtensionPage() {
             secondary: {
                 main: "#ffc400",
             },
+            background: {
+                default: "#fff",
+            },
             contrastThreshold: 5.1,
-            type: "dark",
+            type: "light",
         },
     })
     const classes = useStyles()
