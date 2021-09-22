@@ -9,16 +9,10 @@ export default function useEventRaised<
     node: TEventSource,
     query?: (n: TEventSource) => TValue
 ): TValue {
-    const [version, setVersion] = useState(0)
-    const value = query ? query(node) : undefined
-
+    const [value, setValue] = useState(query?.(node))
     useEffect(
-        () =>
-            node?.subscribe(eventName, () => {
-                setVersion(version + 1)
-            }),
-        [node, version]
+        () => node?.subscribe(eventName, () => setValue(query?.(node))),
+        [JSON.stringify(eventName), node]
     )
-
     return value
 }

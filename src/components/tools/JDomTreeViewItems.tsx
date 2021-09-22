@@ -29,6 +29,7 @@ import {
     ControlAnnounceFlags,
     SRV_ROLE_MANAGER,
     SRV_SETTINGS,
+    ANNOUNCE,
 } from "../../../jacdac-ts/src/jdom/constants"
 import useEventRaised from "../../jacdac/useEventRaised"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
@@ -62,10 +63,10 @@ export function DeviceTreeItem(
     const name = useDeviceName(device, true)
     const kind = isPhysical ? "device" : "virtualdevice"
     const lost = useEventRaised([LOST, FOUND], device, dev => !!dev?.lost)
-    const services = useChange(device, () =>
-        device
-            .services({ mixins: false })
-            .filter(srv => !serviceFilter || serviceFilter(srv))
+    const services = useEventRaised(ANNOUNCE, device, _ =>
+        _.services({ mixins: false }).filter(
+            srv => !serviceFilter || serviceFilter(srv)
+        )
     )
     const { mobile } = useMediaQueries()
     const showActions = !mobile
