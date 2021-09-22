@@ -6,11 +6,7 @@ where clockwise motion increases the position and counter-clockwise
 motion decreases the position. 
 The `position` method returns the current position. 
 
-As is the case with all sensors, an event handler is supplied for when
-the sensor value (position) changes by a specified amount.
-
-The program below uses the two rotary encoder APIs to print 
-the current position whenever it changes by one click:
+The program below outputs the current position whenever it changes by one click:
 
 ```blocks
 modules.rotaryEncoder1.onPositionChangedBy(1, () => {

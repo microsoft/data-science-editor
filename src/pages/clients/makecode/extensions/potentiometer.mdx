@@ -4,11 +4,7 @@ The potentiometer extension reports position as a floating
 point value between 0 and 100.
 The `position` method returns the current position of the potentiometer.
 
-As is the case with all sensors, an event handler is supplied for when
-the sensor value (position) changes by a specified amount.
-
-The program below use the two potentiometer APIs to print
-the current position whenever it changes by 5:
+The following program outputs the current position whenever it changes by 5:
 
 ```blocks
 modules.potentiometer1.onPositionChangedBy(5, function() {

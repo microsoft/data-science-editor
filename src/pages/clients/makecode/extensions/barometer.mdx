@@ -5,14 +5,14 @@ The barometer extension reports the pressure in hPa
 which is exactly equal to a millibar).
 The `pressure` method returns the current barometric pressure.
 
-As is the case with all sensors, an event handler is supplied for when
-the sensor value (pressure) changes by a specified amount.
-
-The program below use the two barometer APIs to print
-the current pressure whenever it changes by 0.2 hPa:
-
+The following program outputs the pressure when the barometer
+is first connected and then whenever the pressure changes by 0.2 hPa:
 
 ```blocks
+modules.barometer1.onConnected(function() {
+    basic.showNumber(modules.barometer1.pressure())
+})
+
 modules.barometer1.onPressureChangedBy(0.2, function() {
     basic.showNumber(modules.barometer1.pressure())
 })

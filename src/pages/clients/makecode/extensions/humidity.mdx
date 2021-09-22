@@ -4,11 +4,7 @@ The humidity extension reports the relative humidity
 in percentage of full water saturation (0.0 to 100.0).
 The `humidity` method returns the current humidity.
 
-As is the case with all sensors, an event handler is supplied for when
-the sensor value (humidity) changes by a specified amount.
-
-The program below use the two humidity APIs to print
-the current humidity when it changes by 5 percent:
+The program below outputs the the current humidity when it changes by 5 percent:
 
 ```blocks
 modules.humidity1.onHumidityChangedBy(5, function() {
