@@ -56,7 +56,7 @@ export default function DashboardPower(props: DashboardServiceProps) {
     const rw = mw / 2
 
     const toggleEnabled = () => allowedRegister.sendSetBoolAsync(!allowed, true)
-    const widgetSize = `clamp(3rem, 10vw, 16vw)`
+    const widgetSize = `clamp(3rem, 10vw, 10vh)`
 
     return (
         <SvgWidget width={w} height={h} size={widgetSize}>

@@ -51,7 +51,7 @@ function BinaryButton(props: { pressed: boolean } & DashboardServiceProps) {
     const label = `button ${pressed ? `down` : `up`}`
     const handleDown = () => server?.down()
     const handleUp = () => server?.up()
-    const widgetSize = `clamp(3rem, 10vw, 16vw)`
+    const widgetSize = `clamp(3rem, 10vw, 10vh)`
 
     return (
         <ButtonWidget
@@ -86,7 +86,7 @@ function AnalogButton(props: { pressed: boolean } & DashboardServiceProps) {
     )
     const [threshold] = useRegisterUnpackedValue(thresholdRegister, { visible })
 
-    const widgetSize = `clamp(3rem, 10vw, 16vw)`
+    const widgetSize = `clamp(3rem, 10vw, 10vh)`
     const server = useServiceServer<ButtonServer>(service)
     const color = server ? "secondary" : "primary"
     const label = `button pressure ${roundWithPrecision(

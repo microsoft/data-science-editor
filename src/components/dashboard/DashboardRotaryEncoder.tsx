@@ -30,7 +30,7 @@ export default function DashboardRotaryEncoder(props: DashboardServiceProps) {
     const { background, controlBackground, active, textProps } =
         useWidgetTheme(color)
     const label = "" + position
-    const widgetSize = `clamp(6rem, 15vw, 20vw)`
+    const widgetSize = `clamp(6rem, 15vw, 15vh)`
 
     const w = 37.794
     const r = 0.06
