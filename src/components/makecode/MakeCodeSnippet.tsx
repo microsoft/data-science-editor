@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useContext } from "react"
 import PaperBox from "../ui/PaperBox"
-import { Tab, Tabs } from "@material-ui/core"
+import { Button, Tab, Tabs } from "@material-ui/core"
 import CodeBlock from "../CodeBlock"
 import TabPanel from "../ui/TabPanel"
 import MakeCodeSnippetContext from "./MakeCodeSnippetContext"
@@ -8,7 +8,6 @@ import { withPrefix } from "gatsby"
 import parseMakeCodeSnippet from "./makecodesnippetparser"
 import AppContext from "../AppContext"
 import { toMap } from "../../../jacdac-ts/src/jdom/utils"
-import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import MakeCodeIcon from "../icons/MakeCodeIcon"
 
 interface Request {
@@ -82,14 +81,14 @@ function MakeCodeButton(props: { req: Request }) {
     }
 
     return (
-        <IconButtonWithTooltip
-            color="primary"
+        <Button
+            variant="outlined"
             onClick={handleClick}
             disabled={importing}
-            title="Try in MakeCode"
+            startIcon={<MakeCodeIcon />}
         >
-            <MakeCodeIcon />
-        </IconButtonWithTooltip>
+            Try in MakeCode
+        </Button>
     )
 }
 

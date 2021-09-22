@@ -37,7 +37,9 @@ export default function MakeCodeExtensions() {
             }
         }
     `)
-    const nodes = query.allMdx.edges.map(edge => edge.node)
+    const nodes = query.allMdx.edges
+        .map(edge => edge.node)
+        .sort((l, r) => l.fields.slug.localeCompare(r.fields.slug))
     return (
         <List>
             {nodes?.map(({ fields, frontmatter }) => (
