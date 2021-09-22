@@ -6,12 +6,14 @@ import DeviceSpecificationList from "./specification/DeviceSpecificationList"
 import { serviceSpecificationFromClassIdentifier } from "../../jacdac-ts/src/jdom/spec"
 import { Grid } from "@material-ui/core"
 import ServiceSpecificationSource from "./specification/ServiceSpecificationSource"
+import MakeCodeIcon from "./icons/MakeCodeIcon"
 
 export default function ServiceMarkdown(props: {
     classIdentifier: number
     source: string
+    makecodeSlug?: string
 }) {
-    const { classIdentifier, source } = props
+    const { classIdentifier, source, makecodeSlug } = props
     const service = serviceSpecificationFromClassIdentifier(classIdentifier)
     const { shortId } = service
 
@@ -29,6 +31,17 @@ export default function ServiceMarkdown(props: {
                         Playground
                     </Button>
                 </Grid>
+                {makecodeSlug && (
+                    <Grid item>
+                        <Button
+                            variant="contained"
+                            to={makecodeSlug}
+                            startIcon={<MakeCodeIcon />}
+                        >
+                            MakeCode
+                        </Button>
+                    </Grid>
+                )}
             </Grid>
 
             <h2>Registered Devices</h2>

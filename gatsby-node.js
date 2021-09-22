@@ -23,6 +23,15 @@ async function createServicePages(graphql, actions, reporter) {
     const { createPage, createRedirect } = actions
     const result = await graphql(`
         {
+            allMdx {
+                edges {
+                    node {
+                        fields {
+                            slug
+                        }
+                    }
+                }
+            }
             allServicesJson {
                 nodes {
                     name
@@ -45,6 +54,12 @@ async function createServicePages(graphql, actions, reporter) {
         return
     }
 
+    const makecodeExtensions = result.data.allMdx.edges
+        .map(edge => edge.node)
+        .filter(node =>
+            /^\/clients\/makecode\/extensions\/\w/.test(node.fields?.slug)
+        )
+
     // Create image post pages.
     const serviceTemplate = path.resolve(`src/templates/service.tsx`)
     const servicePlaygroundTemplate = path.resolve(
@@ -54,12 +69,15 @@ async function createServicePages(graphql, actions, reporter) {
         const { classIdentifier, shortId } = node
         const p = `/services/${shortId}/`
         const pplay = `${p}playground/`
-        const ptest = `${p}test/`
         const r = `/services/0x${classIdentifier.toString(16)}`
 
         const source = result.data.allServicesSourcesJson.nodes.find(
             node => node.classIdentifier === classIdentifier
         ).source
+        const makecodeSlug = makecodeExtensions.find(
+            node =>
+                node.fields.slug === `/clients/makecode/extensions/${shortId}/`
+        )?.fields.slug
 
         createPage({
             path: p,
@@ -67,6 +85,7 @@ async function createServicePages(graphql, actions, reporter) {
             context: {
                 classIdentifier,
                 source,
+                makecodeSlug,
             },
         })
         createPage({
@@ -233,10 +252,8 @@ async function createSpecPages(graphql, actions, reporter) {
     }
     // Create pages.
     const specs = result.data.allMdx.edges
-        .map(node => node.node)
-        .filter(node => {
-            return node.parent.sourceInstanceName == "specPages"
-        })
+        .map(edge => edge.node)
+        .filter(node => node.parent.sourceInstanceName == "specPages")
     // you'll call `createPage` for each result
     specs.forEach(node => {
         createPage({
@@ -245,7 +262,9 @@ async function createSpecPages(graphql, actions, reporter) {
             path: node.fields.slug,
             // This component will wrap our MDX content
             component: path.resolve(`./src/components/spec.tsx`),
-            context: { id: node.id },
+            context: {
+                id: node.id,
+            },
         })
     })
 }
