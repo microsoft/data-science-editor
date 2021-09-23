@@ -102,15 +102,6 @@ export const AppProvider = ({ children }) => {
             variant: "error",
             autoHideDuration: code ? 8000 : 4000,
             preventDuplicate: true,
-            action: !!code && (
-                <Button
-                    variant="outlined"
-                    aria-label={`Open help page on ${code} error`}
-                    to={`/errors/${code}`}
-                >
-                    Help
-                </Button>
-            ),
         })
     }
 
