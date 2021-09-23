@@ -1,4 +1,4 @@
-# Rotary Encoder Extension
+# Rotary Encoder
 
 The rotary encoder extension reports the position of an incremental
 rotary encoder in number of clicks from the initial position (0),
@@ -10,6 +10,7 @@ The program below outputs the current position whenever it changes by one click:
 
 ```blocks
 modules.rotaryEncoder1.onPositionChangedBy(1, () => {
+    led.stopAnimation()
     basic.showNumber(modules.rotaryEncoder1.position())
 })
 ```

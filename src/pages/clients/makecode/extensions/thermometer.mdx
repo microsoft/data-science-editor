@@ -1,4 +1,4 @@
-# Thermometer Extension
+# Thermometer
 
 The thermometer extension reports the temperature in degrees Celsius.
 The `temperature` method returns the current temperature.
@@ -8,6 +8,7 @@ one degree Celsius:
 
 ```blocks
 modules.thermometer1.onTemperatureChangedBy(1, function () {
+    led.stopAnimation()
     basic.showNumber(modules.thermometer1.temperature())
 })
 ```

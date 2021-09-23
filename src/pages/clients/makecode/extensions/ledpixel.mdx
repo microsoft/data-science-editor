@@ -1,9 +1,22 @@
-# LED Pixel Extension
+# LED Pixel
 
 The LED pixel extension provides methods for working with
 an strip of RGB LEDs, as well as a built-in set of animations.
 
+
+All the pixels on a strip can be set to a color using the `setAll` method:
+```blocks
+input.onButtonPressed(Button.A, () => {
+    modules.ledPixel1.setAll(0x00ff00)
+})
+input.onButtonPressed(Button.B, () => {
+    modules.ledPixel1.setAll(0xff0000)
+})
+```
+
+
 The brightness of the strip can be set and retrieved as follows:
+
 ```blocks
 modules.ledPixel1.onConnected(() => {
     modules.ledPixel1.setBrightness(85)
@@ -12,25 +25,15 @@ modules.ledPixel1.onConnected(() => {
 }
 ```
 
-All the pixels on a strip can be set to a color using the `setAll` method:
-```blocks
-modules.ledPixel1.onConnected(() => {
-    modules.ledPixel1.setAll(0x00FF00)   // set all pixels green on button press
-})
-```
-
 Pixels can be individually set using the `setPixel` method as shown in the 
 example below, which also uses the `numPixels` method to get the number
-of pixels supported by the underlying hardware. Finally, note that the code 
-is contained in the `onConnected` handler so that it runs as soon as the 
-device is connected to the Jacdac bus).
+of pixels supported by the underlying hardware.
 
 ```blocks
 modules.ledPixel1.onConnected(() => {
-    modules.ledPixel1.setBrightness(85)
     modules.ledPixel1.setAll(0)
-    let numPixels = modules.ledPixel1.numPixels()
-    for(let i=0; i<numPixels; i++) {
+    let n = modules.ledPixel1.numPixels()
+    for(let i = 0; i <= n - 1; i++) {
         modules.ledPixel1.setPixel(i, 0x00ff00)
         basic.pause(200)
     }    

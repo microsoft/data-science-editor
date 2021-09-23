@@ -1,19 +1,14 @@
 # Potentiometer Extension
 
 The potentiometer extension reports position as a floating
-point value between 0.0 and 100.0.
+point value between 0.0 and 100.
 The `position` method returns the current position of the potentiometer.
 
-The following program outputs the position when
-the potentiometer is connected and whenever the position changes by 
+The following program outputs the position whenever the position changes by 
 5:
 
-```
-modules.potentiometer1.onConnected(function() {
-    basic.showNumber(modules.potentiometer1.position())
-})
-
+```blocks
 modules.potentiometer1.onPositionChangedBy(5, function() {
-    basic.showNumber(modules.potentiometer1.position())
+    led.plotBarGraph(modules.potentiometer1.position(), 100)
 })
 ```
