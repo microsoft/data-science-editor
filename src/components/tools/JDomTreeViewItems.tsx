@@ -247,7 +247,6 @@ export function RegisterTreeItem(
         visible: true,
         maxLength: 18,
     })
-    console.log({ humanValue })
     const handleClick = useCallback(() => register.sendGetAsync(), [register])
 
     useEffect(
