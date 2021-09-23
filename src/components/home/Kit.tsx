@@ -28,8 +28,8 @@ export default function Kit() {
                         }
                         subtitle2="Unbox"
                         description="Power up the micro:bit and plug the cables and modules!"
-                        buttonText="Modules"
-                        buttonUrl="/hardware/kit/modules"
+                        buttonText="Unbox your kit"
+                        buttonUrl="/hardware/kit/unbox"
                     />
                 </Grid>
                 <Grid item xs={12} sm={4}>
@@ -42,7 +42,7 @@ export default function Kit() {
                         }
                         subtitle2="Explore"
                         description="Use the dashboard to interact with modules in the browser."
-                        buttonText="Dashboard"
+                        buttonText="Explore the dashboard"
                         buttonUrl="/dashboard"
                     />
                 </Grid>
@@ -55,8 +55,8 @@ export default function Kit() {
                             />
                         }
                         subtitle2="Build"
-                        description="Code Jacdac into your micro:bit V2, Arcade or Maker board."
-                        buttonText="MakeCode"
+                        description="Code Jacdac into your micro:bit V2."
+                        buttonText="Build with MakeCode"
                         buttonUrl="/clients/makecode"
                     />
                 </Grid>
