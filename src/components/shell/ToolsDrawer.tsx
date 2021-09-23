@@ -40,6 +40,7 @@ import {
 } from "../../../jacdac-ts/src/jdom/constants"
 import { UIFlags } from "../../jacdac/providerbus"
 import { resolveUnit } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
+import JacdacIcon from "../icons/JacdacIcon"
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -106,7 +107,8 @@ export default function ToolsDrawer() {
     const classes = useStyles()
     const { toolsMenu, setToolsMenu, toggleShowDeviceHostsDialog } =
         useContext(AppContext)
-    const { enqueueSnackbar } = useContext(AppContext)
+    const { enqueueSnackbar, toggleShowConnectTransportDialog } =
+        useContext(AppContext)
     const { toggleDarkMode, darkMode } = useContext(DarkModeContext)
     const { converters, setConverter } = useUnitConverters()
     const handleUnitClick =
@@ -131,6 +133,11 @@ export default function ToolsDrawer() {
         toggleDarkMode()
     }
     const links = [
+        {
+            text: "Connect",
+            action: toggleShowConnectTransportDialog,
+            icon: <JacdacIcon />,
+        },
         {
             text: "Start simulator",
             action: toggleShowDeviceHostsDialog,
