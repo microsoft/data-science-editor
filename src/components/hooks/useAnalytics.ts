@@ -1,9 +1,6 @@
 import { Component, ErrorInfo, ReactNode } from "react"
 import { ApplicationInsights } from "@microsoft/applicationinsights-web-basic"
-import {
-    cryptoRandomUint32,
-    randomDeviceId,
-} from "../../../jacdac-ts/src/jdom/random"
+import { cryptoRandomUint32 } from "../../../jacdac-ts/src/jdom/random"
 import { toHex } from "../../../jacdac-ts/src/jdom/utils"
 
 export type EventProperties = Record<string, string | number | boolean>
@@ -26,7 +23,7 @@ function splitProperties(props: EventProperties) {
     return { measurements, properties }
 }
 
-const sessionId = toHex(cryptoRandomUint32(64))
+const sessionId = toHex(cryptoRandomUint32(32))
 const INSTRUMENTATION_KEY = "81ad7468-8585-4970-b027-4f9e7c3eb191"
 const appInsights =
     typeof window !== "undefined" &&
