@@ -12,6 +12,7 @@ import ArrowRightIcon from "@material-ui/icons/ArrowRight"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import useDevices from "../hooks/useDevices"
 import { DeviceTreeItem, JDomTreeViewProps } from "./JDomTreeViewItems"
+import Flags from "../../../jacdac-ts/src/jdom/flags"
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -30,7 +31,7 @@ export default function JDomTreeView(props: JDomTreeViewProps) {
     const classes = useStyles()
     const [expanded, setExpanded] = useState<string[]>(defaultExpanded || [])
     const [selected, setSelected] = useState<string[]>(defaultSelected || [])
-    const devices = useDevices({ ignoreSelf: true })
+    const devices = useDevices({ ignoreSelf: !Flags.diagnostics })
 
     const handleToggle = (
         event: React.ChangeEvent<unknown>,

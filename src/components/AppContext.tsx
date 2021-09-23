@@ -113,7 +113,7 @@ export const AppProvider = ({ children }) => {
     const setDrawerType = (type: DrawerType) => {
         if (type !== DrawerType.None) _setToolsMenu(false)
         setType(type)
-        if (type !== DrawerType.Packets) setPaused(true)
+        setPaused(type !== DrawerType.Packets)
     }
 
     const setToolsMenu = (open: boolean) => {
