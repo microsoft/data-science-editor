@@ -159,8 +159,9 @@ function createBus(): JDBus {
                 trackEvent(`jd.stats`, b.stats.current as any)
         })
         // track restarts
-        b.on(DEVICE_RESTART, (d: JDDevice) => {
+        b.on(DEVICE_RESTART, async (d: JDDevice) => {
             if (d.isPhysical) {
+                await d.resolveProductIdentifier()
                 trackEvent(`jd.restart`, createPayload(d))
             }
         })
