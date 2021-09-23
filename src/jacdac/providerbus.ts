@@ -15,7 +15,7 @@ import IFrameBridgeClient from "../components/makecode/iframebridgeclient"
 import Flags from "../../jacdac-ts/src/jdom/flags"
 import GamepadServerManager from "../../jacdac-ts/src/servers/gamepadservermanager"
 import jacdacTsPackage from "../../jacdac-ts/package.json"
-import { analytics } from "../components/hooks/useAnalytics"
+import { analytics, EventProperties } from "../components/hooks/useAnalytics"
 import {
     CONNECTION_STATE,
     DEVICE_ANNOUNCE,
@@ -26,7 +26,10 @@ import Transport, {
     ConnectionState,
 } from "../../jacdac-ts/src/jdom/transport/transport"
 import JDDevice from "../../jacdac-ts/src/jdom/device"
-import { isInfrastructure } from "../../jacdac-ts/src/jdom/spec"
+import {
+    deviceSpecificationFromProductIdentifier,
+    isInfrastructure,
+} from "../../jacdac-ts/src/jdom/spec"
 
 function sniffQueryArguments() {
     if (typeof window === "undefined" || typeof URLSearchParams === "undefined")
@@ -108,8 +111,10 @@ function createBus(): JDBus {
 
     const { trackEvent } = analytics
     if (trackEvent) {
-        const createPayload = (d: JDDevice) => {
+        const createPayload = (d: JDDevice): EventProperties => {
             const productId = d.isPhysical ? d.productIdentifier : undefined
+            const product =
+                deviceSpecificationFromProductIdentifier(productId)?.id
             const services: Record<string, number> = {}
             for (const srv of d
                 .services()
@@ -117,15 +122,15 @@ function createBus(): JDBus {
                 const { name } = srv
                 services[name] = (services[name] || 0) + 1
             }
-            const payload = {
+            return {
                 deviceId: d.anonymizedDeviceId,
                 source: d.source?.split("-", 1)[0]?.toLowerCase(),
                 physical: d.isPhysical,
                 productId: productId?.toString(16),
+                product,
                 services: JSON.stringify(services),
                 serviceClasses: JSON.stringify(d.serviceClasses.slice(1)),
             }
-            return payload
         }
 
         let cleanCount = 0
