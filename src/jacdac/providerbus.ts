@@ -20,6 +20,7 @@ import {
     CONNECTION_STATE,
     DEVICE_ANNOUNCE,
     DEVICE_CLEAN,
+    DEVICE_RESTART,
 } from "../../jacdac-ts/src/jdom/constants"
 import Transport, {
     ConnectionState,
@@ -107,6 +108,26 @@ function createBus(): JDBus {
 
     const { trackEvent } = analytics
     if (trackEvent) {
+        const createPayload = (d: JDDevice) => {
+            const productId = d.isPhysical ? d.productIdentifier : undefined
+            const services: Record<string, number> = {}
+            for (const srv of d
+                .services()
+                .filter(srv => !isInfrastructure(srv.specification))) {
+                const { name } = srv
+                services[name] = (services[name] || 0) + 1
+            }
+            const payload = {
+                deviceId: d.anonymizedDeviceId,
+                source: d.source?.split("-", 1)[0]?.toLowerCase(),
+                physical: d.isPhysical,
+                productId: productId?.toString(16),
+                services: JSON.stringify(services),
+                serviceClasses: JSON.stringify(d.serviceClasses.slice(1)),
+            }
+            return payload
+        }
+
         let cleanCount = 0
         // track connections
         b.on(
@@ -120,25 +141,8 @@ function createBus(): JDBus {
                     }))
         )
         // track services
-        b.on(DEVICE_ANNOUNCE, async (d: JDDevice) => {
-            const productId = d.isPhysical
-                ? await d.resolveProductIdentifier()
-                : undefined
-            const services: Record<string, number> = {}
-            for (const srv of d
-                .services()
-                .filter(srv => !isInfrastructure(srv.specification))) {
-                const { name } = srv
-                services[name] = (services[name] || 0) + 1
-            }
-            trackEvent("jd.announce", {
-                deviceId: d.anonymizedDeviceId,
-                source: d.source?.split("-", 1)[0]?.toLowerCase(),
-                physical: d.isPhysical,
-                productId: productId?.toString(16),
-                services: JSON.stringify(services),
-                serviceClasses: JSON.stringify(d.serviceClasses.slice(1)),
-            })
+        b.on(DEVICE_ANNOUNCE, (d: JDDevice) => {
+            trackEvent("jd.announce", createPayload(d))
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             trackEvent(`jd.stats`, b.stats.current as any)
         })
@@ -148,6 +152,12 @@ function createBus(): JDBus {
             if (!(cleanCount++ % 30))
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 trackEvent(`jd.stats`, b.stats.current as any)
+        })
+        // track restarts
+        b.on(DEVICE_RESTART, (d: JDDevice) => {
+            if (d.isPhysical) {
+                trackEvent(`jd.restart`, createPayload(d))
+            }
         })
     }
 
