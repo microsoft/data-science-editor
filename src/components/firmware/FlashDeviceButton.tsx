@@ -22,7 +22,7 @@ export function FlashDeviceButton(props: {
     const { device, blob, ignoreFirmwareCheck } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { setError } = useContext(AppContext)
-    const { trackEvent } = useAnalytics()
+    const { trackEvent, trackError } = useAnalytics()
     const [progress, setProgress] = useState(0)
     const firmwareInfo = useChange(device, d => d?.firmwareInfo)
     const update =
@@ -41,10 +41,12 @@ export function FlashDeviceButton(props: {
 
     const handleFlashing = async () => {
         if (device.flashing) return
-        trackEvent("flash.start", {
-            firmware: firmwareInfo.productIdentifier,
+        const props = {
+            productId: firmwareInfo.productIdentifier,
+            name: firmwareInfo.name,
             version: firmwareInfo.version,
-        })
+        }
+        trackEvent("flash.start", props)
         try {
             setProgress(0)
             device.flashing = true // don't refresh registers while flashing
@@ -60,18 +62,13 @@ export function FlashDeviceButton(props: {
             )
             // trigger info
             device.firmwareInfo = undefined
+            trackEvent("flash.success", props)
         } catch (e) {
-            trackEvent("flash.error", {
-                firmware: firmwareInfo.productIdentifier,
-                version: firmwareInfo.version,
-            })
+            trackError(e, props)
+            trackEvent("flash.error", props)
             if (mounted()) setError(e)
         } finally {
             device.flashing = false
-            trackEvent("flash.success", {
-                firmware: firmwareInfo.productIdentifier,
-                version: firmwareInfo.version,
-            })
         }
     }
 
