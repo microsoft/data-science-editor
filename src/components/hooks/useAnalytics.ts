@@ -1,5 +1,10 @@
 import { Component, ErrorInfo, ReactNode } from "react"
 import { ApplicationInsights } from "@microsoft/applicationinsights-web-basic"
+import {
+    cryptoRandomUint32,
+    randomDeviceId,
+} from "../../../jacdac-ts/src/jdom/random"
+import { toHex } from "../../../jacdac-ts/src/jdom/utils"
 
 export type EventProperties = Record<string, string | number | boolean>
 const repo = process.env.GATSBY_GITHUB_REPOSITORY
@@ -21,6 +26,7 @@ function splitProperties(props: EventProperties) {
     return { measurements, properties }
 }
 
+const sessionId = toHex(cryptoRandomUint32(64))
 const INSTRUMENTATION_KEY = "81ad7468-8585-4970-b027-4f9e7c3eb191"
 const appInsights =
     typeof window !== "undefined" &&
@@ -40,6 +46,11 @@ const page: () => void = appInsights
           appInsights.track({
               name: "",
               time: new Date().toUTCString(),
+              ext: {
+                  app: {
+                      sesId: sessionId,
+                  },
+              },
               tags: [],
               data: { repo, sha },
               baseType: "PageviewData",
@@ -56,6 +67,11 @@ const trackEvent: (name: string, properties?: EventProperties) => void =
               appInsights.track({
                   name: "",
                   time: new Date().toUTCString(),
+                  ext: {
+                      app: {
+                          sesId: sessionId,
+                      },
+                  },
                   data: { repo, sha },
                   baseType: "EventData",
                   baseData: {
@@ -71,6 +87,11 @@ const trackError: (error: unknown, properties?: EventProperties) => void =
               appInsights.track({
                   name: "",
                   time: new Date().toUTCString(),
+                  ext: {
+                      app: {
+                          sesId: sessionId,
+                      },
+                  },
                   data: { repo, sha },
                   baseType: "ExceptionData",
                   baseData: {
