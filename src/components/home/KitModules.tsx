@@ -46,7 +46,7 @@ export default function KitModules() {
                 caption="Slot the micro:bit in the Jacdapter then try to connect various modules to see what happens."
                 buttonUrl="/hardware/kit/oob/"
                 buttonVariant="link"
-                buttonText="Download"
+                buttonText="Download again"
                 image={
                     <StaticImage
                         src="./kit/opentopside.jpg"
