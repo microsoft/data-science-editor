@@ -1,16 +1,17 @@
 # Light Level Extension
 
 The light level extension reports light level as a floating
-point value between 0 and 100.
+point value between 0.0 and 100.0.
 The `lightLevel` method returns the current light level.
 
-As is the case with all sensors, an event handler is supplied for when
-the sensor value (lightLevel) changes by a specified amount.
-
-The program below use the two light level APIs to print
-the current light level whenever it changes by 5:
+The following program outputs the light level when the sensor
+is first connected and whenever the light level changes by 5:
 
 ```blocks
+modules.lightLevel1.onConnected(() => {
+    basic.showNumber(modules.lightLevel1.lightLevel())
+})
+
 modules.lightLevel1.onLightLevelChangedBy(5, () => {
     basic.showNumber(modules.lightLevel1.lightLevel())
 })
