@@ -17,8 +17,10 @@ export default function ServiceRole(props: { service: JDService }) {
     const role = useServiceRole(service)
     const handleClick = () => showSelectRoleDialog(service)
 
-    const hasRoleForService = useChange(roleManager, _ =>
-        _?.hasRoleForService(service)
+    const hasRoleForService = useChange(
+        roleManager,
+        _ => _?.hasRoleForService(service),
+        [service]
     )
     // hide if no role manager or role not compatible with required roles
     if (!hasRoleForService) return null
