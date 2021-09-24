@@ -1,7 +1,6 @@
 import { Grid } from "@material-ui/core"
 import { StaticImage } from "gatsby-plugin-image"
 import React, { lazy, Suspense } from "react"
-import useMediaQueries from "../hooks/useMediaQueries"
 import CenterGrid from "./CenterGrid"
 import SplitGrid from "./SplitGrid"
 const DeviceSpecificationList = lazy(
