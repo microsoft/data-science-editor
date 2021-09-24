@@ -20,6 +20,7 @@ import {
     CONNECTION_STATE,
     DEVICE_ANNOUNCE,
     DEVICE_CLEAN,
+    DEVICE_PRODUCT_IDENTIFY,
     DEVICE_RESTART,
 } from "../../jacdac-ts/src/jdom/constants"
 import Transport, {
@@ -158,6 +159,10 @@ function createBus(): JDBus {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 trackEvent(`jd.stats`, b.stats.current as any)
         })
+        // product info
+        b.on(DEVICE_PRODUCT_IDENTIFY, (d: JDDevice) =>
+            trackEvent("jd.product", createPayload(d))
+        )
         // track restarts
         b.on(DEVICE_RESTART, async (d: JDDevice) => {
             if (d.isPhysical) {
