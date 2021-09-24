@@ -2,6 +2,9 @@
 title: Out of the Box
 order: 100
 ---
+
+import DowloadRawFileButton from "../../../components/ui/DowloadRawFileButton"
+
 # Out of the Box
 
 The micro:bit V2 from the Kit comes with a preloaded firmware that will use the Jacdac modules
@@ -15,6 +18,7 @@ The micro:bit V2 from the Kit comes with a preloaded firmware that will use the 
 -   when a Jacdac module is added to or removed from the bus, the micro:bit displays the new count of devices on the bus
 
 -   when a Jacdac button module is attached, the micro:bit will respond to the following events as follows
+
     -   Down: display a first icon on 5x5 LEDs and play a note (eight different icons and notes supported, for up to eight buttons)
     -   Hold: display a second icon
     -   Up: clear display
@@ -29,4 +33,11 @@ The micro:bit V2 from the Kit comes with a preloaded firmware that will use the 
 
 The out-of-the-box experience is a MakeCode program that you can download or even modify!
 
-<a href="https://raw.githubusercontent.com/microsoft/pxt-jacdac/master/tools/microbit-oob/firmware.hex" download="microbit-oob.hex">Download firmware</a>
+<DowloadRawFileButton
+    variant="contained"
+    url="https://raw.githubusercontent.com/microsoft/pxt-jacdac/master/tools/microbit-oob/firmware.hex"
+    name="microbit-oob.hex"
+    disconnect={true}
+>
+    Download firmware
+</DowloadRawFileButton>
