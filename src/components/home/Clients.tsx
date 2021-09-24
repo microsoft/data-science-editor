@@ -69,6 +69,7 @@ export default function Clients() {
             <SplitGrid
                 right={false}
                 subtitle="p5*js"
+                imageColumns={8}
                 description="Physical Creative Coding."
                 buttonText="p5.jacdac library"
                 buttonVariant="link"
@@ -76,7 +77,22 @@ export default function Clients() {
                 image={
                     <StaticImage
                         src="./p5js.jpg"
-                        alt="A p5js program that controls color with potentiometers"
+                        alt="A p5js program that controls color with sliders."
+                    />
+                }
+            />
+
+            <SplitGrid
+                right={true}
+                subtitle="A-Frame"
+                description="Put Reality back into Virtual Reality."
+                buttonText="A-Frame demo"
+                buttonVariant="link"
+                buttonUrl="/clients/a-frame"
+                image={
+                    <StaticImage
+                        src="./a-frame.jpg"
+                        alt="Control the radius of a sphere using a slider using our Javascript SDK."
                     />
                 }
             />
