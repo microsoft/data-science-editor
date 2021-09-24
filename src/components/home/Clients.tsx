@@ -53,6 +53,7 @@ export default function Clients() {
 
             <SplitGrid
                 right={true}
+                imageColumns={8}
                 subtitle="Node-RED"
                 description="Add Jacdac to your Node-RED flows."
                 buttonText="Jacdac node"
@@ -85,6 +86,7 @@ export default function Clients() {
             <SplitGrid
                 right={true}
                 subtitle="A-Frame"
+                imageColumns={7}
                 description="Put Reality back into Virtual Reality."
                 buttonText="A-Frame demo"
                 buttonVariant="link"
