@@ -247,7 +247,7 @@ export default function Home() {
                 description="Absolutely! Use our client software to integrate into your apps."
                 buttonText="Integrate Jacdac into your apps"
                 buttonVariant="link"
-                buttonUrl="/software/"
+                buttonUrl="/clients/"
             />
         </Grid>
     )

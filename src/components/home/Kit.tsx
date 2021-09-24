@@ -2,6 +2,7 @@ import { Grid } from "@material-ui/core"
 import { StaticImage } from "gatsby-plugin-image"
 import React from "react"
 import CarouselGrid from "./CarouselGrid"
+import CenterGrid from "./CenterGrid"
 import FeatureItem from "./FeatureItem"
 
 export default function Kit() {
@@ -61,6 +62,22 @@ export default function Kit() {
                     />
                 </Grid>
             </CarouselGrid>
+
+            <CenterGrid
+                subtitle2="Is there an update available?"
+                description="Jacdac modules can be updated from this web site."
+                buttonText="Check for firmware updates"
+                buttonVariant="link"
+                buttonUrl="/tools/uploader/"
+            />
+
+            <CenterGrid
+                subtitle2="Can I add Jacdac to my app?"
+                description="Absolutely! Use our client software to integrate into your apps."
+                buttonText="Integrate Jacdac into your apps"
+                buttonVariant="link"
+                buttonUrl="/clients/"
+            />
         </Grid>
     )
 }
