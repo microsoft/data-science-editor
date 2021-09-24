@@ -2,7 +2,7 @@
 
 The relay extension exposes the state of the relay
 via the method `closed`, which returns the value
-true when the relay is closed and the circuit is energized.
+true when the circuit is energized.
 
 The following program uses the `setClosed` method to
 close the relay (on press of button A) and to open
@@ -35,3 +35,7 @@ modules.relay1.onInactive(() => {
     basic.showString("I")
 })
 ```
+
+## See Also
+
+- [service specification](/services/relay/)
