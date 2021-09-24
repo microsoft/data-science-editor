@@ -22,21 +22,25 @@ The following snippet is a possible use of Jacdac in a VR setting.
 The radius of the sphere is controlled by any potentiometer module.
 
 ```typescript
-// grab the aframe sphere
-const sphere = document.getElementById("sphere")
+// make sure all sensors are streaming data
+bus.streaming = true
+
+// aframe object
+const sphere = document.getElementById("sphere");
+
 // using an animation frame to query sensor and update DOM
 function step() {
-    // collect all sensor info into a simple object data structure
-    const { potentiometer } = jacdac.snapshotSensors(bus)
-    // grab the first position on potentiometer
-    // !! data will be undefined if nothing is connected ``
-    const [pos = 0] = potentiometer
-    // a-frame magic
-    sphere.setAttribute("radius", 0.5 + pos)
-    // keep animating
-    window.requestAnimationFrame(step)
+  // collect all sensor info into a simple object data structure
+  const sensors = jacdac.snapshotSensors(bus)
+  // grab the first reading on potentiometer
+  // !! reading might be undefined if missing !!
+  const pos = sensors.potentiometer[0] || 0
+  // a-frame magic
+  sphere.setAttribute("radius", 0.5 + pos)
+  // keep animating
+  window.requestAnimationFrame(step);
 }
-window.requestAnimationFrame(step)
+window.requestAnimationFrame(step);
 ```
 
 The HTML of the A-Frame starter has been slightly modified to import the Jacdac SDK
