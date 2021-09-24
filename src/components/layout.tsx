@@ -162,7 +162,7 @@ function LayoutWithContext(props: LayoutProps) {
     const { element, props: pageProps } = props
     const { pageContext, path, location } = pageProps
     const { frontmatter } = pageContext || {}
-    const tools = /tools\//.test(path)
+    const tools = /^\/tools\//.test(path)
     const makeCodeTool = /tools\/makecode-/.test(path)
     const fullWidthTools =
         /^\/editors\/\w+\/$/.test(path) ||
@@ -174,7 +174,7 @@ function LayoutWithContext(props: LayoutProps) {
     } = frontmatter || {
         hideMainMenu: makeCodeTool,
         hideUnderConstruction: makeCodeTool || fullWidthTools,
-        hideBreadcrumbs: tools,
+        hideBreadcrumbs: tools || fullWidthTools,
     }
 
     const isDataEditor = /^\/editors\/data/.test(path)
