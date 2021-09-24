@@ -27,6 +27,7 @@ export interface PacketsProps {
     toggleTracing: () => void
     paused: boolean
     setPaused: (p: boolean) => void
+    setSilent: (p: boolean) => void
     progress: number
     timeRange: number[] // [start, end]
     toggleTimeRange: () => void
@@ -47,6 +48,7 @@ const PacketsContext = createContext<PacketsProps>({
     toggleTracing: () => {},
     paused: false,
     setPaused: () => {},
+    setSilent: () => {},
     progress: undefined,
     timeRange: undefined,
     toggleTimeRange: () => {},
@@ -75,7 +77,8 @@ export const PacketsProvider = ({ children }) => {
     const [recording, setRecording] = useState(false)
     const [replayTrace, _setReplayTrace] = useState<Trace>(undefined)
     const [tracing, setTracing] = useState(false)
-    const [paused, _setPaused] = useState(true)
+    const [paused, _setPaused] = useState(false)
+    const [silent, _setSilent] = useState(false)
 
     const clearPackets = () => {
         setProgress(undefined)
@@ -132,6 +135,12 @@ export const PacketsProvider = ({ children }) => {
             view.current.paused = p
         }
     }
+    const setSilent = (p: boolean) => {
+        if (p !== silent) {
+            _setSilent(p)
+            view.current.silent = p
+        }
+    }
     // views
     useEffect(() => {
         recorder.current.mount(
@@ -186,6 +195,7 @@ export const PacketsProvider = ({ children }) => {
                 toggleTracing,
                 paused,
                 setPaused,
+                setSilent,
                 progress,
                 timeRange,
                 setTimeRange,
