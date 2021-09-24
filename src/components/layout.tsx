@@ -164,7 +164,7 @@ function LayoutWithContext(props: LayoutProps) {
     const { pageContext, path, location } = pageProps
     const { frontmatter } = pageContext || {}
 
-    const isHosted = inIFrame() && /(hosted|embed)=1/.test(window.location.href)
+    const isHosted = /(hosted|embed)=1/.test(window.location.href)
     const tools = /^\/tools\//.test(path)
     const makeCodeTool = /tools\/makecode-/.test(path)
     const fullWidthTools =
@@ -181,7 +181,11 @@ function LayoutWithContext(props: LayoutProps) {
     }
 
     const isDataEditor = /^\/editors\/data/.test(path)
-    const appBar = isDataEditor ? <DataEditorAppBar /> : <MainAppBar />
+    const appBar = hideMainMenu ? undefined : isDataEditor ? (
+        <DataEditorAppBar />
+    ) : (
+        <MainAppBar />
+    )
     const title = isDataEditor
         ? "Data Science Editor (Experimental)"
         : undefined
@@ -229,7 +233,7 @@ function LayoutWithContext(props: LayoutProps) {
     const MainSection = () => (
         <>
             <main className={classes.mainContent}>
-                <div className={classes.drawerHeader} />
+                {!hideMainMenu && <div className={classes.drawerHeader} />}
                 {container ? (
                     <Container>
                         <InnerMainSection />
