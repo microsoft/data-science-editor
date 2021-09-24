@@ -8,11 +8,6 @@ import DbContext, { DbContextProps } from "../DbContext"
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever"
 import AppContext from "../AppContext"
 import SwitchWithLabel from "../ui/SwitchWithLabel"
-import Packet from "../../../jacdac-ts/src/jdom/packet"
-import {
-    ControlCmd,
-    SRV_CONTROL,
-} from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 
 export default function SafeBootAlert() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
@@ -33,11 +28,6 @@ export default function SafeBootAlert() {
     // turn on and off safeboot mode
     useEffect(() => {
         bus.safeBoot = safeBoot
-        if (safeBoot) {
-            // tell all brains to enter proxy mode
-            const pkt = Packet.onlyHeader(ControlCmd.Proxy)
-            pkt.sendAsMultiCommandAsync(bus, SRV_CONTROL)
-        }
         return () => {
             bus.safeBoot = false
         }

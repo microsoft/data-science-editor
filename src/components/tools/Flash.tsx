@@ -7,7 +7,7 @@ import {
     Tab,
     Tabs,
 } from "@material-ui/core"
-import React, { Fragment, useState } from "react"
+import React, { Fragment, useContext, useEffect, useState } from "react"
 import TabPanel from "../ui/TabPanel"
 import ConnectAlert from "../alert/ConnectAlert"
 import FirmwareCardGrid from "../firmware/FirmwareCardGrid"
@@ -19,6 +19,14 @@ import Flags from "../../../jacdac-ts/src/jdom/flags"
 import useFirmwareBlobs from "../firmware/useFirmwareBlobs"
 import GridHeader from "../ui/GridHeader"
 import { groupBy } from "../../../jacdac-ts/src/jdom/utils"
+import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
+import {
+    ControlCmd,
+    DEVICE_ANNOUNCE,
+    SRV_CONTROL,
+} from "../../../jacdac-ts/src/jdom/constants"
+import JDDevice from "../../../jacdac-ts/src/jdom/device"
+import Packet from "../../../jacdac-ts/src/jdom/packet"
 
 function FlashDiagnostics() {
     const blobs = useFirmwareBlobs()
@@ -49,6 +57,7 @@ function FlashDiagnostics() {
 }
 
 export default function Flash() {
+    const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const [tab, setTab] = useState(0)
     const handleTabChange = (
         event: React.ChangeEvent<unknown>,
@@ -56,6 +65,18 @@ export default function Flash() {
     ) => {
         setTab(newValue)
     }
+
+    // put brains into proxy mode
+    useEffect(() => {
+        const forceProxy = () => {
+            console.debug(`jacdac: force clients to proxy mode`)
+            const pkt = Packet.onlyHeader(ControlCmd.Proxy)
+            pkt.sendAsMultiCommandAsync(bus, SRV_CONTROL)
+        }
+        const unsub = bus.subscribe(DEVICE_ANNOUNCE, forceProxy)
+        forceProxy()
+        return unsub
+    }, [])
 
     return (
         <Box mb={2}>
