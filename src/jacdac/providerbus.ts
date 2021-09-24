@@ -160,9 +160,9 @@ function createBus(): JDBus {
                 trackEvent(`jd.stats`, b.stats.current as any)
         })
         // product info
-        b.on(DEVICE_PRODUCT_IDENTIFY, (d: JDDevice) =>
-            trackEvent("jd.product", createPayload(d))
-        )
+        b.on(DEVICE_PRODUCT_IDENTIFY, (d: JDDevice) => {
+            if (d.isPhysical) trackEvent("jd.product", createPayload(d))
+        })
         // track restarts
         b.on(DEVICE_RESTART, async (d: JDDevice) => {
             if (d.isPhysical) {
