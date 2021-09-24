@@ -14,7 +14,9 @@ export default function TraceSaveButton() {
         const busText = bus.describe()
         const savedTrace = replayTrace || view.trace
         const traceText = savedTrace.serializeToText()
-        const text = `# Jacdac Trace
+        const text = `# Jacdac Trace 
+        
+To import, go to https://aka.ms/jacdac, open device tree and click import icon.
 
 ## devices
 
