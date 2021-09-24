@@ -11,16 +11,23 @@ import ConnectButtons from "./buttons/ConnectButtons"
 import PacketsContext from "./PacketsContext"
 import TraceClearButton from "./trace/TraceClearButton"
 import TracePlayButton from "./trace/TracePlayButton"
-import TraceRecordButton from "./trace/TraceRecordButton"
 
 export default function DrawerToolsButtonGroup(props: {
     className?: string
     showToc?: boolean
+    showPackets?: boolean
     showCurrent?: boolean
     showConnect?: boolean
     showTrace?: boolean
 }) {
-    const { className, showToc, showCurrent, showConnect, showTrace } = props
+    const {
+        className,
+        showToc,
+        showCurrent,
+        showConnect,
+        showTrace,
+        showPackets,
+    } = props
     const { drawerType, setDrawerType } = useContext(AppContext)
     const { replayTrace } = useContext(PacketsContext)
 
@@ -36,7 +43,7 @@ export default function DrawerToolsButtonGroup(props: {
             label: "open device tree",
             icon: <AccountTreeIcon />,
         },
-        {
+        showPackets && {
             drawer: DrawerType.Packets,
             label: "open packet console",
             icon: <HistoryIcon />,

@@ -95,7 +95,10 @@ export default function AppDrawer(props: { pagePath: string }) {
                     <>
                         <PacketRecorder />
                         <span className={classes.fluid} />
-                        <DrawerToolsButtonGroup showConnect={true} />
+                        <DrawerToolsButtonGroup
+                            showPackets={true}
+                            showConnect={true}
+                        />
                     </>
                 )}
                 <IconButton aria-label="Collapse" onClick={handleDrawerClose}>
