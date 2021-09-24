@@ -32,4 +32,16 @@ function step() {
 window.requestAnimationFrame(step);
 ```
 
+The HTML of the A-Frame starter has been slightly modified to import the Jacdac SDK
+
+```html
+<script src="https://unpkg.com/jacdac-ts/dist/jacdac.umd.js"></script>
+```
+
+and display a connect button. Connection to a physical device needs to be started from a user interaction like a button click.
+
+```html
+<button id="connectbtn" style="position:absolute; left: 1rem; top: 1rem; z-index:1000;">jacdac connect</button>    
+```
+
 * [Remix the starter project](https://glitch.com/edit/#!/jacdac-aframe-demo)
