@@ -28,7 +28,6 @@ import { useDebounce } from "use-debounce"
 import { arrayConcatMany, uniqueMap } from "../../jacdac-ts/src/jdom/utils"
 import TraceTimeFilterRangeSlider from "./trace/TraceTimeFilterRangeSlider"
 import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
-import { IconButton } from "gatsby-theme-material-ui"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import GroupWorkIcon from "@material-ui/icons/GroupWork"
 import {
@@ -39,6 +38,7 @@ import {
 } from "../../jacdac-ts/src/jdom/spec"
 import Tooltip from "./ui/Tooltip"
 import { useId } from "react-use-id-hook"
+import PacketControlButtons from "./PacketListButtons"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -301,6 +301,7 @@ export default function PacketFilter() {
             {timeRange && <TraceTimeFilterRangeSlider />}
             <Paper square elevation={1}>
                 <Box display="flex">
+                    <PacketControlButtons />
                     <FilterMenu
                         text="Filters"
                         handleAddFilter={handleAddFilter}
