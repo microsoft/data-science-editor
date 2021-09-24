@@ -45,11 +45,20 @@ const jd = createWebBus()
 
 ```
 
+The connection flow must be started from a user interaction, typically a button click.
+
+```javascript
+// you have a button with id = connectbtn somewhere
+const connectEl = document.getElementById("connectbtn");
+connectEl.onclick = () =>
+  bus.connected ? bus.disconnect() : bus.connect();
+```
+
 ## CDN / UMD
 
 You can also use CDN services to import `jacdac` into your html page directly.
-This will load the ES6 build of the library.
+This will load the UMD build of the library.
 
 ```html
-<script src="https://unpkg.com/jacdac-ts/dist/jacdac.js"></script>
+<script src="https://unpkg.com/jacdac-ts/dist/jacdac.umd.js"></script>
 ```
