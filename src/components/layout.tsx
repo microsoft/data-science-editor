@@ -24,6 +24,7 @@ import useMediaQueries from "./hooks/useMediaQueries"
 import MainAppBar from "./shell/MainAppBar"
 import DataEditorAppBar from "./shell/DataEditorAppBar"
 import { AlertTitle } from "@material-ui/lab"
+import { inIFrame } from "../../jacdac-ts/src/jdom/iframeclient"
 
 const WebDiagnostics = lazy(() => import("./shell/WebDiagnostics"))
 const AppDrawer = lazy(() => import("./shell/AppDrawer"))
@@ -162,6 +163,8 @@ function LayoutWithContext(props: LayoutProps) {
     const { element, props: pageProps } = props
     const { pageContext, path, location } = pageProps
     const { frontmatter } = pageContext || {}
+
+    const isHosted = inIFrame() && /(hosted|embed)=1/.test(window.location.href)
     const tools = /^\/tools\//.test(path)
     const makeCodeTool = /tools\/makecode-/.test(path)
     const fullWidthTools =
@@ -172,7 +175,7 @@ function LayoutWithContext(props: LayoutProps) {
         hideUnderConstruction = false,
         hideBreadcrumbs = false,
     } = frontmatter || {
-        hideMainMenu: makeCodeTool,
+        hideMainMenu: isHosted || makeCodeTool,
         hideUnderConstruction: makeCodeTool || fullWidthTools,
         hideBreadcrumbs: tools || fullWidthTools,
     }

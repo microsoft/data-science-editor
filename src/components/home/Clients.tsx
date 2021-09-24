@@ -100,8 +100,8 @@ export default function Clients() {
             />
 
             <CenterGrid
-                subtitle2="Can I embed Jacdac in my web pages?"
-                description="Absolutely! With a few lines of HTML, you can bring Jacdac to your web pages."
+                subtitle2="Can I embed the dashboard in my web pages?"
+                description="Absolutely! With a few lines of HTML, you'll get a dashboard in your web pages."
                 buttonText="Copy HTML code to add Jacdac to your web site."
                 buttonVariant="link"
                 buttonUrl="/clients/embed/"
