@@ -14,12 +14,12 @@ import { Link } from "gatsby-theme-material-ui"
 import ListItemText from "@material-ui/core/ListItemText"
 import AppContext, { DrawerType } from "./AppContext"
 import { graphql, useStaticQuery } from "gatsby"
+import useMediaQueries from "./hooks/useMediaQueries"
 
 interface TocNode {
     name: string
     path: string
     order: number
-    collapse?: boolean
     children?: TocNode[]
 }
 
@@ -76,6 +76,7 @@ function treeifyToc(toc: TocNode[]) {
 export default function Toc(props: { pagePath: string }) {
     const { pagePath } = props
     const { setDrawerType } = useContext(AppContext)
+    const { mobile } = useMediaQueries()
     const theme = useTheme()
     const classes = useStyles()
 
@@ -127,8 +128,8 @@ export default function Toc(props: { pagePath: string }) {
       }
    */
 
-    const handleClick = (node: TocNode) => () => {
-        if (node.collapse) setDrawerType(DrawerType.None)
+    const handleClick = () => {
+        if (mobile) setDrawerType(DrawerType.None)
     }
 
     const tree = useMemo(() => {
@@ -138,25 +139,21 @@ export default function Toc(props: { pagePath: string }) {
                 name: "Home",
                 path: "/",
                 order: 0,
-                collapse: true,
             },
             {
                 name: "Dashboard",
                 path: "/dashboard/",
                 order: 0.1,
-                collapse: true,
             },
             {
                 name: "Hardware",
                 path: "/hardware/",
                 order: 0.2,
-                collapse: true,
             },
             {
                 name: "Software",
                 path: "/software/",
                 order: 0.3,
-                collapse: true,
             },
             {
                 name: "Devices",
@@ -166,7 +163,7 @@ export default function Toc(props: { pagePath: string }) {
             {
                 name: "Client SDKs",
                 path: "/clients/",
-                order: .5,
+                order: 0.5,
             },
             {
                 name: "Services",
@@ -182,13 +179,12 @@ export default function Toc(props: { pagePath: string }) {
                 name: "Protocol",
                 path: "/protocol/",
                 order: 0.8,
-                collapse: true,
             },
             {
                 name: "Reference",
                 path: "/reference/",
                 order: 0.81,
-            }
+            },
         ]
 
         data.allMdx.edges
@@ -233,7 +229,7 @@ export default function Toc(props: { pagePath: string }) {
         return tree
     }, [])
 
-    function TocListItem(props: { entry: TocNode; level: number }) {
+    const TocListItem = (props: { entry: TocNode; level: number }) => {
         const { entry, level } = props
         const { path, children, name } = entry
         const selected = pagePath === path
@@ -245,7 +241,7 @@ export default function Toc(props: { pagePath: string }) {
                 <ListItem button selected={selected} key={"tocitem" + path}>
                     <Link
                         style={{ color: theme.palette.text.primary }}
-                        onClick={handleClick(entry)}
+                        onClick={handleClick}
                         to={path}
                     >
                         <ListItemText

@@ -2,17 +2,13 @@
 
 The relay extension exposes the state of the relay
 via the method `closed`, which returns the value
-true when the relay is closed and false otherwise.
+true when the relay is closed and the circuit is energized.
 
-The events `on` and `off`, with associated event handlers
-are fired when the relay transitions from closed to open,
-and from open to closely, respectively
-
-The following program uses the `setClosed` method to 
+The following program uses the `setClosed` method to
 close the relay (on press of button A) and to open
 the relay (on press of button B). Event handlers for
 the relay are fired for the change in state. Finally,
-on press of buttons A and B simultaneously, the 
+on press of buttons A and B simultaneously, the
 state of the relay is queryed using the `closed`
 method:
 
@@ -24,20 +20,18 @@ input.onButtonPressed(Button.A, function () {
 input.onButtonPressed(Button.B, function () {
     modules.relay1.setClosed(false)
 })
-
-modules.relay1.onOn(() => {
-    basic.showString("Closed")
-})
-
-modules.relay1.onOff(() => {
-    basic.showString("Open")
-})
-
-input.onButtonPressed(Button.AB, function () {
-    if (modules.relay1.closed())
-        basic.showString("Closed")
-    else
-        basic.showString("Open")
-})
 ```
 
+The events `active` and `inactive`, with associated event handlers
+are fired when the relay transitions. Normally closed relays will energize when active,
+and normally closed (NC) relays will energize when inactive.
+
+```blocks
+modules.relay1.onActive(() => {
+    basic.showString("A")
+})
+
+modules.relay1.onInactive(() => {
+    basic.showString("I")
+})
+```
