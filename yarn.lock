@@ -2155,10 +2155,10 @@
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.20.tgz#111b5db0f501aa89b05076fa31f0ea0e0c292cd3"
   integrity sha512-88p7+M0QGxKpmnkfXjS4V26AnoC/eiqZutE8GLdaI5X12NY75bXSdTY9NkmYb2Xyk1O+MmkuO6Frmsj84V6I8Q==
 
-"@react-three/drei@^7.11.0":
-  version "7.11.0"
-  resolved "https://registry.yarnpkg.com/@react-three/drei/-/drei-7.11.0.tgz#43f80a037e28fbffb2a3e89fb95ab8a35975c1bc"
-  integrity sha512-kwXpl0Flwr0PvawRea0GNu8bEJU3m5q7FQNlB0Of09ktdlRgDlR23pDLeQxk7iszOV/a8L8bJQi3/g6Q3dTjwA==
+"@react-three/drei@^7.12.3":
+  version "7.12.3"
+  resolved "https://registry.yarnpkg.com/@react-three/drei/-/drei-7.12.3.tgz#9b49b3c83da1068aec1be9175de8dfdd893b555d"
+  integrity sha512-3xA40awOUNctep8vdJaXYiWmJMKxtqnxIdfWCnXSlc8W0HiRwZ2oTFwcXdZ7uor5npCPohqUMpSTtQkfWzX4tA==
   dependencies:
     "@babel/runtime" "^7.11.2"
     blob-polyfill "^5.0.20210201"
@@ -2170,7 +2170,7 @@
     react-merge-refs "^1.0.0"
     stats.js "^0.17.0"
     three-mesh-bvh "^0.4.1"
-    three-stdlib "^2.4.0"
+    three-stdlib "^2.4.2"
     troika-three-text "^0.42.0"
     use-asset "^1.0.4"
     utility-types "^3.10.0"
@@ -2373,10 +2373,10 @@
     regenerator-runtime "^0.13.5"
     yargs "^16.0.3"
 
-"@tidyjs/tidy@^2.4.3":
-  version "2.4.3"
-  resolved "https://registry.yarnpkg.com/@tidyjs/tidy/-/tidy-2.4.3.tgz#738e6fddc7435df4eac83fb5290efaeba2870b63"
-  integrity sha512-7QHjaqI9EsdN1NwlMWBWLqEAiD1gO4b/50x30+0W9wCSI3pZFYkjor68rVb+vYGdZMGcrTJlul7H/YZNEqK/5Q==
+"@tidyjs/tidy@^2.4.4":
+  version "2.4.4"
+  resolved "https://registry.yarnpkg.com/@tidyjs/tidy/-/tidy-2.4.4.tgz#04f64f3515b3f0039e587d9a73eb94b0c161dc8a"
+  integrity sha512-FGsIoajwkn/5DQCAgry5Vi8yh5vHkqm2k9hz1QmqpC5jY8HA/DI4Kt+x9RDc1tfWDOFq3AdqiD/y6YODN5Ii2Q==
   dependencies:
     d3-array "^2.9.1"
     ts-toolbelt "^8.0.7"
@@ -7540,17 +7540,17 @@ gatsby-remark-images@^5.11.0:
     unist-util-select "^3.0.4"
     unist-util-visit-parents "^3.1.1"
 
-gatsby-remark-makecode@^1.0.17:
-  version "1.0.17"
-  resolved "https://registry.yarnpkg.com/gatsby-remark-makecode/-/gatsby-remark-makecode-1.0.17.tgz#caacc634c2c4ef01744881fd32de6cc4d038f1c2"
-  integrity sha512-lPVaC6c/A5uBrKUuErF09dSqlCv4TaoDeJOOPMmeqZSnoFYJSc3ZfMc/OZRj4K0Qgk9fe0KkawA0rVoXEQgotQ==
+gatsby-remark-makecode@^1.0.18:
+  version "1.0.18"
+  resolved "https://registry.yarnpkg.com/gatsby-remark-makecode/-/gatsby-remark-makecode-1.0.18.tgz#657c284c7b33c319f5d4cd46ec642c0afd044d2f"
+  integrity sha512-c5ahJronb7XaoCuBKRbjCIw8iPFFPcYNpcZLUJth8NrpLdsnzYbHJQD6uvYWfB74AUWxN/HbCQLd2ss3ehTYJA==
   dependencies:
     "@types/node" "^16.9.1"
     hast-util-to-html "^8.0.2"
     mdast-util-to-hast "^11.2.1"
     node-fetch "^2.0.0"
     remark "^14.0.1"
-    unist-util-find "^1.0.2"
+    unist-util-find "1.0.2"
     unist-util-visit "2.0.3"
 
 gatsby-remark-prismjs@^5.11.0:
@@ -11328,10 +11328,10 @@ nan@^2.13.2:
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.15.0.tgz#3f34a473ff18e15c1b5626b62903b5ad6e665fee"
   integrity sha512-8ZtvEnA2c5aYCZYd1cvgdnU6cqwixRoYg70xPLWUws5ORTa/lnw+u4amixRS/Ac5U5mQVgp9pnlSUnbNWFaWZQ==
 
-nanocolors@^0.1.5:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/nanocolors/-/nanocolors-0.1.6.tgz#bc2350d3edfdbfadd7ac018c855ae7c13905a6ad"
-  integrity sha512-2pvTw6vYRaBLGir2xR7MxaJtyWkrn+C53EpW8yPotG+pdAwBvt0Xwk4VJ6VHLY0aLthVZPvDfm9TdZvrvAm5UQ==
+nanocolors@^0.2.2:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/nanocolors/-/nanocolors-0.2.3.tgz#3be3717544da25edf04931fc77ea103624a5f0f3"
+  integrity sha512-RxGTOApG8prHMA08UBMOT6qYzcBBW2EMBv7SRBqoXg/Dqp6G3yT7kLy1tpFuYLO+5h7eajmdiIHJA8oewN58XQ==
 
 nanoid@^3.1.23, nanoid@^3.1.25:
   version "3.1.25"
@@ -12695,12 +12695,12 @@ postcss@^8.0.2, postcss@^8.0.5, postcss@^8.1.6, postcss@^8.2.1, postcss@^8.2.15,
     nanoid "^3.1.23"
     source-map-js "^0.6.2"
 
-postcss@^8.3.7:
-  version "8.3.7"
-  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.3.7.tgz#ec88563588c8da8e58e7226f7633b51ae221eeda"
-  integrity sha512-9SaY7nnyQ63/WittqZYAvkkYPyKxchMKH71UDzeTmWuLSvxTRpeEeABZAzlCi55cuGcoFyoV/amX2BdsafQidQ==
+postcss@^8.3.8:
+  version "8.3.8"
+  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.3.8.tgz#9ebe2a127396b4b4570ae9f7770e7fb83db2bac1"
+  integrity sha512-GT5bTjjZnwDifajzczOC+r3FI3Cu+PgPvrsjhQdRqa2kTJ4968/X9CUce9xttIB0xOs5c6xf0TCWZo/y9lF6bA==
   dependencies:
-    nanocolors "^0.1.5"
+    nanocolors "^0.2.2"
     nanoid "^3.1.25"
     source-map-js "^0.6.2"
 
@@ -13237,10 +13237,10 @@ react-side-effect@^2.1.0:
   resolved "https://registry.yarnpkg.com/react-side-effect/-/react-side-effect-2.1.1.tgz#66c5701c3e7560ab4822a4ee2742dee215d72eb3"
   integrity sha512-2FoTQzRNTncBVtnzxFOk2mCpcfxQpenBMbk5kSVBg5UcPqV9fRbgY2zhb7GTWWOlpFmAxhClBDlIq8Rsubz1yQ==
 
-react-simple-keyboard@^3.2.89:
-  version "3.2.89"
-  resolved "https://registry.yarnpkg.com/react-simple-keyboard/-/react-simple-keyboard-3.2.89.tgz#8404dd6772d0f493475c8fc31576cbfdb1b28a94"
-  integrity sha512-sBfszrWBySpJadWxOGg9K/KtMDyUdGJOq+NWohlDtJSpDMqAAiDcbnWOMnGqYBsGxyLqNXE18wjToKN7Yg80eg==
+react-simple-keyboard@^3.2.90:
+  version "3.2.90"
+  resolved "https://registry.yarnpkg.com/react-simple-keyboard/-/react-simple-keyboard-3.2.90.tgz#8c128afa8cfd8ff92e39514faf82c75dde769da8"
+  integrity sha512-QaKuUtUdc6ClzD411toUujKM/rlo2z+cM1I12+F8YCZ7k/HMzLA4LWEgS62VOo5aX2lDQoEbyoRIcRkfdvoOaA==
 
 react-three-fiber@0.0.0-deprecated:
   version "0.0.0-deprecated"
@@ -15299,10 +15299,10 @@ three-mesh-bvh@^0.4.1:
   resolved "https://registry.yarnpkg.com/three-mesh-bvh/-/three-mesh-bvh-0.4.3.tgz#da5ac7db2e61aa0aa66dc0070a6085bcfbd1281c"
   integrity sha512-4CO1dU73hQRwGgeOL05CnsKkIa0LgNCH6S8t66D9nvSiyK9wDzrSqzGVd8e+eUytFoliYHc/lwoW0uamrmXo5w==
 
-three-stdlib@^2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/three-stdlib/-/three-stdlib-2.4.0.tgz#e6ffde19de40f3e2d8dfe5d5659667272c1918b6"
-  integrity sha512-fy1utgeo/RskodAmKPoiexkcH/m5Zy9C01QjuESTnihDd+LyjxsmqAUI+qoDCkQIAwtBvYPE53EFBXzZM0B04A==
+three-stdlib@^2.4.2:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/three-stdlib/-/three-stdlib-2.4.2.tgz#f8662a151d8860d59a629315237ce86c80e2fe40"
+  integrity sha512-kGd03DzKBTtIZPDIw4VnmEnmiuQbgfUSZo6wuR8DtzUwwhTiqcCefZFVcsmn7Y73Z1cllxxPgV6bV6w+p/axcA==
   dependencies:
     "@babel/runtime" "^7.14.6"
     "@webgpu/glslang" "^0.0.15"
@@ -15870,7 +15870,7 @@ unist-builder@^3.0.0:
   dependencies:
     "@types/unist" "^2.0.0"
 
-unist-util-find@^1.0.1, unist-util-find@^1.0.2:
+unist-util-find@1.0.2, unist-util-find@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/unist-util-find/-/unist-util-find-1.0.2.tgz#4d5b01a69fca2a382ad4f55f9865e402129ecf56"
   integrity sha512-ft06UDYzqi9o9RmGP0sZWI/zvLLQiBW2/MD+rW6mDqbOWDcmknGX9orQPspfuGRYWr8eSJAmfsBcvOpfGRJseA==
