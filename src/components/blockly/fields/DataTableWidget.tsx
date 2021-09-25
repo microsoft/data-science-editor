@@ -104,15 +104,15 @@ export default function DataTableWidget(props: {
               ]
             : raw
 
-    console.log({
-        raw,
-        transformed,
-        transformedData,
-        data,
-        table,
-        selectedColumns,
-        columns,
-    })
+    // console.log({
+    //     raw,
+    //     transformed,
+    //     transformedData,
+    //     data,
+    //     table,
+    //     selectedColumns,
+    //     columns,
+    // })
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const renderCell = (v: any) =>

@@ -15,7 +15,7 @@ import useLocalStorage from "../hooks/useLocalStorage"
 import { BlockWarning, collectWarnings } from "./blockwarning"
 import { registerDataSolver } from "./dsl/datasolver"
 import BlockDomainSpecificLanguage from "./dsl/dsl"
-import { domToJSON } from "./jsongenerator"
+import { workspaceToJSON } from "./jsongenerator"
 import {
     JSON_WARNINGS_CATEGORY,
     NEW_PROJET_XML,
@@ -37,7 +37,7 @@ import AppContext from "../AppContext"
 import {
     WorkspaceFile,
     WorkspaceJSON,
-} from "../../../jacdac-ts/src/dsl/workspacejson"
+} from "./dsl/workspacejson"
 import useEffectAsync from "../useEffectAsync"
 import useChange from "../../jacdac/useChange"
 import FileSystemContext from "../FileSystemContext"
@@ -209,7 +209,7 @@ export function BlockProvider(props: {
     useEffect(() => {
         if (!workspace || dragging) return
 
-        const newWorkspaceJSON = domToJSON(workspace, dsls)
+        const newWorkspaceJSON = workspaceToJSON(workspace, dsls)
         setWorkspaceJSON(newWorkspaceJSON)
         const newWarnings = collectWarnings(newWorkspaceJSON)
         setWarnings(JSON_WARNINGS_CATEGORY, newWarnings)

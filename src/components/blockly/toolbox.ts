@@ -89,6 +89,15 @@ export type BlockTemplate =
     | "meta"
     | string
 
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type BlockDataSet = object[]
+
+export type BlockDataSetTransform = (
+    block: BlockWithServices,
+    data: BlockDataSet,
+    previousData: BlockDataSet
+) => Promise<BlockDataSet>
+
 export interface BlockDefinition extends BlockReference {
     message0?: string
     args0?: InputDefinition[]
@@ -109,14 +118,7 @@ export interface BlockDefinition extends BlockReference {
     vm?: (...args: any[]) => any
 
     // data transformation
-    transformData?: (
-        block: BlockWithServices,
-        // eslint-disable-next-line @typescript-eslint/ban-types
-        data: object[],
-        // eslint-disable-next-line @typescript-eslint/ban-types
-        previousData: object[]
-        // eslint-disable-next-line @typescript-eslint/ban-types
-    ) => Promise<object[]>
+    transformData?: BlockDataSetTransform
 
     // show data preview field
     dataPreviewField?: boolean | "after"

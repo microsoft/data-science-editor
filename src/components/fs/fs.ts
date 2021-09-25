@@ -1,7 +1,12 @@
+import { inIFrame } from "../../../jacdac-ts/src/jdom/iframeclient"
 import { SMap } from "../../../jacdac-ts/src/jdom/utils"
 
 export function fileSystemHandleSupported() {
-    return typeof window !== "undefined" && !!window.showDirectoryPicker
+    return (
+        typeof window !== "undefined" &&
+        !!window.showDirectoryPicker &&
+        !inIFrame()
+    )
 }
 
 export async function writeFileText(

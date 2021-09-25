@@ -14,7 +14,7 @@ import { visitWorkspace } from "../blockly/dsl/workspacevisitor"
 import {
     BlockJSON,
     WorkspaceFile,
-} from "../../../jacdac-ts/src/dsl/workspacejson"
+} from "../blockly/dsl/workspacejson"
 import { WORKSPACE_FILENAME } from "../blockly/toolbox"
 import FileSystemContext, { FileSystemProvider } from "../FileSystemContext"
 import ServiceManagerContext from "../ServiceManagerContext"

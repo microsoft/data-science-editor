@@ -5,12 +5,13 @@ import { BlockProvider } from "../blockly/BlockContext"
 import BlockDiagnostics from "../blockly/BlockDiagnostics"
 import BlockEditor from "../blockly/BlockEditor"
 import FileTabs from "../fs/FileTabs"
-import { WorkspaceFile } from "../../../jacdac-ts/src/dsl/workspacejson"
+import { WorkspaceFile } from "../blockly/dsl/workspacejson"
 import dataDsl from "../blockly/dsl/datadsl"
 import chartDsl from "../blockly/dsl/chartdsl"
 import fieldsDsl from "../blockly/dsl/fieldsdsl"
 import { WORKSPACE_FILENAME } from "../blockly/toolbox"
 import FileSystemContext from "../FileSystemContext"
+import { createIFrameDSL } from "../blockly/dsl/iframedsl"
 
 const DS_EDITOR_ID = "ds"
 const DS_SOURCE_STORAGE_KEY = "tools:dseditor"
@@ -43,7 +44,9 @@ function DSEditorWithContext() {
 
 export default function DSBlockEditor() {
     const dsls = useMemo(() => {
-        return [dataDsl, chartDsl, fieldsDsl]
+        return [dataDsl, chartDsl, fieldsDsl, createIFrameDSL("*")].filter(
+            dsl => !!dsl
+        )
     }, [])
 
     return (

@@ -16,7 +16,8 @@ import {
 } from "./toolbox"
 import BlockDomainSpecificLanguage from "./dsl/dsl"
 import { addDataPreviewField } from "./fields/DataPreviewField"
-import { WorkspaceJSON } from "../../../jacdac-ts/src/dsl/workspacejson"
+import { WorkspaceJSON } from "./dsl/workspacejson"
+import useAsyncMemo from "../hooks/useAsyncMemo"
 
 // overrides blockly emboss filter for svg elements
 Blockly.BlockSvg.prototype.setHighlighted = function (highlighted) {
@@ -34,19 +35,22 @@ type CachedBlockDefinitions = {
     blocks: BlockDefinition[]
 }
 
-function loadBlocks(
+async function loadBlocks(
     dsls: BlockDomainSpecificLanguage[],
     theme: Theme
-): CachedBlockDefinitions {
-    const blocks = arrayConcatMany(
-        dsls.map(dsl =>
-            dsl?.createBlocks?.({ theme }).map(b => {
+): Promise<CachedBlockDefinitions> {
+    const blocks: BlockDefinition[] = []
+    for (const dsl of dsls) {
+        const dslBlocks = await dsl?.createBlocks?.({ theme })
+        if (dslBlocks)
+            for (const b of dslBlocks) {
                 addDataPreviewField(b)
                 b.dsl = dsl.id // ensure DSL is set
-                return b
-            })
-        )
-    )
+                blocks.push(b)
+            }
+    }
+
+    //console.log({ blocks })
 
     // register field editors
     registerFields()
@@ -105,7 +109,7 @@ export default function useToolbox(
     const liveServices = useServices({ specification: true })
     const theme = useTheme()
 
-    useMemo(() => loadBlocks(dsls, theme), [theme, dsls])
+    const blocks = useAsyncMemo(() => loadBlocks(dsls, theme), [theme, dsls])
     const toolboxConfiguration = useMemo(() => {
         const dslsCategories = arrayConcatMany(
             dsls.map(dsl =>
@@ -127,7 +131,13 @@ export default function useToolbox(
             kind: "categoryToolbox",
             contents,
         }
-    }, [theme, dsls, source, (liveServices || []).map(srv => srv.id).join(",")])
+    }, [
+        blocks,
+        theme,
+        dsls,
+        source,
+        (liveServices || []).map(srv => srv.id).join(","),
+    ])
     return toolboxConfiguration
 }
 

@@ -15,7 +15,7 @@ import {
     BlockJSON,
     WorkspaceFile,
     WorkspaceJSON,
-} from "../../../../jacdac-ts/src/dsl/workspacejson"
+} from "./workspacejson"
 
 export interface CreateBlocksOptions {
     theme: Theme
@@ -73,7 +73,7 @@ export default interface BlockDomainSpecificLanguage {
     /**
      * Creates blocks for the DSL
      */
-    createBlocks?: (options: CreateBlocksOptions) => BlockDefinition[]
+    createBlocks?: (options: CreateBlocksOptions) => BlockDefinition[] | Promise<BlockDefinition[]>
 
     /***
      * Creates a JSON category to populate the toolbox

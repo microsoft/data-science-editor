@@ -7,7 +7,7 @@ import React, {
     useEffect,
     useState,
 } from "react"
-import { WorkspaceJSON } from "../../../jacdac-ts/src/dsl/workspacejson"
+import { WorkspaceJSON } from "./dsl/workspacejson"
 import { CHANGE } from "../../../jacdac-ts/src/jdom/constants"
 import JDEventSource from "../../../jacdac-ts/src/jdom/eventsource"
 import JDService from "../../../jacdac-ts/src/jdom/service"

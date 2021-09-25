@@ -20,7 +20,7 @@ import vmDsls from "./vmdsls"
 import { VMStatus } from "../../../jacdac-ts/src/vm/runner"
 import { VM_WARNINGS_CATEGORY, WORKSPACE_FILENAME } from "../blockly/toolbox"
 import FileTabs from "../fs/FileTabs"
-import { WorkspaceFile } from "../../../jacdac-ts/src/dsl/workspacejson"
+import { WorkspaceFile } from "../blockly/dsl/workspacejson"
 import FileSystemContext from "../FileSystemContext"
 import { resolveWorkspaceServices } from "../blockly/WorkspaceContext"
 

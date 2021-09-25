@@ -17,7 +17,7 @@ import Blockly from "blockly"
 import BlockDomainSpecificLanguage, { resolveDsl } from "../blockly/dsl/dsl"
 import { parseRoleType } from "../blockly/dsl/servicesbase"
 import { splitFilter } from "../../../jacdac-ts/src/jdom/utils"
-import { BlockJSON, WorkspaceJSON } from "../../../jacdac-ts/src/dsl/workspacejson"
+import { BlockJSON, WorkspaceJSON } from "../blockly/dsl/workspacejson"
 
 export interface ExpressionWithErrors {
     expr: jsep.Expression

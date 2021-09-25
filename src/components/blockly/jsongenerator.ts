@@ -1,13 +1,19 @@
-import Blockly from "blockly"
+import Blockly, { Block } from "blockly"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import { SMap, toMap } from "../../../jacdac-ts/src/jdom/utils"
 import BlockDomainSpecificLanguage, { resolveDsl } from "./dsl/dsl"
 import { ReactFieldBase } from "./fields/ReactFieldBase"
-import { VariableJSON, WorkspaceJSON, BlockJSON, InputJSON } from "../../../jacdac-ts/src/dsl/workspacejson"
+import {
+    VariableJSON,
+    WorkspaceJSON,
+    BlockJSON,
+    InputJSON,
+} from "./dsl/workspacejson"
 
-export function domToJSON(
+export function workspaceToJSON(
     workspace: Blockly.Workspace,
-    dsls: BlockDomainSpecificLanguage[]
+    dsls: BlockDomainSpecificLanguage[],
+    top?: Block[]
 ): WorkspaceJSON {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const clean = (o: any) =>
@@ -40,7 +46,9 @@ export function domToJSON(
         const j = {}
         if (Flags.diagnostics) j["xml"] = xml.outerHTML
         // dump attributes
-        for (const name of xml.getAttributeNames()) {
+        for (const name of xml
+            .getAttributeNames()
+            .filter(n => n !== "preview")) {
             const v = xml.getAttribute(name)
             j[name.toLowerCase()] = v
         }
@@ -135,10 +143,10 @@ export function domToJSON(
         const variables = Blockly.Variables.allUsedVarModels(workspace).sort(
             (l, r) => l.name.localeCompare(r.name)
         ) // stable sort name
-        const blocks = workspace.getTopBlocks(true)
+        const todo = top || workspace.getTopBlocks(true)
         const json: WorkspaceJSON = {
             variables: variables.map(variableToJSON),
-            blocks: blocks.map(blockToJSON).filter(b => !!b),
+            blocks: todo.map(blockToJSON).filter(b => !!b),
         }
         dsls.forEach(dsl => dsl.visitWorkspaceJSON?.(workspace, json))
         return json
