@@ -80,7 +80,7 @@ export default function Page() {
             dataset: BlockDataSet
         ) => Promise<{ dataset: BlockDataSet; warning?: string }>
     > = {
-        iframe_random: async b => {
+        iframe_random: async () => {
             console.debug(`hostdsl: random`)
             const dataset = Array(10)
                 .fill(0)

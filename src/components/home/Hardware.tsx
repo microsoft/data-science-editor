@@ -1,6 +1,6 @@
 import { Grid } from "@material-ui/core"
 import { StaticImage } from "gatsby-plugin-image"
-import React, { lazy, Suspense } from "react"
+import React, { lazy } from "react"
 import CarouselGrid from "./CarouselGrid"
 import CenterGrid from "./CenterGrid"
 import FeatureItem from "./FeatureItem"
@@ -9,9 +9,12 @@ import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew"
 import CameraIcon from "@material-ui/icons/Camera"
 import TelegramIcon from "@material-ui/icons/Telegram"
 import useMediaQueries from "../hooks/useMediaQueries"
+import Suspense from "../ui/Suspense"
 const DeviceSpecificationList = lazy(
     () => import("../specification/DeviceSpecificationList")
 )
+const ModelViewer = lazy(() => import("./models/ModelViewer"))
+const FabricateModel = lazy(() => import("./models/fabricate"))
 
 export default function Hardware() {
     const { mobile, medium } = useMediaQueries()
@@ -190,6 +193,14 @@ export default function Hardware() {
                 buttonText="Unbox"
                 buttonUrl="/hardware/kit/"
             />
+
+            <Grid item xs={12}>
+                <Suspense>
+                    <ModelViewer>
+                        <FabricateModel />
+                    </ModelViewer>
+                </Suspense>
+            </Grid>
         </Grid>
     )
 }
