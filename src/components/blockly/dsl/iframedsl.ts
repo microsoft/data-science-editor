@@ -89,14 +89,14 @@ class IFrameDomainSpecificLanguage implements BlockDomainSpecificLanguage {
             }
             // trigger recomputation
             if (action === "change") {
-                console.log(`iframedsl: change requested`)
+                //console.log(`iframedsl: change requested`)
                 this._workspace
                     .getTopBlocks(false)
                     .filter(
                         b => resolveBlockDefinition(b.type)?.dsl === this.id
                     )
                     .forEach((b: Block) => {
-                        console.log(`change ${b.id}`)
+                        //console.log(`change ${b.id}`)
                         const { jacdacServices } = b as BlockWithServices
                         jacdacServices.emit(CHANGE)
                     })
