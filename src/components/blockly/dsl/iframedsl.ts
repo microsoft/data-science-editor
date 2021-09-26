@@ -1,3 +1,5 @@
+import { Block, Workspace } from "blockly"
+import { CHANGE } from "../../../../jacdac-ts/src/jdom/constants"
 import { inIFrame } from "../../../../jacdac-ts/src/jdom/iframeclient"
 import { randomDeviceId } from "../../../../jacdac-ts/src/jdom/random"
 import { workspaceToJSON } from "../jsongenerator"
@@ -6,8 +8,9 @@ import {
     BlockDataSetTransform,
     BlockDefinition,
     ContentDefinition,
+    resolveBlockDefinition,
 } from "../toolbox"
-import { setBlockDataWarning } from "../WorkspaceContext"
+import { BlockWithServices, setBlockDataWarning } from "../WorkspaceContext"
 import BlockDomainSpecificLanguage, {
     CreateBlocksOptions,
     CreateCategoryOptions,
@@ -16,9 +19,9 @@ import { WorkspaceJSON } from "./workspacejson"
 
 export interface DslMessage {
     type?: "dsl"
-    id: string
+    id?: string
     dslid: string
-    action: "mount" | "unmount" | "blocks" | "transform"
+    action: "mount" | "unmount" | "blocks" | "transform" | "change"
 }
 
 export interface DslBlocksResponse extends DslMessage {
@@ -39,13 +42,14 @@ export interface DslTransformResponse extends DslTransformMessage {
 }
 
 class IFrameDomainSpecificLanguage implements BlockDomainSpecificLanguage {
-    readonly id = "iframe"
     private dslid = randomDeviceId()
     private blocks: BlockDefinition[] = []
     private category: ContentDefinition[] = []
     private pendings: Record<string, (data: DslMessage) => void> = {}
 
-    constructor(readonly targetOrigin: string) {
+    private _workspace: Workspace
+
+    constructor(readonly id: string, readonly targetOrigin: string) {
         this.handleMessage = this.handleMessage.bind(this)
     }
 
@@ -62,11 +66,13 @@ class IFrameDomainSpecificLanguage implements BlockDomainSpecificLanguage {
         return payload
     }
 
-    mount() {
+    mount(workspace: Workspace) {
+        this._workspace = workspace
         window.addEventListener("message", this.handleMessage)
         this.post("mount")
         return () => {
             this.post("unmount")
+            this._workspace = undefined
             window.removeEventListener("message", this.handleMessage)
         }
     }
@@ -74,11 +80,26 @@ class IFrameDomainSpecificLanguage implements BlockDomainSpecificLanguage {
     private handleMessage(msg: MessageEvent<DslMessage>) {
         const { data } = msg
         if (data.type === "dsl" && data.dslid === this.dslid) {
-            const { id } = data
-            const pending = this.pendings[id]
+            const { id, action } = data
+            // check for pending request
+            const pending = id !== undefined && this.pendings[id]
             if (pending) {
                 delete this.pendings[id]
                 pending(data)
+            }
+            // trigger recomputation
+            if (action === "change") {
+                console.log(`iframedsl: change requested`)
+                this._workspace
+                    .getTopBlocks(false)
+                    .filter(
+                        b => resolveBlockDefinition(b.type)?.dsl === this.id
+                    )
+                    .forEach((b: Block) => {
+                        console.log(`change ${b.id}`)
+                        const { jacdacServices } = b as BlockWithServices
+                        jacdacServices.emit(CHANGE)
+                    })
             }
         }
     }
@@ -148,7 +169,8 @@ class IFrameDomainSpecificLanguage implements BlockDomainSpecificLanguage {
  * @returns
  */
 export function createIFrameDSL(
+    id: string,
     targetOrigin = "*"
 ): BlockDomainSpecificLanguage {
-    return inIFrame() && new IFrameDomainSpecificLanguage(targetOrigin)
+    return inIFrame() && new IFrameDomainSpecificLanguage(id, targetOrigin)
 }

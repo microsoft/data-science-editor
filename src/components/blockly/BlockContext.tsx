@@ -34,10 +34,7 @@ import {
     WorkspaceWithServices,
 } from "./WorkspaceContext"
 import AppContext from "../AppContext"
-import {
-    WorkspaceFile,
-    WorkspaceJSON,
-} from "./dsl/workspacejson"
+import { WorkspaceFile, WorkspaceJSON } from "./dsl/workspacejson"
 import useEffectAsync from "../useEffectAsync"
 import useChange from "../../jacdac/useChange"
 import FileSystemContext from "../FileSystemContext"
@@ -291,9 +288,11 @@ export function BlockProvider(props: {
     }, [dragging])
     // mounting dsts
     useEffect(() => {
-        const unmounnts = dsls.map(dsl => dsl.mount?.()).filter(u => !!u)
+        const unmounnts = dsls
+            .map(dsl => workspace && dsl.mount?.(workspace))
+            .filter(u => !!u)
         return () => unmounnts.forEach(u => u())
-    }, [])
+    }, [workspace])
 
     return (
         <BlockContext.Provider

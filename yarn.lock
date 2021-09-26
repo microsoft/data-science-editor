@@ -7540,7 +7540,7 @@ gatsby-remark-images@^5.11.0:
     unist-util-select "^3.0.4"
     unist-util-visit-parents "^3.1.1"
 
-gatsby-remark-makecode@^1.0.18:
+gatsby-remark-makecode@^1.0.17:
   version "1.0.18"
   resolved "https://registry.yarnpkg.com/gatsby-remark-makecode/-/gatsby-remark-makecode-1.0.18.tgz#657c284c7b33c319f5d4cd46ec642c0afd044d2f"
   integrity sha512-c5ahJronb7XaoCuBKRbjCIw8iPFFPcYNpcZLUJth8NrpLdsnzYbHJQD6uvYWfB74AUWxN/HbCQLd2ss3ehTYJA==

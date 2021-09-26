@@ -21,11 +21,23 @@ import {
     DslMessage,
     DslTransformMessage,
 } from "../../components/blockly/dsl/iframedsl"
+import { Button } from "gatsby-material-ui-components"
 
 export default function Page() {
     const frame = useRef<HTMLIFrameElement>()
+    const dslidRef = useRef<string>(undefined)
     const colour = "#f01010"
     const blocks: BlockDefinition[] = [
+        {
+            kind: "block",
+            type: "iframe_random",
+            message0: "iframe random",
+            colour,
+            args0: [],
+            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            dataPreviewField: true,
+            template: "meta",
+        },
         {
             kind: "block",
             type: "iframe_sort",
@@ -68,11 +80,15 @@ export default function Page() {
             dataset: BlockDataSet
         ) => Promise<{ dataset: BlockDataSet; warning?: string }>
     > = {
-        iframe_identity: async (b, dataset) => {
-            console.debug(`hostdsl: identity`)
+        iframe_random: async b => {
+            console.debug(`hostdsl: random`)
+            const dataset = Array(10)
+                .fill(0)
+                .map((_, i) => ({ x: i, y: Math.random() }))
             return { dataset }
         },
         iframe_sort: async (b, dataset) => {
+            console.debug(`hostdsl: sort`)
             const { column, warning } = resolveFieldColumn(dataset, b, "column")
             const order = getFieldValue(b, "order")
             const descending = order === "descending"
@@ -105,6 +121,7 @@ export default function Page() {
     }
 
     const handleTransform = async (data: DslTransformMessage) => {
+        console.log(`hostdsl: transform`)
         const { blockId, workspace, dataset, ...rest } = data
         const block = workspace.blocks.find(b => b.id === blockId)
         const transformer = transforms[block.type]
@@ -117,11 +134,13 @@ export default function Page() {
         (msg: MessageEvent<DslMessage>) => {
             const { data } = msg
             if (data.type !== "dsl") return
-            const { action } = data
+            const { action, dslid } = data
             switch (action) {
                 case "mount":
+                    dslidRef.current = dslid
                     break
                 case "unmount":
+                    dslidRef.current = dslid
                     break
                 case "blocks": {
                     handleBlocks(data)
@@ -137,11 +156,24 @@ export default function Page() {
         []
     )
 
+    const handleRefresh = () => {
+        post({ type: "dsl", action: "change", dslid: dslidRef.current })
+    }
+
     return (
         <>
             <h1>Data Editor + hosted blocks</h1>
             <p>
-                The data editor below is an example of hosted editor with additional blocks injected by host (Custom category).
+                The data editor below is an example of hosted editor with
+                additional blocks injected by host (Custom category).
+            </p>
+            <p>
+                <Button
+                    title="Click this button to trigger a refresh"
+                    onClick={handleRefresh}
+                >
+                    Refresh
+                </Button>
             </p>
             <iframe
                 ref={frame}

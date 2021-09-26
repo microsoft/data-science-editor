@@ -44,7 +44,7 @@ function DSEditorWithContext() {
 
 export default function DSBlockEditor() {
     const dsls = useMemo(() => {
-        return [dataDsl, chartDsl, fieldsDsl, createIFrameDSL("*")].filter(
+        return [dataDsl, chartDsl, fieldsDsl, createIFrameDSL("host", "*")].filter(
             dsl => !!dsl
         )
     }, [])

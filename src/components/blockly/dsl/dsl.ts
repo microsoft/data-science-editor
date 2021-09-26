@@ -68,7 +68,7 @@ export default interface BlockDomainSpecificLanguage {
     /**
      * Optional API to be called when mounted in the React context, returns unmounted
      */
-    mount?: () => () => void
+    mount?: (workspace: Workspace) => () => void
 
     /**
      * Creates blocks for the DSL

@@ -55,7 +55,7 @@ export function addDataPreviewField(block: BlockDefinition): BlockDefinition {
         // parse args and add one more arg
         const { message0 } = block
         const i = message0.lastIndexOf("%")
-        const index = parseInt(message0.substr(i + 1))
+        const index = parseInt(message0.substr(i + 1)) || 0
         block.message0 += ` %${index + 1}`
 
         // does this mutate the data?
