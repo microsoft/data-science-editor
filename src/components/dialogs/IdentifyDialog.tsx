@@ -60,7 +60,9 @@ export default function IdentifyDialog(props: {
     const handleSendIdentify = async () => await device.identify()
     const handleCloseIdentify = () => onClose()
     const { statusLightFlags } = device
-    const mono = statusLightFlags === ControlAnnounceFlags.StatusLightMono
+    const blue =
+        statusLightFlags === ControlAnnounceFlags.StatusLightRgbFade ||
+        statusLightFlags === ControlAnnounceFlags.StatusLightRgbNoFade
     useInterval(open, handleSendIdentify, 5000, [device])
 
     return (
@@ -74,7 +76,7 @@ export default function IdentifyDialog(props: {
                     <Grid item xs>
                         <Alert severity="info">
                             Look for four blinks in around 2 seconds with the
-                            {mono ? "" : " blue"} LED.
+                            {blue ? "blue" : " "} LED.
                         </Alert>
                     </Grid>
                 </Grid>
