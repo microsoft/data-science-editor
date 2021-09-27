@@ -45,7 +45,7 @@ export default function DeviceActions(props: {
     const handleStop = async () => {
         bus.removeServiceProvider(provider)
     }
-    const handleSettings = () => {
+    const handleSettings = async () => {
         navigate("/tools/settings")
     }
     return (
