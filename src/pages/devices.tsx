@@ -8,7 +8,7 @@ import Alert from "../components/ui/Alert"
 export default function Page() {
     return (
         <>
-            <FilteredDeviceSpecificationList count={20} shuffle={true} />
+            <FilteredDeviceSpecificationList />
             <Box mt={2}>
                 <Alert severity="info">
                     <AlertTitle>Register your device</AlertTitle>
