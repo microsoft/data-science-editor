@@ -127,6 +127,8 @@ export default function DeviceRegistration() {
     const identifierId = useId()
     const descriptionId = useId()
     const homepageId = useId()
+    const hardwareVersionId = useId()
+    const hardwareDesignId = useId()
     const handleServiceAdd = (srv: jdspec.ServiceSpec) => {
         console.log(`add`, srv.classIdentifier)
         device.services.push(srv.classIdentifier)
@@ -204,6 +206,14 @@ export default function DeviceRegistration() {
     }
     const handleDeleteFirmware = (i: number) => () => {
         device.productIdentifiers.splice(i, 1)
+        updateDevice()
+    }
+    const handleHardwareDesign = (ev: ChangeEvent<HTMLInputElement>) => {
+        device.hardwareDesignIdentifier = ev.target.value
+        updateDevice()
+    }
+    const handleHardwareVersion = (ev: ChangeEvent<HTMLInputElement>) => {
+        device.hardwareDesignVersion = ev.target.value
         updateDevice()
     }
     const handleFirmwareAddClick = (
@@ -316,6 +326,30 @@ export default function DeviceRegistration() {
                         value={device?.company}
                         error={companyError}
                         onValueChange={handleCompanyChanged}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        id={hardwareDesignId}
+                        required
+                        fullWidth={true}
+                        helperText="A unique identifier for this hardware design."
+                        label="Hardware design identifier"
+                        value={""}
+                        onChange={handleHardwareDesign}
+                        variant={variant}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        id={hardwareVersionId}
+                        required
+                        fullWidth={true}
+                        helperText="Revision identifier for this hardware design."
+                        label="Hardware version"
+                        value={""}
+                        onChange={handleHardwareVersion}
+                        variant={variant}
                     />
                 </Grid>
                 <Grid item xs={12}>
