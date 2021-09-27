@@ -19,12 +19,18 @@ export default function GithubDowloadRawFileButton(
     const { fileStorage } = useContext(ServiceManagerContext)
     const handleClick = async () => {
         if (disconnect) await bus.disconnect()
-        try {
-            const req = await fetch(url)
-            const text = await req.text()
-            fileStorage.saveText(name, text)
-        } catch (e) {
-            setError(e)
+
+        const shouldDownload = /\.hex$/g.test(url)
+        if (shouldDownload) {
+            try {
+                const req = await fetch(url)
+                const text = await req.text()
+                fileStorage.saveText(name, text)
+            } catch (e) {
+                setError(e)
+            }
+        } else {
+            window.location.href = url
         }
     }
     return (
