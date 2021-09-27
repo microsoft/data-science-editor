@@ -156,6 +156,7 @@ async function createDevicePages(graphql, actions, reporter) {
     const companyTemplate = path.resolve(`src/templates/device-company.tsx`)
     for (const node of result.data.allDevicesJson.nodes) {
         const p = `/devices/${identifierToUrlPath(node.id)}/`
+        console.log(`${node.id} -> ${p}`)
         createPage({
             path: p,
             component: slash(deviceTemplate),
