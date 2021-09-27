@@ -19,6 +19,7 @@ import useRoleManagerClient from "../services/useRoleManagerClient"
 import JDService from "../../../jacdac-ts/src/jdom/service"
 import SimulateDeviceAlert from "../alert/SimulateDeviceAlert"
 import MakeCodeAddBlocksButton from "../makecode/MakeCodeAddBlocksButton"
+import Flags from "../../../jacdac-ts/src/jdom/flags"
 
 function defaultDeviceSort(l: JDDevice, r: JDDevice): number {
     const srvScore = (srv: jdspec.ServiceSpec) =>
@@ -80,7 +81,10 @@ export default function Dashboard(props: DashboardProps) {
     } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { toggleShowDeviceHostsDialog } = useContext(AppContext)
-    const devices = useDevices({ announced: true, ignoreSelf: true })
+    const devices = useDevices({
+        announced: true,
+        ignoreInfrastructure: !Flags.diagnostics,
+    })
         .filter(deviceFilter)
         .sort(deviceSort)
     const [simulators, physicals] = splitFilter(

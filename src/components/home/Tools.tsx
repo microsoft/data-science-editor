@@ -31,7 +31,7 @@ export default function Tools() {
     const handleShowDeviceTree = () => setDrawerType(DrawerType.Dom)
     const handleShowPacketConsole = () => setDrawerType(DrawerType.Packets)
     const simulatorClass = SRV_DOT_MATRIX
-    const dashboards = useDevices({ ignoreSelf: true, announced: true })
+    const dashboards = useDevices({ ignoreInfrastructure: true, announced: true })
         .filter(
             dev =>
                 !dev.hasService(SRV_ROLE_MANAGER) &&
@@ -39,7 +39,7 @@ export default function Tools() {
         )
         .slice(0, 4)
     const simulator = useDevices({
-        ignoreSelf: true,
+        ignoreInfrastructure: true,
         announced: true,
         serviceClass: simulatorClass,
     })?.[0]

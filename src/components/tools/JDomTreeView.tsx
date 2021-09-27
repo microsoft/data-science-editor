@@ -31,7 +31,7 @@ export default function JDomTreeView(props: JDomTreeViewProps) {
     const classes = useStyles()
     const [expanded, setExpanded] = useState<string[]>(defaultExpanded || [])
     const [selected, setSelected] = useState<string[]>(defaultSelected || [])
-    const devices = useDevices({ ignoreSelf: !Flags.diagnostics })
+    const devices = useDevices({ ignoreInfrastructure: !Flags.diagnostics })
 
     const handleToggle = (
         event: React.ChangeEvent<unknown>,

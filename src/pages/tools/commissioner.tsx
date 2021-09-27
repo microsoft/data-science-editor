@@ -284,7 +284,7 @@ export default function Commissioner() {
     const [filterBrains, setFilterBrains] = useState<boolean>(true)
     const devices = useDevices({
         announced: true,
-        ignoreSelf: true,
+        ignoreInfrastructure: true,
         ignoreSimulators: true,
     }).filter(d => !filterBrains || !isBrain(d))
     const [title, setTitle] = useState("")

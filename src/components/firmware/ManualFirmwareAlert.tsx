@@ -20,7 +20,7 @@ function ManualFirmware() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const devices = useDevices({
         announced: true,
-        ignoreSelf: true,
+        ignoreInfrastructure: true,
         ignoreSimulators: true,
     })
     const firmwares = useFirmwareBlobs()

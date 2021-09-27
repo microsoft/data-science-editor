@@ -126,7 +126,7 @@ function SelectHIDEvent(props: { onAdd: (hidEvent: HIDEvent) => void }) {
     ]
     const eventFilter = (ev: JDEvent) =>
         ev.code !== SystemEvent.StatusCodeChanged
-    const services = useServices({ ignoreSelf: true, specification: true })
+    const services = useServices({ ignoreInfrastructure: true, specification: true })
         .filter(srv => excludedServices.indexOf(srv.serviceClass) < 0)
         .filter(srv => srv.events.some(eventFilter))
     const events = arrayConcatMany(

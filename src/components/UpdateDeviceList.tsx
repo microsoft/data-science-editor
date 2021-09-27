@@ -41,7 +41,7 @@ export default function UpdateDeviceList() {
     const devices = useDevices(
         {
             announced: true,
-            ignoreSelf: true,
+            ignoreInfrastructure: true,
             ignoreSimulators: true,
         },
         [safeBoot]

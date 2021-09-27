@@ -67,11 +67,10 @@
         <input
             id="urlinput"
             type="url"
-            value="https://microsoft.github.io/pxt-jacdac/"
         />
         <iframe
             id="left"
-            allow="usb;serial;bluetooth;camera;"
+            allow="usb;serial;camera;"
             sandbox="allow-scripts allow-same-origin allow-downloads allow-popups allow-popups-to-escape-sandbox allow-forms"
         ></iframe>
         <div id="divider"></div>
@@ -88,6 +87,9 @@
                 const selectLeft = document.getElementById("selectleft")
                 const urlinput = document.getElementById("urlinput")
                 const localhost = /localhost=1/.test(window.location.href)
+                let url = localStorage["jacdac/multi/url"] || "https://microsoft.github.io/pxt-jacdac/"
+                urlinput.value = url
+
                 if (localhost) {
                     ;[selectLeft].forEach(sel => {
                         const opt = document.createElement("option")
@@ -122,18 +124,12 @@
                     const h = hash ? "#" + hash : ""
                     ifrm.src = select.value + flags + h
                 }
-                function handleHash() {
-                    const route = window.location.hash || "#"
-                    const parts = route.replace(/^#/, "").split(":|:", 2)
-                    updateSrc(left, selectLeft, parts[0])
-                    updateSrc(right, urlinput, parts[1])
-                    window.history.replaceState("", "", "#")
-                }
 
                 selectLeft.onchange = function () {
                     updateSrc(left, selectLeft)
                 }
                 urlinput.onchange = function () {
+                    localStorage["jacdac/multi/url"] = urlinput.value
                     updateSrc(right, urlinput)
                 }
 
@@ -176,7 +172,6 @@
                     }
                 }
                 window.onresize = setWidths
-                window.onhashchange = handleHash
 
                 divider.onmouseover = function () {
                     document.body.style.cursor = "w-resize"
@@ -188,7 +183,9 @@
                 }
 
                 setWidths()
-                handleHash()
+
+                updateSrc(left, selectLeft)
+                updateSrc(right, urlinput)
             })()
         </script>
         <!-- @include tracking.html -->
