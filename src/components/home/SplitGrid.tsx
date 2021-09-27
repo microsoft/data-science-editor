@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react"
+import React, { CSSProperties, ReactNode } from "react"
 import { Grid, GridSize } from "@material-ui/core"
 import FeatureItem, { FeatureItemProps } from "./FeatureItem"
 
@@ -8,9 +8,10 @@ export default function SplitGrid(
         image: ReactNode
         imageColumns?: GridSize
         centered?: boolean
+        style?: CSSProperties
     } & FeatureItemProps
 ) {
-    const { right, image, centered, imageColumns = 5, ...others } = props
+    const { right, image, centered, imageColumns = 5, style, ...others } = props
 
     const textItem = (
         <Grid item xs>
@@ -33,7 +34,7 @@ export default function SplitGrid(
     )
 
     return (
-        <Grid item xs={12}>
+        <Grid item xs={12} style={style}>
             <Grid
                 container
                 direction="row"

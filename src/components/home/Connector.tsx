@@ -14,16 +14,16 @@ export default function Connector() {
             direction="column"
             alignContent="center"
             alignItems="center"
+            style={{ marginTop: 0 }}
         >
             <SplitGrid
+                style={{ paddingTop: 0 }}
                 title="Connector"
                 description="Jacdac uses 3-pin custom-designed connectors to quickly interface development boards with sensors, relays and more."
                 buttonText="Go to specification"
                 buttonUrl="https://github.com/microsoft/jacdac-ddk/tree/main/connector"
                 imageColumns={6}
-                image={
-                    <StaticImage src="./tangled.png" alt="Tangled cable" />
-                }
+                image={<StaticImage src="./tangled.png" alt="Tangled cable" />}
             />
             <CenterGrid
                 description="A custom cable connector designed to work in both orientations, to provide a haptic “click” when it plugs in, and to feel nice in your hand."

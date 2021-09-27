@@ -1,4 +1,4 @@
-import { Grid, Typography } from "@material-ui/core"
+import { Grid } from "@material-ui/core"
 import { StaticImage } from "gatsby-plugin-image"
 import React, { lazy, Suspense, useMemo } from "react"
 import { deviceSpecifications } from "../../../jacdac-ts/src/jdom/spec"
@@ -23,8 +23,10 @@ export default function KitModules() {
             direction="column"
             alignContent="center"
             alignItems="center"
+            style={{ marginTop: 0 }}
         >
             <SplitGrid
+                style={{ paddingTop: 0 }}
                 title="Kit Modules"
                 subtitle3="Explore the contents of the kit."
                 imageColumns={6}
