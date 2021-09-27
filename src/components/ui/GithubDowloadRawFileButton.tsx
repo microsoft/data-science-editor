@@ -4,11 +4,11 @@ import React, { ReactNode, useContext } from "react"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import ServiceManagerContext from "../ServiceManagerContext"
 
-export default function DowloadRawFileButton(
+export default function GithubDowloadRawFileButton(
     props: {
         url: string
         name: string
-        children: ReactNode
+        children?: ReactNode
         disconnect?: boolean
     } & ButtonProps
 ) {
@@ -23,7 +23,7 @@ export default function DowloadRawFileButton(
     }
     return (
         <Button {...rest} onClick={handleClick}>
-            {children}
+            {children || "Download"}
         </Button>
     )
 }

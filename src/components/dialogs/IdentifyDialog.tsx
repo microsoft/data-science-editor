@@ -7,6 +7,7 @@ import {
     Grid,
 } from "@material-ui/core"
 import React, { useState } from "react"
+import { ControlAnnounceFlags } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import JDDevice from "../../../jacdac-ts/src/jdom/device"
 import useDeviceSpecification from "../../jacdac/useDeviceSpecification"
 import useDeviceImage from "../devices/useDeviceImage"
@@ -58,7 +59,9 @@ export default function IdentifyDialog(props: {
     const { device, open, onClose } = props
     const handleSendIdentify = async () => await device.identify()
     const handleCloseIdentify = () => onClose()
-    useInterval(open, handleSendIdentify, 3500, [device])
+    const { statusLightFlags } = device
+    const mono = statusLightFlags === ControlAnnounceFlags.StatusLightMono
+    useInterval(open, handleSendIdentify, 5000, [device])
 
     return (
         <Dialog open={open} onClose={handleCloseIdentify}>
@@ -71,7 +74,7 @@ export default function IdentifyDialog(props: {
                     <Grid item xs>
                         <Alert severity="info">
                             Look for four blinks in around 2 seconds with the
-                            blue LED.
+                            {mono ? "" : " blue"} LED.
                         </Alert>
                     </Grid>
                 </Grid>

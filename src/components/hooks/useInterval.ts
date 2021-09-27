@@ -9,6 +9,7 @@ export default function useInterval(
     useEffect(() => {
         if (enabled && delay > 0) {
             const id = setInterval(handler, delay)
+            handler()
             return () => clearInterval(id)
         }
     }, [enabled, delay, ...(deps || [])])

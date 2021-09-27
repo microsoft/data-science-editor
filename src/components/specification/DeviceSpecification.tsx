@@ -13,31 +13,34 @@ import DeviceSpecificationSource from "./DeviceSpecificationSource"
 import FirmwareCard from "../firmware/FirmwareCard"
 import { escapeDeviceIdentifier } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import useDeviceImage from "../devices/useDeviceImage"
+import GithubDowloadRawFileButton from "../ui/GithubDowloadRawFileButton"
 
 export default function DeviceSpecification(props: {
     device: jdspec.DeviceSpec
     showSource?: boolean
 }) {
     const { device, showSource } = props
+    const { name, description, company, productIdentifiers, repo, firmwares } =
+        device
     const gridBreakpoints = useGridBreakpoints()
     const imageUrl = useDeviceImage(device)
 
     return (
         <>
-            <h2 key="title">{device.name}</h2>
+            <h2 key="title">{name}</h2>
             <Typography variant="subtitle1">
                 by{" "}
                 <Link
                     to={`/devices/${identifierToUrlPath(
-                        escapeDeviceIdentifier(device.company)
+                        escapeDeviceIdentifier(company)
                     )}`}
                 >
-                    {device.company}
+                    {company}
                 </Link>
-                {!!device.productIdentifiers?.length && (
+                {!!productIdentifiers?.length && (
                     <>
                         &nbsp;
-                        {device.productIdentifiers.map(identifier => (
+                        {productIdentifiers.map(identifier => (
                             <IDChip
                                 key={identifier}
                                 id={identifier}
@@ -49,15 +52,26 @@ export default function DeviceSpecification(props: {
             </Typography>
             {
                 <Box mt={1}>
-                    <img
-                        alt={`device ${device.name}`}
-                        src={imageUrl}
-                        loading="lazy"
-                    />
+                    <img alt={`device ${name}`} src={imageUrl} loading="lazy" />
                 </Box>
             }
-            {device.description && <Markdown source={device.description} />}
-            {device.repo && <FirmwareCard slug={device.repo} />}
+            {description && <Markdown source={description} />}
+            {repo && <FirmwareCard slug={repo} />}
+            {!!firmwares && (
+                <>
+                    <h3>Firmwares</h3>
+                    <ul>
+                        {firmwares.map(({ name, url }) => (
+                            <li key={url}>
+                                <GithubDowloadRawFileButton
+                                    url={url}
+                                    name={name}
+                                />
+                            </li>
+                        ))}
+                    </ul>
+                </>
+            )}
             <h3>Services</h3>
             <Grid container spacing={2}>
                 {device.services
