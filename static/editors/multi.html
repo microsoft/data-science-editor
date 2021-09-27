@@ -64,10 +64,7 @@
                 Jacdac
             </option>
         </select>
-        <input
-            id="urlinput"
-            type="url"
-        />
+        <input id="urlinput" type="url" />
         <iframe
             id="left"
             allow="usb;serial;camera;"
@@ -87,8 +84,7 @@
                 const selectLeft = document.getElementById("selectleft")
                 const urlinput = document.getElementById("urlinput")
                 const localhost = /localhost=1/.test(window.location.href)
-                let url = localStorage["jacdac/multi/url"] || "https://microsoft.github.io/pxt-jacdac/"
-                urlinput.value = url
+                urlinput.value = localStorage["jacdac/multi/url"] || ""
 
                 if (localhost) {
                     ;[selectLeft].forEach(sel => {
@@ -105,6 +101,15 @@
                 let ratio = 0.5
                 const dividerWidth = 14
 
+                function handleHash() {
+                    const hash = window.location.hash.slice(1)
+                    if (hash) {
+                        localStorage["jacdac/multi/url"] = hash
+                        if (urlinput.value !== hash) urlinput.value = hash
+                        updateSrc(right, urlinput)
+                    }
+                }
+
                 window.onmessage = function (msg) {
                     const data = msg.data
                     const source = msg.source
@@ -119,6 +124,7 @@
                             })
                     }
                 }
+                window.onhashchange = handleHash
 
                 function updateSrc(ifrm, select, hash) {
                     const h = hash ? "#" + hash : ""
@@ -129,8 +135,7 @@
                     updateSrc(left, selectLeft)
                 }
                 urlinput.onchange = function () {
-                    localStorage["jacdac/multi/url"] = urlinput.value
-                    updateSrc(right, urlinput)
+                    window.location.hash = urlinput.value
                 }
 
                 function setWidths() {
@@ -185,7 +190,7 @@
                 setWidths()
 
                 updateSrc(left, selectLeft)
-                updateSrc(right, urlinput)
+                handleHash()
             })()
         </script>
         <!-- @include tracking.html -->
