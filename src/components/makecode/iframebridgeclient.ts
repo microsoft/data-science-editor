@@ -245,7 +245,7 @@ export class IFrameBridgeClient extends JDClient {
             return []
 
         const devices = this.bus
-            .devices({ announced: true, ignoreSelf: true })
+            .devices({ announced: true, ignoreInfrastructure: true })
             .filter(this.deviceFilter.bind(this))
         let extensions = unique(
             arrayConcatMany(

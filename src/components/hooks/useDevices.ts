@@ -8,7 +8,7 @@ export default function useDevices(
     deps: DependencyList = []
 ) {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const devices = useChange(bus, _ => _?.devices(options) || [], [
+    const devices = useChange(bus, _ => _.devices(options), [
         JSON.stringify(options),
         ...deps,
     ])

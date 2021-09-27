@@ -17,7 +17,7 @@ function NoSsrConnectAlert(props: {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { transports } = bus
     const devices = useChange(bus, b =>
-        b.devices({ serviceClass, ignoreSelf: true })
+        b.devices({ serviceClass, ignoreInfrastructure: true })
     )
     const spec = serviceSpecificationFromClassIdentifier(serviceClass)
 

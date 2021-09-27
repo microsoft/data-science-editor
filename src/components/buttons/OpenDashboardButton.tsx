@@ -6,7 +6,7 @@ import useDeviceCount from "../hooks/useDeviceCount"
 
 export default function OpenDashboardButton(props: { className?: string }) {
     const { className } = props
-    const count = useDeviceCount({ ignoreSelf: true })
+    const count = useDeviceCount({ ignoreInfrastructure: true })
 
     return (
         <IconButtonWithTooltip

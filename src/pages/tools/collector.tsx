@@ -148,7 +148,7 @@ export default function Collector() {
     const [countdown, setCountdown] = useState(-1)
     const starting = countdown > 0
     const chartPalette = useChartPalette()
-    const devices = useDevices({ ignoreSelf: true, announced: true })
+    const devices = useDevices({ ignoreInfrastructure: true, announced: true })
     const readingRegisters = arrayConcatMany(
         devices.map(device =>
             device

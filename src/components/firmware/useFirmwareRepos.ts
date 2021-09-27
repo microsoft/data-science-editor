@@ -11,7 +11,7 @@ export default function useFirmwareRepos(showAllRepos?: boolean) {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const [repos, setRepos] = useState<string[]>([])
 
-    const devices = useEventRaised(DEVICE_CHANGE, bus, () => bus.devices({ announced: true, ignoreSelf: true }))
+    const devices = useEventRaised(DEVICE_CHANGE, bus, () => bus.devices({ announced: true, ignoreInfrastructure: true }))
     const bootloaders = devices.filter(device => device.hasService(SRV_BOOTLOADER));
     const registers = devices
         .filter(device => !device.hasService(SRV_BOOTLOADER)) // not a bootloader

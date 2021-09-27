@@ -112,7 +112,7 @@ export default function DeviceRegistration() {
     const devices = useDevices({
         announced: true,
         physical: true,
-        ignoreSelf: true,
+        ignoreInfrastructure: true,
         productIdentifier: true,
     })
     const updateDevice = () => {
