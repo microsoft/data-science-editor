@@ -105,15 +105,6 @@ export function DeviceTreeItem(
             alert={alert}
             kind={kind}
             icon={<DeviceAvatar device={device} size="small" center={false} />}
-            actions={
-                showActions && (
-                    <DeviceActions
-                        device={device}
-                        showReset={true}
-                        hideIdentity={true}
-                    />
-                )
-            }
         >
             <DeviceProductInformationTreeItem device={device} />
             <AnnounceFlagsTreeItem device={device} />
@@ -141,6 +132,13 @@ function DeviceProductInformationTreeItem(props: { device: JDDevice }) {
             labelTo={to}
             labelText={specification.name}
             labelInfo={specification.company}
+            actions={
+                <DeviceActions
+                    device={device}
+                    showReset={true}
+                    hideIdentity={true}
+                />
+            }
         ></StyledTreeItem>
     )
 }
