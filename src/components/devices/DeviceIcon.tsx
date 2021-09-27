@@ -6,8 +6,8 @@ import useDeviceSpecification from "../../jacdac/useDeviceSpecification"
 import useServiceProvider from "../hooks/useServiceProvider"
 import KindIcon from "../KindIcon"
 import useDeviceImage from "./useDeviceImage"
-import TransportIcon from "../icons/TransportIcon"
 import JDServerServiceProvider from "../../../jacdac-ts/src/jdom/servers/serverserviceprovider"
+import JacdacIcon from "../icons/JacdacIcon"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -43,11 +43,10 @@ export default function DeviceIcon(props: {
             ? classes.large
             : undefined
     const server = useServiceProvider<JDServerServiceProvider>(device)
-    const source = device.source
     return server ? (
         <KindIcon kind={VIRTUAL_DEVICE_NODE_NAME} />
     ) : !imageUrl ? (
-        <TransportIcon type={source} />
+        <JacdacIcon />
     ) : (
         <Avatar
             className={sizeClassName}
