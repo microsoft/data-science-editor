@@ -217,7 +217,7 @@ export class IFrameBridgeClient extends JDClient {
 
     private postPacket(pkt: Packet) {
         // check if this packet was already sent from another spot
-        if (!!pkt.sender || !this.hosted) return
+        if (/^bridge/.test(pkt.sender) || !this.hosted) return
 
         this.packetSent++
         pkt.sender = this.bridgeId
