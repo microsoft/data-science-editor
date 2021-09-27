@@ -68,7 +68,7 @@ export default function Kit() {
                 description="Jacdac modules can be updated from this web site."
                 buttonText="Check for firmware updates"
                 buttonVariant="link"
-                buttonUrl="/tools/uploader/"
+                buttonUrl="/tools/updater/"
             />
 
             <CenterGrid
