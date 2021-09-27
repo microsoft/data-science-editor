@@ -67,6 +67,7 @@ export default function DeviceSpecification(props: {
                                 <GithubDowloadRawFileButton
                                     url={url}
                                     name={name}
+                                    variant="outlined"
                                 >
                                     {name}
                                 </GithubDowloadRawFileButton>
