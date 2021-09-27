@@ -105,7 +105,7 @@ export default function DeviceSpecificationList(props: {
                                         aria-label={`info about ${spec.name}`}
                                         className={classes.icon}
                                     >
-                                        <InfoIcon />
+                                        <InfoIcon style={{ color: "white" }} />
                                     </IconButton>
                                 </>
                             }
