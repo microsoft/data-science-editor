@@ -1,5 +1,5 @@
 import { Component, ErrorInfo, ReactNode } from "react"
-import { ApplicationInsights } from "@microsoft/applicationinsights-web-basic"
+import { ApplicationInsights } from "@microsoft/applicationinsights-web"
 import { cryptoRandomUint32 } from "../../../jacdac-ts/src/jdom/random"
 import { toHex } from "../../../jacdac-ts/src/jdom/utils"
 
@@ -23,7 +23,6 @@ function splitProperties(props: EventProperties) {
     return { measurements, properties }
 }
 
-const sessionId = toHex(cryptoRandomUint32(32))
 const INSTRUMENTATION_KEY = "81ad7468-8585-4970-b027-4f9e7c3eb191"
 const appInsights =
     typeof window !== "undefined" &&
@@ -31,70 +30,43 @@ const appInsights =
     // ignore dev environment
     !/http:\/\/localhost/.test(window.location.href) &&
     new ApplicationInsights({
-        instrumentationKey: INSTRUMENTATION_KEY,
-        isStorageUseDisabled: true,
-        isCookieUseDisabled: true,
-        disableCookiesUsage: true,
-        disableAjaxTracking: true,
-        enableSessionStorageBuffer: false,
+        config: {
+            instrumentationKey: INSTRUMENTATION_KEY,
+            isStorageUseDisabled: true,
+            isCookieUseDisabled: true,
+            disableCookiesUsage: true,
+            disableAjaxTracking: true,
+            enableSessionStorageBuffer: false,
+        },
     })
+if (appInsights) {
+    appInsights.loadAppInsights()
+    appInsights.addTelemetryInitializer(envelope => {
+        envelope.tags["repo"] = repo
+        envelope.tags["sha"] = sha
+    })
+    appInsights.trackPageView()
+}
+
 const page: () => void = appInsights
-    ? () =>
-          appInsights.track({
-              name: "",
-              time: new Date().toUTCString(),
-              ext: {
-                  app: {
-                      sesId: sessionId,
-                  },
-              },
-              tags: [],
-              data: { repo, sha },
-              baseType: "PageviewData",
-              baseData: {
-                  name: window.location.href,
-                  uri: window.location.href,
-              },
-          })
+    ? () => appInsights.trackPageView({ name: window.location.href })
     : () => {}
 
 const trackEvent: (name: string, properties?: EventProperties) => void =
     appInsights
         ? (name, properties) =>
-              appInsights.track({
-                  name: "",
-                  time: new Date().toUTCString(),
-                  ext: {
-                      app: {
-                          sesId: sessionId,
-                      },
-                  },
-                  data: { repo, sha },
-                  baseType: "EventData",
-                  baseData: {
-                      name,
-                      ...splitProperties(properties),
-                  },
+              appInsights.trackEvent({
+                  name,
+                  ...splitProperties(properties),
               })
         : () => {}
 
-const trackError: (error: unknown, properties?: EventProperties) => void =
+const trackError: (error: Error, properties?: EventProperties) => void =
     appInsights
         ? (error, properties) =>
-              appInsights.track({
-                  name: "",
-                  time: new Date().toUTCString(),
-                  ext: {
-                      app: {
-                          sesId: sessionId,
-                      },
-                  },
-                  data: { repo, sha },
-                  baseType: "ExceptionData",
-                  baseData: {
-                      error,
-                      ...splitProperties(properties),
-                  },
+              appInsights.trackException({
+                  error,
+                  ...splitProperties(properties),
               })
         : () => {}
 

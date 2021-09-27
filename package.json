@@ -19,7 +19,7 @@
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@mdx-js/mdx": "^1.6.22",
     "@mdx-js/react": "^1.6.22",
-    "@microsoft/applicationinsights-web-basic": "^2.7.0",
+    "@microsoft/applicationinsights-web": "^2.7.0",
     "@octokit/core": "^3.5.1",
     "@react-three/drei": "^7.12.3",
     "@react-three/fiber": "^7.0.7",

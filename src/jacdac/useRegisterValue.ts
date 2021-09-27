@@ -12,7 +12,7 @@ function readRegisterValue<T>(
     register: JDRegister,
     reader: (reg: JDRegister) => T,
     defaultValue: T,
-    trackError: (error: unknown, properties?: EventProperties) => void
+    trackError: (error: Error, properties?: EventProperties) => void
 ): T {
     try {
         const value = reader(register)
