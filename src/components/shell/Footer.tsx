@@ -1,6 +1,7 @@
 import { createStyles, makeStyles, Typography } from "@material-ui/core"
 import { Link } from "gatsby-theme-material-ui"
 import React from "react"
+import TraceSaveButton from "../trace/TraceSaveButton"
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -69,16 +70,20 @@ export default function Footer() {
             >
                 Trademarks
             </a>
-            |
             {repo && sha && (
-                <a
-                    href={`https://github.com/${repo}/commit/${sha}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    {sha.slice(0, 8)}
-                </a>
+                <>
+                    |
+                    <a
+                        href={`https://github.com/${repo}/commit/${sha}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        {sha.slice(0, 8)}
+                    </a>
+                </>
             )}
+            | <TraceSaveButton variant="link" />
+            &nbsp;
             <Typography component="span" variant="inherit">
                 © {new Date().getFullYear()} Microsoft Corporation
             </Typography>
