@@ -25,7 +25,8 @@ export default function GithubDowloadRawFileButton(
             try {
                 const req = await fetch(url)
                 const text = await req.text()
-                fileStorage.saveText(name, text)
+                const downloadName = url.slice(url.lastIndexOf("/") + 1)
+                fileStorage.saveText(downloadName, text)
             } catch (e) {
                 setError(e)
             }
