@@ -45,7 +45,6 @@ export default function DashboardHIDKeyboard(props: DashboardServiceProps) {
         bus,
         () => {
             const triggerEvent = bus.node(triggerEventId) as JDEvent
-            console.log({ triggerEventId, triggerEvent, selector, modifiers })
             const un = triggerEvent?.subscribe(EVENT, handleClick)
             return () => un?.()
         },
