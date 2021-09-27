@@ -111,6 +111,7 @@ export default function KeyboardKeyInput(props: {
         "{altright}": "alt ⌥",
         "{metaleft}": "cmd ⌘",
         "{metaright}": "cmd ⌘",
+        "{space}": "⎵",
     }
     const handleKeyboardKeyPress = (code: string) => {
         code = code.toLowerCase().replace(/[{}]/g, "")
