@@ -43,14 +43,14 @@ export default function DeviceSpecificationList(props: {
     shuffle?: boolean
     company?: string
     requiredServiceClasses?: number[]
-    devices?: string[]
+    devices?: jdspec.DeviceSpec[]
 }) {
     const { count, shuffle, requiredServiceClasses, company, devices } = props
     const classes = useStyles()
     const { mobile, medium } = useMediaQueries()
     const cols = mobile ? 1 : medium ? 3 : 4
     const specs = useMemo(() => {
-        let r = deviceSpecifications().filter(
+        let r = (devices || deviceSpecifications()).filter(
             spec => spec.status !== "deprecated"
         )
         if (company) r = r.filter(spec => spec.company === company)
@@ -62,11 +62,15 @@ export default function DeviceSpecificationList(props: {
                         srv => spec.services.indexOf(srv) > -1
                     )
             )
-        if (devices) r = r.filter(spec => devices.indexOf(spec.id) > -1)
         if (shuffle) arrayShuffle(r)
         if (count !== undefined) r = r.slice(0, count)
         return r
-    }, [requiredServiceClasses, shuffle, count, JSON.stringify(devices)])
+    }, [
+        requiredServiceClasses,
+        shuffle,
+        count,
+        JSON.stringify(devices?.map(d => d.id)),
+    ])
 
     if (!specs.length)
         return (

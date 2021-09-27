@@ -1,23 +1,21 @@
 import { Grid } from "@material-ui/core"
 import { StaticImage } from "gatsby-plugin-image"
-import React, { lazy, Suspense } from "react"
+import React, { lazy, Suspense, useMemo } from "react"
+import { deviceSpecifications } from "../../../jacdac-ts/src/jdom/spec"
 import CenterGrid from "./CenterGrid"
 import SplitGrid from "./SplitGrid"
 const DeviceSpecificationList = lazy(
     () => import("../specification/DeviceSpecificationList")
 )
 
-const modules = [
-    "microbit-foundation-microbitv2",
-    "microsoft-research-jmrgbledringv21",
-    "microsoft-research-jmkeyboardkey46v10",
-    "microsoft-research-jmbutton10v13",
-    "microsoft-research-jmrotaryctrlbtnv10",
-    "microsoft-research-jmanalogjoystick44v02",
-    "microsoft-research-jmtemphumidity18v11",
-]
-
 export default function KitModules() {
+    const modules = useMemo(
+        () =>
+            deviceSpecifications().filter(
+                spec => spec.tags?.indexOf("kit") > -1
+            ),
+        []
+    )
     return (
         <Grid
             container
