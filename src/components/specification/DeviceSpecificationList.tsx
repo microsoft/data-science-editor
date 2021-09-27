@@ -87,10 +87,14 @@ export default function DeviceSpecificationList(props: {
                         <ImageListItemBar
                             title={spec.name}
                             subtitle={
-                                <Markdown
-                                    className={classes.ellipsis}
-                                    source={spec.description.split(".", 1)[0]}
-                                />
+                                !!spec.description && (
+                                    <Markdown
+                                        className={classes.ellipsis}
+                                        source={
+                                            spec.description.split(".", 1)[0]
+                                        }
+                                    />
+                                )
                             }
                             actionIcon={
                                 <>

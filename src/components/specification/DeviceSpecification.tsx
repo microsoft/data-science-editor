@@ -22,6 +22,7 @@ export default function DeviceSpecification(props: {
     const { device, showSource } = props
     const { name, description, company, productIdentifiers, repo, firmwares } =
         device
+    const { services } = device
     const gridBreakpoints = useGridBreakpoints()
     const imageUrl = useDeviceImage(device)
 
@@ -66,22 +67,36 @@ export default function DeviceSpecification(props: {
                                 <GithubDowloadRawFileButton
                                     url={url}
                                     name={name}
-                                />
+                                >
+                                    {name}
+                                </GithubDowloadRawFileButton>
                             </li>
                         ))}
                     </ul>
                 </>
             )}
-            <h3>Services</h3>
-            <Grid container spacing={2}>
-                {device.services
-                    .map(sc => serviceSpecificationFromClassIdentifier(sc))
-                    .map(spec => (
-                        <Grid item key={spec.shortId} {...gridBreakpoints}>
-                            <ServiceSpecificationCard specification={spec} />
-                        </Grid>
-                    ))}
-            </Grid>
+            {!!services?.length && (
+                <>
+                    <h3>Services</h3>
+                    <Grid container spacing={2}>
+                        {services
+                            .map(sc =>
+                                serviceSpecificationFromClassIdentifier(sc)
+                            )
+                            .map(spec => (
+                                <Grid
+                                    item
+                                    key={spec.shortId}
+                                    {...gridBreakpoints}
+                                >
+                                    <ServiceSpecificationCard
+                                        specification={spec}
+                                    />
+                                </Grid>
+                            ))}
+                    </Grid>
+                </>
+            )}
             {showSource && (
                 <>
                     <h3>Specification</h3>
