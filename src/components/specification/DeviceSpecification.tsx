@@ -61,6 +61,11 @@ export default function DeviceSpecification(props: {
             {!!firmwares && (
                 <>
                     <h3>Firmwares</h3>
+                    <p>
+                        Drag and drop the files below to your device drive. You
+                        might have to press the bootloader button once to see
+                        this drive.
+                    </p>
                     <ul>
                         {firmwares.map(({ name, url }) => (
                             <li key={url}>
