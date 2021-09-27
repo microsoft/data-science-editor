@@ -1,44 +1,5 @@
----
-title: Projects
-order: 1
----
+import MakeCodeExtensions from "../../../components/makecode/MakeCodeProjects"
 
 # Projects
 
-## Hello Jacdac Heart beat
-
-Start a button simulator and add the blocks below to your project. Jacdac should automatically "bind" your simulated button
-to `button1` and respond to `up`/`down` events by showing icons on the screen.
-
-![Simulated button show large and small heart when pressed](./simheartbeat.gif)
-
-```blocks
-modules.button1.onUp(function () {
-    basic.showIcon(IconNames.SmallHeart)
-})
-modules.button1.onDown(function () {
-    basic.showIcon(IconNames.Heart)
-})
-```
-
-## Rotary control of mouse wheel
-
-This sample uses a special HID server module, so that you
-can use a Jacdac rotary module to act as a mouse wheel.
-The following program can be loaded onto a micro:bit, for 
-example, which should be connected to the HID server via
-Jacdac. The HID server is then connected to your desktop/
-laptop via USB. 
-
-```blocks
-let lastposition = 0
-modules.rotaryEncoder1.onPositionChangedBy(1, function () {
-    if (modules.rotaryEncoder1.position() - lastposition < 0) {
-        modules.hidMouse1.wheel(-1, 0)
-    } else {
-        modules.hidMouse1.wheel(1, 0)
-    }
-    lastposition = modules.rotaryEncoder1.position()
-})
-```
-
+<MakeCodeProjects />
