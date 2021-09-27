@@ -10,17 +10,18 @@ export default function ModelViewer(props) {
         <div
             style={{
                 position: "relative",
-                width: "clamp(640, 100vw - 1rem)",
-                height: "clamp(480, 100vh - 1rem)",
+                width: "clamp(50vw, 640px, 96vw)",
+                height: "clamp(480px, 60vh, 96vh)",
             }}
         >
             <Canvas shadows dpr={[1, 2]} camera={{ fov: 50 }}>
                 <Suspense fallback={null}>
                     <Stage
                         controls={ref}
-                        preset="rembrandt"
-                        intensity={1}
-                        environment="city"
+                        intensity={0.5}
+                        contactShadow
+                        shadows
+                        adjustCamera
                     >
                         {children}
                     </Stage>

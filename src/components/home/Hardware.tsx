@@ -14,7 +14,7 @@ const DeviceSpecificationList = lazy(
     () => import("../specification/DeviceSpecificationList")
 )
 const ModelViewer = lazy(() => import("./models/ModelViewer"))
-const FabricateModel = lazy(() => import("./models/fabricate"))
+const GLBModel = lazy(() => import("./models/GLBModel"))
 
 export default function Hardware() {
     const { mobile, medium } = useMediaQueries()
@@ -197,7 +197,7 @@ export default function Hardware() {
             <Grid item xs={12}>
                 <Suspense>
                     <ModelViewer>
-                        <FabricateModel />
+                        <GLBModel name={"jmhidserversf441v03"} />
                     </ModelViewer>
                 </Suspense>
             </Grid>
