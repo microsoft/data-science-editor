@@ -38,7 +38,8 @@
                 top: 0rem;
             }
 
-            select, input {
+            select,
+            input {
                 position: absolute;
                 width: calc(50% - 0.15rem);
                 height: 1rem;
@@ -68,7 +69,11 @@
             type="url"
             value="https://microsoft.github.io/pxt-jacdac/"
         />
-        <iframe id="left"></iframe>
+        <iframe
+            id="left"
+            allow="usb;serial;bluetooth;camera;"
+            sandbox="allow-scripts allow-same-origin allow-downloads allow-popups allow-popups-to-escape-sandbox allow-forms"
+        ></iframe>
         <div id="divider"></div>
         <iframe
             id="right"
