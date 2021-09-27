@@ -3,6 +3,8 @@
 The LED pixel extension provides methods for working with
 an strip of RGB LEDs, as well as a built-in set of animations.
 
+# Direct control of pixels
+
 All the pixels on a strip can be set to a color using the `setAll` method:
 
 ```blocks
@@ -36,6 +38,37 @@ modules.ledPixel1.onConnected(() => {
         modules.ledPixel1.setPixel(i, 0x00ff00)
         basic.pause(200)
     }
+})
+```
+
+## Built-in Animations
+
+The MakeCode extension provides support for a set of animations
+that can be triggered via the `showAnimation` method:
+```blocks
+input.onButtonPressed(Button.A, () => {
+    modules.ledPixel1.showAnimation(modules.ledPixelAnimations.sparkle, 2000)
+})
+input.onButtonPressed(Button.B, () => {
+    modules.ledPixel1.showAnimation(modules.ledPixelAnimations.firefly, 2000)
+})
+```
+
+## Commands
+
+The [LED pixel service](https://microsoft.github.io/jacdac-docs/services/ledpixel) has
+a small command language that can be used to create your own animations
+and effects.
+
+```blocks
+function runEncoded(prog: string, args?: number[]) {
+    const encoded = jacdac.lightEncode(prog, args)
+    modules.ledPixel1.runProgram(encoded)
+}
+
+input.onButtonPressed(Button.A, () => {
+     runEncoded("rotfwd 1")
+     modules.ledPixel1.setPixel(0, 0x00ff00)
 })
 ```
 
