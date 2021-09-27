@@ -14,8 +14,9 @@ import DeviceIcon from "./DeviceIcon"
 export default function DeviceAvatar(props: {
     device: JDDevice
     size?: "small" | "large"
+    center?: boolean
 }) {
-    const { device, size } = props
+    const { device, size, center } = props
     const [identifyDialog, setIdentifyDialog] = useState(false)
     const specification = useDeviceSpecification(device)
     const imageUrl = useDeviceImage(specification, "avatar")
@@ -39,7 +40,13 @@ export default function DeviceAvatar(props: {
                 size="small"
                 title={`identify ${server ? "simulator" : "device"} ${name}`}
                 onClick={imageUrl ? handleOpenIdentify : handleSendIdentify}
-                icon={<DeviceIcon device={device} size={size} avatar={true} />}
+                icon={
+                    <DeviceIcon
+                        device={device}
+                        size={size}
+                        avatar={center !== false}
+                    />
+                }
             />
             {imageUrl && (
                 <IdentifyDialog

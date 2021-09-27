@@ -46,7 +46,7 @@ import useInstanceName from "../services/useInstanceName"
 import useBestRegister from "../hooks/useBestRegister"
 import { humanify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import useDeviceSpecification from "../../jacdac/useDeviceSpecification"
-import DeviceIcon from "../devices/DeviceIcon"
+import DeviceAvatar from "../devices/DeviceAvatar"
 
 export interface JDomTreeViewProps extends StyledTreeViewProps {
     deviceFilter?: (devices: JDDevice) => boolean
@@ -104,10 +104,14 @@ export function DeviceTreeItem(
             warning={warning}
             alert={alert}
             kind={kind}
-            icon={<DeviceIcon device={device} size="small" />}
+            icon={<DeviceAvatar device={device} size="small" center={false} />}
             actions={
                 showActions && (
-                    <DeviceActions device={device} showReset={true} />
+                    <DeviceActions
+                        device={device}
+                        showReset={true}
+                        hideIdentity={true}
+                    />
                 )
             }
         >
