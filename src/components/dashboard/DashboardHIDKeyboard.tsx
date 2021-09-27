@@ -54,7 +54,9 @@ export default function DashboardHIDKeyboard(props: DashboardServiceProps) {
                     disabled={disabled}
                     onClick={handleClick}
                     icon={<KeyboardIcon />}
-                />
+                >
+                    Send keys
+                </CmdButton>
                 <CmdButton
                     title="clear keys"
                     disabled={disabled}
