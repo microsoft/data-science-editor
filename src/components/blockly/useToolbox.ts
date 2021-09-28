@@ -109,8 +109,13 @@ export default function useToolbox(
     const liveServices = useServices({ specification: true })
     const theme = useTheme()
 
-    const blocks = useAsyncMemo(() => loadBlocks(dsls, theme), [theme, dsls])
+    const blocks = useAsyncMemo(async () => {
+        const r = await loadBlocks(dsls, theme)
+        return r
+    }, [theme, dsls])
     const toolboxConfiguration = useMemo(() => {
+        if (!blocks) return undefined
+
         const dslsCategories = arrayConcatMany(
             dsls.map(dsl =>
                 dsl?.createCategory?.({ theme, source, liveServices })
@@ -138,6 +143,7 @@ export default function useToolbox(
         source,
         (liveServices || []).map(srv => srv.id).join(","),
     ])
+
     return toolboxConfiguration
 }
 

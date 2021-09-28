@@ -288,6 +288,7 @@ export function BlockProvider(props: {
     }, [dragging])
     // mounting dsts
     useEffect(() => {
+        console.debug(`mounting dsls`)
         const unmounnts = dsls
             .map(dsl => workspace && dsl.mount?.(workspace))
             .filter(u => !!u)

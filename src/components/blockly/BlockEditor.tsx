@@ -41,10 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 )
 
-export default function BlockEditor(props: {
-    editorId: string
-    className?: string
-}) {
+function SuspendedBlockEditor(props: { editorId: string; className?: string }) {
     const { editorId, className } = props
     const {
         toolboxConfiguration,
@@ -98,7 +95,10 @@ export default function BlockEditor(props: {
             },
         },
         initialXml: workspaceXml,
-        onImportXmlError: () => setError("Error loading blocks..."),
+        onImportXmlError: () => {
+            console.error(`error loading blocks`)
+            setError("Error loading blocks...")
+        },
     }) as { workspace: WorkspaceSvg; xml: string }
 
     // store ref
@@ -120,7 +120,7 @@ export default function BlockEditor(props: {
                 filter={{
                     chrome: "> 90",
                     edge: "> 90",
-                    firefox: "> 90"
+                    firefox: "> 90",
                 }}
                 label="Please use Microsoft Edge 90+ or Google Chrome 90+ for this page."
             />
@@ -128,4 +128,14 @@ export default function BlockEditor(props: {
             <BlocklyModalDialogs />
         </div>
     )
+}
+
+export default function BlockEditor(props: {
+    editorId: string
+    className?: string
+}) {
+    const { toolboxConfiguration } = useContext(BlockContext)
+
+    if (!toolboxConfiguration) return null
+    return <SuspendedBlockEditor {...props} />
 }

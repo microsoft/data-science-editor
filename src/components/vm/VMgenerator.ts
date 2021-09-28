@@ -50,7 +50,7 @@ export default function workspaceJSONToVMProgram(
     workspace: WorkspaceJSON,
     dsls: BlockDomainSpecificLanguage[]
 ): VMProgram {
-    console.debug(`compile vm`, { workspace, dsls })
+    //console.debug(`compile vm`, { workspace, dsls })
 
     if (!workspace) return undefined
 

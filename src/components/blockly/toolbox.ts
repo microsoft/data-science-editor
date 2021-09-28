@@ -285,5 +285,5 @@ export function visitToolbox(
             }
         })
     }
-    visitContents(node.contents)
+    visitContents(node?.contents)
 }
