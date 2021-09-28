@@ -8,8 +8,32 @@ as optional buttons that may be associated with the joystick.
 ## Coordinates
 
 ```blocks
-modules.joystick1.x()
-modules.joystick1.y()
+basic.forever(() => {
+    plot(modules.joystick1.x(), modules.joystick1.y())
+})
+
+function plot(x: number, y: number) {
+        basic.clearScreen();
+        let dispX = 2;
+        let dispY = 2;
+        if (x < -30)
+            dispX--;
+        if (x < -60)
+            dispX--;
+        if (x > 30)
+            dispX++;
+        if (x > 60)
+            dispX++;
+        if (y < -30)
+            dispY--;
+        if (y < -60)
+            dispY--;
+        if (y > 30)
+            dispY++;
+        if (y > 60)
+            dispY++;
+        led.plot(dispX, dispY);
+}
 
 ```
 
