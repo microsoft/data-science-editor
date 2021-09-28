@@ -1,6 +1,17 @@
 # Total Volatile Organic Compound
 
 
+This extension supports a sensor that measures equivalent Total Volatile Organic Compound (TVOV) levels,
+in parts-per-billion (ppb). The `tVOC` method returns the current TVOC level.
+
+The following program outputs the current TVOC whenever it changes by 10 ppb:
+
+```blocks
+modules.tvoc1.onTVOCChangedBy(10, function() {
+    basic.showNumber(modules.tvoc1.tVOC())
+})
+```
+
 
 ## See Also
 
