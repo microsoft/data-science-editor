@@ -1,4 +1,4 @@
-import { Grid } from "@material-ui/core"
+import { Grid, Suspense } from "@material-ui/core"
 import { StaticImage } from "gatsby-plugin-image"
 import React, { lazy } from "react"
 import CarouselGrid from "./CarouselGrid"
@@ -9,7 +9,6 @@ import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew"
 import CameraIcon from "@material-ui/icons/Camera"
 import TelegramIcon from "@material-ui/icons/Telegram"
 import useMediaQueries from "../hooks/useMediaQueries"
-import Suspense from "../ui/Suspense"
 const DeviceSpecificationList = lazy(
     () => import("../specification/DeviceSpecificationList")
 )
@@ -193,14 +192,6 @@ export default function Hardware() {
                 buttonText="Unbox"
                 buttonUrl="/hardware/kit/"
             />
-
-            <Grid item xs={12}>
-                <Suspense>
-                    <ModelViewer>
-                        <GLBModel name={"jmhidserversf441v03"} />
-                    </ModelViewer>
-                </Suspense>
-            </Grid>
         </Grid>
     )
 }
