@@ -1,6 +1,23 @@
 # HID Keyboard
 
+The HID keyboard extension can be used to control a HID keyboard, via a Jacdac module 
+that implements HID (generally communicating to a desktop/laptop over USB). 
 
+The method `key` sends a keyboard action (press, up, down), specified by the first argument,
+with a modifier (second argument), and a selected key (third argument): 
+
+```blocks
+input.onButtonPressed(Button.A, function() {
+    modules.hidKeyboard1.key(jacdac.HidKeyboardAction.Press, jacdac.HidKeyboardModifiers.LeftControl, jacdac.HidKeyboardKey.Enter)
+})
+```
+
+The method `clear` clears all currently pressed keys:
+```blocks
+input.onButtonPressed(Button.B, function() {
+    modules.hidKeyboard1.clear()
+})
+```
 
 ## See Also
 
