@@ -1,6 +1,6 @@
 import { Grid } from "@material-ui/core"
 import { StaticImage } from "gatsby-plugin-image"
-import React, { lazy, Suspense } from "react"
+import React, { lazy } from "react"
 import CarouselGrid from "./CarouselGrid"
 import CenterGrid from "./CenterGrid"
 import FeatureItem from "./FeatureItem"
@@ -10,6 +10,7 @@ import PlaylistAddCheckIcon from "@material-ui/icons/PlaylistAddCheck"
 import FindReplaceIcon from "@material-ui/icons/FindReplace"
 import SubscriptionsIcon from "@material-ui/icons/Subscriptions"
 import useMediaQueries from "../hooks/useMediaQueries"
+import Suspense from "../ui/Suspense"
 const DeviceSpecificationList = lazy(
     () => import("../specification/DeviceSpecificationList")
 )
@@ -153,7 +154,7 @@ export default function Home() {
                 subtitle="Enabling a cheaper ecosystem."
                 description="A PCB edge connector was chosen for Jacdac primarily because it essentially adds no cost to a product. A module is a small PCB that includes an MCU connected to an on-board sensor or actuator."
                 image={
-                    <Suspense fallback={null}>
+                    <Suspense>
                         <ModelViewer responsive={true}>
                             <GLBModel name={"jmhidserversf441v03"} />
                         </ModelViewer>

@@ -1,4 +1,4 @@
-import React, { lazy, useContext, useEffect } from "react"
+import React, { lazy, useContext } from "react"
 import clsx from "clsx"
 import { makeStyles, Container } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography"
@@ -24,8 +24,8 @@ import useMediaQueries from "./hooks/useMediaQueries"
 import MainAppBar from "./shell/MainAppBar"
 import DataEditorAppBar from "./shell/DataEditorAppBar"
 import { AlertTitle } from "@material-ui/lab"
-import { inIFrame } from "../../jacdac-ts/src/jdom/iframeclient"
 
+const TraceAlert = lazy(() => import("./shell/TraceAlert"))
 const WebDiagnostics = lazy(() => import("./shell/WebDiagnostics"))
 const AppDrawer = lazy(() => import("./shell/AppDrawer"))
 const ToolsDrawer = lazy(() => import("./shell/ToolsDrawer"))
@@ -206,6 +206,9 @@ function LayoutWithContext(props: LayoutProps) {
 
     const InnerMainSection = () => (
         <>
+            <Suspense>
+                <TraceAlert />
+            </Suspense>
             {!hideUnderConstruction && (
                 <Alert closeable={true} severity="warning">
                     <AlertTitle>Partner Preview</AlertTitle>

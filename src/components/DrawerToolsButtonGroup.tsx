@@ -8,9 +8,6 @@ import MenuIcon from "@material-ui/icons/Menu"
 import AccountTreeIcon from "@material-ui/icons/AccountTree"
 import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
 import ConnectButtons from "./buttons/ConnectButtons"
-import PacketsContext from "./PacketsContext"
-import TraceClearButton from "./trace/TraceClearButton"
-import TracePlayButton from "./trace/TracePlayButton"
 
 export default function DrawerToolsButtonGroup(props: {
     className?: string
@@ -18,18 +15,9 @@ export default function DrawerToolsButtonGroup(props: {
     showPackets?: boolean
     showCurrent?: boolean
     showConnect?: boolean
-    showTrace?: boolean
 }) {
-    const {
-        className,
-        showToc,
-        showCurrent,
-        showConnect,
-        showTrace,
-        showPackets,
-    } = props
+    const { className, showToc, showCurrent, showConnect, showPackets } = props
     const { drawerType, setDrawerType } = useContext(AppContext)
-    const { replayTrace } = useContext(PacketsContext)
 
     const handleDrawer = (drawer: DrawerType) => () => setDrawerType(drawer)
     const drawers = [
@@ -68,12 +56,6 @@ export default function DrawerToolsButtonGroup(props: {
                     {drawer.icon}
                 </IconButtonWithTooltip>
             ))}
-            {showTrace && replayTrace && (
-                <TracePlayButton size="small" color="inherit" />
-            )}
-            {showTrace && replayTrace && (
-                <TraceClearButton size="small" color="inherit" />
-            )}
             {showConnect && <ConnectButtons transparent={true} full={false} />}
         </>
     )

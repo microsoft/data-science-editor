@@ -1,7 +1,8 @@
 import { Grid } from "@material-ui/core"
 import { StaticImage } from "gatsby-plugin-image"
-import React, { lazy, Suspense, useMemo } from "react"
+import React, { lazy, useMemo } from "react"
 import { deviceSpecifications } from "../../../jacdac-ts/src/jdom/spec"
+import Suspense from "../ui/Suspense"
 import CenterGrid from "./CenterGrid"
 import SplitGrid from "./SplitGrid"
 const DeviceSpecificationList = lazy(
@@ -59,7 +60,7 @@ export default function KitModules() {
                 caption="Your kit may contain some but not all of these modules."
             />
             <Grid item xs={12}>
-                <Suspense fallback={null}>
+                <Suspense>
                     <DeviceSpecificationList devices={modules} />
                 </Suspense>
             </Grid>
