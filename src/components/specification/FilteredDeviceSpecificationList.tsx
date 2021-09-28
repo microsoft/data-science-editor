@@ -6,6 +6,7 @@ import ServiceSpecificationSelect from "./ServiceSpecificationSelect"
 export default function FilteredDeviceSpecificationList(props: {
     count?: number
     shuffle?: boolean
+    company?: string
 }) {
     const { ...others } = props
 

@@ -1,61 +1,83 @@
 import React from "react"
 import IDChip from "../IDChip"
-import { Link } from "gatsby-theme-material-ui"
 import {
-    identifierToUrlPath,
+    deviceSpecifications,
     serviceSpecificationFromClassIdentifier,
 } from "../../../jacdac-ts/src/jdom/spec"
 import ServiceSpecificationCard from "./ServiceSpecificationCard"
-import { Box, Grid, Typography } from "@material-ui/core"
+import { Box, Chip, Grid } from "@material-ui/core"
 import useGridBreakpoints from "../useGridBreakpoints"
 import Markdown from "../ui/Markdown"
 import DeviceSpecificationSource from "./DeviceSpecificationSource"
 import FirmwareCard from "../firmware/FirmwareCard"
-import { escapeDeviceIdentifier } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import useDeviceImage from "../devices/useDeviceImage"
 import GithubDowloadRawFileButton from "../ui/GithubDowloadRawFileButton"
+import MemoryIcon from "@material-ui/icons/Memory"
+import ChipList from "../ui/ChipList"
+import { semverCmp } from "../semver"
+import DeviceSpecificationList from "./DeviceSpecificationList"
 
 export default function DeviceSpecification(props: {
     device: jdspec.DeviceSpec
     showSource?: boolean
 }) {
     const { device, showSource } = props
-    const { name, description, company, productIdentifiers, repo, firmwares } =
-        device
+    const {
+        name,
+        description,
+        company,
+        productIdentifiers,
+        repo,
+        firmwares,
+        version,
+        designIdentifier,
+    } = device
     const { services } = device
     const gridBreakpoints = useGridBreakpoints()
     const imageUrl = useDeviceImage(device)
 
+    const others =
+        designIdentifier &&
+        deviceSpecifications()
+            .filter(
+                spec =>
+                    spec.id !== device.id &&
+                    spec.designIdentifier === designIdentifier &&
+                    spec.version !== undefined
+            )
+            ?.sort((l, r) => semverCmp(l.version, r.version))
+
     return (
         <>
             <h2 key="title">{name}</h2>
-            <Typography variant="subtitle1">
-                by{" "}
-                <Link
-                    to={`/devices/${identifierToUrlPath(
-                        escapeDeviceIdentifier(company)
-                    )}`}
-                >
-                    {company}
-                </Link>
-                {!!productIdentifiers?.length && (
-                    <>
-                        &nbsp;
-                        {productIdentifiers.map(identifier => (
-                            <IDChip
-                                key={identifier}
-                                id={identifier}
-                                filter={`pid:0x${identifier.toString(16)}`}
-                            />
-                        ))}
-                    </>
+            <ChipList>
+                <Chip size="small" label={company} />
+                {version && (
+                    <Chip
+                        aria-label={`version ${version}`}
+                        size="small"
+                        label={`v${version}`}
+                    />
                 )}
-            </Typography>
-            {
-                <Box mt={1}>
-                    <img alt={`device ${name}`} src={imageUrl} loading="lazy" />
-                </Box>
-            }
+                {designIdentifier && (
+                    <Chip
+                        aria-label={`design identifier: ${designIdentifier}`}
+                        icon={<MemoryIcon />}
+                        size="small"
+                        label={designIdentifier}
+                    />
+                )}
+                {productIdentifiers?.map(identifier => (
+                    <IDChip
+                        key={identifier}
+                        id={identifier}
+                        filter={`pid:0x${identifier.toString(16)}`}
+                    />
+                ))}
+            </ChipList>
+            <Box mt={1}>
+                <img alt={`device ${name}`} src={imageUrl} loading="lazy" />
+            </Box>
             {description && <Markdown source={description} />}
             {repo && <FirmwareCard slug={repo} />}
             {!!firmwares && (
@@ -101,6 +123,12 @@ export default function DeviceSpecification(props: {
                                 </Grid>
                             ))}
                     </Grid>
+                </>
+            )}
+            {!!others?.length && (
+                <>
+                    <h3>Other revisions</h3>
+                    <DeviceSpecificationList devices={others} />
                 </>
             )}
             {showSource && (

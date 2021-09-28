@@ -1,12 +1,14 @@
 import { Link } from "gatsby-theme-material-ui"
 import React from "react"
-import DeviceSpecificationList from "../components/specification/DeviceSpecificationList"
+import FilteredDeviceSpecificationList from "../components/specification/FilteredDeviceSpecificationList"
 
 export default function Page(props: { pageContext: { company: string } }) {
     return (
         <>
             <h1>{props.pageContext.company}</h1>
-            <DeviceSpecificationList company={props.pageContext.company} />
+            <FilteredDeviceSpecificationList
+                company={props.pageContext.company}
+            />
             <h2>See Also</h2>
             <ul>
                 <li>

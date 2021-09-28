@@ -209,11 +209,11 @@ export default function DeviceRegistration() {
         updateDevice()
     }
     const handleHardwareDesign = (ev: ChangeEvent<HTMLInputElement>) => {
-        device.hardwareDesignIdentifier = ev.target.value
+        device.designIdentifier = ev.target.value
         updateDevice()
     }
-    const handleHardwareVersion = (ev: ChangeEvent<HTMLInputElement>) => {
-        device.hardwareDesignVersion = ev.target.value
+    const handleVersion = (ev: ChangeEvent<HTMLInputElement>) => {
+        device.version = ev.target.value
         updateDevice()
     }
     const handleFirmwareAddClick = (
@@ -334,7 +334,7 @@ export default function DeviceRegistration() {
                         required
                         fullWidth={true}
                         helperText="A unique identifier for this hardware design."
-                        label="Hardware design identifier"
+                        label="Hardware design"
                         value={""}
                         onChange={handleHardwareDesign}
                         variant={variant}
@@ -346,9 +346,9 @@ export default function DeviceRegistration() {
                         required
                         fullWidth={true}
                         helperText="Revision identifier for this hardware design."
-                        label="Hardware version"
+                        label="Version"
                         value={""}
-                        onChange={handleHardwareVersion}
+                        onChange={handleVersion}
                         variant={variant}
                     />
                 </Grid>
