@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme =>
             borderWidth: "1px",
             borderStyle: "solid",
             borderColor: "transparent",
-            cursor: "pointer",
+            userSelect: "none",
             "&:hover": {
                 borderColor: theme.palette.primary.main,
             },
@@ -123,7 +123,7 @@ export default function DashboardHIDMouse(props: DashboardServiceProps) {
                         <Grid item>
                             <MouseIcon fontSize="large" />
                         </Grid>
-                        <Grid item xs>
+                        <Grid item xs style={{ userSelect: "none" }}>
                             focus and type l(eft), r(ight), m(iddle) for
                             buttons, arrow keys to move, w(heel up), d(wheel
                             down) for the wheel
