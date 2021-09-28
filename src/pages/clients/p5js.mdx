@@ -45,9 +45,8 @@ function setup() {
 }
 function draw() {
     // grabs sensor data
-    const { sensors } = jacdac
+    const potentiometers = jacdac.sensors
     // add your code here!
-
 }
 ```
 
@@ -58,3 +57,15 @@ device and hide it when connected.
 
 -   [sensors](/clients/p5js/sensors), use sensor data in your sketches
 -   [events](/clients/p5js/events), register handlers for events
+
+## Debugging
+
+Add ``jacdac.debug`` to display a **Debug** button that will open the Jacdac developer tools.
+Developer tools allow you to inspect devices, launch simulator or inspect packets.
+
+```javascript
+funtion setup() {
+    ...
+    jacdac.debug()
+}
+```
