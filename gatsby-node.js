@@ -151,10 +151,13 @@ async function createDevicePages(graphql, actions, reporter) {
         return
     }
 
+    const devices = result.data.allDevicesJson.nodes
+    console.log(devices)
+
     // Create image post pages.
     const deviceTemplate = path.resolve(`src/templates/device.tsx`)
     const companyTemplate = path.resolve(`src/templates/device-company.tsx`)
-    for (const node of result.data.allDevicesJson.nodes) {
+    for (const node of devices) {
         const p = `/devices/${identifierToUrlPath(node.id)}/`
         console.log(`${node.id} -> ${p}`)
         createPage({

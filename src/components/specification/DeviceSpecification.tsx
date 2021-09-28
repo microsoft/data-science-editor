@@ -5,7 +5,7 @@ import {
     serviceSpecificationFromClassIdentifier,
 } from "../../../jacdac-ts/src/jdom/spec"
 import ServiceSpecificationCard from "./ServiceSpecificationCard"
-import { Box, Chip, Grid } from "@material-ui/core"
+import { Box, Chip, Grid, Typography } from "@material-ui/core"
 import useGridBreakpoints from "../useGridBreakpoints"
 import Markdown from "../ui/Markdown"
 import DeviceSpecificationSource from "./DeviceSpecificationSource"
@@ -49,16 +49,12 @@ export default function DeviceSpecification(props: {
 
     return (
         <>
-            <h2 key="title">{name}</h2>
+            <h2 key="title">
+                {name}
+                {!!version && ` v${version}`}
+            </h2>
             <ChipList>
                 <Chip size="small" label={company} />
-                {version && (
-                    <Chip
-                        aria-label={`version ${version}`}
-                        size="small"
-                        label={`v${version}`}
-                    />
-                )}
                 {designIdentifier && (
                     <Chip
                         aria-label={`design identifier: ${designIdentifier}`}

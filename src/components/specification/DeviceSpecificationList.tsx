@@ -85,17 +85,9 @@ export default function DeviceSpecificationList(props: {
                     <ImageListItem key={spec.id}>
                         <img src={imageUrl} alt={spec.name} loading="lazy" />
                         <ImageListItemBar
-                            title={spec.name}
-                            subtitle={
-                                !!spec.description && (
-                                    <Markdown
-                                        className={classes.ellipsis}
-                                        source={
-                                            spec.description.split(".", 1)[0]
-                                        }
-                                    />
-                                )
-                            }
+                            title={`${spec.name} ${
+                                spec.version ? `v${spec.version}` : ""
+                            }`}
                             actionIcon={
                                 <>
                                     <IconButton
