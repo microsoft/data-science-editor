@@ -1,6 +1,17 @@
 # Flex
 
-A bending or deflection sensor.
+The flex extension (for a flexible/bending sensor) reports the sensor 
+value as a floating point value between 0.0 and 100.
+The `bending` method returns the current value of the sensor.
+
+The following program outputs the sensor value whenever it changes by 
+5:
+
+```blocks
+modules.flex1.onBendingChangedBy(5, function() {
+    led.plotBarGraph(modules.flex1.bending(), 100)
+})
+```
 
 ## See Also
 
