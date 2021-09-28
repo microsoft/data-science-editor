@@ -44,9 +44,9 @@ function setup() {
     createCanvas(400, 400)
 }
 function draw() {
-    // grabs sensor data
-    const potentiometers = jacdac.sensors
-    // add your code here!
+    const { potentiometer } = jacdac.sensors
+    const [r = 0, g = 0, b = 0] = potentiometer
+    background(r * 255, g * 255, b * 255)
 }
 ```
 
@@ -63,9 +63,19 @@ device and hide it when connected.
 Add ``jacdac.debug`` to display a **Debug** button that will open the Jacdac developer tools.
 Developer tools allow you to inspect devices, launch simulator or inspect packets.
 
-```javascript
+```p5js
 funtion setup() {
     ...
     jacdac.debug()
+}
+-----
+function setup() {
+    createCanvas(400, 400)
+    jacdac.debug()
+}
+function draw() {
+    const { potentiometer } = jacdac.sensors
+    const [r = 0, g = 0, b = 0] = potentiometer
+    background(r * 255, g * 255, b * 255)
 }
 ```
