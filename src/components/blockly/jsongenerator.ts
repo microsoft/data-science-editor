@@ -24,6 +24,7 @@ export function workspaceToJSON(
         {
             logic_null: () => null,
             text: block => block.getFieldValue("TEXT"),
+            text_input: block => block.getFieldValue("TEXT"),
             math_number: block => Number(block.getFieldValue("NUM") || "0"),
             logic_boolean: block => block.getFieldValue("BOOL") === "TRUE",
         }
