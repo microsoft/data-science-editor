@@ -10,7 +10,11 @@ import PlaylistAddCheckIcon from "@material-ui/icons/PlaylistAddCheck"
 import FindReplaceIcon from "@material-ui/icons/FindReplace"
 import SubscriptionsIcon from "@material-ui/icons/Subscriptions"
 import useMediaQueries from "../hooks/useMediaQueries"
-const DeviceSpecificationList = lazy(() => import("../specification/DeviceSpecificationList"))
+const DeviceSpecificationList = lazy(
+    () => import("../specification/DeviceSpecificationList")
+)
+const ModelViewer = lazy(() => import("./models/ModelViewer"))
+const GLBModel = lazy(() => import("./models/GLBModel"))
 
 export default function Home() {
     const { mobile, medium } = useMediaQueries()
@@ -149,10 +153,11 @@ export default function Home() {
                 subtitle="Enabling a cheaper ecosystem."
                 description="A PCB edge connector was chosen for Jacdac primarily because it essentially adds no cost to a product. A module is a small PCB that includes an MCU connected to an on-board sensor or actuator."
                 image={
-                    <StaticImage
-                        src="./rhtempvertical.png"
-                        alt="Humidity temperature module vertial"
-                    />
+                    <Suspense fallback={null}>
+                        <ModelViewer responsive={true}>
+                            <GLBModel name={"jmhidserversf441v03"} />
+                        </ModelViewer>
+                    </Suspense>
                 }
                 buttonText="Hardware overview"
                 buttonVariant="link"

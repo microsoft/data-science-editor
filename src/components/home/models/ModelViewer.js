@@ -4,15 +4,23 @@ import { OrbitControls, Stage } from "@react-three/drei"
 
 export default function ModelViewer(props) {
     // eslint-disable-next-line react/prop-types
-    const { children } = props
+    const { children, responsive } = props
     const ref = useRef()
     return (
         <div
-            style={{
-                position: "relative",
-                width: "clamp(50vw, 640px, 96vw)",
-                height: "clamp(480px, 60vh, 96vh)",
-            }}
+            style={
+                responsive
+                    ? {
+                          position: "relative",
+                          width: "35vw",
+                          height: "35vw",
+                      }
+                    : {
+                          position: "relative",
+                          width: "clamp(50vw, 640px, 96vw)",
+                          height: "clamp(480px, 60vh, 96vh)",
+                      }
+            }
         >
             <Canvas shadows dpr={[1, 2]} camera={{ fov: 50 }}>
                 <Suspense fallback={null}>
