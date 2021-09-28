@@ -152,7 +152,7 @@ async function createDevicePages(graphql, actions, reporter) {
     }
 
     const devices = result.data.allDevicesJson.nodes
-    console.log(devices)
+    //console.log(devices)
 
     // Create image post pages.
     const deviceTemplate = path.resolve(`src/templates/device.tsx`)
@@ -346,7 +346,7 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
 
 exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
     const { setWebpackConfig, replaceWebpackConfig } = actions
-    console.log({ stage })
+    //console.log({ stage })
     const plugins = [
         new IgnorePlugin({
             resourceRegExp: /^canvas|@axe-core\/react$/,

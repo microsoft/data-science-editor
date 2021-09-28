@@ -83,100 +83,104 @@ const useStyles = makeStyles(theme =>
     })
 )
 
-export default function MainAppBar() {
+function MainToolbar() {
     const classes = useStyles()
     const { drawerType, toolsMenu, setToolsMenu } = useContext(AppContext)
+    const drawerOpen = drawerType !== DrawerType.None
+    const toggleToolsMenu = () => setToolsMenu(!toolsMenu)
+
+    return (
+        <Toolbar>
+            <DrawerToolsButtonGroup
+                className={clsx(
+                    classes.menuButton,
+                    drawerOpen && classes.hideMobile
+                )}
+                showToc={true}
+                showCurrent={true}
+            />
+            <Hidden implementation="css" xsDown={true}>
+                <Typography component="h1" variant="h6">
+                    <Link
+                        style={{
+                            color: UIFlags.widget ? "black" : "white",
+                        }}
+                        to="/"
+                    >
+                        Jacdac
+                    </Link>
+                </Typography>
+            </Hidden>
+            <div className={classes.grow} />
+            {Flags.diagnostics && <PacketStats />}
+            <BridgeButtons className={clsx(classes.menuButton)} />
+            <OpenDashboardButton className={clsx(classes.menuButton)} />
+            {false && (
+                <OpenVMEditorButton className={clsx(classes.menuButton)} />
+            )}
+            <IconButtonWithTooltip
+                className={clsx(
+                    classes.menuButton,
+                    drawerOpen && classes.hideMobile
+                )}
+                aria-label="Discussions"
+                title="Discussions"
+                edge="start"
+                color="inherit"
+                to="https://github.com/microsoft/jacdac/discussions"
+            >
+                <ForumIcon />
+            </IconButtonWithTooltip>
+            <GitHubButton
+                className={clsx(
+                    classes.menuButton,
+                    drawerOpen && classes.hideMobile
+                )}
+                repo={"/github"}
+            />
+            <IconButtonWithTooltip
+                className={clsx(
+                    classes.menuButton,
+                    drawerOpen && classes.hideMobile
+                )}
+                aria-label="More tools"
+                title="More"
+                edge="start"
+                color="inherit"
+                onClick={toggleToolsMenu}
+            >
+                <MoreIcon />
+            </IconButtonWithTooltip>
+        </Toolbar>
+    )
+}
+
+export default function MainAppBar() {
+    const classes = useStyles()
+    const { drawerType, toolsMenu } = useContext(AppContext)
     const { darkMode } = useContext(DarkModeContext)
     const drawerOpen = drawerType !== DrawerType.None
     const appBarColor =
         darkMode === "dark" ? "inherit" : UIFlags.widget ? "default" : undefined
-
-    const toggleToolsMenu = () => setToolsMenu(!toolsMenu)
-
     return (
-        <Box displayPrint="none">
-            <HideOnScroll>
-                <AppBar
-                    position="fixed"
-                    color={appBarColor}
-                    className={clsx(classes.appBar, {
-                        [classes.tocBarShift]: drawerType === DrawerType.Toc,
-                        [classes.appBarShift]:
-                            drawerOpen && drawerType !== DrawerType.Toc,
-                        [classes.toolBarShift]: toolsMenu,
-                    })}
-                >
-                    <Toolbar>
-                        <DrawerToolsButtonGroup
-                            className={clsx(
-                                classes.menuButton,
-                                drawerOpen && classes.hideMobile
-                            )}
-                            showToc={true}
-                            showCurrent={true}
-                            showTrace={true}
-                        />
-                        <Hidden implementation="css" xsDown={true}>
-                            <Typography component="h1" variant="h6">
-                                <Link
-                                    style={{
-                                        color: UIFlags.widget
-                                            ? "black"
-                                            : "white",
-                                    }}
-                                    to="/"
-                                >
-                                    Jacdac
-                                </Link>
-                            </Typography>
-                        </Hidden>
-                        <div className={classes.grow} />
-                        {Flags.diagnostics && <PacketStats />}
-                        <BridgeButtons className={clsx(classes.menuButton)} />
-                        <OpenDashboardButton
-                            className={clsx(classes.menuButton)}
-                        />
-                        {false && (
-                            <OpenVMEditorButton
-                                className={clsx(classes.menuButton)}
-                            />
-                        )}
-                        <IconButtonWithTooltip
-                            className={clsx(
-                                classes.menuButton,
-                                drawerOpen && classes.hideMobile
-                            )}
-                            aria-label="Discussions"
-                            title="Discussions"
-                            edge="start"
-                            color="inherit"
-                            to="https://github.com/microsoft/jacdac/discussions"
-                        >
-                            <ForumIcon />
-                        </IconButtonWithTooltip>
-                        <GitHubButton
-                            className={clsx(
-                                classes.menuButton,
-                                drawerOpen && classes.hideMobile
-                            )}
-                            repo={"/github"}
-                        />
-                        <IconButtonWithTooltip
-                            className={clsx(
-                                classes.menuButton,
-                                drawerOpen && classes.hideMobile
-                            )}
-                            aria-label="More tools"
-                            title="More"
-                            edge="start"
-                            color="inherit"
-                            onClick={toggleToolsMenu}
-                        >
-                            <MoreIcon />
-                        </IconButtonWithTooltip>
-                    </Toolbar>
-                </AppBar>
-            </HideOnScroll>
-        </Box>
+        <>
+            <Box displayPrint="none">
+                <HideOnScroll>
+                    <AppBar
+                        position="fixed"
+                        color={appBarColor}
+                        className={clsx(classes.appBar, {
+                            [classes.tocBarShift]:
+                                drawerType === DrawerType.Toc,
+                            [classes.appBarShift]:
+                                drawerOpen && drawerType !== DrawerType.Toc,
+                            [classes.toolBarShift]: toolsMenu,
+                        })}
+                    >
+                        <MainToolbar />
+                    </AppBar>
+                </HideOnScroll>
+            </Box>
+        </>
     )
 }

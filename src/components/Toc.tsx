@@ -65,7 +65,7 @@ function treeifyToc(toc: TocNode[]) {
     }
 
     function sortNodes(nodes: TocNode[]) {
-        nodes.sort((l, r) => l.order - r.order)
+        nodes.sort((l, r) => l.order - r.order || l.name.localeCompare(r.name))
         nodes.forEach(node => node.children && sortNodes(node.children))
     }
     sortNodes(r.tree)
