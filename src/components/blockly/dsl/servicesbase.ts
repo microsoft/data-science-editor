@@ -389,8 +389,8 @@ export const getServiceInfo = () => {
 
 export class ServicesBaseDSL {
     // only state required across methods of class
-    protected _serviceBlocks: ServiceBlockDefinition[]
-    protected _eventFieldBlocks: EventFieldDefinition[]
+    protected _serviceBlocks: ServiceBlockDefinition[] = []
+    protected _eventFieldBlocks: EventFieldDefinition[] = []
     protected serviceColor: (srv: jdspec.ServiceSpec) => string
 
     protected makeRegisterSimpleGetBlocks(
