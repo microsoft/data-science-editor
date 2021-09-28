@@ -10,10 +10,12 @@ import React, { ChangeEvent, lazy, useState } from "react"
 import { useId } from "react-use-id-hook"
 import Suspense from "../../components/ui/Suspense"
 import { toMap } from "../../../jacdac-ts/src/jdom/utils"
+import { deviceSpecificationFromProductIdentifier } from "../../../jacdac-ts/src/jdom/spec"
 const SilkQRCode = lazy(() => import("../../components/widgets/SilkQrCode"))
 
 import { graphql } from "gatsby"
 import { Button } from "gatsby-theme-material-ui"
+import { Alert } from "@material-ui/lab"
 
 export const query = graphql`
     {
@@ -23,6 +25,7 @@ export const query = graphql`
                 revision
                 modulename
                 designid
+                productid
             }
         }
     }
@@ -36,6 +39,7 @@ export default function DeviceQRCodeGenerator(props: {
                 modulename: string
                 designid: string
                 revision: string
+                productid: string
             }[]
         }
     }
@@ -148,18 +152,43 @@ export default function DeviceQRCodeGenerator(props: {
             <List>
                 {nodes
                     .filter(({ designid }) => !!designid)
-                    .map(({ vanityname, modulename, designid, revision }) => (
-                        <ListItem
-                            button
-                            key={vanityname}
-                            onClick={handleVanity(vanityname)}
-                        >
-                            <ListItemText
-                                primary={`${designid}: ${modulename} v${revision}`}
-                                secondary={`aka.ms/${vanityname}`}
-                            />
-                        </ListItem>
-                    ))}
+                    .map(
+                        ({
+                            vanityname,
+                            modulename,
+                            designid,
+                            revision,
+                            productid,
+                        }) => {
+                            const spec =
+                                deviceSpecificationFromProductIdentifier(
+                                    parseInt(productid, 16)
+                                )
+                            return (
+                                <ListItem
+                                    button
+                                    key={vanityname}
+                                    onClick={handleVanity(vanityname)}
+                                >
+                                    <ListItemText
+                                        primary={`${designid}: ${modulename} v${revision} ${
+                                            productid || ""
+                                        }`}
+                                        secondary={`aka.ms/${vanityname}`}
+                                    />
+                                    {!productid ? (
+                                        <Alert severity="warning">
+                                            product id missing
+                                        </Alert>
+                                    ) : !spec ? (
+                                        <Alert severity="error">
+                                            Missing in device catalog
+                                        </Alert>
+                                    ) : null}
+                                </ListItem>
+                            )
+                        }
+                    )}
             </List>
         </>
     )
