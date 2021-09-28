@@ -1,9 +1,8 @@
 import { Grid } from "@material-ui/core"
 import { StaticImage } from "gatsby-plugin-image"
-import React, { useContext } from "react"
+import React from "react"
 import CenterGrid from "./CenterGrid"
 import SplitGrid from "./SplitGrid"
-import AppContext, { DrawerType } from "../AppContext"
 import CarouselGrid from "./CarouselGrid"
 import FeatureItem from "./FeatureItem"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
@@ -12,9 +11,6 @@ import JacdacIcon from "../icons/JacdacIcon"
 import HistoryIcon from "@material-ui/icons/History"
 
 export default function Software() {
-    const { setDrawerType } = useContext(AppContext)
-    const handleShowPackets = () => setDrawerType(DrawerType.Packets)
-    const handleShowDeviceTree = () => setDrawerType(DrawerType.Dom)
     return (
         <Grid
             container
@@ -128,21 +124,21 @@ export default function Software() {
                 <Grid item xs={12} sm={4}>
                     <FeatureItem
                         startImage={<AccountTreeIcon fontSize="large" />}
-                        description="Device Tree."
+                        description="Device Tree"
                         caption="Inspect devices, services, registers and events in the device tree."
                         buttonText="Open Device Tree"
                         buttonVariant="link"
-                        onButtonClick={handleShowDeviceTree}
+                        buttonUrl="/software/device-tree"
                     />
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <FeatureItem
                         startImage={<HistoryIcon fontSize="large" />}
-                        description="Packet console."
+                        description="Packet console"
                         caption="Inspect every packet moving on the bus, save and reload traces from the web or your logic analyzer."
                         buttonText="Show packets"
                         buttonVariant="link"
-                        onButtonClick={handleShowPackets}
+                        buttonUrl="/software/packet-console"
                     />
                 </Grid>
             </CarouselGrid>
