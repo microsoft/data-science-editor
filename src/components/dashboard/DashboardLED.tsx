@@ -56,15 +56,6 @@ export default function DashboardLED(props: DashboardServiceProps) {
     // handle brightness, speed changes
     useEffectAsync(animate, [rgb, speed, brightness])
 
-    console.log({
-        rgb: rgbToHtmlColor(rgb),
-        brightness,
-        speed,
-        r,
-        g,
-        b,
-    })
-
     // nothing to see
     if (isNaN(rgb)) return <LoadingProgress />
 
