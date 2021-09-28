@@ -1,6 +1,6 @@
-import { Grid, Suspense } from "@material-ui/core"
+import { Grid } from "@material-ui/core"
 import { StaticImage } from "gatsby-plugin-image"
-import React, { lazy } from "react"
+import React, { lazy, Suspense } from "react"
 import CarouselGrid from "./CarouselGrid"
 import CenterGrid from "./CenterGrid"
 import FeatureItem from "./FeatureItem"
@@ -12,8 +12,6 @@ import useMediaQueries from "../hooks/useMediaQueries"
 const DeviceSpecificationList = lazy(
     () => import("../specification/DeviceSpecificationList")
 )
-const ModelViewer = lazy(() => import("./models/ModelViewer"))
-const GLBModel = lazy(() => import("./models/GLBModel"))
 
 export default function Hardware() {
     const { mobile, medium } = useMediaQueries()

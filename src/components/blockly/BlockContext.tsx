@@ -181,6 +181,17 @@ export function BlockProvider(props: {
             handleBlockChange(cev.blockId)
         }
     }
+
+    // mounting dsts
+    useEffect(() => {
+        const unmounnts = dsls
+            .map(dsl => dsl.mount?.(workspace))
+            .filter(u => !!u)
+        return () => {
+            unmounnts.forEach(u => u())
+        }
+    }, [workspace])
+
     // plugins
     useBlocklyPlugins(workspace)
     useBlocklyEvents(workspace)
@@ -286,14 +297,6 @@ export function BlockProvider(props: {
     useEffect(() => {
         bus.backgroundRefreshRegisters = !dragging
     }, [dragging])
-    // mounting dsts
-    useEffect(() => {
-        console.debug(`mounting dsls`)
-        const unmounnts = dsls
-            .map(dsl => workspace && dsl.mount?.(workspace))
-            .filter(u => !!u)
-        return () => unmounnts.forEach(u => u())
-    }, [workspace])
 
     return (
         <BlockContext.Provider

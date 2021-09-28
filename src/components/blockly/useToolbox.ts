@@ -49,9 +49,6 @@ async function loadBlocks(
                 blocks.push(b)
             }
     }
-
-    //console.log({ blocks })
-
     // register field editors
     registerFields()
     // re-register blocks with blocklys

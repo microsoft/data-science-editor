@@ -68,7 +68,7 @@ class IFrameDomainSpecificLanguage implements BlockDomainSpecificLanguage {
 
     mount(workspace: Workspace) {
         this._workspace = workspace
-        window.addEventListener("message", this.handleMessage)
+        window.addEventListener("message", this.handleMessage, false)
         this.post("mount")
         return () => {
             this.post("unmount")
@@ -134,20 +134,24 @@ class IFrameDomainSpecificLanguage implements BlockDomainSpecificLanguage {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     createBlocks(options: CreateBlocksOptions): Promise<BlockDefinition[]> {
-        console.debug(`iframedsl: query blocks`)
         return new Promise<BlockDefinition[]>(resolve => {
             const { id } = this.post("blocks")
             setTimeout(() => {
                 if (this.pendings[id]) {
                     delete this.pendings[id]
-                    console.warn(`iframedsl: no blocks returned, giving up`)
+                    console.warn(
+                        `iframedsl ${this.id}: no blocks returned, giving up`
+                    )
                     resolve(this.blocks)
                 }
-            }, 1000)
+            }, 3000)
             this.pendings[id] = data => {
                 const bdata = data as DslBlocksResponse
                 this.blocks = bdata.blocks
                 this.category = bdata.category
+                console.debug(
+                    `iframedsl ${this.id}: loaded ${this.blocks?.length} blocks, ${this.category?.length} categories`
+                )
                 const transformData = this.createTransformData()
                 this.blocks.forEach(
                     block => (block.transformData = transformData)

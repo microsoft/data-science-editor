@@ -116,8 +116,8 @@ export default function Page() {
     }
 
     const handleBlocks = async (data: DslMessage) => {
-        console.debug(`hostdsl: sending blocks`)
-        post({ ...data, blocks, category } as DslBlocksResponse)
+        const msg = { ...data, blocks, category } as DslBlocksResponse
+        post(msg)
     }
 
     const handleTransform = async (data: DslTransformMessage) => {
