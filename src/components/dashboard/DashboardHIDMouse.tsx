@@ -20,7 +20,10 @@ const useStyles = makeStyles(theme =>
     createStyles({
         capture: {
             whiteSpace: "pre-wrap",
-            cursor: "pointer",
+            borderWidth: "1px",
+            borderStyle: "solid",
+            borderColor: "transparent",
+            userSelect: "none",
             "&:hover": {
                 borderColor: theme.palette.primary.main,
             },
@@ -106,11 +109,8 @@ export default function DashboardHIDMouse(props: DashboardServiceProps) {
     }
 
     return (
-        <Grid container spacing={1}>
-            <Grid item>
-                <MouseIcon fontSize="large" />
-            </Grid>
-            <Grid item xs>
+        <Grid container>
+            <Grid item xs={12}>
                 <pre
                     ref={preRef}
                     className={classes.capture}
@@ -119,8 +119,16 @@ export default function DashboardHIDMouse(props: DashboardServiceProps) {
                     onMouseUp={handleMouseUp}
                     onKeyDown={handleKeyDown}
                 >
-                    focus and type l(eft), r(ight), m(iddle) for buttons, arrow
-                    keys to move, w(heel up), d(wheel down) for the wheel
+                    <Grid container spacing={1} direction="row">
+                        <Grid item>
+                            <MouseIcon fontSize="large" />
+                        </Grid>
+                        <Grid item xs style={{ userSelect: "none" }}>
+                            focus and type l(eft), r(ight), m(iddle) for
+                            buttons, arrow keys to move, w(heel up), d(wheel
+                            down) for the wheel
+                        </Grid>
+                    </Grid>
                 </pre>
             </Grid>
             {server && preview && (
