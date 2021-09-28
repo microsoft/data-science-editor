@@ -25,20 +25,19 @@ export default function DashboardColor(props: DashboardServiceProps) {
 
     if (r === undefined) return <LoadingProgress />
 
-    const value = `rgb(${(r * 0xff) >> 0}, ${(g * 0xff) >> 0}, ${
-        (b * 0xff) >> 0
-    })`
+    const value = `rgb(${(r * 0xff) | 0}, ${(g * 0xff) | 0}, ${(b * 0xff) | 0})`
     const handleChange = (color: string) => {
-        const hex = color.slice(0)
+        const hex = color.replace(/^#/, "")
         const rgb = parseInt(hex, 16)
         const r = (rgb >> 16) & 0xff
         const g = (rgb >> 8) & 0xff
-        const b = (rgb >> 0) & 0xff
+        const b = (rgb | 0) & 0xff
         server.reading.setValues([r / 0xff, g / 0xff, b / 0xff])
         register.refresh()
     }
     const w = 64
     const rx = 4
+
     if (server)
         return (
             <Suspense>
