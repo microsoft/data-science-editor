@@ -76,7 +76,7 @@ export default function IdentifyDialog(props: {
                     <Grid item xs>
                         <Alert severity="info">
                             Look for four blinks in around 2 seconds with the
-                            {blue ? "blue" : " "} LED.
+                            {blue ? " blue" : " "} LED.
                         </Alert>
                     </Grid>
                 </Grid>

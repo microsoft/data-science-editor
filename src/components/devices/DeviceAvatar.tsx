@@ -1,10 +1,8 @@
 import React, { CSSProperties, useState } from "react"
 import JDDevice from "../../../jacdac-ts/src/jdom/device"
-import useDeviceSpecification from "../../jacdac/useDeviceSpecification"
 import CmdButton from "../CmdButton"
 import useServiceProvider from "../hooks/useServiceProvider"
 import useDeviceName from "./useDeviceName"
-import useDeviceImage from "./useDeviceImage"
 import { rgbToHtmlColor } from "../../../jacdac-ts/src/jdom/utils"
 import useChange from "../../jacdac/useChange"
 import IdentifyDialog from "../dialogs/IdentifyDialog"
@@ -18,8 +16,6 @@ export default function DeviceAvatar(props: {
 }) {
     const { device, size, center } = props
     const [identifyDialog, setIdentifyDialog] = useState(false)
-    const specification = useDeviceSpecification(device)
-    const imageUrl = useDeviceImage(specification, "avatar")
     const name = useDeviceName(device)
     const server = useServiceProvider<JDServerServiceProvider>(device)
     const ctrl = server?.controlService
@@ -29,7 +25,6 @@ export default function DeviceAvatar(props: {
               color: rgbToHtmlColor(color),
           }
         : undefined
-    const handleSendIdentify = async () => await device.identify()
     const handleOpenIdentify = async () => setIdentifyDialog(true)
     const handleCloseIdentify = () => setIdentifyDialog(false)
     return (
@@ -39,7 +34,7 @@ export default function DeviceAvatar(props: {
                 style={style}
                 size="small"
                 title={`identify ${server ? "simulator" : "device"} ${name}`}
-                onClick={imageUrl ? handleOpenIdentify : handleSendIdentify}
+                onClick={handleOpenIdentify}
                 icon={
                     <DeviceIcon
                         device={device}
@@ -48,7 +43,7 @@ export default function DeviceAvatar(props: {
                     />
                 }
             />
-            {imageUrl && (
+            {identifyDialog && (
                 <IdentifyDialog
                     device={device}
                     open={identifyDialog}
