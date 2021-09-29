@@ -45,8 +45,7 @@ function JoystickWidget(props: DashboardServiceProps) {
         return [x, y]
     }
     const onUpdate = (newx: number, newy: number) => {
-        const [buttons] = server.reading.values()
-        server.updateDirection(buttons, newx, newy)
+        server.updateDirection(newx, newy)
         register.refresh()
     }
     const { active, background, controlBackground } = useWidgetTheme(color)
@@ -223,14 +222,18 @@ function ArcadeButton(props: {
     const title = JoystickButtons[button]
     const label = buttonLabels[button] || title[0]
 
-    const handleDown = server ? () => {
-        server.down(button) //, 0.7)
-        onRefresh()
-    } : undefined
-    const handleUp = server ? () => {
-        server.up(button)
-        onRefresh()
-    } : undefined
+    const handleDown = server
+        ? () => {
+              server.down(button) //, 0.7)
+              onRefresh()
+          }
+        : undefined
+    const handleUp = server
+        ? () => {
+              server.up(button)
+              onRefresh()
+          }
+        : undefined
     const buttonProps = useSvgButtonProps<SVGCircleElement>(
         title,
         handleDown,
