@@ -45,7 +45,7 @@ export default function Home() {
                 description="Cheap, flexible and extensible."
             />
             <Grid item xs={12}>
-                <Suspense fallback={null}>
+                <Suspense>
                     <DeviceSpecificationList count={cols} shuffle={true} />
                 </Suspense>
             </Grid>
@@ -99,7 +99,7 @@ export default function Home() {
                 buttonText="Add Jacdac to your apps"
                 buttonVariant="link"
                 buttonUrl="/software/"
-                image={<StaticImage src="./html5.png" alt="HTML5 logo" />}
+                image={<HTML5Image />}
             />
 
             <SplitGrid

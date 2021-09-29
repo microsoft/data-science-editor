@@ -9,7 +9,6 @@ const {
     identifierToUrlPath,
     deviceSpecificationFromProductIdentifier,
     isInfrastructure,
-    DEVICE_IMAGE_WIDTH,
 } = require(`./jacdac-ts/dist/jacdac.cjs`)
 const {
     serviceSpecificationsWithServiceTwinSpecification,
@@ -18,7 +17,8 @@ const {
 const { IgnorePlugin } = require("webpack")
 const AVATAR_SIZE = 64
 const LAZY_SIZE = 96
-const CATALOG_SIZE = 650
+const CATALOG_HEIGHT = 400
+const CATALOG_WIDTH = 650
 
 async function createServicePages(graphql, actions, reporter) {
     console.log(`generating service pages`)
@@ -185,7 +185,7 @@ async function createDevicePages(graphql, actions, reporter) {
         console.log(`image ${nodePath} -> ${imgpath}`)
         await fs.copy(imgsrc, `./public/images/devices/${imgpath}`)
         await sharp(imgsrc)
-            .resize(null, CATALOG_SIZE, {
+            .resize(CATALOG_WIDTH, CATALOG_HEIGHT, {
                 fit: sharp.fit.cover,
             })
             .toFormat("jpeg")

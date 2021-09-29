@@ -34,7 +34,7 @@ export default function DeviceSpecification(props: {
     } = device
     const { services } = device
     const gridBreakpoints = useGridBreakpoints()
-    const imageUrl = useDeviceImage(device)
+    const imageUrl = useDeviceImage(device, "catalog")
 
     const others =
         designIdentifier &&
