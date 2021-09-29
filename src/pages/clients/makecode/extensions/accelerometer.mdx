@@ -13,35 +13,22 @@ A Jacdac accelerometer module translate acceleration values as follows:
 | Module on left edge   	| -1          	| 0           	| 0           	|
 | Module on bottom edge 	| 0           	| 1           	| 0           	|
 
-The following program uses the 'x' and 'y' forces to control the position
-of an LED on the micro:bit's 5x5 LED matrix:
+The following program uses the 'x' and 'y' forces to implement a simple 
+using the micro:bit (show a happy face if near level; otherwise,
+show sad or angry face):
 
 ```blocks
-basic.forever(function () {
-    const x = modules.accelerometer1.x() * 100
-    const y = modules.accelerometer1.y() * 100
-    basic.clearScreen()
-    plot(x, y)
-    basic.pause(100)
+basic.forever(function() {
+    let x = modules.accelerometer1.x() * 100
+    let y = modules.accelerometer1.y() * 100
+    if (Math.abs(x) > 32) {
+        basic.showIcon(IconNames.Sad)        
+    } else if (Math.abs(y) > 32) {
+        basic.showIcon(IconNames.Angry)        
+    } else {
+        basic.showIcon(IconNames.Happy)        
+    }
 })
-
-function plot (x: number, y: number) {
-    let dispX = 2
-    let dispY = 2
-    if (Math.abs(x) > 30) {
-        dispX += Math.sign(x)
-    }
-    if (Math.abs(x) > 60) {
-        dispX += Math.sign(x)
-    }
-    if (Math.abs(y) > 30) {
-        dispY += Math.sign(y)
-    }
-    if (Math.abs(y) > 60) {
-        dispY += Math.sign(y)
-    }
-    led.plot(dispX, dispY)
-}
 ```
 
 ## Events
@@ -54,6 +41,22 @@ The accelerometer supports a variety of (debounced) events, including:
 - *force_2g, force_3g, force_6g, force_8g*: emitted when force in any direction exceeds the given threshold.
 
 ```blocks
+modules.accelerometer1.onTiltUp(() => {
+    basic.showArrow(ArrowNames.North)
+})
+
+modules.accelerometer1.onTiltDown(() => {
+    basic.showArrow(ArrowNames.South)
+})
+
+modules.accelerometer1.onTiltLeft(() => {
+    basic.showArrow(ArrowNames.West)
+})
+
+modules.accelerometer1.onTiltRight(() => {
+    basic.showArrow(ArrowNames.East)
+})
+
 modules.accelerometer1.onShake(function () {
     basic.showIcon(IconNames.Heart)
 })
