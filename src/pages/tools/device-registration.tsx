@@ -163,6 +163,11 @@ export default function DeviceRegistration() {
         ? ""
         : "Select at least one service"
     const imageError = !imageBase64 ? "missing image" : ""
+    const versionError = !/^(v\d+\.\d+(\.\d+(\.\d+)?)?\w?)?$/.test(
+        device?.version
+    )
+        ? "Preferred format is vN.N"
+        : ""
     const ok =
         !nameError &&
         parsedRepo &&
@@ -209,11 +214,11 @@ export default function DeviceRegistration() {
         updateDevice()
     }
     const handleHardwareDesign = (ev: ChangeEvent<HTMLInputElement>) => {
-        device.designIdentifier = ev.target.value
+        device.designIdentifier = ev.target.value?.trim()
         updateDevice()
     }
     const handleVersion = (ev: ChangeEvent<HTMLInputElement>) => {
-        device.version = ev.target.value
+        device.version = ev.target.value?.trim()
         updateDevice()
     }
     const handleFirmwareAddClick = (
@@ -335,7 +340,7 @@ export default function DeviceRegistration() {
                         fullWidth={true}
                         helperText="A unique identifier for this hardware design."
                         label="Hardware design"
-                        value={""}
+                        value={device?.designIdentifier}
                         onChange={handleHardwareDesign}
                         variant={variant}
                     />
@@ -345,9 +350,13 @@ export default function DeviceRegistration() {
                         id={hardwareVersionId}
                         required
                         fullWidth={true}
-                        helperText="Revision identifier for this hardware design."
+                        error={!!versionError}
+                        helperText={
+                            versionError ||
+                            "Revision identifier for this hardware design using semver format (v1.0, v1.1, ...)"
+                        }
                         label="Version"
-                        value={""}
+                        value={device?.version}
                         onChange={handleVersion}
                         variant={variant}
                     />
