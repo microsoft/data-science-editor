@@ -46,7 +46,7 @@ function JoystickWidget(props: DashboardServiceProps) {
     }
     const onUpdate = (newx: number, newy: number) => {
         const [buttons] = server.reading.values()
-        server.reading.setValues([buttons, newx, newy])
+        server.updateDirection(buttons, newx, newy)
         register.refresh()
     }
     const { active, background, controlBackground } = useWidgetTheme(color)

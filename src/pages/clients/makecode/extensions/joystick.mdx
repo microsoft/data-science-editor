@@ -41,14 +41,13 @@ function plot(x: number, y: number) {
 
 ```blocks
 modules.joystick1.onButtonsChanged(function () {
-    const button = modules.joystick1.buttons()
-    if (button === jacdac.JoystickButtons.Left) {
+    if (modules.joystick1.isButtonDown(jacdac.JoystickButtons.Left)) {
         basic.showArrow(ArrowNames.West)
-    } else if (button === jacdac.JoystickButtons.Right) {
+    } else if (modules.joystick1.isButtonDown(jacdac.JoystickButtons.Right)) {
         basic.showArrow(ArrowNames.East)
-    } else if (button === jacdac.JoystickButtons.Up) {
+    } else if (modules.joystick1.isButtonDown(jacdac.JoystickButtons.Up)) {
         basic.showArrow(ArrowNames.North)
-    } else if (button === jacdac.JoystickButtons.Down) {
+    } else if (modules.joystick1.isButtonDown(jacdac.JoystickButtons.Down)) {
         basic.showArrow(ArrowNames.South)
     }
 })
