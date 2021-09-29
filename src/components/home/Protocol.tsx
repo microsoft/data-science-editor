@@ -5,6 +5,7 @@ import Suspense from "../ui/Suspense"
 import CarouselGrid from "./CarouselGrid"
 import CenterGrid from "./CenterGrid"
 import FeatureItem from "./FeatureItem"
+import HTML5Image from "./HTML5Image"
 import SplitGrid from "./SplitGrid"
 const DeviceSpecificationList = lazy(
     () => import("../specification/DeviceSpecificationList")
@@ -112,13 +113,7 @@ export default function Protocol() {
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <FeatureItem
-                        startImage={
-                            <StaticImage
-                                width={64}
-                                src="./html5.png"
-                                alt="HTML5 icon"
-                            />
-                        }
+                        startImage={<HTML5Image />}
                         description="JavaScript package"
                         caption="Integrate Jacdac into your web site or node.js application using our TypeScript/JavaScript npm package."
                         buttonText="Learn more"

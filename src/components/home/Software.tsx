@@ -9,6 +9,7 @@ import FeatureItem from "./FeatureItem"
 import AccountTreeIcon from "@material-ui/icons/AccountTree"
 import JacdacIcon from "../icons/JacdacIcon"
 import HistoryIcon from "@material-ui/icons/History"
+import HTML5Image from "./HTML5Image"
 
 export default function Software() {
     return (
@@ -39,12 +40,7 @@ export default function Software() {
                 buttonVariant="link"
                 buttonUrl="/clients/javascript"
                 imageColumns={4}
-                image={
-                    <StaticImage
-                        src="./html5.png"
-                        alt="A Jacdac humidity module plugging into a Jacdac cable"
-                    />
-                }
+                image={<HTML5Image />}
             />
 
             <SplitGrid

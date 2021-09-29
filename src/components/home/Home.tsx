@@ -11,6 +11,7 @@ import FindReplaceIcon from "@material-ui/icons/FindReplace"
 import SubscriptionsIcon from "@material-ui/icons/Subscriptions"
 import useMediaQueries from "../hooks/useMediaQueries"
 import Suspense from "../ui/Suspense"
+import HTML5Image from "./HTML5Image"
 const DeviceSpecificationList = lazy(
     () => import("../specification/DeviceSpecificationList")
 )
@@ -224,13 +225,7 @@ export default function Home() {
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <FeatureItem
-                        startImage={
-                            <StaticImage
-                                width={64}
-                                src="./html5.png"
-                                alt="HTML5 icon"
-                            />
-                        }
+                        startImage={<HTML5Image />}
                         description="JavaScript package"
                         caption="Integrate Jacdac into your web site or node.js application using our TypeScript/JavaScript npm package."
                         buttonText="Learn more"

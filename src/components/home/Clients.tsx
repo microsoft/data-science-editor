@@ -2,6 +2,7 @@ import { Grid } from "@material-ui/core"
 import { StaticImage } from "gatsby-plugin-image"
 import React from "react"
 import CenterGrid from "./CenterGrid"
+import HTML5Image from "./HTML5Image"
 import SplitGrid from "./SplitGrid"
 
 export default function Clients() {
@@ -28,12 +29,7 @@ export default function Clients() {
                 buttonVariant="link"
                 buttonUrl="/clients/javascript"
                 imageColumns={4}
-                image={
-                    <StaticImage
-                        src="./html5.png"
-                        alt="A Jacdac humidity module plugging into a Jacdac cable"
-                    />
-                }
+                image={<HTML5Image />}
             />
 
             <SplitGrid
