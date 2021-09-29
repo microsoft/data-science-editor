@@ -151,7 +151,8 @@ export default function DeviceRegistration() {
     const companyError = !device.company ? "select a company" : ""
     const nameError = device.name?.length > 32 ? "name too long" : undefined
     const parsedRepo = parseRepoUrl(device.repo)
-    const githubError = parsedRepo ? "" : "invalid GitHub repository"
+    const githubError =
+        device.repo && !parsedRepo ? "invalid GitHub repository" : ""
     const linkError =
         !device.link || /^https:\/\//.test(device.link)
             ? ""
