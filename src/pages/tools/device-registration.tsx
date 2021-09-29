@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
 import React, { lazy, useMemo, useState } from "react"
 import { Grid, Link } from "@material-ui/core"
 import useLocalStorage from "../../components/hooks/useLocalStorage"
@@ -47,6 +48,7 @@ import { ControlReg } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import JDDevice from "../../../jacdac-ts/src/jdom/device"
 import useGridBreakpoints from "../../components/useGridBreakpoints"
 import Alert from "../../components/ui/Alert"
+import { GithubPullRequestFiles } from "../../components/buttons/GithubPullRequestButton"
 
 const GithubPullRequestButton = lazy(
     () => import("../../components/buttons/GithubPullRequestButton")
@@ -120,7 +122,7 @@ export default function DeviceRegistration() {
     }
     const [firmwaresAnchorEl, setFirmwaresAnchorEl] =
         React.useState<null | HTMLElement>(null)
-    const [imageBase64, setImageBase64] = useState<string>(undefined)
+    const [imageDataURI, setImageDataURI] = useState<string>(undefined)
     const nameId = useId()
     const firmwareMenuId = useId()
     const repoId = useId()
@@ -162,7 +164,7 @@ export default function DeviceRegistration() {
     const servicesError = device.services?.length
         ? ""
         : "Select at least one service"
-    const imageError = !imageBase64 ? "missing image" : ""
+    const imageError = !imageDataURI ? "missing image" : ""
     const versionError = !/^(v\d+\.\d+(\.\d+(\.\d+)?)?\w?)?$/.test(
         device?.version
     )
@@ -243,8 +245,8 @@ export default function DeviceRegistration() {
         }
     }
     const handleImageImported = (cvs: HTMLCanvasElement) => {
-        const url = cvs.toDataURL("image/jpeg", 99)
-        setImageBase64(url.slice(url.indexOf(",")))
+        const url = cvs.toDataURL("image/jpeg", 100)
+        setImageDataURI(url)
     }
     const handleCompanyChanged = (value: string) => {
         device.company = value
@@ -275,6 +277,23 @@ export default function DeviceRegistration() {
         device.description = descrReg.stringValue
         updateDevice()
     }
+
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    const files = useMemo<GithubPullRequestFiles>(
+        () =>
+            modulePath && {
+                [modulePath]: JSON.stringify(
+                    normalizeDeviceSpecification(device),
+                    null,
+                    2
+                ),
+                [imagePath]: {
+                    content: imageDataURI?.slice(imageDataURI?.indexOf(",")),
+                    encoding: "base64",
+                },
+            },
+        [modulePath, imagePath, imageDataURI, JSON.stringify(device)]
+    )
 
     return (
         <>
@@ -518,19 +537,7 @@ export default function DeviceRegistration() {
                             title={`Device: ${device.name}`}
                             head={`devices/${device.id}`}
                             description={`This pull request registers a new device for Jacdac.`}
-                            files={
-                                modulePath && {
-                                    [modulePath]: JSON.stringify(
-                                        normalizeDeviceSpecification(device),
-                                        null,
-                                        2
-                                    ),
-                                    [imagePath]: {
-                                        content: imageBase64,
-                                        encoding: "base64",
-                                    },
-                                }
-                            }
+                            files={files}
                         />
                     </Suspense>
                 </Grid>

@@ -21,16 +21,17 @@ import { toHex } from "../../../jacdac-ts/src/jdom/utils"
 import { anyRandomUint32 } from "../../../jacdac-ts/src/jdom/random"
 import { useSecret } from "../hooks/useSecret"
 
+export type GithubPullRequestFiles = Record<
+    string,
+    string | { content: string; encoding: "utf-8" | "base64" }
+>
+
 export interface GithubPullRequestButtonProps {
     title: string
     label?: string
     description?: string
     head: string
-    files: {
-        [path: string]:
-            | string
-            | { content: string; encoding: "utf-8" | "base64" }
-    }
+    files: GithubPullRequestFiles
 }
 
 export default function GithubPullRequestButton(
