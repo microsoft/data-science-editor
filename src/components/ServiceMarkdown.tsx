@@ -56,11 +56,10 @@ export default function ServiceMarkdown(props: {
             <ul>
                 <li>
                     <a
-                        href={`https://github.com/microsoft/jacdac/edit/main/services/${shortId}.md`}
+                        href={`https://github.com/microsoft/jacdac/blob/main/services/${shortId}.md`}
                     >
-                        Edit specification source
+                        View source
                     </a>
-                    .
                 </li>
                 <li>
                     Read{" "}
@@ -68,16 +67,6 @@ export default function ServiceMarkdown(props: {
                         Service Specification Language
                     </Link>{" "}
                     reference
-                </li>
-                <li>
-                    Create a new service specification using the{" "}
-                    <Link to="/tools/service-editor/">Service Editor</Link>
-                </li>
-                <li>
-                    Using services in JavaScript with the{" "}
-                    <Link to={`/clients/javascript/jdom/`}>
-                        Jacdac Object Model (JDOM)
-                    </Link>
                 </li>
             </ul>
         </>
