@@ -65,7 +65,7 @@ export default function ConnectTransportDialog(props: {
                             <Card>
                                 <CardMediaWithSkeleton
                                     title={"photograph of the device"}
-                                    image={useDeviceImage(device)}
+                                    image={useDeviceImage(device, "preview")}
                                 />
                                 <CardHeader subheader={device.name} />
                                 <CardActions>

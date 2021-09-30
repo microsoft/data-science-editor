@@ -18,7 +18,7 @@ function LazyDeviceImage(props: { device: JDDevice }) {
     const { device } = props
     const specification = useDeviceSpecification(device)
     const imageUrl = useDeviceImage(specification, "lazy")
-    const largeImageUrl = useDeviceImage(specification)
+    const largeImageUrl = useDeviceImage(specification, "catalog")
     const [showLarge, setShowLarge] = useState(false)
 
     if (!imageUrl) return null
