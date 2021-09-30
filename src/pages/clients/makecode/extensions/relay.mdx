@@ -28,10 +28,12 @@ and normally closed (NC) relays will energize when inactive.
 
 ```blocks
 modules.relay1.onActive(() => {
+    led.stopAnimation()
     basic.showString("A")
 })
 
 modules.relay1.onInactive(() => {
+    led.stopAnimation()
     basic.showString("I")
 })
 ```

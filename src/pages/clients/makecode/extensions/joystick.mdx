@@ -42,12 +42,16 @@ function plot(x: number, y: number) {
 ```blocks
 modules.joystick1.onButtonsChanged(function () {
     if (modules.joystick1.isButtonDown(jacdac.JoystickButtons.Left)) {
+        led.stopAnimation()
         basic.showArrow(ArrowNames.West)
     } else if (modules.joystick1.isButtonDown(jacdac.JoystickButtons.Right)) {
+        led.stopAnimation()
         basic.showArrow(ArrowNames.East)
     } else if (modules.joystick1.isButtonDown(jacdac.JoystickButtons.Up)) {
+        led.stopAnimation()
         basic.showArrow(ArrowNames.North)
     } else if (modules.joystick1.isButtonDown(jacdac.JoystickButtons.Down)) {
+        led.stopAnimation()
         basic.showArrow(ArrowNames.South)
     }
 })

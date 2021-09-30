@@ -8,6 +8,7 @@ The following program outputs the eCO₂ reading whenever it changes by 1 ppm
 
 ```blocks
 modules.eCO21.onECO2ChangedBy(1, function () {
+    led.stopAnimation()
     basic.showNumber(modules.eCO21.eCO2())
 })
 ```

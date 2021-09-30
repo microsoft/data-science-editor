@@ -10,6 +10,7 @@ basic.forever(() => {
     let blue = modules.color1.blue()
     let green = modules.color1.green()
     if (green > 50 && red + blue < 20) {
+        led.stopAnimation()
         basic.showString("G")
     } else {
         basic.clearScreen()

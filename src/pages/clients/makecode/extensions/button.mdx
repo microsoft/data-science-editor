@@ -16,17 +16,21 @@ the three events, as shown in the small example below
 
 ```blocks
 let holdCount = 0
-modules.button1.onDown(() => {
-    holdCount = 0
-    basic.showString("D")
-})
-modules.button1.onHold(() => {
-    holdCount++
-    basic.showNumber(holdCount)
-})
-modules.button1.onUp(() => {
+modules.button1.onUp(function () {
+    led.stopAnimation()
     basic.showString("U")
 })
+modules.button1.onDown(function () {
+    holdCount = 0
+    led.stopAnimation()
+    basic.showString("D")
+})
+modules.button1.onHold(function () {
+    holdCount += 1
+    led.stopAnimation()
+    basic.showNumber(holdCount)
+})
+
 ```
 
 ## Button state (pressed, pressure)
@@ -36,10 +40,13 @@ pressed down, which is a function of the lower-level `pressure` value.
 
 ```blocks
 basic.forever(() => {
-    if (modules.button1.pressed())
+    if (modules.button1.pressed()) {
+        led.stopAnimation()
         basic.showString("D")
-    else
+    } else {
+        led.stopAnimation()
         basic.showString("U")
+    }
 })
 ```
 
@@ -49,12 +56,16 @@ the pressed state will be reached with a certain threshold, in the example below
 
 ```blocks
 basic.forever(() => {
-    if (modules.button1.pressure() >= 70)
+    if (modules.button1.pressure() >= 70) {
+        led.stopAnimation()
         basic.showString("D")
-    else if (modules.button1.pressure() === 0)
+    } else if (modules.button1.pressure() === 0) {
+        led.stopAnimation()
         basic.showString("U")
-    else
+    } else {
+        led.stopAnimation()
         basic.showString("x")
+    }
 })
 ```
 

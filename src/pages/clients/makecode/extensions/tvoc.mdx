@@ -8,6 +8,7 @@ The following program outputs the current TVOC whenever it changes by 10 ppb:
 
 ```blocks
 modules.tvoc1.onTVOCChangedBy(10, function() {
+    led.stopAnimation()
     basic.showNumber(modules.tvoc1.tVOC())
 })
 ```
