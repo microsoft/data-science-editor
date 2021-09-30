@@ -183,7 +183,7 @@ async function createDevicePages(graphql, actions, reporter) {
         const nodePath = identifierToUrlPath(node.id)
         const imgpath = nodePath + ".jpg"
         const imgsrc = `./jacdac-ts/jacdac-spec/devices/${imgpath}`
-        console.log(`image ${nodePath} -> ${imgpath}`)
+        console.log(`image ${node.id} ${nodePath} -> ${imgpath}`)
         await fs.copy(imgsrc, `./public/images/devices/${imgpath}`)
         await sharp(imgsrc)
             .resize(CATALOG_WIDTH, CATALOG_HEIGHT, {
