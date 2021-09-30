@@ -5,13 +5,13 @@ import {
     serviceSpecificationFromClassIdentifier,
 } from "../../../jacdac-ts/src/jdom/spec"
 import ServiceSpecificationCard from "./ServiceSpecificationCard"
-import { Box, Chip, Grid, Typography } from "@material-ui/core"
+import { Box, Chip, Grid } from "@material-ui/core"
 import useGridBreakpoints from "../useGridBreakpoints"
 import Markdown from "../ui/Markdown"
 import DeviceSpecificationSource from "./DeviceSpecificationSource"
 import FirmwareCard from "../firmware/FirmwareCard"
 import useDeviceImage from "../devices/useDeviceImage"
-import GithubDowloadRawFileButton from "../ui/GithubDowloadRawFileButton"
+import DownloadFirmwareButton from "../ui/DownloadFirmwareButton"
 import MemoryIcon from "@material-ui/icons/Memory"
 import ChipList from "../ui/ChipList"
 import { semverCmp } from "../semver"
@@ -87,13 +87,13 @@ export default function DeviceSpecification(props: {
                     <ul>
                         {firmwares.map(({ name, url }) => (
                             <li key={url}>
-                                <GithubDowloadRawFileButton
+                                <DownloadFirmwareButton
                                     url={url}
                                     name={name}
                                     variant="outlined"
                                 >
                                     {name}
-                                </GithubDowloadRawFileButton>
+                                </DownloadFirmwareButton>
                             </li>
                         ))}
                     </ul>
