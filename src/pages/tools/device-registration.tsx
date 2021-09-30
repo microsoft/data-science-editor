@@ -17,6 +17,7 @@ import {
 import { ChangeEvent } from "react"
 import {
     deviceSpecifications,
+    isInfrastructure,
     serviceSpecificationFromClassIdentifier,
 } from "../../../jacdac-ts/src/jdom/spec"
 import PaperBox from "../../components/ui/PaperBox"
@@ -32,6 +33,7 @@ import {
     DEVICE_IMAGE_WIDTH,
     escapeDeviceIdentifier,
     escapeDeviceNameIdentifier,
+    generateDeviceSpecificationId,
     normalizeDeviceSpecification,
 } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import ImportImageCanvas from "../../components/ImageImportCanvas"
@@ -118,7 +120,9 @@ export default function DeviceRegistration() {
         productIdentifier: true,
     })
     const updateDevice = () => {
-        setDevice(clone(device))
+        const dev = clone(device)
+        dev.id = generateDeviceSpecificationId(dev)
+        setDevice(dev)
     }
     const [firmwaresAnchorEl, setFirmwaresAnchorEl] =
         React.useState<null | HTMLElement>(null)
@@ -162,21 +166,17 @@ export default function DeviceRegistration() {
         : deviceSpecifications().find(dev => dev.id == device.id)
         ? "identifer already used"
         : ""
-    const servicesError = device.services?.length
-        ? ""
-        : "Select at least one service"
     const imageError = !imageDataURI ? "missing image" : ""
-    const versionError = !/^(v\d+\.\d+(\.\d+(\.\d+)?)?\w?)?$/.test(
-        device?.version
-    )
-        ? "Preferred format is vN.N"
-        : ""
+    const versionError =
+        device?.version &&
+        !/^(v\d+\.\d+(\.\d+(\.\d+)?)?\w?)?$/.test(device?.version)
+            ? "Preferred format is vN.N"
+            : ""
     const ok =
         !nameError &&
         parsedRepo &&
         !linkError &&
         !idError &&
-        !servicesError &&
         !imageError &&
         !companyError
 
@@ -184,15 +184,8 @@ export default function DeviceRegistration() {
     const modulePath = ok && `devices/${route}.json`
     const imagePath = ok && `devices/${route}.jpg`
 
-    const updateDeviceId = () => {
-        const companyid = escapeDeviceIdentifier(device.company)
-        const nameid = escapeDeviceNameIdentifier(device.name)
-        device.id = companyid + "-" + nameid
-    }
-
     const handleNameChange = (ev: ChangeEvent<HTMLInputElement>) => {
         device.name = ev.target.value
-        updateDeviceId()
         updateDevice()
     }
     const handleRepoChange = (ev: unknown, newValue: string) => {
@@ -241,7 +234,6 @@ export default function DeviceRegistration() {
         if (id !== undefined) {
             device.productIdentifiers.push(id)
             device.name = blob.name
-            updateDeviceId()
             updateDevice()
         }
     }
@@ -251,7 +243,6 @@ export default function DeviceRegistration() {
     }
     const handleCompanyChanged = (value: string) => {
         device.company = value
-        updateDeviceId()
         updateDevice()
     }
     const renderRepoInput = params => (
@@ -259,7 +250,7 @@ export default function DeviceRegistration() {
             {...params}
             error={!!githubError}
             type="url"
-            label="Firmware repository *"
+            label="Firmware repository"
             helperText={
                 githubError ||
                 "GitHub Repository hosting the firmware binaries."
@@ -274,7 +265,10 @@ export default function DeviceRegistration() {
 
         const fw = await dev.resolveProductIdentifier()
         if (fw) device.productIdentifiers = [fw]
-        device.services = dev.serviceClasses.slice(1)
+        device.services = dev
+            .services()
+            .filter(srv => !isInfrastructure(srv.specification))
+            .map(srv => srv.serviceClass)
         device.description = descrReg.stringValue
         updateDevice()
     }
@@ -356,7 +350,6 @@ export default function DeviceRegistration() {
                 <Grid item xs={12}>
                     <TextField
                         id={hardwareDesignId}
-                        required
                         fullWidth={true}
                         helperText="A unique identifier for this hardware design."
                         label="Hardware design"
@@ -368,7 +361,6 @@ export default function DeviceRegistration() {
                 <Grid item xs={12}>
                     <TextField
                         id={hardwareVersionId}
-                        required
                         fullWidth={true}
                         error={!!versionError}
                         helperText={
@@ -456,9 +448,7 @@ export default function DeviceRegistration() {
                 </Grid>
                 <Grid item xs={12}>
                     <PaperBox elevation={1}>
-                        <Typography color={servicesError ? "error" : "inherit"}>
-                            Services *
-                        </Typography>
+                        <Typography color="inherit">Services</Typography>
                         {device.services?.map((id, i) => (
                             <Box component="span" m={0.5} key={id}>
                                 <Chip
