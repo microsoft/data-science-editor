@@ -3,13 +3,13 @@ import { identifierToUrlPath } from "../../../jacdac-ts/src/jdom/spec"
 
 export default function useDeviceImage(
     specification: jdspec.DeviceSpec,
-    suffix: "avatar" | "lazy" | "catalog" | "preview"
+    size?: "avatar" | "lazy" | "catalog" | "preview"
 ) {
     return (
         specification &&
         withPrefix(
             `images/devices/${identifierToUrlPath(specification.id)}${
-                suffix ? `.${suffix}` : ""
+                size ? `.${size}` : ""
             }.jpg`
         )
     )

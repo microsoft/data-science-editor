@@ -66,6 +66,12 @@ export function hostedSimulatorDefinitions(): HostedSimulatorDefinition[] {
     if (inIFrame()) return []
     return [
         {
+            name: "micro:bit V2 Out-of-the-Box",
+            url: "https://microsoft.github.io/pxt-jacdac/?tool=microbit-oob",
+            width: "20rem",
+            height: "17.5rem",
+        },
+        {
             name: "Azure IoT Uploader",
             url: "https://microsoft.github.io/pxt-jacdac/",
             width: "20rem",

@@ -1,19 +1,21 @@
 # Accelerometer
 
-This extension supports 3-axis accelerometers. 
-The current forces acting on the accelerometer are 
+This extension supports 3-axis accelerometers.
+The current forces acting on the accelerometer are
 read via the methods 'x', 'y', and 'z', which return
 values in earth gravities (g).
 
+<DeviceImage id="microsoft-research-jmaccelerometer30v10" size="catalog" />
+
 A Jacdac accelerometer module translate acceleration values as follows:
 
-| Orientation           	| X value (g) 	| Y value (g) 	| Z value (g) 	|
-|-----------------------	|-------------	|-------------	|-------------	|
-| Module lying flat     	| 0           	| 0           	| -1          	|
-| Module on left edge   	| -1          	| 0           	| 0           	|
-| Module on bottom edge 	| 0           	| 1           	| 0           	|
+| Orientation           | X value (g) | Y value (g) | Z value (g) |
+| --------------------- | ----------- | ----------- | ----------- |
+| Module lying flat     | 0           | 0           | -1          |
+| Module on left edge   | -1          | 0           | 0           |
+| Module on bottom edge | 0           | 1           | 0           |
 
-The following program uses the 'x' and 'y' forces to implement a simple 
+The following program uses the 'x' and 'y' forces to implement a simple
 using the micro:bit (show a happy face if near level; otherwise,
 show sad or angry face):
 
@@ -22,11 +24,11 @@ basic.forever(function() {
     let x = modules.accelerometer1.x() * 100
     let y = modules.accelerometer1.y() * 100
     if (Math.abs(x) > 32) {
-        basic.showIcon(IconNames.Sad)        
+        basic.showIcon(IconNames.Sad)
     } else if (Math.abs(y) > 32) {
-        basic.showIcon(IconNames.Angry)        
+        basic.showIcon(IconNames.Angry)
     } else {
-        basic.showIcon(IconNames.Happy)        
+        basic.showIcon(IconNames.Happy)
     }
 })
 ```
@@ -34,11 +36,12 @@ basic.forever(function() {
 ## Events
 
 The accelerometer supports a variety of (debounced) events, including:
-- *tilt_up, tilt_down, tilt_left, tilt_right*:  emitted when accelerometer is tilted in the given direction.
-- *face_up, face_down*: emitted when accelerometer is laying flat in the given direction.
-- *freefall*: emitted when total force acting on accelerometer is much less than 1g.
-- *shake*: emitted when forces change violently a few times.
-- *force_2g, force_3g, force_6g, force_8g*: emitted when force in any direction exceeds the given threshold.
+
+-   _tilt_up, tilt_down, tilt_left, tilt_right_: emitted when accelerometer is tilted in the given direction.
+-   _face_up, face_down_: emitted when accelerometer is laying flat in the given direction.
+-   _freefall_: emitted when total force acting on accelerometer is much less than 1g.
+-   _shake_: emitted when forces change violently a few times.
+-   _force_2g, force_3g, force_6g, force_8g_: emitted when force in any direction exceeds the given threshold.
 
 ```blocks
 modules.accelerometer1.onTiltUp(() => {
@@ -64,4 +67,4 @@ modules.accelerometer1.onShake(function () {
 
 ## See Also
 
-- [service specification](/services/accelerometer/)
+-   [service specification](/services/accelerometer/)

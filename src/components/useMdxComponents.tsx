@@ -16,6 +16,7 @@ const CodeBlock = lazy(() => import("./CodeBlock"))
 const RandomGenerator = lazy(() => import("./RandomGenerator"))
 const TraceList = lazy(() => import("./trace/TraceList"))
 const SpecificationUnitList = lazy(() => import("./SpecificationUnitList"))
+const DeviceImage = lazy(() => import("./devices/DeviceImage"))
 
 export default function useMdxComponents() {
     const theme = useTheme()
@@ -70,6 +71,11 @@ export default function useMdxComponents() {
             SpecificationUnitList: props => (
                 <Suspense>
                     <SpecificationUnitList {...props} />
+                </Suspense>
+            ),
+            DeviceImage: props => (
+                <Suspense>
+                    <DeviceImage {...props} />
                 </Suspense>
             ),
         }),
