@@ -30,7 +30,7 @@ export default function StartSimulatorDialog(props: {
     const { open, onClose } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { enqueueSnackbar } = useContext(AppContext)
-    const { addHostedSimulator } = useContext(HostedSimulatorsContext)
+    const { hostedSimulators } = useContext(HostedSimulatorsContext)
     const deviceHostDialogId = useId()
     const deviceHostLabelId = useId()
 
@@ -49,7 +49,7 @@ export default function StartSimulatorDialog(props: {
         const provider = providerDefinitions.find(h => h.name === selected)
         if (provider) addServiceProvider(bus, provider)
         const simulator = simulatorDefinitions.find(h => h.name === selected)
-        if (simulator) addHostedSimulator(simulator)
+        if (simulator) hostedSimulators.addSimulator(simulator)
         onClose()
     }
     const handleAddAll = async () => {

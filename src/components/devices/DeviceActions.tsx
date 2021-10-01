@@ -12,6 +12,7 @@ import SettingsIcon from "@material-ui/icons/Settings"
 import { SRV_SETTINGS } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import useChange from "../../jacdac/useChange"
 import { navigate } from "gatsby-link"
+import HostedSimulatorsContext from "../HostedSimulatorsContext"
 
 export default function DeviceActions(props: {
     device: JDDevice
@@ -30,7 +31,12 @@ export default function DeviceActions(props: {
         showStop,
     } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const { hostedSimulators } = useContext(HostedSimulatorsContext)
+    const { deviceId } = device
     const provider = useServiceProvider(device)
+    const isHostedSimulator = useChange(hostedSimulators, _ =>
+        _?.isSimulator(deviceId)
+    )
     const settings = useChange(
         device,
         _ => _.services({ serviceClass: SRV_SETTINGS })?.[0]
@@ -43,14 +49,16 @@ export default function DeviceActions(props: {
         await device.reset()
     }
     const handleStop = async () => {
+        hostedSimulators.removeSimulator(deviceId)
         bus.removeServiceProvider(provider)
+        bus.removeDevice(deviceId)
     }
     const handleSettings = async () => {
         navigate("/tools/settings")
     }
     return (
         <>
-            {showStop && provider && (
+            {showStop && (provider || isHostedSimulator) && (
                 <CmdButton
                     trackName="device.stop"
                     size="small"
