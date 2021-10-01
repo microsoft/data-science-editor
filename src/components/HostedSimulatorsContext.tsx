@@ -83,7 +83,7 @@ export function hostedSimulatorDefinitions(): HostedSimulatorDefinition[] {
 const useStyles = makeStyles(() =>
     createStyles({
         cardContainer: {
-            zIndex: 10000,
+            zIndex: 1100,
             position: "absolute",
             left: "25rem",
             top: "25rem",
