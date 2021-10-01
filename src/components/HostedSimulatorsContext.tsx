@@ -27,6 +27,7 @@ import {
 } from "./makecode/iframebridgeclient"
 import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
 import Suspense from "./ui/Suspense"
+import { UIFlags } from "../jacdac/providerbus"
 
 const Draggable = lazy(() => import("react-draggable"))
 
@@ -77,7 +78,13 @@ export function hostedSimulatorDefinitions(): HostedSimulatorDefinition[] {
             width: "20rem",
             height: "12rem",
         },
-    ]
+        UIFlags.localhost && {
+            name: "Azure IoT Uploader (localhost)",
+            url: "http://localhost:3232/index.html",
+            width: "20rem",
+            height: "12rem",
+        },
+    ].filter(d => !!d)
 }
 
 const useStyles = makeStyles(() =>
