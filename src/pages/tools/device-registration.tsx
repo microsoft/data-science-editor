@@ -31,12 +31,10 @@ import { parseRepoUrl } from "../../components/github"
 import {
     DEVICE_IMAGE_HEIGHT,
     DEVICE_IMAGE_WIDTH,
-    escapeDeviceIdentifier,
-    escapeDeviceNameIdentifier,
     generateDeviceSpecificationId,
     normalizeDeviceSpecification,
 } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
-import ImportImageCanvas from "../../components/ImageImportCanvas"
+import ImportImageCanvas from "../../components/ui/ImageImportCanvas"
 // tslint:disable-next-line: no-submodule-imports
 import { Autocomplete } from "@material-ui/lab/"
 import { useFirmwareBlob } from "../../components/firmware/useFirmwareBlobs"
@@ -44,7 +42,7 @@ import { FirmwareBlob } from "../../../jacdac-ts/src/jdom/flashing"
 import { useId } from "react-use-id-hook"
 import AddServiceIconButton from "../../components/AddServiceIconButton"
 import useDevices from "../../components/hooks/useDevices"
-import DeviceCardHeader from "../../components/DeviceCardHeader"
+import DeviceCardHeader from "../../components/devices/DeviceCardHeader"
 import Suspense from "../../components/ui/Suspense"
 import { ControlReg } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import JDDevice from "../../../jacdac-ts/src/jdom/device"

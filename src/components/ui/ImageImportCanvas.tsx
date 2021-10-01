@@ -1,10 +1,10 @@
 import React, { lazy, useEffect, useMemo, useState } from "react"
 import { Box, createStyles, makeStyles } from "@material-ui/core"
 import { Skeleton } from "@material-ui/lab"
-import useBlobCanvas from "./useBlobCanvas"
+import useBlobCanvas from "../useBlobCanvas"
 
-import Suspense from "./ui/Suspense"
-const ImportButton = lazy(() => import("./ImportButton"))
+import Suspense from "./Suspense"
+const ImportButton = lazy(() => import("../ImportButton"))
 
 const useStyles = makeStyles(theme =>
     createStyles({
