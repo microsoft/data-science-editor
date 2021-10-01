@@ -8,7 +8,7 @@ import Alert from "../ui/Alert"
 import React from "react"
 // tslint:disable-next-line: no-submodule-imports
 import Chip from "@material-ui/core/Chip"
-import DeviceList from "../DeviceList"
+import DeviceList from "../devices/DeviceList"
 import { makeStyles, createStyles } from "@material-ui/core"
 import IDChip from "../IDChip"
 import KindChip from "../KindChip"
@@ -62,11 +62,8 @@ function MembersType(props: {
             {!!title && <h4>{title}</h4>}
             {!!beforeRepeat.length && (
                 <ul>
-                    {beforeRepeat.map((member, i) => (
-                        <MemberType
-                            key={`member${member.name}`}
-                            member={member}
-                        />
+                    {beforeRepeat.map(member => (
+                        <MemberType key={member.name} member={member} />
                     ))}
                 </ul>
             )}
@@ -74,11 +71,8 @@ function MembersType(props: {
                 <>
                     <h5>starts repeating</h5>
                     <ul>
-                        {afterRepeat.map((member, i) => (
-                            <MemberType
-                                key={`member${member.name}`}
-                                member={member}
-                            />
+                        {afterRepeat.map(member => (
+                            <MemberType key={member.name} member={member} />
                         ))}
                     </ul>
                 </>

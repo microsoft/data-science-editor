@@ -8,7 +8,7 @@ import {
 import JDDevice from "../../jacdac-ts/src/jdom/device"
 import { scanFirmwares } from "../../jacdac-ts/src/jdom/flashing"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
-import DeviceCard from "./DeviceCard"
+import DeviceCard from "./devices/DeviceCard"
 import useGridBreakpoints from "./useGridBreakpoints"
 import useChange from "../jacdac/useChange"
 import useDevices from "./hooks/useDevices"

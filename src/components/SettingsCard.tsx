@@ -7,7 +7,7 @@ import {
 } from "@material-ui/core"
 import React, { ChangeEvent, useCallback, useState } from "react"
 import JDService from "../../jacdac-ts/src/jdom/service"
-import DeviceCardHeader from "./DeviceCardHeader"
+import DeviceCardHeader from "./devices/DeviceCardHeader"
 import useServiceClient from "./useServiceClient"
 import SettingsClient from "../../jacdac-ts/src/jdom/clients/settingsclient"
 import { useChangeAsync } from "../jacdac/useChange"
