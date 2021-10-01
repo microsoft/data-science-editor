@@ -34,6 +34,17 @@ export interface PacketMessage {
     sender?: string
 }
 
+export function decodePacketMessage(bus: JDBus, msg: PacketMessage) {
+    // try frame format (sent by hardware, hosts)
+    let pkts = Packet.fromFrame(msg.data, bus.timestamp)
+    if (!pkts.length) {
+        // try as a single packet (send by the MakeCode simulator)
+        const pkt = Packet.fromBinary(msg.data, bus.timestamp)
+        pkts = pkt && [pkt]
+    }
+    return pkts
+}
+
 interface SimulatorRunOptions {
     debug?: boolean
     trace?: boolean
@@ -193,14 +204,7 @@ export class IFrameBridgeClient extends JDClient {
         if (msg.sender === this.bridgeId)
             // returning packet
             return
-        // try frame format (sent by hardware, hosts)
-        let pkts = Packet.fromFrame(msg.data, this.bus.timestamp)
-        if (!pkts.length) {
-            // try as a single packet (send by the MakeCode simulator)
-            const pkt = Packet.fromBinary(msg.data, this.bus.timestamp)
-            pkts = pkt && [pkt]
-        }
-
+        const pkts = decodePacketMessage(this.bus, msg)
         // bail out if unknown packet
         if (!pkts) return
 

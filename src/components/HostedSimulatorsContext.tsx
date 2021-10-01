@@ -1,24 +1,23 @@
 import { createStyles, makeStyles } from "@material-ui/core"
-import React, {
-    createContext,
-    useContext,
-    useEffect,
-    useMemo,
-    useRef,
-} from "react"
+import React, { createContext, useContext, useEffect, useRef } from "react"
 import { useId } from "react-use-id-hook"
 import JDBus from "../../jacdac-ts/src/jdom/bus"
+import JDClient from "../../jacdac-ts/src/jdom/client"
 import {
     CHANGE,
     PACKET_PROCESS,
     PACKET_SEND,
 } from "../../jacdac-ts/src/jdom/constants"
-import JDEventSource from "../../jacdac-ts/src/jdom/eventsource"
+import { inIFrame } from "../../jacdac-ts/src/jdom/iframeclient"
 import Packet from "../../jacdac-ts/src/jdom/packet"
 import { randomDeviceId } from "../../jacdac-ts/src/jdom/random"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import useChange from "../jacdac/useChange"
-import { PacketMessage } from "./makecode/iframebridgeclient"
+import useClient from "./hooks/useClient"
+import {
+    decodePacketMessage,
+    PacketMessage,
+} from "./makecode/iframebridgeclient"
 
 export interface HostedSimulatorDefinition {
     name: string
@@ -50,6 +49,8 @@ HostedSimulatorsContext.displayName = "hostedSims"
 export default HostedSimulatorsContext
 
 export function hostedSimulatorDefinitions(): HostedSimulatorDefinition[] {
+    // TODO: support in iframe as well
+    if (inIFrame()) return []
     return [
         {
             name: "Azure IoT Uploader",
@@ -74,12 +75,21 @@ const useStyles = makeStyles(() =>
     })
 )
 
-class HostedSimulatorManager extends JDEventSource {
+class HostedSimulatorManager extends JDClient {
     private _simulators: Record<string, HostedSimulator> = {}
     private _container: HTMLDivElement
 
     constructor(readonly bus: JDBus) {
         super()
+
+        this.handleMessage = this.handleMessage.bind(this)
+        // receiving packets
+        window.addEventListener("message", this.handleMessage, false)
+        this.mount(() =>
+            window.removeEventListener("message", this.handleMessage)
+        )
+        // always clear on exist
+        this.mount(() => this.clear())
     }
 
     get container() {
@@ -97,6 +107,7 @@ class HostedSimulatorManager extends JDEventSource {
     }
 
     addSimulator(definition: HostedSimulatorDefinition) {
+        // must be a device identifier since we're passing this down to the iframe
         const id = randomDeviceId()
         this._simulators[id] = { id, definition }
         this.syncDOM()
@@ -115,6 +126,26 @@ class HostedSimulatorManager extends JDEventSource {
         Object.values(this.simulators).forEach(sim => sim.unsub?.())
         this._simulators = {}
         this.syncDOM()
+    }
+
+    private handleMessage(event: MessageEvent) {
+        const { data } = event
+        const msg = data as PacketMessage
+        const { channel, type, sender } = msg
+        if (
+            channel === "jacdac" &&
+            type === "messagepacket" &&
+            this._simulators[sender]
+        ) {
+            const pkts = decodePacketMessage(this.bus, msg)
+            if (!pkts) return
+            for (const pkt of pkts) {
+                // send to native bus
+                this.bus.sendPacketAsync(pkt)
+                // send to javascript bus
+                this.bus.processPacket(pkt)
+            }
+        }
     }
 
     private syncDOM() {
@@ -149,11 +180,8 @@ class HostedSimulatorManager extends JDEventSource {
                 const unsub = this.bus.subscribe(
                     [PACKET_SEND, PACKET_PROCESS],
                     (pkt: Packet) => {
-                        /*                        console.debug(`hosted sim: sending ${pkt} to ${id}`, {
-                            iframe,
-                            domain,
-                            sender: pkt.sender,
-                        })*/
+                        if (pkt.sender === id) return
+
                         const msg: PacketMessage = {
                             type: "messagepacket",
                             channel: "jacdac",
@@ -177,7 +205,7 @@ export const HostedSimulatorsProvider = ({ children }) => {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const containerRef = useRef<HTMLDivElement>()
     const containerId = useId()
-    const manager = useMemo(() => new HostedSimulatorManager(bus), [])
+    const manager = useClient(() => new HostedSimulatorManager(bus))
     const classes = useStyles()
 
     const simulators = useChange(manager, _ => _.simulators)
