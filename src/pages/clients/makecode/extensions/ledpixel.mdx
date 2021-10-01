@@ -62,7 +62,7 @@ and effects.
 
 ```blocks
 function runEncoded(prog: string, args?: number[]) {
-    const encoded = jacdac.lightEncode(prog, args)
+    let encoded = jacdac.lightEncode(prog, args)
     modules.ledPixel1.runProgram(encoded)
 }
 
