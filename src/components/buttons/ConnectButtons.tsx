@@ -9,14 +9,14 @@ import AppContext from "../AppContext"
 import JacdacIcon from "../icons/JacdacIcon"
 
 function DisconnectedButton(props: {
-    full?: boolean
+    full?: "disconnected" | "always"
     className?: string
     transparent?: boolean
 }) {
     const { mobile } = useMediaQueries()
     const { toggleShowConnectTransportDialog } = useContext(AppContext)
     const { full, transparent, className } = props
-    const small = full !== true && (!full || mobile)
+    const small = !full || mobile
     const trackName = `transport.connect.start`
 
     if (small)
@@ -50,11 +50,12 @@ function DisconnectedButton(props: {
 }
 
 export default function ConnectButtons(props: {
-    full?: boolean
+    full?: "disconnected" | "always"
     className?: string
     transparent?: boolean
 }) {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const { full, ...rest } = props
     const { transports } = bus
     const disconnected = useChange(bus, _ => _.disconnected)
 
@@ -70,7 +71,8 @@ export default function ConnectButtons(props: {
                     <ConnectButton
                         key={transport.type}
                         transport={transport}
-                        {...props}
+                        {...rest}
+                        full={full === "always"}
                     />
                 ))}
         </>

@@ -151,7 +151,7 @@ export default function Dashboard(props: DashboardProps) {
                 title="Devices"
                 action={
                     showConnect && (
-                        <ConnectButtons full={false} transparent={true} />
+                        <ConnectButtons full={"disconnected"} transparent={true} />
                     )
                 }
                 devices={physicals}
