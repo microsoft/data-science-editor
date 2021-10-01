@@ -25,7 +25,7 @@ import {
     PackedValues,
 } from "../../../jacdac-ts/src/jdom/pack"
 import DeviceName from "../../components/devices/DeviceName"
-import DeviceActions from "../../components/DeviceActions"
+import DeviceActions from "../../components/devices/DeviceActions"
 import useEffectAsync from "../../components/useEffectAsync"
 import TestCard from "../../components/TestCard"
 import Packet from "../../../jacdac-ts/src/jdom/packet"

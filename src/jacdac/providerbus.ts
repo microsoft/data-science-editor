@@ -31,6 +31,7 @@ import {
     deviceSpecificationFromProductIdentifier,
     isInfrastructure,
 } from "../../jacdac-ts/src/jdom/spec"
+import { inIFrame } from "../../jacdac-ts/src/jdom/iframeclient"
 
 function sniffQueryArguments() {
     if (typeof window === "undefined" || typeof URLSearchParams === "undefined")
@@ -105,8 +106,9 @@ function createBus(): JDBus {
     // tslint:disable-next-line: no-unused-expression
     // always start bridge
     if (typeof window !== "undefined") {
-        new IFrameBridgeClient(b, args.frameId)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if (inIFrame())
+            new IFrameBridgeClient(b, args.frameId)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ;(<any>window).__jacdacBus = b
     }
 

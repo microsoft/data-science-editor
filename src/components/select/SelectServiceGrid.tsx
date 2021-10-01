@@ -3,7 +3,7 @@ import useGridBreakpoints from "../useGridBreakpoints"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import useChange from "../../jacdac/useChange"
 import { Grid, Card, CardActions, Button } from "@material-ui/core"
-import DeviceCardHeader from "../DeviceCardHeader"
+import DeviceCardHeader from "../devices/DeviceCardHeader"
 import Alert from "../ui/Alert"
 import JDService from "../../../jacdac-ts/src/jdom/service"
 

@@ -15,7 +15,7 @@ import {
 } from "../../../jacdac-ts/src/jdom/spec"
 import { useRegisterHumanValue } from "../../jacdac/useRegisterValue"
 import useEventCount from "../../jacdac/useEventCount"
-import DeviceActions from "../DeviceActions"
+import DeviceActions from "../devices/DeviceActions"
 import {
     LOST,
     FOUND,

@@ -19,6 +19,9 @@ import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import KindIcon from "../KindIcon"
 import SelectWithLabel from "../ui/SelectWithLabel"
 import useMediaQueries from "../hooks/useMediaQueries"
+import HostedSimulatorsContext, {
+    hostedSimulatorDefinitions,
+} from "../HostedSimulatorsContext"
 
 export default function StartSimulatorDialog(props: {
     open: boolean
@@ -27,11 +30,13 @@ export default function StartSimulatorDialog(props: {
     const { open, onClose } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { enqueueSnackbar } = useContext(AppContext)
+    const { addHostedSimulator } = useContext(HostedSimulatorsContext)
     const deviceHostDialogId = useId()
     const deviceHostLabelId = useId()
 
     const [selected, setSelected] = useState("button")
     const providerDefinitions = useMemo(() => servers(), [])
+    const simulatorDefinitions = useMemo(() => hostedSimulatorDefinitions(), [])
     const { mobile } = useMediaQueries()
 
     const handleChange = (ev: React.ChangeEvent<{ value: unknown }>) => {
@@ -42,7 +47,9 @@ export default function StartSimulatorDialog(props: {
     }
     const handleStart = () => {
         const provider = providerDefinitions.find(h => h.name === selected)
-        addServiceProvider(bus, provider)
+        if (provider) addServiceProvider(bus, provider)
+        const simulator = simulatorDefinitions.find(h => h.name === selected)
+        if (simulator) addHostedSimulator(simulator)
         onClose()
     }
     const handleAddAll = async () => {
@@ -76,14 +83,17 @@ export default function StartSimulatorDialog(props: {
                     <Grid item xs={12}>
                         <SelectWithLabel
                             fullWidth={true}
-                            helperText={
-                                "Select the service that will run on the simulator"
-                            }
+                            helperText={"Select the device to simulate"}
                             label={"Simulator"}
                             value={selected}
                             onChange={handleChange}
                         >
                             {providerDefinitions.map(host => (
+                                <MenuItem key={host.name} value={host.name}>
+                                    {host.name}
+                                </MenuItem>
+                            ))}
+                            {simulatorDefinitions.map(host => (
                                 <MenuItem key={host.name} value={host.name}>
                                     {host.name}
                                 </MenuItem>

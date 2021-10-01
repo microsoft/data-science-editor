@@ -19,7 +19,7 @@ import useChange from "../../jacdac/useChange"
 import useGridBreakpoints from "../../components/useGridBreakpoints"
 import JDRegister from "../../../jacdac-ts/src/jdom/register"
 import { JDClient } from "../../../jacdac-ts/src/jdom/client"
-import DeviceCardHeader from "../../components/DeviceCardHeader"
+import DeviceCardHeader from "../../components/devices/DeviceCardHeader"
 import Alert from "../../components/ui/Alert"
 import useEffectAsync from "../../components/useEffectAsync"
 import {

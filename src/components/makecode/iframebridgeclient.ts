@@ -29,7 +29,7 @@ import { inIFrame } from "../../../jacdac-ts/src/jdom/iframeclient"
 export interface PacketMessage {
     channel: "jacdac"
     type: "messagepacket"
-    broadcast: true
+    broadcast?: boolean
     data: Uint8Array
     sender?: string
 }

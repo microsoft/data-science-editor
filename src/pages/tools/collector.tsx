@@ -40,7 +40,7 @@ import {
 import DataSetGrid from "../../components/DataSetGrid"
 import JDRegister from "../../../jacdac-ts/src/jdom/register"
 import ReadingFieldGrid from "../../components/ReadingFieldGrid"
-import DeviceCardHeader from "../../components/DeviceCardHeader"
+import DeviceCardHeader from "../../components/devices/DeviceCardHeader"
 import SensorAggregatorClient from "../../../jacdac-ts/src/clients/sensoraggregatorclient"
 import { Link } from "gatsby-theme-material-ui"
 import JDService from "../../../jacdac-ts/src/jdom/service"
