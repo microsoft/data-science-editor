@@ -31,12 +31,11 @@ export default function DeviceActions(props: {
         showStop,
     } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const { hostedSimulators } = useContext(HostedSimulatorsContext)
+    const { removeHostedSimulator, isHostedSimulator } = useContext(
+        HostedSimulatorsContext
+    )
     const { deviceId } = device
     const provider = useServiceProvider(device)
-    const isHostedSimulator = useChange(hostedSimulators, _ =>
-        _?.isSimulator(deviceId)
-    )
     const settings = useChange(
         device,
         _ => _.services({ serviceClass: SRV_SETTINGS })?.[0]
@@ -49,7 +48,7 @@ export default function DeviceActions(props: {
         await device.reset()
     }
     const handleStop = async () => {
-        hostedSimulators.removeSimulator(deviceId)
+        removeHostedSimulator(deviceId)
         bus.removeServiceProvider(provider)
         bus.removeDevice(deviceId)
     }
@@ -58,7 +57,7 @@ export default function DeviceActions(props: {
     }
     return (
         <>
-            {showStop && (provider || isHostedSimulator) && (
+            {showStop && (provider || isHostedSimulator(deviceId)) && (
                 <CmdButton
                     trackName="device.stop"
                     size="small"

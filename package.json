@@ -89,6 +89,7 @@
     "react-blockly": "^7.0.0-alpha.1",
     "react-color": "^2.19.3",
     "react-dom": "^17.0.2",
+    "react-draggable": "^4.4.4",
     "react-helmet": "^6.1.0",
     "react-markdown": "^7.0.1",
     "react-piano": "^3.1.3",

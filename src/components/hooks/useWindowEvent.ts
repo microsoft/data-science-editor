@@ -1,11 +1,11 @@
 import { DependencyList, useEffect } from "react"
 
 export default function useWindowEvent<K extends keyof WindowEventMap>(type: K,
-    listener: (this: Window, ev: WindowEventMap[K]) => any,
+    listener: (this: Window, ev: WindowEventMap[K]) => unknown,
     passive = false,
-    deps: DependencyList) {
+    deps?: DependencyList) {
     useEffect(() => {
-        if (typeof window === "undefined")
+        if (typeof window === "undefined" || !listener)
             return undefined; // SSR
 
         // initiate the event handler

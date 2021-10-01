@@ -81,7 +81,9 @@ export default function Dashboard(props: DashboardProps) {
         ...other
     } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const { hostedSimulators } = useContext(HostedSimulatorsContext)
+    const { isHostedSimulator, clearHostedSimulators } = useContext(
+        HostedSimulatorsContext
+    )
     const { toggleShowDeviceHostsDialog } = useContext(AppContext)
     const devices = useDevices({
         announced: true,
@@ -93,11 +95,11 @@ export default function Dashboard(props: DashboardProps) {
         devices,
         d =>
             !!bus.findServiceProvider(d.deviceId) ||
-            hostedSimulators.isSimulator(d.deviceId)
+            isHostedSimulator(d.deviceId)
     )
     const roleManager = useRoleManagerClient()
     const handleClearSimulators = () => {
-        hostedSimulators?.clear()
+        clearHostedSimulators()
         bus.serviceProviders().forEach(dev => bus.removeServiceProvider(dev))
     }
     const handleStartSimulators = () => roleManager?.startSimulators()
