@@ -171,12 +171,7 @@ export default function DeviceRegistration() {
             ? "Preferred format is vN.N"
             : ""
     const ok =
-        !nameError &&
-        parsedRepo &&
-        !linkError &&
-        !idError &&
-        !imageError &&
-        !companyError
+        !nameError && !linkError && !idError && !imageError && !companyError
 
     const route = device.id?.split("-").join("/")
     const modulePath = ok && `devices/${route}.json`
