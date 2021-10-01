@@ -68,6 +68,7 @@ function sniffQueryArguments() {
         frameId: window.location.hash?.slice(1),
         widget: params.get("widget") === "1",
         trace: params.get("trace") === "1",
+        localhost: params.get("localhost") === "1",
     }
 }
 
@@ -81,6 +82,7 @@ Flags.trace = args.trace
 export class UIFlags {
     static widget = args.widget
     static peers = args.peers
+    static localhost = args.localhost
 }
 
 // defeat react fast-refresh
