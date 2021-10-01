@@ -5,8 +5,6 @@ The current forces acting on the accelerometer are
 read via the methods 'x', 'y', and 'z', which return
 values in earth gravities (g).
 
-<DeviceImage id="microsoft-research-jmaccelerometer30v10" size="catalog" />
-
 A Jacdac accelerometer module translate acceleration values as follows:
 
 | Orientation           | X value (g) | Y value (g) | Z value (g) |
@@ -64,6 +62,16 @@ modules.accelerometer1.onShake(function () {
     basic.showIcon(IconNames.Heart)
 })
 ```
+
+## JM Accelerometer v1.0
+
+The [JM Accelerometer v1.0](/devices/microsoft/research/jmaccelerometer30v10) module
+has silk screen of (X,Y,Z) axis (arrows are positive vectors) where 
+- the X-axis indicates the **bottom edge** of the module
+- the Y-axis indicates the **left edge** of the module
+- the Z-axis is oriented towards the sky when the module is lying flat, as shown in the picture below
+
+<DeviceImage id="microsoft-research-jmaccelerometer30v10" size="catalog" />
 
 ## See Also
 
