@@ -69,7 +69,7 @@ export function hostedSimulatorDefinitions(): HostedSimulatorDefinition[] {
             name: "Azure IoT Uploader",
             url: "https://microsoft.github.io/pxt-jacdac/",
             width: "20rem",
-            height: "14rem",
+            height: "12rem",
         },
     ]
 }
