@@ -45,7 +45,9 @@ export default function ServiceSpecificationSelect(props: {
                 .filter(
                     spec =>
                         !hasRegisteredDevice ||
-                        !!deviceSpecificationsForService(spec.classIdentifier)?.length
+                        !!deviceSpecificationsForService(
+                            spec.classIdentifier
+                        )?.filter(spec => spec.status !== "deprecated")?.length
                 ),
         [hasRegisteredDevice]
     )
