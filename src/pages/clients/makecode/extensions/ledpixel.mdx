@@ -19,7 +19,7 @@ input.onButtonPressed(Button.B, () => {
 The brightness of the strip can be set and retrieved as follows:
 
 ```blocks
-modules.ledPixel1.onConnected(() => {
+input.onButtonPressed(Button.A, ()) => {
     modules.ledPixel1.setBrightness(85)
     let brightness = modules.ledPixel1.brightness()
     basic.showNumber(brightness)
@@ -31,7 +31,7 @@ example below, which also uses the `numPixels` method to get the number
 of pixels supported by the underlying hardware.
 
 ```blocks
-modules.ledPixel1.onConnected(() => {
+input.onButtonPressed(Button.A, () => {
     modules.ledPixel1.setAll(0)
     let n = modules.ledPixel1.numPixels()
     for(let i = 0; i <= n - 1; i++) {
@@ -71,6 +71,24 @@ input.onButtonPressed(Button.A, () => {
      modules.ledPixel1.setPixel(0, 0x00ff00)
 })
 ```
+
+## JM RGB LED Bar v0.1
+
+The [JM RGB LED Bar v0.1](/devices/microsoft/research/jmrgbledbar58v01) module
+has one end labelled with a "+" sign. The LED RGB at this end is at index
+0 (left end of bar in picture below).  
+The LED RGB at the other end of the bar (labelled with "-") is at index 9
+(right end of bar in picture below).
+
+![led bar](./ledbar.png)
+
+## JM RGB LED Ring v2.1
+
+The [JM RGB LED Ring v2.1](/devices/microsoft/research/jmrgbledring37v21) module
+has eight LEDs. The LED opposite from the edge connector is at index 0 and
+indices increase counter-clockwise, as shown below:
+
+![led ring](./ledring.png)
 
 ## See Also
 
