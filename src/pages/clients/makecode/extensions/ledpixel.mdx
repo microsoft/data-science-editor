@@ -19,7 +19,7 @@ input.onButtonPressed(Button.B, () => {
 The brightness of the strip can be set and retrieved as follows:
 
 ```blocks
-input.onButtonPressed(Button.A, ()) => {
+input.onButtonPressed(Button.A, () => {
     modules.ledPixel1.setBrightness(85)
     let brightness = modules.ledPixel1.brightness()
     basic.showNumber(brightness)
@@ -60,7 +60,7 @@ The [LED pixel service](/services/ledpixel) has
 a small command language that can be used to create your own animations
 and effects.
 
-```blocks
+```
 function runEncoded(prog: string, args?: number[]) {
     let encoded = jacdac.lightEncode(prog, args)
     modules.ledPixel1.runProgram(encoded)
