@@ -44,6 +44,7 @@ import {
     SRV_HID_MOUSE,
     //SRV_AZURE_IOT_HUB,
     SRV_AZURE_IOT_HUB_HEALTH,
+    SRV_WIFI,
 } from "../../../jacdac-ts/src/jdom/constants"
 import JDService from "../../../jacdac-ts/src/jdom/service"
 import { isRegister } from "../../../jacdac-ts/src/jdom/spec"
@@ -107,6 +108,7 @@ const DashboardHIDMouse = lazy(() => import("./DashboardHIDMouse"))
 const DashboardAzureIoTHubHealth = lazy(
     () => import("./DashboardAzureIoTHubHealth")
 )
+const DashboardWifi = lazy(() => import("./DashboardWifi"))
 
 export interface DashboardServiceProps {
     service: JDService
@@ -259,7 +261,11 @@ const serviceViews: {
     */
     [SRV_AZURE_IOT_HUB_HEALTH]: {
         component: DashboardAzureIoTHubHealth,
-        weight: () => 3,
+        weight: () => 2,
+    },
+    [SRV_WIFI]: {
+        component: DashboardWifi,
+        weight: () => 2,
     },
 }
 
