@@ -45,9 +45,10 @@ export default function DashboardCharacterScreen(props: DashboardServiceProps) {
     const { textPrimary, background, controlBackground } =
         useWidgetTheme("primary")
 
-    const handleClear = async () => {
+    const handleClear = async mounted => {
+        await service.sendCmdAsync(CharacterScreenCmd.Clear, undefined, true)
+        if (!mounted()) return
         setFieldMessage("")
-        await service.sendCmdAsync(CharacterScreenCmd.Clear)
     }
     const handleFieldMessageChange = async (
         ev: ChangeEvent<HTMLTextAreaElement>

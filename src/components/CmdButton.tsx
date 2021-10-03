@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => {
 })
 
 export default function CmdButton(props: {
-    onClick: () => Promise<void>
+    onClick: (mounted: () => boolean) => Promise<void>
     className?: string
     style?: CSSProperties
     title?: string
@@ -92,7 +92,7 @@ export default function CmdButton(props: {
             setError(undefined)
             setAck(false)
             setWorking(true)
-            await onClick()
+            await onClick(mounted)
             if (!mounted()) return
             setAck(true)
             if (!disableReset) {

@@ -24,7 +24,6 @@ import {
     WifiReg,
 } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import JDService from "../../../jacdac-ts/src/jdom/service"
-import useMounted from "../hooks/useMounted"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
 import RefreshIcon from "@material-ui/icons/Refresh"
 interface ScanResult {
@@ -93,10 +92,9 @@ function ConnectDialog(props: {
 }) {
     const { open, setOpen, service } = props
     const [aps, setAps] = useState<ScanResult[]>([])
-    const mounted = useMounted()
 
     const handleClose = () => setOpen(false)
-    const startScan = async () => {
+    const startScan = async mounted => {
         const res = await service.receiveWithInPipe<
             [WifiAPFlags, number, number, Uint8Array, string][]
         >(WifiCmd.Scan, "u32 x[4] i8 u8 b[6] s[33]")
@@ -124,7 +122,12 @@ function ConnectDialog(props: {
             <DialogContent>
                 <DialogTitle>
                     Connect to Wifi
-                    <CmdButton onClick={startScan} title="scan" autoRun={true}>
+                    <CmdButton
+                        trackName="dashboard.wifi.scan"
+                        onClick={startScan}
+                        title="scan"
+                        autoRun={true}
+                    >
                         <RefreshIcon />
                     </CmdButton>
                 </DialogTitle>

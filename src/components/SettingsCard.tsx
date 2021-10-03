@@ -94,8 +94,9 @@ function AddSettingRow(props: { client: SettingsClient }) {
     const handleChecked = (ev, checked: boolean) => {
         setSecret(checked)
     }
-    const handleAdd = async () => {
+    const handleAdd = async mounted => {
         await client.setStringValue(`${secret ? "$" : ""}${name}`, value)
+        if (!mounted()) return
         setName("")
         setValue("")
         setSecret(true)
