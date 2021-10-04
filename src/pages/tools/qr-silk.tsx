@@ -67,7 +67,7 @@ export default function DeviceQRCodeGenerator(props: {
     }
     const mirrorid = useId()
     const switchid = useId()
-    const url = !!vanity && `HTTP://AKA.MS/${vanity}`
+    const url = vanity ? `HTTP://AKA.MS/${vanity}` : undefined
     const known = knowns[vanity]
     const { modulename, designid, revision } = known || {}
     const handleVanity = (vanityname: string) => () =>
