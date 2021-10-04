@@ -10,6 +10,7 @@ import React, { useState } from "react"
 import { ControlAnnounceFlags } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import JDDevice from "../../../jacdac-ts/src/jdom/device"
 import useDeviceSpecification from "../../jacdac/useDeviceSpecification"
+import DeviceName from "../devices/DeviceName"
 import useDeviceImage from "../devices/useDeviceImage"
 import useInterval from "../hooks/useInterval"
 import Alert from "../ui/Alert"
@@ -67,7 +68,11 @@ export default function IdentifyDialog(props: {
 
     return (
         <Dialog open={open} onClose={handleCloseIdentify}>
-            <DialogTitle>Identifying {device.friendlyName}...</DialogTitle>
+            <DialogTitle>
+                Identifying{" "}
+                <DeviceName device={device} linkToSpecification={true} />
+                ...
+            </DialogTitle>
             <DialogContent>
                 <Grid container alignItems="center" alignContent={"center"}>
                     <Grid item xs={12}>
