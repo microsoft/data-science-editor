@@ -1,5 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="../../../jacdac-ts/jacdac-spec/spectool/jdspec.d.ts" />
+import { prettyUnit } from "../../../jacdac-ts/src/jdom/pretty"
 import useLocalStorage from "../hooks/useLocalStorage"
 
 const adapters: Record<string, Record<string, (v: number) => number>> = {
@@ -41,12 +42,13 @@ export default function useUnitConverter(unit: jdspec.Unit): {
     const adapter = adapters[unit]
     if (!adapter)
         return {
+            name: prettyUnit(unit),
             converter: v => v,
         }
 
-    const name = settings[unit]
-    const converter = adapter[name] || identity
     const names = Object.keys(adapter)
+    const name = settings[unit] || names[0]
+    const converter = adapter[name] || identity
 
     return {
         name,

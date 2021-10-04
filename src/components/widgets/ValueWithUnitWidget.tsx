@@ -102,7 +102,7 @@ export default function ValueWithUnitWidget(props: {
                                 <Grid item>
                                     <Typography
                                         style={unitStyle}
-                                        variant={labelVariant}
+                                        variant={"caption"}
                                     >
                                         {unitName}
                                     </Typography>
