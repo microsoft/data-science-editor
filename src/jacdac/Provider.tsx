@@ -14,7 +14,11 @@ export default function JacdacProvider(props: {
         // bus live accross hot-reloads
         if (!firstConnect && connectOnStart) {
             setFirstConnect(true)
-            bus.connect(true)
+            if (
+                typeof document !== "undefined" &&
+                document.visibilityState === "visible"
+            )
+                bus.connect(true)
         }
         return () => {}
     }, [])

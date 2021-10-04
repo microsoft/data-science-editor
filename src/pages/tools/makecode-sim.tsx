@@ -43,8 +43,8 @@ function Carousel() {
     const iframeBridge = bus.nodeData[
         IFrameBridgeClient.DATA_ID
     ] as IFrameBridgeClient
-    const deviceFilter = iframeBridge.deviceFilter.bind(iframeBridge)
-    const serviceFilter = iframeBridge.serviceFilter.bind(iframeBridge)
+    const deviceFilter = iframeBridge?.deviceFilter.bind(iframeBridge)
+    const serviceFilter = iframeBridge?.serviceFilter.bind(iframeBridge)
 
     return (
         <Dashboard
