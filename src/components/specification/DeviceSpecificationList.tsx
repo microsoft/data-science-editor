@@ -49,9 +49,7 @@ export default function DeviceSpecificationList(props: {
     const { mobile, medium } = useMediaQueries()
     const cols = mobile ? 1 : medium ? 3 : 4
     const specs = useMemo(() => {
-        let r = (devices || deviceSpecifications()).filter(
-            spec => spec.status !== "deprecated"
-        )
+        let r = devices || deviceSpecifications()
         if (company) r = r.filter(spec => spec.company === company)
         if (requiredServiceClasses)
             r = r.filter(

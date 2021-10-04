@@ -161,7 +161,9 @@ export default function DeviceRegistration() {
             : "Must be https://..."
     const idError = !device.id
         ? "missing identifier"
-        : deviceSpecifications().find(dev => dev.id == device.id)
+        : deviceSpecifications({ includeDeprecated: true }).find(
+              dev => dev.id == device.id
+          )
         ? "identifer already used"
         : ""
     const imageError = !imageDataURI ? "missing image" : ""
