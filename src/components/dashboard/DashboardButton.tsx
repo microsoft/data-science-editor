@@ -56,7 +56,7 @@ function BinaryButton(props: { pressed: boolean } & DashboardServiceProps) {
 
     return (
         <OptionalTooltip
-            title={!server ? "Press the physical button!" : undefined}
+            title={!server ? "Use the physical button!" : undefined}
         >
             <ButtonWidget
                 checked={!!pressed}
