@@ -69,6 +69,7 @@ function sniffQueryArguments() {
         widget: params.get("widget") === "1",
         trace: params.get("trace") === "1",
         localhost: params.get("localhost") === "1",
+        passive: params.get("passive") === "1",
     }
 }
 
@@ -83,6 +84,7 @@ export class UIFlags {
     static widget = args.widget
     static peers = args.peers
     static localhost = args.localhost
+    static passive = args.passive
 }
 
 // defeat react fast-refresh
@@ -101,6 +103,7 @@ function createBus(): JDBus {
             parentOrigin: args.parentOrigin,
         }
     )
+    b.passive = args.passive
     // parentOrigin: args.parentOrigin,
     //if (Flags.webUSB) b.setBackgroundFirmwareScans(true)
     GamepadServerManager.start(b)
