@@ -16,7 +16,7 @@ export default function ErrorList() {
     const data = useStaticQuery(graphql`
         {
             allMdx(
-                filter: { slug: { glob: "errors/**" } }
+                filter: { slug: { glob: "reference/errors/**" } }
                 sort: { fields: slug }
             ) {
                 nodes {
@@ -29,7 +29,6 @@ export default function ErrorList() {
         }
     `)
 
-    console.log("data", { data })
     const nodes: {
         slug: string
         title: string
@@ -37,8 +36,9 @@ export default function ErrorList() {
         ?.filter(node => node.slug.indexOf("/") > -1 && node.frontmatter?.title)
         .map(node => ({ slug: node.slug, title: node.frontmatter.title }))
 
-    const groups = groupBy(nodes, node => node.slug.split("/", 2)[1])
-    const groupNames = Object.keys(groups)
+    const groups = groupBy(nodes, node => node.slug.split("/", 3)[2] || "")
+    const groupNames = Object.keys(groups).filter(g => !!g)
+    console.debug(groupNames)
 
     return (
         <>
