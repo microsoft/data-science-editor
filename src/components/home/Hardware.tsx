@@ -31,7 +31,7 @@ export default function Hardware() {
                 subtitle3="Integrate Jacdac into your devices."
                 imageColumns={6}
                 buttonText="Device Development Kit"
-                buttonUrl="https://github.com/microsoft/jacdac-ddk"
+                buttonUrl="/hardware/ddk"
                 image={
                     <StaticImage
                         src="./pcbfootprint.png"
@@ -41,7 +41,7 @@ export default function Hardware() {
             />
 
             <CenterGrid
-                subtitle="Plug-and-play."
+                subtitle="Plug-and-play"
                 description="Every Jacdac device has a tiny micro-controller that runs the Jacdac protocol and communicates with the bus."
                 image={
                     <StaticImage
@@ -53,7 +53,7 @@ export default function Hardware() {
 
             <SplitGrid
                 right={false}
-                subtitle="3-wire serial."
+                subtitle="3-wire serial"
                 description="Jacdac packets are sent serially among physical devices over a single data line along with a regulated power line."
                 image={
                     <StaticImage src="./bustopology.png" alt="Bus topology" />
@@ -65,7 +65,7 @@ export default function Hardware() {
 
             <SplitGrid
                 right={true}
-                subtitle="8-bit and up."
+                subtitle="8-bit and up"
                 description="Firmware fits on 8-bit micro-controllers to minimize costs"
                 imageColumns={8}
                 image={
@@ -81,7 +81,7 @@ export default function Hardware() {
 
             <SplitGrid
                 right={false}
-                subtitle="PCB Connector."
+                subtitle="PCB Connector"
                 description="A PCB edge connector was chosen for Jacdac primarily because it essentially adds no cost to a product."
                 buttonText="Physical connector"
                 buttonVariant="link"
@@ -97,7 +97,7 @@ export default function Hardware() {
 
             <SplitGrid
                 right={true}
-                subtitle="Power... negociated."
+                subtitle="Power... negociated"
                 description="Power is regulated and negociated on the bus to minimize brown-outs, burn-outs and other inconviences."
                 imageColumns={8}
                 image={
@@ -110,7 +110,7 @@ export default function Hardware() {
 
             <SplitGrid
                 right={false}
-                subtitle="Firmware Updates."
+                subtitle="Firmware Updates"
                 description="Jacdac scans for registered devices and can upgrade firmware over the bus."
                 imageColumns={4}
                 image={
@@ -156,12 +156,12 @@ export default function Hardware() {
 
             <SplitGrid
                 right={true}
-                subtitle="Time to join."
-                description="The Jacdac Device Development Kit (DDK) is for 3rd party hardware designers, firmware developers and manufacturers who wish to create their own Jacdac devices."
+                subtitle="Device Dev Kit"
+                description="Manufacture your own Jacdac devices."
                 imageColumns={8}
                 centered={true}
                 buttonText="Device Development Kit"
-                buttonUrl="https://github.com/microsoft/jacdac-ddk"
+                buttonUrl="/hardware/ddk"
                 buttonVariant="link"
                 image={
                     <StaticImage

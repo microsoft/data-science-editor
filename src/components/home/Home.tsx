@@ -52,7 +52,7 @@ export default function Home() {
             </Grid>
             <SplitGrid
                 right={false}
-                subtitle="Hardware."
+                subtitle="Hardware"
                 description="Jacdac relies on a 3-wire bus for power delivery and data transfer. A purpose-built connector is used to interface with the Jacdac PCB edge connector."
                 image={
                     <StaticImage
@@ -66,7 +66,7 @@ export default function Home() {
             />
             <SplitGrid
                 right={true}
-                subtitle="Protocol."
+                subtitle="Protocol"
                 description="Bus topology, dynamic discovery, services designed for micro-controllers."
                 buttonText="Learn more"
                 buttonVariant="link"
@@ -80,7 +80,7 @@ export default function Home() {
             />
             <SplitGrid
                 right={false}
-                subtitle="'Nano' Services."
+                subtitle="'Nano' Services"
                 description="Jacdac services are specified to abstract the hardware device from the software implementation. The services are comprised of registers, commands and events, along with precise data layout information for each packet."
                 buttonText="Explore services"
                 buttonVariant="link"
@@ -170,12 +170,12 @@ export default function Home() {
 
             <SplitGrid
                 right={true}
-                subtitle="Time to join."
-                description="The Jacdac Device Development Kit (DDK) is for 3rd party hardware designers, firmware developers and manufacturers who wish to create their own Jacdac devices."
+                subtitle="Device Dev Kit"
+                description="Manufacture your own Jacdac devices."
                 imageColumns={8}
                 centered={true}
                 buttonText="Device Development Kit"
-                buttonUrl="https://github.com/microsoft/jacdac-ddk"
+                buttonUrl="/hardware/ddk"
                 buttonVariant="link"
                 image={
                     <StaticImage
