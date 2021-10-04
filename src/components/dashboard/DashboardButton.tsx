@@ -21,6 +21,7 @@ import useAnimationFrame from "../hooks/useAnimationFrame"
 import useRegister from "../hooks/useRegister"
 import useEvent from "../hooks/useEvent"
 import { roundWithPrecision } from "../../../jacdac-ts/src/jdom/utils"
+import OptionalTooltip from "../widgets/OptionalTooltip"
 
 export default function DashboardButton(props: DashboardServiceProps) {
     const { service } = props
@@ -54,14 +55,18 @@ function BinaryButton(props: { pressed: boolean } & DashboardServiceProps) {
     const widgetSize = `clamp(3rem, 10vw, 10vh)`
 
     return (
-        <ButtonWidget
-            checked={!!pressed}
-            color={color}
-            onDown={server ? handleDown : undefined}
-            onUp={server ? handleUp : undefined}
-            label={label}
-            size={widgetSize}
-        />
+        <OptionalTooltip
+            title={!server ? "Press the physical button!" : undefined}
+        >
+            <ButtonWidget
+                checked={!!pressed}
+                color={color}
+                onDown={server ? handleDown : undefined}
+                onUp={server ? handleUp : undefined}
+                label={label}
+                size={widgetSize}
+            />
+        </OptionalTooltip>
     )
 }
 
