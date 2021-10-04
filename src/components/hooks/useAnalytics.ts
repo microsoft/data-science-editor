@@ -45,7 +45,7 @@ if (appInsights) {
         envelope.tags["repo"] = repo
         envelope.tags["sha"] = sha
     })
-    appInsights.trackPageView()
+    appInsights.trackPageView({ name: window.location.href })
 }
 
 const page: () => void = appInsights
