@@ -77,7 +77,7 @@ export default function useFirmwareBlobs() {
 }
 
 export function useFirmwareBlob(repoSlug: string) {
-    repoSlug = repoSlug.replace(/^https:\/\/github\.com\//i, "")
+    repoSlug = repoSlug?.replace(/^https:\/\/github\.com\//i, "")
     const { db } = useContext<DbContextProps>(DbContext)
     const firmwares = db?.firmwares
 

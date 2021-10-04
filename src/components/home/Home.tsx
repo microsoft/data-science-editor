@@ -153,7 +153,8 @@ export default function Home() {
 
             <CenterGrid
                 subtitle="Enabling a cheaper ecosystem."
-                description="A PCB edge connector was chosen for Jacdac primarily because it essentially adds no cost to a product. A module is a small PCB that includes an MCU connected to an on-board sensor or actuator."
+                description="A PCB edge connector was chosen for Jacdac primarily because it essentially adds no cost to a product. 
+                A module is a small PCB that includes an MCU connected to an on-board sensor or actuator."
                 image={
                     <Suspense>
                         <ModelViewer responsive={true}>
