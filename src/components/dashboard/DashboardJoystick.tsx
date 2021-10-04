@@ -17,6 +17,7 @@ import useSvgButtonProps from "../hooks/useSvgButtonProps"
 import LoadingProgress from "../ui/LoadingProgress"
 import useAnimationFrame from "../hooks/useAnimationFrame"
 import useRegister from "../hooks/useRegister"
+import OptionalTooltip from "../widgets/OptionalTooltip"
 
 const buttonLabels = {
     [JoystickButtons.Left]: "\u25C4",
@@ -372,50 +373,58 @@ export default function DashboardJoystick(props: DashboardServiceProps) {
     if (buttonsAvailable === undefined) return <LoadingProgress />
 
     return (
-        <SvgWidget width={w} height={h}>
-            {!analog && (
-                <circle
-                    cx={padcx}
-                    cy={padcy}
-                    r={padr}
-                    fill="none"
-                    stroke={background}
-                    strokeWidth={4}
-                />
-            )}
-            {analog && (
-                <g transform={`scale(${padr / 16}) translate(${-1.8},${-1.8})`}>
-                    <JoystickWidget {...props} />
-                </g>
-            )}
-            {hasButtons && (
-                <rect
-                    transform={`rotate(-66, ${abx}, ${aby})`}
-                    x={abx}
-                    y={aby}
-                    rx={abr}
-                    ry={abr}
-                    width={abw}
-                    height={cw * 2.2}
-                    fill="none"
-                    stroke={background}
-                    strokeWidth={4}
-                />
-            )}
-            {pos.map(({ id, cx, cy, small }) => (
-                <ArcadeButton
-                    key={id}
-                    cx={cx}
-                    cy={cy}
-                    ro={small ? sro : ro}
-                    ri={small ? sri : ri}
-                    button={id}
-                    server={server}
-                    onRefresh={handleRefresh}
-                    pressure={buttons & id ? 1 : 0}
-                    color={color}
-                />
-            ))}
-        </SvgWidget>
+        <OptionalTooltip
+            title={!server ? "Use the physical joystick!" : undefined}
+        >
+            <SvgWidget width={w} height={h}>
+                {!analog && (
+                    <circle
+                        cx={padcx}
+                        cy={padcy}
+                        r={padr}
+                        fill="none"
+                        stroke={background}
+                        strokeWidth={4}
+                    />
+                )}
+                {analog && (
+                    <g
+                        transform={`scale(${
+                            padr / 16
+                        }) translate(${-1.8},${-1.8})`}
+                    >
+                        <JoystickWidget {...props} />
+                    </g>
+                )}
+                {hasButtons && (
+                    <rect
+                        transform={`rotate(-66, ${abx}, ${aby})`}
+                        x={abx}
+                        y={aby}
+                        rx={abr}
+                        ry={abr}
+                        width={abw}
+                        height={cw * 2.2}
+                        fill="none"
+                        stroke={background}
+                        strokeWidth={4}
+                    />
+                )}
+                {pos.map(({ id, cx, cy, small }) => (
+                    <ArcadeButton
+                        key={id}
+                        cx={cx}
+                        cy={cy}
+                        ro={small ? sro : ro}
+                        ri={small ? sri : ri}
+                        button={id}
+                        server={server}
+                        onRefresh={handleRefresh}
+                        pressure={buttons & id ? 1 : 0}
+                        color={color}
+                    />
+                ))}
+            </SvgWidget>
+        </OptionalTooltip>
     )
 }

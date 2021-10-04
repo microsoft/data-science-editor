@@ -37,6 +37,7 @@ const appInsights =
             disableCookiesUsage: true,
             disableAjaxTracking: true,
             enableSessionStorageBuffer: false,
+            autoTrackPageVisitTime: true,
         },
     })
 if (appInsights) {
@@ -45,7 +46,7 @@ if (appInsights) {
         envelope.tags["repo"] = repo
         envelope.tags["sha"] = sha
     })
-    appInsights.trackPageView()
+    appInsights.trackPageView({ name: window.location.href })
 }
 
 const page: () => void = appInsights
@@ -61,11 +62,11 @@ const trackEvent: (name: string, properties?: EventProperties) => void =
               })
         : () => {}
 
-const trackError: (error: Error, properties?: EventProperties) => void =
+const trackError: (exception: Error, properties?: EventProperties) => void =
     appInsights
-        ? (error, properties) =>
+        ? (exception, properties) =>
               appInsights.trackException({
-                  error,
+                  exception,
                   ...splitProperties(properties),
               })
         : () => {}
