@@ -12,8 +12,15 @@ export default function DeviceName(props: {
     expanded?: boolean
     showShortId?: boolean
     linkToSpecification?: boolean
+    onLinkClick?: () => void
 }) {
-    const { device, serviceIndex, showShortId, linkToSpecification } = props
+    const {
+        device,
+        serviceIndex,
+        showShortId,
+        linkToSpecification,
+        onLinkClick,
+    } = props
     const specification = useDeviceSpecification(device)
     const name = useDeviceName(device) || ""
     const { shortId } = device
@@ -33,6 +40,7 @@ export default function DeviceName(props: {
     if (linkToSpecification && specification)
         return (
             <Link
+                onClick={onLinkClick}
                 color="textPrimary"
                 to={`/devices/${identifierToUrlPath(specification.id)}`}
             >

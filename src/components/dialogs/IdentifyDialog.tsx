@@ -70,7 +70,11 @@ export default function IdentifyDialog(props: {
         <Dialog open={open} onClose={handleCloseIdentify}>
             <DialogTitle>
                 Identifying{" "}
-                <DeviceName device={device} linkToSpecification={true} />
+                <DeviceName
+                    device={device}
+                    linkToSpecification={true}
+                    onLinkClick={handleCloseIdentify}
+                />
                 ...
             </DialogTitle>
             <DialogContent>
