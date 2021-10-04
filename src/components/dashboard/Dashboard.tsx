@@ -106,6 +106,7 @@ export default function Dashboard(props: DashboardProps) {
 
     return (
         <>
+            <MakeCodeAddBlocksButton />
             {!hideSimulators && (
                 <DashboardDeviceGroup
                     title="Simulators"
@@ -151,7 +152,10 @@ export default function Dashboard(props: DashboardProps) {
                 title="Devices"
                 action={
                     showConnect && (
-                        <ConnectButtons full={"disconnected"} transparent={true} />
+                        <ConnectButtons
+                            full={"disconnected"}
+                            transparent={true}
+                        />
                     )
                 }
                 devices={physicals}
@@ -163,7 +167,6 @@ export default function Dashboard(props: DashboardProps) {
                     </Grid>
                 )}
             </DashboardDeviceGroup>
-            <MakeCodeAddBlocksButton />
         </>
     )
 }

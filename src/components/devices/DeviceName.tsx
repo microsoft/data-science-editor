@@ -1,6 +1,9 @@
 import { Typography } from "@material-ui/core"
+import { Link } from "gatsby-material-ui-components"
 import React from "react"
 import JDDevice from "../../../jacdac-ts/src/jdom/device"
+import { identifierToUrlPath } from "../../../jacdac-ts/src/jdom/spec"
+import useDeviceSpecification from "../../jacdac/useDeviceSpecification"
 import useDeviceName from "./useDeviceName"
 
 export default function DeviceName(props: {
@@ -8,12 +11,20 @@ export default function DeviceName(props: {
     serviceIndex?: number
     expanded?: boolean
     showShortId?: boolean
+    linkToSpecification?: boolean
+    onLinkClick?: () => void
 }) {
-    const { device, serviceIndex, showShortId } = props
+    const {
+        device,
+        serviceIndex,
+        showShortId,
+        linkToSpecification,
+        onLinkClick,
+    } = props
+    const specification = useDeviceSpecification(device)
     const name = useDeviceName(device) || ""
     const { shortId } = device
-
-    return (
+    const Name = () => (
         <span>
             <span>{name}</span>
             {!name && showShortId && shortId}
@@ -26,4 +37,15 @@ export default function DeviceName(props: {
             {serviceIndex !== undefined && `[${serviceIndex}]`}
         </span>
     )
+    if (linkToSpecification && specification)
+        return (
+            <Link
+                onClick={onLinkClick}
+                color="textPrimary"
+                to={`/devices/${identifierToUrlPath(specification.id)}`}
+            >
+                <Name />
+            </Link>
+        )
+    else return <Name />
 }
