@@ -39,8 +39,9 @@ function ConnectionStringDialog(props: {
     const handleValueChange = (event: ChangeEvent<HTMLInputElement>) => {
         setValue(event.target.value)
     }
-    const handleOk = async () => {
+    const handleOk = async mounted => {
         await client.setConnectionString(value || "")
+        if (!mounted()) return
         setValue("")
         setOpen(false)
     }

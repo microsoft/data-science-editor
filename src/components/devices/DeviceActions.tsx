@@ -41,12 +41,8 @@ export default function DeviceActions(props: {
         _ => _.services({ serviceClass: SRV_SETTINGS })?.[0]
     )
 
-    const handleIdentify = async () => {
-        await device.identify()
-    }
-    const handleReset = async () => {
-        await device.reset()
-    }
+    const handleIdentify = async () => await device.identify()
+    const handleReset = async () => await device.reset()
     const handleStop = async () => {
         removeHostedSimulator(deviceId)
         bus.removeServiceProvider(provider)

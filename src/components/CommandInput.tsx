@@ -37,12 +37,13 @@ export default function CommandInput(props: {
     const reportSpec =
         command.hasReport &&
         specification.packets.find(p => isReportOf(command, p))
-    const handleClick = async () => {
+    const handleClick = async mounted => {
         const pkt = !args?.length
             ? Packet.onlyHeader(command.identifier)
             : packArguments(command, args)
         if (setReports && reportSpec) {
             const reportPacket = await service.sendCmdAwaitResponseAsync(pkt)
+            if (!mounted()) return
             const decoded = reportPacket?.decoded
             setReports([decoded])
         } else if (setReports && hasPipeReport(command)) {
@@ -56,6 +57,7 @@ export default function CommandInput(props: {
                 const reports = output
                     .filter(ot => !!ot.data?.length)
                     .map(ot => ot?.decoded)
+                if (!mounted()) return
                 setReports(reports)
             } finally {
                 inp?.unmount()

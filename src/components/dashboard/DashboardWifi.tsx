@@ -2,10 +2,12 @@ import React, { ChangeEvent, useState } from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import {
     Dialog,
-    DialogActions,
     DialogContent,
     DialogTitle,
     Grid,
+    List,
+    ListItem,
+    ListItemText,
     Switch,
     TextField,
     Typography,
@@ -14,14 +16,74 @@ import useWidgetTheme from "../widgets/useWidgetTheme"
 import { useId } from "react-use-id-hook"
 import SettingsIcon from "@material-ui/icons/Settings"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
-import { Button } from "gatsby-material-ui-components"
 import CmdButton from "../CmdButton"
 import { useRegisterBoolValue } from "../../jacdac/useRegisterValue"
 import {
+    WifiAPFlags,
     WifiCmd,
     WifiReg,
 } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import JDService from "../../../jacdac-ts/src/jdom/service"
+import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
+import RefreshIcon from "@material-ui/icons/Refresh"
+interface ScanResult {
+    flags: WifiAPFlags
+    rssi: number
+    channel: number
+    bssid: Uint8Array
+    ssid: string
+}
+
+function ConnectAp(props: { service: JDService; info: ScanResult }) {
+    const { service, info } = props
+    const { ssid, flags, rssi } = info
+    const [password, setPassword] = useState("")
+    const [selected, setSelected] = useState(false)
+    const selectId = useId()
+    const passwordId = useId()
+    const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setPassword(event.target.value)
+    }
+    const handleConnect = async () => {
+        await service.sendCmdPackedAsync<[string, string]>(
+            WifiCmd.Connect,
+            [ssid, password || ""],
+            true
+        )
+    }
+    const toggleSelected = () => setSelected(!selected)
+    const hasPassword = !!(flags & WifiAPFlags.HasPassword)
+    const connectError =
+        !password && !hasPassword ? "password required" : undefined
+
+    return (
+        <ListItem id={selectId} button onClick={toggleSelected}>
+            <ListItemText primary={ssid} secondary={`rssi: ${rssi}`} />
+            {selected && (
+                <>
+                    <TextField
+                        id={passwordId}
+                        value={password}
+                        label="Password"
+                        fullWidth={true}
+                        type="password"
+                        required={!hasPassword}
+                        helperText={connectError}
+                        onChange={handlePasswordChange}
+                    />
+                    <CmdButton
+                        variant="contained"
+                        color="primary"
+                        disabled={!!connectError}
+                        onClick={handleConnect}
+                    >
+                        Connect
+                    </CmdButton>
+                </>
+            )}
+        </ListItem>
+    )
+}
 
 function ConnectDialog(props: {
     open: boolean
@@ -29,63 +91,52 @@ function ConnectDialog(props: {
     service: JDService
 }) {
     const { open, setOpen, service } = props
-    const [ap, setAp] = useState("")
-    const [password, setPassword] = useState("")
-    const apId = useId()
-    const passwordId = useId()
-    const handleCancel = () => {
-        setAp("")
-        setOpen(false)
+    const [aps, setAps] = useState<ScanResult[]>([])
+
+    const handleClose = () => setOpen(false)
+    const startScan = async mounted => {
+        const res = await service.receiveWithInPipe<
+            [WifiAPFlags, number, number, Uint8Array, string][]
+        >(WifiCmd.Scan, "u32 x[4] i8 u8 b[6] s[33]")
+        if (!mounted()) return
+
+        const newAps: ScanResult[] = arrayConcatMany(res)
+            .map(([flags, rssi, channel, bssid, ssid]) => ({
+                flags,
+                rssi,
+                channel,
+                bssid,
+                ssid,
+            }))
+            .sort((l, r) => l.rssi - r.rssi)
+        setAps(newAps || [])
     }
-    const handleApChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setAp(event.target.value)
-    }
-    const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setPassword(event.target.value)
-    }
-    const handleOk = async () => {
-        await service.sendCmdPackedAsync<[string, string]>(
-            WifiCmd.Connect,
-            [ap, password],
-            true
-        )
-        setAp("")
-        setPassword("")
-        setOpen(false)
-    }
+
     return (
-        <Dialog open={open} fullWidth={true} maxWidth={"lg"}>
+        <Dialog
+            open={open}
+            fullWidth={true}
+            maxWidth={"lg"}
+            onClose={handleClose}
+        >
             <DialogContent>
-                <DialogTitle>Wifi</DialogTitle>
-                <TextField
-                    id={apId}
-                    value={ap}
-                    label="Network"
-                    fullWidth={true}
-                    type="text"
-                    onChange={handleApChange}
-                />
-                <TextField
-                    id={passwordId}
-                    value={password}
-                    label="Password"
-                    fullWidth={true}
-                    type="password"
-                    onChange={handlePasswordChange}
-                />
+                <DialogTitle>
+                    Connect to Wifi
+                    <CmdButton
+                        trackName="dashboard.wifi.scan"
+                        onClick={startScan}
+                        title="scan"
+                        autoRun={true}
+                    >
+                        <RefreshIcon />
+                    </CmdButton>
+                </DialogTitle>
+                <List>
+                    {aps.map(ap => (
+                        <ConnectAp key={ap.ssid} service={service} info={ap} />
+                    ))}
+                </List>
             </DialogContent>
-            <DialogActions>
-                <Button variant="contained" onClick={handleCancel}>
-                    Cancel
-                </Button>
-                <CmdButton
-                    variant="contained"
-                    color="primary"
-                    onClick={handleOk}
-                >
-                    Connect
-                </CmdButton>
-            </DialogActions>
         </Dialog>
     )
 }
