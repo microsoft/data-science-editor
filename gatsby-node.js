@@ -18,8 +18,11 @@ const { IgnorePlugin } = require("webpack")
 const AVATAR_SIZE = 64
 const LAZY_SIZE = 96
 const PREVIEW_WIDTH = 480
+const PREVIEW_HEIGHT = 320
 const CATALOG_HEIGHT = 600
 const CATALOG_WIDTH = 800
+const FULL_HEIGHT = 768
+const FULL_WIDTH = 1024
 
 async function createServicePages(graphql, actions, reporter) {
     console.log(`generating service pages`)
@@ -191,14 +194,20 @@ async function createDevicePages(graphql, actions, reporter) {
             })
             .toFormat("jpeg")
             .toFile(`./public/images/devices/${nodePath}.catalog.jpg`)
-            await sharp(imgsrc)
-            .resize(PREVIEW_WIDTH, null, {
+        await sharp(imgsrc)
+            .resize(PREVIEW_WIDTH, PREVIEW_HEIGHT, {
                 fit: sharp.fit.cover,
             })
             .toFormat("jpeg")
             .toFile(`./public/images/devices/${nodePath}.preview.jpg`)
         await sharp(imgsrc)
-            .resize(null, LAZY_SIZE, {
+            .resize(FULL_WIDTH, FULL_HEIGHT, {
+                fit: sharp.fit.cover,
+            })
+            .toFormat("jpeg")
+            .toFile(`./public/images/devices/${nodePath}.full.jpg`)
+        await sharp(imgsrc)
+            .resize(LAZY_SIZE, LAZY_SIZE, {
                 fit: sharp.fit.cover,
             })
             .toFormat("jpeg")

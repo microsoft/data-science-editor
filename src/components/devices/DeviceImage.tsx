@@ -4,7 +4,7 @@ import useDeviceImage from "./useDeviceImage"
 
 export default function DeviceImage(props: {
     id: string
-    size?: "avatar" | "lazy" | "catalog" | "preview"
+    size: "avatar" | "lazy" | "catalog" | "preview" | "full"
 }) {
     const { id, size } = props
     const spec = deviceSpecificationFromIdentifier(id)
