@@ -107,9 +107,11 @@ function SuspendedBlockEditor(props: { editorId: string; className?: string }) {
 
     // resize blockly
     useEffect(() => {
-        const observer = new ResizeObserver(() => workspace?.resize())
-        observer.observe(blocklyRef.current)
-        return () => observer.disconnect()
+        if (typeof ResizeObserver !== "undefined") {
+            const observer = new ResizeObserver(() => workspace?.resize())
+            observer.observe(blocklyRef.current)
+            return () => observer.disconnect()
+        }
     }, [workspace, blocklyRef.current])
 
     useBlockMinimap(workspace)
