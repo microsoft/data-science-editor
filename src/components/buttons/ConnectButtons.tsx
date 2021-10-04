@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React, { useContext, useState } from "react"
 import ConnectButton from "./ConnectButton"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
@@ -13,11 +13,23 @@ function DisconnectedButton(props: {
     className?: string
     transparent?: boolean
 }) {
+    const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { mobile } = useMediaQueries()
     const { toggleShowConnectTransportDialog } = useContext(AppContext)
     const { full, transparent, className } = props
+    const [working, setWorking] = useState(false)
     const small = !full || mobile
     const trackName = `transport.connect.start`
+
+    const handleConnect = async () => {
+        try {
+            setWorking(true)
+            await bus.connect(true)
+            if (!bus.connected) toggleShowConnectTransportDialog()
+        } finally {
+            setWorking(false)
+        }
+    }
 
     if (small)
         return (
@@ -26,7 +38,8 @@ function DisconnectedButton(props: {
                     title={"Connect to a physical device"}
                     color={transparent ? "inherit" : "primary"}
                     className={className}
-                    onClick={toggleShowConnectTransportDialog}
+                    onClick={handleConnect}
+                    disabled={working}
                 >
                     <JacdacIcon />
                 </IconButtonWithTooltip>
@@ -42,7 +55,8 @@ function DisconnectedButton(props: {
                 color={transparent ? "inherit" : "primary"}
                 className={className}
                 startIcon={<JacdacIcon />}
-                onClick={toggleShowConnectTransportDialog}
+                onClick={handleConnect}
+                disabled={working}
             >
                 Connect
             </Button>

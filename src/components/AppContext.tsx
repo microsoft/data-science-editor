@@ -136,7 +136,7 @@ export const AppProvider = ({ children }) => {
         if (!b) setToolsMenu(false)
     }
 
-    const toggleShowConnectTransportDialog = () => {
+    const toggleShowConnectTransportDialog = async () => {
         const b = !showConnectTransportDialog
         setShowConnectTransportDialog(b)
         if (!b) setToolsMenu(false)
