@@ -28,12 +28,8 @@ export default function ServiceSpecificationCard(props: {
     showServiceClass?: boolean
 }) {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const {
-        serviceClass,
-        specification,
-        showReleaseStatus,
-        showServiceClass,
-    } = props
+    const { serviceClass, specification, showReleaseStatus, showServiceClass } =
+        props
     let spec = specification
     if (!spec && serviceClass !== undefined)
         spec = serviceSpecificationFromClassIdentifier(serviceClass)

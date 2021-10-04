@@ -8,6 +8,38 @@ import { Grid } from "@material-ui/core"
 import ServiceSpecificationSource from "./specification/ServiceSpecificationSource"
 import MakeCodeIcon from "./icons/MakeCodeIcon"
 
+function ServiceButtons(props: {
+    service: jdspec.ServiceSpec
+    makecodeSlug?: string
+}) {
+    const { service, makecodeSlug } = props
+    const { shortId } = service
+
+    return (
+        <Grid container spacing={1}>
+            <Grid item>
+                <Button
+                    variant="contained"
+                    to={`/services/${shortId}/playground/`}
+                >
+                    Playground
+                </Button>
+            </Grid>
+            {makecodeSlug && (
+                <Grid item>
+                    <Button
+                        variant="contained"
+                        to={makecodeSlug}
+                        startIcon={<MakeCodeIcon />}
+                    >
+                        MakeCode
+                    </Button>
+                </Grid>
+            )}
+        </Grid>
+    )
+}
+
 export default function ServiceMarkdown(props: {
     classIdentifier: number
     source: string
@@ -21,28 +53,9 @@ export default function ServiceMarkdown(props: {
         <>
             <ServiceSpecificationStatusAlert specification={service} />
             <Markdown source={source} />
-
-            <Grid container spacing={1}>
-                <Grid item>
-                    <Button
-                        variant="contained"
-                        to={`/services/${shortId}/playground/`}
-                    >
-                        Playground
-                    </Button>
-                </Grid>
-                {makecodeSlug && (
-                    <Grid item>
-                        <Button
-                            variant="contained"
-                            to={makecodeSlug}
-                            startIcon={<MakeCodeIcon />}
-                        >
-                            MakeCode
-                        </Button>
-                    </Grid>
-                )}
-            </Grid>
+            {service && (
+                <ServiceButtons service={service} makecodeSlug={makecodeSlug} />
+            )}
 
             <h2>Registered Devices</h2>
             <DeviceSpecificationList
