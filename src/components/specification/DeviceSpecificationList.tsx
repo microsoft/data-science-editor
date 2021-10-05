@@ -84,7 +84,7 @@ export default function DeviceSpecificationList(props: {
     return (
         <ImageList className={classes.root} cols={cols}>
             {specs.map(spec => {
-                const imageUrl = useDeviceImage(spec, "preview")
+                const imageUrl = useDeviceImage(spec, "list")
                 return (
                     <ImageListItem key={spec.id}>
                         <img src={imageUrl} alt={spec.name} loading="lazy" />

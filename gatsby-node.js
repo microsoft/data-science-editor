@@ -19,6 +19,8 @@ const AVATAR_SIZE = 64
 const LAZY_SIZE = 96
 const PREVIEW_WIDTH = 480
 const PREVIEW_HEIGHT = 320
+const DEVICE_LIST_WIDTH = 309
+const DEVICE_LIST_HEIGHT = 184
 const CATALOG_HEIGHT = 600
 const CATALOG_WIDTH = 800
 const FULL_HEIGHT = 768
@@ -212,6 +214,12 @@ async function createDevicePages(graphql, actions, reporter) {
             })
             .toFormat("jpeg")
             .toFile(`./public/images/devices/${nodePath}.lazy.jpg`)
+        await sharp(imgsrc)
+            .resize(DEVICE_LIST_WIDTH, DEVICE_LIST_HEIGHT, {
+                fit: sharp.fit.cover,
+            })
+            .toFormat("jpeg")
+            .toFile(`./public/images/devices/${nodePath}.list.jpg`)
         await sharp(imgsrc)
             .resize(AVATAR_SIZE, AVATAR_SIZE, { fit: sharp.fit.cover })
             .toFormat("jpeg")
