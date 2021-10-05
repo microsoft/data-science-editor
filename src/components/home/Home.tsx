@@ -42,7 +42,7 @@ export default function Home() {
                 }
             />
             <CenterGrid
-                subtitle3="A protocol designed for easier physical connectivity. It is an entire stack that bridges the world of the low cost microcontroller to the web browser and beyond."
+                subtitle3="A hardware/software stack that bridges the world of low-cost microcontrollers to the web browser and beyond."
                 description="Cheap, flexible and extensible."
             />
             <Grid item xs={12}>
@@ -170,8 +170,8 @@ export default function Home() {
 
             <SplitGrid
                 right={true}
-                subtitle="Device Dev Kit"
-                description="Manufacture your own Jacdac devices."
+                subtitle="For Manufacturers"
+                description="Create Jacdac devices."
                 imageColumns={8}
                 centered={true}
                 buttonText="Device Development Kit"
