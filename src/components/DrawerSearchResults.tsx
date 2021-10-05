@@ -23,7 +23,9 @@ export default function DrawerSearchResults() {
                     <ListItem>
                         <ListItemText
                             primaryTypographyProps={{ color: "textPrimary" }}
-                            secondaryTypographyProps={{ color: "textPrimary" }}
+                            secondaryTypographyProps={{
+                                color: "textSecondary",
+                            }}
                             aria-label={result.title}
                             primary={result.title}
                             secondary={result.url?.slice(0)}
