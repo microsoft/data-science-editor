@@ -10,7 +10,7 @@ export default function TraceView(props: { trace: Trace }) {
         <List>
             {packets.map(packet => (
                 <PacketListItem
-                    key={"pkt" + packet.key}
+                    key={packet.key}
                     packet={packet}
                     count={1}
                     showTime={true}
