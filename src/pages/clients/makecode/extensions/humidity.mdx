@@ -8,9 +8,9 @@ The program below outputs the humidity whenever the humidity
 changes by 5 percent:
 
 ```blocks
-modules.humidity1.onHumidityChangedBy(5, function() {
+modules.humidity1.onHumidityChangedBy(5, function () {
     led.stopAnimation()
-    basic.showNumber(modules.humidity1.humidity())
+    basic.showNumber(Math.round(modules.humidity1.humidity()))
 })
 ```
 
