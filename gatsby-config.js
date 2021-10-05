@@ -1,3 +1,5 @@
+const { identifierToUrlPath } = require(`./jacdac-ts/dist/jacdac.cjs`)
+
 const maxImageWidth = 800
 const siteUrl = "https://microsoft.github.io"
 const pathPrefix = "/jacdac-docs"
@@ -25,6 +27,13 @@ module.exports = {
             options: {
                 name: `images`,
                 path: `${__dirname}/src/images`,
+            },
+        },
+        {
+            resolve: `gatsby-source-filesystem`,
+            options: {
+                name: `images`,
+                path: `${__dirname}/jacdac-ts/jacdac-spec/devices`,
             },
         },
         {
@@ -157,13 +166,14 @@ module.exports = {
                         title: node => node.name,
                         description: node => node.notes["short"],
                         body: node => node.source,
-                        url: node => `/services/${node.shortId}`,
+                        url: node => `/services/${node.shortId}/`,
                     },
                     DevicesJson: {
                         title: node => node.name,
                         description: node => node.description,
                         body: node => node.source,
-                        url: node => `/devices/${node.id}`,
+                        url: node =>
+                            `/devices/${identifierToUrlPath(node.id)}/`,
                     },
                 }, // filter: (node, getNode) => node.frontmatter.tags !== "exempt",
             },

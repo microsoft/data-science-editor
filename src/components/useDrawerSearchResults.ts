@@ -16,7 +16,7 @@ export function useDrawerSearchResults(): SearchResult[] {
         return lastResult.current.nodes;
 
     // spin up search
-    console.log(`search "${searchQuery}"`)
+    //console.debug(`search "${searchQuery}"`)
     let nodes: SearchResult[] = undefined;
     if (searchQuery && index) {
         const results = index.search(searchQuery, <any>{

@@ -8,7 +8,7 @@ export default function PageLinkList(props: {
     const { nodes } = props
     return (
         !!nodes?.length && (
-            <List>
+            <List dense={true}>
                 {nodes?.map(({ slug, title }) => (
                     <ListItem key={slug}>
                         <Link
