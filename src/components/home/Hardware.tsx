@@ -42,7 +42,7 @@ export default function Hardware() {
 
             <CenterGrid
                 subtitle="Plug-and-play"
-                description="Every Jacdac device has a tiny micro-controller that runs the Jacdac protocol and communicates with the bus."
+                description="Every Jacdac device has a tiny micro-controller that runs the Jacdac protocol and communicates over the bus."
                 image={
                     <StaticImage
                         src="./rhtempvertical.png"
@@ -97,8 +97,8 @@ export default function Hardware() {
 
             <SplitGrid
                 right={true}
-                subtitle="Power... negociated"
-                description="Power is regulated and negociated on the bus to minimize brown-outs, burn-outs and other inconviences."
+                subtitle="Power... negotiated"
+                description="Power is regulated and negotiated on the bus to minimize brown-outs, burn-outs and other inconviences."
                 imageColumns={8}
                 image={
                     <StaticImage
@@ -156,8 +156,8 @@ export default function Hardware() {
 
             <SplitGrid
                 right={true}
-                subtitle="Device Dev Kit"
-                description="Manufacture your own Jacdac devices."
+                subtitle="For Manufacturers"
+                description="Create Jacdac devices."
                 imageColumns={8}
                 centered={true}
                 buttonText="Device Development Kit"

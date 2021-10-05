@@ -115,7 +115,7 @@ export default function Home() {
 
             <CenterGrid
                 subtitle="Discover the benefits of Jacdac protocol"
-                description="Jacdac devices communicate using packets over a bus, where each device can advertise itself and the set of services it provides. A service provides registers, events and commands to communicate with other devices."
+                description="Jacdac devices communicate using packets over a bus, where each device can advertise itself and the set of services it provides."
                 buttonText="Protocol specification"
                 buttonVariant="link"
                 buttonUrl="/protocol/"

@@ -75,7 +75,7 @@ export default function Protocol() {
 
             <CenterGrid
                 subtitle="How does it work?"
-                description="Every Jacdac device has a micro-controller to run the Jacdac protocol and communicate with the bus."
+                description="Every Jacdac device has a micro-controller to run the Jacdac protocol and communicate over the bus."
                 image={
                     <StaticImage
                         src="./rhtempvertical.png"
