@@ -73,6 +73,10 @@ export default function CanvasWidget(props: {
     rotator: (delta: number, rotation: Vector) => Vector
 }) {
     const { showAxes, ...others } = props
+
+    // probably a bot or old browser
+    if (typeof ResizeObserver === "undefined") return null
+
     return (
         <Canvas shadowMap camera={{ position: [-1, 0.5, 2], fov: 50 }}>
             <hemisphereLight intensity={0.35} />
