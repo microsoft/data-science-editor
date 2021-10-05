@@ -62,13 +62,13 @@ export default function ServiceSpecificationSelect(props: {
             label={label}
             error={!!error}
             helperText={error}
-            value={serviceClass}
+            value={isNaN(serviceClass) ? "" : serviceClass}
             select
             variant={variant}
             fullWidth={fullWidth}
             onChange={handleChange}
         >
-            <MenuItem key="none" value="NaN">
+            <MenuItem key="none" value="">
                 No service selected
             </MenuItem>
             {specs.map(spec => (
