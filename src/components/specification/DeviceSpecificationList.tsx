@@ -18,6 +18,7 @@ import { IconButton } from "gatsby-theme-material-ui"
 import { arrayShuffle } from "../../../jacdac-ts/src/jdom/utils"
 import useDeviceImage from "../devices/useDeviceImage"
 import useMediaQueries from "../hooks/useMediaQueries"
+import { escapeDeviceIdentifier } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -50,7 +51,12 @@ export default function DeviceSpecificationList(props: {
     const cols = mobile ? 1 : medium ? 3 : 4
     const specs = useMemo(() => {
         let r = devices || deviceSpecifications()
-        if (company) r = r.filter(spec => spec.company === company)
+        if (company) {
+            const lc = escapeDeviceIdentifier(company)
+            r = r.filter(spec =>
+                escapeDeviceIdentifier(spec.company).startsWith(lc)
+            )
+        }
         if (requiredServiceClasses)
             r = r.filter(
                 spec =>
@@ -66,6 +72,7 @@ export default function DeviceSpecificationList(props: {
         requiredServiceClasses,
         shuffle,
         count,
+        company,
         JSON.stringify(devices?.map(d => d.id)),
     ])
 
