@@ -121,6 +121,7 @@ function createBus(): JDBus {
     if (trackEvent) {
         const createPayload = (d: JDDevice): EventProperties => {
             const productId = d.isPhysical ? d.productIdentifier : undefined
+            const firmware = d.isPhysical ? d.firmwareVersion : undefined
             const product =
                 deviceSpecificationFromProductIdentifier(productId)?.id
             const services: Record<string, number> = {}
@@ -136,6 +137,7 @@ function createBus(): JDBus {
                 physical: d.isPhysical,
                 productId: productId?.toString(16),
                 product,
+                firmware,
                 services: JSON.stringify(services),
                 serviceClasses: JSON.stringify(d.serviceClasses.slice(1)),
             }
