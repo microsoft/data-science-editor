@@ -21,7 +21,7 @@ import StructuredData from "../ui/StructuredData"
 function DeviceStructuredData(props: { device: jdspec.DeviceSpec }) {
     const { device } = props
     const payload = useMemo(() => {
-        const { name, images, description, company, status } = device
+        const { name, description, company, status } = device
         const availability = {
             deprecated: "Discontinued",
             experimental: "LimitedAvailability",
@@ -31,7 +31,11 @@ function DeviceStructuredData(props: { device: jdspec.DeviceSpec }) {
             "@context": "https://schema.org/",
             "@type": "Product",
             name,
-            image: images,
+            image: [
+                useDeviceImage(device, "preview"),
+                useDeviceImage(device, "catalog"),
+                useDeviceImage(device, "full"),
+            ],
             description,
             sku: device.id,
             brand: {
