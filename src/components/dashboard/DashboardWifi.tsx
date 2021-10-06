@@ -274,7 +274,7 @@ export default function DashboardWifi(props: DashboardServiceProps) {
                                 key={nssid}
                                 priority={priority}
                                 flags={flags}
-                                ssid={ssid}
+                                ssid={nssid}
                             />
                         ))}
                     </List>
