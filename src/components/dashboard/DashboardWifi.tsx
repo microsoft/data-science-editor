@@ -261,6 +261,11 @@ export default function DashboardWifi(props: DashboardServiceProps) {
                     )}
                 </Grid>
                 <Grid item xs={12}>
+                    <Typography variant="caption">
+                        Known networks ({knownNetworks?.length || 0})
+                    </Typography>
+                </Grid>
+                <Grid item xs={12}>
                     <List dense={true}>
                         {knownNetworks?.map(([priority, flags, nssid]) => (
                             <NetworkItem
