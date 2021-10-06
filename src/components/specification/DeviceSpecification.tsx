@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useMemo } from "react"
 import IDChip from "../IDChip"
 import {
     deviceSpecifications,
@@ -16,6 +16,38 @@ import MemoryIcon from "@material-ui/icons/Memory"
 import ChipList from "../ui/ChipList"
 import { semverCmp } from "../semver"
 import DeviceSpecificationList from "./DeviceSpecificationList"
+import StructuredData from "../ui/StructuredData"
+
+function DeviceStructuredData(props: { device: jdspec.DeviceSpec }) {
+    const { device } = props
+    const payload = useMemo(() => {
+        const { name, description, company, status } = device
+        const availability = {
+            deprecated: "Discontinued",
+            experimental: "LimitedAvailability",
+        }[status]
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const r: any = {
+            "@context": "https://schema.org/",
+            "@type": "Product",
+            name,
+            image: [
+                useDeviceImage(device, "preview"),
+                useDeviceImage(device, "catalog"),
+                useDeviceImage(device, "full"),
+            ],
+            description,
+            sku: device.id,
+            brand: {
+                "@type": "Brand",
+                name: company,
+            },
+        }
+        if (availability) r.availability = availability
+        return r
+    }, [device])
+    return <StructuredData payload={payload} />
+}
 
 export default function DeviceSpecification(props: {
     device: jdspec.DeviceSpec
@@ -49,6 +81,7 @@ export default function DeviceSpecification(props: {
 
     return (
         <>
+            <DeviceStructuredData device={device} />
             <h2 key="title">
                 {name}
                 {!!version && ` v${version}`}
