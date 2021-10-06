@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useMemo } from "react"
 import IDChip from "../IDChip"
 import {
     deviceSpecifications,
@@ -16,6 +16,28 @@ import MemoryIcon from "@material-ui/icons/Memory"
 import ChipList from "../ui/ChipList"
 import { semverCmp } from "../semver"
 import DeviceSpecificationList from "./DeviceSpecificationList"
+import StructuredData from "../ui/StructuredData"
+
+function DeviceStructuredData(props: { device: jdspec.DeviceSpec }) {
+    const { device } = props
+    const { name, images, description, company } = device
+    const payload = useMemo(
+        () => ({
+            "@context": "https://schema.org/",
+            "@type": "Product",
+            name,
+            image: images,
+            description,
+            sku: device.id,
+            brand: {
+                "@type": "Brand",
+                name: company,
+            },
+        }),
+        [device]
+    )
+    return <StructuredData payload={payload} />
+}
 
 export default function DeviceSpecification(props: {
     device: jdspec.DeviceSpec
@@ -49,6 +71,7 @@ export default function DeviceSpecification(props: {
 
     return (
         <>
+            <DeviceStructuredData device={device} />
             <h2 key="title">
                 {name}
                 {!!version && ` v${version}`}
