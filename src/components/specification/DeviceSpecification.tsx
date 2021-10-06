@@ -20,9 +20,14 @@ import StructuredData from "../ui/StructuredData"
 
 function DeviceStructuredData(props: { device: jdspec.DeviceSpec }) {
     const { device } = props
-    const { name, images, description, company } = device
-    const payload = useMemo(
-        () => ({
+    const payload = useMemo(() => {
+        const { name, images, description, company, status } = device
+        const availability = {
+            deprecated: "Discontinued",
+            experimental: "LimitedAvailability",
+        }[status]
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const r: any = {
             "@context": "https://schema.org/",
             "@type": "Product",
             name,
@@ -33,9 +38,10 @@ function DeviceStructuredData(props: { device: jdspec.DeviceSpec }) {
                 "@type": "Brand",
                 name: company,
             },
-        }),
-        [device]
-    )
+        }
+        if (availability) r.availability = availability
+        return r
+    }, [device])
     return <StructuredData payload={payload} />
 }
 
