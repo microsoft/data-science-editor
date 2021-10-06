@@ -1,4 +1,6 @@
-import { DependencyList, useState } from "react"
+import { DependencyList, useEffect, useState } from "react"
+import { EVENT } from "../../../jacdac-ts/src/jdom/constants"
+import JDEvent from "../../../jacdac-ts/src/jdom/event"
 import { PackedValues } from "../../../jacdac-ts/src/jdom/pack"
 import JDService from "../../../jacdac-ts/src/jdom/service"
 import useChange from "../../jacdac/useChange"
@@ -8,19 +10,20 @@ export default function useCommandPipeResults<TItem extends PackedValues>(
     service: JDService,
     cmd: number,
     packFormat: string,
+    changeEvent?: JDEvent,
     deps?: DependencyList
 ) {
     const [results, setResults] = useState<PackedValues[]>([])
     const mounted = useMounted()
 
-    useChange(
-        service,
-        async _ => {
-            const newResults = await _?.receiveWithInPipe(cmd, packFormat)
-            if (mounted()) setResults(newResults || [])
-        },
-        [cmd, packFormat, ...(deps || [])]
-    )
+    const update = async () => {
+        const newResults = await service.receiveWithInPipe(cmd, packFormat)
+        if (mounted()) setResults(newResults || [])
+    }
+
+    // listen to change event if any
+    useEffect(() => changeEvent?.subscribe(EVENT, update), [changeEvent])
+    useChange(service, update, [cmd, packFormat, ...(deps || [])])
 
     return results as TItem[]
 }

@@ -265,7 +265,7 @@ const serviceViews: {
     },
     [SRV_WIFI]: {
         component: DashboardWifi,
-        weight: () => 2,
+        weight: () => 4,
     },
 }
 
