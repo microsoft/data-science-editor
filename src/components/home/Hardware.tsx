@@ -82,7 +82,7 @@ export default function Hardware() {
             <SplitGrid
                 right={false}
                 subtitle="PCB Connector"
-                description="A PCB edge connector was chosen for Jacdac primarily because it essentially adds no cost to a product."
+                description="A PCB edge connector is robust and adds no cost to a product."
                 buttonText="Physical connector"
                 buttonVariant="link"
                 buttonUrl="/hardware/connector/"
@@ -98,7 +98,7 @@ export default function Hardware() {
             <SplitGrid
                 right={true}
                 subtitle="Power... negotiated"
-                description="Power is regulated and negotiated on the bus to minimize brown-outs, burn-outs and other inconviences."
+                description="Power is regulated and negotiated on the bus to minimize brown-outs, etc."
                 imageColumns={8}
                 image={
                     <StaticImage
@@ -142,7 +142,7 @@ export default function Hardware() {
                     <FeatureItem
                         startImage={<CameraIcon fontSize="large" />}
                         description="Flexible."
-                        caption="Hot plug and play with extensive web tooling."
+                        caption="Hot swap plug-and-play with extensive web tooling."
                     />
                 </Grid>
                 <Grid item xs={12} sm={4}>
