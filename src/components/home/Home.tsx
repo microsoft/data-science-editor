@@ -53,7 +53,7 @@ export default function Home() {
             <SplitGrid
                 right={false}
                 subtitle="Hardware"
-                description="Jacdac relies on a 3-wire bus for power delivery and data transfer. A purpose-built connector is used to interface with the Jacdac PCB edge connector."
+                description="Jacdac uses a 3-wire bus for power delivery and data transfer. A purpose-built connector is used to interface with the Jacdac PCB edge connector."
                 image={
                     <StaticImage
                         src="./rotarycable.png"
@@ -81,7 +81,7 @@ export default function Home() {
             <SplitGrid
                 right={false}
                 subtitle="'Nano' Services"
-                description="Jacdac services are specified to abstract the hardware device from the software implementation. The services are comprised of registers, commands and events, along with precise data layout information for each packet."
+                description="Jacdac services provide software an abstract view of the hardware. Services are defined in terms of registers, commands and events."
                 buttonText="Explore services"
                 buttonVariant="link"
                 buttonUrl="/services/"
@@ -115,7 +115,7 @@ export default function Home() {
 
             <CenterGrid
                 subtitle="Discover the benefits of Jacdac protocol"
-                description="Jacdac devices communicate using packets over a bus, where each device can advertise itself and the set of services it provides."
+                description="Jacdac devices communicate using packets over a bus, where each device advertises itself and its set of services."
                 buttonText="Protocol specification"
                 buttonVariant="link"
                 buttonUrl="/protocol/"
@@ -126,35 +126,35 @@ export default function Home() {
                     <FeatureItem
                         startImage={<DirectionsBusIcon fontSize="large" />}
                         description="Bus topology"
-                        caption="Jacdac packets are sent serially among physical devices on the Jacdac bus and may also be sent over WebUSB/WebBLE, providing connectivity to web-based tooling and services running in the web browser."
+                        caption="Jacdac packets are sent among devices on the Jacdac bus and may also be sent over WebUSB/WebBLE, providing connectivity to web-based tooling and services."
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <FeatureItem
                         startImage={<PlaylistAddCheckIcon fontSize="large" />}
                         description="Device discovery and service advertisement"
-                        caption="Any device that hosts a service must also run the control service. The control service is responsible for advertising any services a device is running every 500 milliseconds."
+                        caption="Any device that hosts a service must also run the control service, which is responsible for advertising any services a device is running every 500 milliseconds."
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <FeatureItem
                         startImage={<FindReplaceIcon fontSize="large" />}
                         description="Standardized service abstraction"
-                        caption="This abstraction brings plug-and-play dynamism to Jacdac so that devices with different hardware, but the same overall functionality, can replace one another without having to recompile user applications."
+                        caption="Services allow devices with different hardware, but the same functionality, to replace one another - no need to recompile user applications."
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <FeatureItem
                         startImage={<SubscriptionsIcon fontSize="large" />}
                         description="Full stack from 8bit MCU to web development"
-                        caption="The responsibility of the physical layer is to send/receive a byte buffer (representing a Jacdac frame from the transport layer over a particular media): Single Wire Serial connects MCUs to each other using UART, WebUSB connects MCU to web browser"
+                        caption="The physical protocol layer sends/receives a byte buffer (representing a Jacdac frame): Single Wire Serial connects MCUs to each other using UART."
                     />
                 </Grid>
             </CarouselGrid>
 
             <CenterGrid
                 subtitle="Enabling a cheaper ecosystem."
-                description="A PCB edge connector was chosen for Jacdac primarily because it essentially adds no cost to a product. 
+                description="A PCB edge connector was chosen for Jacdac as it adds no cost to a product. 
                 A module is a small PCB that includes an MCU connected to an on-board sensor or actuator."
                 image={
                     <Suspense>
@@ -209,7 +209,7 @@ export default function Home() {
                             />
                         }
                         description="Hot plug discovery"
-                        caption="The device catalog lists the registered Jacdac devices that can be automatically detected on the bus. The catalog information provides vendor information, the service."
+                        caption="The device catalog lists the registered Jacdac devices that can be automatically detected on the bus, and their services. The catalog information also provides vendor information."
                     />
                 </Grid>
                 <Grid item xs={12} sm={4}>
@@ -222,7 +222,7 @@ export default function Home() {
                             />
                         }
                         description="Firmware updates"
-                        caption="The device catalog is automatically detect, download and flash firmware onto devices."
+                        caption="The device catalog enables the automatic detecttion, download and flashing of firmware onto devices."
                     />
                 </Grid>
                 <Grid item xs={12} sm={4}>
