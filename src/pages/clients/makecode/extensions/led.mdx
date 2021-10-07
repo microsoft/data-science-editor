@@ -1,0 +1,22 @@
+# Single LED Pixel
+
+This extension provides methods for working with a single
+LED:
+
+
+```blocks
+input.onButtonPressed(Button.A, function () {
+    modules.led1.animate(0xff0000, 28)
+})
+input.onButtonPressed(Button.AB, function () {
+    modules.led1.animate(0x000000, 0)
+})
+input.onButtonPressed(Button.B, function () {
+    modules.led1.animate(0x007fff, 58)
+})
+```
+
+
+## See Also
+
+- [service specification](/services/led/)

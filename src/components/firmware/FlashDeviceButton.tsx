@@ -76,7 +76,7 @@ export function FlashDeviceButton(props: {
 
     // tslint:disable-next-line: react-this-binding-issue
     return unsupported ? (
-        <Alert severity="info">No registred firmware</Alert>
+        <Alert severity="info">No registered firmware</Alert>
     ) : missing ? (
         <Alert severity="info">No firmware available</Alert>
     ) : flashing ? (

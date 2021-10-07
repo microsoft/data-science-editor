@@ -69,21 +69,22 @@ function ConnectAp(props: { service: JDService; info: ScanResult }) {
             true
         )
     }
+    // hasPassword == requires password
     const hasPassword = !!(flags & WifiAPFlags.HasPassword)
-    const connectError = !hasPassword ? "password required" : undefined
+    const connectError = hasPassword && !password ? "password required" : undefined
 
     return (
         <Card>
             <CardHeader title={ssid} />
             <CardContent>
-                {!hasPassword && (
+                {hasPassword && (
                     <TextField
                         id={passwordId}
                         value={password}
                         label="Password"
                         fullWidth={true}
                         type="password"
-                        required={!hasPassword}
+                        required={hasPassword}
                         helperText={connectError}
                         onChange={handlePasswordChange}
                     />
@@ -93,7 +94,7 @@ function ConnectAp(props: { service: JDService; info: ScanResult }) {
                 <CmdButton
                     variant="contained"
                     color="primary"
-                    disabled={!connectError}
+                    disabled={!!connectError}
                     onClick={handleAddNetwork}
                 >
                     Connect
