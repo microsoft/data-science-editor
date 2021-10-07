@@ -2,7 +2,7 @@ import Layout from "./src/components/layout"
 import React from "react"
 import ReactDOM from "react-dom"
 
-const UPDATE_DEBOUNCE = 30000
+const UPDATE_DEBOUNCE = 5000
 let lastUpdate = Date.now()
 function tryUpdate(force) {
     const now = Date.now()
@@ -47,9 +47,11 @@ function tryUpdate(force) {
     }, UPDATE_DEBOUNCE - 1000)
 }
 
-export const onRouteUpdate = ({ location }, options) => {
+export const onRouteUpdate = async ({ location }, options) => {
     if (window.analytics && window.analytics.page) window.analytics.page()
-    tryUpdate()
+    const reg = await navigator.serviceWorker.getRegistration()
+    if (reg) reg.update()
+    else tryUpdate()
 }
 
 export const onServiceWorkerUpdateReady = () => {
