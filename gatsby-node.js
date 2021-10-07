@@ -1,5 +1,6 @@
 const path = require(`path`)
 const fs = require(`fs-extra`)
+const process = require(`process`)
 const sharp = require(`sharp`)
 const { slash } = require(`gatsby-core-utils`)
 const { createFilePath } = require(`gatsby-source-filesystem`)
@@ -103,7 +104,7 @@ async function createServicePages(graphql, actions, reporter) {
             component: slash(servicePlaygroundTemplate),
             context: {
                 node,
-                title: `${node.name} playground`
+                title: `${node.name} playground`,
             },
         })
         //console.log(`service redirect`, { from: r, to: p })
@@ -175,7 +176,7 @@ async function createDevicePages(graphql, actions, reporter) {
             component: slash(deviceTemplate),
             context: {
                 node,
-                title: node.name
+                title: node.name,
             },
         })
         // adding firmware identifier redirects
@@ -352,6 +353,15 @@ async function createWorkers() {
     )
 }
 
+async function createVersions() {
+    await fs.outputFile(
+        `./public/version.json`,
+        JSON.stringify({
+            sha: process.env.GATSBY_GITHUB_SHA,
+        })
+    )
+}
+
 // Implement the Gatsby API “createPages”. This is
 // called after the Gatsby bootstrap is finished so you have
 // access to any information necessary to programmatically
@@ -363,6 +373,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     await createDeviceQRPages(actions, reporter)
     await generateServicesJSON()
     await createWorkers()
+    await createVersions()
 }
 
 exports.onCreateNode = ({ node, actions, getNode }) => {

@@ -2,21 +2,49 @@ import Layout from "./src/components/layout"
 import React from "react"
 import ReactDOM from "react-dom"
 
-const UPDATE_DEBOUNCE = 5000
+const UPDATE_DEBOUNCE = 30000
 let lastUpdate = Date.now()
 function tryUpdate(force) {
     const now = Date.now()
     if (now - lastUpdate < UPDATE_DEBOUNCE) return
     lastUpdate = now
 
-    setTimeout(
-        () =>
-            navigator.serviceWorker.getRegistration().then(reg => {
-                if (reg) reg.update()
-                else if (force) window.location.reload()
-            }),
-        UPDATE_DEBOUNCE - 1000
-    )
+    setTimeout(async () => {
+        const reg = await navigator.serviceWorker.getRegistration()
+        if (reg) reg.update()
+        else if (
+            force &&
+            window.navigator.onLine &&
+            !/http:\/\/localhost/.test(window.location.href)
+        ) {
+            console.debug(`jacdac: check for updates`)
+            try {
+                const req = await fetch("/jacdac-docs/version.json")
+                if (!req.ok) {
+                    console.debug(`fetch version.json failed, probably offline`)
+                    return
+                }
+                const version = await req.json()
+                console.log(`version info`, {
+                    version,
+                    sha: window.analytics.sha,
+                })
+                if (
+                    version &&
+                    version.sha &&
+                    window.analytics &&
+                    version.sha !== window.analytics.sha
+                ) {
+                    console.warn(
+                        `web app updated ${version.sha} !== ${window.analytics.sha}`
+                    )
+                    window.location.reload()
+                }
+            } catch (e) {
+                console.error(e)
+            }
+        }
+    }, UPDATE_DEBOUNCE - 1000)
 }
 
 export const onRouteUpdate = ({ location }, options) => {

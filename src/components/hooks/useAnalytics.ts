@@ -75,6 +75,7 @@ export const analytics = {
     page,
     trackEvent,
     trackError,
+    sha
 }
 
 // store instance
