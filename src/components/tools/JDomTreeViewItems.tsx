@@ -68,8 +68,6 @@ export function DeviceTreeItem(
             srv => !serviceFilter || serviceFilter(srv)
         )
     )
-    const { mobile } = useMediaQueries()
-    const showActions = !mobile
     const { dropped, restarts } = useChange(device.stats, _ => _.current)
     const serviceNames = ellipseJoin(
         services

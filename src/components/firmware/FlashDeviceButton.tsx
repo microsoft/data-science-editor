@@ -40,6 +40,7 @@ export function FlashDeviceButton(props: {
     const unsupported = specification && !specification.repo
     const missing = !device || !blob
     const disabled = flashing
+    const color = update && !upToDate ? "primary" : "inherit"
     const mounted = useMounted()
 
     const handleFlashing = async () => {
@@ -87,15 +88,18 @@ export function FlashDeviceButton(props: {
             ) : (
                 <Alert severity="warning">{blob.version} available</Alert>
             )}
-            <Button
-                title={`Flash ${blob.version}`}
-                disabled={disabled}
-                variant="contained"
-                color={"primary"}
-                onClick={handleFlashing}
-            >
-                Flash
-            </Button>
+            {!upToDate ||
+                (ignoreFirmwareCheck && (
+                    <Button
+                        title={`Flash ${blob.version}`}
+                        disabled={disabled}
+                        variant="contained"
+                        color={color}
+                        onClick={handleFlashing}
+                    >
+                        Flash
+                    </Button>
+                ))}
         </>
     ) : (
         <Alert severity="info">No firmware available</Alert>
