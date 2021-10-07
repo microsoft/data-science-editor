@@ -188,7 +188,7 @@ function LayoutWithContext(props: LayoutProps) {
     )
     const title = isDataEditor
         ? "Data Science Editor (Experimental)"
-        : frontmatter.title || undefined
+        : frontmatter?.title || undefined
     const classes = useStyles()
 
     const { darkMode } = useContext(DarkModeContext)
