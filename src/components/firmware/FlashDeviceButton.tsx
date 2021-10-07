@@ -88,15 +88,18 @@ export function FlashDeviceButton(props: {
             ) : (
                 <Alert severity="warning">{blob.version} available</Alert>
             )}
-            <Button
-                title={`Flash ${blob.version}`}
-                disabled={disabled}
-                variant="contained"
-                color={color}
-                onClick={handleFlashing}
-            >
-                Flash
-            </Button>
+            {!upToDate ||
+                (ignoreFirmwareCheck && (
+                    <Button
+                        title={`Flash ${blob.version}`}
+                        disabled={disabled}
+                        variant="contained"
+                        color={color}
+                        onClick={handleFlashing}
+                    >
+                        Flash
+                    </Button>
+                ))}
         </>
     ) : (
         <Alert severity="info">No firmware available</Alert>
