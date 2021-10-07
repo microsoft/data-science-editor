@@ -1,21 +1,29 @@
 # Single LED Pixel
 
 This extension provides methods for working with a single
-LED:
+LED. The `animate` method smoothly transitions to a RGB
+color (red = `0xff0000`, green = `0x00ff00`, blue = `0x0000ff`).
 
 
 ```blocks
 input.onButtonPressed(Button.A, function () {
     modules.led1.animate(0xff0000, 28)
 })
-input.onButtonPressed(Button.AB, function () {
-    modules.led1.animate(0x000000, 0)
-})
 input.onButtonPressed(Button.B, function () {
     modules.led1.animate(0x007fff, 58)
 })
+input.onButtonPressed(Button.AB, function () {
+    modules.led1.animate(0x000000, 0)
+})
 ```
 
+The RGB color values can be retrieved as follows:
+
+```
+let red = modules.led1.colorRed()
+let green = modules.led1.colorGreen()
+let blue = modules.led1.colorBlue()
+```
 
 ## See Also
 
