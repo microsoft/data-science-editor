@@ -186,7 +186,7 @@ function createBus(): JDBus {
         // track uptime
         b.on(DEVICE_PACKET_ANNOUNCE, (d: JDDevice) => {
             if (!(d.stats.announce % 20))
-                trackEvent(`jd.device.stats`, createDevicePayload(d))
+                trackEvent(`jd.uptime`, createDevicePayload(d))
         })
         // track product id
         b.on(
