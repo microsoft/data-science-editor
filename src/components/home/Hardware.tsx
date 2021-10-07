@@ -203,12 +203,6 @@ export default function Hardware() {
                 buttonText="Unbox"
                 buttonUrl="/hardware/kit/"
             />
-
-            <Grid item xs={12}>
-                <Suspense>
-                    <DeviceSpecificationList count={cols} shuffle={true} />
-                </Suspense>
-            </Grid>
         </Grid>
     )
 }
