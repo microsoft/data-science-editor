@@ -21,6 +21,7 @@ import SimulateDeviceAlert from "../alert/SimulateDeviceAlert"
 import MakeCodeAddBlocksButton from "../makecode/MakeCodeAddBlocksButton"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import HostedSimulatorsContext from "../HostedSimulatorsContext"
+import FirmwareAlert from "../firmware/FirmwareAlert"
 
 function defaultDeviceSort(l: JDDevice, r: JDDevice): number {
     const srvScore = (srv: jdspec.ServiceSpec) =>
@@ -161,6 +162,7 @@ export default function Dashboard(props: DashboardProps) {
                 devices={physicals}
                 {...other}
             >
+                <FirmwareAlert />
                 {showConnect && !physicals.length && (
                     <Grid item xs={12}>
                         <ConnectAlert closeable={true} />

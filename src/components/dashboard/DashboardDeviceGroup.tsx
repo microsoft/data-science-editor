@@ -23,6 +23,7 @@ export default function DeviceGroup(
         <section id={sectionId}>
             <Grid container spacing={1}>
                 <GridHeader title={title} action={action} />
+                {children}
                 {devices?.map(device => (
                     <DashboardDeviceItem
                         key={device.id}
@@ -30,7 +31,6 @@ export default function DeviceGroup(
                         {...other}
                     />
                 ))}
-                {children}
             </Grid>
         </section>
     )
