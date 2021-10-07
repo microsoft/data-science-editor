@@ -95,6 +95,7 @@ async function createServicePages(graphql, actions, reporter) {
                 classIdentifier,
                 source,
                 makecodeSlug,
+                title: node.name,
             },
         })
         createPage({
@@ -102,6 +103,7 @@ async function createServicePages(graphql, actions, reporter) {
             component: slash(servicePlaygroundTemplate),
             context: {
                 node,
+                title: `${node.name} playground`
             },
         })
         //console.log(`service redirect`, { from: r, to: p })
@@ -173,6 +175,7 @@ async function createDevicePages(graphql, actions, reporter) {
             component: slash(deviceTemplate),
             context: {
                 node,
+                title: node.name
             },
         })
         // adding firmware identifier redirects
@@ -258,6 +261,7 @@ async function createDevicePages(graphql, actions, reporter) {
                 component: slash(companyTemplate),
                 context: {
                     company: c,
+                    title: `${c} devices`,
                 },
             })
         })
