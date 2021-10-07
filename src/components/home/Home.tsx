@@ -156,7 +156,7 @@ export default function Home() {
                 right={true}
                 subtitle="For Manufacturers"
                 description="Create Jacdac devices."
-                imageColumns={4}
+                imageColumns={6}
                 centered={true}
                 buttonText="Device Development Kit"
                 buttonUrl="/hardware/ddk/"
