@@ -35,19 +35,25 @@ export default function Breadcrumbs(props: { location: WindowLocation }) {
 
     if (!parts.length) return null
     return (
-        <MaterialBreadcrumbs aria-label="breadcrumb">
+        <>
             <BreadcrumbsStructuredData parts={parts} />
-            <Link to="/">Home</Link>
-            {parts.map((part, i) => (
-                <Link
-                    key={i}
-                    color={i === parts.length - 1 ? "textPrimary" : undefined}
-                    aria-current={i === parts.length - 1 ? "page" : undefined}
-                    to={"/" + parts.slice(0, i + 1).join("/")}
-                >
-                    {part}
-                </Link>
-            ))}
-        </MaterialBreadcrumbs>
+            <MaterialBreadcrumbs aria-label="breadcrumb">
+                <Link to="/">Home</Link>
+                {parts.map((part, i) => (
+                    <Link
+                        key={i}
+                        color={
+                            i === parts.length - 1 ? "textPrimary" : undefined
+                        }
+                        aria-current={
+                            i === parts.length - 1 ? "page" : undefined
+                        }
+                        to={"/" + parts.slice(0, i + 1).join("/")}
+                    >
+                        {part}
+                    </Link>
+                ))}
+            </MaterialBreadcrumbs>
+        </>
     )
 }
