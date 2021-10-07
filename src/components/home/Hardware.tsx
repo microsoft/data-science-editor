@@ -10,13 +10,13 @@ import CameraIcon from "@material-ui/icons/Camera"
 import TelegramIcon from "@material-ui/icons/Telegram"
 import useMediaQueries from "../hooks/useMediaQueries"
 import Suspense from "../ui/Suspense"
+const DeviceSpecificationList = lazy(
+    () => import("../specification/DeviceSpecificationList")
+)
 
 /*
 const ModelViewer = lazy(() => import("./models/ModelViewer"))
 const GLBModel = lazy(() => import("./models/GLBModel"))
-const DeviceSpecificationList = lazy(
-    () => import("../specification/DeviceSpecificationList")
-)
 <Grid item xs={12}>
 <Suspense>
     <ModelViewer responsive={true}>
