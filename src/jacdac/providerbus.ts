@@ -21,6 +21,7 @@ import {
     DEVICE_ANNOUNCE,
     DEVICE_CLEAN,
     DEVICE_FIRMWARE_IDENTIFY,
+    DEVICE_PACKET_ANNOUNCE,
     DEVICE_PRODUCT_IDENTIFY,
     DEVICE_RESTART,
 } from "../../jacdac-ts/src/jdom/constants"
@@ -120,11 +121,10 @@ function createBus(): JDBus {
 
     const { trackEvent } = analytics
     if (trackEvent) {
-        const createPayload = (d: JDDevice): EventProperties => {
+        const createServicePayload = (d: JDDevice): EventProperties => {
             const physical = d.isPhysical
             const productId = physical ? d.productIdentifier : undefined
             const firmware = physical ? d.firmwareVersion : undefined
-            const uptime = d.uptime || undefined
             const product =
                 deviceSpecificationFromProductIdentifier(productId)?.id
             const services: Record<string, number> = {}
@@ -143,11 +143,29 @@ function createBus(): JDBus {
                 firmware,
                 services: JSON.stringify(services),
                 serviceClasses: JSON.stringify(d.serviceClasses.slice(1)),
+            }
+        }
+        const createDevicePayload = (d: JDDevice): EventProperties => {
+            const physical = d.isPhysical
+            const productId = physical ? d.productIdentifier : undefined
+            const firmware = physical ? d.firmwareVersion : undefined
+            const product =
+                deviceSpecificationFromProductIdentifier(productId)?.id
+            const uptime = d.uptime
+            const { restarts, announce } = d.stats.current
+            return {
+                deviceId: d.anonymizedDeviceId,
+                source: d.source?.split("-", 1)[0]?.toLowerCase(),
+                physical,
+                productId: productId?.toString(16),
+                product,
+                firmware,
                 uptime,
+                restarts,
+                announce,
             }
         }
 
-        let cleanCount = 0
         // track connections
         b.on(
             CONNECTION_STATE,
@@ -161,33 +179,33 @@ function createBus(): JDBus {
         )
         // track services on announce
         b.on(DEVICE_ANNOUNCE, (d: JDDevice) => {
-            trackEvent("jd.announce", createPayload(d))
+            trackEvent("jd.announce", createServicePayload(d))
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             trackEvent(`jd.stats`, b.stats.current as any)
+        })
+        // track uptime
+        b.on(DEVICE_PACKET_ANNOUNCE, (d: JDDevice) => {
+            if (!(d.stats.announce % 20))
+                trackEvent(`jd.device.stats`, createDevicePayload(d))
         })
         // track product id
         b.on(
             [DEVICE_PRODUCT_IDENTIFY, DEVICE_FIRMWARE_IDENTIFY],
             (d: JDDevice) => {
-                trackEvent("jd.product", createPayload(d))
+                if (d.isPhysical)
+                    trackEvent("jd.product", createServicePayload(d))
             }
         )
         // general stats
         b.on(DEVICE_CLEAN, () => {
-            // log roughly every minute
-            if (!(cleanCount++ % 30))
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                trackEvent(`jd.stats`, b.stats.current as any)
-        })
-        // product info
-        b.on(DEVICE_PRODUCT_IDENTIFY, (d: JDDevice) => {
-            if (d.isPhysical) trackEvent("jd.product", createPayload(d))
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            trackEvent(`jd.stats`, b.stats.current as any)
         })
         // track restarts
         b.on(DEVICE_RESTART, async (d: JDDevice) => {
             if (d.isPhysical) {
                 await d.resolveProductIdentifier()
-                trackEvent(`jd.restart`, createPayload(d))
+                trackEvent(`jd.restart`, createServicePayload(d))
             }
         })
     }
