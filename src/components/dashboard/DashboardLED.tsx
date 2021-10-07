@@ -10,7 +10,6 @@ import AppContext from "../AppContext"
 import LEDWidget from "../widgets/LEDWidget"
 import useRegister from "../hooks/useRegister"
 import useEffectAsync from "../useEffectAsync"
-import { rgbToHtmlColor } from "../../../jacdac-ts/src/jdom/utils"
 
 export default function DashboardLED(props: DashboardServiceProps) {
     const { service } = props
