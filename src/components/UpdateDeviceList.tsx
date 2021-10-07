@@ -30,7 +30,7 @@ function UpdateDeviceCard(props: { device: JDDevice }) {
 
 export default function UpdateDeviceList() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const gridBreakpoints = useGridBreakpoints()
+    const gridBreakpoints = useGridBreakpoints(3)
     const safeBoot = useChange(bus, b => b.safeBoot)
     const devices = useDevices(
         {

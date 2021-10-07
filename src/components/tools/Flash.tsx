@@ -23,6 +23,7 @@ import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import {
     ControlCmd,
     DEVICE_ANNOUNCE,
+    FLASH_MAX_DEVICES,
     SRV_CONTROL,
 } from "../../../jacdac-ts/src/jdom/constants"
 import Packet from "../../../jacdac-ts/src/jdom/packet"
@@ -63,6 +64,7 @@ export default function Flash() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const [tab, setTab] = useState(0)
     const { throttled } = useFirmwareBlobs()
+    const devices = useChange(bus, _ => _.devices({ physical: true }))
 
     const handleTabChange = (
         event: React.ChangeEvent<unknown>,
@@ -90,6 +92,12 @@ export default function Flash() {
                     <AlertTitle>Try again later...</AlertTitle>
                     Oops, it looks like we have been polling firmware too much
                     from GitHub. Please try again later.
+                </Alert>
+            )}
+            {devices?.length > FLASH_MAX_DEVICES && (
+                <Alert severity="error">
+                    <AlertTitle>Too many connected devices</AlertTitle>
+                    Please unplug some of your devices before updating.
                 </Alert>
             )}
             <ConnectAlert />

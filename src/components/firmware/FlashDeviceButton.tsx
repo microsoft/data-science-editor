@@ -40,6 +40,7 @@ export function FlashDeviceButton(props: {
     const unsupported = specification && !specification.repo
     const missing = !device || !blob
     const disabled = flashing
+    const color = update && !upToDate ? "primary" : "inherit"
     const mounted = useMounted()
 
     const handleFlashing = async () => {
@@ -91,7 +92,7 @@ export function FlashDeviceButton(props: {
                 title={`Flash ${blob.version}`}
                 disabled={disabled}
                 variant="contained"
-                color={"primary"}
+                color={color}
                 onClick={handleFlashing}
             >
                 Flash
