@@ -90,25 +90,29 @@ export function parseRepoUrl(url: string): { owner: string; name: string } {
 export async function fetchLatestRelease(
     slug: string,
     options?: GitHubApiOptions
-): Promise<GithubFirmwareRelease> {
+): Promise<{
+    status: number
+    release?: GithubFirmwareRelease
+}> {
     // https://api.github.com/repos/microsoft/jacdac-msr-modules/contents/dist
     const { repoPath } = normalizeSlug(slug)
     const uri = `${ROOT}repos/${repoPath}/contents/dist`
     const resp = await fetch(uri)
     //    console.log(resp)
-    switch (resp.status) {
+    const { status } = resp
+    switch (status) {
         case 200:
         case 204: {
             const contents: GithubContent[] = await resp.json()
             const releases = contentsToFirmwareReleases(contents)
-            return releases[0]
+            return { release: releases[0], status }
         }
         case 404:
             // unknow repo or no access
-            return undefined
+            return { status }
         case 403:
             // throttled
-            if (options?.ignoreThrottled) return undefined
+            if (options?.ignoreThrottled) return { status }
             throw new Error("Too many calls to GitHub, try again later")
     }
     throw new Error(`unknown status code ${resp.status}`)

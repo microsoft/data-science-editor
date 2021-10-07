@@ -20,9 +20,8 @@ import {
     CONNECTION_STATE,
     DEVICE_ANNOUNCE,
     DEVICE_CLEAN,
-    DEVICE_FIRMWARE_IDENTIFY,
+    DEVICE_FIRMWARE_INFO,
     DEVICE_PACKET_ANNOUNCE,
-    DEVICE_PRODUCT_IDENTIFY,
     DEVICE_RESTART,
 } from "../../jacdac-ts/src/jdom/constants"
 import Transport, {
@@ -87,6 +86,7 @@ export class UIFlags {
     static peers = args.peers
     static localhost = args.localhost
     static passive = args.passive
+    static storage = true
 }
 
 // defeat react fast-refresh
@@ -189,13 +189,11 @@ function createBus(): JDBus {
                 trackEvent(`jd.uptime`, createDevicePayload(d))
         })
         // track product id
-        b.on(
-            [DEVICE_PRODUCT_IDENTIFY, DEVICE_FIRMWARE_IDENTIFY],
-            (d: JDDevice) => {
-                if (d.isPhysical)
-                    trackEvent("jd.product", createServicePayload(d))
-            }
-        )
+        b.on(DEVICE_FIRMWARE_INFO, (d: JDDevice) => {
+            const info = d.firmwareInfo
+            if (info && d.isPhysical)
+                trackEvent("jd.product", createServicePayload(d))
+        })
         // general stats
         b.on(DEVICE_CLEAN, () => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any

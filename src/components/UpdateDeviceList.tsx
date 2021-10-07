@@ -1,23 +1,18 @@
 import { Grid } from "@material-ui/core"
-import React, { useContext, useEffect, useRef } from "react"
-import {
-    DEVICE_CHANGE,
-    FIRMWARE_BLOBS_CHANGE,
-    SRV_BOOTLOADER,
-} from "../../jacdac-ts/src/jdom/constants"
+import React, { useContext } from "react"
+import { SRV_BOOTLOADER } from "../../jacdac-ts/src/jdom/constants"
 import JDDevice from "../../jacdac-ts/src/jdom/device"
-import { scanFirmwares } from "../../jacdac-ts/src/jdom/flashing"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import DeviceCard from "./devices/DeviceCard"
 import useGridBreakpoints from "./useGridBreakpoints"
 import useChange from "../jacdac/useChange"
 import useDevices from "./hooks/useDevices"
-import useFirmwareBlobs from "./firmware/useFirmwareBlobs"
 import { FlashDeviceButton } from "./firmware/FlashDeviceButton"
 
 function UpdateDeviceCard(props: { device: JDDevice }) {
+    const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { device } = props
-    const blobs = useFirmwareBlobs()
+    const blobs = useChange(bus, _ => _.firmwareBlobs)
     const firmwareInfo = useChange(device, d => d.firmwareInfo)
     const blob =
         firmwareInfo &&
@@ -35,7 +30,6 @@ function UpdateDeviceCard(props: { device: JDDevice }) {
 
 export default function UpdateDeviceList() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const scanning = useRef(false)
     const gridBreakpoints = useGridBreakpoints()
     const safeBoot = useChange(bus, b => b.safeBoot)
     const devices = useDevices(
@@ -50,27 +44,6 @@ export default function UpdateDeviceList() {
         .sort(
             (l, r) => -(l.productIdentifier || 0) + (r.productIdentifier || 0)
         )
-    const isFlashing = useChange(bus, () => devices.some(dev => dev.flashing))
-    const blobs = useFirmwareBlobs()
-    async function scan() {
-        if (!blobs?.length || isFlashing || scanning.current) return
-        console.log(`start scanning bus`)
-        try {
-            scanning.current = true
-            await scanFirmwares(bus)
-        } finally {
-            scanning.current = false
-        }
-    }
-    // load indexed db file once
-    useEffect(() => {
-        scan()
-    }, [isFlashing, blobs])
-    useEffect(
-        () =>
-            bus.subscribe([DEVICE_CHANGE, FIRMWARE_BLOBS_CHANGE], () => scan()),
-        []
-    )
 
     return (
         <Grid container spacing={2}>

@@ -6,12 +6,12 @@ import Alert from "../ui/Alert"
 import useDevices from "../hooks/useDevices"
 import JDDevice from "../../../jacdac-ts/src/jdom/device"
 import SelectWithLabel from "../ui/SelectWithLabel"
-import useFirmwareBlobs from "./useFirmwareBlobs"
 import { FirmwareBlob } from "../../../jacdac-ts/src/jdom/flashing"
 import { FlashDeviceButton } from "./FlashDeviceButton"
 import { unique } from "../../../jacdac-ts/src/jdom/utils"
 import SelectDevice from "../select/SelectDevice"
 import SwitchWithLabel from "../ui/SwitchWithLabel"
+import useChange from "../../jacdac/useChange"
 
 const fwid = (fw: FirmwareBlob) =>
     fw ? `${fw.store},${fw.productIdentifier},${fw.version}` : ""
@@ -23,7 +23,7 @@ function ManualFirmware() {
         ignoreInfrastructure: true,
         ignoreSimulators: true,
     })
-    const firmwares = useFirmwareBlobs()
+    const firmwares = useChange(bus, _ => _?.firmwareBlobs)
     const stores = unique(firmwares.map(fw => fw.store))
     const [deviceId, setDeviceId] = useState(devices?.[0]?.id)
     const [firmwareId, setFirmwareId] = useState<string>(fwid(firmwares?.[0]))

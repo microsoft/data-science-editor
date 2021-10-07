@@ -19,7 +19,6 @@ import { useId } from "react-use-id-hook"
 import LoadingProgress from "../ui/LoadingProgress"
 import { toHex } from "../../../jacdac-ts/src/jdom/utils"
 import { anyRandomUint32 } from "../../../jacdac-ts/src/jdom/random"
-import { useSecret } from "../hooks/useSecret"
 
 export type GithubPullRequestFiles = Record<
     string,
@@ -44,9 +43,9 @@ export default function GithubPullRequestButton(
         description,
         head,
     } = props
-    const { value: token } = useSecret(GITHUB_API_KEY)
     const [, setResponse] = useState(undefined)
     const [busy, setBusy] = useState(false)
+    const [githubToken, setGithubToken] = useState("")
     const { setError: setAppError, enqueueSnackbar } = useContext(AppContext)
     const [confirmDialog, setConfirmDialog] = useState(false)
     const bodyId = useId()
@@ -68,7 +67,7 @@ export default function GithubPullRequestButton(
         try {
             const MyOctokit = Octokit.plugin(createPullRequest)
             const octokit = new MyOctokit({
-                auth: token,
+                auth: githubToken,
             })
 
             // Returns a normal Octokit PR response
@@ -158,8 +157,9 @@ export default function GithubPullRequestButton(
                         create a Pull Request in that repository.
                     </DialogContentText>
                     <ApiKeyAccordion
-                        apiName={GITHUB_API_KEY}
                         title="GitHub Developer Token"
+                        apiKey={githubToken}
+                        setApiKey={setGithubToken}
                     >
                         Open{" "}
                         <Link
@@ -178,7 +178,7 @@ export default function GithubPullRequestButton(
                         variant="contained"
                         color="primary"
                         onClick={handleCreatePullRequest}
-                        disabled={disabled || !token}
+                        disabled={disabled || !githubToken}
                         aria-label="create pull request"
                     >
                         create pull request

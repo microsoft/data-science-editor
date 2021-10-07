@@ -178,11 +178,6 @@ export default function ToolsDrawer() {
             to: "/tools/jupyterlab",
             icon: <JupyterIcon />,
         },
-            {
-                text: "Edge Impulse",
-                to: "/tools/edge-impulse",
-                icon: <EdgeImpulseIcon />
-            },
         */
         {
             // separator

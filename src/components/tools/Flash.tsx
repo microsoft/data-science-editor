@@ -25,11 +25,14 @@ import {
     DEVICE_ANNOUNCE,
     SRV_CONTROL,
 } from "../../../jacdac-ts/src/jdom/constants"
-import JDDevice from "../../../jacdac-ts/src/jdom/device"
 import Packet from "../../../jacdac-ts/src/jdom/packet"
+import useChange from "../../jacdac/useChange"
+import Alert from "../ui/Alert"
+import { AlertTitle } from "@material-ui/lab"
 
 function FlashDiagnostics() {
-    const blobs = useFirmwareBlobs()
+    const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const blobs = useChange(bus, _ => _?.firmwareBlobs)
     const stores = groupBy(blobs, blob => blob.store)
     return (
         <Grid container spacing={2}>
@@ -59,6 +62,8 @@ function FlashDiagnostics() {
 export default function Flash() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const [tab, setTab] = useState(0)
+    const { throttled } = useFirmwareBlobs()
+
     const handleTabChange = (
         event: React.ChangeEvent<unknown>,
         newValue: number
@@ -80,6 +85,13 @@ export default function Flash() {
 
     return (
         <Box mb={2}>
+            {throttled && (
+                <Alert severity="error">
+                    <AlertTitle>Try again later...</AlertTitle>
+                    Oops, it looks like we have been polling firmware too much
+                    from GitHub. Please try again later.
+                </Alert>
+            )}
             <ConnectAlert />
             <Tabs
                 value={tab}

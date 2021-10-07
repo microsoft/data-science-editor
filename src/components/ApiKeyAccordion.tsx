@@ -16,18 +16,18 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline"
 import { useId } from "react-use-id-hook"
-import { useSecret } from "./hooks/useSecret"
 import AppContext from "./AppContext"
 
 export default function ApiKeyAccordion(props: {
-    apiName: string
     title?: string
     validateKey?: (key: string) => Promise<{ status: number }>
     defaultExpanded?: boolean
     children: ReactNode
+    apiKey: string
+    setApiKey: (value: string) => void
 }) {
-    const { apiName, validateKey, title, children, defaultExpanded } = props
-    const { value: apiKey, setValue: setApiKey } = useSecret(apiName)
+    const { validateKey, title, children, defaultExpanded, apiKey, setApiKey } =
+        props
     const apiKeyId = useId()
     const [key, setKey] = useState("")
     const [expanded, setExpanded] = useState(!apiKey || defaultExpanded)

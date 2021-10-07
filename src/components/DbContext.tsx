@@ -4,8 +4,8 @@ import {
     IEventSource,
     JDEventSource,
 } from "../../jacdac-ts/src/jdom/eventsource"
-import Flags from "../../jacdac-ts/src/jdom/flags"
 import { delay } from "../../jacdac-ts/src/jdom/utils"
+import { UIFlags } from "../jacdac/providerbus"
 import useEffectAsync from "./useEffectAsync"
 
 export const DB_VALUE_CHANGE = "dbValueChange"
@@ -45,7 +45,6 @@ export class DbStore<T> extends JDEventSource {
 
 export interface IDb extends IEventSource {
     readonly blobs: DbStore<Blob>
-    readonly values: DbStore<string>
     readonly firmwares: DbStore<Blob>
     readonly directories: DbStore<FileSystemDirectoryHandle>
 }
@@ -55,14 +54,12 @@ class IDBDb extends JDEventSource implements IDbStorage, IDb {
 
     private _db: IDBDatabase
     readonly blobs: DbStore<Blob>
-    readonly values: DbStore<string>
     readonly firmwares: DbStore<Blob>
     readonly directories: DbStore<FileSystemDirectoryHandle>
 
     constructor() {
         super()
         this.blobs = new DbStore<Blob>(this, IDBDb.STORE_BLOBS)
-        this.values = new DbStore<string>(this, IDBDb.STORE_STORAGE)
         this.firmwares = new DbStore<Blob>(this, IDBDb.STORE_FIRMWARE_BLOBS)
         this.directories = new DbStore<FileSystemDirectoryHandle>(
             this,
@@ -86,7 +83,6 @@ class IDBDb extends JDEventSource implements IDbStorage, IDb {
     static DB_NAME = "JACDAC"
     static STORE_BLOBS = "BLOBS"
     static STORE_FIRMWARE_BLOBS = "STORE_FIRMWARE_BLOBS"
-    static STORE_STORAGE = "STORAGE"
     static STORE_DIRECTORIES = "FILE_SYSTEM_ACCESS_DIRECTORIES"
 
     public static create(): Promise<IDBDb> {
@@ -104,8 +100,6 @@ class IDBDb extends JDEventSource implements IDbStorage, IDb {
                 try {
                     const db = request.result
                     const stores = db.objectStoreNames
-                    if (!stores.contains(IDBDb.STORE_STORAGE))
-                        db.createObjectStore(IDBDb.STORE_STORAGE)
                     if (!stores.contains(IDBDb.STORE_FIRMWARE_BLOBS))
                         db.createObjectStore(IDBDb.STORE_FIRMWARE_BLOBS)
                     if (!stores.contains(IDBDb.STORE_BLOBS))
@@ -243,7 +237,6 @@ class IDBDb extends JDEventSource implements IDbStorage, IDb {
 class MemoryDb extends JDEventSource implements IDb, IDbStorage {
     private readonly tables = {
         [IDBDb.STORE_BLOBS]: {},
-        [IDBDb.STORE_STORAGE]: {},
         [IDBDb.STORE_FIRMWARE_BLOBS]: {},
         [IDBDb.STORE_DIRECTORIES]: {},
     }
@@ -255,7 +248,6 @@ class MemoryDb extends JDEventSource implements IDb, IDbStorage {
     constructor() {
         super()
         this.blobs = new DbStore<Blob>(this, IDBDb.STORE_BLOBS)
-        this.values = new DbStore<string>(this, IDBDb.STORE_STORAGE)
         this.firmwares = new DbStore<Blob>(this, IDBDb.STORE_FIRMWARE_BLOBS)
         this.directories = new DbStore<FileSystemDirectoryHandle>(
             this,
@@ -301,7 +293,7 @@ export const DbProvider = ({ children }) => {
     const [db, setDb] = useState<IDb>(undefined)
     const [error, setError] = useState(undefined)
     useEffectAsync(async () => {
-        if (Flags.storage) {
+        if (UIFlags.storage) {
             console.debug(`db: indexeddb`)
             try {
                 const r = await IDBDb.create()

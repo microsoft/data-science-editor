@@ -1,4 +1,4 @@
-import { useCallback, useContext } from "react"
+import { useCallback, useContext, useState } from "react"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import {
     FirmwareBlob,
@@ -10,10 +10,15 @@ import { deviceSpecifications } from "../../../jacdac-ts/src/jdom/spec"
 import { unique } from "../../../jacdac-ts/src/jdom/utils"
 import { fetchLatestRelease, fetchReleaseBinary } from "../github"
 import useIdleCallback from "../hooks/useIdleCallback"
+import useMounted from "../hooks/useMounted"
+import useAnalytics from "../hooks/useAnalytics"
 
 export default function useFirmwareBlobs() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { db } = useContext<DbContextProps>(DbContext)
+    const { trackEvent } = useAnalytics()
+    const [throttled, setThrottled] = useState(false)
+    const mounted = useMounted()
     const firmwares = db?.firmwares
 
     const loadFirmwares = useCallback(async () => {
@@ -31,27 +36,31 @@ export default function useFirmwareBlobs() {
         )
         for (const slug of missingSlugs) {
             console.log(`db: fetch latest release of ${slug}`)
-            const rel = await fetchLatestRelease(slug, {
+            const { status, release } = await fetchLatestRelease(slug, {
                 ignoreThrottled: true,
             })
-            if (!rel?.version) {
+            trackEvent("github.fetch", { status, slug })
+            if (status === 403) {
+                if (mounted()) setThrottled(true)
+            }
+            if (!release?.version) {
                 console.warn(`release not found`)
                 return
             }
-
-            console.log(`db: fetch binary release ${slug} ${rel.version}`)
-            const fw = await fetchReleaseBinary(slug, rel.version)
+            setThrottled(false)
+            console.log(`db: fetch binary release ${slug} ${release.version}`)
+            const fw = await fetchReleaseBinary(slug, release.version)
             if (fw) {
                 console.log(
-                    `db: binary release ${slug} ${rel.version} downloaded`
+                    `db: binary release ${slug} ${release.version} downloaded`
                 )
                 firmwares.set(slug, fw)
             }
             // throttle github queries
             await bus.delay(5000)
         }
-    }, [db, firmwares])
-    useIdleCallback(loadFirmwares, 30000, [db, firmwares])
+    }, [db, firmwares, throttled])
+    useIdleCallback(loadFirmwares, 5000, [db, firmwares])
     useChangeAsync(
         firmwares,
         async fw => {
@@ -73,7 +82,7 @@ export default function useFirmwareBlobs() {
         []
     )
 
-    return bus.firmwareBlobs
+    return { throttled }
 }
 
 export function useFirmwareBlob(repoSlug: string) {
