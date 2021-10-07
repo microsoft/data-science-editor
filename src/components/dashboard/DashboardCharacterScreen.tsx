@@ -3,6 +3,7 @@ import {
     CharacterScreenCmd,
     CharacterScreenReg,
     CharacterScreenTextDirection,
+    CharacterScreenVariant,
 } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
@@ -24,6 +25,83 @@ const useStyles = makeStyles(() =>
     })
 )
 
+// https://en.wikipedia.org/wiki/Braille_ASCII
+const BRAILE_CHARACTERS = {
+    " ": "⠀", // space bar to dot-0
+    "-": "⠤",
+    ",": "⠠",
+    ";": "⠰",
+    ":": "⠱",
+    "!": "⠮",
+    "?": "⠹",
+    ".": "⠨",
+    "(": "⠷",
+    "[": "⠪",
+    "@": "⠈",
+    "*": "⠡",
+    "/": "⠌",
+    "'": "⠄",
+    '"': "⠐",
+    "\\": "⠳",
+    "&": "⠯",
+    "%": "⠩",
+    "^": "⠘",
+    "+": "⠬",
+    "<": "⠣",
+    ">": "⠜",
+    $: "⠫",
+    "0": "⠴",
+    "1": "⠂",
+    "2": "⠆",
+    "3": "⠒",
+    "4": "⠲",
+    "5": "⠢",
+    "6": "⠖",
+    "7": "⠶",
+    "8": "⠦",
+    "9": "⠔",
+    A: "⠁",
+    B: "⠃",
+    C: "⠉",
+    D: "⠙",
+    E: "⠑",
+    F: "⠋",
+    G: "⠛",
+    H: "⠓",
+    I: "⠊",
+    J: "⠚",
+    K: "⠅",
+    L: "⠇",
+    M: "⠍",
+    N: "⠝",
+    O: "⠕",
+    P: "⠏",
+    Q: "⠟",
+    R: "⠗",
+    S: "⠎",
+    T: "⠞",
+    U: "⠥",
+    V: "⠧",
+    W: "⠺",
+    X: "⠭",
+    Z: "⠵",
+    "]": "⠻",
+    "#": "⠼",
+    Y: "⠽",
+    ")": "⠾",
+    "=": "⠿",
+    _: "⠸",
+}
+function brailify(s: string) {
+    if (!s) return s
+    let r = ""
+    const su = s.toLocaleUpperCase()
+    for (let i = 0; i < su.length; ++i) {
+        r += BRAILE_CHARACTERS[su.charAt(i)] || "?"
+    }
+    return r
+}
+
 export default function DashboardCharacterScreen(props: DashboardServiceProps) {
     const { service } = props
     const classes = useStyles()
@@ -34,11 +112,16 @@ export default function DashboardCharacterScreen(props: DashboardServiceProps) {
         service,
         CharacterScreenReg.TextDirection
     )
+    const variantRegister = useRegister(service, CharacterScreenReg.Variant)
     const [message] = useRegisterUnpackedValue<[string]>(messageRegister, props)
     const [rows] = useRegisterUnpackedValue<[number]>(rowsRegister, props)
     const [columns] = useRegisterUnpackedValue<[number]>(columnsRegister, props)
     const [textDirection] = useRegisterUnpackedValue<[number]>(
         textDirectionRegister,
+        props
+    )
+    const [variant] = useRegisterUnpackedValue<[CharacterScreenVariant]>(
+        variantRegister,
         props
     )
     const [fieldMessage, setFieldMessage] = useState(message)
@@ -75,6 +158,8 @@ export default function DashboardCharacterScreen(props: DashboardServiceProps) {
     const h = rows * (ch + m) - m + 2 * mo
 
     const lines = (message || "").split(/\n/g)
+    const converter: (s: string) => string =
+        variant === CharacterScreenVariant.Braille ? brailify : s => s
     const els: JSX.Element[] = []
 
     let y = mo
@@ -83,6 +168,7 @@ export default function DashboardCharacterScreen(props: DashboardServiceProps) {
         const line = lines[row]
         for (let column = 0; column < columns; ++column) {
             const char = line?.[rtl ? columns - 1 - column : column]
+            const dchar = converter(char)
             els.push(
                 <g key={`${row}-${column}`}>
                     <rect
@@ -103,7 +189,7 @@ export default function DashboardCharacterScreen(props: DashboardServiceProps) {
                             fill={textPrimary}
                             aria-label={char}
                         >
-                            {char}
+                            {dchar}
                         </text>
                     )}
                 </g>

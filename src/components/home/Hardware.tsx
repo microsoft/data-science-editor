@@ -10,7 +10,8 @@ import CameraIcon from "@material-ui/icons/Camera"
 import TelegramIcon from "@material-ui/icons/Telegram"
 import useMediaQueries from "../hooks/useMediaQueries"
 import Suspense from "../ui/Suspense"
-
+const ModelViewer = lazy(() => import("./models/ModelViewer"))
+const GLBModel = lazy(() => import("./models/GLBModel"))
 const DeviceSpecificationList = lazy(
     () => import("../specification/DeviceSpecificationList")
 )
@@ -154,6 +155,14 @@ export default function Hardware() {
                 </Grid>
             </CarouselGrid>
 
+            <Grid item xs={12}>
+                <Suspense>
+                    <ModelViewer responsive={true}>
+                        <GLBModel name={"jmhidserversf441v03"} />
+                    </ModelViewer>
+                </Suspense>
+            </Grid>
+
             <SplitGrid
                 right={true}
                 subtitle="For Manufacturers"
@@ -192,6 +201,12 @@ export default function Hardware() {
                 buttonText="Unbox"
                 buttonUrl="/hardware/kit/"
             />
+
+            <Grid item xs={12}>
+                <Suspense>
+                    <DeviceSpecificationList count={cols} shuffle={true} />
+                </Suspense>
+            </Grid>
         </Grid>
     )
 }

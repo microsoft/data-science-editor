@@ -1,6 +1,6 @@
 import { Grid } from "@material-ui/core"
 import { StaticImage } from "gatsby-plugin-image"
-import React, { lazy } from "react"
+import React from "react"
 import CarouselGrid from "./CarouselGrid"
 import CenterGrid from "./CenterGrid"
 import FeatureItem from "./FeatureItem"
@@ -9,19 +9,9 @@ import DirectionsBusIcon from "@material-ui/icons/DirectionsBus"
 import PlaylistAddCheckIcon from "@material-ui/icons/PlaylistAddCheck"
 import FindReplaceIcon from "@material-ui/icons/FindReplace"
 import SubscriptionsIcon from "@material-ui/icons/Subscriptions"
-import useMediaQueries from "../hooks/useMediaQueries"
-import Suspense from "../ui/Suspense"
 import HTML5Image from "./HTML5Image"
 
-const DeviceSpecificationList = lazy(
-    () => import("../specification/DeviceSpecificationList")
-)
-const ModelViewer = lazy(() => import("./models/ModelViewer"))
-const GLBModel = lazy(() => import("./models/GLBModel"))
-
 export default function Home() {
-    const { mobile, medium } = useMediaQueries()
-    const cols = mobile ? 1 : medium ? 3 : 4
     return (
         <Grid
             container
@@ -45,11 +35,6 @@ export default function Home() {
                 subtitle3="A hardware/software stack that bridges the world of low-cost microcontrollers to the web browser and beyond."
                 description="Cheap, flexible and extensible."
             />
-            <Grid item xs={12}>
-                <Suspense>
-                    <DeviceSpecificationList count={cols} shuffle={true} />
-                </Suspense>
-            </Grid>
             <SplitGrid
                 right={false}
                 subtitle="Hardware"
@@ -157,30 +142,29 @@ export default function Home() {
                 description="A PCB edge connector was chosen for Jacdac as it adds no cost to a product. 
                 A module is a small PCB that includes an MCU connected to an on-board sensor or actuator."
                 image={
-                    <Suspense>
-                        <ModelViewer responsive={true}>
-                            <GLBModel name={"jmhidserversf441v03"} />
-                        </ModelViewer>
-                    </Suspense>
+                    <StaticImage
+                        src="./beautifysimple.png"
+                        alt="An array of Jacdac modules"
+                    />
                 }
-                buttonText="Hardware overview"
+                buttonText="Devices"
                 buttonVariant="link"
-                buttonUrl="/hardware/"
+                buttonUrl="/devices/"
             />
 
             <SplitGrid
                 right={true}
                 subtitle="For Manufacturers"
                 description="Create Jacdac devices."
-                imageColumns={8}
+                imageColumns={4}
                 centered={true}
                 buttonText="Device Development Kit"
-                buttonUrl="/hardware/ddk"
+                buttonUrl="/hardware/ddk/"
                 buttonVariant="link"
                 image={
                     <StaticImage
-                        src="./beautifysimple.png"
-                        alt="An array of Jacdac modules"
+                        src="./pcbfootprint.png"
+                        alt="PCB connector footprint"
                     />
                 }
             />
