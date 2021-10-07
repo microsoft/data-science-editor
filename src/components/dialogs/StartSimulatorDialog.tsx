@@ -22,6 +22,7 @@ import useMediaQueries from "../hooks/useMediaQueries"
 import HostedSimulatorsContext, {
     hostedSimulatorDefinitions,
 } from "../HostedSimulatorsContext"
+import useAnalytics from "../hooks/useAnalytics"
 
 export default function StartSimulatorDialog(props: {
     open: boolean
@@ -31,6 +32,7 @@ export default function StartSimulatorDialog(props: {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { enqueueSnackbar } = useContext(AppContext)
     const { addHostedSimulator } = useContext(HostedSimulatorsContext)
+    const { trackEvent } = useAnalytics()
     const deviceHostDialogId = useId()
     const deviceHostLabelId = useId()
 
@@ -47,9 +49,15 @@ export default function StartSimulatorDialog(props: {
     }
     const handleStart = () => {
         const provider = providerDefinitions.find(h => h.name === selected)
-        if (provider) addServiceProvider(bus, provider)
+        if (provider) {
+            trackEvent("dashboard.server.start", { server: selected })
+            addServiceProvider(bus, provider)
+        }
         const simulator = simulatorDefinitions.find(h => h.name === selected)
-        if (simulator) addHostedSimulator(simulator)
+        if (simulator) {
+            trackEvent("dashboard.sim.start", { simulator: selected })
+            addHostedSimulator(simulator)
+        }
         onClose()
     }
     const handleAddAll = async () => {
