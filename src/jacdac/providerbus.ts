@@ -121,8 +121,10 @@ function createBus(): JDBus {
     const { trackEvent } = analytics
     if (trackEvent) {
         const createPayload = (d: JDDevice): EventProperties => {
-            const productId = d.isPhysical ? d.productIdentifier : undefined
-            const firmware = d.isPhysical ? d.firmwareVersion : undefined
+            const physical = d.isPhysical
+            const productId = physical ? d.productIdentifier : undefined
+            const firmware = physical ? d.firmwareVersion : undefined
+            const uptime = d.uptime || undefined
             const product =
                 deviceSpecificationFromProductIdentifier(productId)?.id
             const services: Record<string, number> = {}
@@ -135,12 +137,13 @@ function createBus(): JDBus {
             return {
                 deviceId: d.anonymizedDeviceId,
                 source: d.source?.split("-", 1)[0]?.toLowerCase(),
-                physical: d.isPhysical,
+                physical,
                 productId: productId?.toString(16),
                 product,
                 firmware,
                 services: JSON.stringify(services),
                 serviceClasses: JSON.stringify(d.serviceClasses.slice(1)),
+                uptime,
             }
         }
 
