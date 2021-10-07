@@ -11,6 +11,8 @@ import Alert from "../ui/Alert"
 export default function FirmwareAlert() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const updates = useChange(bus, _ => {
+        if (inIFrame()) return false
+
         const blobs = _.firmwareBlobs
         const infos = _.devices({ physical: true }).map(d => d.firmwareInfo)
 
@@ -21,7 +23,7 @@ export default function FirmwareAlert() {
         )
     })
 
-    if (inIFrame() || !updates) return null
+    if (!updates) return null
 
     return (
         <Grid item xs={12}>
