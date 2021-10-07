@@ -1,10 +1,7 @@
 import { Component, ErrorInfo, ReactNode } from "react"
 import { ApplicationInsights } from "@microsoft/applicationinsights-web"
-import { cryptoRandomUint32 } from "../../../jacdac-ts/src/jdom/random"
-import { toHex } from "../../../jacdac-ts/src/jdom/utils"
 
 export type EventProperties = Record<string, string | number | boolean>
-const repo = process.env.GATSBY_GITHUB_REPOSITORY
 const sha = process.env.GATSBY_GITHUB_SHA
 
 function splitProperties(props: EventProperties) {
@@ -43,8 +40,7 @@ const appInsights =
 if (appInsights) {
     appInsights.loadAppInsights()
     appInsights.addTelemetryInitializer(envelope => {
-        envelope.tags["repo"] = repo
-        envelope.tags["sha"] = sha
+        if (envelope.data) envelope.data.sha = sha
     })
     appInsights.trackPageView({ name: window.location.href })
 }
@@ -75,7 +71,7 @@ export const analytics = {
     page,
     trackEvent,
     trackError,
-    sha
+    sha,
 }
 
 // store instance
