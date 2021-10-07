@@ -20,6 +20,7 @@ import {
     CONNECTION_STATE,
     DEVICE_ANNOUNCE,
     DEVICE_CLEAN,
+    DEVICE_FIRMWARE_IDENTIFY,
     DEVICE_PRODUCT_IDENTIFY,
     DEVICE_RESTART,
 } from "../../jacdac-ts/src/jdom/constants"
@@ -155,12 +156,19 @@ function createBus(): JDBus {
                         connectionState: transport.connectionState,
                     }))
         )
-        // track services
+        // track services on announce
         b.on(DEVICE_ANNOUNCE, (d: JDDevice) => {
             trackEvent("jd.announce", createPayload(d))
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             trackEvent(`jd.stats`, b.stats.current as any)
         })
+        // track product id
+        b.on(
+            [DEVICE_PRODUCT_IDENTIFY, DEVICE_FIRMWARE_IDENTIFY],
+            (d: JDDevice) => {
+                trackEvent("jd.product", createPayload(d))
+            }
+        )
         // general stats
         b.on(DEVICE_CLEAN, () => {
             // log roughly every minute
