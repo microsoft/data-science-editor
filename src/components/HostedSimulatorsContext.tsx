@@ -92,8 +92,8 @@ const useStyles = makeStyles(() =>
         cardContainer: {
             zIndex: 1100,
             position: "absolute",
-            left: "25rem",
-            top: "25rem",
+            left: "5rem",
+            top: "5rem",
         },
         card: {
             "& .hostedcontainer": {
