@@ -17,12 +17,18 @@ input.onButtonPressed(Button.AB, function () {
 })
 ```
 
-The RGB color values can be retrieved as follows:
+The composite color value (`color`) and individual RGB color values 
+(`red`, `green`, `blue`) can be retrieved as follows:
 
-```
-let red = modules.led1.colorRed()
-let green = modules.led1.colorGreen()
-let blue = modules.led1.colorBlue()
+```blocks
+input.onButtonPressed(Button.A, function () {
+    modules.led1.animate(0x7f00ff, 10)
+})
+input.onButtonPressed(Button.B, function () {
+    // should print 127
+    basic.showNumber(modules.led1.red)
+})
+
 ```
 
 ## See Also
