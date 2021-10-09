@@ -1,0 +1,59 @@
+---
+title: Visual Studio Code
+order: 99
+---
+
+# MakeCode in Visual Studio Code
+
+This guide is for developers wanting to edit MakeCode programs in their favorite text editor.
+This guide is centered around Visual Studio Code (Code); but it applies to many other editors.
+
+MakeCode program can be authored in **Static TypeScript**, a subset of TypeScript suitable for micro-controllers.
+Those programs can be authored with excellent support in Code.
+
+## Setup
+
+-   install [Code])(https://code.visualstudio.com/)
+-   install [Node.JS](https://nodejs.org/en/download/)
+-   install the MakeCode CLI
+
+```
+npm install -g MakeCode
+```
+
+## New project
+
+-   create a new folder and open Code in it
+-   open a new terminal in code (Ctrl + ``)
+-   use the makecode cli to initialize the project for the microbit + Jacdac
+
+```
+mkc init microbit jacdac
+```
+
+## Adding dependencies
+
+Based on which service you plan to use, add the corresponding MakeCode extensions using `mkc add`.
+
+```
+mkc add jacdac-button
+```
+
+## Building
+
+-   launch mkc in watch mode
+
+```
+mkc build --watch
+```
+
+-   open `main.ts` in Code and start editing. mkc will automatically rebuild your changes when a change is detected.
+
+## Building and deploying
+
+- launch mkc in watch mode (`-w`) and auto-deploy (`-d`)
+
+```
+mkc build --watch --deploy
+```
+
