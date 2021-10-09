@@ -5,11 +5,12 @@ order: 99
 
 # MakeCode in Visual Studio Code
 
-This guide is for developers wanting to edit MakeCode programs in their favorite text editor.
-This guide is centered around Visual Studio Code (Code); but it applies to many other editors.
+This guide is for developers wanting to edit MakeCode programs in their usual text-based code editor,
+in particular Visual Studio Code (Code).
 
-MakeCode program can be authored in **Static TypeScript**, a subset of TypeScript suitable for micro-controllers.
-Those programs can be authored with excellent support in Code.
+MakeCode program can be authored in **Static TypeScript**,
+a subset of TypeScript suitable for micro-controllers.
+Those programs can be authored and compiled with excellent tooling support in Visual Studio Code.
 
 ![Screenshot of a code snippet in Code](./code.png)
 
@@ -17,7 +18,7 @@ Those programs can be authored with excellent support in Code.
 
 -   install [Code](https://code.visualstudio.com/)
 -   install [Node.JS](https://nodejs.org/en/download/)
--   install the MakeCode CLI
+-   install the [MKC](https://github.com/microsoft/pxt-mkc), the MakeCode command line tool
 
 ```
 npm install -g MakeCode
@@ -53,9 +54,8 @@ mkc build --watch
 
 ## Building and deploying
 
-- launch mkc in watch mode (`-w`) and auto-deploy (`-d`)
+-   launch mkc in watch mode (`-w`) and auto-deploy (`-d`)
 
 ```
 mkc build --watch --deploy
 ```
-
