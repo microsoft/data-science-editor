@@ -91,7 +91,7 @@ export function createToneContext(): ToneContext {
 
 export function WebAudioProvider(props: { children: ReactNode }) {
     const { children } = props
-    const context = useRef<ToneContext>(createToneContext())
+    const context = useRef<ToneContext>(undefined)
     const [activated, setActivated] = useState(!!context.current)
 
     // needs to be initiated in onClick on safari mobile

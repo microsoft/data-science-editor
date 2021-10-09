@@ -45,6 +45,7 @@ import {
     //SRV_AZURE_IOT_HUB,
     SRV_AZURE_IOT_HUB_HEALTH,
     SRV_WIFI,
+    SRV_VIBRATION_MOTOR,
 } from "../../../jacdac-ts/src/jdom/constants"
 import JDService from "../../../jacdac-ts/src/jdom/service"
 import { isRegister } from "../../../jacdac-ts/src/jdom/spec"
@@ -109,6 +110,7 @@ const DashboardAzureIoTHubHealth = lazy(
     () => import("./DashboardAzureIoTHubHealth")
 )
 const DashboardWifi = lazy(() => import("./DashboardWifi"))
+const DashboardVibrationMotor = lazy(() => import("./DashboardVibrationMotor"))
 
 export interface DashboardServiceProps {
     service: JDService
@@ -266,6 +268,10 @@ const serviceViews: {
     [SRV_WIFI]: {
         component: DashboardWifi,
         weight: () => 4,
+    },
+    [SRV_VIBRATION_MOTOR]: {
+        component: DashboardVibrationMotor,
+        weight: () => 3
     },
 }
 
