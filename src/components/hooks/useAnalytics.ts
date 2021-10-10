@@ -93,6 +93,7 @@ export interface State {
 }
 
 export class AppInsightsErrorBoundary extends Component<Props, State> {
+    private chunkLoadErrorCount = 0
     public state: State = {
         hasError: false,
     }
@@ -105,6 +106,18 @@ export class AppInsightsErrorBoundary extends Component<Props, State> {
     public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
         trackError?.(error, errorInfo as unknown as EventProperties)
         console.error("Uncaught error:", error, errorInfo)
+        if (/ChunkLoadError/i.test(error.message)) {
+            this.chunkLoadErrorCount++
+            // if online, and too many chunk errors reload
+            if (
+                this.chunkLoadErrorCount === 100 &&
+                typeof window !== "undefined" &&
+                !!navigator.onLine
+            ) {
+                trackEvent("error.chunkload.reload")
+                window.location.reload()
+            }
+        }
     }
 
     public render() {
