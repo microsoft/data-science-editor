@@ -20,6 +20,7 @@ import VibrationMotorServer from "../../../jacdac-ts/src/servers/vibrationmotors
 import SwitchWithLabel from "../ui/SwitchWithLabel"
 import JDService from "../../../jacdac-ts/src/jdom/service"
 import CmdButton from "../CmdButton"
+import SliderWithLabel from "../ui/SliderWithLabel"
 
 const patterns: Record<
     string,
@@ -32,12 +33,12 @@ const patterns: Record<
     ".": {
         name: "dit",
         duration: 1,
-        speed: 0.5,
+        speed: 0.6,
     },
     "-": {
         name: "dat",
         duration: 3,
-        speed: 0.5,
+        speed: 0.6,
     },
     " ": {
         name: "space",
@@ -49,10 +50,15 @@ const patterns: Record<
         duration: 3,
         speed: 0.2,
     },
+    "=": {
+        name: "hight dat",
+        duration: 3,
+        speed: 1,
+    },
     "'": {
         name: "high dit",
         duration: 1,
-        speed: 0.7,
+        speed: 1,
     },
     ",": {
         name: "low dit",
@@ -61,9 +67,13 @@ const patterns: Record<
     },
 }
 
-function PatternInput(props: { disabled?: boolean; service: JDService }) {
+function PatternInput(props: {
+    disabled?: boolean
+    service: JDService
+    speedScale: number
+}) {
+    const { speedScale, disabled, service } = props
     const { onClickActivateAudioContext } = useContext(WebAudioContext)
-    const { disabled, service } = props
     const [text, setText] = useState("...---...")
     const helperText = useMemo(
         () =>
@@ -75,14 +85,13 @@ function PatternInput(props: { disabled?: boolean; service: JDService }) {
     const handleSend = async () => {
         onClickActivateAudioContext() // enable audio context within click handler
 
-        const tdit = 100
-        const vscale = 0.25
+        const tdit = 120
         const pattern: [number, number][] = text
             .split("")
             .map(c => patterns[c])
             .filter(p => !!p)
             .flatMap(p => [
-                [(p.duration * tdit) >> 3, p.speed * vscale],
+                [(p.duration * tdit) >> 3, p.speed * speedScale],
                 [tdit >> 3, 0],
             ])
 
@@ -128,6 +137,7 @@ export default function DashboardVibrationMotor(props: DashboardServiceProps) {
     const enabledRegister = useRegister(service, VibrationMotorReg.Enabled)
     const enabled = useRegisterBoolValue(enabledRegister, props)
     const { playTone } = useContext(WebAudioContext)
+    const [speed, setSpeed] = useState(20)
 
     // listen for playTone commands from the buzzer
     useEffect(
@@ -146,6 +156,13 @@ export default function DashboardVibrationMotor(props: DashboardServiceProps) {
     const handleEnabled = async (ev: unknown, checked: boolean) => {
         await enabledRegister.sendSetBoolAsync(checked, true)
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleSpeed: any = (
+        event: React.ChangeEvent<unknown>,
+        value: number | number[]
+    ) => setSpeed(value as number)
+    const percentValueFormat = (newValue: number) => `${newValue | 0}%`
+
     return (
         <>
             {enabled !== undefined && (
@@ -158,7 +175,22 @@ export default function DashboardVibrationMotor(props: DashboardServiceProps) {
                 </Grid>
             )}
             <Grid item xs={12}>
-                <PatternInput disabled={!enabled} service={service} />
+                <PatternInput
+                    disabled={!enabled}
+                    service={service}
+                    speedScale={speed / 100}
+                />
+            </Grid>
+            <Grid item xs={12}>
+                <SliderWithLabel
+                    label="speed"
+                    min={0}
+                    max={100}
+                    value={speed}
+                    onChange={handleSpeed}
+                    valueLabelDisplay="auto"
+                    valueLabelFormat={percentValueFormat}
+                />
             </Grid>
         </>
     )
