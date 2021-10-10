@@ -8,6 +8,7 @@ const Papa = require("papaparse")
 const {
     serviceSpecifications,
     identifierToUrlPath,
+    deviceSpecifications,
     deviceSpecificationFromProductIdentifier,
     isInfrastructure,
 } = require(`./jacdac-ts/dist/jacdac.cjs`)
@@ -144,27 +145,7 @@ async function createDeviceQRPages(actions) {
 async function createDevicePages(graphql, actions, reporter) {
     console.log(`generating device pages`)
     const { createPage, createRedirect } = actions
-    const result = await graphql(`
-        {
-            allDevicesJson {
-                nodes {
-                    id
-                    name
-                    company
-                    productIdentifiers
-                }
-            }
-        }
-    `)
-
-    if (result.errors) {
-        reporter.panicOnBuild('🚨  ERROR: Loading "createPages" query')
-        return
-    }
-
-    const devices = result.data.allDevicesJson.nodes
-    //console.log(devices)
-
+    const devices = deviceSpecifications()
     // Create image post pages.
     const deviceTemplate = path.resolve(`src/templates/device.tsx`)
     const companyTemplate = path.resolve(`src/templates/device-company.tsx`)
@@ -246,9 +227,7 @@ async function createDevicePages(graphql, actions, reporter) {
     }
 
     // create device company routes
-    const companies = new Set(
-        result.data.allDevicesJson.nodes.map(node => node.company)
-    )
+    const companies = new Set(devices.map(node => node.company))
     //console.log(companies)
     for (const company of companies.keys()) {
         const cp = escapeDeviceIdentifier(company).split(/-/g)

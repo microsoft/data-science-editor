@@ -120,12 +120,6 @@ export default function Toc(props: { pagePath: string }) {
           shortId
         }
       } 
-    allDevicesJson {
-        nodes {
-          id
-          name
-        }
-      }
    */
 
     const handleClick = () => {
@@ -208,23 +202,6 @@ export default function Toc(props: { pagePath: string }) {
                 return r
             })
             .forEach(node => toc.push(node))
-
-        /*
-    data.allServicesJson.nodes.map(node => {
-      return {
-        name: node.name,
-        path: `/services/${node.shortId}/`
-      }
-    }).forEach(node => toc.push(node))
-
-    data.allDevicesJson.nodes.map(node => {
-      return {
-        name: node.name,
-        path: `/devices/${identifierToUrlPath(node.id)}/`
-      }
-    }).forEach(node => toc.push(node));
-    */
-
         const { tree } = treeifyToc(toc)
         return tree
     }, [])
