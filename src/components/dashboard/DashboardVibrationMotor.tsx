@@ -84,17 +84,18 @@ function PatternInput(props: {
     )
     const handleSend = async () => {
         onClickActivateAudioContext() // enable audio context within click handler
-
-        const tdit = 120
-        const pattern: [number, number][] = text
+        const seq = text
             .split("")
             .map(c => patterns[c])
             .filter(p => !!p)
-            .flatMap(p => [
-                [(p.duration * tdit) >> 3, p.speed * speedScale],
-                [tdit >> 3, 0],
-            ])
+        if (navigator.vibrate)
+            navigator.vibrate(seq.flatMap(p => [p.duration, tdit >> 3]))
 
+        const tdit = 120
+        const pattern: [number, number][] = seq.flatMap(p => [
+            [(p.duration * tdit) >> 3, p.speed * speedScale],
+            [tdit >> 3, 0],
+        ])
         const data = jdpack<[[number, number][]]>("r: u8 u0.8", [pattern])
         await service.sendCmdAsync(VibrationMotorCmd.Vibrate, data)
     }
