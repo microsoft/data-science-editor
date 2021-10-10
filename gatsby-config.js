@@ -21,6 +21,8 @@ module.exports = {
         FAST_DEV: true,
     },
     plugins: [
+        `gatsby-transformer-json`,
+        `gatsby-transformer-csv`,
         `gatsby-transformer-plaintext`,
         {
             resolve: `gatsby-source-filesystem`,
@@ -92,8 +94,6 @@ module.exports = {
                 path: `${__dirname}/jacdac-ts/jacdac-spec/traces`,
             },
         },
-        `gatsby-transformer-json`,
-        `gatsby-transformer-csv`,
         `gatsby-theme-material-ui`,
         `gatsby-plugin-react-helmet`,
         `gatsby-plugin-image`,
