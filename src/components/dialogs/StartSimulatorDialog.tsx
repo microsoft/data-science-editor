@@ -1,28 +1,34 @@
 import {
     Button,
     Dialog,
+    DialogActions,
     DialogContent,
     DialogTitle,
-    Grid,
-    MenuItem,
+    List,
+    ListItem,
+    TextField,
 } from "@material-ui/core"
 import AppContext from "../AppContext"
-import React, { useContext, useMemo, useState } from "react"
+import React, { ChangeEvent, useContext, useMemo, useState } from "react"
 import { useId } from "react-use-id-hook"
 import servers, {
     addServiceProvider,
+    ServiceProviderDefinition,
 } from "../../../jacdac-ts/src/servers/servers"
-import { VIRTUAL_DEVICE_NODE_NAME } from "../../../jacdac-ts/src/jdom/constants"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import { delay, uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
-import KindIcon from "../KindIcon"
-import SelectWithLabel from "../ui/SelectWithLabel"
 import useMediaQueries from "../hooks/useMediaQueries"
 import HostedSimulatorsContext, {
+    HostedSimulatorDefinition,
     hostedSimulatorDefinitions,
 } from "../HostedSimulatorsContext"
 import useAnalytics from "../hooks/useAnalytics"
+import { useDebounce } from "use-debounce"
+import {
+    serviceSpecificationFromClassIdentifier,
+    serviceSpecifications,
+} from "../../../jacdac-ts/src/jdom/spec"
 
 export default function StartSimulatorDialog(props: {
     open: boolean
@@ -30,34 +36,47 @@ export default function StartSimulatorDialog(props: {
 }) {
     const { open, onClose } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const [query, setQuery] = useState("")
     const { enqueueSnackbar } = useContext(AppContext)
     const { addHostedSimulator } = useContext(HostedSimulatorsContext)
     const { trackEvent } = useAnalytics()
+    const searchId = useId()
     const deviceHostDialogId = useId()
     const deviceHostLabelId = useId()
 
-    const [selected, setSelected] = useState("button")
-    const providerDefinitions = useMemo(() => servers(), [])
-    const simulatorDefinitions = useMemo(() => hostedSimulatorDefinitions(), [])
+    const [dquery] = useDebounce(query.toLowerCase(), 500)
+    const providerDefinitions = useMemo(
+        () =>
+            servers().filter(
+                server =>
+                    !dquery || server.name.toLowerCase().indexOf(dquery) > -1
+            ),
+        [dquery]
+    )
+    const simulatorDefinitions = useMemo(
+        () =>
+            hostedSimulatorDefinitions().filter(
+                sim => !dquery || sim.name.toLowerCase().indexOf(dquery) > -1
+            ),
+        [dquery]
+    )
     const { mobile } = useMediaQueries()
 
-    const handleChange = (ev: React.ChangeEvent<{ value: unknown }>) => {
-        setSelected(ev.target.value as string)
-    }
-    const handleCancel = () => {
-        onClose()
-    }
-    const handleStart = () => {
-        const provider = providerDefinitions.find(h => h.name === selected)
-        if (provider) {
-            trackEvent("dashboard.server.start", { server: selected })
+    const handleProviderDefinition =
+        (provider: ServiceProviderDefinition) => () => {
+            trackEvent("dashboard.server.start", { server: provider.name })
             addServiceProvider(bus, provider)
+            onClose()
         }
-        const simulator = simulatorDefinitions.find(h => h.name === selected)
-        if (simulator) {
-            trackEvent("dashboard.sim.start", { simulator: selected })
+    const handleHostedSimulator =
+        (simulator: HostedSimulatorDefinition) => () => {
+            trackEvent("dashboard.sim.start", { simulator: simulator.name })
             addHostedSimulator(simulator)
+            onClose()
         }
+    const handleQuery = (ev: ChangeEvent<HTMLInputElement>) =>
+        setQuery(ev.target.value)
+    const handleCancel = () => {
         onClose()
     }
     const handleAddAll = async () => {
@@ -83,75 +102,55 @@ export default function StartSimulatorDialog(props: {
             aria-labelledby={deviceHostLabelId}
             open={open}
             onClose={onClose}
+            fullWidth={true}
             fullScreen={mobile}
         >
             <DialogTitle id={deviceHostLabelId}>Start a simulator</DialogTitle>
             <DialogContent>
-                <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                        <SelectWithLabel
-                            fullWidth={true}
-                            helperText={"Select the device to simulate"}
-                            label={"Simulator"}
-                            value={selected}
-                            onChange={handleChange}
+                <TextField
+                    id={searchId}
+                    label="Filter"
+                    type="search"
+                    fullWidth={true}
+                    value={query}
+                    onChange={handleQuery}
+                />
+                <List>
+                    {providerDefinitions.map(host => (
+                        <ListItem
+                            button
+                            key={host.name}
+                            onClick={handleProviderDefinition(host)}
                         >
-                            {providerDefinitions.map(host => (
-                                <MenuItem key={host.name} value={host.name}>
-                                    {host.name}
-                                </MenuItem>
-                            ))}
-                            {simulatorDefinitions.map(host => (
-                                <MenuItem key={host.name} value={host.name}>
-                                    {host.name}
-                                </MenuItem>
-                            ))}
-                        </SelectWithLabel>
-                    </Grid>
-                    <Grid item>
-                        <Grid container spacing={1}>
-                            {mobile && (
-                                <Grid item>
-                                    <Button
-                                        aria-label={`cancel`}
-                                        variant="contained"
-                                        title="Cancel"
-                                        onClick={handleCancel}
-                                    >
-                                        cancel
-                                    </Button>
-                                </Grid>
-                            )}
-                            <Grid item>
-                                <Button
-                                    aria-label={`start ${selected}`}
-                                    color="primary"
-                                    variant="contained"
-                                    title="Start new simulator"
-                                    onClick={handleStart}
-                                    startIcon={
-                                        <KindIcon
-                                            kind={VIRTUAL_DEVICE_NODE_NAME}
-                                        />
-                                    }
-                                >
-                                    start
-                                </Button>
-                            </Grid>
-                            {Flags.diagnostics && (
-                                <Grid item>
-                                    <Button
-                                        variant="outlined"
-                                        onClick={handleAddAll}
-                                    >
-                                        start all simulators
-                                    </Button>
-                                </Grid>
-                            )}
-                        </Grid>
-                    </Grid>
-                </Grid>
+                            {host.name}
+                        </ListItem>
+                    ))}
+                    {simulatorDefinitions.map(host => (
+                        <ListItem
+                            button
+                            key={host.name}
+                            onClick={handleHostedSimulator(host)}
+                        >
+                            {host.name}
+                        </ListItem>
+                    ))}
+                </List>
             </DialogContent>
+            <DialogActions>
+                {Flags.diagnostics && (
+                    <Button variant="outlined" onClick={handleAddAll}>
+                        start all simulators
+                    </Button>
+                )}
+                <Button
+                    aria-label={`cancel`}
+                    variant="outlined"
+                    title="Cancel"
+                    onClick={handleCancel}
+                >
+                    cancel
+                </Button>
+            </DialogActions>
         </Dialog>
     )
 }
