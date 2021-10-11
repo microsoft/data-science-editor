@@ -1,9 +1,9 @@
 # HID Mouse
 
-The HID mouse extension can be used to control a HID mouse, via a Jacdac module 
+The HID mouse extension can be used to control a HID mouse, via a Jacdac module
 that implements HID (generally communicating to a desktop/laptop over USB). Use the
 [JM Brain F4 v0.2](/devices/microsoft/research/jmbrainf441v02) or [JM Brain RP2040 v0.1](/devices/microsoft/research/jmbrainrp204059v01) module,
-  loaded with the HID Keyboard + Mouse firmware that is available via the same links.  
+loaded with the HID Keyboard + Mouse firmware that is available via the same links.
 
 ## Mouse buttons
 
@@ -27,7 +27,7 @@ input.onButtonPressed(Button.B, function() {
 ```
 
 A third optional parameter (`time`, defaults to 0) to the `move` method specifies
-how long the move should take (in milliseconds). 
+how long the move should take (in milliseconds).
 
 ## Mouse wheel
 
@@ -41,6 +41,13 @@ input.onButtonPressed(Button.AB, function() {
 })
 ```
 
+## Connecting the Keyboard module
+
+The module that implements the HID mouse server (like the [JD BRAIN F4](/devices/microsoft/research/jmbrainf441v02) below)
+must also be connected with a USB-C cable to your computer.
+
+![A microbit and HID mouse module connected with 2 cables](./hidcables.jpg)
+
 ## See Also
 
-- [service specification](/services/hidmouse/)
+-   [service specification](/services/hidmouse/)
