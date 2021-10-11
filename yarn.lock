@@ -11681,6 +11681,11 @@ minimist@^1.1.0, minimist@^1.1.3, minimist@^1.2.0, minimist@^1.2.3, minimist@^1.
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.5.tgz#67d66014b66a6a8aaa0c083c5fd58df4e4e97602"
   integrity sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==
 
+minisearch@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/minisearch/-/minisearch-3.1.0.tgz#56325b6ff0fd43adce01b926666121d5c80fa26e"
+  integrity sha512-Lm1YCI3O1BGZFm4RG0LSHCslR4DlW/idmv/QuLdBfI7toDkI8NPcFbo1673tkq4Vz3KqwfnS/6500qSJckcy6A==
+
 mitt@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/mitt/-/mitt-1.2.0.tgz#cb24e6569c806e31bd4e3995787fe38a04fdf90d"
@@ -13729,6 +13734,11 @@ react-merge-refs@^1.0.0, react-merge-refs@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/react-merge-refs/-/react-merge-refs-1.1.0.tgz#73d88b892c6c68cbb7a66e0800faa374f4c38b06"
   integrity sha512-alTKsjEL0dKH/ru1Iyn7vliS2QRcBp9zZPGoWxUOvRGWPUYgjo+V01is7p04It6KhgrzhJGnIj9GgX8W4bZoCQ==
+
+react-minisearch@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/react-minisearch/-/react-minisearch-3.1.0.tgz#e096102f2c7c6a02c9cb6bd99e90e863dac8e66b"
+  integrity sha512-fxRKdqvgvqDqp15b02KiQ5j6tYY5E06jUyW7FWLx7hSadITT9ZJnIJcR0YzGlIv3/XAoMRfktIdCaWJOlwyVRQ==
 
 react-piano@^3.1.3:
   version "3.1.3"

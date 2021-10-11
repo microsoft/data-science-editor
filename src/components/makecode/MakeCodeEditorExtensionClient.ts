@@ -195,7 +195,7 @@ export class MakeCodeEditorExtensionClient extends JDClient {
         code: string,
         json?: string,
         jres?: string,
-        dependencies?: SMap<string>
+        dependencies?: Record<string, string>
     ): Promise<void> {
         if (!this.extensionId) {
             // Write to local storage instead

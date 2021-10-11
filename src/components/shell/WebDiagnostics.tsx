@@ -74,7 +74,7 @@ function NodeCallRow(props: { node: JDNode }) {
 
 function NodeCalls() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const nodes: SMap<JDNode> = {}
+    const nodes: Record<string, JDNode> = {}
     visitNodes(bus, n => (nodes[n.id] = n))
 
     return (
@@ -141,7 +141,7 @@ function NodeListenerRow(props: { node: JDNode }) {
 
 function NodeListeners() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const nodes: SMap<JDNode> = {}
+    const nodes: Record<string, JDNode> = {}
     visitNodes(bus, n => (nodes[n.id] = n))
 
     return (

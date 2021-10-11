@@ -65,7 +65,7 @@ ${config.roles
 }
 
 function toDependencies(config: Configuration) {
-    const r: SMap<string> = {}
+    const r: Record<string, string> = {}
     config?.roles.forEach(role => {
         const mk = resolveMakecodeServiceFromClassIdentifier(role.service)
         r[mk.client.name] = `github:${mk.client.repo}`
