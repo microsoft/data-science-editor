@@ -14,13 +14,14 @@ Automatically, the Micro:bit simulator connects to the physical button and uses 
 
 ![Hardware button show large and small heart when pressed](./hardwareheartbeat.gif)
 
-## "Only one brain"
+## Proxy mode: "Only one brain"
 
 To avoid having the micro:bit simulator **and** the physical micro:bit running code **at the same time**,
 Jacdac automatically puts one of the two micro:bit in a **proxy mode** when restarting the simulator or downloading code into the physical device.
 In proxy mode, the Jacdac messages are transmitted by the MakeCode code is not executed
 
--   in proxy mode, the micro:bit renders a proxy icon.
+-   in proxy mode, the micro:bit renders a proxy icon
+- to exit proxy mode, **reset the device** - either the simulator or the physical device
 
 ![Proxy icon on micro:bit screen](./proxyscreen.png)
 
@@ -29,27 +30,6 @@ In proxy mode, the Jacdac messages are transmitted by the MakeCode code is not e
 -   in proxy mode, the physical micro:bit still transmits the Jacdac packets, so you can see physical services, but does not execute MakeCode code.
 
 ![Switching proxy mode between simulator and hardware micro:bit](./onebrain.gif)
-
-## Role lifecycle
-
-Each role, like ``button1`` defined in the MakeCode program needs to be bound to a server (module) before it starts to operate. 
-When the micro:bit starts or when a new module is plugged, it may take a couple seconds before roles around bound (there is some time needed to discover modules on the bus).
-This means that typically roles are not yet bound when running the ``on start`` block.
-
-Instead of using ``on start``, you can use ``on connected`` and ``on disconnected``
-to start or stop using a role.
-
-```blocks
-modules.button1.onDisconnected(function () {
-    basic.showIcon(IconNames.No)
-})
-modules.button1.onConnected(function () {
-    basic.showIcon(IconNames.Heart)
-})
-```
-
-![An animation that shows how to create new roles](./multiroles.gif)
-
 
 ## Multiple Roles
 
@@ -71,3 +51,34 @@ However, if you want to create a program with multiple buttons, you would need t
 Once reloaded, you should be able to select your roles in the block drop downs.
 
 ![An animation that shows how to create new roles](./multiroles.gif)
+
+## Role lifecycle
+
+Each role, like `button1` defined in the MakeCode program needs to be bound to a server (module) before it starts to operate.
+When the micro:bit starts or when a new module is plugged, it may take a couple seconds before roles around bound (there is some time needed to discover modules on the bus).
+This means that typically roles are not yet bound when running the `on start` block.
+
+Instead of using `on start`, you can use `on connected` and `on disconnected`
+to start or stop using a role.
+
+```blocks
+modules.button1.onDisconnected(function () {
+    basic.showIcon(IconNames.No)
+})
+modules.button1.onConnected(function () {
+    basic.showIcon(IconNames.Heart)
+})
+```
+
+![An animation that shows how to create new roles](./multiroles.gif)
+
+## Updating Jacdac Extensions
+
+Sometimes, you may have to update the Jacdac extension used in your project. This happens when we fix a bug or add a new feature!
+
+-   switch to Javascript using the language button
+-   expand the **Explorer** tree view
+-   click on the update icon next to the jacdac extension entry
+-   That's it!
+
+![Updating references](./update.gif)
