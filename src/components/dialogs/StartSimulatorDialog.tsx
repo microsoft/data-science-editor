@@ -172,21 +172,23 @@ export default function StartSimulatorDialog(props: {
                     )}
                 </List>
             </DialogContent>
-            <DialogActions>
-                {Flags.diagnostics && (
-                    <Button variant="outlined" onClick={handleAddAll}>
-                        start all simulators
+            {!mobile && (
+                <DialogActions>
+                    {Flags.diagnostics && (
+                        <Button variant="outlined" onClick={handleAddAll}>
+                            start all simulators
+                        </Button>
+                    )}
+                    <Button
+                        aria-label={`cancel`}
+                        variant="outlined"
+                        title="Cancel"
+                        onClick={handleCancel}
+                    >
+                        cancel
                     </Button>
-                )}
-                <Button
-                    aria-label={`cancel`}
-                    variant="outlined"
-                    title="Cancel"
-                    onClick={handleCancel}
-                >
-                    cancel
-                </Button>
-            </DialogActions>
+                </DialogActions>
+            )}
         </Dialog>
     )
 }
