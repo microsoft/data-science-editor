@@ -45,7 +45,7 @@ export class DbStore<T> extends JDEventSource {
 
 export interface IDb extends IEventSource {
     readonly blobs: DbStore<Blob>
-    readonly firmwares: DbStore<Blob>
+    readonly firmwares: DbStore<{ time: number; firmware: Blob }>
     readonly directories: DbStore<FileSystemDirectoryHandle>
 }
 
@@ -54,13 +54,16 @@ class IDBDb extends JDEventSource implements IDbStorage, IDb {
 
     private _db: IDBDatabase
     readonly blobs: DbStore<Blob>
-    readonly firmwares: DbStore<Blob>
+    readonly firmwares: DbStore<{ time: number; firmware: Blob }>
     readonly directories: DbStore<FileSystemDirectoryHandle>
 
     constructor() {
         super()
         this.blobs = new DbStore<Blob>(this, IDBDb.STORE_BLOBS)
-        this.firmwares = new DbStore<Blob>(this, IDBDb.STORE_FIRMWARE_BLOBS)
+        this.firmwares = new DbStore<{ time: number; firmware: Blob }>(
+            this,
+            IDBDb.STORE_FIRMWARE_BLOBS
+        )
         this.directories = new DbStore<FileSystemDirectoryHandle>(
             this,
             IDBDb.STORE_DIRECTORIES
@@ -79,7 +82,7 @@ class IDBDb extends JDEventSource implements IDbStorage, IDb {
             }
     }
 
-    static DB_VERSION = 18
+    static DB_VERSION = 19
     static DB_NAME = "JACDAC"
     static STORE_BLOBS = "BLOBS"
     static STORE_FIRMWARE_BLOBS = "STORE_FIRMWARE_BLOBS"
@@ -242,13 +245,16 @@ class MemoryDb extends JDEventSource implements IDb, IDbStorage {
     }
     readonly blobs: DbStore<Blob>
     readonly values: DbStore<string>
-    readonly firmwares: DbStore<Blob>
+    readonly firmwares: DbStore<{ time: number; firmware: Blob }>
     readonly directories: DbStore<FileSystemDirectoryHandle>
 
     constructor() {
         super()
         this.blobs = new DbStore<Blob>(this, IDBDb.STORE_BLOBS)
-        this.firmwares = new DbStore<Blob>(this, IDBDb.STORE_FIRMWARE_BLOBS)
+        this.firmwares = new DbStore<{ time: number; firmware: Blob }>(
+            this,
+            IDBDb.STORE_FIRMWARE_BLOBS
+        )
         this.directories = new DbStore<FileSystemDirectoryHandle>(
             this,
             IDBDb.STORE_DIRECTORIES

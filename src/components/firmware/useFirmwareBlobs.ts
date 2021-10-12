@@ -12,6 +12,7 @@ import { fetchLatestRelease, fetchReleaseBinary } from "../github"
 import useIdleCallback from "../hooks/useIdleCallback"
 import useMounted from "../hooks/useMounted"
 import useAnalytics from "../hooks/useAnalytics"
+import { prettyDuration } from "../../../jacdac-ts/src/jdom/pretty"
 
 export default function useFirmwareBlobs() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
@@ -26,41 +27,52 @@ export default function useFirmwareBlobs() {
         const names = await firmwares?.list()
         if (!names) return
 
-        const missingSlugs = unique(
+        const slugs = unique(
             deviceSpecifications()
                 .filter(spec => !!spec?.productIdentifiers?.length) // needs some product identifiers
                 .map(spec => spec.repo)
                 .filter(repo => /^https:\/\/github.com\//.test(repo))
                 .map(repo => repo.substr("https://github.com/".length))
-                .filter(slug => names.indexOf(slug) < 0)
+            //.filter(slug => names.indexOf(slug) < 0)
         )
-        for (const slug of missingSlugs) {
-            console.log(`db: fetch latest release of ${slug}`)
+        for (const slug of slugs) {
+            const { time } = await firmwares.get(slug)
+            const age = Date.now() - time
+            console.debug(`firmware ${slug} age ${prettyDuration(age)}`)
+            if (age < 3600_000) {
+                console.debug(`db: skipping fresh firmware ${slug}`)
+                continue
+            }
+            console.debug(`db: fetch latest release of ${slug}`)
             const { status, release } = await fetchLatestRelease(slug, {
                 ignoreThrottled: true,
             })
             trackEvent("github.fetch", { status, slug })
             if (status === 403) {
+                trackEvent("github.fetch.throttled", { repo: slug })
                 if (mounted()) setThrottled(true)
             }
             if (!release?.version) {
+                trackEvent("github.fetch.notfound", { repo: slug })
                 console.warn(`release not found`)
                 return
             }
             setThrottled(false)
             console.log(`db: fetch binary release ${slug} ${release.version}`)
-            const fw = await fetchReleaseBinary(slug, release.version)
-            if (fw) {
-                console.log(
+            const firmware = await fetchReleaseBinary(slug, release.version)
+            if (firmware) {
+                console.debug(
                     `db: binary release ${slug} ${release.version} downloaded`
                 )
-                firmwares.set(slug, fw)
+                firmwares.set(slug, { time: Date.now(), firmware })
             }
             // throttle github queries
             await bus.delay(5000)
         }
     }, [db, firmwares, throttled])
+    // reload firmwares
     useIdleCallback(loadFirmwares, 5000, [db, firmwares])
+    // update bus with info on changes
     useChangeAsync(
         firmwares,
         async fw => {
@@ -70,11 +82,13 @@ export default function useFirmwareBlobs() {
             const uf2s: FirmwareBlob[] = []
             if (names?.length) {
                 for (const name of names) {
-                    const blob = await fw.get(name)
-                    const uf2Blobs = await parseFirmwareFile(blob, name)
-                    uf2Blobs?.forEach(uf2Blob => {
-                        uf2s.push(uf2Blob)
-                    })
+                    const { firmware } = (await fw.get(name)) || {}
+                    if (firmware) {
+                        const uf2Blobs = await parseFirmwareFile(firmware, name)
+                        uf2Blobs?.forEach(uf2Blob => {
+                            uf2s.push(uf2Blob)
+                        })
+                    }
                 }
             }
             bus.firmwareBlobs = uf2s
@@ -95,11 +109,11 @@ export function useFirmwareBlob(repoSlug: string) {
         async () => {
             if (!repoSlug) return undefined
 
-            const blob = await firmwares?.get(repoSlug)
-            if (!blob) {
+            const { firmware } = (await firmwares?.get(repoSlug)) || {}
+            if (!firmware) {
                 return undefined
             } else {
-                const uf2Blobs = await parseFirmwareFile(blob, repoSlug)
+                const uf2Blobs = await parseFirmwareFile(firmware, repoSlug)
                 return uf2Blobs
             }
         },
@@ -107,7 +121,8 @@ export function useFirmwareBlob(repoSlug: string) {
     )
 
     const setFirmwareFile = async (tag: string, f: Blob) => {
-        await firmwares?.set(repoSlug, f)
+        if (!f) await firmwares?.set(repoSlug, undefined)
+        else await firmwares?.set(repoSlug, { time: Date.now(), firmware: f })
     }
 
     return {
