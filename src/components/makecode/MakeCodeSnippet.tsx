@@ -9,6 +9,7 @@ import parseMakeCodeSnippet from "./makecodesnippetparser"
 import AppContext from "../AppContext"
 import { toMap } from "../../../jacdac-ts/src/jdom/utils"
 import MakeCodeIcon from "../icons/MakeCodeIcon"
+import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 
 interface Request {
     code: string
@@ -26,6 +27,7 @@ interface Rendered {
 function MakeCodeButton(props: { req: Request }) {
     const { req } = props
     const { setError } = useContext(AppContext)
+    const { mobile } = useMediaQueries()
     const [importing, setImporting] = useState(false)
     const { code, options } = req
     const md = "\n"
@@ -80,7 +82,15 @@ function MakeCodeButton(props: { req: Request }) {
         }
     }
 
-    return (
+    return mobile ? (
+        <IconButtonWithTooltip
+            onClick={handleClick}
+            disabled={importing}
+            title="Try in MakeCode"
+        >
+            <MakeCodeIcon />
+        </IconButtonWithTooltip>
+    ) : (
         <Button
             variant="outlined"
             onClick={handleClick}
