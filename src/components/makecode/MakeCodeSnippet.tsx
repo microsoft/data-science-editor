@@ -85,6 +85,7 @@ function MakeCodeButton(props: { req: Request }) {
     return mobile ? (
         <IconButtonWithTooltip
             onClick={handleClick}
+            color="primary"
             disabled={importing}
             title="Try in MakeCode"
         >
@@ -93,6 +94,7 @@ function MakeCodeButton(props: { req: Request }) {
     ) : (
         <Button
             variant="outlined"
+            color="primary"
             onClick={handleClick}
             disabled={importing}
             startIcon={<MakeCodeIcon />}
