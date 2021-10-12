@@ -10,6 +10,7 @@ import AppContext from "../AppContext"
 import { toMap } from "../../../jacdac-ts/src/jdom/utils"
 import MakeCodeIcon from "../icons/MakeCodeIcon"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
+import useMediaQueries from "../hooks/useMediaQueries"
 
 interface Request {
     code: string
