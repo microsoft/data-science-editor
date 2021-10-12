@@ -6,11 +6,7 @@ import Card from "@material-ui/core/Card"
 // tslint:disable-next-line: no-submodule-imports
 import CardContent from "@material-ui/core/CardContent"
 import JDDevice from "../../../jacdac-ts/src/jdom/device"
-import {
-    SRV_CONTROL,
-    SRV_LOGGER,
-    ControlReg,
-} from "../../../jacdac-ts/src/jdom/constants"
+import { ControlReg } from "../../../jacdac-ts/src/jdom/constants"
 import ServiceButton from "../ServiceButton"
 import useChange from "../../jacdac/useChange"
 import { navigate } from "gatsby"
@@ -19,6 +15,7 @@ import { CardActions, createStyles } from "@material-ui/core"
 import DeviceCardHeader from "./DeviceCardHeader"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import { DeviceLostAlert } from "../alert/DeviceLostAlert"
+import { isInfrastructure } from "../../../jacdac-ts/src/jdom/spec"
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -75,13 +72,7 @@ export default function DeviceCard(props: {
     } = props
     const classes = useStyles()
     const services = useChange(device, () =>
-        device
-            .services()
-            .filter(
-                service =>
-                    service.serviceClass != SRV_CONTROL &&
-                    service.serviceClass != SRV_LOGGER
-            )
+        device.services().filter(srv => !isInfrastructure(srv.specification))
     )
 
     return (
