@@ -2,6 +2,8 @@ import React, { useContext, useState } from "react"
 import AppContext from "../AppContext"
 import EditIcon from "@material-ui/icons/Edit"
 import IconButtonWithTooltip from "./IconButtonWithTooltip"
+import useMediaQueries from "../hooks/useMediaQueries"
+import { Button } from "gatsby-material-ui-components"
 
 export default function CodeSandboxButton(props: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -9,6 +11,7 @@ export default function CodeSandboxButton(props: {
 }) {
     const { files } = props
     const { setError } = useContext(AppContext)
+    const { mobile } = useMediaQueries()
     const [importing, setImporting] = useState(false)
 
     const handleClick = async () => {
@@ -40,7 +43,7 @@ export default function CodeSandboxButton(props: {
         }
     }
 
-    return (
+    return mobile ? (
         <IconButtonWithTooltip
             color="primary"
             onClick={handleClick}
@@ -49,5 +52,15 @@ export default function CodeSandboxButton(props: {
         >
             <EditIcon />
         </IconButtonWithTooltip>
+    ) : (
+        <Button
+            color="primary"
+            variant="outlined"
+            onClick={handleClick}
+            startIcon={<EditIcon />}
+            disabled={importing}
+        >
+            Try in CodeSandbox
+        </Button>
     )
 }
