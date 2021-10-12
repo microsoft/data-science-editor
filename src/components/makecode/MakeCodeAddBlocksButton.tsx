@@ -20,7 +20,7 @@ export default function MakeCodeAddBlocksButton() {
         []
     )
 
-    if (isMakeCodeTool && !extensions?.length) return null
+    if (!isMakeCodeTool || !extensions?.length) return null
     return (
         <Box m={1}>
             <Button

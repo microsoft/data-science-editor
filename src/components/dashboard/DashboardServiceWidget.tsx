@@ -46,6 +46,7 @@ import {
     SRV_AZURE_IOT_HUB_HEALTH,
     SRV_WIFI,
     SRV_VIBRATION_MOTOR,
+    SRV_CODAL_MESSAGE_BUS,
 } from "../../../jacdac-ts/src/jdom/constants"
 import JDService from "../../../jacdac-ts/src/jdom/service"
 import { isRegister } from "../../../jacdac-ts/src/jdom/spec"
@@ -59,13 +60,13 @@ import { CircularProgress, NoSsr } from "@material-ui/core"
 
 // bundled
 import DashboardButton from "./DashboardButton"
-import DashboardServo from "./DashboardServo"
 import DashboardRotaryEncoder from "./DashboardRotaryEncoder"
 import DashboardSwitch from "./DashboardSwitch"
 import useServiceServer from "../hooks/useServiceServer"
 import useRegister from "../hooks/useRegister"
 
 // lazy devices
+const DashboardServo = lazy(() => import("./DashboardServo"))
 const DashboardAccelerometer = lazy(() => import("./DashboardAccelerometer"))
 const DashboardBuzzer = lazy(() => import("./DashboardBuzzer"))
 const DashboardLEDPixel = lazy(() => import("./DashboardLEDPixel"))
@@ -111,6 +112,9 @@ const DashboardAzureIoTHubHealth = lazy(
 )
 const DashboardWifi = lazy(() => import("./DashboardWifi"))
 const DashboardVibrationMotor = lazy(() => import("./DashboardVibrationMotor"))
+const DashboardCODALMessageBus = lazy(
+    () => import("./DashboardCODALMessageBus")
+)
 
 export interface DashboardServiceProps {
     service: JDService
@@ -157,7 +161,6 @@ const serviceViews: {
     },
     [SRV_SERVO]: {
         component: DashboardServo,
-        bundled: true,
     },
     [SRV_SWITCH]: {
         component: DashboardSwitch,
@@ -271,7 +274,11 @@ const serviceViews: {
     },
     [SRV_VIBRATION_MOTOR]: {
         component: DashboardVibrationMotor,
-        weight: () => 3
+        weight: () => 3,
+    },
+    [SRV_CODAL_MESSAGE_BUS]: {
+        component: DashboardCODALMessageBus,
+        weight: () => 2,
     },
 }
 
