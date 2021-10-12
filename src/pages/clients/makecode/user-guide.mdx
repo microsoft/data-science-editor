@@ -44,6 +44,8 @@ modules.button1.onUp(function () {
 
 However, if you want to create a program with multiple buttons, you would need to define additional roles in your program.
 
+### Blocks editor
+
 -   Open the **Modules** drawer
 -   Click **Settings** to open the roles editor
 -   Add and remove roles and go back
@@ -51,6 +53,15 @@ However, if you want to create a program with multiple buttons, you would need t
 Once reloaded, you should be able to select your roles in the block drop downs.
 
 ![An animation that shows how to create new roles](./multiroles.gif)
+
+### JavaScript editor
+
+Unfortunately, the role editor is not yet available in the JavaScript view. So you are left with 2 choices, go to blocks, add roles, go back to JavaScript. 
+Or... add them manually by instantiating clients.
+
+```
+export const dotMatrix2 = new modules.DotMatrixClient("dot Matrix2")
+```
 
 ## Role lifecycle
 
