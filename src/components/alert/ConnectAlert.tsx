@@ -30,7 +30,7 @@ function NoSsrConnectAlert(props: {
                 {!spec && <span>Did you connect your device?</span>}
                 {spec && <span>Did you connect a {spec.name} device?</span>}
                 <Box component="span" ml={2}>
-                    <ConnectButtons full={true} transparent={true} />
+                    <ConnectButtons full="always" transparent={true} />
                 </Box>
             </Alert>
         </Box>
