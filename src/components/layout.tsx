@@ -24,6 +24,7 @@ import useMediaQueries from "./hooks/useMediaQueries"
 import MainAppBar from "./shell/MainAppBar"
 import DataEditorAppBar from "./shell/DataEditorAppBar"
 import { AlertTitle } from "@material-ui/lab"
+import { UIFlags } from "../jacdac/providerbus"
 
 const TraceAlert = lazy(() => import("./shell/TraceAlert"))
 const WebDiagnostics = lazy(() => import("./shell/WebDiagnostics"))
@@ -164,7 +165,7 @@ function LayoutWithContext(props: LayoutProps) {
     const { pageContext, path, location } = pageProps
     const { frontmatter } = pageContext || {}
 
-    const isHosted = /(hosted|embed)=1/.test(window.location.href)
+    const isHosted = UIFlags.hosted
     const tools = /^\/tools\//.test(path)
     const makeCodeTool = /tools\/makecode-/.test(path)
     const fullWidthTools =

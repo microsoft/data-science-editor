@@ -1,11 +1,13 @@
 import { inIFrame } from "../../../jacdac-ts/src/jdom/iframeclient"
 import { SMap } from "../../../jacdac-ts/src/jdom/utils"
+import { UIFlags } from "../../jacdac/providerbus"
 
 export function fileSystemHandleSupported() {
     return (
         typeof window !== "undefined" &&
         !!window.showDirectoryPicker &&
-        !inIFrame()
+        !inIFrame() &&
+        !UIFlags.hosted
     )
 }
 

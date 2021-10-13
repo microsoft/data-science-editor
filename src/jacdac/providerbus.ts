@@ -87,6 +87,7 @@ export class UIFlags {
     static localhost = args.localhost
     static passive = args.passive
     static storage = true
+    static hosted = typeof window !== "undefined" && /(hosted|embed)=1/.test(window.location.href)
 }
 
 // defeat react fast-refresh
