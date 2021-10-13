@@ -10,15 +10,19 @@ export function useLocationSearchParamString(key: string): string {
     }, [key])
 }
 
-export function useLocationSearchParamBoolean(key: string): boolean {
+export function useLocationSearchParamBoolean(
+    key: string,
+    defaultValue: boolean
+): boolean {
     return useMemo(() => {
         if (typeof window !== "undefined") {
             const url = new URL(window.location.href)
             const v = url.searchParams.get(key)
-            if (v) return v === "1" || v === "true"
+            if (v) return v === "1" || v === "true" || v === "yes"
             // empty value
-            return url.searchParams.has(key)
+            if (url.searchParams.has(key)) return true
+            return defaultValue
         }
         return undefined
-    }, [key])
+    }, [key, defaultValue])
 }

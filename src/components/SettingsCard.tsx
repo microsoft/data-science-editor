@@ -5,7 +5,13 @@ import {
     Grid,
     TextField,
 } from "@material-ui/core"
-import React, { ChangeEvent, useCallback, useContext, useState } from "react"
+import React, {
+    ChangeEvent,
+    lazy,
+    useCallback,
+    useContext,
+    useState,
+} from "react"
 import JDService from "../../jacdac-ts/src/jdom/service"
 import DeviceCardHeader from "./devices/DeviceCardHeader"
 import useServiceClient from "./useServiceClient"
@@ -23,6 +29,11 @@ import { bufferToString } from "../../jacdac-ts/src/jdom/utils"
 import { randomDeviceId } from "../../jacdac-ts/src/jdom/random"
 import { Button } from "gatsby-material-ui-components"
 import ServiceManagerContext from "./ServiceManagerContext"
+import Suspense from "./ui/Suspense"
+import AppContext from "./AppContext"
+import SystemUpdateAltIcon from "@material-ui/icons/SystemUpdateAlt"
+
+const ImportButton = lazy(() => import("./ImportButton"))
 
 function SettingRow(props: {
     client: SettingsClient
@@ -172,6 +183,42 @@ function AddSettingRow(props: {
     )
 }
 
+function ImportSettingsButton(props: { client: SettingsClient }) {
+    const { client } = props
+    const { setError } = useContext(AppContext)
+
+    const handleFilesUploaded = async (files: File[]) => {
+        for (const file of files) {
+            try {
+                const text = await file.text()
+                const json = JSON.parse(text)
+                if (Array.isArray(json)) {
+                    for (const entry of json as {
+                        key: string
+                        value: string
+                    }[]) {
+                        const { key, value } = entry
+                        if (key) await client.setStringValue(key, value)
+                    }
+                }
+            } catch (e) {
+                console.warn(e)
+                setError(`invalid file ${file.name}`)
+            }
+        }
+    }
+    return (
+        <Suspense>
+            <ImportButton
+                icon={false}
+                text="Import"
+                onFilesUploaded={handleFilesUploaded}
+                acceptedFiles={["application/json"]}
+            />
+        </Suspense>
+    )
+}
+
 export default function SettingsCard(props: {
     service: JDService
     mutable?: boolean
@@ -196,15 +243,16 @@ export default function SettingsCard(props: {
         },
         [keyPrefix]
     )
+
+    const secrets = values?.filter(value => showSecrets && value.key[0] === "$")
+    const publics = values?.filter(value => value.key[0] !== "$")
+
     const handleClear = async () => await client?.clear()
     const handleExport = () =>
         fileStorage.saveText(
             "settings.json",
-            JSON.stringify(values || {}, null, 2)
+            JSON.stringify(publics || {}, null, 2)
         )
-
-    const secrets = values?.filter(value => showSecrets && value.key[0] === "$")
-    const publics = values?.filter(value => value.key[0] !== "$")
 
     if (!client) return <LoadingProgress /> // wait till loaded
 
@@ -219,7 +267,6 @@ export default function SettingsCard(props: {
                             keyPrefix={keyPrefix}
                             showSecrets={showSecrets}
                             autoKey={autoKey}
-                            key="add"
                         />
                     )}
                     {publics?.map(({ key, value }) => (
@@ -272,9 +319,13 @@ export default function SettingsCard(props: {
                             title="export"
                             disabled={!values}
                             onClick={handleExport}
+                            startIcon={<SystemUpdateAltIcon />}
                         >
                             Export
                         </Button>
+                    </Grid>
+                    <Grid item>
+                        <ImportSettingsButton client={client} />
                     </Grid>
                 </Grid>
             </CardActions>

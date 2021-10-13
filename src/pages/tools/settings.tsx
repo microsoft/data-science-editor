@@ -16,7 +16,7 @@ export default function Page() {
     useServiceProviderFromServiceClass(SRV_SETTINGS)
     const services = useServices({ serviceClass: SRV_SETTINGS })
     const keyPrefix = useLocationSearchParamString("prefix")
-    const autoKey = useLocationSearchParamBoolean("autokey")
+    const autoKey = useLocationSearchParamBoolean("autokey", false)
     const showSecrets = !keyPrefix
 
     return (
@@ -52,7 +52,10 @@ export default function Page() {
                 </li>
                 <li>
                     <code>autokey</code>, will automatically generate random
-                    keys for entries
+                    keys for entries. Default is false.
+                </li>
+                <li>
+                    <code>import=false</code>, will hide the import button
                 </li>
             </ul>
         </>
