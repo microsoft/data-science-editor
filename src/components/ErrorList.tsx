@@ -1,16 +1,7 @@
 import React from "react"
 import { graphql, useStaticQuery } from "gatsby"
-import { Link } from "gatsby-theme-material-ui"
 import { groupBy } from "../../jacdac-ts/src/jdom/utils"
-
-function ErrorListItem(props: { slug: string; title: string }) {
-    const { slug, title } = props
-    return (
-        <li>
-            <Link to={`/${slug}`}>{title}</Link>
-        </li>
-    )
-}
+import PageLinkList from "./ui/PageLinkList"
 
 export default function ErrorList() {
     const data = useStaticQuery(graphql`
@@ -45,11 +36,7 @@ export default function ErrorList() {
             {groupNames.map(group => (
                 <>
                     <h2 key={group}>{group}</h2>
-                    <ul key={group + "list"}>
-                        {groups[group].map(node => (
-                            <ErrorListItem key={node.slug} {...node} />
-                        ))}
-                    </ul>
+                    <PageLinkList nodes={groups[group]} />
                 </>
             ))}
         </>
