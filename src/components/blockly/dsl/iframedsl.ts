@@ -165,6 +165,10 @@ class IFrameDomainSpecificLanguage implements BlockDomainSpecificLanguage {
     createCategory(options: CreateCategoryOptions): ContentDefinition[] {
         return this.category
     }
+
+    visitWorkspaceJSON(workspace: Workspace, workspaceJSON: WorkspaceJSON) {
+        this.post("workspace", { workspace: workspaceJSON })
+    }
 }
 
 /**
