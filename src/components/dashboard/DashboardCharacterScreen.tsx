@@ -210,6 +210,7 @@ export default function DashboardCharacterScreen(props: DashboardServiceProps) {
                     <Grid container spacing={1}>
                         <Grid item xs>
                             <TextField
+                                label="text"
                                 value={fieldMessage}
                                 onChange={handleFieldMessageChange}
                                 multiline={true}
