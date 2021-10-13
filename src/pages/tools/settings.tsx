@@ -17,7 +17,8 @@ export default function Page() {
     const services = useServices({ serviceClass: SRV_SETTINGS })
     const keyPrefix = useLocationSearchParamString("prefix")
     const autoKey = useLocationSearchParamBoolean("autokey", false)
-    const showSecrets = !keyPrefix
+    const showSecrets =
+        useLocationSearchParamBoolean("secrets", true) && !keyPrefix
 
     return (
         <>
@@ -55,7 +56,7 @@ export default function Page() {
                     keys for entries. Default is false.
                 </li>
                 <li>
-                    <code>import=false</code>, will hide the import button
+                    <code>secrets=0</code>, disables secrets
                 </li>
             </ul>
         </>
