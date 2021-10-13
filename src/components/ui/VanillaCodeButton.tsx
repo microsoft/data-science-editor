@@ -94,7 +94,8 @@ ${html}
                     resolutions: {
                         "@babel/preset-env": "^7.15.8",
                     },
-                    keyworkds: ["jacdac", "typescript", "javascript"],
+                    keywords: ["jacdac", "typescript", "javascript"],
+                    browserslist: ["defaults"],
                 },
             },
             "index.ts": {
