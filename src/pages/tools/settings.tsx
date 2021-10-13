@@ -17,8 +17,7 @@ export default function Page() {
     const services = useServices({ serviceClass: SRV_SETTINGS })
     const keyPrefix = useLocationSearchParamString("prefix")
     const autoKey = useLocationSearchParamBoolean("autokey", false)
-    const showSecrets =
-        useLocationSearchParamBoolean("secrets", true) && !keyPrefix
+    const showSecrets = useLocationSearchParamBoolean("secrets", true)
 
     return (
         <>
@@ -49,7 +48,7 @@ export default function Page() {
             <ul>
                 <li>
                     <code>prefix=JD</code>, will prefix and filter keys with{" "}
-                    <code>JD</code>. In this mode, secrets are disabled.
+                    <code>JD</code>.
                 </li>
                 <li>
                     <code>autokey</code>, will automatically generate random
