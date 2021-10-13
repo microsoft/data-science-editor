@@ -15,7 +15,7 @@ import IconButtonWithTooltip from "../../components/ui/IconButtonWithTooltip"
 import DeleteIcon from "@material-ui/icons/Delete"
 import SettingsClient from "../../../jacdac-ts/src/jdom/clients/settingsclient"
 import useServiceClient from "../../components/useServiceClient"
-import { clone } from "../../../jacdac-ts/src/jdom/utils"
+import { clone, debounce } from "../../../jacdac-ts/src/jdom/utils"
 import { jdpack, jdunpack } from "../../../jacdac-ts/src/jdom/pack"
 import { randomDeviceId } from "../../../jacdac-ts/src/jdom/random"
 import JDBus from "../../../jacdac-ts/src/jdom/bus"
@@ -70,7 +70,7 @@ export default function HIDEvents() {
     const settings = useServiceClient(settingsService, factory)
 
     useServiceProviderFromServiceClass(SRV_SETTINGS)
-    useChange(settings, async () => {
+    useChange(settings, debounce(async () => {
         const phrs: Phrase[] = []
         if (settings) {
             const all = await settings.list()
@@ -84,28 +84,37 @@ export default function HIDEvents() {
         }
         // different? set the variable
         if (JSON.stringify(phrs) !== JSON.stringify(phrases)) setPhrases(phrs)
-    })
+    }, 500))
 
     const handlePhraseChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const index = Number.parseInt(event.target.id)
         const phrase = phrases[index]
-        phrase.phrase = event.target.value.trim()
-        if (!phrase.key) phrase.key = PREFIX + randomDeviceId()
-        settings.setValue(phrase.key, phraseToBuffer(phrase))
+        phrase.phrase = event.target.value
+        setPhrases(phrases.slice())
     }
 
     const handleAddPhrase = () => {
-        const newPhrases = phrases.slice()
-        newPhrases.push({ phrase: "" })
-        setPhrases(newPhrases)
+        setPhrases([...phrases, { phrase: "" }])
     }
 
-    const handleRemovePhrase = (index: number) => () => {
+    const handleRemovePhrase = (index: number) => async () => {
         const { key } = phrases[index]
-        if (key) settings.deleteValue(key)
+        if (key) await settings.deleteValue(key)
+        setPhrases([...phrases.slice(0, index), ... phrases.slice(index)])
     }
     const handleSelectSettingsService = (service: JDService) => () =>
         setSettingsService(settingsService === service ? undefined : service)
+
+    const handleClearPhrases = async () => {
+        await Promise.all(phrases.filter(({key})=>!!key).map((phrase) => settings.deleteValue(phrase.key)))
+    }
+
+    const handleSavePhrases = () => {
+        phrases.forEach(phrase => {
+            if (!phrase.key) phrase.key = PREFIX + randomDeviceId()
+            settings.setValue(phrase.key, phraseToBuffer(phrase))
+        })
+    }
 
     const exportUri =
         phrases &&
@@ -189,6 +198,8 @@ export default function HIDEvents() {
                             <Grid item {...gridBreakpoints} key={index}>
                                 <TextField
                                     value={phrase}
+                                    spellCheck={false}
+                                    helperText={"Enter your phrase"}
                                     id={index.toString()}
                                     onChange={handlePhraseChange}
                                     multiline={false}
@@ -212,6 +223,24 @@ export default function HIDEvents() {
                                         onClick={handleAddPhrase}
                                     >
                                         Add phrase
+                                    </Button>
+                                </Grid>
+                                <Grid item>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={handleSavePhrases}
+                                    >
+                                        Save all phrases
+                                    </Button>
+                                </Grid>
+                                <Grid item>
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        onClick={handleClearPhrases}
+                                    >
+                                        Clear all phrases
                                     </Button>
                                 </Grid>
                                 <Grid item>
