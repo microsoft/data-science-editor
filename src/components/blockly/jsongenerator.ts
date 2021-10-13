@@ -12,6 +12,7 @@ import {
 
 export function workspaceToJSON(
     workspace: Blockly.Workspace,
+    workspaceXml: string,
     dsls: BlockDomainSpecificLanguage[],
     top?: Block[]
 ): WorkspaceJSON {
@@ -149,7 +150,9 @@ export function workspaceToJSON(
             variables: variables.map(variableToJSON),
             blocks: todo.map(blockToJSON).filter(b => !!b),
         }
-        dsls.forEach(dsl => dsl.visitWorkspaceJSON?.(workspace, json))
+        dsls.forEach(dsl =>
+            dsl.visitWorkspaceJSON?.(workspace, workspaceXml, json)
+        )
         return json
     } catch (e) {
         console.error(e)

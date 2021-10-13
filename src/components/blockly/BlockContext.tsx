@@ -217,7 +217,7 @@ export function BlockProvider(props: {
     useEffect(() => {
         if (!workspace || dragging) return
 
-        const newWorkspaceJSON = workspaceToJSON(workspace, dsls)
+        const newWorkspaceJSON = workspaceToJSON(workspace, workspaceXml, dsls)
         setWorkspaceJSON(newWorkspaceJSON)
         const newWarnings = collectWarnings(newWorkspaceJSON)
         setWarnings(JSON_WARNINGS_CATEGORY, newWarnings)

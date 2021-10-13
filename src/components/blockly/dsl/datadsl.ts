@@ -1,26 +1,15 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import {
-    Block,
-    Events,
-    FieldVariable,
-    Variables,
-    Workspace,
-    alert,
-} from "blockly"
-import BuiltinDataSetField from "../fields/BuiltinDataSetField"
+import { Block } from "blockly"
 import DataColumnChooserField from "../fields/DataColumnChooserField"
 import {
     BlockDefinition,
     BlockReference,
-    ButtonDefinition,
     CategoryDefinition,
     DATA_SCIENCE_STATEMENT_TYPE,
     identityTransformData,
     NumberInputDefinition,
     OptionsInputDefinition,
-    VariableInputDefinition,
     TextInputDefinition,
-    SeparatorDefinition,
     DataColumnInputDefinition,
     DummyInputDefinition,
 } from "../toolbox"
@@ -41,14 +30,6 @@ import type {
     DataCorrelationRequest,
     DataLinearRegressionRequest,
 } from "../../../workers/data/dist/node_modules/data.worker"
-import {
-    BlockWithServices,
-    resolveBlockServices,
-    resolveWorkspaceServices,
-} from "../WorkspaceContext"
-import FileSaveField from "../fields/FileSaveField"
-import { saveCSV } from "./workers/csv.proxy"
-import FileOpenField from "../fields/FileOpenField"
 import palette from "./palette"
 import {
     tidyResolveFieldColumn,
@@ -58,7 +39,6 @@ import {
 import DataTableField from "../fields/DataTableField"
 import DataPreviewField from "../fields/DataPreviewField"
 import ScatterPlotField from "../fields/chart/ScatterPlotField"
-import { importCSVFilesIntoWorkspace } from "../../fs/fs"
 
 const DATA_ARRANGE_BLOCK = "data_arrange"
 const DATA_SELECT_BLOCK = "data_select"
@@ -71,22 +51,12 @@ const DATA_SLICE_BLOCK = "data_slice"
 const DATA_SUMMARIZE_BLOCK = "data_summarize"
 const DATA_SUMMARIZE_BY_GROUP_BLOCK = "data_summarize_by_group"
 const DATA_COUNT_BLOCK = "data_count"
-const DATA_ADD_VARIABLE_CALLBACK = "data_add_variable"
-const DATA_DATAVARIABLE_READ_BLOCK = "data_dataset_read"
-const DATA_DATAVARIABLE_WRITE_BLOCK = "data_dataset_write"
-const DATA_DATASET_BUILTIN_BLOCK = "data_dataset_builtin"
-const DATA_ADD_DATASET_CALLBACK = "data_add_dataset_variable"
-const DATA_TABLE_TYPE = "DataTable"
 const DATA_BIN_BLOCK = "data_bin"
 const DATA_CORRELATION_BLOCK = "data_correlation"
 const DATA_LINEAR_REGRESSION_BLOCK = "data_linear_regression"
-const DATA_LOAD_FILE_BLOCK = "data_load_file"
-const DATA_SAVE_FILE_BLOCK = "data_save_file"
 const DATA_COMMENT_BLOCK = "data_comment_block"
 
-const [datasetColour, operatorsColour, computeColour, statisticsColour] =
-    palette()
-const dataVariablesColour = "%{BKY_VARIABLES_HUE}"
+const [, operatorsColour, computeColour, statisticsColour] = palette()
 const calcOptions = [
     "mean",
     "median",
@@ -452,9 +422,12 @@ const dataDsl: BlockDomainSpecificLanguage = {
             dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             transformData: (b: Block, data: any[]) => {
-                const columns = tidyResolveFieldColumns(data, b, "column", {
-                    type: "number",
-                })
+                const columns = tidyResolveFieldColumns(
+                    data,
+                    b,
+                    "column",
+                    "number"
+                )
                 const calc = b.getFieldValue("calc")
                 return postTransformData(<DataSummarizeRequest>{
                     type: "summarize",
@@ -567,84 +540,6 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 })
             },
             template: "meta",
-        },
-        <BlockDefinition>{
-            kind: "block",
-            type: DATA_DATASET_BUILTIN_BLOCK,
-            message0: "dataset %1",
-            tooltip: "Loads a builtin dataset",
-            args0: [
-                {
-                    type: BuiltinDataSetField.KEY,
-                    name: "dataset",
-                },
-            ],
-            inputsInline: false,
-            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            colour: datasetColour,
-            template: "meta",
-            dataPreviewField: true,
-            transformData: identityTransformData,
-        },
-        <BlockDefinition>{
-            kind: "block",
-            type: DATA_DATAVARIABLE_READ_BLOCK,
-            message0: "dataset variable %1",
-            args0: [
-                <VariableInputDefinition>{
-                    type: "field_variable",
-                    name: "data",
-                    variable: "data",
-                    variableTypes: [DATA_TABLE_TYPE],
-                    defaultType: DATA_TABLE_TYPE,
-                },
-            ],
-            inputsInline: false,
-            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            colour: dataVariablesColour,
-            template: "meta",
-            dataPreviewField: "after",
-            transformData: (b: Block) => {
-                const services = resolveBlockServices(b)
-                const data = services?.data
-                return Promise.resolve(data)
-            },
-        },
-        <BlockDefinition>{
-            kind: "block",
-            type: DATA_DATAVARIABLE_WRITE_BLOCK,
-            message0: "store in dataset variable %1",
-            args0: [
-                <VariableInputDefinition>{
-                    type: "field_variable",
-                    name: "data",
-                    variable: "data",
-                    variableTypes: [DATA_TABLE_TYPE],
-                    defaultType: DATA_TABLE_TYPE,
-                },
-            ],
-            inputsInline: false,
-            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            colour: dataVariablesColour,
-            template: "meta",
-            dataPreviewField: "after",
-            transformData: (b: Block, data: object[]) => {
-                // grab the variable from the block
-                const variable = b.getFieldValue("data")
-                if (!variable) return Promise.resolve(undefined)
-                const readBlocks = b.workspace.getBlocksByType(
-                    DATA_DATAVARIABLE_READ_BLOCK,
-                    false
-                )
-                const readServices = readBlocks
-                    .filter(b => b.isEnabled())
-                    .filter(b => b.getFieldValue("data") === variable)
-                    .map(b => (b as BlockWithServices).jacdacServices)
-                    .filter(services => !!services)
-                readServices.forEach(services => (services.data = data))
-                return Promise.resolve(data)
-            },
         },
         <BlockDefinition>{
             kind: "block",
@@ -782,46 +677,6 @@ const dataDsl: BlockDomainSpecificLanguage = {
         },
         {
             kind: "block",
-            type: DATA_LOAD_FILE_BLOCK,
-            message0: "load dataset from file %1",
-            args0: [
-                {
-                    type: FileOpenField.KEY,
-                    name: "file",
-                },
-            ],
-            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            colour: datasetColour,
-            template: "meta",
-            inputsInline: false,
-            dataPreviewField: true,
-            transformData: identityTransformData,
-        },
-        {
-            kind: "block",
-            type: DATA_SAVE_FILE_BLOCK,
-            message0: "save dataset to file %1",
-            args0: [
-                {
-                    type: FileSaveField.KEY,
-                    name: "file",
-                },
-            ],
-            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            colour: datasetColour,
-            template: "meta",
-            inputsInline: false,
-            dataPreviewField: "after",
-            transformData: async (block, data) => {
-                const file = block.getField("file") as FileSaveField
-                if (file?.fileHandle && data)
-                    await saveCSV(file.fileHandle, data)
-                return data
-            },
-        },
-        {
-            kind: "block",
             type: DATA_COMMENT_BLOCK,
             message0: "comment %1 %2 %3",
             args0: [
@@ -849,46 +704,6 @@ const dataDsl: BlockDomainSpecificLanguage = {
         },
     ],
     createCategory: () => [
-        <SeparatorDefinition>{
-            kind: "sep",
-        },
-        <CategoryDefinition>{
-            kind: "category",
-            name: "Data sets",
-            colour: datasetColour,
-            contents: [
-                <BlockReference>{
-                    kind: "block",
-                    type: DATA_DATASET_BUILTIN_BLOCK,
-                },
-                <BlockReference>{
-                    kind: "block",
-                    type: DATA_LOAD_FILE_BLOCK,
-                },
-                <BlockReference>{
-                    kind: "block",
-                    type: DATA_SAVE_FILE_BLOCK,
-                },
-                <ButtonDefinition>{
-                    kind: "button",
-                    text: "Import dataset",
-                    callbackKey: DATA_ADD_DATASET_CALLBACK,
-                    callback: (workspace: Workspace) => {
-                        const services = resolveWorkspaceServices(workspace)
-                        const directory = services?.workingDirectory
-                        if (!directory)
-                            alert(
-                                "You need to open a directory to import a dataset."
-                            )
-                        else {
-                            importCSVFilesIntoWorkspace(directory.handle)
-                                .then(() => directory.sync())
-                                .then(() => alert("Datasets imported!"))
-                        }
-                    },
-                },
-            ],
-        },
         <CategoryDefinition>{
             kind: "category",
             name: "Organize",
@@ -970,94 +785,6 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 },
             ],
         },
-        <CategoryDefinition>{
-            kind: "category",
-            name: "Data variables",
-            colour: dataVariablesColour,
-            contents: [
-                <ButtonDefinition>{
-                    kind: "button",
-                    text: `Add dataset variable`,
-                    callbackKey: DATA_ADD_VARIABLE_CALLBACK,
-                    callback: workspace =>
-                        Variables.createVariableButtonHandler(
-                            workspace,
-                            null,
-                            DATA_TABLE_TYPE
-                        ),
-                },
-                <BlockReference>{
-                    kind: "block",
-                    type: DATA_DATAVARIABLE_READ_BLOCK,
-                },
-                <BlockReference>{
-                    kind: "block",
-                    type: DATA_DATAVARIABLE_WRITE_BLOCK,
-                },
-            ],
-        },
     ],
-    createWorkspaceChangeListener: () => (event: Events.Abstract) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const { type, blockId } = event as any
-        const isBlockChange =
-            type === Events.BLOCK_CHANGE || type === Events.BLOCK_MOVE
-
-        if (isBlockChange || type === Events.FINISHED_LOADING) {
-            const workspace = event.getEventWorkspace_()
-            if (isBlockChange) {
-                const block = workspace.getBlockById(blockId)
-                if (block?.type !== DATA_DATAVARIABLE_WRITE_BLOCK) return // nothing so see here
-            }
-
-            // collect set variables blocks,
-            // and make sure only 1 of them is enabled
-            const setvars = workspace
-                .getBlocksByType(DATA_DATAVARIABLE_WRITE_BLOCK, true)
-                .filter(b => b.isEnabled())
-
-            // mark and sweep variables, leaving one 1 enabled per kind
-            const marked = {}
-            while (setvars.length) {
-                const block = setvars.shift()
-                const variable = (
-                    block.getField("data") as FieldVariable
-                ).getVariable()
-                if (variable) {
-                    const name = variable.name
-                    if (marked[name]) {
-                        if (block.isEnabled()) {
-                            block.setEnabled(false)
-                            block.unplug(true)
-                        }
-                    } else marked[name] = true
-                }
-            }
-        }
-    },
 }
 export default dataDsl
-
-export function resolveUsedDataVariables(block: Block): {
-    reads?: string[]
-    write?: string
-} {
-    const { type } = block
-    if (type === DATA_DATAVARIABLE_READ_BLOCK) {
-        const field = block.getField("data") as FieldVariable
-        const variable = field.getVariable()
-        if (variable)
-            return {
-                reads: [variable.name],
-            }
-    } else if (type === DATA_DATAVARIABLE_WRITE_BLOCK) {
-        const field = block.getField("data") as FieldVariable
-        const variable = field.getVariable()
-        if (variable)
-            return {
-                write: variable.name,
-            }
-    }
-
-    return {}
-}

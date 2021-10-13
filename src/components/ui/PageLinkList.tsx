@@ -14,7 +14,7 @@ export default function PageLinkList(props: {
                         <Link
                             color="textPrimary"
                             rel="noopener noreferrer"
-                            to={`/${slug}`}
+                            to={slug}
                         >
                             <ListItemText primary={title} />
                         </Link>

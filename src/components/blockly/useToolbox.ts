@@ -119,7 +119,7 @@ export default function useToolbox(
             )
         )
             .filter(cat => !!cat)
-            .sort((l, r) => -(l.order - r.order))
+            .sort((l, r) => -((l.order || 0) - (r.order || 0)))
         const contents = dslsCategories.map(node =>
             node.kind === "category"
                 ? patchCategoryJSONtoXML(node as CategoryDefinition)

@@ -11,11 +11,7 @@ import {
     ServiceBlockDefinition,
 } from "../toolbox"
 import { CmdWithErrors, ExpressionWithErrors } from "../../vm/VMgenerator"
-import {
-    BlockJSON,
-    WorkspaceFile,
-    WorkspaceJSON,
-} from "./workspacejson"
+import { BlockJSON, WorkspaceFile, WorkspaceJSON } from "./workspacejson"
 
 export interface CreateBlocksOptions {
     theme: Theme
@@ -73,7 +69,9 @@ export default interface BlockDomainSpecificLanguage {
     /**
      * Creates blocks for the DSL
      */
-    createBlocks?: (options: CreateBlocksOptions) => BlockDefinition[] | Promise<BlockDefinition[]>
+    createBlocks?: (
+        options: CreateBlocksOptions
+    ) => BlockDefinition[] | Promise<BlockDefinition[]>
 
     /***
      * Creates a JSON category to populate the toolbox
@@ -98,6 +96,7 @@ export default interface BlockDomainSpecificLanguage {
      */
     visitWorkspaceJSON?: (
         workspace: Workspace,
+        workspaceXml: string,
         workspaceJSON: WorkspaceJSON
     ) => void
 

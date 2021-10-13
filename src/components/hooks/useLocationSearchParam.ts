@@ -18,8 +18,13 @@ export function useLocationSearchParamBoolean(
         if (typeof window !== "undefined") {
             const url = new URL(window.location.href)
             const v = url.searchParams.get(key)
-            if (v) return v === "1" || v === "true" || v === "yes"
-            // empty value
+            console.log({ key, url, v })
+            if (v) {
+                if (v === "1" || v === "true" || v === "yes") return true
+                else if (v === "0" || v === "false" || v === "no") return false
+                else return defaultValue
+            }
+            // empty value means true
             if (url.searchParams.has(key)) return true
             return defaultValue
         }
