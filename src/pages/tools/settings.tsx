@@ -23,8 +23,8 @@ export default function Page() {
         <>
             <h1>Devices Settings</h1>
             <p>
-                Configure settings in
-                <Link to="/services/settings/">settings</Link> services.
+                Configure &npsp;<Link to="/services/settings/">settings</Link>{" "}
+                services.
             </p>
             <ConnectAlert serviceClass={SRV_SETTINGS} />
             <Grid container spacing={1}>
