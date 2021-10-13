@@ -14,6 +14,8 @@ import LoadingProgress from "../ui/LoadingProgress"
 import useRegister from "../hooks/useRegister"
 import CmdButton from "../CmdButton"
 import ClearIcon from "@material-ui/icons/Clear"
+import EditIcon from "@material-ui/icons/Edit"
+import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -113,6 +115,7 @@ export default function DashboardCharacterScreen(props: DashboardServiceProps) {
         CharacterScreenReg.TextDirection
     )
     const variantRegister = useRegister(service, CharacterScreenReg.Variant)
+    const [edit, setEdit] = useState(false)
     const [message] = useRegisterUnpackedValue<[string]>(messageRegister, props)
     const [rows] = useRegisterUnpackedValue<[number]>(rowsRegister, props)
     const [columns] = useRegisterUnpackedValue<[number]>(columnsRegister, props)
@@ -139,6 +142,7 @@ export default function DashboardCharacterScreen(props: DashboardServiceProps) {
         setFieldMessage(ev.target.value)
         await messageRegister.sendSetStringAsync(ev.target.value, true)
     }
+    const handleEdit = () => setEdit(e => !e)
 
     // set first value of message
     useEffect(() => {
@@ -201,27 +205,29 @@ export default function DashboardCharacterScreen(props: DashboardServiceProps) {
     }
     return (
         <Grid container spacing={1}>
-            <Grid item xs={12}>
-                <Grid container spacing={1}>
-                    <Grid item xs>
-                        <TextField
-                            value={fieldMessage}
-                            onChange={handleFieldMessageChange}
-                            multiline={true}
-                            rows={rows || 2}
-                            fullWidth={true}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <CmdButton
-                            title="clear the entire display"
-                            onClick={handleClear}
-                            icon={<ClearIcon />}
-                        />
+            {edit && (
+                <Grid item xs={12}>
+                    <Grid container spacing={1}>
+                        <Grid item xs>
+                            <TextField
+                                value={fieldMessage}
+                                onChange={handleFieldMessageChange}
+                                multiline={true}
+                                rows={rows || 2}
+                                fullWidth={true}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <CmdButton
+                                title="clear the entire display"
+                                onClick={handleClear}
+                                icon={<ClearIcon />}
+                            />
+                        </Grid>
                     </Grid>
                 </Grid>
-            </Grid>
-            <Grid item xs={12}>
+            )}
+            <Grid item xs>
                 <SvgWidget
                     tabIndex={0}
                     title={`character screen displaying "${message}"`}
@@ -240,6 +246,14 @@ export default function DashboardCharacterScreen(props: DashboardServiceProps) {
                         {els}
                     </>
                 </SvgWidget>
+            </Grid>
+            <Grid item>
+                <IconButtonWithTooltip
+                    title={!edit ? "show editor" : "hide editor"}
+                    onClick={handleEdit}
+                >
+                    <EditIcon />
+                </IconButtonWithTooltip>
             </Grid>
         </Grid>
     )
