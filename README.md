@@ -6,15 +6,15 @@
 
 This repository contains sources of [Jacdac](https://aka.ms/jacdac).
 
-* [User Documentation](https://aka.ms/jacdac/)
-* Discussions at https://github.com/microsoft/jacdac/discussions
-* Issues are tracked on https://github.com/microsoft/jacdac/issues
+-   [User Documentation](https://aka.ms/jacdac/)
+-   Discussions at https://github.com/microsoft/jacdac/discussions
+-   Issues are tracked on https://github.com/microsoft/jacdac/issues
 
 The rest of this page is for developers of the jacdac-ts library.
 
 ## Developer setup
 
-* Open this repository online at https://github.dev/microsoft/jacdac-docs
+-   Open this repository online at https://github.dev/microsoft/jacdac-docs
 
 All command line instructions assume a bash-like terminal.
 
@@ -24,63 +24,67 @@ On Windows, you may need to run these commands within Git Bash or Windows Subsys
 
 Edit this project directly from your browser using GitHub Codespaces. If you have access to them,
 
-* open project in a new codespace (https://github.dev/microsoft/jacdac-docs)
-* launch the docs server
+-   open project in a new codespace (https://github.dev/microsoft/jacdac-docs)
+-   launch the docs server
 
 ```
 yarn develop
 ```
 
-* click on the generated URL in the terminal output and voila!
+-   click on the generated URL in the terminal output and voila!
 
 ### Local Setup
 
-* install node.js
-** Have successfully tested with node 14.17.0. There were some errors when using node 16.3.0 (note made on 6/2021, please update if errors with node v16.3.0 are resolved.)
-* install python 2 (if you don't have it already)
-* install yarn
+-   install node.js
+    \*\* Have successfully tested with node 14.17.0. There were some errors when using node 16.3.0 (note made on 6/2021, please update if errors with node v16.3.0 are resolved.)
+-   install python 2 (if you don't have it already)
+-   install yarn globally if needed
 
 ```
 npm install -g yarn
 ```
 
-* setup repo
+-   setup repo
 
 ```
 yarn setup
 ```
+
+**Do not use npm**
+
 ### VS Code
 
 You are welcome to use any editor you want! Visual Studio Code
 provides seamless support for git sub-modules and is our preferred editor.
 
-* open [Visual Studio Code](https://code.visualstudio.com/)
+-   open [Visual Studio Code](https://code.visualstudio.com/)
 
 ```
 code .
 ```
 
-* install the recommended extensions (**MDX**, **ESLint** and **Prettier** extensions)
-* in the Git view, click on the ``jacdac`` branch and select ``main`` so that changes are automatically synched
-* remember that you need a bash-like terminal to run some of these commands - VS Code allows you to start a Git Bash terminal from the new terminals dropdown
+-   install the recommended extensions (**MDX**, **ESLint** and **Prettier** extensions)
+-   in the Git view, click on the `jacdac` branch and select `main` so that changes are automatically synched
+-   remember that you need a bash-like terminal to run some of these commands - VS Code allows you to start a Git Bash terminal from the new terminals dropdown
 
 ### Specs build
 
-To regenerate the service definition JSON files from the ``.md`` files in jacdac-spec,
+To regenerate the service definition JSON files from the `.md` files in jacdac-spec,
 run
 
 ```
 yarn buildspecs
 ```
+
 ### Docs build
 
-* run the docs web site locally
+-   run the docs web site locally
 
 ```
 yarn develop
 ```
 
-* browse to the local server
+-   browse to the local server
 
 ```
 http://localhost:8000?dbg=1
@@ -119,53 +123,53 @@ https://makecode.com/multi?jacdac=1&localhost=1&beta=1
 
 ### Adding a new MakeCode client
 
-Create a new issue in https://github.com/microsoft/jacdac and select the ``MakeCode client`` template.
+Create a new issue in https://github.com/microsoft/jacdac and select the `MakeCode client` template.
 
 ### HTML tools
 
-You can do ``yarn watch`` to watch/build bundles. Bundles are placed under the ``dist`` folder.
+You can do `yarn watch` to watch/build bundles. Bundles are placed under the `dist` folder.
 
 ```
 yarn watch
 ```
 
-On another terminal, launch a small web server and 
-try all the tools under ``docs/static/tools/*`` at http://localhost:8080/docs/static/tools/js/console.html . These tools load the files under ``dist`` so you'll want 
-to also run ``yarn watch`` on the side.
+On another terminal, launch a small web server and
+try all the tools under `docs/static/tools/*` at http://localhost:8080/docs/static/tools/js/console.html . These tools load the files under `dist` so you'll want
+to also run `yarn watch` on the side.
 
 ```
 yarn tools
 ```
 
-* console http://localhost:8080/docs/static/tools/js/console.html
-* devices http://localhost:8080/docs/static/tools/js/devices.html
-* flashing http://localhost:8080/docs/static/tools/js/flashing.html
-* namer http://localhost:8080/docs/static/tools/js/namer.html
-* tfite http://localhost:8080/docs/static/tools/js/tflite.html
-* streaming http://localhost:8080/docs/static/tools/js/streaming.html
-* streaming-rickshaw: http://localhost:8080/docs/static/tools/js/streaming-rickshaw.html
+-   console http://localhost:8080/docs/static/tools/js/console.html
+-   devices http://localhost:8080/docs/static/tools/js/devices.html
+-   flashing http://localhost:8080/docs/static/tools/js/flashing.html
+-   namer http://localhost:8080/docs/static/tools/js/namer.html
+-   tfite http://localhost:8080/docs/static/tools/js/tflite.html
+-   streaming http://localhost:8080/docs/static/tools/js/streaming.html
+-   streaming-rickshaw: http://localhost:8080/docs/static/tools/js/streaming-rickshaw.html
 
 ### Commits create releases
 
 The releases are automatically created by the build system based on the title of the commit:
 
-* ``patch|fix:...``  patch
-* ``minor:feature:...`` minor
+-   `patch|fix:...` patch
+-   `minor:feature:...` minor
 
 ### NPM scripts
 
- - `yarn watch`: Run `yarn build` in watch mode
- - `yarn lint`: Lints code
- - `yarn develop`: Launch docs web service
+-   `yarn watch`: Run `yarn build` in watch mode
+-   `yarn lint`: Lints code
+-   `yarn develop`: Launch docs web service
 
 ## Microsoft Open Source Code of Conduct
 
-This project is hosted at https://github.com/microsoft/jacdac-ts. 
-This project has adopted the 
+This project is hosted at https://github.com/microsoft/jacdac-ts.
+This project has adopted the
 [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
 
 Resources:
 
-- [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/)
-- [Microsoft Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/)
-- Contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with questions or concerns
+-   [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/)
+-   [Microsoft Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/)
+-   Contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with questions or concerns
