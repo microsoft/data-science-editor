@@ -5,7 +5,7 @@ import {
     Grid,
     TextField,
 } from "@material-ui/core"
-import React, { ChangeEvent, useCallback, useState } from "react"
+import React, { ChangeEvent, useCallback, useContext, useState } from "react"
 import JDService from "../../jacdac-ts/src/jdom/service"
 import DeviceCardHeader from "./devices/DeviceCardHeader"
 import useServiceClient from "./useServiceClient"
@@ -21,6 +21,8 @@ import LoadingProgress from "./ui/LoadingProgress"
 import SwitchWithLabel from "./ui/SwitchWithLabel"
 import { bufferToString } from "../../jacdac-ts/src/jdom/utils"
 import { randomDeviceId } from "../../jacdac-ts/src/jdom/random"
+import { Button } from "gatsby-material-ui-components"
+import ServiceManagerContext from "./ServiceManagerContext"
 
 function SettingRow(props: {
     client: SettingsClient
@@ -178,19 +180,28 @@ export default function SettingsCard(props: {
     autoKey?: boolean
 }) {
     const { service, mutable, keyPrefix = "", showSecrets, autoKey } = props
+    const { fileStorage } = useContext(ServiceManagerContext)
     const factory = useCallback(srv => new SettingsClient(srv), [])
     const client = useServiceClient(service, factory)
     const values = useChangeAsync(
         client,
         async c => {
             const keys = await c?.list()
-            return keys?.filter(
-                ({ key }) => !keyPrefix || key.startsWith(keyPrefix)
-            )
+            return keys
+                ?.filter(({ key }) => !keyPrefix || key.startsWith(keyPrefix))
+                .map(({ key, value }) => ({
+                    key,
+                    value: bufferToString(value),
+                }))
         },
         [keyPrefix]
     )
     const handleClear = async () => await client?.clear()
+    const handleExport = () =>
+        fileStorage.saveText(
+            "settings.json",
+            JSON.stringify(values || {}, null, 2)
+        )
 
     const secrets = values?.filter(value => showSecrets && value.key[0] === "$")
     const publics = values?.filter(value => value.key[0] !== "$")
@@ -215,7 +226,7 @@ export default function SettingsCard(props: {
                         <SettingRow
                             key={key}
                             name={key}
-                            value={bufferToString(value)}
+                            value={value}
                             client={client}
                             mutable={mutable}
                             showSecrets={showSecrets}
@@ -231,7 +242,7 @@ export default function SettingsCard(props: {
                         <SettingRow
                             key={key}
                             name={key}
-                            value={bufferToString(value)}
+                            value={value}
                             client={client}
                             mutable={mutable}
                             showSecrets={showSecrets}
@@ -240,18 +251,33 @@ export default function SettingsCard(props: {
                     ))}
                 </Grid>
             </CardContent>
-            {mutable && (
-                <CardActions>
-                    <CmdButton
-                        trackName="settings.clearall"
-                        title="Clear all settings"
-                        icon={<DeleteIcon />}
-                        onClick={handleClear}
-                    >
-                        Clear
-                    </CmdButton>
-                </CardActions>
-            )}
+            <CardActions>
+                <Grid container spacing={1} direction="row">
+                    {mutable && (
+                        <Grid item>
+                            <CmdButton
+                                variant="outlined"
+                                trackName="settings.clearall"
+                                title="Clear all settings"
+                                icon={<DeleteIcon />}
+                                onClick={handleClear}
+                            >
+                                Clear
+                            </CmdButton>
+                        </Grid>
+                    )}
+                    <Grid item>
+                        <Button
+                            variant="outlined"
+                            title="export"
+                            disabled={!values}
+                            onClick={handleExport}
+                        >
+                            Export
+                        </Button>
+                    </Grid>
+                </Grid>
+            </CardActions>
         </Card>
     )
 }
