@@ -119,6 +119,9 @@
     "jacdac"
   ],
   "license": "MIT",
+  "engines": {
+    "node": ">=14.17.0"
+  },
   "scripts": {
     "setup": "git submodule update --init --recursive && git pull && yarn install --frozen-lockfile",
     "postinstall": "yarn buildml4f && yarn buildworkers && cd jacdac-ts && yarn install --frozen-lockfile && yarn dist",
