@@ -217,7 +217,7 @@ export function BlockProvider(props: {
     useEffect(() => {
         if (!workspace || dragging) return
 
-        const newWorkspaceJSON = workspaceToJSON(workspace, workspaceXml, dsls)
+        const newWorkspaceJSON = workspaceToJSON(workspace, dsls)
         setWorkspaceJSON(newWorkspaceJSON)
         const newWarnings = collectWarnings(newWorkspaceJSON)
         setWarnings(JSON_WARNINGS_CATEGORY, newWarnings)
@@ -245,18 +245,19 @@ export function BlockProvider(props: {
         [workspaceFile]
     )
     useEffectAsync(async () => {
-        if (!workspaceFile) return
         const file: WorkspaceFile = {
             editor: editorId,
             xml: workspaceXml,
             json: workspaceJSON,
         }
-        // allow dsls to add data
         dsls.forEach(dsl => dsl.onBeforeSaveWorkspaceFile?.(file))
         onBeforeSaveWorkspaceFile?.(file)
-        const fileContent = JSON.stringify(file)
-        workspaceFile?.write(fileContent)
-    }, [editorId, workspaceFile, workspaceJSON])
+        dsls.forEach(dsl => dsl.onSave?.(file))
+        if (workspaceFile) {
+            const fileContent = JSON.stringify(file)
+            workspaceFile?.write(fileContent)
+        }
+    }, [editorId, workspaceFile, workspaceXml, workspaceJSON])
     useEffect(() => {
         const services = resolveWorkspaceServices(workspace)
         if (services) services.workspaceJSON = workspaceJSON

@@ -2,7 +2,6 @@ import { Block, Workspace } from "blockly"
 import { CHANGE } from "../../../../jacdac-ts/src/jdom/constants"
 import { inIFrame } from "../../../../jacdac-ts/src/jdom/iframeclient"
 import { randomDeviceId } from "../../../../jacdac-ts/src/jdom/random"
-import { workspaceToJSON } from "../jsongenerator"
 import {
     BlockDataSet,
     BlockDataSetTransform,
@@ -15,7 +14,7 @@ import BlockDomainSpecificLanguage, {
     CreateBlocksOptions,
     CreateCategoryOptions,
 } from "./dsl"
-import { WorkspaceJSON } from "./workspacejson"
+import { WorkspaceFile, WorkspaceJSON } from "./workspacejson"
 
 export interface DslMessage {
     type?: "dsl"
@@ -172,16 +171,14 @@ class IFrameDomainSpecificLanguage implements BlockDomainSpecificLanguage {
         return this.category
     }
 
-    visitWorkspaceJSON(
-        workspace: Workspace,
-        workspaceXml: string,
-        workspaceJSON: WorkspaceJSON
-    ) {
-        // TODO store editor id
+    onWorkspaceJSONChange(json: WorkspaceJSON) {
         this.post("workspace", {
-            source: workspaceXml,
-            workspace: workspaceJSON,
+            workspace: json,
         })
+    }
+
+    onSave(file: WorkspaceFile) {
+        this.post("save", file)
     }
 }
 

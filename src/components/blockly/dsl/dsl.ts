@@ -96,7 +96,6 @@ export default interface BlockDomainSpecificLanguage {
      */
     visitWorkspaceJSON?: (
         workspace: Workspace,
-        workspaceXml: string,
         workspaceJSON: WorkspaceJSON
     ) => void
 
@@ -110,6 +109,10 @@ export default interface BlockDomainSpecificLanguage {
     compileExpressionToVM?: (
         options: CompileExpressionToVMOptions
     ) => ExpressionWithErrors
+
+    onWorkspaceJSONChange?: (workspaceJSON: WorkspaceJSON) => void
+
+    onSave?: (file: WorkspaceFile) => void
 
     onBeforeSaveWorkspaceFile?: (file: WorkspaceFile) => void
 }
