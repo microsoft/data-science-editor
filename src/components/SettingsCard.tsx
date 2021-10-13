@@ -20,14 +20,17 @@ import { useId } from "react-use-id-hook"
 import LoadingProgress from "./ui/LoadingProgress"
 import SwitchWithLabel from "./ui/SwitchWithLabel"
 import { bufferToString } from "../../jacdac-ts/src/jdom/utils"
+import { randomDeviceId } from "../../jacdac-ts/src/jdom/random"
 
 function SettingRow(props: {
     client: SettingsClient
     name: string
     value?: string
-    mutable?: boolean
+    mutable: boolean
+    showSecrets: boolean
+    autoKey: boolean
 }) {
-    const { client, name, value, mutable } = props
+    const { client, name, value, mutable, autoKey } = props
     const isSecret = name[0] == "$"
     const displayName = isSecret ? name.slice(1) : name
     const handleComponentDelete = async () => {
@@ -40,17 +43,19 @@ function SettingRow(props: {
     return (
         <Grid item xs={12}>
             <Grid container spacing={1}>
-                <Grid item>
-                    <TextField
-                        id={keyId}
-                        error={!!nameError}
-                        variant="outlined"
-                        label="key"
-                        helperText={nameError}
-                        value={displayName}
-                        disabled={true}
-                    />
-                </Grid>
+                {!autoKey && (
+                    <Grid item>
+                        <TextField
+                            id={keyId}
+                            error={!!nameError}
+                            variant="outlined"
+                            label="key"
+                            helperText={nameError}
+                            value={displayName}
+                            disabled={true}
+                        />
+                    </Grid>
+                )}
                 <Grid item xs>
                     <TextField
                         id={valueId}
@@ -77,11 +82,16 @@ function SettingRow(props: {
     )
 }
 
-function AddSettingRow(props: { client: SettingsClient }) {
-    const { client } = props
+function AddSettingRow(props: {
+    client: SettingsClient
+    keyPrefix: string
+    showSecrets: boolean
+    autoKey: boolean
+}) {
+    const { client, keyPrefix, showSecrets, autoKey } = props
     const [name, setName] = useState("")
     const [value, setValue] = useState("")
-    const [secret, setSecret] = useState(true)
+    const [secret, setSecret] = useState(showSecrets)
     const keyId = useId()
     const valueId = useId()
 
@@ -95,11 +105,13 @@ function AddSettingRow(props: { client: SettingsClient }) {
         setSecret(checked)
     }
     const handleAdd = async mounted => {
-        await client.setStringValue(`${secret ? "$" : ""}${name}`, value)
+        const keyName = autoKey ? randomDeviceId() : name
+        const key = `${secret ? "$" : ""}${keyPrefix || ""}${keyName}`
+        await client.setStringValue(key, value)
         if (!mounted()) return
         setName("")
         setValue("")
-        setSecret(true)
+        setSecret(showSecrets)
     }
     const keyError = ""
     const valueError = ""
@@ -107,17 +119,19 @@ function AddSettingRow(props: { client: SettingsClient }) {
     return (
         <Grid item xs={12}>
             <Grid container spacing={1} alignContent="center">
-                <Grid item>
-                    <TextField
-                        id={keyId}
-                        error={!!keyError}
-                        variant="outlined"
-                        label="Add key"
-                        helperText={keyError}
-                        value={name}
-                        onChange={handleNameChange}
-                    />
-                </Grid>
+                {!autoKey && (
+                    <Grid item>
+                        <TextField
+                            id={keyId}
+                            error={!!keyError}
+                            variant="outlined"
+                            label="Add key"
+                            helperText={keyError}
+                            value={name}
+                            onChange={handleNameChange}
+                        />
+                    </Grid>
+                )}
                 <Grid item xs>
                     <TextField
                         id={valueId}
@@ -130,18 +144,22 @@ function AddSettingRow(props: { client: SettingsClient }) {
                         onChange={handleValueChange}
                     />
                 </Grid>
-                <Grid item>
-                    <SwitchWithLabel
-                        checked={secret}
-                        onChange={handleChecked}
-                        label="Secret"
-                    />
-                </Grid>
+                {showSecrets && (
+                    <Grid item>
+                        <SwitchWithLabel
+                            checked={secret}
+                            onChange={handleChecked}
+                            label="Secret"
+                        />
+                    </Grid>
+                )}
                 <Grid item>
                     <CmdButton
                         trackName="settings.add"
                         variant="contained"
-                        disabled={!name || !!keyError || !!valueError}
+                        disabled={
+                            (!autoKey && !name) || !!keyError || !!valueError
+                        }
                         title="Add setting"
                         onClick={handleAdd}
                         icon={<AddIcon />}
@@ -155,14 +173,26 @@ function AddSettingRow(props: { client: SettingsClient }) {
 export default function SettingsCard(props: {
     service: JDService
     mutable?: boolean
+    keyPrefix?: string
+    showSecrets?: boolean
+    autoKey?: boolean
 }) {
-    const { service, mutable } = props
+    const { service, mutable, keyPrefix = "", showSecrets, autoKey } = props
     const factory = useCallback(srv => new SettingsClient(srv), [])
     const client = useServiceClient(service, factory)
-    const values = useChangeAsync(client, c => c?.list())
+    const values = useChangeAsync(
+        client,
+        async c => {
+            const keys = await c?.list()
+            return keys?.filter(
+                ({ key }) => !keyPrefix || key.startsWith(keyPrefix)
+            )
+        },
+        [keyPrefix]
+    )
     const handleClear = async () => await client?.clear()
 
-    const secrets = values?.filter(value => value.key[0] === "$")
+    const secrets = values?.filter(value => showSecrets && value.key[0] === "$")
     const publics = values?.filter(value => value.key[0] !== "$")
 
     if (!client) return <LoadingProgress /> // wait till loaded
@@ -172,11 +202,14 @@ export default function SettingsCard(props: {
             <DeviceCardHeader device={service.device} showAvatar={true} />
             <CardContent>
                 <Grid container spacing={2}>
-                    {mutable && <AddSettingRow client={client} key="add" />}
-                    {!!publics?.length && (
-                        <Grid item xs={12}>
-                            Settings
-                        </Grid>
+                    {mutable && (
+                        <AddSettingRow
+                            client={client}
+                            keyPrefix={keyPrefix}
+                            showSecrets={showSecrets}
+                            autoKey={autoKey}
+                            key="add"
+                        />
                     )}
                     {publics?.map(({ key, value }) => (
                         <SettingRow
@@ -185,6 +218,8 @@ export default function SettingsCard(props: {
                             value={bufferToString(value)}
                             client={client}
                             mutable={mutable}
+                            showSecrets={showSecrets}
+                            autoKey={autoKey}
                         />
                     ))}
                     {!!secrets?.length && (
@@ -199,6 +234,8 @@ export default function SettingsCard(props: {
                             value={bufferToString(value)}
                             client={client}
                             mutable={mutable}
+                            showSecrets={showSecrets}
+                            autoKey={autoKey}
                         />
                     ))}
                 </Grid>
