@@ -6,8 +6,8 @@ import React, { useContext } from "react"
 import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import { NoSsr } from "@material-ui/core"
-import useChange from "../../jacdac/useChange"
 import ConnectButtons from "../buttons/ConnectButtons"
+import useDevices from "../hooks/useDevices"
 
 function NoSsrConnectAlert(props: {
     serviceClass?: number
@@ -16,9 +16,7 @@ function NoSsrConnectAlert(props: {
     const { serviceClass, closeable } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { transports } = bus
-    const devices = useChange(bus, b =>
-        b.devices({ serviceClass, ignoreInfrastructure: true })
-    )
+    const devices = useDevices({ serviceClass, ignoreInfrastructure: true })
     const spec = serviceSpecificationFromClassIdentifier(serviceClass)
 
     // don't show if no transport, some devices
