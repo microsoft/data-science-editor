@@ -1,6 +1,7 @@
 import React, { ChangeEvent, useState } from "react"
 import { Grid, TextField } from "@material-ui/core"
-import { Button, Link } from "gatsby-theme-material-ui"
+import { Button } from "gatsby-theme-material-ui"
+import SendIcon from "@material-ui/icons/Send"
 
 export default function DevToolsLauncher() {
     const [text, setText] = useState("")
@@ -24,7 +25,9 @@ export default function DevToolsLauncher() {
                 />
             </Grid>
             <Grid item>
-                <Button variant="outlined" href={url}>Open</Button>
+                <Button variant="outlined" href={url} startIcon={<SendIcon />}>
+                    Open
+                </Button>
             </Grid>
         </Grid>
     )
