@@ -108,7 +108,7 @@ function createBus(): JDBus {
         ],
         {
             parentOrigin: args.parentOrigin,
-            client: false,
+            //client: false,
         }
     )
     b.passive = args.passive
