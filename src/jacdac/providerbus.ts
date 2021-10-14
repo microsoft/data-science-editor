@@ -71,6 +71,7 @@ function sniffQueryArguments() {
         trace: params.get("trace") === "1",
         localhost: params.get("localhost") === "1",
         passive: params.get("passive") === "1",
+        gamepad: params.get("gamepad") === "1",
     }
 }
 
@@ -87,7 +88,10 @@ export class UIFlags {
     static localhost = args.localhost
     static passive = args.passive
     static storage = true
-    static hosted = typeof window !== "undefined" && /(hosted|embed)=1/.test(window.location.href)
+    static hosted =
+        typeof window !== "undefined" &&
+        /(hosted|embed)=1/.test(window.location.href)
+    static gamepad = args.gamepad
 }
 
 // defeat react fast-refresh
@@ -109,7 +113,7 @@ function createBus(): JDBus {
     b.passive = args.passive
     // parentOrigin: args.parentOrigin,
     //if (Flags.webUSB) b.setBackgroundFirmwareScans(true)
-    GamepadServerManager.start(b)
+    if (UIFlags.gamepad) GamepadServerManager.start(b)
 
     // tslint:disable-next-line: no-unused-expression
     // always start bridge
