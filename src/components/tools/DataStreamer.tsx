@@ -1,6 +1,5 @@
-import React, { useContext } from "react"
+import React, { useContext, useEffect } from "react"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
-import useWindowEvent from "../hooks/useWindowEvent"
 import { snapshotSensors } from "../../../jacdac-ts/src/jdom/sensors"
 import { inIFrame } from "../../../jacdac-ts/src/jdom/iframeclient"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
@@ -8,8 +7,10 @@ import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
 export default function DataStreamer() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
 
-    useWindowEvent("message", () => {
-        console.debug("jacdac: start datastreamer upload loop")
+    useEffect(() => {
+        if (!inIFrame()) return
+
+        console.debug("datastreamer: start uploader")
         const upload = () => {
             const sensors = snapshotSensors(bus, true)
             const headers = arrayConcatMany(
@@ -30,15 +31,14 @@ export default function DataStreamer() {
                 values,
             }
             //console.log({ sensors, headers, values })
-            if (inIFrame()) window.parent.postMessage(msg, "*")
+            window.parent.postMessage(msg, "*")
         }
 
         const id = setInterval(upload, 100)
         return () => {
             clearInterval(id)
-            console.debug("jacdac: stop datastreamer upload loop")
+            console.debug("datastreamer: stop uploader")
         }
     })
-
-    return <div>data streamer</div>
+    return <span></span>
 }

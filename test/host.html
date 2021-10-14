@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <style>
+            iframe {
+                position: absolute;
+                left: 0;
+                right: 0;
+                width: 100%;
+                height: 100%;
+                border: none;
+            }
+        </style>
+    </head>
+    <body>
+        <iframe
+            id="iframe"
+            allow="usb;serial"
+            src="http://localhost:8000/dashboard/?datastreamer=1&hosted=1"
+        ></iframe>
+        <script>
+window.addEventListener("message", msg => console.log(msg.data))
+        </script>
+    </body>
+</html>
