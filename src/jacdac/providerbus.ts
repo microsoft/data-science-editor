@@ -46,6 +46,9 @@ function sniffQueryArguments() {
     const toolsMakecode =
         /\/tools\/makecode-/.test(window.location.href) ||
         params.get(`nestededitorsim`) === "1"
+    const toolsMakeEditorExtension = /\/tools\/makecode-editor-extension/.test(
+        window.location.href
+    )
     return {
         diagnostics: params.get(`dbg`) === "1",
         webUSB:
@@ -70,8 +73,9 @@ function sniffQueryArguments() {
         widget: params.get("widget") === "1",
         trace: params.get("trace") === "1",
         localhost: params.get("localhost") === "1",
-        passive: params.get("passive") === "1",
+        passive: params.get("passive") === "1" || toolsMakeEditorExtension,
         gamepad: params.get("gamepad") === "1",
+        hosted: params.get("hosted") === "1" || params.get("embed") === "1",
     }
 }
 
@@ -88,9 +92,7 @@ export class UIFlags {
     static localhost = args.localhost
     static passive = args.passive
     static storage = true
-    static hosted =
-        typeof window !== "undefined" &&
-        /(hosted|embed)=1/.test(window.location.href)
+    static hosted = args.hosted
     static gamepad = args.gamepad
 }
 
