@@ -48,12 +48,14 @@ function DSEditorWithContext() {
 export default function DSBlockEditor() {
     const dataSet = useLocationSearchParamBoolean("dataset", true)
     const dataVar = useLocationSearchParamBoolean("datavar", true)
+    const chart = useLocationSearchParamBoolean("chart", true)
+
     const dsls = useMemo(() => {
         return [
             dataSet && dataSetDsl,
             dataDsl,
             dataVar && dataVarDsl,
-            chartDsl,
+            chart && chartDsl,
             fieldsDsl,
             createIFrameDSL("host", "*"),
         ].filter(dsl => !!dsl)

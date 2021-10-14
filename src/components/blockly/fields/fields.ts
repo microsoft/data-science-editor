@@ -43,6 +43,7 @@ import DenseLayerBlockField from "./mb/DenseLayerBlockField"
 import TrainedModelBlockField from "./mb/TrainedModelBlockField"
 
 import JSONSettingsField from "./JSONSettingsField"
+import IFrameDataChooserField from "./IFrameDataChooserField"
 
 let reactFieldShadows: BlockDefinition[]
 export function registerFields() {
@@ -109,6 +110,8 @@ export function registerFields() {
         UseModelField,
 
         JSONSettingsField,
+
+        IFrameDataChooserField,
     ]
     fieldTypes.forEach(registerType)
 }

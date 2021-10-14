@@ -30,6 +30,7 @@ export interface DslMessage {
         | "workspace"
         | "load"
         | "save"
+        | "options"
 }
 
 export interface DslBlocksResponse extends DslMessage {
@@ -53,6 +54,11 @@ export type DslWorkspaceFileMessage = {
     action: "load" | "save"
 } & DslMessage &
     WorkspaceFile
+
+export interface DslOptionsMessage extends DslMessage {
+    action: "options"
+    options: Record<string, [string, string][]>
+}
 
 class IFrameDomainSpecificLanguage implements BlockDomainSpecificLanguage {
     private dslid = randomDeviceId()

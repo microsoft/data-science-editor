@@ -40,7 +40,12 @@ import useChange from "../../jacdac/useChange"
 import FileSystemContext from "../FileSystemContext"
 import { resolveBlockWarnings } from "./WorkspaceContext"
 import useWindowEvent from "../hooks/useWindowEvent"
-import { DslWorkspaceFileMessage } from "./dsl/iframedsl"
+import {
+    DslMessage,
+    DslOptionsMessage,
+    DslWorkspaceFileMessage,
+} from "./dsl/iframedsl"
+import { AllOptions } from "./fields/IFrameDataChooserField"
 
 export interface BlockProps {
     editorId: string
@@ -305,14 +310,28 @@ export function BlockProvider(props: {
     }, [dragging])
 
     // load message from parent
-    useWindowEvent("message", (msg: MessageEvent<DslWorkspaceFileMessage>) => {
+    useWindowEvent("message", (msg: MessageEvent<DslMessage>) => {
         const { data } = msg
-        if (data.type === "dsl" && data.action === "load") {
-            console.debug(`dsl load`, data)
-            try {
-                loadWorkspaceFile(data)
-            } catch (e) {
-                console.error(e)
+        const { type, action } = data
+        if (type === "dsl") {
+            switch (action) {
+                case "load":
+                    console.debug(`dsl load`, data)
+                    try {
+                        loadWorkspaceFile(data as DslWorkspaceFileMessage)
+                    } catch (e) {
+                        console.error(e)
+                    }
+                    break
+                case "options": {
+                    const options: Record<string, [string, string][]> = (
+                        data as DslOptionsMessage
+                    ).options
+                    console.debug(`dsl: received options`, options)
+                    Object.entries(options || {}).forEach(
+                        ([key, value]) => (AllOptions[key] = value)
+                    )
+                }
             }
         }
     })
