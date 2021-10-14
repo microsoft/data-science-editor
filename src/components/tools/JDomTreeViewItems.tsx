@@ -143,10 +143,11 @@ function DeviceProductInformationTreeItem(props: { device: JDDevice }) {
 
 function AnnounceFlagsTreeItem(props: { device: JDDevice }) {
     const { device } = props
-    const { announceFlags, id, deviceId, restartCounter } = device
+    const { announceFlags, id, deviceId, restartCounter, proxy } = device
 
     const text = [
         deviceId,
+        proxy && "proxy",
         announceFlags & ControlAnnounceFlags.IsClient && "client",
         announceFlags & ControlAnnounceFlags.SupportsACK && "acks",
         announceFlags & ControlAnnounceFlags.SupportsBroadcast && "broadcast",
