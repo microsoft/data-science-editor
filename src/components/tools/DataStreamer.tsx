@@ -28,7 +28,7 @@ export default function DataStreamer() {
                 headers,
                 values,
             }
-            console.log({ sensors, headers, values })
+            //console.log({ sensors, headers, values })
             if (inIFrame()) window.parent.postMessage(msg, "*")
         }
 
