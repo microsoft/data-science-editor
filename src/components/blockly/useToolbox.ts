@@ -108,6 +108,7 @@ export default function useToolbox(
 
     const blocks = useAsyncMemo(async () => {
         const r = await loadBlocks(dsls, theme)
+        if (Flags.diagnostics) console.debug(`blocks`, r)
         return r
     }, [theme, dsls])
     const toolboxConfiguration = useMemo(() => {
