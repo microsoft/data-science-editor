@@ -2,6 +2,7 @@ import { Block, Workspace } from "blockly"
 import { CHANGE } from "../../../../jacdac-ts/src/jdom/constants"
 import { inIFrame } from "../../../../jacdac-ts/src/jdom/iframeclient"
 import { randomDeviceId } from "../../../../jacdac-ts/src/jdom/random"
+import { workspaceToJSON } from "../jsongenerator"
 import {
     BlockDataSet,
     BlockDataSetTransform,
@@ -118,8 +119,15 @@ class IFrameDomainSpecificLanguage implements BlockDomainSpecificLanguage {
     private createTransformData(): BlockDataSetTransform {
         return (blockWithServices, dataset) =>
             new Promise<BlockDataSet>(resolve => {
+                // TODO fix event ordering
+                const workspace = workspaceToJSON(
+                    blockWithServices.workspace,
+                    [], // TODO pass dsls
+                    [blockWithServices]
+                )
                 const { id } = this.post("transform", {
                     blockId: blockWithServices.id,
+                    workspace,
                     dataset,
                 })
                 setTimeout(() => {
