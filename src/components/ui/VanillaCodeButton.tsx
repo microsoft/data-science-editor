@@ -84,9 +84,9 @@ ${html}
                         build: "parcel build index.html",
                     },
                     dependencies: {
-                        "jacdac-ts": "^1.18.13",
+                        "jacdac-ts": "^1.18.16",
                         milligram: "^1.4.1",
-                        "parcel-bundler": "^1.12.5",
+                        "parcel-bundler": "^2.0.0",
                     },
                     devDependencies: {
                         typescript: "^4.4.3",
