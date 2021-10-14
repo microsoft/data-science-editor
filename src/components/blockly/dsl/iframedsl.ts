@@ -28,6 +28,8 @@ export interface DslMessage {
         | "transform"
         | "change"
         | "workspace"
+        | "load"
+        | "save"
 }
 
 export interface DslBlocksResponse extends DslMessage {
@@ -46,6 +48,11 @@ export interface DslTransformMessage extends DslMessage {
 export interface DslTransformResponse extends DslTransformMessage {
     warning?: string
 }
+
+export type DslWorkspaceFileMessage = {
+    action: "load" | "save"
+} & DslMessage &
+    WorkspaceFile
 
 class IFrameDomainSpecificLanguage implements BlockDomainSpecificLanguage {
     private dslid = randomDeviceId()
