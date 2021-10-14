@@ -9,6 +9,7 @@ export default function DataStreamer() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
 
     useWindowEvent("message", () => {
+        console.debug("jacdac: start datastreamer upload loop")
         const upload = () => {
             const sensors = snapshotSensors(bus, true)
             const headers = arrayConcatMany(
@@ -33,7 +34,10 @@ export default function DataStreamer() {
         }
 
         const id = setInterval(upload, 100)
-        return () => clearInterval(id)
+        return () => {
+            clearInterval(id)
+            console.debug("jacdac: stop datastreamer upload loop")
+        }
     })
 
     return <div>data streamer</div>
