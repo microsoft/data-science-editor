@@ -53,7 +53,7 @@ export default function DashboardCODALMessageBus(props: DashboardServiceProps) {
                     label="Value"
                     value={value}
                     onChange={handleValueChange}
-                    error={value && isNaN(nvalue)}
+                    error={!!value && isNaN(nvalue)}
                     helperText={
                         isNaN(nvalue)
                             ? "value must be an unsigned number"
