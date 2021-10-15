@@ -76,6 +76,7 @@ function sniffQueryArguments() {
         passive: params.get("passive") === "1" || toolsMakeEditorExtension,
         gamepad: params.get("gamepad") === "1",
         hosted: params.get("hosted") === "1" || params.get("embed") === "1",
+        storage: params.get("storage") === "0" ? false : true,
     }
 }
 
@@ -91,7 +92,7 @@ export class UIFlags {
     static peers = args.peers
     static localhost = args.localhost
     static passive = args.passive
-    static storage = true
+    static storage = args.storage
     static hosted = args.hosted
     static gamepad = args.gamepad
 }
