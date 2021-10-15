@@ -26,6 +26,7 @@ export interface FeatureItemProps {
     buttonVariant?: "outlined" | "contained" | "link"
     onButtonClick?: () => void
     image?: ReactNode
+    hideJacdacIcon?: boolean
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -61,6 +62,7 @@ export default function FeatureItem(props: FeatureItemProps) {
         image,
         centered,
         onButtonClick,
+        hideJacdacIcon
     } = props
     const classes = useStyles()
     const centeredCls = centered && classes.centered
@@ -75,13 +77,15 @@ export default function FeatureItem(props: FeatureItemProps) {
             {title && (
                 <Grid item xs={12}>
                     <Typography variant="h1" className={cls}>
-                        <JacdacIcon
-                            fontSize="large"
-                            style={{
-                                fontSize: "4rem",
-                                verticalAlign: "middle",
-                            }}
-                        />
+                        {!hideJacdacIcon && (
+                            <JacdacIcon
+                                fontSize="large"
+                                style={{
+                                    fontSize: "4rem",
+                                    verticalAlign: "middle",
+                                }}
+                            />
+                        )}
                         <span style={{ fontWeight: "bold" }}>{title}</span>
                     </Typography>
                 </Grid>
