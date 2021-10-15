@@ -6,6 +6,8 @@ import SplitGrid from "../../../components/home/SplitGrid"
 import { FEEDBACK_URL } from "../../../components/shell/DataEditorAppBar"
 
 export default function Home() {
+    const DATASET_URL =
+        "https://green-rock-09efbc210.azurestaticapps.net/hosted_files/dataset.xlsx"
     return (
         <Grid
             container
@@ -23,7 +25,7 @@ export default function Home() {
                     <StaticImage src="./hero.png" alt="Many Modules Together" />
                 }
                 buttonText="Download Worksheet"
-                buttonUrl="https://green-rock-09efbc210.azurestaticapps.net/hosted_files/dataset.xlsx"
+                buttonUrl={DATASET_URL}
             />
             <CenterGrid
                 subtitle3="Drag blocks to build a data analysis pipeline within Excel."
@@ -87,7 +89,7 @@ export default function Home() {
                 description="Yes! Download the worksheet and follow the instructions to get started."
                 buttonVariant="link"
                 buttonText="Download Worksheet"
-                buttonUrl="https://green-rock-09efbc210.azurestaticapps.net/hosted_files/dataset.xlsx"
+                buttonUrl={DATASET_URL}
             />
 
             <CenterGrid
