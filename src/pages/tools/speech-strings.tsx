@@ -110,12 +110,7 @@ export default function HIDEvents() {
 
     const handleClearPhrases = async () => {
         await Promise.all(phrases.filter(({key})=>!!key).map((phrase) => settings.deleteValue(phrase.key)))
-        let temp_phrases = phrases.slice();
-        phrases.filter(({key})=>!key).map((phrase) => {
-            const idx = temp_phrases.indexOf(phrase)
-            temp_phrases = [...temp_phrases.slice(0, idx), ... temp_phrases.slice(idx)]
-        })
-        setPhrases(temp_phrases);
+        setPhrases([]);
     }
 
     const handleSavePhrases = () => {
