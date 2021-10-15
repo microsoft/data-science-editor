@@ -206,7 +206,7 @@ export default function Home() {
                             />
                         }
                         description="Firmware updates"
-                        caption="The device catalog enables the automatic detecttion, download and flashing of firmware onto devices."
+                        caption="The device catalog enables the automatic detection, download and flashing of firmware onto devices."
                     />
                 </Grid>
                 <Grid item xs={12} sm={4}>
