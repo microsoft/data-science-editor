@@ -8,6 +8,8 @@ import DarkModeContext from "../ui/DarkModeContext"
 import { HideOnScroll } from "../ui/HideOnScroll"
 import { Link } from "gatsby-theme-material-ui"
 
+export const FEEDBACK_URL = "https://github.com/microsoft/jacdac/discussions/categories/data-editor"
+
 const useStyles = makeStyles(theme =>
     createStyles({
         grow: {
@@ -66,7 +68,7 @@ export default function DataEditorAppBar() {
                             aria-label="Send feedback in our forums"
                             title="Send feedback in our forums"
                             color="inherit"
-                            href="https://github.com/microsoft/jacdac/discussions/categories/data-editor"
+                            href={FEEDBACK_URL}
                         >
                             Feedback
                         </Link>

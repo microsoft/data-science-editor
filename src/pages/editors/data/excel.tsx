@@ -1,14 +1,9 @@
 import { Grid } from "@material-ui/core"
 import { StaticImage } from "gatsby-plugin-image"
 import React from "react"
-import CarouselGrid from "../../../components/home/CarouselGrid"
 import CenterGrid from "../../../components/home/CenterGrid"
-import FeatureItem from "../../../components/home/FeatureItem"
 import SplitGrid from "../../../components/home/SplitGrid"
-import DirectionsBusIcon from "@material-ui/icons/DirectionsBus"
-import PlaylistAddCheckIcon from "@material-ui/icons/PlaylistAddCheck"
-import FindReplaceIcon from "@material-ui/icons/FindReplace"
-import SubscriptionsIcon from "@material-ui/icons/Subscriptions"
+import { FEEDBACK_URL } from "../../../components/shell/DataEditorAppBar"
 
 export default function Home() {
     return (
@@ -28,7 +23,7 @@ export default function Home() {
                     <StaticImage src="./hero.png" alt="Many Modules Together" />
                 }
                 buttonText="Download Worksheet"
-                buttonUrl="https://green-rock-09efbc210.azurestaticapps.net/hosted_files/cereal.xlsx"
+                buttonUrl="https://green-rock-09efbc210.azurestaticapps.net/hosted_files/dataset.xlsx"
             />
             <CenterGrid
                 subtitle3="Drag blocks to build a data analysis pipeline without Excel."
@@ -85,6 +80,22 @@ export default function Home() {
                         alt="A drawer of statistics blocks"
                     />
                 }
+            />
+
+            <CenterGrid
+                subtitle="Where can I try this editor?"
+                description="Yes! Download the worksheet and follow the instructions to get started."
+                buttonVariant="link"
+                buttonText="Download Worksheet"
+                buttonUrl="https://green-rock-09efbc210.azurestaticapps.net/hosted_files/dataset.xlsx"
+            />
+
+            <CenterGrid
+                subtitle="Community"
+                description="Please tell us what you think of the editor on our forum."
+                buttonText="Go to forum"
+                buttonVariant="link"
+                buttonUrl={FEEDBACK_URL}
             />
         </Grid>
     )
