@@ -30,6 +30,8 @@ import Suspense from "../../components/ui/Suspense"
 import useServiceProviderFromServiceClass from "../../components/hooks/useServiceProviderFromServiceClass"
 import AppContext from "../../components/AppContext"
 const ImportButton = lazy(() => import("../../components/ImportButton"))
+import ServiceManagerContext from "../../components/ServiceManagerContext"
+import ShareIcon from "@material-ui/icons/Share"
 
 // all settings keys are prefixed with this string
 const PREFIX = "@ph_"
@@ -65,6 +67,7 @@ export default function HIDEvents() {
     const [phrases, setPhrases] = useState<Phrase[]>([])
     const gridBreakpoints = useGridBreakpoints()
     const exportRef = useRef()
+    const { fileStorage } = useContext(ServiceManagerContext)
 
     const factory = useCallback(srv => new SettingsClient(srv), [])
     const settings = useServiceClient(settingsService, factory)
@@ -107,6 +110,12 @@ export default function HIDEvents() {
 
     const handleClearPhrases = async () => {
         await Promise.all(phrases.filter(({key})=>!!key).map((phrase) => settings.deleteValue(phrase.key)))
+        let temp_phrases = phrases.slice();
+        phrases.filter(({key})=>!key).map((phrase) => {
+            const idx = temp_phrases.indexOf(phrase)
+            temp_phrases = [...temp_phrases.slice(0, idx), ... temp_phrases.slice(idx)]
+        })
+        setPhrases(temp_phrases);
     }
 
     const handleSavePhrases = () => {
@@ -114,6 +123,15 @@ export default function HIDEvents() {
             if (!phrase.key) phrase.key = PREFIX + randomDeviceId()
             settings.setValue(phrase.key, phraseToBuffer(phrase))
         })
+    }
+
+    const handleExport = () => {
+        fileStorage.saveText(`phrases.json`, JSON.stringify(
+            clone(phrases).map(h => {
+                delete h.key
+                return h
+            })
+        ))
     }
 
     const exportUri =
@@ -245,9 +263,9 @@ export default function HIDEvents() {
                                 </Grid>
                                 <Grid item>
                                     <Button
-                                        ref={exportRef}
                                         variant="outlined"
-                                        href={exportUri}
+                                        onClick={handleExport}
+                                        startIcon={<ShareIcon/>}
                                     >
                                         Export
                                     </Button>
