@@ -63,7 +63,7 @@ export function resolveFieldColumn(
     let warning: string
     if (!column) {
         if (required && !name) warning = "missing column"
-        else if (name) warning = `${name} not found in dataset`
+        else if (name) warning = `${name} column not found`
     }
     return { column, warning }
 }

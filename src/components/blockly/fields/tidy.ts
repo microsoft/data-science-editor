@@ -48,7 +48,7 @@ export function tidyResolveFieldColumn(
     const column = tidyResolveHeader(data, name, type)
     if (!column) {
         if (required && !name) setBlockDataWarning(b, `missing columns`)
-        else if (name) setBlockDataWarning(b, `${name} not found in dataset`)
+        else if (name) setBlockDataWarning(b, `${name} not found`)
     }
     return column
 }

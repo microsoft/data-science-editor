@@ -132,7 +132,8 @@ export function BlockProvider(props: {
     }
     const loadWorkspaceFile = (file: WorkspaceFile) => {
         const { editor, xml } = file || {}
-        if (editor !== editorId) throw new Error("Wrong block editor")
+        if (editor !== editorId)
+            throw new Error(`wrong block editor (${editor} != ${editorId}`)
         // try loading xml into a dummy blockly workspace
         const dom = Xml.textToDom(xml || DEFAULT_XML)
         // all good, load in workspace
