@@ -1,16 +1,15 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext } from "react"
 import { JDClient } from "../../../jacdac-ts/src/jdom/client"
 import { CHANGE, CONNECT } from "../../../jacdac-ts/src/jdom/constants"
 import { inIFrame } from "../../../jacdac-ts/src/jdom/iframeclient"
-import Packet from "../../../jacdac-ts/src/jdom/packet"
-import { SMap } from "../../../jacdac-ts/src/jdom/utils"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
+import useClient from "../hooks/useClient"
+import useEffectAsync from "../useEffectAsync"
 
 export const READ = "read"
 export const MESSAGE_PACKET = "messagepacket"
 const HIDDEN = "hidden"
 const SHOWN = "shown"
-const SENDER = "jacdac-editor-extension"
 
 export interface ReadResponse {
     code?: string
@@ -29,7 +28,7 @@ export class MakeCodeEditorExtensionClient extends JDClient {
     private readonly extensionId: string = inIFrame()
         ? window.location.hash.substr(1)
         : undefined
-    private _target: any // full apptarget
+    private _target: { id: string } // full apptarget
     private _connected = false
     private _visible = false
 
@@ -102,7 +101,7 @@ export class MakeCodeEditorExtensionClient extends JDClient {
         if (!msg.id) {
             switch (msg.event) {
                 case "extinit":
-                    this.log(`init`)
+                    this.log("init")
                     this._target = msg.target
                     this._connected = true
                     this.emit(CONNECT)
@@ -143,6 +142,7 @@ export class MakeCodeEditorExtensionClient extends JDClient {
             // raise event as well
             switch (action) {
                 case "extinit":
+                    this._target = msg.target
                     this._connected = true
                     this.emit(CONNECT)
                     this.emit(CHANGE)
@@ -173,7 +173,7 @@ export class MakeCodeEditorExtensionClient extends JDClient {
 
     private async refresh() {
         this.log(`refresh`)
-        const r = await this.read()
+        await this.read()
     }
 
     async read(): Promise<ReadResponse> {
@@ -235,27 +235,7 @@ export class MakeCodeEditorExtensionClient extends JDClient {
 
 export default function useMakeCodeEditorExtensionClient() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const [client, setClient] =
-        useState<MakeCodeEditorExtensionClient>(undefined)
-    useEffect(() => {
-        console.log(`mkcd: new editor client`)
-        const c = new MakeCodeEditorExtensionClient()
-        c.on(CONNECT, () => {
-            console.log(`mkcd: stream messages`)
-            c.dataStreamMessages(true)
-        })
-        c.on([HIDDEN, SHOWN], () => bus.clear())
-        c.on(MESSAGE_PACKET, msg => {
-            if (msg.channel === "jacdac" && msg.source !== SENDER) {
-                const pkts = Packet.fromFrame(msg.data, bus.timestamp)
-                for (const pkt of pkts) {
-                    pkt.sender = msg.source || "makecode"
-                    bus.processPacket(pkt)
-                }
-            }
-        })
-        setClient(c)
-        return () => c?.unmount()
-    }, [])
+    useEffectAsync(() => bus.stop(), [])
+    const client = useClient(() => new MakeCodeEditorExtensionClient(), [])
     return client
 }
