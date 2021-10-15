@@ -310,31 +310,36 @@ export function BlockProvider(props: {
     }, [dragging])
 
     // load message from parent
-    useWindowEvent("message", (msg: MessageEvent<DslMessage>) => {
-        const { data } = msg
-        const { type, action } = data
-        if (type === "dsl") {
-            switch (action) {
-                case "load":
-                    console.debug(`dsl load`, data)
-                    try {
-                        loadWorkspaceFile(data as DslWorkspaceFileMessage)
-                    } catch (e) {
-                        console.error(e)
+    useWindowEvent(
+        "message",
+        (msg: MessageEvent<DslMessage>) => {
+            const { data } = msg
+            const { type, action } = data
+            if (type === "dsl") {
+                switch (action) {
+                    case "load":
+                        console.debug(`dsl load`, data)
+                        try {
+                            loadWorkspaceFile(data as DslWorkspaceFileMessage)
+                        } catch (e) {
+                            console.error(e)
+                        }
+                        break
+                    case "options": {
+                        const options: Record<string, [string, string][]> = (
+                            data as DslOptionsMessage
+                        ).options
+                        console.debug(`dsl: received options`, options)
+                        Object.entries(options || {}).forEach(
+                            ([key, value]) => (AllOptions[key] = value)
+                        )
                     }
-                    break
-                case "options": {
-                    const options: Record<string, [string, string][]> = (
-                        data as DslOptionsMessage
-                    ).options
-                    console.debug(`dsl: received options`, options)
-                    Object.entries(options || {}).forEach(
-                        ([key, value]) => (AllOptions[key] = value)
-                    )
                 }
             }
-        }
-    })
+        },
+        false,
+        []
+    )
 
     return (
         <BlockContext.Provider

@@ -72,7 +72,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: DATA_ARRANGE_BLOCK,
-            message0: "arrange %1 %2",
+            message0: "sort %1 %2",
             colour: operatorsColour,
             args0: [
                 {
