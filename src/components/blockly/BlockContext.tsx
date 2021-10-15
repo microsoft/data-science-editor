@@ -39,6 +39,13 @@ import useEffectAsync from "../useEffectAsync"
 import useChange from "../../jacdac/useChange"
 import FileSystemContext from "../FileSystemContext"
 import { resolveBlockWarnings } from "./WorkspaceContext"
+import useWindowEvent from "../hooks/useWindowEvent"
+import {
+    DslMessage,
+    DslOptionsMessage,
+    DslWorkspaceFileMessage,
+} from "./dsl/iframedsl"
+import { AllOptions } from "./fields/IFrameDataChooserField"
 
 export interface BlockProps {
     editorId: string
@@ -122,6 +129,15 @@ export function BlockProvider(props: {
             },
             ...warnings.slice(i + 1),
         ])
+    }
+    const loadWorkspaceFile = (file: WorkspaceFile) => {
+        const { editor, xml } = file || {}
+        if (editor !== editorId) throw new Error("Wrong block editor")
+        // try loading xml into a dummy blockly workspace
+        const dom = Xml.textToDom(xml || DEFAULT_XML)
+        // all good, load in workspace
+        workspace.clear()
+        Xml.domToWorkspace(dom, workspace)
     }
 
     const toolboxConfiguration = useToolbox(dsls, workspaceJSON)
@@ -230,13 +246,7 @@ export function BlockProvider(props: {
                 if (!mounted()) return
 
                 const json = JSON.parse(text) as WorkspaceFile
-                const { editor, xml } = json || {}
-                if (editor !== editorId) throw new Error("Wrong block editor")
-                // try loading xml into a dummy blockly workspace
-                const dom = Xml.textToDom(xml || DEFAULT_XML)
-                // all good, load in workspace
-                workspace.clear()
-                Xml.domToWorkspace(dom, workspace)
+                loadWorkspaceFile(json)
             } catch (e) {
                 if (mounted()) setError(e)
                 if (fileSystem) fileSystem.workingDirectory = undefined
@@ -245,18 +255,19 @@ export function BlockProvider(props: {
         [workspaceFile]
     )
     useEffectAsync(async () => {
-        if (!workspaceFile) return
         const file: WorkspaceFile = {
             editor: editorId,
             xml: workspaceXml,
             json: workspaceJSON,
         }
-        // allow dsls to add data
         dsls.forEach(dsl => dsl.onBeforeSaveWorkspaceFile?.(file))
         onBeforeSaveWorkspaceFile?.(file)
-        const fileContent = JSON.stringify(file)
-        workspaceFile?.write(fileContent)
-    }, [editorId, workspaceFile, workspaceJSON])
+        dsls.forEach(dsl => dsl.onSave?.(file))
+        if (workspaceFile) {
+            const fileContent = JSON.stringify(file)
+            workspaceFile?.write(fileContent)
+        }
+    }, [editorId, workspaceFile, workspaceXml, workspaceJSON])
     useEffect(() => {
         const services = resolveWorkspaceServices(workspace)
         if (services) services.workspaceJSON = workspaceJSON
@@ -297,6 +308,33 @@ export function BlockProvider(props: {
     useEffect(() => {
         bus.backgroundRefreshRegisters = !dragging
     }, [dragging])
+
+    // load message from parent
+    useWindowEvent("message", (msg: MessageEvent<DslMessage>) => {
+        const { data } = msg
+        const { type, action } = data
+        if (type === "dsl") {
+            switch (action) {
+                case "load":
+                    console.debug(`dsl load`, data)
+                    try {
+                        loadWorkspaceFile(data as DslWorkspaceFileMessage)
+                    } catch (e) {
+                        console.error(e)
+                    }
+                    break
+                case "options": {
+                    const options: Record<string, [string, string][]> = (
+                        data as DslOptionsMessage
+                    ).options
+                    console.debug(`dsl: received options`, options)
+                    Object.entries(options || {}).forEach(
+                        ([key, value]) => (AllOptions[key] = value)
+                    )
+                }
+            }
+        }
+    })
 
     return (
         <BlockContext.Provider

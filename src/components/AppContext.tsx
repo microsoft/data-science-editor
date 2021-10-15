@@ -1,3 +1,4 @@
+import { Button } from "gatsby-material-ui-components"
 import { useSnackbar } from "notistack"
 import React, {
     createContext,
@@ -94,6 +95,7 @@ export const AppProvider = ({ children }) => {
         const msg = e?.message || e + ""
         const code = errorCode(e)
 
+        console.error(msg, { code, error: e })
         trackError?.(e, {
             code,
         })

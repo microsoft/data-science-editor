@@ -13,11 +13,14 @@ import Flags from "../../../jacdac-ts/src/jdom/flags"
 import BlockContext from "./BlockContext"
 import { useBlockMinimap } from "./BlockMinimap"
 import BrowserCompatibilityAlert from "../ui/BrowserCompatibilityAlert"
+import { UIFlags } from "../../jacdac/providerbus"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         editor: {
-            height: `calc(100vh - ${Flags.diagnostics ? 15 : 10}rem)`,
+            height: `calc(100vh - ${
+                UIFlags.hosted ? 3.5 : Flags.diagnostics ? 15 : 10
+            }rem)`,
             "& .blocklyTreeLabel": {
                 fontFamily: theme.typography.fontFamily,
             },

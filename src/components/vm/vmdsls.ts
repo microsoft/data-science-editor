@@ -12,6 +12,7 @@ import chartDsl from "../blockly/dsl/chartdsl"
 import dataDsl from "../blockly/dsl/datadsl"
 import widgetDSL from "../blockly/dsl/widgetdsl"
 import mlBlocksDsl from "../blockly/dsl/mlblocksdsl"
+import { createIFrameDSL } from "../blockly/dsl/iframedsl"
 
 const vmDsls = [
     servicesDSL,
@@ -28,5 +29,6 @@ const vmDsls = [
     shadowDsl,
     fieldsDsl,
     mlBlocksDsl,
+    createIFrameDSL("hostvm", "*"),
 ]
 export default vmDsls

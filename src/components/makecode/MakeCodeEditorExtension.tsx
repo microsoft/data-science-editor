@@ -153,6 +153,7 @@ function validateClientRole(config: Configuration, role: ClientRole) {
 
 export default function MakeCodeEditorExtension() {
     const client = useMakeCodeEditorExtensionClient()
+    const target = useChange(client, _ => _?.target)
     const connected = useChange(client, c => c?.connected)
     const [configuration, setConfiguration] = useState<Configuration>({
         roles: [],
@@ -167,8 +168,14 @@ export default function MakeCodeEditorExtension() {
             }),
         [client]
     )
-    const hasMakeCodeService = (srv: jdspec.ServiceSpec) =>
-        !!resolveMakecodeService(srv)
+    const hasMakeCodeService = (srv: jdspec.ServiceSpec) => {
+        const mkc = resolveMakecodeService(srv)
+        return (
+            mkc &&
+            target &&
+            (!mkc.client.targets || mkc.client.targets.indexOf(target.id) > -1)
+        )
+    }
     const update = () => {
         setConfiguration(clone(configuration))
     }

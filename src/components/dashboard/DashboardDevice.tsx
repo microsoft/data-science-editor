@@ -28,6 +28,7 @@ import useIntersectionObserver from "../hooks/useIntersectionObserver"
 import { dependencyId } from "../../../jacdac-ts/src/jdom/eventsource"
 import useMediaQueries from "../hooks/useMediaQueries"
 import { DeviceLostAlert } from "../alert/DeviceLostAlert"
+import { DeviceProxyAlert } from "../alert/DeviceProxyAlert"
 
 const ignoredServices = [SRV_CONTROL, SRV_LOGGER, SRV_SETTINGS, SRV_PROTO_TEST]
 
@@ -115,6 +116,7 @@ export default function DashboardDevice(
             />
             <CardContent style={{ paddingTop: 0 }}>
                 <DeviceLostAlert device={device} />
+                <DeviceProxyAlert device={device} />
                 <ServiceWidgets />
             </CardContent>
         </Card>

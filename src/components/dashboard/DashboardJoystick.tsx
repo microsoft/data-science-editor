@@ -198,7 +198,9 @@ function JoystickWidget(props: DashboardServiceProps) {
                     fill={background}
                     stroke={active}
                     strokeWidth={jw}
+                    role="button"
                     aria-label="joystick handle"
+                    arial-live="polite"
                 />
             )}
         </>
@@ -244,6 +246,8 @@ function ArcadeButton(props: {
     return (
         <g
             transform={`translate(${cx},${cy})`}
+            role="button"
+            aria-live="polite"
             aria-label={`button ${title} ${checked ? "down" : "up"}`}
         >
             <circle cx={0} cy={0} r={ro} fill={background} />

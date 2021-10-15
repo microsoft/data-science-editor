@@ -108,6 +108,7 @@ export default function useToolbox(
 
     const blocks = useAsyncMemo(async () => {
         const r = await loadBlocks(dsls, theme)
+        if (Flags.diagnostics) console.debug(`blocks`, r)
         return r
     }, [theme, dsls])
     const toolboxConfiguration = useMemo(() => {
@@ -119,7 +120,7 @@ export default function useToolbox(
             )
         )
             .filter(cat => !!cat)
-            .sort((l, r) => -(l.order - r.order))
+            .sort((l, r) => -((l.order || 0) - (r.order || 0)))
         const contents = dslsCategories.map(node =>
             node.kind === "category"
                 ? patchCategoryJSONtoXML(node as CategoryDefinition)

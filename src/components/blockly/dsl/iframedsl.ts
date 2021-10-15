@@ -15,13 +15,22 @@ import BlockDomainSpecificLanguage, {
     CreateBlocksOptions,
     CreateCategoryOptions,
 } from "./dsl"
-import { WorkspaceJSON } from "./workspacejson"
+import { WorkspaceFile, WorkspaceJSON } from "./workspacejson"
 
 export interface DslMessage {
     type?: "dsl"
     id?: string
     dslid: string
-    action: "mount" | "unmount" | "blocks" | "transform" | "change"
+    action:
+        | "mount"
+        | "unmount"
+        | "blocks"
+        | "transform"
+        | "change"
+        | "workspace"
+        | "load"
+        | "save"
+        | "options"
 }
 
 export interface DslBlocksResponse extends DslMessage {
@@ -39,6 +48,16 @@ export interface DslTransformMessage extends DslMessage {
 
 export interface DslTransformResponse extends DslTransformMessage {
     warning?: string
+}
+
+export type DslWorkspaceFileMessage = {
+    action: "load" | "save"
+} & DslMessage &
+    WorkspaceFile
+
+export interface DslOptionsMessage extends DslMessage {
+    action: "options"
+    options: Record<string, [string, string][]>
 }
 
 class IFrameDomainSpecificLanguage implements BlockDomainSpecificLanguage {
@@ -88,18 +107,24 @@ class IFrameDomainSpecificLanguage implements BlockDomainSpecificLanguage {
                 pending(data)
             }
             // trigger recomputation
-            if (action === "change") {
-                //console.log(`iframedsl: change requested`)
-                this._workspace
-                    .getTopBlocks(false)
-                    .filter(
-                        b => resolveBlockDefinition(b.type)?.dsl === this.id
-                    )
-                    .forEach((b: Block) => {
-                        //console.log(`change ${b.id}`)
-                        const { jacdacServices } = b as BlockWithServices
-                        jacdacServices.emit(CHANGE)
-                    })
+            switch (action) {
+                case "change": {
+                    //console.log(`iframedsl: change requested`)
+                    this._workspace
+                        .getTopBlocks(false)
+                        .filter(
+                            b => resolveBlockDefinition(b.type)?.dsl === this.id
+                        )
+                        .forEach((b: Block) => {
+                            //console.log(`change ${b.id}`)
+                            const { jacdacServices } = b as BlockWithServices
+                            jacdacServices.emit(CHANGE)
+                        })
+                    break
+                }
+                case "workspace": {
+                    break
+                }
             }
         }
     }
@@ -107,6 +132,7 @@ class IFrameDomainSpecificLanguage implements BlockDomainSpecificLanguage {
     private createTransformData(): BlockDataSetTransform {
         return (blockWithServices, dataset) =>
             new Promise<BlockDataSet>(resolve => {
+                // TODO fix event ordering
                 const workspace = workspaceToJSON(
                     blockWithServices.workspace,
                     [], // TODO pass dsls
@@ -166,8 +192,14 @@ class IFrameDomainSpecificLanguage implements BlockDomainSpecificLanguage {
         return this.category
     }
 
-    visitWorkspaceJSON(workspace: Workspace, workspaceJSON: WorkspaceJSON) {
-        this.post("workspace", { workspace: workspaceJSON })
+    onWorkspaceJSONChange(json: WorkspaceJSON) {
+        this.post("workspace", {
+            workspace: json,
+        })
+    }
+
+    onSave(file: WorkspaceFile) {
+        this.post("save", file)
     }
 }
 

@@ -13,7 +13,7 @@ import {
 import { IFrameTransport } from "../../jacdac-ts/src/embed/transport"
 import DarkModeContext from "./ui/DarkModeContext"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
-import { inIFrame } from "../../jacdac-ts/src/jdom/iframeclient"
+import { UIFlags } from "../jacdac/providerbus"
 
 export interface ISettings {
     get(key: string): string
@@ -99,8 +99,7 @@ export const ServiceManagerProvider = ({ children }) => {
     )
 
     function createProps(): ServiceManagerContextProps {
-        const isHosted =
-            inIFrame() && /(hosted|embed)=1/.test(window.location.href)
+        const isHosted = UIFlags.hosted
         let fileStorage: IFileStorage = new BrowserFileStorage()
         let modelStore: ModelStore = undefined
         if (isHosted) {

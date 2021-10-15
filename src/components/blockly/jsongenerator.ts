@@ -150,6 +150,7 @@ export function workspaceToJSON(
             blocks: todo.map(blockToJSON).filter(b => !!b),
         }
         dsls.forEach(dsl => dsl.visitWorkspaceJSON?.(workspace, json))
+        dsls.forEach(dsl => dsl.onWorkspaceJSONChange?.(json))
         return json
     } catch (e) {
         console.error(e)

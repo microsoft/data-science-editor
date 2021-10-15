@@ -180,6 +180,8 @@ export const JSON_TYPE = "JSON"
 export const STRING_TYPE = "String"
 export const BOOLEAN_TYPE = "Boolean"
 export const NUMBER_TYPE = "Number"
+export const DATA_TABLE_TYPE = "DataTable"
+
 export const PRIMITIVE_TYPES = [STRING_TYPE, BOOLEAN_TYPE, NUMBER_TYPE]
 export const BUILTIN_TYPES = ["", ...PRIMITIVE_TYPES]
 
