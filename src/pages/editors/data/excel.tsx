@@ -37,6 +37,7 @@ export default function Home() {
 
             <SplitGrid
                 right={true}
+                imageColumns={8}
                 subtitle="Tell a data story"
                 description="Follow the blocks to see how the data is analyzed."
                 image={
@@ -49,6 +50,19 @@ export default function Home() {
 
             <SplitGrid
                 right={false}
+                imageColumns={8}
+                subtitle="Visualize"
+                description="Drag a chart block to visualize your data."
+                image={
+                    <StaticImage
+                        src="./chart.png"
+                        alt="A scatter plot of pinguins"
+                    />
+                }
+            />
+
+            <SplitGrid
+                right={true}
                 subtitle="👀 every step"
                 description="Inspect before and after data on every computation block."
                 imageColumns={8}
@@ -61,7 +75,7 @@ export default function Home() {
             />
 
             <SplitGrid
-                right={true}
+                right={false}
                 subtitle="Discover"
                 description="Discover how to compute with data using an intuitive block-based editor."
                 imageColumns={8}
