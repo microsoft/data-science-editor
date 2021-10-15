@@ -1,4 +1,5 @@
 import { Grid } from "@material-ui/core"
+import { withPrefix } from "gatsby-link"
 import { StaticImage } from "gatsby-plugin-image"
 import React from "react"
 import CenterGrid from "../../../components/home/CenterGrid"
@@ -22,7 +23,7 @@ export default function Home() {
                 subtitle="for Excel"
                 image={
                     <img
-                        src="/images/hero.gif"
+                        src={withPrefix("/images/hero.gif")}
                         alt="Building a chart from various modules"
                         loading="lazy"
                     />
