@@ -77,6 +77,7 @@ function sniffQueryArguments() {
         gamepad: params.get("gamepad") === "1",
         hosted: params.get("hosted") === "1" || params.get("embed") === "1",
         storage: params.get("storage") === "0" ? false : true,
+        bus: params.get("bus") === "0" ? false : true,
     }
 }
 
@@ -215,6 +216,7 @@ function createBus(): JDBus {
                 trackEvent(`jd.restart`, createServicePayload(d))
             }
         })
+        if (!args.bus) b.stop()
     }
 
     return b
