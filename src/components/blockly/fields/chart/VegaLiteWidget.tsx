@@ -14,6 +14,7 @@ import { humanify } from "../../../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import CopyButton from "../../../ui/CopyButton"
 import FullscreenIcon from "@material-ui/icons/Fullscreen"
 import IconButtonWithTooltip from "../../../ui/IconButtonWithTooltip"
+import { UIFlags } from "../../../../jacdac/providerbus"
 const VegaLite = lazy(() => import("./VegaLite"))
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -134,32 +135,34 @@ export default function VegaLiteWidget(props: {
             <PointerBoundary>
                 <div style={{ background: "#fff", borderRadius: "0.25rem" }}>
                     <Grid container direction="column" spacing={1}>
-                        <Grid item xs={12}>
-                            <Grid
-                                container
-                                direction="row"
-                                justifyContent="flex-start"
-                                alignItems="center"
-                                spacing={1}
-                            >
-                                <Grid item>
-                                    <CopyButton
-                                        size="small"
-                                        className={classes.button}
-                                        onCopy={handleCopy}
-                                    />
-                                </Grid>
-                                <Grid item>
-                                    <IconButtonWithTooltip
-                                        title="show full screen"
-                                        className={classes.button}
-                                        onClick={handleFullScreen}
-                                    >
-                                        <FullscreenIcon />
-                                    </IconButtonWithTooltip>
+                        {!UIFlags.hosted && (
+                            <Grid item xs={12}>
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    alignItems="center"
+                                    spacing={1}
+                                >
+                                    <Grid item>
+                                        <CopyButton
+                                            size="small"
+                                            className={classes.button}
+                                            onCopy={handleCopy}
+                                        />
+                                    </Grid>
+                                    <Grid item>
+                                        <IconButtonWithTooltip
+                                            title="show full screen"
+                                            className={classes.button}
+                                            onClick={handleFullScreen}
+                                        >
+                                            <FullscreenIcon />
+                                        </IconButtonWithTooltip>
+                                    </Grid>
                                 </Grid>
                             </Grid>
-                        </Grid>
+                        )}
                         <Grid item xs={12}>
                             <Suspense>
                                 <VegaLite

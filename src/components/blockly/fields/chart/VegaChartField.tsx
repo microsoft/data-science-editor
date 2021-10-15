@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react"
 import WorkspaceContext, {
-    BlocklyWorkspaceWithServices,
     WorkspaceServices,
+    WorkspaceWithServices,
 } from "../../WorkspaceContext"
 import { ReactFieldJSON } from "../ReactField"
 import ReactInlineField from "../ReactInlineField"
@@ -13,7 +13,7 @@ import { useEffect } from "react"
 function VegaChartWidget() {
     const { sourceBlock, workspace } = useContext(WorkspaceContext)
     const { data } = useBlockData(sourceBlock)
-    const services = (workspace as BlocklyWorkspaceWithServices)?.jacdacServices
+    const services = (workspace as any as WorkspaceWithServices)?.jacdacServices
 
     // track workspace changes and re-render
     const [, setWorkspaceJSON] = useState(services?.workspaceJSON)
