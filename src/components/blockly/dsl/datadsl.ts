@@ -480,7 +480,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: DATA_SLICE_BLOCK,
-            message0: "slice %1 rows from %2",
+            message0: "take %1 rows from %2",
             colour: operatorsColour,
             args0: [
                 <NumberInputDefinition>{
@@ -709,10 +709,10 @@ const dataDsl: BlockDomainSpecificLanguage = {
             name: "Organize",
             colour: operatorsColour,
             contents: [
-                <BlockReference>{
+                /*<BlockReference>{
                     kind: "block",
                     type: DATA_COMMENT_BLOCK,
-                },
+                },*/
                 <BlockReference>{
                     kind: "block",
                     type: DATA_ARRANGE_BLOCK,
