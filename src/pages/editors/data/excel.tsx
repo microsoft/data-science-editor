@@ -26,7 +26,7 @@ export default function Home() {
                 buttonUrl="https://green-rock-09efbc210.azurestaticapps.net/hosted_files/dataset.xlsx"
             />
             <CenterGrid
-                subtitle3="Drag blocks to build a data analysis pipeline without Excel."
+                subtitle3="Drag blocks to build a data analysis pipeline within Excel."
                 description="Drag, Drop, Analyze."
             />
 
