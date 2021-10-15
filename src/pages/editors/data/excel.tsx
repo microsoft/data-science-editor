@@ -16,13 +16,16 @@ export default function Home() {
             alignContent="center"
             alignItems="center"
         >
-            <SplitGrid
+            <CenterGrid
                 hideJacdacIcon={true}
                 title="Data Science Editor"
                 subtitle="for Excel"
-                imageColumns={6}
                 image={
-                    <StaticImage src="./hero.png" alt="Many Modules Together" />
+                    <img
+                        src="/images/hero.gif"
+                        alt="Building a chart from various modules"
+                        loading="lazy"
+                    />
                 }
                 buttonText="Download Worksheet"
                 buttonUrl={DATASET_URL}
