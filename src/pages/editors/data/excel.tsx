@@ -31,10 +31,7 @@ export default function Home() {
                 buttonText="Download Worksheet"
                 buttonUrl={DATASET_URL}
             />
-            <CenterGrid
-                subtitle3="Drag blocks to build a data analysis pipeline within Excel."
-                description="Drag, Drop, Analyze."
-            />
+            <CenterGrid subtitle3="Drag blocks to build a data analysis pipeline within Excel." />
 
             <SplitGrid
                 right={true}
