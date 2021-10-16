@@ -1,6 +1,9 @@
 import { CHANGE } from "../../../../jacdac-ts/src/jdom/constants"
 import { identityTransformData, resolveBlockDefinition } from "../toolbox"
 import { BlockWithServices, resolveBlockServices } from "../WorkspaceContext"
+import { start, done } from "nprogress"
+
+const PROGRESS_DELAY = 200
 
 export function registerDataSolver(block: BlockWithServices) {
     const { jacdacServices: services } = block
@@ -21,19 +24,28 @@ export function registerDataSolver(block: BlockWithServices) {
             let newData: object[]
             if (transformData === identityTransformData) newData = services.data
             else {
-                //const start = performance.now()
-                newData = await transformData(
-                    block,
-                    services.data,
-                    nextServices?.data
-                )
-                //const end = performance.now()
-                //console.debug(
-                //    `data ${block.type}: ${roundWithPrecision(
-                //        (end - start) / 1000,
-                //        3
-                //    )}s`
-                //)
+                let progressid = setTimeout(() => {
+                    progressid = undefined
+                    start()
+                }, PROGRESS_DELAY)
+                try {
+                    //const start = performance.now()
+                    newData = await transformData(
+                        block,
+                        services.data,
+                        nextServices?.data
+                    )
+                    //const end = performance.now()
+                    //console.debug(
+                    //    `data ${block.type}: ${roundWithPrecision(
+                    //        (end - start) / 1000,
+                    //        3
+                    //    )}s`
+                    //)
+                } finally {
+                    if (progressid) clearTimeout(progressid)
+                    else done()
+                }
             }
 
             // propagate
