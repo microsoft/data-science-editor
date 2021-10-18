@@ -90,6 +90,15 @@ function Network(props: {
         await service.sendCmdPackedAsync<[string]>(WifiCmd.ForgetNetwork, [
             ssid,
         ])
+    const handlePriorityChange = async (ev: ChangeEvent<HTMLInputElement>) => {
+        const newPriority = parseInt(ev.target.value)
+        if (!isNaN(newPriority))
+            await service.sendCmdPackedAsync(
+                WifiCmd.SetNetworkPriority,
+                [newPriority, ssid],
+                true
+            )
+    }
     // hasPassword == requires password
     const hasPassword = !!(networkFlags & WifiAPFlags.HasPassword)
     const connectError =
@@ -141,6 +150,14 @@ function Network(props: {
                         Forget
                     </CmdButton>
                 )}
+                {known && (
+                    <TextField
+                        type="number"
+                        value={priority}
+                        label="priority"
+                        onChange={handlePriorityChange}
+                    />
+                )}
             </CardActions>
         </Card>
     )
@@ -182,7 +199,7 @@ function ConnectDialog(props: {
         await service.sendCmdAsync(WifiCmd.ForgetAllNetworks)
 
     const priority = (s: string) =>
-        knownNetworks.find(n => n[2] === s)?.[0] || Infinity
+        knownNetworks.find(n => n[2] === s)?.[0] || -Infinity
 
     const ssids = unique([
         ...(knownNetworks || []).map(kn => kn[2]),
