@@ -20,7 +20,7 @@ export default function Home() {
             <CenterGrid
                 hideJacdacIcon={true}
                 title="Data Science Editor"
-                subtitle="for Excel"
+                subtitle="for Excel Web"
                 image={
                     <img
                         src={withPrefix("/images/hero.gif")}
@@ -31,7 +31,7 @@ export default function Home() {
                 buttonText="Download Worksheet"
                 buttonUrl={DATASET_URL}
             />
-            <CenterGrid subtitle3="Block programming meets data analysis within Excel." />
+            <CenterGrid subtitle3="Block programming meets data analysis within Excel Web." />
 
             <SplitGrid
                 right={true}
