@@ -11,10 +11,6 @@ import {
     DialogContent,
     DialogTitle,
     Grid,
-    List,
-    ListItem,
-    ListItemSecondaryAction,
-    ListItemText,
     TextField,
     Typography,
 } from "@material-ui/core"
@@ -33,20 +29,20 @@ import {
     WifiEvent,
 } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import JDService from "../../../jacdac-ts/src/jdom/service"
-import { toHex } from "../../../jacdac-ts/src/jdom/utils"
-import RefreshIcon from "@material-ui/icons/Refresh"
-import SwitchWithLabel from "../ui/SwitchWithLabel"
+import { toHex, unique } from "../../../jacdac-ts/src/jdom/utils"
 import useInterval from "../hooks/useInterval"
 import useEvent from "../hooks/useEvent"
 import useCommandPipeResults from "../hooks/useCommandPipeResults"
 import DeleteIcon from "@material-ui/icons/Delete"
-import { Button } from "gatsby-theme-material-ui"
 import ChipList from "../ui/ChipList"
-import useServiceProvider from "../hooks/useServiceProvider"
 import useServiceServer from "../hooks/useServiceServer"
 import WifiServer from "../../../jacdac-ts/src/servers/wifiserver"
 import { Alert, AlertTitle } from "@material-ui/lab"
 import { EVENT } from "../../../jacdac-ts/src/jdom/constants"
+import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
+import useGridBreakpoints from "../useGridBreakpoints"
+import WifiIcon from "@material-ui/icons/Wifi"
+import WifiOffIcon from "@material-ui/icons/WifiOff"
 
 // flags, rssi, channel, bssid, ssid
 type ScanResult = [WifiAPFlags, number, number, Uint8Array, string]
@@ -54,30 +50,64 @@ type ScanResult = [WifiAPFlags, number, number, Uint8Array, string]
 // priority, flags, ssid
 type NetworkResult = [number, number, string]
 
-function ConnectAp(props: { service: JDService; info: ScanResult }) {
-    const { service, info } = props
-    const [flags, rssi, channel, bssid, ssid] = info
+function toMAC(buffer: Uint8Array) {
+    const hex = toHex(buffer, ":")
+    return hex
+}
+
+function toIP(buffer: Uint8Array): string {
+    if (!buffer) return undefined
+    if (buffer.length === 4)
+        return `${buffer[0]}.${buffer[1]}.${buffer[2]}.${buffer[3]}`
+    else return toHex(buffer, ".")
+}
+
+function Network(props: {
+    service: JDService
+    ssid: string
+    network?: NetworkResult
+    info?: ScanResult
+    connected: boolean
+}) {
+    const { service, info, network, ssid, connected } = props
+    const [priority, networkFlags] = network || []
+    const [scanFlags, rssi, channel] = info || []
     const [password, setPassword] = useState("")
+    const known = !!network
+    const scanned = !!info
     const passwordId = useId()
     const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
         setPassword(event.target.value)
     }
-    const handleAddNetwork = async () => {
+    const handleConnect = async () =>
         await service.sendCmdPackedAsync<[string, string]>(
             WifiCmd.AddNetwork,
             [ssid, password || ""],
             true
         )
-    }
+    const handleForgetNetwork = async () =>
+        await service.sendCmdPackedAsync<[string]>(WifiCmd.ForgetNetwork, [
+            ssid,
+        ])
     // hasPassword == requires password
-    const hasPassword = !!(flags & WifiAPFlags.HasPassword)
-    const connectError = hasPassword && !password ? "password required" : undefined
+    const hasPassword = !!(networkFlags & WifiAPFlags.HasPassword)
+    const connectError =
+        hasPassword && !password ? "password required" : undefined
 
     return (
         <Card>
-            <CardHeader title={ssid} />
+            <CardHeader
+                title={ssid}
+                subheader={[
+                    known && `priority ${priority}`,
+                    scanned && `RSSI ${rssi}, channel ${channel}`,
+                ]
+                    .filter(s => !!s)
+                    .join(", ")}
+            />
             <CardContent>
-                {hasPassword && (
+                {connected && <Alert severity="info">Connected</Alert>}
+                {!hasPassword && (
                     <TextField
                         id={passwordId}
                         value={password}
@@ -91,14 +121,24 @@ function ConnectAp(props: { service: JDService; info: ScanResult }) {
                 )}
             </CardContent>
             <CardActions>
-                <CmdButton
-                    variant="contained"
-                    color="primary"
-                    disabled={!!connectError}
-                    onClick={handleAddNetwork}
-                >
-                    Connect
-                </CmdButton>
+                {!known ? (
+                    <CmdButton
+                        variant="contained"
+                        color="primary"
+                        disabled={!!connectError}
+                        onClick={handleConnect}
+                    >
+                        Connect
+                    </CmdButton>
+                ) : (
+                    <CmdButton
+                        variant="outlined"
+                        disabled={!!connectError}
+                        onClick={handleForgetNetwork}
+                    >
+                        Forget
+                    </CmdButton>
+                )}
             </CardActions>
         </Card>
     )
@@ -108,10 +148,21 @@ function ConnectDialog(props: {
     open: boolean
     setOpen: (v: boolean) => void
     service: JDService
+    connectedSsid: string
 }) {
-    const { open, setOpen, service } = props
-    const handleClose = () => setOpen(false)
+    const { open, setOpen, service, connectedSsid } = props
+    const breakpoints = useGridBreakpoints()
     const scan = () => service.sendCmdAsync(WifiCmd.Scan)
+    const knownNetworksChangedEvent = useEvent(
+        service,
+        WifiEvent.NetworksChanged
+    )
+    const knownNetworks = useCommandPipeResults<NetworkResult>(
+        service,
+        WifiCmd.ListKnownNetworks,
+        "i16 i16 s",
+        knownNetworksChangedEvent
+    )
 
     // grad scan results
     const scanCompleteEvent = useEvent(service, WifiEvent.ScanComplete)
@@ -124,6 +175,14 @@ function ConnectDialog(props: {
 
     // keep scanning
     useInterval(open, scan, 30000, [service])
+    const handleClose = () => setOpen(false)
+    const handleForgetAll = async () =>
+        await service.sendCmdAsync(WifiCmd.ForgetAllNetworks)
+
+    const ssids = unique([
+        ...(knownNetworks || []).map(kn => kn[2]),
+        ...(aps || []).map(ap => ap[4]),
+    ])
 
     return (
         <Dialog
@@ -135,49 +194,32 @@ function ConnectDialog(props: {
             <DialogContent>
                 <DialogTitle>Connect to Wifi</DialogTitle>
                 <Grid container spacing={1}>
-                    {aps.map(ap => (
-                        <Grid item xs={12} key={ap[4]}>
-                            <ConnectAp service={service} info={ap} />
+                    {ssids.map(ssid => (
+                        <Grid item {...breakpoints} key={ssid}>
+                            <Network
+                                service={service}
+                                connected={connectedSsid === ssid}
+                                ssid={ssid}
+                                network={knownNetworks?.find(
+                                    kn => kn[2] === ssid
+                                )}
+                                info={aps?.find(ap => ap[4] === ssid)}
+                            />
                         </Grid>
                     ))}
                 </Grid>
             </DialogContent>
             <DialogActions>
                 <CmdButton
-                    trackName="dashboard.wifi.scan"
-                    onClick={scan}
-                    title="scan"
-                    autoRun={true}
-                    icon={<RefreshIcon />}
+                    trackName="dashboard.wifi.forgetall"
+                    onClick={handleForgetAll}
+                    title="forget all"
+                    icon={<DeleteIcon />}
                 >
-                    Scan
+                    Forget all
                 </CmdButton>
             </DialogActions>
         </Dialog>
-    )
-}
-
-function NetworkItem(props: {
-    currentSsid: string
-    service: JDService
-    priority: number
-    flags: WifiAPFlags
-    ssid: string
-}) {
-    const { currentSsid, service, priority, flags, ssid } = props
-    const handleDelete = async () =>
-        await service.sendCmdPackedAsync(WifiCmd.ForgetNetwork, [ssid])
-    return (
-        <ListItem selected={currentSsid === ssid}>
-            <ListItemText primary={ssid} secondary={priority} />
-            <ListItemSecondaryAction>
-                <CmdButton
-                    onClick={handleDelete}
-                    icon={<DeleteIcon />}
-                    title="delete"
-                />
-            </ListItemSecondaryAction>
-        </ListItem>
     )
 }
 
@@ -199,24 +241,12 @@ export default function DashboardWifi(props: DashboardServiceProps) {
     const [mac] = useRegisterUnpackedValue<[Uint8Array]>(macRegister)
     const lostIpEvent = useEvent(service, WifiEvent.LostIp)
     const gotIpEvent = useEvent(service, WifiEvent.GotIp)
-    const knownNetworksChangedEvent = useEvent(
-        service,
-        WifiEvent.NetworksChanged
-    )
-    const knownNetworks = useCommandPipeResults<NetworkResult>(
-        service,
-        WifiCmd.ListKnownNetworks,
-        "i16 i16 s",
-        knownNetworksChangedEvent
-    )
 
     const handleConnect = async () => {
         if (connected) await enabledRegister.sendSetBoolAsync(false)
         else await service.sendCmdAsync(WifiCmd.Reconnect, undefined, true)
     }
     const handleConfigure = () => setOpen(true)
-    const handleForgetAll = async () =>
-        await service.sendCmdAsync(WifiCmd.ForgetAllNetworks, undefined, true)
 
     // force register refreshs on various events
     const refreshRegisters = () => {
@@ -256,67 +286,43 @@ export default function DashboardWifi(props: DashboardServiceProps) {
                     {(ssid || ip || mac) && (
                         <ChipList>
                             {!!ssid && <Chip label={ssid} />}
-                            {!!ip && <Chip label={`IP: ${toHex(ip)}`} />}
-                            {!!mac && <Chip label={`MAC: ${toHex(mac)}`} />}
+                            {!!ip && <Chip label={`IP: ${toIP(ip)}`} />}
+                            {!!mac && <Chip label={`MAC: ${toMAC(mac)}`} />}
                         </ChipList>
                     )}
-                </Grid>
-                <Grid item xs={12}>
-                    <Typography variant="caption">
-                        Known networks ({knownNetworks?.length || 0})
-                    </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                    <List dense={true}>
-                        {knownNetworks?.map(([priority, flags, nssid]) => (
-                            <NetworkItem
-                                currentSsid={ssid}
-                                service={service}
-                                key={nssid}
-                                priority={priority}
-                                flags={flags}
-                                ssid={nssid}
-                            />
-                        ))}
-                    </List>
                 </Grid>
                 <Grid item xs={12}>
                     <Grid container spacing={1} direction="row">
                         <Grid item>
                             <CmdButton
                                 trackName="dashboard.wifi.connect"
-                                variant="contained"
+                                variant="outlined"
                                 color="primary"
                                 onClick={handleConnect}
-                            >
-                                {connected ? "Disconnect" : "Connect"}
-                            </CmdButton>
+                                icon={
+                                    connected ? <WifiOffIcon /> : <WifiIcon />
+                                }
+                            />
                         </Grid>
                         <Grid item>
-                            <Button
-                                variant="outlined"
-                                startIcon={<SettingsIcon />}
+                            <IconButtonWithTooltip
                                 onClick={handleConfigure}
                                 title="configure"
                             >
-                                Configure
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <CmdButton
-                                variant="outlined"
-                                trackName="dashboard.wifi.forgetall"
-                                title="forget all networks"
-                                icon={<DeleteIcon />}
-                                onClick={handleForgetAll}
-                            >
-                                Forget all
-                            </CmdButton>
+                                <SettingsIcon />
+                            </IconButtonWithTooltip>
                         </Grid>
                     </Grid>
                 </Grid>
             </Grid>
-            <ConnectDialog open={open} setOpen={setOpen} service={service} />
+            {open && (
+                <ConnectDialog
+                    open={open}
+                    setOpen={setOpen}
+                    service={service}
+                    connectedSsid={ssid}
+                />
+            )}
         </>
     )
 }
