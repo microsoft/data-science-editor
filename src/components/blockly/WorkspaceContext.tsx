@@ -24,6 +24,7 @@ export class WorkspaceServices extends JDEventSource {
     private _directory: FileSystemDirectory
 
     private _workspaceJSON: WorkspaceJSON
+
     private _runner: VMProgramRunner
     private _roleManager: RoleManager
 

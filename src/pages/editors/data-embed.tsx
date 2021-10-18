@@ -18,6 +18,7 @@ import useWindowEvent from "../../components/hooks/useWindowEvent"
 import { tidy, arrange, desc } from "@tidyjs/tidy"
 import {
     DslBlocksResponse,
+    DslChartExportMessage,
     DslMessage,
     DslTransformMessage,
 } from "../../components/blockly/dsl/iframedsl"
@@ -129,6 +130,10 @@ export default function Page() {
         post({ ...rest, ...(res || {}) })
     }
 
+    const handleChartExport = async (data: DslChartExportMessage) => {
+        console.log(`hostdsl: chart export`, data)
+    }
+
     useWindowEvent(
         "message",
         (msg: MessageEvent<DslMessage>) => {
@@ -144,6 +149,10 @@ export default function Page() {
                     break
                 case "blocks": {
                     handleBlocks(data)
+                    break
+                }
+                case "chartexport": {
+                    handleChartExport(data)
                     break
                 }
                 case "transform": {

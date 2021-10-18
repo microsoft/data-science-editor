@@ -12,9 +12,9 @@ import { tidyResolveHeader, tidySlice } from "./../tidy"
 import { JSONTryParse } from "../../../../../jacdac-ts/src/jdom/utils"
 import { humanify } from "../../../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import CopyButton from "../../../ui/CopyButton"
-import FullscreenIcon from "@material-ui/icons/Fullscreen"
 import IconButtonWithTooltip from "../../../ui/IconButtonWithTooltip"
 import { UIFlags } from "../../../../jacdac/providerbus"
+import SaveAltIcon from "@material-ui/icons/SaveAlt"
 const VegaLite = lazy(() => import("./VegaLite"))
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -40,6 +40,8 @@ const useStyles = makeStyles(() => ({
     },
 }))
 
+export type VegaLiteChart = unknown
+
 export default function VegaLiteWidget(props: {
     spec: VisualizationSpec
     slice?: DataSliceOptions
@@ -56,7 +58,7 @@ export default function VegaLiteWidget(props: {
     const settings = JSONTryParse(sourceBlock?.getFieldValue("settings"))
     const handleNewView = (view: View) => (viewRef.current = view)
 
-    const fullSpec = useMemo(() => {
+    const fullSpec: VegaLiteChart = useMemo(() => {
         if (!settings) return spec
         const s = clone(spec)
         if (s.encoding)
@@ -107,35 +109,37 @@ export default function VegaLiteWidget(props: {
 
     const renderer =
         vegaData.values.length < CHART_SVG_MAX_ITEMS ? "svg" : "canvas"
-    const handleCopy = async () => {
-        const view = viewRef.current
-        const canvas = await view?.toCanvas(2)
-        return canvas
-    }
-    const handleFullScreen = async () => {
-        const view = viewRef.current
-        const container = view?.container()
-        if (!container) return
-        const svg = container.firstElementChild as HTMLElement
-        if (svg.getAttribute("width")) {
-            container.style.width = svg.getAttribute("width") + "px"
-            container.style.height = svg.getAttribute("height") + "px"
-            svg.style.width = "100%"
-            svg.style.height = "100%"
-            svg.removeAttribute("width")
-            svg.removeAttribute("height")
-        }
-        await container?.requestFullscreen({
-            navigationUI: "hide",
-        })
-    }
+    const handleCopy = UIFlags.hosted
+        ? undefined
+        : async () => {
+              const view = viewRef.current
+              const canvas = await view?.toCanvas(2)
+              return canvas
+          }
+    const handleExport = UIFlags.hosted
+        ? async () => {
+              window.parent?.postMessage({
+                  type: "dsl",
+                  action: "chartexport",
+                  vega: fullSpec,
+                  slice,
+                  dataset: data,
+                  vegaDataset: vegaData,
+              })
+          }
+        : async () => {
+              const view = viewRef.current
+              const canvas = await view?.toCanvas(2)
+              return canvas
+          }
+    const showToolbar = !!handleCopy || !!handleExport
 
     return (
         <NoSsr>
             <PointerBoundary>
                 <div style={{ background: "#fff", borderRadius: "0.25rem" }}>
                     <Grid container direction="column" spacing={1}>
-                        {!UIFlags.hosted && (
+                        {showToolbar && (
                             <Grid item xs={12}>
                                 <Grid
                                     container
@@ -144,22 +148,27 @@ export default function VegaLiteWidget(props: {
                                     alignItems="center"
                                     spacing={1}
                                 >
-                                    <Grid item>
-                                        <CopyButton
-                                            size="small"
-                                            className={classes.button}
-                                            onCopy={handleCopy}
-                                        />
-                                    </Grid>
-                                    <Grid item>
-                                        <IconButtonWithTooltip
-                                            title="show full screen"
-                                            className={classes.button}
-                                            onClick={handleFullScreen}
-                                        >
-                                            <FullscreenIcon />
-                                        </IconButtonWithTooltip>
-                                    </Grid>
+                                    {!!handleCopy && (
+                                        <Grid item>
+                                            <CopyButton
+                                                size="small"
+                                                className={classes.button}
+                                                onCopy={handleCopy}
+                                            />
+                                        </Grid>
+                                    )}
+                                    {!!handleExport && (
+                                        <Grid item>
+                                            <IconButtonWithTooltip
+                                                title="save"
+                                                size="small"
+                                                className={classes.button}
+                                                onClick={handleExport}
+                                            >
+                                                <SaveAltIcon />
+                                            </IconButtonWithTooltip>
+                                        </Grid>
+                                    )}
                                 </Grid>
                             </Grid>
                         )}
@@ -183,13 +192,3 @@ export default function VegaLiteWidget(props: {
         </NoSsr>
     )
 }
-
-/**
- * https://github.com/vega/vega-embed/issues/733
-actions {
-                                export: { png: true, svg: true },
-                                source: false,
-                                compiled: false,
-                                editor: false,
-                            }
- */

@@ -2,6 +2,7 @@ import { Block, Workspace } from "blockly"
 import { CHANGE } from "../../../../jacdac-ts/src/jdom/constants"
 import { inIFrame } from "../../../../jacdac-ts/src/jdom/iframeclient"
 import { randomDeviceId } from "../../../../jacdac-ts/src/jdom/random"
+import type { DataSliceOptions } from "../../../workers/data/dist/node_modules/data.worker"
 import { workspaceToJSON } from "../jsongenerator"
 import {
     BlockDataSet,
@@ -31,6 +32,7 @@ export interface DslMessage {
         | "load"
         | "save"
         | "options"
+        | "chartexport"
 }
 
 export interface DslBlocksResponse extends DslMessage {
@@ -44,6 +46,15 @@ export interface DslTransformMessage extends DslMessage {
     blockId?: string
     workspace?: WorkspaceJSON
     dataset?: BlockDataSet
+}
+
+export interface DslChartExportMessage extends DslMessage {
+    action: "transform"
+    blockId?: string
+    spec: unknown,
+    slice: DataSliceOptions,
+    dataset: BlockDataSet,
+    vegaDataset: BlockDataSet
 }
 
 export interface DslTransformResponse extends DslTransformMessage {
