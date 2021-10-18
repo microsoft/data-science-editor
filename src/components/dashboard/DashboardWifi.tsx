@@ -244,7 +244,10 @@ export default function DashboardWifi(props: DashboardServiceProps) {
 
     const handleConnect = async () => {
         if (connected) await enabledRegister.sendSetBoolAsync(false)
-        else await service.sendCmdAsync(WifiCmd.Reconnect, undefined, true)
+        else {
+            await enabledRegister.sendSetBoolAsync(true)
+            await service.sendCmdAsync(WifiCmd.Reconnect, undefined, true)
+        }
     }
     const handleConfigure = () => setOpen(true)
 
