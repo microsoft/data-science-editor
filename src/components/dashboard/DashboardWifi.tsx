@@ -79,12 +79,13 @@ function Network(props: {
     const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
         setPassword(event.target.value)
     }
-    const handleConnect = async () =>
+    const handleAddNetwork = async () => {
         await service.sendCmdPackedAsync<[string, string]>(
             WifiCmd.AddNetwork,
             [ssid, password || ""],
             true
         )
+    }
     const handleForgetNetwork = async () =>
         await service.sendCmdPackedAsync<[string]>(WifiCmd.ForgetNetwork, [
             ssid,
@@ -107,7 +108,8 @@ function Network(props: {
             />
             <CardContent>
                 {connected && <Alert severity="info">Connected</Alert>}
-                {!hasPassword && (
+                {known && !scanned && <Alert severity="info">Not found</Alert>}
+                {!known && !hasPassword && (
                     <TextField
                         id={passwordId}
                         value={password}
@@ -126,7 +128,7 @@ function Network(props: {
                         variant="contained"
                         color="primary"
                         disabled={!!connectError}
-                        onClick={handleConnect}
+                        onClick={handleAddNetwork}
                     >
                         Connect
                     </CmdButton>
@@ -179,10 +181,13 @@ function ConnectDialog(props: {
     const handleForgetAll = async () =>
         await service.sendCmdAsync(WifiCmd.ForgetAllNetworks)
 
+    const priority = (s: string) =>
+        knownNetworks.find(n => n[2] === s)?.[0] || Infinity
+
     const ssids = unique([
         ...(knownNetworks || []).map(kn => kn[2]),
         ...(aps || []).map(ap => ap[4]),
-    ])
+    ]).sort((l, r) => -priority(l) + priority(r))
 
     return (
         <Dialog
@@ -302,6 +307,7 @@ export default function DashboardWifi(props: DashboardServiceProps) {
                                 variant="outlined"
                                 color="primary"
                                 onClick={handleConnect}
+                                title={connected ? "disconnect" : "connect"}
                                 icon={
                                     connected ? <WifiOffIcon /> : <WifiIcon />
                                 }
@@ -323,7 +329,7 @@ export default function DashboardWifi(props: DashboardServiceProps) {
                     open={open}
                     setOpen={setOpen}
                     service={service}
-                    connectedSsid={ssid}
+                    connectedSsid={connected ? ssid : undefined}
                 />
             )}
         </>
