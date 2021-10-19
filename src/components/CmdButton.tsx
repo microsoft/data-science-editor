@@ -97,7 +97,7 @@ export default function CmdButton(props: {
             setAck(true)
             if (!disableReset) {
                 await bus.delay(ackResetDelay || ACK_RESET_DELAY)
-                if (!mounted) return
+                if (!mounted()) return
                 setAck(false)
             }
         } catch (e) {
@@ -126,7 +126,7 @@ export default function CmdButton(props: {
 
     // run once
     useEffect(() => {
-        if (autoRun) run()
+        if (autoRun && mounted()) run()
     }, [autoRun])
 
     if (!children && icon)
