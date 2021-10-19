@@ -36,7 +36,9 @@ export default function useFirmwareBlobs() {
             //.filter(slug => names.indexOf(slug) < 0)
         )
         for (const slug of slugs) {
-            const { time } = await firmwares.get(slug)
+            const fw = await firmwares.get(slug)
+            if (!fw) continue
+            const { time } = fw
             const age = Date.now() - time
             console.debug(`firmware ${slug} age ${prettyDuration(age)}`)
             if (age < 3600_000) {
