@@ -1,6 +1,7 @@
 import React, { ChangeEvent, useCallback, useState } from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import {
+    Chip,
     Dialog,
     DialogActions,
     DialogContent,
@@ -14,6 +15,7 @@ import useServiceClient from "../../jacdac/useServiceClient"
 import AzureIoTHubHealthClient from "../../../jacdac-ts/src/clients/azureiothubhealthclient"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import {
+    AzureIotHubHealthCmd,
     AzureIotHubHealthConnectionStatus,
     AzureIotHubHealthReg,
 } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
@@ -23,6 +25,9 @@ import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import { Button } from "gatsby-material-ui-components"
 import CmdButton from "../CmdButton"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
+import ChipList from "../ui/ChipList"
+import WifiIcon from "@material-ui/icons/Wifi"
+import WifiOffIcon from "@material-ui/icons/WifiOff"
 
 function ConnectionStringDialog(props: {
     open: boolean
@@ -88,7 +93,6 @@ export default function DashboardAzureIoTHubHealth(
 ) {
     const { service } = props
     const [open, setOpen] = useState(false)
-    const connectId = useId()
 
     const hubNameRegister = service.register(AzureIotHubHealthReg.HubName)
     const [hubName] = useRegisterUnpackedValue<[string]>(hubNameRegister, props)
@@ -111,7 +115,14 @@ export default function DashboardAzureIoTHubHealth(
     const { textPrimary } = useWidgetTheme(color)
     const connected =
         connectionStatus === AzureIotHubHealthConnectionStatus.Connected
-    const handleSetConnectionString = () => setOpen(true)
+
+    const handleConnect = async () => {
+        const cmd = connected
+            ? AzureIotHubHealthCmd.Disconnect
+            : AzureIotHubHealthCmd.Connect
+        await service.sendCmdAsync(cmd)
+    }
+    const handleConfigure = () => setOpen(true)
     return (
         <>
             <Grid
@@ -121,29 +132,32 @@ export default function DashboardAzureIoTHubHealth(
             >
                 <Grid item xs={12}>
                     <Typography component="span" variant="subtitle2">
-                        Azure IoT Hub:&nbsp;
+                        Azure IoT Hub
                     </Typography>
-                    <Typography component="span" variant="subtitle1">
-                        {hubName}
-                    </Typography>
+                    <ChipList>
+                        {hubName && <Chip color="primary" label={`hub: ${hubName}`} />}
+                        {hubDeviceId && (
+                            <Chip label={`device: ${hubDeviceId}`} />
+                        )}
+                    </ChipList>
                 </Grid>
                 <Grid item xs={12}>
-                    <Typography component="span" variant="subtitle2">
-                        Device id:&nbsp;
-                    </Typography>
-                    <Typography component="span" variant="subtitle1">
-                        {hubDeviceId}
-                    </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                    <Switch checked={connected} aria-labelledby={connectId} />
-                    <label className=".no-pointer-events" id={connectId}>
-                        {AzureIotHubHealthConnectionStatus[connectionStatus] ||
-                            "Waiting..."}
-                    </label>
+                    <CmdButton
+                        trackName="dashboard.azureiothealth.connect"
+                        variant="outlined"
+                        color="primary"
+                        onClick={handleConnect}
+                        disabled={connectionStatus === undefined}
+                        title={
+                            AzureIotHubHealthConnectionStatus[
+                                connectionStatus
+                            ] || "Waiting..."
+                        }
+                        icon={connected ? <WifiIcon /> : <WifiOffIcon />}
+                    />
                     <IconButtonWithTooltip
-                        title="Set connection string"
-                        onClick={handleSetConnectionString}
+                        title="Configure"
+                        onClick={handleConfigure}
                     >
                         <SettingsIcon />
                     </IconButtonWithTooltip>

@@ -311,7 +311,7 @@ export default function DashboardWifi(props: DashboardServiceProps) {
                     </Typography>
                     {(ssid || ip || mac) && (
                         <ChipList>
-                            {!!ssid && <Chip label={ssid} />}
+                            {!!ssid && <Chip color="primary" label={ssid} />}
                             {!!ip && <Chip label={`IP: ${toIP(ip)}`} />}
                             {!!mac && <Chip label={`MAC: ${toMAC(mac)}`} />}
                         </ChipList>
@@ -325,9 +325,9 @@ export default function DashboardWifi(props: DashboardServiceProps) {
                                 variant="outlined"
                                 color="primary"
                                 onClick={handleConnect}
-                                title={connected ? "disconnect" : "connect"}
+                                title={connected ? "connected" : "disconnected"}
                                 icon={
-                                    connected ? <WifiOffIcon /> : <WifiIcon />
+                                    connected ? <WifiIcon /> : <WifiOffIcon />
                                 }
                             />
                         </Grid>
