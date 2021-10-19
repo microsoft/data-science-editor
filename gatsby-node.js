@@ -46,14 +46,6 @@ async function createServicePages(graphql, actions, reporter) {
                     }
                 }
             }
-            allServicesJson {
-                nodes {
-                    name
-                    shortName
-                    shortId
-                    classIdentifier
-                }
-            }
             allServicesSourcesJson {
                 nodes {
                     source
@@ -77,7 +69,7 @@ async function createServicePages(graphql, actions, reporter) {
     const servicePlaygroundTemplate = path.resolve(
         `src/templates/service-playground.tsx`
     )
-    result.data.allServicesJson.nodes.map(node => {
+    serviceSpecifications().map(node => {
         const { classIdentifier, shortId } = node
         const p = `/services/${shortId}/`
         const pplay = `${p}playground/`
@@ -294,10 +286,7 @@ async function createSpecPages(graphql, actions, reporter) {
 
 async function generateServicesJSON() {
     const dir = "./public"
-    const services = serviceSpecifications().filter(
-        srv => !isInfrastructure(srv)
-    )
-
+    const services = serviceSpecifications()
     // JSON
     for (const srv of services) {
         const f = path.join(
