@@ -253,6 +253,7 @@ export default function DashboardWifi(props: DashboardServiceProps) {
     const color = server ? "primary" : "secondary"
     const { textPrimary } = useWidgetTheme(color)
     const enabledRegister = service.register(WifiReg.Enabled)
+    const enabled = useRegisterBoolValue(enabledRegister)
     const connectedRegister = service.register(WifiReg.Connected)
     const connected = useRegisterBoolValue(connectedRegister, props)
     const ssidRegister = service.register(WifiReg.Ssid)
@@ -267,8 +268,8 @@ export default function DashboardWifi(props: DashboardServiceProps) {
     const handleConnect = async () => {
         if (connected) await enabledRegister.sendSetBoolAsync(false)
         else {
-            await enabledRegister.sendSetBoolAsync(true)
-            await service.sendCmdAsync(WifiCmd.Reconnect, undefined, true)
+            if (enabled) await enabledRegister.sendSetBoolAsync(true)
+            else await service.sendCmdPackedAsync(WifiCmd.Reconnect)
         }
     }
     const handleConfigure = () => setOpen(true)
