@@ -138,7 +138,7 @@ export default function DashboardAzureIoTHubHealth(
                         {hubName && (
                             <Chip
                                 color={connected ? "primary" : "default"}
-                                label={`hub: ${hubName}`}
+                                label={hubName}
                             />
                         )}
                         {hubDeviceId && (
