@@ -9,7 +9,7 @@ export interface DarkModeContextProps {
 
 const DarkModeContext = createContext<DarkModeContextProps>({
   darkMode: 'dark',
-  toggleDarkMode: (mode?: PaletteType) => { },
+  toggleDarkMode: () => { },
   darkModeMounted: false,
 });
 DarkModeContext.displayName = "DarkMode";
