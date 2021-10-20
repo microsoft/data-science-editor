@@ -33,6 +33,9 @@ export interface ConsoleProps {
     sourceMap?: SourceMap
     setSourceMap: (sc: SourceMap) => void
 
+    autoScroll?: boolean
+    setAutoScroll: (newValue: boolean) => void
+
     filter?: Methods[]
     setFilter: (filter: Methods[]) => void
     searchKeywords?: string
@@ -52,6 +55,7 @@ const ConsoleContext = createContext<ConsoleProps>({
     setSearchKeywords: () => {},
     connect: async () => {},
     disconnect: async () => {},
+    setAutoScroll: () => {},
 })
 ConsoleContext.displayName = "console"
 
@@ -64,6 +68,7 @@ export const ConsoleProvider = ({ children }) => {
     const [filter, setFilter] = useState<Methods[]>()
     const [searchKeywords, setSearchKeywords] = useState<string>()
     const [logs, setLogs] = useState([])
+    const [autoScroll, setAutoScroll] = useState(true)
     const [sourceMap, setSourceMap] = useState<SourceMap>()
     const { connected, connect, disconnect } = useConsoleSerial(sourceMap)
 
@@ -74,7 +79,10 @@ export const ConsoleProvider = ({ children }) => {
                 : currLogs),
             log,
         ])
-    const clear = () => setLogs([])
+    const clear = () => {
+        setLogs([])
+        setAutoScroll(true)
+    }
 
     return (
         <ConsoleContext.Provider
@@ -91,6 +99,8 @@ export const ConsoleProvider = ({ children }) => {
                 connected,
                 connect,
                 disconnect,
+                autoScroll,
+                setAutoScroll,
             }}
         >
             {children}

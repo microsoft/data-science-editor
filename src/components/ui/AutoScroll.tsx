@@ -4,10 +4,11 @@ import React, { ReactNode, useEffect, useRef, useState } from "react"
 export default function AutoScroll(props: {
     className?: string
     children: ReactNode
-    height: string
+    height: string,
+    autoScroll?: boolean
+    setAutoScroll?: (newValue: boolean) => void
 }) {
-    const { children, height, className } = props
-    const [autoScroll, setAutoScroll] = useState(true)
+    const { children, height, className, autoScroll, setAutoScroll } = props
     const containerElement = useRef<HTMLDivElement>(null)
     const style = {
         height,

@@ -14,7 +14,8 @@ const useStyles = makeStyles(() =>
 )
 
 export default function ConsoleLog() {
-    const { logs, appendLog } = useContext(ConsoleContext)
+    const { logs, appendLog, autoScroll, setAutoScroll } =
+        useContext(ConsoleContext)
     const classes = useStyles()
 
     useEffect(() => {
@@ -27,7 +28,12 @@ export default function ConsoleLog() {
     }, [])
 
     return (
-        <AutoScroll className={classes.root} height="calc(100vh - 7.05rem)">
+        <AutoScroll
+            className={classes.root}
+            height="calc(100vh - 7.05rem)"
+            autoScroll={autoScroll}
+            setAutoScroll={setAutoScroll}
+        >
             <Console
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 logs={logs as any[]}
