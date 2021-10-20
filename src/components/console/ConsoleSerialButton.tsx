@@ -1,0 +1,27 @@
+import React, { useContext } from "react"
+import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
+import TransportIcon from "../icons/TransportIcon"
+import ConsoleContext from "./ConsoleContext"
+import { IconButtonProps } from "@material-ui/core"
+
+export default function ConsoleSerialButton(props: IconButtonProps) {
+    const { ...rest } = props
+    const { connected, connect, disconnect } = useContext(ConsoleContext)
+    if (!connect) return null
+
+    const handleClick = connected ? disconnect : connect
+    return (
+        <IconButtonWithTooltip
+            onClick={handleClick}
+            color={connected ? "primary" : "default"}
+            title={
+                connected
+                    ? `connected to serial console`
+                    : "serial console disconnected"
+            }
+            {...rest}
+        >
+            <TransportIcon type="serial" />
+        </IconButtonWithTooltip>
+    )
+}

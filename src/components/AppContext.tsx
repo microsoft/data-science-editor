@@ -31,6 +31,7 @@ export enum DrawerType {
     Toc,
     Packets,
     Dom,
+    Console,
 }
 
 export interface AppProps {

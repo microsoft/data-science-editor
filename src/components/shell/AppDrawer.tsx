@@ -16,6 +16,7 @@ const PacketView = lazy(() => import("../tools/PacketView"))
 const JDomTreeView = lazy(() => import("../tools/JDomTreeView"))
 const DrawerSearchResults = lazy(() => import("../DrawerSearchResults"))
 const DrawerSearchInput = lazy(() => import("../DrawerSearchInput"))
+const Console = lazy(() => import("../console/Console"))
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -98,6 +99,7 @@ export default function AppDrawer(props: { pagePath: string }) {
                         <DrawerToolsButtonGroup
                             showPackets={true}
                             showConnect={true}
+                            showConsole={true}
                         />
                     </>
                 )}
@@ -116,18 +118,24 @@ export default function AppDrawer(props: { pagePath: string }) {
                     <Toc pagePath={pagePath} />
                 </Suspense>
             )}
-            {!showSearchResults && drawerType === DrawerType.Packets ? (
+            {!showSearchResults && drawerType === DrawerType.Packets && (
                 <Suspense>
                     <PacketView showTime={true} />
                 </Suspense>
-            ) : drawerType === DrawerType.Dom ? (
+            )}
+            {!showSearchResults && drawerType === DrawerType.Dom && (
                 <>
                     <ConnectAlert closeable={true} />
                     <Suspense>
                         <JDomTreeView />
                     </Suspense>
                 </>
-            ) : undefined}
+            )}
+            {!showSearchResults && drawerType === DrawerType.Console && (
+                <Suspense>
+                    <Console />
+                </Suspense>
+            )}
         </Drawer>
     )
 }

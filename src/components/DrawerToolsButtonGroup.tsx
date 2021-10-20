@@ -8,6 +8,7 @@ import MenuIcon from "@material-ui/icons/Menu"
 import AccountTreeIcon from "@material-ui/icons/AccountTree"
 import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
 import ConnectButtons from "./buttons/ConnectButtons"
+import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft"
 
 export default function DrawerToolsButtonGroup(props: {
     className?: string
@@ -15,8 +16,16 @@ export default function DrawerToolsButtonGroup(props: {
     showPackets?: boolean
     showCurrent?: boolean
     showConnect?: boolean
+    showConsole?: boolean
 }) {
-    const { className, showToc, showCurrent, showConnect, showPackets } = props
+    const {
+        className,
+        showToc,
+        showCurrent,
+        showConnect,
+        showPackets,
+        showConsole,
+    } = props
     const { drawerType, setDrawerType } = useContext(AppContext)
 
     const handleDrawer = (drawer: DrawerType) => () => setDrawerType(drawer)
@@ -31,9 +40,14 @@ export default function DrawerToolsButtonGroup(props: {
             label: "open device tree",
             icon: <AccountTreeIcon />,
         },
+        showConsole && {
+            drawer: DrawerType.Console,
+            label: "open console",
+            icon: <FormatAlignLeftIcon />,
+        },
         showPackets && {
             drawer: DrawerType.Packets,
-            label: "open packet console",
+            label: "open packet trace",
             icon: <HistoryIcon />,
         },
     ]
