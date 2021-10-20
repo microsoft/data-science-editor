@@ -13,7 +13,7 @@ export default function ConsoleImportSourceMapButton() {
         const text = await file.text()
         try {
             setSourceMap(JSON.parse(text))
-            enqueueSnackbar("source map loaded", "success")
+            enqueueSnackbar("MakeCode source map loaded", "success")
         } catch (e) {
             setError(e)
         }
@@ -21,7 +21,7 @@ export default function ConsoleImportSourceMapButton() {
 
     return (
         <ImportButton
-            text="source map"
+            text="Import MakeCode source map"
             onFilesUploaded={handleFilesUploaded}
             filesLimit={1}
             acceptedFiles={[".srcmap"]}

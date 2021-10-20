@@ -83,7 +83,7 @@ export default function useConsoleSerial(sourceMap: SourceMap) {
                             sourceMap ? expandStackTrace(sourceMap, line) : line
                         )
                         .forEach(line => {
-                            const m = /^\s*(W|I)\s+\(\d+\)\s*/.exec(line)
+                            const m = /^\s*(W|I|E)\s+\(\d+\)\s*/.exec(line)
                             const level = m?.[1]
                             switch (level) {
                                 case "W":
