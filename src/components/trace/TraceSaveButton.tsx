@@ -6,10 +6,12 @@ import PacketsContext from "../PacketsContext"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import { Link } from "@material-ui/core"
+import ConsoleContext from "../console/ConsoleContext"
 
 export default function TraceSaveButton(props: { variant?: "link" | "icon" }) {
     const { variant } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const { logs } = useContext(ConsoleContext)
     const { replayTrace, view } = useContext(PacketsContext)
     const { fileStorage } = useContext(ServiceManagerContext)
     const saveTrace = () => {
@@ -32,6 +34,20 @@ ${busText}
 
 \`\`\`
 ${traceText}
+\`\`\`
+
+## console
+
+\`\`\`
+${logs
+    ?.map(
+        ({ method, data }) =>
+            `${method !== "log" ? method : ""} ${data[0]}${data
+                .slice(1)
+                .map(d => "\n" + JSON.stringify(d))
+                .join("")}`
+    )
+    .join("\n")}
 \`\`\`
 
 ## environment

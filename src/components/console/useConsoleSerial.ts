@@ -79,6 +79,7 @@ export default function useConsoleSerial(sourceMap: SourceMap) {
                     lastChunk = lines.pop()
                     lines
                         .filter(l => !!l)
+                        .map(l => l.replace(/DMESG:/g, ""))
                         .map(line =>
                             sourceMap ? expandStackTrace(sourceMap, line) : line
                         )

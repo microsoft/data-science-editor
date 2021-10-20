@@ -16,7 +16,14 @@ export type Methods =
     | "command"
     | "result"
 
-export type Message = unknown
+export interface Message {
+    // The log method
+    method: Methods
+    // The arguments passed to console API
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    data: any[]
+}
+
 export type SourceMap = Record<string, number[]>
 export interface ConsoleProps {
     logs: Message[]
