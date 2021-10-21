@@ -8,7 +8,7 @@ import { DRAWER_WIDTH, MOBILE_BREAKPOINT, TOC_DRAWER_WIDTH } from "../layout"
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft"
 import AppContext, { DrawerType } from "../AppContext"
 import PacketRecorder from "../PacketRecorder"
-import DrawerToolsButtonGroup from "../DrawerToolsButtonGroup"
+import DrawerToolsButtonGroup from "./DrawerToolsButtonGroup"
 import ConnectAlert from "../alert/ConnectAlert"
 
 const Toc = lazy(() => import("../Toc"))
@@ -96,11 +96,7 @@ export default function AppDrawer(props: { pagePath: string }) {
                     <>
                         <PacketRecorder />
                         <span className={classes.fluid} />
-                        <DrawerToolsButtonGroup
-                            showPackets={true}
-                            showConnect={true}
-                            showConsole={true}
-                        />
+                        <DrawerToolsButtonGroup />
                     </>
                 )}
                 <IconButton aria-label="Collapse" onClick={handleDrawerClose}>

@@ -9,7 +9,6 @@ import MoreIcon from "@material-ui/icons/MoreVert"
 import AppContext, { DrawerType } from "../AppContext"
 import DarkModeContext from "../ui/DarkModeContext"
 import GitHubButton from "../buttons/GitHubButton"
-import DrawerToolsButtonGroup from "../DrawerToolsButtonGroup"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import OpenDashboardButton from "../buttons/OpenDashboardButton"
 import PacketStats from "./PacketStats"
@@ -28,6 +27,7 @@ import {
 } from "../layout"
 import BridgeButtons from "../ui/BridgeButtons"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
+import { ToolsButton } from "./ToolsButton"
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -91,14 +91,14 @@ function MainToolbar() {
 
     return (
         <Toolbar>
-            <DrawerToolsButtonGroup
-                className={clsx(
-                    classes.menuButton,
-                    drawerOpen && classes.hideMobile
-                )}
-                showToc={true}
-                showCurrent={true}
-            />
+            {drawerType === DrawerType.None && (
+                <ToolsButton
+                    className={clsx(
+                        classes.menuButton,
+                        drawerOpen && classes.hideMobile
+                    )}
+                />
+            )}
             <Hidden implementation="css" xsDown={true}>
                 <Typography component="h1" variant="h6">
                     <Link
