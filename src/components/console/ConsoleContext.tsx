@@ -87,7 +87,8 @@ function useJacdacLogger() {
                         (pkt.serviceCommand - LoggerCmd.Debug)
                     const { device } = pkt
                     const { shortId } = device
-                    const message = `${shortId}> ${pkt.jdunpack("s")[0]}`
+                    const content = pkt.jdunpack<[string]>("s")[0]
+                    const message = `${shortId}> ${content.trimEnd()}`
                     switch (priority) {
                         case LoggerPriority.Debug:
                             console.debug(message)
