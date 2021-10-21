@@ -45,8 +45,7 @@ export default function PacketListItem(props: {
         navigate("/tools/packet-inspector/")
     }
     const selected = packet === selectedPacket
-    const logMessage =
-        packet.serviceClass === SRV_LOGGER && packet.isReport && packet.isEvent
+    const logMessage = packet.serviceClass === SRV_LOGGER && packet.isReport
     const pipePackets = packet.meta[META_PIPE] as Packet[]
 
     const name = info?.name || packet.friendlyCommandName

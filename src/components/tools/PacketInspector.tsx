@@ -3,7 +3,7 @@ import Alert from "../ui/Alert"
 import PacketsContext from "../PacketsContext"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import HistoryIcon from "@material-ui/icons/History"
-import { Box, Tooltip, Typography, useTheme } from "@material-ui/core"
+import { Box, Chip, Tooltip, useTheme } from "@material-ui/core"
 import PacketSpecification from "../specification/PacketSpecification"
 import { printPacket } from "../../../jacdac-ts/src/jdom/pretty"
 import PacketHeaderLayout from "../PacketHeaderLayout"
@@ -68,9 +68,7 @@ export default function PacketInspector() {
 
                 <TraceCopyButton packet={packet} />
             </h2>
-            {packet.sender && (
-                <Typography variant="body2">sender: {packet.sender}</Typography>
-            )}
+            {packet.sender && <Chip label={`sender: ${packet.sender}`} />}
             {error && <Alert severity="error">{error}</Alert>}
             <PaperBox padding={0}>
                 <pre>
