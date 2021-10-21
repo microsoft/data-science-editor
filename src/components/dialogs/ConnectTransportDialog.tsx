@@ -32,7 +32,7 @@ export default function ConnectTransportDialog(props: {
                 .map(device => ({
                     device,
                     transport: transports.find(
-                        t => t.type === device.transport
+                        t => t.type === device.transport?.type
                     ),
                 }))
                 .filter(({ transport }) => !!transport),
@@ -70,6 +70,7 @@ export default function ConnectTransportDialog(props: {
                                 <CardHeader subheader={device.name} />
                                 <CardActions>
                                     <ConnectButton
+                                        specification={device}
                                         transport={transport}
                                         full={true}
                                         transparent={true}

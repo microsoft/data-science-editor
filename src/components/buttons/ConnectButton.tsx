@@ -13,10 +13,12 @@ export default function ConnectButton(props: {
     full?: boolean
     className?: string
     transparent?: boolean
+    specification?: jdspec.DeviceSpec
     transport: Transport
     onClick?: () => void
 }) {
-    const { full, className, transparent, transport, onClick } = props
+    const { full, className, transparent, transport, onClick, specification } =
+        props
     const { type } = transport
     const connectionState = useChange(transport, t => t.connectionState)
     const showDisconnect =
@@ -46,8 +48,8 @@ export default function ConnectButton(props: {
     )
     const label = showDisconnect
         ? `disconnect from ${type}`
-        : `connect to a Jacdac device with ${type}`
-    const title = showDisconnect ? `disconnect ${type}` : `connect ${type}`
+        : `connect to ${specification?.name || type}`
+    const title = showDisconnect ? `disconnect` : `connect`
     const trackName = `transport.connect.${type}`
     const trackProperties = {
         transport: type,
@@ -58,7 +60,7 @@ export default function ConnectButton(props: {
             <span>
                 <IconButtonWithProgress
                     aria-label={label}
-                    title={title}
+                    title={label}
                     color={transparent ? "inherit" : "primary"}
                     className={className}
                     disabled={disabled}
@@ -75,7 +77,7 @@ export default function ConnectButton(props: {
                 trackName={trackName}
                 trackProperties={trackProperties}
                 aria-label={label}
-                title={title}
+                title={label}
                 size="small"
                 variant={transparent ? "outlined" : "contained"}
                 color={transparent ? "inherit" : "primary"}
