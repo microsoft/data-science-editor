@@ -14,8 +14,14 @@ const useStyles = makeStyles(() =>
 )
 
 export default function ConsoleLog() {
-    const { logs, appendLog, autoScroll, setAutoScroll } =
-        useContext(ConsoleContext)
+    const {
+        logs,
+        filter,
+        searchKeywords,
+        appendLog,
+        autoScroll,
+        setAutoScroll,
+    } = useContext(ConsoleContext)
     const classes = useStyles()
 
     useEffect(() => {
@@ -39,6 +45,8 @@ export default function ConsoleLog() {
                 logs={logs as any[]}
                 variant="dark"
                 logGrouping={true}
+                filter={filter}
+                searchKeywords={searchKeywords}
             />
         </AutoScroll>
     )
