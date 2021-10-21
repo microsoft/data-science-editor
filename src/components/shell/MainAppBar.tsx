@@ -27,7 +27,7 @@ import {
 } from "../layout"
 import BridgeButtons from "../ui/BridgeButtons"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
-import { ToolsButton } from "./ToolsButton"
+import DrawerToolsButton from "./DrawerToolsButton"
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -92,7 +92,7 @@ function MainToolbar() {
     return (
         <Toolbar>
             {drawerType === DrawerType.None && (
-                <ToolsButton
+                <DrawerToolsButton
                     className={clsx(
                         classes.menuButton,
                         drawerOpen && classes.hideMobile

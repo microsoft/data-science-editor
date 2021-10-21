@@ -4,7 +4,7 @@ import AppContext, { DrawerType } from "../AppContext"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import BuildIcon from "@material-ui/icons/Build"
 import MenuIcon from "@material-ui/icons/Menu"
-export function ToolsButton(props: { className: string }) {
+export default function DrawerToolsButton(props: { className: string }) {
     const { className } = props
     const { setDrawerType } = useContext(AppContext)
     const handleDrawer = (drawerType: DrawerType) => () =>
