@@ -7,10 +7,12 @@ import AccountTreeIcon from "@material-ui/icons/AccountTree"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import ConnectButtons from "../buttons/ConnectButtons"
 import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft"
+import useMediaQueries from "../hooks/useMediaQueries"
 
 export default function DrawerToolsButtonGroup(props: { className?: string }) {
     const { className } = props
     const { drawerType, setDrawerType } = useContext(AppContext)
+    const { mobile } = useMediaQueries()
 
     const handleDrawer = (drawer: DrawerType) => () => setDrawerType(drawer)
     const drawers = [
@@ -46,7 +48,10 @@ export default function DrawerToolsButtonGroup(props: { className?: string }) {
                     {drawer.icon}
                 </IconButtonWithTooltip>
             ))}
-            <ConnectButtons transparent={true} />
+            <ConnectButtons
+                transparent={true}
+                full={!mobile ? "disconnected" : undefined}
+            />
         </>
     )
 }
