@@ -78,9 +78,7 @@ export default function useFirmwareBlobs() {
     useChangeAsync(
         firmwares,
         async fw => {
-            console.log(`firmwares: change`)
             const names = await fw?.list()
-            console.log(`import stored uf2`, names)
             const uf2s: FirmwareBlob[] = []
             if (names?.length) {
                 for (const name of names) {
