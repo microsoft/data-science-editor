@@ -7,6 +7,7 @@ import {
     SRV_JOYSTICK,
     SRV_LED,
     SRV_POTENTIOMETER,
+    SRV_SOIL_MOISTURE,
     SRV_THERMOMETER,
     SRV_TRAFFIC_LIGHT,
 } from "../../../jacdac-ts/src/jdom/constants"
@@ -53,6 +54,16 @@ export function SimulateDeviceHint() {
             >
                 <span aria-label="thermometer emoji" role="img">
                     🌡️
+                </span>
+            </IconButtonWithTooltip>
+            <IconButtonWithTooltip
+                trackName="simulator.hint.soilmoisture"
+                onClick={handleStartSimulator(SRV_SOIL_MOISTURE)}
+                title="slider"
+                aria-label="start soil moisture simulator"
+            >
+                <span aria-label="sprout emoji" role="img">
+                    🌱
                 </span>
             </IconButtonWithTooltip>
             <IconButtonWithTooltip
