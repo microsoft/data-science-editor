@@ -1,4 +1,7 @@
-import React, { createContext, useState } from "react"
+import React, { createContext, useContext, useMemo, useState } from "react"
+import { LoggerPriority } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
+import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
+import useChange from "../../jacdac/useChange"
 import useConsoleSerial from "./useConsoleSerial"
 
 export type Methods =
@@ -37,7 +40,6 @@ export interface ConsoleProps {
     setAutoScroll: (newValue: boolean) => void
 
     filter?: Methods[]
-    setFilter: (filter: Methods[]) => void
     searchKeywords?: string
     setSearchKeywords: (kw: string) => void
 
@@ -51,7 +53,6 @@ const ConsoleContext = createContext<ConsoleProps>({
     appendLog: () => {},
     clear: () => {},
     setSourceMap: () => {},
-    setFilter: () => {},
     setSearchKeywords: () => {},
     connect: async () => {},
     disconnect: async () => {},
@@ -63,14 +64,43 @@ export default ConsoleContext
 const MAX_MESSAGES = 5000
 const MAX_MESSAGES_SPILL = 500
 
+function useFilter() {
+    const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const minLoggerPriority = useChange(bus, _ => _.minLoggerPriority)
+    return useMemo(() => {
+        const filter: Methods[] = []
+        if (minLoggerPriority <= LoggerPriority.Debug) {
+            filter.push("debug")
+            filter.push("clear")
+        }
+        if (minLoggerPriority <= LoggerPriority.Log) {
+            filter.push("log")
+            filter.push("info")
+            filter.push("result")
+            filter.push("table")
+            filter.push("time")
+            filter.push("timeEnd")
+            filter.push("count")
+        }
+        if (minLoggerPriority <= LoggerPriority.Warning) {
+            filter.push("warn")
+            filter.push("assert")
+            filter.push("command")
+        }
+        if (minLoggerPriority <= LoggerPriority.Error) filter.push("error")
+        if (minLoggerPriority > LoggerPriority.Error) filter.push("clear")
+        return filter
+    }, [minLoggerPriority])
+}
+
 // eslint-disable-next-line react/prop-types
 export const ConsoleProvider = ({ children }) => {
-    const [filter, setFilter] = useState<Methods[]>()
     const [searchKeywords, setSearchKeywords] = useState<string>()
     const [logs, setLogs] = useState([])
     const [autoScroll, setAutoScroll] = useState(true)
     const [sourceMap, setSourceMap] = useState<SourceMap>()
     const { connected, connect, disconnect } = useConsoleSerial(sourceMap)
+    const filter = useFilter()
 
     const appendLog = log =>
         setLogs(currLogs => [
@@ -93,7 +123,6 @@ export const ConsoleProvider = ({ children }) => {
                 sourceMap,
                 setSourceMap,
                 filter,
-                setFilter,
                 searchKeywords,
                 setSearchKeywords,
                 connected,

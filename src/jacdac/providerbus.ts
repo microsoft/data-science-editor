@@ -23,6 +23,7 @@ import {
     DEVICE_FIRMWARE_INFO,
     DEVICE_PACKET_ANNOUNCE,
     DEVICE_RESTART,
+    LoggerPriority,
 } from "../../jacdac-ts/src/jdom/constants"
 import Transport, {
     ConnectionState,
@@ -116,6 +117,7 @@ function createBus(): JDBus {
         }
     )
     b.passive = args.passive
+    b.minLoggerPriority = LoggerPriority.Log
     // parentOrigin: args.parentOrigin,
     //if (Flags.webUSB) b.setBackgroundFirmwareScans(true)
     if (UIFlags.gamepad) GamepadServerManager.start(b)

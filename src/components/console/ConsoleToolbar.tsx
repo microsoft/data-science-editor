@@ -1,10 +1,20 @@
 import React, { ChangeEvent, useContext } from "react"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
-import ConsoleContext, { Methods } from "./ConsoleContext"
+import ConsoleContext from "./ConsoleContext"
 import ConsoleImportSourceMapButton from "./ConsoleImportSourceMapButton"
 import ConsoleSerialButton from "./ConsoleSerialButton"
 import ClearIcon from "@material-ui/icons/Clear"
-import { MenuItem, Select, TextField } from "@material-ui/core"
+import {
+    FormControl,
+    Grid,
+    MenuItem,
+    Select,
+    TextField,
+} from "@material-ui/core"
+import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
+import useChange from "../../jacdac/useChange"
+import { LoggerPriority } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
+import { useId } from "react-use-id-hook"
 
 function ClearButton() {
     const { clear } = useContext(ConsoleContext)
@@ -12,6 +22,47 @@ function ClearButton() {
         <IconButtonWithTooltip title="clear" onClick={clear}>
             <ClearIcon />
         </IconButtonWithTooltip>
+    )
+}
+
+function MinLoggerPrioritySelect() {
+    const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const selectId = useId()
+    const value = useChange(bus, _ => _.minLoggerPriority)
+    const levels = [
+        LoggerPriority.Debug,
+        LoggerPriority.Log,
+        LoggerPriority.Warning,
+        LoggerPriority.Error,
+        LoggerPriority.Silent,
+    ]
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleChange = (event: React.ChangeEvent<{ value: any }>) => {
+        bus.minLoggerPriority = event.target.value
+        console.debug(
+            `bus min logger priority: ${LoggerPriority[bus.minLoggerPriority]}`
+        )
+    }
+
+    return (
+        <FormControl
+            style={{ marginTop: "0.25rem" }}
+            variant="outlined"
+            size="small"
+        >
+            <Select
+                id={selectId}
+                title="log level"
+                value={value}
+                onChange={handleChange}
+            >
+                {levels.map(level => (
+                    <MenuItem key={level} value={level}>
+                        {LoggerPriority[level]}
+                    </MenuItem>
+                ))}
+            </Select>
+        </FormControl>
     )
 }
 
@@ -37,12 +88,23 @@ function SearchKeywordField() {
 export default function ConsoleToolbar() {
     const { sourceMap } = useContext(ConsoleContext)
     return (
-        <>
-            <ConsoleSerialButton />
-            <ClearButton />
-            <SearchKeywordField />
-            <ConsoleImportSourceMapButton />
-            {!!sourceMap && "source map loaded"}
-        </>
+        <Grid container spacing={1} direction="row">
+            <Grid item>
+                <ConsoleSerialButton />
+            </Grid>
+            <Grid item>
+                <ClearButton />
+            </Grid>
+            <Grid item>
+                <SearchKeywordField />
+            </Grid>
+            <Grid item>
+                <MinLoggerPrioritySelect />
+            </Grid>
+            <Grid item>
+                <ConsoleImportSourceMapButton />
+                {!!sourceMap && "source map loaded"}
+            </Grid>
+        </Grid>
     )
 }
