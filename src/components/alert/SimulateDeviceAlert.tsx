@@ -2,9 +2,12 @@ import React, { useContext } from "react"
 import {
     SRV_BUTTON,
     SRV_BUZZER,
+    SRV_CHARACTER_SCREEN,
     SRV_HUMIDITY,
     SRV_JOYSTICK,
     SRV_LED,
+    SRV_POTENTIOMETER,
+    SRV_THERMOMETER,
     SRV_TRAFFIC_LIGHT,
 } from "../../../jacdac-ts/src/jdom/constants"
 import { startServiceProviderFromServiceClass } from "../../../jacdac-ts/src/servers/servers"
@@ -21,7 +24,7 @@ export function SimulateDeviceHint() {
     const { toggleShowDeviceHostsDialog } = useContext(AppContext)
     return (
         <>
-            Simulate devices (
+            Simulate
             <IconButtonWithTooltip
                 trackName="simulator.hint.button"
                 onClick={handleStartSimulator(SRV_BUTTON)}
@@ -32,18 +35,26 @@ export function SimulateDeviceHint() {
                     🔘
                 </span>
             </IconButtonWithTooltip>
-            ,
             <IconButtonWithTooltip
                 trackName="simulator.hint.humidity"
                 onClick={handleStartSimulator(SRV_HUMIDITY)}
                 title="humidity"
-                aria-label="start traffic humidity sensor"
+                aria-label="start humidity sensor"
             >
-                <span aria-label="traffic light umbrella" role="img">
+                <span aria-label="umbrella emoji" role="img">
                     ☂️
                 </span>
             </IconButtonWithTooltip>
-            ,
+            <IconButtonWithTooltip
+                trackName="simulator.hint.thermometer"
+                onClick={handleStartSimulator(SRV_THERMOMETER)}
+                title="thermometer"
+                aria-label="start thermometer"
+            >
+                <span aria-label="thermometer emoji" role="img">
+                    🌡️
+                </span>
+            </IconButtonWithTooltip>
             <IconButtonWithTooltip
                 trackName="simulator.hint.buzzer"
                 onClick={handleStartSimulator(SRV_BUZZER)}
@@ -52,6 +63,16 @@ export function SimulateDeviceHint() {
             >
                 <span aria-label="piano emoji" role="img">
                     🎹
+                </span>
+            </IconButtonWithTooltip>
+            <IconButtonWithTooltip
+                trackName="simulator.hint.potentiometer"
+                onClick={handleStartSimulator(SRV_POTENTIOMETER)}
+                title="slider"
+                aria-label="start slider simulator"
+            >
+                <span aria-label="slider emoji" role="img">
+                    🎚️
                 </span>
             </IconButtonWithTooltip>
             <IconButtonWithTooltip
@@ -64,7 +85,16 @@ export function SimulateDeviceHint() {
                     🕹️
                 </span>
             </IconButtonWithTooltip>
-            ,
+            <IconButtonWithTooltip
+                trackName="simulator.hint.characterscreen"
+                onClick={handleStartSimulator(SRV_CHARACTER_SCREEN)}
+                title="Character screen"
+                aria-label="start character screen simulator"
+            >
+                <span aria-label="pager emoji" role="img">
+                    📟
+                </span>
+            </IconButtonWithTooltip>
             <IconButtonWithTooltip
                 trackName="simulator.hint.led"
                 onClick={handleStartSimulator(SRV_LED)}
@@ -75,7 +105,6 @@ export function SimulateDeviceHint() {
                     💡
                 </span>
             </IconButtonWithTooltip>
-            ,
             <IconButtonWithTooltip
                 trackName="simulator.hint.traffic"
                 onClick={handleStartSimulator(SRV_TRAFFIC_LIGHT)}
@@ -86,7 +115,7 @@ export function SimulateDeviceHint() {
                     🚦
                 </span>
             </IconButtonWithTooltip>
-            , ...) by clicking &nbsp;
+            or click &nbsp;
             <IconButtonWithTooltip
                 trackName="simulator.hint.start"
                 title="start simulator"
