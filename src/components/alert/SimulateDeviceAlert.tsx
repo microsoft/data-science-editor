@@ -59,7 +59,7 @@ export function SimulateDeviceHint() {
             <IconButtonWithTooltip
                 trackName="simulator.hint.soilmoisture"
                 onClick={handleStartSimulator(SRV_SOIL_MOISTURE)}
-                title="slider"
+                title="soil moisture"
                 aria-label="start soil moisture simulator"
             >
                 <span aria-label="sprout emoji" role="img">
@@ -99,7 +99,7 @@ export function SimulateDeviceHint() {
             <IconButtonWithTooltip
                 trackName="simulator.hint.characterscreen"
                 onClick={handleStartSimulator(SRV_CHARACTER_SCREEN)}
-                title="Character screen"
+                title="character screen"
                 aria-label="start character screen simulator"
             >
                 <span aria-label="pager emoji" role="img">
