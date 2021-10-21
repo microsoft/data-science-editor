@@ -17,11 +17,15 @@ export default function ValueWithUnitWidget(props: {
     tabIndex?: number
     color?: "primary" | "secondary"
     size?: string
-    onChange?: (event: unknown, newValue: number | number[]) => void
+    onChange?: (newValue: number) => void
 }) {
     const { step, secondaryLabel, icon, unit, tabIndex, color, onChange } =
         props
-    const { name: unitName, converter: unitConverter } = useUnitConverter(unit)
+    const {
+        name: unitName,
+        converter: unitConverter,
+        inverter: unitInverter,
+    } = useUnitConverter(unit)
 
     // map all values with unit converters
     const { value, min, max } = {
@@ -30,7 +34,6 @@ export default function ValueWithUnitWidget(props: {
         max: unitConverter(props.max),
     }
 
-    const labelVariant = "subtitle1"
     const precision =
         step === undefined ? 1 : step < 1 ? Math.ceil(-Math.log10(step)) : 0
     const hasValue = !isNaN(value)
@@ -70,6 +73,12 @@ export default function ValueWithUnitWidget(props: {
     }
     const captionStyle: CSSProperties = {
         color: textPrimary,
+    }
+
+    const handleChange = (event: unknown, newValue: number | number[]) => {
+        const v = newValue as number
+        const iv = unitInverter(v)
+        onChange?.(iv)
     }
 
     return (
@@ -122,7 +131,7 @@ export default function ValueWithUnitWidget(props: {
                     </Grid>
                 </Grid>
             </Grid>
-            {onChange && value !== undefined && (
+            {handleChange && value !== undefined && (
                 <Grid item xs={12}>
                     <Slider
                         valueLabelDisplay="off"
@@ -131,7 +140,7 @@ export default function ValueWithUnitWidget(props: {
                         max={max}
                         step={step}
                         value={value}
-                        onChange={onChange}
+                        onChange={handleChange}
                         aria-label={unitName || secondaryLabel}
                     />
                 </Grid>

@@ -132,13 +132,8 @@ export default function MemberInput(props: {
             : (event.target.value as number)
         setValue(v)
     }
-    const handleSliderChange = (
-        event: unknown,
-        newValue: number | number[]
-    ) => {
-        const v = newValue as number
-        setValue(v)
-    }
+    const handleSliderChange = (newValue: number) => setValue(newValue)
+
     const percentValueFormat = (value: number) => {
         // avoid super long floats
         return ((value * 100) >> 0) + "%"
