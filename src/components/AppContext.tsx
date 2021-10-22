@@ -17,8 +17,6 @@ import useAnalytics from "./hooks/useAnalytics"
 import PacketsContext from "./PacketsContext"
 
 import Suspense from "./ui/Suspense"
-import { requestVideoStream } from "./ui/WebCam"
-import useEffectAsync from "./useEffectAsync"
 const StartSimulatorDialog = lazy(
     () => import("./dialogs/StartSimulatorDialog")
 )
@@ -95,11 +93,6 @@ export const AppProvider = ({ children }) => {
     const [showWebCam, setShowWebCam] = useState(false)
 
     const { enqueueSnackbar: _enqueueSnackbar } = useSnackbar()
-
-    // request permission when using web cam
-    useEffectAsync(async () => {
-        if (showWebCam) await requestVideoStream()
-    }, [showWebCam])
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const setError = (e: any) => {

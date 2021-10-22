@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 import {
     Card,
+    CardContent,
     CardHeader,
     CardMedia,
     createStyles,
@@ -25,6 +26,7 @@ import useMounted from "../hooks/useMounted"
 import Suspense from "./Suspense"
 import CloseIcon from "@material-ui/icons/Close"
 import AppContext from "../AppContext"
+import { Alert } from "@material-ui/lab"
 const Draggable = lazy(() => import("react-draggable"))
 
 const useStyles = makeStyles(() =>
@@ -50,7 +52,7 @@ const useStyles = makeStyles(() =>
     })
 )
 
-export async function requestVideoStream() {
+async function requestVideoStream() {
     // first ask for permission from ther user so that
     // labels are populated in enumerateDevices
     return await navigator.mediaDevices.getUserMedia({
@@ -122,17 +124,41 @@ export default function WebCam() {
         }
     }, [deviceId])
 
+    const updateDevices = async () => {
+        try {
+            // enumerate devices
+            const devices = await navigator.mediaDevices.enumerateDevices()
+            const webcams = devices.filter(
+                device => device.kind == "videoinput"
+            )
+            if (mounted()) {
+                setDevices(webcams)
+                if (!webcams.find(webcam => webcam.deviceId === deviceId)) {
+                    const did = webcams[0]?.deviceId
+                    setDeviceId(did)
+                }
+            }
+        } catch (e) {
+            if (mounted()) setDevices([])
+        }
+    }
+
     // startup
     useEffectAsync(async () => {
         // first ask for permission from ther user so that
         // labels are populated in enumerateDevices
-
-        // enumerate devices
-        const devices = await navigator.mediaDevices.enumerateDevices()
-        const webcams = devices.filter(device => device.kind == "videoinput")
-
-        if (mounted()) setDevices(webcams)
+        await requestVideoStream()
+        await updateDevices()
     }, [])
+
+    useEffect(() => {
+        navigator.mediaDevices.addEventListener("devicechange", updateDevices)
+        return () =>
+            navigator.mediaDevices.removeEventListener(
+                "devicechange",
+                updateDevices
+            )
+    })
 
     // cleanup
     useEffect(() => stop, [deviceId])
@@ -148,7 +174,8 @@ export default function WebCam() {
                     <Card className={classes.card}>
                         <CardHeader
                             title={
-                                settingsOpen && (
+                                settingsOpen &&
+                                devices && (
                                     <FormControl
                                         variant="outlined"
                                         size="small"
@@ -192,6 +219,13 @@ export default function WebCam() {
                                 </>
                             }
                         />
+                        {!devices && (
+                            <CardContent>
+                                <Alert severity="warning">
+                                    Please allow access to use your camera.
+                                </Alert>
+                            </CardContent>
+                        )}
                         <CardMedia>
                             <div className="hostedcontainer">
                                 <video
