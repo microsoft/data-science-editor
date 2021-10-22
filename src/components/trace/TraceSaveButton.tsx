@@ -6,7 +6,7 @@ import PacketsContext from "../PacketsContext"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import { Link } from "@material-ui/core"
-import ConsoleContext from "../console/ConsoleContext"
+import ConsoleContext, { serializeLogs } from "../console/ConsoleContext"
 
 export default function TraceSaveButton(props: { variant?: "link" | "icon" }) {
     const { variant } = props
@@ -39,15 +39,7 @@ ${traceText}
 ## console
 
 \`\`\`
-${logs
-    ?.map(
-        ({ method, data }) =>
-            `${method !== "log" ? method : ""} ${data[0]}${data
-                .slice(1)
-                .map(d => "\n" + JSON.stringify(d))
-                .join("")}`
-    )
-    .join("\n")}
+${serializeLogs(logs)}
 \`\`\`
 
 ## environment

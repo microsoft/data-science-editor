@@ -138,6 +138,18 @@ function useFilter() {
     }, [minLoggerPriority])
 }
 
+export function serializeLogs(logs: Message[]) {
+    return logs
+        ?.map(
+            ({ method, data }) =>
+                `${method !== "log" ? method : ""} ${data[0]}${data
+                    .slice(1)
+                    .map(d => "\n" + JSON.stringify(d))
+                    .join("")}`
+        )
+        .join("\n")
+}
+
 // eslint-disable-next-line react/prop-types
 export const ConsoleProvider = ({ children }) => {
     const [searchKeywords, setSearchKeywords] = useState<string>()

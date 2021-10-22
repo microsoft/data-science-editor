@@ -1,9 +1,10 @@
 import React, { ChangeEvent, useContext } from "react"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
-import ConsoleContext from "./ConsoleContext"
+import ConsoleContext, { serializeLogs } from "./ConsoleContext"
 import ConsoleImportSourceMapButton from "./ConsoleImportSourceMapButton"
 import ConsoleSerialButton from "./ConsoleSerialButton"
 import ClearIcon from "@material-ui/icons/Clear"
+import SaveAltIcon from "@material-ui/icons/SaveAlt"
 import {
     FormControl,
     Grid,
@@ -15,12 +16,26 @@ import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import useChange from "../../jacdac/useChange"
 import { LoggerPriority } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import { useId } from "react-use-id-hook"
+import ServiceManagerContext from "../ServiceManagerContext"
 
 function ClearButton() {
     const { clear } = useContext(ConsoleContext)
     return (
         <IconButtonWithTooltip title="clear" onClick={clear}>
             <ClearIcon />
+        </IconButtonWithTooltip>
+    )
+}
+
+function SaveButton() {
+    const { logs } = useContext(ConsoleContext)
+    const { fileStorage } = useContext(ServiceManagerContext)
+    const handleSave = () => {
+        fileStorage.saveText("jacdac-console.txt", serializeLogs(logs))
+    }
+    return (
+        <IconButtonWithTooltip title="save" onClick={handleSave}>
+            <SaveAltIcon />
         </IconButtonWithTooltip>
     )
 }
@@ -94,6 +109,9 @@ export default function ConsoleToolbar() {
             </Grid>
             <Grid item>
                 <ClearButton />
+            </Grid>
+            <Grid item>
+                <SaveButton />
             </Grid>
             <Grid item>
                 <SearchKeywordField />
