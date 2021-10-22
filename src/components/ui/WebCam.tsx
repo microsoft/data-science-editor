@@ -109,7 +109,11 @@ export default function WebCam() {
             console.debug(`greenscreen: stream acquired`)
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({
-                    video: { advanced: [{ deviceId: deviceId }] },
+                    video: {
+                        width: { ideal: 1920 },
+                        height: { ideal: 1080 },
+                        advanced: [{ deviceId: deviceId }],
+                    },
                     audio: false,
                 })
                 streamRef.current = stream
