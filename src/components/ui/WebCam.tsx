@@ -27,6 +27,7 @@ import Suspense from "./Suspense"
 import CloseIcon from "@material-ui/icons/Close"
 import AppContext from "../AppContext"
 import { Alert } from "@material-ui/lab"
+import FullscreenIcon from "@material-ui/icons/Fullscreen"
 const Draggable = lazy(() => import("react-draggable"))
 
 const useStyles = makeStyles(() =>
@@ -78,6 +79,7 @@ export default function WebCam() {
         ev: ChangeEvent<{ name?: string; value: unknown }>
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ) => setDeviceId(ev.target.value as any as string)
+    const handleFullScreen = () => videoRef.current?.requestFullscreen()
     const stop = () => {
         const stream = streamRef.current
         if (stream) {
@@ -202,6 +204,13 @@ export default function WebCam() {
                             }
                             action={
                                 <>
+                                    <IconButtonWithTooltip
+                                        size="small"
+                                        onClick={handleFullScreen}
+                                        title="full screen"
+                                    >
+                                        <FullscreenIcon />
+                                    </IconButtonWithTooltip>
                                     <IconButtonWithTooltip
                                         size="small"
                                         onClick={handleSettings}
