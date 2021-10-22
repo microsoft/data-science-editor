@@ -137,7 +137,10 @@ async function createDeviceQRPages(actions) {
 async function createDevicePages(graphql, actions, reporter) {
     console.log(`generating device pages`)
     const { createPage, createRedirect } = actions
-    const devices = deviceSpecifications()
+    const devices = deviceSpecifications({
+        includeDeprecated: true,
+        includeExperimental: true,
+    })
     // Create image post pages.
     const deviceTemplate = path.resolve(`src/templates/device.tsx`)
     const companyTemplate = path.resolve(`src/templates/device-company.tsx`)
