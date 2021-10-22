@@ -1,7 +1,7 @@
 import {
     Card,
-    CardContent,
     CardHeader,
+    CardMedia,
     createStyles,
     makeStyles,
 } from "@material-ui/core"
@@ -160,7 +160,7 @@ function HostedSimulatorCard(props: { sim: HostedSimulator }) {
                                 </IconButtonWithTooltip>
                             }
                         />
-                        <CardContent>
+                        <CardMedia>
                             <div className="hostedcontainer">
                                 <iframe
                                     id={sim.id}
@@ -170,7 +170,7 @@ function HostedSimulatorCard(props: { sim: HostedSimulator }) {
                                     style={{ width, height }}
                                 />
                             </div>
-                        </CardContent>
+                        </CardMedia>
                     </Card>
                 </span>
             </Draggable>

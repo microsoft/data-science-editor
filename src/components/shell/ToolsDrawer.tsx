@@ -29,6 +29,7 @@ import WifiIcon from "@material-ui/icons/Wifi"
 import SettingsIcon from "@material-ui/icons/Settings"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord"
+import VideoCallIcon from "@material-ui/icons/VideoCall"
 import MakeCodeIcon from "../icons/MakeCodeIcon"
 
 import DarkModeContext from "../ui/DarkModeContext"
@@ -105,8 +106,13 @@ function ToolsListItem(props: {
 
 export default function ToolsDrawer() {
     const classes = useStyles()
-    const { toolsMenu, setToolsMenu, toggleShowDeviceHostsDialog } =
-        useContext(AppContext)
+    const {
+        toolsMenu,
+        setToolsMenu,
+        toggleShowDeviceHostsDialog,
+        showWebCam,
+        setShowWebCam,
+    } = useContext(AppContext)
     const { enqueueSnackbar, toggleShowConnectTransportDialog } =
         useContext(AppContext)
     const { toggleDarkMode, darkMode } = useContext(DarkModeContext)
@@ -147,6 +153,11 @@ export default function ToolsDrawer() {
             text: "Data Collector",
             to: "/tools/collector/",
             icon: <FiberManualRecordIcon />,
+        },
+        UIFlags.webcam && {
+            text: showWebCam ? "Stop WebCam" : "Start WebCam",
+            icon: <VideoCallIcon />,
+            action: () => setShowWebCam(!showWebCam),
         },
         UIFlags.peers && {
             text: "Peers",

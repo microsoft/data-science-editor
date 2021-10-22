@@ -1,4 +1,3 @@
-import { Button } from "gatsby-material-ui-components"
 import { useSnackbar } from "notistack"
 import React, {
     createContext,
@@ -18,6 +17,8 @@ import useAnalytics from "./hooks/useAnalytics"
 import PacketsContext from "./PacketsContext"
 
 import Suspense from "./ui/Suspense"
+import { requestVideoStream } from "./ui/WebCam"
+import useEffectAsync from "./useEffectAsync"
 const StartSimulatorDialog = lazy(
     () => import("./dialogs/StartSimulatorDialog")
 )
@@ -52,6 +53,8 @@ export interface AppProps {
     toggleShowConnectTransportDialog: () => void
     selectedPacket: Packet
     setSelectedPacket: (pkt: Packet) => void
+    showWebCam: boolean
+    setShowWebCam: (newValue: boolean) => void
 }
 
 const AppContext = createContext<AppProps>({
@@ -68,6 +71,8 @@ const AppContext = createContext<AppProps>({
     toggleShowConnectTransportDialog: () => {},
     selectedPacket: undefined,
     setSelectedPacket: () => {},
+    showWebCam: false,
+    setShowWebCam: () => {},
 })
 AppContext.displayName = "app"
 
@@ -87,8 +92,14 @@ export const AppProvider = ({ children }) => {
         useState<JDService>(undefined)
     const { trackError } = useAnalytics()
     const [selectedPacket, setSelectedPacket] = useState<Packet>(undefined)
+    const [showWebCam, setShowWebCam] = useState(false)
 
     const { enqueueSnackbar: _enqueueSnackbar } = useSnackbar()
+
+    // request permission when using web cam
+    useEffectAsync(async () => {
+        if (showWebCam) await requestVideoStream()
+    }, [showWebCam])
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const setError = (e: any) => {
@@ -166,6 +177,8 @@ export const AppProvider = ({ children }) => {
                 toggleShowConnectTransportDialog,
                 selectedPacket,
                 setSelectedPacket,
+                showWebCam,
+                setShowWebCam,
             }}
         >
             {children}

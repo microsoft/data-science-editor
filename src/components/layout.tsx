@@ -30,6 +30,7 @@ const TraceAlert = lazy(() => import("./shell/TraceAlert"))
 const WebDiagnostics = lazy(() => import("./shell/WebDiagnostics"))
 const AppDrawer = lazy(() => import("./shell/AppDrawer"))
 const ToolsDrawer = lazy(() => import("./shell/ToolsDrawer"))
+const WebCam = lazy(() => import("./ui/WebCam"))
 
 export const TOC_DRAWER_WIDTH = 18
 export const DRAWER_WIDTH = 40
@@ -193,7 +194,7 @@ function LayoutWithContext(props: LayoutProps) {
     const classes = useStyles()
 
     const { darkMode } = useContext(DarkModeContext)
-    const { drawerType, toolsMenu } = useContext(AppContext)
+    const { drawerType, toolsMenu, showWebCam } = useContext(AppContext)
     const drawerOpen = drawerType !== DrawerType.None
     const { medium } = useMediaQueries()
     const container = !medium && !fullWidthTools
@@ -282,6 +283,11 @@ function LayoutWithContext(props: LayoutProps) {
                 <div className={mainClasses}>
                     <MainSection />
                 </div>
+            )}
+            {showWebCam && (
+                <Suspense>
+                    <WebCam />
+                </Suspense>
             )}
         </div>
     )

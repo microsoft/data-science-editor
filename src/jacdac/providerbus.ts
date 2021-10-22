@@ -43,6 +43,14 @@ function sniffQueryArguments() {
             webBluetooth: isWebBluetoothSupported(),
         }
 
+    const isMediaDevicesSupported = () => {
+        return (
+            typeof navigator !== undefined &&
+            !!navigator.mediaDevices &&
+            !!navigator.mediaDevices.enumerateDevices &&
+            !!navigator.mediaDevices.getUserMedia
+        )
+    }
     const params = new URLSearchParams(window.location.search)
     const toolsMakecode =
         /\/tools\/makecode-/.test(window.location.href) ||
@@ -79,6 +87,7 @@ function sniffQueryArguments() {
         hosted: params.get("hosted") === "1" || params.get("embed") === "1",
         storage: params.get("storage") === "0" ? false : true,
         bus: params.get("bus") === "0" ? false : true,
+        webcam: isMediaDevicesSupported(),
     }
 }
 
@@ -97,6 +106,7 @@ export class UIFlags {
     static storage = args.storage
     static hosted = args.hosted
     static gamepad = args.gamepad
+    static webcam = args.webcam
 }
 
 // defeat react fast-refresh
