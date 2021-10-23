@@ -37,8 +37,8 @@ const useStyles = makeStyles(() =>
         cardContainer: {
             zIndex: 1101,
             position: "absolute",
-            right: "5rem",
-            bottom: "5rem",
+            right: "2rem",
+            bottom: "3rem",
         },
         card: {
             "& .hostedcontainer": {
@@ -66,7 +66,7 @@ async function requestVideoStream() {
 
 export default function WebCam() {
     const { setShowWebCam } = useContext(AppContext)
-    const [minimize, setMinimize] = useState(false)
+    const [minimize, setMinimize] = useState(true)
     const [devices, setDevices] = useState<MediaDeviceInfo[]>()
     const [deviceId, setDeviceId] = useLocalStorage("webcam_deviceid", "")
     const nodeRef = useRef<HTMLSpanElement>()
@@ -226,7 +226,9 @@ export default function WebCam() {
                                     <IconButtonWithTooltip
                                         size="small"
                                         onClick={handleMinimize}
-                                        title="minimize"
+                                        title={
+                                            minimize ? "Maximize" : "Minimize"
+                                        }
                                     >
                                         {minimize ? (
                                             <MaximizeIcon />
@@ -261,7 +263,13 @@ export default function WebCam() {
                         <CardMedia>
                             <div
                                 className="hostedcontainer"
-                                style={minimize ? { height: "0px" } : undefined}
+                                style={
+                                    !minimize
+                                        ? {
+                                              width: "96vw",
+                                          }
+                                        : undefined
+                                }
                             >
                                 <video
                                     autoPlay
