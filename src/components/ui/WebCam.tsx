@@ -72,6 +72,8 @@ export default function WebCam() {
     const [settingsOpen, setSettingsOpen] = useState(!deviceId)
     const mounted = useMounted()
     const classes = useStyles()
+    const supportsFullScreen =
+        typeof document !== "undefined" && !!document.fullscreenEnabled
 
     const handleClose = () => setShowWebCam(false)
     const handleSettings = () => setSettingsOpen(newValue => !newValue)
@@ -208,13 +210,15 @@ export default function WebCam() {
                             }
                             action={
                                 <>
-                                    <IconButtonWithTooltip
-                                        size="small"
-                                        onClick={handleFullScreen}
-                                        title="full screen"
-                                    >
-                                        <FullscreenIcon />
-                                    </IconButtonWithTooltip>
+                                    {supportsFullScreen && (
+                                        <IconButtonWithTooltip
+                                            size="small"
+                                            onClick={handleFullScreen}
+                                            title="full screen"
+                                        >
+                                            <FullscreenIcon />
+                                        </IconButtonWithTooltip>
+                                    )}
                                     <IconButtonWithTooltip
                                         size="small"
                                         onClick={handleSettings}
