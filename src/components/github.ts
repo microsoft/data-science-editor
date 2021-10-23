@@ -67,6 +67,7 @@ function contentsToFirmwareReleases(contents: GithubContent[]) {
 }
 
 export function normalizeSlug(slug: string) {
+    if (!slug) return {}
     const cleaned = slug.replace(/^https:\/\/github.com\//, "")
     const parts = cleaned.split("/")
     return {
@@ -156,7 +157,7 @@ export async function fetchText(
 }
 
 function useFetchApi<T>(path: string, options?: GitHubApiOptions) {
-    const res = useFetch<T>(`${ROOT}${path}`)
+    const res = useFetch<T>(path ? `${ROOT}${path}` : undefined)
     if (res.status !== undefined)
         switch (res.status) {
             case 200:
@@ -201,7 +202,7 @@ export function useFetchJSON<T>(
 
 export function useRepository(slug: string) {
     const { repoPath } = normalizeSlug(slug)
-    const path = `repos/${repoPath}`
+    const path = repoPath ? `repos/${repoPath}` : undefined
     const res = useFetchApi<GithubRepository>(path, { ignoreThrottled: true })
     return res
 }
