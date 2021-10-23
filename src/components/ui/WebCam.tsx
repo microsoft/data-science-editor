@@ -266,7 +266,7 @@ export default function WebCam() {
                                 style={
                                     !minimize
                                         ? {
-                                              width: "96vw",
+                                              width: "85vw",
                                           }
                                         : undefined
                                 }
