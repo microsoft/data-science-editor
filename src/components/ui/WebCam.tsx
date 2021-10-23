@@ -28,6 +28,8 @@ import CloseIcon from "@material-ui/icons/Close"
 import AppContext from "../AppContext"
 import { Alert } from "@material-ui/lab"
 import FullscreenIcon from "@material-ui/icons/Fullscreen"
+import MinimizeIcon from "@material-ui/icons/Minimize"
+import MaximizeIcon from "@material-ui/icons/Maximize"
 const Draggable = lazy(() => import("react-draggable"))
 
 const useStyles = makeStyles(() =>
@@ -64,6 +66,7 @@ async function requestVideoStream() {
 
 export default function WebCam() {
     const { setShowWebCam } = useContext(AppContext)
+    const [minimize, setMinimize] = useState(false)
     const [devices, setDevices] = useState<MediaDeviceInfo[]>()
     const [deviceId, setDeviceId] = useLocalStorage("webcam_deviceid", "")
     const nodeRef = useRef<HTMLSpanElement>()
@@ -76,6 +79,7 @@ export default function WebCam() {
         typeof document !== "undefined" && !!document.fullscreenEnabled
 
     const handleClose = () => setShowWebCam(false)
+    const handleMinimize = () => setMinimize(v => !v)
     const handleSettings = () => setSettingsOpen(newValue => !newValue)
     const handleDeviceChange = (
         ev: ChangeEvent<{ name?: string; value: unknown }>
@@ -221,6 +225,17 @@ export default function WebCam() {
                                     )}
                                     <IconButtonWithTooltip
                                         size="small"
+                                        onClick={handleMinimize}
+                                        title="minimize"
+                                    >
+                                        {minimize ? (
+                                            <MaximizeIcon />
+                                        ) : (
+                                            <MinimizeIcon />
+                                        )}
+                                    </IconButtonWithTooltip>
+                                    <IconButtonWithTooltip
+                                        size="small"
                                         onClick={handleSettings}
                                         title="Settings"
                                     >
@@ -244,7 +259,12 @@ export default function WebCam() {
                             </CardContent>
                         )}
                         <CardMedia>
-                            <div className="hostedcontainer">
+                            <div
+                                className="hostedcontainer"
+                                style={
+                                    minimize ? { height: "0px" } : undefined
+                                }
+                            >
                                 <video
                                     autoPlay
                                     playsInline
