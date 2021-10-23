@@ -37,13 +37,13 @@ const useStyles = makeStyles(() =>
         cardContainer: {
             zIndex: 1101,
             position: "absolute",
-            left: "5rem",
-            top: "5rem",
+            right: "5rem",
+            bottom: "5rem",
         },
         card: {
             "& .hostedcontainer": {
                 position: "relative",
-                width: "30vw",
+                width: "40vw",
             },
             "& video": {
                 border: "none",
@@ -261,9 +261,7 @@ export default function WebCam() {
                         <CardMedia>
                             <div
                                 className="hostedcontainer"
-                                style={
-                                    minimize ? { height: "0px" } : undefined
-                                }
+                                style={minimize ? { height: "0px" } : undefined}
                             >
                                 <video
                                     autoPlay
