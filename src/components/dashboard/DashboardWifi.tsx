@@ -254,8 +254,6 @@ export default function DashboardWifi(props: DashboardServiceProps) {
     const { textPrimary } = useWidgetTheme(color)
     const enabledRegister = service.register(WifiReg.Enabled)
     const enabled = useRegisterBoolValue(enabledRegister)
-    const connectedRegister = service.register(WifiReg.Connected)
-    const connected = useRegisterBoolValue(connectedRegister, props)
     const ssidRegister = service.register(WifiReg.Ssid)
     const [ssid] = useRegisterUnpackedValue<[string]>(ssidRegister)
     const ipAddressRegister = service.register(WifiReg.IpAddress)
@@ -264,19 +262,16 @@ export default function DashboardWifi(props: DashboardServiceProps) {
     const [mac] = useRegisterUnpackedValue<[Uint8Array]>(macRegister)
     const lostIpEvent = useEvent(service, WifiEvent.LostIp)
     const gotIpEvent = useEvent(service, WifiEvent.GotIp)
+    const connected = !!ip?.length
 
     const handleConnect = async () => {
         if (connected) await enabledRegister.sendSetBoolAsync(false)
-        else {
-            if (enabled) await enabledRegister.sendSetBoolAsync(true)
-            else await service.sendCmdPackedAsync(WifiCmd.Reconnect)
-        }
+        else await service.sendCmdPackedAsync(WifiCmd.Reconnect)
     }
     const handleConfigure = () => setOpen(true)
 
     // force register refreshs on various events
     const refreshRegisters = () => {
-        connectedRegister.clearGetTimestamp()
         ssidRegister.clearGetTimestamp()
         ipAddressRegister.clearGetTimestamp()
     }
