@@ -132,7 +132,8 @@ export default function MemberInput(props: {
             : (event.target.value as number)
         setValue(v)
     }
-    const handleSliderChange = (newValue: number) => setValue(newValue)
+    const handleSliderChange = (ev: unknown, newValue: number | number[]) => setValue(newValue as number)
+    const handleSliderWidgetChange = (newValue: number) => setValue(newValue)
 
     const percentValueFormat = (value: number) => {
         // avoid super long floats
@@ -222,7 +223,7 @@ export default function MemberInput(props: {
                     max={max}
                     step={step}
                     valueLabel={percentValueLabelFormat}
-                    onChange={disabled ? undefined : handleSliderChange}
+                    onChange={disabled ? undefined : handleSliderWidgetChange}
                     off={off}
                     toggleOff={toggleOff}
                 />
@@ -276,7 +277,7 @@ export default function MemberInput(props: {
                     step={step}
                     secondaryLabel={errorValue}
                     color={color}
-                    onChange={disabled ? undefined : handleSliderChange}
+                    onChange={disabled ? undefined : handleSliderWidgetChange}
                 />
             )
 
