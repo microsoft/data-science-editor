@@ -4,7 +4,7 @@ import useRegister from "../components/hooks/useRegister"
 import { useRegisterUnpackedValue } from "./useRegisterValue"
 
 export default function useDeviceProductIdentifier(device: JDDevice) {
-    const reg = useRegister(device.service(0), ControlReg.ProductIdentifier)
+    const reg = useRegister(device?.service(0), ControlReg.ProductIdentifier)
     const [id] = useRegisterUnpackedValue<[number]>(reg)
     return id
 }
