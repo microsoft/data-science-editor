@@ -84,6 +84,12 @@ export function hostedSimulatorDefinitions(): HostedSimulatorDefinition[] {
             width: "20rem",
             height: "12rem",
         },
+        UIFlags.localhost && {
+            name: "makecode serve (localhost)",
+            url: "http://localhost:7000/",
+            width: "20rem",
+            height: "17.5rem",
+        },
     ].filter(d => !!d)
 }
 
