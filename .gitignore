@@ -5,3 +5,4 @@ public
 .DS_Store
 src/workers/dist
 yarn-error.log
+.parcel-cache

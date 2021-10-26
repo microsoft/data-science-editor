@@ -167,5 +167,8 @@
     "Edge > 80",
     "Chrome > 80",
     "Firefox > 80"
-  ]
+  ],
+  "devDependencies": {
+    "@parcel/transformer-typescript-types": "^2.0.0"
+  }
 }

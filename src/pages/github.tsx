@@ -47,7 +47,11 @@ export default function Page() {
             <h2>Client SDKs</h2>
 
             <GithubRepositoryList
-                repos={["microsoft/jacdac-ts", "microsoft/pxt-jacdac"]}
+                repos={[
+                    "microsoft/jacdac-ts",
+                    "microsoft/react-jacdac",
+                    "microsoft/pxt-jacdac",
+                ]}
                 showDescription={true}
             />
 

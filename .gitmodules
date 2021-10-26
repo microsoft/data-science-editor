@@ -16,3 +16,6 @@
 [submodule "gatsby-remark-makecode"]
 	path = gatsby-remark-makecode
 	url = https://github.com/microsoft/gatsby-remark-makecode
+[submodule "react-jacdac"]
+	path = react-jacdac
+	url = https://github.com/microsoft/react-jacdac
