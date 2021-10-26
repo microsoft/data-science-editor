@@ -61,7 +61,7 @@ export default function ConnectTransportDialog(props: {
             <DialogContent>
                 <Grid container spacing={2}>
                     {devices.map(({ device, transport }) => (
-                        <Grid item key={device.id}>
+                        <Grid item xs={12} sm={6} key={device.id}>
                             <Card>
                                 <CardMediaWithSkeleton
                                     title={"photograph of the device"}
