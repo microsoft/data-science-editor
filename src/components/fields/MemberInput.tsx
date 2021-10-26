@@ -132,7 +132,8 @@ export default function MemberInput(props: {
             : (event.target.value as number)
         setValue(v)
     }
-    const handleSliderChange = (ev: unknown, newValue: number | number[]) => setValue(newValue as number)
+    const handleSliderChange = (ev: unknown, newValue: number | number[]) =>
+        setValue(newValue as number)
     const handleSliderWidgetChange = (newValue: number) => setValue(newValue)
 
     const percentValueFormat = (value: number) => {

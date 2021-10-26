@@ -78,7 +78,7 @@ export default function ValueWithUnitWidget(props: {
     const handleChange = (event: unknown, newValue: number | number[]) => {
         const v = newValue as number
         const iv = unitInverter(v)
-        onChange?.(iv)
+        onChange(iv)
     }
 
     return (
@@ -131,7 +131,7 @@ export default function ValueWithUnitWidget(props: {
                     </Grid>
                 </Grid>
             </Grid>
-            {handleChange && value !== undefined && (
+            {onChange && value !== undefined && (
                 <Grid item xs={12}>
                     <Slider
                         valueLabelDisplay="off"
