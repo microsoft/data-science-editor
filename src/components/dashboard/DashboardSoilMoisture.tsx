@@ -8,6 +8,7 @@ import SensorServer from "../../../jacdac-ts/src/servers/sensorserver"
 import { Grid, Slider } from "@material-ui/core"
 import SoilMoistureWidget from "../widgets/SoilMoistureWidget"
 import useRegister from "../hooks/useRegister"
+import { useId } from "react-use-id-hook"
 
 export default function DashboardSoilMoisture(props: DashboardServiceProps) {
     const { service, services, variant } = props
@@ -16,6 +17,7 @@ export default function DashboardSoilMoisture(props: DashboardServiceProps) {
     const widgetSize = useWidgetSize(variant, services?.length)
     const server = useServiceServer<SensorServer<[number]>>(service)
     const color = server ? "secondary" : "primary"
+    const sliderId = useId()
 
     const hasValue = !isNaN(value)
 
@@ -37,6 +39,8 @@ export default function DashboardSoilMoisture(props: DashboardServiceProps) {
             {server && hasValue && (
                 <Grid item xs>
                     <Slider
+                        id={sliderId}
+                        aria-label="moisture"
                         valueLabelDisplay="off"
                         min={0}
                         max={1}

@@ -1,6 +1,7 @@
 import React, { ChangeEvent, useEffect, useState } from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import {
+    Button,
     Card,
     CardActions,
     CardContent,
@@ -232,9 +233,13 @@ function ConnectDialog(props: {
                 </Grid>
             </DialogContent>
             <DialogActions>
+                <Button variant="outlined" title="cancel" onClick={handleClose}>
+                    Cancel
+                </Button>
                 <CmdButton
                     trackName="dashboard.wifi.forgetall"
                     onClick={handleForgetAll}
+                    variant="outlined"
                     title="forget all"
                     icon={<DeleteIcon />}
                 >
