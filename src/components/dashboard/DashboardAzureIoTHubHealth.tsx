@@ -1,13 +1,13 @@
 import React, { ChangeEvent, useCallback, useState } from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import {
+    Badge,
     Chip,
     Dialog,
     DialogActions,
     DialogContent,
     DialogContentText,
     Grid,
-    Switch,
     TextField,
     Typography,
 } from "@material-ui/core"
@@ -17,6 +17,7 @@ import useWidgetTheme from "../widgets/useWidgetTheme"
 import {
     AzureIotHubHealthCmd,
     AzureIotHubHealthConnectionStatus,
+    AzureIotHubHealthEvent,
     AzureIotHubHealthReg,
 } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import { useId } from "react-use-id-hook"
@@ -28,6 +29,9 @@ import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import ChipList from "../ui/ChipList"
 import WifiIcon from "@material-ui/icons/Wifi"
 import WifiOffIcon from "@material-ui/icons/WifiOff"
+import useEvent from "../hooks/useEvent"
+import useEventRaised from "../../jacdac/useEventRaised"
+import { EVENT } from "../../../jacdac-ts/src/jdom/constants"
 
 function ConnectionStringDialog(props: {
     open: boolean
@@ -93,6 +97,7 @@ export default function DashboardAzureIoTHubHealth(
 ) {
     const { service } = props
     const [open, setOpen] = useState(false)
+    const [messageSent, setMessageSent] = useState(0)
 
     const hubNameRegister = service.register(AzureIotHubHealthReg.HubName)
     const [hubName] = useRegisterUnpackedValue<[string]>(hubNameRegister, props)
@@ -109,6 +114,13 @@ export default function DashboardAzureIoTHubHealth(
     const [connectionStatus] = useRegisterUnpackedValue<
         [AzureIotHubHealthConnectionStatus]
     >(connectionStatusRegister, props)
+    const messageSentEvent = useEvent(
+        service,
+        AzureIotHubHealthEvent.MessageSent
+    )
+    useEventRaised(EVENT, messageSentEvent, () =>
+        setMessageSent(msg => msg + 1)
+    )
     const factory = useCallback(srv => new AzureIoTHubHealthClient(srv), [])
     const client = useServiceClient(service, factory)
     const color = "primary"
@@ -142,7 +154,9 @@ export default function DashboardAzureIoTHubHealth(
                             />
                         )}
                         {hubDeviceId && (
-                            <Chip label={`device: ${hubDeviceId}`} />
+                            <Badge badgeContent={messageSent} color="primary">
+                                <Chip label={`device: ${hubDeviceId}`} />
+                            </Badge>
                         )}
                     </ChipList>
                 </Grid>
