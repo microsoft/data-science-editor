@@ -1,0 +1,161 @@
+---
+title: React
+order: 5
+---
+
+# React package
+
+This package provides a [context](https://reactjs.org/docs/context.html) and [hooks](https://reactjs.org/docs/hooks-intro.html) to interact with the bus within a [React](https://reactjs.org/) application.
+It is built on top of the [JavaScript package](/clients/javascript).
+
+* [GitHub project](https://github.com/microsoft/react-jacdac)
+* [API reference](https://microsoft.github.io/react-jacdac/) for a full list of hooks.
+
+## Installation
+
+Add the [react-jacdac npm package](https://www.npmjs.com/package/react-jacdac) module
+to your project
+
+```
+npm install --save react-jacdac
+```
+
+or
+
+```
+yarn add react-jacdac
+```
+
+## Context setup
+
+To use the hooks in this library, you must wrap your top-level component with the `JacdacProvider` which installs the `JacdacContext` in the React tree.
+
+```tsx
+import { JacdacProvider } from "react-jacdac"
+
+// wrap your top-level layout tsx with JacdacProvider
+const App = () => <JacdacProvider>...</JacdacProvider>
+```
+
+Once your provider is ready, you'll be able to use Jacdac anywhere within your React application.
+
+### Hot-reload
+
+If you are using hot-reload in your developmenet cycle, you will want to create a separate file that instantiates the bus
+to avoid closing and opening connections on each reload.
+
+```javascript
+//---------------
+// bus.ts
+import { createWebBus } from "jacdac-ts"
+
+export const bus = createWebBus()
+
+//---------------
+// layout.ts
+import { JacdacProvider } from "react-jacdac"
+import { bus } from "./bus"
+
+const App = () => <JacdacProvider bus={bus}>...</JacdacProvider>
+```
+
+## Hooks
+
+### useBus
+
+The `useBus` hook ensures that the context is setup and returns the Jacdac bus.
+
+```tsx
+const Connected = () => {
+    const bus = useBus()
+    ...
+}
+```
+
+### useDevices
+
+The `useDevices` hooks gets a snapshot of the devices connected to the bus. It provides a number of filtering options.
+
+```tsx
+import { useDevices } from "react-jacdac"
+
+const DeviceCount = () => {
+    // all devices, minus articifial devices created to run jacdac
+    const devices = useDevices({ ignoreInfrastructure: true })
+    return <span>{devices.length}</span>
+}
+```
+
+### useServices
+
+The `useServices` hooks gets a snapshot of the services accross devices connected to the bus. It provides a number of filtering options.
+
+```tsx
+import { SRV_BUTTON } from "jacdac-ts"
+import { useServices } from "react-jacdac"
+
+const ButtonCount = () => {
+    const buttons = useServices({ serviceClass: SRV_BUTTON })
+    return <span>{buttons.length}</span>
+}
+```
+
+### useRegister
+
+The `useRegister` retrevies the register JDOM node from a service. This hook is typically used with `useRegisterValue` hooks
+documented afterwards below.
+
+```tsx
+import { SRV_POTENTIOMETER, JDService, PotentiometerReg } from "jacdac-ts"
+import { useRegister } from "react-jacdac"
+
+const Position = (props: { slider: JDService }) => {
+    const { slider } = props
+    const positionRegister = useRegister(slider, PotentiometerReg.Position)
+    ...
+}
+```
+
+### useRegisterValue
+
+The `useRegisterValue` decodes the latest register value and returns it into an unpacked value array.
+If data is missing, the array is empty.
+
+```tsx
+import { SRV_POTENTIOMETER, JDService, PotentiometerReg } from "jacdac-ts"
+import { useRegister } from "react-jacdac"
+
+const Position = (props: { slider: JDService }) => {
+    const { slider } = props
+    const positionRegister = useRegister(slider, PotentiometerReg.Position)
+    const [position] = useRegisterValue(positionRegister)
+    return <span>{position}</span>
+}
+```
+
+### useChange
+
+The `useChange` hook retreives a mutable value from the JDOM tree and triggers a render when it mutates.
+
+```tsx
+const Connected = () => {
+    const bus = useBus()
+    // read the connected state of the bus
+    const connected = useChange(bus, _ => _.connected)
+    return <span>connected: {connected}</span>
+}
+```
+
+It's not uncommon that the `useChange` hook receives a undefined node as an argument.
+To handle this in the query callback, using the **`?.` operator** which checks for nullness before calling a function.
+
+```tsx
+import { JDService } from "jacdac-ts"
+
+const ServiceName = (props: { service: JDService }) => {
+    const { service } = props
+    // notice the ?. to handle case when _ is undefined
+    const name = useChange(service, _ => _?.name)
+    return <span>{name || "?"}</span>
+}
+```

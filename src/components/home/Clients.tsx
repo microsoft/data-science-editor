@@ -81,6 +81,17 @@ export default function Clients() {
 
             <SplitGrid
                 right={true}
+                subtitle="React"
+                imageColumns={7}
+                description="Context and Hooks for your React apps."
+                buttonText="react-jacdac documentation"
+                buttonVariant="link"
+                buttonUrl="/clients/react"
+                image={<StaticImage src="./react.png" alt="React logo." />}
+            />
+
+            <SplitGrid
+                right={false}
                 subtitle="A-Frame"
                 imageColumns={7}
                 description="Put Reality back into Virtual Reality."
