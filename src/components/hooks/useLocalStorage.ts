@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import { UIFlags } from "../../jacdac/providerbus"
 
 // enabled when storage=0
@@ -35,27 +35,30 @@ export default function useLocalStorage<T>(
 
     // Return a wrapped version of useState's setter function that ...
     // ... persists the new value to localStorage.
-    const setValue = (value: T) => {
-        if (UIFlags.storage) {
-            try {
-                // Allow value to be a function so we have same API as useState
-                const valueToStore = value
-                // Save state
-                setStoredValue(valueToStore)
-                // Save to local storage
-                if (typeof window !== "undefined" && key)
-                    window.localStorage.setItem(
-                        pkey,
-                        JSON.stringify(valueToStore)
-                    )
-            } catch (error) {
-                // A more advanced implementation would handle the error case
-                console.log(error)
+    const setValue = useCallback(
+        (value: T) => {
+            if (UIFlags.storage) {
+                try {
+                    // Allow value to be a function so we have same API as useState
+                    const valueToStore = value
+                    // Save state
+                    setStoredValue(valueToStore)
+                    // Save to local storage
+                    if (typeof window !== "undefined" && key)
+                        window.localStorage.setItem(
+                            pkey,
+                            JSON.stringify(valueToStore)
+                        )
+                } catch (error) {
+                    // A more advanced implementation would handle the error case
+                    console.log(error)
+                }
+            } else {
+                memStorage[key] = value
             }
-        } else {
-            memStorage[key] = value
-        }
-    }
+        },
+        [key]
+    )
 
     return [storedValue, setValue]
 }
