@@ -47,6 +47,7 @@ import {
     SRV_WIFI,
     SRV_VIBRATION_MOTOR,
     SRV_CODAL_MESSAGE_BUS,
+    SRV_RELAY,
 } from "../../../jacdac-ts/src/jdom/constants"
 import JDService from "../../../jacdac-ts/src/jdom/service"
 import { isRegister } from "../../../jacdac-ts/src/jdom/spec"
@@ -115,6 +116,7 @@ const DashboardVibrationMotor = lazy(() => import("./DashboardVibrationMotor"))
 const DashboardCODALMessageBus = lazy(
     () => import("./DashboardCODALMessageBus")
 )
+const DashboardRelay = lazy(() => import("./DashboardRelay"))
 
 export interface DashboardServiceProps {
     service: JDService
@@ -279,6 +281,9 @@ const serviceViews: {
     [SRV_CODAL_MESSAGE_BUS]: {
         component: DashboardCODALMessageBus,
         weight: () => 2,
+    },
+    [SRV_RELAY]: {
+        component: DashboardRelay,
     },
 }
 
