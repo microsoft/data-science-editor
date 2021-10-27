@@ -30,8 +30,7 @@ import ChipList from "../ui/ChipList"
 import WifiIcon from "@material-ui/icons/Wifi"
 import WifiOffIcon from "@material-ui/icons/WifiOff"
 import useEvent from "../hooks/useEvent"
-import useEventRaised from "../../jacdac/useEventRaised"
-import { EVENT } from "../../../jacdac-ts/src/jdom/constants"
+import useEventCount from "../../jacdac/useEventCount"
 
 function ConnectionStringDialog(props: {
     open: boolean
@@ -97,7 +96,6 @@ export default function DashboardAzureIoTHubHealth(
 ) {
     const { service } = props
     const [open, setOpen] = useState(false)
-    const [messageSent, setMessageSent] = useState(0)
 
     const hubNameRegister = service.register(AzureIotHubHealthReg.HubName)
     const [hubName] = useRegisterUnpackedValue<[string]>(hubNameRegister, props)
@@ -118,9 +116,7 @@ export default function DashboardAzureIoTHubHealth(
         service,
         AzureIotHubHealthEvent.MessageSent
     )
-    useEventRaised(EVENT, messageSentEvent, () =>
-        setMessageSent(msg => msg + 1)
-    )
+    const messageSent = useEventCount(messageSentEvent)
     const factory = useCallback(srv => new AzureIoTHubHealthClient(srv), [])
     const client = useServiceClient(service, factory)
     const color = "primary"
