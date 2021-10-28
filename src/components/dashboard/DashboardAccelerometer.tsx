@@ -1,4 +1,4 @@
-import React, { lazy, useCallback } from "react"
+import React, { ChangeEvent, lazy, useCallback } from "react"
 import { AccelerometerReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
@@ -6,7 +6,7 @@ import useWidgetTheme from "../widgets/useWidgetTheme"
 import useServiceServer from "../hooks/useServiceServer"
 import SensorServer from "../../../jacdac-ts/src/servers/sensorserver"
 import JDRegister from "../../../jacdac-ts/src/jdom/register"
-import { Grid, Mark, NoSsr } from "@material-ui/core"
+import { Grid, Mark, NoSsr, TextField } from "@material-ui/core"
 import { roundWithPrecision } from "../../../jacdac-ts/src/jdom/utils"
 import { Vector } from "../widgets/threeutils"
 import LoadingProgress from "../ui/LoadingProgress"
@@ -14,6 +14,7 @@ import Suspense from "../ui/Suspense"
 import SliderWithLabel from "../ui/SliderWithLabel"
 import useRegister from "../hooks/useRegister"
 import { useId } from "react-use-id-hook"
+import JDService from "../../../jacdac-ts/src/jdom/service"
 
 const CanvasWidget = lazy(() => import("../widgets/CanvasWidget"))
 
@@ -127,6 +128,44 @@ function lerp(v0: number, v1: number, t: number) {
     return v0 * (1 - t) + v1 * t
 }
 
+function MaxForceInput(props: DashboardServiceProps) {
+    const { service } = props
+    const inputId = useId()
+    const maxForceRegister = useRegister(service, AccelerometerReg.MaxForce)
+    const [maxForce] = useRegisterUnpackedValue<[number]>(
+        maxForceRegister,
+        props
+    )
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const value = parseFloat(event.target.value)
+        if (!isNaN(value)) maxForceRegister.sendSetPackedAsync([value], true)
+    }
+    const label = "maximum force"
+    const disabled = !maxForceRegister
+    const helperText = "g"
+
+    if (maxForce === undefined) return null
+
+    return (
+        <Grid item xs={12}>
+            <TextField
+                id={inputId}
+                spellCheck={false}
+                value={maxForce}
+                label={label}
+                inputProps={{
+                    "aria-label": label,
+                    "aria-readonly": disabled,
+                    readOnly: disabled,
+                }}
+                helperText={helperText}
+                onChange={handleChange}
+                type={"number"}
+            />
+        </Grid>
+    )
+}
+
 export default function DashboardAccelerometer(props: DashboardServiceProps) {
     const { service, visible } = props
     const register = useRegister(service, AccelerometerReg.Forces)
@@ -166,6 +205,7 @@ export default function DashboardAccelerometer(props: DashboardServiceProps) {
                 </NoSsr>
             </Grid>
             <Sliders server={server} register={register} visible={visible} />
+            <MaxForceInput {...props} />
         </Grid>
     )
 }
