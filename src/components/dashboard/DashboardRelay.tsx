@@ -1,4 +1,9 @@
-import { FormControlLabel, Grid, Typography } from "@material-ui/core"
+import {
+    CircularProgress,
+    FormControlLabel,
+    Grid,
+    Typography,
+} from "@material-ui/core"
 import React from "react"
 import { RelayReg } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import { useRegisterBoolValue } from "../../jacdac/useRegisterValue"
@@ -13,6 +18,8 @@ export default function DashboardSoilMoisture(props: DashboardServiceProps) {
 
     const handleClose = (event: unknown, checked) =>
         closedRegister?.sendSetBoolAsync(checked, true)
+
+    if (closed === undefined) return <CircularProgress />
 
     return (
         <Grid container spacing={1} direction="row" alignItems="center">
