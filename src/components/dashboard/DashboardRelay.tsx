@@ -24,11 +24,11 @@ export default function DashboardSoilMoisture(props: DashboardServiceProps) {
     return (
         <Grid container spacing={1} direction="row" alignItems="center">
             <Grid item>
-                <Typography variant="subtitle1">open (NO)</Typography>
+                <Typography variant="subtitle1">open</Typography>
             </Grid>
             <Grid item>
                 <SwitchWithLabel
-                    label="closed (NC)"
+                    label="closed"
                     checked={closed}
                     onChange={handleClose}
                 />
