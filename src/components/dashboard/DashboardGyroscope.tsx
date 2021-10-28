@@ -132,7 +132,7 @@ export default function DashboardGyroscope(props: DashboardServiceProps) {
             const degreesToRadians = Math.PI / 180
             const f = delta * degreesToRadians
             return {
-                x: rotation.x + x * f,
+                x: rotation.x - x * f,
                 y: rotation.y - z * f,
                 z: rotation.z - y * f,
             }

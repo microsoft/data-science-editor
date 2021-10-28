@@ -1,9 +1,4 @@
-import {
-    CircularProgress,
-    FormControlLabel,
-    Grid,
-    Typography,
-} from "@material-ui/core"
+import { CircularProgress, Grid, Typography } from "@material-ui/core"
 import React from "react"
 import { RelayReg } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import { useRegisterBoolValue } from "../../jacdac/useRegisterValue"
