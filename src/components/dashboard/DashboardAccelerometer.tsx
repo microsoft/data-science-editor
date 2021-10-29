@@ -1,4 +1,10 @@
-import React, { ChangeEvent, lazy, useCallback } from "react"
+import React, {
+    ChangeEvent,
+    lazy,
+    useCallback,
+    useEffect,
+    useState,
+} from "react"
 import { AccelerometerReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
@@ -14,7 +20,8 @@ import Suspense from "../ui/Suspense"
 import SliderWithLabel from "../ui/SliderWithLabel"
 import useRegister from "../hooks/useRegister"
 import { useId } from "react-use-id-hook"
-import JDService from "../../../jacdac-ts/src/jdom/service"
+import CmdButton from "../CmdButton"
+import SaveIcon from "@material-ui/icons/Save"
 
 const CanvasWidget = lazy(() => import("../widgets/CanvasWidget"))
 
@@ -136,32 +143,48 @@ function MaxForceInput(props: DashboardServiceProps) {
         maxForceRegister,
         props
     )
-    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const value = parseFloat(event.target.value)
+    const [text, setText] = useState<string>((maxForce || "") + "")
+    const value = parseInt(text)
+    const handleClick = async () => {
         if (!isNaN(value)) maxForceRegister.sendSetPackedAsync([value], true)
     }
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) =>
+        setText(event.target.value)
     const label = "maximum force"
     const disabled = !maxForceRegister
     const helperText = "g"
+
+    useEffect(() => setText((maxForce || "") + ""), [maxForce])
 
     if (maxForce === undefined) return null
 
     return (
         <Grid item xs={12}>
-            <TextField
-                id={inputId}
-                spellCheck={false}
-                value={maxForce}
-                label={label}
-                inputProps={{
-                    "aria-label": label,
-                    "aria-readonly": disabled,
-                    readOnly: disabled,
-                }}
-                helperText={helperText}
-                onChange={handleChange}
-                type={"number"}
-            />
+            <Grid container spacing={1} direction="row">
+                <Grid item>
+                    <TextField
+                        id={inputId}
+                        spellCheck={false}
+                        value={text}
+                        label={label}
+                        inputProps={{
+                            "aria-label": label,
+                            "aria-readonly": disabled,
+                            readOnly: disabled,
+                        }}
+                        helperText={helperText}
+                        onChange={handleChange}
+                        type={"number"}
+                    />
+                </Grid>
+                <Grid item>
+                    <CmdButton
+                        onClick={handleClick}
+                        disabled={isNaN(value)}
+                        icon={<SaveIcon />}
+                    />
+                </Grid>
+            </Grid>
         </Grid>
     )
 }
