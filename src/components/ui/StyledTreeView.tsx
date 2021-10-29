@@ -7,6 +7,8 @@ import WarningIcon from "@material-ui/icons/Warning"
 
 import { useId } from "react-use-id-hook"
 import { Link } from "gatsby-material-ui-components"
+import { Tooltip } from "@material-ui/core"
+import { ellipse } from "../../../jacdac-ts/src/jdom/utils"
 
 declare module "csstype" {
     interface Properties {
@@ -133,7 +135,13 @@ export function StyledTreeItem(
                                 {alert}
                             </Typography>
                         )}
-                        {labelInfo}
+                        {labelInfo?.length > 18 ? (
+                            <Tooltip title={labelInfo}>
+                                <span>{ellipse(labelInfo, 18)}</span>
+                            </Tooltip>
+                        ) : (
+                            labelInfo
+                        )}
                         {actions}
                     </Typography>
                 </div>
