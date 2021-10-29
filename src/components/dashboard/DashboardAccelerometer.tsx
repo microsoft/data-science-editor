@@ -1,10 +1,4 @@
-import React, {
-    ChangeEvent,
-    lazy,
-    useCallback,
-    useEffect,
-    useState,
-} from "react"
+import React, { lazy, useCallback } from "react"
 import { AccelerometerReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
@@ -12,7 +6,7 @@ import useWidgetTheme from "../widgets/useWidgetTheme"
 import useServiceServer from "../hooks/useServiceServer"
 import SensorServer from "../../../jacdac-ts/src/servers/sensorserver"
 import JDRegister from "../../../jacdac-ts/src/jdom/register"
-import { Grid, Mark, NoSsr, TextField } from "@material-ui/core"
+import { Grid, Mark, NoSsr } from "@material-ui/core"
 import { roundWithPrecision } from "../../../jacdac-ts/src/jdom/utils"
 import { Vector } from "../widgets/threeutils"
 import LoadingProgress from "../ui/LoadingProgress"
@@ -20,8 +14,7 @@ import Suspense from "../ui/Suspense"
 import SliderWithLabel from "../ui/SliderWithLabel"
 import useRegister from "../hooks/useRegister"
 import { useId } from "react-use-id-hook"
-import CmdButton from "../CmdButton"
-import SaveIcon from "@material-ui/icons/Save"
+import MaxReadingField from "./MaxReadingField"
 
 const CanvasWidget = lazy(() => import("../widgets/CanvasWidget"))
 
@@ -135,60 +128,6 @@ function lerp(v0: number, v1: number, t: number) {
     return v0 * (1 - t) + v1 * t
 }
 
-function MaxForceInput(props: DashboardServiceProps) {
-    const { service } = props
-    const inputId = useId()
-    const maxForceRegister = useRegister(service, AccelerometerReg.MaxForce)
-    const [maxForce] = useRegisterUnpackedValue<[number]>(
-        maxForceRegister,
-        props
-    )
-    const [text, setText] = useState<string>((maxForce || "") + "")
-    const value = parseInt(text)
-    const handleClick = async () => {
-        if (!isNaN(value)) maxForceRegister.sendSetPackedAsync([value], true)
-    }
-    const handleChange = (event: ChangeEvent<HTMLInputElement>) =>
-        setText(event.target.value)
-    const label = "maximum force"
-    const disabled = !maxForceRegister
-    const helperText = "g"
-
-    useEffect(() => setText((maxForce || "") + ""), [maxForce])
-
-    if (maxForce === undefined) return null
-
-    return (
-        <Grid item xs={12}>
-            <Grid container spacing={1} direction="row">
-                <Grid item>
-                    <TextField
-                        id={inputId}
-                        spellCheck={false}
-                        value={text}
-                        label={label}
-                        inputProps={{
-                            "aria-label": label,
-                            "aria-readonly": disabled,
-                            readOnly: disabled,
-                        }}
-                        helperText={helperText}
-                        onChange={handleChange}
-                        type={"number"}
-                    />
-                </Grid>
-                <Grid item>
-                    <CmdButton
-                        onClick={handleClick}
-                        disabled={isNaN(value)}
-                        icon={<SaveIcon />}
-                    />
-                </Grid>
-            </Grid>
-        </Grid>
-    )
-}
-
 export default function DashboardAccelerometer(props: DashboardServiceProps) {
     const { service, visible } = props
     const register = useRegister(service, AccelerometerReg.Forces)
@@ -228,7 +167,10 @@ export default function DashboardAccelerometer(props: DashboardServiceProps) {
                 </NoSsr>
             </Grid>
             <Sliders server={server} register={register} visible={visible} />
-            <MaxForceInput {...props} />
+            <MaxReadingField
+                registerCode={AccelerometerReg.MaxForce}
+                {...props}
+            />
         </Grid>
     )
 }

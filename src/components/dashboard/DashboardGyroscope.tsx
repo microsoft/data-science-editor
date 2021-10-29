@@ -14,6 +14,7 @@ import LoadingProgress from "../ui/LoadingProgress"
 import Suspense from "../ui/Suspense"
 import SliderWithLabel from "../ui/SliderWithLabel"
 import useRegister from "../hooks/useRegister"
+import MaxReadingField from "./MaxReadingField"
 
 function Sliders(props: {
     server: SensorServer<[number, number, number]>
@@ -156,6 +157,7 @@ export default function DashboardGyroscope(props: DashboardServiceProps) {
                     visible={visible}
                 />
             )}
+            <MaxReadingField registerCode={GyroscopeReg.MaxRate} {...props} />
         </Grid>
     )
 }
