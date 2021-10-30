@@ -1,4 +1,5 @@
 import { primitives, transforms, booleans } from "@jscad/modeling"
+import { Geom3 } from "@jscad/modeling/src/geometries/types"
 import stlSerializer from "@jscad/stl-serializer"
 const { cuboid, cylinder, roundedCuboid } = primitives
 const { translate, rotateZ } = transforms
@@ -170,6 +171,7 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
     const { width, height, depth } = box
     const { cover, legs } = options
 
+    let coverModel: Geom3
     // box
     let model = union(
         roundedCuboid({
@@ -276,6 +278,44 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
         })
     )
 
+    const coverSnaps = [
+        {
+            x: -width / 2 + ringGap,
+            y: -height / 2 + ringGap,
+        },
+        {
+            x: width / 2 - ringGap,
+            y: -height / 2 + ringGap,
+        },
+        {
+            x: width / 2 - ringGap,
+            y: height / 2 - ringGap,
+        },
+        {
+            x: -width / 2 + ringGap,
+            y: height / 2 - ringGap,
+        },
+    ]
+    const coverSnap = (x, y) =>
+        translate(
+            [x, y, 0],
+            cylinder({
+                radius: ringRadius + 0.1,
+                height: 2 * wall,
+                center: [0, 0, wall / 2],
+                segments,
+            })
+        )
+    if (cover) {
+        coverModel = cuboid({
+            size: [width + wall, height + wall, wall],
+        })
+        coverModel = coverSnaps.reduce(
+            (m, ring) => subtract(m, coverSnap(ring.x, ring.y)),
+            coverModel
+        )
+    }
+
     // remove jacdac connectors
     const connector = (x, y, dir, type) => {
         const conn = connectorSpecs[type]
@@ -321,24 +361,7 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
     const mounts = [
         ...rings.map(p => ({ ...p, h: snapHeight, hc: pcbWidth })),
         ...(cover?.mounts?.type === "ring"
-            ? [
-                  {
-                      x: -width / 2 + ringGap,
-                      y: -height / 2 + ringGap,
-                  },
-                  {
-                      x: width / 2 - ringGap,
-                      y: -height / 2 + ringGap,
-                  },
-                  {
-                      x: width / 2 - ringGap,
-                      y: height / 2 - ringGap,
-                  },
-                  {
-                      x: -width / 2 + ringGap,
-                      y: height / 2 - ringGap,
-                  },
-              ].map(p => ({ ...p, h: depth, hc: wall }))
+            ? coverSnaps.map(p => ({ ...p, h: depth, hc: wall }))
             : []),
     ]
     model = mounts.reduce(
@@ -346,15 +369,18 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
         model
     )
 
-    return model
+    return [model, coverModel].filter(m => !!m)
 }
 
 export function convertToSTL(
     model: EnclosureModel,
     options?: EnclosureOptions
 ) {
-    const geometry = convert(model, options)
-    const rawData = stlSerializer.serialize({ binary: false } as any, geometry)
-    const blob = new Blob(rawData)
-    return blob
+    const geometries = convert(model, options)
+    return geometries.map(
+        geometry =>
+            new Blob(
+                stlSerializer.serialize({ binary: false } as any, geometry)
+            )
+    )
 }

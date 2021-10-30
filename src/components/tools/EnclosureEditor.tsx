@@ -100,7 +100,7 @@ export default function EnclosureEditor() {
                     <EnclosureGenerator
                         module={enclosure}
                         options={options}
-                        color="#444"
+                        color="#777"
                     />
                 </Suspense>
             </Grid>

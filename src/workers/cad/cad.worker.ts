@@ -29,14 +29,20 @@ export interface CadConvertResponse extends CadMessage {
 const handlers: { [index: string]: (msg: CadMessage) => Promise<object> } = {
     convert: async (msg: CadConvertRequest) => {
         const { model, options } = msg
-        const stl = convertToSTL(model, options)
+        const stls = convertToSTL(model, options)
         return {
             stls: [
                 {
                     name: "box",
-                    blob: stl,
+                    blob: stls[0],
                 },
-            ],
+                stls[1]
+                    ? {
+                          name: "cover",
+                          blob: stls[1],
+                      }
+                    : undefined,
+            ].filter(f => !!f),
         }
     },
 }
