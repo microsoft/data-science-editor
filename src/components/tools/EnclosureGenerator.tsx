@@ -4,7 +4,7 @@ import stlSerializer from "@jscad/stl-serializer"
 
 import { Button, Grid } from "@material-ui/core"
 import Suspense from "../ui/Suspense"
-import { convert, Enclosure } from "./enclosure"
+import { convert, Enclosure } from "./enclosurecad"
 
 const ModelViewer = lazy(() => import("../home/models/ModelViewer"))
 const STLModel = lazy(() => import("../home/models/STLModel"))
@@ -23,7 +23,8 @@ export default function EnclosureGenerator(props: {
             return undefined
         }
     }, [module])
-    useEffect(() => {
+
+    const updateUrl = () => {
         if (!geometry) {
             // keep last known good
             return
@@ -35,15 +36,22 @@ export default function EnclosureGenerator(props: {
         const blob = new Blob(rawData)
         const newUrl = URL.createObjectURL(blob)
         setUrl(newUrl)
-        return () => URL.revokeObjectURL(newUrl)
-    }, [geometry])
+    }
+    useEffect(() => () => URL.revokeObjectURL(url), [url])
+    const handleClick = updateUrl
 
     if (!url) return null
 
     return (
         <Grid container spacing={1}>
             <Grid item>
-                <Button href={url} variant="outlined" color="primary" download="enclosure.stl">
+                <Button onClick={handleClick}>Refresh STL</Button>
+                <Button
+                    href={url}
+                    variant="outlined"
+                    color="primary"
+                    download="enclosure.stl"
+                >
                     Download STL
                 </Button>
             </Grid>

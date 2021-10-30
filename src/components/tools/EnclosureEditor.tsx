@@ -3,7 +3,7 @@ import { Button, Grid } from "@material-ui/core"
 import useLocalStorage from "../hooks/useLocalStorage"
 import HighlightTextField from "../ui/HighlightTextField"
 import EnclosureGenerator from "./EnclosureGenerator"
-import { modules } from "./enclosure"
+import { Enclosure, modules } from "./enclosurecad"
 
 const STORAGE_KEY = "jacdac:enclosureeditorkey"
 
@@ -12,7 +12,7 @@ export default function EnclosureEditor() {
         STORAGE_KEY,
         JSON.stringify(modules[0], null, 4)
     )
-    const json = useMemo(() => {
+    const json: Enclosure = useMemo(() => {
         try {
             return JSON.parse(source)
         } catch (e) {
@@ -26,7 +26,11 @@ export default function EnclosureEditor() {
     return (
         <Grid spacing={1} container>
             <Grid item xs={12}>
-                <Button variant="outlined" onClick={handleFormat} disabled={!json}>
+                <Button
+                    variant="outlined"
+                    onClick={handleFormat}
+                    disabled={!json}
+                >
                     Format code
                 </Button>
             </Grid>
