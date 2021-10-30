@@ -171,17 +171,6 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
     const { width, height, depth } = box
     const { cover, legs } = options
 
-    console.log(`convert`, {
-        box,
-        rings,
-        connectors,
-        width,
-        height,
-        depth,
-        cover,
-        legs,
-    })
-
     let coverModel: Geom3
     // box
     let model = union(
