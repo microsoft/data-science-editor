@@ -1,13 +1,20 @@
 import React, { Suspense, useRef } from "react"
 import { Canvas } from "@react-three/fiber"
 import { OrbitControls, Stage } from "@react-three/drei"
+import FullscreenIcon from "@material-ui/icons/Fullscreen"
+import IconButtonWithTooltip from "../../ui/IconButtonWithTooltip"
 
 export default function ModelViewer(props) {
     // eslint-disable-next-line react/prop-types
-    const { children, responsive, style } = props
+    const { children, responsive, style, autoRotate } = props
     const ref = useRef()
+    const canvasRef = useRef()
+    const supportsFullScreen =
+        typeof document !== "undefined" && !!document.fullscreenEnabled
+    const handleFullScreen = () => canvasRef.current?.requestFullscreen()
     return (
         <div
+            ref={canvasRef}
             style={
                 style
                     ? style
@@ -36,8 +43,22 @@ export default function ModelViewer(props) {
                         {children}
                     </Stage>
                 </Suspense>
-                <OrbitControls ref={ref} autoRotate />
+                <OrbitControls ref={ref} autoRotate={!!autoRotate} />
             </Canvas>
+            {supportsFullScreen && (
+                <IconButtonWithTooltip
+                    style={{
+                        position: "absolute",
+                        right: "0.5rem",
+                        bottom: "0.5rem",
+                    }}
+                    size="small"
+                    onClick={handleFullScreen}
+                    title="full screen"
+                >
+                    <FullscreenIcon />
+                </IconButtonWithTooltip>
+            )}
         </div>
     )
 }
