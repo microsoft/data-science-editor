@@ -2,7 +2,10 @@ import React, { lazy, useMemo } from "react"
 import { Button, Grid } from "@material-ui/core"
 import useLocalStorage from "../hooks/useLocalStorage"
 import HighlightTextField from "../ui/HighlightTextField"
-import type { EnclosureModel, EnclosureOptions } from "./enclosurecad"
+import type {
+    EnclosureModel,
+    EnclosureOptions,
+} from "../../workers/cad/dist/node_modules/enclosurecad"
 import Suspense from "../ui/Suspense"
 const EnclosureGenerator = lazy(() => import("./EnclosureGenerator"))
 

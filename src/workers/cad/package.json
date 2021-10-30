@@ -1,0 +1,9 @@
+{
+  "name": "cad-worker",
+  "type": "module",
+  "source": "cad.worker.ts",
+  "main": "./dist/node_modules/cad-worker.umd.js",
+  "module": "./dist/node_modules/cad-worker.cjs.js",
+  "exports": "./dist/node_modules/cad-worker.js",
+  "license": "MIT"
+}

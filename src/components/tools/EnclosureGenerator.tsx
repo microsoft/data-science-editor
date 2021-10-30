@@ -1,10 +1,12 @@
-import React, { lazy, useEffect, useMemo, useState } from "react"
-
-import stlSerializer from "@jscad/stl-serializer"
+import React, { lazy, useEffect, useState } from "react"
 
 import { Button, Grid } from "@material-ui/core"
 import Suspense from "../ui/Suspense"
-import { convert, EnclosureModel, EnclosureOptions } from "./enclosurecad"
+import { convertToSTL } from "../blockly/dsl/workers/cad.proxy"
+import type {
+    EnclosureModel,
+    EnclosureOptions,
+} from "../../workers/cad/dist/node_modules/enclosurecad"
 
 const ModelViewer = lazy(() => import("../home/models/ModelViewer"))
 const STLModel = lazy(() => import("../home/models/STLModel"))
@@ -15,28 +17,18 @@ export default function EnclosureGenerator(props: {
     color?: string
 }) {
     const { color, module, options } = props
+    const [working, setWorking] = useState(false)
     const [url, setUrl] = useState<string>("")
-    const geometry = useMemo(() => {
-        try {
-            return module ? convert(module, options) : undefined
-        } catch (e) {
-            console.warn(e)
-            return undefined
-        }
-    }, [module])
 
-    const updateUrl = () => {
-        if (!geometry) {
-            // keep last known good
-            return
+    const updateUrl = async () => {
+        try {
+            setWorking(true)
+            const blob = await convertToSTL(module, options)
+            const newUrl = blob ? URL.createObjectURL(blob) : undefined
+            setUrl(newUrl)
+        } finally {
+            setWorking(false)
         }
-        const rawData = stlSerializer.serialize(
-            { binary: false } as any,
-            geometry
-        )
-        const blob = new Blob(rawData)
-        const newUrl = URL.createObjectURL(blob)
-        setUrl(newUrl)
     }
     useEffect(() => () => URL.revokeObjectURL(url), [url])
     const handleClick = () => updateUrl()
@@ -50,7 +42,7 @@ export default function EnclosureGenerator(props: {
                             onClick={handleClick}
                             variant="contained"
                             color="primary"
-                            disabled={!geometry}
+                            disabled={working}
                         >
                             Refresh STL
                         </Button>

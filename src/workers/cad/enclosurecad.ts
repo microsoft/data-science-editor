@@ -1,4 +1,5 @@
 import { primitives, transforms, booleans } from "@jscad/modeling"
+import stlSerializer from "@jscad/stl-serializer"
 const { cuboid, cylinder, roundedCuboid } = primitives
 const { translate, rotateZ } = transforms
 const { union, subtract } = booleans
@@ -60,7 +61,7 @@ export interface EnclosureOptions {
     }
 }
 
-export const modules: EnclosureModel[] = [
+const modules: EnclosureModel[] = [
     {
         box: {
             width: 25,
@@ -343,7 +344,12 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
     return model
 }
 
-export const main = () => {
-    let x = -modules.reduce((prev, m) => prev + m.box.width, 0) / 2
-    return modules.map(m => translate([(x += m.box.width), 0, 0], convert(m)))
+export function convertToSTL(
+    model: EnclosureModel,
+    options?: EnclosureOptions
+) {
+    const geometry = convert(model, options)
+    const rawData = stlSerializer.serialize({ binary: false } as any, geometry)
+    const blob = new Blob(rawData)
+    return blob
 }

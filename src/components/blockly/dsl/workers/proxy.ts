@@ -7,8 +7,9 @@ import createCsvWorker from "../../../../workers/csv/workerloader"
 import createDataWorker from "../../../../workers/data/workerloader"
 import createTFWorker from "../../../../workers/tf/workerloader"
 import createVMWorker from "../../../../workers/vm/workerloader"
+import createCadWorker from "../../../../workers/cad/workerloader"
 
-export type VMType = "data" | "csv" | "tf" | "vm"
+export type VMType = "data" | "csv" | "tf" | "vm" | "cad"
 
 export interface WorkerMessage {
     worker: VMType
@@ -57,6 +58,7 @@ const loaders = {
     csv: createCsvWorker,
     tf: createTFWorker,
     vm: createVMWorker,
+    cad: createCadWorker,
 }
 export default function workerProxy(workerid: VMType) {
     const worker =
