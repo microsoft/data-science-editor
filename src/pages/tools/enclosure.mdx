@@ -1,0 +1,45 @@
+import EnclosureEditor from "../../components/tools/EnclosureEditor"
+
+# Enclosure Generator
+
+<EnclosureEditor />
+
+## Documentation
+
+### Model
+
+The model takes a JSON payload with the following type definition. All measures are in millimeters, with the model centered around `0, 0`.
+
+```typescript
+export interface EnclosureModel {
+    box: {
+        width: number
+        height: number
+        depth: number
+    }
+    rings: { x: number; y: number }[]
+    connectors: {
+        x: number
+        y: number
+        dir: "top" | "bottom" | "left" | "right"
+        type: "jacdac" | "usbc"
+    }[]
+}
+```
+
+### Options
+
+You can tweak various aspect of the generated enclosure using the options.
+
+```typescript
+export interface EnclosureOptions {
+    legs?: {
+        type?: "well"
+    }
+    cover?: {
+        mounts?: {
+            type?: "ring"
+        }
+    }
+}
+```

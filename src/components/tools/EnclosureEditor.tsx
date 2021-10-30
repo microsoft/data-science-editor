@@ -2,11 +2,13 @@ import React, { lazy, useMemo } from "react"
 import { Button, Grid, Typography } from "@material-ui/core"
 import useLocalStorage from "../hooks/useLocalStorage"
 import HighlightTextField from "../ui/HighlightTextField"
+import RefreshIcon from "@material-ui/icons/Refresh"
 import type {
     EnclosureModel,
     EnclosureOptions,
 } from "../../workers/cad/dist/node_modules/enclosurecad"
 import Suspense from "../ui/Suspense"
+import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 const EnclosureGenerator = lazy(() => import("./EnclosureGenerator"))
 
 const STORAGE_KEY = "jacdac:enclosureeditorkey_source"
@@ -88,6 +90,10 @@ export default function EnclosureEditor() {
         setSource(JSON.stringify(enclosure, null, 4))
         setSource(JSON.stringify(enclosureOptions, null, 4))
     }
+    const handleRefreshSource = () =>
+        setSource(JSON.stringify(DEFAULT_MODEL, null, 4))
+    const handleRefreshOptions = () =>
+        setOptions(JSON.stringify(DEFAULT_OPTIONS, null, 4))
     return (
         <Grid spacing={1} container>
             <Grid item xs={12}>
@@ -100,7 +106,16 @@ export default function EnclosureEditor() {
                 </Button>
             </Grid>
             <Grid item xs={12}>
-                <Typography variant="caption">Model</Typography>
+                <Typography variant="subtitle1" component="span">
+                    Model
+                </Typography>
+                <IconButtonWithTooltip
+                    title="reset"
+                    size="small"
+                    onClick={handleRefreshSource}
+                >
+                    <RefreshIcon />
+                </IconButtonWithTooltip>
                 <HighlightTextField
                     code={source}
                     language={"json"}
@@ -108,7 +123,16 @@ export default function EnclosureEditor() {
                 />
             </Grid>
             <Grid item xs={12}>
-                <Typography variant="caption">Options</Typography>
+                <Typography variant="subtitle1" component="span">
+                    Options
+                </Typography>
+                <IconButtonWithTooltip
+                    title="reset"
+                    size="small"
+                    onClick={handleRefreshOptions}
+                >
+                    <RefreshIcon />
+                </IconButtonWithTooltip>
                 <HighlightTextField
                     minHeight="8rem"
                     code={options}
