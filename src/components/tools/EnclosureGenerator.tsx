@@ -38,30 +38,44 @@ export default function EnclosureGenerator(props: {
         setUrl(newUrl)
     }
     useEffect(() => () => URL.revokeObjectURL(url), [url])
-    const handleClick = updateUrl
-
-    if (!url) return null
+    const handleClick = () => updateUrl()
 
     return (
         <Grid container spacing={1}>
             <Grid item>
-                <Button onClick={handleClick}>Refresh STL</Button>
-                <Button
-                    href={url}
-                    variant="outlined"
-                    color="primary"
-                    download="enclosure.stl"
-                >
-                    Download STL
-                </Button>
+                <Grid container spacing={1} direction="row">
+                    <Grid item>
+                        <Button
+                            onClick={handleClick}
+                            variant="contained"
+                            color="primary"
+                            disabled={!geometry}
+                        >
+                            Refresh STL
+                        </Button>
+                    </Grid>
+                    <Grid item>
+                        <Button
+                            href={url}
+                            variant="outlined"
+                            color="primary"
+                            download="enclosure.stl"
+                            disabled={!url}
+                        >
+                            Download STL
+                        </Button>
+                    </Grid>
+                </Grid>
             </Grid>
-            <Grid item xs={12}>
-                <Suspense>
-                    <ModelViewer responsive={true}>
-                        <STLModel url={url} color={color} />
-                    </ModelViewer>
-                </Suspense>
-            </Grid>
+            {url && (
+                <Grid item xs={12}>
+                    <Suspense>
+                        <ModelViewer responsive={true}>
+                            <STLModel url={url} color={color} />
+                        </ModelViewer>
+                    </Suspense>
+                </Grid>
+            )}
         </Grid>
     )
 }
