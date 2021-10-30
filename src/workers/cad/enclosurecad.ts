@@ -29,7 +29,7 @@ const snapHeight = 2.5
 
 const wall = pcbWidth
 const wallRadius = wall / 2
-const segments = 64
+const segments = 16
 const snapRadius = wall
 const mountRadius = 4
 const mountRoundRadius = 0.5
