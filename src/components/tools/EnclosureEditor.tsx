@@ -12,8 +12,8 @@ const EnclosureGenerator = lazy(() => import("./EnclosureGenerator"))
 const STORAGE_KEY = "jacdac:enclosureeditorkey"
 const DEFAULT_MODEL = {
     box: {
-        width: 25,
-        height: 27.5,
+        width: 22,
+        height: 29,
         depth: 10,
     },
     rings: [

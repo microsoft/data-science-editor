@@ -22,8 +22,9 @@ const dirAngles = {
 }
 
 const ringGap = 2.5
-const ringRadius = 1
+const ringRadius = 2.15 / 2
 const pcbWidth = 1.6
+const snapHeight = 2.5
 
 const wall = pcbWidth
 const wallRadius = wall / 2
@@ -33,7 +34,6 @@ const mountRadius = 4
 const mountRoundRadius = 0.5
 const mountCenterRadius = 1
 const mountHeight = 5
-const snapHeight = 3
 
 export interface EnclosureModel {
     box: {
@@ -69,8 +69,8 @@ export interface EnclosureFile {
 const modules: EnclosureModel[] = [
     {
         box: {
-            width: 25,
-            height: 27.5,
+            width: 22,
+            height: 29,
             depth: 10,
         },
         rings: [
