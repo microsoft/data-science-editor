@@ -1,15 +1,54 @@
 import React, { lazy, useEffect, useState } from "react"
 
-import { Button, Grid } from "@material-ui/core"
+import {
+    Button,
+    Card,
+    CardActions,
+    CardHeader,
+    CardMedia,
+    Grid,
+} from "@material-ui/core"
 import Suspense from "../ui/Suspense"
 import { convertToSTL } from "../blockly/dsl/workers/cad.proxy"
 import type {
     EnclosureModel,
     EnclosureOptions,
 } from "../../workers/cad/dist/node_modules/enclosurecad"
+import useGridBreakpoints from "../useGridBreakpoints"
+import useMounted from "../hooks/useMounted"
+import { CircularProgress } from "@material-ui/core"
 
 const ModelViewer = lazy(() => import("../home/models/ModelViewer"))
 const STLModel = lazy(() => import("../home/models/STLModel"))
+
+function STLModelCard(props: { name: string; url: string; color: string }) {
+    const { name, url, color } = props
+    const fn = `${name}.stl`
+    return (
+        <Card>
+            <CardHeader title={fn} />
+            <CardMedia>
+                <Suspense>
+                    <ModelViewer
+                        responsive={true}
+                        style={{
+                            position: "relative",
+                            height: "20rem",
+                            width: "100%",
+                        }}
+                    >
+                        <STLModel url={url} color={color} />
+                    </ModelViewer>
+                </Suspense>
+            </CardMedia>
+            <CardActions>
+                <Button href={url} variant="outlined" download={fn}>
+                    Download
+                </Button>
+            </CardActions>
+        </Card>
+    )
+}
 
 export default function EnclosureGenerator(props: {
     module: EnclosureModel
@@ -18,57 +57,56 @@ export default function EnclosureGenerator(props: {
 }) {
     const { color, module, options } = props
     const [working, setWorking] = useState(false)
-    const [url, setUrl] = useState<string>("")
+    const [files, setFiles] = useState<{ name: string; url: string }[]>()
+    const gridBreakpoints = useGridBreakpoints(files?.length)
+    const mounted = useMounted()
 
     const updateUrl = async () => {
         try {
             setWorking(true)
-            const blob = await convertToSTL(module, options)
-            const newUrl = blob ? URL.createObjectURL(blob) : undefined
-            setUrl(newUrl)
+            const files = await convertToSTL(module, options)
+            const newFiles = files?.map(({ name, blob }) => ({
+                name,
+                url: URL.createObjectURL(blob),
+            }))
+            if (!mounted()) return
+            setFiles(newFiles)
         } finally {
-            setWorking(false)
+            if (mounted()) setWorking(false)
         }
     }
-    useEffect(() => () => URL.revokeObjectURL(url), [url])
+    useEffect(
+        () => () => files?.forEach(({ url }) => URL.revokeObjectURL(url)),
+        [files]
+    )
     const handleClick = () => updateUrl()
 
     return (
         <Grid container spacing={1}>
-            <Grid item>
-                <Grid container spacing={1} direction="row">
-                    <Grid item>
-                        <Button
-                            onClick={handleClick}
-                            variant="contained"
-                            color="primary"
-                            disabled={working}
-                        >
-                            Refresh STL
-                        </Button>
-                    </Grid>
-                    <Grid item>
-                        <Button
-                            href={url}
-                            variant="outlined"
-                            color="primary"
-                            download="enclosure.stl"
-                            disabled={!url}
-                        >
-                            Download STL
-                        </Button>
-                    </Grid>
-                </Grid>
+            <Grid item xs={12}>
+                <Button
+                    onClick={handleClick}
+                    variant="contained"
+                    color="primary"
+                    disabled={working}
+                    startIcon={
+                        working && (
+                            <CircularProgress
+                                size="1rem"
+                                title="generating STL files"
+                                variant="indeterminate"
+                            />
+                        )
+                    }
+                >
+                    Generate STL
+                </Button>
             </Grid>
-            {url && (
-                <Grid item xs={12}>
-                    <Suspense>
-                        <ModelViewer responsive={true}>
-                            <STLModel url={url} color={color} />
-                        </ModelViewer>
-                    </Suspense>
+            {files?.map(file => (
+                <Grid item key={file.name} {...gridBreakpoints}>
+                    <STLModelCard {...file} color={color} />
                 </Grid>
-            )}
+            ))}
         </Grid>
     )
 }

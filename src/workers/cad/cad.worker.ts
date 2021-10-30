@@ -1,5 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { convertToSTL, EnclosureModel, EnclosureOptions } from "./enclosurecad"
+import {
+    convertToSTL,
+    EnclosureFile,
+    EnclosureModel,
+    EnclosureOptions,
+} from "./enclosurecad"
 
 export interface CadMessage {
     worker: "cad"
@@ -18,14 +23,21 @@ export interface CadConvertRequest extends CadRequest {
 }
 
 export interface CadConvertResponse extends CadMessage {
-    stl: Blob
+    stls: EnclosureFile[]
 }
 
 const handlers: { [index: string]: (msg: CadMessage) => Promise<object> } = {
     convert: async (msg: CadConvertRequest) => {
         const { model, options } = msg
         const stl = convertToSTL(model, options)
-        return { stl }
+        return {
+            stls: [
+                {
+                    name: "box",
+                    blob: stl,
+                },
+            ],
+        }
     },
 }
 

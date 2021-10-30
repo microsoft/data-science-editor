@@ -4,12 +4,14 @@ import { OrbitControls, Stage } from "@react-three/drei"
 
 export default function ModelViewer(props) {
     // eslint-disable-next-line react/prop-types
-    const { children, responsive } = props
+    const { children, responsive, style } = props
     const ref = useRef()
     return (
         <div
             style={
-                responsive
+                style
+                    ? style
+                    : responsive
                     ? {
                           position: "relative",
                           width: "35vw",

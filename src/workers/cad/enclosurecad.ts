@@ -61,6 +61,11 @@ export interface EnclosureOptions {
     }
 }
 
+export interface EnclosureFile {
+    name: string
+    blob: Blob
+}
+
 const modules: EnclosureModel[] = [
     {
         box: {
