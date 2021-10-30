@@ -1990,6 +1990,24 @@
     "@babel/runtime" "^7.7.2"
     regenerator-runtime "^0.13.3"
 
+"@jscad/array-utils@2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@jscad/array-utils/-/array-utils-2.1.0.tgz#5dce9a85a9dc861187b7104630d13d619dc1dbaa"
+  integrity sha512-SvdLYfodb7T8PSOcHey1CY9GG4EYZe/Hda6MOVDngfsVmBGn7/l9uiU/7QQQ2Jl7FZ0SRe6S2+2ZJ4nT2RS1Wg==
+
+"@jscad/modeling@2.6.0", "@jscad/modeling@^2.6.0":
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/@jscad/modeling/-/modeling-2.6.0.tgz#c30860907923a6bd256a4a67d84dbd50563ba05f"
+  integrity sha512-RvnljIr0jduJsjFejT3P+jOO0szYwsYzLEqX5k883A4vnLeEc78bwtfsvU4RXOnwlgNc7gdVkVHJCT64dbxGzg==
+
+"@jscad/stl-serializer@^2.0.10":
+  version "2.0.10"
+  resolved "https://registry.yarnpkg.com/@jscad/stl-serializer/-/stl-serializer-2.0.10.tgz#0ad005e62754561d035779c8e5e6b52ee82e0f9b"
+  integrity sha512-ux375BvBFsQ/ueW3TuaiPsq87pwcoQ6b69Mkf3NgLednZ3NNMWh3b8yW+a2wC9ZiyfWaOXSC8iVLy7nwN6ulTg==
+  dependencies:
+    "@jscad/array-utils" "2.1.0"
+    "@jscad/modeling" "2.6.0"
+
 "@leichtgewicht/ip-codec@^2.0.1":
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.3.tgz#0300943770e04231041a51bd39f0439b5c7ab4f0"
