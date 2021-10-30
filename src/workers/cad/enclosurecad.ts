@@ -7,12 +7,12 @@ const { union, subtract } = booleans
 
 const connectorSpecs = {
     jacdac: {
-        width: 10,
-        height: 5,
+        width: 9.5,
+        height: 4.65,
     },
     usbc: {
-        width: 8,
-        height: 3.5,
+        width: 9.5,
+        height: 2.5,
     },
 }
 const dirAngles = {
@@ -320,7 +320,7 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
     if (cover) {
         coverModel = roundedCuboid({
             size: [width + wall, height + wall, wall],
-            roundRadius: 0.25
+            roundRadius: 0.25,
         })
         if (cover?.mounts?.type === "ring") {
             coverModel = coverSnaps.reduce(
@@ -341,7 +341,7 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
                 dirAngle,
                 roundedCuboid({
                     size: [conn.width, d, conn.height],
-                    roundRadius: 1,
+                    roundRadius: conn.height / 2 - 0.5,
                     segments: 32,
                     center: [0, d / 2, conn.height / 2],
                 })
