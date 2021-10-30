@@ -1,16 +1,56 @@
-import React, { useMemo } from "react"
+import React, { lazy, useMemo } from "react"
 import { Button, Grid } from "@material-ui/core"
 import useLocalStorage from "../hooks/useLocalStorage"
 import HighlightTextField from "../ui/HighlightTextField"
-import EnclosureGenerator from "./EnclosureGenerator"
-import { EnclosureModel, EnclosureOptions, modules } from "./enclosurecad"
+import type { EnclosureModel, EnclosureOptions } from "./enclosurecad"
+import Suspense from "../ui/Suspense"
+const EnclosureGenerator = lazy(() => import("./EnclosureGenerator"))
 
 const STORAGE_KEY = "jacdac:enclosureeditorkey"
+const DEFAULT_MODEL = {
+    box: {
+        width: 25,
+        height: 27.5,
+        depth: 10,
+    },
+    rings: [
+        {
+            x: 7.5,
+            y: 7.5,
+        },
+        {
+            x: -7.5,
+            y: -7.5,
+        },
+        {
+            x: -7.5,
+            y: 7.5,
+        },
+        {
+            x: 7.5,
+            y: -7.5,
+        },
+    ],
+    connectors: [
+        {
+            x: 0,
+            y: 7.5,
+            dir: "top",
+            type: "jacdac",
+        },
+        {
+            x: 0,
+            y: 7.5,
+            dir: "bottom",
+            type: "jacdac",
+        },
+    ],
+}
 
 export default function EnclosureEditor() {
     const [source, setSource] = useLocalStorage(
         STORAGE_KEY,
-        JSON.stringify(modules[0], null, 4)
+        JSON.stringify(DEFAULT_MODEL, null, 4)
     )
     const options: EnclosureOptions = useMemo(
         () => ({
@@ -53,11 +93,13 @@ export default function EnclosureEditor() {
                 />
             </Grid>
             <Grid item xs={12}>
-                <EnclosureGenerator
-                    module={enclosure}
-                    options={options}
-                    color="#444"
-                />
+                <Suspense>
+                    <EnclosureGenerator
+                        module={enclosure}
+                        options={options}
+                        color="#444"
+                    />
+                </Suspense>
             </Grid>
         </Grid>
     )
