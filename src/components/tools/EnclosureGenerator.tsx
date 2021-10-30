@@ -4,20 +4,21 @@ import stlSerializer from "@jscad/stl-serializer"
 
 import { Button, Grid } from "@material-ui/core"
 import Suspense from "../ui/Suspense"
-import { convert, Enclosure } from "./enclosurecad"
+import { convert, EnclosureModel, EnclosureOptions } from "./enclosurecad"
 
 const ModelViewer = lazy(() => import("../home/models/ModelViewer"))
 const STLModel = lazy(() => import("../home/models/STLModel"))
 
 export default function EnclosureGenerator(props: {
-    module: Enclosure
+    module: EnclosureModel
+    options?: EnclosureOptions
     color?: string
 }) {
-    const { color, module } = props
+    const { color, module, options } = props
     const [url, setUrl] = useState<string>("")
     const geometry = useMemo(() => {
         try {
-            return module ? convert(module) : undefined
+            return module ? convert(module, options) : undefined
         } catch (e) {
             console.warn(e)
             return undefined

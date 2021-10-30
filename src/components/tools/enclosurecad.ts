@@ -34,15 +34,11 @@ const mountCenterRadius = 1
 const mountHeight = 5
 const snapHeight = 3
 
-export interface Enclosure {
-    name: string
+export interface EnclosureModel {
     box: {
         width: number
         height: number
         depth: number
-    }
-    cover: {
-        mounts: boolean
     }
     rings: { x: number; y: number }[]
     connectors: {
@@ -53,16 +49,23 @@ export interface Enclosure {
     }[]
 }
 
-export const modules: Enclosure[] = [
+export interface EnclosureOptions {
+    legs?: {
+        type?: "well"
+    }
+    cover?: {
+        mounts?: {
+            type?: "ring"
+        }
+    }
+}
+
+export const modules: EnclosureModel[] = [
     {
-        name: "light sensor",
         box: {
             width: 25,
             height: 27.5,
             depth: 10,
-        },
-        cover: {
-            mounts: true,
         },
         rings: [
             {
@@ -98,14 +101,10 @@ export const modules: Enclosure[] = [
         ],
     },
     {
-        name: "demo",
         box: {
             width: 40,
             height: 60,
             depth: 10,
-        },
-        cover: {
-            mounts: false,
         },
         rings: [
             {
@@ -160,9 +159,10 @@ export const modules: Enclosure[] = [
     },
 ]
 
-export const convert = (m: Enclosure) => {
-    const { box, rings, connectors, cover } = m
+export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
+    const { box, rings, connectors } = m
     const { width, height, depth } = box
+    const { cover, legs } = options
 
     // box
     let model = union(
@@ -179,77 +179,79 @@ export const convert = (m: Enclosure) => {
     )
 
     // add screw mounts
-    const post = (x, y, sign) =>
-        translate(
-            [x, y, mountHeight / 2],
-            subtract(
+    if (legs?.type === "well") {
+        const post = (x, y, sign) =>
+            translate(
+                [x, y, mountHeight / 2],
                 subtract(
-                    union(
+                    subtract(
+                        union(
+                            cylinder({
+                                radius: mountRadius,
+                                height: mountHeight,
+                                segments,
+                            }),
+                            cuboid({
+                                size: [
+                                    mountRadius * 2,
+                                    mountRadius + wall,
+                                    mountHeight - mountRoundRadius * 2,
+                                ],
+                                center: [
+                                    0,
+                                    (-sign * (mountRadius + wall)) / 2,
+                                    -mountRoundRadius,
+                                ],
+                            })
+                        ),
                         cylinder({
-                            radius: mountRadius,
-                            height: mountHeight,
+                            radius: mountRadius - wall,
+                            height: mountHeight + wall,
+                            center: [0, 0, wall],
                             segments,
-                        }),
-                        cuboid({
-                            size: [
-                                mountRadius * 2,
-                                mountRadius + wall,
-                                mountHeight - mountRoundRadius * 2,
-                            ],
-                            center: [
-                                0,
-                                (-sign * (mountRadius + wall)) / 2,
-                                -mountRoundRadius,
-                            ],
                         })
                     ),
                     cylinder({
-                        radius: mountRadius - wall,
-                        height: mountHeight + wall,
-                        center: [0, 0, wall],
+                        radius: mountCenterRadius,
+                        height: mountHeight,
+                        center: [0, 0, -wall],
                         segments,
                     })
-                ),
-                cylinder({
-                    radius: mountCenterRadius,
-                    height: mountHeight,
-                    center: [0, 0, -wall],
-                    segments,
-                })
+                )
+            )
+        model = union(
+            model,
+            post(
+                -width / 2 + mountRadius - wall,
+                -height / 2 - mountRadius - wall / 2,
+                -1
             )
         )
-    model = union(
-        model,
-        post(
-            -width / 2 + mountRadius - wall,
-            -height / 2 - mountRadius - wall / 2,
-            -1
+        model = union(
+            model,
+            post(
+                width / 2 - mountRadius + wall,
+                height / 2 + mountRadius + wall / 2,
+                1
+            )
         )
-    )
-    model = union(
-        model,
-        post(
-            width / 2 - mountRadius + wall,
-            height / 2 + mountRadius + wall / 2,
-            1
+        model = union(
+            model,
+            post(
+                -width / 2 + mountRadius - wall,
+                height / 2 + mountRadius + wall / 2,
+                1
+            )
         )
-    )
-    model = union(
-        model,
-        post(
-            -width / 2 + mountRadius - wall,
-            height / 2 + mountRadius + wall / 2,
-            1
+        model = union(
+            model,
+            post(
+                width / 2 - mountRadius + wall,
+                -height / 2 - mountRadius - wall / 2,
+                -1
+            )
         )
-    )
-    model = union(
-        model,
-        post(
-            width / 2 - mountRadius + wall,
-            -height / 2 - mountRadius - wall / 2,
-            -1
-        )
-    )
+    }
 
     // empty box
     const innerbox = roundedCuboid({
@@ -312,7 +314,7 @@ export const convert = (m: Enclosure) => {
         )
     const mounts = [
         ...rings.map(p => ({ ...p, h: snapHeight, hc: pcbWidth })),
-        ...(cover.mounts
+        ...(cover?.mounts?.type === "ring"
             ? [
                   {
                       x: -width / 2 + ringGap,
