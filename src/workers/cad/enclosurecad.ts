@@ -318,8 +318,9 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
             })
         )
     if (cover) {
-        coverModel = cuboid({
+        coverModel = roundedCuboid({
             size: [width + wall, height + wall, wall],
+            roundRadius: 0.25
         })
         if (cover?.mounts?.type === "ring") {
             coverModel = coverSnaps.reduce(
