@@ -1,5 +1,5 @@
 import React, { lazy, useMemo } from "react"
-import { Button, Grid } from "@material-ui/core"
+import { Button, Grid, Typography } from "@material-ui/core"
 import useLocalStorage from "../hooks/useLocalStorage"
 import HighlightTextField from "../ui/HighlightTextField"
 import type {
@@ -9,7 +9,8 @@ import type {
 import Suspense from "../ui/Suspense"
 const EnclosureGenerator = lazy(() => import("./EnclosureGenerator"))
 
-const STORAGE_KEY = "jacdac:enclosureeditorkey"
+const STORAGE_KEY = "jacdac:enclosureeditorkey_source"
+const OPTIONS_STORAGE_KEY = "jacdac:enclosureeditorkey_options"
 const DEFAULT_MODEL = {
     box: {
         width: 22,
@@ -49,22 +50,23 @@ const DEFAULT_MODEL = {
         },
     ],
 }
+const DEFAULT_OPTIONS = {
+    legs: { type: "well" },
+    cover: {
+        mounts: {
+            type: "ring",
+        },
+    },
+}
 
 export default function EnclosureEditor() {
     const [source, setSource] = useLocalStorage(
         STORAGE_KEY,
         JSON.stringify(DEFAULT_MODEL, null, 4)
     )
-    const options: EnclosureOptions = useMemo(
-        () => ({
-            legs: { type: "well" },
-            cover: {
-                mounts: {
-                    type: "ring",
-                },
-            },
-        }),
-        []
+    const [options, setOptions] = useLocalStorage(
+        OPTIONS_STORAGE_KEY,
+        JSON.stringify(DEFAULT_OPTIONS, null, 4)
     )
     const enclosure: EnclosureModel = useMemo(() => {
         try {
@@ -74,8 +76,17 @@ export default function EnclosureEditor() {
             return undefined
         }
     }, [source])
+    const enclosureOptions: EnclosureOptions = useMemo(() => {
+        try {
+            return JSON.parse(options)
+        } catch (e) {
+            console.debug(e)
+            return undefined
+        }
+    }, [options])
     const handleFormat = () => {
         setSource(JSON.stringify(enclosure, null, 4))
+        setSource(JSON.stringify(enclosureOptions, null, 4))
     }
     return (
         <Grid spacing={1} container>
@@ -83,12 +94,13 @@ export default function EnclosureEditor() {
                 <Button
                     variant="outlined"
                     onClick={handleFormat}
-                    disabled={!enclosure}
+                    disabled={!enclosure || !enclosureOptions}
                 >
                     Format code
                 </Button>
             </Grid>
             <Grid item xs={12}>
+                <Typography variant="caption">Model</Typography>
                 <HighlightTextField
                     code={source}
                     language={"json"}
@@ -96,10 +108,19 @@ export default function EnclosureEditor() {
                 />
             </Grid>
             <Grid item xs={12}>
+                <Typography variant="caption">Options</Typography>
+                <HighlightTextField
+                    minHeight="8rem"
+                    code={options}
+                    language={"json"}
+                    onChange={setOptions}
+                />
+            </Grid>
+            <Grid item xs={12}>
                 <Suspense>
                     <EnclosureGenerator
                         module={enclosure}
-                        options={options}
+                        options={enclosureOptions}
                         color="#777"
                     />
                 </Suspense>

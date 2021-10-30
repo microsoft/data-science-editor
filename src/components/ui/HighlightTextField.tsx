@@ -34,6 +34,7 @@ const AnnotationTooltip = withStyles(theme => ({
 export default function HighlightTextField(props: {
     language: string
     code: string
+    minHeight?: string
     onChange: (newValue: string) => void
     annotations?: jdspec.Diagnostic[]
     pullRequestTitle?: string
@@ -48,6 +49,7 @@ export default function HighlightTextField(props: {
         pullRequestTitle,
         pullRequestPath,
         pullRequestDescription,
+        minHeight,
     } = props
     const { darkMode } = useContext(DarkModeContext)
     const theme = (darkMode === "dark" ? DARK_THEME : LIGHT_THEME) as PrismTheme
@@ -74,7 +76,7 @@ export default function HighlightTextField(props: {
                             style={{
                                 ...style,
                                 ...{
-                                    minHeight: "12rem",
+                                    minHeight: minHeight || "12rem",
                                     whiteSpace: "pre-wrap",
                                     overflowWrap: "break-word",
                                 },

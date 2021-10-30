@@ -171,6 +171,17 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
     const { width, height, depth } = box
     const { cover, legs } = options
 
+    console.log(`convert`, {
+        box,
+        rings,
+        connectors,
+        width,
+        height,
+        depth,
+        cover,
+        legs,
+    })
+
     let coverModel: Geom3
     // box
     let model = union(
@@ -310,10 +321,12 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
         coverModel = cuboid({
             size: [width + wall, height + wall, wall],
         })
-        coverModel = coverSnaps.reduce(
-            (m, ring) => subtract(m, coverSnap(ring.x, ring.y)),
-            coverModel
-        )
+        if (cover?.mounts?.type === "ring") {
+            coverModel = coverSnaps.reduce(
+                (m, ring) => subtract(m, coverSnap(ring.x, ring.y)),
+                coverModel
+            )
+        }
     }
 
     // remove jacdac connectors
