@@ -88,7 +88,7 @@ export default function EnclosureEditor() {
     }, [options])
     const handleFormat = () => {
         setSource(JSON.stringify(enclosure, null, 4))
-        setSource(JSON.stringify(enclosureOptions, null, 4))
+        setOptions(JSON.stringify(enclosureOptions, null, 4))
     }
     const handleRefreshSource = () =>
         setSource(JSON.stringify(DEFAULT_MODEL, null, 4))
