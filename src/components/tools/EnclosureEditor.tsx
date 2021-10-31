@@ -17,7 +17,7 @@ const DEFAULT_MODEL = {
     box: {
         width: 22,
         height: 29,
-        depth: 10,
+        depth: 7.5,
     },
     rings: [
         {
@@ -35,6 +35,19 @@ const DEFAULT_MODEL = {
         {
             x: 7.5,
             y: -7.5,
+        },
+    ],
+    components: [
+        {
+            x: 7,
+            y: 0,
+            type: "led",
+        },
+        {
+            x: 0,
+            y: 0,
+            type: "circle",
+            radius: 3,
         },
     ],
     connectors: [

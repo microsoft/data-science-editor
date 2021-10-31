@@ -24,9 +24,8 @@ const dirAngles = {
 
 const ringGap = 2.5
 const ringRadius = 2.15 / 2
-const printPrecision = 0.5
 const pcbWidth = 1.6
-const snapHeight = 2.5
+const snapHeight = 1.5
 
 const wall = pcbWidth
 const wallRadius = wall / 2
@@ -45,6 +44,12 @@ export interface EnclosureModel {
         depth: number
     }
     rings: { x: number; y: number }[]
+    components?: {
+        x: number
+        y: number
+        radius?: number
+        type: "led" | "reset" | "circle" | "square"
+    }[]
     connectors: {
         x: number
         y: number
@@ -62,6 +67,7 @@ export interface EnclosureOptions {
             type?: "ring"
         }
     }
+    printPrecision?: number
 }
 
 export interface EnclosureFile {
@@ -92,6 +98,19 @@ const modules: EnclosureModel[] = [
             {
                 x: 7.5,
                 y: -7.5,
+            },
+        ],
+        components: [
+            {
+                x: 0,
+                y: 7,
+                type: "led",
+            },
+            {
+                x: 0,
+                y: 0,
+                type: "circle",
+                radius: 2,
             },
         ],
         connectors: [
@@ -169,9 +188,9 @@ const modules: EnclosureModel[] = [
 ]
 
 export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
-    const { box, rings, connectors } = m
+    const { box, rings, connectors, components } = m
     const { width, height, depth } = box
-    const { cover, legs } = options
+    const { cover, legs, printPrecision = 0.55 } = options
 
     let coverModel: Geom3
     // box
@@ -254,22 +273,27 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
         )
     }
 
-    // empty box
-    const innerbox = roundedCuboid({
-        size: [width, height, depth + 3 * wall],
-        center: [0, 0, depth / 2 + 2 * wall],
-        segments,
-    })
-    model = subtract(model, innerbox)
-
-    // substract top
+    // substract empty box, top, notch
     model = subtract(
         model,
-        cuboid({
-            size: [width + wall, height + wall, wall],
-            center: [0, 0, depth + wall + wall / 2],
-        })
+        union(
+            roundedCuboid({
+                size: [width, height, depth + 3 * wall],
+                center: [0, 0, depth / 2 + 2 * wall],
+                segments,
+            }),
+            cuboid({
+                size: [width + wall, height + wall, wall],
+                center: [0, 0, depth + wall + wall / 2],
+            }),
+            cuboid({
+                size: [5, 5, wall],
+                center: [-width / 2, 0, depth + wall + wall / 2],
+            })
+        )
     )
+
+    // subtract notch for screwdriver
 
     const coverSnaps = [
         {
@@ -290,7 +314,8 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
         },
     ]
     if (cover) {
-        const coverSnap = (x, y) =>
+        const { mounts } = cover
+        const coverSnap = (x: number, y: number) =>
             translate(
                 [x, y, 0],
                 cylinder({
@@ -308,7 +333,35 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
             ],
             roundRadius: printPrecision / 2,
         })
-        if (cover?.mounts?.type === "ring") {
+        if (components)
+            coverModel = subtract(
+                coverModel,
+                union(
+                    components.map(({ x, y, radius, type }) =>
+                        translate(
+                            [x, y, 0],
+                            type === "square"
+                                ? cuboid({
+                                      size: [
+                                          2 * (radius || ringRadius),
+                                          2 * (radius || ringRadius),
+                                          2 * wall,
+                                      ],
+                                      center: [0, 0, wall / 2],
+                                  })
+                                : cylinder({
+                                      radius:
+                                          (radius || ringRadius) +
+                                          printPrecision / 2,
+                                      height: 2 * wall,
+                                      center: [0, 0, wall / 2],
+                                      segments,
+                                  })
+                        )
+                    )
+                )
+            )
+        if (mounts?.type === "ring") {
             coverModel = subtract(
                 coverModel,
                 union(coverSnaps.map(ring => coverSnap(ring.x, ring.y)))
@@ -322,7 +375,7 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
         const dirAngle = (dirAngles[dir] / 180) * Math.PI
         const d = 24
         return translate(
-            [x, y, snapHeight + pcbWidth / 2],
+            [x, y, snapHeight + pcbWidth / 2 + wall],
             rotateZ(
                 dirAngle,
                 roundedCuboid({
