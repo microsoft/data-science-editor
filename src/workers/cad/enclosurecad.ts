@@ -1,4 +1,4 @@
-import { primitives, transforms, booleans } from "@jscad/modeling"
+import { primitives, transforms, booleans, colors } from "@jscad/modeling"
 import { Geom3 } from "@jscad/modeling/src/geometries/types"
 import stlSerializer from "@jscad/stl-serializer"
 const { cuboid, cylinder, roundedCuboid } = primitives
@@ -24,13 +24,15 @@ const dirAngles = {
 
 const ringGap = 2.5
 const ringRadius = 2.15 / 2
+const printPrecision = 0.5
 const pcbWidth = 1.6
 const snapHeight = 2.5
 
 const wall = pcbWidth
 const wallRadius = wall / 2
-const segments = 16
-const snapRadius = wall
+const segments = 32
+const legSegments = 64
+const snapRadius = 2.1
 const mountRadius = 4
 const mountRoundRadius = 0.5
 const mountCenterRadius = 1
@@ -197,7 +199,7 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
                             cylinder({
                                 radius: mountRadius,
                                 height: mountHeight,
-                                segments,
+                                segments: legSegments,
                             }),
                             cuboid({
                                 size: [
@@ -216,7 +218,7 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
                             radius: mountRadius - wall,
                             height: mountHeight + wall,
                             center: [0, 0, wall],
-                            segments,
+                            segments: legSegments,
                         })
                     ),
                     cylinder({
@@ -233,26 +235,17 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
                 -width / 2 + mountRadius - wall,
                 -height / 2 - mountRadius - wall / 2,
                 -1
-            )
-        )
-        model = union(
-            model,
+            ),
             post(
                 width / 2 - mountRadius + wall,
                 height / 2 + mountRadius + wall / 2,
                 1
-            )
-        )
-        model = union(
-            model,
+            ),
             post(
                 -width / 2 + mountRadius - wall,
                 height / 2 + mountRadius + wall / 2,
                 1
-            )
-        )
-        model = union(
-            model,
+            ),
             post(
                 width / 2 - mountRadius + wall,
                 -height / 2 - mountRadius - wall / 2,
@@ -296,25 +289,25 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
             y: height / 2 - ringGap,
         },
     ]
-    const coverSnap = (x, y) =>
-        translate(
-            [x, y, 0],
-            cylinder({
-                radius: ringRadius + 0.1,
-                height: 2 * wall,
-                center: [0, 0, wall / 2],
-                segments,
-            })
-        )
     if (cover) {
+        const coverSnap = (x, y) =>
+            translate(
+                [x, y, 0],
+                cylinder({
+                    radius: ringRadius + printPrecision,
+                    height: 2 * wall,
+                    center: [0, 0, wall / 2],
+                    segments,
+                })
+            )
         coverModel = roundedCuboid({
             size: [width + wall, height + wall, wall],
             roundRadius: 0.25,
         })
         if (cover?.mounts?.type === "ring") {
-            coverModel = coverSnaps.reduce(
-                (m, ring) => subtract(m, coverSnap(ring.x, ring.y)),
-                coverModel
+            coverModel = subtract(
+                model,
+                union(coverSnaps.map(ring => coverSnap(ring.x, ring.y)))
             )
         }
     }
@@ -337,24 +330,27 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
             )
         )
     }
-    model = connectors.reduce(
-        (m, c) => subtract(m, connector(c.x, c.y, c.dir, c.type)),
-        model
+    model = subtract(
+        model,
+        union(connectors.map(c => connector(c.x, c.y, c.dir, c.type)))
     )
 
     // add snap fit ring mounts
     const snap = (x, y, h, hc) =>
-        translate(
-            [x, y, wall],
-            union(
+        union(
+            translate(
+                [x, y, 0],
                 cylinder({
                     radius: snapRadius,
-                    height: h,
-                    center: [0, 0, h / 2],
+                    height: h + wall,
+                    center: [0, 0, (h + wall) / 2],
                     segments,
-                }),
+                })
+            ),
+            translate(
+                [x, y, wall],
                 cylinder({
-                    radius: ringRadius,
+                    radius: ringRadius - printPrecision / 2,
                     height: hc,
                     center: [0, 0, h + hc / 2],
                     segments,
@@ -367,9 +363,9 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
             ? coverSnaps.map(p => ({ ...p, h: depth, hc: wall }))
             : []),
     ]
-    model = mounts.reduce(
-        (m, ring) => union(m, snap(ring.x, ring.y, ring.h, ring.hc)),
-        model
+    model = union(
+        model,
+        ...mounts.map(ring => snap(ring.x, ring.y, ring.h, ring.hc))
     )
 
     return [model, coverModel].filter(m => !!m)
