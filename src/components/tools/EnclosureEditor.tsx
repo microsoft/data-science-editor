@@ -63,15 +63,15 @@ const modules: EnclosureModel[] = [
         ],
         connectors: [
             {
-                x: 0,
-                y: 7.5,
-                dir: "top",
+                x: 7.5,
+                y: 0,
+                dir: "left",
                 type: "jacdac",
             },
             {
-                x: 0,
-                y: 7.5,
-                dir: "bottom",
+                x: 7.5,
+                y: 0,
+                dir: "right",
                 type: "jacdac",
             },
         ],
