@@ -17,8 +17,14 @@ export interface EnclosureModel {
         height: number
         depth: number
     }
-    rings: { x: number; y: number }[]
-    connectors: {
+    rings?: { x: number; y: number }[]
+    components?: {
+        x: number
+        y: number
+        radius?: number
+        type: "led" | "reset" | "circle" | "square"
+    }[]
+    connectors?: {
         x: number
         y: number
         dir: "top" | "bottom" | "left" | "right"

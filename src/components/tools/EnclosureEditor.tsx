@@ -15,8 +15,8 @@ const STORAGE_KEY = "jacdac:enclosureeditorkey_source"
 const OPTIONS_STORAGE_KEY = "jacdac:enclosureeditorkey_options"
 const DEFAULT_MODEL = {
     box: {
-        width: 22,
-        height: 29,
+        width: 29,
+        height: 22,
         depth: 7.5,
     },
     rings: [

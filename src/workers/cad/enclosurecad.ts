@@ -7,12 +7,12 @@ const { union, subtract } = booleans
 
 const connectorSpecs = {
     jacdac: {
-        width: 10,
-        height: 5,
+        width: 10.5,
+        height: 5.5,
     },
     usbc: {
-        width: 10,
-        height: 3,
+        width: 10.5,
+        height: 3.5,
     },
 }
 const dirAngles = {
@@ -287,7 +287,7 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
                 center: [0, 0, depth + wall + wall / 2],
             }),
             cuboid({
-                size: [5, 5, wall],
+                size: [10, 10, wall],
                 center: [-width / 2, 0, depth + wall + wall / 2],
             })
         )
@@ -319,7 +319,7 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
             translate(
                 [x, y, 0],
                 cylinder({
-                    radius: ringRadius + printPrecision / 2,
+                    radius: ringRadius + printPrecision,
                     height: 2 * wall,
                     center: [0, 0, wall / 2],
                     segments,
@@ -375,14 +375,14 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
         const dirAngle = (dirAngles[dir] / 180) * Math.PI
         const d = 24
         return translate(
-            [x, y, snapHeight + pcbWidth / 2 + wall],
+            [x, y, pcbWidth / 2 + wall],
             rotateZ(
                 dirAngle,
                 roundedCuboid({
                     size: [conn.width, d, conn.height],
                     roundRadius: conn.height / 2 - 0.5,
                     segments: 32,
-                    center: [0, d / 2, conn.height / 2],
+                    center: [0, d / 2, conn.height / 2 - snapHeight],
                 })
             )
         )
