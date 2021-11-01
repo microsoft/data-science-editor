@@ -10,6 +10,7 @@ import type {
 import Suspense from "../ui/Suspense"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import { useId } from "react-use-id-hook"
+import { identifierToUrlPath } from "../../../jacdac-ts/src/jdom/spec"
 const EnclosureGenerator = lazy(() => import("./EnclosureGenerator"))
 
 const STORAGE_KEY = "jacdac:enclosureeditorkey_source"
@@ -50,15 +51,15 @@ const modules: EnclosureModel[] = [
         ],
         components: [
             {
-                x: 7,
-                y: 0,
+                x: 0,
+                y: 7,
                 type: "led",
             },
             {
-                x: 0,
-                y: 0,
+                x: 7,
+                y: 3,
                 type: "circle",
-                radius: 3,
+                radius: 4,
             },
         ],
         connectors: [
