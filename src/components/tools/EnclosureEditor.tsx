@@ -1,5 +1,5 @@
 import React, { lazy, useMemo } from "react"
-import { Button, Grid, Typography } from "@material-ui/core"
+import { Button, Grid, Menu, MenuItem, Typography } from "@material-ui/core"
 import useLocalStorage from "../hooks/useLocalStorage"
 import HighlightTextField from "../ui/HighlightTextField"
 import RefreshIcon from "@material-ui/icons/Refresh"
@@ -9,6 +9,7 @@ import type {
 } from "../../workers/cad/dist/node_modules/enclosurecad"
 import Suspense from "../ui/Suspense"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
+import { useId } from "react-use-id-hook"
 const EnclosureGenerator = lazy(() => import("./EnclosureGenerator"))
 
 const STORAGE_KEY = "jacdac:enclosureeditorkey_source"
@@ -23,6 +24,7 @@ const DEFAULT_OPTIONS = {
 }
 const modules: EnclosureModel[] = [
     {
+        name: "accelerometer",
         box: {
             width: 29,
             height: 22,
@@ -75,6 +77,7 @@ const modules: EnclosureModel[] = [
         ],
     },
     {
+        name: "esp brain",
         box: {
             width: 40,
             height: 60,
@@ -133,6 +136,53 @@ const modules: EnclosureModel[] = [
     },
 ]
 
+function ExampleMenu(props: { setSource: (source: string) => void }) {
+    const { setSource } = props
+    const [anchorEl, setAnchorEl] = React.useState(null)
+    const open = Boolean(anchorEl)
+    const id = useId()
+    const handleClick = event => {
+        setAnchorEl(event.currentTarget)
+    }
+    const handleClose = () => {
+        setAnchorEl(null)
+    }
+    const handleModule = (module: EnclosureModel) => () => {
+        setSource(JSON.stringify(module, null, 4))
+        handleClose()
+    }
+
+    return (
+        <div>
+            <Button
+                id={id}
+                variant="outlined"
+                aria-controls="basic-menu"
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                onClick={handleClick}
+            >
+                Examples
+            </Button>
+            <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                    "aria-labelledby": "basic-button",
+                }}
+            >
+                {modules.map(module => (
+                    <MenuItem key={module.name} onClick={handleModule(module)}>
+                        {module.name}
+                    </MenuItem>
+                ))}
+            </Menu>
+        </div>
+    )
+}
+
 export default function EnclosureEditor() {
     const [source, setSource] = useLocalStorage(
         STORAGE_KEY,
@@ -176,6 +226,9 @@ export default function EnclosureEditor() {
                 >
                     Format code
                 </Button>
+            </Grid>
+            <Grid item>
+                <ExampleMenu setSource={setSource} />
             </Grid>
             <Grid item xs={12}>
                 <Typography variant="subtitle1" component="span">

@@ -37,7 +37,7 @@ const legSegments = 64
 const snapRadius = 2.1
 
 export interface EnclosureModel {
-    name?: string
+    name: string
     box: {
         width: number
         height: number
@@ -333,6 +333,7 @@ export function convertToSTL(
     return geometries.map(
         geometry =>
             new Blob(
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 stlSerializer.serialize({ binary: false } as any, geometry)
             )
     )
