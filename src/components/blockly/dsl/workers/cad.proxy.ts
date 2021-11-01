@@ -13,7 +13,7 @@ import type {
 export async function convertToSTL(
     model: EnclosureModel,
     options?: EnclosureOptions
-): Promise<EnclosureFile[]> {
+): Promise<{ stls?: EnclosureFile[]; error?: string }> {
     const worker = workerProxy("cad")
     const res = await worker.postMessage<CadConvertRequest, CadConvertResponse>(
         {
@@ -23,5 +23,5 @@ export async function convertToSTL(
             options,
         }
     )
-    return res?.stls
+    return { stls: res?.stls, error: res?.error }
 }

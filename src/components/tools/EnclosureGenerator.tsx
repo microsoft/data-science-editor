@@ -17,6 +17,7 @@ import type {
 import useGridBreakpoints from "../useGridBreakpoints"
 import useMounted from "../hooks/useMounted"
 import { CircularProgress } from "@material-ui/core"
+import { Alert } from "@material-ui/lab"
 
 const ModelViewer = lazy(() => import("../home/models/ModelViewer"))
 const STLModel = lazy(() => import("../home/models/STLModel"))
@@ -59,18 +60,22 @@ export default function EnclosureGenerator(props: {
     const [working, setWorking] = useState(false)
     const [files, setFiles] = useState<{ name: string; url: string }[]>()
     const gridBreakpoints = useGridBreakpoints(files?.length)
+    const [stlError, setStlError] = useState("")
     const mounted = useMounted()
 
     const updateUrl = async () => {
         try {
+            setStlError(undefined)
             setWorking(true)
-            const files = await convertToSTL(module, options)
+            const { stls: files, error } = await convertToSTL(module, options)
+            if (!mounted()) return
+
             const newFiles = files?.map(({ name, blob }) => ({
                 name,
                 url: URL.createObjectURL(blob),
             }))
-            if (!mounted()) return
             setFiles(newFiles)
+            setStlError(error)
         } finally {
             if (mounted()) setWorking(false)
         }
@@ -102,6 +107,11 @@ export default function EnclosureGenerator(props: {
                     Generate STL
                 </Button>
             </Grid>
+            {stlError && (
+                <Grid item xs={12}>
+                    <Alert severity="error">{stlError}</Alert>
+                </Grid>
+            )}
             {files?.map(file => (
                 <Grid item key={file.name} {...gridBreakpoints}>
                     <STLModelCard {...file} color={color} />
