@@ -28,7 +28,7 @@ const modules: EnclosureModel[] = [
         box: {
             width: 29,
             height: 22,
-            depth: 7.5,
+            depth: 5.5,
         },
         rings: [
             {
@@ -81,7 +81,7 @@ const modules: EnclosureModel[] = [
         box: {
             width: 40,
             height: 60,
-            depth: 10,
+            depth: 7,
         },
         rings: [
             {
