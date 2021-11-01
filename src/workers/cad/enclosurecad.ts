@@ -85,18 +85,12 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
 
     let coverModel: Geom3
     // box
-    let model = union(
-        roundedCuboid({
-            size: [width + wall * 2, height + wall * 2, depth + wall * 2],
-            center: [0, 0, depth / 2 + wall],
-            roundRadius: wallRadius * 2,
-            segments,
-        }),
-        cuboid({
-            size: [width + wall * 2, height + wall * 2, wall],
-            center: [0, 0, wall / 2],
-        })
-    )
+    let model = roundedCuboid({
+        size: [width + wall * 2, height + wall * 2, depth + wall * 2],
+        center: [0, 0, depth / 2 + wall],
+        roundRadius: wallRadius * 2,
+        segments,
+    })
 
     // add screw mounts
     if (legs?.type === "well") {
@@ -311,7 +305,7 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
                     radius: ringRadius - printPrecision / 2,
                     height: hc,
                     center: [0, 0, h + hc / 2],
-                    segments,
+                    segments: segments >> 1,
                 })
             )
         )

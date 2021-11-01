@@ -69,7 +69,7 @@ const modules: EnclosureModel[] = [
                 type: "jacdac",
             },
             {
-                x: 7.5,
+                x: -7.5,
                 y: 0,
                 dir: "right",
                 type: "jacdac",
