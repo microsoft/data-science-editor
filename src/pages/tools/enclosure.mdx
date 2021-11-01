@@ -41,11 +41,15 @@ You can tweak various aspect of the generated enclosure using the options.
 export interface EnclosureOptions {
     legs?: {
         type?: "well"
+        radius?: number
+        height?: number
+        hole?: number
     }
     cover?: {
         mounts?: {
             type?: "ring"
         }
     }
+    printPrecision?: number
 }
 ```

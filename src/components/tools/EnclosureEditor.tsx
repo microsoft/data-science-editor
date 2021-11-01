@@ -10,7 +10,6 @@ import type {
 import Suspense from "../ui/Suspense"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import { useId } from "react-use-id-hook"
-import { identifierToUrlPath } from "../../../jacdac-ts/src/jdom/spec"
 const EnclosureGenerator = lazy(() => import("./EnclosureGenerator"))
 
 const STORAGE_KEY = "jacdac:enclosureeditorkey_source"

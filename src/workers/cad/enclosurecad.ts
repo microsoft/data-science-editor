@@ -100,9 +100,9 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
 
     // add screw mounts
     if (legs?.type === "well") {
-        const mountRadius = legs.radius || 4
+        const mountRadius = legs.radius || 5
         const mountRoundRadius = 0.5
-        const mountCenterRadius = legs.hole || 2
+        const mountCenterRadius = legs.hole || 1.5
         const mountHeight = legs.height || 4.5
 
         const post = (x, y, sign) =>
