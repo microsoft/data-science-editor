@@ -9,10 +9,13 @@ const connectorSpecs = {
     jacdac: {
         width: 10.5,
         height: 5.5,
+        offset: [0, 0, 0],
     },
     usbc: {
         width: 10.5,
         height: 3.5,
+        z: 0,
+        offset: [0, 0, 2],
     },
 }
 const dirAngles = {
@@ -32,12 +35,9 @@ const wallRadius = wall / 2
 const segments = 32
 const legSegments = 64
 const snapRadius = 2.1
-const mountRadius = 4
-const mountRoundRadius = 0.5
-const mountCenterRadius = 1
-const mountHeight = 5
 
 export interface EnclosureModel {
+    name?: string
     box: {
         width: number
         height: number
@@ -61,6 +61,9 @@ export interface EnclosureModel {
 export interface EnclosureOptions {
     legs?: {
         type?: "well"
+        radius?: number
+        height?: number
+        hole?: number
     }
     cover?: {
         mounts?: {
@@ -74,118 +77,6 @@ export interface EnclosureFile {
     name: string
     blob: Blob
 }
-
-const modules: EnclosureModel[] = [
-    {
-        box: {
-            width: 22,
-            height: 29,
-            depth: 10,
-        },
-        rings: [
-            {
-                x: 7.5,
-                y: 7.5,
-            },
-            {
-                x: -7.5,
-                y: -7.5,
-            },
-            {
-                x: -7.5,
-                y: 7.5,
-            },
-            {
-                x: 7.5,
-                y: -7.5,
-            },
-        ],
-        components: [
-            {
-                x: 0,
-                y: 7,
-                type: "led",
-            },
-            {
-                x: 0,
-                y: 0,
-                type: "circle",
-                radius: 2,
-            },
-        ],
-        connectors: [
-            {
-                x: 0,
-                y: 7.5,
-                dir: "top",
-                type: "jacdac",
-            },
-            {
-                x: 0,
-                y: 7.5,
-                dir: "bottom",
-                type: "jacdac",
-            },
-        ],
-    },
-    {
-        box: {
-            width: 40,
-            height: 60,
-            depth: 10,
-        },
-        rings: [
-            {
-                x: 5,
-                y: 12.5,
-            },
-            {
-                x: -5,
-                y: -12.5,
-            },
-            {
-                x: -5,
-                y: 12.5,
-            },
-            {
-                x: 5,
-                y: -12.5,
-            },
-        ],
-        connectors: [
-            {
-                x: 0,
-                y: 26,
-                dir: "top",
-                type: "jacdac",
-            },
-            {
-                x: 16,
-                y: 0,
-                dir: "left",
-                type: "jacdac",
-            },
-            {
-                x: -16,
-                y: 0,
-                dir: "right",
-                type: "jacdac",
-            },
-            {
-                x: -16,
-                y: connectorSpecs.jacdac.width,
-                dir: "right",
-                type: "jacdac",
-            },
-            {
-                x: 0,
-                y: -26,
-                dir: "bottom",
-                type: "usbc",
-            },
-        ],
-    },
-]
 
 export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
     const { box, rings, connectors, components } = m
@@ -209,6 +100,11 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
 
     // add screw mounts
     if (legs?.type === "well") {
+        const mountRadius = legs.radius || 4
+        const mountRoundRadius = 0.5
+        const mountCenterRadius = legs.hole || 2
+        const mountHeight = legs.height || 4.5
+
         const post = (x, y, sign) =>
             translate(
                 [x, y, mountHeight / 2],
@@ -373,9 +269,10 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
     const connector = (x, y, dir, type) => {
         const conn = connectorSpecs[type]
         const dirAngle = (dirAngles[dir] / 180) * Math.PI
+        const { offset } = conn || [0, 0, 0]
         const d = 24
         return translate(
-            [x, y, pcbWidth / 2 + wall],
+            [x + offset[0], y + offset[1], pcbWidth / 2 + wall + offset[2]],
             rotateZ(
                 dirAngle,
                 roundedCuboid({

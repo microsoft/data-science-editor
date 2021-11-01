@@ -13,58 +13,6 @@ const EnclosureGenerator = lazy(() => import("./EnclosureGenerator"))
 
 const STORAGE_KEY = "jacdac:enclosureeditorkey_source"
 const OPTIONS_STORAGE_KEY = "jacdac:enclosureeditorkey_options"
-const DEFAULT_MODEL = {
-    box: {
-        width: 29,
-        height: 22,
-        depth: 7.5,
-    },
-    rings: [
-        {
-            x: 7.5,
-            y: 7.5,
-        },
-        {
-            x: -7.5,
-            y: -7.5,
-        },
-        {
-            x: -7.5,
-            y: 7.5,
-        },
-        {
-            x: 7.5,
-            y: -7.5,
-        },
-    ],
-    components: [
-        {
-            x: 7,
-            y: 0,
-            type: "led",
-        },
-        {
-            x: 0,
-            y: 0,
-            type: "circle",
-            radius: 3,
-        },
-    ],
-    connectors: [
-        {
-            x: 0,
-            y: 7.5,
-            dir: "top",
-            type: "jacdac",
-        },
-        {
-            x: 0,
-            y: 7.5,
-            dir: "bottom",
-            type: "jacdac",
-        },
-    ],
-}
 const DEFAULT_OPTIONS = {
     legs: { type: "well" },
     cover: {
@@ -73,11 +21,122 @@ const DEFAULT_OPTIONS = {
         },
     },
 }
+const modules: EnclosureModel[] = [
+    {
+        box: {
+            width: 29,
+            height: 22,
+            depth: 7.5,
+        },
+        rings: [
+            {
+                x: 7.5,
+                y: 7.5,
+            },
+            {
+                x: -7.5,
+                y: -7.5,
+            },
+            {
+                x: -7.5,
+                y: 7.5,
+            },
+            {
+                x: 7.5,
+                y: -7.5,
+            },
+        ],
+        components: [
+            {
+                x: 7,
+                y: 0,
+                type: "led",
+            },
+            {
+                x: 0,
+                y: 0,
+                type: "circle",
+                radius: 3,
+            },
+        ],
+        connectors: [
+            {
+                x: 0,
+                y: 7.5,
+                dir: "top",
+                type: "jacdac",
+            },
+            {
+                x: 0,
+                y: 7.5,
+                dir: "bottom",
+                type: "jacdac",
+            },
+        ],
+    },
+    {
+        box: {
+            width: 40,
+            height: 60,
+            depth: 10,
+        },
+        rings: [
+            {
+                x: 5,
+                y: 12.5,
+            },
+            {
+                x: -5,
+                y: -12.5,
+            },
+            {
+                x: -5,
+                y: 12.5,
+            },
+            {
+                x: 5,
+                y: -12.5,
+            },
+        ],
+        connectors: [
+            {
+                x: 0,
+                y: 26,
+                dir: "top",
+                type: "jacdac",
+            },
+            {
+                x: 16,
+                y: 0,
+                dir: "left",
+                type: "jacdac",
+            },
+            {
+                x: -16,
+                y: 0,
+                dir: "right",
+                type: "jacdac",
+            },
+            {
+                x: -16,
+                y: 10,
+                dir: "right",
+                type: "jacdac",
+            },
+            {
+                x: 0,
+                y: -26,
+                dir: "bottom",
+                type: "usbc",
+            },
+        ],
+    },
+]
 
 export default function EnclosureEditor() {
     const [source, setSource] = useLocalStorage(
         STORAGE_KEY,
-        JSON.stringify(DEFAULT_MODEL, null, 4)
+        JSON.stringify(modules[0], null, 4)
     )
     const [options, setOptions] = useLocalStorage(
         OPTIONS_STORAGE_KEY,
@@ -104,12 +163,12 @@ export default function EnclosureEditor() {
         setOptions(JSON.stringify(enclosureOptions, null, 4))
     }
     const handleRefreshSource = () =>
-        setSource(JSON.stringify(DEFAULT_MODEL, null, 4))
+        setSource(JSON.stringify(modules[0], null, 4))
     const handleRefreshOptions = () =>
         setOptions(JSON.stringify(DEFAULT_OPTIONS, null, 4))
     return (
         <Grid spacing={1} container>
-            <Grid item xs={12}>
+            <Grid item>
                 <Button
                     variant="outlined"
                     onClick={handleFormat}
