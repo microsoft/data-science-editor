@@ -1,4 +1,4 @@
-import { primitives, transforms, booleans, colors } from "@jscad/modeling"
+import { primitives, transforms, booleans } from "@jscad/modeling"
 import { Geom3 } from "@jscad/modeling/src/geometries/types"
 import stlSerializer from "@jscad/stl-serializer"
 const { cuboid, cylinder, roundedCuboid } = primitives
@@ -17,7 +17,7 @@ const connectorSpecs = {
 }
 const dirAngles = {
     top: 0,
-    bottom: 180.000001,
+    bottom: 180,
     left: -90,
     right: 90,
 }
