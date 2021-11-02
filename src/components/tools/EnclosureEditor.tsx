@@ -63,15 +63,15 @@ const modules: EnclosureModel[] = [
         ],
         connectors: [
             {
-                x: 7.5,
-                y: 0,
-                dir: "left",
+                x: 0,
+                y: 7.5,
+                dir: "top",
                 type: "jacdac",
             },
             {
-                x: -7.5,
-                y: 0,
-                dir: "right",
+                x: 0,
+                y: -7.5,
+                dir: "bottom",
                 type: "jacdac",
             },
         ],
@@ -270,7 +270,7 @@ export default function EnclosureEditor() {
                     <EnclosureGenerator
                         module={enclosure}
                         options={enclosureOptions}
-                        color="#777"
+                        color="#888"
                     />
                 </Suspense>
             </Grid>

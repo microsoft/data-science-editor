@@ -1,4 +1,4 @@
-import { primitives, transforms, booleans } from "@jscad/modeling"
+import { primitives, transforms, booleans, extrusions } from "@jscad/modeling"
 import { Geom3 } from "@jscad/modeling/src/geometries/types"
 import stlSerializer from "@jscad/stl-serializer"
 const { cuboid, cylinder, roundedCuboid } = primitives
@@ -7,8 +7,8 @@ const { union, subtract } = booleans
 
 const connectorSpecs = {
     jacdac: {
-        width: 10.5,
-        height: 5.5,
+        width: 10,
+        height: 5,
         offset: [0, 0, 0],
     },
     usbc: {
@@ -167,10 +167,9 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
     model = subtract(
         model,
         union(
-            roundedCuboid({
+            cuboid({
                 size: [width, height, depth + 3 * wall],
                 center: [0, 0, depth / 2 + 2 * wall],
-                segments,
             }),
             cuboid({
                 size: [width + wall, height + wall, wall],
@@ -178,7 +177,7 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
             }),
             cuboid({
                 size: [10, 10, wall],
-                center: [0, -height / 2, depth + wall + wall / 2],
+                center: [0, height / 2, depth + wall + wall / 2],
             })
         )
     )
