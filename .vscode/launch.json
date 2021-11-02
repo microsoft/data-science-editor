@@ -25,7 +25,7 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/jacdac-ts/dist/jacdac-cli.js",
-            "args": ["--usb=true", "-p"],
+            "args": ["--usb", "-p"],
             "outFiles": [
                 "${workspaceFolder}/jacdac-ts/dist/*.js"
             ]
