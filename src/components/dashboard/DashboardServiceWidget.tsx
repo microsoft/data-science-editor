@@ -49,6 +49,7 @@ import {
     SRV_CODAL_MESSAGE_BUS,
     SRV_RELAY,
     SRV_LIGHT_BULB,
+    SRV_BRAILLE_DISPLAY,
 } from "../../../jacdac-ts/src/jdom/constants"
 import JDService from "../../../jacdac-ts/src/jdom/service"
 import { isRegister } from "../../../jacdac-ts/src/jdom/spec"
@@ -77,6 +78,7 @@ const DashboardTrafficLight = lazy(() => import("./DashboardTrafficLight"))
 const DashboardCharacterScreen = lazy(
     () => import("./DashboardCharacterScreen")
 )
+const DashboardBrailleDisplay = lazy(() => import("./DashboardBrailleDisplay"))
 const DashboardRainGauge = lazy(() => import("./DashboardRainGauge"))
 const DashboardDotMatrix = lazy(() => import("./DashboardDotMatrix"))
 const DashboardWindDirection = lazy(() => import("./DashboardWindDirection"))
@@ -175,6 +177,10 @@ const serviceViews: {
     },
     [SRV_CHARACTER_SCREEN]: {
         component: DashboardCharacterScreen,
+        weight: () => 3,
+    },
+    [SRV_BRAILLE_DISPLAY]: {
+        component: DashboardBrailleDisplay,
         weight: () => 3,
     },
     [SRV_RAIN_GAUGE]: {
