@@ -24,6 +24,53 @@ const DEFAULT_OPTIONS = {
 }
 const modules: EnclosureModel[] = [
     {
+        name: "humidity",
+        box: {
+            width: 32.5,
+            height: 20,
+            depth: 5.5,
+        },
+        rings: [
+            {
+                x: 10,
+                y: 2.5,
+            },
+            {
+                x: 10,
+                y: -2.5,
+            },
+            {
+                x: -7.5,
+                y: 2.5,
+            },
+            {
+                x: -7.5,
+                y: -2.5,
+            },
+        ],
+        components: [
+            {
+                x: -5,
+                y: 0,
+                type: "led",
+            },
+            {
+                x: 6,
+                y: 2.4,
+                type: "circle",
+                radius: 2,
+            },
+        ],
+        connectors: [
+            {
+                x: -20,
+                y: 0,
+                dir: "left",
+                type: "jacdac",
+            },
+        ],
+    },
+    {
         name: "accelerometer",
         box: {
             width: 29,
@@ -80,55 +127,74 @@ const modules: EnclosureModel[] = [
         name: "esp brain",
         box: {
             width: 40,
-            height: 60,
+            height: 57,
             depth: 7,
         },
         rings: [
             {
-                x: 5,
-                y: 12.5,
+                x: 13.25,
+                y: 20,
             },
             {
-                x: -5,
-                y: -12.5,
+                x: -13.25,
+                y: 20,
             },
             {
-                x: -5,
-                y: 12.5,
+                x: -13.25,
+                y: 0,
             },
             {
-                x: 5,
-                y: -12.5,
+                x: 13.25,
+                y: 0,
+            },
+        ],
+        components: [
+            {
+                x: 0,
+                y: -8,
+                type: "led",
+            },
+            {
+                x: -13,
+                y: 16,
+                type: "circle",
+                radius: 2,
+            },
+            {
+                x: 13,
+                y: 16,
+                type: "circle",
+                radius: 2,
             },
         ],
         connectors: [
             {
-                x: 0,
-                y: 26,
-                dir: "top",
-                type: "jacdac",
-            },
-            {
-                x: 16,
-                y: 0,
+                x: -16,
+                y: -7.5,
                 dir: "left",
                 type: "jacdac",
             },
             {
                 x: -16,
-                y: 0,
+                y: -17.5,
+                dir: "left",
+                type: "jacdac",
+            },
+            {
+                x: 16,
+                y: -7.5,
                 dir: "right",
                 type: "jacdac",
             },
             {
-                x: -16,
-                y: 10,
+                x: 16,
+                y: -17.5,
                 dir: "right",
                 type: "jacdac",
             },
             {
                 x: 0,
-                y: -26,
+                y: -18,
                 dir: "bottom",
                 type: "usbc",
             },

@@ -171,7 +171,9 @@ function LayoutWithContext(props: LayoutProps) {
     const makeCodeTool = /tools\/makecode-/.test(path)
     const fullWidthTools =
         /^\/editors\/\w+\/$/.test(path) ||
-        /^\/(tools\/makecode-|dashboard)/.test(path)
+        /^\/(tools\/makecode-|dashboard)/.test(path) ||
+        !!frontmatter?.fullWidth
+
     const isDataEditor = /^\/editors\/data/.test(path)
     const {
         hideMainMenu = false,
