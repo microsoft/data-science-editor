@@ -11,7 +11,9 @@ import {
     SRV_CONTROL,
     SRV_LOGGER,
     SRV_PROTO_TEST,
+    SRV_PROXY,
     SRV_SETTINGS,
+    SRV_UNIQUE_BRAIN,
 } from "../../../jacdac-ts/src/jdom/constants"
 import JDDevice from "../../../jacdac-ts/src/jdom/device"
 import useChange from "../../jacdac/useChange"
@@ -30,7 +32,14 @@ import useMediaQueries from "../hooks/useMediaQueries"
 import { DeviceLostAlert } from "../alert/DeviceLostAlert"
 import { DeviceProxyAlert } from "../alert/DeviceProxyAlert"
 
-const ignoredServices = [SRV_CONTROL, SRV_LOGGER, SRV_SETTINGS, SRV_PROTO_TEST]
+const ignoredServices = [
+    SRV_CONTROL,
+    SRV_LOGGER,
+    SRV_SETTINGS,
+    SRV_PROTO_TEST,
+    SRV_PROXY,
+    SRV_UNIQUE_BRAIN,
+]
 
 export default function DashboardDevice(
     props: {

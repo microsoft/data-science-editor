@@ -10,6 +10,14 @@ import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import DarkModeContext from "../../components/ui/DarkModeContext"
 import IFrameBridgeClient from "../../components/makecode/iframebridgeclient"
 
+/**
+ * To debug locally:
+ * 
+ * - launch yarn develop
+ * - launch pxt serve + ?localhostmessagesims=1
+ * - launch jacdac project
+ */
+
 function deviceSort(l: JDDevice, r: JDDevice): number {
     const srvScore = (srv: jdspec.ServiceSpec) =>
         srv.packets.reduce(
