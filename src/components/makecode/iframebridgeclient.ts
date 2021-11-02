@@ -1,9 +1,12 @@
 import {
     SRV_CONTROL,
+    SRV_INFRASTRUCTURE,
     SRV_LOGGER,
     SRV_PROTO_TEST,
+    SRV_PROXY,
     SRV_ROLE_MANAGER,
     SRV_SETTINGS,
+    SRV_UNIQUE_BRAIN,
 } from "../../../jacdac-ts/src/jdom/constants"
 import JDBus from "../../../jacdac-ts/src/jdom/bus"
 import JDClient from "../../../jacdac-ts/src/jdom/client"
@@ -77,6 +80,9 @@ const ignoredServices = [
     SRV_SETTINGS,
     SRV_ROLE_MANAGER,
     SRV_PROTO_TEST,
+    SRV_PROXY,
+    SRV_UNIQUE_BRAIN,
+    SRV_INFRASTRUCTURE,
 ]
 
 /**
