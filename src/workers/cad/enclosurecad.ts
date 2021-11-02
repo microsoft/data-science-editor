@@ -177,7 +177,7 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
             }),
             cuboid({
                 size: [10, 10, wall],
-                center: [0, height / 2, depth + wall + wall / 2],
+                center: [width / 2, 0, depth + wall + wall / 2],
             })
         )
     )
