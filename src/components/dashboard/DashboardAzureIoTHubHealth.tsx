@@ -150,8 +150,11 @@ export default function DashboardAzureIoTHubHealth(
                             />
                         )}
                         {hubDeviceId && (
+                            <Chip label={`device: ${hubDeviceId}`} />
+                        )}
+                        {messageSent !== undefined && (
                             <Badge badgeContent={messageSent} color="primary">
-                                <Chip label={`device: ${hubDeviceId}`} />
+                                <Chip label={`messages`} />
                             </Badge>
                         )}
                     </ChipList>
