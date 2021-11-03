@@ -39,7 +39,6 @@ import JDRegister from "../../../jacdac-ts/src/jdom/register"
 import ReadingFieldGrid from "../../components/ReadingFieldGrid"
 import DeviceCardHeader from "../../components/devices/DeviceCardHeader"
 import SensorAggregatorClient from "../../../jacdac-ts/src/clients/sensoraggregatorclient"
-import { Link } from "gatsby-theme-material-ui"
 import JDService from "../../../jacdac-ts/src/jdom/service"
 import ServiceManagerContext from "../../components/ServiceManagerContext"
 import useChartPalette from "../../components/useChartPalette"
@@ -57,6 +56,7 @@ import useLocalStorage from "../../components/hooks/useLocalStorage"
 import FileTabs from "../../components/fs/FileTabs"
 import FileSystemContext from "../../components/FileSystemContext"
 import useChange from "../../jacdac/useChange"
+import GridHeader from "../../components/ui/GridHeader"
 
 const LIVE_HORIZON = 24
 function createDataSet(
@@ -141,11 +141,6 @@ export default function Collector() {
     const triggerEvent = bus.node(triggerEventId) as JDEvent
     const startEnabled = !starting && !!recordingRegisters?.length
     const events = useEvents({ ignoreChange: true })
-    const aggregatorsId = useId()
-    const sensorsId = useId()
-    const recordId = useId()
-    const recordingsId = useId()
-    const dashboardId = useId()
     const samplingIntervalId = useId()
     const samplingDurationId = useId()
     const startDelayId = useId()
@@ -343,15 +338,10 @@ export default function Collector() {
                 Use this page to collect streaming data from Jacdac devices into
                 various output formats.
             </p>
-            {!!aggregators.length && (
-                <section id={aggregatorsId}>
-                    <h3>(Optional) Choose a data aggregator</h3>
-                    <p>
-                        A <Link to="/services/aggregator">data aggregator</Link>{" "}
-                        service collects collects sensor data on the bus and
-                        returns an aggregated at regular intervals.
-                    </p>
-                    <Grid container spacing={1}>
+            <Grid container spacing={1}>
+                {!!aggregators.length && (
+                    <>
+                        <GridHeader title="(Optional) Choose a data aggregator" />
                         {aggregators.map(aggregator => (
                             <Grid key={aggregator.id} item xs={4}>
                                 <Card>
@@ -373,194 +363,198 @@ export default function Collector() {
                                 </Card>
                             </Grid>
                         ))}
-                    </Grid>
-                </section>
-            )}
-            <section id={sensorsId}>
-                <h3>
-                    Choose sensors &nbsp;
-                    <IconButtonWithTooltip
-                        title="start simulator"
-                        onClick={toggleShowDeviceHostsDialog}
-                    >
-                        <AddIcon />
-                    </IconButtonWithTooltip>
-                </h3>
+                    </>
+                )}
+                <GridHeader
+                    title="Sensors"
+                    action={
+                        <IconButtonWithTooltip
+                            title="start simulator"
+                            onClick={toggleShowDeviceHostsDialog}
+                        >
+                            <AddIcon />
+                        </IconButtonWithTooltip>
+                    }
+                />
                 {!readingRegisters.length && (
-                    <Alert severity="info">Waiting for sensor...</Alert>
+                    <Grid item xs={12}>
+                        <Alert severity="info">Waiting for sensor...</Alert>
+                    </Grid>
                 )}
                 {!!readingRegisters.length && (
-                    <ReadingFieldGrid
-                        readingRegisters={readingRegisters}
-                        registerIdsChecked={registerIdsChecked}
-                        recording={recording}
-                        liveDataSet={liveDataSet}
-                        handleRegisterCheck={handleRegisterCheck}
-                    />
-                )}
-            </section>
-            <section id={recordId}>
-                <h3>Record data</h3>
-                {aggregator && (
-                    <p>
-                        Record the sensor input configuration in order to up
-                        your ML model later on.
-                    </p>
-                )}
-                <Grid container direction="row" spacing={1}>
                     <Grid item xs={12}>
-                        <Button
-                            size="large"
-                            variant="contained"
-                            color={recording ? "secondary" : "primary"}
-                            title={
-                                starting
-                                    ? `starting in ${countdown}`
-                                    : recording
-                                    ? "stop recording"
-                                    : "start recording"
-                            }
-                            onClick={toggleRecording}
-                            startIcon={
-                                starting ? (
-                                    <HourglassEmptyIcon />
-                                ) : recording ? (
-                                    <StopIcon />
-                                ) : (
-                                    <PlayArrowIcon />
-                                )
-                            }
-                            disabled={!startEnabled}
-                        >
-                            {starting
-                                ? countdown + ""
+                        <ReadingFieldGrid
+                            readingRegisters={readingRegisters}
+                            registerIdsChecked={registerIdsChecked}
+                            recording={recording}
+                            liveDataSet={liveDataSet}
+                            handleRegisterCheck={handleRegisterCheck}
+                        />
+                    </Grid>
+                )}
+                <GridHeader title="Recorder" />
+                {aggregator && (
+                    <Grid item xs={12}>
+                        <Alert severity="info">
+                            Record the sensor input configuration in order to up
+                            your ML model later on.
+                        </Alert>
+                    </Grid>
+                )}
+                <Grid item xs={12}>
+                    <Button
+                        size="large"
+                        variant="contained"
+                        color={recording ? "secondary" : "primary"}
+                        title={
+                            starting
+                                ? `starting in ${countdown}`
                                 : recording
-                                ? "Stop"
-                                : "Start"}
-                        </Button>
-                    </Grid>
-                    {aggregator && (
+                                ? "stop recording"
+                                : "start recording"
+                        }
+                        onClick={toggleRecording}
+                        startIcon={
+                            starting ? (
+                                <HourglassEmptyIcon />
+                            ) : recording ? (
+                                <StopIcon />
+                            ) : (
+                                <PlayArrowIcon />
+                            )
+                        }
+                        disabled={!startEnabled}
+                    >
+                        {starting
+                            ? countdown + ""
+                            : recording
+                            ? "Stop"
+                            : "Start"}
+                    </Button>
+                </Grid>
+                <Grid item xs={12} mt={1}>
+                    <Grid container direction="row" spacing={1}>
+                        {aggregator && (
+                            <Grid item>
+                                <Button
+                                    variant="contained"
+                                    title="save sensor input configuration"
+                                    onClick={saveConfig}
+                                    startIcon={<SaveIcon />}
+                                    disabled={recording}
+                                >
+                                    Save configuration
+                                </Button>
+                            </Grid>
+                        )}
                         <Grid item>
-                            <Button
-                                variant="contained"
-                                title="save sensor input configuration"
-                                onClick={saveConfig}
-                                startIcon={<SaveIcon />}
+                            <TextField
+                                id={samplingIntervalId}
                                 disabled={recording}
-                            >
-                                Save configuration
-                            </Button>
+                                type="number"
+                                label="Sampling interval"
+                                value={samplingIntervalDelay}
+                                variant="outlined"
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            ms
+                                        </InputAdornment>
+                                    ),
+                                }}
+                                onChange={handleSamplingIntervalChange}
+                            />
                         </Grid>
-                    )}
-                    <Grid item>
-                        <TextField
-                            id={samplingIntervalId}
-                            disabled={recording}
-                            type="number"
-                            label="Sampling interval"
-                            value={samplingIntervalDelay}
-                            variant="outlined"
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        ms
-                                    </InputAdornment>
-                                ),
-                            }}
-                            onChange={handleSamplingIntervalChange}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <TextField
-                            id={samplingDurationId}
-                            type="number"
-                            disabled={recording}
-                            label="Sampling duration"
-                            value={samplingDuration}
-                            variant="outlined"
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        s
-                                    </InputAdornment>
-                                ),
-                            }}
-                            onChange={handleSamplingDurationChange}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <TextField
-                            id={startDelayId}
-                            type="number"
-                            disabled={recording}
-                            label="Start delay"
-                            value={startDelay}
-                            variant="outlined"
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        s
-                                    </InputAdornment>
-                                ),
-                            }}
-                            onChange={handleStartDelayChange}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <TextField
-                            id={prefixId}
-                            disabled={recording}
-                            label="File name prefix"
-                            value={prefix}
-                            variant="outlined"
-                            onChange={handlePrefixChange}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <SelectEvent
-                            events={events}
-                            eventId={triggerEventId}
-                            onChange={handleTriggerChange}
-                            label={"Start Event"}
-                            friendlyName={true}
-                        />
+                        <Grid item>
+                            <TextField
+                                id={samplingDurationId}
+                                type="number"
+                                disabled={recording}
+                                label="Sampling duration"
+                                value={samplingDuration}
+                                variant="outlined"
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            s
+                                        </InputAdornment>
+                                    ),
+                                }}
+                                onChange={handleSamplingDurationChange}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <TextField
+                                id={startDelayId}
+                                type="number"
+                                disabled={recording}
+                                label="Start delay"
+                                value={startDelay}
+                                variant="outlined"
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            s
+                                        </InputAdornment>
+                                    ),
+                                }}
+                                onChange={handleStartDelayChange}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <TextField
+                                id={prefixId}
+                                disabled={recording}
+                                label="File name prefix"
+                                value={prefix}
+                                variant="outlined"
+                                onChange={handlePrefixChange}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <SelectEvent
+                                events={events}
+                                eventId={triggerEventId}
+                                onChange={handleTriggerChange}
+                                label={"Start Event"}
+                                friendlyName={true}
+                            />
+                        </Grid>
                     </Grid>
                 </Grid>
-            </section>
-            {!!recordingDevices?.length && (
-                <section id={dashboardId}>
-                    <Grid container spacing={1}>
-                        {recordingDevices?.map(device => (
-                            <DashboardDeviceItem
-                                key={device.id}
-                                device={device}
-                                showAvatar={true}
-                                showHeader={true}
-                            />
-                        ))}
-                    </Grid>
-                </section>
-            )}
-            {liveDataSet && (
-                <Trend
-                    key="trends"
-                    height={12}
-                    dataSet={liveDataSet}
-                    horizon={LIVE_HORIZON}
-                    dot={true}
-                    gradient={true}
-                />
-            )}
-            <FileTabs hideFiles={true} hideDirectories={true} />
-            {!!tables.length && (
-                <section id={recordingsId}>
-                    <h3>Recordings</h3>
-                    <DataSetGrid
-                        tables={tables}
-                        handleDeleteTable={handleDeleteTable}
+                {recordingDevices?.map(device => (
+                    <DashboardDeviceItem
+                        key={device.id}
+                        device={device}
+                        showAvatar={true}
+                        showHeader={true}
                     />
-                </section>
-            )}
+                ))}
+                {liveDataSet && (
+                    <Grid item xs={12}>
+                        <Trend
+                            key="trends"
+                            height={12}
+                            dataSet={liveDataSet}
+                            horizon={LIVE_HORIZON}
+                            dot={true}
+                            gradient={true}
+                        />
+                    </Grid>
+                )}
+                <GridHeader title="Recordings" />
+                <Grid item xs={12}>
+                    <FileTabs hideFiles={true} hideDirectories={true} />
+                </Grid>
+                {!!tables.length && (
+                    <Grid item xs={12}>
+                        <DataSetGrid
+                            tables={tables}
+                            handleDeleteTable={handleDeleteTable}
+                        />
+                    </Grid>
+                )}
+            </Grid>
         </>
     )
 }

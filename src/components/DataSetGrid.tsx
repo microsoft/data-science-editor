@@ -27,7 +27,7 @@ export default function DataSetGrid(props: {
     }
     const handelDelete = (table: FieldDataSet) => () => handleDeleteTable(table)
     return (
-        <Grid container spacing={2}>
+        <Grid container spacing={1}>
             {tables.map(table => (
                 <Grid item {...gridBreakpoints} key={`result` + table.id}>
                     <Card>
