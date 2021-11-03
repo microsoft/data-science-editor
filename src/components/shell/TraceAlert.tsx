@@ -1,10 +1,10 @@
-import { Typography } from "@material-ui/core"
+import { Typography } from "@mui/material"
 import React, { useContext } from "react"
 import PacketsContext from "../PacketsContext"
 import TraceClearButton from "../trace/TraceClearButton"
 import TracePlayButton from "../trace/TracePlayButton"
 import Alert from "../ui/Alert"
-import { AlertTitle } from "@material-ui/lab"
+import { AlertTitle } from "@mui/material"
 
 export default function TraceAlert() {
     const { recording, replayTrace } = useContext(PacketsContext)

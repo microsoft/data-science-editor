@@ -1,4 +1,4 @@
-import { Slide, useScrollTrigger } from "@material-ui/core"
+import { Slide, useScrollTrigger } from "@mui/material"
 import React from "react"
 import { ReactElement } from "react-markdown"
 

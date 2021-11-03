@@ -1,25 +1,25 @@
-import {
-    Box,
-    Chip,
-    createStyles,
-    Grid,
-    makeStyles,
-    Typography,
-} from "@material-ui/core"
+import { Box, Chip, Grid, Typography } from "@mui/material"
+import { styled } from "@mui/material/styles"
 import React from "react"
 import clsx from "clsx"
 
-const useStyles = makeStyles(theme =>
-    createStyles({
-        hr: {
-            background: theme.palette.text.disabled,
-            marginBottom: "unset",
-        },
-        start: {
-            width: theme.spacing(2),
-        },
-    })
-)
+const PREFIX = "GridHeader"
+
+const classes = {
+    hr: `${PREFIX}-hr`,
+    start: `${PREFIX}-start`,
+}
+
+const StyledGrid = styled(Grid)(({ theme }) => ({
+    [`& .${classes.hr}`]: {
+        background: theme.palette.text.disabled,
+        marginBottom: "unset",
+    },
+
+    [`& .${classes.start}`]: {
+        width: theme.spacing(2),
+    },
+}))
 
 export default function GridHeader(props: {
     title?: string
@@ -28,9 +28,9 @@ export default function GridHeader(props: {
     action?: JSX.Element
 }) {
     const { title, count, variant, action } = props
-    const classes = useStyles()
+
     return (
-        <Grid item xs={12}>
+        <StyledGrid item xs={12}>
             <Grid
                 container
                 direction="row"
@@ -63,6 +63,6 @@ export default function GridHeader(props: {
                     <hr className={classes.hr} />
                 </Grid>
             </Grid>
-        </Grid>
+        </StyledGrid>
     )
 }

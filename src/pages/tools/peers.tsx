@@ -1,6 +1,4 @@
-import {
-    NoSsr,
-} from "@material-ui/core"
+import { NoSsr } from "@mui/material"
 import React, { lazy } from "react"
 import Suspense from "../../components/ui/Suspense"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name

@@ -1,5 +1,5 @@
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import ClearIcon from "@material-ui/icons/Clear"
+import ClearIcon from "@mui/icons-material/Clear"
 import React, { useContext } from "react"
 import PacketsContext from "../PacketsContext"
 import { IconButtonWithProgressProps } from "../ui/IconButtonWithProgress"

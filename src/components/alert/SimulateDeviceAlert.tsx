@@ -15,7 +15,7 @@ import { startServiceProviderFromServiceClass } from "../../../jacdac-ts/src/ser
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import AppContext from "../AppContext"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
-import AddIcon from "@material-ui/icons/Add"
+import AddIcon from "@mui/icons-material/Add"
 import Alert from "../ui/Alert"
 
 export function SimulateDeviceHint() {

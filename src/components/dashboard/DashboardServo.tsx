@@ -8,7 +8,7 @@ import {
 import useServiceServer from "../hooks/useServiceServer"
 import useThrottledValue from "../hooks/useThrottledValue"
 import { SG90_RESPONSE_SPEED } from "../../../jacdac-ts/src/servers/servers"
-import { Grid } from "@material-ui/core"
+import { Grid } from "@mui/material"
 import ServoServer from "../../../jacdac-ts/src/servers/servoserver"
 import RegisterInput from "../RegisterInput"
 import JDService from "../../../jacdac-ts/src/jdom/service"

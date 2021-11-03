@@ -1,18 +1,18 @@
 import React, { lazy, useEffect, useContext, useState } from "react"
 
-import { Button, Grid, TextField, InputAdornment } from "@material-ui/core"
-import { Autocomplete } from "@material-ui/lab"
-import PlayArrowIcon from "@material-ui/icons/PlayArrow"
+import { Button, Grid, TextField, InputAdornment } from "@mui/material"
+import { Autocomplete } from "@mui/material"
+import PlayArrowIcon from "@mui/icons-material/PlayArrow"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import StopIcon from "@material-ui/icons/Stop"
+import StopIcon from "@mui/icons-material/Stop"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import DownloadIcon from "@material-ui/icons/GetApp"
+import DownloadIcon from "@mui/icons-material/GetApp"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import DeleteAllIcon from "@material-ui/icons/DeleteSweep"
+import DeleteAllIcon from "@mui/icons-material/DeleteSweep"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import NavigateNextIcon from "@material-ui/icons/NavigateNext"
+import NavigateNextIcon from "@mui/icons-material/NavigateNext"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import AddIcon from "@material-ui/icons/Add"
+import AddIcon from "@mui/icons-material/Add"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 
 import ServiceManagerContext from "../ServiceManagerContext"
@@ -380,7 +380,7 @@ export default function CollectData(props: {
                             onInputChange={(event, newValue) =>
                                 handleLabelChange(newValue)
                             }
-                            getOptionSelected={() => true}
+                            isOptionEqualToValue={() => true}
                         />
                         <TextField
                             className={classes.field}

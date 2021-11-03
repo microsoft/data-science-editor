@@ -4,7 +4,7 @@ import ServiceSpecificationStatusAlert from "./specification/ServiceSpecificatio
 import { Button, Link } from "gatsby-theme-material-ui"
 import DeviceSpecificationList from "./specification/DeviceSpecificationList"
 import { serviceSpecificationFromClassIdentifier } from "../../jacdac-ts/src/jdom/spec"
-import { Grid } from "@material-ui/core"
+import { Grid } from "@mui/material"
 import ServiceSpecificationSource from "./specification/ServiceSpecificationSource"
 import MakeCodeIcon from "./icons/MakeCodeIcon"
 

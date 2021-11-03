@@ -1,4 +1,4 @@
-import { Grid, NoSsr } from "@material-ui/core"
+import { Grid, NoSsr } from "@mui/material"
 import React, {
     useCallback,
     useContext,

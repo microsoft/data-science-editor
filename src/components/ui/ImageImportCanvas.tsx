@@ -1,30 +1,39 @@
 import React, { lazy, useEffect, useMemo, useState } from "react"
-import { Box, createStyles, makeStyles } from "@material-ui/core"
-import { Skeleton } from "@material-ui/lab"
+import { styled } from "@mui/material/styles"
+import { Box } from "@mui/material"
+import { Skeleton } from "@mui/material"
 import useBlobCanvas from "../useBlobCanvas"
 
 import Suspense from "./Suspense"
-const ImportButton = lazy(() => import("../ImportButton"))
+const PREFIX = "ImageImportCanvas"
 
-const useStyles = makeStyles(theme =>
-    createStyles({
-        root: {
-            position: "relative",
-        },
-        img: {
-            margin: "auto",
-            display: "block",
-            width: "100%",
-        },
-        btn: {
-            position: "absolute",
-            borderRadius: "6rem",
-            left: "calc(50% - 2rem)",
-            top: "calc(50% - 2rem)",
-            background: theme.palette.background.paper,
-        },
-    })
-)
+const classes = {
+    root: `${PREFIX}-root`,
+    img: `${PREFIX}-img`,
+    btn: `${PREFIX}-btn`,
+}
+
+const Root = styled("div")(({ theme }) => ({
+    [`&.${classes.root}`]: {
+        position: "relative",
+    },
+
+    [`& .${classes.img}`]: {
+        margin: "auto",
+        display: "block",
+        width: "100%",
+    },
+
+    [`& .${classes.btn}`]: {
+        position: "absolute",
+        borderRadius: "6rem",
+        left: "calc(50% - 2rem)",
+        top: "calc(50% - 2rem)",
+        background: theme.palette.background.paper,
+    },
+}))
+
+const ImportButton = lazy(() => import("../ImportButton"))
 
 export default function ImportImageCanvas(props: {
     width: number
@@ -35,7 +44,6 @@ export default function ImportImageCanvas(props: {
     const [imageBlob, setImageBlob] = useState<Blob>(undefined)
     const canvas = useBlobCanvas(imageBlob, width, height)
     const canvasUrl = useMemo(() => canvas?.toDataURL("image/png"), [canvas])
-    const classes = useStyles()
 
     const handleFilesUploaded = async (files: File[]) => {
         const file = files[0]
@@ -45,10 +53,14 @@ export default function ImportImageCanvas(props: {
     useEffect(() => canvas && onImageImported(canvas), [canvas])
 
     return (
-        <div className={classes.root}>
+        <Root className={classes.root}>
             <div className={classes.img}>
                 {!canvasUrl && (
-                    <Skeleton variant="rect" width={"100%"} height={"18rem"} />
+                    <Skeleton
+                        variant="rectangular"
+                        width={"100%"}
+                        height={"18rem"}
+                    />
                 )}
                 {canvasUrl && (
                     <img
@@ -69,6 +81,6 @@ export default function ImportImageCanvas(props: {
                     />
                 </Suspense>
             </Box>
-        </div>
+        </Root>
     )
 }

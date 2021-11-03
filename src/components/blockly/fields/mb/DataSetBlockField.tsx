@@ -1,29 +1,12 @@
 import React, { ReactNode, useContext, useEffect, useState } from "react"
-import {
-    Box,
-    Grid,
-    MenuItem,
-    Select,
-    TextField,
-    Tooltip,
-    makeStyles,
-    Theme,
-    createStyles,
-} from "@material-ui/core"
+import { Box, Grid } from "@mui/material"
 
 import { ReactFieldJSON } from "../ReactField"
 import ReactInlineField from "../ReactInlineField"
 import { PointerBoundary } from "../PointerBoundary"
 
-import WorkspaceContext, {
-    resolveBlockServices,
-    WorkspaceWithServices,
-    WorkspaceServices,
-} from "../../WorkspaceContext"
+import WorkspaceContext, { resolveBlockServices } from "../../WorkspaceContext"
 import { CHANGE } from "../../../../../jacdac-ts/src/jdom/constants"
-
-import { useId } from "react-use-id-hook"
-import ExpandModelBlockField from "./ExpandModelBlockField"
 
 export interface DataSetBlockFieldValue {
     numRecordings: number
@@ -93,12 +76,17 @@ export default class DataSetBlockField extends ReactInlineField {
     }
 
     getText_() {
-        const totalRecordings = this.value.numRecordings
+        const totalRecordings = (this.value as DataSetBlockFieldValue)
+            .numRecordings
 
         return `${totalRecordings} recording(s)`
     }
 
     renderInlineField(): ReactNode {
-        return <DataSetParameterWidget initFieldValue={this.value} />
+        return (
+            <DataSetParameterWidget
+                initFieldValue={this.value as DataSetBlockFieldValue}
+            />
+        )
     }
 }

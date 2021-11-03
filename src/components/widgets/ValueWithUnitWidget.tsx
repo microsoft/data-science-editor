@@ -1,7 +1,7 @@
 import React from "react"
-import { Grid, Slider, Typography } from "@material-ui/core"
+import { Grid, Slider, Typography } from "@mui/material"
 import { isSet, roundWithPrecision } from "../../../jacdac-ts/src/jdom/utils"
-import { CSSProperties } from "@material-ui/core/styles/withStyles"
+import { CSSProperties } from "@mui/material/styles"
 import useWidgetTheme from "./useWidgetTheme"
 import useUnitConverter from "../ui/useUnitConverter"
 /// <reference path="../../../jacdac-ts/jacdac-spec/spectool/jdspec.d.ts" />

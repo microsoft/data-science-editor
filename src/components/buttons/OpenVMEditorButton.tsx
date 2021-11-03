@@ -1,6 +1,6 @@
 import React from "react"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
-import ExtensionIcon from "@material-ui/icons/Extension"
+import ExtensionIcon from "@mui/icons-material/Extension"
 
 export default function OpenVMEditorButton(props: { className?: string }) {
     const { className } = props

@@ -1,6 +1,6 @@
-import { Chip } from "@material-ui/core"
+import { Chip } from "@mui/material"
 import React, { useContext } from "react"
-import OpenInBrowserIcon from "@material-ui/icons/OpenInBrowser"
+import OpenInBrowserIcon from "@mui/icons-material/OpenInBrowser"
 import FileSystemContext from "../FileSystemContext"
 import useChange from "../../jacdac/useChange"
 

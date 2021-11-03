@@ -6,7 +6,7 @@ import {
     CardActions,
     Switch,
     Box,
-} from "@material-ui/core"
+} from "@mui/material"
 import useChange from "../jacdac/useChange"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import useGridBreakpoints from "./useGridBreakpoints"

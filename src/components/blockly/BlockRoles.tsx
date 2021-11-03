@@ -1,7 +1,7 @@
 import React, { useContext } from "react"
 import useChange from "../../jacdac/useChange"
 import BlockContext from "./BlockContext"
-import { Grid } from "@material-ui/core"
+import { Grid } from "@mui/material"
 import RoleChip from "./RoleChip"
 
 export default function BlockClientRoles() {
@@ -10,16 +10,18 @@ export default function BlockClientRoles() {
 
     return (
         <>
-            {roles?.map(({ role, service, serviceClass, preferredDeviceId }) => (
-                <Grid item key={role}>
-                    <RoleChip
-                        role={role}
-                        service={service}
-                        serviceClass={serviceClass}
-                        preferredDeviceId={preferredDeviceId}
-                    />
-                </Grid>
-            ))}
+            {roles?.map(
+                ({ role, service, serviceClass, preferredDeviceId }) => (
+                    <Grid item key={role}>
+                        <RoleChip
+                            role={role}
+                            service={service}
+                            serviceClass={serviceClass}
+                            preferredDeviceId={preferredDeviceId}
+                        />
+                    </Grid>
+                )
+            )}
         </>
     )
 }

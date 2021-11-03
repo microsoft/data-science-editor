@@ -1,22 +1,15 @@
 import React, { lazy, ReactNode, useContext, useEffect, useState } from "react"
-import {
-    Box,
-    Button,
-    Grid,
-    Tooltip,
-    makeStyles,
-    Theme,
-    createStyles,
-} from "@material-ui/core"
+import { styled } from "@mui/material/styles"
+import { Box, Button, Grid, Tooltip } from "@mui/material"
 import Suspense from "../../../ui/Suspense"
 
 import { ReactFieldJSON } from "../ReactField"
 import ReactInlineField from "../ReactInlineField"
 import { PointerBoundary } from "../PointerBoundary"
 
-import ViewIcon from "@material-ui/icons/Visibility"
+import ViewIcon from "@mui/icons-material/Visibility"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import DownloadIcon from "@material-ui/icons/GetApp"
+import DownloadIcon from "@mui/icons-material/GetApp"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 
 import { predictRequest } from "../../dsl/workers/tf.proxy"
@@ -28,6 +21,31 @@ import { CHANGE } from "../../../../../jacdac-ts/src/jdom/constants"
 import MBDataSet, { arraysEqual } from "../../../model-editor/MBDataSet"
 import MBModel from "../../../model-editor/MBModel"
 
+const PREFIX = "TrainedModelBlockField"
+
+const classes = {
+    fieldContainer: `${PREFIX}-fieldContainer`,
+    field: `${PREFIX}-field`,
+    inlineItem: `${PREFIX}-inlineItem`,
+}
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled("div")(({ theme }) => ({
+    [`& .${classes.fieldContainer}`]: {
+        lineHeight: "2.5rem",
+        width: "15rem",
+    },
+
+    [`& .${classes.field}`]: {
+        width: theme.spacing(10),
+    },
+
+    [`& .${classes.inlineItem}`]: {
+        height: theme.spacing(30),
+        overflowY: "scroll",
+    },
+}))
+
 const ConfusionMatrixHeatMap = lazy(
     () => import("../../../model-editor/components/ConfusionMatrixHeatMap")
 )
@@ -35,24 +53,7 @@ const DataSetPlot = lazy(
     () => import("../../../model-editor/components/DataSetPlot")
 )
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        fieldContainer: {
-            lineHeight: "2.5rem",
-            width: "15rem",
-        },
-        field: {
-            width: theme.spacing(10),
-        },
-        inlineItem: {
-            height: theme.spacing(30),
-            overflowY: "scroll",
-        },
-    })
-)
-
 function TrainedModelDisplayWidget() {
-    const classes = useStyles()
     const chartProps = {
         CHART_WIDTH: 150,
         CHART_HEIGHT: 150,
@@ -331,12 +332,16 @@ export default class TrainedModelBlockField extends ReactInlineField {
     }
 
     renderInlineField(): ReactNode {
-        return <TrainedModelDisplayWidget />
+        return (
+            <Root>
+                <TrainedModelDisplayWidget />
+            </Root>
+        )
     }
 
     updateFieldValue(msg: any) {
         this.value = {
-            ...this.value,
+            ...(this.value as any),
             ...msg,
         }
     }

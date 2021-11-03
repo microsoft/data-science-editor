@@ -1,10 +1,10 @@
 import React from "react"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import UsbIcon from "@material-ui/icons/Usb"
+import UsbIcon from "@mui/icons-material/Usb"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import BluetoothIcon from "@material-ui/icons/Bluetooth"
+import BluetoothIcon from "@mui/icons-material/Bluetooth"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import WifiIcon from "@material-ui/icons/Wifi"
+import WifiIcon from "@mui/icons-material/Wifi"
 import {
     BLUETOOTH_TRANSPORT,
     PACKETIO_TRANSPORT,

@@ -9,7 +9,7 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-} from "@material-ui/core"
+} from "@mui/material"
 import React, { useContext, useState } from "react"
 import {
     NEW_LISTENER,
@@ -19,9 +19,9 @@ import JDNode from "../../../jacdac-ts/src/jdom/node"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import PaperBox from "../ui/PaperBox"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import Alert from "../ui/Alert"
-import { AlertTitle } from "@material-ui/lab"
+import { AlertTitle } from "@mui/material"
 import { SMap } from "../../../jacdac-ts/src/jdom/utils"
 
 function visitNodes(node: JDNode, vis: (node: JDNode) => void) {

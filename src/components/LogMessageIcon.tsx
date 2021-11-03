@@ -2,13 +2,13 @@ import React from "react"
 import { LoggerCmd } from "../../jacdac-ts/src/jdom/constants"
 
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import WarningIcon from "@material-ui/icons/Warning"
+import WarningIcon from "@mui/icons-material/Warning"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import ErrorIcon from "@material-ui/icons/Error"
+import ErrorIcon from "@mui/icons-material/Error"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import MessageIcon from "@material-ui/icons/Message"
+import MessageIcon from "@mui/icons-material/Message"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import NoteIcon from "@material-ui/icons/Note"
+import NoteIcon from "@mui/icons-material/Note"
 
 export default function LogMessageIcon(props: {
     identifier: LoggerCmd

@@ -1,4 +1,4 @@
-import { ButtonProps } from "@material-ui/core"
+import { ButtonProps } from "@mui/material"
 import { Button } from "gatsby-material-ui-components"
 import React, { ReactNode, useContext } from "react"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"

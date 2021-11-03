@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { JDClient } from "../../../jacdac-ts/src/jdom/client"
 import { CHANGE } from "../../../jacdac-ts/src/jdom/constants"
 import useChange from "../../jacdac/useChange"
-import { Button, Grid } from "@material-ui/core"
+import { Button, Grid } from "@mui/material"
 
 /**
  * Razor Chroma SDK client

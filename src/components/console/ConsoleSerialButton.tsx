@@ -2,7 +2,7 @@ import React, { useContext } from "react"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import TransportIcon from "../icons/TransportIcon"
 import ConsoleContext from "./ConsoleContext"
-import { IconButtonProps } from "@material-ui/core"
+import { IconButtonProps } from "@mui/material"
 
 export default function ConsoleSerialButton(props: IconButtonProps) {
     const { ...rest } = props

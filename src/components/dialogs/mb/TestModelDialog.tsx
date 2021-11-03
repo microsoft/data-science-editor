@@ -5,8 +5,8 @@ import {
     DialogActions,
     DialogContent,
     Grid,
-} from "@material-ui/core"
-import DownloadIcon from "@material-ui/icons/GetApp"
+} from "@mui/material"
+import DownloadIcon from "@mui/icons-material/GetApp"
 import IconButtonWithTooltip from "../../ui/IconButtonWithTooltip"
 import Suspense from "../../ui/Suspense"
 

@@ -1,11 +1,11 @@
 // tslint:disable-next-line: no-submodule-imports
-import { Box } from "@material-ui/core"
+import { Box } from "@mui/material"
 // tslint:disable-next-line: no-submodule-imports
 import Alert from "../ui/Alert"
 import React, { useContext } from "react"
 import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
-import { NoSsr } from "@material-ui/core"
+import { NoSsr } from "@mui/material"
 import ConnectButtons from "../buttons/ConnectButtons"
 import useDevices from "../hooks/useDevices"
 

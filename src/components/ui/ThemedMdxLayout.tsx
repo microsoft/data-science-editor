@@ -1,4 +1,4 @@
-import { Theme } from "@material-ui/core"
+import { Theme } from "@mui/material"
 import { MDXProvider } from "@mdx-js/react"
 import React, { ReactNode } from "react"
 import useMdxComponents from "../useMdxComponents"

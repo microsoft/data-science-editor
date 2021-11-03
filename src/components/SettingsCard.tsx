@@ -1,10 +1,4 @@
-import {
-    Card,
-    CardActions,
-    CardContent,
-    Grid,
-    TextField,
-} from "@material-ui/core"
+import { Card, CardActions, CardContent, Grid, TextField } from "@mui/material"
 import React, {
     ChangeEvent,
     lazy,
@@ -18,9 +12,9 @@ import useServiceClient from "./useServiceClient"
 import SettingsClient from "../../jacdac-ts/src/jdom/clients/settingsclient"
 import { useChangeAsync } from "../jacdac/useChange"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import DeleteIcon from "@material-ui/icons/Delete"
+import DeleteIcon from "@mui/icons-material/Delete"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
-import AddIcon from "@material-ui/icons/Add"
+import AddIcon from "@mui/icons-material/Add"
 import CmdButton from "./CmdButton"
 import { useId } from "react-use-id-hook"
 import LoadingProgress from "./ui/LoadingProgress"
@@ -31,7 +25,7 @@ import { Button } from "gatsby-material-ui-components"
 import ServiceManagerContext from "./ServiceManagerContext"
 import Suspense from "./ui/Suspense"
 import AppContext from "./AppContext"
-import SystemUpdateAltIcon from "@material-ui/icons/SystemUpdateAlt"
+import SystemUpdateAltIcon from "@mui/icons-material/SystemUpdateAlt"
 
 const ImportButton = lazy(() => import("./ImportButton"))
 

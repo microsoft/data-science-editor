@@ -1,10 +1,7 @@
 import React, { lazy, ReactNode } from "react"
 import { createToneContext, ToneContext } from "../../ui/WebAudioContext"
 import Suspense from "../../ui/Suspense"
-import ReactField, {
-    ReactFieldJSON,
-    toShadowDefinition,
-} from "./ReactField"
+import ReactField, { ReactFieldJSON, toShadowDefinition } from "./ReactField"
 const PianoWidget = lazy(() => import("../../widgets/PianoWidget"))
 
 export default class NoteField extends ReactField<number> {

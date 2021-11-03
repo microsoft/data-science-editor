@@ -4,7 +4,7 @@ import {
     InputLabel,
     MenuItem,
     Select,
-} from "@material-ui/core"
+} from "@mui/material"
 import React, { ChangeEvent, ReactNode } from "react"
 import { useId } from "react-use-id-hook"
 

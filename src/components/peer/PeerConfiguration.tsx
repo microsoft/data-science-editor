@@ -6,7 +6,7 @@ import {
     Grid,
     TextField,
     Typography,
-} from "@material-ui/core"
+} from "@mui/material"
 import React, { ChangeEvent, useContext, useState } from "react"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"

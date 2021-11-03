@@ -50,9 +50,10 @@ function tryParse(v: string): Version {
         }
     }
     if (/^v\d/i.test(v)) v = v.slice(1)
-    const m = /^(\d+)\.(\d+)\.(\d+)(-([0-9a-zA-Z\-\.]+))?(\+([0-9a-zA-Z\-\.]+))?$/.exec(
-        v
-    )
+    const m =
+        /^(\d+)\.(\d+)\.(\d+)(-([0-9a-zA-Z\-\.]+))?(\+([0-9a-zA-Z\-\.]+))?$/.exec(
+            v
+        )
     if (m)
         return {
             major: parseInt(m[1]),

@@ -1,5 +1,5 @@
 import React, { useContext } from "react"
-import { Typography } from "@material-ui/core"
+import { Typography } from "@mui/material"
 import { InPipeReader } from "../../jacdac-ts/src/jdom/pipes"
 import JDService from "../../jacdac-ts/src/jdom/service"
 import DeviceName from "./devices/DeviceName"

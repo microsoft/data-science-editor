@@ -5,7 +5,7 @@ import {
     CardHeader,
     Grid,
     TextField,
-} from "@material-ui/core"
+} from "@mui/material"
 import React, { ChangeEvent, useState } from "react"
 import useDevices from "../../components/hooks/useDevices"
 import DeviceCardHeader from "../../components/devices/DeviceCardHeader"

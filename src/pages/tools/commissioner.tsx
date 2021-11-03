@@ -1,13 +1,13 @@
 import React, { useState, useContext, useEffect, useCallback } from "react"
 // tslint:disable-next-line: no-submodule-imports
-import { Grid, Button, TextField } from "@material-ui/core"
+import { Grid, Button, TextField } from "@mui/material"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import SaveIcon from "@material-ui/icons/Save"
-import CheckCircle from "@material-ui/icons/CheckCircle"
-import CancelIcon from "@material-ui/icons/Cancel"
+import SaveIcon from "@mui/icons-material/Save"
+import CheckCircle from "@mui/icons-material/CheckCircle"
+import CancelIcon from "@mui/icons-material/Cancel"
 // tslint:disable-next-line: no-submodule-imports
 import useDevices from "../../components/hooks/useDevices"
 import {
@@ -20,19 +20,19 @@ import {
 import JDService from "../../../jacdac-ts/src/jdom/service"
 import Packet from "../../../jacdac-ts/src/jdom/packet"
 // tslint:disable-next-line: no-submodule-imports
-import Table from "@material-ui/core/Table"
+import Table from "@mui/material/Table"
 // tslint:disable-next-line: no-submodule-imports
-import TableBody from "@material-ui/core/TableBody"
+import TableBody from "@mui/material/TableBody"
 // tslint:disable-next-line: no-submodule-imports
-import TableCell from "@material-ui/core/TableCell"
+import TableCell from "@mui/material/TableCell"
 // tslint:disable-next-line: no-submodule-imports
-import TableContainer from "@material-ui/core/TableContainer"
+import TableContainer from "@mui/material/TableContainer"
 // tslint:disable-next-line: no-submodule-imports
-import TableHead from "@material-ui/core/TableHead"
+import TableHead from "@mui/material/TableHead"
 // tslint:disable-next-line: no-submodule-imports
-import TableRow from "@material-ui/core/TableRow"
+import TableRow from "@mui/material/TableRow"
 // tslint:disable-next-line: no-submodule-imports
-import Paper from "@material-ui/core/Paper"
+import Paper from "@mui/material/Paper"
 import GridHeader from "../../components/ui/GridHeader"
 import Dashboard from "../../components/dashboard/Dashboard"
 import ServiceManagerContext from "../../components/ServiceManagerContext"
@@ -42,7 +42,6 @@ import { dependencyId } from "../../../jacdac-ts/src/jdom/eventsource"
 import JDDevice from "../../../jacdac-ts/src/jdom/device"
 import { lightEncode } from "../../../jacdac-ts/src/jdom/light"
 import { LedPixelCmd, LedCmd } from "../../../jacdac-ts/src/jdom/constants"
-import { createStyles, makeStyles } from "@material-ui/core"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
 import FileSystemContext from "../../components/FileSystemContext"
 import FileTabs from "../../components/fs/FileTabs"
@@ -50,19 +49,6 @@ import useChange from "../../jacdac/useChange"
 import AppContext from "../../components/AppContext"
 import { ControlReg } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import { LedPixelReg } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
-
-const useStyles = makeStyles(() =>
-    createStyles({
-        buttonFail: {
-            color: "white",
-            backgroundColor: "red",
-        },
-        buttonSuccess: {
-            color: "white",
-            backgroundColor: "green",
-        },
-    })
-)
 
 interface ServiceDescriptor {
     name: string
@@ -114,7 +100,6 @@ function DataSetTable(props: {
     updateDescriptor: (DeviceDescriptor) => void
     className?: string
 }) {
-    const classes = useStyles()
     const { dataSet, updateDescriptor } = props
     const { descriptors, headers } = dataSet
 
@@ -184,7 +169,7 @@ function DataSetTable(props: {
                                     <Button
                                         aria-label="Toggle pass state"
                                         variant="contained"
-                                        className={classes.buttonSuccess}
+                                        color="success"
                                         onClick={setPass(descriptor, false)}
                                         startIcon={
                                             <CheckCircle fontSize="small" />
@@ -197,7 +182,7 @@ function DataSetTable(props: {
                                     <Button
                                         aria-label="Toggle pass state"
                                         variant="contained"
-                                        className={classes.buttonFail}
+                                        color="error"
                                         onClick={setPass(descriptor, true)}
                                         startIcon={
                                             <CancelIcon fontSize="small" />

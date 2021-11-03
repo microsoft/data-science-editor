@@ -1,12 +1,6 @@
 import React, { useContext } from "react"
-import {
-    ListItem,
-    ListItemIcon,
-    makeStyles,
-    createStyles,
-    ListItemText,
-    Box,
-} from "@material-ui/core"
+import { styled } from "@mui/material/styles"
+import { ListItem, ListItemIcon, ListItemText, Box } from "@mui/material"
 import Packet from "../../jacdac-ts/src/jdom/packet"
 import PacketBadge from "./PacketBadge"
 import AppContext, { DrawerType } from "./AppContext"
@@ -17,14 +11,18 @@ import { jdunpack } from "../../jacdac-ts/src/jdom/pack"
 import { navigate } from "gatsby"
 import useMediaQueries from "./hooks/useMediaQueries"
 
-const useStyles = makeStyles(() =>
-    createStyles({
-        item: {
-            marginBottom: 0,
-            borderBottom: "1px solid #ddd",
-        },
-    })
-)
+const PREFIX = "PacketListItem"
+
+const classes = {
+    item: `${PREFIX}-item`,
+}
+
+const StyledListItem = styled(ListItem)(() => ({
+    [`&.${classes.item}`]: {
+        marginBottom: 0,
+        borderBottom: "1px solid #ddd",
+    },
+}))
 
 export default function PacketListItem(props: {
     packet: Packet
@@ -34,7 +32,7 @@ export default function PacketListItem(props: {
     const { packet, count, showTime } = props
     const { selectedPacket, setSelectedPacket } = useContext(AppContext)
     const { setDrawerType } = useContext(AppContext)
-    const classes = useStyles()
+
     const { mobile } = useMediaQueries()
     const { decoded } = packet
     const { info } = decoded || {}
@@ -71,8 +69,7 @@ export default function PacketListItem(props: {
     }`
 
     return (
-        <ListItem
-            button
+        <StyledListItem
             className={classes.item}
             dense={true}
             onClick={handleClick}
@@ -85,6 +82,6 @@ export default function PacketListItem(props: {
                 primary={<Box textOverflow="ellipsis">{primary}</Box>}
                 secondary={secondary}
             />
-        </ListItem>
+        </StyledListItem>
     )
 }

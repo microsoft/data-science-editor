@@ -1,10 +1,10 @@
 import React, { useMemo } from "react"
 import { getParser, Parser } from "bowser"
 import Alert from "./Alert"
-import { AlertTitle } from "@material-ui/lab"
+import { AlertTitle } from "@mui/material"
 
 export default function BrowserCompatibilityAlert(props: {
-    filter: Parser.checkTree,
+    filter: Parser.checkTree
     label: string
 }) {
     const { filter, label } = props

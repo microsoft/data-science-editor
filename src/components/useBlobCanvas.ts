@@ -1,16 +1,20 @@
-import { useState } from "react";
+import { useState } from "react"
 import useEffectAsync from "./useEffectAsync"
 
-function readBlobToCanvas(blob: Blob, width: number, height: number): Promise<HTMLCanvasElement> {
+function readBlobToCanvas(
+    blob: Blob,
+    width: number,
+    height: number
+): Promise<HTMLCanvasElement> {
     return new Promise((resolve, reject) => {
-        const url = URL.createObjectURL(blob);
-        const img = new Image();
+        const url = URL.createObjectURL(blob)
+        const img = new Image()
         img.onload = () => {
-            URL.revokeObjectURL(url);
+            URL.revokeObjectURL(url)
 
-            const cvs = document.createElement("canvas");
-            cvs.width = width;
-            cvs.height = height;
+            const cvs = document.createElement("canvas")
+            cvs.width = width
+            cvs.height = height
             const ctx = cvs.getContext("2d")
 
             // compute center of image to be copied into canvas
@@ -20,43 +24,51 @@ function readBlobToCanvas(blob: Blob, width: number, height: number): Promise<HT
             const iw = img.width
             const ih = img.height
             const iar = iw / ih
-            let sx = 0, sy = 0, sw = iw, sh = ih;
-            if (iar < car) { // image is wider, clip sides
-                const dw = iw - cw;
+            let sx = 0,
+                sy = 0,
+                sw = iw,
+                sh = ih
+            if (iar < car) {
+                // image is wider, clip sides
+                const dw = iw - cw
                 sx = dw >> 1
                 sw = iw - dw
-            } else { // klip top
-                const dh = ih - ch;
+            } else {
+                // klip top
+                const dh = ih - ch
                 sy = dh >> 1
-                sh = ih - dh;
+                sh = ih - dh
             }
-            ctx.drawImage(img, sx, sy, sw, sh, 0, 0, cw, ch);
+            ctx.drawImage(img, sx, sy, sw, sh, 0, 0, cw, ch)
 
             // done
-            resolve(cvs);
+            resolve(cvs)
         }
         img.onerror = () => {
             // error
-            URL.revokeObjectURL(url);
-            reject(undefined);
+            URL.revokeObjectURL(url)
+            reject(undefined)
         }
-        img.src = url;
+        img.src = url
     })
 }
 
-export default function useBlobCanvas(blob: Blob, width: number, height: number) {
-    const [canvas, setCanvas] = useState<HTMLCanvasElement>(undefined);
+export default function useBlobCanvas(
+    blob: Blob,
+    width: number,
+    height: number
+) {
+    const [canvas, setCanvas] = useState<HTMLCanvasElement>(undefined)
     useEffectAsync(async () => {
-        if (!blob)
-            setCanvas(undefined);
+        if (!blob) setCanvas(undefined)
         else {
             try {
-                const cvs = await readBlobToCanvas(blob, width, height);
-                setCanvas(cvs);
+                const cvs = await readBlobToCanvas(blob, width, height)
+                setCanvas(cvs)
             } catch (e) {
                 setCanvas(undefined)
             }
         }
     }, [blob, width, height])
-    return canvas;
+    return canvas
 }

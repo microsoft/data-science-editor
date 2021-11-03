@@ -68,7 +68,13 @@ export default function PowerButton(props: {
                     style={{ userSelect: "none", pointerEvents: "none" }}
                 />
             </g>
-            <text aria-label={label} x={cx} y={cy + r + 8} {...textProps} fontSize={"80%"}>
+            <text
+                aria-label={label}
+                x={cx}
+                y={cy + r + 8}
+                {...textProps}
+                fontSize={"80%"}
+            >
                 {label}
             </text>
         </g>

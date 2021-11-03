@@ -1,4 +1,4 @@
-import { Grid } from "@material-ui/core"
+import { Grid } from "@mui/material"
 import { StaticImage } from "gatsby-plugin-image"
 import React, { lazy, useContext } from "react"
 import CenterGrid from "./CenterGrid"
@@ -31,7 +31,10 @@ export default function Tools() {
     const handleShowDeviceTree = () => setDrawerType(DrawerType.Dom)
     const handleShowPacketConsole = () => setDrawerType(DrawerType.Packets)
     const simulatorClass = SRV_DOT_MATRIX
-    const dashboards = useDevices({ ignoreInfrastructure: true, announced: true })
+    const dashboards = useDevices({
+        ignoreInfrastructure: true,
+        announced: true,
+    })
         .filter(
             dev =>
                 !dev.hasService(SRV_ROLE_MANAGER) &&

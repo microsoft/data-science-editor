@@ -1,14 +1,8 @@
-import {
-    Chip,
-    Divider,
-    Grid,
-    InputAdornment,
-    TextField,
-} from "@material-ui/core"
+import { Chip, Divider, Grid, InputAdornment, TextField } from "@mui/material"
 import React, { useMemo, useState } from "react"
 import ServiceSpecificationList from "./specification/ServiceSpecificationList"
 import { useDebounce } from "use-debounce"
-import SearchIcon from "@material-ui/icons/Search"
+import SearchIcon from "@mui/icons-material/Search"
 import ChipList from "./ui/ChipList"
 import {
     deviceSpecificationsForService,
@@ -20,7 +14,7 @@ import MakeCodeIcon from "./icons/MakeCodeIcon"
 import KindIcon from "./KindIcon"
 import { serviceProviderDefinitionFromServiceClass } from "../../jacdac-ts/src/servers/servers"
 import JacdacIcon from "./icons/JacdacIcon"
-import SpeedIcon from "@material-ui/icons/Speed"
+import SpeedIcon from "@mui/icons-material/Speed"
 import { VIRTUAL_DEVICE_NODE_NAME } from "../../jacdac-ts/src/jdom/constants"
 import { useId } from "react-use-id-hook"
 import { resolveMakecodeServiceFromClassIdentifier } from "./makecode/services"
@@ -92,7 +86,10 @@ export default function ServiceCatalog() {
             )
         if (simulators)
             r = r.filter(
-                srv => !!serviceProviderDefinitionFromServiceClass(srv.classIdentifier)
+                srv =>
+                    !!serviceProviderDefinitionFromServiceClass(
+                        srv.classIdentifier
+                    )
             )
         if (devices)
             r = r.filter(

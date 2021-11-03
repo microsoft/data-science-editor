@@ -7,8 +7,7 @@ import ValueContext, { ValueContextProps } from "./ValueContext"
 const ServoWidget = lazy(() => import("../../widgets/ServoWidget"))
 
 function ServiceFieldWidget() {
-    const { value } =
-        useContext<ValueContextProps<number>>(ValueContext)
+    const { value } = useContext<ValueContextProps<number>>(ValueContext)
     return (
         <Suspense>
             <ServoWidget

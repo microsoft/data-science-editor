@@ -1,40 +1,40 @@
-import React, { useContext, useState } from "react";
-import Alert from "./ui/Alert";
-import AppContext from "./AppContext";
+import React, { useContext, useState } from "react"
+import Alert from "./ui/Alert"
+import AppContext from "./AppContext"
 
 export type ProgressHandler = (p: number) => void
 
 export default function useCall() {
     const { setError: setAppError } = useContext(AppContext)
-    const [error, setError] = useState<Error>();
+    const [error, setError] = useState<Error>()
     const [running, setRunning] = useState(false)
-    const [progress, setProgress] = useState(0);
+    const [progress, setProgress] = useState(0)
 
-    const handleProgress = (p: number) => setProgress(p);
+    const handleProgress = (p: number) => setProgress(p)
 
     const call = (handler: (onProgress?: ProgressHandler) => void) => {
         try {
             setRunning(true)
             setError(undefined)
-            handler(handleProgress);
+            handler(handleProgress)
         } catch (e) {
             setError(e)
             setAppError(e)
-        }
-        finally {
+        } finally {
             setRunning(false)
         }
     }
-    const callAsync = async (handler: (onProgress?: (p: number) => void) => Promise<void>) => {
+    const callAsync = async (
+        handler: (onProgress?: (p: number) => void) => Promise<void>
+    ) => {
         try {
             setRunning(true)
             setError(undefined)
-            await handler(handleProgress);
+            await handler(handleProgress)
         } catch (e) {
             setError(e)
             setAppError(e)
-        }
-        finally {
+        } finally {
             setRunning(false)
         }
     }
@@ -46,6 +46,6 @@ export default function useCall() {
         progress,
         alert,
         call,
-        callAsync
+        callAsync,
     }
-} 
+}

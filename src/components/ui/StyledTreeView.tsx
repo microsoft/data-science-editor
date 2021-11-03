@@ -1,14 +1,87 @@
 import React from "react"
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles"
-import TreeItem, { TreeItemProps } from "@material-ui/lab/TreeItem"
-import Typography from "@material-ui/core/Typography"
+import { styled } from "@mui/material/styles"
+import TreeItem, { TreeItemProps } from "@mui/lab/TreeItem"
+import Typography from "@mui/material/Typography"
 import KindIcon from "../KindIcon"
-import WarningIcon from "@material-ui/icons/Warning"
+import WarningIcon from "@mui/icons-material/Warning"
 
 import { useId } from "react-use-id-hook"
 import { Link } from "gatsby-material-ui-components"
-import { Tooltip } from "@material-ui/core"
+import { Tooltip } from "@mui/material"
 import { ellipse } from "../../../jacdac-ts/src/jdom/utils"
+
+const PREFIX = "StyledTreeView"
+
+const classes = {
+    root: `${PREFIX}-root`,
+    content: `${PREFIX}-content`,
+    group: `${PREFIX}-group`,
+    expanded: `${PREFIX}-expanded`,
+    selected: `${PREFIX}-selected`,
+    label: `${PREFIX}-label`,
+    labelRoot: `${PREFIX}-labelRoot`,
+    labelIcon: `${PREFIX}-labelIcon`,
+    labelText: `${PREFIX}-labelText`,
+}
+
+const Root = styled("div")(({ theme }) => ({
+    [`& .${classes.root}`]: {
+        color: theme.palette.text.secondary,
+        "&:hover > $content": {
+            backgroundColor: theme.palette.action.hover,
+        },
+        "&:focus > $content, &$selected > $content": {
+            backgroundColor: `var(--tree-view-bg-color, ${theme.palette.grey})`,
+            color: "var(--tree-view-color)",
+        },
+        "&:focus > $content $label, &:hover > $content $label, &$selected > $content $label":
+            {
+                backgroundColor: "transparent",
+            },
+    },
+
+    [`& .${classes.content}`]: {
+        color: theme.palette.text.secondary,
+        fontWeight: theme.typography.fontWeightMedium,
+        "$expanded > &": {
+            fontWeight: theme.typography.fontWeightRegular,
+        },
+    },
+
+    [`& .${classes.group}`]: {
+        marginLeft: 0,
+        "& $content": {
+            paddingLeft: theme.spacing(1),
+        },
+    },
+
+    [`& .${classes.expanded}`]: {},
+
+    [`& .${classes.selected}`]: {
+        fontWeight: theme.typography.fontWeightBold,
+    },
+
+    [`& .${classes.label}`]: {
+        fontWeight: "inherit",
+        color: "inherit",
+    },
+
+    [`&.${classes.labelRoot}`]: {
+        display: "flex",
+        alignItems: "center",
+        padding: theme.spacing(0.5, 0),
+    },
+
+    [`& .${classes.labelIcon}`]: {
+        marginRight: theme.spacing(0.5),
+    },
+
+    [`& .${classes.labelText}`]: {
+        fontWeight: "inherit",
+        flexGrow: 1,
+        marginRight: theme.spacing(0.5),
+    },
+}))
 
 declare module "csstype" {
     interface Properties {
@@ -17,58 +90,18 @@ declare module "csstype" {
     }
 }
 
-const useTreeItemStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        root: {
-            color: theme.palette.text.secondary,
-            "&:hover > $content": {
-                backgroundColor: theme.palette.action.hover,
-            },
-            "&:focus > $content, &$selected > $content": {
-                backgroundColor: `var(--tree-view-bg-color, ${theme.palette.grey})`,
-                color: "var(--tree-view-color)",
-            },
-            "&:focus > $content $label, &:hover > $content $label, &$selected > $content $label":
-                {
-                    backgroundColor: "transparent",
-                },
-        },
-        content: {
-            color: theme.palette.text.secondary,
-            fontWeight: theme.typography.fontWeightMedium,
-            "$expanded > &": {
-                fontWeight: theme.typography.fontWeightRegular,
-            },
-        },
-        group: {
-            marginLeft: 0,
-            "& $content": {
-                paddingLeft: theme.spacing(1),
-            },
-        },
-        expanded: {},
-        selected: {
-            fontWeight: theme.typography.fontWeightBold,
-        },
-        label: {
-            fontWeight: "inherit",
-            color: "inherit",
-        },
-        labelRoot: {
-            display: "flex",
-            alignItems: "center",
-            padding: theme.spacing(0.5, 0),
-        },
-        labelIcon: {
-            marginRight: theme.spacing(0.5),
-        },
-        labelText: {
-            fontWeight: "inherit",
-            flexGrow: 1,
-            marginRight: theme.spacing(0.5),
-        },
-    })
-)
+export interface StyledTreeViewItemProps {
+    key: string
+    expanded: string[]
+    selected: string[]
+}
+
+export interface StyledTreeViewProps {
+    defaultExpanded?: string[]
+    defaultSelected?: string[]
+    onToggle?: (expanded: string[]) => void
+    onSelect?: (selected: string[]) => void
+}
 
 export function StyledTreeItem(
     props: TreeItemProps & {
@@ -85,7 +118,6 @@ export function StyledTreeItem(
         actions?: JSX.Element | JSX.Element[]
     }
 ) {
-    const classes = useTreeItemStyles()
     const {
         labelText,
         labelTo,
@@ -108,7 +140,7 @@ export function StyledTreeItem(
             tabIndex={0}
             nodeId={nodeId}
             label={
-                <div className={classes.labelRoot}>
+                <Root className={classes.labelRoot}>
                     {kind && !icon && (
                         <KindIcon kind={kind} className={classes.labelIcon} />
                     )}
@@ -144,7 +176,7 @@ export function StyledTreeItem(
                         )}
                         {actions}
                     </Typography>
-                </div>
+                </Root>
             }
             style={{
                 "--tree-view-color": color,
@@ -161,17 +193,4 @@ export function StyledTreeItem(
             {...other}
         />
     )
-}
-
-export interface StyledTreeViewItemProps {
-    key: string
-    expanded: string[]
-    selected: string[]
-}
-
-export interface StyledTreeViewProps {
-    defaultExpanded?: string[]
-    defaultSelected?: string[]
-    onToggle?: (expanded: string[]) => void
-    onSelect?: (selected: string[]) => void
 }

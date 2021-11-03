@@ -40,8 +40,6 @@ import {
     StyledTreeViewItemProps,
     StyledTreeViewProps,
 } from "../ui/StyledTreeView"
-// tslint:disable-next-line: no-submodule-imports match-default-export-name
-import useMediaQueries from "../hooks/useMediaQueries"
 import useInstanceName from "../services/useInstanceName"
 import useBestRegister from "../hooks/useBestRegister"
 import { humanify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
@@ -245,7 +243,7 @@ export function RegisterTreeItem(
         `${specification?.name || id}${optional ? "?" : ""}`
     )
     const humanValue = useRegisterHumanValue(register, {
-        visible: true
+        visible: true,
     })
     const handleClick = useCallback(() => register.sendGetAsync(), [register])
 

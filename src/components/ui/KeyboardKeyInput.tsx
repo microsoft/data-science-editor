@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from "react"
-import { createStyles, makeStyles } from "@material-ui/core"
+import { styled } from "@mui/material/styles"
 import { HidKeyboardModifiers } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import Keyboard from "react-simple-keyboard"
 import "react-simple-keyboard/build/css/index.css"
@@ -12,38 +12,46 @@ import {
 } from "../../../jacdac-ts/src/servers/hidkeyboardserver"
 import useMediaQueries from "../hooks/useMediaQueries"
 
-const useStyles = makeStyles(theme =>
-    createStyles({
-        capture: {
-            cursor: "pointer",
-            "&:hover": {
-                borderColor: theme.palette.primary.main,
-            },
-            "&:focus": {
-                borderColor: theme.palette.action.active,
-            },
+const PREFIX = "KeyboardKeyInput"
+
+const classes = {
+    capture: `${PREFIX}-capture`,
+    darkKeyboard: `${PREFIX}-darkKeyboard`,
+    keyboard: `${PREFIX}-keyboard`,
+}
+
+const Root = styled("div")(({ theme }) => ({
+    [`& .${classes.capture}`]: {
+        cursor: "pointer",
+        "&:hover": {
+            borderColor: theme.palette.primary.main,
         },
-        darkKeyboard: {
-            backgroundColor: "#333 !important",
-            borderColor: "#777 !important",
+        "&:focus": {
+            borderColor: theme.palette.action.active,
+        },
+    },
+
+    [`& .${classes.darkKeyboard}`]: {
+        backgroundColor: "#333 !important",
+        borderColor: "#777 !important",
+        color: "white !important",
+        "& .hg-button": {
+            background: "rgba(0, 0, 0, 0.5) !important",
+            color: "white",
+        },
+        "& .hg-button.buttonSelected": {
+            background: `${theme.palette.primary.dark} !important`,
             color: "white !important",
-            "& .hg-button": {
-                background: "rgba(0, 0, 0, 0.5) !important",
-                color: "white",
-            },
-            "& .hg-button.buttonSelected": {
-                background: `${theme.palette.primary.dark} !important`,
-                color: "white !important",
-            },
         },
-        keyboard: {
-            "& .buttonSelected": {
-                background: `${theme.palette.primary.dark} !important`,
-                color: "white !important",
-            },
+    },
+
+    [`& .${classes.keyboard}`]: {
+        "& .buttonSelected": {
+            background: `${theme.palette.primary.dark} !important`,
+            color: "white !important",
         },
-    })
-)
+    },
+}))
 
 export default function KeyboardKeyInput(props: {
     initialSelector?: number
@@ -65,7 +73,7 @@ export default function KeyboardKeyInput(props: {
     const { darkMode } = useContext(DarkModeContext)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const keyboardRef = useRef<any>()
-    const classes = useStyles()
+
     const theme = `hg-theme-default hg-layout-default ${
         darkMode === "dark" ? classes.darkKeyboard : classes.keyboard
     }`
@@ -157,15 +165,17 @@ export default function KeyboardKeyInput(props: {
     }, [value])
 
     return (
-        <Keyboard
-            baseClass={keyboardId}
-            keyboardRef={r => (keyboardRef.current = r)}
-            onKeyPress={handleKeyboardKeyPress}
-            layout={layout}
-            layoutName={layoutName}
-            theme={theme}
-            display={display}
-            mergeDisplay={true}
-        />
+        <Root>
+            <Keyboard
+                baseClass={keyboardId}
+                keyboardRef={r => (keyboardRef.current = r)}
+                onKeyPress={handleKeyboardKeyPress}
+                layout={layout}
+                layoutName={layoutName}
+                theme={theme}
+                display={display}
+                mergeDisplay={true}
+            />
+        </Root>
     )
 }

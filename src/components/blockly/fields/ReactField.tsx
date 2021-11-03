@@ -7,7 +7,7 @@ import { ReactNode } from "react"
 import { IdProvider } from "react-use-id-hook"
 import DarkModeProvider from "../../ui/DarkModeProvider"
 import AppTheme from "../../ui/AppTheme"
-import { Box } from "@material-ui/core"
+import { Box } from "@mui/material"
 import { BlockDefinition } from "../toolbox"
 import { assert } from "../../../../jacdac-ts/src/jdom/utils"
 import { ValueProvider } from "./ValueContext"
@@ -35,14 +35,12 @@ export const VALUE_CHANGE = "valueChange"
 export const MOUNT = "mount"
 export const UNMOUNT = "unmount"
 
-
 export default class ReactField<T> extends ReactFieldBase<T> {
     SERIALIZABLE = true
     public readonly events = new JDEventSource()
     protected div_: Element
     protected view: SVGElement
     protected darkMode: "light" | "dark" = "dark"
-
 
     // override to support custom view
     protected initCustomView(): SVGElement {
@@ -162,7 +160,7 @@ export default class ReactField<T> extends ReactFieldBase<T> {
                                     >
                                         <Box
                                             m={0.5}
-                                            borderRadius={"0.25rem"}
+                                            borderRadius="0.25rempx"
                                             bgcolor="background.paper"
                                         >
                                             {this.renderField()}

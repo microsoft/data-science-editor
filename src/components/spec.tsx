@@ -4,20 +4,20 @@ import { MDXRenderer } from "gatsby-plugin-mdx"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function PageTemplate(props: { data: { mdx: { body: any } } }) {
-  const { data } = props;
-  const { mdx } = data;
-  return <MDXRenderer>{mdx.body}</MDXRenderer>
+    const { data } = props
+    const { mdx } = data
+    return <MDXRenderer>{mdx.body}</MDXRenderer>
 }
 
 export const pageQuery = graphql`
-  query SpecQuery($id: String) {
-    mdx(id: { eq: $id }) {
-      id
-      body
-      frontmatter {
-        title
-        hideToc
-      }
+    query SpecQuery($id: String) {
+        mdx(id: { eq: $id }) {
+            id
+            body
+            frontmatter {
+                title
+                hideToc
+            }
+        }
     }
-  }
 `

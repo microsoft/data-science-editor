@@ -1,8 +1,8 @@
 import React, { useState } from "react"
-import { createStyles, Box, Tabs, Tab } from "@material-ui/core"
+import { styled } from "@mui/material/styles"
+import { Box, Tabs, Tab } from "@mui/material"
 import TabPanel from "../ui/TabPanel"
 
-import { makeStyles, Theme } from "@material-ui/core/styles"
 import useChartPalette from "../useChartPalette"
 
 import CollectData from "./CollectData"
@@ -12,45 +12,63 @@ import ModelOutput from "./ModelOutput"
 import MBDataSet from "./MBDataSet"
 import MBModel from "./MBModel"
 
+const PREFIX = "DATASET_NAME"
+
+const classes = {
+    root: `${PREFIX}-root`,
+    grow: `${PREFIX}-grow`,
+    field: `${PREFIX}-field`,
+    segment: `${PREFIX}-segment`,
+    row: `${PREFIX}-row`,
+    buttons: `${PREFIX}-buttons`,
+    trend: `${PREFIX}-trend`,
+    vmiddle: `${PREFIX}-vmiddle`,
+}
+
+const StyledBox = styled(Box)(({ theme }) => ({
+    [`& .${classes.root}`]: {
+        marginBottom: theme.spacing(1),
+    },
+
+    [`& .${classes.grow}`]: {
+        flexGrow: 1,
+    },
+
+    [`& .${classes.field}`]: {
+        marginRight: theme.spacing(1),
+        marginBottom: theme.spacing(1.5),
+        display: "inline-flex",
+        width: theme.spacing(35),
+    },
+
+    [`& .${classes.segment}`]: {
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2),
+    },
+
+    [`& .${classes.row}`]: {
+        marginBottom: theme.spacing(0.5),
+    },
+
+    [`& .${classes.buttons}`]: {
+        display: "inline-flex",
+        marginRight: theme.spacing(1),
+        marginBottom: theme.spacing(2),
+    },
+
+    [`& .${classes.trend}`]: {
+        width: theme.spacing(10),
+    },
+
+    [`& .${classes.vmiddle}`]: {
+        verticalAlign: "middle",
+    },
+}))
+
 const MODEL_EDITOR = "model_editor" // create prefix for model editor page
 const MODEL_NAME = MODEL_EDITOR + "-model"
 export const DATASET_NAME = MODEL_EDITOR + "-dataset"
 export const MODEL_EDITOR_STORAGE_KEY = "model-editor-data-json"
-
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        root: {
-            marginBottom: theme.spacing(1),
-        },
-        grow: {
-            flexGrow: 1,
-        },
-        field: {
-            marginRight: theme.spacing(1),
-            marginBottom: theme.spacing(1.5),
-            display: "inline-flex",
-            width: theme.spacing(35),
-        },
-        segment: {
-            marginTop: theme.spacing(2),
-            marginBottom: theme.spacing(2),
-        },
-        row: {
-            marginBottom: theme.spacing(0.5),
-        },
-        buttons: {
-            display: "inline-flex",
-            marginRight: theme.spacing(1),
-            marginBottom: theme.spacing(2),
-        },
-        trend: {
-            width: theme.spacing(10),
-        },
-        vmiddle: {
-            verticalAlign: "middle",
-        },
-    })
-)
 
 function getDataSetFromLocalStorage() {
     // check local storage for recording
@@ -90,7 +108,6 @@ function getTabFromLocalStorage() {
 }
 
 export default function ModelPlayground() {
-    const classes = useStyles()
     const chartPalette = useChartPalette()
     const chartProps = {
         CHART_WIDTH: 300,
@@ -192,7 +209,7 @@ export default function ModelPlayground() {
     }
 
     return (
-        <Box mb={2}>
+        <StyledBox mb={2}>
             <h1>ML Model Editor</h1>
             <p>
                 This page allows you to collect data from Jacdac sensors and use
@@ -245,6 +262,6 @@ export default function ModelPlayground() {
                     model={tfModel}
                 />
             </TabPanel>
-        </Box>
+        </StyledBox>
     )
 }

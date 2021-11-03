@@ -1,5 +1,5 @@
-import { Box } from "@material-ui/core"
-import { AlertTitle } from "@material-ui/lab"
+import { Box } from "@mui/material"
+import { AlertTitle } from "@mui/material"
 import { Link } from "gatsby-theme-material-ui"
 import React from "react"
 import FilteredDeviceSpecificationList from "../components/specification/FilteredDeviceSpecificationList"

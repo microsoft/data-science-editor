@@ -1,8 +1,8 @@
-import { Grid, IconButton } from "@material-ui/core"
+import { Grid, IconButton } from "@mui/material"
 import React from "react"
 import { rgbToHtmlColor } from "../../../jacdac-ts/src/jdom/utils"
-import RadioButtonCheckedIcon from "@material-ui/icons/RadioButtonChecked"
-import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked"
+import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked"
+import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked"
 
 export default function ColorButtons(props: {
     colors?: number[]
@@ -21,6 +21,7 @@ export default function ColorButtons(props: {
                     <IconButton
                         style={{ color: rgbToHtmlColor(col) }}
                         onClick={handleSetColor(col)}
+                        size="large"
                     >
                         {col !== color ? (
                             <RadioButtonUncheckedIcon />

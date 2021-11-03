@@ -1,4 +1,4 @@
-import { Grid, NoSsr } from "@material-ui/core"
+import { Grid, NoSsr } from "@mui/material"
 import React, { useContext, useMemo } from "react"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import { BlockProvider } from "../blockly/BlockContext"

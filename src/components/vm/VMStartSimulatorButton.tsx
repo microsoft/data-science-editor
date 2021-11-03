@@ -1,6 +1,6 @@
 import React from "react"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
-import AddIcon from "@material-ui/icons/Add"
+import AddIcon from "@mui/icons-material/Add"
 import { useContext } from "react"
 import AppContext from "../AppContext"
 

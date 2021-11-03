@@ -1,11 +1,11 @@
 import React, { ChangeEvent, useEffect, useState } from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
-import { Grid, TextField } from "@material-ui/core"
+import { Grid, TextField } from "@mui/material"
 import useRegister from "../hooks/useRegister"
 import { useId } from "react-use-id-hook"
 import CmdButton from "../CmdButton"
-import SaveIcon from "@material-ui/icons/Save"
+import SaveIcon from "@mui/icons-material/Save"
 import { prettyUnit } from "../../../jacdac-ts/src/jdom/pretty"
 import { humanify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 

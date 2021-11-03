@@ -1,8 +1,8 @@
 import React, { useContext, useState } from "react"
 
-import { Grid } from "@material-ui/core"
-import AddCircleIcon from "@material-ui/icons/AddCircleOutline"
-import RemoveCircleIcon from "@material-ui/icons/RemoveCircleOutline"
+import { Grid } from "@mui/material"
+import AddCircleIcon from "@mui/icons-material/AddCircleOutline"
+import RemoveCircleIcon from "@mui/icons-material/RemoveCircleOutline"
 import IconButtonWithTooltip from "../../../ui/IconButtonWithTooltip"
 
 import { ReactFieldJSON } from "../ReactField"

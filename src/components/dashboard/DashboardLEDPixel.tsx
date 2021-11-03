@@ -1,15 +1,15 @@
-import { Grid, MenuItem, TextField, Typography } from "@material-ui/core"
+import { Grid, MenuItem, TextField, Typography } from "@mui/material"
 import React, { ChangeEvent, lazy, useMemo, useState } from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { lightEncode } from "../../../jacdac-ts/src/jdom/light"
 import SelectWithLabel from "../ui/SelectWithLabel"
 import JDService from "../../../jacdac-ts/src/jdom/service"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import RemoveIcon from "@material-ui/icons/Remove"
+import RemoveIcon from "@mui/icons-material/Remove"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import AddIcon from "@material-ui/icons/Add"
+import AddIcon from "@mui/icons-material/Add"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import PlayArrowIcon from "@material-ui/icons/PlayArrow"
+import PlayArrowIcon from "@mui/icons-material/PlayArrow"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import useServiceServer from "../hooks/useServiceServer"
 import LedPixelServer from "../../../jacdac-ts/src/servers/ledpixelserver"

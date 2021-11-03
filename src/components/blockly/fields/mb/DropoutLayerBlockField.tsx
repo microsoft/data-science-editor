@@ -1,13 +1,6 @@
-import React, { ReactNode, useContext, useEffect, useState } from "react"
-import {
-    Box,
-    Grid,
-    TextField,
-    Tooltip,
-    makeStyles,
-    Theme,
-    createStyles,
-} from "@material-ui/core"
+import React, { ReactNode, useContext } from "react"
+import { styled } from "@mui/material/styles"
+import { Box, Grid, TextField, Tooltip } from "@mui/material"
 
 import { ReactFieldJSON } from "../ReactField"
 import ReactInlineField from "../ReactInlineField"
@@ -18,6 +11,24 @@ import WorkspaceContext from "../../WorkspaceContext"
 import { useId } from "react-use-id-hook"
 import ExpandModelBlockField from "./ExpandModelBlockField"
 
+const PREFIX = "DropoutLayerBlockField"
+
+const classes = {
+    fieldContainer: `${PREFIX}-fieldContainer`,
+    field: `${PREFIX}-field`,
+}
+
+const Root = styled("div")(({ theme }) => ({
+    [`& .${classes.fieldContainer}`]: {
+        lineHeight: "2.5rem",
+        width: "15rem",
+    },
+
+    [`& .${classes.field}`]: {
+        width: theme.spacing(10),
+    },
+}))
+
 export interface DropoutLayerFieldValue {
     percentParams: number
     percentSize: number
@@ -26,24 +37,11 @@ export interface DropoutLayerFieldValue {
     rate: string
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        fieldContainer: {
-            lineHeight: "2.5rem",
-            width: "15rem",
-        },
-        field: {
-            width: theme.spacing(10),
-        },
-    })
-)
-
 function LayerParameterWidget(props: {
     initFieldValue: DropoutLayerFieldValue
 }) {
     const { initFieldValue } = props
     const { sourceBlock } = useContext(WorkspaceContext)
-    const classes = useStyles()
 
     const { percentSize, percentParams, outputShape, runTimeInMs } =
         initFieldValue
@@ -144,6 +142,12 @@ export default class DropoutLayerBlockField extends ReactInlineField {
     }
 
     renderInlineField(): ReactNode {
-        return <LayerParameterWidget initFieldValue={this.value} />
+        return (
+            <Root>
+                <LayerParameterWidget
+                    initFieldValue={this.value as DropoutLayerFieldValue}
+                />
+            </Root>
+        )
     }
 }

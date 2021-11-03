@@ -1,4 +1,4 @@
-import { Grid, TextField } from "@material-ui/core"
+import { Grid, TextField } from "@mui/material"
 import React, { ChangeEvent, useEffect, useMemo, useState } from "react"
 import {
     clone,
@@ -8,7 +8,7 @@ import {
 } from "../../../jacdac-ts/src/jdom/utils"
 import useChange from "../../jacdac/useChange"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import DeleteIcon from "@material-ui/icons/Delete"
+import DeleteIcon from "@mui/icons-material/Delete"
 import { serviceSpecifications } from "../../../jacdac-ts/src/jdom/spec"
 import AddServiceIconButton from "../AddServiceIconButton"
 import ServiceSpecificationSelect from "../specification/ServiceSpecificationSelect"
@@ -19,7 +19,7 @@ import useMakeCodeEditorExtensionClient, {
 } from "./MakeCodeEditorExtensionClient"
 import CmdButton from "../CmdButton"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import SaveIcon from "@material-ui/icons/Save"
+import SaveIcon from "@mui/icons-material/Save"
 import { camelize } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import { useId } from "react-use-id-hook"
 import {

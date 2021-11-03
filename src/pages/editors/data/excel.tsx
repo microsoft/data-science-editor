@@ -1,4 +1,4 @@
-import { Grid } from "@material-ui/core"
+import { Grid } from "@mui/material"
 import { withPrefix } from "gatsby-link"
 import { StaticImage } from "gatsby-plugin-image"
 import React from "react"

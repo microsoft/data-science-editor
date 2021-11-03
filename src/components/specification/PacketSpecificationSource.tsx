@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Tabs, Tab } from "@material-ui/core"
+import { Tabs, Tab } from "@mui/material"
 import TabPanel from "../ui/TabPanel"
 import Snippet from "../ui/Snippet"
 import { packInfo } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"

@@ -1,14 +1,8 @@
-import {
-    Chip,
-    Divider,
-    Grid,
-    InputAdornment,
-    TextField,
-} from "@material-ui/core"
+import { Chip, Divider, Grid, InputAdornment, TextField } from "@mui/material"
 import React, { useMemo, useState } from "react"
 import ServiceSpecificationList from "../components/specification/ServiceSpecificationList"
 import { useDebounce } from "use-debounce"
-import SearchIcon from "@material-ui/icons/Search"
+import SearchIcon from "@mui/icons-material/Search"
 import ChipList from "../components/ui/ChipList"
 import {
     deviceSpecificationsForService,
@@ -20,7 +14,7 @@ import MakeCodeIcon from "../components/icons/MakeCodeIcon"
 import KindIcon from "../components/KindIcon"
 import { serviceProviderDefinitionFromServiceClass } from "../../jacdac-ts/src/servers/servers"
 import JacdacIcon from "../components/icons/JacdacIcon"
-import SpeedIcon from "@material-ui/icons/Speed"
+import SpeedIcon from "@mui/icons-material/Speed"
 import {
     SERVICE_MIXIN_NODE_NAME,
     VIRTUAL_DEVICE_NODE_NAME,
@@ -28,7 +22,7 @@ import {
 import { useId } from "react-use-id-hook"
 import { Link } from "gatsby-theme-material-ui"
 import { resolveMakecodeServiceFromClassIdentifier } from "../components/makecode/services"
-import CheckCircleIcon from "@material-ui/icons/CheckCircle"
+import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 import { isMixinService } from "../../jacdac-ts/jacdac-spec/spectool/jdutils"
 
 interface ServiceFilter {

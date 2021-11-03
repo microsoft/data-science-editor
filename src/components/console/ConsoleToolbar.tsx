@@ -3,15 +3,9 @@ import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import ConsoleContext, { serializeLogs } from "./ConsoleContext"
 import ConsoleImportSourceMapButton from "./ConsoleImportSourceMapButton"
 import ConsoleSerialButton from "./ConsoleSerialButton"
-import ClearIcon from "@material-ui/icons/Clear"
-import SaveAltIcon from "@material-ui/icons/SaveAlt"
-import {
-    FormControl,
-    Grid,
-    MenuItem,
-    Select,
-    TextField,
-} from "@material-ui/core"
+import ClearIcon from "@mui/icons-material/Clear"
+import SaveAltIcon from "@mui/icons-material/SaveAlt"
+import { FormControl, Grid, MenuItem, Select, TextField } from "@mui/material"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import useChange from "../../jacdac/useChange"
 import { LoggerPriority } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"

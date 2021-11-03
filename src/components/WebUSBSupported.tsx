@@ -1,10 +1,10 @@
-import React from "react"
-import Flags from "../../jacdac-ts/src/jdom/flags";
-import { isWebUSBEnabled, isWebUSBSupported } from "../../jacdac-ts/src/jdom/usb"
+import React, { ReactNode } from "react"
+import {
+    isWebUSBEnabled,
+    isWebUSBSupported,
+} from "../../jacdac-ts/src/jdom/transport/usb"
 
 export default function WebUSBSupported(props: { children: ReactNode }) {
-    const { children } = props;
-    return <>
-        {isWebUSBEnabled() && isWebUSBSupported() && children}
-    </>
+    const { children } = props
+    return <>{isWebUSBEnabled() && isWebUSBSupported() && children}</>
 }

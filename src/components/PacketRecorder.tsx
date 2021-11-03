@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core"
+import { Typography } from "@mui/material"
 import React, { useContext } from "react"
 import PacketsContext from "./PacketsContext"
 import TraceImportButton from "./trace/TraceImportButton"

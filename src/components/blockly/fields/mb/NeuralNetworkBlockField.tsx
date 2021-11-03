@@ -1,24 +1,34 @@
 import React, { ReactNode, useContext, useEffect, useState } from "react"
-import {
-    Box,
-    Grid,
-    MenuItem,
-    Select,
-    TextField,
-    Tooltip,
-    makeStyles,
-    Theme,
-    createStyles,
-} from "@material-ui/core"
+import { styled } from "@mui/material/styles"
+import { Box, Grid, MenuItem, Select, TextField, Tooltip } from "@mui/material"
 
 import { ReactFieldJSON } from "../ReactField"
 import ReactInlineField from "../ReactInlineField"
 import { PointerBoundary } from "../PointerBoundary"
 
-import WorkspaceContext, { resolveBlockServices } from "../../WorkspaceContext"
+import WorkspaceContext from "../../WorkspaceContext"
 
 import { useId } from "react-use-id-hook"
 import ExpandModelBlockField from "./ExpandModelBlockField"
+
+const PREFIX = "NeuralNetworkBlockField"
+
+const classes = {
+    fieldContainer: `${PREFIX}-fieldContainer`,
+    field: `${PREFIX}-field`,
+}
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled("div")(({ theme }) => ({
+    [`& .${classes.fieldContainer}`]: {
+        lineHeight: "2.5rem",
+        width: "15rem",
+    },
+
+    [`& .${classes.field}`]: {
+        width: theme.spacing(10),
+    },
+}))
 
 export interface NeuralNetworkBlockFieldValue {
     totalLayers: number
@@ -32,24 +42,11 @@ export interface NeuralNetworkBlockFieldValue {
     metrics: string
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        fieldContainer: {
-            lineHeight: "2.5rem",
-            width: "15rem",
-        },
-        field: {
-            width: theme.spacing(10),
-        },
-    })
-)
-
 function NNParameterWidget(props: {
     initFieldValue: NeuralNetworkBlockFieldValue
 }) {
     const { initFieldValue } = props
     const { sourceBlock } = useContext(WorkspaceContext)
-    const classes = useStyles()
 
     const { totalLayers, totalSize, totalParams, runTimeInMs, inputShape } =
         initFieldValue
@@ -196,12 +193,18 @@ export default class NeuralNetworkBlockField extends ReactInlineField {
     }
 
     getText_() {
-        const { totalLayers } = this.value
+        const { totalLayers } = this.value as NeuralNetworkBlockFieldValue
 
         return `${totalLayers} layer(s)`
     }
 
     renderInlineField(): ReactNode {
-        return <NNParameterWidget initFieldValue={this.value} />
+        return (
+            <Root>
+                <NNParameterWidget
+                    initFieldValue={this.value as NeuralNetworkBlockFieldValue}
+                />
+            </Root>
+        )
     }
 }

@@ -12,6 +12,10 @@ export default function useEvents(options?: {
     const services = useServices(options)
     let events = arrayConcatMany(services.map(srv => srv.events))
     if (ignoreChange)
-        events = events.filter(ev => ev.code !== SystemEvent.StatusCodeChanged && ev.code !== SystemEvent.Change)
+        events = events.filter(
+            ev =>
+                ev.code !== SystemEvent.StatusCodeChanged &&
+                ev.code !== SystemEvent.Change
+        )
     return events
 }

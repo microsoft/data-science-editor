@@ -1,4 +1,4 @@
-import { ButtonProps } from "@material-ui/core"
+import { ButtonProps } from "@mui/material"
 import { Button } from "gatsby-theme-material-ui"
 import React from "react"
 import JDService from "../../jacdac-ts/src/jdom/service"

@@ -1,31 +1,35 @@
 import React, { ReactNode, useContext } from "react"
-import { Button, createStyles, Grid, Tooltip } from "@material-ui/core"
-import { makeStyles, Theme } from "@material-ui/core/styles"
-import AutorenewIcon from "@material-ui/icons/Autorenew"
+import { styled } from "@mui/material/styles"
+import { Button, Grid, Tooltip } from "@mui/material"
+import AutorenewIcon from "@mui/icons-material/Autorenew"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import DownloadIcon from "@material-ui/icons/GetApp"
+import DownloadIcon from "@mui/icons-material/GetApp"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 
 import { ReactFieldJSON } from "../ReactField"
 import ReactInlineField from "../ReactInlineField"
 import WorkspaceContext from "../../WorkspaceContext"
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        numberField: {
-            marginBottom: theme.spacing(1),
-        },
-        buttonContainer: {
-            display: "inline-flex",
-            width: 300,
-        },
-    })
-)
+const PREFIX = "NeuralNetworkBlockButtons"
+
+const classes = {
+    numberField: `${PREFIX}-numberField`,
+    buttonContainer: `${PREFIX}-buttonContainer`,
+}
+
+const Root = styled("div")(({ theme }) => ({
+    [`& .${classes.numberField}`]: {
+        marginBottom: theme.spacing(1),
+    },
+
+    [`& .${classes.buttonContainer}`]: {
+        display: "inline-flex",
+        width: 300,
+    },
+}))
 
 function NeuralNetworkButtonWidget() {
-    const classes = useStyles()
-
-    const { workspace, sourceBlock } = useContext(WorkspaceContext)
+    const { sourceBlock } = useContext(WorkspaceContext)
 
     const handleTrainModel = () => {
         console.log("Open NN classifier modal")
@@ -82,6 +86,10 @@ export default class NeuralNetworkBlockButtons extends ReactInlineField {
     }
 
     renderInlineField(): ReactNode {
-        return <NeuralNetworkButtonWidget />
+        return (
+            <Root>
+                <NeuralNetworkButtonWidget />
+            </Root>
+        )
     }
 }

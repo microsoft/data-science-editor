@@ -7,7 +7,7 @@ import {
     CardHeader,
     CardMedia,
     Grid,
-} from "@material-ui/core"
+} from "@mui/material"
 import Suspense from "../ui/Suspense"
 import { convertToSTL } from "../blockly/dsl/workers/cad.proxy"
 import type {
@@ -16,8 +16,8 @@ import type {
 } from "../../workers/cad/dist/node_modules/enclosurecad"
 import useGridBreakpoints from "../useGridBreakpoints"
 import useMounted from "../hooks/useMounted"
-import { CircularProgress } from "@material-ui/core"
-import { Alert } from "@material-ui/lab"
+import { CircularProgress } from "@mui/material"
+import { Alert } from "@mui/material"
 
 const ModelViewer = lazy(() => import("../home/models/ModelViewer"))
 const STLModel = lazy(() => import("../home/models/STLModel"))

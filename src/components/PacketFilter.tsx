@@ -1,23 +1,12 @@
-import {
-    makeStyles,
-    Theme,
-    createStyles,
-    Paper,
-    InputBase,
-} from "@material-ui/core"
+import { Paper, InputBase } from "@mui/material"
+import { styled } from "@mui/material/styles"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
-import FilterListIcon from "@material-ui/icons/FilterList"
+import FilterListIcon from "@mui/icons-material/FilterList"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
-import QueryBuilderIcon from "@material-ui/icons/QueryBuilder"
+import QueryBuilderIcon from "@mui/icons-material/QueryBuilder"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
-import ClearIcon from "@material-ui/icons/Clear"
-import {
-    Box,
-    ListItemIcon,
-    Menu,
-    MenuItem,
-    Typography,
-} from "@material-ui/core"
+import ClearIcon from "@mui/icons-material/Clear"
+import { Box, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material"
 import React, { useContext, useEffect, useState } from "react"
 import KindIcon, { allKinds, kindName } from "./KindIcon"
 import PacketsContext from "./PacketsContext"
@@ -29,7 +18,7 @@ import { arrayConcatMany, uniqueMap } from "../../jacdac-ts/src/jdom/utils"
 import TraceTimeFilterRangeSlider from "./trace/TraceTimeFilterRangeSlider"
 import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
-import GroupWorkIcon from "@material-ui/icons/GroupWork"
+import GroupWorkIcon from "@mui/icons-material/GroupWork"
 import {
     isCommand,
     isEvent,
@@ -40,21 +29,30 @@ import Tooltip from "./ui/Tooltip"
 import { useId } from "react-use-id-hook"
 import PacketControlButtons from "./PacketListButtons"
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        input: {
-            marginLeft: theme.spacing(1),
-            flex: 1,
-        },
-        iconButton: {
-            padding: theme.spacing(0.5),
-        },
-        divider: {
-            height: 28,
-            margin: 4,
-        },
-    })
-)
+const PREFIX = "PacketFilter"
+
+const classes = {
+    input: `${PREFIX}-input`,
+    iconButton: `${PREFIX}-iconButton`,
+    divider: `${PREFIX}-divider`,
+}
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled("div")(({ theme }) => ({
+    [`& .${classes.input}`]: {
+        marginLeft: theme.spacing(1),
+        flex: 1,
+    },
+
+    [`& .${classes.iconButton}`]: {
+        padding: theme.spacing(0.5),
+    },
+
+    [`& .${classes.divider}`]: {
+        height: 28,
+        margin: 4,
+    },
+}))
 
 function FilterMenu(props: {
     text?: string
@@ -66,7 +64,6 @@ function FilterMenu(props: {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
     const kinds = allKinds()
-    const classes = useStyles()
 
     const devices = useChange(bus, b => b.devices())
     const services = uniqueMap(
@@ -272,7 +269,7 @@ function FilterMenu(props: {
 export default function PacketFilter() {
     const { timeRange, toggleTimeRange, filter, setFilter } =
         useContext(PacketsContext)
-    const classes = useStyles()
+
     const [text, setText] = useState(filter)
     const [debouncedText] = useDebounce(text, 1000)
     const filterId = useId()
@@ -297,7 +294,7 @@ export default function PacketFilter() {
     }
 
     return (
-        <>
+        <Root>
             {timeRange && <TraceTimeFilterRangeSlider />}
             <Paper square elevation={1}>
                 <Box display="flex">
@@ -340,6 +337,6 @@ export default function PacketFilter() {
                     )}
                 </Box>
             </Paper>
-        </>
+        </Root>
     )
 }

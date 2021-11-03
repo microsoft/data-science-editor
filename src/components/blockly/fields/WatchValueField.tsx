@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react"
 import { ReactFieldJSON } from "./ReactField"
-import { Box, Grid, Typography, useTheme } from "@material-ui/core"
+import { Box, Grid, Typography, useTheme } from "@mui/material"
 import WorkspaceContext from "../WorkspaceContext"
 import ReactInlineField from "./ReactInlineField"
 import { PointerBoundary } from "./PointerBoundary"
@@ -54,7 +54,7 @@ function WatchValueWidget() {
     return (
         <Box
             bgcolor={theme.palette.background.paper}
-            borderRadius={theme.spacing(1)}
+            borderRadius="undefinedpx"
             color={theme.palette.text.primary}
         >
             <Grid

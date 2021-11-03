@@ -12,8 +12,8 @@ import {
 
 import { BlockSvg, FieldVariable } from "blockly"
 import useServiceServer from "../hooks/useServiceServer"
-import CancelIcon from "@material-ui/icons/Cancel"
-import { Chip, Tooltip } from "@material-ui/core"
+import CancelIcon from "@mui/icons-material/Cancel"
+import { Chip, Tooltip } from "@mui/material"
 import { TWIN_BLOCK } from "./toolbox"
 
 export default function RoleChip(props: {
@@ -28,7 +28,7 @@ export default function RoleChip(props: {
     const serviceServer = useServiceServer(service)
     const handleRoleClick = () => {
         // spin off simulator
-        if (!service && !preferredDeviceId ) {
+        if (!service && !preferredDeviceId) {
             const specification =
                 serviceSpecificationFromClassIdentifier(serviceClass)
             if (specification) {
@@ -64,7 +64,7 @@ export default function RoleChip(props: {
                     variable = workspace.getVariable(
                         role,
                         `${serviceClass}:server`
-                )
+                    )
                 console.log(`new twin`, { twinBlock, variable })
                 const field = twinBlock.inputList[0].fieldRow.find(
                     f => f.name === "role"

@@ -4,91 +4,85 @@ import {
     CardContent,
     CardHeader,
     CardMedia,
-    createStyles,
     FormControl,
-    makeStyles,
     MenuItem,
     Select,
-} from "@material-ui/core"
-import React, {
-    ChangeEvent,
-    lazy,
-    useContext,
-    useEffect,
-    useRef,
-    useState,
-} from "react"
+    SelectChangeEvent,
+} from "@mui/material"
+import { styled } from "@mui/material/styles"
+import React, { useContext, useEffect, useRef, useState } from "react"
 import useLocalStorage from "../hooks/useLocalStorage"
 import useEffectAsync from "../useEffectAsync"
-import SettingsIcon from "@material-ui/icons/Settings"
+import SettingsIcon from "@mui/icons-material/Settings"
 import IconButtonWithTooltip from "./IconButtonWithTooltip"
 import useMounted from "../hooks/useMounted"
-import Suspense from "./Suspense"
-import CloseIcon from "@material-ui/icons/Close"
+import CloseIcon from "@mui/icons-material/Close"
 import AppContext from "../AppContext"
-import { Alert } from "@material-ui/lab"
-import FullscreenIcon from "@material-ui/icons/Fullscreen"
-import MinimizeIcon from "@material-ui/icons/Minimize"
-import MaximizeIcon from "@material-ui/icons/Maximize"
-const Draggable = lazy(() => import("react-draggable"))
+import { Alert } from "@mui/material"
+import FullscreenIcon from "@mui/icons-material/Fullscreen"
+import MinimizeIcon from "@mui/icons-material/Minimize"
+import MaximizeIcon from "@mui/icons-material/Maximize"
+import Draggable from "react-draggable"
 
-const useStyles = makeStyles(() =>
-    createStyles({
-        cardContainer: {
-            zIndex: 1101,
-            position: "absolute",
-            right: "2rem",
-            bottom: "3rem",
-        },
-        card: {
-            "& .hostedcontainer": {
-                position: "relative",
-                width: "40vw",
-            },
-            "& video": {
-                border: "none",
-                position: "relative",
-                width: "100%",
-                height: "100%",
-            },
-        },
-    })
-)
+const PREFIX = "WebCam"
 
-async function requestVideoStream() {
-    // first ask for permission from ther user so that
-    // labels are populated in enumerateDevices
-    return await navigator.mediaDevices.getUserMedia({
-        audio: false,
-        video: true,
-    })
+const classes = {
+    cardContainer: `${PREFIX}-cardContainer`,
+    card: `${PREFIX}-card`,
 }
+
+const Root = styled("div")(() => ({
+    [`& .${classes.cardContainer}`]: {
+        zIndex: 1101,
+        position: "absolute",
+        right: "2rem",
+        bottom: "3rem",
+    },
+
+    [`& .${classes.card}`]: {
+        "& .hostedcontainer": {
+            position: "relative",
+            width: "40vw",
+        },
+        "& video": {
+            border: "none",
+            position: "relative",
+            width: "100%",
+            height: "100%",
+        },
+    },
+}))
 
 export default function WebCam() {
     const { setShowWebCam } = useContext(AppContext)
     const [minimize, setMinimize] = useState(true)
     const [devices, setDevices] = useState<MediaDeviceInfo[]>()
     const [deviceId, setDeviceId] = useLocalStorage("webcam_deviceid", "")
+    const [working, setWorking] = useState(false)
     const nodeRef = useRef<HTMLSpanElement>()
     const streamRef = useRef<MediaStream>()
     const videoRef = useRef<HTMLVideoElement>()
     const [settingsOpen, setSettingsOpen] = useState(!deviceId)
     const mounted = useMounted()
-    const classes = useStyles()
+
     const supportsFullScreen =
         typeof document !== "undefined" && !!document.fullscreenEnabled
 
-    const handleClose = () => setShowWebCam(false)
-    const handleMinimize = () => setMinimize(v => !v)
-    const handleSettings = () => setSettingsOpen(newValue => !newValue)
+    const handleClose = async () => await setShowWebCam(false)
+    const handleMinimize = () => setMinimize(!minimize)
+    const handleSettings = () => {
+        console.debug(`toggle settings`, { settingsOpen })
+        setSettingsOpen(!settingsOpen)
+    }
     const handleDeviceChange = (
-        ev: ChangeEvent<{ name?: string; value: unknown }>
+        ev: SelectChangeEvent<string>
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ) => setDeviceId(ev.target.value as any as string)
+    ) => setDeviceId(ev.target.value)
     const handleFullScreen = () => videoRef.current?.requestFullscreen()
     const stop = () => {
         const stream = streamRef.current
         if (stream) {
+            console.debug(`webcam: stop`)
             try {
                 const tracks = stream.getTracks()
                 if (tracks) tracks.forEach(track => track.stop())
@@ -109,59 +103,54 @@ export default function WebCam() {
 
     // start camera
     useEffectAsync(async () => {
-        console.debug(`greenscreen: start`)
-        // deviceId is "" if green screen selected
-        if (deviceId) {
-            console.debug(`greenscreen: stream acquired`)
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: {
-                        width: { ideal: 1920 },
-                        height: { ideal: 1080 },
-                        advanced: [{ deviceId: deviceId }],
-                    },
-                    audio: false,
-                })
-                streamRef.current = stream
-                const video = videoRef.current
-                video.srcObject = stream
-                video.play()
+        stop()
+        if (!deviceId) return
 
-                if (mounted()) setSettingsOpen(false)
-            } catch (e) {
-                console.debug(`greenscreen: play failed`)
-                console.error(e)
-                if (mounted()) setDeviceId(undefined)
-            }
+        console.debug(`webcam: start '${deviceId}'`)
+        try {
+            setWorking(true)
+            stop()
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    width: { ideal: 1920 },
+                    height: { ideal: 1080 },
+                    advanced: [{ deviceId: deviceId }],
+                },
+                audio: false,
+            })
+            streamRef.current = stream
+            const video = videoRef.current
+            video.srcObject = stream
+            await video.play()
+
+            console.debug(`webcam: play started`)
+            setSettingsOpen(false)
+        } catch (e) {
+            console.debug(`webcam: play failed`)
+            console.error(e)
+            setSettingsOpen(true)
+        } finally {
+            setWorking(false)
         }
     }, [deviceId])
 
     const updateDevices = async () => {
+        console.debug(`webcam: update devices`)
         try {
             // enumerate devices
             const devices = await navigator.mediaDevices.enumerateDevices()
             const webcams = devices.filter(
                 device => device.kind == "videoinput"
             )
-            if (mounted()) {
-                setDevices(webcams)
-                if (!webcams.find(webcam => webcam.deviceId === deviceId)) {
-                    const did = webcams[0]?.deviceId
-                    setDeviceId(did)
-                }
-            }
+            if (mounted()) setDevices(webcams)
         } catch (e) {
             if (mounted()) setDevices([])
         }
     }
 
-    // startup
     useEffectAsync(async () => {
-        // first ask for permission from ther user so that
-        // labels are populated in enumerateDevices
-        await requestVideoStream()
-        await updateDevices()
-    }, [])
+        if (settingsOpen) await updateDevices()
+    }, [settingsOpen])
 
     useEffect(() => {
         navigator.mediaDevices.addEventListener("devicechange", updateDevices)
@@ -173,14 +162,14 @@ export default function WebCam() {
     })
 
     // cleanup
-    useEffect(() => stop, [deviceId])
+    useEffect(() => stop, [])
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const draggableProps: any = {
         nodeRef,
     }
 
     return (
-        <Suspense>
+        <Root>
             <Draggable {...draggableProps}>
                 <span ref={nodeRef} className={classes.cardContainer}>
                     <Card className={classes.card}>
@@ -196,7 +185,8 @@ export default function WebCam() {
                                             title="select a webcam"
                                             open={settingsOpen}
                                             onChange={handleDeviceChange}
-                                            value={deviceId}
+                                            value={deviceId || ""}
+                                            disabled={working}
                                         >
                                             {devices?.map(
                                                 ({ deviceId, label }) => (
@@ -219,6 +209,7 @@ export default function WebCam() {
                                             size="small"
                                             onClick={handleFullScreen}
                                             title="full screen"
+                                            disabled={working}
                                         >
                                             <FullscreenIcon />
                                         </IconButtonWithTooltip>
@@ -226,6 +217,7 @@ export default function WebCam() {
                                     <IconButtonWithTooltip
                                         size="small"
                                         onClick={handleMinimize}
+                                        disabled={working}
                                         title={
                                             minimize ? "Maximize" : "Minimize"
                                         }
@@ -240,6 +232,7 @@ export default function WebCam() {
                                         size="small"
                                         onClick={handleSettings}
                                         title="Settings"
+                                        disabled={working}
                                     >
                                         <SettingsIcon />
                                     </IconButtonWithTooltip>
@@ -253,10 +246,10 @@ export default function WebCam() {
                                 </>
                             }
                         />
-                        {!devices && (
+                        {working && (
                             <CardContent>
-                                <Alert severity="warning">
-                                    Please allow access to use your camera.
+                                <Alert severity="info">
+                                    starting camera...
                                 </Alert>
                             </CardContent>
                         )}
@@ -282,6 +275,6 @@ export default function WebCam() {
                     </Card>
                 </span>
             </Draggable>
-        </Suspense>
+        </Root>
     )
 }

@@ -3,6 +3,8 @@ import {
     CategoryDefinition,
     MODEL_BLOCK_CLASS_STATEMENT_TYPE,
     MODEL_BLOCK_LAYER_STATEMENT_TYPE,
+    TextInputDefinition,
+    VariableInputDefinition,
 } from "../blockly/toolbox"
 import BlockDomainSpecificLanguage from "../blockly/dsl/dsl"
 
@@ -109,7 +111,7 @@ export class ModelBlockDomainSpecificLanguage
                         variable: "classifier1",
                         variableTypes: [MB_CLASSIFIER_VAR_TYPE],
                         defaultType: MB_CLASSIFIER_VAR_TYPE,
-                    },
+                    } as VariableInputDefinition,
                 ],
                 message1: " training data %1 %2",
                 args1: [
@@ -155,7 +157,7 @@ export class ModelBlockDomainSpecificLanguage
                         type: "field_input",
                         name: "TRAINED_MODEL_NAME",
                         text: "classifier1.t",
-                    },
+                    } as TextInputDefinition,
                 ],
                 message1: "testing data %1",
                 args1: [

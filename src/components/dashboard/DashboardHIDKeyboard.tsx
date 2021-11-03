@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react"
-import { Grid } from "@material-ui/core"
+import { Grid } from "@mui/material"
 import {
     HidKeyboardAction,
     HidKeyboardCmd,
@@ -9,7 +9,7 @@ import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
 import CmdButton from "../CmdButton"
 import KeyboardKeyInput from "../ui/KeyboardKeyInput"
-import KeyboardIcon from "@material-ui/icons/Keyboard"
+import KeyboardIcon from "@mui/icons-material/Keyboard"
 
 export default function DashboardHIDKeyboard(props: DashboardServiceProps) {
     const { service } = props

@@ -9,7 +9,7 @@ import {
     List,
     ListItemText,
     Typography,
-} from "@material-ui/core"
+} from "@mui/material"
 import { useFirmwareBlob } from "./useFirmwareBlobs"
 import Alert from "../ui/Alert"
 import Suspense from "../ui/Suspense"

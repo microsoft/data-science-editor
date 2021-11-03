@@ -7,7 +7,7 @@ import useChange from "../../jacdac/useChange"
 import RegisterInput from "../RegisterInput"
 import { isRegister } from "../../../jacdac-ts/src/jdom/spec"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
-import { Grid } from "@material-ui/core"
+import { Grid } from "@mui/material"
 import JDRegister from "../../../jacdac-ts/src/jdom/register"
 
 // filter out common registers

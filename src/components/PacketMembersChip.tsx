@@ -1,8 +1,8 @@
 import React from "react"
 // tslint:disable-next-line: no-submodule-imports
-import Chip from "@material-ui/core/Chip"
+import Chip from "@mui/material/Chip"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import CategoryIcon from "@material-ui/icons/Category"
+import CategoryIcon from "@mui/icons-material/Category"
 import Tooltip from "./ui/Tooltip"
 
 export default function PacketMembersChip(props: {

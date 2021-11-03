@@ -145,7 +145,7 @@ export default class FielddataSet extends JDEventSource {
         // drop rows if needed
         let refreshminmax = false
         while (this.maxRows > 0 && this.rows.length > this.maxRows * 1.1) {
-            const d = this.rows.shift()
+            this.rows.shift()
             refreshminmax = true
         }
 

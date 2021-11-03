@@ -1,4 +1,4 @@
-import { Grid, Switch, Typography } from "@material-ui/core"
+import { Grid, Switch, Typography } from "@mui/material"
 import React, { useContext, useEffect, useState } from "react"
 import {
     bufferEq,
@@ -30,7 +30,7 @@ import useEffectAsync from "../../components/useEffectAsync"
 import TestCard from "../../components/TestCard"
 import Packet from "../../../jacdac-ts/src/jdom/packet"
 import JDEvent from "../../../jacdac-ts/src/jdom/event"
-import { AlertTitle } from "@material-ui/lab"
+import { AlertTitle } from "@mui/material"
 import Alert from "../../components/ui/Alert"
 import ProtocolTestServer from "../../../jacdac-ts/src/jdom/servers/protocoltestserver"
 import { Link } from "gatsby-theme-material-ui"

@@ -10,9 +10,9 @@ import {
     MenuItem,
     Select,
     TextField,
-} from "@material-ui/core"
+} from "@mui/material"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import NavigateNextIcon from "@material-ui/icons/NavigateNext"
+import NavigateNextIcon from "@mui/icons-material/NavigateNext"
 
 import Blockly, { Variables, WorkspaceSvg } from "blockly"
 import { MB_CLASSIFIER_VAR_TYPE } from "../../model-editor/modelblockdsl"

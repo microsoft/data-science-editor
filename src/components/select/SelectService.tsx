@@ -1,4 +1,4 @@
-import { MenuItem } from "@material-ui/core"
+import { MenuItem } from "@mui/material"
 import React, { ChangeEvent } from "react"
 import JDService from "../../../jacdac-ts/src/jdom/service"
 import SelectWithLabel from "../ui/SelectWithLabel"

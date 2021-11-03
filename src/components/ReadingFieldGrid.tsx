@@ -1,28 +1,12 @@
-import {
-    Card,
-    CardActions,
-    CardContent,
-    CardHeader,
-    createStyles,
-    Grid,
-    makeStyles,
-} from "@material-ui/core"
+import { Card, CardActions, CardContent, CardHeader, Grid } from "@mui/material"
 import React from "react"
 import JDRegister from "../../jacdac-ts/src/jdom/register"
 import useGridBreakpoints from "./useGridBreakpoints"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord"
+import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord"
 import FieldDataSet from "./FieldDataSet"
 import useDeviceName from "./devices/useDeviceName"
 import SwitchWithLabel from "./ui/SwitchWithLabel"
-
-const useStyles = makeStyles(() =>
-    createStyles({
-        vmiddle: {
-            verticalAlign: "middle",
-        },
-    })
-)
 
 function ReadingFieldGridItem(props: {
     register: JDRegister
@@ -41,7 +25,6 @@ function ReadingFieldGridItem(props: {
     const { service } = register
     const { device } = service
     const gridBreakpoints = useGridBreakpoints()
-    const classes = useStyles()
     const deviceName = useDeviceName(device)
     const handleCheck = () => handleRegisterCheck(register)
 
@@ -56,12 +39,12 @@ function ReadingFieldGridItem(props: {
                     {register.fields.map(field => (
                         <span key={field.id}>
                             <FiberManualRecordIcon
-                                className={classes.vmiddle}
                                 fontSize="large"
                                 style={{
+                                    verticalAlign: "middle",
                                     color:
                                         (registerChecked &&
-                                            liveDataSet?.colorOf(field)) ||
+                                            liveDataSet?.colorOf(field)?.[0]) ||
                                         "#ccc",
                                 }}
                             />

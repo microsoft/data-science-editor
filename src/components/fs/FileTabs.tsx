@@ -1,4 +1,4 @@
-import { Grid } from "@material-ui/core"
+import { Grid } from "@mui/material"
 import React, { useContext, useRef } from "react"
 import useKeyboardNavigationProps from "../hooks/useKeyboardNavigationProps"
 import FileSystemContext from "../FileSystemContext"
@@ -25,7 +25,7 @@ export default function FileTabs(props: {
         directoryFilter,
         fileFilter,
         newFileLabel,
-        newFileExtension
+        newFileExtension,
     } = props
     const { fileSystem } = useContext(FileSystemContext)
     const root = useChange(fileSystem, _ => _?.root)

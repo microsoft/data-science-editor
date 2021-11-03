@@ -8,17 +8,17 @@ import {
     DialogContent,
     TextField,
     InputAdornment,
-} from "@material-ui/core"
+} from "@mui/material"
 import IconButtonWithTooltip from "../../ui/IconButtonWithTooltip"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import PlayArrowIcon from "@material-ui/icons/PlayArrow"
+import PlayArrowIcon from "@mui/icons-material/PlayArrow"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import StopIcon from "@material-ui/icons/Stop"
+import StopIcon from "@mui/icons-material/Stop"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import DownloadIcon from "@material-ui/icons/GetApp"
+import DownloadIcon from "@mui/icons-material/GetApp"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import NavigateNextIcon from "@material-ui/icons/NavigateNext"
-import { Autocomplete } from "@material-ui/lab"
+import NavigateNextIcon from "@mui/icons-material/NavigateNext"
+import { Autocomplete } from "@mui/material"
 
 import ReadingFieldGrid from "../../ReadingFieldGrid"
 import FieldDataSet from "../../FieldDataSet"

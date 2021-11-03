@@ -13,7 +13,7 @@ import {
     ListItemText,
     MenuItem,
     Typography,
-} from "@material-ui/core"
+} from "@mui/material"
 import {
     fetchReleaseBinary,
     GithubFirmwareRelease,
@@ -24,7 +24,7 @@ import GithubRepositoryCardHeader from "../GithubRepositoryCardHeader"
 import Alert from "../ui/Alert"
 import { Link } from "gatsby-theme-material-ui"
 import SelectWithLabel from "../ui/SelectWithLabel"
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import LoadingProgress from "../ui/LoadingProgress"
 
 export default function FirmwareCard(props: { slug: string }) {

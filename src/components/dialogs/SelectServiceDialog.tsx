@@ -5,7 +5,7 @@ import {
     DialogTitle,
     Grid,
     MenuItem,
-} from "@material-ui/core"
+} from "@mui/material"
 import React, { useMemo, useState } from "react"
 import { useId } from "react-use-id-hook"
 import { serviceSpecifications } from "../../../jacdac-ts/src/jdom/spec"
@@ -50,9 +50,7 @@ export default function SelectServiceDialog(props: {
                     <Grid item xs={12}>
                         <SelectWithLabel
                             fullWidth={true}
-                            helperText={
-                                "Select a service"
-                            }
+                            helperText={"Select a service"}
                             label={"Service"}
                             value={selected}
                             onChange={handleChange}

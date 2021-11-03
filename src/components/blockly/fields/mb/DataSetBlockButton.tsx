@@ -1,8 +1,8 @@
 import React, { ReactNode, useContext } from "react"
-import { Button, Grid, Tooltip } from "@material-ui/core"
-import ViewIcon from "@material-ui/icons/Visibility"
+import { Button, Grid, Tooltip } from "@mui/material"
+import ViewIcon from "@mui/icons-material/Visibility"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import DownloadIcon from "@material-ui/icons/GetApp"
+import DownloadIcon from "@mui/icons-material/GetApp"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 
 import { ReactFieldJSON } from "../ReactField"

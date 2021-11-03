@@ -1,4 +1,4 @@
-import { Grid, Input, Mark, Slider, Typography } from "@material-ui/core"
+import { Grid, Input, Mark, Slider, Typography } from "@mui/material"
 import React from "react"
 import { useId } from "react-use-id-hook"
 
@@ -35,7 +35,10 @@ export default function InputSlider(props: {
     const inputId = useId()
     const labelId = useId()
 
-    const handleSliderChange = (event: unknown, newValue: number | number[]) => {
+    const handleSliderChange = (
+        event: unknown,
+        newValue: number | number[]
+    ) => {
         onChange(newValue as number)
     }
 

@@ -1,11 +1,11 @@
 import React, { useContext } from "react"
-import { Button } from "@material-ui/core"
-import AddIcon from "@material-ui/icons/Add"
+import { Button } from "@mui/material"
+import AddIcon from "@mui/icons-material/Add"
 import { startServiceProviderFromServiceClass } from "../../../../jacdac-ts/src/servers/servers"
 import JacdacContext, { JacdacContextProps } from "../../../jacdac/Context"
 import WorkspaceContext from "../WorkspaceContext"
 import { serviceSpecificationFromClassIdentifier } from "../../../../jacdac-ts/src/jdom/spec"
-import { Alert } from "@material-ui/lab"
+import { Alert } from "@mui/material"
 
 export default function NoServiceAlert() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
@@ -27,7 +27,6 @@ export default function NoServiceAlert() {
     return (
         <Button
             variant="outlined"
-            color="default"
             startIcon={<AddIcon />}
             onClick={handleStartSimulator}
         >

@@ -6,19 +6,17 @@ import React, {
     useRef,
     useState,
 } from "react"
-import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
-import { Card, CardActions, Grid, TextField } from "@material-ui/core"
+import { Card, CardActions, Grid, TextField } from "@mui/material"
 import useChange from "../../jacdac/useChange"
 import JDService from "../../../jacdac-ts/src/jdom/service"
 import { SRV_SETTINGS } from "../../../jacdac-ts/src/jdom/constants"
 import IconButtonWithTooltip from "../../components/ui/IconButtonWithTooltip"
-import DeleteIcon from "@material-ui/icons/Delete"
+import DeleteIcon from "@mui/icons-material/Delete"
 import SettingsClient from "../../../jacdac-ts/src/jdom/clients/settingsclient"
 import useServiceClient from "../../components/useServiceClient"
 import { clone, debounce } from "../../../jacdac-ts/src/jdom/utils"
 import { jdpack, jdunpack } from "../../../jacdac-ts/src/jdom/pack"
 import { randomDeviceId } from "../../../jacdac-ts/src/jdom/random"
-import JDBus from "../../../jacdac-ts/src/jdom/bus"
 import useServices from "../../components/hooks/useServices"
 import { Button } from "gatsby-theme-material-ui"
 import Alert from "../../components/ui/Alert"
@@ -31,7 +29,7 @@ import useServiceProviderFromServiceClass from "../../components/hooks/useServic
 import AppContext from "../../components/AppContext"
 const ImportButton = lazy(() => import("../../components/ImportButton"))
 import ServiceManagerContext from "../../components/ServiceManagerContext"
-import ShareIcon from "@material-ui/icons/Share"
+import ShareIcon from "@mui/icons-material/Share"
 
 // all settings keys are prefixed with this string
 const PREFIX = "@ph_"
@@ -60,7 +58,6 @@ function bufferToPhrase(key: string, data: Uint8Array): Phrase {
 }
 
 export default function HIDEvents() {
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { setError } = useContext(AppContext)
     const settingsServices = useServices({ serviceClass: SRV_SETTINGS })
     const [settingsService, setSettingsService] = useState<JDService>()
@@ -73,21 +70,25 @@ export default function HIDEvents() {
     const settings = useServiceClient(settingsService, factory)
 
     useServiceProviderFromServiceClass(SRV_SETTINGS)
-    useChange(settings, debounce(async () => {
-        const phrs: Phrase[] = []
-        if (settings) {
-            const all = await settings.list()
-            for (const kv of all.filter(entry =>
-                entry.key?.startsWith(PREFIX)
-            )) {
-                const { key, value } = kv
-                const he = bufferToPhrase(key, value)
-                if (he) phrs.push(he)
+    useChange(
+        settings,
+        debounce(async () => {
+            const phrs: Phrase[] = []
+            if (settings) {
+                const all = await settings.list()
+                for (const kv of all.filter(entry =>
+                    entry.key?.startsWith(PREFIX)
+                )) {
+                    const { key, value } = kv
+                    const he = bufferToPhrase(key, value)
+                    if (he) phrs.push(he)
+                }
             }
-        }
-        // different? set the variable
-        if (JSON.stringify(phrs) !== JSON.stringify(phrases)) setPhrases(phrs)
-    }, 500))
+            // different? set the variable
+            if (JSON.stringify(phrs) !== JSON.stringify(phrases))
+                setPhrases(phrs)
+        }, 500)
+    )
 
     const handlePhraseChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const index = Number.parseInt(event.target.id)
@@ -103,14 +104,18 @@ export default function HIDEvents() {
     const handleRemovePhrase = (index: number) => async () => {
         const { key } = phrases[index]
         if (key) await settings.deleteValue(key)
-        setPhrases([...phrases.slice(0, index), ... phrases.slice(index)])
+        setPhrases([...phrases.slice(0, index), ...phrases.slice(index)])
     }
     const handleSelectSettingsService = (service: JDService) => () =>
         setSettingsService(settingsService === service ? undefined : service)
 
     const handleClearPhrases = async () => {
-        await Promise.all(phrases.filter(({key})=>!!key).map((phrase) => settings.deleteValue(phrase.key)))
-        setPhrases([]);
+        await Promise.all(
+            phrases
+                .filter(({ key }) => !!key)
+                .map(phrase => settings.deleteValue(phrase.key))
+        )
+        setPhrases([])
     }
 
     const handleSavePhrases = () => {
@@ -121,24 +126,17 @@ export default function HIDEvents() {
     }
 
     const handleExport = () => {
-        fileStorage.saveText(`phrases.json`, JSON.stringify(
-            clone(phrases).map(h => {
-                delete h.key
-                return h
-            })
-        ))
-    }
-
-    const exportUri =
-        phrases &&
-        `data:application/json;charset=UTF-8,${encodeURIComponent(
+        fileStorage.saveText(
+            `phrases.json`,
             JSON.stringify(
                 clone(phrases).map(h => {
                     delete h.key
                     return h
                 })
             )
-        )}`
+        )
+    }
+
     useEffect(() => {
         if (exportRef.current)
             (exportRef.current as HTMLAnchorElement).download = "phrases.json"
@@ -260,7 +258,7 @@ export default function HIDEvents() {
                                     <Button
                                         variant="outlined"
                                         onClick={handleExport}
-                                        startIcon={<ShareIcon/>}
+                                        startIcon={<ShareIcon />}
                                     >
                                         Export
                                     </Button>

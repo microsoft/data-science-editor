@@ -6,7 +6,7 @@ import useWidgetTheme from "../widgets/useWidgetTheme"
 import useServiceServer from "../hooks/useServiceServer"
 import useWidgetSize from "../widgets/useWidgetSize"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
-import { Grid, Slider } from "@material-ui/core"
+import { Grid, Slider } from "@mui/material"
 import SensorServer from "../../../jacdac-ts/src/servers/sensorserver"
 import useRegister from "../hooks/useRegister"
 

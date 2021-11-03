@@ -10,7 +10,7 @@ import {
     Grid,
     TextField,
     Typography,
-} from "@material-ui/core"
+} from "@mui/material"
 import useServiceClient from "../../jacdac/useServiceClient"
 import AzureIoTHubHealthClient from "../../../jacdac-ts/src/clients/azureiothubhealthclient"
 import useWidgetTheme from "../widgets/useWidgetTheme"
@@ -21,14 +21,14 @@ import {
     AzureIotHubHealthReg,
 } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import { useId } from "react-use-id-hook"
-import SettingsIcon from "@material-ui/icons/Settings"
+import SettingsIcon from "@mui/icons-material/Settings"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import { Button } from "gatsby-material-ui-components"
 import CmdButton from "../CmdButton"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import ChipList from "../ui/ChipList"
-import WifiIcon from "@material-ui/icons/Wifi"
-import WifiOffIcon from "@material-ui/icons/WifiOff"
+import WifiIcon from "@mui/icons-material/Wifi"
+import WifiOffIcon from "@mui/icons-material/WifiOff"
 import useEvent from "../hooks/useEvent"
 import useEventCount from "../../jacdac/useEventCount"
 

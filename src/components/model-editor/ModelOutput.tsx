@@ -3,11 +3,11 @@ import {
     AccordionDetails,
     AccordionSummary,
     Grid,
-} from "@material-ui/core"
+} from "@mui/material"
 import Trend from "../Trend"
-import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord"
+import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import React, { useContext, useEffect, useState } from "react"
 
 import { predictRequest } from "../blockly/dsl/workers/tf.proxy"

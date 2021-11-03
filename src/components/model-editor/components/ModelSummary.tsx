@@ -1,11 +1,5 @@
 import React from "react"
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-} from "@material-ui/core"
+import { Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material"
 
 import MBModel, { MCU_FLOAT_SIZE, MCU_SPEED } from "../MBModel"
 import MBDataSet from "../MBDataSet"

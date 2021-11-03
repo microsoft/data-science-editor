@@ -1,11 +1,11 @@
 import React, { useContext } from "react"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
-import SaveIcon from "@material-ui/icons/Save"
+import SaveIcon from "@mui/icons-material/Save"
 import ServiceManagerContext from "../ServiceManagerContext"
 import PacketsContext from "../PacketsContext"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
-import { Link } from "@material-ui/core"
+import { Link } from "@mui/material"
 import ConsoleContext, { serializeLogs } from "../console/ConsoleContext"
 
 export default function TraceSaveButton(props: { variant?: "link" | "icon" }) {
@@ -57,6 +57,7 @@ user-agent: ${typeof window !== undefined && window.navigator.userAgent}
             title="save trace and environment information in a file"
             component="button"
             onClick={saveTrace}
+            underline="hover"
         >
             Save trace
         </Link>

@@ -1,5 +1,5 @@
 import React, { useMemo } from "react"
-import { Grid } from "@material-ui/core"
+import { Grid } from "@mui/material"
 import { parseServiceSpecificationMarkdownToJSON } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import { serviceMap } from "../../../jacdac-ts/src/jdom/spec"
 import RandomGenerator from "../RandomGenerator"

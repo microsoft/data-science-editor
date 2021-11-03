@@ -5,16 +5,16 @@ import {
     useRegisterBoolValue,
     useRegisterUnpackedValue,
 } from "../../jacdac/useRegisterValue"
-import { Grid, TextField } from "@material-ui/core"
+import { Grid, TextField } from "@mui/material"
 import LoadingProgress from "../ui/LoadingProgress"
 import useRegister from "../hooks/useRegister"
 import CmdButton from "../CmdButton"
-import ClearIcon from "@material-ui/icons/Clear"
-import EditIcon from "@material-ui/icons/Edit"
+import ClearIcon from "@mui/icons-material/Clear"
+import EditIcon from "@mui/icons-material/Edit"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import CharacterScreenWidget from "../widgets/CharacterScreenWidget"
 import { useId } from "react-use-id-hook"
-import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew"
+import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew"
 
 // https://en.wikipedia.org/wiki/Braille_ASCII
 const BRAILE_CHARACTERS = {

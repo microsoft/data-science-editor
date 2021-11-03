@@ -5,7 +5,7 @@ import {
     Grid,
     Paper,
     Typography,
-} from "@material-ui/core"
+} from "@mui/material"
 import React, { useCallback, useRef } from "react"
 import {
     SRV_CONTROL,

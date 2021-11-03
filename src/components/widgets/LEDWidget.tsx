@@ -1,6 +1,6 @@
 import React from "react"
 import SvgWidget from "../widgets/SvgWidget"
-import { Grid, Typography } from "@material-ui/core"
+import { Grid, Typography } from "@mui/material"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import SliderWithLabel from "../ui/SliderWithLabel"
 import ColorButtons from "./ColorButtons"

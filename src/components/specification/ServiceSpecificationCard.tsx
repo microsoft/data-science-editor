@@ -6,7 +6,7 @@ import {
     CardHeader,
     Chip,
     Typography,
-} from "@material-ui/core"
+} from "@mui/material"
 import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec"
 import IDChip from "../IDChip"
 import { Button } from "gatsby-theme-material-ui"

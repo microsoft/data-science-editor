@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle, List } from "@material-ui/core"
+import { Dialog, DialogContent, DialogTitle, List } from "@mui/material"
 import React from "react"
 import { useId } from "react-use-id-hook"
 import JDService from "../../../jacdac-ts/src/jdom/service"

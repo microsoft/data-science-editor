@@ -1,39 +1,48 @@
 import React, { useContext } from "react"
-import { Hidden, Box, makeStyles, createStyles } from "@material-ui/core"
-import AppBar from "@material-ui/core/AppBar"
-import Toolbar from "@material-ui/core/Toolbar"
-import Typography from "@material-ui/core/Typography"
+import { styled } from "@mui/material/styles"
+import { Hidden, Box } from "@mui/material"
+import AppBar from "@mui/material/AppBar"
+import Toolbar from "@mui/material/Toolbar"
+import Typography from "@mui/material/Typography"
 // tslint:disable-next-line: no-submodule-imports
 import DarkModeContext from "../ui/DarkModeContext"
 import { HideOnScroll } from "../ui/HideOnScroll"
 import { Link } from "gatsby-theme-material-ui"
 
-export const FEEDBACK_URL = "https://github.com/microsoft/jacdac/discussions/categories/data-editor"
+const PREFIX = "FEEDBACK_URL"
 
-const useStyles = makeStyles(theme =>
-    createStyles({
-        grow: {
-            flexGrow: 1,
-        },
-        appBar: {
-            transition: theme.transitions.create(["margin", "width"], {
-                easing: theme.transitions.easing.sharp,
-                duration: theme.transitions.duration.leavingScreen,
-            }),
-        },
-        menuButton: {
-            marginRight: theme.spacing(1),
-        },
-    })
-)
+const classes = {
+    grow: `${PREFIX}-grow`,
+    appBar: `${PREFIX}-appBar`,
+    menuButton: `${PREFIX}-menuButton`,
+}
+
+const StyledBox = styled(Box)(({ theme }) => ({
+    [`& .${classes.grow}`]: {
+        flexGrow: 1,
+    },
+
+    [`& .${classes.appBar}`]: {
+        transition: theme.transitions.create(["margin", "width"], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+    },
+
+    [`& .${classes.menuButton}`]: {
+        marginRight: theme.spacing(1),
+    },
+}))
+
+export const FEEDBACK_URL =
+    "https://github.com/microsoft/jacdac/discussions/categories/data-editor"
 
 export default function DataEditorAppBar() {
-    const classes = useStyles()
     const { darkMode } = useContext(DarkModeContext)
     const appBarColor = darkMode === "dark" ? "inherit" : undefined
 
     return (
-        <Box displayPrint="none">
+        <StyledBox displayPrint="none">
             <HideOnScroll>
                 <AppBar
                     position="fixed"
@@ -41,7 +50,7 @@ export default function DataEditorAppBar() {
                     className={classes.appBar}
                 >
                     <Toolbar>
-                        <Hidden implementation="css" xsDown={true}>
+                        <Hidden implementation="css" smDown={true}>
                             <Typography component="h1" variant="h6">
                                 <Link
                                     style={{
@@ -75,6 +84,6 @@ export default function DataEditorAppBar() {
                     </Toolbar>
                 </AppBar>
             </HideOnScroll>
-        </Box>
+        </StyledBox>
     )
 }

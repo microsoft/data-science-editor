@@ -1,4 +1,4 @@
-import { Box } from "@material-ui/core"
+import { Box } from "@mui/material"
 import { Button } from "gatsby-theme-material-ui"
 import React, { useContext, useMemo } from "react"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"

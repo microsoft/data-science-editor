@@ -1,10 +1,12 @@
-import React, { lazy, useState } from "react"
-import { Box, Button } from "@material-ui/core"
+import React, { ChangeEvent } from "react"
+import { Button } from "@mui/material"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import OpenInBrowserIcon from "@material-ui/icons/OpenInBrowser"
-import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
-import Suspense from "./ui/Suspense"
-const DropzoneDialog = lazy(() => import("./ui/DropzoneDialog"))
+import OpenInBrowserIcon from "@mui/icons-material/OpenInBrowser"
+import IconButton from "@mui/material/IconButton"
+import { toArray } from "../../jacdac-ts/src/jdom/utils"
+import { useId } from "react-use-id-hook"
+
+const MAX_SIZE = 5000000
 
 export default function ImportButton(props: {
     icon?: boolean
@@ -12,7 +14,7 @@ export default function ImportButton(props: {
     onFilesUploaded: (files: File[]) => void
     disabled?: boolean
     acceptedFiles?: string[]
-    filesLimit?: number
+    multiple?: boolean
     className?: string
 }) {
     const {
@@ -21,51 +23,48 @@ export default function ImportButton(props: {
         disabled,
         acceptedFiles,
         icon,
-        filesLimit,
+        multiple,
         className,
     } = props
-    const [open, setOpen] = useState(false)
-
-    const handleOpen = () => {
-        setOpen(true)
-    }
-    const handleSave = (files: File[]) => {
+    const inputId = useId()
+    const handleSave = (ev: ChangeEvent<HTMLInputElement>) => {
+        const { target } = ev
+        const files = toArray(target.files)?.filter(f => f.size < MAX_SIZE)
         if (files?.length) onFilesUploaded(files)
-        setOpen(false)
     }
-    const handleClose = () => setOpen(false)
+    const ip = (
+        <input
+            id={inputId}
+            type="file"
+            hidden
+            accept={acceptedFiles?.join(",")}
+            multiple={multiple}
+            onChange={handleSave}
+        />
+    )
 
-    return (
-        <Box className={className}>
-            {icon && (
-                <IconButtonWithTooltip title={text} onClick={handleOpen}>
-                    <OpenInBrowserIcon />
-                </IconButtonWithTooltip>
-            )}
-            {!icon && (
-                <Button
-                    disabled={disabled}
-                    variant="outlined"
-                    onClick={handleOpen}
-                    startIcon={<OpenInBrowserIcon />}
-                >
-                    {text}
-                </Button>
-            )}
-            {open && (
-                <Suspense>
-                    <DropzoneDialog
-                        open={open}
-                        onSave={handleSave}
-                        maxFileSize={5000000}
-                        onClose={handleClose}
-                        acceptedFiles={acceptedFiles}
-                        clearOnUnmount={true}
-                        filesLimit={filesLimit || 1}
-                        submitButtonText={"import"}
-                    />
-                </Suspense>
-            )}
-        </Box>
+    return icon ? (
+        <label htmlFor={inputId}>
+            <IconButton
+                title={text || "import"}
+                className={className}
+                disabled={disabled}
+                component="span"
+            >
+                <OpenInBrowserIcon />
+                {ip}
+            </IconButton>
+        </label>
+    ) : (
+        <Button
+            className={className}
+            variant="contained"
+            component="label"
+            disabled={disabled}
+            startIcon={icon || <OpenInBrowserIcon />}
+        >
+            {text || "import"}
+            {ip}
+        </Button>
     )
 }

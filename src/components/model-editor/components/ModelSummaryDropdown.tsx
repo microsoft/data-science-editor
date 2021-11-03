@@ -4,8 +4,8 @@ import {
     AccordionDetails,
     AccordionSummary,
     Grid,
-} from "@material-ui/core"
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
+} from "@mui/material"
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 
 import ModelSummary from "./ModelSummary"

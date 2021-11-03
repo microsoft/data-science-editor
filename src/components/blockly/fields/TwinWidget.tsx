@@ -1,5 +1,5 @@
 import React, { useContext } from "react"
-import { Grid } from "@material-ui/core"
+import { Grid } from "@mui/material"
 import DashboardServiceWidget from "../../dashboard/DashboardServiceWidget"
 import WorkspaceContext from "../WorkspaceContext"
 import NoServiceAlert from "./NoServiceAlert"

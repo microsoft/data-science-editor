@@ -14,7 +14,8 @@ export default function useServiceProviderFromServiceClass(
     useEffect(() => {
         const devices = bus.devices({ serviceClass })
         const def =
-            !devices.length && serviceProviderDefinitionFromServiceClass(serviceClass)
+            !devices.length &&
+            serviceProviderDefinitionFromServiceClass(serviceClass)
         const provider = def && addServiceProvider(bus, def)
         return () => bus.removeServiceProvider(provider)
     }, [serviceClass])

@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, Typography } from "@material-ui/core"
+import { Box, Typography } from "@mui/material"
 import { useId } from "react-use-id-hook"
 
 export default function TabPanel(props: {

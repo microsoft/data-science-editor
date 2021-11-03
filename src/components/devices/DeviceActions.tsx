@@ -1,14 +1,14 @@
 import React, { useContext } from "react"
 import JDDevice from "../../../jacdac-ts/src/jdom/device"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import FingerprintIcon from "@material-ui/icons/Fingerprint"
+import FingerprintIcon from "@mui/icons-material/Fingerprint"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import RefreshIcon from "@material-ui/icons/Refresh"
+import RefreshIcon from "@mui/icons-material/Refresh"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import CmdButton from "../CmdButton"
 import useServiceProvider from "../hooks/useServiceProvider"
-import CloseIcon from "@material-ui/icons/Close"
-import SettingsIcon from "@material-ui/icons/Settings"
+import CloseIcon from "@mui/icons-material/Close"
+import SettingsIcon from "@mui/icons-material/Settings"
 import { SRV_SETTINGS } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import useChange from "../../jacdac/useChange"
 import { navigate } from "gatsby-link"

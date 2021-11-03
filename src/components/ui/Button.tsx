@@ -1,5 +1,5 @@
 import React from "react"
-import { ButtonProps } from "@material-ui/core"
+import { ButtonProps } from "@mui/material"
 import { Button as GatsbyButton } from "gatsby-theme-material-ui"
 import useAnalytics, { EventProperties } from "../hooks/useAnalytics"
 

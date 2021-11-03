@@ -3,13 +3,13 @@ import {
     isEvent,
     isCommand,
 } from "../../../jacdac-ts/src/jdom/spec"
+import { styled } from "@mui/material/styles"
 // tslint:disable-next-line: no-submodule-imports
 import Alert from "../ui/Alert"
 import React from "react"
 // tslint:disable-next-line: no-submodule-imports
-import Chip from "@material-ui/core/Chip"
+import Chip from "@mui/material/Chip"
 import DeviceList from "../devices/DeviceList"
-import { makeStyles, createStyles } from "@material-ui/core"
 import IDChip from "../IDChip"
 import KindChip from "../KindChip"
 import PacketMembersChip from "../PacketMembersChip"
@@ -17,23 +17,31 @@ import Markdown from "../ui/Markdown"
 import { prettyMemberUnit } from "../../../jacdac-ts/src/jdom/pretty"
 import PacketSpecificationSource from "./PacketSpecificationSource"
 
-const useStyles = makeStyles(theme =>
-    createStyles({
-        root: {
-            marginBottom: theme.spacing(1),
-        },
-        field: {
-            "& > div": { verticalAlign: "middle" },
-        },
-        chip: {
-            margin: theme.spacing(0.5),
-        },
-    })
-)
+const PREFIX = "PacketSpecification"
+
+const classes = {
+    root: `${PREFIX}-root`,
+    field: `${PREFIX}-field`,
+    chip: `${PREFIX}-chip`,
+}
+
+const Root = styled("div")(({ theme }) => ({
+    [`&.${classes.root}`]: {
+        marginBottom: theme.spacing(1),
+    },
+
+    [`& .${classes.field}`]: {
+        "& > div": { verticalAlign: "middle" },
+    },
+
+    [`& .${classes.chip}`]: {
+        margin: theme.spacing(0.5),
+    },
+}))
 
 function MemberType(props: { member: jdspec.PacketMember }) {
     const { member } = props
-    const classes = useStyles()
+
     const helperText = prettyMemberUnit(member, true)
 
     return (
@@ -95,7 +103,7 @@ export default function PacketSpecification(props: {
         pipeReportInfo,
         showDevices,
     } = props
-    const classes = useStyles()
+
     if (!packetInfo)
         return (
             <Alert severity="error">{`Unknown member ${serviceClass.toString(
@@ -106,7 +114,7 @@ export default function PacketSpecification(props: {
     const isCmd = isCommand(packetInfo)
 
     return (
-        <div className={classes.root}>
+        <Root className={classes.root}>
             <h3 id={`${packetInfo.kind}:${packetInfo.identifier}`}>
                 {packetInfo.name}
                 <PacketMembersChip
@@ -173,6 +181,6 @@ export default function PacketSpecification(props: {
                     eventIdentifiers={[packetInfo.identifier]}
                 />
             )}
-        </div>
+        </Root>
     )
 }

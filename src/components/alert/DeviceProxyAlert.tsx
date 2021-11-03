@@ -1,4 +1,4 @@
-import { AlertTitle } from "@material-ui/lab"
+import { AlertTitle } from "@mui/material"
 import { Button } from "gatsby-theme-material-ui"
 import React from "react"
 import JDDevice from "../../../jacdac-ts/src/jdom/device"

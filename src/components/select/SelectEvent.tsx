@@ -1,5 +1,5 @@
 import React from "react"
-import MenuItem from "@material-ui/core/MenuItem"
+import MenuItem from "@mui/material/MenuItem"
 import JDEvent from "../../../jacdac-ts/src/jdom/event"
 import SelectWithLabel from "../ui/SelectWithLabel"
 
@@ -7,7 +7,7 @@ export default function SelectEvent(props: {
     events: JDEvent[]
     eventId: string
     onChange: (eventId: string) => void
-    friendlyName?: boolean,
+    friendlyName?: boolean
     label?: string
 }) {
     const { events, eventId, onChange, friendlyName, label } = props

@@ -3,7 +3,7 @@ import JDBridge from "../../../jacdac-ts/src/jdom/bridge"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import useChange from "../../jacdac/useChange"
 import IconButtonWithTooltip from "./IconButtonWithTooltip"
-import DevicesOtherIcon from "@material-ui/icons/DevicesOther"
+import DevicesOtherIcon from "@mui/icons-material/DevicesOther"
 
 function BridgeButton(props: { bridge: JDBridge; className: string }) {
     const { bridge, className } = props

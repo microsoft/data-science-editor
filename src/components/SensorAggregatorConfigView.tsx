@@ -1,4 +1,4 @@
-import { Paper } from "@material-ui/core"
+import { Paper } from "@mui/material"
 import React, { useContext } from "react"
 import { serviceName } from "../../jacdac-ts/src/jdom/pretty"
 import {

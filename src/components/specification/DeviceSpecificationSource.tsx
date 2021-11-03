@@ -1,9 +1,9 @@
 import React, { useState } from "react"
 // tslint:disable-next-line: no-submodule-imports
-import Tabs from "@material-ui/core/Tabs"
+import Tabs from "@mui/material/Tabs"
 // tslint:disable-next-line: no-submodule-imports
-import Tab from "@material-ui/core/Tab"
-import { Paper } from "@material-ui/core"
+import Tab from "@mui/material/Tab"
+import { Paper } from "@mui/material"
 import TabPanel from "../ui/TabPanel"
 import Snippet from "../ui/Snippet"
 import DeviceSpecification from "./DeviceSpecification"

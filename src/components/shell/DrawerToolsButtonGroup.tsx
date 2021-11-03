@@ -1,12 +1,12 @@
 import React, { useContext } from "react"
 import AppContext, { DrawerType } from "../AppContext"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import HistoryIcon from "@material-ui/icons/History"
+import HistoryIcon from "@mui/icons-material/History"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import AccountTreeIcon from "@material-ui/icons/AccountTree"
+import AccountTreeIcon from "@mui/icons-material/AccountTree"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import ConnectButtons from "../buttons/ConnectButtons"
-import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft"
+import FormatAlignLeftIcon from "@mui/icons-material/FormatAlignLeft"
 import useMediaQueries from "../hooks/useMediaQueries"
 
 export default function DrawerToolsButtonGroup(props: { className?: string }) {

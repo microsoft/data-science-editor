@@ -1,12 +1,12 @@
-import { Button, Grid, LinearProgress } from "@material-ui/core"
+import { Button, Grid, LinearProgress } from "@mui/material"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
-import PlayArrowIcon from "@material-ui/icons/PlayArrow"
+import PlayArrowIcon from "@mui/icons-material/PlayArrow"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
-import NavigateNextIcon from "@material-ui/icons/NavigateNext"
+import NavigateNextIcon from "@mui/icons-material/NavigateNext"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
-import DownloadIcon from "@material-ui/icons/GetApp"
+import DownloadIcon from "@mui/icons-material/GetApp"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import DeleteAllIcon from "@material-ui/icons/DeleteSweep"
+import DeleteAllIcon from "@mui/icons-material/DeleteSweep"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import React, { lazy, useContext, useEffect, useState } from "react"
 import Suspense from "../ui/Suspense"

@@ -1,4 +1,4 @@
-import { Badge, IconButtonProps } from "@material-ui/core"
+import { Badge, IconButtonProps } from "@mui/material"
 import { IconButton } from "gatsby-theme-material-ui"
 import React from "react"
 import CircularProgressBox, {
@@ -42,7 +42,7 @@ export default function IconButtonWithProgress(
     return (
         <Tooltip title={title} aria-label={props["aria-label"]}>
             <span>
-                <IconButton {...others}>
+                <IconButton {...others} size="large">
                     {!indeterminate && badge}
                     {indeterminate && (
                         <CircularProgressBox

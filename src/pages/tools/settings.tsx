@@ -1,6 +1,6 @@
 import React from "react"
 import { Link } from "gatsby-theme-material-ui"
-import { Grid } from "@material-ui/core"
+import { Grid } from "@mui/material"
 import { SRV_SETTINGS } from "../../../jacdac-ts/src/jdom/constants"
 import ConnectAlert from "../../components/alert/ConnectAlert"
 import SettingsCard from "../../components/SettingsCard"

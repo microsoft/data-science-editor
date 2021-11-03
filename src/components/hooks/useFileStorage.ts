@@ -1,4 +1,3 @@
-
 export default function useFileStorage(fileHandle: FileSystemFileHandle) {
     // if no file, return nothing
     if (!fileHandle) return undefined

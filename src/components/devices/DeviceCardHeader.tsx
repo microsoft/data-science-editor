@@ -1,5 +1,5 @@
 import { ControlReg } from "../../../jacdac-ts/src/jdom/constants"
-import { CardHeader, Chip, Typography } from "@material-ui/core"
+import { CardHeader, Chip, Typography } from "@mui/material"
 // tslint:disable-next-line: no-submodule-imports
 import { Link } from "gatsby-theme-material-ui"
 import JDDevice from "../../../jacdac-ts/src/jdom/device"
@@ -23,10 +23,7 @@ function DeviceProductIdentifierChip(props: { device: JDDevice }) {
     if (isNaN(productIdentifier)) return null
 
     return (
-        <Chip
-            size="small"
-            label={`pid: 0x${productIdentifier.toString(16)}`}
-        />
+        <Chip size="small" label={`pid: 0x${productIdentifier.toString(16)}`} />
     )
 }
 

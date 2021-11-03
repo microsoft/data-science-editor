@@ -1,15 +1,37 @@
-import {
-    createStyles,
-    Grid,
-    makeStyles,
-    Typography,
-    Theme,
-    Box,
-} from "@material-ui/core"
+import { Grid, Typography, Box } from "@mui/material"
+import { styled } from "@mui/material/styles"
 import { Button, Link } from "gatsby-theme-material-ui"
 import React, { ReactNode } from "react"
 import clsx from "clsx"
 import JacdacIcon from "../icons/JacdacIcon"
+
+const PREFIX = "FeatureItem"
+
+const classes = {
+    centered: `${PREFIX}-centered`,
+    description: `${PREFIX}-description`,
+    caption: `${PREFIX}-caption`,
+    button: `${PREFIX}-button`,
+}
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled("div")(({ theme }) => ({
+    [`& .${classes.centered}`]: {
+        textAlign: "center",
+    },
+
+    [`& .${classes.description}`]: {
+        fontSize: theme.typography.fontSize * 1.8,
+    },
+
+    [`& .${classes.caption}`]: {
+        fontSize: theme.typography.fontSize,
+    },
+
+    [`& .${classes.button}`]: {
+        fontSize: theme.typography.fontSize * 1.5,
+    },
+}))
 
 export interface FeatureItemProps {
     startImage?: ReactNode
@@ -21,30 +43,13 @@ export interface FeatureItemProps {
     caption?: string
     buttonText?: string
     centered?: boolean
-    buttonColor?: "primary" | "secondary" | "default"
+    buttonColor?: "primary" | "secondary" | "inherit"
     buttonUrl?: string
     buttonVariant?: "outlined" | "contained" | "link"
     onButtonClick?: () => void
     image?: ReactNode
     hideJacdacIcon?: boolean
 }
-
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        centered: {
-            textAlign: "center",
-        },
-        description: {
-            fontSize: theme.typography.fontSize * 1.8,
-        },
-        caption: {
-            fontSize: theme.typography.fontSize,
-        },
-        button: {
-            fontSize: theme.typography.fontSize * 1.5,
-        },
-    })
-)
 
 export default function FeatureItem(props: FeatureItemProps) {
     const {
@@ -62,13 +67,13 @@ export default function FeatureItem(props: FeatureItemProps) {
         image,
         centered,
         onButtonClick,
-        hideJacdacIcon
+        hideJacdacIcon,
     } = props
-    const classes = useStyles()
+
     const centeredCls = centered && classes.centered
     const cls = centeredCls
     return (
-        <>
+        <Root>
             {startImage && (
                 <Grid item xs={12}>
                     <Box mb={2}>{startImage}</Box>
@@ -161,6 +166,6 @@ export default function FeatureItem(props: FeatureItemProps) {
                     {image}
                 </Grid>
             )}
-        </>
+        </Root>
     )
 }

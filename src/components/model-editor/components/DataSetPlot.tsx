@@ -1,5 +1,5 @@
 import React, { lazy, useMemo, useState } from "react"
-import { Box, Grid, MenuItem, Select } from "@material-ui/core"
+import { Box, Grid, MenuItem, Select } from "@mui/material"
 import FieldDataSet from "../../FieldDataSet"
 import Suspense from "../../ui/Suspense"
 import MBDataSet from "../MBDataSet"

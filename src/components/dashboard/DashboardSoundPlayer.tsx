@@ -6,7 +6,7 @@ import {
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import useServiceServer from "../hooks/useServiceServer"
-import { Button, Grid, Slider } from "@material-ui/core"
+import { Button, Grid, Slider } from "@mui/material"
 import { useChangeAsync } from "../../jacdac/useChange"
 import JDService from "../../../jacdac-ts/src/jdom/service"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"

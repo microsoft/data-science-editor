@@ -3,9 +3,9 @@ import useWidgetTheme from "./useWidgetTheme"
 import SvgWidget from "./SvgWidget"
 import useThrottledValue from "../hooks/useThrottledValue"
 import { closestPoint, describeArc, svgPointerPoint } from "./svgutils"
-import { CSSProperties } from "@material-ui/core/styles/withStyles"
+import { CSSProperties } from "@mui/material/styles"
 import PowerButton from "./PowerButton"
-import { Grid, Slider } from "@material-ui/core"
+import { Grid, Slider } from "@mui/material"
 
 export default function GaugeWidget(props: {
     value: number

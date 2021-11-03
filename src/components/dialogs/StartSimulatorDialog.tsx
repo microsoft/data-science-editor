@@ -7,7 +7,7 @@ import {
     List,
     ListItem,
     TextField,
-} from "@material-ui/core"
+} from "@mui/material"
 import AppContext from "../AppContext"
 import React, { useContext, useMemo, useState } from "react"
 import { useId } from "react-use-id-hook"
@@ -27,7 +27,7 @@ import useAnalytics from "../hooks/useAnalytics"
 import { useMiniSearch } from "react-minisearch"
 import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
-import FilterListIcon from "@material-ui/icons/FilterList"
+import FilterListIcon from "@mui/icons-material/FilterList"
 
 const miniSearchOptions = {
     fields: ["name", "description"],

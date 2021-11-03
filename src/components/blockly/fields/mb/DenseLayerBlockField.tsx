@@ -1,24 +1,34 @@
-import React, { ReactNode, useContext, useEffect, useState } from "react"
-import {
-    Box,
-    Grid,
-    MenuItem,
-    Select,
-    TextField,
-    Tooltip,
-    makeStyles,
-    Theme,
-    createStyles,
-} from "@material-ui/core"
+import React, { ReactNode, useContext } from "react"
+import { styled } from "@mui/material/styles"
+import { Box, Grid, MenuItem, Select, TextField, Tooltip } from "@mui/material"
 
 import { ReactFieldJSON } from "../ReactField"
 import ReactInlineField from "../ReactInlineField"
 import { PointerBoundary } from "../PointerBoundary"
 
-import WorkspaceContext, { resolveBlockServices } from "../../WorkspaceContext"
+import WorkspaceContext from "../../WorkspaceContext"
 
 import { useId } from "react-use-id-hook"
 import ExpandModelBlockField from "./ExpandModelBlockField"
+
+const PREFIX = "DenseLayerBlockField"
+
+const classes = {
+    fieldContainer: `${PREFIX}-fieldContainer`,
+    field: `${PREFIX}-field`,
+}
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled("div")(({ theme }) => ({
+    [`& .${classes.fieldContainer}`]: {
+        lineHeight: "2.5rem",
+        width: "15rem",
+    },
+
+    [`& .${classes.field}`]: {
+        width: theme.spacing(10),
+    },
+}))
 
 export interface DenseLayerFieldValue {
     percentParams: number
@@ -29,25 +39,9 @@ export interface DenseLayerFieldValue {
     activation: string
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        fieldContainer: {
-            lineHeight: "2.5rem",
-            width: "15rem",
-        },
-        field: {
-            width: theme.spacing(10),
-        },
-    })
-)
-
-function LayerParameterWidget(props: {
-    initFieldValue: DenseLayerFieldValue
-    setFieldValue: (f: DenseLayerFieldValue) => void
-}) {
+function LayerParameterWidget(props: { initFieldValue: DenseLayerFieldValue }) {
     const { initFieldValue } = props
     const { sourceBlock } = useContext(WorkspaceContext)
-    const classes = useStyles()
 
     const { percentSize, percentParams, outputShape, runTimeInMs } =
         initFieldValue
@@ -84,51 +78,54 @@ function LayerParameterWidget(props: {
     }
 
     return (
-        <PointerBoundary>
-            <Grid container spacing={1} direction={"column"}>
-                <Grid item className={classes.fieldContainer}>
-                    <Box color="text.secondary">
-                        units&emsp;
-                        <Tooltip title="Update the number of units">
-                            <TextField
-                                id={useId() + "filters"}
-                                type="number"
-                                size="small"
-                                variant="outlined"
-                                defaultValue={numUnits}
-                                onChange={handleChangedUnits}
-                                className={classes.field}
-                            />
-                        </Tooltip>
-                    </Box>
-                    <Box color="text.secondary">
-                        activation&emsp;
-                        <Tooltip title="Update the activation function">
-                            <Select
-                                id={useId() + "activation"}
-                                variant="outlined"
-                                defaultValue={activation}
-                                onChange={handleChangedActivation}
-                            >
-                                <MenuItem value="softmax">softmax</MenuItem>
-                                <MenuItem value="linear">linear</MenuItem>
-                                <MenuItem value="relu">relu</MenuItem>
-                            </Select>
-                        </Tooltip>
-                    </Box>
+        <Root>
+            <PointerBoundary>
+                <Grid container spacing={1} direction={"column"}>
+                    <Grid item className={classes.fieldContainer}>
+                        <Box color="text.secondary">
+                            units&emsp;
+                            <Tooltip title="Update the number of units">
+                                <TextField
+                                    id={useId() + "filters"}
+                                    type="number"
+                                    size="small"
+                                    variant="outlined"
+                                    defaultValue={numUnits}
+                                    onChange={handleChangedUnits}
+                                    className={classes.field}
+                                />
+                            </Tooltip>
+                        </Box>
+                        <Box color="text.secondary">
+                            activation&emsp;
+                            <Tooltip title="Update the activation function">
+                                <Select
+                                    id={useId() + "activation"}
+                                    variant="outlined"
+                                    defaultValue={activation}
+                                    onChange={handleChangedActivation}
+                                >
+                                    <MenuItem value="softmax">softmax</MenuItem>
+                                    <MenuItem value="linear">linear</MenuItem>
+                                    <MenuItem value="relu">relu</MenuItem>
+                                </Select>
+                            </Tooltip>
+                        </Box>
+                    </Grid>
+                    <Grid item>
+                        <Box color="text.secondary">
+                            Output shape: [{outputShape.join(", ")}]<br />
+                            Percent of total size: {percentSize.toPrecision(2)}%
+                            <br />
+                            Percent of total params:{" "}
+                            {percentParams.toPrecision(2)}%
+                            <br />
+                            Run time: {runTimeInMs.toPrecision(2)} ms <br />
+                        </Box>
+                    </Grid>
                 </Grid>
-                <Grid item>
-                    <Box color="text.secondary">
-                        Output shape: [{outputShape.join(", ")}]<br />
-                        Percent of total size: {percentSize.toPrecision(2)}%
-                        <br />
-                        Percent of total params: {percentParams.toPrecision(2)}%
-                        <br />
-                        Run time: {runTimeInMs.toPrecision(2)} ms <br />
-                    </Box>
-                </Grid>
-            </Grid>
-        </PointerBoundary>
+            </PointerBoundary>
+        </Root>
     )
 }
 
@@ -162,6 +159,10 @@ export default class DenseLayerBlockField extends ReactInlineField {
     }
 
     renderInlineField(): ReactNode {
-        return <LayerParameterWidget initFieldValue={this.value} />
+        return (
+            <LayerParameterWidget
+                initFieldValue={this.value as DenseLayerFieldValue}
+            />
+        )
     }
 }

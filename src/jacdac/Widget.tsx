@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react"
-import { Box, Paper, useTheme } from "@material-ui/core"
+import { Box, Paper, useTheme } from "@mui/material"
 
 export default function Widget(props: { children: ReactNode }) {
     const { children } = props

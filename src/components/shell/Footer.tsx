@@ -1,40 +1,44 @@
-import { createStyles, makeStyles, Typography } from "@material-ui/core"
+import { Typography } from "@mui/material"
+import { styled } from "@mui/material/styles"
 import { Link } from "gatsby-theme-material-ui"
 import React from "react"
 import TraceSaveButton from "../trace/TraceSaveButton"
 
-const useStyles = makeStyles(theme =>
-    createStyles({
-        footer: {
-            textAlign: "center",
-            "& *": {
-                fontSize: `${theme.typography.fontSize * 0.8}px`,
-                textDecoration: "none",
-                color: theme.palette.text.primary,
-            },
-            "& .note": {
-                fontSize: `${theme.typography.fontSize * 0.9}px`,
-            },
-            "& a:hover": {
-                textDecoration: "underline",
-            },
-            "& a:visited": {
-                color: theme.palette.text.hint,
-            },
-            "& a": {
-                marginRight: theme.spacing(0.5),
-            },
+const PREFIX = "Footer"
+
+const classes = {
+    footer: `${PREFIX}-footer`,
+}
+
+const Root = styled("footer")(({ theme }) => ({
+    [`&.${classes.footer}`]: {
+        textAlign: "center",
+        "& *": {
+            fontSize: `${theme.typography.fontSize * 0.8}px`,
+            textDecoration: "none",
+            color: theme.palette.text.primary,
         },
-    })
-)
+        "& .note": {
+            fontSize: `${theme.typography.fontSize * 0.9}px`,
+        },
+        "& a:hover": {
+            textDecoration: "underline",
+        },
+        "& a:visited": {
+            color: theme.palette.grey[400],
+        },
+        "& a": {
+            marginRight: theme.spacing(0.5),
+        },
+    },
+}))
 
 export default function Footer() {
-    const classes = useStyles()
     const repo = process.env.GATSBY_GITHUB_REPOSITORY
     const sha = process.env.GATSBY_GITHUB_SHA
 
     return (
-        <footer role="contentinfo" className={classes.footer}>
+        <Root role="contentinfo" className={classes.footer}>
             <div className="note">
                 This web site collects anonymous usage analytics.{" "}
                 <Link to="/privacy/">Learn more...</Link>
@@ -87,6 +91,6 @@ export default function Footer() {
             <Typography component="span" variant="inherit">
                 © {new Date().getFullYear()} Microsoft Corporation
             </Typography>
-        </footer>
+        </Root>
     )
 }

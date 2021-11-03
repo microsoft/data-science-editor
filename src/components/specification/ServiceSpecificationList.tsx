@@ -1,4 +1,4 @@
-import { Chip, Grid, List, ListItem, ListItemText } from "@material-ui/core"
+import { Chip, Grid, List, ListItem, ListItemText } from "@mui/material"
 import React, { useMemo } from "react"
 import {
     deviceSpecificationsForService,

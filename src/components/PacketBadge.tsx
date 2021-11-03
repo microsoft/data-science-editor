@@ -1,21 +1,21 @@
-import { Badge } from "@material-ui/core"
+import { Badge } from "@mui/material"
 import React from "react"
 import { SRV_LOGGER } from "../../jacdac-ts/jacdac-spec/dist/specconstants"
 import Packet from "../../jacdac-ts/src/jdom/packet"
 import KindIcon from "./KindIcon"
 import LogMessageIcon from "./LogMessageIcon"
-import ArrowLeftIcon from "@material-ui/icons/ArrowLeft"
-import ArrowRightIcon from "@material-ui/icons/ArrowRight"
-import ClearIcon from "@material-ui/icons/Clear"
+import ArrowLeftIcon from "@mui/icons-material/ArrowLeft"
+import ArrowRightIcon from "@mui/icons-material/ArrowRight"
+import ClearIcon from "@mui/icons-material/Clear"
 import {
     CRC_ACK_NODE_NAME,
     META_ACK,
     META_ACK_FAILED,
     META_GET,
 } from "../../jacdac-ts/src/jdom/constants"
-import CodeIcon from "@material-ui/icons/Code"
+import CodeIcon from "@mui/icons-material/Code"
 import Tooltip from "./ui/Tooltip"
-import ErrorIcon from "@material-ui/icons/Error"
+import ErrorIcon from "@mui/icons-material/Error"
 
 export default function PacketBadge(props: { packet: Packet; count?: number }) {
     const { packet, count } = props

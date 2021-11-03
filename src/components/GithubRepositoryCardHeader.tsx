@@ -1,6 +1,6 @@
 import React from "react"
 // tslint:disable-next-line: no-submodule-imports
-import { Box, CardHeader, Typography } from "@material-ui/core"
+import { Box, CardHeader, Typography } from "@mui/material"
 import {
     GithubRepository,
     normalizeSlug,
@@ -8,7 +8,7 @@ import {
     useLatestRelease,
     useRepository,
 } from "./github"
-import GitHubIcon from "@material-ui/icons/GitHub"
+import GitHubIcon from "@mui/icons-material/GitHub"
 import { Link } from "gatsby-theme-material-ui"
 import LoadingProgress from "./ui/LoadingProgress"
 

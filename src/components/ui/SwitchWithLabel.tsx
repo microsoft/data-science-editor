@@ -1,4 +1,4 @@
-import { FormControlLabel, Switch, SwitchProps } from "@material-ui/core"
+import { FormControlLabel, Switch, SwitchProps } from "@mui/material"
 import React, { ReactNode } from "react"
 
 export default function SwitchWithLabel(

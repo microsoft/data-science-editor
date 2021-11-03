@@ -1,8 +1,8 @@
 import React from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
-import { Grid, TextField } from "@material-ui/core"
+import { Grid, TextField } from "@mui/material"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import RefreshIcon from "@material-ui/icons/Refresh"
+import RefreshIcon from "@mui/icons-material/Refresh"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import { toHex } from "../../../jacdac-ts/src/jdom/utils"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"

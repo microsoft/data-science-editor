@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useContext } from "react"
 import PaperBox from "../ui/PaperBox"
-import { Button, Tab, Tabs } from "@material-ui/core"
+import { Button, Tab, Tabs } from "@mui/material"
 import CodeBlock from "../CodeBlock"
 import TabPanel from "../ui/TabPanel"
 import MakeCodeSnippetContext from "./MakeCodeSnippetContext"

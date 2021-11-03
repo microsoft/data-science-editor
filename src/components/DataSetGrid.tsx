@@ -1,10 +1,4 @@
-import {
-    Card,
-    CardActions,
-    CardContent,
-    CardHeader,
-    Grid,
-} from "@material-ui/core"
+import { Card, CardActions, CardContent, CardHeader, Grid } from "@mui/material"
 import { Button } from "gatsby-theme-material-ui"
 import React, { useContext } from "react"
 import { prettyDuration } from "../../jacdac-ts/src/jdom/pretty"
@@ -12,9 +6,9 @@ import ServiceManagerContext from "./ServiceManagerContext"
 import Trend from "./Trend"
 import useGridBreakpoints from "./useGridBreakpoints"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import SaveAltIcon from "@material-ui/icons/SaveAlt"
+import SaveAltIcon from "@mui/icons-material/SaveAlt"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import DeleteIcon from "@material-ui/icons/Delete"
+import DeleteIcon from "@mui/icons-material/Delete"
 import FieldDataSet from "./FieldDataSet"
 import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
 

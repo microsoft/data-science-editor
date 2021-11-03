@@ -1,34 +1,37 @@
 import React, { useState } from "react"
+import { styled } from "@mui/material/styles"
 import clsx from "clsx"
 // tslint:disable-next-line: no-submodule-imports
-import { makeStyles, createStyles } from "@material-ui/core/styles"
-// tslint:disable-next-line: no-submodule-imports
-import TreeView from "@material-ui/lab/TreeView"
+import TreeView from "@mui/lab/TreeView"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown"
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import ArrowRightIcon from "@material-ui/icons/ArrowRight"
+import ArrowRightIcon from "@mui/icons-material/ArrowRight"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import useDevices from "../hooks/useDevices"
 import { DeviceTreeItem, JDomTreeViewProps } from "./JDomTreeViewItems"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 
-const useStyles = makeStyles(theme =>
-    createStyles({
-        root: {
-            flexGrow: 1,
-        },
-        margins: {
-            marginLeft: theme.spacing(0.5),
-            marginRight: theme.spacing(0.5),
-        },
-    })
-)
+const PREFIX = "JDomTreeView"
+const classes = {
+    root: `${PREFIX}-root`,
+    margins: `${PREFIX}-margins`,
+}
+const StyledTreeView = styled(TreeView)(({ theme }) => ({
+    [`&.${classes.root}`]: {
+        flexGrow: 1,
+    },
+
+    [`&.${classes.margins}`]: {
+        marginLeft: theme.spacing(0.5),
+        marginRight: theme.spacing(0.5),
+    },
+}))
 
 export default function JDomTreeView(props: JDomTreeViewProps) {
     const { defaultExpanded, defaultSelected, ...other } = props
-    const classes = useStyles()
+
     const [expanded, setExpanded] = useState<string[]>(defaultExpanded || [])
     const [selected, setSelected] = useState<string[]>(defaultSelected || [])
     const devices = useDevices({ ignoreInfrastructure: !Flags.diagnostics })
@@ -48,7 +51,7 @@ export default function JDomTreeView(props: JDomTreeViewProps) {
     }
 
     return (
-        <TreeView
+        <StyledTreeView
             className={clsx(classes.root, classes.margins)}
             defaultCollapseIcon={<ArrowDropDownIcon />}
             defaultExpandIcon={<ArrowRightIcon />}
@@ -67,6 +70,6 @@ export default function JDomTreeView(props: JDomTreeViewProps) {
                     {...other}
                 />
             ))}
-        </TreeView>
+        </StyledTreeView>
     )
 }

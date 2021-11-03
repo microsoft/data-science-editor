@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react"
 import PacketsContext from "../PacketsContext"
-import { Box, Slider, useTheme } from "@material-ui/core"
+import { Box, Slider, useTheme } from "@mui/material"
 import { useDebounce } from "use-debounce"
 import { prettyDuration } from "../../../jacdac-ts/src/jdom/pretty"
 import useChange from "../../jacdac/useChange"

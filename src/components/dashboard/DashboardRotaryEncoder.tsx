@@ -6,7 +6,7 @@ import SvgWidget from "../widgets/SvgWidget"
 import useServiceServer from "../hooks/useServiceServer"
 import RotaryEncoderServer from "../../../jacdac-ts/src/servers/rotaryencoderserver"
 import useWidgetTheme from "../widgets/useWidgetTheme"
-import { Grid, Slider } from "@material-ui/core"
+import { Grid, Slider } from "@mui/material"
 import useThrottledValue from "../hooks/useThrottledValue"
 import useRegister from "../hooks/useRegister"
 

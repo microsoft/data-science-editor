@@ -504,7 +504,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
                 <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
                     name: "field",
-                    parentData: true
+                    parentData: true,
                 },
                 <OptionsInputDefinition>{
                     type: "field_dropdown",

@@ -1,5 +1,5 @@
-import { Button } from "@material-ui/core"
-import { Alert } from "@material-ui/lab"
+import { Button } from "@mui/material"
+import { Alert } from "@mui/material"
 import React, { useContext, useState } from "react"
 import JDDevice from "../../../jacdac-ts/src/jdom/device"
 import {

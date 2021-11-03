@@ -1,4 +1,4 @@
-import { FiberManualRecord } from "@material-ui/icons"
+import { FiberManualRecord } from "@mui/icons-material"
 import React, { useContext } from "react"
 import PacketsContext from "../PacketsContext"
 import IconButtonWithProgress, {

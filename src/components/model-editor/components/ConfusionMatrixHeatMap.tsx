@@ -1,5 +1,5 @@
 import React, { lazy } from "react"
-import { Grid } from "@material-ui/core"
+import { Grid } from "@mui/material"
 import Suspense from "../../ui/Suspense"
 
 const VegaLite = lazy(() => import("../../blockly/fields/chart/VegaLite"))

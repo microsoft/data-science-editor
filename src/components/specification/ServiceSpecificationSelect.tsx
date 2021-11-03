@@ -1,22 +1,22 @@
-import {
-    createStyles,
-    makeStyles,
-    MenuItem,
-    TextField,
-} from "@material-ui/core"
+import { MenuItem, TextField } from "@mui/material"
+import { styled } from "@mui/material/styles"
 import React, { ChangeEvent, useMemo, useState } from "react"
 import {
     deviceSpecificationsForService,
     serviceSpecifications,
 } from "../../../jacdac-ts/src/jdom/spec"
 
-const useStyles = makeStyles(() =>
-    createStyles({
-        root: {
-            minWidth: "18rem",
-        },
-    })
-)
+const PREFIX = "ServiceSpecificationSelect"
+
+const classes = {
+    root: `${PREFIX}-root`,
+}
+
+const StyledTextField = styled(TextField)(() => ({
+    [`&.${classes.root}`]: {
+        minWidth: "18rem",
+    },
+}))
 
 export default function ServiceSpecificationSelect(props: {
     label: string
@@ -37,7 +37,7 @@ export default function ServiceSpecificationSelect(props: {
         hasRegisteredDevice,
     } = props
     const [labelId] = useState("select-" + Math.random())
-    const classes = useStyles()
+
     const specs = useMemo(
         () =>
             serviceSpecifications()
@@ -56,7 +56,7 @@ export default function ServiceSpecificationSelect(props: {
         setServiceClass(parseInt(event.target.value))
 
     return (
-        <TextField
+        <StyledTextField
             id={labelId}
             className={classes.root}
             label={label}
@@ -79,6 +79,6 @@ export default function ServiceSpecificationSelect(props: {
                     {spec.name}
                 </MenuItem>
             ))}
-        </TextField>
+        </StyledTextField>
     )
 }

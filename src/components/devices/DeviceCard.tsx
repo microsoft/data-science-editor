@@ -1,38 +1,47 @@
 import React, { ReactNode } from "react"
+import { styled } from "@mui/material/styles"
 // tslint:disable-next-line: no-submodule-imports
-import { makeStyles } from "@material-ui/core/styles"
+import Card from "@mui/material/Card"
 // tslint:disable-next-line: no-submodule-imports
-import Card from "@material-ui/core/Card"
-// tslint:disable-next-line: no-submodule-imports
-import CardContent from "@material-ui/core/CardContent"
+import CardContent from "@mui/material/CardContent"
 import JDDevice from "../../../jacdac-ts/src/jdom/device"
 import { ControlReg } from "../../../jacdac-ts/src/jdom/constants"
 import ServiceButton from "../ServiceButton"
 import useChange from "../../jacdac/useChange"
 import { navigate } from "gatsby"
 import JDService from "../../../jacdac-ts/src/jdom/service"
-import { CardActions, createStyles } from "@material-ui/core"
+import { CardActions } from "@mui/material"
 import DeviceCardHeader from "./DeviceCardHeader"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import { DeviceLostAlert } from "../alert/DeviceLostAlert"
 import { isInfrastructure } from "../../../jacdac-ts/src/jdom/spec"
 
-const useStyles = makeStyles(() =>
-    createStyles({
-        root: {},
-        bullet: {
-            display: "inline-block",
-            margin: "0 2px",
-            transform: "scale(0.8)",
-        },
-        title: {
-            fontSize: 14,
-        },
-        pos: {
-            marginBottom: 12,
-        },
-    })
-)
+const PREFIX = "DeviceCard"
+
+const classes = {
+    root: `${PREFIX}-root`,
+    bullet: `${PREFIX}-bullet`,
+    title: `${PREFIX}-title`,
+    pos: `${PREFIX}-pos`,
+}
+
+const StyledCard = styled(Card)(() => ({
+    [`&.${classes.root}`]: {},
+
+    [`& .${classes.bullet}`]: {
+        display: "inline-block",
+        margin: "0 2px",
+        transform: "scale(0.8)",
+    },
+
+    [`& .${classes.title}`]: {
+        fontSize: 14,
+    },
+
+    [`& .${classes.pos}`]: {
+        marginBottom: 12,
+    },
+}))
 
 function navigateToService(service: JDService) {
     const spec = service.specification
@@ -70,13 +79,13 @@ export default function DeviceCard(props: {
         showFirmware,
         showServices,
     } = props
-    const classes = useStyles()
+
     const services = useChange(device, () =>
         device.services().filter(srv => !isInfrastructure(srv.specification))
     )
 
     return (
-        <Card className={classes.root}>
+        <StyledCard className={classes.root}>
             <DeviceCardHeader
                 device={device}
                 showDeviceId={showDeviceId}
@@ -103,6 +112,6 @@ export default function DeviceCard(props: {
                     ))}
             </CardActions>
             {children}
-        </Card>
+        </StyledCard>
     )
 }

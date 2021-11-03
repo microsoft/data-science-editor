@@ -1,11 +1,11 @@
-import { Box, Button, Typography } from "@material-ui/core"
+import { Box, Button, Typography } from "@mui/material"
 import React, { useContext, useEffect, useState } from "react"
 // tslint:disable-next-line: no-submodule-imports
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import Alert from "../ui/Alert"
 import DbContext, { DbContextProps } from "../DbContext"
 // tslint:disable-next-line: match-default-export-name tslint:disable-next-line: no-submodule-imports
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever"
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever"
 import AppContext from "../AppContext"
 import SwitchWithLabel from "../ui/SwitchWithLabel"
 

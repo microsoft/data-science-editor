@@ -1,4 +1,4 @@
-import { Box, NoSsr, Paper } from "@material-ui/core"
+import { Box, NoSsr, Paper } from "@mui/material"
 import React from "react"
 import ConsoleLog from "./ConsoleLog"
 import ConsoleToolbar from "./ConsoleToolbar"

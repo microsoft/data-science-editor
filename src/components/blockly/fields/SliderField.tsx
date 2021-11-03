@@ -1,4 +1,4 @@
-import { Grid, Slider } from "@material-ui/core"
+import { Grid, Slider } from "@mui/material"
 import React, { ReactNode, useContext } from "react"
 import ReactField from "./ReactField"
 import ValueContext, { ValueContextProps } from "./ValueContext"

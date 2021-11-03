@@ -9,7 +9,7 @@ import {
     TableHead,
     TableRow,
     useTheme,
-} from "@material-ui/core"
+} from "@mui/material"
 
 import Suspense from "./ui/Suspense"
 const CodeBlock = lazy(() => import("./CodeBlock"))

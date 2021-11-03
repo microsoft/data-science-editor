@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react"
-import { createTheme, responsiveFontSizes } from "@material-ui/core"
+import { createTheme, responsiveFontSizes } from "@mui/material"
 import ThemedLayout from "../../components/ui/ThemedLayout"
 import JDDevice from "../../../jacdac-ts/src/jdom/device"
 import { isReading, isValueOrIntensity } from "../../../jacdac-ts/src/jdom/spec"
@@ -12,7 +12,7 @@ import IFrameBridgeClient from "../../components/makecode/iframebridgeclient"
 
 /**
  * To debug locally:
- * 
+ *
  * - launch yarn develop
  * - launch pxt serve + ?localhostmessagesims=1
  * - launch jacdac project
@@ -78,7 +78,7 @@ export default function Page() {
             background: {
                 default: "#fff",
             },
-            type: "light",
+            mode: "light",
             contrastThreshold: 3.1,
         },
     })

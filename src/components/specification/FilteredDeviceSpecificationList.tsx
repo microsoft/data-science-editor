@@ -1,4 +1,4 @@
-import { Box } from "@material-ui/core"
+import { Box } from "@mui/material"
 import React, { useState } from "react"
 import DeviceSpecificationList from "./DeviceSpecificationList"
 import ServiceSpecificationSelect from "./ServiceSpecificationSelect"

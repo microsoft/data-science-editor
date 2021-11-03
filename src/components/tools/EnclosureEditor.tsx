@@ -1,8 +1,8 @@
 import React, { lazy, useMemo } from "react"
-import { Button, Grid, Menu, MenuItem, Typography } from "@material-ui/core"
+import { Button, Grid, Menu, MenuItem, Typography } from "@mui/material"
 import useLocalStorage from "../hooks/useLocalStorage"
 import HighlightTextField from "../ui/HighlightTextField"
-import RefreshIcon from "@material-ui/icons/Refresh"
+import RefreshIcon from "@mui/icons-material/Refresh"
 import type {
     EnclosureModel,
     EnclosureOptions,

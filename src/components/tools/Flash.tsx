@@ -6,7 +6,7 @@ import {
     Grid,
     Tab,
     Tabs,
-} from "@material-ui/core"
+} from "@mui/material"
 import React, { Fragment, useContext, useEffect, useState } from "react"
 import TabPanel from "../ui/TabPanel"
 import ConnectAlert from "../alert/ConnectAlert"
@@ -29,7 +29,7 @@ import {
 import Packet from "../../../jacdac-ts/src/jdom/packet"
 import useChange from "../../jacdac/useChange"
 import Alert from "../ui/Alert"
-import { AlertTitle } from "@material-ui/lab"
+import { AlertTitle } from "@mui/material"
 
 function FlashDiagnostics() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)

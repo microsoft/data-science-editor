@@ -1,4 +1,4 @@
-import { Grid, Slider } from "@material-ui/core"
+import { Grid, Slider } from "@mui/material"
 import React, { lazy, useContext, useEffect } from "react"
 import { BuzzerCmd, BuzzerReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
@@ -6,12 +6,12 @@ import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import useServiceServer from "../hooks/useServiceServer"
 import BuzzerServer from "../../../jacdac-ts/src/servers/buzzerserver"
-import VolumeDownIcon from "@material-ui/icons/VolumeDown"
+import VolumeDownIcon from "@mui/icons-material/VolumeDown"
 import Suspense from "../ui/Suspense"
 import useRegister from "../hooks/useRegister"
-import { Alert } from "@material-ui/lab"
+import { Alert } from "@mui/material"
 import { IconButton } from "gatsby-theme-material-ui"
-import VolumeUpIcon from "@material-ui/icons/VolumeUp"
+import VolumeUpIcon from "@mui/icons-material/VolumeUp"
 import WebAudioContext from "../ui/WebAudioContext"
 const PianoWidget = lazy(() => import("../widgets/PianoWidget"))
 
@@ -64,6 +64,7 @@ export default function DashboardBuzzer(props: DashboardServiceProps) {
                         <IconButton
                             aria-label="unlock sounds"
                             onClick={handleUnlock}
+                            size="large"
                         >
                             <VolumeUpIcon />
                         </IconButton>

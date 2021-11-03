@@ -1,5 +1,5 @@
 import React from "react"
-import { Grid } from "@material-ui/core"
+import { Grid } from "@mui/material"
 import { SRV_SETTINGS } from "../../../jacdac-ts/src/jdom/constants"
 import ConnectAlert from "../alert/ConnectAlert"
 import SettingsCard from "../SettingsCard"

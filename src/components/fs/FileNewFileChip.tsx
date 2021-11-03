@@ -6,9 +6,9 @@ import {
     TextField,
     DialogActions,
     Button,
-} from "@material-ui/core"
+} from "@mui/material"
 import React, { ChangeEvent, useContext, useState } from "react"
-import AddIcon from "@material-ui/icons/Add"
+import AddIcon from "@mui/icons-material/Add"
 import { useId } from "react-use-id-hook"
 import FileSystemContext from "../FileSystemContext"
 

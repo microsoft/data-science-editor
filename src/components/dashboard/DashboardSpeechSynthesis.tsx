@@ -4,8 +4,8 @@ import {
     SpeechSynthesisReg,
 } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
-import { Grid, TextField } from "@material-ui/core"
-import VoiceChatIcon from "@material-ui/icons/VoiceChat"
+import { Grid, TextField } from "@mui/material"
+import VoiceChatIcon from "@mui/icons-material/VoiceChat"
 import CmdButton from "../CmdButton"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
 import { useId } from "react-use-id-hook"

@@ -1,11 +1,29 @@
-import React, { ReactNode, useContext } from "react"
-import { Box, Grid, makeStyles, Theme, createStyles } from "@material-ui/core"
+import React, { ReactNode } from "react"
+import { styled } from "@mui/material/styles"
+import { Box, Grid } from "@mui/material"
 
 import { ReactFieldJSON } from "../ReactField"
 import ReactInlineField from "../ReactInlineField"
 import { PointerBoundary } from "../PointerBoundary"
 
-import WorkspaceContext, { resolveBlockServices } from "../../WorkspaceContext"
+const PREFIX = "FlattenLayerBlockField"
+
+const classes = {
+    fieldContainer: `${PREFIX}-fieldContainer`,
+    field: `${PREFIX}-field`,
+}
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled("div")(({ theme }) => ({
+    [`& .${classes.fieldContainer}`]: {
+        lineHeight: "2.5rem",
+        width: "15rem",
+    },
+
+    [`& .${classes.field}`]: {
+        width: theme.spacing(10),
+    },
+}))
 
 export interface FlattenLayerFieldValue {
     percentParams: number
@@ -13,18 +31,6 @@ export interface FlattenLayerFieldValue {
     runTimeInMs: number
     outputShape: number[]
 }
-
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        fieldContainer: {
-            lineHeight: "2.5rem",
-            width: "15rem",
-        },
-        field: {
-            width: theme.spacing(10),
-        },
-    })
-)
 
 function LayerParameterWidget(props: {
     initFieldValue: FlattenLayerFieldValue
@@ -82,6 +88,12 @@ export default class FlattenLayerBlockField extends ReactInlineField {
     }
 
     renderInlineField(): ReactNode {
-        return <LayerParameterWidget initFieldValue={this.value} />
+        return (
+            <Root>
+                <LayerParameterWidget
+                    initFieldValue={this.value as FlattenLayerFieldValue}
+                />
+            </Root>
+        )
     }
 }

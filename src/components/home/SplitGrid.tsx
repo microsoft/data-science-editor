@@ -1,5 +1,5 @@
 import React, { CSSProperties, ReactNode } from "react"
-import { Grid, GridSize } from "@material-ui/core"
+import { Grid, GridSize } from "@mui/material"
 import FeatureItem, { FeatureItemProps } from "./FeatureItem"
 
 export default function SplitGrid(

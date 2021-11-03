@@ -4,7 +4,7 @@ import {
     DialogContent,
     DialogContentText,
     TextField,
-} from "@material-ui/core"
+} from "@mui/material"
 import Blockly from "blockly"
 import { Button } from "gatsby-theme-material-ui"
 import React, { ChangeEvent, useEffect, useRef, useState } from "react"

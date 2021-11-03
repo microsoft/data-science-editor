@@ -1,18 +1,23 @@
 import React, { useContext } from "react"
-import { Grid, makeStyles, Theme, createStyles } from "@material-ui/core"
+import { styled } from "@mui/material/styles"
+import { Grid } from "@mui/material"
 import DeviceCard from "./DeviceCard"
 import ServiceCard from "../ServiceCard"
 import useChange from "../../jacdac/useChange"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import useGridBreakpoints from "../useGridBreakpoints"
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        root: {
-            marginBottom: theme.spacing(1),
-        },
-    })
-)
+const PREFIX = "DeviceList"
+
+const classes = {
+    root: `${PREFIX}-root`,
+}
+
+const StyledGrid = styled(Grid)(({ theme }) => ({
+    [`&.${classes.root}`]: {
+        marginBottom: theme.spacing(1),
+    },
+}))
 
 export default function DeviceList(props: {
     serviceClass?: number
@@ -41,12 +46,12 @@ export default function DeviceList(props: {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const devices = useChange(bus, n => n.devices({ serviceClass }))
     const services = useChange(bus, n => n.services({ serviceClass }))
-    const classes = useStyles()
+
     const hasServiceClass = serviceClass !== undefined
     const gridBreakpoints = useGridBreakpoints(devices?.length)
 
     return (
-        <Grid container spacing={2} className={classes.root}>
+        <StyledGrid container spacing={2} className={classes.root}>
             {!hasServiceClass &&
                 devices.map(device => (
                     <Grid key={device.id} item {...gridBreakpoints}>
@@ -75,6 +80,6 @@ export default function DeviceList(props: {
                         </Grid>
                     )
                 })}
-        </Grid>
+        </StyledGrid>
     )
 }

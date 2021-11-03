@@ -1,7 +1,7 @@
 import React, { useContext } from "react"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import FingerprintIcon from "@material-ui/icons/Fingerprint"
-import { Chip, IconButton } from "@material-ui/core"
+import FingerprintIcon from "@mui/icons-material/Fingerprint"
+import { Chip, IconButton } from "@mui/material"
 import PacketsContext from "./PacketsContext"
 import AppContext, { DrawerType } from "./AppContext"
 import Tooltip from "./ui/Tooltip"
@@ -45,6 +45,7 @@ export default function IDChip(props: {
                             <IconButton
                                 aria-label={title}
                                 onClick={handleFilterClick}
+                                size="large"
                             >
                                 {icon}
                             </IconButton>

@@ -1,7 +1,8 @@
 import React, { ReactNode, useContext } from "react"
+import { styled } from '@mui/material/styles';
 import WorkspaceContext from "../WorkspaceContext"
 import useBlockData from "../useBlockData"
-import { Grid, makeStyles, Typography } from "@material-ui/core"
+import { Grid, Typography } from "@mui/material"
 import { TABLE_HEIGHT, TABLE_WIDTH } from "../toolbox"
 import { PointerBoundary } from "./PointerBoundary"
 import CopyButton from "../../ui/CopyButton"
@@ -10,22 +11,30 @@ import { roundWithPrecision, toMap } from "../../../../jacdac-ts/src/jdom/utils"
 import { tidyHeaders, tidyResolveHeader } from "./tidy"
 import { humanify } from "../../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 
-interface StylesProps {
-    tableHeight: number
-}
+const PREFIX = 'DataTableWidget';
 
-const useStyles = makeStyles(() => ({
-    empty: {
+const classes = {
+    empty: `${PREFIX}-empty`,
+    button: `${PREFIX}-button`,
+    root: `${PREFIX}-root`,
+    table: `${PREFIX}-table`
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')(() => ({
+    [`& .${classes.empty}`]: {
         paddingLeft: "0.5rem",
         paddingRight: "0.5rem",
         background: "#fff",
         color: "#000",
         borderRadius: "0.25rem",
     },
-    button: {
+
+    [`& .${classes.button}`]: {
         color: "grey",
     },
-    root: (props: StylesProps) => ({
+
+    [`& .${classes.root}`]: (props: StylesProps) => ({
         marginTop: "0.25rem",
         paddingLeft: "0.5rem",
         paddingRight: "0.5rem",
@@ -36,7 +45,8 @@ const useStyles = makeStyles(() => ({
         height: `calc(${props.tableHeight}px - 0.25rem)`,
         overflow: "auto",
     }),
-    table: {
+
+    [`& .${classes.table}`]: {
         margin: 0,
         fontSize: "0.8rem",
         lineHeight: "1rem",
@@ -54,8 +64,12 @@ const useStyles = makeStyles(() => ({
             borderColor: "#ccc",
             borderRightStyle: "solid 1px",
         },
-    },
-}))
+    }
+}));
+
+interface StylesProps {
+    tableHeight: number
+}
 
 export default function DataTableWidget(props: {
     label?: string
@@ -78,7 +92,7 @@ export default function DataTableWidget(props: {
         sourceBlock
     )
     const raw = transformed ? transformedData : data
-    const classes = useStyles({ tableHeight })
+
 
     if (!raw?.length)
         return empty ? <span className={classes.empty}>{empty}</span> : null
@@ -130,58 +144,63 @@ export default function DataTableWidget(props: {
     }
 
     return (
-        <PointerBoundary className={classes.root}>
-            <Grid container direction="column" spacing={1}>
-                <Grid item xs={12}>
-                    <Grid
-                        container
-                        direction="row"
-                        justifyContent="flex-start"
-                        alignItems="center"
-                        spacing={1}
-                    >
-                        {label && (
+        (<Root>
+            <PointerBoundary className={classes.root}>
+                <Grid container direction="column" spacing={1}>
+                    <Grid item xs={12}>
+                        <Grid
+                            container
+                            direction="row"
+                            justifyContent="flex-start"
+                            alignItems="center"
+                            spacing={1}
+                        >
+                            {label && (
+                                <Grid item>
+                                    <Typography variant="h6">
+                                        {label}
+                                    </Typography>
+                                </Grid>
+                            )}
                             <Grid item>
-                                <Typography variant="h6">{label}</Typography>
+                                <CopyButton
+                                    size="small"
+                                    className={classes.button}
+                                    onCopy={handleCopy}
+                                />
                             </Grid>
-                        )}
-                        <Grid item>
-                            <CopyButton
-                                size="small"
-                                className={classes.button}
-                                onCopy={handleCopy}
-                            />
+                            {raw.length > 1 && (
+                                <Grid item>
+                                    <Typography variant="caption">
+                                        {raw.length} rows x {columns.length}{" "}
+                                        columns
+                                    </Typography>
+                                </Grid>
+                            )}
                         </Grid>
-                        {raw.length > 1 && (
-                            <Grid item>
-                                <Typography variant="caption">
-                                    {raw.length} rows x {columns.length} columns
-                                </Typography>
-                            </Grid>
-                        )}
                     </Grid>
-                </Grid>
-                <Grid item xs={12}>
-                    <table className={classes.table}>
-                        <thead>
-                            <tr>
-                                {columns.map(c => (
-                                    <th key={c}>{humanify(c)}</th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {table.map((r, i) => (
-                                <tr key={r.id || i}>
+                    <Grid item xs={12}>
+                        <table className={classes.table}>
+                            <thead>
+                                <tr>
                                     {columns.map(c => (
-                                        <td key={c}>{renderCell(r[c])}</td>
+                                        <th key={c}>{humanify(c)}</th>
                                     ))}
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {table.map((r, i) => (
+                                    <tr key={r.id || i}>
+                                        {columns.map(c => (
+                                            <td key={c}>{renderCell(r[c])}</td>
+                                        ))}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </Grid>
                 </Grid>
-            </Grid>
-        </PointerBoundary>
-    )
+            </PointerBoundary>
+        </Root>)
+    );
 }

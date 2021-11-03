@@ -1,4 +1,4 @@
-import { Grid } from "@material-ui/core"
+import { Grid } from "@mui/material"
 import { StaticImage } from "gatsby-plugin-image"
 import React, { lazy, useMemo } from "react"
 import { deviceSpecifications } from "../../../jacdac-ts/src/jdom/spec"

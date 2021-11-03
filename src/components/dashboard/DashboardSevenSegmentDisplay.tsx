@@ -7,7 +7,7 @@ import {
 } from "../../jacdac/useRegisterValue"
 import SvgWidget from "../widgets/SvgWidget"
 import useWidgetTheme from "../widgets/useWidgetTheme"
-import { Grid } from "@material-ui/core"
+import { Grid } from "@mui/material"
 import RegisterInput from "../RegisterInput"
 import LoadingProgress from "../ui/LoadingProgress"
 import useServiceServer from "../hooks/useServiceServer"

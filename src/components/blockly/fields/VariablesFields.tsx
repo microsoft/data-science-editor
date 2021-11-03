@@ -1,30 +1,34 @@
-import { createStyles, makeStyles, Theme } from "@material-ui/core"
+import { styled } from "@mui/material/styles"
 import React, { useContext, useEffect, useState } from "react"
 import { VM_GLOBAL_CHANGE } from "../../../../jacdac-ts/src/vm/events"
-import { atomic } from "../../../../jacdac-ts/src/vm/runner"
+import { atomic } from "../../../../jacdac-ts/src/vm/utils"
 import WorkspaceContext from "../WorkspaceContext"
 import { ReactFieldJSON } from "./ReactField"
 import ReactInlineField from "./ReactInlineField"
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        table: {
-            padding: 0,
-            margin: 0,
-            fontSize: "0.9rem",
-            lineHeight: "1rem",
-            color: theme.palette.text.primary,
+const PREFIX = "VariablesFields"
 
-            "& td": {
-                borderColor: "#ccc",
-            },
+const classes = {
+    table: `${PREFIX}-table`,
+}
+
+const Root = styled("div")(({ theme }) => ({
+    [`& .${classes.table}`]: {
+        padding: 0,
+        margin: 0,
+        fontSize: "0.9rem",
+        lineHeight: "1rem",
+        color: theme.palette.text.primary,
+
+        "& td": {
+            borderColor: "#ccc",
         },
-    })
-)
+    },
+}))
 
 function VariablesWidget() {
     const { runner } = useContext(WorkspaceContext)
-    const classes = useStyles()
+
     const [variables, setVariables] = useState<
         { name: string; value: atomic }[]
     >(runner?.globals())
@@ -68,6 +72,10 @@ export default class VariablesField extends ReactInlineField {
     }
 
     renderInlineField() {
-        return <VariablesWidget />
+        return (
+            <Root>
+                <VariablesWidget />
+            </Root>
+        )
     }
 }

@@ -1,5 +1,5 @@
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
-import GitHubIcon from "@material-ui/icons/GitHub"
+import GitHubIcon from "@mui/icons-material/GitHub"
 import React from "react"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 

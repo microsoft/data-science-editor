@@ -10,10 +10,10 @@ import {
     Grid,
     TextField,
     Typography,
-} from "@material-ui/core"
+} from "@mui/material"
 import { GITHUB_API_KEY } from "../github"
 import AppContext from "../AppContext"
-import GitHubIcon from "@material-ui/icons/GitHub"
+import GitHubIcon from "@mui/icons-material/GitHub"
 import ApiKeyAccordion from "../ApiKeyAccordion"
 import { useId } from "react-use-id-hook"
 import LoadingProgress from "../ui/LoadingProgress"

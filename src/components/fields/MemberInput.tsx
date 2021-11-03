@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 // tslint:disable-next-line: no-submodule-imports
-import { FormControlLabel, Slider, Typography } from "@material-ui/core"
-import { MenuItem, Select, Switch, TextField } from "@material-ui/core"
+import { FormControlLabel, Slider, SelectChangeEvent } from "@mui/material"
+import { MenuItem, Select, Switch, TextField } from "@mui/material"
 import {
     flagsToValue,
     prettyMemberUnit,
@@ -126,7 +126,7 @@ export default function MemberInput(props: {
         setErrorText(r.error)
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleEnumChange = (event: React.ChangeEvent<{ value: any }>) => {
+    const handleEnumChange = (event: SelectChangeEvent<number | number[]>) => {
         const v = enumInfo.isFlags
             ? flagsToValue(event.target.value as number[])
             : (event.target.value as number)
@@ -196,7 +196,7 @@ export default function MemberInput(props: {
                 value={
                     enumInfo.isFlags
                         ? valueToFlags(enumInfo, value as number)
-                        : value
+                        : (value as number)
                 }
                 onChange={handleEnumChange}
             >

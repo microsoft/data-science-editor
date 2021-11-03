@@ -1,4 +1,4 @@
-import { useTheme } from "@material-ui/core"
+import { useTheme } from "@mui/material"
 import { SVGProps, useContext } from "react"
 import DarkModeContext from "../ui/DarkModeContext"
 

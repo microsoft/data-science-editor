@@ -1,17 +1,21 @@
 import React, { useEffect, useContext } from "react"
+import { styled } from "@mui/material/styles"
 import { Console, Hook, Unhook } from "console-feed"
 import ConsoleContext from "./ConsoleContext"
-import { createStyles, makeStyles } from "@material-ui/core"
 import AutoScroll from "../ui/AutoScroll"
 
-const useStyles = makeStyles(() =>
-    createStyles({
-        root: {
-            backgroundColor: "#242424",
-            height: "calc(100vh - 7.05rem)",
-        },
-    })
-)
+const PREFIX = "ConsoleLog"
+
+const classes = {
+    root: `${PREFIX}-root`,
+}
+
+const StyledAutoScroll = styled(AutoScroll)(() => ({
+    [`&.${classes.root}`]: {
+        backgroundColor: "#242424",
+        height: "calc(100vh - 7.05rem)",
+    },
+}))
 
 export default function ConsoleLog() {
     const {
@@ -22,19 +26,19 @@ export default function ConsoleLog() {
         autoScroll,
         setAutoScroll,
     } = useContext(ConsoleContext)
-    const classes = useStyles()
 
     useEffect(() => {
         const hooked =
             typeof window !== "undefined" &&
-            Hook(window.console, appendLog, false)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            Hook(window.console, appendLog as any, false)
         return () => {
             hooked && Unhook(hooked)
         }
     }, [])
 
     return (
-        <AutoScroll
+        <StyledAutoScroll
             className={classes.root}
             height="calc(100vh - 7.05rem)"
             autoScroll={autoScroll}
@@ -48,6 +52,6 @@ export default function ConsoleLog() {
                 filter={filter}
                 searchKeywords={searchKeywords}
             />
-        </AutoScroll>
+        </StyledAutoScroll>
     )
 }

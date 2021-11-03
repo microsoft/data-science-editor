@@ -1,4 +1,4 @@
-import { NoSsr } from "@material-ui/core"
+import { NoSsr } from "@mui/material"
 import React, { ReactNode, Suspense as ReactSuspense } from "react"
 import Progress from "./Progress"
 

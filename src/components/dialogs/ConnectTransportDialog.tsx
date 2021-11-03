@@ -8,7 +8,7 @@ import {
     DialogContent,
     DialogTitle,
     Grid,
-} from "@material-ui/core"
+} from "@mui/material"
 import React, { useContext, useMemo } from "react"
 import { useId } from "react-use-id-hook"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"

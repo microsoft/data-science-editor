@@ -18,7 +18,7 @@ import {
     Radio,
     RadioGroup,
     Typography,
-} from "@material-ui/core"
+} from "@mui/material"
 import ConnectAlert from "../../components/alert/ConnectAlert"
 import DeviceCardHeader from "../../components/devices/DeviceCardHeader"
 import JDService from "../../../jacdac-ts/src/jdom/service"

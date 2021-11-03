@@ -5,7 +5,7 @@ import {
     DialogContent,
     DialogTitle,
     Grid,
-} from "@material-ui/core"
+} from "@mui/material"
 import React, { useState } from "react"
 import { ControlAnnounceFlags } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import JDDevice from "../../../jacdac-ts/src/jdom/device"

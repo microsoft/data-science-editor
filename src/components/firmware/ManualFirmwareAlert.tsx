@@ -1,4 +1,4 @@
-import { Box, Grid, MenuItem, Typography } from "@material-ui/core"
+import { Box, Grid, MenuItem, Typography } from "@mui/material"
 import React, { ChangeEvent, useContext, useState } from "react"
 // tslint:disable-next-line: no-submodule-imports
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"

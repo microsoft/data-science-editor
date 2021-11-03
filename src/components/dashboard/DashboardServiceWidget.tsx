@@ -59,7 +59,7 @@ import {
     useRegisterBoolValue,
     useRegisterUnpackedValue,
 } from "../../jacdac/useRegisterValue"
-import { CircularProgress, NoSsr } from "@material-ui/core"
+import { CircularProgress, NoSsr } from "@mui/material"
 
 // bundled
 import DashboardButton from "./DashboardButton"

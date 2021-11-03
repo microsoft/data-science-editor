@@ -3,7 +3,7 @@ import Button from "../ui/Button"
 import Transport, {
     ConnectionState,
 } from "../../../jacdac-ts/src/jdom/transport/transport"
-import { Badge } from "@material-ui/core"
+import { Badge } from "@mui/material"
 import IconButtonWithProgress from "../ui/IconButtonWithProgress"
 import TransportIcon from "../icons/TransportIcon"
 import useChange from "../../jacdac/useChange"

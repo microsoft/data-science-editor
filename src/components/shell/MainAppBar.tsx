@@ -1,10 +1,11 @@
 import React, { useContext } from "react"
+import { styled } from "@mui/material/styles"
 import clsx from "clsx"
-import { Hidden, Box, makeStyles, createStyles } from "@material-ui/core"
-import AppBar from "@material-ui/core/AppBar"
-import Toolbar from "@material-ui/core/Toolbar"
-import Typography from "@material-ui/core/Typography"
-import MoreIcon from "@material-ui/icons/MoreVert"
+import { Hidden, Box } from "@mui/material"
+import AppBar from "@mui/material/AppBar"
+import Toolbar from "@mui/material/Toolbar"
+import Typography from "@mui/material/Typography"
+import MoreIcon from "@mui/icons-material/MoreVert"
 // tslint:disable-next-line: no-submodule-imports
 import AppContext, { DrawerType } from "../AppContext"
 import DarkModeContext from "../ui/DarkModeContext"
@@ -13,7 +14,7 @@ import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import OpenDashboardButton from "../buttons/OpenDashboardButton"
 import PacketStats from "./PacketStats"
 import { Link } from "gatsby-theme-material-ui"
-import ForumIcon from "@material-ui/icons/Forum"
+import ForumIcon from "@mui/icons-material/Forum"
 import { UIFlags } from "../../jacdac/providerbus"
 import { HideOnScroll } from "../ui/HideOnScroll"
 import OpenVMEditorButton from "../buttons/OpenVMEditorButton"
@@ -29,62 +30,77 @@ import BridgeButtons from "../ui/BridgeButtons"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import DrawerToolsButton from "./DrawerToolsButton"
 
-const useStyles = makeStyles(theme =>
-    createStyles({
-        grow: {
-            flexGrow: 1,
+const PREFIX = "MainAppBar"
+
+const classes = {
+    grow: `${PREFIX}-grow`,
+    appBar: `${PREFIX}-appBar`,
+    appBarShift: `${PREFIX}-appBarShift`,
+    tocBarShift: `${PREFIX}-tocBarShift`,
+    toolBarShift: `${PREFIX}-toolBarShift`,
+    menuButton: `${PREFIX}-menuButton`,
+    hideMobile: `${PREFIX}-hideMobile`,
+}
+
+const Root = styled("div")(({ theme }) => ({
+    [`& .${classes.grow}`]: {
+        flexGrow: 1,
+    },
+
+    [`& .${classes.appBar}`]: {
+        transition: theme.transitions.create(["margin", "width"], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+    },
+
+    [`& .${classes.appBarShift}`]: {
+        width: `calc(100% - ${DRAWER_WIDTH}rem)`,
+        marginLeft: `${DRAWER_WIDTH}rem`,
+        [theme.breakpoints.down(MOBILE_BREAKPOINT)]: {
+            width: `calc(100% - ${MOBILE_DRAWER_WIDTH}rem)`,
+            marginLeft: `${MOBILE_DRAWER_WIDTH}rem`,
         },
-        appBar: {
-            transition: theme.transitions.create(["margin", "width"], {
-                easing: theme.transitions.easing.sharp,
-                duration: theme.transitions.duration.leavingScreen,
-            }),
+        transition: theme.transitions.create(["margin", "width"], {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    },
+
+    [`& .${classes.tocBarShift}`]: {
+        width: `calc(100% - ${TOC_DRAWER_WIDTH}rem)`,
+        marginLeft: `${TOC_DRAWER_WIDTH}rem`,
+        transition: theme.transitions.create(["margin", "width"], {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    },
+
+    [`& .${classes.toolBarShift}`]: {
+        width: `calc(100% - ${TOOLS_DRAWER_WIDTH}rem)`,
+        marginRight: `${TOOLS_DRAWER_WIDTH}rem`,
+        [theme.breakpoints.down(MOBILE_BREAKPOINT)]: {
+            width: `calc(100% - ${MOBILE_TOOLS_DRAWER_WIDTH}rem)`,
+            marginRight: `${MOBILE_TOOLS_DRAWER_WIDTH}rem`,
         },
-        appBarShift: {
-            width: `calc(100% - ${DRAWER_WIDTH}rem)`,
-            marginLeft: `${DRAWER_WIDTH}rem`,
-            [theme.breakpoints.down(MOBILE_BREAKPOINT)]: {
-                width: `calc(100% - ${MOBILE_DRAWER_WIDTH}rem)`,
-                marginLeft: `${MOBILE_DRAWER_WIDTH}rem`,
-            },
-            transition: theme.transitions.create(["margin", "width"], {
-                easing: theme.transitions.easing.easeOut,
-                duration: theme.transitions.duration.enteringScreen,
-            }),
+        transition: theme.transitions.create(["margin", "width"], {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    },
+
+    [`& .${classes.menuButton}`]: {
+        marginRight: theme.spacing(1),
+    },
+
+    [`& .${classes.hideMobile}`]: {
+        [theme.breakpoints.down("lg")]: {
+            display: "none",
         },
-        tocBarShift: {
-            width: `calc(100% - ${TOC_DRAWER_WIDTH}rem)`,
-            marginLeft: `${TOC_DRAWER_WIDTH}rem`,
-            transition: theme.transitions.create(["margin", "width"], {
-                easing: theme.transitions.easing.easeOut,
-                duration: theme.transitions.duration.enteringScreen,
-            }),
-        },
-        toolBarShift: {
-            width: `calc(100% - ${TOOLS_DRAWER_WIDTH}rem)`,
-            marginRight: `${TOOLS_DRAWER_WIDTH}rem`,
-            [theme.breakpoints.down(MOBILE_BREAKPOINT)]: {
-                width: `calc(100% - ${MOBILE_TOOLS_DRAWER_WIDTH}rem)`,
-                marginRight: `${MOBILE_TOOLS_DRAWER_WIDTH}rem`,
-            },
-            transition: theme.transitions.create(["margin", "width"], {
-                easing: theme.transitions.easing.easeOut,
-                duration: theme.transitions.duration.enteringScreen,
-            }),
-        },
-        menuButton: {
-            marginRight: theme.spacing(1),
-        },
-        hideMobile: {
-            [theme.breakpoints.down("md")]: {
-                display: "none",
-            },
-        },
-    })
-)
+    },
+}))
 
 function MainToolbar() {
-    const classes = useStyles()
     const { drawerType, toolsMenu, setToolsMenu } = useContext(AppContext)
     const drawerOpen = drawerType !== DrawerType.None
     const toggleToolsMenu = () => setToolsMenu(!toolsMenu)
@@ -99,7 +115,7 @@ function MainToolbar() {
                     )}
                 />
             )}
-            <Hidden implementation="css" xsDown={true}>
+            <Hidden implementation="css" smDown={true}>
                 <Typography component="h1" variant="h6">
                     <Link
                         style={{
@@ -156,14 +172,13 @@ function MainToolbar() {
 }
 
 export default function MainAppBar() {
-    const classes = useStyles()
     const { drawerType, toolsMenu } = useContext(AppContext)
     const { darkMode } = useContext(DarkModeContext)
     const drawerOpen = drawerType !== DrawerType.None
     const appBarColor =
         darkMode === "dark" ? "inherit" : UIFlags.widget ? "default" : undefined
     return (
-        <>
+        <Root>
             <Box displayPrint="none">
                 <HideOnScroll>
                     <AppBar
@@ -181,6 +196,6 @@ export default function MainAppBar() {
                     </AppBar>
                 </HideOnScroll>
             </Box>
-        </>
+        </Root>
     )
 }

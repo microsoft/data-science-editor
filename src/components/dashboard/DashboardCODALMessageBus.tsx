@@ -2,8 +2,8 @@ import React, { ChangeEvent, useState } from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { CodalMessageBusCmd } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import { useId } from "react-use-id-hook"
-import { Grid, TextField } from "@material-ui/core"
-import SendIcon from "@material-ui/icons/Send"
+import { Grid, TextField } from "@mui/material"
+import SendIcon from "@mui/icons-material/Send"
 import CmdButton from "../CmdButton"
 
 export default function DashboardCODALMessageBus(props: DashboardServiceProps) {

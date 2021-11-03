@@ -1,23 +1,13 @@
-import React, { ReactNode, useContext, useEffect, useState } from "react"
-import {
-    Box,
-    Grid,
-    Tooltip,
-    makeStyles,
-    Theme,
-    createStyles,
-    Button,
-} from "@material-ui/core"
-import DownloadIcon from "@material-ui/icons/GetApp"
+import React, { ReactNode, useContext } from "react"
+import { Box, Grid, Tooltip, Button } from "@mui/material"
+import DownloadIcon from "@mui/icons-material/GetApp"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 
 import { ReactFieldJSON } from "../ReactField"
 import ReactInlineField from "../ReactInlineField"
 import { PointerBoundary } from "../PointerBoundary"
 
-import WorkspaceContext, { resolveBlockServices } from "../../WorkspaceContext"
-import ServiceManagerContext from "../../../ServiceManagerContext"
-import FieldDataSet from "../../../FieldDataSet"
+import WorkspaceContext from "../../WorkspaceContext"
 
 export interface RecordingBlockFieldValue {
     numSamples: number
@@ -94,6 +84,10 @@ export default class RecordingBlockField extends ReactInlineField {
     }
 
     renderInlineField(): ReactNode {
-        return <RecordingParameterWidget initFieldValue={this.value} />
+        return (
+            <RecordingParameterWidget
+                initFieldValue={this.value as RecordingBlockFieldValue}
+            />
+        )
     }
 }

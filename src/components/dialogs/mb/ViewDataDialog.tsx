@@ -6,8 +6,8 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-} from "@material-ui/core"
-import DownloadIcon from "@material-ui/icons/GetApp"
+} from "@mui/material"
+import DownloadIcon from "@mui/icons-material/GetApp"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import IconButtonWithTooltip from "../../ui/IconButtonWithTooltip"
 

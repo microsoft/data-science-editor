@@ -1,4 +1,4 @@
-import { Grid } from "@material-ui/core"
+import { Grid } from "@mui/material"
 import { StaticImage } from "gatsby-plugin-image"
 import React from "react"
 import CenterGrid from "./CenterGrid"
@@ -6,9 +6,9 @@ import SplitGrid from "./SplitGrid"
 import CarouselGrid from "./CarouselGrid"
 import FeatureItem from "./FeatureItem"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import AccountTreeIcon from "@material-ui/icons/AccountTree"
+import AccountTreeIcon from "@mui/icons-material/AccountTree"
 import JacdacIcon from "../icons/JacdacIcon"
-import HistoryIcon from "@material-ui/icons/History"
+import HistoryIcon from "@mui/icons-material/History"
 import HTML5Image from "./HTML5Image"
 
 export default function Software() {

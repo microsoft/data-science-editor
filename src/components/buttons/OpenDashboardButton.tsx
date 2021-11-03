@@ -1,4 +1,4 @@
-import { Badge } from "@material-ui/core"
+import { Badge } from "@mui/material"
 import React from "react"
 import JacdacIcon from "../icons/JacdacIcon"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"

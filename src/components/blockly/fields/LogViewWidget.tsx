@@ -1,4 +1,4 @@
-import { useTheme } from "@material-ui/core"
+import { useTheme } from "@mui/material"
 import React, { useContext, useEffect, useState } from "react"
 import { VM_LOG_ENTRY } from "../../../../jacdac-ts/src/vm/events"
 import WorkspaceContext from "../WorkspaceContext"

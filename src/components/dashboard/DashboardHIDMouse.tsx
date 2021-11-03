@@ -1,7 +1,8 @@
 /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React, { KeyboardEvent, MouseEvent, useRef, useState } from "react"
-import { createStyles, Grid, makeStyles, Typography } from "@material-ui/core"
+import { styled } from "@mui/material/styles"
+import { Grid, Typography } from "@mui/material"
 import {
     HidMouseButton,
     HidMouseButtonEvent,
@@ -14,29 +15,33 @@ import HIDMouseServer, {
     renderHidMouseButtons,
 } from "../../../jacdac-ts/src/servers/hidmouseserver"
 import useChange from "../../jacdac/useChange"
-import MouseIcon from "@material-ui/icons/MouseOutlined"
+import MouseIcon from "@mui/icons-material/MouseOutlined"
 
-const useStyles = makeStyles(theme =>
-    createStyles({
-        capture: {
-            whiteSpace: "pre-wrap",
-            borderWidth: "1px",
-            borderStyle: "solid",
-            borderColor: "transparent",
-            userSelect: "none",
-            "&:hover": {
-                borderColor: theme.palette.primary.main,
-            },
-            "&:focus": {
-                borderColor: theme.palette.action.active,
-            },
+const PREFIX = "DashboardHIDMouse"
+
+const classes = {
+    capture: `${PREFIX}-capture`,
+}
+
+const StyledGrid = styled(Grid)(({ theme }) => ({
+    [`& .${classes.capture}`]: {
+        whiteSpace: "pre-wrap",
+        borderWidth: "1px",
+        borderStyle: "solid",
+        borderColor: "transparent",
+        userSelect: "none",
+        "&:hover": {
+            borderColor: theme.palette.primary.main,
         },
-    })
-)
+        "&:focus": {
+            borderColor: theme.palette.action.active,
+        },
+    },
+}))
 
 export default function DashboardHIDMouse(props: DashboardServiceProps) {
     const { service } = props
-    const classes = useStyles()
+
     const preRef = useRef<HTMLPreElement>()
     const server = useServiceServer<HIDMouseServer>(service)
     const [observed, setObserved] = useState("")
@@ -109,7 +114,7 @@ export default function DashboardHIDMouse(props: DashboardServiceProps) {
     }
 
     return (
-        <Grid container>
+        <StyledGrid container>
             <Grid item xs={12}>
                 <pre
                     ref={preRef}
@@ -138,6 +143,6 @@ export default function DashboardHIDMouse(props: DashboardServiceProps) {
                     </Typography>
                 </Grid>
             )}
-        </Grid>
+        </StyledGrid>
     )
 }

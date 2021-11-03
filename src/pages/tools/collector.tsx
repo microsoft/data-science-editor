@@ -1,25 +1,22 @@
 import React, { useState, useContext, useEffect } from "react"
-// tslint:disable-next-line: no-submodule-imports
-import { makeStyles, Theme } from "@material-ui/core/styles"
 import {
     Grid,
     Button,
     TextField,
     InputAdornment,
-    createStyles,
     Switch,
     Card,
     CardActions,
-} from "@material-ui/core"
+} from "@mui/material"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import PlayArrowIcon from "@material-ui/icons/PlayArrow"
+import PlayArrowIcon from "@mui/icons-material/PlayArrow"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import StopIcon from "@material-ui/icons/Stop"
+import StopIcon from "@mui/icons-material/Stop"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import SaveIcon from "@material-ui/icons/Save"
+import SaveIcon from "@mui/icons-material/Save"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import HourglassEmptyIcon from "@material-ui/icons/HourglassEmpty"
+import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty"
 import JDBus from "../../../jacdac-ts/src/jdom/bus"
 import FieldDataSet from "../../components/FieldDataSet"
 import Trend from "../../components/Trend"
@@ -53,45 +50,13 @@ import { useId } from "react-use-id-hook"
 import DashboardDeviceItem from "../../components/dashboard/DashboardDeviceItem"
 import IconButtonWithTooltip from "../../components/ui/IconButtonWithTooltip"
 import AppContext from "../../components/AppContext"
-import AddIcon from "@material-ui/icons/Add"
+import AddIcon from "@mui/icons-material/Add"
 import useServices from "../../components/hooks/useServices"
 import { delay } from "../../../jacdac-ts/src/jdom/utils"
 import useLocalStorage from "../../components/hooks/useLocalStorage"
 import FileTabs from "../../components/fs/FileTabs"
 import FileSystemContext from "../../components/FileSystemContext"
 import useChange from "../../jacdac/useChange"
-
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        root: {
-            marginBottom: theme.spacing(1),
-        },
-        grow: {
-            flexGrow: 1,
-        },
-        field: {
-            marginRight: theme.spacing(1),
-            marginBottom: theme.spacing(1.5),
-        },
-        segment: {
-            marginTop: theme.spacing(2),
-            marginBottom: theme.spacing(2),
-        },
-        row: {
-            marginBottom: theme.spacing(0.5),
-        },
-        buttons: {
-            marginRight: theme.spacing(1),
-            marginBottom: theme.spacing(2),
-        },
-        trend: {
-            width: theme.spacing(10),
-        },
-        vmiddle: {
-            verticalAlign: "middle",
-        },
-    })
-)
 
 const LIVE_HORIZON = 24
 function createDataSet(
@@ -118,7 +83,6 @@ export default function Collector() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { toggleShowDeviceHostsDialog, enqueueSnackbar } =
         useContext(AppContext)
-    const classes = useStyles()
     const { fileSystem } = useContext(FileSystemContext)
     const root = useChange(fileSystem, _ => _?.root)
     const { fileStorage } = useContext(ServiceManagerContext)
@@ -243,8 +207,7 @@ export default function Collector() {
                 const name = `data-${now.getFullYear()}-${
                     now.getMonth() + 1
                 }-${now.getDate()}-${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}.csv`
-                root.fileAsync(name, { create: true })
-                    .then(f => f.write(csv))
+                root.fileAsync(name, { create: true }).then(f => f.write(csv))
             }
             setTables([liveDataSet, ...tables])
             setLiveDataSet(newDataSet(registerIdsChecked, true))
@@ -374,7 +337,7 @@ export default function Collector() {
     }, [recording, liveDataSet, registerIdsChecked, aggregator])
 
     return (
-        <div className={classes.root}>
+        <>
             <h1>Data Collector</h1>
             <p>
                 Use this page to collect streaming data from Jacdac devices into
@@ -424,9 +387,7 @@ export default function Collector() {
                     </IconButtonWithTooltip>
                 </h3>
                 {!readingRegisters.length && (
-                    <Alert className={classes.grow} severity="info">
-                        Waiting for sensor...
-                    </Alert>
+                    <Alert severity="info">Waiting for sensor...</Alert>
                 )}
                 {!!readingRegisters.length && (
                     <ReadingFieldGrid
@@ -446,117 +407,125 @@ export default function Collector() {
                         your ML model later on.
                     </p>
                 )}
-                <div className={classes.buttons}>
-                    <Button
-                        size="large"
-                        variant="contained"
-                        color={recording ? "secondary" : "primary"}
-                        title={
-                            starting
-                                ? `starting in ${countdown}`
-                                : recording
-                                ? "stop recording"
-                                : "start recording"
-                        }
-                        onClick={toggleRecording}
-                        startIcon={
-                            starting ? (
-                                <HourglassEmptyIcon />
-                            ) : recording ? (
-                                <StopIcon />
-                            ) : (
-                                <PlayArrowIcon />
-                            )
-                        }
-                        disabled={!startEnabled}
-                    >
-                        {starting
-                            ? countdown + ""
-                            : recording
-                            ? "Stop"
-                            : "Start"}
-                    </Button>
-                    {aggregator && (
+                <Grid container direction="row" spacing={1}>
+                    <Grid item xs={12}>
                         <Button
+                            size="large"
                             variant="contained"
-                            title="save sensor input configuration"
-                            onClick={saveConfig}
-                            startIcon={<SaveIcon />}
-                            disabled={recording}
+                            color={recording ? "secondary" : "primary"}
+                            title={
+                                starting
+                                    ? `starting in ${countdown}`
+                                    : recording
+                                    ? "stop recording"
+                                    : "start recording"
+                            }
+                            onClick={toggleRecording}
+                            startIcon={
+                                starting ? (
+                                    <HourglassEmptyIcon />
+                                ) : recording ? (
+                                    <StopIcon />
+                                ) : (
+                                    <PlayArrowIcon />
+                                )
+                            }
+                            disabled={!startEnabled}
                         >
-                            Save configuration
+                            {starting
+                                ? countdown + ""
+                                : recording
+                                ? "Stop"
+                                : "Start"}
                         </Button>
+                    </Grid>
+                    {aggregator && (
+                        <Grid item>
+                            <Button
+                                variant="contained"
+                                title="save sensor input configuration"
+                                onClick={saveConfig}
+                                startIcon={<SaveIcon />}
+                                disabled={recording}
+                            >
+                                Save configuration
+                            </Button>
+                        </Grid>
                     )}
-                </div>
-                <div className={classes.row}>
-                    <TextField
-                        id={samplingIntervalId}
-                        className={classes.field}
-                        disabled={recording}
-                        type="number"
-                        label="Sampling interval"
-                        value={samplingIntervalDelay}
-                        variant="outlined"
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    ms
-                                </InputAdornment>
-                            ),
-                        }}
-                        onChange={handleSamplingIntervalChange}
-                    />
-                    <TextField
-                        id={samplingDurationId}
-                        className={classes.field}
-                        type="number"
-                        disabled={recording}
-                        label="Sampling duration"
-                        value={samplingDuration}
-                        variant="outlined"
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    s
-                                </InputAdornment>
-                            ),
-                        }}
-                        onChange={handleSamplingDurationChange}
-                    />
-                    <TextField
-                        id={startDelayId}
-                        className={classes.field}
-                        type="number"
-                        disabled={recording}
-                        label="Start delay"
-                        value={startDelay}
-                        variant="outlined"
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    s
-                                </InputAdornment>
-                            ),
-                        }}
-                        onChange={handleStartDelayChange}
-                    />
-                    <TextField
-                        id={prefixId}
-                        className={classes.field}
-                        disabled={recording}
-                        label="File name prefix"
-                        value={prefix}
-                        variant="outlined"
-                        onChange={handlePrefixChange}
-                    />
-                    <SelectEvent
-                        events={events}
-                        eventId={triggerEventId}
-                        onChange={handleTriggerChange}
-                        label={"Start Event"}
-                        friendlyName={true}
-                    />
-                </div>
+                    <Grid item>
+                        <TextField
+                            id={samplingIntervalId}
+                            disabled={recording}
+                            type="number"
+                            label="Sampling interval"
+                            value={samplingIntervalDelay}
+                            variant="outlined"
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        ms
+                                    </InputAdornment>
+                                ),
+                            }}
+                            onChange={handleSamplingIntervalChange}
+                        />
+                    </Grid>
+                    <Grid item>
+                        <TextField
+                            id={samplingDurationId}
+                            type="number"
+                            disabled={recording}
+                            label="Sampling duration"
+                            value={samplingDuration}
+                            variant="outlined"
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        s
+                                    </InputAdornment>
+                                ),
+                            }}
+                            onChange={handleSamplingDurationChange}
+                        />
+                    </Grid>
+                    <Grid item>
+                        <TextField
+                            id={startDelayId}
+                            type="number"
+                            disabled={recording}
+                            label="Start delay"
+                            value={startDelay}
+                            variant="outlined"
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        s
+                                    </InputAdornment>
+                                ),
+                            }}
+                            onChange={handleStartDelayChange}
+                        />
+                    </Grid>
+                    <Grid item>
+                        <TextField
+                            id={prefixId}
+                            disabled={recording}
+                            label="File name prefix"
+                            value={prefix}
+                            variant="outlined"
+                            onChange={handlePrefixChange}
+                        />
+                    </Grid>
+                    <Grid item>
+                        <SelectEvent
+                            events={events}
+                            eventId={triggerEventId}
+                            onChange={handleTriggerChange}
+                            label={"Start Event"}
+                            friendlyName={true}
+                        />
+                    </Grid>
+                </Grid>
             </section>
             {!!recordingDevices?.length && (
                 <section id={dashboardId}>
@@ -592,8 +561,6 @@ export default function Collector() {
                     />
                 </section>
             )}
-        </div>
+        </>
     )
-
-    //{liveDataSet && <DataSetTable key="datasettable" className={classes.segment} dataSet={liveDataSet} maxRows={3} minRows={3} />}
 }

@@ -7,7 +7,7 @@ import {
     TableHead,
     TableRow,
     useTheme,
-} from "@material-ui/core"
+} from "@mui/material"
 import React from "react"
 import { getNumber, NumberFormat } from "../../jacdac-ts/src/jdom/buffer"
 import {

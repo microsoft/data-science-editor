@@ -1,4 +1,4 @@
-import { Box } from "@material-ui/core"
+import { Box } from "@mui/material"
 import React, { useMemo } from "react"
 import { Piano, KeyboardShortcuts, MidiNumbers } from "react-piano"
 import "react-piano/dist/styles.css"

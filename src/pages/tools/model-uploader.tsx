@@ -1,4 +1,4 @@
-import { List, ListItem, ListItemText, Typography } from "@material-ui/core"
+import { List, ListItem, ListItemText, Typography } from "@mui/material"
 import React, { lazy, useContext, useState } from "react"
 import {
     SRV_SENSOR_AGGREGATOR,
@@ -27,7 +27,7 @@ import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import useCall from "../../components/useCall"
 
 import Suspense from "../../components/ui/Suspense"
-import { Link } from "@material-ui/icons"
+import { Link } from "@mui/icons-material"
 import useRegister from "../../components/hooks/useRegister"
 const ImportButton = lazy(() => import("../../components/ImportButton"))
 

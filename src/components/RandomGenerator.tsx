@@ -5,19 +5,18 @@ import {
 } from "../../jacdac-ts/src/jdom/spec"
 import {
     Card,
-    makeStyles,
     CardContent,
     CardActions,
+    CardHeader,
     Typography,
-    createStyles,
     Input,
-} from "@material-ui/core"
+} from "@mui/material"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import CheckIcon from "@material-ui/icons/Check"
+import CheckIcon from "@mui/icons-material/Check"
 // tslint:disable-next-line: no-submodule-imports
 import Alert from "./ui/Alert"
 import { Button } from "gatsby-theme-material-ui"
-import { NoSsr } from "@material-ui/core"
+import { NoSsr } from "@mui/material"
 import { useId } from "react-use-id-hook"
 import { cryptoRandomUint32 } from "../../jacdac-ts/src/jdom/random"
 import { toFullHex } from "../../jacdac-ts/src/jdom/utils"
@@ -72,18 +71,6 @@ export function uniqueFirmwareId() {
     return id !== undefined && toFullHex([id])
 }
 
-const useStyles = makeStyles(
-    createStyles({
-        root: {
-            minWidth: 275,
-            marginBottom: "1rem",
-        },
-        title: {
-            fontSize: 14,
-        },
-    })
-)
-
 export default function RandomGenerator(props: {
     device?: boolean
     firmware?: boolean
@@ -91,7 +78,7 @@ export default function RandomGenerator(props: {
     const { device, firmware } = props
     const labelId = useId()
     const fieldId = useId()
-    const classes = useStyles()
+
     const [value, setValue] = useState(
         device ? uniqueDeviceId() : uniqueServiceId()
     )
@@ -121,16 +108,9 @@ export default function RandomGenerator(props: {
         : "Random Service Identifier"
     return (
         <NoSsr>
-            <Card className={classes.root}>
+            <Card>
+                <CardHeader title={title} />
                 <CardContent>
-                    <Typography
-                        id={labelId}
-                        className={classes.title}
-                        color="textSecondary"
-                        gutterBottom
-                    >
-                        {title}
-                    </Typography>
                     {value !== undefined && (
                         <Typography variant="h5" component="h2">
                             <Input

@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core"
+import { Typography } from "@mui/material"
 import { Link } from "gatsby-material-ui-components"
 import React from "react"
 import JDDevice from "../../../jacdac-ts/src/jdom/device"

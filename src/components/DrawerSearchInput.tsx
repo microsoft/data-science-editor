@@ -1,11 +1,11 @@
-import React, { useContext, useRef, useState } from "react"
+import React, { useContext, useState } from "react"
 // tslint:disable-next-line: no-submodule-imports
-import TextField from "@material-ui/core/TextField"
+import TextField from "@mui/material/TextField"
 // tslint:disable-next-line: no-submodule-imports
 import AppContext from "./AppContext"
 import { useId } from "react-use-id-hook"
-import { InputAdornment } from "@material-ui/core"
-import ClearIcon from "@material-ui/icons/Clear"
+import { InputAdornment } from "@mui/material"
+import ClearIcon from "@mui/icons-material/Clear"
 import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
 import { delay } from "../../jacdac-ts/src/jdom/utils"
 

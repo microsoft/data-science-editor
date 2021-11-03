@@ -4,7 +4,7 @@ import {
     CardActions,
     CardContent,
     CardHeader,
-} from "@material-ui/core"
+} from "@mui/material"
 import React, { useContext } from "react"
 import { prettyDuration } from "../../../jacdac-ts/src/jdom/pretty"
 import Trace from "../../../jacdac-ts/src/jdom/trace/trace"

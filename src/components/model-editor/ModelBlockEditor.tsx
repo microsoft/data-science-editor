@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from "react"
-import { Grid, NoSsr } from "@material-ui/core"
+import { Grid, NoSsr } from "@mui/material"
 import FileTabs from "../fs/FileTabs"
 
 import BlockContext, { BlockProvider } from "../blockly/BlockContext"
@@ -11,10 +11,7 @@ import fieldsDsl from "../blockly/dsl/fieldsdsl"
 import BlockDiagnostics from "../blockly/BlockDiagnostics"
 import { visitWorkspace } from "../blockly/dsl/workspacevisitor"
 
-import {
-    BlockJSON,
-    WorkspaceFile,
-} from "../blockly/dsl/workspacejson"
+import { BlockJSON, WorkspaceFile } from "../blockly/dsl/workspacejson"
 import { WORKSPACE_FILENAME } from "../blockly/toolbox"
 import FileSystemContext, { FileSystemProvider } from "../FileSystemContext"
 import ServiceManagerContext from "../ServiceManagerContext"

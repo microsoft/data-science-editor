@@ -1,4 +1,4 @@
-import { Card, CardActions, CardContent, CardHeader } from "@material-ui/core"
+import { Card, CardActions, CardContent, CardHeader } from "@mui/material"
 import React, { useState } from "react"
 import { toHex } from "../../jacdac-ts/src/jdom/utils"
 import CmdButton from "./CmdButton"

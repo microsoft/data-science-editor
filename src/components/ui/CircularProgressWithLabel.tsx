@@ -1,7 +1,14 @@
 import React from "react"
-import { CircularProgressProps, Box, CircularProgress, Typography } from "@material-ui/core";
+import {
+    CircularProgressProps,
+    Box,
+    CircularProgress,
+    Typography,
+} from "@mui/material"
 
-export default function CircularProgressWithLabel(props: CircularProgressProps & { value: number }) {
+export default function CircularProgressWithLabel(
+    props: CircularProgressProps & { value: number }
+) {
     return (
         <Box position="relative" display="inline-flex">
             <CircularProgress variant="determinate" {...props} />
@@ -15,10 +22,12 @@ export default function CircularProgressWithLabel(props: CircularProgressProps &
                 alignItems="center"
                 justifyContent="center"
             >
-                <Typography variant="caption" component="div" color="textSecondary">{`${Math.round(
-                    props.value,
-                )}%`}</Typography>
+                <Typography
+                    variant="caption"
+                    component="div"
+                    color="textSecondary"
+                >{`${Math.round(props.value)}%`}</Typography>
             </Box>
         </Box>
-    );
+    )
 }

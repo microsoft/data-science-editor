@@ -5,7 +5,7 @@ import {
     ListItemText,
     Switch,
     TextField,
-} from "@material-ui/core"
+} from "@mui/material"
 import React, { ChangeEvent, lazy, useState } from "react"
 import { useId } from "react-use-id-hook"
 import Suspense from "../../components/ui/Suspense"
@@ -15,7 +15,7 @@ const SilkQRCode = lazy(() => import("../../components/widgets/SilkQrCode"))
 
 import { graphql } from "gatsby"
 import { Button } from "gatsby-theme-material-ui"
-import { Alert } from "@material-ui/lab"
+import { Alert } from "@mui/material"
 
 export const query = graphql`
     {

@@ -11,9 +11,9 @@ import DARK_THEME from "prism-react-renderer/themes/vsDark"
 import DarkModeContext from "./ui/DarkModeContext"
 import { IconButton, Link } from "gatsby-theme-material-ui"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import GetAppIcon from "@material-ui/icons/GetApp"
+import GetAppIcon from "@mui/icons-material/GetApp"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import LaunchIcon from "@material-ui/icons/Launch"
+import LaunchIcon from "@mui/icons-material/Launch"
 import Tooltip from "./ui/Tooltip"
 import MakeCodeSnippet from "./makecode/MakeCodeSnippet"
 import Suspense from "./ui/Suspense"
@@ -61,7 +61,7 @@ function HighlightedCode(props: {
                     {!!url && (
                         <Link style={{ float: "right" }} href={url}>
                             <Tooltip title={`Open ${url}`}>
-                                <IconButton>
+                                <IconButton size="large">
                                     <LaunchIcon />
                                 </IconButton>
                             </Tooltip>
@@ -74,7 +74,7 @@ function HighlightedCode(props: {
                             download={downloadName || "download"}
                         >
                             <Tooltip title="Download">
-                                <IconButton>
+                                <IconButton size="large">
                                     <GetAppIcon />
                                 </IconButton>
                             </Tooltip>

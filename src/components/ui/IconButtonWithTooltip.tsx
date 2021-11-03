@@ -1,7 +1,7 @@
-import { IconButtonProps } from "@material-ui/core"
+import { IconButtonProps } from "@mui/material"
 import { IconButton } from "gatsby-theme-material-ui"
 import React from "react"
-import Zoom from "@material-ui/core/Zoom"
+import Zoom from "@mui/material/Zoom"
 import Tooltip from "./Tooltip"
 import useAnalytics, { EventProperties } from "../hooks/useAnalytics"
 
@@ -40,6 +40,7 @@ export default function IconButtonWithTooltip(
                     disabled={disabled}
                     onClick={handleClick}
                     {...others}
+                    size="large"
                 >
                     {children}
                 </IconButton>

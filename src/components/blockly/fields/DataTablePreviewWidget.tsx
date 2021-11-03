@@ -1,7 +1,7 @@
 import React from "react"
 import DataTableWidget from "./DataTableWidget"
 import { TABLE_PREVIEW_MAX_ITEMS } from "../toolbox"
-import { Grid } from "@material-ui/core"
+import { Grid } from "@mui/material"
 
 export default function DataTablePreviewWidget(props: { compare?: boolean }) {
     const { compare } = props

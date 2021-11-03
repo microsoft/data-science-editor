@@ -1,10 +1,5 @@
-import {
-    Card,
-    CardHeader,
-    CardMedia,
-    createStyles,
-    makeStyles,
-} from "@material-ui/core"
+import { Card, CardHeader, CardMedia } from "@mui/material"
+import { styled } from "@mui/material/styles"
 import React, {
     createContext,
     lazy,
@@ -20,7 +15,7 @@ import Packet from "../../jacdac-ts/src/jdom/packet"
 import { randomDeviceId } from "../../jacdac-ts/src/jdom/random"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import useWindowEvent from "./hooks/useWindowEvent"
-import CloseIcon from "@material-ui/icons/Close"
+import CloseIcon from "@mui/icons-material/Close"
 import {
     decodePacketMessage,
     PacketMessage,
@@ -28,6 +23,35 @@ import {
 import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
 import Suspense from "./ui/Suspense"
 import { UIFlags } from "../jacdac/providerbus"
+
+const PREFIX = "HostedSimulatorsContext"
+
+const classes = {
+    cardContainer: `${PREFIX}-cardContainer`,
+    card: `${PREFIX}-card`,
+}
+
+const Root = styled("div")(() => ({
+    [`& .${classes.cardContainer}`]: {
+        zIndex: 1100,
+        position: "absolute",
+        left: "5rem",
+        top: "5rem",
+    },
+
+    [`& .${classes.card}`]: {
+        "& .hostedcontainer": {
+            position: "relative",
+            width: "20rem",
+        },
+        "& iframe": {
+            border: "none",
+            position: "relative",
+            width: "100%",
+            height: "100%",
+        },
+    },
+}))
 
 const Draggable = lazy(() => import("react-draggable"))
 
@@ -93,29 +117,6 @@ export function hostedSimulatorDefinitions(): HostedSimulatorDefinition[] {
     ].filter(d => !!d)
 }
 
-const useStyles = makeStyles(() =>
-    createStyles({
-        cardContainer: {
-            zIndex: 1100,
-            position: "absolute",
-            left: "5rem",
-            top: "5rem",
-        },
-        card: {
-            "& .hostedcontainer": {
-                position: "relative",
-                width: "20rem",
-            },
-            "& iframe": {
-                border: "none",
-                position: "relative",
-                width: "100%",
-                height: "100%",
-            },
-        },
-    })
-)
-
 function HostedSimulatorCard(props: { sim: HostedSimulator }) {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { sim } = props
@@ -123,7 +124,7 @@ function HostedSimulatorCard(props: { sim: HostedSimulator }) {
     const { definition, id } = sim
     const { url, name, width, height } = definition
     const origin = useMemo(() => new URL(url).origin, [url])
-    const classes = useStyles()
+
     const nodeRef = useRef<HTMLSpanElement>()
     const iframeRef = useRef<HTMLIFrameElement>()
 
@@ -230,18 +231,20 @@ export const HostedSimulatorsProvider = ({ children }) => {
     ])
 
     return (
-        <HostedSimulatorsContext.Provider
-            value={{
-                addHostedSimulator,
-                removeHostedSimulator,
-                isHostedSimulator,
-                clearHostedSimulators,
-            }}
-        >
-            {children}
-            {simulators.map(sim => (
-                <HostedSimulatorCard key={sim.id} sim={sim} />
-            ))}
-        </HostedSimulatorsContext.Provider>
+        <Root>
+            <HostedSimulatorsContext.Provider
+                value={{
+                    addHostedSimulator,
+                    removeHostedSimulator,
+                    isHostedSimulator,
+                    clearHostedSimulators,
+                }}
+            >
+                {children}
+                {simulators.map(sim => (
+                    <HostedSimulatorCard key={sim.id} sim={sim} />
+                ))}
+            </HostedSimulatorsContext.Provider>
+        </Root>
     )
 }

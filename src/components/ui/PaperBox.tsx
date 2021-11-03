@@ -1,4 +1,4 @@
-import { Box, BoxProps, Paper, useTheme } from "@material-ui/core"
+import { Box, BoxProps, Paper, useTheme } from "@mui/material"
 import React from "react"
 
 export default function PaperBox(

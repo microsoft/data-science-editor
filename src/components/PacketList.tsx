@@ -1,4 +1,4 @@
-import { List } from "@material-ui/core"
+import { List } from "@mui/material"
 import React from "react"
 import Packet from "../../jacdac-ts/src/jdom/packet"
 import PacketListItem from "./PacketListItem"

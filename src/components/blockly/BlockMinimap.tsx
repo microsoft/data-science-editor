@@ -1,4 +1,4 @@
-import { useTheme } from "@material-ui/core"
+import { useTheme } from "@mui/material"
 import {
     BlockSvg,
     Events,
@@ -193,7 +193,7 @@ function BlockMiniMap(props: {
 }
 
 class MinimapPlugin implements IPositionable {
-    readonly id = 'minimap';    
+    readonly id = "minimap"
     private top_ = 0
     private left_ = 0
     private width_ = MAX_WIDTH

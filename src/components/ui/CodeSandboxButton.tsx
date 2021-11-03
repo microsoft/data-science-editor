@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react"
 import AppContext from "../AppContext"
-import EditIcon from "@material-ui/icons/Edit"
+import EditIcon from "@mui/icons-material/Edit"
 import IconButtonWithTooltip from "./IconButtonWithTooltip"
 import useMediaQueries from "../hooks/useMediaQueries"
 import { Button } from "gatsby-material-ui-components"

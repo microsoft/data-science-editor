@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useState } from "react"
-import { Grid, TextField } from "@material-ui/core"
+import { Grid, TextField } from "@mui/material"
 import { Button } from "gatsby-theme-material-ui"
-import SendIcon from "@material-ui/icons/Send"
+import SendIcon from "@mui/icons-material/Send"
 
 export default function DevToolsLauncher() {
     const [text, setText] = useState("")

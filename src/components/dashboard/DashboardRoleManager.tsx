@@ -1,4 +1,4 @@
-import { Grid, List, Switch } from "@material-ui/core"
+import { Grid, List, Switch } from "@mui/material"
 import React, { useContext } from "react"
 import { RoleManagerReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"

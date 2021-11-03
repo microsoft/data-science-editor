@@ -6,15 +6,15 @@ import {
     DialogContent,
     Grid,
     LinearProgress,
-} from "@material-ui/core"
+} from "@mui/material"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
-import PlayArrowIcon from "@material-ui/icons/PlayArrow"
+import PlayArrowIcon from "@mui/icons-material/PlayArrow"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
-import NavigateNextIcon from "@material-ui/icons/NavigateNext"
+import NavigateNextIcon from "@mui/icons-material/NavigateNext"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
-import NavigateBackIcon from "@material-ui/icons/NavigateBefore"
+import NavigateBackIcon from "@mui/icons-material/NavigateBefore"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
-import DownloadIcon from "@material-ui/icons/GetApp"
+import DownloadIcon from "@mui/icons-material/GetApp"
 import IconButtonWithTooltip from "../../ui/IconButtonWithTooltip"
 import Suspense from "../../ui/Suspense"
 

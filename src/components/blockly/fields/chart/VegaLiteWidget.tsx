@@ -1,9 +1,10 @@
 import React, { lazy, useContext, useMemo, useRef, useState } from "react"
+import { styled } from "@mui/material/styles"
 import WorkspaceContext from "../../WorkspaceContext"
 import useBlockData from "../../useBlockData"
 import { PointerBoundary } from "../PointerBoundary"
 import Suspense from "../../../ui/Suspense"
-import { Grid, makeStyles, NoSsr } from "@material-ui/core"
+import { Grid, NoSsr } from "@mui/material"
 import { CHART_HEIGHT, CHART_SVG_MAX_ITEMS, CHART_WIDTH } from "../../toolbox"
 import type { View, VisualizationSpec } from "react-vega"
 import type { DataSliceOptions } from "../../../../workers/data/dist/node_modules/data.worker"
@@ -14,7 +15,19 @@ import { humanify } from "../../../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import CopyButton from "../../../ui/CopyButton"
 import IconButtonWithTooltip from "../../../ui/IconButtonWithTooltip"
 import { UIFlags } from "../../../../jacdac/providerbus"
-import SaveAltIcon from "@material-ui/icons/SaveAlt"
+import SaveAltIcon from "@mui/icons-material/SaveAlt"
+const PREFIX = "VegaLiteWidget"
+
+const classes = {
+    button: `${PREFIX}-button`,
+}
+
+const Root = styled("div")(() => ({
+    [`& .${classes.button}`]: {
+        color: "grey",
+    },
+}))
+
 const VegaLite = lazy(() => import("./VegaLite"))
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -34,12 +47,6 @@ function jsonMergeFrom(trg: object, src: object) {
     })
 }
 
-const useStyles = makeStyles(() => ({
-    button: {
-        color: "grey",
-    },
-}))
-
 export type VegaLiteChart = unknown
 
 export default function VegaLiteWidget(props: {
@@ -49,7 +56,7 @@ export default function VegaLiteWidget(props: {
     const { spec, slice } = props
     const { sourceBlock } = useContext(WorkspaceContext)
     const { data } = useBlockData(sourceBlock)
-    const classes = useStyles()
+
     // eslint-disable-next-line @typescript-eslint/ban-types
     const [vegaData, setVegaData] = useState<{ values: object[] }>(undefined)
     const viewRef = useRef<View>()
@@ -137,7 +144,7 @@ export default function VegaLiteWidget(props: {
     return (
         <NoSsr>
             <PointerBoundary>
-                <div style={{ background: "#fff", borderRadius: "0.25rem" }}>
+                <Root style={{ background: "#fff", borderRadius: "0.25rem" }}>
                     <Grid container direction="column" spacing={1}>
                         {showToolbar && (
                             <Grid item xs={12}>
@@ -187,7 +194,7 @@ export default function VegaLiteWidget(props: {
                             </Suspense>
                         </Grid>
                     </Grid>
-                </div>
+                </Root>
             </PointerBoundary>
         </NoSsr>
     )

@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core"
+import { Typography } from "@mui/material"
 import React, { useContext } from "react"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import { prettySize } from "../../../jacdac-ts/src/jdom/pretty"

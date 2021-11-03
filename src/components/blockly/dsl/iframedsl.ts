@@ -51,9 +51,9 @@ export interface DslTransformMessage extends DslMessage {
 export interface DslChartExportMessage extends DslMessage {
     action: "transform"
     blockId?: string
-    spec: unknown,
-    slice: DataSliceOptions,
-    dataset: BlockDataSet,
+    spec: unknown
+    slice: DataSliceOptions
+    dataset: BlockDataSet
     vegaDataset: BlockDataSet
 }
 

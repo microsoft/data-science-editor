@@ -1,15 +1,15 @@
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import ClearIcon from "@material-ui/icons/Clear"
+import ClearIcon from "@mui/icons-material/Clear"
 import React, { useContext } from "react"
 import PacketsContext from "./PacketsContext"
 
 import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import ReplayIcon from "@material-ui/icons/Replay"
+import ReplayIcon from "@mui/icons-material/Replay"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import PauseIcon from "@material-ui/icons/Pause"
+import PauseIcon from "@mui/icons-material/Pause"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import LiveTvIcon from "@material-ui/icons/LiveTv"
+import LiveTvIcon from "@mui/icons-material/LiveTv"
 
 export default function PacketControlButtons() {
     const { clearPackets, clearBus, recording, tracing, paused, setPaused } =

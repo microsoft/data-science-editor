@@ -1,4 +1,4 @@
-import { PaletteType, useMediaQuery } from "@material-ui/core"
+import { PaletteType, useMediaQuery } from "@mui/material"
 import React, { ReactNode, useEffect, useState } from "react"
 import DarkModeContext from "./DarkModeContext"
 

@@ -5,8 +5,8 @@ import {
     useRegisterUnpackedValue,
 } from "../../jacdac/useRegisterValue"
 import useServiceServer from "../hooks/useServiceServer"
-import { Grid } from "@material-ui/core"
-import MicIcon from "@material-ui/icons/Mic"
+import { Grid } from "@mui/material"
+import MicIcon from "@mui/icons-material/Mic"
 import {
     REFRESH,
     SoundSpectrumReg,

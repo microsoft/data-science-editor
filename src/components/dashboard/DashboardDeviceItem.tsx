@@ -1,4 +1,4 @@
-import { Grid } from "@material-ui/core"
+import { Grid } from "@mui/material"
 import React, { useContext } from "react"
 import JDDevice from "../../../jacdac-ts/src/jdom/device"
 import DashboardDevice from "./DashboardDevice"

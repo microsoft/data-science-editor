@@ -1,6 +1,6 @@
 import React, { useMemo } from "react"
 import { WindowLocation } from "@reach/router"
-import { Breadcrumbs as MaterialBreadcrumbs } from "@material-ui/core"
+import { Breadcrumbs as MaterialBreadcrumbs } from "@mui/material"
 import { Link } from "gatsby-theme-material-ui"
 import { withPrefix } from "gatsby-link"
 import StructuredData from "./StructuredData"

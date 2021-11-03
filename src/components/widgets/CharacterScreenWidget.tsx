@@ -1,17 +1,6 @@
 import React from "react"
 import SvgWidget from "../widgets/SvgWidget"
-import { createStyles, makeStyles } from "@material-ui/core"
 import useWidgetTheme from "../widgets/useWidgetTheme"
-
-const useStyles = makeStyles(() =>
-    createStyles({
-        text: {
-            fontFamily: "monospace",
-            fontWeight: 100,
-        },
-        box: {},
-    })
-)
 
 export default function CharacterScreenWidget(props: {
     rows: number
@@ -21,7 +10,6 @@ export default function CharacterScreenWidget(props: {
     disabled?: boolean
 }) {
     const { rows, columns, message, rtl, disabled } = props
-    const classes = useStyles()
     const { textPrimary, background, controlBackground } =
         useWidgetTheme("primary")
     const cw = 8
@@ -49,7 +37,6 @@ export default function CharacterScreenWidget(props: {
                         y={y}
                         width={cw}
                         height={ch}
-                        className={classes.box}
                         fill={controlBackground}
                     />
                     {char && (
@@ -58,7 +45,10 @@ export default function CharacterScreenWidget(props: {
                             y={y + ch - fs / 3}
                             textAnchor="middle"
                             fontSize={fs}
-                            className={classes.text}
+                            style={{
+                                fontFamily: "monospace",
+                                fontWeight: 100,
+                            }}
                             fill={disabled ? background : textPrimary}
                             aria-label={char}
                         >

@@ -1,4 +1,4 @@
-import { Grid } from "@material-ui/core"
+import { Grid } from "@mui/material"
 import { StaticImage } from "gatsby-plugin-image"
 import React, { lazy } from "react"
 import Suspense from "../ui/Suspense"

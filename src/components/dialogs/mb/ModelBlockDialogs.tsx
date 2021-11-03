@@ -1,6 +1,5 @@
 import React, { lazy } from "react"
-
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles"
+import { styled } from "@mui/material/styles"
 
 import Blockly, {
     BlockSvg,
@@ -20,44 +19,63 @@ import MBDataSet from "../../model-editor/MBDataSet"
 import Suspense from "../../ui/Suspense"
 import useChartPalette from "../../useChartPalette"
 
+const PREFIX = "ModelBlockDialogs"
+
+const classes = {
+    root: `${PREFIX}-root`,
+    grow: `${PREFIX}-grow`,
+    field: `${PREFIX}-field`,
+    segment: `${PREFIX}-segment`,
+    row: `${PREFIX}-row`,
+    buttons: `${PREFIX}-buttons`,
+    trend: `${PREFIX}-trend`,
+    vmiddle: `${PREFIX}-vmiddle`,
+}
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled("div")(({ theme }) => ({
+    [`& .${classes.root}`]: {
+        marginBottom: theme.spacing(1),
+    },
+
+    [`& .${classes.grow}`]: {
+        flexGrow: 1,
+    },
+
+    [`& .${classes.field}`]: {
+        marginRight: theme.spacing(1),
+        marginBottom: theme.spacing(1.5),
+        width: theme.spacing(25),
+    },
+
+    [`& .${classes.segment}`]: {
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2),
+    },
+
+    [`& .${classes.row}`]: {
+        marginBottom: theme.spacing(0.5),
+    },
+
+    [`& .${classes.buttons}`]: {
+        marginRight: theme.spacing(1),
+        marginBottom: theme.spacing(2),
+    },
+
+    [`& .${classes.trend}`]: {
+        width: theme.spacing(10),
+    },
+
+    [`& .${classes.vmiddle}`]: {
+        verticalAlign: "middle",
+    },
+}))
+
 const ViewDataDialog = lazy(() => import("./ViewDataDialog"))
 const RecordDataDialog = lazy(() => import("./RecordDataDialog"))
 const TrainModelDialog = lazy(() => import("./TrainModelDialog"))
 const TestModelDialog = lazy(() => import("./TestModelDialog"))
 const NewClassifierDialog = lazy(() => import("./NewClassifierDialog"))
-
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        root: {
-            marginBottom: theme.spacing(1),
-        },
-        grow: {
-            flexGrow: 1,
-        },
-        field: {
-            marginRight: theme.spacing(1),
-            marginBottom: theme.spacing(1.5),
-            width: theme.spacing(25),
-        },
-        segment: {
-            marginTop: theme.spacing(2),
-            marginBottom: theme.spacing(2),
-        },
-        row: {
-            marginBottom: theme.spacing(0.5),
-        },
-        buttons: {
-            marginRight: theme.spacing(1),
-            marginBottom: theme.spacing(2),
-        },
-        trend: {
-            width: theme.spacing(10),
-        },
-        vmiddle: {
-            verticalAlign: "middle",
-        },
-    })
-)
 
 // handling dialogs within Blockly
 export function addNewDataSet(workspace: WorkspaceSvg) {
@@ -161,72 +179,69 @@ export default function ModelBlockDialogs(props: {
         trainedModelCount,
     } = props
 
-    const classes = useStyles()
     const chartPalette = useChartPalette()
 
-    if (visibleDialog == "dataset") {
-        return (
-            <Suspense>
-                <ViewDataDialog
-                    classes={classes}
-                    chartPalette={chartPalette}
-                    open={visibleDialog == "dataset"}
-                    onDone={closeModal}
-                    dataset={dataset}
-                />
-            </Suspense>
-        )
-    } else if (visibleDialog == "recording") {
-        return (
-            <Suspense>
-                <RecordDataDialog
-                    classes={classes}
-                    chartPalette={chartPalette}
-                    open={visibleDialog == "recording"}
-                    onDone={onRecordingDone}
-                    recordingCount={recordingCount}
-                    workspace={workspace}
-                />
-            </Suspense>
-        )
-    } else if (visibleDialog == "model") {
-        return (
-            <Suspense>
-                <TrainModelDialog
-                    classes={classes}
-                    chartPalette={chartPalette}
-                    open={visibleDialog == "model"}
-                    onModelUpdate={onModelUpdate}
-                    onDone={closeModal}
-                    dataset={dataset}
-                    model={model}
-                    trainedModelCount={trainedModelCount}
-                    workspace={workspace}
-                />
-            </Suspense>
-        )
-    } else if (visibleDialog == "trained_model") {
-        return (
-            <Suspense>
-                <TestModelDialog
-                    classes={classes}
-                    chartPalette={chartPalette}
-                    open={visibleDialog == "trained_model"}
-                    onDone={closeModal}
-                    model={model}
-                />
-            </Suspense>
-        )
-    } else if (visibleDialog == "classifier") {
-        return (
-            <Suspense>
-                <NewClassifierDialog
-                    classes={classes}
-                    open={visibleDialog == "classifier"}
-                    onDone={closeModal}
-                    workspace={workspace}
-                />
-            </Suspense>
-        )
-    } else return null
+    return (
+        <Root>
+            {visibleDialog === "dataset" && (
+                <Suspense>
+                    <ViewDataDialog
+                        classes={classes}
+                        chartPalette={chartPalette}
+                        open={visibleDialog == "dataset"}
+                        onDone={closeModal}
+                        dataset={dataset}
+                    />
+                </Suspense>
+            )}
+            {visibleDialog === "recording" && (
+                <Suspense>
+                    <RecordDataDialog
+                        classes={classes}
+                        chartPalette={chartPalette}
+                        open={visibleDialog == "recording"}
+                        onDone={onRecordingDone}
+                        recordingCount={recordingCount}
+                        workspace={workspace}
+                    />
+                </Suspense>
+            )}
+            {visibleDialog === "model" && (
+                <Suspense>
+                    <TrainModelDialog
+                        classes={classes}
+                        chartPalette={chartPalette}
+                        open={visibleDialog == "model"}
+                        onModelUpdate={onModelUpdate}
+                        onDone={closeModal}
+                        dataset={dataset}
+                        model={model}
+                        trainedModelCount={trainedModelCount}
+                        workspace={workspace}
+                    />
+                </Suspense>
+            )}
+            {visibleDialog == "trained_model" && (
+                <Suspense>
+                    <TestModelDialog
+                        classes={classes}
+                        chartPalette={chartPalette}
+                        open={visibleDialog == "trained_model"}
+                        onDone={closeModal}
+                        model={model}
+                    />
+                </Suspense>
+            )}
+            {visibleDialog == "classifier" && (
+                <Suspense>
+                    <NewClassifierDialog
+                        classes={classes}
+                        open={visibleDialog == "classifier"}
+                        onDone={closeModal}
+                        workspace={workspace}
+                    />
+                </Suspense>
+            )}
+        </Root>
+    )
 }

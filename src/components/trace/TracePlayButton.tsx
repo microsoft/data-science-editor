@@ -1,7 +1,7 @@
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import PlayArrowIcon from "@material-ui/icons/PlayArrow"
+import PlayArrowIcon from "@mui/icons-material/PlayArrow"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import StopIcon from "@material-ui/icons/Stop"
+import StopIcon from "@mui/icons-material/Stop"
 import React, { useContext } from "react"
 import PacketsContext from "../PacketsContext"
 import IconButtonWithProgress, {

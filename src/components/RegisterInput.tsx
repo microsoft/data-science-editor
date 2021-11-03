@@ -1,4 +1,4 @@
-import { Box, Typography } from "@material-ui/core"
+import { Box, Typography } from "@mui/material"
 import DeviceName from "./devices/DeviceName"
 import Alert from "./ui/Alert"
 import React, { useContext, useEffect, useState } from "react"

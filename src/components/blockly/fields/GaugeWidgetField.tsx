@@ -6,7 +6,7 @@ import useBlockData from "../useBlockData"
 import Suspense from "../../ui/Suspense"
 import { tidyFindLastValue } from "./tidy"
 import { tidy, min as tidyMin, max as tidyMax, summarize } from "@tidyjs/tidy"
-import { Grid } from "@material-ui/core"
+import { Grid } from "@mui/material"
 import { roundWithPrecision } from "../../../../jacdac-ts/src/jdom/utils"
 const GaugeWidget = lazy(() => import("../../widgets/GaugeWidget"))
 

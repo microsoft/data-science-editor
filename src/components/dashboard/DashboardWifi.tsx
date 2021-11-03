@@ -14,10 +14,10 @@ import {
     Grid,
     TextField,
     Typography,
-} from "@material-ui/core"
+} from "@mui/material"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import { useId } from "react-use-id-hook"
-import SettingsIcon from "@material-ui/icons/Settings"
+import SettingsIcon from "@mui/icons-material/Settings"
 import CmdButton from "../CmdButton"
 import {
     useRegisterBoolValue,
@@ -34,16 +34,16 @@ import { toHex, unique } from "../../../jacdac-ts/src/jdom/utils"
 import useInterval from "../hooks/useInterval"
 import useEvent from "../hooks/useEvent"
 import useCommandPipeResults from "../hooks/useCommandPipeResults"
-import DeleteIcon from "@material-ui/icons/Delete"
+import DeleteIcon from "@mui/icons-material/Delete"
 import ChipList from "../ui/ChipList"
 import useServiceServer from "../hooks/useServiceServer"
 import WifiServer from "../../../jacdac-ts/src/servers/wifiserver"
-import { Alert, AlertTitle } from "@material-ui/lab"
+import { Alert, AlertTitle } from "@mui/material"
 import { EVENT } from "../../../jacdac-ts/src/jdom/constants"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import useGridBreakpoints from "../useGridBreakpoints"
-import WifiIcon from "@material-ui/icons/Wifi"
-import WifiOffIcon from "@material-ui/icons/WifiOff"
+import WifiIcon from "@mui/icons-material/Wifi"
+import WifiOffIcon from "@mui/icons-material/WifiOff"
 
 // flags, rssi, channel, bssid, ssid
 type ScanResult = [WifiAPFlags, number, number, Uint8Array, string]

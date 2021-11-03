@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useRef } from "react"
+import { styled } from "@mui/material/styles"
 import { useBlocklyWorkspace } from "react-blockly"
 import { WorkspaceSvg } from "blockly"
 import Theme from "@blockly/theme-modern"
@@ -6,7 +7,6 @@ import DarkTheme from "@blockly/theme-dark"
 import BlocklyModalDialogs from "./BlocklyModalDialogs"
 import DarkModeContext from "../ui/DarkModeContext"
 import AppContext from "../AppContext"
-import { createStyles, makeStyles } from "@material-ui/core"
 import clsx from "clsx"
 import { withPrefix } from "gatsby"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
@@ -15,34 +15,38 @@ import { useBlockMinimap } from "./BlockMinimap"
 import BrowserCompatibilityAlert from "../ui/BrowserCompatibilityAlert"
 import { UIFlags } from "../../jacdac/providerbus"
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        editor: {
-            height: `calc(100vh - ${
-                UIFlags.hosted ? 3.5 : Flags.diagnostics ? 15 : 10
-            }rem)`,
-            "& .blocklyTreeLabel": {
-                fontFamily: theme.typography.fontFamily,
-            },
-            "& .blocklyText": {
-                fontWeight: `normal !important`,
-                fontFamily: `${theme.typography.fontFamily} !important`,
-            },
-            "& .blocklyTreeIconOpen, & .blocklyTreeIconClosed": {
-                opacity: 0.5,
-            },
-            "& .blocklyFieldButton.blocklyEditableText": {
-                cursor: "pointer",
-            },
-            "& .blocklyFieldButton.blocklyEditableText > text": {
-                fill: "#ffffff",
-            },
-            "& .blocklyFieldButton.blocklyEditableText > .blocklyFieldRect": {
-                fill: "transparent !important",
-            },
+const PREFIX = "BlockEditor"
+
+const classes = {
+    editor: `${PREFIX}-editor`,
+}
+
+const Root = styled("div")(({ theme }) => ({
+    [`& .${classes.editor}`]: {
+        height: `calc(100vh - ${
+            UIFlags.hosted ? 3.5 : Flags.diagnostics ? 15 : 10
+        }rem)`,
+        "& .blocklyTreeLabel": {
+            fontFamily: theme.typography.fontFamily,
         },
-    })
-)
+        "& .blocklyText": {
+            fontWeight: `normal !important`,
+            fontFamily: `${theme.typography.fontFamily} !important`,
+        },
+        "& .blocklyTreeIconOpen, & .blocklyTreeIconClosed": {
+            opacity: 0.5,
+        },
+        "& .blocklyFieldButton.blocklyEditableText": {
+            cursor: "pointer",
+        },
+        "& .blocklyFieldButton.blocklyEditableText > text": {
+            fill: "#ffffff",
+        },
+        "& .blocklyFieldButton.blocklyEditableText > .blocklyFieldRect": {
+            fill: "transparent !important",
+        },
+    },
+}))
 
 function SuspendedBlockEditor(props: { editorId: string; className?: string }) {
     const { editorId, className } = props
@@ -53,7 +57,7 @@ function SuspendedBlockEditor(props: { editorId: string; className?: string }) {
         setWorkspaceXml,
         setEditorId,
     } = useContext(BlockContext)
-    const classes = useStyles()
+
     const { darkMode } = useContext(DarkModeContext)
     const { setError } = useContext(AppContext)
     const theme = darkMode === "dark" ? DarkTheme : Theme
@@ -120,7 +124,7 @@ function SuspendedBlockEditor(props: { editorId: string; className?: string }) {
     useBlockMinimap(workspace)
 
     return (
-        <div>
+        <Root>
             <BrowserCompatibilityAlert
                 filter={{
                     chrome: "> 90",
@@ -131,7 +135,7 @@ function SuspendedBlockEditor(props: { editorId: string; className?: string }) {
             />
             <div className={clsx(classes.editor, className)} ref={blocklyRef} />
             <BlocklyModalDialogs />
-        </div>
+        </Root>
     )
 }
 

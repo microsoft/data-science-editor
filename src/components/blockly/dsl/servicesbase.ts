@@ -1,5 +1,5 @@
 import jsep from "jsep"
-import { Theme } from "@material-ui/core"
+import { Theme } from "@mui/material"
 import { withPrefix } from "gatsby"
 import {
     humanify,

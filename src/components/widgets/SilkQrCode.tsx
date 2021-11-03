@@ -1,4 +1,4 @@
-import { Button, Grid } from "@material-ui/core"
+import { Button, Grid } from "@mui/material"
 import QRCode from "qrcode"
 import React, { useState } from "react"
 import { useEffect } from "react"

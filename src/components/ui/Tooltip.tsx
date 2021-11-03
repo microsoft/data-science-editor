@@ -1,11 +1,12 @@
-import { Theme, Tooltip as MaterialTooltip, withStyles } from "@material-ui/core";
+import { Tooltip as MaterialTooltip } from "@mui/material"
+import { styled } from "@mui/material/styles"
 
 // fix for contrast issue
-const Tooltip = withStyles((theme: Theme) => ({
-    tooltip: {
+const Tooltip = styled(MaterialTooltip)(({ theme }) => ({
+    [`& .tooltip`]: {
         backgroundColor: theme.palette.background.default,
         color: theme.palette.text.primary,
     },
-}))(MaterialTooltip);
+}))
 
-export default Tooltip;
+export default Tooltip

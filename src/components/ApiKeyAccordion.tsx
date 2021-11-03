@@ -9,12 +9,12 @@ import {
     Typography,
     TextField,
     Box,
-} from "@material-ui/core"
+} from "@mui/material"
 import { Button } from "gatsby-theme-material-ui"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
-import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline"
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline"
 import { useId } from "react-use-id-hook"
 import AppContext from "./AppContext"
 
