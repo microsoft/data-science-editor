@@ -112,6 +112,7 @@ const Root = styled("div")(({ theme }) => ({
     [`& .${classes.toolBarShift}`]: {
         width: `calc(100% - ${TOOLS_DRAWER_WIDTH}rem)`,
         marginRight: `${TOOLS_DRAWER_WIDTH}rem`,
+        marginLeft: `-${TOOLS_DRAWER_WIDTH}rem`,
         [theme.breakpoints.down(MOBILE_BREAKPOINT)]: {
             width: `calc(100% - ${MOBILE_TOOLS_DRAWER_WIDTH}rem)`,
             marginRight: `${MOBILE_TOOLS_DRAWER_WIDTH}rem`,
