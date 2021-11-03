@@ -159,7 +159,7 @@ export default function DashboardAzureIoTHubHealth(
                         )}
                     </ChipList>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item>
                     <CmdButton
                         trackName="dashboard.azureiothealth.connect"
                         variant="outlined"
@@ -173,6 +173,8 @@ export default function DashboardAzureIoTHubHealth(
                         }
                         icon={connected ? <WifiIcon /> : <WifiOffIcon />}
                     />
+                </Grid>
+                <Grid item>
                     <IconButtonWithTooltip
                         title="Configure"
                         onClick={handleConfigure}
