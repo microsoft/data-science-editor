@@ -38,7 +38,9 @@ export default function Breadcrumbs(props: { location: WindowLocation }) {
         <>
             <BreadcrumbsStructuredData parts={parts} />
             <MaterialBreadcrumbs aria-label="breadcrumb">
-                <Link to="/">Home</Link>
+                <Link to="/" underline="hover">
+                    Home
+                </Link>
                 {parts.map((part, i) => (
                     <Link
                         key={i}
@@ -49,6 +51,7 @@ export default function Breadcrumbs(props: { location: WindowLocation }) {
                             i === parts.length - 1 ? "page" : undefined
                         }
                         to={"/" + parts.slice(0, i + 1).join("/")}
+                        underline="hover"
                     >
                         {part}
                     </Link>
