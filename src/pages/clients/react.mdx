@@ -5,211 +5,105 @@ order: 5
 
 # React package
 
-This package provides a [context](https://reactjs.org/docs/context.html) and [hooks](https://reactjs.org/docs/hooks-intro.html) to interact with the bus within a [React](https://reactjs.org/) application.
+This package provides a [context](/clients/react/setup/) and [hooks](/clients/react/hooks/) to interact with the bus within a [React](https://reactjs.org/) application.
 It is built on top of the [JavaScript package](/clients/javascript).
 
 -   [GitHub project](https://github.com/microsoft/react-jacdac)
 -   [API reference](https://microsoft.github.io/react-jacdac/) for a full list of hooks.
 
-## Installation
+## Color slider!
 
-Add the [react-jacdac npm package](https://www.npmjs.com/package/react-jacdac) module
-to your project
-
-```
-npm install --save react-jacdac
-```
-
-or
-
-```
-yarn add react-jacdac
-```
-
-## Context setup
-
-To use the hooks in this library, you must wrap your top-level component with the `JacdacProvider` which installs the `JacdacContext` in the React tree.
+Let's introduce the library with a fully-fledge mini-application that lets you control the
+background color of a `div` using a Jacdac slider.
 
 ```tsx
-import { JacdacProvider } from "react-jacdac"
-
-// wrap your top-level layout tsx with JacdacProvider
-const App = () => <JacdacProvider>...</JacdacProvider>
-```
-
-Once your provider is ready, you'll be able to use Jacdac anywhere within your React application.
-
-### Hot-reload
-
-If you are using hot-reload in your developmenet cycle, you will want to create a separate file that instantiates the bus
-to avoid closing and opening connections on each reload.
-
-```javascript
-//---------------
-// bus.ts
-import { createWebBus } from "jacdac-ts"
-
-export const bus = createWebBus()
-
-//---------------
-// layout.ts
-import { JacdacProvider } from "react-jacdac"
-import { bus } from "./bus"
-
-const App = () => <JacdacProvider bus={bus}>...</JacdacProvider>
-```
-
-## Hooks
-
-### useBus
-
-The `useBus` hook ensures that the context is setup and returns the Jacdac bus.
-
-```tsx
-const Connected = () => {
-    const bus = useBus()
-    ...
-}
-```
-
-### useDevices
-
-The `useDevices` hooks gets a snapshot of the devices connected to the bus. It provides a number of filtering options.
-
-```tsx
-import { useDevices } from "react-jacdac";
-
-const Devices = () => {
-  const devices = useDevices({ ignoreInfrastructure: true });
+const Demo = () => {
+  // auto-update list of slider services on the jacdac bus
+  const service = useServices({ serviceClass: SRV_POTENTIOMETER })[0];
+  // the position register returns a 0..1 value
+  const positionRegister = useRegister(service, PotentiometerReg.Position);
+  // read and decode the value
+  const [position] = useRegisterValue<[number]>(positionRegister);
+  // position is undefined if data is unavailable
+  if (position === undefined) return null;
+  // we have a position reading! (between 0 and 1)
+  // draw a colored rectangle
   return (
-    <ul>
-      {devices.map((device) => (
-        <li key={device.id}>{device.describe()}</li>
-      ))}
-    </ul>
-  );
-};
------
-import React from "react";
-import { useDevices } from "react-jacdac";
-
-const Devices = () => {
-  const devices = useDevices({ ignoreInfrastructure: true });
-  return (
-    <ul>
-      {devices.map((device) => (
-        <li key={device.id}>{device.describe()}</li>
-      ))}
-    </ul>
+    <div
+      style={{
+        backgroundColor: `hsl(${position * 360}, 50%, 50%)`,
+        width: `10rem`,
+        height: `10rem`,
+        borderRadius: `1rem`
+      }}
+    />
   );
 };
 
-export default Devices
-```
-
-### useServices
-
-The `useServices` hooks gets a snapshot of the services accross devices connected to the bus. It provides a number of filtering options.
-
-```tsx
-import { SRV_BUTTON } from "jacdac-ts"
-import { useServices } from "react-jacdac"
-
-const ButtonCount = () => {
-    const buttons = useServices({ serviceClass: SRV_BUTTON })
-    return <span>{buttons.length}</span>
-}
+export default Demo;
 -----
 import React from "react";
-import { SRV_BUTTON } from "jacdac-ts"
-import { useServices } from "react-jacdac"
-
-const ButtonCount = () => {
-    const buttons = useServices({ serviceClass: SRV_BUTTON })
-    return <span>{buttons.length}</span>
-}
-export default ButtonCount
-```
-
-### useRegister
-
-The `useRegister` retrevies the register JDOM node from a service. This hook is typically used with `useRegisterValue` hooks
-documented afterwards below.
-
-```tsx
-import { SRV_POTENTIOMETER, JDService, PotentiometerReg } from "jacdac-ts"
-import { useRegister } from "react-jacdac"
-
-const Position = (props: { slider: JDService }) => {
-    const { slider } = props
-    const positionRegister = useRegister(slider, PotentiometerReg.Position)
-    ...
-}
-```
-
-### useRegisterValue
-
-The `useRegisterValue` decodes the latest register value and returns it into an unpacked value array.
-If data is missing, the array is empty.
-
-```tsx
-import { SRV_POTENTIOMETER, JDService, PotentiometerReg } from "jacdac-ts"
-import { useRegister } from "react-jacdac"
-
-const Position = (props: { service: JDService }) => {
-    const { service } = props
-    const positionRegister = useRegister(service, PotentiometerReg.Position)
-    const [position] = useRegisterValue(positionRegister)
-    return <input type="range" min="0" max="100" value={position * 100} />
-}
------
-import React from "react";
-import { SRV_POTENTIOMETER, JDService, PotentiometerReg } from "jacdac-ts";
+import { SRV_POTENTIOMETER, PotentiometerReg } from "jacdac-ts";
 import { useServices, useRegister, useRegisterValue } from "react-jacdac";
 
-const Position = (props: { service: JDService }) => {
-  const { service } = props;
-  const positionRegister = useRegister(service, PotentiometerReg.Position);
-  const [position] = useRegisterValue(positionRegister);
-  return <input type="range" min="0" max="100" value={position * 100} />
-};
-
 const Demo = () => {
-  const sliders = useServices({ serviceClass: SRV_POTENTIOMETER });
+  // auto-update list of slider services on the jacdac bus
+  const service = useServices({ serviceClass: SRV_POTENTIOMETER })[0];
+  // the position register returns a 0..1 value
+  const positionRegister = useRegister(service, PotentiometerReg.Position);
+  // read and decode the value
+  const [position] = useRegisterValue<[number]>(positionRegister);
+  // position is undefined if data is unavailable
+  if (position === undefined) return null;
+  // we have a position reading! (between 0 and 1)
+  // draw a colored rectangle
   return (
-    <ul>
-      {sliders.map((slider) => (
-        <Position key={slider.id} slider={slider} />
-      ))}
-    </ul>
+    <div
+      style={{
+        backgroundColor: `hsl(${position * 360}, 50%, 50%)`,
+        width: `10rem`,
+        height: `10rem`,
+        borderRadius: `1rem`
+      }}
+    />
   );
 };
+
 export default Demo;
 ```
 
-### useChange
-
-The `useChange` hook retreives a mutable value from the JDOM tree and triggers a render when it mutates.
+Let's break down what happens in the `Demo` component:
 
 ```tsx
-const Connected = () => {
-    const bus = useBus()
-    // read the connected state of the bus
-    const connected = useChange(bus, _ => _.connected)
-    return <span>connected: {connected}</span>
-}
+// auto-update list of slider services on the jacdac bus
+const service = useServices({ serviceClass: SRV_POTENTIOMETER })[0]
 ```
 
-It's not uncommon that the `useChange` hook receives a undefined node as an argument.
-To handle this in the query callback, using the **`?.` operator** which checks for nullness before calling a function.
+The `useServices` hook returns list of a [potentiometer service nodes](/services/potentiometer/) (`SRV_POTENTIOMETER`) on the bus.
+The service JDOM nodes mirror the state of the physical services. Although we could support multiple sliders, we simply grab the first.
 
 ```tsx
-import { JDService } from "jacdac-ts"
-
-const ServiceName = (props: { service: JDService }) => {
-    const { service } = props
-    // notice the ?. to handle case when _ is undefined
-    const name = useChange(service, _ => _?.name)
-    return <span>{name || "?"}</span>
-}
+// the position register returns a 0..1 value
+const positionRegister = useRegister(service, PotentiometerReg.Position)
 ```
+
+From reading the [potentiometer service specification](/services/potentiometer), we know that should read the `position` register.
+The `useRegister` hook returns the register JDOM node that mirrors the state of the physical register.
+You will find pregenerated constants like `PotentiometerReg` for every services.
+
+```tsx
+// read and decode the value
+const [position] = useRegisterValue<[number]>(positionRegister)
+```
+
+The `useRegisterValue` unpacks latest data received from the bus and returns the data as an array.
+Since the position register has a single filed, we destructure the array into a variable `position`
+which holds a floating point number between 0 and 1.
+The hook will trigger a render whenever it receives new data and it also makes sure that the bus keeps refreshing the value of that register.
+
+Once you have the value, we generate a HSL color and stuff it into the style of a div... well that's much more familiar territory. Remix as you please!
+
+## Next steps
+
+-   [setup](/clients/react/setup/), you need to mount the `JacdacContext` in your React tree
+-   [hooks](/clients/react/hooks/), integrate Jacdac in your React app with the hooks
