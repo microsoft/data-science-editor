@@ -6,7 +6,6 @@ import {
 } from "../../../jacdac-ts/src/jdom/flashing"
 import DbContext, { DbContextProps } from "../DbContext"
 import { useChangeAsync } from "../../jacdac/useChange"
-import { deviceSpecifications } from "../../../jacdac-ts/src/jdom/spec"
 import { unique } from "../../../jacdac-ts/src/jdom/utils"
 import { fetchLatestRelease, fetchReleaseBinary } from "../github"
 import useIdleCallback from "../hooks/useIdleCallback"
