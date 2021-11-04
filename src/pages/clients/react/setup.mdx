@@ -33,7 +33,7 @@ Once your provider is ready, you'll be able to use Jacdac anywhere within your R
 
 ## Hot-reload
 
-If you are using hot-reload in your developmenet cycle, you will want to create a separate file that instantiates the bus
+If you are using hot-reload in your development cycle, you will want to create a separate file that instantiates the bus
 to avoid closing and opening connections on each reload.
 
 ```javascript
@@ -44,9 +44,15 @@ import { createWebBus } from "jacdac-ts"
 export const bus = createWebBus()
 
 //---------------
-// layout.ts
+// index.tsx
 import { JacdacProvider } from "react-jacdac"
 import { bus } from "./bus"
 
 const App = () => <JacdacProvider bus={bus}>...</JacdacProvider>
 ```
+
+By default, Jacdac will try to connect via WebUSB, WebSerial and WebBluetooth. However, you can configure these options when calling `createWebBus`.
+
+## Ready for hooks
+
+With the context in place, your React application is ready to use the [Jacdac hooks](/clients/react/hooks/).
