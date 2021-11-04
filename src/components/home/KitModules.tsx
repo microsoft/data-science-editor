@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material"
 import { StaticImage } from "gatsby-plugin-image"
 import React, { lazy, useMemo } from "react"
-import { deviceSpecifications } from "../../../jacdac-ts/src/jdom/spec"
+import useDeviceSpecifications from "../devices/useDeviceSpecifications"
 import Suspense from "../ui/Suspense"
 import CenterGrid from "./CenterGrid"
 import SplitGrid from "./SplitGrid"
@@ -10,12 +10,10 @@ const DeviceSpecificationList = lazy(
 )
 
 export default function KitModules() {
+    const specifications = useDeviceSpecifications()
     const modules = useMemo(
-        () =>
-            deviceSpecifications().filter(
-                spec => spec.tags?.indexOf("kit") > -1
-            ),
-        []
+        () => specifications.filter(spec => spec.tags?.indexOf("kit") > -1),
+        [specifications]
     )
     return (
         <Grid

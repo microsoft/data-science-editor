@@ -54,7 +54,7 @@ export default function GithubRepositoryCardHeader(props: {
             {folder ? (
                 <MakeCodeFolderLink slug={slug} folder={folder} repo={repo} />
             ) : (
-                <Link href={repo.html_url} target="_blank">
+                <Link href={repo.html_url} target="_blank" underline="hover">
                     <Typography component="span" variant="h5">
                         {repo.name}
                     </Typography>
@@ -63,7 +63,11 @@ export default function GithubRepositoryCardHeader(props: {
         </>
     ) : (
         <>
-            <Link href={`https://github.com/${slug}`} target="_blank">
+            <Link
+                href={`https://github.com/${slug}`}
+                target="_blank"
+                underline="hover"
+            >
                 <Typography component="span" variant="h6">
                     {slug}
                 </Typography>

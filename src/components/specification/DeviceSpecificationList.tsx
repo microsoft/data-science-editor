@@ -17,6 +17,8 @@ import { arrayShuffle } from "../../../jacdac-ts/src/jdom/utils"
 import useDeviceImage from "../devices/useDeviceImage"
 import useMediaQueries from "../hooks/useMediaQueries"
 import { escapeDeviceIdentifier } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
+import useDeviceSpecifications from "../devices/useDeviceSpecifications"
+import { dependencyId } from "../../../jacdac-ts/src/jdom/eventsource"
 
 const PREFIX = "DeviceSpecificationList"
 
@@ -54,9 +56,10 @@ export default function DeviceSpecificationList(props: {
     const { count, shuffle, requiredServiceClasses, company, devices } = props
 
     const { mobile, medium } = useMediaQueries()
+    const specifications = useDeviceSpecifications()
     const cols = mobile ? 1 : medium ? 3 : 4
     const specs = useMemo(() => {
-        let r = devices || deviceSpecifications()
+        let r = devices || specifications
         if (company) {
             const lc = escapeDeviceIdentifier(company)
             r = r.filter(spec =>
@@ -80,6 +83,7 @@ export default function DeviceSpecificationList(props: {
         count,
         company,
         JSON.stringify(devices?.map(d => d.id)),
+        specifications,
     ])
 
     if (!specs.length)

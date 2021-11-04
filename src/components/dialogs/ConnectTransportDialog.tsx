@@ -16,6 +16,7 @@ import ConnectButton from "../buttons/ConnectButton"
 import { deviceSpecifications } from "../../../jacdac-ts/src/jdom/spec"
 import useDeviceImage from "../devices/useDeviceImage"
 import CardMediaWithSkeleton from "../ui/CardMediaWithSkeleton"
+import useDeviceSpecifications from "../devices/useDeviceSpecifications"
 
 export default function ConnectTransportDialog(props: {
     open: boolean
@@ -26,9 +27,10 @@ export default function ConnectTransportDialog(props: {
     const { open, onClose } = props
     const dialogId = useId()
     const labelId = useId()
+    const specifications = useDeviceSpecifications()
     const devices = useMemo(
         () =>
-            deviceSpecifications()
+            specifications
                 .map(device => ({
                     device,
                     transport: transports.find(
@@ -36,7 +38,7 @@ export default function ConnectTransportDialog(props: {
                     ),
                 }))
                 .filter(({ transport }) => !!transport),
-        []
+        [specifications]
     )
     return (
         <Dialog

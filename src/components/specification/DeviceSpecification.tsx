@@ -1,9 +1,6 @@
 import React, { useMemo } from "react"
 import IDChip from "../IDChip"
-import {
-    deviceSpecifications,
-    serviceSpecificationFromClassIdentifier,
-} from "../../../jacdac-ts/src/jdom/spec"
+import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec"
 import ServiceSpecificationCard from "./ServiceSpecificationCard"
 import { Box, Chip, Grid } from "@mui/material"
 import useGridBreakpoints from "../useGridBreakpoints"
@@ -17,6 +14,7 @@ import ChipList from "../ui/ChipList"
 import { semverCmp } from "../semver"
 import DeviceSpecificationList from "./DeviceSpecificationList"
 import StructuredData from "../ui/StructuredData"
+import useDeviceSpecifications from "../devices/useDeviceSpecifications"
 
 function DeviceStructuredData(props: { device: jdspec.DeviceSpec }) {
     const { device } = props
@@ -65,12 +63,13 @@ export default function DeviceSpecification(props: {
         designIdentifier,
     } = device
     const { services } = device
+    const specifications = useDeviceSpecifications()
     const gridBreakpoints = useGridBreakpoints()
     const imageUrl = useDeviceImage(device, "catalog")
 
     const others =
         designIdentifier &&
-        deviceSpecifications()
+        specifications
             .filter(
                 spec =>
                     spec.id !== device.id &&

@@ -1,8 +1,5 @@
 import React, { useState } from "react"
-import {
-    deviceSpecificationFromProductIdentifier,
-    serviceSpecificationFromClassIdentifier,
-} from "../../jacdac-ts/src/jdom/spec"
+import { serviceSpecificationFromClassIdentifier } from "../../jacdac-ts/src/jdom/spec"
 import {
     Card,
     CardContent,
@@ -20,6 +17,7 @@ import { NoSsr } from "@mui/material"
 import { useId } from "react-use-id-hook"
 import { cryptoRandomUint32 } from "../../jacdac-ts/src/jdom/random"
 import { toFullHex } from "../../jacdac-ts/src/jdom/utils"
+import { deviceCatalog } from "../../jacdac-ts/src/jdom/catalog"
 
 function looksRandom(n: number) {
     const s = n.toString(16)
@@ -64,7 +62,8 @@ export function uniqueFirmwareId() {
     let id = genFirmwareId()
     while (
         id !== undefined &&
-        (!looksRandom(id) || deviceSpecificationFromProductIdentifier(id))
+        (!looksRandom(id) ||
+            deviceCatalog.specificationFromProductIdentifier(id))
     ) {
         id = genFirmwareId()
     }

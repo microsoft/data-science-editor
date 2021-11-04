@@ -1,10 +1,8 @@
 import { MenuItem, TextField } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import React, { ChangeEvent, useMemo, useState } from "react"
-import {
-    deviceSpecificationsForService,
-    serviceSpecifications,
-} from "../../../jacdac-ts/src/jdom/spec"
+import { serviceSpecifications } from "../../../jacdac-ts/src/jdom/spec"
+import useDeviceCatalog from "../devices/useDeviceCatalog"
 
 const PREFIX = "ServiceSpecificationSelect"
 
@@ -37,6 +35,7 @@ export default function ServiceSpecificationSelect(props: {
         hasRegisteredDevice,
     } = props
     const [labelId] = useState("select-" + Math.random())
+    const deviceCatalog = useDeviceCatalog()
 
     const specs = useMemo(
         () =>
@@ -45,9 +44,10 @@ export default function ServiceSpecificationSelect(props: {
                 .filter(
                     spec =>
                         !hasRegisteredDevice ||
-                        !!deviceSpecificationsForService(
-                            spec.classIdentifier
-                        )?.filter(spec => spec.status !== "deprecated")?.length
+                        !!deviceCatalog
+                            .specificationsForService(spec.classIdentifier)
+                            ?.filter(spec => spec.status !== "deprecated")
+                            ?.length
                 ),
         [hasRegisteredDevice]
     )

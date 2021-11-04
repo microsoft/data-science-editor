@@ -4,11 +4,7 @@ import ServiceSpecificationList from "../components/specification/ServiceSpecifi
 import { useDebounce } from "use-debounce"
 import SearchIcon from "@mui/icons-material/Search"
 import ChipList from "../components/ui/ChipList"
-import {
-    deviceSpecificationsForService,
-    isSensor,
-    serviceSpecifications,
-} from "../../jacdac-ts/src/jdom/spec"
+import { isSensor, serviceSpecifications } from "../../jacdac-ts/src/jdom/spec"
 import { arrayConcatMany, hexNum, unique } from "../../jacdac-ts/src/jdom/utils"
 import MakeCodeIcon from "../components/icons/MakeCodeIcon"
 import KindIcon from "../components/KindIcon"
@@ -24,6 +20,7 @@ import { Link } from "gatsby-theme-material-ui"
 import { resolveMakecodeServiceFromClassIdentifier } from "../components/makecode/services"
 import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 import { isMixinService } from "../../jacdac-ts/jacdac-spec/spectool/jdutils"
+import useDeviceCatalog from "../components/devices/useDeviceCatalog"
 
 interface ServiceFilter {
     query: string
@@ -52,7 +49,7 @@ function FilterChip(props: {
             aria-label={descr}
             title={descr}
             icon={icon}
-            variant={value ? "default" : "outlined"}
+            variant={value ? undefined : "outlined"}
             color={value ? "secondary" : undefined}
             onClick={onClick}
         />
@@ -64,9 +61,10 @@ export default function ServiceCatalog() {
         query: "",
     })
     const [deboundedFilter] = useDebounce(filter, 200)
-    const searchId = useId()
     const { query, tag, makeCode, mixin, simulators, devices, sensors, test } =
         filter
+    const deviceCatalog = useDeviceCatalog()
+    const searchId = useId()
     const allTags = useMemo(
         () =>
             unique(
@@ -109,8 +107,9 @@ export default function ServiceCatalog() {
         if (devices)
             r = r.filter(
                 srv =>
-                    !!deviceSpecificationsForService(srv.classIdentifier)
-                        ?.length
+                    !!deviceCatalog.specificationsForService(
+                        srv.classIdentifier
+                    )?.length
             )
         if (sensors) r = r.filter(srv => isSensor(srv))
         return r

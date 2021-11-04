@@ -10,12 +10,12 @@ import React, { ChangeEvent, lazy, useState } from "react"
 import { useId } from "react-use-id-hook"
 import Suspense from "../../components/ui/Suspense"
 import { toMap } from "../../../jacdac-ts/src/jdom/utils"
-import { deviceSpecificationFromProductIdentifier } from "../../../jacdac-ts/src/jdom/spec"
 const SilkQRCode = lazy(() => import("../../components/widgets/SilkQrCode"))
 
 import { graphql } from "gatsby"
 import { Button } from "gatsby-theme-material-ui"
 import { Alert } from "@mui/material"
+import useDeviceCatalog from "../../components/devices/useDeviceCatalog"
 
 export const query = graphql`
     {
@@ -46,6 +46,8 @@ export default function DeviceQRCodeGenerator(props: {
 }) {
     const { data } = props
     const { nodes } = data.allQrUrlDeviceMapCsv
+    const deviceCatalog = useDeviceCatalog()
+    const searchId = useId()
     const knowns = toMap(
         nodes,
         n => n.vanityname.toUpperCase(),
@@ -161,7 +163,7 @@ export default function DeviceQRCodeGenerator(props: {
                             productid,
                         }) => {
                             const spec =
-                                deviceSpecificationFromProductIdentifier(
+                                deviceCatalog.specificationFromProductIdentifier(
                                     parseInt(productid, 16)
                                 )
                             return (

@@ -60,7 +60,7 @@ function HighlightedCode(props: {
             {({ className, style, tokens, getLineProps, getTokenProps }) => (
                 <pre className={className} style={{ ...style }}>
                     {!!url && (
-                        <Link style={{ float: "right" }} href={url}>
+                        <Link style={{ float: "right" }} href={url} underline="hover">
                             <Tooltip title={`Open ${url}`}>
                                 <IconButton size="large">
                                     <LaunchIcon />

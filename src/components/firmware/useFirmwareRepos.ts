@@ -1,8 +1,4 @@
 import { useContext, useState } from "react"
-import {
-    deviceSpecificationFromProductIdentifier,
-    deviceSpecifications,
-} from "../../../jacdac-ts/src/jdom/spec"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import useEffectAsync from "../useEffectAsync"
 import { unique } from "../../../jacdac-ts/src/jdom/utils"
@@ -14,11 +10,14 @@ import {
 } from "../../../jacdac-ts/src/jdom/constants"
 import useEventRaised from "../../jacdac/useEventRaised"
 import Packet from "../../../jacdac-ts/src/jdom/packet"
+import useDeviceSpecifications from "../devices/useDeviceSpecifications"
+import useDeviceCatalog from "../devices/useDeviceCatalog"
 
 export default function useFirmwareRepos(showAllRepos?: boolean) {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const [repos, setRepos] = useState<string[]>([])
-
+    const specifications = useDeviceSpecifications()
+    const deviceCatalog = useDeviceCatalog()
     const devices = useEventRaised(DEVICE_CHANGE, bus, () =>
         bus.devices({ announced: true, ignoreInfrastructure: true })
     )
@@ -35,8 +34,7 @@ export default function useFirmwareRepos(showAllRepos?: boolean) {
     useEffectAsync(
         async mounted => {
             let repos: string[] = []
-            if (showAllRepos)
-                repos = deviceSpecifications().map(spec => spec.repo)
+            if (showAllRepos) repos = specifications.map(spec => spec.repo)
             else {
                 const productIdentifiers: number[] = []
                 // ask firmware registers
@@ -75,7 +73,9 @@ export default function useFirmwareRepos(showAllRepos?: boolean) {
                 }
                 repos = productIdentifiers
                     .map(
-                        fw => deviceSpecificationFromProductIdentifier(fw)?.repo
+                        fw =>
+                            deviceCatalog.specificationFromProductIdentifier(fw)
+                                ?.repo
                     )
                     .filter(repo => !!repo)
             }
@@ -88,6 +88,7 @@ export default function useFirmwareRepos(showAllRepos?: boolean) {
             devices.map(dev => dev.id).join(),
             registers.map(reg => reg.id).join(),
             showAllRepos,
+            specifications,
         ]
     )
     return repos

@@ -13,6 +13,7 @@ import useIdleCallback from "../hooks/useIdleCallback"
 import useMounted from "../hooks/useMounted"
 import useAnalytics from "../hooks/useAnalytics"
 import { prettyDuration } from "../../../jacdac-ts/src/jdom/pretty"
+import useDeviceSpecifications from "../devices/useDeviceSpecifications"
 
 export default function useFirmwareBlobs() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
@@ -21,6 +22,7 @@ export default function useFirmwareBlobs() {
     const [throttled, setThrottled] = useState(false)
     const mounted = useMounted()
     const firmwares = db?.firmwares
+    const specifications = useDeviceSpecifications()
 
     const loadFirmwares = useCallback(async () => {
         console.log(`firmware: load`)
@@ -28,7 +30,7 @@ export default function useFirmwareBlobs() {
         if (!names) return
 
         const slugs = unique(
-            deviceSpecifications()
+            specifications
                 .filter(spec => !!spec?.productIdentifiers?.length) // needs some product identifiers
                 .map(spec => spec.repo)
                 .filter(repo => /^https:\/\/github.com\//.test(repo))

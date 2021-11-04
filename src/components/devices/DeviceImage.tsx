@@ -1,5 +1,6 @@
 import React from "react"
-import { deviceSpecificationFromIdentifier } from "../../../jacdac-ts/src/jdom/spec"
+import useChange from "../../jacdac/useChange"
+import useDeviceCatalog from "./useDeviceCatalog"
 import useDeviceImage from "./useDeviceImage"
 
 export default function DeviceImage(props: {
@@ -7,7 +8,12 @@ export default function DeviceImage(props: {
     size: "avatar" | "lazy" | "catalog" | "preview" | "full"
 }) {
     const { id, size } = props
-    const spec = deviceSpecificationFromIdentifier(id)
+    const deviceCatalog = useDeviceCatalog()
+    const spec = useChange(
+        deviceCatalog,
+        _ => _.specificationFromIdentifier(id),
+        [id]
+    )
     const url = useDeviceImage(spec, size)
 
     if (!url) return null

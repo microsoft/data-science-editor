@@ -49,6 +49,7 @@ import JDDevice from "../../../jacdac-ts/src/jdom/device"
 import useGridBreakpoints from "../../components/useGridBreakpoints"
 import Alert from "../../components/ui/Alert"
 import { GithubPullRequestFiles } from "../../components/buttons/GithubPullRequestButton"
+import useDeviceSpecifications from "../../components/devices/useDeviceSpecifications"
 
 const GithubPullRequestButton = lazy(
     () => import("../../components/buttons/GithubPullRequestButton")
@@ -61,9 +62,10 @@ function CompanySelect(props: {
 }) {
     const { onValueChange, value, error } = props
     const [company, setCompany] = useState(value)
+    const specifications = useDeviceSpecifications()
     const companies = useMemo(
-        () => unique(deviceSpecifications().map(dev => dev.company)),
-        []
+        () => unique(specifications.map(dev => dev.company)),
+        [specifications]
     )
     const companyId = useId()
     const helperText =
@@ -133,6 +135,7 @@ export default function DeviceRegistration() {
     const homepageId = useId()
     const hardwareVersionId = useId()
     const hardwareDesignId = useId()
+    const specifications = useDeviceSpecifications()
     const handleServiceAdd = (srv: jdspec.ServiceSpec) => {
         console.log(`add`, srv.classIdentifier)
         device.services.push(srv.classIdentifier)
@@ -141,12 +144,12 @@ export default function DeviceRegistration() {
     const companyRepos = useMemo(
         () =>
             unique(
-                deviceSpecifications()
+                specifications
                     .filter(d => d.company === device.company)
                     .map(d => d.repo)
                     .filter(repo => !!repo)
             ),
-        [device?.company]
+        [device?.company, specifications]
     )
     const { firmwareBlobs } = useFirmwareBlob(device.repo)
     const variant = "outlined"

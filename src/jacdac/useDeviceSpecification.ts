@@ -1,9 +1,15 @@
 import JDDevice from "../../jacdac-ts/src/jdom/device"
-import { deviceSpecificationFromProductIdentifier } from "../../jacdac-ts/src/jdom/spec"
 import useDeviceProductIdentifier from "./useDeviceProductIdentifier"
+import useChange from "./useChange"
+import useDeviceCatalog from "../components/devices/useDeviceCatalog"
 
 export default function useDeviceSpecification(device: JDDevice) {
+    const deviceCatalog = useDeviceCatalog()
     const id = useDeviceProductIdentifier(device)
-    const specification = deviceSpecificationFromProductIdentifier(id)
+    const specification = useChange(
+        deviceCatalog,
+        _ => _.specificationFromProductIdentifier(id),
+        [id]
+    )
     return specification
 }

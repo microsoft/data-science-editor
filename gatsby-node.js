@@ -8,8 +8,7 @@ const Papa = require("papaparse")
 const {
     serviceSpecifications,
     identifierToUrlPath,
-    deviceSpecifications,
-    deviceSpecificationFromProductIdentifier,
+    deviceCatalog,
     isInfrastructure,
 } = require(`./jacdac-ts/dist/jacdac.cjs`)
 const {
@@ -123,7 +122,7 @@ async function createDeviceQRPages(actions) {
     for (const qr of data) {
         const vanity = qr[vanitycol].trim()
         const productid = parseInt(qr[productidcol], 16)
-        const spec = deviceSpecificationFromProductIdentifier(productid)
+        const spec = deviceCatalog.specificationFromProductIdentifier(productid)
         const p = `/devices/codes/${vanity}/`
         const toPath = spec
             ? `/devices/0x${productid.toString(16)}/`
@@ -137,7 +136,7 @@ async function createDeviceQRPages(actions) {
 async function createDevicePages(graphql, actions, reporter) {
     console.log(`generating device pages`)
     const { createPage, createRedirect } = actions
-    const devices = deviceSpecifications({
+    const devices = deviceCatalog.specifications({
         includeDeprecated: true,
         includeExperimental: true,
     })
