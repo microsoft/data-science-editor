@@ -122,6 +122,7 @@ function MainToolbar() {
                             color: UIFlags.widget ? "black" : "white",
                         }}
                         to="/"
+                        underline="hover"
                     >
                         Jacdac
                     </Link>

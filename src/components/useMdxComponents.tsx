@@ -32,7 +32,7 @@ export default function useMdxComponents() {
                 />
             ),
             pre: props => (
-                <Box mb={theme.spacing(0.5)}>
+                <Box mb={theme.spacing(3)}>
                     <Paper>
                         <div {...props} />
                     </Paper>

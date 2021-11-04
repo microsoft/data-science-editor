@@ -16,6 +16,48 @@ It is built on top of the [JavaScript package](/clients/javascript).
 Let's introduce the library with a fully-fledge mini-application that lets you control the
 background color of a `div` using a Jacdac slider.
 
+We start by retreiving any potentiometer attached to the bus using the `useServices` hook.
+The `useServices` hook returns list of a [potentiometer service nodes](/services/potentiometer/) (`SRV_POTENTIOMETER`) on the bus.
+The service JDOM nodes mirror the state of the physical services (although we could support multiple sliders, we simply grab the first).
+
+```tsx
+// auto-update list of slider services on the jacdac bus
+const service = useServices({ serviceClass: SRV_POTENTIOMETER })[0]
+```
+
+From reading the [potentiometer service specification](/services/potentiometer), we know that should read the `position` register.
+The `useRegister` hook returns the register JDOM node that mirrors the state of the physical register 
+(you will find pregenerated constants like `PotentiometerReg` for every services).
+
+```tsx
+// the position register returns a 0..1 value
+const positionRegister = useRegister(service, PotentiometerReg.Position)
+```
+
+The `useRegisterValue` unpacks latest data received from the bus and returns the data as an array.
+Since the position register has a single filed, we destructure the array into a variable `position`
+which holds a floating point number between 0 and 1.
+The hook will trigger a render whenever it receives new data 
+and it also makes sure that the bus keeps refreshing the value of that register.
+
+```tsx
+// read and decode the value
+const [position] = useRegisterValue<[number]>(positionRegister)
+```
+
+Once you have the value, we generate a HSL color and stuff it into the style of a div...
+
+```tsx
+  return (
+    <div
+      style={{
+        backgroundColor: `hsl(${position * 360}, 50%, 50%)`,
+
+        ...}} />
+```
+
+All together the demo looks like this (you can open it up in codesandbox to try it out!)
+
 ```tsx
 const Demo = () => {
   // auto-update list of slider services on the jacdac bus
@@ -39,8 +81,6 @@ const Demo = () => {
     />
   );
 };
-
-export default Demo;
 -----
 import React from "react";
 import { SRV_POTENTIOMETER, PotentiometerReg } from "jacdac-ts";
@@ -72,38 +112,11 @@ const Demo = () => {
 export default Demo;
 ```
 
-Let's break down what happens in the `Demo` component:
-
-```tsx
-// auto-update list of slider services on the jacdac bus
-const service = useServices({ serviceClass: SRV_POTENTIOMETER })[0]
-```
-
-The `useServices` hook returns list of a [potentiometer service nodes](/services/potentiometer/) (`SRV_POTENTIOMETER`) on the bus.
-The service JDOM nodes mirror the state of the physical services. Although we could support multiple sliders, we simply grab the first.
-
-```tsx
-// the position register returns a 0..1 value
-const positionRegister = useRegister(service, PotentiometerReg.Position)
-```
-
-From reading the [potentiometer service specification](/services/potentiometer), we know that should read the `position` register.
-The `useRegister` hook returns the register JDOM node that mirrors the state of the physical register.
-You will find pregenerated constants like `PotentiometerReg` for every services.
-
-```tsx
-// read and decode the value
-const [position] = useRegisterValue<[number]>(positionRegister)
-```
-
-The `useRegisterValue` unpacks latest data received from the bus and returns the data as an array.
-Since the position register has a single filed, we destructure the array into a variable `position`
-which holds a floating point number between 0 and 1.
-The hook will trigger a render whenever it receives new data and it also makes sure that the bus keeps refreshing the value of that register.
-
-Once you have the value, we generate a HSL color and stuff it into the style of a div... well that's much more familiar territory. Remix as you please!
-
 ## Next steps
 
 -   [setup](/clients/react/setup/), you need to mount the `JacdacContext` in your React tree
 -   [hooks](/clients/react/hooks/), integrate Jacdac in your React app with the hooks
+
+## Developing with simulators
+
+Using the [Jacdac Dev Tools](/clients/javascript/devtools), you can test your code against simulated Jacdac modules. Open the devtools, copy your locally hosted URL and get started!
