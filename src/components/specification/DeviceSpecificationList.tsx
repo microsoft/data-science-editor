@@ -6,10 +6,7 @@ import {
     ImageListItemBar,
     Typography,
 } from "@mui/material"
-import {
-    deviceSpecifications,
-    identifierToUrlPath,
-} from "../../../jacdac-ts/src/jdom/spec"
+import { identifierToUrlPath } from "../../../jacdac-ts/src/jdom/spec"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import InfoIcon from "@mui/icons-material/Info"
 import { IconButton } from "gatsby-theme-material-ui"
@@ -18,7 +15,6 @@ import useDeviceImage from "../devices/useDeviceImage"
 import useMediaQueries from "../hooks/useMediaQueries"
 import { escapeDeviceIdentifier } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import useDeviceSpecifications from "../devices/useDeviceSpecifications"
-import { dependencyId } from "../../../jacdac-ts/src/jdom/eventsource"
 
 const PREFIX = "DeviceSpecificationList"
 

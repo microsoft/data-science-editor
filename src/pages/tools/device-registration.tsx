@@ -16,7 +16,6 @@ import {
 } from "@mui/material"
 import { ChangeEvent } from "react"
 import {
-    deviceSpecifications,
     isInfrastructure,
     serviceSpecificationFromClassIdentifier,
 } from "../../../jacdac-ts/src/jdom/spec"
@@ -36,7 +35,7 @@ import {
 } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import ImportImageCanvas from "../../components/ui/ImageImportCanvas"
 // tslint:disable-next-line: no-submodule-imports
-import { Autocomplete } from "@mui/lab/"
+import { Autocomplete } from "@mui/material"
 import { useFirmwareBlob } from "../../components/firmware/useFirmwareBlobs"
 import { FirmwareBlob } from "../../../jacdac-ts/src/jdom/flashing"
 import { useId } from "react-use-id-hook"
@@ -135,7 +134,10 @@ export default function DeviceRegistration() {
     const homepageId = useId()
     const hardwareVersionId = useId()
     const hardwareDesignId = useId()
-    const specifications = useDeviceSpecifications()
+    const specifications = useDeviceSpecifications({
+        includeDeprecated: true,
+        includeExperimental: true,
+    })
     const handleServiceAdd = (srv: jdspec.ServiceSpec) => {
         console.log(`add`, srv.classIdentifier)
         device.services.push(srv.classIdentifier)
@@ -164,10 +166,7 @@ export default function DeviceRegistration() {
             : "Must be https://..."
     const idError = !device.id
         ? "missing identifier"
-        : deviceSpecifications({
-              includeDeprecated: true,
-              includeExperimental: true,
-          }).find(dev => dev.id == device.id)
+        : specifications.find(dev => dev.id == device.id)
         ? "identifer already used"
         : ""
     const imageError = !imageDataURI ? "missing image" : ""
