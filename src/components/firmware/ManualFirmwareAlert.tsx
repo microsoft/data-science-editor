@@ -3,6 +3,7 @@ import React, { ChangeEvent, useContext, useState } from "react"
 // tslint:disable-next-line: no-submodule-imports
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import Alert from "../ui/Alert"
+import useBus from "../../jacdac/useBus"
 import useDevices from "../hooks/useDevices"
 import JDDevice from "../../../jacdac-ts/src/jdom/device"
 import SelectWithLabel from "../ui/SelectWithLabel"
@@ -105,11 +106,15 @@ function ManualFirmware() {
 }
 
 export default function ManualFirmwareAlert() {
+    const bus = useBus()
+    const safeBoot = useChange(bus, _ => _.safeBoot)
     const [enabled, setEnabled] = useState(false)
     const handleToggle = async () => {
         const v = !enabled
         setEnabled(v)
     }
+
+    if (!safeBoot) return null
 
     return (
         <>
