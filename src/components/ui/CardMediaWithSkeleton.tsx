@@ -1,32 +1,15 @@
-import { CardMedia, CardMediaProps } from "@mui/material"
-import { styled } from "@mui/material/styles"
+import { CardMedia, CardMediaProps, Skeleton, useTheme } from "@mui/material"
 import React from "react"
 
-const PREFIX = "CardMediaWithSkeleton"
-
-const classes = {
-    media: `${PREFIX}-media`,
-}
-
-const StyledCardMedia = styled(CardMedia)(() => ({
-    [`& .${classes.media}`]: {
-        height: 0,
-        paddingTop: "75%", // 4:3
-    },
-}))
-
-export default function CardMediaWithSkeleton(props: CardMediaProps) {
-    const { image, src, className, ...others } = props
+export default function CardMediaWithSkeleton(
+    props: CardMediaProps & { height?: string | number }
+) {
+    const { image, src, height } = props
+    const theme = useTheme()
+    const h = height || theme.spacing(21)
 
     const hasImage = !!image || !!src
-    if (!hasImage) return null
+    if (!hasImage) return <Skeleton height={h} width="100%" />
 
-    return (
-        <StyledCardMedia
-            className={className || classes.media}
-            {...others}
-            image={image}
-            src={src}
-        />
-    )
+    return <CardMedia component="img" height={h} image={image} src={src} />
 }
