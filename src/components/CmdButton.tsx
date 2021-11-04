@@ -58,7 +58,14 @@ export default function CmdButton(props: {
     trackName?: string
     trackProperties?: EventProperties
     ackResetDelay?: number
-    color?: "primary" | "secondary"
+    color?:
+        | "inherit"
+        | "primary"
+        | "secondary"
+        | "error"
+        | "info"
+        | "success"
+        | "warning"
 }) {
     const {
         onClick,

@@ -31,6 +31,7 @@ import WifiIcon from "@mui/icons-material/Wifi"
 import WifiOffIcon from "@mui/icons-material/WifiOff"
 import useEvent from "../hooks/useEvent"
 import useEventCount from "../../jacdac/useEventCount"
+import DialogTitleWithClose from "../ui/DialogTitleWithClose"
 
 function ConnectionStringDialog(props: {
     open: boolean
@@ -55,9 +56,11 @@ function ConnectionStringDialog(props: {
     }
     return (
         <Dialog open={open} fullWidth={true} maxWidth={"lg"}>
+            <DialogTitleWithClose onClose={handleCancel}>
+                Enter device connection string
+            </DialogTitleWithClose>
             <DialogContent>
                 <DialogContentText>
-                    Enter device connection string
                     <Typography component="p" variant="caption">
                         Open your IoT Hub in the Azure portal, select IoT
                         Devices, select or create a device, copy the primary or
@@ -75,9 +78,6 @@ function ConnectionStringDialog(props: {
                 />
             </DialogContent>
             <DialogActions>
-                <Button variant="contained" onClick={handleCancel}>
-                    Cancel
-                </Button>
                 <CmdButton
                     variant="contained"
                     color="primary"

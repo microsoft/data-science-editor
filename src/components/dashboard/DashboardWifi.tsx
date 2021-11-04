@@ -155,6 +155,7 @@ function Network(props: {
                 ) : (
                     <CmdButton
                         variant="outlined"
+                        color="warning"
                         disabled={!!connectError}
                         onClick={handleForgetNetwork}
                     >
@@ -241,6 +242,7 @@ function ConnectDialog(props: {
                     trackName="dashboard.wifi.forgetall"
                     onClick={handleForgetAll}
                     variant="outlined"
+                    color="warning"
                     title="forget all"
                     icon={<DeleteIcon />}
                 >
