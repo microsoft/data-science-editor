@@ -1,4 +1,4 @@
-import { Button } from "@mui/material"
+import { Button, Grid } from "@mui/material"
 import { Alert } from "@mui/material"
 import React, { useContext, useState } from "react"
 import JDDevice from "../../../jacdac-ts/src/jdom/device"
@@ -26,6 +26,7 @@ export function FlashDeviceButton(props: {
     const { trackEvent, trackError } = useAnalytics()
     const [progress, setProgress] = useState(0)
     const specification = useDeviceSpecification(device)
+    const firmwares = specification?.firmwares
     const firmwareInfo = useChange(device, d => d?.firmwareInfo)
     const update =
         ignoreFirmwareCheck ||
@@ -73,6 +74,19 @@ export function FlashDeviceButton(props: {
             device.flashing = false
         }
     }
+
+    if (firmwares?.length)
+        return (
+            <Grid container spacing={1} direction="row">
+                {firmwares.map(fw => (
+                    <Grid item key={fw.name}>
+                        <Button variant="contained" href={fw.url}>
+                            {fw.name}
+                        </Button>
+                    </Grid>
+                ))}
+            </Grid>
+        )
 
     // tslint:disable-next-line: react-this-binding-issue
     return unsupported ? (
