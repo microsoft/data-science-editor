@@ -515,7 +515,7 @@ export default function DeviceRegistration() {
                             onImageImported={handleImageImported}
                         />
                         <Typography variant="caption" component="div">
-                            {`Import a ${DEVICE_IMAGE_WIDTH}x${DEVICE_IMAGE_HEIGHT} image of the device.`}
+                            {`Import an image of the device, at least ${DEVICE_IMAGE_WIDTH}x${DEVICE_IMAGE_HEIGHT}.`}
                         </Typography>
                         {imageError && (
                             <Alert severity="error">{imageError}</Alert>
