@@ -119,6 +119,16 @@ const ButtonCount = () => {
     const buttons = useServices({ serviceClass: SRV_BUTTON })
     return <span>{buttons.length}</span>
 }
+-----
+import React from "react";
+import { SRV_BUTTON } from "jacdac-ts"
+import { useServices } from "react-jacdac"
+
+const ButtonCount = () => {
+    const buttons = useServices({ serviceClass: SRV_BUTTON })
+    return <span>{buttons.length}</span>
+}
+export default ButtonCount
 ```
 
 ### useRegister
@@ -146,12 +156,35 @@ If data is missing, the array is empty.
 import { SRV_POTENTIOMETER, JDService, PotentiometerReg } from "jacdac-ts"
 import { useRegister } from "react-jacdac"
 
-const Position = (props: { slider: JDService }) => {
-    const { slider } = props
-    const positionRegister = useRegister(slider, PotentiometerReg.Position)
+const Position = (props: { service: JDService }) => {
+    const { service } = props
+    const positionRegister = useRegister(service, PotentiometerReg.Position)
     const [position] = useRegisterValue(positionRegister)
-    return <span>{position}</span>
+    return <input type="range" min="0" max="100" value={position * 100} />
 }
+-----
+import React from "react";
+import { SRV_POTENTIOMETER, JDService, PotentiometerReg } from "jacdac-ts";
+import { useServices, useRegister, useRegisterValue } from "react-jacdac";
+
+const Position = (props: { service: JDService }) => {
+  const { service } = props;
+  const positionRegister = useRegister(service, PotentiometerReg.Position);
+  const [position] = useRegisterValue(positionRegister);
+  return <input type="range" min="0" max="100" value={position * 100} />
+};
+
+const Demo = () => {
+  const sliders = useServices({ serviceClass: SRV_POTENTIOMETER });
+  return (
+    <ul>
+      {sliders.map((slider) => (
+        <Position key={slider.id} slider={slider} />
+      ))}
+    </ul>
+  );
+};
+export default Demo;
 ```
 
 ### useChange
