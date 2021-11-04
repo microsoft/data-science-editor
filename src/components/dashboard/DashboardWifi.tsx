@@ -10,6 +10,7 @@ import {
     DialogActions,
     DialogContent,
     Grid,
+    Stack,
     TextField,
     Typography,
 } from "@mui/material"
@@ -17,10 +18,7 @@ import useWidgetTheme from "../widgets/useWidgetTheme"
 import { useId } from "react-use-id-hook"
 import SettingsIcon from "@mui/icons-material/Settings"
 import CmdButton from "../CmdButton"
-import {
-    useRegisterBoolValue,
-    useRegisterUnpackedValue,
-} from "../../jacdac/useRegisterValue"
+import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import {
     WifiAPFlags,
     WifiCmd,
@@ -111,25 +109,38 @@ function Network(props: {
                 subheader={[
                     known && `priority ${priority}`,
                     scanned && `RSSI ${rssi}, channel ${channel}`,
+                    scanFlags && WifiAPFlags.WPS && `WPS`,
                 ]
                     .filter(s => !!s)
                     .join(", ")}
             />
             <CardContent>
-                {connected && <Alert severity="info">Connected</Alert>}
-                {known && !scanned && <Alert severity="info">Not found</Alert>}
-                {!known && !hasPassword && (
-                    <TextField
-                        id={passwordId}
-                        value={password}
-                        label="Password"
-                        fullWidth={true}
-                        type="password"
-                        required={hasPassword}
-                        helperText={connectError}
-                        onChange={handlePasswordChange}
-                    />
-                )}
+                <Stack spacing={1}>
+                    {connected && <Alert severity="info">Connected</Alert>}
+                    {known && !scanned && (
+                        <Alert severity="info">Not found</Alert>
+                    )}
+                    {!known && !hasPassword && (
+                        <TextField
+                            id={passwordId}
+                            value={password}
+                            label="Password"
+                            fullWidth={true}
+                            type="password"
+                            required={hasPassword}
+                            helperText={connectError}
+                            onChange={handlePasswordChange}
+                        />
+                    )}
+                    {known && (
+                        <TextField
+                            type="number"
+                            value={priority}
+                            label="priority"
+                            onChange={handlePriorityChange}
+                        />
+                    )}
+                </Stack>
             </CardContent>
             <CardActions>
                 {!known ? (
@@ -149,14 +160,6 @@ function Network(props: {
                     >
                         Forget
                     </CmdButton>
-                )}
-                {known && (
-                    <TextField
-                        type="number"
-                        value={priority}
-                        label="priority"
-                        onChange={handlePriorityChange}
-                    />
                 )}
             </CardActions>
         </Card>
@@ -251,25 +254,32 @@ function ConnectDialog(props: {
 export default function DashboardWifi(props: DashboardServiceProps) {
     const { service } = props
     const [open, setOpen] = useState(false)
+    const [connectionFailedSsid, setConnectionFailedSsid] = useState("")
 
     const server = useServiceServer<WifiServer>(service)
     const color = server ? "primary" : "secondary"
     const { textPrimary } = useWidgetTheme(color)
     const enabledRegister = service.register(WifiReg.Enabled)
-    const enabled = useRegisterBoolValue(enabledRegister)
     const ssidRegister = service.register(WifiReg.Ssid)
     const [ssid] = useRegisterUnpackedValue<[string]>(ssidRegister)
     const ipAddressRegister = service.register(WifiReg.IpAddress)
     const [ip] = useRegisterUnpackedValue<[Uint8Array]>(ipAddressRegister)
     const macRegister = service.register(WifiReg.Eui48)
     const [mac] = useRegisterUnpackedValue<[Uint8Array]>(macRegister)
+
     const lostIpEvent = useEvent(service, WifiEvent.LostIp)
     const gotIpEvent = useEvent(service, WifiEvent.GotIp)
+    const connectionFailedEvent = useEvent(service, WifiEvent.ConnectionFailed)
+
     const connected = !!ip?.length
 
     const handleConnect = async () => {
+        setConnectionFailedSsid("")
         if (connected) await enabledRegister.sendSetBoolAsync(false)
-        else await service.sendCmdPackedAsync(WifiCmd.Reconnect)
+        else {
+            await enabledRegister.sendSetBoolAsync(true)
+            await service.sendCmdAsync(WifiCmd.Reconnect)
+        }
     }
     const handleConfigure = () => setOpen(true)
 
@@ -286,6 +296,14 @@ export default function DashboardWifi(props: DashboardServiceProps) {
         () => lostIpEvent?.subscribe(EVENT, refreshRegisters),
         [lostIpEvent]
     )
+    useEffect(
+        () =>
+            connectionFailedEvent?.subscribe(EVENT, () => {
+                const [failedSsid] = connectionFailedEvent.unpacked
+                if (failedSsid) setConnectionFailedSsid(failedSsid)
+            }),
+        [connectionFailedEvent]
+    )
 
     return (
         <>
@@ -294,6 +312,14 @@ export default function DashboardWifi(props: DashboardServiceProps) {
                 spacing={1}
                 style={{ color: textPrimary, minWidth: "16rem" }}
             >
+                {connectionFailedSsid && (
+                    <Grid item xs={12}>
+                        <Alert severity="error">
+                            <AlertTitle>Connection failed</AlertTitle>
+                            Failed to connect to {connectionFailedSsid}.
+                        </Alert>
+                    </Grid>
+                )}
                 {server && (
                     <Grid item xs={12}>
                         <Alert severity="warning">
@@ -323,7 +349,11 @@ export default function DashboardWifi(props: DashboardServiceProps) {
                                 variant="outlined"
                                 color="primary"
                                 onClick={handleConnect}
-                                title={connected ? "connected" : "disconnected"}
+                                title={
+                                    connected
+                                        ? "disconnect WiFi"
+                                        : "connect WiFi"
+                                }
                                 icon={
                                     connected ? <WifiIcon /> : <WifiOffIcon />
                                 }
