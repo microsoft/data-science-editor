@@ -43,6 +43,7 @@ export default function DeviceName(props: {
                 onClick={onLinkClick}
                 color="textPrimary"
                 to={`/devices/${identifierToUrlPath(specification.id)}`}
+                underline="hover"
             >
                 <Name />
             </Link>
