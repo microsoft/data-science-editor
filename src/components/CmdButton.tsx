@@ -24,7 +24,7 @@ const classes = {
     error: `${PREFIX}-error`,
 }
 
-const Root = styled("div")(({ theme }) => ({
+const Root = styled("span")(({ theme }) => ({
     [`& .${classes.ack}`]: {
         color: "#fff",
         fontWeight: theme.typography.fontWeightMedium,
@@ -50,7 +50,7 @@ export default function CmdButton(props: {
     title?: string
     children?: ReactNode
     icon?: JSX.Element
-    size?: "small" | undefined
+    size?: "small" | "large" | undefined
     variant?: "outlined" | "contained" | undefined
     disabled?: boolean
     disableReset?: boolean

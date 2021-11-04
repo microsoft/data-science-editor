@@ -151,9 +151,9 @@ export function StyledTreeItem(
                             className={classes.labelIcon}
                         />
                     )}
-                    <Typography variant="body2" className={classes.labelText}>
+                    <Typography component="span" variant="body2" className={classes.labelText}>
                         {labelTo ? (
-                            <Link color="textPrimary" to={labelTo}>
+                            <Link color="textPrimary" to={labelTo} underline="hover">
                                 {labelText}
                             </Link>
                         ) : (
@@ -161,7 +161,7 @@ export function StyledTreeItem(
                         )}
                     </Typography>
                     {alert && "!"}
-                    <Typography variant="caption" color="inherit">
+                    <Typography component="span" variant="caption" color="inherit">
                         {alert && (
                             <Typography variant="caption" component="span">
                                 {alert}

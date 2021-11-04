@@ -40,7 +40,6 @@ export default function IconButtonWithTooltip(
                     disabled={disabled}
                     onClick={handleClick}
                     {...others}
-                    size="large"
                 >
                     {children}
                 </IconButton>

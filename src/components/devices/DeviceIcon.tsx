@@ -18,7 +18,7 @@ const classes = {
     large: `${PREFIX}-large`,
 }
 
-const StyledAvatar = styled(Avatar)(({ theme }) => ({
+const StyledAvatar = styled("span")(({ theme }) => ({
     [`& .${classes.img}`]: {
         marginTop: "58%",
     },
@@ -57,13 +57,15 @@ export default function DeviceIcon(props: {
     ) : !imageUrl ? (
         <JacdacIcon />
     ) : (
-        <StyledAvatar
-            className={sizeClassName}
-            alt={specification?.name || "Image of the device"}
-            src={imageUrl}
-            classes={{
-                img: avatar ? classes.img : undefined,
-            }}
-        />
+        <StyledAvatar>
+            <Avatar
+                className={sizeClassName}
+                alt={specification?.name || "Image of the device"}
+                src={imageUrl}
+                classes={{
+                    img: avatar ? classes.img : undefined,
+                }}
+            />
+        </StyledAvatar>
     )
 }
