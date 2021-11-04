@@ -1,12 +1,9 @@
 import {
-    Button,
     Card,
     CardActions,
     CardHeader,
     Dialog,
-    DialogActions,
     DialogContent,
-    DialogTitle,
     Grid,
 } from "@mui/material"
 import React, { useContext, useMemo } from "react"
@@ -17,6 +14,7 @@ import useDeviceImage from "../devices/useDeviceImage"
 import CardMediaWithSkeleton from "../ui/CardMediaWithSkeleton"
 import useDeviceSpecifications from "../devices/useDeviceSpecifications"
 import Transport from "../../../jacdac-ts/src/jdom/transport/transport"
+import DialogTitleWithClose from "../ui/DialogTitleWithClose"
 
 function ConnectDeviceCard(props: {
     device: jdspec.DeviceSpec
@@ -75,7 +73,7 @@ export default function ConnectTransportDialog(props: {
             onClose={onClose}
             fullWidth={true}
         >
-            <DialogTitle id={labelId}>
+            <DialogTitleWithClose onClose={onClose} id={labelId}>
                 Connect to a device
                 {transports.map(transport => (
                     <ConnectButton
@@ -86,7 +84,7 @@ export default function ConnectTransportDialog(props: {
                         onClick={onClose}
                     />
                 ))}
-            </DialogTitle>
+            </DialogTitleWithClose>
             <DialogContent>
                 <Grid container spacing={2}>
                     {devices.map(({ device, transport }) => (
@@ -100,11 +98,6 @@ export default function ConnectTransportDialog(props: {
                     ))}
                 </Grid>
             </DialogContent>
-            <DialogActions>
-                <Button variant="outlined" onClick={onClose}>
-                    Cancel
-                </Button>
-            </DialogActions>
         </Dialog>
     )
 }

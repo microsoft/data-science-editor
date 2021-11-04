@@ -1,7 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import {
-    Button,
     Card,
     CardActions,
     CardContent,
@@ -10,7 +9,6 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogTitle,
     Grid,
     TextField,
     Typography,
@@ -44,6 +42,7 @@ import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import useGridBreakpoints from "../useGridBreakpoints"
 import WifiIcon from "@mui/icons-material/Wifi"
 import WifiOffIcon from "@mui/icons-material/WifiOff"
+import DialogTitleWithClose from "../ui/DialogTitleWithClose"
 
 // flags, rssi, channel, bssid, ssid
 type ScanResult = [WifiAPFlags, number, number, Uint8Array, string]
@@ -215,7 +214,9 @@ function ConnectDialog(props: {
             onClose={handleClose}
         >
             <DialogContent>
-                <DialogTitle>Connect to Wifi</DialogTitle>
+                <DialogTitleWithClose onClose={handleClose}>
+                    Connect to Wifi
+                </DialogTitleWithClose>
                 <Grid container spacing={1}>
                     {ssids.map(ssid => (
                         <Grid item {...breakpoints} key={ssid}>
@@ -233,9 +234,6 @@ function ConnectDialog(props: {
                 </Grid>
             </DialogContent>
             <DialogActions>
-                <Button variant="outlined" title="cancel" onClick={handleClose}>
-                    Cancel
-                </Button>
                 <CmdButton
                     trackName="dashboard.wifi.forgetall"
                     onClick={handleForgetAll}

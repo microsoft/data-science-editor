@@ -3,7 +3,6 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogTitle,
     List,
     ListItem,
     TextField,
@@ -28,6 +27,7 @@ import { useMiniSearch } from "react-minisearch"
 import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import FilterListIcon from "@mui/icons-material/FilterList"
+import DialogTitleWithClose from "../ui/DialogTitleWithClose"
 
 const miniSearchOptions = {
     fields: ["name", "description"],
@@ -135,7 +135,7 @@ export default function StartSimulatorDialog(props: {
             fullWidth={true}
             fullScreen={mobile}
         >
-            <DialogTitle id={deviceHostLabelId}>
+            <DialogTitleWithClose onClose={onClose} id={deviceHostLabelId}>
                 Start a simulator
                 <IconButtonWithTooltip
                     title={showFilters ? "show filters" : "hide filters"}
@@ -143,7 +143,7 @@ export default function StartSimulatorDialog(props: {
                 >
                     <FilterListIcon />
                 </IconButtonWithTooltip>
-            </DialogTitle>
+            </DialogTitleWithClose>
             <DialogContent>
                 {showFilters && (
                     <TextField
@@ -172,21 +172,13 @@ export default function StartSimulatorDialog(props: {
                     )}
                 </List>
             </DialogContent>
-            {!mobile && (
+            {Flags.diagnostics && (
                 <DialogActions>
                     {Flags.diagnostics && (
                         <Button variant="outlined" onClick={handleAddAll}>
                             start all simulators
                         </Button>
                     )}
-                    <Button
-                        aria-label={`cancel`}
-                        variant="outlined"
-                        title="Cancel"
-                        onClick={handleCancel}
-                    >
-                        cancel
-                    </Button>
                 </DialogActions>
             )}
         </Dialog>

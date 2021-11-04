@@ -1,11 +1,4 @@
-import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    Grid,
-} from "@mui/material"
+import { Dialog, DialogContent, Grid } from "@mui/material"
 import React, { useState } from "react"
 import { ControlAnnounceFlags } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import JDDevice from "../../../jacdac-ts/src/jdom/device"
@@ -14,6 +7,7 @@ import DeviceName from "../devices/DeviceName"
 import useDeviceImage from "../devices/useDeviceImage"
 import useInterval from "../hooks/useInterval"
 import Alert from "../ui/Alert"
+import DialogTitleWithClose from "../ui/DialogTitleWithClose"
 
 function LazyDeviceImage(props: { device: JDDevice }) {
     const { device } = props
@@ -68,7 +62,7 @@ export default function IdentifyDialog(props: {
 
     return (
         <Dialog open={open} onClose={handleCloseIdentify}>
-            <DialogTitle>
+            <DialogTitleWithClose onClose={handleCloseIdentify}>
                 Identifying{" "}
                 <DeviceName
                     device={device}
@@ -76,7 +70,7 @@ export default function IdentifyDialog(props: {
                     onLinkClick={handleCloseIdentify}
                 />
                 ...
-            </DialogTitle>
+            </DialogTitleWithClose>
             <DialogContent>
                 <Grid container alignItems="center" alignContent={"center"}>
                     <Grid item xs={12}>
@@ -90,11 +84,6 @@ export default function IdentifyDialog(props: {
                     </Grid>
                 </Grid>
             </DialogContent>
-            <DialogActions>
-                <Button variant="outlined" onClick={handleCloseIdentify}>
-                    Dismiss
-                </Button>
-            </DialogActions>
         </Dialog>
     )
 }

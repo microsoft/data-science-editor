@@ -13,7 +13,6 @@ import {
     CardContent,
     Dialog,
     DialogContent,
-    DialogTitle,
     Grid,
     Typography,
 } from "@mui/material"
@@ -56,6 +55,7 @@ import useServiceProviderFromServiceClass from "../../components/hooks/useServic
 import AppContext from "../../components/AppContext"
 import { AlertTitle } from "@mui/material"
 import { renderKeyboardKey } from "../../../jacdac-ts/src/servers/hidkeyboardserver"
+import DialogTitleWithClose from "../../components/ui/DialogTitleWithClose"
 const ImportButton = lazy(() => import("../../components/ImportButton"))
 
 // all settings keys are prefixed with this string
@@ -452,7 +452,9 @@ export default function HIDEvents() {
                 maxWidth={"lg"}
                 fullWidth={true}
             >
-                <DialogTitle>Add binding</DialogTitle>
+                <DialogTitleWithClose onClose={handleCloseAdd}>
+                    Add binding
+                </DialogTitleWithClose>
                 <DialogContent>
                     <SelectHIDEvent onAdd={handleAdd} />
                 </DialogContent>

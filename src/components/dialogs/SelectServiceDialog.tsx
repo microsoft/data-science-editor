@@ -1,16 +1,10 @@
-import {
-    Button,
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    Grid,
-    MenuItem,
-} from "@mui/material"
+import { Button, Dialog, DialogContent, Grid, MenuItem } from "@mui/material"
 import React, { useMemo, useState } from "react"
 import { useId } from "react-use-id-hook"
 import { serviceSpecifications } from "../../../jacdac-ts/src/jdom/spec"
 import SelectWithLabel from "../ui/SelectWithLabel"
 import useMediaQueries from "../hooks/useMediaQueries"
+import DialogTitleWithClose from "../ui/DialogTitleWithClose"
 
 export default function SelectServiceDialog(props: {
     open: boolean
@@ -44,7 +38,9 @@ export default function SelectServiceDialog(props: {
             onClose={() => onClose(undefined)}
             fullScreen={mobile}
         >
-            <DialogTitle id={deviceHostLabelId}>Start a simulator</DialogTitle>
+            <DialogTitleWithClose onClose={handleCancel} id={deviceHostLabelId}>
+                Start a simulator
+            </DialogTitleWithClose>
             <DialogContent>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>

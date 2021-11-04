@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle, List } from "@mui/material"
+import { Dialog, DialogContent, List } from "@mui/material"
 import React from "react"
 import { useId } from "react-use-id-hook"
 import JDService from "../../../jacdac-ts/src/jdom/service"
@@ -6,6 +6,7 @@ import useRoleManagerClient from "../services/useRoleManagerClient"
 import useChange from "../../jacdac/useChange"
 import RoleListItem from "../services/RoleListItem"
 import { Role } from "../../../jacdac-ts/src/jdom/clients/rolemanagerclient"
+import DialogTitleWithClose from "../ui/DialogTitleWithClose"
 
 export default function SelectRoleDialog(props: {
     service: JDService
@@ -34,9 +35,9 @@ export default function SelectRoleDialog(props: {
             open={open}
             onClose={onClose}
         >
-            <DialogTitle id={labelId}>
+            <DialogTitleWithClose onClose={onClose} id={labelId}>
                 {hasRoles ? `Select a role` : `No role available`}
-            </DialogTitle>
+            </DialogTitleWithClose>
             {hasRoles && (
                 <DialogContent>
                     <List>

@@ -1,10 +1,8 @@
 import {
     Button,
     Dialog,
-    DialogActions,
     DialogContent,
     DialogContentText,
-    DialogTitle,
     Grid,
 } from "@mui/material"
 import { Alert } from "@mui/material"
@@ -23,6 +21,7 @@ import useMounted from "./../hooks/useMounted"
 import useAnalytics from "../hooks/useAnalytics"
 import useDeviceSpecification from "../../jacdac/useDeviceSpecification"
 import { Link } from "gatsby-material-ui-components"
+import DialogTitleWithClose from "../ui/DialogTitleWithClose"
 
 function DragAndDropUpdateButton(props: {
     specification: jdspec.DeviceSpec
@@ -47,7 +46,9 @@ function DragAndDropUpdateButton(props: {
                 {name}
             </Button>
             <Dialog open={open}>
-                <DialogTitle>Updating your {specification.name}</DialogTitle>
+                <DialogTitleWithClose onClose={handleClose}>
+                    Updating your {specification.name}
+                </DialogTitleWithClose>
                 <DialogContent>
                     <DialogContentText>
                         <p>
@@ -74,11 +75,6 @@ function DragAndDropUpdateButton(props: {
                         </ol>
                     </DialogContentText>
                 </DialogContent>
-                <DialogActions>
-                    <Button variant="outlined" onClick={handleClose}>
-                        close
-                    </Button>
-                </DialogActions>
             </Dialog>
         </>
     )
