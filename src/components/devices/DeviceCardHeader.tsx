@@ -88,6 +88,7 @@ export default function DeviceCardHeader(props: {
                 title={
                     <Link
                         color="textPrimary"
+                        underline="hover"
                         to={`/devices/${
                             identifierToUrlPath(specification?.id) || ""
                         }`}

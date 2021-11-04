@@ -30,6 +30,7 @@ import Packet from "../../../jacdac-ts/src/jdom/packet"
 import useChange from "../../jacdac/useChange"
 import Alert from "../ui/Alert"
 import { AlertTitle } from "@mui/material"
+import FirmwareLoader from "../firmware/FirmwareLoader"
 
 function FlashDiagnostics() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
@@ -118,6 +119,7 @@ export default function Flash() {
             <SafeBootAlert />
             <ManualFirmwareAlert />
             {Flags.diagnostics && <FlashDiagnostics />}
+            <FirmwareLoader />
         </Box>
     )
 }

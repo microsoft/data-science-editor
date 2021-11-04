@@ -24,7 +24,6 @@ export default function useFirmwareBlobs() {
     const specifications = useDeviceSpecifications()
 
     const loadFirmwares = useCallback(async () => {
-        console.log(`firmware: load`)
         const names = await firmwares?.list()
         if (!names) return
 
@@ -34,19 +33,20 @@ export default function useFirmwareBlobs() {
                 .map(spec => spec.repo)
                 .filter(repo => /^https:\/\/github.com\//.test(repo))
                 .map(repo => repo.substr("https://github.com/".length))
-            //.filter(slug => names.indexOf(slug) < 0)
         )
+        console.debug(`firmware: found ${slugs.join(", ")}`)
         for (const slug of slugs) {
             const fw = await firmwares.get(slug)
-            if (!fw) continue
-            const { time } = fw
-            const age = Date.now() - time
-            console.debug(`firmware ${slug} age ${prettyDuration(age)}`)
-            if (age < 3600_000) {
-                console.debug(`db: skipping fresh firmware ${slug}`)
-                continue
+            if (fw) {
+                const { time } = fw
+                const age = Date.now() - time
+                console.debug(`firmware: ${slug} age ${prettyDuration(age)}`)
+                if (age < 3600_000) {
+                    console.debug(`firmware: skipping fresh firmware ${slug}`)
+                    continue
+                }
             }
-            console.debug(`db: fetch latest release of ${slug}`)
+            console.debug(`firmware: fetch latest release of ${slug}`)
             const { status, release } = await fetchLatestRelease(slug, {
                 ignoreThrottled: true,
             })
@@ -57,15 +57,17 @@ export default function useFirmwareBlobs() {
             }
             if (!release?.version) {
                 trackEvent("github.fetch.notfound", { repo: slug })
-                console.warn(`release not found`)
+                console.warn(`firmware: release not found`)
                 return
             }
             setThrottled(false)
-            console.log(`db: fetch binary release ${slug} ${release.version}`)
+            console.log(
+                `firmware: fetch binary release ${slug} ${release.version}`
+            )
             const firmware = await fetchReleaseBinary(slug, release.version)
             if (firmware) {
                 console.debug(
-                    `db: binary release ${slug} ${release.version} downloaded`
+                    `firmware: binary release ${slug} ${release.version} downloaded`
                 )
                 firmwares.set(slug, { time: Date.now(), firmware })
             }
