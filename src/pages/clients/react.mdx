@@ -8,8 +8,8 @@ order: 5
 This package provides a [context](https://reactjs.org/docs/context.html) and [hooks](https://reactjs.org/docs/hooks-intro.html) to interact with the bus within a [React](https://reactjs.org/) application.
 It is built on top of the [JavaScript package](/clients/javascript).
 
-* [GitHub project](https://github.com/microsoft/react-jacdac)
-* [API reference](https://microsoft.github.io/react-jacdac/) for a full list of hooks.
+-   [GitHub project](https://github.com/microsoft/react-jacdac)
+-   [API reference](https://microsoft.github.io/react-jacdac/) for a full list of hooks.
 
 ## Installation
 
@@ -77,13 +77,34 @@ const Connected = () => {
 The `useDevices` hooks gets a snapshot of the devices connected to the bus. It provides a number of filtering options.
 
 ```tsx
-import { useDevices } from "react-jacdac"
+import { useDevices } from "react-jacdac";
 
-const DeviceCount = () => {
-    // all devices, minus articifial devices created to run jacdac
-    const devices = useDevices({ ignoreInfrastructure: true })
-    return <span>{devices.length}</span>
-}
+const Devices = () => {
+  const devices = useDevices({ ignoreInfrastructure: true });
+  return (
+    <ul>
+      {devices.map((device) => (
+        <li key={device.id}>{device.describe()}</li>
+      ))}
+    </ul>
+  );
+};
+-----
+import React from "react";
+import { useDevices } from "react-jacdac";
+
+const Devices = () => {
+  const devices = useDevices({ ignoreInfrastructure: true });
+  return (
+    <ul>
+      {devices.map((device) => (
+        <li key={device.id}>{device.describe()}</li>
+      ))}
+    </ul>
+  );
+};
+
+export default Devices
 ```
 
 ### useServices

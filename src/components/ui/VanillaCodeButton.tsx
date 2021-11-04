@@ -1,5 +1,6 @@
 import React, { useCallback } from "react"
 import CodeSandboxButton from "./CodeSandboxButton"
+import packageJson from "../../../jacdac-ts/package.json"
 
 export default function VanillaCodeButton(props: {
     title?: string
@@ -84,7 +85,7 @@ ${html}
                         build: "parcel build index.html",
                     },
                     dependencies: {
-                        "jacdac-ts": "^1.18.16",
+                        "jacdac-ts": `^${packageJson.version}`,
                         milligram: "^1.4.1",
                         "parcel-bundler": "^2.0.0",
                     },

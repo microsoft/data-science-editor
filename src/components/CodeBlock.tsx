@@ -20,11 +20,12 @@ import Suspense from "./ui/Suspense"
 
 const TraceSnippet = lazy(() => import("./trace/TraceSnippet"))
 const VanillaCodeButton = lazy(() => import("./ui/VanillaCodeButton"))
+const ReactCodeButton = lazy(() => import("./ui/ReactCodeButton"))
 const P5JSCodeButton = lazy(() => import("./ui/P5JSCodeButton"))
 
 function HighlightedCode(props: {
     children: string
-    codeSandbox?: { p5js?: string; js?: string; html?: string }
+    codeSandbox?: { p5js?: string; js?: string; tsx?: string; html?: string }
     className?: string
     downloadName?: string
     downloadText?: string
@@ -80,6 +81,13 @@ function HighlightedCode(props: {
                             </Tooltip>
                         </Link>
                     )}
+                    {codeSandbox?.tsx && (
+                        <div style={{ float: "right" }}>
+                            <Suspense>
+                                <ReactCodeButton source={codeSandbox} />
+                            </Suspense>
+                        </div>
+                    )}
                     {codeSandbox?.js && (
                         <div style={{ float: "right" }}>
                             <Suspense>
@@ -124,7 +132,7 @@ export default function CodeBlock(props: {
 }) {
     const { children, className, ...rest } = props
     const language = className?.replace(/language-/, "") || ""
-
+    console.log({ language })
     switch (language) {
         case "trace":
             return (
@@ -134,6 +142,18 @@ export default function CodeBlock(props: {
             )
         case "blocks":
             return <MakeCodeSnippet renderedSource={children} />
+        case "tsx": {
+            const [source, tsx] = children.split(/\n-{5,}\n/gi)
+            return (
+                <HighlightedCode
+                    {...rest}
+                    className={"tsx"}
+                    codeSandbox={{ tsx }}
+                >
+                    {source}
+                </HighlightedCode>
+            )
+        }
         case "vanilla": {
             const [source, js, html] = children.split(/\n-{5,}\n/gi)
             return (

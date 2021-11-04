@@ -8,8 +8,9 @@ import { Button } from "gatsby-material-ui-components"
 export default function CodeSandboxButton(props: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     files: () => Record<string, any>
+    startFile?: string
 }) {
-    const { files } = props
+    const { files, startFile } = props
     const { setError } = useContext(AppContext)
     const { mobile } = useMediaQueries()
     const [importing, setImporting] = useState(false)
@@ -17,7 +18,9 @@ export default function CodeSandboxButton(props: {
     const handleClick = async () => {
         const f = files()
         const file =
-            Object.keys(f).filter(fn => /\.js$/.test(fn))[0] || "index.js"
+            startFile ||
+            Object.keys(f).filter(fn => /\.js$/.test(fn))[0] ||
+            "index.js"
         try {
             setImporting(true)
             const x = await fetch(
