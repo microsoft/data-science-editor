@@ -28,17 +28,21 @@ function readBlobToCanvas(
                 sy = 0,
                 sw = iw,
                 sh = ih
-            if (iar < car) {
-                // image is wider, clip sides
-                const dw = iw - cw
+
+            //console.log(`image (${iw}x${ih}:${iar}), target (${cw}x${ch}:${car})`)
+            if (iar > car) {
+                const dw = iw * (1 - car / iar)
                 sx = dw >> 1
                 sw = iw - dw
-            } else {
+                //console.log({ dw, sx, sw })
+            } else if (iar < car) {
                 // klip top
-                const dh = ih - ch
+                const dh = ih * (1 - iar / car)
                 sy = dh >> 1
                 sh = ih - dh
+                //console.log({ dh, sy, sh })
             }
+            //console.log({ sx, sy, sw, sh, cw, ch })
             ctx.drawImage(img, sx, sy, sw, sh, 0, 0, cw, ch)
 
             // done
