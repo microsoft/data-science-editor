@@ -40,6 +40,12 @@ export interface GithubRepository {
     html_url: string
 }
 
+export interface GithubRelease {
+    url: string
+    tag_name: string
+    name: string
+}
+
 function contentToFirmwareRelease(
     content: GithubContent
 ): GithubFirmwareRelease {
@@ -87,7 +93,7 @@ export function parseRepoUrl(url: string): { owner: string; name: string } {
     return undefined
 }
 
-export async function fetchLatestRelease(
+export async function fetchLatestFirmwareRelease(
     slug: string,
     options?: GitHubApiOptions
 ): Promise<{
@@ -118,7 +124,7 @@ export async function fetchLatestRelease(
     throw new Error(`unknown status code ${resp.status}`)
 }
 
-export async function fetchReleaseBinary(
+export async function fetchFirmwareReleaseBinary(
     slug: string,
     version: string
 ): Promise<Blob> {
@@ -206,15 +212,47 @@ export function useRepository(slug: string) {
     return res
 }
 
-export function useLatestRelease(slug: string, options?: GitHubApiOptions) {
-    const resp = useLatestReleases(slug, options)
+export function useLatestRelease(slug: string) {
+    const { repoPath } = normalizeSlug(slug)
+    const path = `repos/${repoPath}/releases/latest`
+    const res = useFetchApi<GithubRelease>(path)
+    return res
+}
+
+export function useLatestReleaseAsset(url: string) {
+    const [, slug, filename] =
+        /^https:\/\/github.com\/(.+)\/releases\/download\/.+\/(.+)$/i.exec(
+            url
+        ) || []
+    const { status, response } = useLatestRelease(slug)
+    console.log({ url, slug, filename, status, response })
+    if (status === 200 && response) {
+        const { tag_name, name } = response
+        return {
+            name,
+            version: tag_name,
+            assertUrl: `https://github.com/${normalizeSlug(
+                slug
+            )}/releases/download/${tag_name}/${filename}`,
+        }
+    } else return {}
+}
+
+export function useLatestFirmwareRelease(
+    slug: string,
+    options?: GitHubApiOptions
+) {
+    const resp = useLatestFirmwareReleases(slug, options)
     return {
         ...resp,
         response: resp.response?.[0],
     }
 }
 
-export function useLatestReleases(slug: string, options?: GitHubApiOptions) {
+export function useLatestFirmwareReleases(
+    slug: string,
+    options?: GitHubApiOptions
+) {
     if (!slug)
         return {
             response: undefined,

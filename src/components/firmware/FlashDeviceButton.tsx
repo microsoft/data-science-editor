@@ -1,5 +1,6 @@
 import {
     Button,
+    Typography,
     Dialog,
     DialogContent,
     DialogContentText,
@@ -22,8 +23,10 @@ import useAnalytics from "../hooks/useAnalytics"
 import useDeviceSpecification from "../../jacdac/useDeviceSpecification"
 import { Link } from "gatsby-material-ui-components"
 import DialogTitleWithClose from "../ui/DialogTitleWithClose"
+import { useLatestReleaseAsset } from "../github"
 
 function DragAndDropUpdateButton(props: {
+    firmwareVersion: string
     specification: jdspec.DeviceSpec
     info: { name: string; url: string }
 }) {
@@ -39,11 +42,15 @@ function DragAndDropUpdateButton(props: {
         setOpen(true)
     }
     const handleClose = () => setOpen(false)
+    const { version, assertUrl } = useLatestReleaseAsset(url)
 
     return (
         <>
-            <Button variant="contained" onClick={handleOpen}>
+            <Button variant="outlined" onClick={handleOpen}>
                 {name}
+                {version && (
+                    <Typography variant="caption">({version})</Typography>
+                )}
             </Button>
             <Dialog open={open}>
                 <DialogTitleWithClose onClose={handleClose}>
@@ -57,7 +64,7 @@ function DragAndDropUpdateButton(props: {
                         </p>
                         <ol>
                             <li>
-                                <Link href={url}>
+                                <Link href={assertUrl || url}>
                                     Download the firmware file
                                 </Link>
                             </li>
@@ -146,6 +153,7 @@ export function FlashDeviceButton(props: {
                 {firmwares.map(fw => (
                     <Grid item key={fw.name}>
                         <DragAndDropUpdateButton
+                            firmwareVersion={firmwareInfo?.version}
                             specification={specification}
                             info={fw}
                         />

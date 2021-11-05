@@ -5,7 +5,7 @@ import {
     GithubRepository,
     normalizeSlug,
     useFetchJSON,
-    useLatestRelease,
+    useLatestFirmwareRelease,
     useRepository,
 } from "./github"
 import GitHubIcon from "@mui/icons-material/GitHub"
@@ -40,7 +40,7 @@ export default function GithubRepositoryCardHeader(props: {
 }) {
     const { slug, showRelease } = props
     const { response: repo, loading: repoLoading, status } = useRepository(slug)
-    const { response: release } = useLatestRelease(showRelease && slug)
+    const { response: release } = useLatestFirmwareRelease(showRelease && slug)
     const { folder } = normalizeSlug(slug)
 
     const title = repo ? (

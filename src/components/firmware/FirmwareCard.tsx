@@ -15,9 +15,9 @@ import {
     Typography,
 } from "@mui/material"
 import {
-    fetchReleaseBinary,
+    fetchFirmwareReleaseBinary,
     GithubFirmwareRelease,
-    useLatestReleases,
+    useLatestFirmwareReleases,
 } from "../github"
 import { useFirmwareBlob } from "./useFirmwareBlobs"
 import GithubRepositoryCardHeader from "../GithubRepositoryCardHeader"
@@ -29,7 +29,7 @@ import LoadingProgress from "../ui/LoadingProgress"
 
 export default function FirmwareCard(props: { slug: string }) {
     const { slug } = props
-    const { response: releases } = useLatestReleases(slug)
+    const { response: releases } = useLatestFirmwareReleases(slug)
     const [downloading, setDownloading] = useState(false)
     const [error, setError] = useState("")
     const [release, setRelease] = useState<GithubFirmwareRelease>(undefined)
@@ -62,7 +62,7 @@ export default function FirmwareCard(props: { slug: string }) {
         try {
             setError("")
             setDownloading(true)
-            const firmware = await fetchReleaseBinary(slug, tag)
+            const firmware = await fetchFirmwareReleaseBinary(slug, tag)
             if (firmware) setFirmwareFile(tag, firmware)
         } finally {
             setDownloading(false)

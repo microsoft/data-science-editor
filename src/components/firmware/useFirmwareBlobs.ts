@@ -7,7 +7,7 @@ import {
 import DbContext, { DbContextProps } from "../DbContext"
 import { useChangeAsync } from "../../jacdac/useChange"
 import { unique } from "../../../jacdac-ts/src/jdom/utils"
-import { fetchLatestRelease, fetchReleaseBinary } from "../github"
+import { fetchLatestFirmwareRelease, fetchFirmwareReleaseBinary } from "../github"
 import useIdleCallback from "../hooks/useIdleCallback"
 import useMounted from "../hooks/useMounted"
 import useAnalytics from "../hooks/useAnalytics"
@@ -47,7 +47,7 @@ export default function useFirmwareBlobs() {
                 }
             }
             console.debug(`firmware: fetch latest release of ${slug}`)
-            const { status, release } = await fetchLatestRelease(slug, {
+            const { status, release } = await fetchLatestFirmwareRelease(slug, {
                 ignoreThrottled: true,
             })
             trackEvent("github.fetch", { status, slug })
@@ -64,7 +64,10 @@ export default function useFirmwareBlobs() {
             console.log(
                 `firmware: fetch binary release ${slug} ${release.version}`
             )
-            const firmware = await fetchReleaseBinary(slug, release.version)
+            const firmware = await fetchFirmwareReleaseBinary(
+                slug,
+                release.version
+            )
             if (firmware) {
                 console.debug(
                     `firmware: binary release ${slug} ${release.version} downloaded`
