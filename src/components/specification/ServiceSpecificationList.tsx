@@ -19,6 +19,10 @@ import { isMixinService } from "../../../jacdac-ts/jacdac-spec/spectool/jdutils"
 import useDeviceCatalog from "../devices/useDeviceCatalog"
 import useChange from "../../jacdac/useChange"
 
+const components = {
+    p: "div",
+}
+
 function ServiceSpecificatinListItem(props: { service: jdspec.ServiceSpec }) {
     const { service } = props
     const { shortId, classIdentifier, name, notes, tags } = service
@@ -38,7 +42,10 @@ function ServiceSpecificatinListItem(props: { service: jdspec.ServiceSpec }) {
                 primary={name}
                 secondary={
                     <ChipList>
-                        <Markdown source={notes["short"]} />
+                        <Markdown
+                            components={components}
+                            source={notes["short"]}
+                        />
                         {tags?.map(tag => (
                             <Chip key={tag} size="small" label={tag} />
                         ))}
@@ -108,7 +115,7 @@ export default function ServiceSpecificationList(props: {
         <Grid container spacing={1}>
             {title && <GridHeader title={title} count={specs.length} />}
             <Grid item>
-                <List>
+                <List component="div">
                     {specs.map(node => (
                         <ListItem button key={node.shortId}>
                             <ServiceSpecificatinListItem service={node} />

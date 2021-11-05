@@ -214,7 +214,7 @@ export default function Toc(props: { pagePath: string }) {
                     component="li"
                     selected={selected}
                     key={"tocitem" + path}
-                    sx={{ ml: level }}
+                    sx={{ ml: Math.max(0, level - 1) }}
                 >
                     <Link
                         style={{ color: theme.palette.text.primary }}

@@ -301,7 +301,7 @@ export default function DeviceRegistration() {
                 </Link>
                 .
             </p>
-            <Grid container direction="row" spacing={2}>
+            <Grid container spacing={3}>
                 {devices.map(dev => (
                     <Grid item key={dev.id} {...gridBreakpoints}>
                         <Card>
@@ -366,15 +366,16 @@ export default function DeviceRegistration() {
                         id={hardwareVersionId}
                         fullWidth={true}
                         error={!!versionError}
-                        helperText={
-                            versionError ||
-                            "Revision identifier for this hardware design using semver format (v1.0, v1.1, ...)"
-                        }
+                        helperText={versionError}
                         label="Version"
                         value={device?.version}
                         onChange={handleVersion}
                         variant={variant}
                     />
+                    <Typography variant="caption">
+                        Revision identifier for this hardware design using
+                        semver format (v1.0, v1.1, ...).
+                    </Typography>
                 </Grid>
                 <Grid item xs={12}>
                     <PaperBox elevation={1}>
@@ -474,12 +475,13 @@ export default function DeviceRegistration() {
                         error={!!idError}
                         fullWidth={true}
                         label="Identifier"
-                        helperText={
-                            "This generated identifer is a URL friendly string created from your company and product name."
-                        }
                         variant={variant}
                         value={device.id || ""}
                     />
+                    <Typography variant="caption">
+                        This generated identifer is a URL friendly string
+                        created from your company and product name.
+                    </Typography>
                 </Grid>
                 <Grid item xs={12}>
                     <TextField

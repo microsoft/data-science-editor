@@ -21,7 +21,6 @@ export default function RandomGenerator(props: {
     firmware?: boolean
 }) {
     const { device, firmware } = props
-    const labelId = useId()
     const fieldId = useId()
     const deviceCatalog = useDeviceCatalog()
 
@@ -66,7 +65,7 @@ export default function RandomGenerator(props: {
                                 value={value}
                                 readOnly={true}
                                 inputProps={{
-                                    "aria-labelledby": labelId,
+                                    "aria-label": "generated identifier",
                                 }}
                             />
                             {copySuccess && <CheckIcon />}
