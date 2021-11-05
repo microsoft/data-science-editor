@@ -45,7 +45,7 @@ export default function IDChip(props: {
                             <IconButton
                                 aria-label={title}
                                 onClick={handleFilterClick}
-                                size="large"
+                                size="small"
                             >
                                 {icon}
                             </IconButton>
