@@ -242,7 +242,7 @@ export default function ToolsDrawer() {
                     <ChevronRightIcon />
                 </IconButton>
             </div>
-            <List>
+            <List component="div">
                 {links.map((link, i) =>
                     link.text ? (
                         <ToolsListItem
