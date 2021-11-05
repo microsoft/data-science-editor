@@ -18,7 +18,7 @@ import CardMediaWithSkeleton from "../ui/CardMediaWithSkeleton"
 
 function DeviceSpecificationCard(props: {
     specification: jdspec.DeviceSpec
-    size: "list" | "catalog"
+    size: "list" | "preview" | "catalog"
 }) {
     const { specification, size } = props
     const { id, name, company, services } = specification
@@ -95,7 +95,7 @@ export default function DeviceSpecificationList(props: {
         specifications,
     ])
     const gridBreakpoints = useGridBreakpoints(specs.length)
-    const size = specs?.length < 6 ? "catalog" : "list"
+    const size = specs?.length < 6 ? "catalog" : "preview"
 
     if (!specs.length)
         return (
