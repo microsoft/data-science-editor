@@ -70,7 +70,6 @@ function DragAndDropUpdateButton(props: {
                                     Download the firmware file
                                 </Link>
                             </li>
-                            <li>Connect your device to your computer.</li>
                             <li>
                                 Drag and drop the file into the&nbsp;
                                 <b>{specification.driveName}</b> drive. You may
