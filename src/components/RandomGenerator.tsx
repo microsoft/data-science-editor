@@ -17,7 +17,7 @@ import { NoSsr } from "@mui/material"
 import { useId } from "react-use-id-hook"
 import { cryptoRandomUint32 } from "../../jacdac-ts/src/jdom/random"
 import { toFullHex } from "../../jacdac-ts/src/jdom/utils"
-import { deviceCatalog } from "../../jacdac-ts/src/jdom/catalog"
+import useDeviceCatalog from "./devices/useDeviceCatalog"
 
 function looksRandom(n: number) {
     const s = n.toString(16)
@@ -58,18 +58,6 @@ export function uniqueDeviceId() {
     return n !== undefined && toFullHex([n[0], n[1]])
 }
 
-export function uniqueFirmwareId() {
-    let id = genFirmwareId()
-    while (
-        id !== undefined &&
-        (!looksRandom(id) ||
-            deviceCatalog.specificationFromProductIdentifier(id))
-    ) {
-        id = genFirmwareId()
-    }
-    return id !== undefined && toFullHex([id])
-}
-
 export default function RandomGenerator(props: {
     device?: boolean
     firmware?: boolean
@@ -77,12 +65,24 @@ export default function RandomGenerator(props: {
     const { device, firmware } = props
     const labelId = useId()
     const fieldId = useId()
+    const deviceCatalog = useDeviceCatalog()
 
     const [value, setValue] = useState(
         device ? uniqueDeviceId() : uniqueServiceId()
     )
     const [copySuccess, setCopySuccess] = useState(false)
 
+    const uniqueFirmwareId = () => {
+        let id = genFirmwareId()
+        while (
+            id !== undefined &&
+            (!looksRandom(id) ||
+                deviceCatalog.specificationFromProductIdentifier(id))
+        ) {
+            id = genFirmwareId()
+        }
+        return id !== undefined && toFullHex([id])
+    }
     const handleRegenerate = () => {
         const v = device
             ? uniqueDeviceId()

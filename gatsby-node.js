@@ -8,7 +8,7 @@ const Papa = require("papaparse")
 const {
     serviceSpecifications,
     identifierToUrlPath,
-    deviceCatalog,
+    DeviceCatalog,
     isInfrastructure,
 } = require(`./jacdac-ts/dist/jacdac.cjs`)
 const {
@@ -26,6 +26,8 @@ const CATALOG_HEIGHT = 600
 const CATALOG_WIDTH = 800
 const FULL_HEIGHT = 768
 const FULL_WIDTH = 1024
+
+const deviceCatalog = new DeviceCatalog()
 
 async function createServicePages(graphql, actions, reporter) {
     console.log(`generating service pages`)

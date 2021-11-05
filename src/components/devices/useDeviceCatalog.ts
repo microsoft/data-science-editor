@@ -1,4 +1,10 @@
-import { deviceCatalog } from "../../../jacdac-ts/src/jdom/catalog"
+import useBus from "../../jacdac/useBus"
+
+/**
+ * Gets the device catalog from the current bus
+ * @returns
+ */
 export default function useDeviceCatalog() {
-    return deviceCatalog
+    const bus = useBus()
+    return bus.deviceCatalog
 }

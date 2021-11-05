@@ -31,7 +31,6 @@ import Transport, {
 import JDDevice from "../../jacdac-ts/src/jdom/device"
 import { isInfrastructure } from "../../jacdac-ts/src/jdom/spec"
 import { inIFrame } from "../../jacdac-ts/src/jdom/iframeclient"
-import { deviceCatalog } from "../../jacdac-ts/src/jdom/catalog"
 
 function sniffQueryArguments() {
     if (typeof window === "undefined" || typeof URLSearchParams === "undefined")
@@ -146,7 +145,9 @@ function createBus(): JDBus {
             const productId = physical ? d.productIdentifier : undefined
             const firmware = physical ? d.firmwareVersion : undefined
             const product =
-                deviceCatalog.specificationFromProductIdentifier(productId)?.id
+                b.deviceCatalog.specificationFromProductIdentifier(
+                    productId
+                )?.id
             const services: Record<string, number> = {}
             for (const srv of d
                 .services()
@@ -170,7 +171,9 @@ function createBus(): JDBus {
             const productId = physical ? d.productIdentifier : undefined
             const firmware = physical ? d.firmwareVersion : undefined
             const product =
-                deviceCatalog.specificationFromProductIdentifier(productId)?.id
+                b.deviceCatalog.specificationFromProductIdentifier(
+                    productId
+                )?.id
             const uptime = d.uptime
             const { restarts, announce } = d.stats.current
             return {

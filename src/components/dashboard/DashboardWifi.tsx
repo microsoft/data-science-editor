@@ -1,6 +1,7 @@
 import React, { ChangeEvent, useEffect, useState } from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import {
+    Badge,
     Card,
     CardActions,
     CardContent,
@@ -71,6 +72,7 @@ function Network(props: {
     const [priority, networkFlags] = network || []
     const [scanFlags, rssi, channel] = info || []
     const [password, setPassword] = useState("")
+    const [connectionFailed, setConnectionFailed] = useState(false)
     const known = !!network
     const scanned = !!info
     const passwordId = useId()
@@ -78,16 +80,19 @@ function Network(props: {
         setPassword(event.target.value)
     }
     const handleAddNetwork = async () => {
+        setConnectionFailed(false)
         await service.sendCmdPackedAsync<[string, string]>(
             WifiCmd.AddNetwork,
             [ssid, password || ""],
             true
         )
     }
-    const handleForgetNetwork = async () =>
+    const handleForgetNetwork = async () => {
+        setConnectionFailed(false)
         await service.sendCmdPackedAsync<[string]>(WifiCmd.ForgetNetwork, [
             ssid,
         ])
+    }
     const handlePriorityChange = async (ev: ChangeEvent<HTMLInputElement>) => {
         const newPriority = parseInt(ev.target.value)
         if (!isNaN(newPriority))
@@ -101,7 +106,15 @@ function Network(props: {
     const hasPassword = !!(networkFlags & WifiAPFlags.HasPassword)
     const connectError =
         hasPassword && !password ? "password required" : undefined
-
+    const connectionFailedEvent = useEvent(service, WifiEvent.ConnectionFailed)
+    useEffect(
+        () =>
+            connectionFailedEvent?.subscribe(EVENT, () => {
+                const [failedSsid] = connectionFailedEvent.unpacked
+                if (failedSsid === ssid) setConnectionFailed(true)
+            }),
+        [connectionFailedEvent]
+    )
     return (
         <Card>
             <CardHeader
@@ -116,10 +129,13 @@ function Network(props: {
             />
             <CardContent>
                 <Stack spacing={1}>
-                    {connected && <Alert severity="info">Connected</Alert>}
-                    {known && !scanned && (
+                    {connected ? (
+                        <Alert severity="info">Connected</Alert>
+                    ) : connectionFailed ? (
+                        <Alert severity="error">Connection failed</Alert>
+                    ) : known && !scanned ? (
                         <Alert severity="info">Not found</Alert>
-                    )}
+                    ) : null}
                     {!known && !hasPassword && (
                         <TextField
                             id={passwordId}
@@ -256,7 +272,7 @@ function ConnectDialog(props: {
 export default function DashboardWifi(props: DashboardServiceProps) {
     const { service } = props
     const [open, setOpen] = useState(false)
-    const [connectionFailedSsid, setConnectionFailedSsid] = useState("")
+    const [connectionFailed, setConnectionFailed] = useState(0)
 
     const server = useServiceServer<WifiServer>(service)
     const color = server ? "primary" : "secondary"
@@ -268,22 +284,23 @@ export default function DashboardWifi(props: DashboardServiceProps) {
     const [ip] = useRegisterUnpackedValue<[Uint8Array]>(ipAddressRegister)
     const macRegister = service.register(WifiReg.Eui48)
     const [mac] = useRegisterUnpackedValue<[Uint8Array]>(macRegister)
-
     const lostIpEvent = useEvent(service, WifiEvent.LostIp)
     const gotIpEvent = useEvent(service, WifiEvent.GotIp)
     const connectionFailedEvent = useEvent(service, WifiEvent.ConnectionFailed)
-
     const connected = !!ip?.length
 
     const handleConnect = async () => {
-        setConnectionFailedSsid("")
+        setConnectionFailed(0)
         if (connected) await enabledRegister.sendSetBoolAsync(false)
         else {
             await enabledRegister.sendSetBoolAsync(true)
             await service.sendCmdAsync(WifiCmd.Reconnect)
         }
     }
-    const handleConfigure = () => setOpen(true)
+    const handleConfigure = () => {
+        setConnectionFailed(0)
+        setOpen(true)
+    }
 
     // force register refreshs on various events
     const refreshRegisters = () => {
@@ -300,13 +317,11 @@ export default function DashboardWifi(props: DashboardServiceProps) {
     )
     useEffect(
         () =>
-            connectionFailedEvent?.subscribe(EVENT, () => {
-                const [failedSsid] = connectionFailedEvent.unpacked
-                if (failedSsid) setConnectionFailedSsid(failedSsid)
-            }),
+            connectionFailedEvent?.subscribe(EVENT, () =>
+                setConnectionFailed(f => f + 1)
+            ),
         [connectionFailedEvent]
     )
-
     return (
         <>
             <Grid
@@ -314,14 +329,6 @@ export default function DashboardWifi(props: DashboardServiceProps) {
                 spacing={1}
                 style={{ color: textPrimary, minWidth: "16rem" }}
             >
-                {connectionFailedSsid && (
-                    <Grid item xs={12}>
-                        <Alert severity="error">
-                            <AlertTitle>Connection failed</AlertTitle>
-                            Failed to connect to {connectionFailedSsid}.
-                        </Alert>
-                    </Grid>
-                )}
                 {server && (
                     <Grid item xs={12}>
                         <Alert severity="warning">
@@ -364,9 +371,16 @@ export default function DashboardWifi(props: DashboardServiceProps) {
                         <Grid item>
                             <IconButtonWithTooltip
                                 onClick={handleConfigure}
-                                title="configure"
+                                title={"configure"}
                             >
-                                <SettingsIcon />
+                                <Badge
+                                    color="error"
+                                    overlap="circular"
+                                    badgeContent=" "
+                                    invisible={connectionFailed > 0}
+                                >
+                                    <SettingsIcon />
+                                </Badge>
                             </IconButtonWithTooltip>
                         </Grid>
                     </Grid>
