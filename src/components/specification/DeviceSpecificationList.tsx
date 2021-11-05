@@ -1,46 +1,62 @@
 import React, { useMemo } from "react"
-import { styled } from "@mui/material/styles"
+import { Card, CardContent, Grid, Typography, useTheme } from "@mui/material"
 import {
-    ImageList,
-    ImageListItem,
-    ImageListItemBar,
-    Typography,
-} from "@mui/material"
-import { identifierToUrlPath } from "../../../jacdac-ts/src/jdom/spec"
+    identifierToUrlPath,
+    serviceSpecificationFromClassIdentifier,
+} from "../../../jacdac-ts/src/jdom/spec"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
-import InfoIcon from "@mui/icons-material/Info"
-import { IconButton } from "gatsby-theme-material-ui"
+import { CardActionArea } from "gatsby-theme-material-ui"
 import { arrayShuffle } from "../../../jacdac-ts/src/jdom/utils"
 import useDeviceImage from "../devices/useDeviceImage"
-import useMediaQueries from "../hooks/useMediaQueries"
-import { escapeDeviceIdentifier } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
+import {
+    escapeDeviceIdentifier,
+    humanify,
+} from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import useDeviceSpecifications from "../devices/useDeviceSpecifications"
+import useGridBreakpoints from "../useGridBreakpoints"
+import CardMediaWithSkeleton from "../ui/CardMediaWithSkeleton"
 
-const PREFIX = "DeviceSpecificationList"
-
-const classes = {
-    root: `${PREFIX}-root`,
-    ellipsis: `${PREFIX}-ellipsis`,
-    icon: `${PREFIX}-icon`,
+function DeviceSpecificationCard(props: {
+    specification: jdspec.DeviceSpec
+    size: "list" | "catalog"
+}) {
+    const { specification, size } = props
+    const { id, name, company, services } = specification
+    const theme = useTheme()
+    const height = theme.spacing(31)
+    const imageUrl = useDeviceImage(specification, size)
+    const serviceNames = services
+        ?.map(sc =>
+            humanify(serviceSpecificationFromClassIdentifier(sc)?.shortName)
+        )
+        ?.join(", ")
+    return (
+        <Card>
+            <CardActionArea to={`/devices/${identifierToUrlPath(id)}`}>
+                <CardMediaWithSkeleton
+                    height={height}
+                    src={imageUrl}
+                    title={`photograph of ${specification.name}`}
+                />
+                <CardContent>
+                    <Typography
+                        gutterBottom
+                        variant="subtitle1"
+                        component="div"
+                    >
+                        {name}
+                    </Typography>
+                    <Typography component="div" variant="subtitle2">
+                        {serviceNames || ""}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                        {company}
+                    </Typography>
+                </CardContent>
+            </CardActionArea>
+        </Card>
+    )
 }
-
-const StyledImageList = styled(ImageList)(({ theme }) => ({
-    [`&.${classes.root}`]: {
-        display: "flex",
-        flexWrap: "wrap",
-        justifyContent: "space-around",
-        overflow: "hidden",
-        backgroundColor: theme.palette.background.paper,
-    },
-
-    [`& .${classes.ellipsis}`]: {
-        textOverflow: "ellipsis",
-    },
-
-    [`& .${classes.icon}`]: {
-        color: "rgba(255, 255, 255, 0.54)",
-    },
-}))
 
 export default function DeviceSpecificationList(props: {
     count?: number
@@ -50,10 +66,7 @@ export default function DeviceSpecificationList(props: {
     devices?: jdspec.DeviceSpec[]
 }) {
     const { count, shuffle, requiredServiceClasses, company, devices } = props
-
-    const { mobile, medium } = useMediaQueries()
     const specifications = useDeviceSpecifications()
-    const cols = mobile ? 1 : medium ? 3 : 4
     const specs = useMemo(() => {
         let r = devices || specifications
         if (company) {
@@ -81,6 +94,8 @@ export default function DeviceSpecificationList(props: {
         JSON.stringify(devices?.map(d => d.id)),
         specifications,
     ])
+    const gridBreakpoints = useGridBreakpoints(specs.length)
+    const size = specs?.length < 6 ? "catalog" : "list"
 
     if (!specs.length)
         return (
@@ -88,34 +103,15 @@ export default function DeviceSpecificationList(props: {
         )
 
     return (
-        <StyledImageList className={classes.root} cols={cols}>
-            {specs.map(spec => {
-                const imageUrl = useDeviceImage(spec, "list")
-                return (
-                    <ImageListItem key={spec.id}>
-                        <img src={imageUrl} alt={spec.name} loading="lazy" />
-                        <ImageListItemBar
-                            title={`${spec.name} ${
-                                spec.version ? `v${spec.version}` : ""
-                            }`}
-                            actionIcon={
-                                <>
-                                    <IconButton
-                                        to={`/devices/${identifierToUrlPath(
-                                            spec.id
-                                        )}`}
-                                        aria-label={`info about ${spec.name}`}
-                                        className={classes.icon}
-                                        size="large"
-                                    >
-                                        <InfoIcon style={{ color: "white" }} />
-                                    </IconButton>
-                                </>
-                            }
-                        />
-                    </ImageListItem>
-                )
-            })}
-        </StyledImageList>
+        <Grid container spacing={2}>
+            {specs.map(specification => (
+                <Grid key={specification.id} item {...gridBreakpoints}>
+                    <DeviceSpecificationCard
+                        specification={specification}
+                        size={size}
+                    />
+                </Grid>
+            ))}
+        </Grid>
     )
 }
