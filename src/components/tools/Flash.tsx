@@ -74,18 +74,6 @@ export default function Flash() {
         setTab(newValue)
     }
 
-    // put brains into proxy mode
-    useEffect(() => {
-        const forceProxy = () => {
-            console.debug(`jacdac: force clients to proxy mode`)
-            const pkt = Packet.onlyHeader(ControlCmd.Proxy)
-            pkt.sendAsMultiCommandAsync(bus, SRV_CONTROL)
-        }
-        const unsub = bus.subscribe(DEVICE_ANNOUNCE, forceProxy)
-        forceProxy()
-        return unsub
-    }, [])
-
     return (
         <Box mb={2}>
             {throttled && (
@@ -116,7 +104,7 @@ export default function Flash() {
             <TabPanel value={tab} index={1}>
                 <FirmwareCardGrid />
             </TabPanel>
-            <SafeBootAlert />
+            <SafeBootAlert proxy={true} />
             <ManualFirmwareAlert />
             {Flags.diagnostics && <FlashDiagnostics />}
             <FirmwareLoader />

@@ -1,9 +1,8 @@
-import React, { SVGAttributes, useRef } from "react"
+import React, { CSSProperties, SVGAttributes, useRef } from "react"
 import useWidgetTheme from "./useWidgetTheme"
 import SvgWidget from "./SvgWidget"
 import useThrottledValue from "../hooks/useThrottledValue"
 import { closestPoint, describeArc, svgPointerPoint } from "./svgutils"
-import { CSSProperties } from "@mui/material/styles"
 import PowerButton from "./PowerButton"
 import { Grid, Slider } from "@mui/material"
 
@@ -35,6 +34,7 @@ export default function GaugeWidget(props: {
         toggleOff,
         onChange,
         tabIndex,
+        label,
     } = props
     const { background, active, textProps } = useWidgetTheme(color)
 
@@ -152,6 +152,7 @@ export default function GaugeWidget(props: {
             {clickeable && (
                 <Grid item>
                     <Slider
+                        aria-label={label}
                         disabled={off}
                         color={color}
                         min={min}
