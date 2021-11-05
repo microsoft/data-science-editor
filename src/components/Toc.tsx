@@ -210,7 +210,12 @@ export default function Toc(props: { pagePath: string }) {
 
         return (
             <>
-                <ListItem button selected={selected} key={"tocitem" + path}>
+                <ListItem
+                    component="li"
+                    selected={selected}
+                    key={"tocitem" + path}
+                    sx={{ ml: level }}
+                >
                     <Link
                         style={{ color: theme.palette.text.primary }}
                         onClick={handleClick}
@@ -228,17 +233,14 @@ export default function Toc(props: { pagePath: string }) {
                         />
                     </Link>
                 </ListItem>
-                {showSub && (
-                    <Box ml={level > 0 ? 1 : 0}>
-                        {children?.map(child => (
-                            <TocListItem
-                                key={child.path}
-                                entry={child}
-                                level={level + 1}
-                            />
-                        ))}
-                    </Box>
-                )}
+                {showSub &&
+                    children?.map(child => (
+                        <TocListItem
+                            key={child.path}
+                            entry={child}
+                            level={level + 1}
+                        />
+                    ))}
             </>
         )
     }
