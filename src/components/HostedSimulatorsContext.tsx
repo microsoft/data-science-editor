@@ -23,6 +23,7 @@ import {
 import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
 import Suspense from "./ui/Suspense"
 import { UIFlags } from "../jacdac/providerbus"
+import Flags from "../../jacdac-ts/src/jdom/flags"
 
 const PREFIX = "HostedSimulatorsContext"
 
@@ -42,7 +43,6 @@ const Root = styled("div")(() => ({
     [`& .${classes.card}`]: {
         "& .hostedcontainer": {
             position: "relative",
-            width: "20rem",
         },
         "& iframe": {
             border: "none",
@@ -101,6 +101,12 @@ export function hostedSimulatorDefinitions(): HostedSimulatorDefinition[] {
             url: "https://microsoft.github.io/pxt-jacdac/",
             width: "20rem",
             height: "12rem",
+        },
+        Flags.diagnostics && {
+            name: "MakeCode Arcade multitool",
+            url: "https://microsoft.github.io/pxt-jacdac/?tool=multitool",
+            width: "25vw",
+            height: "28.75vw",
         },
         UIFlags.localhost && {
             name: "Azure IoT Uploader (localhost)",
@@ -168,13 +174,18 @@ function HostedSimulatorCard(props: { sim: HostedSimulator }) {
                             }
                         />
                         <CardMedia>
-                            <div className="hostedcontainer">
+                            <div className="hostedcontainer" style={{ width }}>
                                 <iframe
                                     id={sim.id}
                                     ref={iframeRef}
                                     title={name}
                                     src={`${url}#${id}`}
-                                    style={{ width, height }}
+                                    style={{
+                                        width,
+                                        height,
+                                        margin: 0,
+                                        padding: 0,
+                                    }}
                                 />
                             </div>
                         </CardMedia>
