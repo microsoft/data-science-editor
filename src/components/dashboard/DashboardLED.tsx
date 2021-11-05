@@ -31,9 +31,9 @@ export default function DashboardLED(props: DashboardServiceProps) {
         props
     )
 
-    const r = ((((rgb >> 16) & 0xff) << 8) / brightness) & 0xff
-    const g = ((((rgb >> 8) & 0xff) << 8) / brightness) & 0xff
-    const b = ((((rgb >> 0) & 0xff) << 8) / brightness) & 0xff
+    const r = ((((rgb >> 16) & 0xff) * brightness) >> 8) & 0xff
+    const g = ((((rgb >> 8) & 0xff) * brightness) >> 8) & 0xff
+    const b = ((((rgb >> 0) & 0xff) * brightness) >> 8) & 0xff
 
     // send animate command
     const animate = async () => {

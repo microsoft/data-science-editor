@@ -99,7 +99,7 @@ export default function LEDWidget(props: {
         ? [nmToRGB(waveLength), 0x000000]
         : [0xff0000, 0xff00ff, 0x0000ff, 0x00ff00, 0xffff00, 0x000000]
     const percentValueFormat = (newValue: number) =>
-        newValue == 0 ? "100%" : `${((newValue / 0xff) * 100) | 0}%`
+        `${((newValue / 0xff) * 100) | 0}%`
 
     const opacity = !r && !b && !g ? 0 : 1
     const fill = `rgb(${r}, ${g}, ${b})`
