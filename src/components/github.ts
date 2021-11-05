@@ -231,9 +231,7 @@ export function useLatestReleaseAsset(url: string) {
         return {
             name,
             version: tag_name,
-            assertUrl: `https://github.com/${normalizeSlug(
-                slug
-            )}/releases/download/${tag_name}/${filename}`,
+            assertUrl: `https://github.com/${slug}/releases/download/${tag_name}/${filename}`,
         }
     } else return {}
 }

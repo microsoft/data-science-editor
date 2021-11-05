@@ -1,5 +1,5 @@
 import { ControlReg } from "../../../jacdac-ts/src/jdom/constants"
-import { CardHeader, Chip, Typography } from "@mui/material"
+import { CardHeader, Chip, Grid, Typography } from "@mui/material"
 // tslint:disable-next-line: no-submodule-imports
 import { Link } from "gatsby-theme-material-ui"
 import JDDevice from "../../../jacdac-ts/src/jdom/device"
@@ -97,25 +97,33 @@ export default function DeviceCardHeader(props: {
                     </Link>
                 }
                 subheader={
-                    <>
-                        <Typography variant="caption" gutterBottom>
-                            {[
-                                specification?.name,
-                                showDeviceId && device.deviceId,
-                            ]
-                                .filter(s => !!s)
-                                .join(", ")}
-                        </Typography>
+                    <Grid container spacing={1}>
+                        <Grid item>
+                            <Typography variant="caption" gutterBottom>
+                                {[
+                                    specification?.name,
+                                    showDeviceId && device.deviceId,
+                                ]
+                                    .filter(s => !!s)
+                                    .join(", ")}
+                            </Typography>
+                        </Grid>
                         {showFirmware && Flags.diagnostics && (
-                            <DeviceProductIdentifierChip device={device} />
+                            <Grid item>
+                                <DeviceProductIdentifierChip device={device} />
+                            </Grid>
                         )}
                         {showFirmware && (
-                            <DeviceFirmwareVersionChip device={device} />
+                            <Grid item>
+                                <DeviceFirmwareVersionChip device={device} />
+                            </Grid>
                         )}
                         {showTemperature && (
-                            <DeviceTemperatureChip device={device} />
+                            <Grid item>
+                                <DeviceTemperatureChip device={device} />
+                            </Grid>
                         )}
-                    </>
+                    </Grid>
                 }
             />
         </>

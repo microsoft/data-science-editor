@@ -49,7 +49,9 @@ function DragAndDropUpdateButton(props: {
             <Button variant="outlined" onClick={handleOpen}>
                 {name}
                 {version && (
-                    <Typography variant="caption">({version})</Typography>
+                    <Typography sx={{ ml: 1 }} variant="caption">
+                        ({version})
+                    </Typography>
                 )}
             </Button>
             <Dialog open={open}>
