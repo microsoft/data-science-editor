@@ -20,7 +20,6 @@ import {
     serviceSpecificationFromClassIdentifier,
 } from "../../../jacdac-ts/src/jdom/spec"
 import PaperBox from "../../components/ui/PaperBox"
-import { uniqueFirmwareId } from "../../components/RandomGenerator"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import AddIcon from "@mui/icons-material/Add"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
@@ -49,6 +48,7 @@ import useGridBreakpoints from "../../components/useGridBreakpoints"
 import Alert from "../../components/ui/Alert"
 import { GithubPullRequestFiles } from "../../components/buttons/GithubPullRequestButton"
 import useDeviceSpecifications from "../../components/devices/useDeviceSpecifications"
+import useDeviceCatalog from "../../components/devices/useDeviceCatalog"
 
 const GithubPullRequestButton = lazy(
     () => import("../../components/buttons/GithubPullRequestButton")
@@ -126,6 +126,7 @@ export default function DeviceRegistration() {
     const [firmwaresAnchorEl, setFirmwaresAnchorEl] =
         React.useState<null | HTMLElement>(null)
     const [imageDataURI, setImageDataURI] = useState<string>(undefined)
+    const deviceCatalog = useDeviceCatalog()
     const nameId = useId()
     const firmwareMenuId = useId()
     const repoId = useId()
@@ -219,11 +220,12 @@ export default function DeviceRegistration() {
         event: React.MouseEvent<HTMLButtonElement>
     ) => {
         setFirmwaresAnchorEl(event.currentTarget)
-        // device.firmwares.push(parseInt(uniqueFirmwareId(), 16))
         updateDevice()
     }
     const handleProductIdentifierAddRandomClick = () => {
-        device.productIdentifiers.push(parseInt(uniqueFirmwareId(), 16))
+        device.productIdentifiers.push(
+            parseInt(deviceCatalog.uniqueFirmwareId(), 16)
+        )
         updateDevice()
     }
     const handleFirmwareAddClose = (blob: FirmwareBlob) => () => {

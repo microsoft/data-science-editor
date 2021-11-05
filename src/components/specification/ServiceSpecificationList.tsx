@@ -1,9 +1,6 @@
 import { Chip, Grid, List, ListItem, ListItemText } from "@mui/material"
 import React, { useMemo } from "react"
-import {
-    deviceSpecificationsForService,
-    isInfrastructure,
-} from "../../../jacdac-ts/src/jdom/spec"
+import { isInfrastructure } from "../../../jacdac-ts/src/jdom/spec"
 import { arrayShuffle } from "../../../jacdac-ts/src/jdom/utils"
 import GridHeader from "../ui/GridHeader"
 import { Link } from "gatsby-theme-material-ui"
@@ -19,13 +16,19 @@ import JacdacIcon from "../icons/JacdacIcon"
 import Markdown from "../ui/Markdown"
 import { resolveMakecodeServiceFromClassIdentifier } from "../makecode/services"
 import { isMixinService } from "../../../jacdac-ts/jacdac-spec/spectool/jdutils"
+import useDeviceCatalog from "../devices/useDeviceCatalog"
+import useChange from "../../jacdac/useChange"
 
 function ServiceSpecificatinListItem(props: { service: jdspec.ServiceSpec }) {
     const { service } = props
     const { shortId, classIdentifier, name, notes, tags } = service
     const makecode = resolveMakecodeServiceFromClassIdentifier(classIdentifier)
     const simulator = serviceProviderDefinitionFromServiceClass(classIdentifier)
-    const device = !!deviceSpecificationsForService(classIdentifier)?.length
+    const deviceCatalog = useDeviceCatalog()
+    const deviceSpecifications = useChange(deviceCatalog, _ =>
+        _.specificationsForService(classIdentifier)
+    )
+    const device = !!deviceSpecifications?.length
     const mixin = isMixinService(classIdentifier)
 
     return (

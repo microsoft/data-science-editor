@@ -70,7 +70,6 @@ window.addEventListener(`unhandledrejection`, event => {
 })
 
 // inject React Axe into DOM tree at development time
-/* blocked by crypto import issue
 export const onInitialClientRender = () => {
     const activeEnv =
         process.env.GATSBY_ACTIVE_ENV || process.env.NODE_ENV || "development"
@@ -82,4 +81,3 @@ export const onInitialClientRender = () => {
         })
     }
 }
-*/

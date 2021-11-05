@@ -4,11 +4,7 @@ import ServiceSpecificationList from "./specification/ServiceSpecificationList"
 import { useDebounce } from "use-debounce"
 import SearchIcon from "@mui/icons-material/Search"
 import ChipList from "./ui/ChipList"
-import {
-    deviceSpecificationsForService,
-    isSensor,
-    serviceSpecifications,
-} from "../../jacdac-ts/src/jdom/spec"
+import { isSensor, serviceSpecifications } from "../../jacdac-ts/src/jdom/spec"
 import { arrayConcatMany, unique } from "../../jacdac-ts/src/jdom/utils"
 import MakeCodeIcon from "./icons/MakeCodeIcon"
 import KindIcon from "./KindIcon"
@@ -18,6 +14,7 @@ import SpeedIcon from "@mui/icons-material/Speed"
 import { VIRTUAL_DEVICE_NODE_NAME } from "../../jacdac-ts/src/jdom/constants"
 import { useId } from "react-use-id-hook"
 import { resolveMakecodeServiceFromClassIdentifier } from "./makecode/services"
+import useDeviceCatalog from "./devices/useDeviceCatalog"
 
 interface ServiceFilter {
     query: string
@@ -44,7 +41,7 @@ function FilterChip(props: {
             aria-label={descr}
             title={descr}
             icon={icon}
-            variant={value ? "default" : "outlined"}
+            variant={value ? "filled" : "outlined"}
             color={value ? "secondary" : undefined}
             onClick={onClick}
         />
@@ -56,6 +53,7 @@ export default function ServiceCatalog() {
         query: "",
     })
     const [deboundedFilter] = useDebounce(filter, 200)
+    const deviceCatalog = useDeviceCatalog()
     const searchId = useId()
     const { query, tag, makeCode, simulators, devices, sensors } = filter
     const allTags = useMemo(
@@ -94,8 +92,9 @@ export default function ServiceCatalog() {
         if (devices)
             r = r.filter(
                 srv =>
-                    !!deviceSpecificationsForService(srv.classIdentifier)
-                        ?.length
+                    !!deviceCatalog.specificationsForService(
+                        srv.classIdentifier
+                    )?.length
             )
         if (sensors) r = r.filter(srv => isSensor(srv))
         return r

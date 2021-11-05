@@ -370,10 +370,11 @@ exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
     //console.log({ stage })
     const plugins = [
         new IgnorePlugin({
-            resourceRegExp: /^canvas|@axe-core\/react$/,
+            resourceRegExp: /^canvas$/,
         }),
     ]
     const fallback = {
+        crypto: false,
         util: require.resolve("util/"),
         assert: require.resolve("assert/"),
         fs: false,
