@@ -15,10 +15,18 @@ export default function ConnectButton(props: {
     transparent?: boolean
     specification?: jdspec.DeviceSpec
     transport: Transport
+    typeInTitle?: boolean
     onClick?: () => void
 }) {
-    const { full, className, transparent, transport, onClick, specification } =
-        props
+    const {
+        full,
+        className,
+        transparent,
+        transport,
+        onClick,
+        specification,
+        typeInTitle,
+    } = props
     const { type } = transport
     const connectionState = useChange(transport, t => t.connectionState)
     const showDisconnect =
@@ -49,7 +57,13 @@ export default function ConnectButton(props: {
     const label = showDisconnect
         ? `disconnect from ${type}`
         : `connect to ${specification?.name || type}`
-    const title = showDisconnect ? `disconnect` : `connect`
+    const title = showDisconnect
+        ? typeInTitle
+            ? `disconnect ${type}`
+            : `disconnect`
+        : typeInTitle
+        ? `connect ${type}`
+        : `connect`
     const trackName = `transport.connect.${type}`
     const trackProperties = {
         transport: type,

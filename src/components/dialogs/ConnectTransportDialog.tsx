@@ -5,6 +5,7 @@ import {
     Dialog,
     DialogContent,
     Grid,
+    useTheme,
 } from "@mui/material"
 import React, { useContext, useMemo } from "react"
 import { useId } from "react-use-id-hook"
@@ -15,31 +16,58 @@ import CardMediaWithSkeleton from "../ui/CardMediaWithSkeleton"
 import useDeviceSpecifications from "../devices/useDeviceSpecifications"
 import Transport from "../../../jacdac-ts/src/jdom/transport/transport"
 import DialogTitleWithClose from "../ui/DialogTitleWithClose"
+import GridHeader from "../ui/GridHeader"
+import Flags from "../../../jacdac-ts/src/jdom/flags"
 
-function ConnectDeviceCard(props: {
-    device: jdspec.DeviceSpec
-    transport: Transport
-    onClose: () => void
-}) {
-    const { device, transport, onClose } = props
+function ConnectDeviceCard(props: { device: jdspec.DeviceSpec }) {
+    const { device } = props
     const image = useDeviceImage(device, "preview")
+    const theme = useTheme()
     return (
         <Card>
             <CardMediaWithSkeleton
                 title={"photograph of the device"}
                 image={image}
+                height={theme.spacing(12)}
             />
             <CardHeader subheader={device.name} />
-            <CardActions>
-                <ConnectButton
-                    specification={device}
-                    transport={transport}
-                    full={true}
-                    transparent={true}
-                    onClick={onClose}
-                />
-            </CardActions>
         </Card>
+    )
+}
+
+function ConnectTransport(props: {
+    transport: Transport
+    onClose: () => void
+}) {
+    const { transport, onClose } = props
+    const specifications = useDeviceSpecifications()
+    const devices = useMemo(
+        () =>
+            specifications.filter(
+                device => device.transport?.type === transport.type
+            ),
+        [specifications]
+    )
+    if (!devices?.length && !Flags.diagnostics) return null
+    return (
+        <>
+            <GridHeader
+                action={
+                    <ConnectButton
+                        key={transport.type}
+                        transport={transport}
+                        onClick={onClose}
+                        full={true}
+                        typeInTitle={true}
+                    />
+                }
+            />
+            {devices.map(device => (
+                <Grid item xs={12} sm={6} lg={4} key={device.id}>
+                    <ConnectDeviceCard device={device} />
+                </Grid>
+            ))}
+        </>
     )
 }
 
@@ -52,19 +80,6 @@ export default function ConnectTransportDialog(props: {
     const { open, onClose } = props
     const dialogId = useId()
     const labelId = useId()
-    const specifications = useDeviceSpecifications()
-    const devices = useMemo(
-        () =>
-            specifications
-                .map(device => ({
-                    device,
-                    transport: transports.find(
-                        t => t.type === device.transport?.type
-                    ),
-                }))
-                .filter(({ transport }) => !!transport),
-        [specifications]
-    )
     return (
         <Dialog
             id={dialogId}
@@ -75,26 +90,15 @@ export default function ConnectTransportDialog(props: {
         >
             <DialogTitleWithClose onClose={onClose} id={labelId}>
                 Connect to a device
-                {transports.map(transport => (
-                    <ConnectButton
-                        key={transport.type}
-                        transport={transport}
-                        full={false}
-                        transparent={true}
-                        onClick={onClose}
-                    />
-                ))}
             </DialogTitleWithClose>
             <DialogContent>
                 <Grid container spacing={2}>
-                    {devices.map(({ device, transport }) => (
-                        <Grid item xs={12} sm={6} key={device.id}>
-                            <ConnectDeviceCard
-                                device={device}
-                                transport={transport}
-                                onClose={onClose}
-                            />
-                        </Grid>
+                    {transports.map(transport => (
+                        <ConnectTransport
+                            key={transport.type}
+                            transport={transport}
+                            onClose={onClose}
+                        />
                     ))}
                 </Grid>
             </DialogContent>
