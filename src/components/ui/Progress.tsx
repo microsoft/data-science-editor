@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { start, done } from "nprogress"
+import useProgress from "./useProgress"
 
 const PROGRESS_DELAY = 200
 
@@ -8,6 +8,7 @@ export default function Progress(props: {
     children: JSX.Element
 }) {
     const { delay, children } = props
+    const { start, done } = useProgress()
     useEffect(() => {
         let id = setTimeout(() => {
             id = undefined

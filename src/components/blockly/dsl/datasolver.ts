@@ -1,7 +1,7 @@
 import { CHANGE } from "../../../../jacdac-ts/src/jdom/constants"
 import { identityTransformData, resolveBlockDefinition } from "../toolbox"
 import { BlockWithServices, resolveBlockServices } from "../WorkspaceContext"
-import { start, done } from "nprogress"
+//import nprogress from "accessible-nprogress"
 
 const PROGRESS_DELAY = 200
 
@@ -26,7 +26,7 @@ export function registerDataSolver(block: BlockWithServices) {
             else {
                 let progressid = setTimeout(() => {
                     progressid = undefined
-                    start()
+                    // nprogress.start()
                 }, PROGRESS_DELAY)
                 try {
                     //const start = performance.now()
@@ -44,7 +44,9 @@ export function registerDataSolver(block: BlockWithServices) {
                     //)
                 } finally {
                     if (progressid) clearTimeout(progressid)
-                    else done()
+                    else {
+                        //nprogress.done()
+                    }
                 }
             }
 

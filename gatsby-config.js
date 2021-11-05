@@ -180,13 +180,6 @@ module.exports = {
                 }, // filter: (node, getNode) => node.frontmatter.tags !== "exempt",
             },
         },
-        {
-            resolve: `gatsby-plugin-nprogress`,
-            options: {
-                // Disable the loading spinner.
-                showSpinner: false,
-            },
-        },
         /*    
     {
       resolve: 'gatsby-plugin-flexsearch',
