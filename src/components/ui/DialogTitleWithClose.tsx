@@ -1,7 +1,6 @@
-import { DialogTitle, DialogTitleProps } from "@mui/material"
+import { DialogTitle, DialogTitleProps, IconButton } from "@mui/material"
 import React, { ReactNode } from "react"
 import CloseIcon from "@mui/icons-material/Close"
-import IconButtonWithTooltip from "./IconButtonWithTooltip"
 
 export default function DialogTitleWithClose(
     props: { onClose: () => void; children: ReactNode } & DialogTitleProps
@@ -10,7 +9,8 @@ export default function DialogTitleWithClose(
     return (
         <DialogTitle {...others}>
             {children}
-            <IconButtonWithTooltip
+            <IconButton
+                aria-label="close"
                 title="close"
                 onClick={onClose}
                 sx={{
@@ -21,7 +21,7 @@ export default function DialogTitleWithClose(
                 }}
             >
                 <CloseIcon />
-            </IconButtonWithTooltip>
+            </IconButton>
         </DialogTitle>
     )
 }
