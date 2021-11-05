@@ -235,7 +235,7 @@ function ConnectDialog(props: {
         >
             <DialogContent>
                 <DialogTitleWithClose onClose={handleClose}>
-                    Connect to Wifi
+                    Configure Wifi
                 </DialogTitleWithClose>
                 <Grid container spacing={1}>
                     {ssids.map(ssid => (
@@ -272,7 +272,7 @@ function ConnectDialog(props: {
 export default function DashboardWifi(props: DashboardServiceProps) {
     const { service } = props
     const [open, setOpen] = useState(false)
-    const [connectionFailed, setConnectionFailed] = useState(0)
+    const [connectionFailed, setConnectionFailed] = useState(false)
 
     const server = useServiceServer<WifiServer>(service)
     const color = server ? "primary" : "secondary"
@@ -289,17 +289,22 @@ export default function DashboardWifi(props: DashboardServiceProps) {
     const connectionFailedEvent = useEvent(service, WifiEvent.ConnectionFailed)
     const connected = !!ip?.length
 
+    const connect = async () => {
+        await enabledRegister.sendSetBoolAsync(true)
+        await service.sendCmdAsync(WifiCmd.Reconnect)
+    }
+
     const handleConnect = async () => {
-        setConnectionFailed(0)
         if (connected) await enabledRegister.sendSetBoolAsync(false)
         else {
-            await enabledRegister.sendSetBoolAsync(true)
-            await service.sendCmdAsync(WifiCmd.Reconnect)
+            setConnectionFailed(false)
+            await connect()
         }
     }
     const handleConfigure = () => {
-        setConnectionFailed(0)
+        setConnectionFailed(false)
         setOpen(true)
+        connect()
     }
 
     // force register refreshs on various events
@@ -318,7 +323,7 @@ export default function DashboardWifi(props: DashboardServiceProps) {
     useEffect(
         () =>
             connectionFailedEvent?.subscribe(EVENT, () =>
-                setConnectionFailed(f => f + 1)
+                setConnectionFailed(true)
             ),
         [connectionFailedEvent]
     )
@@ -376,8 +381,8 @@ export default function DashboardWifi(props: DashboardServiceProps) {
                                 <Badge
                                     color="error"
                                     overlap="circular"
-                                    badgeContent=" "
-                                    invisible={connectionFailed > 0}
+                                    variant="dot"
+                                    invisible={!connectionFailed}
                                 >
                                     <SettingsIcon />
                                 </Badge>
