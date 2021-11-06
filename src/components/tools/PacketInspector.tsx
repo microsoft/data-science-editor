@@ -49,7 +49,7 @@ export default function PacketInspector() {
             </Alert>
         )
 
-    const { decoded } = packet
+    const { decoded, isNack } = packet
     const { info, error } = decoded || {}
     const name = info?.name || packet.friendlyCommandName
     const ack = packet.meta[META_ACK] as Packet
@@ -70,6 +70,11 @@ export default function PacketInspector() {
             </h2>
             {packet.sender && <Chip label={`sender: ${packet.sender}`} />}
             {error && <Alert severity="error">{error}</Alert>}
+            {isNack && (
+                <Alert severity="info">
+                    Nack: register is not supported by the device.
+                </Alert>
+            )}
             <PaperBox padding={0}>
                 <pre>
                     <code>

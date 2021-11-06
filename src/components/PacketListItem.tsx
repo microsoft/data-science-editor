@@ -48,6 +48,7 @@ export default function PacketListItem(props: {
 
     const name = info?.name || packet.friendlyCommandName
     const primary =
+        (packet.isNack && `nack ${name}`) ||
         (packet.isCRCAck && `crc ack ${name}`) ||
         (packet.isAnnounce && `announce from ${name}`) ||
         (packet.isRegisterGet && `get ${name}`) ||
