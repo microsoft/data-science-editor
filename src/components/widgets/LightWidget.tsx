@@ -215,7 +215,6 @@ function LightStripWidget(props: {
                                     strokeWidth={1}
                                     aria-label={`pixel ${i}`}
                                     onPointerDown={handleClick}
-                                    onPointerEnter={handleClick}
                                     onKeyDown={fireClick}
                                 >
                                     <title>pixel {i}</title>
@@ -283,7 +282,6 @@ function LightMatrixWidget(props: {
                         strokeWidth={ps}
                         aria-label={label}
                         onPointerDown={handleClick}
-                        onPointerEnter={handleClick}
                         onKeyDown={fireClick}
                     >
                         <title>{label}</title>

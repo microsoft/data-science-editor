@@ -1,15 +1,14 @@
-import { Grid } from "@mui/material"
+import { Grid, IconButton, useTheme } from "@mui/material"
 import React from "react"
 import { rgbToHtmlColor } from "../../../jacdac-ts/src/jdom/utils"
-import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked"
-import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked"
-import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
+import CircleIcon from "@mui/icons-material/Circle"
 
 export default function ColorButtons(props: {
     colors?: { name: string; value: number }[]
     color: number
     onColorChange?: (newLedColor: number) => void
 }) {
+    const theme = useTheme()
     const DEFAULT_COLORS = [
         {
             name: "red",
@@ -28,22 +27,28 @@ export default function ColorButtons(props: {
     const handleSetColor = (col: number) => () => onColorChange(col)
     return (
         <Grid container spacing={1}>
-            {colors.map(({ name, value }) => (
-                <Grid key={name} item xs={colors.length === 2 ? 4 : 2}>
-                    <IconButtonWithTooltip
-                        style={{ color: rgbToHtmlColor(value) }}
-                        onClick={handleSetColor(value)}
-                        size="large"
-                        title={name}
-                    >
-                        {value !== color ? (
-                            <RadioButtonUncheckedIcon />
-                        ) : (
-                            <RadioButtonCheckedIcon />
-                        )}
-                    </IconButtonWithTooltip>
-                </Grid>
-            ))}
+            {colors.map(({ name, value }) => {
+                const selected = value === color
+                const c = rgbToHtmlColor(value)
+                const title = value === color ? `${name} (selected)` : name
+                return (
+                    <Grid key={name} item xs={colors.length === 2 ? 4 : 2}>
+                        <IconButton
+                            style={{ color: selected ? "#fff" : c }}
+                            onClick={handleSetColor(value)}
+                            aria-label={title}
+                            title={title}
+                            sx={{
+                                backgroundColor: selected
+                                    ? c
+                                    : theme.palette.grey[300],
+                            }}
+                        >
+                            <CircleIcon />
+                        </IconButton>
+                    </Grid>
+                )
+            })}
         </Grid>
     )
 }
