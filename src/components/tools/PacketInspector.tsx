@@ -98,7 +98,7 @@ export default function PacketInspector() {
                 showFlags={true}
                 showCommands={true}
             />
-            {data && (
+            {!!data?.length && (
                 <>
                     <h3>Data</h3>
                     <PacketDataLayout
