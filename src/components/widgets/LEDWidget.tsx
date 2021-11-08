@@ -95,9 +95,6 @@ export default function LEDWidget(props: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleBrightnessChange: any = (event: unknown, newValue: number) =>
         onBrightnessChange(newValue)
-    const buttonColors = waveLength
-        ? [nmToRGB(waveLength), 0x000000]
-        : [0xff0000, 0xff00ff, 0x0000ff, 0x00ff00, 0xffff00, 0x000000]
     const percentValueFormat = (newValue: number) =>
         `${((newValue / 0xff) * 100) | 0}%`
 
@@ -196,7 +193,6 @@ export default function LEDWidget(props: {
             {onLedColorChange && (
                 <Grid item xs={12}>
                     <ColorButtons
-                        colors={buttonColors}
                         color={ledColor}
                         onColorChange={onLedColorChange}
                     />
