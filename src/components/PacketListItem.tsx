@@ -4,7 +4,11 @@ import { ListItem, ListItemIcon, ListItemText, Box } from "@mui/material"
 import Packet from "../../jacdac-ts/src/jdom/packet"
 import PacketBadge from "./PacketBadge"
 import AppContext, { DrawerType } from "./AppContext"
-import { META_PIPE, SRV_LOGGER } from "../../jacdac-ts/src/jdom/constants"
+import {
+    META_NOT_IMPLEMENTED,
+    META_PIPE,
+    SRV_LOGGER,
+} from "../../jacdac-ts/src/jdom/constants"
 import { prettyDuration } from "../../jacdac-ts/src/jdom/pretty"
 import { ellipseJoin } from "../../jacdac-ts/src/jdom/utils"
 import { jdunpack } from "../../jacdac-ts/src/jdom/pack"
@@ -45,10 +49,10 @@ export default function PacketListItem(props: {
     const selected = packet === selectedPacket
     const logMessage = packet.serviceClass === SRV_LOGGER && packet.isReport
     const pipePackets = packet.meta[META_PIPE] as Packet[]
+    const notImplemented = !!packet.meta[META_NOT_IMPLEMENTED]
 
     const name = info?.name || packet.friendlyCommandName
     const primary =
-        (packet.isNack && `nack ${name}`) ||
         (packet.isCRCAck && `crc ack ${name}`) ||
         (packet.isAnnounce && `announce from ${name}`) ||
         (packet.isRegisterGet && `get ${name}`) ||
@@ -67,7 +71,7 @@ export default function PacketListItem(props: {
         showTime ? `${prettyDuration(packet.timestamp)}: ` : ""
     }${packet.isCommand ? "to" : "from"} ${packet.friendlyDeviceName}/${
         packet.friendlyServiceName
-    }`
+    }${notImplemented ? `, not implemented` : ""}`
 
     return (
         <StyledListItem

@@ -180,7 +180,7 @@ export function ServiceMembersTreeItems(
     const registers = packets
         ?.filter(pkt => !pkt.client && isRegister(pkt))
         .map(info => service.register(info.identifier))
-        .filter(reg => !reg.nack)
+        .filter(reg => !reg.notImplemented)
         .filter(reg => !registerFilter || registerFilter(reg))
         .sort((l, r) => l.name.localeCompare(r.name))
     const events = packets

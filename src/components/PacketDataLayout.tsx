@@ -41,7 +41,7 @@ export default function PacketDataLayout(props: {
     return (
         <>
             {error && (
-                <Alert severity="error">
+                <Alert sx={{ mb: 2 }} severity="error">
                     <AlertTitle>Invalid data payload</AlertTitle>
                     {error}
                 </Alert>
