@@ -27,6 +27,7 @@ export default function NoServiceAlert() {
     return (
         <Button
             variant="outlined"
+            color="inherit"
             startIcon={<AddIcon />}
             onClick={handleStartSimulator}
         >

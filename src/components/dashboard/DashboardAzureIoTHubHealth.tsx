@@ -23,7 +23,6 @@ import {
 import { useId } from "react-use-id-hook"
 import SettingsIcon from "@mui/icons-material/Settings"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
-import { Button } from "gatsby-material-ui-components"
 import CmdButton from "../CmdButton"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import ChipList from "../ui/ChipList"
