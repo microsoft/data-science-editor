@@ -25,14 +25,16 @@ import { Link } from "gatsby-material-ui-components"
 import DialogTitleWithClose from "../ui/DialogTitleWithClose"
 import { useLatestReleaseAsset } from "../github"
 import useBus from "../../jacdac/useBus"
+import { semverCmp } from "../semver"
 
 function DragAndDropUpdateButton(props: {
     firmwareVersion: string
+    productIdentifier: number
     specification: jdspec.DeviceSpec
-    info: { name: string; url: string }
+    info: { name: string; url: string; productIdentifier?: number }
 }) {
     const bus = useBus()
-    const { specification, info } = props
+    const { firmwareVersion, specification, info, productIdentifier } = props
     const { bootloader } = specification
     const { driveName, sequence, ledAnimation } = bootloader
     const { name, url } = info
@@ -47,16 +49,29 @@ function DragAndDropUpdateButton(props: {
     }
     const handleClose = () => setOpen(false)
     const { version, assertUrl } = useLatestReleaseAsset(url)
+    const current =
+        !!productIdentifier && productIdentifier === info.productIdentifier
+    const hasUpdate =
+        current &&
+        version &&
+        firmwareVersion &&
+        semverCmp(firmwareVersion, version) > 0
 
     // device dissapears after reset
     useEffect(() => {
-        bus.pushDeviceFrozen()
-        return bus.popDeviceFrozen()
-    }, [])
+        if (open) {
+            bus.pushDeviceFrozen()
+            return () => bus.popDeviceFrozen()
+        }
+    }, [open])
 
     return (
         <>
-            <Button variant="outlined" onClick={handleOpen}>
+            <Button
+                variant={hasUpdate ? "contained" : "outlined"}
+                color={current ? "primary" : "inherit"}
+                onClick={handleOpen}
+            >
                 {name}
                 {version && (
                     <Typography sx={{ ml: 1 }} variant="caption">
@@ -70,7 +85,7 @@ function DragAndDropUpdateButton(props: {
                 </DialogTitleWithClose>
                 <DialogContent>
                     <DialogContentText>
-                        <Typography>
+                        <Typography component="div">
                             Follow these instruction to upgrade your{" "}
                             {specification.name} with <b>{name}</b>.
                         </Typography>
@@ -181,6 +196,7 @@ export function FlashDeviceButton(props: {
                     <Grid item key={fw.name}>
                         <DragAndDropUpdateButton
                             firmwareVersion={firmwareInfo?.version}
+                            productIdentifier={firmwareInfo?.productIdentifier}
                             specification={specification}
                             info={fw}
                         />

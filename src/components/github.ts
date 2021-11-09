@@ -221,11 +221,12 @@ export function useLatestRelease(slug: string) {
 
 export function useLatestReleaseAsset(url: string) {
     const [, slug, filename] =
-        /^https:\/\/github.com\/(.+)\/releases\/download\/.+\/(.+)$/i.exec(
+        /^https:\/\/github.com\/(.+)\/releases\/latest\/download\/(.+)$/i.exec(
             url
         ) || []
+    //console.log(`asset slug`, { url, slug })
+    if (!slug) return { status: 404 }
     const { status, response } = useLatestRelease(slug)
-    //console.log({ url, slug, filename, status, response })
     if (status === 200 && response) {
         const { tag_name, name } = response
         return {
