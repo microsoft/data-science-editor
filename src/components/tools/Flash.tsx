@@ -7,7 +7,7 @@ import {
     Tab,
     Tabs,
 } from "@mui/material"
-import React, { Fragment, useContext, useEffect, useState } from "react"
+import React, { Fragment, useContext, useState } from "react"
 import TabPanel from "../ui/TabPanel"
 import ConnectAlert from "../alert/ConnectAlert"
 import FirmwareCardGrid from "../firmware/FirmwareCardGrid"
@@ -20,13 +20,7 @@ import useFirmwareBlobs from "../firmware/useFirmwareBlobs"
 import GridHeader from "../ui/GridHeader"
 import { groupBy } from "../../../jacdac-ts/src/jdom/utils"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
-import {
-    ControlCmd,
-    DEVICE_ANNOUNCE,
-    FLASH_MAX_DEVICES,
-    SRV_CONTROL,
-} from "../../../jacdac-ts/src/jdom/constants"
-import Packet from "../../../jacdac-ts/src/jdom/packet"
+import { FLASH_MAX_DEVICES } from "../../../jacdac-ts/src/jdom/constants"
 import useChange from "../../jacdac/useChange"
 import Alert from "../ui/Alert"
 import { AlertTitle } from "@mui/material"
