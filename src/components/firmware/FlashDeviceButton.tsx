@@ -7,7 +7,7 @@ import {
     Grid,
 } from "@mui/material"
 import { Alert } from "@mui/material"
-import React, { useContext, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import JDDevice from "../../../jacdac-ts/src/jdom/device"
 import {
     flashFirmwareBlob,
@@ -24,13 +24,17 @@ import useDeviceSpecification from "../../jacdac/useDeviceSpecification"
 import { Link } from "gatsby-material-ui-components"
 import DialogTitleWithClose from "../ui/DialogTitleWithClose"
 import { useLatestReleaseAsset } from "../github"
+import useBus from "../../jacdac/useBus"
 
 function DragAndDropUpdateButton(props: {
     firmwareVersion: string
     specification: jdspec.DeviceSpec
     info: { name: string; url: string }
 }) {
+    const bus = useBus()
     const { specification, info } = props
+    const { bootloader } = specification
+    const { driveName, sequence, ledAnimation } = bootloader
     const { name, url } = info
     const [open, setOpen] = useState(false)
     const { trackEvent } = useAnalytics()
@@ -43,6 +47,12 @@ function DragAndDropUpdateButton(props: {
     }
     const handleClose = () => setOpen(false)
     const { version, assertUrl } = useLatestReleaseAsset(url)
+
+    // device dissapears after reset
+    useEffect(() => {
+        bus.pushDeviceFrozen()
+        return bus.popDeviceFrozen()
+    }, [])
 
     return (
         <>
@@ -60,21 +70,37 @@ function DragAndDropUpdateButton(props: {
                 </DialogTitleWithClose>
                 <DialogContent>
                     <DialogContentText>
-                        <p>
+                        <Typography>
                             Follow these instruction to upgrade your{" "}
                             {specification.name} with <b>{name}</b>.
-                        </p>
+                        </Typography>
                         <ol>
                             <li>
                                 <Link href={assertUrl || url}>
                                     Download the firmware file
                                 </Link>
                             </li>
+                            {sequence === "reset" && (
+                                <li>
+                                    Press the <b>Reset (RST)</b> button
+                                </li>
+                            )}
+                            {sequence === "reset-boot" && (
+                                <li>
+                                    Press the <b>Reset (RST)</b> then{" "}
+                                    <b>Bootloader (BOOT)</b> button
+                                </li>
+                            )}
+                            {ledAnimation === "blue-glow" && (
+                                <li>
+                                    You should see the status LED glow in Blue
+                                    and the <b>{driveName}</b> drive should
+                                    appear.
+                                </li>
+                            )}
                             <li>
                                 Drag and drop the file into the&nbsp;
-                                <b>{specification.driveName}</b> drive. You may
-                                need to press on the reset or boot button to
-                                make it appear.
+                                <b>{driveName}</b> drive.
                             </li>
                             <li>
                                 Once the file is copied, the device will
