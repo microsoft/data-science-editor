@@ -75,7 +75,7 @@ function DragAndDropUpdateButton(props: {
                 {name}
                 {version && (
                     <Typography sx={{ ml: 1 }} variant="caption">
-                        ({version})
+                        {version}
                     </Typography>
                 )}
             </Button>

@@ -12,32 +12,26 @@ import useDeviceSpecification from "../../jacdac/useDeviceSpecification"
 import { identifierToUrlPath } from "../../../jacdac-ts/src/jdom/spec"
 import DeviceAvatar from "./DeviceAvatar"
 import useChange from "../../jacdac/useChange"
-import Flags from "../../../jacdac-ts/src/jdom/flags"
-
-function DeviceProductIdentifierChip(props: { device: JDDevice }) {
-    const { device } = props
-    const register = useChange(device, _ =>
-        _?.service(0)?.register(ControlReg.ProductIdentifier)
-    )
-    const [productIdentifier] = useRegisterUnpackedValue<[number]>(register)
-    if (isNaN(productIdentifier)) return null
-
-    return (
-        <Chip size="small" label={`pid: 0x${productIdentifier.toString(16)}`} />
-    )
-}
 
 function DeviceFirmwareVersionChip(props: { device: JDDevice }) {
     const { device } = props
-    const firmwareVersionRegister = useChange(device, _ =>
-        _?.service(0)?.register(ControlReg.FirmwareVersion)
-    )
-    const [firmwareVersion] = useRegisterUnpackedValue<[string]>(
-        firmwareVersionRegister
-    )
+    const specification = useDeviceSpecification(device)
+    const productIdentifier = useChange(device, _ => _?.productIdentifier)
+    const firmwareVersion = useChange(device, _ => _?.firmwareVersion)
     if (!firmwareVersion) return null
 
-    return <Chip size="small" label={firmwareVersion} />
+    const firmwareName =
+        !!productIdentifier &&
+        specification?.firmwares?.find(
+            fw => fw.productIdentifier === productIdentifier
+        )?.name
+
+    return (
+        <Chip
+            size="small"
+            label={[firmwareName, firmwareVersion].filter(f => !!f).join(" ")}
+        />
+    )
 }
 
 function DeviceTemperatureChip(props: { device: JDDevice }) {
@@ -108,11 +102,6 @@ export default function DeviceCardHeader(props: {
                                     .join(", ")}
                             </Typography>
                         </Grid>
-                        {showFirmware && Flags.diagnostics && (
-                            <Grid item>
-                                <DeviceProductIdentifierChip device={device} />
-                            </Grid>
-                        )}
                         {showFirmware && (
                             <Grid item>
                                 <DeviceFirmwareVersionChip device={device} />
