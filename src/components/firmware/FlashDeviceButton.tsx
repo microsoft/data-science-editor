@@ -35,8 +35,8 @@ function DragAndDropUpdateButton(props: {
 }) {
     const bus = useBus()
     const { firmwareVersion, specification, info, productIdentifier } = props
-    const { bootloader } = specification
-    const { driveName, sequence, ledAnimation } = bootloader
+    const { bootloader } = specification || {}
+    const { driveName, sequence, ledAnimation } = bootloader || {}
     const { name, url } = info
     const [open, setOpen] = useState(false)
     const { trackEvent } = useAnalytics()
