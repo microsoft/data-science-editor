@@ -14,8 +14,9 @@ export default function useGridBreakpoints(
     itemCount?: number
 ): GridBreakpoints {
     const { drawerType } = useContext(AppContext)
+    const hasDrawer = drawerType !== DrawerType.None
 
-    if (itemCount !== undefined) {
+    if (!drawerType && itemCount !== undefined) {
         switch (itemCount) {
             case 1:
             case 2:
@@ -25,8 +26,7 @@ export default function useGridBreakpoints(
         }
     }
 
-    if (drawerType != DrawerType.None)
-        return { xs: 12, md: 6, sm: 6, lg: 6, xl: 4 }
+    if (hasDrawer) return { xs: 12, md: 6, sm: 6, lg: 6, xl: 4 }
     else
         return {
             xs: 12,

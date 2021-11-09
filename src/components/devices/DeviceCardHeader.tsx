@@ -1,4 +1,7 @@
-import { ControlReg } from "../../../jacdac-ts/src/jdom/constants"
+import {
+    ControlReg,
+    JD_SERVICE_INDEX_CTRL,
+} from "../../../jacdac-ts/src/jdom/constants"
 import { CardHeader, Chip, Grid, Typography } from "@mui/material"
 // tslint:disable-next-line: no-submodule-imports
 import { Link } from "gatsby-theme-material-ui"
@@ -12,13 +15,27 @@ import useDeviceSpecification from "../../jacdac/useDeviceSpecification"
 import { identifierToUrlPath } from "../../../jacdac-ts/src/jdom/spec"
 import DeviceAvatar from "./DeviceAvatar"
 import useChange from "../../jacdac/useChange"
+import useRegister from "../hooks/useRegister"
 
 function DeviceFirmwareVersionChip(props: { device: JDDevice }) {
     const { device } = props
     const specification = useDeviceSpecification(device)
-    const productIdentifier = useChange(device, _ => _?.productIdentifier)
-    const firmwareVersion = useChange(device, _ => _?.firmwareVersion)
-    if (!firmwareVersion) return null
+    const control = useChange(device, _ => _?.service(JD_SERVICE_INDEX_CTRL))
+    const productIdentifierRegister = useRegister(
+        control,
+        ControlReg.ProductIdentifier
+    )
+    const [productIdentifier] = useRegisterUnpackedValue<[number]>(
+        productIdentifierRegister
+    )
+    const firmwareVersionRegister = useRegister(
+        control,
+        ControlReg.FirmwareVersion
+    )
+    const [firmwareVersion] = useRegisterUnpackedValue<[string]>(
+        firmwareVersionRegister
+    )
+    if (firmwareVersion == undefined) return null
 
     const firmwareName =
         !!productIdentifier &&
