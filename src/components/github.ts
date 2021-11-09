@@ -225,7 +225,7 @@ export function useLatestReleaseAsset(url: string) {
             url
         ) || []
     const { status, response } = useLatestRelease(slug)
-    console.log({ url, slug, filename, status, response })
+    //console.log({ url, slug, filename, status, response })
     if (status === 200 && response) {
         const { tag_name, name } = response
         return {
