@@ -16,7 +16,7 @@ function usePWAInfo() {
 
 export default function InstallPWAButton(props: ButtonProps) {
     const { standAlone } = usePWAInfo()
-    const [supportsPWA, setSupportsPWA] = useState(false)
+    const [visible, setVisible] = useState(false)
     const [promptInstall, setPromptInstall] = useState(null)
     const { enqueueSnackbar } = useContext(AppContext)
     const { trackEvent } = useAnalytics()
@@ -28,7 +28,7 @@ export default function InstallPWAButton(props: ButtonProps) {
         e => {
             trackEvent("app.beforeinstall")
             e.preventDefault()
-            setSupportsPWA(true)
+            setVisible(true)
             setPromptInstall(e)
         },
         false,
@@ -38,10 +38,11 @@ export default function InstallPWAButton(props: ButtonProps) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     useWindowEvent("appinstalled" as any, () => {
         trackEvent("app.installed")
+        setVisible(false)
         enqueueSnackbar("Jacdac app installed!", "success")
     })
 
-    if (!supportsPWA || standAlone) return null
+    if (!visible || standAlone) return null
 
     const onClick = async (evt: React.MouseEvent<HTMLButtonElement>) => {
         evt.preventDefault()
