@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React, { lazy, Suspense, useContext } from "react"
 import { styled } from "@mui/material/styles"
 import clsx from "clsx"
 import { Hidden, Box } from "@mui/material"
@@ -29,6 +29,8 @@ import {
 import BridgeButtons from "../ui/BridgeButtons"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import DrawerToolsButton from "./DrawerToolsButton"
+
+const InstallPWAButton = lazy(() => import("../ui/InstallPWAButton"))
 
 const PREFIX = "MainAppBar"
 
@@ -130,6 +132,12 @@ function MainToolbar() {
             </Hidden>
             <div className={classes.grow} />
             {Flags.diagnostics && <PacketStats />}
+            <Suspense fallback={null}>
+                <InstallPWAButton
+                    color="inherit"
+                    className={clsx(classes.menuButton)}
+                />
+            </Suspense>
             <BridgeButtons className={clsx(classes.menuButton)} />
             <OpenDashboardButton className={clsx(classes.menuButton)} />
             {false && (
