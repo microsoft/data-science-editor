@@ -1,17 +1,19 @@
 import { FormControlLabel, Switch, SwitchProps } from "@mui/material"
-import React, { ReactNode } from "react"
+import React, { CSSProperties } from "react"
 
 export default function SwitchWithLabel(
     props: {
-        label: ReactNode
+        label: string | number | JSX.Element
         labelPlacement?: "end" | "start" | "top" | "bottom"
+        labelStyle?: CSSProperties
     } & SwitchProps
 ) {
-    const { label, labelPlacement, ...rest } = props
+    const { label, labelPlacement, labelStyle, ...rest } = props
     return (
         <FormControlLabel
             control={<Switch {...rest} />}
             label={label}
+            style={labelStyle}
             labelPlacement={labelPlacement}
         />
     )
