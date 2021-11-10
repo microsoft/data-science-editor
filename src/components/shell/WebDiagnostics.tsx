@@ -22,7 +22,6 @@ import PaperBox from "../ui/PaperBox"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import Alert from "../ui/Alert"
 import { AlertTitle } from "@mui/material"
-import { SMap } from "../../../jacdac-ts/src/jdom/utils"
 
 function visitNodes(node: JDNode, vis: (node: JDNode) => void) {
     const todo = [node]

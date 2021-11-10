@@ -8,12 +8,7 @@ import DbContext, { DbContextProps } from "../DbContext"
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever"
 import AppContext from "../AppContext"
 import SwitchWithLabel from "../ui/SwitchWithLabel"
-import Packet from "../../../jacdac-ts/src/jdom/packet"
-import {
-    ControlCmd,
-    SRV_CONTROL,
-} from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
-import { DEVICE_ANNOUNCE } from "../../../jacdac-ts/src/jdom/constants"
+import useForceProxy from "../devices/useForceProxy"
 
 export default function SafeBootAlert(props: { proxy?: boolean }) {
     const { proxy } = props
@@ -40,18 +35,7 @@ export default function SafeBootAlert(props: { proxy?: boolean }) {
         }
     }, [safeBoot])
 
-    // put brains into proxy mode
-    useEffect(() => {
-        if (!safeBoot || !proxy) return () => {}
-        const forceProxy = () => {
-            console.debug(`jacdac: force clients to proxy mode`)
-            const pkt = Packet.onlyHeader(ControlCmd.Proxy)
-            pkt.sendAsMultiCommandAsync(bus, SRV_CONTROL)
-        }
-        const unsub = bus.subscribe(DEVICE_ANNOUNCE, forceProxy)
-        forceProxy()
-        return unsub
-    }, [safeBoot, proxy])
+    useForceProxy(safeBoot || proxy)
 
     return (
         <>
