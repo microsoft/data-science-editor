@@ -51,9 +51,13 @@ export default function InstallPWAButton(props: ButtonProps) {
         )
             return
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const apps = await (navigator as any).getInstalledRelatedApp()
-        console.log("installed apps", { apps })
+        try {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const apps = await (navigator as any).getInstalledRelatedApps()
+            console.log("installed apps", { apps })
+        } catch (e) {
+            console.debug(e)
+        }
     }, [])
 
     if (!visible || standAlone) return null
