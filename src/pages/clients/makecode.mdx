@@ -5,23 +5,49 @@ order: 0
 
 # MakeCode Extensions
 
-The [pxt-jacdac](https://github.com/microsoft/pxt-jacdac) extension contains MakeCode support for many Jacdac services.
+Write programs using Jacdac modules using [MakeCode](https://makecode.com).
+
+-   [MakeCode for micro:bit](https://makecode.microbit.org/)
+-   [MakeCode Arcade (beta)](https://arcade.makecode.com/beta/)
+-   [Maker (beta)](https://maker.makecode.com/)
+
+The [pxt-jacdac repository](https://github.com/microsoft/pxt-jacdac) contains MakeCode support for many Jacdac services.
 Each Jacdac service is represented by a separate MakeCode [extension](./makecode/extensions) within
-the [pxt-jacdac repository](https://github.com/microsoft/pxt-jacdac);
-MakeCode knows which services a Jacdac module (physical or simulated) supports to help you get started quickly.
+the `pxt-jacdac` repository.
+
+This guide is targetted at the [micro:bit V2](https://www.microbit.org/)
+but it can be applied to other editors.
+
+## Before you code...
+
+The **[Out of the box program](/hardware/kit/oob/)** is a Jacdac program 
+that automatically interacts with modules and the micro:bit v2 sensors.
+Before getting into coding Jacdac programs, you can try it out to experiment with 
+sensors.
+
+![Animation of a button connected to the micro:bit V2](../hardware/kit/oob.gif)
+
 
 ## Getting started
 
 -   Open [MakeCode for micro:bit](https://makecode.microbit.org/)
 -   Open or create a new project.
 -   Add the **Jacdac** extension.
--   You should see a **Modules** drawer in the toolbox, under **Advanced**.
+-   You should see a **Modules** drawer in the toolbox.
 
 ![Add Jacdac extension in MakeCode](./makecode/addjacdac.gif)
 
+### First connection with a micro:bit V2
+
+If you have a program that does not use Jacdac on the micro:bit V2, from MakeCode or micropython, you will want to start
+by downloading an empty program **using Jacdac** onto the micro:bit V2.
+
+-   Click on the menu of the **Download** button, do not connect to the micro:bit V2.
+-   Drag and drop the generated .hex file onto the `MICROBIT` drive as usual.
+
 ### Connecting to a micro:bit V2
 
-In the micro:bit editor, you can connect your micro:bit V2 and the editor will automatically communicate with the physical Jacdac modules.
+In the editor, you can connect your micro:bit V2 and the editor will automatically communicate with the physical Jacdac modules.
 
 -   Click on the menu of the **Download** button and select **Connect Device** and follow the instructions.
 -   Download your program at least once, even if it's empty, so that you get the latest Jacdac runtime in the micro:bit.
@@ -29,6 +55,8 @@ In the micro:bit editor, you can connect your micro:bit V2 and the editor will a
 ![Connect to a physical micro:bit](./makecode/connectmicrobit.gif)
 
 ### Adding blocks for services
+
+When a Jacdac device (physical or simulated) is detected, MakeCode can automatically determine which **extensions** are needed to program with it.
 
 -   After connecting, plug **one or more** modules to the micro:bit. You should see them appear in the **Devices** section.
 -   Click on **Add Blocks** to add the extensions for these modules' services in your project.
@@ -38,7 +66,14 @@ In the micro:bit editor, you can connect your micro:bit V2 and the editor will a
 
 ![Add Jacdac button extension in MakeCode](./makecode/addmodule.gif)
 
--   If you do not have the physical module, you can also start a simulator. For example, **start a button**.
+### Using device simulators
+
+You can start simulators for any Jacdac service. This is useful if you do not have the hardware module or you want to simulate specific condition... like freezing temperatures!
+
+For example, to **start a button simulator**,
+
+-   Click on the plus (+) icon in the Jacdac dashboard and select `button`.
+-   You should see a button appear in the simulator section of the Jacdac dashboard.
 -   Click on **Add Blocks** and follow the same procedure as for physical modules.
 
 ![Add Jacdac button extension from simulator](./makecode/addbutton.gif)
