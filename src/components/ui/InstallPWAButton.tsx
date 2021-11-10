@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from "react"
+import React, { useContext, useEffect, useMemo, useState } from "react"
 import useWindowEvent from "../hooks/useWindowEvent"
 import { Button, ButtonProps } from "@mui/material"
 import AppContext from "../AppContext"
@@ -41,6 +41,15 @@ export default function InstallPWAButton(props: ButtonProps) {
         setVisible(false)
         enqueueSnackbar("Jacdac app installed!", "success")
     })
+
+    // detect installed apps
+    useEffect(() => {
+        if (typeof window === "undefined") return
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const apps = (navigator as any).getInstalledRelatedApps?.()
+        console.log("installed apps", { apps })
+    }, [])
 
     if (!visible || standAlone) return null
 
