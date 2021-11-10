@@ -98,7 +98,7 @@ export default function Flash() {
             <TabPanel value={tab} index={1}>
                 <FirmwareCardGrid />
             </TabPanel>
-            <SafeBootAlert proxy={true} />
+            <SafeBootAlert />
             <ManualFirmwareAlert />
             {Flags.diagnostics && <FlashDiagnostics />}
             <FirmwareLoader />

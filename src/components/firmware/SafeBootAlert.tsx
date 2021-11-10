@@ -9,32 +9,21 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever"
 import AppContext from "../AppContext"
 import SwitchWithLabel from "../ui/SwitchWithLabel"
 import useForceProxy from "../devices/useForceProxy"
+import useChange from "../../jacdac/useChange"
 
 export default function SafeBootAlert(props: { proxy?: boolean }) {
     const { proxy } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { db } = useContext<DbContextProps>(DbContext)
     const { enqueueSnackbar } = useContext(AppContext)
-    const [safeBoot, setSafeBoot] = useState(bus.safeBoot)
+    const safeBoot = useChange(bus, _ => _.safeBoot)
     const firmwares = db?.firmwares
 
-    const handleRecovery = async () => {
-        const v = !safeBoot
-        setSafeBoot(v)
-    }
+    const handleRecovery = async () => (bus.safeBoot = !bus.safeBoot)
     const handleClear = async () => {
         await firmwares.clear()
         enqueueSnackbar("firmwares cleared", "info")
     }
-
-    // turn on and off safeboot mode
-    useEffect(() => {
-        bus.safeBoot = safeBoot
-        return () => {
-            bus.safeBoot = false
-        }
-    }, [safeBoot])
-
     useForceProxy(safeBoot || proxy)
 
     return (
