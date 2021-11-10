@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useMemo, useState } from "react"
+import React, { useContext, useMemo, useState } from "react"
 import useWindowEvent from "../hooks/useWindowEvent"
 import { Button, ButtonProps } from "@mui/material"
 import AppContext from "../AppContext"
 import useAnalytics from "../hooks/useAnalytics"
-import useEffectAsync from "../useEffectAsync"
 
 function usePWAInfo() {
     const standAlone = useMemo(
@@ -44,6 +43,7 @@ export default function InstallPWAButton(props: ButtonProps) {
     })
 
     // detect installed apps
+    /*
     useEffectAsync(async () => {
         if (
             typeof window === "undefined" ||
@@ -59,6 +59,7 @@ export default function InstallPWAButton(props: ButtonProps) {
             console.debug(e)
         }
     }, [])
+    */
 
     if (!visible || standAlone) return null
 
