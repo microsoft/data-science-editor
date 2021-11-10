@@ -3,6 +3,7 @@ import useWindowEvent from "../hooks/useWindowEvent"
 import { Button, ButtonProps } from "@mui/material"
 import AppContext from "../AppContext"
 import useAnalytics from "../hooks/useAnalytics"
+import useEffectAsync from "../useEffectAsync"
 
 function usePWAInfo() {
     const standAlone = useMemo(
@@ -43,11 +44,15 @@ export default function InstallPWAButton(props: ButtonProps) {
     })
 
     // detect installed apps
-    useEffect(() => {
-        if (typeof window === "undefined") return
+    useEffectAsync(async () => {
+        if (
+            typeof window === "undefined" ||
+            !("getInstalledRelatedApps" in navigator)
+        )
+            return
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const apps = (navigator as any).getInstalledRelatedApps?.()
+        const apps = await (navigator as any).getInstalledRelatedApp()
         console.log("installed apps", { apps })
     }, [])
 
