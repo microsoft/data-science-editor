@@ -13,6 +13,9 @@ export default function MakeCodeProjects() {
                     frontmatter: {
                         title?: string
                     }
+                    headings: {
+                        value: string
+                    }[]
                 }
             }[]
         }
@@ -32,6 +35,9 @@ export default function MakeCodeProjects() {
                         frontmatter {
                             title
                         }
+                        headings {
+                            value
+                        }
                     }
                 }
             }
@@ -42,9 +48,9 @@ export default function MakeCodeProjects() {
         .sort((l, r) => l.fields.slug.localeCompare(r.fields.slug))
     return (
         <PageLinkList
-            nodes={nodes.map(({ fields, frontmatter }) => ({
+            nodes={nodes.map(({ fields, frontmatter, headings }) => ({
                 slug: fields.slug,
-                title: frontmatter.title,
+                title: frontmatter.title || headings?.[0]?.value,
             }))}
         />
     )
