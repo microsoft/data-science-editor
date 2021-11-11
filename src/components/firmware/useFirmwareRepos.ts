@@ -12,6 +12,7 @@ import useEventRaised from "../../jacdac/useEventRaised"
 import Packet from "../../../jacdac-ts/src/jdom/packet"
 import useDeviceSpecifications from "../devices/useDeviceSpecifications"
 import useDeviceCatalog from "../devices/useDeviceCatalog"
+import { dependencyId } from "../../../jacdac-ts/src/jdom/eventsource"
 
 export default function useFirmwareRepos(showAllRepos?: boolean) {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
@@ -85,8 +86,8 @@ export default function useFirmwareRepos(showAllRepos?: boolean) {
             }
         },
         [
-            devices.map(dev => dev.id).join(),
-            registers.map(reg => reg.id).join(),
+            dependencyId(devices),
+            dependencyId(registers),
             showAllRepos,
             specifications,
         ]

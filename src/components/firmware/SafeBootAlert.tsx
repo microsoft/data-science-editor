@@ -24,13 +24,13 @@ export default function SafeBootAlert(props: { proxy?: boolean }) {
         await firmwares.clear()
         enqueueSnackbar("firmwares cleared", "info")
     }
+    console.log({ safeBoot, proxy })
     useForceProxy(safeBoot || proxy)
-
     return (
         <>
             <Alert severity="info">
                 <SwitchWithLabel
-                    value={safeBoot}
+                    checked={safeBoot}
                     onChange={handleRecovery}
                     label={
                         <Typography component="span" variant="body1">
