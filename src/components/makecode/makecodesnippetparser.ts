@@ -4,7 +4,6 @@ import { makeCodeServices } from "./services"
 
 export interface MakeCodeSnippetSource {
     code: string
-    ghost?: string
     meta: {
         editor?: string
         snippet?: boolean
@@ -22,8 +21,7 @@ export interface MakeCodeSnippetRendered {
 export default function parseMakeCodeSnippet(
     source: string
 ): MakeCodeSnippetSource {
-    let ghost: string
-    let code: string
+    let code = ""
     const meta: {
         editor?: string
         snippet?: boolean
@@ -37,19 +35,16 @@ export default function parseMakeCodeSnippet(
         const parts = source.replace(/^-----\n/, "").split(/-----\n/gm)
         switch (parts.length) {
             case 1:
-                front = ghost = undefined
+                front = undefined
                 code = source
                 break
-            case 2:
-                ;[front, code] = parts
-                break
             default:
-                ;[front, ghost, code] = parts
+                ;[front, code] = parts
                 break
         }
 
         // parse front matter
-        front?.replace(/(.+):\s*(.+)\s*\n/g, (m, name, value) => {
+        front?.replace(/([a-z0-9]+):\s*(.+)\s*\n/gi, (m, name, value) => {
             switch (name) {
                 case "dep":
                     meta.dependencies.push(value)
@@ -70,13 +65,12 @@ export default function parseMakeCodeSnippet(
     }
 
     // sniff services
-    const src = (ghost || "") + "\n" + (code || "")
     const mkcds = makeCodeServices()
     mkcds
         .filter(info => {
             return (
-                src.indexOf(info.client.qName) > -1 ||
-                (info.client.default && src.indexOf(info.client.default) > -1)
+                code.indexOf(info.client.qName) > -1 ||
+                (info.client.default && code.indexOf(info.client.default) > -1)
             )
         })
         .map(
@@ -96,12 +90,11 @@ export default function parseMakeCodeSnippet(
 
     // sniff target
     if (!meta.editor) {
-        if (/basic\.show/.test(src)) meta.editor = "microbit"
+        if (/basic\.show/.test(code)) meta.editor = "microbit"
     }
 
     return {
         code,
-        ghost,
         meta,
     }
 }

@@ -16,7 +16,8 @@ In a `forever` loop, drag the `write numbers` block from the **data streamer** c
 and add the sensor readinds into the array. This code will write data that the Data Streamer addon can import into your spreadsheet.
 
 ```blocks
-dep: github:microsoft/pxt-data-streamer
+-----
+dep: data-streamer=github:microsoft/pxt-data-streamer
 -----
 basic.forever(function () {
     led.toggle(0, 0)
@@ -27,7 +28,7 @@ basic.forever(function () {
         modules.lightLevel1.lightLevel()
     ])
     dataStreamer.writeLine()
-    pause(100)
+    basic.pause(100)
 })
 ```
 
