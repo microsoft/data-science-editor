@@ -14,22 +14,22 @@ Automatically, the Micro:bit simulator connects to the physical button and uses 
 
 ![Hardware button show large and small heart when pressed](./hardwareheartbeat.gif)
 
-## Proxy mode: "Only one brain"
+## Dongle mode: "Only one brain"
 
 To avoid having the micro:bit simulator **and** the physical micro:bit running code **at the same time**,
-Jacdac automatically puts one of the two micro:bit in a **proxy mode** when restarting the simulator or downloading code into the physical device.
-In proxy mode, the Jacdac messages are transmitted by the MakeCode code is not executed
+Jacdac automatically puts one of the two micro:bit in a **dongle mode** when restarting the simulator or downloading code into the physical device.
+In dongle mode, the Jacdac messages are transmitted by the MakeCode code is not executed.
 
--   in proxy mode, the micro:bit renders a proxy icon
-- to exit proxy mode, **reset the device** - either the simulator or the physical device
+-   in dongle mode, the micro:bit scrolls `JACDAC DONGLE MODE PRESS A TO RESET`
+-   to exit dongle mode, **press any button or reset** - either the simulator or the physical device
 
-![Proxy icon on micro:bit screen](./proxyscreen.png)
+![Dongle icon on micro:bit screen](./proxyscreen.png)
 
--   when a physical micro:bit restarts, the simulator micro:bit enters proxy mode.
--   when the simulator micro:bit restarts, the physical micro:bit enters proxy mode.
--   in proxy mode, the physical micro:bit still transmits the Jacdac packets, so you can see physical services, but does not execute MakeCode code.
+-   when a physical micro:bit restarts, the simulator micro:bit enters dongle mode.
+-   when the simulator micro:bit restarts, the physical micro:bit enters dongle mode.
+-   in dongle mode, the physical micro:bit still transmits the Jacdac packets, so you can see physical services, but does not execute MakeCode code.
 
-![Switching proxy mode between simulator and hardware micro:bit](./onebrain.gif)
+![Switching dongle mode between simulator and hardware micro:bit](./onebrain.gif)
 
 ## Multiple Roles
 
@@ -56,7 +56,7 @@ Once reloaded, you should be able to select your roles in the block drop downs.
 
 ### JavaScript editor
 
-Unfortunately, the role editor is not yet available in the JavaScript view. So you are left with 2 choices, go to blocks, add roles, go back to JavaScript. 
+Unfortunately, the role editor is not yet available in the JavaScript view. So you are left with 2 choices, go to blocks, add roles, go back to JavaScript.
 Or... add them manually by instantiating clients.
 
 ```
