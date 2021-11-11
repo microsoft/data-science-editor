@@ -7,7 +7,7 @@ import MakeCodeSnippetContext from "./MakeCodeSnippetContext"
 import { withPrefix } from "gatsby"
 import parseMakeCodeSnippet from "./makecodesnippetparser"
 import AppContext from "../AppContext"
-import { toMap } from "../../../jacdac-ts/src/jdom/utils"
+import { JSONTryParse, toMap } from "../../../jacdac-ts/src/jdom/utils"
 import MakeCodeIcon from "../icons/MakeCodeIcon"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import useMediaQueries from "../hooks/useMediaQueries"
@@ -107,10 +107,15 @@ function MakeCodeButton(props: { req: Request }) {
 
 export default function MakeCodeSnippet(props: { renderedSource: string }) {
     const { renderedSource } = props
-    const { source, rendered } = JSON.parse(renderedSource) as {
-        source: string
-        rendered: Rendered
-    }
+    console.log({ renderedSource })
+    const { source, rendered } = useMemo(
+        () =>
+            JSONTryParse<{
+                source?: string
+                rendered?: Rendered
+            }>(renderedSource, {}),
+        [renderedSource]
+    )
     const { url, req } = rendered || {}
     const tabs = ["blocks", "typescript"]
     const { editor, setEditor } = useContext(MakeCodeSnippetContext)
