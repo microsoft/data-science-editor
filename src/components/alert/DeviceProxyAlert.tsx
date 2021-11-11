@@ -13,7 +13,7 @@ export function DeviceProxyAlert(props: { device: JDDevice }) {
         <>
             {proxy && (
                 <Alert severity="info">
-                    <AlertTitle>Proxy mode</AlertTitle>
+                    <AlertTitle>Dongle mode</AlertTitle>
                     Device transfers Jacdac packets but does not run other code.
                     <Button
                         style={{ display: "block" }}
@@ -21,7 +21,7 @@ export function DeviceProxyAlert(props: { device: JDDevice }) {
                         variant="outlined"
                         onClick={handleReset}
                     >
-                        Reset to application mode
+                        Reset to Application mode
                     </Button>
                 </Alert>
             )}
