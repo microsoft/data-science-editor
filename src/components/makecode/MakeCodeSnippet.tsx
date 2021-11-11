@@ -75,7 +75,7 @@ function MakeCodeButton(props: { req: Request }) {
             })
             const data = await x.json()
             const url = `${editor}#pub:${data.shortid}`
-            window.location.href = url
+            window.open(url, "_blank", "noreferrer")
         } catch (error) {
             setError(error)
         } finally {
