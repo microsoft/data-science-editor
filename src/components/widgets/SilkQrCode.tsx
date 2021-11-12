@@ -174,7 +174,7 @@ export default function SilkQRCode(props: {
     margin?: number
 }) {
     const { url, layer, mirror = true, size = 0.3, margin = 1 } = props
-    const eagleLayer = layer ?? mirror ? 22 : 21
+    const eagleLayer = layer ?? mirror ? 21 : 22
     const { altium, kicad, scr, image, error, numBlocks } = useQRCodeSCR(
         url,
         eagleLayer,
