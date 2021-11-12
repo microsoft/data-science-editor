@@ -1,18 +1,17 @@
-import { Grid, List, Switch } from "@mui/material"
-import React, { useContext } from "react"
+import { Grid, Switch } from "@mui/material"
+import React from "react"
 import { RoleManagerReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useId } from "react-use-id-hook"
 import { useRegisterBoolValue } from "../../jacdac/useRegisterValue"
 import LoadingProgress from "../ui/LoadingProgress"
-import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import useChange from "../../jacdac/useChange"
 import RoleListItem from "../services/RoleListItem"
 import useRegister from "../hooks/useRegister"
+import useRoleManagerClient from "../services/useRoleManagerClient"
 
 export default function DashboardRoleManager(props: DashboardServiceProps) {
     const { service, expanded } = props
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const autoBindRegister = useRegister(service, RoleManagerReg.AutoBind)
     const autoBind = useRegisterBoolValue(autoBindRegister, props)
     const handleChecked = async (ev, checked: boolean) => {
@@ -20,10 +19,10 @@ export default function DashboardRoleManager(props: DashboardServiceProps) {
     }
     const switchId = useId()
     const labelId = useId()
-    const roleManager = useChange(bus, _ => _.roleManager)
+    const roleManager = useRoleManagerClient()
     const roles = useChange(roleManager, _ => _?.roles)
-    if (autoBind === undefined) return <LoadingProgress />
 
+    if (autoBind === undefined) return <LoadingProgress />
     return (
         <>
             {roles && (

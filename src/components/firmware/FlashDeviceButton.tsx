@@ -84,45 +84,42 @@ function DragAndDropUpdateButton(props: {
                     Updating your {specification.name}
                 </DialogTitleWithClose>
                 <DialogContent>
-                    <DialogContentText>
-                        <Typography component="div">
-                            Follow these instruction to upgrade your{" "}
-                            {specification.name} with <b>{name}</b>.
-                        </Typography>
-                        <ol>
+                    <p>
+                        Follow these instruction to upgrade your{" "}
+                        {specification.name} with <b>{name}</b>.
+                    </p>
+                    <ol>
+                        <li>
+                            <Link href={assertUrl || url}>
+                                Download the firmware file
+                            </Link>
+                        </li>
+                        {sequence === "reset" && (
                             <li>
-                                <Link href={assertUrl || url}>
-                                    Download the firmware file
-                                </Link>
+                                Press the <b>Reset (RST)</b> button
                             </li>
-                            {sequence === "reset" && (
-                                <li>
-                                    Press the <b>Reset (RST)</b> button
-                                </li>
-                            )}
-                            {sequence === "reset-boot" && (
-                                <li>
-                                    Press the <b>Reset (RST)</b> then{" "}
-                                    <b>Bootloader (BOOT)</b> button
-                                </li>
-                            )}
-                            {ledAnimation === "blue-glow" && (
-                                <li>
-                                    You should see the status LED glow in Blue
-                                    and the <b>{driveName}</b> drive should
-                                    appear.
-                                </li>
-                            )}
+                        )}
+                        {sequence === "reset-boot" && (
                             <li>
-                                Drag and drop the file into the&nbsp;
-                                <b>{driveName}</b> drive.
+                                Press the <b>Reset (RST)</b> then{" "}
+                                <b>Bootloader (BOOT)</b> button
                             </li>
+                        )}
+                        {ledAnimation === "blue-glow" && (
                             <li>
-                                Once the file is copied, the device will
-                                automatically restart with the new firmware.
+                                You should see the status LED glow in Blue and
+                                the <b>{driveName}</b> drive should appear.
                             </li>
-                        </ol>
-                    </DialogContentText>
+                        )}
+                        <li>
+                            Drag and drop the file into the&nbsp;
+                            <b>{driveName}</b> drive.
+                        </li>
+                        <li>
+                            Once the file is copied, the device will
+                            automatically restart with the new firmware.
+                        </li>
+                    </ol>
                 </DialogContent>
             </Dialog>
         </>
