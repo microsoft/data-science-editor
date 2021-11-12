@@ -99,7 +99,7 @@ export function useDbString(blobName: string) {
 
 export function useDbJSON<T>(blobName: string) {
     const { data, setBlob } = useDbString(blobName)
-    const value: T = JSONTryParse(data) as T
+    const value: T = JSONTryParse<T>(data)
     return {
         value,
         setBlob: async (blob: Blob) => {

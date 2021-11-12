@@ -3,7 +3,6 @@ import React, { ChangeEvent, useEffect, useMemo, useState } from "react"
 import {
     clone,
     JSONTryParse,
-    SMap,
     uniqueName,
 } from "../../../jacdac-ts/src/jdom/utils"
 import useChange from "../../jacdac/useChange"
@@ -151,6 +150,9 @@ function validateClientRole(config: Configuration, role: ClientRole) {
     return { serviceError, nameError }
 }
 
+/**
+ * To test locally, add ?localeditorextensions=1&debugextensions=1
+ */
 export default function MakeCodeEditorExtension() {
     const client = useMakeCodeEditorExtensionClient()
     const target = useChange(client, _ => _?.target)
@@ -162,7 +164,7 @@ export default function MakeCodeEditorExtension() {
         () =>
             client?.subscribe(READ, (resp: ReadResponse) => {
                 console.log(`mkcd: read received`)
-                const cfg = JSONTryParse(resp.json)
+                const cfg = JSONTryParse<Configuration>(resp.json)
                 console.log({ resp, cfg })
                 if (cfg) setConfiguration(cfg)
             }),

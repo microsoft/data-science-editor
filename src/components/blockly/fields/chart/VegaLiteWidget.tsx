@@ -62,7 +62,8 @@ export default function VegaLiteWidget(props: {
     const viewRef = useRef<View>()
 
     const group = tidyResolveHeader(data, sourceBlock?.getFieldValue("group"))
-    const settings = JSONTryParse(sourceBlock?.getFieldValue("settings"))
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const settings = JSONTryParse<any>(sourceBlock?.getFieldValue("settings"))
     const handleNewView = (view: View) => (viewRef.current = view)
 
     const fullSpec: VegaLiteChart = useMemo(() => {

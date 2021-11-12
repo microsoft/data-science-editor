@@ -51,7 +51,7 @@ export default function ConsoleListItem(props: { packet: Packet }) {
     const decoded = decodePacketData(packet)
     const severity = decoded.info.identifier
     const decodedText = decoded?.decoded[0]
-    const text = JSONTryParse(decodedText?.humanValue) || "???"
+    const text = JSONTryParse<string>(decodedText?.humanValue) || "???"
 
     function severityClass() {
         switch (severity) {

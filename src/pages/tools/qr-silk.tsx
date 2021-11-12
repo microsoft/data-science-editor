@@ -47,7 +47,6 @@ export default function DeviceQRCodeGenerator(props: {
     const { data } = props
     const { nodes } = data.allQrUrlDeviceMapCsv
     const deviceCatalog = useDeviceCatalog()
-    const searchId = useId()
     const knowns = toMap(
         nodes,
         n => n.vanityname.toUpperCase(),

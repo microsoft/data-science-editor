@@ -22,10 +22,10 @@ export interface ISettings {
 }
 
 export class LocalStorageSettings implements ISettings {
-    private live: SMap<string>
+    private live: Record<string, string>
     constructor(private readonly key: string) {
         this.live =
-            JSONTryParse(
+            JSONTryParse<Record<string, string>>(
                 typeof window !== "undefined" &&
                     window.localStorage.getItem(key)
             ) || {}
