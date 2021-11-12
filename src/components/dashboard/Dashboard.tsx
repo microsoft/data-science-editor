@@ -4,7 +4,6 @@ import JDDevice from "../../../jacdac-ts/src/jdom/device"
 import { isReading, isValueOrIntensity } from "../../../jacdac-ts/src/jdom/spec"
 import { splitFilter, strcmp } from "../../../jacdac-ts/src/jdom/utils"
 import useDevices from "../hooks/useDevices"
-import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import AppContext from "../AppContext"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import DashboardDeviceGroup from "./DashboardDeviceGroup"
@@ -22,6 +21,7 @@ import MakeCodeAddBlocksButton from "../makecode/MakeCodeAddBlocksButton"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import HostedSimulatorsContext from "../HostedSimulatorsContext"
 import FirmwareAlert from "../firmware/FirmwareAlert"
+import useBus from "../../jacdac/useBus"
 
 function defaultDeviceSort(l: JDDevice, r: JDDevice): number {
     const srvScore = (srv: jdspec.ServiceSpec) =>
@@ -81,7 +81,7 @@ export default function Dashboard(props: DashboardProps) {
         deviceFilter = defaultDeviceFilter,
         ...other
     } = props
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const bus = useBus()
     const { isHostedSimulator, clearHostedSimulators } = useContext(
         HostedSimulatorsContext
     )
@@ -101,7 +101,7 @@ export default function Dashboard(props: DashboardProps) {
     const roleManager = useRoleManagerClient()
     const handleClearSimulators = () => {
         clearHostedSimulators()
-        bus.serviceProviders().forEach(dev => bus.removeServiceProvider(dev))
+        bus.clearServiceProviders()
     }
     const handleStartSimulators = () => roleManager?.startSimulators()
 
