@@ -19,3 +19,9 @@
 [submodule "react-jacdac"]
 	path = react-jacdac
 	url = https://github.com/microsoft/react-jacdac
+[submodule "jacdac-cli"]
+	path = jacdac-cli
+	url = https://github.com/microsoft/jacdac-cli
+[submodule "jacdac-python"]
+	path = jacdac-python
+	url = https://github.com/microsoft/jacdac-python
