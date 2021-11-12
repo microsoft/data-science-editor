@@ -49,6 +49,7 @@ export default function Page() {
             <GithubRepositoryList
                 repos={[
                     "microsoft/jacdac-ts",
+                    "microsoft/jacdac-cli",
                     "microsoft/react-jacdac",
                     "microsoft/pxt-jacdac",
                 ]}
