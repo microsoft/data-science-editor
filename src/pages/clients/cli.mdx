@@ -8,9 +8,28 @@ order: 99
 The [Jacdac Command Line Interface (CLI)](https://github.com/microsoft/jacdac-cli)
 provides various tools to work with Jacdac.
 
-## jacdac devtools
+## Installation
 
-The following command opens a web socket server that acts as a bridge between a locally hosted dashboard and a potential client application.
+-   Install [nodejs.org](https://nodejs.org/) 14+
+-   Install the tool globally.
+
+```
+npm install -g jacdac-cli
+```
+
+## Usage
+
+### `jacdac parse`
+
+Parses a logic analyzer log and replays the packets
+
+```
+jacdac parse log.txt
+```
+
+### `jacdac devtools`
+
+Starts a local websocket server that acts as a bridge between a web dashboard and a client implementation. This allows to test a native client using the latest version of the web developer tools.
 
 ```
 jacdac devtools
