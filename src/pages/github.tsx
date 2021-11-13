@@ -51,6 +51,7 @@ export default function Page() {
                     "microsoft/jacdac-ts",
                     "microsoft/jacdac-cli",
                     "microsoft/react-jacdac",
+                    "microsoft/jacdac-python",
                     "microsoft/pxt-jacdac",
                 ]}
                 showDescription={true}
