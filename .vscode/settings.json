@@ -12,5 +12,8 @@
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "liveServer.settings.port": 5501,
-    "scm.showActionButton": false
+    "scm.showActionButton": false,
+    "python.analysis.completeFunctionParens": true,
+    "python.analysis.diagnosticMode": "workspace",
+    "python.analysis.typeCheckingMode": "basic"
 }
