@@ -25,3 +25,6 @@
 [submodule "jacdac-python"]
 	path = jacdac-python
 	url = https://github.com/microsoft/jacdac-python
+[submodule "pxt-jacdac"]
+	path = pxt-jacdac
+	url = https://github.com/microsoft/pxt-jacdac
