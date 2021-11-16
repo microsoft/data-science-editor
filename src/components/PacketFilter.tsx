@@ -185,6 +185,16 @@ function FilterMenu(props: {
                         label: "Disable collapse pipes",
                         value: false,
                     },
+                    {
+                        cmd: "collapse-not-implemented",
+                        label: "Disable collapse not implemented",
+                        value: false,
+                    },
+                    {
+                        cmd: "errors",
+                        label: "Show only errors",
+                        value: true,
+                    },
                 ].map(({ cmd, kind, value, label }) => (
                     <MenuItem key={cmd} onClick={handleAdd(`${cmd}:${value}`)}>
                         <ListItemIcon>
