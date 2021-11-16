@@ -173,9 +173,9 @@ module.exports = {
                     DevicesJson: {
                         title: node => node.name,
                         description: node => node.description,
-                        body: node => node.source,
+                        body: node => node.company,
                         url: node =>
-                            `/devices/${identifierToUrlPath(node.id)}/`,
+                            `/devices/${identifierToUrlPath(node.jsonId)}/`,
                     },
                 }, // filter: (node, getNode) => node.frontmatter.tags !== "exempt",
             },
