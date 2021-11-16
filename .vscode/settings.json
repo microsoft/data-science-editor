@@ -15,5 +15,8 @@
     "scm.showActionButton": false,
     "python.analysis.completeFunctionParens": true,
     "python.analysis.diagnosticMode": "workspace",
-    "python.analysis.typeCheckingMode": "basic"
+    "python.analysis.typeCheckingMode": "basic",
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.python"
+    }
 }
