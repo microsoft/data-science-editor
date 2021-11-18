@@ -5,6 +5,7 @@ import {
     Dialog,
     DialogContent,
     Grid,
+    Typography,
     useTheme,
 } from "@mui/material"
 import React, { useContext, useMemo } from "react"
@@ -51,22 +52,21 @@ function ConnectTransport(props: {
     if (!devices?.length && !Flags.diagnostics) return null
     return (
         <>
-            <GridHeader
-                action={
-                    <ConnectButton
-                        key={transport.type}
-                        transport={transport}
-                        onClick={onClose}
-                        full={true}
-                        typeInTitle={true}
-                    />
-                }
-            />
+            <GridHeader title={transport.type.toUpperCase()} />
             {devices.map(device => (
                 <Grid item xs={12} sm={6} lg={4} key={device.id}>
                     <ConnectDeviceCard device={device} />
                 </Grid>
             ))}
+            <Grid item xs={12} textAlign="right">
+                <ConnectButton
+                    key={transport.type}
+                    transport={transport}
+                    onClick={onClose}
+                    full={true}
+                    typeInTitle={true}
+                />
+            </Grid>
         </>
     )
 }
@@ -92,6 +92,9 @@ export default function ConnectTransportDialog(props: {
                 Connect to a device
             </DialogTitleWithClose>
             <DialogContent>
+                <Typography variant="caption">
+                    Find your device connection type and connect.
+                </Typography>
                 <Grid container spacing={2}>
                     {transports.map(transport => (
                         <ConnectTransport
