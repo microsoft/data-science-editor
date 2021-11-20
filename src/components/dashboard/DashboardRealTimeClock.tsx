@@ -11,7 +11,7 @@ export default function DashboardRealTimeClock(props: DashboardServiceProps) {
     const { service } = props
 
     const localTimeRegister = useRegister(service, RealTimeClockReg.LocalTime)
-    const [year, month, dayOfMonth, hour, min, seconds] =
+    const [year, month, dayOfMonth, dayOfWeek, hour, min, seconds] =
         useRegisterUnpackedValue<RealTimeClockReadingType>(
             localTimeRegister,
             props
