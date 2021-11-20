@@ -4,7 +4,7 @@ const maxImageWidth = 800
 const siteUrl = "https://microsoft.github.io"
 const pathPrefix = "/jacdac-docs"
 
-const wsl = !!process.env.WSL_DISTRO_NAME
+const wsl = !!process.env.WSL_DISTRO_NAME || !!process.env.CODESPACE_NAME
 
 const SITE_TITLE = `Jacdac - plug-n-play for microcontrollers`
 const SITE_DESCRIPTION = `Jacdac is a plug-and-play hardware and software stack for microcontrollers and their peripherals such as sensors and actuators. Jacdac is primarily designed for “modular electronics” scenarios that support rapid prototyping, creative exploration, making and learning through physical computing. Jacdac is designed to be cheap, flexible and extensible.`
