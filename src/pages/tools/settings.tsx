@@ -23,7 +23,7 @@ export default function Page() {
         <>
             <h1>Devices Settings</h1>
             <p>
-                Configure &npsp;<Link to="/services/settings/">settings</Link>{" "}
+                Configure <Link to="/services/settings/">settings</Link>{" "}
                 services.
             </p>
             <ConnectAlert serviceClass={SRV_SETTINGS} />
