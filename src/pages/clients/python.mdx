@@ -12,7 +12,7 @@ There are various ways to integrate Jacdac into **desktop python** projects.
 -   [GitHub project](https://github.com/microsoft/jacdac-python)
 -   [API Reference](https://jacdac-python.readthedocs.io/)
 
-## Pip Install
+## PyPi Package
 
 Add jacdac-python to your project using `pip` (or `pip3` on Windows)
 
@@ -20,10 +20,86 @@ Add jacdac-python to your project using `pip` (or `pip3` on Windows)
 pip install jacdac-python
 ```
 
-## Under construction
+## Getting started
+
+Let's learn about Jacdac by creating a couple small projects.
+
+## Developer tools
+
+The first step of a Jacdac project is to create a bus which will handle all the communication and
+the management of the service client.
+Since the bus communicates with hardware, configuring it may vary **a lot** whether you are on a Raspberry Pi or a desktop computer.
+
+To provide a consistent experience, we recommend using the Jacdac developer tools.
+
+-   install Node.JS
+-   install Jacdac command line tool (`jacdac-cli`)
+
+```
+npm install -g jacdac-cli
+```
+
+-   launch the devtools server (and keep it running)
+
+```
+jacdac devtools
+```
+
+Once the devtools server is running, you should be able to navigate to the local web server and see a dashboard.
+
+> Pro tip: You can use `devtools` from a GitHub codespaces virtual machine :)
+
+## Blinky
+
+Let's start with a blinking LED light project, assuming you have a [LED](/services/led) module.
 
 ```python
-from jacdac import Bus
-# This is a python snippet
-bus = Bus()
+from jacdac.devtools import create_dev_tools_bus
+
+bus = create_dev_tools_bus()
+```
+
+Next we create an LED service client (and assign it the `led` role).
+The client will allow us to change the color on the LED module.
+
+```python
+from jacdac.led import LedClient
+
+led = LedClient(bus, "led")
+```
+
+Finally, we create a loop with a couple `sleep` command to
+toggle between blue and red.
+
+```python
+speed = 64
+brightness = 128
+while True:
+    # blue
+    led.animate(0, 0, brightness, speed)
+    sleep(1)
+    # red
+    led.animate(brightness, 0, 0, speed)
+    sleep(1)
+```
+
+All together, we get:
+
+```python
+from jacdac.devtools import create_dev_tools_bus
+from jacdac.led import LedClient
+from time import sleep
+
+bus = create_dev_tools_bus()
+led = LedClient(bus, "led")
+
+speed = 64
+brightness = 128
+while True:
+    # blue
+    led.animate(0, 0, brightness, speed)
+    sleep(1)
+    # off
+    led.animate(0, 0, 0, speed)
+    sleep(1)
 ```
