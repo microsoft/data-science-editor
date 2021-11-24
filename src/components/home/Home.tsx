@@ -81,8 +81,8 @@ export default function Home() {
             <SplitGrid
                 right={true}
                 subtitle="Client SDKs"
-                description="Integrate Jacdac in the Web or Node.JS using our Javascript/TypeScript library."
-                buttonText="Add Jacdac to your apps"
+                description="Integrate Jacdac into your Web pages, Node.JS apps or Python scripts."
+                buttonText="Use Jacdac"
                 buttonVariant="link"
                 buttonUrl="/software/"
                 image={<HTML5Image />}
