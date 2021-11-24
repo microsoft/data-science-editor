@@ -29,6 +29,8 @@ the management of the service client.
 Since the bus communicates with hardware, configuring it may vary **a lot** whether you are on a Raspberry Pi or a desktop computer.
 
 To provide a consistent experience, we recommend using the Jacdac developer tools.
+The developer tools rely on the browser WebUSB/WebSerial/WebBluetooth to connect to the hardware devices and uses a local web socket server
+to pipe the packets to the Python SDK. This also allows to debug your Python code in a virtual machine with no hardware access, like GitHub codespaces.
 
 -   install Node.JS
 -   install Jacdac command line tool (`jacdac-cli`)
@@ -44,8 +46,6 @@ jacdac devtools
 ```
 
 Once the devtools server is running, you should be able to navigate to the local web server and see a dashboard.
-
-> Pro tip: You can use `devtools` from a GitHub codespaces virtual machine :)
 
 ### Blinky
 
