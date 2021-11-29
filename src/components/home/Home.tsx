@@ -26,7 +26,7 @@ export default function Home() {
                 imageColumns={6}
                 image={
                     <StaticImage
-                        src="./manymodulestogether.png"
+                        src="./manymodules2.png"
                         alt="Many Modules Together"
                     />
                 }

@@ -28,7 +28,7 @@ export default function Protocol() {
                 buttonUrl="/reference/protocol"
                 image={
                     <StaticImage
-                        src="./manymodulestogether.png"
+                        src="./manymodules2.png"
                         alt="Many Modules Together"
                     />
                 }
