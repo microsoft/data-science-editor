@@ -53,7 +53,7 @@ import JacdacIcon from "./icons/JacdacIcon"
 export default function KindIcon(props: {
     kind: string
     className?: string
-    fontSize?: "small" | "default" | "inherit" | "large"
+    fontSize?: "small" | "inherit" | "large"
 }) {
     const { kind, ...rest } = props
     let icon: JSX.Element

@@ -4,6 +4,8 @@
         "esbenp.prettier-vscode",
         "silvenon.mdx",
         "wix.vscode-import-cost",
-        "gruntfuggly.todo-tree"
+        "gruntfuggly.todo-tree",
+        "ms-python.vscode-pylance",
+        "ms-python.python"
     ]
 }

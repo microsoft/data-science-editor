@@ -150,7 +150,7 @@ const serviceViews: {
     },
     [SRV_LED_PIXEL]: {
         component: DashboardLEDPixel,
-        weight: () => 2,
+        weight: () => 3,
     },
     [SRV_ACCELEROMETER]: {
         component: DashboardAccelerometer,

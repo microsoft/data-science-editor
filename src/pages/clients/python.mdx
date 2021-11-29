@@ -1,0 +1,171 @@
+---
+title: Python
+order: 2
+---
+
+# Jacdac Python
+
+There are various ways to integrate Jacdac into **desktop python** projects.
+
+-   [GitHub project](https://github.com/microsoft/jacdac-python)
+-   [API Reference](https://jacdac-python.readthedocs.io/)
+
+## PyPi Package
+
+Add jacdac-python to your project using `pip` (or `pip3` on Windows)
+
+```
+pip install jacdac-python
+```
+
+## Getting started
+
+Let's learn about Jacdac by creating a couple small projects.
+
+### Developer tools
+
+The first step of a Jacdac project is to create a bus which will handle all the communication and
+the management of the service client.
+Since the bus communicates with hardware, configuring it may vary **a lot** whether you are on a Raspberry Pi or a desktop computer.
+
+To provide a consistent experience, we recommend using the Jacdac developer tools.
+The developer tools rely on the browser WebUSB/WebSerial/WebBluetooth to connect to the hardware devices and uses a local web socket server
+to pipe the packets to the Python SDK. This also allows to debug your Python code in a virtual machine with no hardware access, like GitHub codespaces.
+
+-   install Node.JS
+-   install Jacdac command line tool (`jacdac-cli`)
+
+```
+npm install -g jacdac-cli
+```
+
+-   launch the devtools server (and keep it running)
+
+```
+jacdac devtools
+```
+
+Once the devtools server is running, you should be able to navigate to the local web server and see a dashboard.
+
+### Blinky
+
+Let's build a blinking LED light project, assuming you have a [LED](/services/led) module.
+
+The first step is to start a Jacdac `Bus` instance. The bus instance will automatically try to connect to the devtools;
+but there are many other configuration options (see also how to use configuration files).
+
+```python
+from jacdac import Bus
+
+bus = Bus()
+```
+
+Next we create an LED service client (and assign it the `led` role).
+The client will allow us to change the color on the LED module.
+
+```python
+from jacdac.led import LedClient
+
+led = LedClient(bus, "led")
+```
+
+Finally, we create a loop with a couple `sleep` command to
+toggle between blue and red.
+
+```python
+speed = 64
+brightness = 128
+while True:
+    # blue
+    led.animate(0, 0, brightness, speed)
+    sleep(1)
+    # red
+    led.animate(brightness, 0, 0, speed)
+    sleep(1)
+```
+
+All together, we get:
+
+```python
+from jacdac import Bus
+from jacdac.led import LedClient
+from time import sleep
+
+bus = Bus()
+led = LedClient(bus, "led")
+
+speed = 64
+brightness = 128
+while True:
+    # blue
+    led.animate(0, 0, brightness, speed)
+    sleep(1)
+    # off
+    led.animate(0, 0, 0, speed)
+    sleep(1)
+```
+
+### Slidy Blinky
+
+Let's add a [slider](/services/potentiometer) to control the brightness of the LED.
+The potentiometer can come in various physical shapes but we can handle it all
+through the `PotentiometerClient` client.
+
+```python
+from jacdac.potentiometer import PotentiometerClient
+
+slider = PotentiometerClient(bus, "slider")
+```
+
+In the `while`, we will read the `position` of the slider into a variable.
+
+```python
+    while True:
+        position = slider.position
+        # position is a float in [0..100] or None
+```
+
+We need to be a bit careful about the `position` value, as it may be `None` if no sensor
+is connected to the Jacdac bus. To handle this case, we add `or 0.` to default to the 0 value.
+
+```python
+    while True:
+        position = slider.position or 0.
+        # position is a float in [0..100]!
+```
+
+From here, we can remap the `position` float in `[0, 100]` to a `int` in `[0, 255]` for the color brightness:
+
+```python
+    while True:
+        position = slider.position or 0.
+        brightness = int(position / 100 * 255)
+```
+
+All together the slidy blinky sample looks like
+
+```python
+from jacdac import Bus
+from jacdac.led import LedClient
+from jacdac.potentiometer import PotentiometerClient
+from time import sleep
+
+def main():
+    bus = Bus()
+    led = LedClient(bus, "led")
+    slider = PotentiometerClient(bus, "slider")
+    speed = 16
+    brightness = 128
+    # fade between colors
+    while True:
+        position = slider.position or 0.
+        brightness = int(position / 100. * 255.)
+        # blue
+        led.animate(0, 0, brightness, speed)
+        sleep(1)
+        # off
+        led.animate(brightness, 0, 0, speed)
+        sleep(1)
+
+main()
+```

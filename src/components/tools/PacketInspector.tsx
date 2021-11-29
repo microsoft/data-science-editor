@@ -68,9 +68,14 @@ export default function PacketInspector() {
                     packet.friendlyDeviceName
                 }/${packet.friendlyServiceName}`}
 
+                {packet.sender && (
+                    <Chip
+                        aria-label={`sender: ${packet.sender}`}
+                        label={packet.sender}
+                    />
+                )}
                 <TraceCopyButton packet={packet} />
             </h2>
-            {packet.sender && <Chip label={`sender: ${packet.sender}`} />}
             {error && <Alert severity="error">{error}</Alert>}
             <PaperBox padding={0}>
                 <pre>
