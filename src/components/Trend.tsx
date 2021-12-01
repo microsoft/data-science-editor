@@ -105,9 +105,9 @@ function UnitTrendChart(
         // adding random for lineragradient bug workaround
         // which does not render perfectly
         // horizontal lines
-        return unitConverter(
+        return (
             ((Math.random() * 0.0001 * rv - (unitConverter(v) - minv)) / h) *
-                (vph - 2 * margin)
+            (vph - 2 * margin)
         )
     }
     const lastRow = data[data.length - 1]
