@@ -106,7 +106,7 @@ function UnitTrendChart(
         // which does not render perfectly
         // horizontal lines
         return unitConverter(
-            ((Math.random() * 0.0001 * rv - (v - minv)) / h) *
+            ((Math.random() * 0.0001 * rv - (unitConverter(v) - minv)) / h) *
                 (vph - 2 * margin)
         )
     }
