@@ -1,4 +1,4 @@
-import { Button, Grid } from "@mui/material"
+import { Button, Card, CardContent, CardHeader, Grid } from "@mui/material"
 import QRCode from "qrcode"
 import React, { useState } from "react"
 import { useEffect } from "react"
@@ -241,25 +241,41 @@ export default function SilkQRCode(props: {
                         </Button>
                     </Grid>
                 )}
+                {image && (
+                    <Grid item xs={12}>
+                        <Grid container spacing={1}>
+                            <Grid item>
+                                <Card>
+                                    <CardHeader title="original size" />
+                                    <CardContent>
+                                        <img
+                                            className="pixelated"
+                                            style={{
+                                                width: `${size * numBlocks}mm`,
+                                            }}
+                                            src={imageUri}
+                                            alt={`QR code of ${url}`}
+                                        />
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                            <Grid item>
+                                <Card>
+                                    <CardHeader title="zoomed" />
+                                    <CardContent>
+                                        <img
+                                            className="pixelated"
+                                            style={{ width: `10rem` }}
+                                            src={imageUri}
+                                            alt={`QR code of ${url}`}
+                                        />
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                )}
             </Grid>
-            {image && (
-                <>
-                    <h3>Original size</h3>
-                    <img
-                        className="pixelated"
-                        style={{ width: `${size * numBlocks}mm` }}
-                        src={imageUri}
-                        alt={`QR code of ${url}`}
-                    />
-                    <h3>Zoomed</h3>
-                    <img
-                        className="pixelated"
-                        style={{ width: `10rem` }}
-                        src={imageUri}
-                        alt={`QR code of ${url}`}
-                    />
-                </>
-            )}
         </>
     )
 }
