@@ -186,7 +186,7 @@ function UnitTrendChart(
                     fontSize={fontSize}
                     fill={textPrimary}
                 >
-                    {minv}
+                    {maxv}
                 </text>
                 <text
                     x={margin}
@@ -194,7 +194,7 @@ function UnitTrendChart(
                     fontSize={fontSize}
                     fill={textPrimary}
                 >
-                    {maxv}
+                    {minv}
                 </text>
                 {opposite && (
                     <line
