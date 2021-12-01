@@ -5,12 +5,15 @@ import DashboardServiceWidget, {
 } from "./DashboardServiceWidget"
 import ServiceRole from "../services/ServiceRole"
 import useInstanceName from "../services/useInstanceName"
+import useChange from "../../jacdac/useChange"
+import RegisterTrend from "../RegisterTrend"
 
 export default function DashboardServiceWidgetItem(
     props: React.Attributes & DashboardServiceProps
 ): JSX.Element {
-    const { service, ...rest } = props
+    const { service, charts, ...rest } = props
     const instanceName = useInstanceName(service, rest)
+    const reading = useChange(service, srv => srv?.readingRegister)
 
     return (
         <Grid item>
@@ -32,6 +35,11 @@ export default function DashboardServiceWidgetItem(
                 )}
             </Grid>
             <DashboardServiceWidget {...props} />
+            {charts && reading && (
+                <Grid item xs={12}>
+                    <RegisterTrend register={reading} mini={false} height={18} />
+                </Grid>
+            )}
         </Grid>
     )
 }

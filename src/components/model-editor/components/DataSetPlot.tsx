@@ -5,7 +5,7 @@ import Suspense from "../../ui/Suspense"
 import MBDataSet from "../MBDataSet"
 import { useId } from "react-use-id-hook"
 
-const VegaLite = lazy(() => import("../../blockly/fields/chart/VegaLite"))
+const VegaLite = lazy(() => import("../../charts/VegaLite"))
 
 export default function DataSetPlot(props: {
     chartProps: any

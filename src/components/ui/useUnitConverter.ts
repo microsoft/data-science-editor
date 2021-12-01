@@ -32,7 +32,7 @@ export function useUnitConverters() {
 }
 const identity = (v: number) => v
 
-export default function useUnitConverter(unit: jdspec.Unit): {
+export default function useUnitConverter(unit: jdspec.Unit | string): {
     name?: string
     converter: (v: number) => number
     inverter: (v: number) => number

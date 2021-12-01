@@ -6,7 +6,7 @@ import {
     Paper,
     Typography,
 } from "@mui/material"
-import React, { useCallback, useRef } from "react"
+import React, { useCallback, useRef, useState } from "react"
 import {
     SRV_CONTROL,
     SRV_LOGGER,
@@ -31,6 +31,9 @@ import { dependencyId } from "../../../jacdac-ts/src/jdom/eventsource"
 import useMediaQueries from "../hooks/useMediaQueries"
 import { DeviceLostAlert } from "../alert/DeviceLostAlert"
 import { DeviceProxyAlert } from "../alert/DeviceProxyAlert"
+import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
+import BarChartIcon from "@mui/icons-material/BarChart"
+import { isSensor } from "../../../jacdac-ts/src/jdom/spec"
 
 const ignoredServices = [
     SRV_CONTROL,
@@ -45,18 +48,34 @@ export default function DashboardDevice(
     props: {
         device: JDDevice
         variant?: "icon" | ""
+        charts?: boolean
+        setCharts?: (value: boolean) => void
     } & DashboardDeviceProps
 ) {
-    const { device, serviceFilter, variant, showAvatar, showHeader } = props
+    const {
+        device,
+        serviceFilter,
+        variant,
+        showAvatar,
+        showHeader,
+        charts,
+        setCharts,
+    } = props
     const { xs: mobile } = useMediaQueries()
 
     const name = useDeviceName(device)
     const specification = useDeviceSpecification(device)
     const services = useChange(device, _ =>
         _?.services({ specification: true }).filter(
-            service => ignoredServices.indexOf(service.serviceClass) < 0
+            service =>
+                ignoredServices.indexOf(service.serviceClass) < 0 &&
+                !service.isMixin &&
+                (!serviceFilter || serviceFilter(service))
         )
     )
+    const sensors = services.filter(srv => isSensor(srv.specification))
+    const showChart = !!setCharts && !!sensors.length
+    const handleChartChanged = () => setCharts(!charts)
 
     // refresh when visible
     const serviceGridRef = useRef<HTMLDivElement>()
@@ -74,21 +93,19 @@ export default function DashboardDevice(
                 alignItems="flex-end"
                 alignContent="space-between"
             >
-                {services
-                    ?.filter(srv => !srv.isMixin)
-                    ?.filter(srv => !serviceFilter || serviceFilter(srv))
-                    ?.map(service => (
-                        <DashboardServiceWidgetItem
-                            key={service.id}
-                            service={service}
-                            services={services}
-                            variant={variant}
-                            visible={visible}
-                        />
-                    ))}
+                {services?.map(service => (
+                    <DashboardServiceWidgetItem
+                        key={service.id}
+                        service={service}
+                        services={services}
+                        variant={variant}
+                        visible={visible}
+                        charts={charts}
+                    />
+                ))}
             </Grid>
         ),
-        [dependencyId(services), variant, visible]
+        [dependencyId(services), variant, visible, charts]
     )
 
     if (!showHeader)
@@ -110,7 +127,16 @@ export default function DashboardDevice(
                         hideIdentity={true}
                         showReset={false}
                         showSettings={false}
-                    />
+                    >
+                        {showChart && (
+                            <IconButtonWithTooltip
+                                title={charts ? "chart mode" : "widget mode"}
+                                onClick={handleChartChanged}
+                            >
+                                <BarChartIcon />
+                            </IconButtonWithTooltip>
+                        )}
+                    </DeviceActions>
                 }
                 title={<DeviceName showShortId={false} device={device} />}
                 subheader={

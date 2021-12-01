@@ -1,8 +1,10 @@
 import React from "react"
 import { styled } from "@mui/material/styles"
 import FieldDataSet, { Example } from "./FieldDataSet"
-import { unique } from "../../jacdac-ts/src/jdom/utils"
+import { roundWithPrecision, unique } from "../../jacdac-ts/src/jdom/utils"
 import { Paper } from "@mui/material"
+import useWidgetTheme from "./widgets/useWidgetTheme"
+import useUnitConverter from "./ui/useUnitConverter"
 
 const PREFIX = "Trend"
 
@@ -39,7 +41,8 @@ function UnitTrendChart(
     } & TrendProps
 ) {
     const { dataSet, useGradient, data, unit, vpw, vph, dot } = props
-
+    const { converter: unitConverter } = useUnitConverter(unit)
+    const { textPrimary } = useWidgetTheme("primary")
     const shape = unit == "#" ? "step" : "line"
     const symmetric = unit == "g" ? true : false
 
@@ -50,20 +53,22 @@ function UnitTrendChart(
     const times = data.map(ex => ex.timestamp)
     const maxt = Math.max.apply(null, times)
     const mint = Math.min.apply(null, times)
-    let minv =
+    let minv = unitConverter(
         unit == "/"
             ? 0
             : Math.min.apply(
                   null,
                   indexes.map(i => dataSet.mins[i])
               )
-    let maxv =
+    )
+    let maxv = unitConverter(
         unit == "/"
             ? 1
             : Math.max.apply(
                   null,
                   indexes.map(i => dataSet.maxs[i])
               )
+    )
     const opposite = unit != "/" && Math.sign(minv) != Math.sign(maxv)
     if (isNaN(minv) && isNaN(maxv)) {
         minv = 0
@@ -73,6 +78,12 @@ function UnitTrendChart(
         maxv = Math.max(Math.abs(minv), Math.abs(maxv))
         minv = -maxv
     }
+
+    const step = undefined
+    const precision =
+        step === undefined ? 1 : step < 1 ? Math.ceil(-Math.log10(step)) : 0
+    minv = roundWithPrecision(minv, precision, Math.floor)
+    maxv = roundWithPrecision(maxv, precision, Math.ceil)
     const rv = maxv - minv
 
     const margin = 2
@@ -84,18 +95,19 @@ function UnitTrendChart(
     const axisColor = "#ccc"
     const pointRadius = strokeWidth * 1.5
     const toffset = -pointRadius * 3
+    const fontSize = "0.3rem"
 
-    function x(t: number) {
+    const x = (t: number) => {
         return ((t - mint) / w) * vpw
     }
-    function y(v: number) {
+    const y = (v: number) => {
         if (v === undefined || isNaN(v)) v = minv
         // adding random for lineragradient bug workaround
         // which does not render perfectly
         // horizontal lines
-        return (
+        return unitConverter(
             ((Math.random() * 0.0001 * rv - (v - minv)) / h) *
-            (vph - 2 * margin)
+                (vph - 2 * margin)
         )
     }
     const lastRow = data[data.length - 1]
@@ -167,6 +179,23 @@ function UnitTrendChart(
                 </defs>
             )}
             <g transform={`translate(${toffset}, ${vph - margin})`}>
+                <text
+                    x={margin}
+                    y={-vph + margin + margin / 2}
+                    dominantBaseline="hanging"
+                    fontSize={fontSize}
+                    fill={textPrimary}
+                >
+                    {minv}
+                </text>
+                <text
+                    x={margin}
+                    y={margin}
+                    fontSize={fontSize}
+                    fill={textPrimary}
+                >
+                    {maxv}
+                </text>
                 {opposite && (
                     <line
                         x1={x(mint)}
@@ -246,7 +275,12 @@ function UnitTrend(
     const data = rows.slice(-horizon)
     const useGradient = gradient || data.length < rows.length
     return (
-        <Paper className={classes.graph} square>
+        <Paper
+            className={classes.graph}
+            variant="outlined"
+            elevation={0}
+            square
+        >
             <svg
                 viewBox={`0 0 ${vpw} ${vph}`}
                 style={{ maxHeight: mini ? "5vh" : "10vh", maxWidth: "100%" }}
@@ -257,6 +291,7 @@ function UnitTrend(
                         useGradient={useGradient}
                         vpw={vpw}
                         vph={vph}
+                        dot={true}
                         {...props}
                     />
                 )}

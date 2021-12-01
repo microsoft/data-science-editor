@@ -1,7 +1,7 @@
 import React, { lazy } from "react"
 import Suspense from "../../ui/Suspense"
 
-const VegaLite = lazy(() => import("../../blockly/fields/chart/VegaLite"))
+const VegaLite = lazy(() => import("../../charts/VegaLite"))
 
 export default function LossAccChart(props: {
     chartProps: any

@@ -28,7 +28,7 @@ const Root = styled("div")(() => ({
     },
 }))
 
-const VegaLite = lazy(() => import("./VegaLite"))
+const VegaLite = lazy(() => import("../../../charts/VegaLite"))
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function clone(v: any) {
@@ -47,7 +47,7 @@ function jsonMergeFrom(trg: object, src: object) {
     })
 }
 
-export type VegaLiteChart = unknown
+type VegaLiteChart = unknown
 
 export default function VegaLiteWidget(props: {
     spec: VisualizationSpec

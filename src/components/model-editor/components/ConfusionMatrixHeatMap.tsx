@@ -2,7 +2,7 @@ import React, { lazy } from "react"
 import { Grid } from "@mui/material"
 import Suspense from "../../ui/Suspense"
 
-const VegaLite = lazy(() => import("../../blockly/fields/chart/VegaLite"))
+const VegaLite = lazy(() => import("../../charts/VegaLite"))
 
 export default function ConfusionMatrixHeatMap(props: {
     chartProps: any

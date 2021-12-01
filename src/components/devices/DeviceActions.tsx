@@ -53,6 +53,7 @@ export default function DeviceActions(props: {
     }
     return (
         <>
+            {children}
             {showStop && (provider || isHostedSimulator(deviceId)) && (
                 <CmdButton
                     trackName="device.stop"
@@ -89,7 +90,6 @@ export default function DeviceActions(props: {
                     icon={<RefreshIcon />}
                 />
             )}
-            {children}
         </>
     )
 }
