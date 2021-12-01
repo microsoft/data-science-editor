@@ -41,7 +41,7 @@ function UnitTrendChart(
     } & TrendProps
 ) {
     const { dataSet, useGradient, data, unit, vpw, vph, dot } = props
-    const { converter: unitConverter } = useUnitConverter(unit)
+    const { name: unitName, converter: unitConverter } = useUnitConverter(unit)
     const { textPrimary } = useWidgetTheme("primary")
     const shape = unit == "#" ? "step" : "line"
     const symmetric = unit == "g" ? true : false
@@ -186,7 +186,7 @@ function UnitTrendChart(
                     fontSize={fontSize}
                     fill={textPrimary}
                 >
-                    {maxv}
+                    {maxv}{unitName}
                 </text>
                 <text
                     x={margin}
@@ -194,7 +194,7 @@ function UnitTrendChart(
                     fontSize={fontSize}
                     fill={textPrimary}
                 >
-                    {minv}
+                    {minv}{unitName}
                 </text>
                 {opposite && (
                     <line

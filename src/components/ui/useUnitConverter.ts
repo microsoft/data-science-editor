@@ -8,10 +8,17 @@ const adapters: Record<string, Record<string, (v: number) => number>> = {
         "°C": v => v,
         "°F": v => (9 / 5) * v + 32,
     },
+    "/": {
+        "/": v => v,
+        "%": v => v * 100,
+    },
 }
 const inverters: Record<string, Record<string, (v: number) => number>> = {
     "°F": {
         "°C": v => ((v - 32) * 5) / 9,
+    },
+    "%": {
+        "/": v => v / 100,
     },
 }
 
@@ -44,7 +51,9 @@ export default function useUnitConverter(unit: jdspec.Unit | string): {
             inverter: v => v,
         }
 
-    const [settings] = useLocalStorage("jacdac:unitconverters", {})
+    const [settings] = useLocalStorage("jacdac:unitconverters", {
+        "/": "%",
+    })
 
     const adapter = adapters[unit]
     if (!adapter)
