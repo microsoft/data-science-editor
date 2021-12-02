@@ -121,6 +121,7 @@ function createBus(): JDBus {
         {
             parentOrigin: args.parentOrigin,
             client: false,
+            dashboard: true,
         }
     )
     b.passive = args.passive
