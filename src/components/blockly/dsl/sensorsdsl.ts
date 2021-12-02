@@ -10,6 +10,8 @@ import {
     SENSOR_BLOCK,
     SeparatorDefinition,
     NumberInputDefinition,
+    TextInputDefinition,
+    DataColumnInputDefinition,
 } from "../toolbox"
 import BlockDomainSpecificLanguage, {
     CreateBlocksOptions,
@@ -17,11 +19,17 @@ import BlockDomainSpecificLanguage, {
 } from "./dsl"
 import TwinField from "../fields/TwinField"
 import { ServicesBaseDSL } from "./servicesbase"
-import type { DataRecordWindowRequest } from "../../../workers/data/dist/node_modules/data.worker"
+import type {
+    DataRecordWindowRequest,
+    DataMovingAverageRequest,
+} from "../../../workers/data/dist/node_modules/data.worker"
 import { Block } from "blockly"
 import postTransformData from "./workers/data.proxy"
+import DataColumnChooserField from "../fields/DataColumnChooserField"
+import { tidyResolveFieldColumn } from "../fields/tidy"
 
 const RECORD_WINDOW_BLOCK = "jacdac_record_window"
+const MOVING_AVERAGE_BLOCK = "jacdac_moving_average"
 
 export class SensorsBlockDomainSpecificLanguage
     extends ServicesBaseDSL
@@ -91,6 +99,49 @@ export class SensorsBlockDomainSpecificLanguage
                     })
                 },
             },
+            {
+                kind: "block",
+                type: MOVING_AVERAGE_BLOCK,
+                message0: "moving average %1 of %2 horizon %3",
+                colour,
+                args0: [
+                    <TextInputDefinition>{
+                        type: "field_input",
+                        name: "newcolumn",
+                        spellcheck: false,
+                    },
+                    <DataColumnInputDefinition>{
+                        type: DataColumnChooserField.KEY,
+                        name: "column",
+                        dataType: "number",
+                    },
+                    <NumberInputDefinition>{
+                        type: "field_number",
+                        name: "horizon",
+                        min: 2,
+                        precision: 1,
+                    },
+                ],
+                previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
+                nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+                dataPreviewField: true,
+                transformData: (b: Block, data: object[]) => {
+                    const newcolumn = b.getFieldValue("newcolumn")
+                    const column = tidyResolveFieldColumn(data, b, "column", {
+                        type: "number",
+                    })
+                    const horizon = Math.max(2, b.getFieldValue("horizon"))
+                    if (!newcolumn || !column) return Promise.resolve(data)
+                    return postTransformData(<DataMovingAverageRequest>{
+                        type: "moving_average",
+                        data,
+                        newcolumn,
+                        column,
+                        horizon,
+                    })
+                },
+                template: "meta",
+            },
         ]
     }
 
@@ -111,6 +162,10 @@ export class SensorsBlockDomainSpecificLanguage
                     <BlockDefinition>{
                         kind: "block",
                         type: RECORD_WINDOW_BLOCK,
+                    },
+                    <BlockDefinition>{
+                        kind: "block",
+                        type: MOVING_AVERAGE_BLOCK,
                     },
                 ],
             },

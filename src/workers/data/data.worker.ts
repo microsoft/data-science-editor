@@ -2,7 +2,6 @@
 import {
     groupBy,
     summarize,
-    mean,
     median,
     min,
     max,
@@ -22,9 +21,21 @@ import {
     sum,
     variance,
     sliceSample,
+    mutateWithSummary,
+    mean,
+    roll,
 } from "@tidyjs/tidy"
 import { bin } from "d3-array"
 import { sampleCorrelation, linearRegression } from "simple-statistics"
+
+export type DataSummarizer =
+    | "mean"
+    | "median"
+    | "min"
+    | "max"
+    | "sum"
+    | "deviation"
+    | "variance"
 
 export interface DataMessage {
     worker: "data"
@@ -85,14 +96,14 @@ export interface DataMutateNumberRequest extends DataRequest {
 export interface DataSummarizeRequest extends DataRequest {
     type: "summarize"
     columns: string[]
-    calc: string
+    calc: DataSummarizer
 }
 
 export interface DataSummarizeByGroupRequest extends DataRequest {
     type: "summarize_by_group"
     column: string
     by: string
-    calc: string
+    calc: DataSummarizer
 }
 
 export interface DataCountRequest extends DataRequest {
@@ -136,6 +147,13 @@ export interface DataSliceOptions {
 
 export interface DataSliceRequest extends DataRequest, DataSliceOptions {
     type: "slice"
+}
+
+export interface DataMovingAverageRequest extends DataRequest {
+    type: "moving_average"
+    horizon: number
+    column: string
+    newcolumn: string
 }
 
 const summarizers = {
@@ -333,7 +351,7 @@ const handlers: { [index: string]: (props: any) => object[] } = {
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const items: SummarizeSpec<Object> = {}
-        columns.forEach(column => (items[column] = summarizer(column)))
+        columns.forEach(column => (items[column] = summarizer(column as any)))
         return tidy(data, summarize(items))
     },
     summarize_by_group: (props: DataSummarizeByGroupRequest) => {
@@ -344,7 +362,7 @@ const handlers: { [index: string]: (props: any) => object[] } = {
         if (!summarizer) return data
 
         const items: SummarizeSpec<Object> = {}
-        items[column] = summarizer(column)
+        items[column] = summarizer(column as any)
         const res = tidy(
             data,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -419,6 +437,15 @@ const handlers: { [index: string]: (props: any) => object[] } = {
               ) as object[])
             : []
         return tidied
+    },
+    moving_average: (props: DataMovingAverageRequest) => {
+        const { data, horizon, column, newcolumn } = props
+        return tidy(
+            data,
+            mutateWithSummary({
+                [newcolumn]: roll(horizon, mean(column), { partial: true }),
+            })
+        )
     },
 }
 
