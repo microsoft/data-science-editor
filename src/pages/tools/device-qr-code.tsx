@@ -42,7 +42,7 @@ export default function DeviceQRCodeGenerator() {
                         placeholder=""
                         onChange={handleUrlChange}
                         error={!!error}
-                        helperText={error || "Short URL, capital letters best"}
+                        helperText={error || "Use _very_ short URL and CAPITAL letters for best results."}
                     />
                 </Grid>
                 <Grid item>
@@ -50,7 +50,9 @@ export default function DeviceQRCodeGenerator() {
                         label="block size (mm)"
                         type="number"
                         value={size}
+                        inputProps={{ step: 0.1 }}
                         onChange={handleSizeChange}
+                        helperText="Image size equals block size times number of blocks needed to encode URL."
                     />
                 </Grid>
                 <Grid item>

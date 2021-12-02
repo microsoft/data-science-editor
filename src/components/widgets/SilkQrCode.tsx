@@ -1,15 +1,10 @@
-import {
-    Button,
-    Card,
-    CardContent,
-    CardHeader,
-    Grid,
-} from "@mui/material"
+import { Button, Card, CardContent, CardHeader, Grid } from "@mui/material"
 import QRCode from "qrcode"
 import React, { useState } from "react"
 import { useEffect } from "react"
 import useEffectAsync from "../useEffectAsync"
 import Alert from "../ui/Alert"
+import { roundWithPrecision } from "../../../jacdac-ts/src/jdom/utils"
 
 export interface QRCodeProps {
     url: string
@@ -201,7 +196,7 @@ export default function SilkQRCode(props: {
     const altiumUri =
         altium && `data:text/plain;charset=UTF-8,${encodeURIComponent(altium)}`
 
-    const widthmm = size * numBlocks
+    const widthmm = roundWithPrecision(size * numBlocks, 2, Math.ceil)
     return (
         <>
             {error && <Alert severity="warning">{error}</Alert>}
