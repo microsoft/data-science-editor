@@ -1,16 +1,22 @@
-import { Alert, Grid, Switch, TextField } from "@mui/material"
+import { Alert, Grid, TextField } from "@mui/material"
 import React, { ChangeEvent, lazy, useState } from "react"
-import { useId } from "react-use-id-hook"
 import Suspense from "../../components/ui/Suspense"
+import SwitchWithLabel from "../../components/ui/SwitchWithLabel"
 const SilkQRCode = lazy(() => import("../../components/widgets/SilkQrCode"))
 
 export default function DeviceQRCodeGenerator() {
     const [url, setURL] = useState(``)
     const [mirror, setMirror] = useState(false)
     const [size, setSize] = useState(0.3)
+    const [error, setError] = useState("")
     const handleUrlChange = (ev: ChangeEvent<HTMLInputElement>) => {
-        const vanity = ev.target.value?.toUpperCase()
+        const vanity = (ev.target.value || "").trim()
         setURL(vanity)
+        setError(
+            !/^https?:\/\/./i.test(vanity)
+                ? "Must start with http:// or https://"
+                : undefined
+        )
     }
     const handleSizeChange = (ev: ChangeEvent<HTMLInputElement>) => {
         const s = Number(ev.target.value)
@@ -19,8 +25,6 @@ export default function DeviceQRCodeGenerator() {
     const handleMirror = (ev: ChangeEvent<HTMLInputElement>) => {
         setMirror(!!ev.target.checked)
     }
-    const mirrorid = useId()
-    const switchid = useId()
     return (
         <>
             <h1>Device Silk QR Code generator</h1>
@@ -37,7 +41,8 @@ export default function DeviceQRCodeGenerator() {
                         value={url}
                         placeholder=""
                         onChange={handleUrlChange}
-                        helperText={"Short URL, capital letters best"}
+                        error={!!error}
+                        helperText={error || "Short URL, capital letters best"}
                     />
                 </Grid>
                 <Grid item>
@@ -49,19 +54,21 @@ export default function DeviceQRCodeGenerator() {
                     />
                 </Grid>
                 <Grid item>
-                    <Switch checked={mirror} onChange={handleMirror} />
-                    <label id={mirrorid} htmlFor={switchid}>
-                        mirror
-                    </label>
+                    <SwitchWithLabel
+                        checked={mirror}
+                        onChange={handleMirror}
+                        label="mirror"
+                    />
                 </Grid>
             </Grid>
-            {url && (
+            {url && !error && (
                 <>
-                    <h2>URL</h2>
-                    <pre>
-                        <a href={url}>{url}</a>
-                    </pre>
-                    <h2>QR codes</h2>
+                    <h2>
+                        QR codes for{" "}
+                        <a href={url} target="_blank" rel="noopener noreferrer">
+                            {url}
+                        </a>
+                    </h2>
                     <Suspense>
                         <SilkQRCode url={url} mirror={mirror} size={size} />
                     </Suspense>

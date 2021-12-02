@@ -1,4 +1,10 @@
-import { Button, Card, CardContent, CardHeader, Grid } from "@mui/material"
+import {
+    Button,
+    Card,
+    CardContent,
+    CardHeader,
+    Grid,
+} from "@mui/material"
 import QRCode from "qrcode"
 import React, { useState } from "react"
 import { useEffect } from "react"
@@ -175,6 +181,7 @@ export default function SilkQRCode(props: {
 }) {
     const { url, layer, mirror = true, size = 0.3, margin = 1 } = props
     const eagleLayer = layer ?? mirror ? 21 : 22
+
     const { altium, kicad, scr, image, error, numBlocks } = useQRCodeSCR(
         url,
         eagleLayer,
@@ -193,6 +200,8 @@ export default function SilkQRCode(props: {
         kicad && `data:text/plain;charset=UTF-8,${encodeURIComponent(kicad)}`
     const altiumUri =
         altium && `data:text/plain;charset=UTF-8,${encodeURIComponent(altium)}`
+
+    const widthmm = size * numBlocks
     return (
         <>
             {error && <Alert severity="warning">{error}</Alert>}
@@ -246,16 +255,25 @@ export default function SilkQRCode(props: {
                         <Grid container spacing={1}>
                             <Grid item>
                                 <Card>
-                                    <CardHeader title="original size" />
-                                    <CardContent>
-                                        <img
-                                            className="pixelated"
-                                            style={{
-                                                width: `${size * numBlocks}mm`,
-                                            }}
-                                            src={imageUri}
-                                            alt={`QR code of ${url}`}
-                                        />
+                                    <CardHeader
+                                        title="original size"
+                                        subheader={`${widthmm}x${widthmm}mm`}
+                                    />
+                                    <CardContent sx={{ textAlign: "center" }}>
+                                        <a
+                                            href={imageUri}
+                                            title="Download image"
+                                            download="qr-code.png"
+                                        >
+                                            <img
+                                                className="pixelated"
+                                                style={{
+                                                    width: `${widthmm}mm`,
+                                                }}
+                                                src={imageUri}
+                                                alt={`QR code of ${url} scaled 1:1`}
+                                            />
+                                        </a>
                                     </CardContent>
                                 </Card>
                             </Grid>
@@ -263,12 +281,18 @@ export default function SilkQRCode(props: {
                                 <Card>
                                     <CardHeader title="zoomed" />
                                     <CardContent>
-                                        <img
-                                            className="pixelated"
-                                            style={{ width: `10rem` }}
-                                            src={imageUri}
-                                            alt={`QR code of ${url}`}
-                                        />
+                                        <a
+                                            href={imageUri}
+                                            title="Download image"
+                                            download="qr-code.png"
+                                        >
+                                            <img
+                                                className="pixelated"
+                                                style={{ width: `10rem` }}
+                                                src={imageUri}
+                                                alt={`QR code of ${url}`}
+                                            />
+                                        </a>
                                     </CardContent>
                                 </Card>
                             </Grid>
