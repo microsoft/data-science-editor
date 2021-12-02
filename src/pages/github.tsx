@@ -19,24 +19,18 @@ export default function Page() {
                 </a>
                 .
             </p>
-            <h2>Specification</h2>
+            <h2>Specification and Schematics</h2>
             <GithubRepositoryList
-                repos={["microsoft/jacdac"]}
+                repos={["microsoft/jacdac", "microsoft/jacdac-ddk"]}
                 showDescription={true}
             />
             <h2>Module Development</h2>
-
-            <h3>Schematics and Server C SDK</h3>
-
-            <GithubRepositoryList
-                repos={["microsoft/jacdac-ddk", "microsoft/jacdac-c"]}
-                showDescription={true}
-            />
 
             <h3>Server SDKs</h3>
 
             <GithubRepositoryList
                 repos={[
+                    "microsoft/jacdac-c",
                     "microsoft/jacdac-stm32x0",
                     "microsoft/jacdac-esp32",
                     "microsoft/jacdac-padauk",
@@ -49,8 +43,6 @@ export default function Page() {
             <GithubRepositoryList
                 repos={[
                     "microsoft/jacdac-ts",
-                    "microsoft/jacdac-cli",
-                    "microsoft/react-jacdac",
                     "microsoft/jacdac-python",
                     "microsoft/pxt-jacdac",
                 ]}
@@ -60,7 +52,11 @@ export default function Page() {
             <h2>Integrations</h2>
 
             <GithubRepositoryList
-                repos={["microsoft/node-red-contrib-jacdac"]}
+                repos={[
+                    "microsoft/node-red-contrib-jacdac",
+                    "microsoft/react-jacdac",
+                    "microsoft/jacdac-cli",
+                ]}
                 showDescription={true}
             />
 
