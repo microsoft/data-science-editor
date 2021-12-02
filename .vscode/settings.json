@@ -18,5 +18,8 @@
     "python.analysis.typeCheckingMode": "basic",
     "[python]": {
         "editor.defaultFormatter": "ms-python.python"
+    },
+    "files.associations": {
+        "*.mdx": "markdown"
     }
 }
