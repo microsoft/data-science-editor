@@ -12,6 +12,8 @@ import {
     NumberInputDefinition,
     TextInputDefinition,
     DataColumnInputDefinition,
+    OptionsInputDefinition,
+    calcOptions,
 } from "../toolbox"
 import BlockDomainSpecificLanguage, {
     CreateBlocksOptions,
@@ -21,7 +23,7 @@ import TwinField from "../fields/TwinField"
 import { ServicesBaseDSL } from "./servicesbase"
 import type {
     DataRecordWindowRequest,
-    DataMovingAverageRequest,
+    DataRollingSummaryRequest,
 } from "../../../workers/data/dist/node_modules/data.worker"
 import { Block } from "blockly"
 import postTransformData from "./workers/data.proxy"
@@ -29,7 +31,7 @@ import DataColumnChooserField from "../fields/DataColumnChooserField"
 import { tidyResolveFieldColumn } from "../fields/tidy"
 
 const RECORD_WINDOW_BLOCK = "jacdac_record_window"
-const MOVING_AVERAGE_BLOCK = "jacdac_moving_average"
+const ROLLING_SUMMARY_BLOCK = "jacdac_rolling_summary"
 
 export class SensorsBlockDomainSpecificLanguage
     extends ServicesBaseDSL
@@ -101,14 +103,20 @@ export class SensorsBlockDomainSpecificLanguage
             },
             {
                 kind: "block",
-                type: MOVING_AVERAGE_BLOCK,
-                message0: "moving average %1 of %2 horizon %3",
+                type: ROLLING_SUMMARY_BLOCK,
+                message0:
+                    "compute column %1 as rolling %2 of %3 with horizon %4",
                 colour,
                 args0: [
                     <TextInputDefinition>{
                         type: "field_input",
                         name: "newcolumn",
                         spellcheck: false,
+                    },
+                    <OptionsInputDefinition>{
+                        type: "field_dropdown",
+                        name: "calc",
+                        options: calcOptions,
                     },
                     <DataColumnInputDefinition>{
                         type: DataColumnChooserField.KEY,
@@ -131,13 +139,15 @@ export class SensorsBlockDomainSpecificLanguage
                         type: "number",
                     })
                     const horizon = Math.max(2, b.getFieldValue("horizon"))
+                    const calc = b.getFieldValue("calc") || "mean"
                     if (!newcolumn || !column) return Promise.resolve(data)
-                    return postTransformData(<DataMovingAverageRequest>{
-                        type: "moving_average",
+                    return postTransformData(<DataRollingSummaryRequest>{
+                        type: "rolling_summary",
                         data,
                         newcolumn,
                         column,
                         horizon,
+                        calc,
                     })
                 },
                 template: "meta",
@@ -165,7 +175,7 @@ export class SensorsBlockDomainSpecificLanguage
                     },
                     <BlockDefinition>{
                         kind: "block",
-                        type: MOVING_AVERAGE_BLOCK,
+                        type: ROLLING_SUMMARY_BLOCK,
                     },
                 ],
             },

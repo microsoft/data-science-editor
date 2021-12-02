@@ -12,6 +12,7 @@ import {
     TextInputDefinition,
     DataColumnInputDefinition,
     DummyInputDefinition,
+    calcOptions,
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
 import postTransformData from "./workers/data.proxy"
@@ -57,15 +58,6 @@ const DATA_LINEAR_REGRESSION_BLOCK = "data_linear_regression"
 const DATA_COMMENT_BLOCK = "data_comment_block"
 
 const [, operatorsColour, computeColour, statisticsColour] = palette()
-const calcOptions = [
-    "mean",
-    "median",
-    "min",
-    "max",
-    "sum",
-    "deviation",
-    "variance",
-].map(n => [n, n])
 const dataDsl: BlockDomainSpecificLanguage = {
     id: "dataScience",
     createBlocks: () => [

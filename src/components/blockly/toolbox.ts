@@ -268,6 +268,16 @@ export interface ToolboxConfiguration {
     contents: ContentDefinition[]
 }
 
+export const calcOptions = [
+    "mean",
+    "median",
+    "min",
+    "max",
+    "sum",
+    "deviation",
+    "variance",
+].map(n => [n, n])
+
 export function visitToolbox(
     node: ToolboxConfiguration,
     visitor: {

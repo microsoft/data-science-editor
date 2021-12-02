@@ -149,11 +149,12 @@ export interface DataSliceRequest extends DataRequest, DataSliceOptions {
     type: "slice"
 }
 
-export interface DataMovingAverageRequest extends DataRequest {
-    type: "moving_average"
+export interface DataRollingSummaryRequest extends DataRequest {
+    type: "rolling_summary"
     horizon: number
     column: string
     newcolumn: string
+    calc: DataSummarizer
 }
 
 const summarizers = {
@@ -438,14 +439,22 @@ const handlers: { [index: string]: (props: any) => object[] } = {
             : []
         return tidied
     },
-    moving_average: (props: DataMovingAverageRequest) => {
-        const { data, horizon, column, newcolumn } = props
-        return tidy(
+    rolling_summary: (props: DataRollingSummaryRequest) => {
+        const { data, horizon, column, newcolumn, calc } = props
+        const summarizer = summarizers[calc]
+        if (!calc) return null
+
+        const res = tidy(
             data,
             mutateWithSummary({
-                [newcolumn]: roll(horizon, mean(column), { partial: true }),
+                [newcolumn]: roll(horizon, summarizer(column), {
+                    partial: true,
+                }),
             })
         )
+        // deviation/variance always generate undefined
+        if (calc === "deviation" || calc === "variance") res.shift()
+        return res
     },
 }
 
