@@ -15,8 +15,8 @@ const classes = {
 
 const Root = styled("div")(({ theme }) => ({
     [`& .${classes.graph}`]: {
-        marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(2),
+        marginTop: theme.spacing(1),
+        marginBottom: theme.spacing(1),
     },
 
     [`& .${classes.mini}`]: {
@@ -186,7 +186,8 @@ function UnitTrendChart(
                     fontSize={fontSize}
                     fill={textPrimary}
                 >
-                    {maxv}{unitName}
+                    {maxv}
+                    {unitName}
                 </text>
                 <text
                     x={margin}
@@ -194,7 +195,8 @@ function UnitTrendChart(
                     fontSize={fontSize}
                     fill={textPrimary}
                 >
-                    {minv}{unitName}
+                    {minv}
+                    {unitName}
                 </text>
                 {opposite && (
                     <line

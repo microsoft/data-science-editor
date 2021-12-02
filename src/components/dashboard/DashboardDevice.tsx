@@ -130,7 +130,9 @@ export default function DashboardDevice(
                     >
                         {showChart && (
                             <IconButtonWithTooltip
-                                title={charts ? "chart mode" : "widget mode"}
+                                title={
+                                    charts ? "chart visible" : "chart hidden"
+                                }
                                 onClick={handleChartChanged}
                             >
                                 <BarChartIcon />
