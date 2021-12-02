@@ -7,7 +7,7 @@ const _palette = [
     "#f748a5",
     "#359b73",
     "#d55e00",
-    "e69f00",
+    "#e69f00",
 ]
 
 export default function palette() {
