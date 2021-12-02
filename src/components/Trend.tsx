@@ -38,9 +38,10 @@ function UnitTrendChart(
         unit: string
         vpw: number
         vph: number
+        yAxis?: boolean
     } & TrendProps
 ) {
-    const { dataSet, useGradient, data, unit, vpw, vph, dot } = props
+    const { dataSet, useGradient, data, unit, vpw, vph, dot, yAxis } = props
     const { name: unitName, converter: unitConverter } = useUnitConverter(unit)
     const { textPrimary } = useWidgetTheme("primary")
     const shape = unit == "#" ? "step" : "line"
@@ -179,25 +180,29 @@ function UnitTrendChart(
                 </defs>
             )}
             <g transform={`translate(${toffset}, ${vph - margin})`}>
-                <text
-                    x={margin}
-                    y={-vph + margin + margin / 2}
-                    dominantBaseline="hanging"
-                    fontSize={fontSize}
-                    fill={textPrimary}
-                >
-                    {maxv}
-                    {unitName}
-                </text>
-                <text
-                    x={margin}
-                    y={margin}
-                    fontSize={fontSize}
-                    fill={textPrimary}
-                >
-                    {minv}
-                    {unitName}
-                </text>
+                {yAxis && (
+                    <g>
+                        <text
+                            x={margin}
+                            y={-vph + margin + margin / 2}
+                            dominantBaseline="hanging"
+                            fontSize={fontSize}
+                            fill={textPrimary}
+                        >
+                            {maxv}
+                            {unitName}
+                        </text>
+                        <text
+                            x={margin}
+                            y={margin}
+                            fontSize={fontSize}
+                            fill={textPrimary}
+                        >
+                            {minv}
+                            {unitName}
+                        </text>
+                    </g>
+                )}
                 {opposite && (
                     <line
                         x1={x(mint)}
@@ -294,6 +299,7 @@ function UnitTrend(
                         vpw={vpw}
                         vph={vph}
                         dot={true}
+                        yAxis={!mini}
                         {...props}
                     />
                 )}
@@ -316,7 +322,12 @@ export default function Trend(
     return (
         <Root className={mini ? classes.mini : undefined}>
             {units.map(unit => (
-                <UnitTrend key={`graph${unit}`} unit={unit} {...props} />
+                <UnitTrend
+                    key={`graph${unit}`}
+                    mini={mini}
+                    unit={unit}
+                    {...props}
+                />
             ))}
         </Root>
     )

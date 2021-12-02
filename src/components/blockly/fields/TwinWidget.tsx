@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React, { useContext, useRef } from "react"
 import { Grid } from "@mui/material"
 import DashboardServiceWidget from "../../dashboard/DashboardServiceWidget"
 import WorkspaceContext from "../WorkspaceContext"
@@ -11,15 +11,15 @@ import useBlockData from "../useBlockData"
 import JacdacContext, { JacdacContextProps } from "../../../jacdac/Context"
 import { toMap } from "../../../../jacdac-ts/src/jdom/utils"
 
-const HORIZON = 10
+const DEFAULT_HORIZON = 30 // 10 seconds
 export default function TwinWidget() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const { roleService, flyout, sourceId, sourceBlock } =
-        useContext(WorkspaceContext)
-    const { data, setData } = useBlockData(sourceBlock, [])
+    const { twinService, flyout, sourceBlock } = useContext(WorkspaceContext)
+    const { data, setData } = useBlockData(sourceBlock, [], 50)
+    const currentDataRef = useRef<{ time: number }[]>([])
 
     // data collection
-    const register = useBestRegister(roleService)
+    const register = useBestRegister(twinService)
     const setRegisterData = () => {
         const newValue = register?.unpackedValue
         if (newValue !== undefined) {
@@ -28,23 +28,31 @@ export default function TwinWidget() {
                 f => f.name,
                 (f, i) => newValue[i]
             )
+            const now = bus.timestamp / 1000
+            const rowTime = register.lastDataTimestamp / 1000
+            const outdated = now - DEFAULT_HORIZON
+            const currentData = currentDataRef.current
             const newData = [
-                ...(data || []),
+                ...(currentData || []).filter(d => d.time >= outdated),
                 {
-                    ...{ time: bus.timestamp / 1000 },
+                    time: rowTime,
                     ...newRow,
                 },
-            ].slice(-HORIZON)
+            ]
+            currentDataRef.current = newData
             setData(newData)
         }
     }
+    useEffect(
+        () => register?.subscribe(REPORT_UPDATE, setRegisterData),
+        [register]
+    )
     useEffect(() => {
-        setRegisterData()
-        return register?.subscribe(REPORT_UPDATE, setRegisterData)
-    }, [register, sourceId, data])
+        currentDataRef.current = data
+    }, [sourceBlock])
 
     if (flyout) return null
-    if (!roleService) return <NoServiceAlert />
+    if (!twinService) return <NoServiceAlert />
 
     return (
         <Grid
@@ -57,7 +65,7 @@ export default function TwinWidget() {
             <Grid item>
                 <PointerBoundary>
                     <DashboardServiceWidget
-                        service={roleService}
+                        service={twinService}
                         visible={true}
                         variant="icon"
                     />

@@ -135,11 +135,7 @@ export default function VegaLiteWidget(props: {
                   vegaDataset: vegaData,
               })
           }
-        : async () => {
-              const view = viewRef.current
-              const canvas = await view?.toCanvas(2)
-              return canvas
-          }
+        : undefined
     const showToolbar = !!handleCopy || !!handleExport
 
     return (

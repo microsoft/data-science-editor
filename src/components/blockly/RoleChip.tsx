@@ -15,6 +15,7 @@ import useServiceServer from "../hooks/useServiceServer"
 import CancelIcon from "@mui/icons-material/Cancel"
 import { Chip, Tooltip } from "@mui/material"
 import { TWIN_BLOCK } from "./toolbox"
+import { toRoleType } from "./dsl/servicesbase"
 
 export default function RoleChip(props: {
     role: string
@@ -58,14 +59,14 @@ export default function RoleChip(props: {
                 twinBlock = workspace.newBlock(TWIN_BLOCK) as BlockSvg
                 let variable = workspace.getVariable(
                     role,
-                    `${serviceClass}:client`
+                    toRoleType(service.specification, true)
                 )
                 if (!variable)
                     variable = workspace.getVariable(
                         role,
-                        `${serviceClass}:server`
+                        toRoleType(service.specification, false)
                     )
-                console.log(`new twin`, { twinBlock, variable })
+                console.debug(`new twin`, { twinBlock, variable })
                 const field = twinBlock.inputList[0].fieldRow.find(
                     f => f.name === "role"
                 ) as FieldVariable
@@ -83,7 +84,7 @@ export default function RoleChip(props: {
     return (
         <Chip
             label={role}
-            variant={service ? "default" : "outlined"}
+            variant={service ? undefined : "outlined"}
             avatar={service && <DeviceAvatar device={service.device} />}
             onClick={handleRoleClick}
             onDelete={serviceServer ? handleDelete : undefined}

@@ -6,7 +6,11 @@ import React, {
     useEffect,
     useState,
 } from "react"
-import { CHANGE } from "../../../jacdac-ts/src/jdom/constants"
+import {
+    CHANGE,
+    DEVICE_ANNOUNCE,
+    DEVICE_DISCONNECT,
+} from "../../../jacdac-ts/src/jdom/constants"
 import { arrayConcatMany, toMap } from "../../../jacdac-ts/src/jdom/utils"
 import RoleManager from "../../../jacdac-ts/src/jdom/rolemanager"
 import bus from "../../jacdac/providerbus"
@@ -46,6 +50,11 @@ import {
     DslWorkspaceFileMessage,
 } from "./dsl/iframedsl"
 import { AllOptions } from "./fields/IFrameDataChooserField"
+import {
+    dashify,
+    humanify,
+} from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
+import { isSensor } from "../../../jacdac-ts/src/jdom/spec"
 
 export interface BlockProps {
     editorId: string
@@ -309,6 +318,39 @@ export function BlockProvider(props: {
     useEffect(() => {
         bus.backgroundRefreshRegisters = !dragging
     }, [dragging])
+
+    // handle services
+    useEffect(
+        () =>
+            bus.subscribe([DEVICE_ANNOUNCE, DEVICE_DISCONNECT], () => {
+                if (!workspace) return
+                const services = bus.services({ ignoreInfrastructure: true })
+                services.forEach(service => {
+                    let name = ""
+                    const instanceName = service.instanceName
+                    if (instanceName) name += humanify(dashify(instanceName))
+                    else {
+                        name += humanify(
+                            dashify(service.specification.shortName)
+                        )
+                        if (
+                            service.device.services({
+                                serviceClass: service.serviceClass,
+                            }).length > 1
+                        )
+                            name += `[${service.serviceIndex.toString(16)}]`
+                    }
+                    name += ` (${service.device.shortId})`
+                    workspace.createVariable(
+                        name,
+                        isSensor(service.specification) ? "sensor" : "service",
+                        service.id
+                    )
+                    // TODO: remove unused variables?
+                })
+            }),
+        [bus, workspace]
+    )
 
     // load message from parent
     useWindowEvent(

@@ -54,7 +54,6 @@ function DisconnectedButton(props: {
                 variant={transparent ? "outlined" : "contained"}
                 color={transparent ? "inherit" : "primary"}
                 className={className}
-                startIcon={<JacdacIcon />}
                 onClick={handleConnect}
                 disabled={working}
             >

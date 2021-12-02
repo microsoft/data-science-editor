@@ -29,6 +29,7 @@ import {
 import BridgeButtons from "../ui/BridgeButtons"
 import Flags from "../../../jacdac-ts/src/jdom/flags"
 import DrawerToolsButton from "./DrawerToolsButton"
+import ConnectButtons from "../buttons/ConnectButtons"
 
 const InstallPWAButton = lazy(() => import("../ui/InstallPWAButton"))
 
@@ -139,6 +140,11 @@ function MainToolbar() {
                 />
             </Suspense>
             <BridgeButtons className={clsx(classes.menuButton)} />
+            <ConnectButtons
+                className={clsx(classes.menuButton)}
+                transparent={true}
+                full={"disconnected"}
+            />
             <OpenDashboardButton className={clsx(classes.menuButton)} />
             {false && (
                 <OpenVMEditorButton className={clsx(classes.menuButton)} />

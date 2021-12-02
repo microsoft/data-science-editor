@@ -94,7 +94,7 @@ export function tidySlice(
         return Promise.resolve(data)
 
     // crunch in webworker
-    console.debug(`slice data`, { data, options })
+    //console.debug(`slice data`, { data, options })
     return postTransformData(<DataSliceRequest>{
         type: "slice",
         data,

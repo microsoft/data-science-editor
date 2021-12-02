@@ -9,7 +9,7 @@ import { Alert } from "@mui/material"
 
 export default function NoServiceAlert() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const { roleService, roleServiceClass, flyout } =
+    const { twinService, roleServiceClass, flyout } =
         useContext(WorkspaceContext)
     const theme = useTheme()
     const spec = serviceSpecificationFromClassIdentifier(roleServiceClass)
@@ -17,10 +17,10 @@ export default function NoServiceAlert() {
         startServiceProviderFromServiceClass(bus, spec.classIdentifier)
 
     // nothing to do here
-    if (roleService || flyout) return null
+    if (twinService || flyout) return null
 
     // unresolved, unknown service
-    if (!roleService && !roleServiceClass) return null
+    if (!twinService && !roleServiceClass) return null
 
     // unknown spec
     if (!spec) return <Alert severity="warning">Unknown service</Alert>
