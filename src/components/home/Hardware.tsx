@@ -41,8 +41,8 @@ export default function Hardware() {
                 title="Hardware"
                 subtitle3="Integrate Jacdac into your devices."
                 imageColumns={6}
-                buttonText="Device Development Kit"
-                buttonUrl="/hardware/ddk"
+                buttonText="Hardware Specification"
+                buttonUrl="/reference/hardware-specification/"
                 image={
                     <StaticImage
                         src="./pcbfootprint.png"
@@ -171,8 +171,8 @@ export default function Hardware() {
                 description="Create Jacdac devices."
                 imageColumns={8}
                 centered={true}
-                buttonText="Device Development Kit"
-                buttonUrl="/hardware/ddk"
+                buttonText="Hardware Specification"
+                buttonUrl="/reference/hardware-specification/"
                 buttonVariant="link"
                 image={
                     <StaticImage

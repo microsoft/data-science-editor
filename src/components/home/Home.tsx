@@ -158,8 +158,8 @@ export default function Home() {
                 description="Create Jacdac devices."
                 imageColumns={6}
                 centered={true}
-                buttonText="Device Development Kit"
-                buttonUrl="/hardware/ddk/"
+                buttonText="Hardware Specification"
+                buttonUrl="/reference/hardware-specification/"
                 buttonVariant="link"
                 image={
                     <StaticImage
