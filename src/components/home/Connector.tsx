@@ -1,4 +1,6 @@
+/* eslint-disable jsx-a11y/media-has-caption */
 import { Grid } from "@mui/material"
+import { withPrefix } from "gatsby-link"
 import { StaticImage } from "gatsby-plugin-image"
 import React from "react"
 import CarouselGrid from "./CarouselGrid"
@@ -111,10 +113,18 @@ export default function Connector() {
                 subtitle="Lower costs. Higher efficiency."
                 description="Not requiring a female port mounted on the Jacdac modules means less sourcing and assembly costs. On top of that, our PCB edge and cable connector have been tested extensively to ensure a consistent experience up to 1500 cycles."
                 image={
-                    <StaticImage
-                        src="./forces.png"
-                        alt="The cable insertion and simulated forces."
-                    />
+                    <video
+                        autoPlay={true}
+                        muted={true}
+                        loop={true}
+                        playsInline={true}
+                        poster={withPrefix("/images/forces.png")}
+                    >
+                        <source
+                            src={withPrefix("/images/insertion.mp4")}
+                            type="video/mp4"
+                        />
+                    </video>
                 }
             />
 
