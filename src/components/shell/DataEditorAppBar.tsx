@@ -34,9 +34,6 @@ const StyledBox = styled(Box)(({ theme }) => ({
     },
 }))
 
-export const FEEDBACK_URL =
-    "https://github.com/microsoft/jacdac/discussions/categories/data-editor"
-
 export default function DataEditorAppBar() {
     const { darkMode } = useContext(DarkModeContext)
     const appBarColor = darkMode === "dark" ? "inherit" : undefined
@@ -71,15 +68,6 @@ export default function DataEditorAppBar() {
                             to="/editors/data/about"
                         >
                             About
-                        </Link>
-                        <Link
-                            className={classes.menuButton}
-                            aria-label="Send feedback in our forums"
-                            title="Send feedback in our forums"
-                            color="inherit"
-                            href={FEEDBACK_URL}
-                        >
-                            Feedback
                         </Link>
                     </Toolbar>
                 </AppBar>

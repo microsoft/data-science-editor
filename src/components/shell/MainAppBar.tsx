@@ -149,19 +149,6 @@ function MainToolbar() {
             {false && (
                 <OpenVMEditorButton className={clsx(classes.menuButton)} />
             )}
-            <IconButtonWithTooltip
-                className={clsx(
-                    classes.menuButton,
-                    drawerOpen && classes.hideMobile
-                )}
-                aria-label="Discussions"
-                title="Discussions"
-                edge="start"
-                color="inherit"
-                to="https://github.com/microsoft/jacdac/discussions"
-            >
-                <ForumIcon />
-            </IconButtonWithTooltip>
             <GitHubButton
                 className={clsx(
                     classes.menuButton,
