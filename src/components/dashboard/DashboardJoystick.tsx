@@ -35,7 +35,7 @@ function decay(value: number, rate: number, precision: number) {
 function JoystickWidget(props: DashboardServiceProps) {
     const { service } = props
     const register = useRegister(service, JoystickReg.Direction)
-    const [, x, y] = useRegisterUnpackedValue<
+    const [buttons, x, y] = useRegisterUnpackedValue<
         [JoystickButtons, number, number]
     >(register, props)
     const server = useServiceServer<JoystickServer>(service)
@@ -87,11 +87,15 @@ function JoystickWidget(props: DashboardServiceProps) {
         ev: React.PointerEvent<SVGCircleElement>
     ) => {
         ev.preventDefault()
+        const circle = ev.target as SVGCircleElement
+        circle.setPointerCapture(ev.pointerId)
         setGrabbing(true)
         updateJoystickDrag(ev.clientX, ev.clientY)
     }
     const handlePointerUp = (ev: React.PointerEvent<SVGCircleElement>) => {
         ev.preventDefault()
+        const circle = ev.target as SVGCircleElement
+        circle.releasePointerCapture(ev.pointerId)
         setGrabbing(false)
     }
     const handlePointerMove = async (
@@ -104,8 +108,8 @@ function JoystickWidget(props: DashboardServiceProps) {
     useAnimationFrame(() => {
         if (!server || grabbing) return false // let use do its thing
         const [ax, ay] = hostValues()
-        const nx = decay(ax, 0.9, 16)
-        const ny = decay(ay, 0.9, 16)
+        const nx = decay(ax, 0.95, 16)
+        const ny = decay(ay, 0.95, 16)
 
         // async
         onUpdate(nx, ny)
@@ -134,7 +138,7 @@ function JoystickWidget(props: DashboardServiceProps) {
                 width={ph}
                 height={pw}
                 rx={rp}
-                fill={controlBackground}
+                fill={buttons & JoystickButtons.Up ? active : controlBackground}
             ></rect>
             <rect
                 className="dpad-down"
@@ -143,7 +147,9 @@ function JoystickWidget(props: DashboardServiceProps) {
                 width={ph}
                 height={pw}
                 rx={rp}
-                fill={controlBackground}
+                fill={
+                    buttons & JoystickButtons.Down ? active : controlBackground
+                }
             ></rect>
             <rect
                 className="dpad-right"
@@ -152,7 +158,9 @@ function JoystickWidget(props: DashboardServiceProps) {
                 width={pw}
                 height={ph}
                 ry={rp}
-                fill={controlBackground}
+                fill={
+                    buttons & JoystickButtons.Right ? active : controlBackground
+                }
             ></rect>
             <rect
                 className="dpad-left"
@@ -161,7 +169,9 @@ function JoystickWidget(props: DashboardServiceProps) {
                 width={pw}
                 height={ph}
                 ry={rp}
-                fill={controlBackground}
+                fill={
+                    buttons & JoystickButtons.Left ? active : controlBackground
+                }
             ></rect>
             <circle
                 className="dpad-center"
@@ -186,7 +196,6 @@ function JoystickWidget(props: DashboardServiceProps) {
                     onPointerMove={handlePointerMove}
                     onPointerDown={handlePointerDown}
                     onPointerUp={handlePointerUp}
-                    onPointerLeave={handlePointerUp}
                     style={handleStyle}
                 />
             ) : (
