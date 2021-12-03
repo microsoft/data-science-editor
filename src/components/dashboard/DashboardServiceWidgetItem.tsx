@@ -1,5 +1,5 @@
 import { Grid, Typography } from "@mui/material"
-import React from "react"
+import React, { useMemo } from "react"
 import DashboardServiceWidget, {
     DashboardServiceProps,
 } from "./DashboardServiceWidget"
@@ -14,6 +14,10 @@ export default function DashboardServiceWidgetItem(
     const { service, charts, ...rest } = props
     const instanceName = useInstanceName(service, rest)
     const reading = useChange(service, srv => srv?.readingRegister)
+    const hasTrend = useMemo(
+        () => charts && reading?.fields.some(f => f.unit),
+        [charts, reading]
+    )
 
     return (
         <Grid item>
@@ -35,9 +39,13 @@ export default function DashboardServiceWidgetItem(
                 )}
             </Grid>
             <DashboardServiceWidget {...props} />
-            {charts && reading && (
+            {hasTrend && (
                 <Grid item xs={12}>
-                    <RegisterTrend register={reading} mini={false} height={18} />
+                    <RegisterTrend
+                        register={reading}
+                        mini={false}
+                        height={18}
+                    />
                 </Grid>
             )}
         </Grid>

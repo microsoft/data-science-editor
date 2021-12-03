@@ -318,7 +318,7 @@ export default function Trend(
 ) {
     const { dataSet, mini } = props
 
-    const units = unique(dataSet.units.map(unit => unit || "/"))
+    const units = unique(dataSet.units.filter(u => !!u))
     return (
         <Root className={mini ? classes.mini : undefined}>
             {units.map(unit => (
