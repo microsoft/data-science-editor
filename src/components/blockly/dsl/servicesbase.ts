@@ -2,6 +2,7 @@ import jsep from "jsep"
 import { Theme } from "@mui/material"
 import { withPrefix } from "gatsby"
 import {
+    dashify,
     humanify,
     isNumericType,
 } from "../../../../jacdac-ts/jacdac-spec/spectool/jdspec"
@@ -72,6 +73,7 @@ import {
 import { Variables } from "blockly"
 import { paletteColorByIndex } from "./palette"
 import { VariableJSON } from "./workspacejson"
+import JDService from "../../../../jacdac-ts/src/jdom/service"
 
 const SET_STATUS_LIGHT_BLOCK = "jacdac_set_status_light"
 const ROLE_BOUND_EVENT_BLOCK = "jacdac_role_bound_event"
@@ -237,6 +239,26 @@ type ServicePackets = {
 }
 
 // exports
+export function toServiceName(service: JDService) {
+    let name = ""
+    const instanceName = service.instanceName
+    if (instanceName) name += humanify(dashify(instanceName))
+    else {
+        name += humanify(dashify(service.specification.shortName))
+        if (
+            service.device.services({
+                serviceClass: service.serviceClass,
+            }).length > 1
+        )
+            name += `[${service.serviceIndex.toString(16)}]`
+    }
+    name += ` (${service.device.shortId})`
+    return name
+}
+
+export function toServiceType(service: JDService) {
+    return isSensor(service.specification) ? "sensor" : "service"
+}
 
 export function toRoleType(service: jdspec.ServiceSpec, client = true) {
     return `${service.classIdentifier}:${client ? "client" : "server"}`

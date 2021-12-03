@@ -16,6 +16,7 @@ import { useLocationSearchParamBoolean } from "../hooks/useLocationSearchParam"
 import dataVarDsl from "./dsl/datavardsl"
 import sensorsDSL from "./dsl/sensorsdsl"
 import dataSetDsl from "./dsl/datasetdsl"
+import ServiceChips from "./ServiceChips"
 
 const SENSORS_EDITOR_ID = "sensors"
 const SENSORS_SOURCE_STORAGE_KEY = "tools:sensoreditor"
@@ -29,6 +30,9 @@ function SensorsEditorWithContext() {
 
     return (
         <Grid container direction="column" spacing={1}>
+            <Grid item xs={12}>
+                <ServiceChips />
+            </Grid>
             {!!fileSystem && (
                 <Grid item xs={12}>
                     <FileTabs
