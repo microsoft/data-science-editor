@@ -6,10 +6,11 @@ import AppContext from "../AppContext"
 
 export default function VMStartSimulatorButton() {
     const { toggleShowDeviceHostsDialog } = useContext(AppContext)
+    const handleShowStartSimulator = () => toggleShowDeviceHostsDialog()
     return (
         <IconButtonWithTooltip
             title="start simulator"
-            onClick={toggleShowDeviceHostsDialog}
+            onClick={handleShowStartSimulator}
         >
             <AddIcon />
         </IconButtonWithTooltip>

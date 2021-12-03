@@ -83,6 +83,7 @@ export default function Collector() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { toggleShowDeviceHostsDialog, enqueueSnackbar } =
         useContext(AppContext)
+    const handleShowStartSimulator = () => toggleShowDeviceHostsDialog()
     const { fileSystem } = useContext(FileSystemContext)
     const root = useChange(fileSystem, _ => _?.root)
     const { fileStorage } = useContext(ServiceManagerContext)
@@ -370,7 +371,7 @@ export default function Collector() {
                     action={
                         <IconButtonWithTooltip
                             title="start simulator"
-                            onClick={toggleShowDeviceHostsDialog}
+                            onClick={handleShowStartSimulator}
                         >
                             <AddIcon />
                         </IconButtonWithTooltip>

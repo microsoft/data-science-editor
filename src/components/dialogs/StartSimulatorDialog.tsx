@@ -24,7 +24,10 @@ import HostedSimulatorsContext, {
 } from "../HostedSimulatorsContext"
 import useAnalytics from "../hooks/useAnalytics"
 import { useMiniSearch } from "react-minisearch"
-import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec"
+import {
+    isSensor,
+    serviceSpecificationFromClassIdentifier,
+} from "../../../jacdac-ts/src/jdom/spec"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import FilterListIcon from "@mui/icons-material/FilterList"
 import DialogTitleWithClose from "../ui/DialogTitleWithClose"
@@ -40,8 +43,9 @@ const miniSearchOptions = {
 export default function StartSimulatorDialog(props: {
     open: boolean
     onClose: () => void
+    sensor: boolean
 }) {
-    const { open, onClose } = props
+    const { open, onClose, sensor } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { enqueueSnackbar } = useContext(AppContext)
     const { addHostedSimulator } = useContext(HostedSimulatorsContext)
@@ -60,26 +64,38 @@ export default function StartSimulatorDialog(props: {
         simulator?: HostedSimulatorDefinition
     }[] = useMemo(
         () => [
-            ...servers().map(server => ({
-                id: `server:${server.name}`,
-                name: server.name,
-                description: server.serviceClasses
-                    .map(serviceSpecificationFromClassIdentifier)
-                    .map(
-                        spec =>
-                            `${spec.name} ${spec.shortName} ${spec.notes["short"]}`
-                    )
-                    .join(", "),
-                server,
-            })),
-            ...hostedSimulatorDefinitions().map(simulator => ({
-                id: `sim:${simulator.name}`,
-                name: simulator.name,
-                description: simulator.url,
-                simulator,
-            })),
+            ...servers()
+                .filter(
+                    server =>
+                        !sensor ||
+                        server.serviceClasses.some(sc =>
+                            isSensor(
+                                serviceSpecificationFromClassIdentifier(sc)
+                            )
+                        )
+                )
+                .map(server => ({
+                    id: `server:${server.name}`,
+                    name: server.name,
+                    description: server.serviceClasses
+                        .map(serviceSpecificationFromClassIdentifier)
+                        .map(
+                            spec =>
+                                `${spec.name} ${spec.shortName} ${spec.notes["short"]}`
+                        )
+                        .join(", "),
+                    server,
+                })),
+            ...hostedSimulatorDefinitions()
+                .filter(() => !sensor)
+                .map(simulator => ({
+                    id: `sim:${simulator.name}`,
+                    name: simulator.name,
+                    description: simulator.url,
+                    simulator,
+                })),
         ],
-        []
+        [sensor]
     )
     const { search, clearSearch, searchResults } = useMiniSearch(
         documents,
@@ -101,7 +117,6 @@ export default function StartSimulatorDialog(props: {
             addHostedSimulator(simulator)
             onClose()
         }
-    const handleCancel = () => onClose()
     const handleAddAll = async () => {
         const allProviderDefinitions = uniqueMap(
             servers().filter(hd => hd.serviceClasses.length === 1),

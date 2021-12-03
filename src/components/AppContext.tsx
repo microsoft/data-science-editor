@@ -33,6 +33,10 @@ export enum DrawerType {
     Console,
 }
 
+export interface ShowDeviceHostsOptions {
+    sensor?: boolean
+}
+
 export interface AppProps {
     drawerType: DrawerType
     setDrawerType: (type: DrawerType) => void
@@ -46,7 +50,7 @@ export interface AppProps {
         message: string | ReactNode,
         variant?: "success" | "warning" | "info"
     ) => void
-    toggleShowDeviceHostsDialog: () => void
+    toggleShowDeviceHostsDialog: (options?: ShowDeviceHostsOptions) => void
     showSelectRoleDialog: (srv: JDService) => void
     toggleShowConnectTransportDialog: () => void
     selectedPacket: Packet
@@ -84,6 +88,7 @@ export const AppProvider = ({ children }) => {
     const [searchQuery, setSearchQuery] = useState("")
     const [toolsMenu, _setToolsMenu] = useState(false)
     const [showDeviceHostsDialog, setShowDeviceHostsDialog] = useState(false)
+    const [showDeviceHostsSensors, setShowDeviceHostsSensors] = useState(false)
     const [showConnectTransportDialog, setShowConnectTransportDialog] =
         useState(false)
     const [showSelectRoleDialogService, setShowSelectRoleDialogService] =
@@ -137,8 +142,10 @@ export const AppProvider = ({ children }) => {
         []
     )
 
-    const toggleShowDeviceHostsDialog = () => {
+    const toggleShowDeviceHostsDialog = (options?: ShowDeviceHostsOptions) => {
         const b = !showDeviceHostsDialog
+        if (b)
+            setShowDeviceHostsSensors(!!options?.sensor)
         setShowDeviceHostsDialog(b)
         if (!b) setToolsMenu(false)
     }
@@ -177,9 +184,10 @@ export const AppProvider = ({ children }) => {
             {children}
             {showDeviceHostsDialog && (
                 <Suspense>
-                    <StartSimulatorDialog
+                <StartSimulatorDialog
                         open={showDeviceHostsDialog}
                         onClose={toggleShowDeviceHostsDialog}
+                        sensor={showDeviceHostsSensors}
                     />
                 </Suspense>
             )}

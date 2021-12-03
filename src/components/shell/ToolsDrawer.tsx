@@ -124,6 +124,7 @@ export default function ToolsDrawer() {
         useContext(AppContext)
     const { toggleDarkMode, darkMode } = useContext(DarkModeContext)
     const { converters, setConverter } = useUnitConverters()
+    const handleShowStartSimulator = () => toggleShowDeviceHostsDialog()
     const handleUnitClick =
         (unit: string, name: string, names: string[]) => () => {
             const index = (names.indexOf(name) + 1) % names.length
@@ -153,7 +154,7 @@ export default function ToolsDrawer() {
         },
         {
             text: "Start simulator",
-            action: toggleShowDeviceHostsDialog,
+            action: handleShowStartSimulator,
             icon: <KindIcon kind={VIRTUAL_DEVICE_NODE_NAME} />,
         },
         {

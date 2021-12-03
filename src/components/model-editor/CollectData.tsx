@@ -70,6 +70,7 @@ export default function CollectData(props: {
     const { fileStorage } = useContext(ServiceManagerContext)
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { toggleShowDeviceHostsDialog } = useContext(AppContext)
+    const handleShowStartSimulator = () => toggleShowDeviceHostsDialog()
     const readingRegisters = useChange(bus, bus =>
         arrayConcatMany(
             bus.devices().map(device =>
@@ -335,7 +336,7 @@ export default function CollectData(props: {
                         Select input sensors&nbsp;
                         <IconButtonWithTooltip
                             title="start simulator"
-                            onClick={toggleShowDeviceHostsDialog}
+                            onClick={handleShowStartSimulator}
                         >
                             <AddIcon />
                         </IconButtonWithTooltip>

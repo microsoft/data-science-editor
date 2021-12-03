@@ -86,6 +86,7 @@ export default function Dashboard(props: DashboardProps) {
         HostedSimulatorsContext
     )
     const { toggleShowDeviceHostsDialog } = useContext(AppContext)
+    const handleShowStartSimulator = () => toggleShowDeviceHostsDialog()
     const devices = useDevices({
         announced: true,
         ignoreInfrastructure: !Flags.diagnostics,
@@ -126,7 +127,7 @@ export default function Dashboard(props: DashboardProps) {
                             <IconButtonWithTooltip
                                 trackName="dashboard.simulators.start"
                                 title="start simulator"
-                                onClick={toggleShowDeviceHostsDialog}
+                                onClick={handleShowStartSimulator}
                             >
                                 <AddIcon />
                             </IconButtonWithTooltip>

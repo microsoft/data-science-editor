@@ -9,12 +9,13 @@ import AppContext from "../AppContext"
 export default function ServiceChips() {
     const services = useServices({ sensor: true })
     const { toggleShowDeviceHostsDialog } = useContext(AppContext)
+    const handleClick = () => toggleShowDeviceHostsDialog({ sensor: true })
 
     return (
         <ChipList>
             <Chip
                 label="start simulator"
-                onClick={toggleShowDeviceHostsDialog}
+                onClick={handleClick}
                 icon={<AddIcon />}
             />
             {services.map(services => (

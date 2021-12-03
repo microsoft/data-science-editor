@@ -23,6 +23,7 @@ export function SimulateDeviceHint() {
     const handleStartSimulator = (serviceClass: number) => () =>
         startServiceProviderFromServiceClass(bus, serviceClass)
     const { toggleShowDeviceHostsDialog } = useContext(AppContext)
+    const handleShowStartSimulator = () => toggleShowDeviceHostsDialog()
     return (
         <>
             Simulate
@@ -130,7 +131,7 @@ export function SimulateDeviceHint() {
             <IconButtonWithTooltip
                 trackName="simulator.hint.start"
                 title="start simulator"
-                onClick={toggleShowDeviceHostsDialog}
+                onClick={handleShowStartSimulator}
             >
                 <AddIcon />
             </IconButtonWithTooltip>
