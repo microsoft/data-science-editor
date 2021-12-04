@@ -20,6 +20,7 @@ import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import KindIcon from "../KindIcon"
 import { VIRTUAL_DEVICE_NODE_NAME } from "../../../jacdac-ts/src/jdom/constants"
 import { navigate } from "gatsby"
+import Alert from "../ui/Alert"
 
 export default function ServiceSpecificationCard(props: {
     serviceClass?: number
@@ -44,7 +45,7 @@ export default function ServiceSpecificationCard(props: {
     return (
         <Card>
             <CardHeader
-                title={spec?.name || "???"}
+                title={spec?.name || `0x${serviceClass?.toString(16) || "?"}`}
                 subheader={
                     showServiceClass &&
                     srv && <IDChip id={sc} filter={`srv:${srv}`} />
@@ -66,6 +67,7 @@ export default function ServiceSpecificationCard(props: {
                 }
             />
             <CardContent>
+                {!spec && <Alert severity="warning">Unknown service</Alert>}
                 {spec?.notes["short"] && (
                     <Typography variant="body2" component="div">
                         <Markdown

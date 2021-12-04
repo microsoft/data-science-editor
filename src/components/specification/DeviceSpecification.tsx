@@ -136,16 +136,20 @@ export default function DeviceSpecification(props: {
                     <h3>Services</h3>
                     <Grid container spacing={2}>
                         {services
-                            .map(sc =>
-                                serviceSpecificationFromClassIdentifier(sc)
-                            )
-                            .map(spec => (
+                            .map(serviceClass => ({
+                                serviceClass,
+                                spec: serviceSpecificationFromClassIdentifier(
+                                    serviceClass
+                                ),
+                            }))
+                            .map(({ serviceClass, spec }) => (
                                 <Grid
                                     item
-                                    key={spec.shortId}
+                                    key={serviceClass}
                                     {...gridBreakpoints}
                                 >
                                     <ServiceSpecificationCard
+                                        serviceClass={serviceClass}
                                         specification={spec}
                                     />
                                 </Grid>
