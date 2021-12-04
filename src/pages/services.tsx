@@ -83,7 +83,8 @@ export default function ServiceCatalog() {
                 srv =>
                     filter(srv.name) ||
                     filter(srv.notes["short"]) ||
-                    hexNum(srv.classIdentifier) === query
+                    m.indexOf(srv.classIdentifier.toString()) > -1 ||
+                    m.indexOf(srv.classIdentifier.toString(16)) > -1
             )
         }
         if (tag) {
