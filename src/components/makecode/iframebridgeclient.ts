@@ -1,4 +1,6 @@
 import {
+    REPORT_UPDATE,
+    SELF_ANNOUNCE,
     SRV_CONTROL,
     SRV_INFRASTRUCTURE,
     SRV_LOGGER,
@@ -7,6 +9,7 @@ import {
     SRV_ROLE_MANAGER,
     SRV_SETTINGS,
     SRV_UNIQUE_BRAIN,
+    SystemReg,
 } from "../../../jacdac-ts/src/jdom/constants"
 import JDBus from "../../../jacdac-ts/src/jdom/bus"
 import JDClient from "../../../jacdac-ts/src/jdom/client"
@@ -28,6 +31,7 @@ import {
     unique,
 } from "../../../jacdac-ts/src/jdom/utils"
 import { inIFrame } from "../../../jacdac-ts/src/jdom/iframeclient"
+import JDRegister from "../../../jacdac-ts/src/jdom/register"
 
 export interface PacketMessage {
     channel: "jacdac"
@@ -35,6 +39,13 @@ export interface PacketMessage {
     broadcast?: boolean
     data: Uint8Array
     sender?: string
+}
+
+export interface BulkSerialMessage {
+    type: "bulkserial"
+    data: { data: string; time: number }[]
+    id: string
+    sim: boolean
 }
 
 export function decodePacketMessage(bus: JDBus, msg: PacketMessage) {
@@ -97,6 +108,7 @@ export class IFrameBridgeClient extends JDClient {
     packetSent = 0
     packetProcessed = 0
     private _lastAspectRatio = 0
+    private _serialMessages: { data: string; time: number; sim: boolean }[] = []
 
     private _runOptions: SimulatorRunOptions
 
@@ -104,6 +116,9 @@ export class IFrameBridgeClient extends JDClient {
         super()
         this.postPacket = this.postPacket.bind(this)
         this.handleMessage = this.handleMessage.bind(this)
+        this.handleReportUpdate = this.handleReportUpdate.bind(this)
+        this.handleSerialMessagesUpload =
+            this.handleSerialMessagesUpload.bind(this)
         this.handleResize = debounce(this.handleResize.bind(this), 200)
         this.registerEvents()
 
@@ -129,6 +144,7 @@ export class IFrameBridgeClient extends JDClient {
         this.mount(this.bus.subscribe(DEVICE_ANNOUNCE, this.handleResize))
         // force compute add blocks button
         this.mount(this.bus.subscribe(DEVICE_ANNOUNCE, () => this.emit(CHANGE)))
+        this.mount(this.bus.subscribe(REPORT_UPDATE, this.handleReportUpdate))
         window.addEventListener("message", this.handleMessage, false)
         this.mount(() =>
             window.removeEventListener("message", this.handleMessage, false)
@@ -139,6 +155,9 @@ export class IFrameBridgeClient extends JDClient {
             // don't use bus.schedulere here
             const id = setInterval(this.handleResize, 1000)
             this.mount(() => clearInterval(id))
+
+            const serialid = setInterval(this.handleSerialMessagesUpload, 200)
+            this.mount(() => clearInterval(serialid))
 
             // handle received frame id
             const frameid = window.location.hash.slice(1)
@@ -152,6 +171,58 @@ export class IFrameBridgeClient extends JDClient {
                 "*"
             )
         }
+    }
+
+    private handleSerialMessagesUpload() {
+        if (this._serialMessages.length && this.hosted) {
+            const simmsgs = this._serialMessages
+                .filter(msg => msg.sim)
+                .map(msg => ({ data: msg.data, time: msg.time }))
+            const devmsgs = this._serialMessages
+                .filter(msg => !msg.sim)
+                .map(msg => ({ data: msg.data, time: msg.time }))
+            this._serialMessages = []
+            if (simmsgs.length)
+                window.parent.postMessage(
+                    <BulkSerialMessage>{
+                        type: "bulkserial",
+                        id: this.bridgeId,
+                        data: simmsgs,
+                        sim: true,
+                    },
+                    this.origin
+                )
+            if (devmsgs.length)
+                window.parent.postMessage(
+                    <BulkSerialMessage>{
+                        type: "bulkserial",
+                        id: this.bridgeId,
+                        data: devmsgs,
+                        sim: false,
+                    },
+                    this.origin
+                )
+        }
+    }
+
+    private handleReportUpdate(reg: JDRegister) {
+        if (reg.code !== SystemReg.Reading || !reg.specification) return
+        const { specification, service, fields } = reg
+        if (!specification) return
+        const { role, device } = service
+        if (!role) return
+
+        const sim = !device.isPhysical
+        const single = fields.length === 1
+        fields.forEach(field => {
+            this._serialMessages.push({
+                time: Date.now(),
+                data: `${reg.service.role}${single ? "" : `.${field.name}`}: ${
+                    field.value
+                }\n`,
+                sim,
+            })
+        })
     }
 
     private handleMessage(event: MessageEvent) {
