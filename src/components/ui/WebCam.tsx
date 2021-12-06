@@ -62,7 +62,7 @@ export default function WebCam() {
     const nodeRef = useRef<HTMLSpanElement>()
     const streamRef = useRef<MediaStream>()
     const videoRef = useRef<HTMLVideoElement>()
-    const [settingsOpen, setSettingsOpen] = useState(!deviceId)
+    const [settingsOpen, setSettingsOpen] = useState(false)
     const mounted = useMounted()
 
     const supportsFullScreen =
@@ -104,20 +104,24 @@ export default function WebCam() {
     // start camera
     useEffectAsync(async () => {
         stop()
-        if (!deviceId) return
 
-        console.debug(`webcam: start '${deviceId}'`)
+        console.debug(`webcam: start '${deviceId || "?"}'`)
         try {
             setWorking(true)
             stop()
-            const stream = await navigator.mediaDevices.getUserMedia({
+            const filter: MediaStreamConstraints = {
                 video: {
                     width: { ideal: 1920 },
                     height: { ideal: 1080 },
-                    advanced: [{ deviceId: deviceId }],
                 },
                 audio: false,
-            })
+            }
+            if (deviceId)
+                (filter.video as MediaTrackConstraints).advanced = [
+                    { deviceId: deviceId },
+                ]
+
+            const stream = await navigator.mediaDevices.getUserMedia(filter)
             streamRef.current = stream
             const video = videoRef.current
             video.srcObject = stream
@@ -144,6 +148,7 @@ export default function WebCam() {
             )
             if (mounted()) setDevices(webcams)
         } catch (e) {
+            console.debug(e)
             if (mounted()) setDevices([])
         }
     }
