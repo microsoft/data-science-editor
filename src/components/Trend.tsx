@@ -194,7 +194,7 @@ function UnitTrendChart(
                         </text>
                         <text
                             x={margin}
-                            y={margin}
+                            y={margin - margin / 2}
                             fontSize={fontSize}
                             fill={textPrimary}
                         >
