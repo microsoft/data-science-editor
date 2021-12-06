@@ -40,16 +40,9 @@ export default function ValueWithUnitWidget(props: {
         ? roundWithPrecision(value, precision).toLocaleString()
         : "--"
     const valueTextLength =
-        isSet(min) && isSet(max)
-            ? [min, max, min + (min + max) / 3]
-                  .map(
-                      v =>
-                          roundWithPrecision(v, precision)
-                              .toLocaleString()
-                              .replace(/[,.]/, "").length
-                  )
-                  .reduce((l, r) => Math.max(l, r), 0) + precision
-            : valueText.length
+        roundWithPrecision(value, precision)
+            .toLocaleString()
+            .replace(/[,.]/, "").length + precision
 
     const { textPrimary } = useWidgetTheme(color)
     //console.log({ min, max, step, precision })
@@ -65,7 +58,7 @@ export default function ValueWithUnitWidget(props: {
             : "h6"
     const valueStyle: CSSProperties = {
         color: textPrimary,
-        minWidth: `${Math.max(2, valueTextLength - 1)}em`,
+        minWidth: `2em`,
     }
     const unitStyle: CSSProperties = {
         color: textPrimary,
