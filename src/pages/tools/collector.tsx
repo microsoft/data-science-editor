@@ -83,7 +83,8 @@ export default function Collector() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { toggleShowDeviceHostsDialog, enqueueSnackbar } =
         useContext(AppContext)
-    const handleShowStartSimulator = () => toggleShowDeviceHostsDialog()
+    const handleShowStartSimulator = () =>
+        toggleShowDeviceHostsDialog({ sensor: true })
     const { fileSystem } = useContext(FileSystemContext)
     const root = useChange(fileSystem, _ => _?.root)
     const { fileStorage } = useContext(ServiceManagerContext)
@@ -301,13 +302,6 @@ export default function Collector() {
             throttleUpdate()
         }
     }
-    // setting interval
-    useEffect(() => {
-        console.log(`set interval to ${samplingIntervalDelay}`)
-        recordingRegisters.forEach(reg =>
-            reg.sendSetPackedAsync([samplingIntervalDelay])
-        )
-    }, [samplingIntervalDelay, registerIdsChecked])
     // collecting
     useEffect(() => {
         if (aggregator && recording) return undefined
