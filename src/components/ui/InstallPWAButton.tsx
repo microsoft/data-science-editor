@@ -69,6 +69,7 @@ export default function InstallPWAButton(props: ButtonProps) {
     }
     return (
         <Button
+            size="small"
             aria-label="Install application"
             title="Install application"
             onClick={onClick}
