@@ -5,7 +5,8 @@ order: 2
 
 # Jacdac Python
 
-There are various ways to integrate Jacdac into **desktop python** projects.
+There are various ways to integrate Jacdac into desktop **Python** projects,
+including on Raspberry Pi.
 
 -   [GitHub project](https://github.com/microsoft/jacdac-python)
 -   [API Reference](https://jacdac-python.readthedocs.io/)
@@ -17,6 +18,13 @@ Add jacdac-python to your project using `pip` (or `pip3` on Windows)
 ```
 pip install jacdac-python
 ```
+
+## Connecting to hardware
+
+The transport used to connect to the Jacdac device
+typically varies a lot dependending on the platform and the usage scenario.
+This layer currently supports a cross-platform development mode using browser bridge
+and a transport for the Raspberry Pi using a specialized Jacdapter.
 
 ## Getting started
 
