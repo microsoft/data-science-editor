@@ -56,6 +56,7 @@ export default function MaxReadingField(
                 </Grid>
                 <Grid item>
                     <CmdButton
+                        title="Save"
                         onClick={handleClick}
                         disabled={isNaN(value)}
                         icon={<SaveIcon />}

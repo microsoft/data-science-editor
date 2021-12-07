@@ -260,7 +260,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: LINEPLOT_BLOCK,
             tooltip: "Renders the block data in a line chart",
-            message0: "line chart of x %1 y %2 group %3 %4 %5 %6",
+            message0: "line chart of x %1 y %2 %3 %4 group %5 %6 %7 %8",
             args0: [
                 <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
@@ -270,6 +270,16 @@ const chartDsl: BlockDomainSpecificLanguage = {
                 <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
                     name: "y",
+                    dataType: "number",
+                },
+                <DataColumnInputDefinition>{
+                    type: DataColumnChooserField.KEY,
+                    name: "y2",
+                    dataType: "number",
+                },
+                <DataColumnInputDefinition>{
+                    type: DataColumnChooserField.KEY,
+                    name: "y3",
                     dataType: "number",
                 },
                 <DataColumnInputDefinition>{
