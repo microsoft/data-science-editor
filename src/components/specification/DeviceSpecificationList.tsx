@@ -1,5 +1,5 @@
 import React, { useMemo } from "react"
-import { Card, CardContent, Grid, Typography, useTheme } from "@mui/material"
+import { Card, CardContent, Grid, Typography } from "@mui/material"
 import {
     identifierToUrlPath,
     serviceSpecificationFromClassIdentifier,
@@ -22,8 +22,7 @@ function DeviceSpecificationCard(props: {
 }) {
     const { specification, size } = props
     const { id, name, company, services } = specification
-    const theme = useTheme()
-    const height = theme.spacing(31)
+    const height = "100%"
     const imageUrl = useDeviceImage(specification, size)
     const serviceNames = services
         ?.map(sc =>
