@@ -14,7 +14,6 @@ import {
 } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import useDeviceSpecifications from "../devices/useDeviceSpecifications"
 import useGridBreakpoints from "../useGridBreakpoints"
-import CardMediaWithSkeleton from "../ui/CardMediaWithSkeleton"
 
 function DeviceSpecificationCard(props: {
     specification: jdspec.DeviceSpec
@@ -22,7 +21,6 @@ function DeviceSpecificationCard(props: {
 }) {
     const { specification, size } = props
     const { id, name, company, services } = specification
-    const height = "100%"
     const imageUrl = useDeviceImage(specification, size)
     const serviceNames = services
         ?.map(sc =>
@@ -32,10 +30,10 @@ function DeviceSpecificationCard(props: {
     return (
         <Card>
             <CardActionArea to={`/devices/${identifierToUrlPath(id)}`}>
-                <CardMediaWithSkeleton
-                    height={height}
+                <img
                     src={imageUrl}
-                    title={`photograph of ${specification.name}`}
+                    style={{ aspectRatio: "3 / 2", width: "100%" }}
+                    alt={`photograph of ${specification.name}`}
                 />
                 <CardContent>
                     <Typography
