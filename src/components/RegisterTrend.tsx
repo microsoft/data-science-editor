@@ -56,6 +56,7 @@ export default function RegisterTrend(props: {
             gradient={true}
             height={height || DEFAULT_HEIGHT}
             mini={mini}
+            yAxis={true}
         />
     )
 }

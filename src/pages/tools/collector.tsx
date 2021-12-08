@@ -235,16 +235,6 @@ export default function Collector() {
             enqueueSnackbar(`recording started`)
         }
     }
-    const startStreamingRegisters = () => {
-        console.log(`start streaming`)
-        const streamers = recordingRegisters?.map(reg =>
-            reg.subscribe(REPORT_UPDATE, () => {})
-        )
-        return () => {
-            console.log(`stop streaming`)
-            streamers.map(streamer => streamer())
-        }
-    }
     const toggleRecording = () => {
         if (recording) stopRecording()
         else startRecording()
@@ -302,14 +292,19 @@ export default function Collector() {
             throttleUpdate()
         }
     }
+    // stream data
+    useEffect(() => {
+        bus.streaming = true
+        return () => {
+            bus.streaming = false
+        }
+    }, [])
     // collecting
     useEffect(() => {
         if (aggregator && recording) return undefined
         const interval = setInterval(() => addRow(), samplingIntervalDelay)
-        const stopStreaming = startStreamingRegisters()
         return () => {
             clearInterval(interval)
-            stopStreaming()
         }
     }, [
         recording,
@@ -534,6 +529,7 @@ export default function Collector() {
                             horizon={LIVE_HORIZON}
                             dot={true}
                             gradient={true}
+                            yAxis={false}
                         />
                     </Grid>
                 )}

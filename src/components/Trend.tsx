@@ -272,9 +272,10 @@ function UnitTrend(
         width?: number
         height?: number
         mini?: boolean
+        yAxis?: boolean
     } & TrendProps
 ) {
-    const { dataSet, horizon, width, height, mini, gradient } = props
+    const { dataSet, horizon, width, height, mini, gradient, yAxis } = props
     const { rows } = dataSet
 
     const vpw = width || 80
@@ -299,7 +300,7 @@ function UnitTrend(
                         vpw={vpw}
                         vph={vph}
                         dot={true}
-                        yAxis={!mini}
+                        yAxis={yAxis}
                         {...props}
                     />
                 )}
@@ -314,9 +315,10 @@ export default function Trend(
         width?: number
         height?: number
         mini?: boolean
+        yAxis?: boolean
     } & TrendProps
 ) {
-    const { dataSet, mini } = props
+    const { dataSet, mini, yAxis } = props
 
     const units = unique(dataSet.units.filter(u => !!u))
     return (
@@ -325,6 +327,7 @@ export default function Trend(
                 <UnitTrend
                     key={`graph${unit}`}
                     mini={mini}
+                    yAxis={yAxis}
                     unit={unit}
                     {...props}
                 />
