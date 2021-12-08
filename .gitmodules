@@ -28,3 +28,6 @@
 [submodule "pxt-jacdac"]
 	path = pxt-jacdac
 	url = https://github.com/microsoft/pxt-jacdac
+[submodule "jacdac-dotnet"]
+	path = jacdac-dotnet
+	url = https://github.com/microsoft/jacdac-dotnet
