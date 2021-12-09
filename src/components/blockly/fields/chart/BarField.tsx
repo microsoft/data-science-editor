@@ -25,7 +25,7 @@ function BarWidget() {
     const spec: VisualizationSpec = {
         mark: { type: "bar", cornerRadius: BAR_CORNER_RADIUS, tooltip: true },
         encoding: {
-            x: { field: index, type: "nominal" },
+            x: { field: index, type: "nominal", sort: null },
             y: { field: value, type: "quantitative" },
         },
         data: { name: "values" },

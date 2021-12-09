@@ -59,6 +59,7 @@ const Root = styled("div")(() => ({
         "& th": {
             position: "sticky",
             top: 0,
+            background: "#fff"
         },
         "& td": {
             borderColor: "#ccc",
