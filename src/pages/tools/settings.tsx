@@ -29,7 +29,7 @@ export default function Page() {
             <ConnectAlert serviceClass={SRV_SETTINGS} />
             <Grid container spacing={1}>
                 {services.map(service => (
-                    <Grid key={service.id} item xs={12} lg={6}>
+                    <Grid key={service.nodeId} item xs={12} lg={6}>
                         <SettingsCard
                             service={service}
                             mutable={true}

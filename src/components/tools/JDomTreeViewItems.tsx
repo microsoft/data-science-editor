@@ -106,7 +106,7 @@ export function DeviceTreeItem(
             <AnnounceFlagsTreeItem device={device} />
             {services?.map(service => (
                 <ServiceTreeItem
-                    key={service.id}
+                    key={service.nodeId}
                     service={service}
                     {...other}
                 />

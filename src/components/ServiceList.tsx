@@ -89,7 +89,7 @@ export default function ServiceList(props: {
         <Box mb={1}>
             <Grid container spacing={2}>
                 {services?.map(service => (
-                    <Grid key={service.id} item {...gridBreakpoints}>
+                    <Grid key={service.nodeId} item {...gridBreakpoints}>
                         <ServiceListItem
                             service={service}
                             checked={handleSelected(service)}

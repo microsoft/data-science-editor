@@ -102,7 +102,6 @@ export default function ServiceCard(props: {
                 <Typography variant="body2" component="div">
                     {hasRegisterIdentifiers && (
                         <ServiceRegisters
-                            key={"reg" + service.id}
                             service={service}
                             showRegisterName={showMemberName}
                             registerIdentifiers={registerIdentifiers}
@@ -110,7 +109,6 @@ export default function ServiceCard(props: {
                     )}
                     {hasEventIdentifiers && (
                         <ServiceEvents
-                            key={"ev" + service.id}
                             service={service}
                             showEventName={showMemberName}
                             eventIdentifiers={eventIdentifiers}

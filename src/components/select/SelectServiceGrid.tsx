@@ -25,7 +25,7 @@ export default function SelectServiceGrid(props: {
             {!!services.length && (
                 <Grid container spacing={2}>
                     {services.map(service => (
-                        <Grid key={service.id} item {...gridBreakpoints}>
+                        <Grid key={service.nodeId} item {...gridBreakpoints}>
                             <Card>
                                 <DeviceCardHeader
                                     device={service.device}

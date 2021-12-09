@@ -67,7 +67,7 @@ export default function DeviceList(props: {
             {hasServiceClass &&
                 services.map(service => {
                     return (
-                        <Grid key={service.id} item {...gridBreakpoints}>
+                        <Grid key={service.nodeId} item {...gridBreakpoints}>
                             <ServiceCard
                                 service={service}
                                 linkToService={linkToService}

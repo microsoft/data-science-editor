@@ -95,7 +95,7 @@ export default function DashboardDevice(
             >
                 {services?.map(service => (
                     <DashboardServiceWidgetItem
-                        key={service.id}
+                        key={service.nodeId}
                         service={service}
                         services={services}
                         variant={variant}

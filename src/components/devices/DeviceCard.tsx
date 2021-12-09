@@ -105,7 +105,7 @@ export default function DeviceCard(props: {
                 {showServices &&
                     services?.map(service => (
                         <ServiceButton
-                            key={service.id}
+                            key={service.nodeId}
                             service={service}
                             onClick={() => navigateToService(service)}
                         />

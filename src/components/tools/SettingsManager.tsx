@@ -13,7 +13,7 @@ export default function SettingsManager() {
             <ConnectAlert serviceClass={SRV_SETTINGS} />
             <Grid container spacing={2}>
                 {services.map(service => (
-                    <Grid key={service.id} item xs={12}>
+                    <Grid key={service.nodeId} item xs={12}>
                         <SettingsCard service={service} mutable={true} />
                     </Grid>
                 ))}

@@ -311,7 +311,7 @@ export default function ProtocolTest() {
                     <ConnectAlert serviceClass={SRV_PROTO_TEST} />
                 </Grid>
                 {services?.map(service => (
-                    <Grid key={service.id} item xs={12}>
+                    <Grid key={service.nodeId} item xs={12}>
                         <ServiceProtocolTest service={service} />
                     </Grid>
                 ))}
