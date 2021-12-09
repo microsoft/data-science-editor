@@ -220,6 +220,14 @@ export default function ServiceCatalog() {
                 </Grid>
                 <Grid item xs={12}>
                     <ServiceSpecificationList
+                        title="Release Candidate"
+                        status={["rc"]}
+                        infrastructure={false}
+                        services={services}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <ServiceSpecificationList
                         title="Experimental"
                         status={["experimental"]}
                         infrastructure={false}
