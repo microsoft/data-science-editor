@@ -1,6 +1,5 @@
 import React, { ChangeEvent, useEffect, useState } from "react"
 import {
-    CharacterScreenCmd,
     CharacterScreenReg,
     CharacterScreenTextDirection,
     CharacterScreenVariant,
@@ -127,7 +126,7 @@ export default function DashboardCharacterScreen(props: DashboardServiceProps) {
 
     const handleClear = async () => {
         setFieldMessage("")
-        await service.sendCmdAsync(CharacterScreenCmd.Clear, undefined, true)
+        await messageRegister.sendSetStringAsync("", true)
     }
     const handleFieldMessageChange = async (
         ev: ChangeEvent<HTMLTextAreaElement>

@@ -6,18 +6,12 @@ import React, {
     useMemo,
     useState,
 } from "react"
-import {
-    VibrationMotorReg,
-    VibrationMotorCmd,
-} from "../../../jacdac-ts/src/jdom/constants"
+import { VibrationMotorCmd } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
-import { useRegisterBoolValue } from "../../jacdac/useRegisterValue"
 import useServiceServer from "../hooks/useServiceServer"
-import useRegister from "../hooks/useRegister"
 import WebAudioContext from "../ui/WebAudioContext"
 import VibrationMotorServer from "../../../jacdac-ts/src/servers/vibrationmotorserver"
-import SwitchWithLabel from "../ui/SwitchWithLabel"
 import JDService from "../../../jacdac-ts/src/jdom/service"
 import CmdButton from "../CmdButton"
 import SliderWithLabel from "../ui/SliderWithLabel"
@@ -135,15 +129,12 @@ function PatternInput(props: {
 export default function DashboardVibrationMotor(props: DashboardServiceProps) {
     const { service } = props
     const server = useServiceServer<VibrationMotorServer>(service)
-    const enabledRegister = useRegister(service, VibrationMotorReg.Enabled)
-    const enabled = useRegisterBoolValue(enabledRegister, props)
     const { playTone } = useContext(WebAudioContext)
     const [speed, setSpeed] = useState(20)
 
     // listen for playTone commands from the buzzer
     useEffect(
         () =>
-            enabled &&
             server?.subscribe<{
                 duration: number
                 speed: number
@@ -151,12 +142,9 @@ export default function DashboardVibrationMotor(props: DashboardServiceProps) {
                 const ms = duration << 3
                 playTone(440, ms, speed)
             }),
-        [server, enabled]
+        [server]
     )
 
-    const handleEnabled = async (ev: unknown, checked: boolean) => {
-        await enabledRegister.sendSetBoolAsync(checked, true)
-    }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleSpeed: any = (
         event: React.ChangeEvent<unknown>,
@@ -166,21 +154,8 @@ export default function DashboardVibrationMotor(props: DashboardServiceProps) {
 
     return (
         <>
-            {enabled !== undefined && (
-                <Grid item xs={12}>
-                    <SwitchWithLabel
-                        checked={enabled}
-                        label={enabled ? "vibration on" : "vibration off"}
-                        onChange={handleEnabled}
-                    />
-                </Grid>
-            )}
             <Grid item xs={12}>
-                <PatternInput
-                    disabled={!enabled}
-                    service={service}
-                    speedScale={speed / 100}
-                />
+                <PatternInput service={service} speedScale={speed / 100} />
             </Grid>
             <Grid item xs={12}>
                 <SliderWithLabel
