@@ -48,7 +48,7 @@ const Root = styled("div")(() => ({
     }),
 
     [`& .${classes.table}`]: {
-        margin: 0,
+        margin: "0.25rem",
         fontSize: "0.8rem",
         lineHeight: "1rem",
 

@@ -36,6 +36,7 @@ export default class DataTableField extends ReactInlineField {
         c.style.minWidth = "388px"
         c.style.maxWidth = "80vh"
         c.style.maxHeight = "60vh"
+        c.style.overflow = "auto"
         return c
     }
 
