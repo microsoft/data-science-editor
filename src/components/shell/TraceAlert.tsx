@@ -5,6 +5,8 @@ import TraceClearButton from "../trace/TraceClearButton"
 import TracePlayButton from "../trace/TracePlayButton"
 import Alert from "../ui/Alert"
 import { AlertTitle } from "@mui/material"
+import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
+import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 
 export default function TraceAlert() {
     const { recording, replayTrace } = useContext(PacketsContext)
@@ -15,6 +17,9 @@ export default function TraceAlert() {
             <AlertTitle>Trace replay mode</AlertTitle>
             <TracePlayButton size="small" color="inherit" />
             <TraceClearButton size="small" color="inherit" />
+            <IconButtonWithTooltip size="small" color="inherit" to="/tools/player/" title="Open Trace Analyzer">
+                <TextSnippetIcon/>
+            </IconButtonWithTooltip>
             {!recording && replayTrace && (
                 <Typography variant="caption">
                     {replayTrace.packets.length} packets, clear to resume live
