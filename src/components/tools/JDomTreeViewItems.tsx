@@ -236,10 +236,8 @@ export function RegisterTreeItem(
         JDomTreeViewProps
 ) {
     const { register } = props
-    const { specification, id, lastGetAttempts } = register
-    const [attempts, setAttempts] = useState(lastGetAttempts)
+    const { specification, id } = register
     const optional = !!specification?.optional
-    const failedGet = attempts > 2
     const labelText = humanify(
         `${specification?.name || id}${optional ? "?" : ""}`
     )
@@ -248,13 +246,12 @@ export function RegisterTreeItem(
     })
     const handleClick = useCallback(() => register.sendGetAsync(), [register])
 
-    useEffect(
-        () =>
-            register?.subscribe(GET_ATTEMPT, () => {
-                setAttempts(register.lastGetAttempts)
-            }),
-        [register]
+    const attempts = useEventRaised(
+        GET_ATTEMPT,
+        register,
+        _ => _?.lastGetAttempts
     )
+    const failedGet = attempts > 2
 
     // if register is optional and no data, hide
     if (optional && failedGet && humanValue === undefined) return <></>

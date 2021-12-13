@@ -45,6 +45,7 @@ export default function DashboardServiceWidgetItem(
                         register={reading}
                         mini={false}
                         height={18}
+                        interval={250}
                     />
                 </Grid>
             )}

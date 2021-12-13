@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react"
+import { DependencyList, useEffect, useState } from "react"
 import { REPORT_UPDATE } from "../../jacdac-ts/src/jdom/constants"
 import { PackedValues } from "../../jacdac-ts/src/jdom/pack"
 import JDRegister from "../../jacdac-ts/src/jdom/register"
+import { ellipse } from "../../jacdac-ts/src/jdom/utils"
 import useAnalytics, { EventProperties } from "../components/hooks/useAnalytics"
+import useEventRaised from "./useEventRaised"
 export interface RegisterOptions {
     // Indicates if the HTML element is visible in view. If not, updates may be slowed or stopped.
     visible?: boolean
@@ -35,74 +37,53 @@ export function useRegisterHumanValue(
     register: JDRegister,
     options?: HumanRegisterOptions
 ): string {
-    const [value, setValue] = useState<string>(register?.humanValue)
     const { visible, maxLength } = options || { visible: true }
     const { trackError } = useAnalytics()
 
-    // update value
-    useEffect(() => {
-        const readValue = () =>
+    return useEventRaised(
+        REPORT_UPDATE,
+        visible ? register : undefined,
+        _ =>
             readRegisterValue(
-                register,
-                _ => {
-                    let v = _?.humanValue
-                    if (v?.length > maxLength) v = v.slice(0, maxLength) + "..."
-                    return v
-                },
+                _,
+                __ => ellipse(__?.humanValue, maxLength),
                 "???",
                 trackError
-            )
-        setValue(readValue)
-        return (
-            visible &&
-            register?.subscribe(REPORT_UPDATE, () => setValue(readValue))
-        )
-    }, [register, visible, maxLength])
-    return value
+            ),
+        [visible, maxLength]
+    )
 }
 
 export function useRegisterUnpackedValue<T extends PackedValues>(
     register: JDRegister,
     options?: RegisterOptions
 ): T {
-    const [value, setValue] = useState<T>(register?.unpackedValue as T)
     const { visible } = options || { visible: true }
     const { trackError } = useAnalytics()
 
-    useEffect(() => {
-        const readValue = () =>
+    return useEventRaised(
+        REPORT_UPDATE,
+        visible ? register : undefined,
+        _ =>
             readRegisterValue<T>(
-                register,
-                _ => _?.unpackedValue as T,
-                undefined,
+                _,
+                __ => (__?.unpackedValue || []) as T,
+                [] as T,
                 trackError
-            )
-        setValue(readValue)
-        return (
-            visible &&
-            register?.subscribe(REPORT_UPDATE, () => {
-                setValue(readValue)
-            })
-        )
-    }, [register, visible])
-    return value || ([] as T)
+            ),
+        [visible]
+    )
 }
 
 export function useRegisterBoolValue(
     register: JDRegister,
     options?: RegisterOptions
 ): boolean {
-    const [value, setValue] = useState<boolean>(register?.boolValue)
     const { visible } = options || { visible: true }
-    // update value
-    useEffect(() => {
-        setValue(register?.boolValue)
-        return (
-            visible &&
-            register?.subscribe(REPORT_UPDATE, () => {
-                setValue(register?.boolValue)
-            })
-        )
-    }, [register, visible])
-    return value
+    return useEventRaised(
+        REPORT_UPDATE,
+        visible ? register : undefined,
+        _ => _?.boolValue,
+        [visible]
+    )
 }

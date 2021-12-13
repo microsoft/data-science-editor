@@ -117,7 +117,9 @@
     "vega": "^5.21.0",
     "vega-lite": "^5.2.0",
     "ws": "^8.3.0",
-    "xmlhttprequest-ssl": "^2.0.0"
+    "xmlhttprequest-ssl": "^2.0.0",
+    "@parcel/transformer-typescript-types": "^2.0.1",
+    "@types/use-subscription": "^1.0.0"
   },
   "keywords": [
     "jacdac"
@@ -171,8 +173,5 @@
     "Edge > 80",
     "Chrome > 80",
     "Firefox > 80"
-  ],
-  "devDependencies": {
-    "@parcel/transformer-typescript-types": "^2.0.1"
-  }
+  ]
 }

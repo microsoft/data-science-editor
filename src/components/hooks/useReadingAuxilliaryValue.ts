@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react"
-import { REPORT_UPDATE, SystemReg } from "../../../jacdac-ts/src/jdom/constants"
+import { SystemReg } from "../../../jacdac-ts/src/jdom/constants"
 import JDRegister from "../../../jacdac-ts/src/jdom/register"
+import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 
 export default function useReadingAuxilliaryValue(
     register: JDRegister,
@@ -19,19 +19,5 @@ export default function useReadingAuxilliaryValue(
     const reading = code === SystemReg.Reading || code === SystemReg.Value
     const auxilliaryRegister =
         reading && identifier ? service.register(identifier) : undefined
-    const [value, setValue] = useState<number[]>(
-        auxilliaryRegister?.unpackedValue
-    )
-
-    useEffect(() => {
-        setValue(auxilliaryRegister?.unpackedValue)
-        return (
-            visible &&
-            auxilliaryRegister?.subscribe(REPORT_UPDATE, () => {
-                setValue(auxilliaryRegister?.unpackedValue)
-            })
-        )
-    }, [register, auxilliaryRegister, visible])
-
-    return value
+    return useRegisterUnpackedValue<[number]>(auxilliaryRegister, { visible })
 }
