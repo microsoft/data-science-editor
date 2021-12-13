@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from "react"
+import React, { ChangeEvent, useCallback, useEffect, useState } from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import {
     Badge,
@@ -233,7 +233,10 @@ function NetworkListItem(props: {
 
 function APList(props: { service: JDService; connectedSsid: string }) {
     const { service, connectedSsid } = props
-    const scan = () => service.sendCmdAsync(WifiCmd.Scan)
+    const scan = useCallback(
+        () => service.sendCmdAsync(WifiCmd.Scan),
+        [service]
+    )
     const knownNetworksChangedEvent = useEvent(
         service,
         WifiEvent.NetworksChanged

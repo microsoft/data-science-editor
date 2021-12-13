@@ -1,31 +1,15 @@
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect } from "react"
 import { CHANGE } from "../../jacdac-ts/src/jdom/constants"
 import { IEventSource } from "../../jacdac-ts/src/jdom/eventsource"
-import { assert } from "../../jacdac-ts/src/jdom/utils"
 import useEffectAsync from "../components/useEffectAsync"
+import useEventRaised from "./useEventRaised"
 
 export default function useChange<TNode extends IEventSource, TValue>(
     node: TNode,
     query?: (n: TNode) => TValue,
     deps?: React.DependencyList
 ): TValue {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    assert((node as any) !== false)
-    const [version, setVersion] = useState(node?.changeId || 0)
-    const value = useMemo(
-        () => (query ? query(node) : undefined),
-        [node, version, ...(deps || [])]
-    )
-
-    useEffect(() => {
-        setVersion(node?.changeId || 0)
-        return node?.subscribe(CHANGE, () => {
-            //console.log(`change ${node} ${version}->${node.changeId}`)
-            setVersion(node.changeId)
-        })
-    }, [node, ...(deps || [])])
-
-    return value
+    return useEventRaised(CHANGE, node, query, deps)
 }
 
 export function useChangeAsync<TNode extends IEventSource, TValue>(

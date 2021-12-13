@@ -10,7 +10,7 @@ import {
     SRV_LOGGER,
 } from "../../jacdac-ts/src/jdom/constants"
 import { prettyDuration } from "../../jacdac-ts/src/jdom/pretty"
-import { ellipseJoin } from "../../jacdac-ts/src/jdom/utils"
+import { ellipseJoin, toHex } from "../../jacdac-ts/src/jdom/utils"
 import { jdunpack } from "../../jacdac-ts/src/jdom/pack"
 import { navigate } from "gatsby"
 import useMediaQueries from "./hooks/useMediaQueries"
@@ -32,8 +32,9 @@ export default function PacketListItem(props: {
     packet: Packet
     showTime?: boolean
     count?: number
+    showRaw?: boolean
 }) {
-    const { packet, count, showTime } = props
+    const { packet, count, showTime, showRaw } = props
     const { selectedPacket, setSelectedPacket } = useContext(AppContext)
     const { setDrawerType } = useContext(AppContext)
 
@@ -85,7 +86,12 @@ export default function PacketListItem(props: {
             </ListItemIcon>
             <ListItemText
                 primary={<Box textOverflow="ellipsis">{primary}</Box>}
-                secondary={secondary}
+                secondary={
+                    <>
+                        {secondary}
+                        {showRaw && ", " + toHex(packet.toBuffer())}
+                    </>
+                }
             />
         </StyledListItem>
     )

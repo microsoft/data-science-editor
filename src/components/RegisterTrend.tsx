@@ -1,11 +1,10 @@
-import React, { useContext, useEffect, useMemo } from "react"
+import React, { useCallback, useContext, useEffect, useMemo } from "react"
 import { REPORT_RECEIVE } from "../../jacdac-ts/src/jdom/constants"
 import JDRegister from "../../jacdac-ts/src/jdom/register"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import FieldDataSet from "./FieldDataSet"
 import Trend from "./Trend"
 import useChartPalette from "./useChartPalette"
-import useChange from "../jacdac/useChange"
 import useInterval from "./hooks/useInterval"
 
 const DEFAULT_HORIZON = 255
@@ -39,15 +38,14 @@ export default function RegisterTrend(props: {
             ),
         [register, palette]
     )
-    useChange(dataSet)
-    const addRow = () => dataSet.addRow()
+    const addRow = useCallback(() => dataSet.addRow(), [dataSet])
     // register on change if no intervals
     useEffect(
         () =>
             interval ? undefined : register?.subscribe(REPORT_RECEIVE, addRow),
-        [interval, register, dataSet]
+        [interval, register, addRow]
     )
-    useInterval(!!interval, addRow, interval, [dataSet])
+    useInterval(!!interval, addRow, interval)
 
     return (
         <Trend

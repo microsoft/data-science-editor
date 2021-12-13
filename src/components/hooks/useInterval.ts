@@ -12,5 +12,5 @@ export default function useInterval(
             handler()
             return () => clearInterval(id)
         }
-    }, [enabled, delay, ...(deps || [])])
+    }, [enabled, handler, delay, ...(deps || [])])
 }

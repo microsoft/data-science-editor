@@ -5,6 +5,7 @@ import { roundWithPrecision, unique } from "../../jacdac-ts/src/jdom/utils"
 import { Paper } from "@mui/material"
 import useWidgetTheme from "./widgets/useWidgetTheme"
 import useUnitConverter from "./ui/useUnitConverter"
+import useChange from "../jacdac/useChange"
 
 const PREFIX = "Trend"
 
@@ -47,6 +48,7 @@ function UnitTrendChart(
     const shape = unit == "#" ? "step" : "line"
     const symmetric = unit == "g" ? true : false
 
+    useChange(dataSet)
     const indexes = dataSet.units
         .map((u, index) => ((u || "/") === unit ? index : undefined))
         .filter(index => index !== undefined)
@@ -276,7 +278,7 @@ function UnitTrend(
     } & TrendProps
 ) {
     const { dataSet, horizon, width, height, mini, gradient, yAxis } = props
-    const { rows } = dataSet
+    const rows = useChange(dataSet, _ => _?.rows)
 
     const vpw = width || 80
     const vph = height || 15
@@ -320,7 +322,7 @@ export default function Trend(
 ) {
     const { dataSet, mini, yAxis } = props
 
-    const units = unique(dataSet.units.filter(u => !!u))
+    const units = useChange(dataSet, _ => unique(_?.units.filter(u => !!u)))
     return (
         <Root className={mini ? classes.mini : undefined}>
             {units.map(unit => (
