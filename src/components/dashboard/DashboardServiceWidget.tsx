@@ -438,6 +438,7 @@ export default function DashboardServiceWidget(
             <Suspense
                 fallback={
                     <CircularProgress
+                        aria-label={`loading widget for ${service}`}
                         color={color}
                         disableShrink={true}
                         variant={"indeterminate"}

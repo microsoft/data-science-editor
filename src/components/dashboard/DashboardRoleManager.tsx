@@ -4,7 +4,6 @@ import { RoleManagerReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useId } from "react-use-id-hook"
 import { useRegisterBoolValue } from "../../jacdac/useRegisterValue"
-import LoadingProgress from "../ui/LoadingProgress"
 import useChange from "../../jacdac/useChange"
 import RoleListItem from "../services/RoleListItem"
 import useRegister from "../hooks/useRegister"
@@ -14,15 +13,13 @@ export default function DashboardRoleManager(props: DashboardServiceProps) {
     const { service, expanded } = props
     const autoBindRegister = useRegister(service, RoleManagerReg.AutoBind)
     const autoBind = useRegisterBoolValue(autoBindRegister, props)
-    const handleChecked = async (ev, checked: boolean) => {
+    const handleChecked = async (ev, checked: boolean) =>
         await autoBindRegister.sendSetBoolAsync(checked, true)
-    }
     const switchId = useId()
     const labelId = useId()
     const roleManager = useRoleManagerClient()
     const roles = useChange(roleManager, _ => _?.roles)
 
-    if (autoBind === undefined) return <LoadingProgress />
     return (
         <>
             {roles && (
@@ -36,7 +33,7 @@ export default function DashboardRoleManager(props: DashboardServiceProps) {
                     </Grid>
                 </Grid>
             )}
-            {expanded && (
+            {expanded && autoBind !== undefined && (
                 <Grid item xs={12}>
                     <Switch
                         id={switchId}
