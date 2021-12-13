@@ -1,5 +1,8 @@
 import { Component, ErrorInfo, ReactNode } from "react"
-import { ApplicationInsights } from "@microsoft/applicationinsights-web"
+import {
+    ApplicationInsights,
+    SeverityLevel,
+} from "@microsoft/applicationinsights-web"
 
 export type EventProperties = Record<string, string | number | boolean>
 const sha = process.env.GATSBY_GITHUB_SHA
@@ -67,10 +70,34 @@ const trackError: (exception: Error, properties?: EventProperties) => void =
               })
         : () => {}
 
+const severities = {
+    debug: SeverityLevel.Verbose,
+    warn: SeverityLevel.Warning,
+    error: SeverityLevel.Error,
+    info: SeverityLevel.Information,
+    log: SeverityLevel.Information,
+}
+
+const trackTrace: (
+    message: string,
+    level?: "debug" | "log" | "info" | "warn" | "error",
+    properties?: EventProperties
+) => void = appInsights
+    ? (message, level, properties) =>
+          appInsights.trackTrace(
+              {
+                  message,
+                  severityLevel: severities[level] || SeverityLevel.Information,
+              },
+              splitProperties(properties).properties
+          )
+    : () => {}
+
 export const analytics = {
     page,
     trackEvent,
     trackError,
+    trackTrace,
     sha,
 }
 

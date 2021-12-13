@@ -5,7 +5,14 @@ import ConsoleImportSourceMapButton from "./ConsoleImportSourceMapButton"
 import ConsoleSerialButton from "./ConsoleSerialButton"
 import ClearIcon from "@mui/icons-material/Clear"
 import SaveAltIcon from "@mui/icons-material/SaveAlt"
-import { FormControl, Grid, MenuItem, Select, TextField } from "@mui/material"
+import {
+    FormControl,
+    Grid,
+    MenuItem,
+    Select,
+    SelectChangeEvent,
+    TextField,
+} from "@mui/material"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import useChange from "../../jacdac/useChange"
 import { LoggerPriority } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
@@ -46,8 +53,8 @@ function MinLoggerPrioritySelect() {
         LoggerPriority.Silent,
     ]
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleChange = (event: React.ChangeEvent<{ value: any }>) => {
-        bus.minLoggerPriority = event.target.value
+    const handleChange = (event: SelectChangeEvent<LoggerPriority>) => {
+        bus.minLoggerPriority = event.target.value as LoggerPriority
         console.debug(
             `bus min logger priority: ${LoggerPriority[bus.minLoggerPriority]}`
         )
@@ -97,7 +104,7 @@ function SearchKeywordField() {
 export default function ConsoleToolbar() {
     const { sourceMap } = useContext(ConsoleContext)
     return (
-        <Grid container spacing={1} direction="row">
+        <Grid sx={{ mb: 0.5 }} container spacing={1} direction="row">
             <Grid item>
                 <ConsoleSerialButton />
             </Grid>
@@ -108,15 +115,15 @@ export default function ConsoleToolbar() {
                 <SaveButton />
             </Grid>
             <Grid item>
+                <ConsoleImportSourceMapButton />
+            </Grid>
+            <Grid item>
                 <SearchKeywordField />
             </Grid>
             <Grid item>
                 <MinLoggerPrioritySelect />
             </Grid>
-            <Grid item>
-                <ConsoleImportSourceMapButton />
-                {!!sourceMap && "source map loaded"}
-            </Grid>
+            <Grid item>{!!sourceMap && "source map loaded"}</Grid>
         </Grid>
     )
 }

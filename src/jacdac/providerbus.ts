@@ -85,6 +85,7 @@ function sniffQueryArguments() {
         storage: params.get("storage") === "0" ? false : true,
         bus: params.get("bus") === "0" ? false : true,
         webcam: isMediaDevicesSupported(),
+        consoleinsights: params.get("consoleinsights") === "1"
     }
 }
 
@@ -104,6 +105,7 @@ export class UIFlags {
     static hosted = args.hosted
     static gamepad = args.gamepad
     static webcam = args.webcam
+    static consoleinsights = args.consoleinsights
 }
 
 // defeat react fast-refresh

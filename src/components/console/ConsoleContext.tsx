@@ -13,7 +13,9 @@ import {
 import { PACKET_REPORT } from "../../../jacdac-ts/src/jdom/constants"
 import Packet from "../../../jacdac-ts/src/jdom/packet"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
+import { UIFlags } from "../../jacdac/providerbus"
 import useChange from "../../jacdac/useChange"
+import useAnalytics from "../hooks/useAnalytics"
 import useConsoleSerial from "./useConsoleSerial"
 
 export type Methods =
@@ -160,16 +162,19 @@ export const ConsoleProvider = ({ children }) => {
     const [autoScroll, setAutoScroll] = useState(true)
     const [sourceMap, setSourceMap] = useState<SourceMap>()
     const { connected, connect, disconnect } = useConsoleSerial(sourceMap)
+    const { trackTrace } = useAnalytics()
     const filter = useFilter()
     useJacdacLogger()
 
-    const appendLog = log =>
+    const appendLog = log => {
+        if (UIFlags.consoleinsights) trackTrace(log.data[0], log.method)
         setLogs(currLogs => [
             ...(currLogs.length > MAX_MESSAGES
                 ? currLogs.slice(-MAX_MESSAGES_SPILL)
                 : currLogs),
             log,
         ])
+    }
     const clear = () => {
         setLogs([])
         setAutoScroll(true)
