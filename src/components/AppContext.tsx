@@ -14,6 +14,7 @@ import JDService from "../../jacdac-ts/src/jdom/service"
 import { isCancelError } from "../../jacdac-ts/src/jdom/utils"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import useAnalytics from "./hooks/useAnalytics"
+import useLocalStorage from "./hooks/useLocalStorage"
 import PacketsContext from "./PacketsContext"
 
 import Suspense from "./ui/Suspense"
@@ -57,6 +58,8 @@ export interface AppProps {
     setSelectedPacket: (pkt: Packet) => void
     showWebCam: boolean
     setShowWebCam: (newValue: boolean) => void
+    passive: boolean
+    setPassive: (newValue: boolean) => void
 }
 
 const AppContext = createContext<AppProps>({
@@ -75,6 +78,8 @@ const AppContext = createContext<AppProps>({
     setSelectedPacket: () => {},
     showWebCam: false,
     setShowWebCam: () => {},
+    passive: false,
+    setPassive: () => {},
 })
 AppContext.displayName = "app"
 
@@ -96,6 +101,7 @@ export const AppProvider = ({ children }) => {
     const { trackError } = useAnalytics()
     const [selectedPacket, setSelectedPacket] = useState<Packet>(undefined)
     const [showWebCam, setShowWebCam] = useState(false)
+    const [passive, setPassive] = useLocalStorage("buspassive", false)
 
     const { enqueueSnackbar: _enqueueSnackbar } = useSnackbar()
 
@@ -132,6 +138,11 @@ export const AppProvider = ({ children }) => {
         _setToolsMenu(open)
     }
 
+    // bus settings
+    useEffect(() => {
+        bus.passive = passive
+    }, [passive])
+
     // notify errors
     useEffect(
         () =>
@@ -144,8 +155,7 @@ export const AppProvider = ({ children }) => {
 
     const toggleShowDeviceHostsDialog = (options?: ShowDeviceHostsOptions) => {
         const b = !showDeviceHostsDialog
-        if (b)
-            setShowDeviceHostsSensors(!!options?.sensor)
+        if (b) setShowDeviceHostsSensors(!!options?.sensor)
         setShowDeviceHostsDialog(b)
         if (!b) setToolsMenu(false)
     }
@@ -179,12 +189,14 @@ export const AppProvider = ({ children }) => {
                 setSelectedPacket,
                 showWebCam,
                 setShowWebCam,
+                passive,
+                setPassive,
             }}
         >
             {children}
             {showDeviceHostsDialog && (
                 <Suspense>
-                <StartSimulatorDialog
+                    <StartSimulatorDialog
                         open={showDeviceHostsDialog}
                         onClose={toggleShowDeviceHostsDialog}
                         sensor={showDeviceHostsSensors}

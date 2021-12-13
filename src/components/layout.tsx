@@ -25,6 +25,12 @@ import MainAppBar from "./shell/MainAppBar"
 import DataEditorAppBar from "./shell/DataEditorAppBar"
 import { AlertTitle } from "@mui/material"
 import { UIFlags } from "../jacdac/providerbus"
+const TraceAlert = lazy(() => import("./shell/TraceAlert"))
+const WebDiagnostics = lazy(() => import("./shell/WebDiagnostics"))
+const AppDrawer = lazy(() => import("./shell/AppDrawer"))
+const ToolsDrawer = lazy(() => import("./shell/ToolsDrawer"))
+const WebCam = lazy(() => import("./ui/WebCam"))
+const PassiveAlert = lazy(() => import("./shell/PassiveAlert"))
 
 const PREFIX = "Layout"
 
@@ -123,12 +129,6 @@ const Root = styled("div")(({ theme }) => ({
         }),
     },
 }))
-
-const TraceAlert = lazy(() => import("./shell/TraceAlert"))
-const WebDiagnostics = lazy(() => import("./shell/WebDiagnostics"))
-const AppDrawer = lazy(() => import("./shell/AppDrawer"))
-const ToolsDrawer = lazy(() => import("./shell/ToolsDrawer"))
-const WebCam = lazy(() => import("./ui/WebCam"))
 
 export const TOC_DRAWER_WIDTH = 18
 export const DRAWER_WIDTH = 40
@@ -249,6 +249,9 @@ function LayoutWithContext(props: LayoutProps) {
         <>
             <Suspense>
                 <TraceAlert />
+            </Suspense>
+            <Suspense>
+                <PassiveAlert />
             </Suspense>
             {!hideUnderConstruction && (
                 <Alert closeable={true} severity="warning">

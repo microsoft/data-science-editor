@@ -120,7 +120,7 @@ export default function ToolsDrawer() {
         showWebCam,
         setShowWebCam,
     } = useContext(AppContext)
-    const { enqueueSnackbar, toggleShowConnectTransportDialog } =
+    const { enqueueSnackbar, toggleShowConnectTransportDialog, passive, setPassive } =
         useContext(AppContext)
     const { toggleDarkMode, darkMode } = useContext(DarkModeContext)
     const { converters, setConverter } = useUnitConverters()
@@ -213,6 +213,11 @@ export default function ToolsDrawer() {
         },
         {
             // separator
+        },
+        {
+            text: passive ? "Passive mode" : "Active mode",
+            title: "In passive mode, the browser does not send any Jacdac packets.",
+            action: () => setPassive(!passive)
         },
         ...converters.map(({ unit, name, names }) => ({
             text: `${name} (change to ${names
