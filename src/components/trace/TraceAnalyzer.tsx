@@ -15,7 +15,10 @@ export default function TraceAnalyzer() {
     )
     useWindowPaste(importTrace)
 
-    if (!replayTrace) return null
+    const missingTrace = `
+# Trace Analyzer
 
-    return <Markdown source={replayTrace.serializeToText()} />
+No trace loaded. See the [Trace documentation](/software/traces) for details.
+`
+    return <Markdown source={replayTrace?.serializeToText() || missingTrace} />
 }
