@@ -2,7 +2,7 @@ import React, { useCallback, useContext } from "react"
 import PacketsContext from "../PacketsContext"
 import { parseTrace } from "../../../jacdac-ts/src/jdom/logparser"
 import useWindowPaste from "../hooks/useWindowPaste"
-import PacketList from "../PacketList"
+import Markdown from "../ui/Markdown"
 
 export default function TraceAnalyzer() {
     const { replayTrace, setReplayTrace } = useContext(PacketsContext)
@@ -17,14 +17,5 @@ export default function TraceAnalyzer() {
 
     if (!replayTrace) return null
 
-    return (
-        <>
-            <PacketList
-                packets={replayTrace.packets}
-                showTime={true}
-                showRaw={true}
-            />
-            <pre>{replayTrace.serializeToText()}</pre>
-        </>
-    )
+    return <Markdown source={replayTrace.serializeToText()} />
 }
