@@ -2,6 +2,8 @@
 
 Record traces in your logic analyser and replay them to test your services.
 
+<TraceList />
+
 ## Analyzer trace
 
 * open [trace analyzer](/tools/player)
@@ -14,19 +16,30 @@ the current trace to a file.
 
 ## Import traces
 
-Paste your trace from the clipboard or import file from the packet console
+Paste your trace from the clipboard in the trace analyzer or import file from the packet console.
 
-## Trace Format
+## Trace format
 
-The trace is a text file where each line is composed of 3 parts:
+Jacdac traces can be created by recording them in this web site
+and saving them to files. The trace file contains enough information
+to replay all the packets.
 
-    timestamp framebuffer description
+```
+DESCRIPTION
 
-where 
+TIMESTAMP PACKET_HEX INFO
+...
+```
 
--   "timestamp" is ellapsed milliseconds of the frame in the trace,
--   "framebuffer" is a hex-encoded frame
--   "description" is a human readable description of the frame, it is ignored.  
+where
+
+* ``DESCRIPTION`` is a Markdown-formatted description of the trace.
+* ``TIMESTAMP`` is the timestamp of the packet, in milliseconds
+* ``PACKET_HEX`` is the packet header and data formatted as a hex buffer
+* ``INFO`` is the human readable description of the packet, ignored by the parser
+
+The traces are stored at https://github.com/microsoft/jacdac/tree/main/traces.
+If you want to contribute new traces, please send us a pull request!
 
 ### Saleae LOGIC
 

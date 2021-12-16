@@ -30,6 +30,7 @@ import SettingsIcon from "@mui/icons-material/Settings"
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord"
 import VideoCallIcon from "@mui/icons-material/VideoCall"
 import MakeCodeIcon from "../icons/MakeCodeIcon"
+import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 
 import DarkModeContext from "../ui/DarkModeContext"
 import KindIcon from "../KindIcon"
@@ -182,6 +183,11 @@ export default function ToolsDrawer() {
             text: "Firmware Update",
             to: "/tools/updater/",
             icon: <SystemUpdateAltIcon />,
+        },
+        {
+            text: "Trace Analyzer",
+            to: "/tools/player/",
+            icon: <TextSnippetIcon/>,
         },
         {
             // separator

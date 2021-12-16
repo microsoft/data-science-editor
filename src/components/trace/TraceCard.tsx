@@ -8,20 +8,18 @@ import {
 import React, { useContext } from "react"
 import { prettyDuration } from "../../../jacdac-ts/src/jdom/pretty"
 import Trace from "../../../jacdac-ts/src/jdom/trace/trace"
-import AppContext, { DrawerType } from "../AppContext"
 import Markdown from "../ui/Markdown"
 import PacketsContext from "../PacketsContext"
+import { navigate } from "gatsby"
 
 export default function TraceCard(props: { name: string; trace: Trace }) {
     const { name, trace } = props
     const { description, duration, length } = trace
-    const { setReplayTrace, toggleTracing } = useContext(PacketsContext)
-    const { setDrawerType } = useContext(AppContext)
+    const { setReplayTrace } = useContext(PacketsContext)
 
     const handleClick = () => {
-        setDrawerType(DrawerType.Packets)
         setReplayTrace(trace)
-        toggleTracing()
+        navigate("/tools/player");
     }
 
     return (
