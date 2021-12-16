@@ -7,7 +7,7 @@ import AppContext, { DrawerType } from "../AppContext"
 import Suspense from "../ui/Suspense"
 import {
     SRV_BUTTON,
-    SRV_JOYSTICK,
+    SRV_GAMEPAD,
     SRV_DOT_MATRIX,
     SRV_LED_PIXEL,
     SRV_POTENTIOMETER,
@@ -22,7 +22,7 @@ const PacketView = lazy(() => import("../tools/PacketView"))
 
 export default function Tools() {
     useServiceProviderFromServiceClass(SRV_BUTTON)
-    useServiceProviderFromServiceClass(SRV_JOYSTICK)
+    useServiceProviderFromServiceClass(SRV_GAMEPAD)
     useServiceProviderFromServiceClass(SRV_SERVO)
     useServiceProviderFromServiceClass(SRV_POTENTIOMETER)
     useServiceProviderFromServiceClass(SRV_LED_PIXEL)

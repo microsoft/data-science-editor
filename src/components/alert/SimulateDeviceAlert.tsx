@@ -4,11 +4,11 @@ import {
     SRV_BUZZER,
     SRV_CHARACTER_SCREEN,
     SRV_HUMIDITY,
-    SRV_JOYSTICK,
+    SRV_GAMEPAD,
     SRV_LED,
     SRV_POTENTIOMETER,
     SRV_SOIL_MOISTURE,
-    SRV_THERMOMETER,
+    SRV_TEMPERATURE,
     SRV_TRAFFIC_LIGHT,
 } from "../../../jacdac-ts/src/jdom/constants"
 import { startServiceProviderFromServiceClass } from "../../../jacdac-ts/src/servers/servers"
@@ -49,7 +49,7 @@ export function SimulateDeviceHint() {
             </IconButtonWithTooltip>
             <IconButtonWithTooltip
                 trackName="simulator.hint.thermometer"
-                onClick={handleStartSimulator(SRV_THERMOMETER)}
+                onClick={handleStartSimulator(SRV_TEMPERATURE)}
                 title="thermometer"
                 aria-label="start thermometer"
             >
@@ -89,7 +89,7 @@ export function SimulateDeviceHint() {
             </IconButtonWithTooltip>
             <IconButtonWithTooltip
                 trackName="simulator.hint.joystick"
-                onClick={handleStartSimulator(SRV_JOYSTICK)}
+                onClick={handleStartSimulator(SRV_GAMEPAD)}
                 title="joystick"
                 aria-label="start joystick simulator"
             >

@@ -8,12 +8,12 @@ import {
 } from "../../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import {
     BuzzerCmd,
-    JoystickReg,
+    GamepadReg,
     ServoReg,
     SRV_BOOTLOADER,
     SRV_BUZZER,
     SRV_CONTROL,
-    SRV_JOYSTICK,
+    SRV_GAMEPAD,
     SRV_LOGGER,
     SRV_PROTO_TEST,
     SRV_ROLE_MANAGER,
@@ -113,8 +113,8 @@ const ignoredServices = [
 
 const customMessages = [
     {
-        service: SRV_JOYSTICK,
-        register: JoystickReg.Direction,
+        service: SRV_GAMEPAD,
+        register: GamepadReg.Direction,
         field: "buttons",
         get: "is %1 %2 pressed",
     },

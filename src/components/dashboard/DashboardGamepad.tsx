@@ -2,14 +2,14 @@ import React, { CSSProperties, useMemo, useRef, useState } from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import useServiceServer from "../hooks/useServiceServer"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
-import JoystickServer, {
-    JOYSTICK_DPAD_BUTTONS,
-    JOYSTICK_GAMEPAD_EXTRA_BUTTONS,
-} from "../../../jacdac-ts/src/servers/joystickserver"
+import GamepadServer, {
+    GAMEPAD_DPAD_BUTTONS,
+    GAMEPAD_GAMEPAD_EXTRA_BUTTONS,
+} from "../../../jacdac-ts/src/servers/gamepadserver"
 import {
-    JoystickButtons,
-    JoystickReg,
-    JoystickVariant,
+    GamepadButtons,
+    GamepadReg,
+    GamepadVariant,
 } from "../../../jacdac-ts/src/jdom/constants"
 import SvgWidget from "../widgets/SvgWidget"
 import useWidgetTheme from "../widgets/useWidgetTheme"
@@ -20,10 +20,10 @@ import useRegister from "../hooks/useRegister"
 import OptionalTooltip from "../widgets/OptionalTooltip"
 
 const buttonLabels = {
-    [JoystickButtons.Left]: "\u25C4",
-    [JoystickButtons.Up]: "\u25B2",
-    [JoystickButtons.Down]: "\u25BC",
-    [JoystickButtons.Right]: "\u25BA",
+    [GamepadButtons.Left]: "\u25C4",
+    [GamepadButtons.Up]: "\u25B2",
+    [GamepadButtons.Down]: "\u25BC",
+    [GamepadButtons.Right]: "\u25BA",
 }
 
 function decay(value: number, rate: number, precision: number) {
@@ -32,13 +32,13 @@ function decay(value: number, rate: number, precision: number) {
     return nv
 }
 
-function JoystickWidget(props: DashboardServiceProps) {
+function GamepadWidget(props: DashboardServiceProps) {
     const { service } = props
-    const register = useRegister(service, JoystickReg.Direction)
+    const register = useRegister(service, GamepadReg.Direction)
     const [buttons, x, y] = useRegisterUnpackedValue<
-        [JoystickButtons, number, number]
+        [GamepadButtons, number, number]
     >(register, props)
-    const server = useServiceServer<JoystickServer>(service)
+    const server = useServiceServer<GamepadServer>(service)
     const color = server ? "secondary" : "primary"
 
     const hostValues = (): [number, number] => {
@@ -67,7 +67,7 @@ function JoystickWidget(props: DashboardServiceProps) {
     const jy = cy + (y || 0) * rj
     const jw = 1
 
-    const updateJoystickDrag = (x: number, y: number) => {
+    const updateGamepadDrag = (x: number, y: number) => {
         const bounds = dragSurfaceRef.current.getBoundingClientRect()
 
         const dx = (x - bounds.left) * (w / bounds.width) - w2
@@ -90,7 +90,7 @@ function JoystickWidget(props: DashboardServiceProps) {
         const circle = ev.target as SVGCircleElement
         circle.setPointerCapture(ev.pointerId)
         setGrabbing(true)
-        updateJoystickDrag(ev.clientX, ev.clientY)
+        updateGamepadDrag(ev.clientX, ev.clientY)
     }
     const handlePointerUp = (ev: React.PointerEvent<SVGCircleElement>) => {
         ev.preventDefault()
@@ -102,7 +102,7 @@ function JoystickWidget(props: DashboardServiceProps) {
         ev: React.PointerEvent<SVGCircleElement>
     ) => {
         ev.preventDefault()
-        if (grabbing) updateJoystickDrag(ev.clientX, ev.clientY)
+        if (grabbing) updateGamepadDrag(ev.clientX, ev.clientY)
     }
 
     useAnimationFrame(() => {
@@ -125,7 +125,7 @@ function JoystickWidget(props: DashboardServiceProps) {
         <>
             <circle
                 ref={dragSurfaceRef}
-                className="joystick-background"
+                className="Gamepad-background"
                 cx={cx}
                 cy={cy}
                 r="16"
@@ -138,7 +138,7 @@ function JoystickWidget(props: DashboardServiceProps) {
                 width={ph}
                 height={pw}
                 rx={rp}
-                fill={buttons & JoystickButtons.Up ? active : controlBackground}
+                fill={buttons & GamepadButtons.Up ? active : controlBackground}
             ></rect>
             <rect
                 className="dpad-down"
@@ -148,7 +148,7 @@ function JoystickWidget(props: DashboardServiceProps) {
                 height={pw}
                 rx={rp}
                 fill={
-                    buttons & JoystickButtons.Down ? active : controlBackground
+                    buttons & GamepadButtons.Down ? active : controlBackground
                 }
             ></rect>
             <rect
@@ -159,7 +159,7 @@ function JoystickWidget(props: DashboardServiceProps) {
                 height={ph}
                 ry={rp}
                 fill={
-                    buttons & JoystickButtons.Right ? active : controlBackground
+                    buttons & GamepadButtons.Right ? active : controlBackground
                 }
             ></rect>
             <rect
@@ -170,7 +170,7 @@ function JoystickWidget(props: DashboardServiceProps) {
                 height={ph}
                 ry={rp}
                 fill={
-                    buttons & JoystickButtons.Left ? active : controlBackground
+                    buttons & GamepadButtons.Left ? active : controlBackground
                 }
             ></rect>
             <circle
@@ -182,7 +182,7 @@ function JoystickWidget(props: DashboardServiceProps) {
             ></circle>
             {server ? (
                 <circle
-                    className="joystick-handle"
+                    className="Gamepad-handle"
                     cx={jx}
                     cy={jy}
                     r={rc}
@@ -191,7 +191,7 @@ function JoystickWidget(props: DashboardServiceProps) {
                     strokeWidth={jw}
                     tabIndex={0}
                     role="button"
-                    aria-label="joystick handle"
+                    aria-label="Gamepad handle"
                     arial-live="polite"
                     onPointerMove={handlePointerMove}
                     onPointerDown={handlePointerDown}
@@ -200,7 +200,7 @@ function JoystickWidget(props: DashboardServiceProps) {
                 />
             ) : (
                 <circle
-                    className="joystick-handle"
+                    className="Gamepad-handle"
                     cx={jx}
                     cy={jy}
                     r={rc}
@@ -208,7 +208,7 @@ function JoystickWidget(props: DashboardServiceProps) {
                     stroke={active}
                     strokeWidth={jw}
                     role="button"
-                    aria-label="joystick handle"
+                    aria-label="Gamepad handle"
                     arial-live="polite"
                 />
             )}
@@ -222,8 +222,8 @@ function ArcadeButton(props: {
     ro: number
     ri: number
     pressure: number
-    button: JoystickButtons
-    server: JoystickServer
+    button: GamepadButtons
+    server: GamepadServer
     onRefresh: () => void
     color?: "primary" | "secondary"
 }) {
@@ -231,7 +231,7 @@ function ArcadeButton(props: {
     const { textProps, active, background, controlBackground } =
         useWidgetTheme(color)
     const checked = (pressure || 0) > 0
-    const title = JoystickButtons[button]
+    const title = GamepadButtons[button]
     const label = buttonLabels[button] || title[0]
 
     const handleDown = server
@@ -276,40 +276,40 @@ function ArcadeButton(props: {
     )
 }
 
-export default function DashboardJoystick(props: DashboardServiceProps) {
+export default function DashboardGamepad(props: DashboardServiceProps) {
     const { service } = props
-    const variantRegister = useRegister(service, JoystickReg.Variant)
-    let [variant] = useRegisterUnpackedValue<[JoystickVariant]>(
+    const variantRegister = useRegister(service, GamepadReg.Variant)
+    let [variant] = useRegisterUnpackedValue<[GamepadVariant]>(
         variantRegister,
         props
     )
     const buttonsAvailableRegister = useRegister(
         service,
-        JoystickReg.ButtonsAvailable
+        GamepadReg.ButtonsAvailable
     )
-    const [buttonsAvailable] = useRegisterUnpackedValue<[JoystickButtons]>(
+    const [buttonsAvailable] = useRegisterUnpackedValue<[GamepadButtons]>(
         buttonsAvailableRegister,
         props
     )
 
     // if variant is not specific, infer from buttons
     if (variant === undefined) {
-        if (buttonsAvailable & JOYSTICK_GAMEPAD_EXTRA_BUTTONS)
-            variant = JoystickVariant.Gamepad
-        else if (!buttonsAvailable || buttonsAvailable === JoystickButtons.A)
-            variant = JoystickVariant.Thumb
+        if (buttonsAvailable & GAMEPAD_GAMEPAD_EXTRA_BUTTONS)
+            variant = GamepadVariant.Gamepad
+        else if (!buttonsAvailable || buttonsAvailable === GamepadButtons.A)
+            variant = GamepadVariant.Thumb
     }
-    const directionRegister = useRegister(service, JoystickReg.Direction)
+    const directionRegister = useRegister(service, GamepadReg.Direction)
     const [buttons] = useRegisterUnpackedValue<
-        [JoystickButtons, number, number]
+        [GamepadButtons, number, number]
     >(directionRegister, props)
-    const server = useServiceServer<JoystickServer>(service)
+    const server = useServiceServer<GamepadServer>(service)
     const color = server ? "secondary" : "primary"
     const { background } = useWidgetTheme(color)
 
     // buttonsAvailable should be defined by now
-    const analog = !(buttonsAvailable & JOYSTICK_DPAD_BUTTONS)
-    const hasButtons = !!(buttonsAvailable & ~JOYSTICK_DPAD_BUTTONS)
+    const analog = !(buttonsAvailable & GAMEPAD_DPAD_BUTTONS)
+    const hasButtons = !!(buttonsAvailable & ~GAMEPAD_DPAD_BUTTONS)
 
     const w = 256
     const h = 128
@@ -328,46 +328,46 @@ export default function DashboardJoystick(props: DashboardServiceProps) {
         () =>
             [
                 {
-                    id: JoystickButtons.Left,
+                    id: GamepadButtons.Left,
                     cx: cw * 1.5,
                     cy: 2 * ch,
                     small: false,
                 },
-                { id: JoystickButtons.Up, cx: cw * 3, cy: ch, small: false },
+                { id: GamepadButtons.Up, cx: cw * 3, cy: ch, small: false },
                 {
-                    id: JoystickButtons.Right,
+                    id: GamepadButtons.Right,
                     cx: cw * 4.5,
                     cy: 2 * ch,
                     small: false,
                 },
                 {
-                    id: JoystickButtons.Down,
+                    id: GamepadButtons.Down,
                     cx: cw * 3,
                     cy: 3 * ch,
                     small: false,
                 },
                 {
-                    id: JoystickButtons.A,
+                    id: GamepadButtons.A,
                     cx: cw * 10.5,
                     cy: ch * 1.25,
                     small: false,
                 },
                 {
-                    id: JoystickButtons.B,
+                    id: GamepadButtons.B,
                     cx: cw * 9.5,
                     cy: ch * 2.75,
                     small: false,
                 },
-                { id: JoystickButtons.Menu, cx: cw * 7, cy: scy, small: true },
+                { id: GamepadButtons.Menu, cx: cw * 7, cy: scy, small: true },
                 {
-                    id: JoystickButtons.Select,
+                    id: GamepadButtons.Select,
                     cx: cw * 6,
                     cy: scy,
                     small: true,
                 },
 
-                { id: JoystickButtons.Exit, cx: cw * 8, cy: scy, small: true },
-                { id: JoystickButtons.Reset, cx: cw * 9, cy: scy, small: true },
+                { id: GamepadButtons.Exit, cx: cw * 8, cy: scy, small: true },
+                { id: GamepadButtons.Reset, cx: cw * 9, cy: scy, small: true },
             ].filter(p => !!(p.id & buttonsAvailable)),
         [buttonsAvailable]
     )
@@ -387,7 +387,7 @@ export default function DashboardJoystick(props: DashboardServiceProps) {
 
     return (
         <OptionalTooltip
-            title={!server ? "Use the physical joystick!" : undefined}
+            title={!server ? "Use the physical Gamepad!" : undefined}
         >
             <SvgWidget width={w} height={h}>
                 {!analog && (
@@ -406,7 +406,7 @@ export default function DashboardJoystick(props: DashboardServiceProps) {
                             padr / 16
                         }) translate(${-1.8},${-1.8})`}
                     >
-                        <JoystickWidget {...props} />
+                        <GamepadWidget {...props} />
                     </g>
                 )}
                 {hasButtons && (

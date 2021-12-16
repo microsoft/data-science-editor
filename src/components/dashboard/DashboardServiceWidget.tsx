@@ -13,7 +13,7 @@ import {
     SRV_COLOR,
     SRV_COMPASS,
     SRV_GYROSCOPE,
-    SRV_JOYSTICK,
+    SRV_GAMEPAD,
     SRV_LED,
     SRV_DOT_MATRIX,
     SRV_LED_PIXEL,
@@ -91,7 +91,7 @@ const DashboardSpeechSynthesis = lazy(
 const DashboardSoilMoisture = lazy(() => import("./DashboardSoilMoisture"))
 const DashboardRealTimeClock = lazy(() => import("./DashboardRealTimeClock"))
 const DashboardLED = lazy(() => import("./DashboardLED"))
-const DashboardJoystick = lazy(() => import("./DashboardJoystick"))
+const DashboardGamepad = lazy(() => import("./DashboardGamepad"))
 const DashboardSevenSegmentDisplay = lazy(
     () => import("./DashboardSevenSegmentDisplay")
 )
@@ -216,8 +216,8 @@ const serviceViews: {
     [SRV_LED]: {
         component: DashboardLED,
     },
-    [SRV_JOYSTICK]: {
-        component: DashboardJoystick,
+    [SRV_GAMEPAD]: {
+        component: DashboardGamepad,
         weight: () => 3,
     },
     [SRV_SEVEN_SEGMENT_DISPLAY]: {
