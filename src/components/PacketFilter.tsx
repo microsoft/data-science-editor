@@ -145,6 +145,16 @@ function FilterMenu(props: {
                         value: false,
                     },
                     {
+                        cmd: "requires-ack",
+                        label: "Filter packet that require acks",
+                        value: true
+                    },
+                    {
+                        cmd: "ack",
+                        label: "Show ack packets",
+                        value: true
+                    },                    
+                    {
                         cmd: "announce",
                         value: false,
                     },
