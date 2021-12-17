@@ -5,9 +5,10 @@ import useWindowPaste from "../hooks/useWindowPaste"
 import { Link } from "gatsby-theme-material-ui"
 import useBus from "../../jacdac/useBus"
 import useChange from "../../jacdac/useChange"
+import { Container } from "@mui/material"
 
 export default function TraceAnalyzer() {
-    const bus = useBus();
+    const bus = useBus()
     const { replayTrace, setReplayTrace } = useContext(PacketsContext)
     const importTrace = useCallback(
         (text: string) => {
@@ -17,16 +18,26 @@ export default function TraceAnalyzer() {
         [setReplayTrace]
     )
     useWindowPaste(importTrace)
-    const traceText = useChange(bus, _ => {
-        if (_)
-            replayTrace?.resolveDevices(_);
-        return replayTrace?.serializeToText()
-    }, [replayTrace])
+    const traceText = useChange(
+        bus,
+        _ => {
+            if (_) replayTrace?.resolveDevices(_)
+            return replayTrace?.serializeToText()
+        },
+        [replayTrace]
+    )
 
     if (!traceText)
-        return <p>
-            No trace loaded. <Link to="/software/traces">Learn how to collect a trace.</Link>
-        </p>
+        return (
+            <Container>
+                <p>
+                    No trace loaded.{" "}
+                    <Link to="/software/traces">
+                        Learn how to collect a trace.
+                    </Link>
+                </p>
+            </Container>
+        )
 
     return <pre>{traceText}</pre>
 }
