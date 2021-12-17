@@ -151,9 +151,17 @@ export function StyledTreeItem(
                             className={classes.labelIcon}
                         />
                     )}
-                    <Typography component="span" variant="body2" className={classes.labelText}>
+                    <Typography
+                        component="span"
+                        variant="body2"
+                        className={classes.labelText}
+                    >
                         {labelTo ? (
-                            <Link color="textPrimary" to={labelTo} underline="hover">
+                            <Link
+                                color="textPrimary"
+                                to={labelTo}
+                                underline="hover"
+                            >
                                 {labelText}
                             </Link>
                         ) : (
@@ -161,10 +169,17 @@ export function StyledTreeItem(
                         )}
                     </Typography>
                     {alert && "!"}
-                    <Typography component="span" variant="caption" color="inherit">
+                    <Typography
+                        component="span"
+                        variant="caption"
+                        color="inherit"
+                    >
                         {alert && (
-                            <Typography variant="caption" component="span">
-                                {alert}
+                            <Typography
+                                variant="caption"
+                                component="span"
+                            >
+                                {alert},
                             </Typography>
                         )}
                         {labelInfo?.length > 18 ? (

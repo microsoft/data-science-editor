@@ -33,7 +33,7 @@ import {
 } from "../../../jacdac-ts/src/jdom/constants"
 import useEventRaised from "../../jacdac/useEventRaised"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import { ellipseJoin } from "../../../jacdac-ts/src/jdom/utils"
+import { ellipseJoin, roundWithPrecision } from "../../../jacdac-ts/src/jdom/utils"
 import useDeviceName from "../devices/useDeviceName"
 import {
     StyledTreeItem,
@@ -85,12 +85,10 @@ export function DeviceTreeItem(
         : restarts > 1
         ? `malfunction...`
         : dropped > 2
-        ? `${dropped} pkt lost`
+        ? `${roundWithPrecision(dropped, 1)} pkt lost`
         : undefined
     const warning = restarts > 1 || dropped > 2
-    const labelInfo = [dropped > 2 && `${dropped | 0} lost`, serviceNames]
-        .filter(r => !!r)
-        .join(", ")
+    const labelInfo = serviceNames
 
     return (
         <StyledTreeItem
