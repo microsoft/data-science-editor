@@ -258,7 +258,7 @@ function APList(props: { service: JDService; connectedSsid: string }) {
     )
 
     // keep scanning
-    useInterval(true, scan, 30000, [service])
+    useInterval(true, scan, aps?.length ? 30000 : 10000, [service])
 
     const priority = (s: string) =>
         knownNetworks.find(n => n[2] === s)?.[0] || -Infinity
@@ -272,7 +272,7 @@ function APList(props: { service: JDService; connectedSsid: string }) {
         <List>
             {aps !== undefined && !aps.length && (
                 <ListItem>
-                    <Alert severity="warning">No WiFi detected.</Alert>
+                    <Alert severity="success">Scanning for networks...</Alert>
                 </ListItem>
             )}
             {ssids.map(ssid => (
