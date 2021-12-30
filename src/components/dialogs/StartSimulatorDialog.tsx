@@ -3,12 +3,15 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
+    DialogTitle,
+    Grid,
+    IconButton,
     List,
     ListItem,
     TextField,
 } from "@mui/material"
 import AppContext from "../AppContext"
-import React, { useContext, useMemo, useState } from "react"
+import React, { useContext, useMemo } from "react"
 import { useId } from "react-use-id-hook"
 import servers, {
     addServiceProvider,
@@ -28,9 +31,7 @@ import {
     isSensor,
     serviceSpecificationFromClassIdentifier,
 } from "../../../jacdac-ts/src/jdom/spec"
-import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
-import FilterListIcon from "@mui/icons-material/FilterList"
-import DialogTitleWithClose from "../ui/DialogTitleWithClose"
+import CloseIcon from "@mui/icons-material/Close"
 
 const miniSearchOptions = {
     fields: ["name", "description"],
@@ -54,7 +55,6 @@ export default function StartSimulatorDialog(props: {
     const searchId = useId()
     const deviceHostDialogId = useId()
     const deviceHostLabelId = useId()
-    const [showFilters, setShowFilters] = useState(false)
 
     const documents: {
         id: string
@@ -97,7 +97,7 @@ export default function StartSimulatorDialog(props: {
         ],
         [sensor]
     )
-    const { search, clearSearch, searchResults } = useMiniSearch(
+    const { search, searchResults } = useMiniSearch(
         documents,
         miniSearchOptions
     )
@@ -133,43 +133,44 @@ export default function StartSimulatorDialog(props: {
             addServiceProvider(bus, provider)
         }
     }
-    const handleShowFilters = () => {
-        if (showFilters) {
-            clearSearch()
-            setShowFilters(false)
-        }
-        setShowFilters(!showFilters)
-    }
 
     return (
         <Dialog
             id={deviceHostDialogId}
-            aria-labelledby={deviceHostLabelId}
+            aria-label="Start a simulator dialog"
             open={open}
             onClose={onClose}
             fullWidth={true}
             fullScreen={mobile}
+            scroll="paper"
         >
-            <DialogTitleWithClose onClose={onClose} id={deviceHostLabelId}>
-                Start a simulator
-                <IconButtonWithTooltip
-                    title={showFilters ? "show filters" : "hide filters"}
-                    onClick={handleShowFilters}
-                >
-                    <FilterListIcon />
-                </IconButtonWithTooltip>
-            </DialogTitleWithClose>
+            <DialogTitle id={deviceHostLabelId}>
+                <Grid container spacing={1}>
+                    <Grid item xs>
+                        <TextField
+                            id={searchId}
+                            label="Start a simulator"
+                            type="search"
+                            fullWidth={true}
+                            onChange={handleSearchChange}
+                        />
+                    </Grid>
+                    <Grid item>
+                        <IconButton
+                            aria-label="close"
+                            title="close"
+                            onClick={onClose}
+                            sx={{
+                                color: theme => theme.palette.grey[500],
+                            }}
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                    </Grid>
+                </Grid>
+            </DialogTitle>
             <DialogContent>
-                {showFilters && (
-                    <TextField
-                        id={searchId}
-                        label="Filter"
-                        type="search"
-                        fullWidth={true}
-                        onChange={handleSearchChange}
-                    />
-                )}
-                <List>
+                <List sx={{ height: mobile ? undefined : "min(32rem, 80vh)" }}>
                     {(searchResults || documents).map(
                         ({ id, name, server, simulator }) => (
                             <ListItem
