@@ -3,9 +3,6 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogTitle,
-    Grid,
-    IconButton,
     List,
     ListItem,
     TextField,
@@ -31,7 +28,7 @@ import {
     isSensor,
     serviceSpecificationFromClassIdentifier,
 } from "../../../jacdac-ts/src/jdom/spec"
-import CloseIcon from "@mui/icons-material/Close"
+import DialogTitleWithClose from "../ui/DialogTitleWithClose"
 
 const miniSearchOptions = {
     fields: ["name", "description"],
@@ -137,39 +134,26 @@ export default function StartSimulatorDialog(props: {
     return (
         <Dialog
             id={deviceHostDialogId}
-            aria-label="Start a simulator dialog"
+            aria-labelledby={deviceHostLabelId}
             open={open}
             onClose={onClose}
             fullWidth={true}
             fullScreen={mobile}
             scroll="paper"
         >
-            <DialogTitle id={deviceHostLabelId}>
-                <Grid container spacing={1}>
-                    <Grid item xs>
-                        <TextField
-                            id={searchId}
-                            label="Start a simulator"
-                            type="search"
-                            fullWidth={true}
-                            onChange={handleSearchChange}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <IconButton
-                            aria-label="close"
-                            title="close"
-                            onClick={onClose}
-                            sx={{
-                                color: theme => theme.palette.grey[500],
-                            }}
-                        >
-                            <CloseIcon />
-                        </IconButton>
-                    </Grid>
-                </Grid>
-            </DialogTitle>
+            <DialogTitleWithClose onClose={onClose} id={deviceHostLabelId}>
+                Start a simulator
+            </DialogTitleWithClose>
             <DialogContent>
+                <TextField
+                    id={searchId}
+                    sx={{ mt: "8px" }}
+                    label="Filter simulators"
+                    type="search"
+                    fullWidth={true}
+                    size="small"
+                    onChange={handleSearchChange}
+                />
                 <List sx={{ height: mobile ? undefined : "min(32rem, 80vh)" }}>
                     {(searchResults || documents).map(
                         ({ id, name, server, simulator }) => (
