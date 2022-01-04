@@ -15,6 +15,7 @@ import { semverCmp } from "../semver"
 import DeviceSpecificationList from "./DeviceSpecificationList"
 import StructuredData from "../ui/StructuredData"
 import useDeviceSpecifications from "../devices/useDeviceSpecifications"
+import { Link } from "gatsby-theme-material-ui"
 
 function DeviceStructuredData(props: { device: jdspec.DeviceSpec }) {
     const { device } = props
@@ -61,6 +62,8 @@ export default function DeviceSpecification(props: {
         firmwares,
         version,
         designIdentifier,
+        hardwareDesign,
+        firmwareSource,
     } = device
     const { services } = device
     const specifications = useDeviceSpecifications()
@@ -155,6 +158,27 @@ export default function DeviceSpecification(props: {
                                 </Grid>
                             ))}
                     </Grid>
+                </>
+            )}
+            {(hardwareDesign || firmwareSource) && (
+                <>
+                    <h3>Sources</h3>
+                    <ul>
+                        {hardwareDesign && (
+                            <li>
+                                <Link target="_blank" href={hardwareDesign}>
+                                    Hardware design
+                                </Link>
+                            </li>
+                        )}
+                        {firmwareSource && (
+                            <li>
+                                <Link target="_blank" href={firmwareSource}>
+                                    Firmware code
+                                </Link>
+                            </li>
+                        )}
+                    </ul>
                 </>
             )}
             {!!others?.length && (
