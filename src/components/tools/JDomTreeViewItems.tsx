@@ -33,7 +33,11 @@ import {
 } from "../../../jacdac-ts/src/jdom/constants"
 import useEventRaised from "../../jacdac/useEventRaised"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import { ellipseJoin, roundWithPrecision } from "../../../jacdac-ts/src/jdom/utils"
+import {
+    ellipse,
+    ellipseJoin,
+    roundWithPrecision,
+} from "../../../jacdac-ts/src/jdom/utils"
 import useDeviceName from "../devices/useDeviceName"
 import {
     StyledTreeItem,
@@ -204,6 +208,26 @@ export function ServiceMembersTreeItems(
     )
 }
 
+function ServiceSpecificationTreeItem(props: { service: JDService }) {
+    const { service } = props
+    const { id, specification } = service
+    if (!specification) return null
+
+    const { classIdentifier } = specification
+    const nodeId = `${id}:spec`
+    const labelText = (specification?.notes["short"] || specification.name).split('.', 1)[0] + "."
+    const labelTo = `/services/${specification.shortId}/`
+
+    return (
+        <StyledTreeItem
+            nodeId={nodeId}
+            labelText={labelText}
+            labelInfo={`id: 0x${classIdentifier.toString(16)}`}
+            labelTo={labelTo}
+        />
+    )
+}
+
 export function ServiceTreeItem(
     props: { service: JDService } & StyledTreeViewItemProps & JDomTreeViewProps
 ) {
@@ -224,6 +248,7 @@ export function ServiceTreeItem(
             labelInfo={reading}
             kind={isMixin ? SERVICE_MIXIN_NODE_NAME : SERVICE_NODE_NAME}
         >
+            <ServiceSpecificationTreeItem service={service} />
             <ServiceMembersTreeItems service={service} {...props} />
         </StyledTreeItem>
     )
