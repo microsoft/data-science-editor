@@ -18,6 +18,10 @@ import Tooltip from "./ui/Tooltip"
 import MakeCodeSnippet from "./makecode/MakeCodeSnippet"
 import Suspense from "./ui/Suspense"
 
+import Prism from "prism-react-renderer/prism";
+(typeof global !== "undefined" ? global : window).Prism = Prism;
+require("prismjs/components/prism-csharp")
+
 const TraceSnippet = lazy(() => import("./trace/TraceSnippet"))
 const VanillaCodeButton = lazy(() => import("./ui/VanillaCodeButton"))
 const ReactCodeButton = lazy(() => import("./ui/ReactCodeButton"))

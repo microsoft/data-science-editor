@@ -1,0 +1,137 @@
+---
+title: .NET
+order: 3
+---
+
+# Jacdac .NET
+
+** Under development **
+
+There are various ways to integrate Jacdac into **.NET** projects,
+including on desktop, Raspberry Pi, TinyCLR devices.
+
+-   [.NET for IoT](https://dotnet.microsoft.com/en-us/apps/iot) on Raspberry Pi
+-   [.NET 5+](https://dotnet.microsoft.com/en-us/download/dotnet) on desktop
+-   [TinyCLR](https://www.ghielectronics.com/tinyclr/) on SITCore devices
+
+More information
+
+-   [GitHub project](https://github.com/microsoft/jacdac-dotnet)
+
+## Supported .NET runtimes
+
+## NuGet packages
+
+TODO
+
+## Connecting to hardware
+
+The transport used to connect to the Jacdac device typically varies a lot dependending on the platform and the usage scenario.
+
+### JacHAT
+
+A JacHAT is a Jacdac adapter for the Raspberry Pi that provides an SPI bridge to the Jacdac bus.
+
+-   [JM SPI bridge](/devices/microsoft/research/jmspibridgev37v37)
+
+### USB/Serial
+
+Connection to USB or serial device is not yet supported.
+
+## Getting started
+
+Let's learn about Jacdac by creating a couple small projects.
+
+### Developer tools
+
+The first step of a Jacdac project is to create a bus which will handle all the communication and
+the management of the service client.
+Since the bus communicates with hardware, configuring it may vary **a lot** whether you are on a Raspberry Pi or a desktop computer.
+
+To provide a consistent experience, we recommend using the Jacdac developer tools.
+The developer tools rely on the browser WebUSB/WebSerial/WebBluetooth to connect to the hardware devices and uses a local web socket server
+to pipe the packets to the Python SDK. This also allows to debug your Python code in a virtual machine with no hardware access, like GitHub codespaces.
+
+-   install Node.JS
+-   install Jacdac command line tool (`jacdac-cli`)
+
+```
+(sudo) npm install -g jacdac-cli
+```
+
+-   launch the devtools server (and keep it running)
+
+```
+jacdac devtools
+```
+
+Once the devtools server is running, you should be able to navigate to the local web server and see a dashboard.
+
+### Blinky
+
+Let's build a blinking LED light project, assuming you have a [LED](/services/led) module.
+
+The first step is to start a Jacdac `Bus` instance. The bus instance will automatically try to connect to the devtools;
+but there are many other configuration options (see also how to use configuration files).
+
+```cs
+using Jacdac;
+
+var bus = new JDBus(/* platform specific initialization */)
+```
+
+Next we create an LED service client (and assign it the `led` role).
+The client will allow us to change the color on the LED module.
+
+```cs
+using Jacdac.Clients;
+
+var led = new LedClient(bus, "led");
+```
+
+Finally, we create a loop with a couple `sleep` command to
+toggle between blue and red.
+
+```cs
+var speed = 64;
+var brightness = 128;
+while(true) {
+    // blue
+    led.Animate(0, 0, brightness, speed);
+    Thread.Sleep(1000);
+    // red
+    led.Animate(brightness, 0, 0, speed);
+    Thread.Sleep(1000);
+}
+```
+
+All together, we get:
+
+```cs
+using System.Threading;
+using Jacdac;
+using Jacdac.Clients;
+
+static class Program {
+    static void Main() {
+        var bus = new JDBus(/* platform specific initialization */);
+        var led = new LedClient(bus, "led");
+
+        var speed = 64;
+        var brightness = 128;
+        while(true) {
+            // blue
+            led.Animate(0, 0, brightness, speed);
+            Thread.Sleep(1000);
+            // red
+            led.Animate(brightness, 0, 0, speed);
+            Thread.Sleep(1000);
+        }
+    }
+}
+```
+
+## .NET micro framework limitations
+
+Jacdac.NET is designed to run on the .NET micro framework (TinyCLR, ...)
+and up, so it does not have all the greatest lateset features of the .NET 5+ runtime.

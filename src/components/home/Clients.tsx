@@ -16,7 +16,7 @@ export default function Clients() {
         >
             <SplitGrid
                 title="Client SDKs"
-                subtitle3="Integrate Jacdac with JavaScript, Node.JS, Python or MakeCode."
+                subtitle3="Integrate Jacdac with JavaScript, Python, .NET, MakeCode..."
                 imageColumns={6}
                 image={<StaticImage src="./dashboard.png" alt="Dashboard" />}
             />
@@ -31,6 +31,7 @@ export default function Clients() {
                 imageColumns={4}
                 image={<HTML5Image />}
             />
+
             <SplitGrid
                 right={false}
                 subtitle="MakeCode"
@@ -42,6 +43,38 @@ export default function Clients() {
                     <StaticImage
                         src="./makecode.png"
                         alt="Block code to swipe a servo"
+                    />
+                }
+            />
+
+            <SplitGrid
+                right={true}
+                subtitle="Python"
+                description="Control hardware from your computer or your Raspberry Pi using Python."
+                buttonText="Python library"
+                buttonVariant="link"
+                buttonUrl="/clients/python"
+                imageColumns={6}
+                image={
+                    <StaticImage
+                        src="https://www.python.org/static/community_logos/python-logo-master-v3-TM.png"
+                        alt="Python Foundation Logo"
+                    />
+                }
+            />
+
+            <SplitGrid
+                right={false}
+                subtitle=".NET"
+                description="Control hardware from your computer or your Raspberry Pi using .NET, TinyCLR."
+                buttonText=".NET packages"
+                buttonVariant="link"
+                buttonUrl="/clients/dotnet"
+                imageColumns={4}
+                image={
+                    <StaticImage
+                        src="https://raw.githubusercontent.com/dotnet/brand/main/logo/dotnet-logo.jpg"
+                        alt=".NET Framework logo"
                     />
                 }
             />
@@ -101,22 +134,6 @@ export default function Clients() {
                     <StaticImage
                         src="./a-frame.jpg"
                         alt="Control the radius of a sphere using a slider using our Javascript SDK."
-                    />
-                }
-            />
-
-            <SplitGrid
-                right={true}
-                subtitle="Python"
-                description="Control hardware from your computer or your Raspberry Pi using Python."
-                buttonText="Python library"
-                buttonVariant="link"
-                buttonUrl="/clients/python"
-                imageColumns={6}
-                image={
-                    <StaticImage
-                        src="https://www.python.org/static/community_logos/python-logo-master-v3-TM.png"
-                        alt="Python Foundation Logo"
                     />
                 }
             />

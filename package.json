@@ -25,12 +25,14 @@
     "@mui/lab": "^5.0.0-alpha.62",
     "@mui/material": "^5.2.6",
     "@octokit/core": "^3.5.1",
+    "@parcel/transformer-typescript-types": "^2.0.1",
     "@react-three/drei": "^8.3.1",
     "@react-three/fiber": "^7.0.24",
     "@tensorflow/tfjs": "3.8.0",
     "@tidyjs/tidy": "^2.4.5",
     "@types/json-schema": "^7.0.9",
     "@types/react-aria-live": "^2.0.2",
+    "@types/use-subscription": "^1.0.0",
     "@types/w3c-web-serial": "^1.0.2",
     "@types/wicg-file-system-access": "^2020.9.4",
     "@typescript-eslint/eslint-plugin": "^5.8.1",
@@ -86,6 +88,7 @@
     "postcss": "^8.4.5",
     "prettier": "2.5.1",
     "prism-react-renderer": "^1.2.1",
+    "prismjs": "^1.26.0",
     "prop-types": "^15.8.0",
     "puppeteer": "^13.0.1",
     "qrcode": "^1.5.0",
@@ -117,9 +120,7 @@
     "vega": "^5.21.0",
     "vega-lite": "^5.2.0",
     "ws": "^8.4.0",
-    "xmlhttprequest-ssl": "^2.0.0",
-    "@parcel/transformer-typescript-types": "^2.0.1",
-    "@types/use-subscription": "^1.0.0"
+    "xmlhttprequest-ssl": "^2.0.0"
   },
   "keywords": [
     "jacdac"

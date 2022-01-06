@@ -21,10 +21,17 @@ pip install jacdac-python
 
 ## Connecting to hardware
 
-The transport used to connect to the Jacdac device
-typically varies a lot dependending on the platform and the usage scenario.
-This layer currently supports a cross-platform development mode using browser bridge
-and a transport for the Raspberry Pi using a specialized Jacdapter.
+The transport used to connect to the Jacdac device typically varies a lot dependending on the platform and the usage scenario.
+
+### JacHAT
+
+A JacHAT is a Jacdac adapter for the Raspberry Pi that provides an SPI bridge to the Jacdac bus.
+
+* [JM SPI bridge](/devices/microsoft/research/jmspibridgev37v37)
+
+### USB/Serial
+
+Connection to USB or serial device is not yet supported.
 
 ## Getting started
 
