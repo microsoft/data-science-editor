@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-autofocus */
 import {
     Button,
     Dialog,
@@ -149,9 +150,14 @@ export default function StartSimulatorDialog(props: {
                     id={searchId}
                     sx={{ mt: "8px" }}
                     label="Filter simulators"
+                    inputProps={{
+                        "aria-label":
+                            "Filter textbox for simulators",
+                    }}
                     type="search"
                     fullWidth={true}
                     size="small"
+                    autoFocus={true}
                     onChange={handleSearchChange}
                 />
                 <List sx={{ height: mobile ? undefined : "min(32rem, 80vh)" }}>
