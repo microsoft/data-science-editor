@@ -64,6 +64,7 @@ export default function ServiceSpecificationSelect(props: {
             helperText={error}
             value={isNaN(serviceClass) ? "" : serviceClass}
             select
+            size="small"
             variant={variant}
             fullWidth={fullWidth}
             onChange={handleChange}

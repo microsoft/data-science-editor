@@ -21,6 +21,7 @@ import { resolveMakecodeServiceFromClassIdentifier } from "../components/makecod
 import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 import { isMixinService } from "../../jacdac-ts/jacdac-spec/spectool/jdutils"
 import useDeviceCatalog from "../components/devices/useDeviceCatalog"
+import FilterChip from "../components/ui/FilterChip"
 
 interface ServiceFilter {
     query: string
@@ -31,29 +32,6 @@ interface ServiceFilter {
     simulators?: boolean
     devices?: boolean
     test?: boolean
-}
-
-function FilterChip(props: {
-    label: string
-    value: boolean
-    icon?: JSX.Element
-    onClick: () => void
-}) {
-    const { label, value, icon, onClick } = props
-    const descr = value
-        ? `Disable ${label} filter`
-        : `Filter by ${label} support`
-    return (
-        <Chip
-            label={label}
-            aria-label={descr}
-            title={descr}
-            icon={icon}
-            variant={value ? undefined : "outlined"}
-            color={value ? "secondary" : undefined}
-            onClick={onClick}
-        />
-    )
 }
 
 export default function ServiceCatalog() {
@@ -141,6 +119,7 @@ export default function ServiceCatalog() {
                         id={searchId}
                         margin="normal"
                         type="search"
+                        size="small"
                         variant="outlined"
                         label="Search services"
                         aria-label="Search services"

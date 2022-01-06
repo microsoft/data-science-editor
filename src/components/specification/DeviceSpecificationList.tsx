@@ -1,5 +1,5 @@
 import React, { useMemo } from "react"
-import { Card, CardContent, Grid, Typography } from "@mui/material"
+import { Card, CardContent, Chip, Grid, Typography } from "@mui/material"
 import {
     identifierToUrlPath,
     serviceSpecificationFromClassIdentifier,
@@ -14,17 +14,30 @@ import {
 } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import useDeviceSpecifications from "../devices/useDeviceSpecifications"
 import useGridBreakpoints from "../useGridBreakpoints"
+import ChipList from "../ui/ChipList"
 
 function DeviceSpecificationCard(props: {
     specification: jdspec.DeviceSpec
     size: "list" | "preview" | "catalog"
 }) {
     const { specification, size } = props
-    const { id, name, company, services } = specification
+    const {
+        id,
+        name,
+        company,
+        services,
+        hardwareDesign,
+        firmwareSource,
+        repo,
+    } = specification
     const imageUrl = useDeviceImage(specification, size)
     const serviceNames = services
         ?.map(sc =>
-            humanify(serviceSpecificationFromClassIdentifier(sc)?.shortName)
+            humanify(
+                serviceSpecificationFromClassIdentifier(
+                    sc
+                )?.shortName.toLowerCase()
+            )
         )
         ?.join(", ")
     return (
@@ -44,11 +57,19 @@ function DeviceSpecificationCard(props: {
                         {name}
                     </Typography>
                     <Typography component="div" variant="subtitle2">
-                        {serviceNames || ""}
+                        {serviceNames || "no services"}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
                         {company}
                     </Typography>
+                    <ChipList>
+                        {firmwareSource && (
+                            <Chip size="small" label="firmware code" />
+                        )}
+                        {hardwareDesign && (
+                            <Chip size="small" label="hardware design" />
+                        )}
+                    </ChipList>
                 </CardContent>
             </CardActionArea>
         </Card>
@@ -61,8 +82,20 @@ export default function DeviceSpecificationList(props: {
     company?: string
     requiredServiceClasses?: number[]
     devices?: jdspec.DeviceSpec[]
+    updates?: boolean
+    firmwareSources?: boolean
+    hardwareDesign?: boolean
 }) {
-    const { count, shuffle, requiredServiceClasses, company, devices } = props
+    const {
+        count,
+        shuffle,
+        requiredServiceClasses,
+        company,
+        devices,
+        updates,
+        hardwareDesign,
+        firmwareSources,
+    } = props
     const specifications = useDeviceSpecifications()
     const specs = useMemo(() => {
         let r = devices || specifications
@@ -80,6 +113,12 @@ export default function DeviceSpecificationList(props: {
                         srv => spec.services.indexOf(srv) > -1
                     )
             )
+        if (updates)
+            r = r.filter(spec => spec.repo)
+        if (hardwareDesign)
+            r = r.filter(spec => spec.hardwareDesign)
+        if (firmwareSources)
+            r = r.filter(spec => spec.firmwareSource)
         if (shuffle) arrayShuffle(r)
         if (count !== undefined) r = r.slice(0, count)
         return r
@@ -90,6 +129,9 @@ export default function DeviceSpecificationList(props: {
         company,
         JSON.stringify(devices?.map(d => d.id)),
         specifications,
+        updates,
+        hardwareDesign,
+        firmwareSources,
     ])
     const gridBreakpoints = useGridBreakpoints(specs.length)
     const size = specs?.length < 6 ? "catalog" : "preview"
