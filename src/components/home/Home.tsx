@@ -155,7 +155,7 @@ export default function Home() {
             <SplitGrid
                 right={true}
                 subtitle="For Manufacturers"
-                description="Create Jacdac devices."
+                description="Add Jacdac to your devices. Schematics, footprints, libraries, open source hardware designs."
                 imageColumns={6}
                 centered={true}
                 buttonText="Hardware Specification"
