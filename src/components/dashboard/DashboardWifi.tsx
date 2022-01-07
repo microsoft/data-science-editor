@@ -153,7 +153,7 @@ function NetworkListItem(props: {
     useEffect(
         () =>
             connectionFailedEvent?.subscribe(EVENT, () => {
-                const [failedSsid] = connectionFailedEvent.unpacked
+                const [failedSsid] = connectionFailedEvent.unpackedValue
                 if (failedSsid === ssid) setConnectionFailed(true)
             }),
         [connectionFailedEvent]

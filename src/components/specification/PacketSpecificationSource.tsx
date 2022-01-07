@@ -5,6 +5,7 @@ import Snippet from "../ui/Snippet"
 import { packInfo } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import {
     isCommand,
+    isEvent,
     isRegister,
     serviceSpecificationFromClassIdentifier,
 } from "../../../jacdac-ts/src/jdom/spec"
@@ -31,7 +32,7 @@ export default function PacketSpecificationSource(props: {
     if (
         !info ||
         !packetInfo?.fields?.length ||
-        !(isRegister(packetInfo) || isCommand(packetInfo))
+        !(isRegister(packetInfo) || isCommand(packetInfo) || isEvent(packetInfo))
     )
         return null
 
