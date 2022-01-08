@@ -3,9 +3,7 @@ title: Jacdac for .NET
 order: 3
 ---
 
-# Jacdac .NET
-
-** Under development **
+# Jacdac for .NET
 
 There are various ways to integrate Jacdac into **.NET** projects,
 including on desktop, Raspberry Pi, TinyCLR devices.
@@ -114,7 +112,7 @@ using Jacdac.Clients;
 
 static class Program {
     static void Main() {
-        var bus = new JDBus(UsbTransport.Create())
+        var bus = new JDBus(UsbTransport.Create());
         var led = new LedClient(bus, "led");
 
         var speed = 64;
@@ -131,7 +129,63 @@ static class Program {
 }
 ```
 
-## .NET micro framework limitations
 
-Jacdac.NET is designed to run on the .NET micro framework (TinyCLR, ...)
-and up, so it does not have all the greatest lateset features of the .NET 5+ runtime.
+### Slidy Blinky
+
+Let's add a [slider](/services/potentiometer) to control the brightness of the LED.
+The potentiometer can come in various physical shapes but we can handle it all
+through the `PotentiometerClient` client.
+
+```cs
+var slider = new PotentiometerClient(bus, "slider");
+```
+
+In the `while`, we will read the `position` of the slider into a variable.
+
+```cs
+while (true) 
+{
+    // position is a float in [0..100]
+    position = slider.position;
+}
+```
+
+From here, we can remap the `position` float in `[0, 100]` to a `int` in `[0, 255]` for the color brightness:
+
+```cs
+while (true) 
+{
+    position = slider.Position;
+    var brightness = Math.round(Position / 100.0 * 255.0);
+}
+```
+
+All together the slidy blinky sample looks like
+
+```cs
+using System.Threading;
+using Jacdac;
+using Jacdac.Transport.Usb;
+using Jacdac.Clients;
+
+static class Program {
+    static void Main() {
+        var bus = new JDBus(UsbTransport.Create());
+        var led = new LedClient(bus, "led");
+        var slider = new PotentiometerClient(bus, "slider");
+
+        var speed = 64;
+        while(true) {
+            var position = slider.Position;
+            var brightness = Math.round(position / 100.0 * 255.0);
+            // blue
+            led.Animate(0, 0, brightness, speed);
+            Thread.Sleep(1000);
+            // red
+            led.Animate(brightness, 0, 0, speed);
+            Thread.Sleep(1000);
+        }
+    }
+}
+```
+

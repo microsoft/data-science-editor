@@ -170,7 +170,6 @@ def main():
     led = LedClient(bus, "led")
     slider = PotentiometerClient(bus, "slider")
     speed = 16
-    brightness = 128
     # fade between colors
     while True:
         position = slider.position or 0.
