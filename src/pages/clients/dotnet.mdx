@@ -23,15 +23,18 @@ More information
 
 The transport used to connect to the Jacdac device typically varies a lot dependending on the platform and the usage scenario.
 
-### JacHAT
+### JacHAT bridge
 
-A JacHAT is a Jacdac adapter for the Raspberry Pi that provides an SPI bridge to the Jacdac bus.
-
--   [JM SPI bridge](/devices/microsoft/research/jmspibridgev37v37)
+A [JacHAT bridge](/services/bridge) is a Jacdac adapter for the Raspberry Pi that provides an SPI bridge to the Jacdac bus.
 
 ### USB/Serial
 
-Connection to USB or serial device is not yet supported.
+Jacdac.NET can connect to Jacdac devices that support a USB connection.
+
+### Websocket
+
+Jacdac.NET can connect to a remote dashboard using web sockets. This transport is used for the devtools but also allows
+to explore a Jacdac bus on a headless computer.
 
 ## Getting started
 
@@ -66,13 +69,14 @@ Once the devtools server is running, you should be able to navigate to the local
 
 Let's build a blinking LED light project, assuming you have a [LED](/services/led) module.
 
-The first step is to start a Jacdac `Bus` instance. The bus instance will automatically try to connect to the devtools;
-but there are many other configuration options (see also how to use configuration files).
+The first step is to start a Jacdac `Bus` instance using a USB transport. 
+You will need the `Jacdac.NET`, `Jacdac.NET.Clients` and `Jacdac.NET.Transport.Usb` NuGet packages.
 
 ```cs
 using Jacdac;
+using Jacdac.Transport.Usb;
 
-var bus = new JDBus(/* platform specific initialization */)
+var bus = new JDBus(UsbTransport.Create())
 ```
 
 Next we create an LED service client (and assign it the `led` role).
@@ -105,11 +109,12 @@ All together, we get:
 ```cs
 using System.Threading;
 using Jacdac;
+using Jacdac.Transport.Usb;
 using Jacdac.Clients;
 
 static class Program {
     static void Main() {
-        var bus = new JDBus(/* platform specific initialization */);
+        var bus = new JDBus(UsbTransport.Create())
         var led = new LedClient(bus, "led");
 
         var speed = 64;
