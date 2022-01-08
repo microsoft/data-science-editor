@@ -17,26 +17,9 @@ More information
 -   [NuGet packages](https://www.nuget.org/profiles/Jacdac)
 -   [GitHub project](https://github.com/microsoft/jacdac-dotnet)
 
-## Connecting to hardware
-
-The transport used to connect to the Jacdac device typically varies a lot dependending on the platform and the usage scenario.
-
-### JacHAT bridge
-
-A [JacHAT bridge](/services/bridge) is a Jacdac adapter for the Raspberry Pi that provides an SPI bridge to the Jacdac bus.
-
-### USB/Serial
-
-Jacdac.NET can connect to Jacdac devices that support a USB connection.
-
-### Websocket
-
-Jacdac.NET can connect to a remote dashboard using web sockets. This transport is used for the devtools but also allows
-to explore a Jacdac bus on a headless computer.
-
 ## Getting started
 
-Let's learn about Jacdac by creating a couple small projects.
+Let's learn about Jacdac for .NET by creating a couple small projects.
 
 ### Developer tools
 
@@ -44,37 +27,32 @@ The first step of a Jacdac project is to create a bus which will handle all the 
 the management of the service client.
 Since the bus communicates with hardware, configuring it may vary **a lot** whether you are on a Raspberry Pi or a desktop computer.
 
-To provide a consistent experience, we recommend using the Jacdac developer tools.
+To provide a consistent experience, we recommend using the Jacdac developer tools at first.
 The developer tools rely on the browser WebUSB/WebSerial/WebBluetooth to connect to the hardware devices and uses a local web socket server
 to pipe the packets to the Python SDK. This also allows to debug your Python code in a virtual machine with no hardware access, like GitHub codespaces.
 
--   install Node.JS
--   install Jacdac command line tool (`jacdac-cli`)
-
-```
-(sudo) npm install -g jacdac-cli
-```
-
+-   Download the [Jacdac.NET.DevTools](https://www.nuget.org/packages/Jacdac.NET.DevTools/) package 
 -   launch the devtools server (and keep it running)
 
 ```
-jacdac devtools
+jacdac.devtools
 ```
 
 Once the devtools server is running, you should be able to navigate to the local web server and see a dashboard.
+**You do not need any hardware to try this out!**
 
 ### Blinky
 
 Let's build a blinking LED light project, assuming you have a [LED](/services/led) module.
 
 The first step is to start a Jacdac `Bus` instance using a USB transport. 
-You will need the `Jacdac.NET`, `Jacdac.NET.Clients` and `Jacdac.NET.Transport.Usb` NuGet packages.
+You will need the [Jacdac.NET](https://www.nuget.org/packages/Jacdac.NET/), [Jacdac.NET.Clients](https://www.nuget.org/packages/Jacdac.NET.Clients/) and [Jacdac.NET.Transports.WebSockets](https://www.nuget.org/packages/Jacdac.NET.Transports.WebSockets/) NuGet packages.
 
 ```cs
 using Jacdac;
-using Jacdac.Transport.Usb;
+using Jacdac.Transport.WebSockets;
 
-var bus = new JDBus(UsbTransport.Create())
+var bus = new JDBus(WebSocketTransport.Create())
 ```
 
 Next we create an LED service client (and assign it the `led` role).
@@ -107,12 +85,13 @@ All together, we get:
 ```cs
 using System.Threading;
 using Jacdac;
-using Jacdac.Transport.Usb;
+using Jacdac.Transport.WebSockets;
+
 using Jacdac.Clients;
 
 static class Program {
     static void Main() {
-        var bus = new JDBus(UsbTransport.Create());
+        var bus = new JDBus(WebSocketTransport.Create())
         var led = new LedClient(bus, "led");
 
         var speed = 64;
@@ -129,6 +108,35 @@ static class Program {
 }
 ```
 
+### Connecting to hardware
+
+To run Jacdac on a physical device, you will need to use a different transport. This varies per device.
+
+* USB, add the [Jacdac.NET.Transports.Usb](https://www.nuget.org/packages/Jacdac.NET.Transports.Usb/) NuGet package
+
+```cs
+using Jacdac.Transports.Usb;
+...
+var bus = new JDBus(UsbTransport.Create());
+```
+
+or add it to the existing bus
+
+```cs
+using Jacdac.Transports.Usb;
+...
+bus.AddTransport(new JDBus(UsbTransport.Create()));
+```
+
+* [JacHAT bridge](/services/bridge), add the [Jacdac.NET.Transports.Spi](https://www.nuget.org/packages/Jacdac.NET.Transports.Spi/) NuGet package
+
+![A JacHAT bridge device](/images/devices/microsoft/research/jmspibridgev37v37.catalog.jpg)
+
+```cs
+using Jacdac.Transports.Spi;
+...
+var bus = new JDBus(SpiTransport.Create());
+```
 
 ### Slidy Blinky
 
@@ -147,7 +155,6 @@ while (true)
 {
     // position is a float in [0..100]
     position = slider.position;
-}
 ```
 
 From here, we can remap the `position` float in `[0, 100]` to a `int` in `[0, 255]` for the color brightness:
@@ -157,7 +164,6 @@ while (true)
 {
     position = slider.Position;
     var brightness = Math.round(Position / 100.0 * 255.0);
-}
 ```
 
 All together the slidy blinky sample looks like
@@ -165,12 +171,12 @@ All together the slidy blinky sample looks like
 ```cs
 using System.Threading;
 using Jacdac;
-using Jacdac.Transport.Usb;
+using Jacdac.Transport.WebSockets;
 using Jacdac.Clients;
 
 static class Program {
     static void Main() {
-        var bus = new JDBus(UsbTransport.Create());
+        var bus = new JDBus(WebSocketTransport.Create());
         var led = new LedClient(bus, "led");
         var slider = new PotentiometerClient(bus, "slider");
 
