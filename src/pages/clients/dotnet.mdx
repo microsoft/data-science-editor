@@ -27,11 +27,16 @@ The first step of a Jacdac project is to create a bus which will handle all the 
 the management of the service client.
 Since the bus communicates with hardware, configuring it may vary **a lot** whether you are on a Raspberry Pi or a desktop computer.
 
-To provide a consistent experience, we recommend using the Jacdac developer tools at first.
+To provide a consistent experience, we recommend using the Jacdac "devtools" at first.
 The developer tools rely on the browser WebUSB/WebSerial/WebBluetooth to connect to the hardware devices and uses a local web socket server
-to pipe the packets to the Python SDK. This also allows to debug your Python code in a virtual machine with no hardware access, like GitHub codespaces.
+to pipe the packets to the your .NET app.
 
--   Download the [Jacdac.NET.DevTools](https://www.nuget.org/packages/Jacdac.NET.DevTools/) package 
+-   Install the [Jacdac.NET.DevTools](https://www.nuget.org/packages/Jacdac.NET.DevTools/) tool from nuget 
+
+```
+dotnet tool install -g jacdac.net.devtools
+```
+
 -   launch the devtools server (and keep it running)
 
 ```
@@ -41,12 +46,16 @@ jacdac.devtools
 Once the devtools server is running, you should be able to navigate to the local web server and see a dashboard.
 **You do not need any hardware to try this out!**
 
+- open http://localhost:8081/
+
 ### Blinky
 
 Let's build a blinking LED light project, assuming you have a [LED](/services/led) module.
 
-The first step is to start a Jacdac `Bus` instance using a USB transport. 
-You will need the [Jacdac.NET](https://www.nuget.org/packages/Jacdac.NET/), [Jacdac.NET.Clients](https://www.nuget.org/packages/Jacdac.NET.Clients/) and [Jacdac.NET.Transports.WebSockets](https://www.nuget.org/packages/Jacdac.NET.Transports.WebSockets/) NuGet packages.
+The first step is to start a Jacdac `JDBus` instance using a USB transport. 
+You will need nuget packages: [Jacdac.NET](https://www.nuget.org/packages/Jacdac.NET/), 
+[Jacdac.NET.Clients](https://www.nuget.org/packages/Jacdac.NET.Clients/) 
+and [Jacdac.NET.Transports.WebSockets](https://www.nuget.org/packages/Jacdac.NET.Transports.WebSockets/) NuGet packages.
 
 ```cs
 using Jacdac;
