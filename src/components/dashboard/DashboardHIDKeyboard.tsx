@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react"
+import React, { lazy, useCallback, useState } from "react"
 import { Grid } from "@mui/material"
 import {
     HidKeyboardAction,
@@ -8,8 +8,9 @@ import {
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
 import CmdButton from "../CmdButton"
-import KeyboardKeyInput from "../ui/KeyboardKeyInput"
 import KeyboardIcon from "@mui/icons-material/Keyboard"
+import Suspense from "../ui/Suspense"
+const KeyboardKeyInput = lazy(() => import("../ui/KeyboardKeyInput"))
 
 export default function DashboardHIDKeyboard(props: DashboardServiceProps) {
     const { service } = props
@@ -36,11 +37,13 @@ export default function DashboardHIDKeyboard(props: DashboardServiceProps) {
     return (
         <Grid container direction="column" spacing={1}>
             <Grid item xs={12}>
-                <KeyboardKeyInput
-                    selector={selector}
-                    modifiers={modifiers}
-                    onChange={handleKeyChange}
-                />
+                <Suspense>
+                    <KeyboardKeyInput
+                        selector={selector}
+                        modifiers={modifiers}
+                        onChange={handleKeyChange}
+                    />
+                </Suspense>
             </Grid>
             <Grid item xs={12}>
                 <CmdButton

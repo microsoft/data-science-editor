@@ -28,7 +28,6 @@ import {
     SystemEvent,
 } from "../../../jacdac-ts/src/jdom/constants"
 import JDEvent from "../../../jacdac-ts/src/jdom/event"
-import KeyboardKeyInput from "../../components/ui/KeyboardKeyInput"
 import IconButtonWithTooltip from "../../components/ui/IconButtonWithTooltip"
 import DeleteIcon from "@mui/icons-material/Delete"
 import SettingsClient from "../../../jacdac-ts/src/jdom/clients/settingsclient"
@@ -57,6 +56,7 @@ import { AlertTitle } from "@mui/material"
 import { renderKeyboardKey } from "../../../jacdac-ts/src/servers/hidkeyboardserver"
 import DialogTitleWithClose from "../../components/ui/DialogTitleWithClose"
 const ImportButton = lazy(() => import("../../components/ImportButton"))
+const KeyboardKeyInput = lazy(() => import("../../components/ui/KeyboardKeyInput"))
 
 // all settings keys are prefixed with this string
 const PREFIX = "@ke_"
@@ -190,11 +190,13 @@ function SelectHIDEvent(props: { onAdd: (hidEvent: HIDEvent) => void }) {
                 <>
                     <GridHeader title="Enter your keyboard/mouse command" />
                     <Grid item xs={12}>
-                        <KeyboardKeyInput
-                            selector={selector}
-                            modifiers={modifiers}
-                            onChange={handleKeyChange}
-                        />
+                        <Suspense>
+                            <KeyboardKeyInput
+                                selector={selector}
+                                modifiers={modifiers}
+                                onChange={handleKeyChange}
+                            />
+                        </Suspense>
                     </Grid>
                 </>
             )}
