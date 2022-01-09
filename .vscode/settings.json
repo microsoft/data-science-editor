@@ -22,5 +22,8 @@
     "files.associations": {
         "*.mdx": "markdown"
     },
-    "git.detectSubmodulesLimit": 20
+    "git.detectSubmodulesLimit": 20,
+    "[xml]": {
+        "editor.defaultFormatter": "redhat.vscode-xml"
+    }
 }
