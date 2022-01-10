@@ -1,12 +1,19 @@
 import { useEffect, useRef } from "react"
+import useLocalStorage from "./useLocalStorage"
 
 export default function useAudioContext() {
     const audioContextRef = useRef<AudioContext>()
+    const [microphoneId, setMicrophoneId] =
+        useLocalStorage<string>("microphoneid")
 
     // final cleanup
     useEffect(
         () => () => {
-            audioContextRef.current?.close()
+            try {
+                audioContextRef.current?.close()
+            } catch (e) {
+                console.warn(e)
+            }
         },
         []
     )
@@ -41,5 +48,7 @@ export default function useAudioContext() {
 
     return {
         onClickActivateAudioContext,
+        microphoneId,
+        setMicrophoneId,
     }
 }

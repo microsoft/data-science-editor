@@ -17,6 +17,7 @@ import JDService from "../../../jacdac-ts/src/jdom/service"
 import SensorServer from "../../../jacdac-ts/src/servers/sensorserver"
 import BytesBarGraphWidget from "../widgets/BytesBarGraphWidget"
 import useRegister from "../hooks/useRegister"
+import MicrophoneSettingsButton from "../ui/MicrophoneSettingsButton"
 
 function HostMicrophoneButton(props: {
     service: JDService
@@ -120,11 +121,18 @@ export default function DashboardSoundSpectrum(props: DashboardServiceProps) {
                 />
             </Grid>
             <Grid item>
-                <HostMicrophoneButton
-                    service={service}
-                    server={server}
-                    visible={visible}
-                />
+                <Grid container spacing={1}>
+                    <Grid item>
+                        <HostMicrophoneButton
+                            service={service}
+                            server={server}
+                            visible={visible}
+                        />
+                    </Grid>
+                    <Grid item>
+                        <MicrophoneSettingsButton />
+                    </Grid>
+                </Grid>
             </Grid>
         </Grid>
     )

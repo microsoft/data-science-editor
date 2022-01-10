@@ -11,7 +11,7 @@ export interface AudioAnalyzerOptions {
 export function useMicrophoneAnalyzer(options?: AudioAnalyzerOptions) {
     const { fftSize, smoothingTimeConstant, minDecibels, maxDecibels } =
         options || {}
-    const { onClickActivateAudioContext } = useAudioContext()
+    const { onClickActivateAudioContext, microphoneId } = useAudioContext()
     const analyzerRef = useRef<AnalyserNode>()
     const microphoneSource = useRef<MediaStreamAudioSourceNode>()
 
@@ -38,7 +38,7 @@ export function useMicrophoneAnalyzer(options?: AudioAnalyzerOptions) {
             console.log("activating microphone", { audioContext })
             const resp = await navigator.mediaDevices.getUserMedia({
                 video: false,
-                audio: true,
+                audio: microphoneId ? { deviceId: microphoneId } : true,
             })
 
             const source = (microphoneSource.current =
@@ -75,7 +75,7 @@ export function useMicrophoneAnalyzer(options?: AudioAnalyzerOptions) {
     }
 
     // final cleanup
-    useEffect(() => closeMicrophone, [])
+    useEffect(() => closeMicrophone, [microphoneId])
 
     // update options
     useEffect(applyOptions, [

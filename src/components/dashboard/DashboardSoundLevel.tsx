@@ -15,6 +15,7 @@ import useMicrophoneVolume from "../hooks/useMicrophoneVolume"
 import TrendWidget from "../widgets/TrendWidget"
 import LoadingProgress from "../ui/LoadingProgress"
 import useRegister from "../hooks/useRegister"
+import MicrophoneSettingsButton from "../ui/MicrophoneSettingsButton"
 
 function HostMicrophoneButton(props: {
     service: JDService
@@ -24,21 +25,11 @@ function HostMicrophoneButton(props: {
     const { server, service, visible } = props
 
     const enabledRegister = useRegister(service, SoundLevelReg.Enabled)
-    const minDecibelsRegister = useRegister(service, SoundLevelReg.MinDecibels)
-    const maxDecibelsRegister = useRegister(service, SoundLevelReg.MaxDecibels)
 
     const enabled = useRegisterBoolValue(enabledRegister, props)
-    const [minDecibels] = useRegisterUnpackedValue<[number]>(
-        minDecibelsRegister,
-        props
-    )
-    const [maxDecibels] = useRegisterUnpackedValue<[number]>(
-        maxDecibelsRegister,
-        props
-    )
     const { volume, onClickActivateMicrophone } = useMicrophoneVolume(
         enabled && !!server,
-        { fftSize: 64, smoothingTimeConstant: 0, minDecibels, maxDecibels }
+        { fftSize: 64, smoothingTimeConstant: 0 }
     )
     const title = enabled ? "Stop microphone" : "Start microphone"
 
@@ -93,11 +84,18 @@ export default function DashboardSoundLevel(props: DashboardServiceProps) {
                 />
             </Grid>
             <Grid item>
-                <HostMicrophoneButton
-                    service={service}
-                    server={server}
-                    visible={visible}
-                />
+                <Grid container spacing={1}>
+                    <Grid item>
+                        <HostMicrophoneButton
+                            service={service}
+                            server={server}
+                            visible={visible}
+                        />
+                    </Grid>
+                    <Grid item>
+                        <MicrophoneSettingsButton />
+                    </Grid>
+                </Grid>
             </Grid>
         </Grid>
     )
