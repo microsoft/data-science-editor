@@ -26,7 +26,7 @@ import {
     LedPixelReg,
     REFRESH,
 } from "../../../jacdac-ts/src/jdom/constants"
-import ColorButtons from "../widgets/ColorButtons"
+import ColorButtons, { DEFAULT_COLORS } from "../widgets/ColorButtons"
 import Suspense from "../ui/Suspense"
 import RotateLeftIcon from "@mui/icons-material/RotateLeft"
 import RotateRightIcon from "@mui/icons-material/RotateRight"
@@ -280,8 +280,9 @@ function EffectButtons(props: {
     setEffect: (value: string) => void
     configure: boolean
     toggleConfigure: () => void
+    addGradientColor: () => void
 }) {
-    const { setEffect, configure, toggleConfigure } = props
+    const { setEffect, configure, toggleConfigure, addGradientColor } = props
     const [rot, setRot] = useState(1)
 
     const handleRotChanged = (value: number) => () =>
@@ -316,6 +317,14 @@ function EffectButtons(props: {
                     onClick={handleRotChanged(1)}
                 >
                     <RotateRightIcon />
+                </IconButtonWithTooltip>
+            </Grid>
+            <Grid item>
+                <IconButtonWithTooltip
+                    title={"Add gradient color"}
+                    onClick={addGradientColor}
+                >
+                    <AddIcon />
                 </IconButtonWithTooltip>
             </Grid>
             <Grid item>
@@ -356,13 +365,24 @@ export default function DashboardLEDPixel(props: DashboardServiceProps) {
     const [configure, setConfigure] = useState(false)
     const animationCounter = useRef(0)
     const [penColor, setPenColor] = useState<number>(undefined)
+    const [gradientColors, setGradientColors] = useState<number[]>([])
     const [effect, setEffect] = useState("")
     const server = useServiceServer<LedPixelServer>(
         service,
         () => new LedPixelServer()
     )
     const handleColorChange = (newColor: number) =>
-        setPenColor(newColor === penColor ? undefined : newColor)
+        setPenColor(current => newColor === current ? undefined : newColor)
+    const handleGradientColorChange = (index: number) => (newColor: number) =>
+        setGradientColors(current =>
+            newColor === current[index]
+                ? [...current.slice(0, index), ...current.slice(index + 1)]
+                : [
+                      ...current.slice(0, index),
+                      newColor,
+                      ...current.slice(index + 1),
+                  ]
+        )
     const handleLedClick: (index: number) => void = async (index: number) => {
         const encoded = lightEncode(
             `setone % #
@@ -372,7 +392,10 @@ show 20`,
         await service?.sendCmdAsync(LedPixelCmd.Run, encoded)
     }
     const toggleConfigure = () => setConfigure(c => !c)
+    const handleAddGradientColor = () =>
+        setGradientColors(current => [...current, DEFAULT_COLORS[0].value])
 
+    // rotation animation
     const animationSkip = 2
     useEffect(
         () =>
@@ -382,15 +405,36 @@ show 20`,
                     animationCounter.current + 1)
                 if (a % animationSkip === 0) {
                     const command: string[] = []
-                    if (!isNaN(penColor)) command.push(`setone 0 #`)
+                    const args: number[] = []
+                    if (!isNaN(penColor) && !gradientColors.length) {
+                        command.push(`setone 0 #`)
+                        args.push(penColor)
+                    }
                     command.push(effect)
                     command.push(`show 0`)
-                    const encoded = lightEncode(command.join("\n"), [penColor])
+                    const encoded = lightEncode(command.join("\n"), args)
                     service?.sendCmdAsync(LedPixelCmd.Run, encoded)
                 }
             }),
-        [effect, penColor]
+        [service, effect, penColor]
     )
+
+    // set gradient
+    useEffect(() => {
+        if (gradientColors.length) {
+            const command = [
+                `fade ${Array(gradientColors.length + 1)
+                    .fill(0)
+                    .map(() => "#")
+                    .join(" ")}`,
+                `show 0`,
+            ]
+            const args = [penColor, ...gradientColors].map(c => c || 0)
+            const encoded = lightEncode(command.join("\n"), args)
+            console.log({ command, args })
+            service?.sendCmdAsync(LedPixelCmd.Run, encoded)
+        }
+    }, [service, penColor, gradientColors])
 
     return (
         <>
@@ -408,6 +452,7 @@ show 20`,
                         setEffect={setEffect}
                         configure={configure}
                         toggleConfigure={toggleConfigure}
+                        addGradientColor={handleAddGradientColor}
                     />
                 </Grid>
                 <Grid item>
@@ -416,6 +461,14 @@ show 20`,
                         onColorChange={handleColorChange}
                     />
                 </Grid>
+                {gradientColors.map((gradientColor, index) => (
+                    <Grid item key={`gradient${index}`}>
+                        <ColorButtons
+                            color={gradientColor}
+                            onColorChange={handleGradientColorChange(index)}
+                        />
+                    </Grid>
+                ))}
                 {expanded && (
                     <Grid item>
                         <LightCommand service={service} expanded={expanded} />

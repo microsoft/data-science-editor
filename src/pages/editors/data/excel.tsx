@@ -4,7 +4,6 @@ import { StaticImage } from "gatsby-plugin-image"
 import React from "react"
 import CenterGrid from "../../../components/home/CenterGrid"
 import SplitGrid from "../../../components/home/SplitGrid"
-import { FEEDBACK_URL } from "../../../components/shell/DataEditorAppBar"
 
 export default function Home() {
     const DATASET_URL =
@@ -91,14 +90,6 @@ export default function Home() {
                 buttonVariant="link"
                 buttonText="Download Worksheet"
                 buttonUrl={DATASET_URL}
-            />
-
-            <CenterGrid
-                subtitle="Community"
-                description="Please tell us what you think of the editor on our forum."
-                buttonText="Go to forum"
-                buttonVariant="link"
-                buttonUrl={FEEDBACK_URL}
             />
         </Grid>
     )

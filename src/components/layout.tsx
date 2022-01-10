@@ -22,7 +22,6 @@ import ThemedMdxLayout from "./ui/ThemedMdxLayout"
 import Breadcrumbs from "./ui/Breadcrumbs"
 import useMediaQueries from "./hooks/useMediaQueries"
 import MainAppBar from "./shell/MainAppBar"
-import DataEditorAppBar from "./shell/DataEditorAppBar"
 import { AlertTitle } from "@mui/material"
 import { UIFlags } from "../jacdac/providerbus"
 const TraceAlert = lazy(() => import("./shell/TraceAlert"))
@@ -31,6 +30,7 @@ const AppDrawer = lazy(() => import("./shell/AppDrawer"))
 const ToolsDrawer = lazy(() => import("./shell/ToolsDrawer"))
 const WebCam = lazy(() => import("./ui/WebCam"))
 const PassiveAlert = lazy(() => import("./shell/PassiveAlert"))
+const DataEditorAppBar = lazy(() => import("./shell/DataEditorAppBar"))
 
 const PREFIX = "Layout"
 
@@ -223,7 +223,9 @@ function LayoutWithContext(props: LayoutProps) {
     }
 
     const appBar = hideMainMenu ? undefined : isDataEditor ? (
-        <DataEditorAppBar />
+        <Suspense>
+            <DataEditorAppBar />
+        </Suspense>
     ) : (
         <MainAppBar />
     )

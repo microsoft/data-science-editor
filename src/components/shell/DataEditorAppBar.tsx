@@ -9,7 +9,7 @@ import DarkModeContext from "../ui/DarkModeContext"
 import { HideOnScroll } from "../ui/HideOnScroll"
 import { Link } from "gatsby-theme-material-ui"
 
-const PREFIX = "FEEDBACK_URL"
+const PREFIX = "DataEditorApp"
 
 const classes = {
     grow: `${PREFIX}-grow`,
