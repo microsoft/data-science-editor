@@ -288,9 +288,9 @@ function EffectButtons(props: {
     const [rot, setRot] = useState(1)
 
     const handleRotChanged = () =>
-        setRot(value => value >= MAX_ROT ? 0 : value + 1)
+        setRot(value => (value < 0 ? 1 : value >= MAX_ROT ? 0 : value + 1))
     const handleCounterRotChanged = () =>
-        setRot(value => value <= -MAX_ROT ? 0 : value - 1)
+        setRot(value => (value > 0 ? -1 : value <= -MAX_ROT ? 0 : value - 1))
 
     useEffect(() => {
         const effect: string[] = []
@@ -304,7 +304,11 @@ function EffectButtons(props: {
             <Grid item>
                 <IconButtonWithTooltip
                     selected={rot < 0}
-                    title={rot < 0 ? `rotate counter clockwize, ${rot} per frame` : `rotate counter clockwize`}
+                    title={
+                        rot < 0
+                            ? `rotate counter clockwize, ${rot} per frame`
+                            : `rotate counter clockwize`
+                    }
                     onClick={handleCounterRotChanged}
                 >
                     <RotateLeftIcon />
@@ -313,7 +317,11 @@ function EffectButtons(props: {
             <Grid item>
                 <IconButtonWithTooltip
                     selected={rot > 0}
-                    title={rot > 0 ? `rotate clockwize, ${rot} per frame` : `rotate clockwize`}
+                    title={
+                        rot > 0
+                            ? `rotate clockwize, ${rot} per frame`
+                            : `rotate clockwize`
+                    }
                     onClick={handleRotChanged}
                 >
                     <RotateRightIcon />
@@ -372,7 +380,7 @@ export default function DashboardLEDPixel(props: DashboardServiceProps) {
         () => new LedPixelServer()
     )
     const handleColorChange = (newColor: number) =>
-        setPenColor(current => newColor === current ? undefined : newColor)
+        setPenColor(current => (newColor === current ? undefined : newColor))
     const handleGradientColorChange = (index: number) => (newColor: number) =>
         setGradientColors(current =>
             newColor === current[index]
