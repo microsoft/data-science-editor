@@ -276,6 +276,8 @@ function LightCommand(props: { service: JDService; expanded: boolean }) {
     )
 }
 
+const MAX_ROT = 6
+
 function EffectButtons(props: {
     setEffect: (value: string) => void
     configure: boolean
@@ -285,8 +287,10 @@ function EffectButtons(props: {
     const { setEffect, configure, toggleConfigure, addGradientColor } = props
     const [rot, setRot] = useState(1)
 
-    const handleRotChanged = (value: number) => () =>
-        setRot(() => (rot == value ? 0 : value))
+    const handleRotChanged = () =>
+        setRot(value => value >= MAX_ROT ? 0 : value + 1)
+    const handleCounterRotChanged = () =>
+        setRot(value => value <= -MAX_ROT ? 0 : value - 1)
 
     useEffect(() => {
         const effect: string[] = []
@@ -300,12 +304,8 @@ function EffectButtons(props: {
             <Grid item>
                 <IconButtonWithTooltip
                     selected={rot < 0}
-                    title={
-                        rot === -1
-                            ? "Disable rotation"
-                            : "Rotate counter clockwize"
-                    }
-                    onClick={handleRotChanged(-1)}
+                    title={rot < 0 ? `rotate counter clockwize, ${rot} per frame` : `rotate counter clockwize`}
+                    onClick={handleCounterRotChanged}
                 >
                     <RotateLeftIcon />
                 </IconButtonWithTooltip>
@@ -313,8 +313,8 @@ function EffectButtons(props: {
             <Grid item>
                 <IconButtonWithTooltip
                     selected={rot > 0}
-                    title={rot === 1 ? "Disable rotation" : "Rotate clockwize"}
-                    onClick={handleRotChanged(1)}
+                    title={rot > 0 ? `rotate clockwize, ${rot} per frame` : `rotate clockwize`}
+                    onClick={handleRotChanged}
                 >
                     <RotateRightIcon />
                 </IconButtonWithTooltip>
@@ -396,7 +396,7 @@ show 20`,
         setGradientColors(current => [...current, DEFAULT_COLORS[0].value])
 
     // rotation animation
-    const animationSkip = 2
+    const animationSkip = 1
     useEffect(
         () =>
             effect &&
