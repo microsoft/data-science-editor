@@ -31,10 +31,9 @@ import Suspense from "../ui/Suspense"
 import RotateLeftIcon from "@mui/icons-material/RotateLeft"
 import RotateRightIcon from "@mui/icons-material/RotateRight"
 import bus from "../../jacdac/providerbus"
-import SliderWithLabel from "../ui/SliderWithLabel"
 import useRegister from "../hooks/useRegister"
-import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import SettingsIcon from "@mui/icons-material/Settings"
+import RegisterInput from "../RegisterInput"
 const ColorInput = lazy(() => import("../ui/ColorInput"))
 
 /*
@@ -333,27 +332,28 @@ function EffectButtons(props: {
     )
 }
 
-function percentValueFormat(value: number) {
-    // avoid super long floats
-    return ((value * 100) >> 0) + "%"
+const configureRegisters = [
+    LedPixelReg.Brightness,
+    LedPixelReg.ActualBrightness,
+    LedPixelReg.NumPixels,
+    LedPixelReg.MaxPixels,
+    LedPixelReg.LightType,
+    LedPixelReg.MaxPower,
+]
+
+function RegisterInputItem(props: {
+    service: JDService
+    registerCode: number
+    visible: boolean
+}) {
+    const { service, registerCode, visible } = props
+    const register = useRegister(service, registerCode)
+    return <RegisterInput register={register} visible={visible} />
 }
 
 export default function DashboardLEDPixel(props: DashboardServiceProps) {
-    const { service, services, expanded } = props
+    const { service, services, expanded, visible } = props
     const [configure, setConfigure] = useState(false)
-    const brightnessRegister = useRegister(service, LedPixelReg.Brightness)
-    const [brightness] = useRegisterUnpackedValue<[number]>(
-        brightnessRegister,
-        props
-    )
-    const actualBrightnessRegister = useRegister(
-        service,
-        LedPixelReg.ActualBrightness
-    )
-    const [actualBrightness] = useRegisterUnpackedValue<[number]>(
-        actualBrightnessRegister,
-        props
-    )
     const animationCounter = useRef(0)
     const [penColor, setPenColor] = useState<number>(undefined)
     const [effect, setEffect] = useState("")
@@ -371,8 +371,6 @@ show 20`,
         )
         await service?.sendCmdAsync(LedPixelCmd.Run, encoded)
     }
-    const handleBrightnessChange = (ev: unknown, newValue: number | number[]) =>
-        brightnessRegister.sendSetPackedAsync([newValue as number], true)
     const toggleConfigure = () => setConfigure(c => !c)
 
     const animationSkip = 2
@@ -388,7 +386,6 @@ show 20`,
                     command.push(effect)
                     command.push(`show 0`)
                     const encoded = lightEncode(command.join("\n"), [penColor])
-                    console.log(`light effect`, encoded)
                     service?.sendCmdAsync(LedPixelCmd.Run, encoded)
                 }
             }),
@@ -419,36 +416,21 @@ show 20`,
                         onColorChange={handleColorChange}
                     />
                 </Grid>
-                {configure && !isNaN(brightness) && (
-                    <Grid>
-                        <SliderWithLabel
-                            label="brightness"
-                            min={0}
-                            step={0.01}
-                            max={1}
-                            value={brightness}
-                            valueLabelFormat={percentValueFormat}
-                            onChange={handleBrightnessChange}
-                        />
-                    </Grid>
-                )}
-                {configure && !isNaN(actualBrightness) && (
-                    <Grid>
-                        <SliderWithLabel
-                            label="actual brightness"
-                            min={0}
-                            max={1}
-                            value={actualBrightness}
-                            valueLabelFormat={percentValueFormat}
-                            disabled={true}
-                        />
-                    </Grid>
-                )}
                 {expanded && (
                     <Grid item>
                         <LightCommand service={service} expanded={expanded} />
                     </Grid>
                 )}
+                {configure &&
+                    configureRegisters.map(code => (
+                        <Grid item key={code}>
+                            <RegisterInputItem
+                                service={service}
+                                registerCode={code}
+                                visible={visible}
+                            />
+                        </Grid>
+                    ))}
             </Grid>
         </>
     )
