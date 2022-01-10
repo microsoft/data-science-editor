@@ -47,17 +47,8 @@ To provide a consistent experience, we recommend using the Jacdac developer tool
 The developer tools rely on the browser WebUSB/WebSerial/WebBluetooth to connect to the hardware devices and uses a local web socket server
 to pipe the packets to the Python SDK. This also allows to debug your Python code in a virtual machine with no hardware access, like GitHub codespaces.
 
--   install Node.JS
--   install Jacdac command line tool (`jacdac-cli`)
-
 ```
-(sudo) npm install -g jacdac-cli
-```
-
--   launch the devtools server (and keep it running)
-
-```
-jacdac devtools
+python -m jacdac.devtools
 ```
 
 Once the devtools server is running, you should be able to navigate to the local web server and see a dashboard.
