@@ -38,8 +38,8 @@ function rgbToHsl(r: number, g: number, b: number): [number, number, number] {
         else s = 100 * (cDelta / maxAndMin)
     }
 
-    // at least 60% luminosity
-    l = Math.max(l, 60)
+    // at least 30% luminosity
+    l = Math.max(l, 40)
     return [Math.floor(h), Math.floor(s), Math.floor(l)]
 }
 
