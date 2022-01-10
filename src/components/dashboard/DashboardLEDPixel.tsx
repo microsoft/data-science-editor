@@ -1,5 +1,12 @@
 import { Grid, MenuItem, TextField, Typography } from "@mui/material"
-import React, { ChangeEvent, lazy, useMemo, useState } from "react"
+import React, {
+    ChangeEvent,
+    lazy,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { lightEncode } from "../../../jacdac-ts/src/jdom/light"
 import SelectWithLabel from "../ui/SelectWithLabel"
@@ -14,9 +21,12 @@ import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import useServiceServer from "../hooks/useServiceServer"
 import LedPixelServer from "../../../jacdac-ts/src/servers/ledpixelserver"
 import LightWidget from "../widgets/LightWidget"
-import { LedPixelCmd } from "../../../jacdac-ts/src/jdom/constants"
+import { LedPixelCmd, REFRESH } from "../../../jacdac-ts/src/jdom/constants"
 import ColorButtons from "../widgets/ColorButtons"
 import Suspense from "../ui/Suspense"
+import RotateLeftIcon from "@mui/icons-material/RotateLeft"
+import RotateRightIcon from "@mui/icons-material/RotateRight"
+import bus from "../../jacdac/providerbus"
 const ColorInput = lazy(() => import("../ui/ColorInput"))
 
 /*
@@ -259,14 +269,62 @@ function LightCommand(props: { service: JDService; expanded: boolean }) {
     )
 }
 
+function EffectButtons(props: { setEffect: (value: string) => void }) {
+    const { setEffect } = props
+    const [rot, setRot] = useState(1)
+
+    const handleRotChanged = (value: number) => () =>
+        setRot(() => (rot == value ? 0 : value))
+
+    useEffect(() => {
+        const effect: string[] = []
+        if (rot)
+            effect.push(`${rot > 0 ? "rotfwd" : "rotback"} ${Math.abs(rot)}`)
+        setEffect(effect.join("\n"))
+    }, [rot])
+
+    return (
+        <Grid container spacing={1}>
+            <Grid item>
+                <IconButtonWithTooltip
+                    selected={rot < 0}
+                    title={
+                        rot === -1
+                            ? "Disable rotation"
+                            : "Rotate counter clockwize"
+                    }
+                    onClick={handleRotChanged(-1)}
+                >
+                    <RotateLeftIcon />
+                </IconButtonWithTooltip>
+            </Grid>
+            <Grid item>
+                <IconButtonWithTooltip
+                    selected={rot > 0}
+                    title={
+                        rot === 1
+                            ? "Disable rotation"
+                            : "Rotate clockwize"
+                    }
+                    onClick={handleRotChanged(1)}
+                >
+                    <RotateRightIcon />
+                </IconButtonWithTooltip>
+            </Grid>
+        </Grid>
+    )
+}
+
 export default function DashboardLEDPixel(props: DashboardServiceProps) {
     const { service, services, expanded } = props
-    const [penColor, setPenColor] = useState<number>(0x020202)
+    const animationCounter = useRef(0)
+    const [penColor, setPenColor] = useState<number>(undefined)
+    const [effect, setEffect] = useState("")
     const server = useServiceServer<LedPixelServer>(
         service,
         () => new LedPixelServer()
     )
-    const handleColorChange = (newColor: number) => setPenColor(newColor)
+    const handleColorChange = (newColor: number) => setPenColor(newColor === penColor ? undefined : newColor)
     const handleLedClick: (index: number) => void = async (index: number) => {
         const encoded = lightEncode(
             `setone % #
@@ -275,6 +333,30 @@ show 20`,
         )
         await service?.sendCmdAsync(LedPixelCmd.Run, encoded)
     }
+
+    const animationSkip = 2
+    useEffect(
+        () =>
+            effect &&
+            bus.subscribe(REFRESH, () => {
+                const a = (animationCounter.current =
+                    animationCounter.current + 1)
+                if (a % animationSkip === 0) {
+                    const command: string[] = [];
+                    if (!isNaN(penColor))
+                        command.push(`setone 0 #`)
+                    command.push(effect)
+                    command.push(`show 20`)
+                    const encoded = lightEncode(command.join('\n'),
+                        [penColor]
+                    )
+                    console.log(`light effect`, encoded)
+                    service?.sendCmdAsync(LedPixelCmd.Run, encoded)
+                }
+            }),
+        [effect, penColor]
+    )
+
     return (
         <>
             {server && (
@@ -285,8 +367,22 @@ show 20`,
                     {...props}
                 />
             )}
-            <ColorButtons color={penColor} onColorChange={handleColorChange} />
-            {expanded && <LightCommand service={service} expanded={expanded} />}
+            <Grid container direction="column" spacing={1}>
+                <Grid item>
+                    <EffectButtons setEffect={setEffect} />
+                </Grid>
+                <Grid item>
+                    <ColorButtons
+                        color={penColor}
+                        onColorChange={handleColorChange}
+                    />
+                </Grid>
+                {expanded && (
+                    <Grid item>
+                        <LightCommand service={service} expanded={expanded} />
+                    </Grid>
+                )}
+            </Grid>
         </>
     )
 }
