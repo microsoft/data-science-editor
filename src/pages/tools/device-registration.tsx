@@ -49,6 +49,7 @@ import Alert from "../../components/ui/Alert"
 import { GithubPullRequestFiles } from "../../components/buttons/GithubPullRequestButton"
 import useDeviceSpecifications from "../../components/devices/useDeviceSpecifications"
 import useDeviceCatalog from "../../components/devices/useDeviceCatalog"
+import GridHeader from "../../components/ui/GridHeader"
 
 const GithubPullRequestButton = lazy(
     () => import("../../components/buttons/GithubPullRequestButton")
@@ -134,7 +135,9 @@ export default function DeviceRegistration() {
     const descriptionId = useId()
     const homepageId = useId()
     const hardwareVersionId = useId()
+    const designIdentifierId = useId()
     const hardwareDesignId = useId()
+    const firmwareSourceId = useId()
     const specifications = useDeviceSpecifications({
         includeDeprecated: true,
         includeExperimental: true,
@@ -208,7 +211,7 @@ export default function DeviceRegistration() {
         device.productIdentifiers.splice(i, 1)
         updateDevice()
     }
-    const handleHardwareDesign = (ev: ChangeEvent<HTMLInputElement>) => {
+    const handleDesignIdentifier = (ev: ChangeEvent<HTMLInputElement>) => {
         device.designIdentifier = ev.target.value?.trim()
         updateDevice()
     }
@@ -243,6 +246,14 @@ export default function DeviceRegistration() {
     }
     const handleCompanyChanged = (value: string) => {
         device.company = value
+        updateDevice()
+    }
+    const handleFirmwareSourceChanged = (ev: ChangeEvent<HTMLInputElement>) => {
+        device.firmwareSource = ev.target.value?.trim()
+        updateDevice()
+    }
+    const handleHardwareDesignChanged = (ev: ChangeEvent<HTMLInputElement>) => {
+        device.hardwareDesign = ev.target.value?.trim()
         updateDevice()
     }
     const renderRepoInput = params => (
@@ -332,6 +343,14 @@ export default function DeviceRegistration() {
                     />
                 </Grid>
                 <Grid item xs={12}>
+                    <CompanySelect
+                        value={device?.company}
+                        error={companyError}
+                        onValueChange={handleCompanyChanged}
+                    />
+                </Grid>
+                <GridHeader title="Firmware" />
+                <Grid item xs={12}>
                     <Autocomplete
                         id={repoId}
                         freeSolo={true}
@@ -344,20 +363,25 @@ export default function DeviceRegistration() {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <CompanySelect
-                        value={device?.company}
-                        error={companyError}
-                        onValueChange={handleCompanyChanged}
+                    <TextField
+                        id={firmwareSourceId}
+                        fullWidth={true}
+                        helperText="public URL to the firmware sources."
+                        label="Firmware source code"
+                        value={device?.firmwareSource}
+                        onChange={handleFirmwareSourceChanged}
+                        variant={variant}
                     />
                 </Grid>
+                <GridHeader title="Hardware" />
                 <Grid item xs={12}>
                     <TextField
-                        id={hardwareDesignId}
+                        id={designIdentifierId}
                         fullWidth={true}
                         helperText="A unique identifier for this hardware design."
-                        label="Hardware design"
+                        label="Hardware design identifier"
                         value={device?.designIdentifier}
-                        onChange={handleHardwareDesign}
+                        onChange={handleDesignIdentifier}
                         variant={variant}
                     />
                 </Grid>
@@ -377,6 +401,18 @@ export default function DeviceRegistration() {
                         semver format (v1.0, v1.1, ...).
                     </Typography>
                 </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        id={firmwareSourceId}
+                        fullWidth={true}
+                        helperText="public URL to the hardware design files"
+                        label="Hardware design files"
+                        value={device?.hardwareDesign}
+                        onChange={handleHardwareDesignChanged}
+                        variant={variant}
+                    />
+                </Grid>
+                <GridHeader title="Services" />
                 <Grid item xs={12}>
                     <PaperBox elevation={1}>
                         <Typography>Product Identifiers</Typography>
@@ -483,6 +519,7 @@ export default function DeviceRegistration() {
                         created from your company and product name.
                     </Typography>
                 </Grid>
+                <GridHeader title="Catalog" />
                 <Grid item xs={12}>
                     <TextField
                         id={descriptionId}
