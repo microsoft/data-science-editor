@@ -85,6 +85,7 @@ export default function DeviceSpecificationList(props: {
     updates?: boolean
     firmwareSources?: boolean
     hardwareDesign?: boolean
+    transports?: jdspec.TransportType[]
 }) {
     const {
         count,
@@ -95,6 +96,7 @@ export default function DeviceSpecificationList(props: {
         updates,
         hardwareDesign,
         firmwareSources,
+        transports
     } = props
     const specifications = useDeviceSpecifications()
     const specs = useMemo(() => {
@@ -119,6 +121,8 @@ export default function DeviceSpecificationList(props: {
             r = r.filter(spec => spec.hardwareDesign)
         if (firmwareSources)
             r = r.filter(spec => spec.firmwareSource)
+        if (transports?.length)
+            r = r.filter(spec => transports.indexOf(spec.transport?.type) > -1)
         if (shuffle) arrayShuffle(r)
         if (count !== undefined) r = r.slice(0, count)
         return r
@@ -132,6 +136,7 @@ export default function DeviceSpecificationList(props: {
         updates,
         hardwareDesign,
         firmwareSources,
+        transports?.join(",")
     ])
     const gridBreakpoints = useGridBreakpoints(specs.length)
     const size = specs?.length < 6 ? "catalog" : "preview"

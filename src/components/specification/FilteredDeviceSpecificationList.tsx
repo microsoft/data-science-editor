@@ -1,5 +1,6 @@
 import { Box } from "@mui/material"
-import React, { useState } from "react"
+import React, { useMemo, useState } from "react"
+import TransportIcon from "../icons/TransportIcon"
 import ChipList from "../ui/ChipList"
 import FilterChip from "../ui/FilterChip"
 import DeviceSpecificationList from "./DeviceSpecificationList"
@@ -17,10 +18,19 @@ export default function FilteredDeviceSpecificationList(props: {
 
     const [firmwareSources, setFirmwareSources] = useState(false)
     const [hardwareDesign, setHardwareDesign] = useState(false)
+    const [usb, setUsb] = useState(false)
+    const [serial, setSerial] = useState(false)
     const requiredServiceClasses = !isNaN(serviceClass) && [serviceClass]
 
-    const handleSetFirmwareSources = () => setFirmwareSources(c => !c);
-    const handleSetHardwareDesign = () => setHardwareDesign(c => !c);
+    const handleSetFirmwareSources = () => setFirmwareSources(c => !c)
+    const handleSetHardwareDesign = () => setHardwareDesign(c => !c)
+    const handleSetUSB = () => setUsb(c => !c)
+    const handleSetSerial = () => setSerial(c => !c)
+
+    const transports = useMemo<jdspec.TransportType[]>(
+        () => [usb && "usb", serial && "serial"].filter(t => !!t) as jdspec.TransportType[],
+        [usb, serial]
+    )
     return (
         <>
             <Box display="flex" mb={1}>
@@ -31,8 +41,28 @@ export default function FilteredDeviceSpecificationList(props: {
                     hasRegisteredDevice={true}
                 />
                 <ChipList>
-                    <FilterChip label="firmware code" value={firmwareSources} onClick={handleSetFirmwareSources} />
-                    <FilterChip label="hardware design" value={hardwareDesign} onClick={handleSetHardwareDesign} />
+                    <FilterChip
+                        label="firmware code"
+                        value={firmwareSources}
+                        onClick={handleSetFirmwareSources}
+                    />
+                    <FilterChip
+                        label="hardware design"
+                        value={hardwareDesign}
+                        onClick={handleSetHardwareDesign}
+                    />
+                    <FilterChip
+                        label="USB"
+                        value={usb}
+                        onClick={handleSetUSB}
+                        icon={<TransportIcon type="usb" />}
+                    />
+                    <FilterChip
+                        label="Serial"
+                        value={serial}
+                        onClick={handleSetSerial}
+                        icon={<TransportIcon type="serial" />}
+                    />
                 </ChipList>
             </Box>
             <DeviceSpecificationList
@@ -40,6 +70,7 @@ export default function FilteredDeviceSpecificationList(props: {
                 firmwareSources={firmwareSources}
                 hardwareDesign={hardwareDesign}
                 requiredServiceClasses={requiredServiceClasses}
+                transports={transports}
             />
         </>
     )
