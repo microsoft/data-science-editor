@@ -21,12 +21,19 @@ import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import useServiceServer from "../hooks/useServiceServer"
 import LedPixelServer from "../../../jacdac-ts/src/servers/ledpixelserver"
 import LightWidget from "../widgets/LightWidget"
-import { LedPixelCmd, REFRESH } from "../../../jacdac-ts/src/jdom/constants"
+import {
+    LedPixelCmd,
+    LedPixelReg,
+    REFRESH,
+} from "../../../jacdac-ts/src/jdom/constants"
 import ColorButtons from "../widgets/ColorButtons"
 import Suspense from "../ui/Suspense"
 import RotateLeftIcon from "@mui/icons-material/RotateLeft"
 import RotateRightIcon from "@mui/icons-material/RotateRight"
 import bus from "../../jacdac/providerbus"
+import SliderWithLabel from "../ui/SliderWithLabel"
+import useRegister from "../hooks/useRegister"
+import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 const ColorInput = lazy(() => import("../ui/ColorInput"))
 
 /*
@@ -301,11 +308,7 @@ function EffectButtons(props: { setEffect: (value: string) => void }) {
             <Grid item>
                 <IconButtonWithTooltip
                     selected={rot > 0}
-                    title={
-                        rot === 1
-                            ? "Disable rotation"
-                            : "Rotate clockwize"
-                    }
+                    title={rot === 1 ? "Disable rotation" : "Rotate clockwize"}
                     onClick={handleRotChanged(1)}
                 >
                     <RotateRightIcon />
@@ -315,8 +318,26 @@ function EffectButtons(props: { setEffect: (value: string) => void }) {
     )
 }
 
+function percentValueFormat(value: number) {
+    // avoid super long floats
+    return ((value * 100) >> 0) + "%"
+}
+
 export default function DashboardLEDPixel(props: DashboardServiceProps) {
     const { service, services, expanded } = props
+    const brightnessRegister = useRegister(service, LedPixelReg.Brightness)
+    const [brightness] = useRegisterUnpackedValue<[number]>(
+        brightnessRegister,
+        props
+    )
+    const actualBrightnessRegister = useRegister(
+        service,
+        LedPixelReg.ActualBrightness
+    )
+    const [actualBrightness] = useRegisterUnpackedValue<[number]>(
+        actualBrightnessRegister,
+        props
+    )
     const animationCounter = useRef(0)
     const [penColor, setPenColor] = useState<number>(undefined)
     const [effect, setEffect] = useState("")
@@ -324,7 +345,8 @@ export default function DashboardLEDPixel(props: DashboardServiceProps) {
         service,
         () => new LedPixelServer()
     )
-    const handleColorChange = (newColor: number) => setPenColor(newColor === penColor ? undefined : newColor)
+    const handleColorChange = (newColor: number) =>
+        setPenColor(newColor === penColor ? undefined : newColor)
     const handleLedClick: (index: number) => void = async (index: number) => {
         const encoded = lightEncode(
             `setone % #
@@ -333,7 +355,9 @@ show 20`,
         )
         await service?.sendCmdAsync(LedPixelCmd.Run, encoded)
     }
-
+    const handleBrightnessChange = (ev: unknown, newValue: number | number[]) =>
+        brightnessRegister.sendSetPackedAsync([newValue as number], true);
+        
     const animationSkip = 2
     useEffect(
         () =>
@@ -342,14 +366,11 @@ show 20`,
                 const a = (animationCounter.current =
                     animationCounter.current + 1)
                 if (a % animationSkip === 0) {
-                    const command: string[] = [];
-                    if (!isNaN(penColor))
-                        command.push(`setone 0 #`)
+                    const command: string[] = []
+                    if (!isNaN(penColor)) command.push(`setone 0 #`)
                     command.push(effect)
-                    command.push(`show 20`)
-                    const encoded = lightEncode(command.join('\n'),
-                        [penColor]
-                    )
+                    command.push(`show 0`)
+                    const encoded = lightEncode(command.join("\n"), [penColor])
                     console.log(`light effect`, encoded)
                     service?.sendCmdAsync(LedPixelCmd.Run, encoded)
                 }
@@ -377,6 +398,31 @@ show 20`,
                         onColorChange={handleColorChange}
                     />
                 </Grid>
+                {!isNaN(brightness) && (
+                    <Grid>
+                        <SliderWithLabel
+                            label="brightness"
+                            min={0}
+                            step={0.01}
+                            max={1}
+                            value={brightness}
+                            valueLabelFormat={percentValueFormat}
+                            onChange={handleBrightnessChange}
+                        />
+                    </Grid>
+                )}
+                {!isNaN(actualBrightness) && (
+                    <Grid>
+                        <SliderWithLabel
+                            label="actual brightness"
+                            min={0}
+                            max={1}
+                            value={actualBrightness}
+                            valueLabelFormat={percentValueFormat}
+                            disabled={true}
+                        />
+                    </Grid>
+                )}
                 {expanded && (
                     <Grid item>
                         <LightCommand service={service} expanded={expanded} />
