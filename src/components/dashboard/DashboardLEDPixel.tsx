@@ -34,6 +34,7 @@ import bus from "../../jacdac/providerbus"
 import SliderWithLabel from "../ui/SliderWithLabel"
 import useRegister from "../hooks/useRegister"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
+import SettingsIcon from "@mui/icons-material/Settings"
 const ColorInput = lazy(() => import("../ui/ColorInput"))
 
 /*
@@ -276,8 +277,12 @@ function LightCommand(props: { service: JDService; expanded: boolean }) {
     )
 }
 
-function EffectButtons(props: { setEffect: (value: string) => void }) {
-    const { setEffect } = props
+function EffectButtons(props: {
+    setEffect: (value: string) => void
+    configure: boolean
+    toggleConfigure: () => void
+}) {
+    const { setEffect, configure, toggleConfigure } = props
     const [rot, setRot] = useState(1)
 
     const handleRotChanged = (value: number) => () =>
@@ -314,6 +319,16 @@ function EffectButtons(props: { setEffect: (value: string) => void }) {
                     <RotateRightIcon />
                 </IconButtonWithTooltip>
             </Grid>
+            <Grid item>
+                <IconButtonWithTooltip
+                    title={
+                        configure ? "Hide configuration" : "Show configuration"
+                    }
+                    onClick={toggleConfigure}
+                >
+                    <SettingsIcon />
+                </IconButtonWithTooltip>
+            </Grid>
         </Grid>
     )
 }
@@ -325,6 +340,7 @@ function percentValueFormat(value: number) {
 
 export default function DashboardLEDPixel(props: DashboardServiceProps) {
     const { service, services, expanded } = props
+    const [configure, setConfigure] = useState(false)
     const brightnessRegister = useRegister(service, LedPixelReg.Brightness)
     const [brightness] = useRegisterUnpackedValue<[number]>(
         brightnessRegister,
@@ -356,8 +372,9 @@ show 20`,
         await service?.sendCmdAsync(LedPixelCmd.Run, encoded)
     }
     const handleBrightnessChange = (ev: unknown, newValue: number | number[]) =>
-        brightnessRegister.sendSetPackedAsync([newValue as number], true);
-        
+        brightnessRegister.sendSetPackedAsync([newValue as number], true)
+    const toggleConfigure = () => setConfigure(c => !c)
+
     const animationSkip = 2
     useEffect(
         () =>
@@ -390,7 +407,11 @@ show 20`,
             )}
             <Grid container direction="column" spacing={1}>
                 <Grid item>
-                    <EffectButtons setEffect={setEffect} />
+                    <EffectButtons
+                        setEffect={setEffect}
+                        configure={configure}
+                        toggleConfigure={toggleConfigure}
+                    />
                 </Grid>
                 <Grid item>
                     <ColorButtons
@@ -398,7 +419,7 @@ show 20`,
                         onColorChange={handleColorChange}
                     />
                 </Grid>
-                {!isNaN(brightness) && (
+                {configure && !isNaN(brightness) && (
                     <Grid>
                         <SliderWithLabel
                             label="brightness"
@@ -411,7 +432,7 @@ show 20`,
                         />
                     </Grid>
                 )}
-                {!isNaN(actualBrightness) && (
+                {configure && !isNaN(actualBrightness) && (
                     <Grid>
                         <SliderWithLabel
                             label="actual brightness"
