@@ -226,6 +226,7 @@ export default function DeviceRegistration() {
         updateDevice()
     }
     const handleProductIdentifierAddRandomClick = () => {
+        if (!device.productIdentifiers) device.productIdentifiers = []
         device.productIdentifiers.push(
             parseInt(deviceCatalog.uniqueFirmwareId(), 16)
         )
