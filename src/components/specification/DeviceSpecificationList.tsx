@@ -86,6 +86,7 @@ export default function DeviceSpecificationList(props: {
     firmwareSources?: boolean
     hardwareDesign?: boolean
     transports?: jdspec.TransportType[]
+    tags?: string[]
 }) {
     const {
         count,
@@ -96,7 +97,8 @@ export default function DeviceSpecificationList(props: {
         updates,
         hardwareDesign,
         firmwareSources,
-        transports
+        transports,
+        tags,
     } = props
     const specifications = useDeviceSpecifications()
     const specs = useMemo(() => {
@@ -115,14 +117,13 @@ export default function DeviceSpecificationList(props: {
                         srv => spec.services.indexOf(srv) > -1
                     )
             )
-        if (updates)
-            r = r.filter(spec => spec.repo)
-        if (hardwareDesign)
-            r = r.filter(spec => spec.hardwareDesign)
-        if (firmwareSources)
-            r = r.filter(spec => spec.firmwareSource)
+        if (updates) r = r.filter(spec => spec.repo)
+        if (hardwareDesign) r = r.filter(spec => spec.hardwareDesign)
+        if (firmwareSources) r = r.filter(spec => spec.firmwareSource)
         if (transports?.length)
             r = r.filter(spec => transports.indexOf(spec.transport?.type) > -1)
+        if (tags?.length)
+            r = r.filter(spec => spec.tags?.find(tag => tags.includes(tag)))
         if (shuffle) arrayShuffle(r)
         if (count !== undefined) r = r.slice(0, count)
         return r
@@ -136,7 +137,8 @@ export default function DeviceSpecificationList(props: {
         updates,
         hardwareDesign,
         firmwareSources,
-        transports?.join(",")
+        transports?.join(","),
+        tags?.join(","),
     ])
     const gridBreakpoints = useGridBreakpoints(specs.length)
     const size = specs?.length < 6 ? "catalog" : "preview"
