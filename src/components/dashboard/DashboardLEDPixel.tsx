@@ -392,6 +392,8 @@ export default function DashboardLEDPixel(props: DashboardServiceProps) {
                   ]
         )
     const handleLedClick: (index: number) => void = async (index: number) => {
+        if (isNaN(penColor)) return
+        
         const encoded = lightEncode(
             `setone % #
 show 20`,
