@@ -31,10 +31,10 @@ To provide a consistent experience, we recommend using the Jacdac "devtools" at 
 The developer tools rely on the browser WebUSB/WebSerial/WebBluetooth to connect to the hardware devices and uses a local web socket server
 to pipe the packets to the your .NET app.
 
--   Install the [Jacdac.NET.DevTools](https://www.nuget.org/packages/Jacdac.NET.DevTools/) tool from nuget 
+-   Install the [Jacdac.DevTools](https://www.nuget.org/packages/Jacdac.DevTools/) tool from nuget
 
 ```
-dotnet tool install -g jacdac.net.devtools
+dotnet tool install -g jacdac.devtools
 ```
 
 -   launch the devtools server (and keep it running)
@@ -47,6 +47,7 @@ Once the devtools server is running, you should be able to navigate to the local
 **You do not need any hardware to try this out!**
 
 - open [http://localhost:8081/](http://localhost:8081/)
+- use the `WebSocketTransport` from the [Jacdac.NET.Transports.WebSockets](https://www.nuget.org/packages/Jacdac.NET.Transports.WebSockets/) package
 
 ### Blinky
 
@@ -95,7 +96,6 @@ All together, we get:
 using System.Threading;
 using Jacdac;
 using Jacdac.Transport.WebSockets;
-
 using Jacdac.Clients;
 
 static class Program {
