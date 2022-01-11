@@ -43,6 +43,7 @@ export default function Page() {
             <GithubRepositoryList
                 repos={[
                     "microsoft/jacdac-ts",
+                    "microsoft/jacdac-dotnet",
                     "microsoft/jacdac-python",
                     "microsoft/pxt-jacdac",
                 ]}
@@ -84,7 +85,6 @@ export default function Page() {
             <GithubRepositoryList
                 repos={[
                     "microsoft/jacdac-circuitpython",
-                    "microsoft/jacdac-dotnet",
                     "microsoft/jupyter-jacdac",
                 ]}
                 showDescription={true}
