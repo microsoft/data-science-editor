@@ -1,11 +1,16 @@
 import React from "react"
-import { RealTimeClockReg } from "../../../jacdac-ts/src/jdom/constants"
+import {
+    RealTimeClockCmd,
+    RealTimeClockReg,
+} from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import { RealTimeClockReadingType } from "../../../jacdac-ts/src/servers/realtimeclockserver"
-import { Typography } from "@mui/material"
+import { Grid, Typography } from "@mui/material"
 import LoadingProgress from "../ui/LoadingProgress"
 import useRegister from "../hooks/useRegister"
+import SyncIcon from "@mui/icons-material/Sync"
+import CmdButton from "../CmdButton"
 
 export default function DashboardRealTimeClock(props: DashboardServiceProps) {
     const { service } = props
@@ -16,30 +21,61 @@ export default function DashboardRealTimeClock(props: DashboardServiceProps) {
             localTimeRegister,
             props
         )
+    const handleSync = async () => {
+        const now = new Date()
+        const year = now.getFullYear()
+        const month = now.getMonth()
+        const dayOfMonth = now.getDate()
+        const dayOfWeek = now.getDay()
+        const hour = now.getHours()
+        const min = now.getMinutes()
+        const second = now.getSeconds()
+        await service.sendCmdPackedAsync(RealTimeClockCmd.SetTime, [
+            year,
+            month,
+            dayOfMonth,
+            dayOfWeek,
+            hour,
+            min,
+            second,
+        ])
+    }
+
     if (year === undefined) return <LoadingProgress />
     const t = new Date(year, month - 1, dayOfMonth, hour, min, seconds)
     const date = t.toLocaleDateString()
     const time = t.toLocaleTimeString()
     return (
-        <>
-            <Typography
-                align="center"
-                tabIndex={0}
-                role="timer"
-                aria-label={date}
-                variant="body2"
-            >
-                {date}
-            </Typography>
-            <Typography
-                align="center"
-                tabIndex={0}
-                role="timer"
-                aria-label={time}
-                variant="body1"
-            >
-                {time}
-            </Typography>
-        </>
+        <Grid container spacing={1}>
+            <Grid item>
+                <Grid container spacing={1} direction="column">
+                    <Grid item>
+                        <Typography
+                            align="left"
+                            tabIndex={0}
+                            role="timer"
+                            aria-label={date}
+                            variant="h6"
+                        >
+                            {date}
+                        </Typography>
+                    </Grid>
+                    <Grid item>
+                        <Typography
+                            align="center"
+                            tabIndex={0}
+                            role="timer"
+                            aria-label={time}
+                            variant="h4"
+                        >
+                            {time}
+                        </Typography>
+                    </Grid>
+                </Grid>
+            </Grid>
+            <Grid item>
+                <CmdButton title="Sync time" onClick={handleSync} icon={<SyncIcon />} />
+            </Grid>
+        </Grid>
     )
 }
