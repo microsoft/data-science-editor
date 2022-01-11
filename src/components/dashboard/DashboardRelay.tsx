@@ -10,16 +10,16 @@ import { DashboardServiceProps } from "./DashboardServiceWidget"
 
 export default function DashboardRelay(props: DashboardServiceProps) {
     const { service } = props
-    const closedRegister = useRegister(service, RelayReg.Closed)
-    const closed = useRegisterBoolValue(closedRegister, props)
+    const activeRegister = useRegister(service, RelayReg.Active)
+    const active = useRegisterBoolValue(activeRegister, props)
     const server = useServiceServer(service)
     const color = server ? "secondary" : "primary"
     const { textPrimary } = useWidgetTheme(color)
 
     const handleClose = (event: unknown, checked) =>
-        closedRegister?.sendSetBoolAsync(checked, true)
+        activeRegister?.sendSetBoolAsync(checked, true)
 
-    if (closed === undefined) return <CircularProgress />
+    if (active === undefined) return <CircularProgress />
 
     const labelStyle: CSSProperties = {
         color: textPrimary,
@@ -28,13 +28,13 @@ export default function DashboardRelay(props: DashboardServiceProps) {
         <Grid container spacing={1} direction="row" alignItems="center">
             <Grid item>
                 <Typography variant="subtitle1" style={labelStyle}>
-                    open
+                    inactive
                 </Typography>
             </Grid>
             <Grid item>
                 <SwitchWithLabel
-                    label="closed"
-                    checked={closed}
+                    label="active"
+                    checked={active}
                     onChange={handleClose}
                     labelStyle={labelStyle}
                 />
