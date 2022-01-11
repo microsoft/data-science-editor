@@ -1,5 +1,6 @@
 <html lang="en">
     <head>
+        <title>Jacdac DevTools</title>
         <link
             rel="icon"
             href="https://microsoft.github.io/jacdac-docs/favicon.svg"
@@ -27,10 +28,10 @@
         <script>
             ;(function () {
                 var frame = document.getElementById("frame")
+                var search = window.location.search || ""
                 var sender = Math.random() + ""
-                frame.src =
-                    "https://microsoft.github.io/jacdac-docs/dashboard/#" +
-                    sender
+                var frameUrl = "https://microsoft.github.io/jacdac-docs/dashboard/" + search + "#" + sender
+                    
                 var location = window.location
                 var secure = location.protocol === "https:"
                 var protocol = secure ? "wss:" : "ws:"
@@ -92,6 +93,8 @@
                 // start background connection
                 setInterval(connectSocket, 5000)
                 connectSocket()
+                // launch iframe
+                frame.src = frameUrl
             })()
         </script>
     </body>
