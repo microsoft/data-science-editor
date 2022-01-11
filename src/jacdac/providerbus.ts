@@ -100,7 +100,6 @@ export class UIFlags {
     static widget = args.widget
     static peers = args.peers
     static localhost = args.localhost
-    static passive = args.passive
     static storage = args.storage
     static hosted = args.hosted
     static gamepad = args.gamepad

@@ -42,6 +42,8 @@ import {
 import { UIFlags } from "../../jacdac/providerbus"
 import { resolveUnit } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import JacdacIcon from "../icons/JacdacIcon"
+import useBus from "../../jacdac/useBus"
+import useChange from "../../jacdac/useChange"
 
 const PREFIX = "ToolsDrawer"
 
@@ -121,7 +123,9 @@ export default function ToolsDrawer() {
         showWebCam,
         setShowWebCam,
     } = useContext(AppContext)
-    const { enqueueSnackbar, toggleShowConnectTransportDialog, passive, setPassive } =
+    const bus = useBus()
+    const passive = useChange(bus, _ => _.passive)
+    const { enqueueSnackbar, toggleShowConnectTransportDialog } =
         useContext(AppContext)
     const { toggleDarkMode, darkMode } = useContext(DarkModeContext)
     const { converters, setConverter } = useUnitConverters()
@@ -147,6 +151,7 @@ export default function ToolsDrawer() {
         setToolsMenu(false)
         toggleDarkMode()
     }
+    const handleTogglePassive = () => bus.passive = !bus.passive
     const links = [
         {
             text: "Connect",
@@ -223,7 +228,7 @@ export default function ToolsDrawer() {
         {
             text: passive ? "Passive mode" : "Active mode",
             title: "In passive mode, the browser does not send any Jacdac packets.",
-            action: () => setPassive(!passive)
+            action: handleTogglePassive
         },
         ...converters.map(({ unit, name, names }) => ({
             text: `${name} (change to ${names

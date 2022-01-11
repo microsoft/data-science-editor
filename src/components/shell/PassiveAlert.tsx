@@ -1,12 +1,14 @@
-import React, { useContext } from "react"
+import React from "react"
 import Alert from "../ui/Alert"
 import { AlertTitle } from "@mui/material"
-import AppContext from "../AppContext"
 import { Button } from "gatsby-theme-material-ui"
+import useBus from "../../jacdac/useBus"
+import useChange from "../../jacdac/useChange"
 
 export default function PassiveAlert() {
-    const { passive, setPassive } = useContext(AppContext)
-    const handleActive = () => setPassive(false)
+    const bus = useBus()
+    const passive = useChange(bus, _ => _.passive)
+    const handleActive = () => bus.passive = false
     if (!passive) return null
 
     return (
