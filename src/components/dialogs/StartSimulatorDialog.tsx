@@ -9,7 +9,7 @@ import {
     TextField,
 } from "@mui/material"
 import AppContext from "../AppContext"
-import React, { useContext, useMemo } from "react"
+import React, { useContext, useMemo, useRef } from "react"
 import { useId } from "react-use-id-hook"
 import servers, {
     addServiceProvider,
@@ -30,6 +30,8 @@ import {
     serviceSpecificationFromClassIdentifier,
 } from "../../../jacdac-ts/src/jdom/spec"
 import DialogTitleWithClose from "../ui/DialogTitleWithClose"
+import useKeyboardNavigation from "../hooks/useKeyboardNavigation"
+import useKeyboardNavigationProps from "../hooks/useKeyboardNavigationProps"
 
 const miniSearchOptions = {
     fields: ["name", "description"],
@@ -53,6 +55,7 @@ export default function StartSimulatorDialog(props: {
     const searchId = useId()
     const deviceHostDialogId = useId()
     const deviceHostLabelId = useId()
+    const contentRef = useRef<HTMLElement>()
 
     const documents: {
         id: string
@@ -132,6 +135,8 @@ export default function StartSimulatorDialog(props: {
         }
     }
 
+    const keyboardProps = useKeyboardNavigationProps(contentRef.current, true)
+
     return (
         <Dialog
             id={deviceHostDialogId}
@@ -145,20 +150,22 @@ export default function StartSimulatorDialog(props: {
             <DialogTitleWithClose onClose={onClose} id={deviceHostLabelId}>
                 Start a simulator
             </DialogTitleWithClose>
-            <DialogContent>
+            <DialogContent ref={contentRef}>
                 <TextField
+                    tabIndex={0}
                     id={searchId}
                     sx={{ mt: "8px" }}
                     label="Filter simulators"
                     inputProps={{
-                        "aria-label":
-                            "Filter textbox for simulators",
+                        "aria-label": "Filter textbox for simulators",
                     }}
                     type="search"
                     fullWidth={true}
                     size="small"
                     autoFocus={true}
                     onChange={handleSearchChange}
+                    autoComplete="off"
+                    {...keyboardProps}
                 />
                 <List sx={{ height: mobile ? undefined : "min(32rem, 80vh)" }}>
                     {(searchResults || documents).map(
@@ -171,6 +178,7 @@ export default function StartSimulatorDialog(props: {
                                         ? handleProviderDefinition(server)
                                         : handleHostedSimulator(simulator)
                                 }
+                                {...keyboardProps}
                             >
                                 {name}
                             </ListItem>
