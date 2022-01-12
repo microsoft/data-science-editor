@@ -7,10 +7,9 @@ using System.Threading;
 var led = new LedClient(bus, "led");
 var slider = new PotentiometerClient(bus, "slider");
 var speed = 64u;
-
-while (true)
+led.Connected += (s, e) =>
 {
-    try
+    while (led.IsConnected)
     {
         // grab brightness
         var brightness = (uint)(slider.Position * 100);
@@ -21,7 +20,8 @@ while (true)
         led.Animate(brightness, 0, 0, speed);
         Thread.Sleep(500);
     }
-    catch (ClientDisconnectedException)
+};
+on)
     {
         Thread.Sleep(1000);
     }

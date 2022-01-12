@@ -6,18 +6,17 @@ using System.Threading;
 ...
 
 var led = new LedClient(bus, "led");
+// wait for jacdac to find a LED service
 led.Connected += (s, e) =>
 {
-    var speed = 64u;
-    var brightness = 128u;
+    // as long as the led is connected, blink
     while (led.IsConnected)
     {
-        Console.WriteLine("blink");
-        // blue
-        led.Animate(0, 0, brightness, speed);
+        // send red 24-bit RGB color (same as HTML colors!)
+        led.SetColor(0xff0000);
         Thread.Sleep(500);
-        // red
-        led.Animate(brightness, 0, 0, speed);
+        // send blue
+        led.SetColor(0x0000ff);
         Thread.Sleep(500);
     }
 };

@@ -22,6 +22,7 @@ co2.ReadingChanged += (s, e) =>
     else if (value < 900)
     {
         Console.WriteLine("CO2 ok");
+        // turn off light by showing black
         led.SetColor(0);
     }
 };
