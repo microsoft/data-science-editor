@@ -6,3 +6,4 @@ public
 src/workers/dist
 yarn-error.log
 .parcel-cache
+slnx.*
