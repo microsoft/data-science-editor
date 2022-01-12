@@ -1,6 +1,6 @@
 import { Grid } from "@mui/material"
 import { StaticImage } from "gatsby-plugin-image"
-import React, { lazy } from "react"
+import React, { lazy, useContext } from "react"
 import CarouselGrid from "./CarouselGrid"
 import CenterGrid from "./CenterGrid"
 import FeatureItem from "./FeatureItem"
@@ -10,6 +10,7 @@ import CameraIcon from "@mui/icons-material/Camera"
 import TelegramIcon from "@mui/icons-material/Telegram"
 import useMediaQueries from "../hooks/useMediaQueries"
 import Suspense from "../ui/Suspense"
+import DarkModeContext from "../ui/DarkModeContext"
 const DeviceSpecificationList = lazy(
     () => import("../specification/DeviceSpecificationList")
 )
@@ -27,6 +28,7 @@ const GLBModel = lazy(() => import("./models/GLBModel"))
 */
 
 export default function Hardware() {
+    const { imgStyle } = useContext(DarkModeContext)
     const { mobile, medium } = useMediaQueries()
     const cols = mobile ? 1 : medium ? 3 : 4
     return (
@@ -58,6 +60,7 @@ export default function Hardware() {
                     <StaticImage
                         src="./rhtempvertical.png"
                         alt="A Jacdac humidity module plugging into a Jacdac cable"
+                        imgStyle={imgStyle}
                     />
                 }
             />
@@ -67,7 +70,11 @@ export default function Hardware() {
                 subtitle="3-wire serial"
                 description="Jacdac packets are sent serially among physical devices over a single data line along with a regulated power line."
                 image={
-                    <StaticImage src="./bustopology.png" alt="Bus topology" />
+                    <StaticImage
+                        src="./bustopology.png"
+                        alt="Bus topology"
+                        imgStyle={imgStyle}
+                    />
                 }
                 buttonText={"Learn more"}
                 buttonVariant="link"
@@ -83,6 +90,7 @@ export default function Hardware() {
                     <StaticImage
                         src="./jacdacsinglergbledmodule.png"
                         alt="A LED module"
+                        imgStyle={imgStyle}
                     />
                 }
                 buttonText="Device Development Kit"
@@ -102,6 +110,7 @@ export default function Hardware() {
                     <StaticImage
                         src="./mechanicalclickconnector.png"
                         alt="Cable and connector"
+                        imgStyle={imgStyle}
                     />
                 }
             />
@@ -115,6 +124,7 @@ export default function Hardware() {
                     <StaticImage
                         src="./rotary.png"
                         alt="A Jacdac rotary encoder module plugging into a Jacdac cable"
+                        imgStyle={imgStyle}
                     />
                 }
             />
@@ -170,7 +180,6 @@ export default function Hardware() {
                 subtitle="For Manufacturers"
                 description="Create Jacdac devices."
                 imageColumns={8}
-                centered={true}
                 buttonText="Hardware Specification"
                 buttonUrl="/reference/hardware-specification/"
                 buttonVariant="link"
@@ -178,6 +187,7 @@ export default function Hardware() {
                     <StaticImage
                         src="./beautifysimple.png"
                         alt="An array of Jacdac modules"
+                        imgStyle={imgStyle}
                     />
                 }
             />

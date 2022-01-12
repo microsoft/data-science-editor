@@ -150,6 +150,7 @@ export default function Home() {
                     <StaticImage
                         src="./beautifysimple.png"
                         alt="An array of Jacdac modules"
+                        imgStyle={imgStyle}
                     />
                 }
                 buttonText="Devices"
@@ -183,6 +184,7 @@ export default function Home() {
                     <StaticImage
                         src="./buttoncable.png"
                         alt="A Jacdac humidity module plugging into a Jacdac cable"
+                        imgStyle={imgStyle}
                     />
                 }
             />
