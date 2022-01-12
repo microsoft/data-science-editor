@@ -24,7 +24,7 @@ export default function DashboardRealTimeClock(props: DashboardServiceProps) {
     const handleSync = async () => {
         const now = new Date()
         const year = now.getFullYear()
-        const month = now.getMonth()
+        const month = now.getMonth() + 1
         const dayOfMonth = now.getDate()
         const dayOfWeek = now.getDay()
         const hour = now.getHours()
