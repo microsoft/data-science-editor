@@ -15,8 +15,8 @@ Jacdac. The HID module is then connected to your desktop/laptop via USB.
 
 ```blocks
 basic.forever(function () {
-    let dx = modules.joystick1.x()
-    let dy = modules.joystick1.y()
+    let dx = modules.gamepad1.x()
+    let dy = modules.gamepad1.y()
     if (Math.abs(dx) > 20 || Math.abs(dy) > 20) {
         modules.hidMouse1.move(dx / 4, dy / 4)
     }
