@@ -1,6 +1,6 @@
 import { Grid } from "@mui/material"
 import { StaticImage } from "gatsby-plugin-image"
-import React from "react"
+import React, { useContext } from "react"
 import CarouselGrid from "./CarouselGrid"
 import CenterGrid from "./CenterGrid"
 import FeatureItem from "./FeatureItem"
@@ -10,8 +10,10 @@ import PlaylistAddCheckIcon from "@mui/icons-material/PlaylistAddCheck"
 import FindReplaceIcon from "@mui/icons-material/FindReplace"
 import SubscriptionsIcon from "@mui/icons-material/Subscriptions"
 import HTML5Image from "./HTML5Image"
+import DarkModeContext from "../ui/DarkModeContext"
 
 export default function Home() {
+    const { imgStyle } = useContext(DarkModeContext)
     return (
         <Grid
             container
@@ -28,6 +30,7 @@ export default function Home() {
                     <StaticImage
                         src="./manymodules2.png"
                         alt="Many Modules Together"
+                        imgStyle={imgStyle}
                     />
                 }
             />
@@ -43,6 +46,7 @@ export default function Home() {
                     <StaticImage
                         src="./rotarycable.png"
                         alt="A rotary encoder module with a Jacdac cable attached."
+                        imgStyle={imgStyle}
                     />
                 }
                 buttonText="Physical interconnect"
@@ -60,6 +64,7 @@ export default function Home() {
                     <StaticImage
                         src="./bustopology.png"
                         alt="Four cables joining into a hub"
+                        imgStyle={imgStyle}
                     />
                 }
             />

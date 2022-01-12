@@ -1,6 +1,12 @@
-import { PaletteType, useMediaQuery } from "@mui/material"
-import React, { ReactNode, useEffect, useState } from "react"
-import DarkModeContext from "./DarkModeContext"
+import { useMediaQuery } from "@mui/material"
+import React, {
+    CSSProperties,
+    ReactNode,
+    useEffect,
+    useMemo,
+    useState,
+} from "react"
+import DarkModeContext, { PaletteType } from "./DarkModeContext"
 
 export default function DarkModeProvider(props: {
     fixedDarkMode?: PaletteType
@@ -37,6 +43,15 @@ export default function DarkModeProvider(props: {
             setMode("light")
         }
     }
+    const imgStyle = useMemo<CSSProperties>(
+        () =>
+            darkMode == "dark"
+                ? ({
+                      filter: "drop-shadow(0 0 0.5rem #444)",
+                  } as CSSProperties)
+                : undefined,
+        [darkMode]
+    )
 
     useEffect(() => {
         setMounted(true)
@@ -44,7 +59,7 @@ export default function DarkModeProvider(props: {
 
     return (
         <DarkModeContext.Provider
-            value={{ darkMode, toggleDarkMode, darkModeMounted }}
+            value={{ darkMode, toggleDarkMode, darkModeMounted, imgStyle }}
         >
             {children}
         </DarkModeContext.Provider>
