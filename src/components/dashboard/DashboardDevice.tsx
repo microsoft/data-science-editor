@@ -6,7 +6,7 @@ import {
     Paper,
     Typography,
 } from "@mui/material"
-import React, { useCallback, useRef, useState } from "react"
+import React, { useCallback, useRef } from "react"
 import {
     SRV_CONTROL,
     SRV_LOGGER,

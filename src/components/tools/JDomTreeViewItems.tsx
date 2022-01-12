@@ -34,7 +34,6 @@ import {
 import useEventRaised from "../../jacdac/useEventRaised"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import {
-    ellipse,
     ellipseJoin,
     roundWithPrecision,
 } from "../../../jacdac-ts/src/jdom/utils"
@@ -134,6 +133,7 @@ function DeviceProductInformationTreeItem(props: { device: JDDevice }) {
                 <DeviceActions
                     device={device}
                     showReset={true}
+                    showProxy={true}
                     hideIdentity={true}
                 />
             }

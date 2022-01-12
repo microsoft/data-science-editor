@@ -9,16 +9,17 @@ import CmdButton from "../CmdButton"
 import useServiceProvider from "../hooks/useServiceProvider"
 import CloseIcon from "@mui/icons-material/Close"
 import SettingsIcon from "@mui/icons-material/Settings"
-import { SRV_SETTINGS } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
+import { SRV_SETTINGS, SRV_UNIQUE_BRAIN } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import useChange from "../../jacdac/useChange"
 import { navigate } from "gatsby-link"
 import HostedSimulatorsContext from "../HostedSimulatorsContext"
-
+import CableIcon from '@mui/icons-material/Cable';
 export default function DeviceActions(props: {
     device: JDDevice
     showSettings?: boolean
     showReset?: boolean
     showStop?: boolean
+    showProxy?: boolean
     hideIdentity?: boolean
     children?: JSX.Element | JSX.Element[]
 }) {
@@ -29,6 +30,7 @@ export default function DeviceActions(props: {
         children,
         hideIdentity,
         showStop,
+        showProxy
     } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { removeHostedSimulator, isHostedSimulator } = useContext(
@@ -40,9 +42,11 @@ export default function DeviceActions(props: {
         device,
         _ => _.services({ serviceClass: SRV_SETTINGS })?.[0]
     )
+    const _showProxy = useChange(device, _ => showProxy && _.services({ serviceClass: SRV_UNIQUE_BRAIN})?.length)
 
     const handleIdentify = async () => await device.identify()
     const handleReset = async () => await device.reset()
+    const handleProxy = async () => await device.startProxy()
     const handleStop = async () => {
         removeHostedSimulator(deviceId)
         bus.removeServiceProvider(provider)
@@ -79,6 +83,15 @@ export default function DeviceActions(props: {
                     title="settings"
                     onClick={handleSettings}
                     icon={<SettingsIcon />}
+                />
+            )}
+            {_showProxy && (
+                <CmdButton
+                    trackName="device.proxy"
+                    size="small"
+                    title="dongle"
+                    onClick={handleProxy}
+                    icon={<CableIcon />}
                 />
             )}
             {showReset && (
