@@ -1,0 +1,12 @@
+---
+order: 1
+---
+
+# Blinky
+
+This sample show how to blink an [LED](/services/led) module.
+
+After creating the `led` client, we register to the `Connected` event to run code while a LED is available.
+In the `Connected` handler, we start a loop where we alternate sending commands between red and blue.
+
+`embed:blinky.g.cs`

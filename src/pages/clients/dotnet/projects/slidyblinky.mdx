@@ -1,0 +1,12 @@
+---
+order: 2
+---
+
+# Slidy Blinky
+
+This sample show how to blink an [LED](/services/led) module and change the brightness using a [slider](/services/slider).
+
+After creating the `led` client, we register to the `Connected` event to run code while a LED is available.
+In the `Connected` handler, we start a loop where we alternate sending commands between red and blue.
+
+`embed:slidyblinky.g.cs`

@@ -117,25 +117,14 @@ static class Program {
 }
 ```
 
+## What's next?
+
+-   [Projects](/clients/dotnet/projects/)
+
+
 ### Connecting to hardware
 
 To run Jacdac on a physical device, you will need to use a different transport. This varies per device.
-
-* USB, add the [Jacdac.NET.Transports.Usb](https://www.nuget.org/packages/Jacdac.NET.Transports.Usb/) NuGet package
-
-```cs
-using Jacdac.Transports.Usb;
-...
-var bus = new JDBus(UsbTransport.Create());
-```
-
-or add it to the existing bus
-
-```cs
-using Jacdac.Transports.Usb;
-...
-bus.AddTransport(new JDBus(UsbTransport.Create()));
-```
 
 * [JacHAT bridge](/services/bridge), add the [Jacdac.NET.Transports.Spi](https://www.nuget.org/packages/Jacdac.NET.Transports.Spi/) NuGet package
 
