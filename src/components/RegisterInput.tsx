@@ -12,6 +12,7 @@ import IconButtonWithProgress from "./ui/IconButtonWithProgress"
 import useRegisterServer from "./hooks/useRegisterServer"
 import useReadingAuxilliaryValue from "./hooks/useReadingAuxilliaryValue"
 import useChange from "../jacdac/useChange"
+import { isReadOnlyRegister } from "../../jacdac-ts/src/jdom/spec"
 
 export type RegisterInputVariant = "widget" | ""
 
@@ -106,7 +107,9 @@ export default function RegisterInput(props: {
         try {
             setWorking(true)
             if (server) server.setValues(values)
-            await register.sendSetPackedAsync(values, true)
+            // don't send set commands to rw registers
+            if (!isReadOnlyRegister(register.specification))
+                await register.sendSetPackedAsync(values, true)
         } catch (e) {
             setAppError(e)
         } finally {
