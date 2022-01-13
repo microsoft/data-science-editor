@@ -49,11 +49,21 @@ where you can inspect physical and simulated devices.
 - open [http://localhost:8081/](http://localhost:8081/)
 - use the `WebSocketTransport` from the [Jacdac.NET.Transports.WebSockets](https://www.nuget.org/packages/Jacdac.NET.Transports.WebSockets/) package
 
+#### Access from other computers
+
 If you wish to access the dashboard from another computer,
 use the ``--internet`` and the web server will bind to **all** network interface.
 
 ```
 jacdac.devtools --internet
+```
+
+#### JacHAT
+
+If you wish to connect the dashboard to the JacHAT on raspberry pi, add the ``--spi`` argument.
+
+```
+jacdac.devtools --internet --spi
 ```
 
 ### Blinky
