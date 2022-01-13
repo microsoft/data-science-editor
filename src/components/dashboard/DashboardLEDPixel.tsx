@@ -285,12 +285,12 @@ function EffectButtons(props: {
     addGradientColor: () => void
 }) {
     const { setEffect, configure, toggleConfigure, addGradientColor } = props
-    const [rot, setRot] = useState(1)
+    const [rot, setRot] = useState(0)
 
     const handleRotChanged = () =>
-        setRot(value => (value < 0 ? 1 : value >= MAX_ROT ? 0 : value + 1))
+        setRot(value => (value < 0 ? 2 : value >= MAX_ROT ? 0 : value + 1))
     const handleCounterRotChanged = () =>
-        setRot(value => (value > 0 ? -1 : value <= -MAX_ROT ? 0 : value - 1))
+        setRot(value => (value > 0 ? -2 : value <= -MAX_ROT ? 0 : value - 1))
 
     useEffect(() => {
         const effect: string[] = []
