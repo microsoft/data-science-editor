@@ -43,11 +43,18 @@ dotnet tool install -g jacdac.devtools
 jacdac.devtools
 ```
 
-Once the devtools server is running, you should be able to navigate to the local web server and see a dashboard.
-**You do not need any hardware to try this out!**
+Once the devtools server is running, you should be able to navigate to the local web server and see a dashboard
+where you can inspect physical and simulated devices.
 
 - open [http://localhost:8081/](http://localhost:8081/)
 - use the `WebSocketTransport` from the [Jacdac.NET.Transports.WebSockets](https://www.nuget.org/packages/Jacdac.NET.Transports.WebSockets/) package
+
+If you wish to access the dashboard from another computer,
+use the ``--internet`` and the web server will bind to **all** network interface.
+
+```
+jacdac.devtools --internet
+```
 
 ### Blinky
 
