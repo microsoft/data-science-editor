@@ -24,6 +24,7 @@ import useMediaQueries from "./hooks/useMediaQueries"
 import MainAppBar from "./shell/MainAppBar"
 import { AlertTitle } from "@mui/material"
 import { UIFlags } from "../jacdac/providerbus"
+import DevToolsAlert from "./alert/DevToolsAlert"
 const TraceAlert = lazy(() => import("./shell/TraceAlert"))
 const WebDiagnostics = lazy(() => import("./shell/WebDiagnostics"))
 const AppDrawer = lazy(() => import("./shell/AppDrawer"))
@@ -261,6 +262,9 @@ function LayoutWithContext(props: LayoutProps) {
                     {UNDER_CONSTRUCTION_BODY}
                 </Alert>
             )}
+            <Suspense>
+                <DevToolsAlert />
+            </Suspense>
             {Flags.diagnostics && (
                 <Suspense>
                     <WebDiagnostics />

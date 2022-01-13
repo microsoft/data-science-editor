@@ -27,11 +27,6 @@
         ></iframe>
         <script>
             ;(function () {
-                var frame = document.getElementById("frame")
-                var search = window.location.search || ""
-                var sender = Math.random() + ""
-                var frameUrl = "https://microsoft.github.io/jacdac-docs/dashboard/" + search + "#" + sender
-                    
                 var location = window.location
                 var secure = location.protocol === "https:"
                 var protocol = secure ? "wss:" : "ws:"
@@ -41,6 +36,13 @@
                     .concat(protocol, "//")
                     .concat(hostname, ":")
                     .concat(port, "/")
+
+                var frame = document.getElementById("frame")
+                var search = window.location.search || ""
+                search += (search.length > 0 ? "&" : "?") + `devtools=${encodeURIComponent(wsurl)}`;
+                var sender = Math.random() + ""
+                var frameUrl = "https://microsoft.github.io/jacdac-docs/dashboard/" + search + "#" + sender
+                    
                 var ws
                 var connectSocket = function () {
                     // already connected or connecting
@@ -53,6 +55,11 @@
                     ws.addEventListener("open", function () {
                         console.debug("devtools: connected ".concat(ws.url))
                         opened = true
+                        var pktMsg = {
+                            type: "devtoolsconnected",
+                            sender: sender,
+                        }
+                        frame.contentWindow.postMessage(pktMsg, "*")
                     })
                     ws.addEventListener("message", function (msg) {
                         var data = new Uint8Array(msg.data)
