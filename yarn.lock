@@ -8350,15 +8350,6 @@ gatsby-remark-makecode@^1.0.22:
     unist-util-find "1.0.2"
     unist-util-visit "2.0.3"
 
-gatsby-remark-prismjs@^6.5.0:
-  version "6.5.0"
-  resolved "https://registry.yarnpkg.com/gatsby-remark-prismjs/-/gatsby-remark-prismjs-6.5.0.tgz#a8d0d1aa81cc37d8d59650f19d57a803f74a0285"
-  integrity sha512-48UtIOiLWF37OHE6B2zTHflrJ5vcGLMHVaTXs0OwPc5eXyvGXe2BdWQrmvOWW+DQ0rd7HeUvlBxjnHohTjVP9Q==
-  dependencies:
-    "@babel/runtime" "^7.15.4"
-    parse-numeric-range "^1.2.0"
-    unist-util-visit "^2.0.3"
-
 gatsby-remark-static-images@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/gatsby-remark-static-images/-/gatsby-remark-static-images-1.2.1.tgz#3bdbf6ac0e5c9fee0cdb24d6109f941448fc5e3b"
