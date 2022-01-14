@@ -98,7 +98,7 @@ export default function Page() {
             </Card>
             <Grid container spacing={1}>
                 <GridHeader
-                    action={<ConnectButtons full={false} transparent={true} />}
+                    action={<ConnectButtons transparent={true} />}
                     title={"Devices"}
                 />
                 {devices.map(device => (

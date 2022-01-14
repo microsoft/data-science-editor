@@ -107,7 +107,8 @@ function SchemaForm(props: {
                     {title && <GridHeader title={title} />}
                     <PropertiesForm
                         properties={properties}
-                        required={required}
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        required={required as any}
                         value={value}
                         setValue={setValue}
                     />

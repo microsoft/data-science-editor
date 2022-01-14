@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import {
     Accordion,
     AccordionDetails,
@@ -12,6 +12,7 @@ import {
     ListItem,
     ListItemText,
     MenuItem,
+    SelectChangeEvent,
     Typography,
 } from "@mui/material"
 import {
@@ -51,9 +52,7 @@ export default function FirmwareCard(props: { slug: string }) {
         if (releases?.length && !release) setRelease(releases[0])
     }, [releases])
 
-    const handleReleaseChange = (
-        ev: ChangeEvent<{ name?: string; value: unknown }>
-    ) => {
+    const handleReleaseChange = (ev: SelectChangeEvent<string>) => {
         const v = ev.target.value as string
         const rel = releases?.find(r => r.version === v)
         setRelease(rel)

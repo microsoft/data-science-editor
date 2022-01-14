@@ -7,22 +7,6 @@ import { Button } from "@mui/material"
 import useMounted from "../hooks/useMounted"
 import { delay } from "../../../jacdac-ts/src/jdom/utils"
 
-declare class ClipboardItem {
-    constructor(input: { [contentType: string]: Blob })
-}
-declare type AsyncClipboardWriteFunction = (
-    input: ClipboardItem
-) => Promise<void>
-
-declare global {
-    interface Window {
-        ClipboardItem: ClipboardItem | undefined
-    }
-
-    interface Clipboard {
-        write?: AsyncClipboardWriteFunction
-    }
-}
 
 export default function CopyButton(props: {
     label?: string

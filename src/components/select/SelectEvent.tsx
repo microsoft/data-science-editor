@@ -2,6 +2,7 @@ import React from "react"
 import MenuItem from "@mui/material/MenuItem"
 import { JDEvent } from "../../../jacdac-ts/src/jdom/event"
 import SelectWithLabel from "../ui/SelectWithLabel"
+import { SelectChangeEvent } from "@mui/material"
 
 export default function SelectEvent(props: {
     events: JDEvent[]
@@ -12,8 +13,8 @@ export default function SelectEvent(props: {
 }) {
     const { events, eventId, onChange, friendlyName, label } = props
 
-    const handleChange = (ev: React.ChangeEvent<{ value: unknown }>) => {
-        onChange(ev.target.value as string)
+    const handleChange = (ev: SelectChangeEvent<string>) => {
+        onChange(ev.target.value)
     }
 
     return (

@@ -1,4 +1,3 @@
-import { CSSProperties } from "@mui/material/styles"
 import React, { ReactNode } from "react"
 
 export default function SvgWidget(props: {

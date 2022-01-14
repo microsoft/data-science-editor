@@ -1,6 +1,5 @@
 import { Slide, useScrollTrigger } from "@mui/material"
-import React from "react"
-import { ReactElement } from "react-markdown"
+import React, { ReactElement } from "react"
 
 export function HideOnScroll(props: {
     children: ReactElement

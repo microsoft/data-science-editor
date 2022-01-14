@@ -10,6 +10,7 @@ import {
     tonePayload,
 } from "../../../jacdac-ts/src/servers/buzzerserver"
 import WebAudioContext from "../ui/WebAudioContext"
+import { JDServerServiceProvider } from "../../../jacdac-ts/src/jdom/servers/serverserviceprovider"
 
 export default function useBuzzerPlayTone() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
@@ -54,7 +55,7 @@ export default function useBuzzerPlayTone() {
         // must be done once to allow background sounds
         onClickActivateAudioContext()
         if (!buzzerServer) {
-            const dev = startServiceProviderFromServiceClass(bus, SRV_BUZZER)
+            const dev = startServiceProviderFromServiceClass(bus, SRV_BUZZER) as JDServerServiceProvider;
             const srv = dev
                 .services()
                 .find(s => s.serviceClass === SRV_BUZZER) as BuzzerServer

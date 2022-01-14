@@ -1,4 +1,4 @@
-import { MenuItem } from "@mui/material"
+import { MenuItem, SelectChangeEvent } from "@mui/material"
 import React, { ChangeEvent } from "react"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import SelectWithLabel from "../ui/SelectWithLabel"
@@ -12,10 +12,8 @@ export default function SelectService(props: {
 }) {
     const { services, serviceId, onChange, helperText, friendlyName } = props
 
-    const handleChange = async (
-        ev: ChangeEvent<{ name?: string; value: unknown }>
-    ) => {
-        const id = ev.target.value as string
+    const handleChange = async (ev: SelectChangeEvent<string>) => {
+        const id = ev.target.value
         onChange(id)
     }
     return (

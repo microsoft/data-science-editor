@@ -16,7 +16,6 @@ export default function LossAccChart(props: {
         <Suspense>
             <VegaLite
                 spec={{
-                    title: { timestamp },
                     width: chartProps.CHART_WIDTH,
                     height: chartProps.CHART_HEIGHT,
                     data: { values: accData },
@@ -43,7 +42,6 @@ export default function LossAccChart(props: {
             />
             <VegaLite
                 spec={{
-                    title: { timestamp },
                     width: chartProps.CHART_WIDTH,
                     height: chartProps.CHART_HEIGHT,
                     data: { values: lossData },

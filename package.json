@@ -151,6 +151,7 @@
     "buildml4f": "cd ml4f && yarn",
     "buildpxt": "cd pxt-jacdac && sh mk.sh",
     "buildmodels": "cd static/models && sh mk.sh",
+    "builddocsts": "node node_modules/typescript/bin/tsc -b src",
     "buildworkercsv": "cd src/workers/csv && node ../../../node_modules/microbundle/dist/cli.js build -f modern --no-compress --types --ts-config tsconfig.json",
     "buildworkerdata": "cd src/workers/data && node ../../../node_modules/microbundle/dist/cli.js build -f modern --no-compress --types --ts-config tsconfig.json",
     "buildworkertf": "cd src/workers/tf && node ../../../node_modules/microbundle/dist/cli.js build -f modern --no-compres --types --ts-config tsconfig.json",

@@ -369,7 +369,7 @@ function ModelBlockEditorWithContext(props: {
     const toggleTrainModelDialog = () => toggleDialog("model")
     const toggleTestModelDialog = () => toggleDialog("trained_model")
     const toggleNewClassifierDialog = () => toggleDialog("classifier")
-    const toggleDialog = (dialog: string) => {
+    const toggleDialog = (dialog) => {
         if (dialog != "none") setVisibleDialog(dialog)
         else setVisibleDialog("none")
     }

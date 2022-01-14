@@ -11,7 +11,8 @@ export default function useBlocklyEvents(workspace: Blockly.WorkspaceSvg) {
             const { type } = event
             switch (type) {
                 case Blockly.Events.BLOCK_CHANGE: {
-                    const change = event as Blockly.Events.Change
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    const change = event as any as Blockly.Events.Change
                     const block = workspace.getBlockById(change.blockId)
                     // notify twin that the value changed
                     const twinInput = block.inputList[1]

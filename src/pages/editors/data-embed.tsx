@@ -152,7 +152,7 @@ export default function Page() {
                     break
                 }
                 case "chartexport": {
-                    handleChartExport(data)
+                    handleChartExport(data as DslChartExportMessage)
                     break
                 }
                 case "transform": {

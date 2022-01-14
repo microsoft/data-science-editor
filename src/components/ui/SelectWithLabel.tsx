@@ -4,6 +4,7 @@ import {
     InputLabel,
     MenuItem,
     Select,
+    SelectChangeEvent,
 } from "@mui/material"
 import React, { ChangeEvent, ReactNode } from "react"
 import { useId } from "react-use-id-hook"
@@ -17,7 +18,7 @@ export default function SelectWithLabel(props: {
     placeholder?: string
     type?: string
     fullWidth?: boolean
-    onChange?: (ev: ChangeEvent<{ name?: string; value: unknown }>) => void
+    onChange?: (ev: SelectChangeEvent<unknown>) => void
     onClose?: (ev: ChangeEvent<unknown>) => void
     helperText?: string
     children?: ReactNode

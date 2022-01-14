@@ -1,4 +1,4 @@
-import { MenuItem } from "@mui/material"
+import { MenuItem, SelectChangeEvent } from "@mui/material"
 import React, { ChangeEvent, useContext } from "react"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
@@ -12,10 +12,8 @@ export default function SelectDevice(props: {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { devices, deviceId, onChange } = props
 
-    const handleDeviceChange = async (
-        ev: ChangeEvent<{ name?: string; value: unknown }>
-    ) => {
-        const id = ev.target.value as string
+    const handleDeviceChange = async (ev: SelectChangeEvent<string>) => {
+        const id = ev.target.value
         onChange(id)
         const device = bus.node(id) as JDDevice
         await device?.identify()

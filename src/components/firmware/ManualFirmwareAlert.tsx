@@ -1,5 +1,11 @@
-import { Box, Grid, MenuItem, Typography } from "@mui/material"
-import React, { ChangeEvent, useContext, useState } from "react"
+import {
+    Box,
+    Grid,
+    MenuItem,
+    SelectChangeEvent,
+    Typography,
+} from "@mui/material"
+import React, { useContext, useState } from "react"
 // tslint:disable-next-line: no-submodule-imports
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import Alert from "../ui/Alert"
@@ -31,16 +37,12 @@ function ManualFirmware() {
     const [store, setStore] = useState<string>(stores?.[0] || "")
 
     const handleDeviceChange = (newId: string) => setDeviceId(newId)
-    const handleStoreChange = (
-        ev: ChangeEvent<{ name?: string; value: unknown }>
-    ) => {
-        const store = ev.target.value as string
+    const handleStoreChange = (ev: SelectChangeEvent<string>) => {
+        const store = ev.target.value
         setStore(store)
     }
-    const handleFirmwareChange = (
-        ev: ChangeEvent<{ name?: string; value: unknown }>
-    ) => {
-        const id = ev.target.value as string
+    const handleFirmwareChange = (ev: SelectChangeEvent<string>) => {
+        const id = ev.target.value
         setFirmwareId(id)
     }
 

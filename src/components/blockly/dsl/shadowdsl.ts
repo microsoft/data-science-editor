@@ -1,7 +1,7 @@
 import { Block } from "blockly"
 import { SMap } from "../../../../jacdac-ts/src/jdom/utils"
 import {
-    ColorInputDefnition,
+    ColorInputDefinition,
     NumberInputDefinition,
     OptionsInputDefinition,
 } from "../toolbox"
@@ -142,7 +142,7 @@ const shadowDsl: BlockDomainSpecificLanguage = {
             type: `jacdac_color`,
             message0: `%1`,
             args0: [
-                <ColorInputDefnition>{
+                <ColorInputDefinition>{
                     type: "field_colour",
                     name: "col",
                     colour: "#ff0000",

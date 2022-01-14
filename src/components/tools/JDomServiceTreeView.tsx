@@ -62,7 +62,7 @@ export default function JDomServiceTreeView(
             onNodeSelect={handleSelect}
         >
             <ServiceTreeItem
-                key={service.nodeId}
+                key={"node:" + service.nodeId}
                 service={service}
                 expanded={expanded}
                 selected={selected}

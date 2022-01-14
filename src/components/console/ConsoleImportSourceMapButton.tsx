@@ -23,7 +23,6 @@ export default function ConsoleImportSourceMapButton() {
         <ImportButton
             text="Import MakeCode source map"
             onFilesUploaded={handleFilesUploaded}
-            filesLimit={1}
             acceptedFiles={[".srcmap"]}
             icon={true}
         />
