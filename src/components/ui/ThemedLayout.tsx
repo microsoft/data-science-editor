@@ -21,10 +21,12 @@ import { AppInsightsErrorBoundary } from "../hooks/useAnalytics"
 import { HostedSimulatorsProvider } from "../HostedSimulatorsContext"
 import { ConsoleProvider } from "../console/ConsoleContext"
 
+/*
 declare module "@mui/styles/defaultTheme" {
     // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface DefaultTheme extends Theme {}
 }
+*/
 
 export default function ThemedLayout(props: {
     theme: Theme

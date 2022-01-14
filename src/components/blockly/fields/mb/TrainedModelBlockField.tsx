@@ -71,9 +71,7 @@ function TrainedModelDisplayWidget() {
         ],
     }
 
-    const [chartType, setChartType] = useState<
-        "confusion matrix" | "dataset plot"
-    >("confusion matrix")
+    const [chartType, setChartType] = useState<string>("confusion matrix")
 
     const { sourceBlock } = useContext(WorkspaceContext)
     const services = resolveBlockServices(sourceBlock)
@@ -128,8 +126,8 @@ function TrainedModelDisplayWidget() {
 
                 // for confusion matrix and dataset plot predict on dataset
                 if (
-                    selectedChart == "confusion matrix" ||
-                    selectedChart == "dataset plot"
+                    selectedChart === "confusion matrix" ||
+                    selectedChart === "dataset plot"
                 ) {
                     const predictMsg = {
                         worker: "tf",

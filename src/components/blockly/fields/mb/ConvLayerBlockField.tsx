@@ -38,6 +38,7 @@ export interface ConvLayerFieldValue {
     kernelSize: number
     strideSize: number
     activation: string
+    parametersVisible?: boolean
 }
 
 function LayerParameterWidget(props: { initFieldValue: ConvLayerFieldValue }) {

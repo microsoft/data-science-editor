@@ -149,7 +149,7 @@ function ExpandIconWidget() {
     )
 }
 
-export default class ExpandModelBlockField extends ReactInlineField {
+export default class ExpandModelBlockField extends ReactInlineField<any> {
     static KEY = "model_field_key"
 
     constructor(value: string) {

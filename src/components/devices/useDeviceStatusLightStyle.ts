@@ -1,3 +1,4 @@
+/*
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 
 const statusHue = 32
@@ -102,7 +103,6 @@ export default function useDeviceStatusLightStyle(
     device: JDDevice,
     options?: LedAnimationProps
 ) {
-    /*
     const bootloader = useChange(device, d => d.hasService(SRV_BOOTLOADER))
     const identifying = useChange(device, d => d?.identifying)
     TODO
@@ -116,7 +116,7 @@ export default function useDeviceStatusLightStyle(
         : bootloader
         ? bootloaderAnimation
         : undefined
-    */
 
     return {}
 }
+*/

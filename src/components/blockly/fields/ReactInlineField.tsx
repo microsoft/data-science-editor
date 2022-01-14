@@ -10,7 +10,7 @@ import Blockly, { Events } from "blockly"
 import { WorkspaceProvider } from "../WorkspaceContext"
 import { WebAudioProvider } from "../../ui/WebAudioContext"
 
-export default class ReactInlineField extends ReactField<unknown> {
+export default class ReactInlineField<T = unknown> extends ReactField<T> {
     protected container: HTMLDivElement
     protected resizeObserver: ResizeObserver
 

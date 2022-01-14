@@ -1,4 +1,10 @@
-import { Grid, MenuItem, TextField, Typography } from "@mui/material"
+import {
+    Grid,
+    MenuItem,
+    SelectChangeEvent,
+    TextField,
+    Typography,
+} from "@mui/material"
 import React, {
     ChangeEvent,
     lazy,
@@ -128,16 +134,14 @@ function LightCommand(props: { service: JDService; expanded: boolean }) {
             setSending(false)
         }
     }
-    const handleCommandChange = (
-        ev: ChangeEvent<{ name?: string; value: unknown }>
-    ) => {
-        const newName = ev.target.value as string
+    const handleCommandChange = (ev: SelectChangeEvent<string>) => {
+        const newName = ev.target.value
         setCommand(lightCommands.find(cmd => cmd.name === newName))
     }
     const handleOffsetChange = (ev: ChangeEvent<{ value: string }>) => {
         setOffset(ev.target.value)
     }
-    const handleModeChange = (ev: ChangeEvent<any>) => {
+    const handleModeChange = (ev: SelectChangeEvent<string>) => {
         const v = parseInt(ev.target.value)
         if (!isNaN(v)) setMode(v)
     }
@@ -393,7 +397,7 @@ export default function DashboardLEDPixel(props: DashboardServiceProps) {
         )
     const handleLedClick: (index: number) => void = async (index: number) => {
         if (isNaN(penColor)) return
-        
+
         const encoded = lightEncode(
             `setone % #
 show 20`,

@@ -10,6 +10,7 @@ import {
     MenuItem,
     Select,
     TextField,
+    SelectChangeEvent,
 } from "@mui/material"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import NavigateNextIcon from "@mui/icons-material/NavigateNext"
@@ -101,10 +102,8 @@ export default function NewClassifierDialog(props: {
         setClassifierName(event.target.value.trim())
     }
 
-    const handleClassifierTypeChange = (
-        event: React.ChangeEvent<{ value: unknown }>
-    ) => {
-        setClassifierType(event.target.value as string)
+    const handleClassifierTypeChange = (event: SelectChangeEvent<string>) => {
+        setClassifierType(event.target.value)
     }
 
     const handleCancel = () => {

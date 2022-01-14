@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogContent, Grid, MenuItem } from "@mui/material"
+import { Button, Dialog, DialogContent, Grid, MenuItem, SelectChangeEvent } from "@mui/material"
 import React, { useMemo, useState } from "react"
 import { useId } from "react-use-id-hook"
 import { serviceSpecifications } from "../../../jacdac-ts/src/jdom/spec"
@@ -18,8 +18,8 @@ export default function SelectServiceDialog(props: {
     const specDefinitions = useMemo(() => serviceSpecifications(), [])
     const { mobile } = useMediaQueries()
 
-    const handleChange = (ev: React.ChangeEvent<{ value: unknown }>) => {
-        setSelected(ev.target.value as string)
+    const handleChange = (ev: SelectChangeEvent<string>) => {
+        setSelected(ev.target.value)
     }
     const handleCancel = () => {
         onClose(undefined)

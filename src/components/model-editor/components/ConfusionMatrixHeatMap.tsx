@@ -65,7 +65,6 @@ export default function ConfusionMatrixHeatMap(props: {
                     <VegaLite
                         actions={false}
                         spec={{
-                            title: { timestamp },
                             width: chartProps.CHART_WIDTH,
                             height: chartProps.CHART_HEIGHT,
                             mark: "rect",

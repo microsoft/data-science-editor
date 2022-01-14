@@ -96,7 +96,8 @@ export default function DataSetPlot(props: {
     const handleChangedX = event => setXAxis(event.target.value)
     const handleChangedY = event => setYAxis(event.target.value)
 
-    const configTooltip = () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const configTooltip: () => any = () => {
         const spec = [
             {
                 field: "name",
@@ -167,7 +168,6 @@ export default function DataSetPlot(props: {
                     <VegaLite
                         actions={false}
                         spec={{
-                            title: { timestamp },
                             width: chartProps.CHART_WIDTH,
                             height: chartProps.CHART_HEIGHT,
                             data: { values: dataSetPoints },

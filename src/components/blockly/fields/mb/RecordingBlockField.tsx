@@ -55,10 +55,10 @@ function RecordingParameterWidget(props: {
     )
 }
 
-export default class RecordingBlockField extends ReactInlineField {
+export default class RecordingBlockField extends ReactInlineField<RecordingBlockFieldValue> {
     static KEY = "recording_block_field_key"
 
-    constructor(value: string, previousValue?: any) {
+    constructor(value: string, previousValue?: RecordingBlockFieldValue) {
         super(value)
         if (previousValue)
             this.value = { ...this.defaultValue, ...previousValue }

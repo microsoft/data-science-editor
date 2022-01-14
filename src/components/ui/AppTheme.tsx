@@ -3,16 +3,17 @@ import {
     responsiveFontSizes,
     DeprecatedThemeOptions,
     ThemeProvider,
-    Theme,
     StyledEngineProvider,
 } from "@mui/material"
 import React, { useContext } from "react"
 import DarkModeContext from "./DarkModeContext"
 
+/*
 declare module "@mui/styles/defaultTheme" {
     // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface DefaultTheme extends Theme {}
 }
+*/
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function AppTheme(props: any) {
