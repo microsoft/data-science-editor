@@ -1,6 +1,6 @@
 import React, { useCallback } from "react"
 import CodeSandboxButton from "./CodeSandboxButton"
-import { packageJson } from "../../../jacdac-ts/package.json"
+import packageJson from "../../../jacdac-ts/package.json"
 
 export default function VanillaCodeButton(props: {
     title?: string

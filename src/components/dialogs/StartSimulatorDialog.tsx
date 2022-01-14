@@ -11,7 +11,8 @@ import {
 import AppContext from "../AppContext"
 import React, { useContext, useMemo, useRef } from "react"
 import { useId } from "react-use-id-hook"
-import servers, {
+import {
+    serviceProviderDefinitions,
     addServiceProvider,
     ServiceProviderDefinition,
 } from "../../../jacdac-ts/src/servers/servers"
@@ -65,7 +66,7 @@ export default function StartSimulatorDialog(props: {
         simulator?: HostedSimulatorDefinition
     }[] = useMemo(
         () => [
-            ...servers()
+            ...serviceProviderDefinitions()
                 .filter(
                     server =>
                         !sensor ||
@@ -120,7 +121,7 @@ export default function StartSimulatorDialog(props: {
         }
     const handleAddAll = async () => {
         const allProviderDefinitions = uniqueMap(
-            servers().filter(hd => hd.serviceClasses.length === 1),
+            serviceProviderDefinitions().filter(hd => hd.serviceClasses.length === 1),
             hd => hd.serviceClasses[0].toString(),
             h => h
         )

@@ -4,7 +4,8 @@ import { startServiceProviderFromServiceClass } from "../../../jacdac-ts/src/ser
 import { BuzzerCmd, SRV_BUZZER } from "../../../jacdac-ts/src/jdom/constants"
 import { Packet } from "../../../jacdac-ts/src/jdom/packet"
 import useServices from "./useServices"
-import BuzzerServer, {
+import {
+    BuzzerServer,
     BuzzerTone,
     tonePayload,
 } from "../../../jacdac-ts/src/servers/buzzerserver"

@@ -14,7 +14,8 @@ import { Button } from "gatsby-theme-material-ui"
 import { ModelRunnerClient } from "../../../jacdac-ts/src/clients/modelrunnerclient"
 import RegisterInput from "../../components/RegisterInput"
 import CircularProgressWithLabel from "../../components/ui/CircularProgressWithLabel"
-import SensorAggregatorClient, {
+import {
+    SensorAggregatorClient,
     SensorAggregatorConfig,
 } from "../../../jacdac-ts/src/clients/sensoraggregatorclient"
 import SensorAggregatorConfigView from "../../components/SensorAggregatorConfigView"

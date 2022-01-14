@@ -11,7 +11,8 @@ import {
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
 import useServiceServer from "../hooks/useServiceServer"
-import HIDMouseServer, {
+import {
+    HIDMouseServer,
     renderHidMouseButtons,
 } from "../../../jacdac-ts/src/servers/hidmouseserver"
 import useChange from "../../jacdac/useChange"

@@ -1,6 +1,7 @@
 import React from "react"
 import Button from "../ui/Button"
-import Transport, {
+import {
+    Transport,
     ConnectionState,
 } from "../../../jacdac-ts/src/jdom/transport/transport"
 import { Badge } from "@mui/material"

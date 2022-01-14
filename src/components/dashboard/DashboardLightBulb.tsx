@@ -29,7 +29,7 @@ export default function DashboardLightBulb(props: DashboardServiceProps) {
         400,
         5
     )
-    const dimmeableRegister = useRegister(service, LightBulbReg.Dimmeable)
+    const dimmeableRegister = useRegister(service, LightBulbReg.Dimmable)
     const dimmeable = useRegisterBoolValue(dimmeableRegister, props)
 
     if (brightness === undefined) return <CircularProgress />

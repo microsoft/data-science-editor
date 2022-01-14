@@ -13,8 +13,8 @@ import {
 } from "../../jacdac-ts/src/jdom/transport/webserial"
 import IFrameBridgeClient from "../components/makecode/iframebridgeclient"
 import { Flags } from "../../jacdac-ts/src/jdom/flags"
-import { GamepadServerManager } from "../../jacdac-ts/src/servers/gamepadservermanager"
-import { jacdacTsPackage } from "../../jacdac-ts/package.json"
+import { GamepadHostManager } from "../../jacdac-ts/src/servers/gamepadservermanager"
+import jacdacTsPackage from "../../jacdac-ts/package.json"
 import { analytics, EventProperties } from "../components/hooks/useAnalytics"
 import {
     CONNECTION_STATE,
@@ -25,7 +25,8 @@ import {
     DEVICE_RESTART,
     LoggerPriority,
 } from "../../jacdac-ts/src/jdom/constants"
-import Transport, {
+import {
+    Transport,
     ConnectionState,
 } from "../../jacdac-ts/src/jdom/transport/transport"
 import { JDDevice } from "../../jacdac-ts/src/jdom/device"
@@ -131,7 +132,7 @@ function createBus(): JDBus {
     b.minLoggerPriority = LoggerPriority.Log
     // parentOrigin: args.parentOrigin,
     //if (Flags.webUSB) b.setBackgroundFirmwareScans(true)
-    if (UIFlags.gamepad) GamepadServerManager.start(b)
+    if (UIFlags.gamepad) GamepadHostManager.start(b)
 
     // tslint:disable-next-line: no-unused-expression
     // always start bridge

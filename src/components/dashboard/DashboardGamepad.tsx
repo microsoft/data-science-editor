@@ -2,7 +2,8 @@ import React, { CSSProperties, useMemo, useRef, useState } from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import useServiceServer from "../hooks/useServiceServer"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
-import GamepadServer, {
+import {
+    GamepadServer,
     GAMEPAD_DPAD_BUTTONS,
     GAMEPAD_GAMEPAD_EXTRA_BUTTONS,
 } from "../../../jacdac-ts/src/servers/gamepadserver"

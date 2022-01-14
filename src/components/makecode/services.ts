@@ -1,4 +1,4 @@
-import { makecodeServicesData } from "../../../jacdac-ts/jacdac-spec/services/makecode-extensions.json"
+import makecodeServicesData from "../../../jacdac-ts/jacdac-spec/services/makecode-extensions.json"
 import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec"
 
 export function makeCodeServices(): jdspec.MakeCodeServiceInfo[] {
