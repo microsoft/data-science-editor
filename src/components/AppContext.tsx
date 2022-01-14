@@ -10,20 +10,14 @@ import React, {
 import { ERROR } from "../../jacdac-ts/src/jdom/constants"
 import { errorCode } from "../../jacdac-ts/src/jdom/error"
 import { Packet } from "../../jacdac-ts/src/jdom/packet"
-import { JDService } from "../../jacdac-ts/src/jdom/service"
 import { isCancelError } from "../../jacdac-ts/src/jdom/utils"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import useAnalytics from "./hooks/useAnalytics"
-import useLocalStorage from "./hooks/useLocalStorage"
 import PacketsContext from "./PacketsContext"
 
 import Suspense from "./ui/Suspense"
 const StartSimulatorDialog = lazy(
     () => import("./dialogs/StartSimulatorDialog")
-)
-const SelectRoleDialog = lazy(() => import("./dialogs/SelectRoleDialog"))
-const ConnectTransportDialog = lazy(
-    () => import("./dialogs/ConnectTransportDialog")
 )
 
 export enum DrawerType {
@@ -52,7 +46,6 @@ export interface AppProps {
         variant?: "success" | "warning" | "info"
     ) => void
     toggleShowDeviceHostsDialog: (options?: ShowDeviceHostsOptions) => void
-    toggleShowConnectTransportDialog: () => void
     selectedPacket: Packet
     setSelectedPacket: (pkt: Packet) => void
     showWebCam: boolean
@@ -69,7 +62,6 @@ const AppContext = createContext<AppProps>({
     setError: () => {},
     enqueueSnackbar: () => {},
     toggleShowDeviceHostsDialog: () => {},
-    toggleShowConnectTransportDialog: () => {},
     selectedPacket: undefined,
     setSelectedPacket: () => {},
     showWebCam: false,
@@ -88,8 +80,6 @@ export const AppProvider = ({ children }) => {
     const [toolsMenu, _setToolsMenu] = useState(false)
     const [showDeviceHostsDialog, setShowDeviceHostsDialog] = useState(false)
     const [showDeviceHostsSensors, setShowDeviceHostsSensors] = useState(false)
-    const [showConnectTransportDialog, setShowConnectTransportDialog] =
-        useState(false)
     const { trackError } = useAnalytics()
     const [selectedPacket, setSelectedPacket] = useState<Packet>(undefined)
     const [showWebCam, setShowWebCam] = useState(false)
@@ -146,12 +136,6 @@ export const AppProvider = ({ children }) => {
         if (!b) setToolsMenu(false)
     }
 
-    const toggleShowConnectTransportDialog = async () => {
-        const b = !showConnectTransportDialog
-        setShowConnectTransportDialog(b)
-        if (!b) setToolsMenu(false)
-    }
-
     return (
         <AppContext.Provider
             value={{
@@ -164,7 +148,6 @@ export const AppProvider = ({ children }) => {
                 setError,
                 enqueueSnackbar,
                 toggleShowDeviceHostsDialog,
-                toggleShowConnectTransportDialog,
                 selectedPacket,
                 setSelectedPacket,
                 showWebCam,
@@ -172,23 +155,13 @@ export const AppProvider = ({ children }) => {
             }}
         >
             {children}
-            {showDeviceHostsDialog && (
-                <Suspense>
-                    <StartSimulatorDialog
-                        open={showDeviceHostsDialog}
-                        onClose={toggleShowDeviceHostsDialog}
-                        sensor={showDeviceHostsSensors}
-                    />
-                </Suspense>
-            )}
-            {showConnectTransportDialog && (
-                <Suspense>
-                    <ConnectTransportDialog
-                        open={showConnectTransportDialog}
-                        onClose={toggleShowConnectTransportDialog}
-                    />
-                </Suspense>
-            )}
+            <Suspense>
+                <StartSimulatorDialog
+                    open={showDeviceHostsDialog}
+                    onClose={toggleShowDeviceHostsDialog}
+                    sensor={showDeviceHostsSensors}
+                />
+            </Suspense>
         </AppContext.Provider>
     )
 }

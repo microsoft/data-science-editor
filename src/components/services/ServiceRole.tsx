@@ -1,11 +1,11 @@
 import { Button, styled } from "@mui/material"
-import React, { useState } from "react"
+import React, { lazy, useState } from "react"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import useChange from "../../jacdac/useChange"
-import SelectRoleDialog from "../dialogs/SelectRoleDialog"
 import Suspense from "../ui/Suspense"
 import useRoleManagerClient from "./useRoleManagerClient"
 import useServiceRole from "./useServiceRole"
+const SelectRoleDialog = lazy(() => import("../dialogs/SelectRoleDialog"))
 
 const RoleButton = styled(Button)({
     textTransform: "none",

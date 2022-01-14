@@ -125,7 +125,7 @@ export default function ToolsDrawer() {
     } = useContext(AppContext)
     const bus = useBus()
     const passive = useChange(bus, _ => _.passive)
-    const { enqueueSnackbar, toggleShowConnectTransportDialog } =
+    const { enqueueSnackbar } =
         useContext(AppContext)
     const { toggleDarkMode, darkMode } = useContext(DarkModeContext)
     const { converters, setConverter } = useUnitConverters()
@@ -153,11 +153,6 @@ export default function ToolsDrawer() {
     }
     const handleTogglePassive = () => bus.passive = !bus.passive
     const links = [
-        {
-            text: "Connect",
-            action: toggleShowConnectTransportDialog,
-            icon: <JacdacIcon />,
-        },
         {
             text: "Start simulator",
             action: handleShowStartSimulator,
