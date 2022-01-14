@@ -42,7 +42,7 @@ export default function DeviceActions(props: {
         device,
         _ => _.services({ serviceClass: SRV_SETTINGS })?.[0]
     )
-    const _showProxy = useChange(device, _ => showProxy && _.services({ serviceClass: SRV_UNIQUE_BRAIN})?.length)
+    const _showProxy = useChange(device, _ => !!showProxy && _.services({ serviceClass: SRV_UNIQUE_BRAIN})?.length)
 
     const handleIdentify = async () => await device.identify()
     const handleReset = async () => await device.reset()
@@ -76,7 +76,7 @@ export default function DeviceActions(props: {
                     icon={<FingerprintIcon />}
                 />
             )}
-            {showSettings && settings && (
+            {showSettings && !!settings && (
                 <CmdButton
                     trackName="device.settings"
                     size="small"

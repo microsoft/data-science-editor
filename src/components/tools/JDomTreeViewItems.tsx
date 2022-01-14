@@ -1,8 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react"
-// tslint:disable-next-line: no-submodule-imports
-// tslint:disable-next-line: no-submodule-imports
-// tslint:disable-next-line: no-submodule-imports match-default-export-name
-// tslint:disable-next-line: no-submodule-imports match-default-export-name
+import React, { useMemo, useCallback } from "react"
 import JDDevice from "../../../jacdac-ts/src/jdom/device"
 import JDEvent from "../../../jacdac-ts/src/jdom/event"
 import JDService from "../../../jacdac-ts/src/jdom/service"
@@ -129,14 +125,6 @@ function DeviceProductInformationTreeItem(props: { device: JDDevice }) {
             labelTo={to}
             labelText={specification.name}
             labelInfo={specification.company}
-            actions={
-                <DeviceActions
-                    device={device}
-                    showReset={true}
-                    showProxy={true}
-                    hideIdentity={true}
-                />
-            }
         ></StyledTreeItem>
     )
 }
@@ -168,7 +156,14 @@ function AnnounceFlagsTreeItem(props: { device: JDDevice }) {
         <StyledTreeItem
             nodeId={`${id}:flags`}
             labelText={text}
-            labelInfo={`0x${announceFlags.toString(16)}`}
+            actions={
+                <DeviceActions
+                    device={device}
+                    showReset={true}
+                    showProxy={true}
+                    hideIdentity={true}
+                />
+            }
         ></StyledTreeItem>
     )
 }
