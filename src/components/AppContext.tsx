@@ -52,7 +52,6 @@ export interface AppProps {
         variant?: "success" | "warning" | "info"
     ) => void
     toggleShowDeviceHostsDialog: (options?: ShowDeviceHostsOptions) => void
-    showSelectRoleDialog: (srv: JDService) => void
     toggleShowConnectTransportDialog: () => void
     selectedPacket: Packet
     setSelectedPacket: (pkt: Packet) => void
@@ -70,7 +69,6 @@ const AppContext = createContext<AppProps>({
     setError: () => {},
     enqueueSnackbar: () => {},
     toggleShowDeviceHostsDialog: () => {},
-    showSelectRoleDialog: () => {},
     toggleShowConnectTransportDialog: () => {},
     selectedPacket: undefined,
     setSelectedPacket: () => {},
@@ -92,8 +90,6 @@ export const AppProvider = ({ children }) => {
     const [showDeviceHostsSensors, setShowDeviceHostsSensors] = useState(false)
     const [showConnectTransportDialog, setShowConnectTransportDialog] =
         useState(false)
-    const [showSelectRoleDialogService, setShowSelectRoleDialogService] =
-        useState<JDService>(undefined)
     const { trackError } = useAnalytics()
     const [selectedPacket, setSelectedPacket] = useState<Packet>(undefined)
     const [showWebCam, setShowWebCam] = useState(false)
@@ -156,11 +152,6 @@ export const AppProvider = ({ children }) => {
         if (!b) setToolsMenu(false)
     }
 
-    const handleCloseRoleDialog = () =>
-        setShowSelectRoleDialogService(undefined)
-    const showSelectRoleDialog = (srv: JDService) =>
-        setShowSelectRoleDialogService(srv)
-
     return (
         <AppContext.Provider
             value={{
@@ -173,7 +164,6 @@ export const AppProvider = ({ children }) => {
                 setError,
                 enqueueSnackbar,
                 toggleShowDeviceHostsDialog,
-                showSelectRoleDialog,
                 toggleShowConnectTransportDialog,
                 selectedPacket,
                 setSelectedPacket,
@@ -188,14 +178,6 @@ export const AppProvider = ({ children }) => {
                         open={showDeviceHostsDialog}
                         onClose={toggleShowDeviceHostsDialog}
                         sensor={showDeviceHostsSensors}
-                    />
-                </Suspense>
-            )}
-            {showSelectRoleDialogService && (
-                <Suspense>
-                    <SelectRoleDialog
-                        service={showSelectRoleDialogService}
-                        onClose={handleCloseRoleDialog}
                     />
                 </Suspense>
             )}
