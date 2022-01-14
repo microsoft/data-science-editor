@@ -1,0 +1,82 @@
+---
+order: 20
+---
+# Developer tools
+
+The first step of a Jacdac project is to create a bus which will handle all the communication and
+the management of the service client.
+Since the bus communicates with hardware, configuring it may vary **a lot** whether you are on a Raspberry Pi or a desktop computer.
+
+To provide a consistent experience, we recommend using the Jacdac "devtools" at first.
+The developer tools rely on the browser WebUSB/WebSerial/WebBluetooth to connect to the hardware devices and uses a local web socket server
+to pipe the packets to the your .NET app.
+
+## Installation
+
+-   install the .NET CLI ([Windows, Linux, MacOS](https://docs.microsoft.com/en-us/dotnet/core/install/), [Raspberry Pi](https://docs.microsoft.com/en-us/dotnet/iot/deployment))
+-   install the [jacdac.devtools](https://www.nuget.org/packages/Jacdac.DevTools/) tool using `dotnet`
+
+```
+dotnet tool install -g jacdac.devtools
+```
+
+-   to update , run this command
+
+```
+dotnet tool update -g jacdac.devtools
+```
+
+-   launch the devtools server (and keep it running)
+
+```
+jacdac.devtools
+```
+
+Once the devtools server is running, you should be able to navigate to the local web server and see a Jacdac dashboard.
+
+- open [http://localhost:8081/](http://localhost:8081/)
+
+## Connect to DevTools by code
+
+Add the `WebSocketTransport` from the [Jacdac.NET.Transports.WebSockets](https://www.nuget.org/packages/Jacdac.NET.Transports.WebSockets/) nuget package
+to your Jacdac bus transports to enable communications with the devtools server.
+
+```cs
+using Jacdac;
+using Jacdac.Transports.WebSockets;
+...
+var bus = new JDBus(new WebSocketTransport(), ...);
+```
+
+or, adding on the fly,
+
+```cs
+using Jacdac;
+using Jacdac.Transports.WebSockets;
+...
+var bus = new JDBus(...);
+...
+bus.AddTransport(new WebSocketTransport());
+```
+
+### Access from other computers
+
+If you wish to access the devtools dashboard from another computer,
+use the ``--internet`` and the web server will bind to **all** network interface.
+
+```
+jacdac.devtools --internet
+```
+
+### Hardware connection using JacHAT
+
+If you wish to connect the dashboard to the [JacHAT](https://microsoft.github.io/jacdac-docs/devices/microsoft/research/jmspibridgev37v37) on Raspberry Pi, 
+add the ``--spi`` argument.
+
+```
+jacdac.devtools --internet --spi
+```
+
+### Additional arguments
+
+- `--stats`, output various Jacdac statistics periodically to the console

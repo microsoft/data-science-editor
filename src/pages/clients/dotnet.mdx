@@ -21,51 +21,6 @@ More information
 
 Let's learn about Jacdac for .NET by creating a couple small projects.
 
-### Developer tools
-
-The first step of a Jacdac project is to create a bus which will handle all the communication and
-the management of the service client.
-Since the bus communicates with hardware, configuring it may vary **a lot** whether you are on a Raspberry Pi or a desktop computer.
-
-To provide a consistent experience, we recommend using the Jacdac "devtools" at first.
-The developer tools rely on the browser WebUSB/WebSerial/WebBluetooth to connect to the hardware devices and uses a local web socket server
-to pipe the packets to the your .NET app.
-
--   Install the [Jacdac.DevTools](https://www.nuget.org/packages/Jacdac.DevTools/) tool from nuget
-
-```
-dotnet tool install -g jacdac.devtools
-```
-
--   launch the devtools server (and keep it running)
-
-```
-jacdac.devtools
-```
-
-Once the devtools server is running, you should be able to navigate to the local web server and see a dashboard
-where you can inspect physical and simulated devices.
-
-- open [http://localhost:8081/](http://localhost:8081/)
-- use the `WebSocketTransport` from the [Jacdac.NET.Transports.WebSockets](https://www.nuget.org/packages/Jacdac.NET.Transports.WebSockets/) package
-
-#### Access from other computers
-
-If you wish to access the dashboard from another computer,
-use the ``--internet`` and the web server will bind to **all** network interface.
-
-```
-jacdac.devtools --internet
-```
-
-#### JacHAT
-
-If you wish to connect the dashboard to the JacHAT on raspberry pi, add the ``--spi`` argument.
-
-```
-jacdac.devtools --internet --spi
-```
-
 ### Blinky
 
 Let's build a blinking LED light project, assuming you have a [LED](/services/led) module.
@@ -119,38 +74,11 @@ while (led.IsConnected)
 
 All together, we get:
 
-```cs
-using System.Threading;
-using Jacdac;
-using Jacdac.Transport.WebSockets;
-using Jacdac.Clients;
-
-static class Program {
-    static void Main() {
-        var bus = new JDBus(WebSocketTransport.Create())
-        var led = new LedClient(bus, "led");
-        // wait for jacdac to find a LED service
-        led.Connected += (s, e) =>
-        {
-            // as long as the led is connected, blink
-            while (led.IsConnected)
-            {
-                // send red 24-bit RGB color (same as HTML colors!)
-                led.SetColor(0xff0000);
-                Thread.Sleep(500);
-                // send blue
-                led.SetColor(0x0000ff);
-                Thread.Sleep(500);
-            }
-        };
-    }
-}
-```
+`embed:samples/blinky.g.cs`
 
 ## What's next?
 
 -   [Projects](/clients/dotnet/projects/)
-
 
 ### Connecting to hardware
 
