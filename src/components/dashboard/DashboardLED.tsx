@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import useServiceServer from "../hooks/useServiceServer"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
-import LEDServer from "../../../jacdac-ts/src/servers/ledserver"
+import { LEDServer } from "../../../jacdac-ts/src/servers/ledserver"
 import {
     COMMAND_RECEIVE,
     LedCmd,
@@ -13,7 +13,7 @@ import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
 import AppContext from "../AppContext"
 import LEDWidget from "../widgets/LEDWidget"
 import useRegister from "../hooks/useRegister"
-import Packet from "../../../jacdac-ts/src/jdom/packet"
+import { Packet } from "../../../jacdac-ts/src/jdom/packet"
 
 export default function DashboardLED(props: DashboardServiceProps) {
     const { service } = props

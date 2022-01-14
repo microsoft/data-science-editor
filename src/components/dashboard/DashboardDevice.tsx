@@ -15,7 +15,7 @@ import {
     SRV_SETTINGS,
     SRV_UNIQUE_BRAIN,
 } from "../../../jacdac-ts/src/jdom/constants"
-import JDDevice from "../../../jacdac-ts/src/jdom/device"
+import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import useChange from "../../jacdac/useChange"
 import DeviceName from "../devices/DeviceName"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name

@@ -1,5 +1,5 @@
 import { DependencyList, useEffect, useMemo } from "react"
-import JDClient from "../../../jacdac-ts/src/jdom/client"
+import { JDClient } from "../../../jacdac-ts/src/jdom/client"
 
 export default function useClient<TClient extends JDClient>(
     factory: () => TClient,

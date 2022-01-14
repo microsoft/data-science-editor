@@ -1,5 +1,5 @@
 import React, { useContext } from "react"
-import JDBridge from "../../../jacdac-ts/src/jdom/bridge"
+import { JDBridge } from "../../../jacdac-ts/src/jdom/bridge"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import useChange from "../../jacdac/useChange"
 import IconButtonWithTooltip from "./IconButtonWithTooltip"

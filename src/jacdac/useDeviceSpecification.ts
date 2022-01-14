@@ -1,4 +1,4 @@
-import JDDevice from "../../jacdac-ts/src/jdom/device"
+import { JDDevice } from "../../jacdac-ts/src/jdom/device"
 import useDeviceProductIdentifier from "./useDeviceProductIdentifier"
 import useChange from "./useChange"
 import useDeviceCatalog from "../components/devices/useDeviceCatalog"

@@ -18,8 +18,8 @@ import Tooltip from "./ui/Tooltip"
 import MakeCodeSnippet from "./makecode/MakeCodeSnippet"
 import Suspense from "./ui/Suspense"
 
-import Prism from "prism-react-renderer/prism";
-(typeof global !== "undefined" ? global : window).Prism = Prism;
+import Prism from "prism-react-renderer/prism"
+;(typeof global !== "undefined" ? global : window).Prism = Prism
 require("prismjs/components/prism-csharp")
 
 const TraceSnippet = lazy(() => import("./trace/TraceSnippet"))
@@ -64,7 +64,11 @@ function HighlightedCode(props: {
             {({ className, style, tokens, getLineProps, getTokenProps }) => (
                 <pre className={className} style={{ ...style }}>
                     {!!url && (
-                        <Link style={{ float: "right" }} href={url} underline="hover">
+                        <Link
+                            style={{ float: "right" }}
+                            href={url}
+                            underline="hover"
+                        >
                             <Tooltip title={`Open ${url}`}>
                                 <IconButton size="large">
                                     <LaunchIcon />

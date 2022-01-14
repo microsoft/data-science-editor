@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, List } from "@mui/material"
 import React from "react"
 import { useId } from "react-use-id-hook"
-import JDService from "../../../jacdac-ts/src/jdom/service"
+import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import useRoleManagerClient from "../services/useRoleManagerClient"
 import useChange from "../../jacdac/useChange"
 import RoleListItem from "../services/RoleListItem"

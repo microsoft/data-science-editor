@@ -76,7 +76,10 @@ export default function ServiceMarkdown(props: {
                 </li>
                 <li>
                     Read{" "}
-                    <Link to="/reference/service-specification/" underline="hover">
+                    <Link
+                        to="/reference/service-specification/"
+                        underline="hover"
+                    >
                         Service Specification Language
                     </Link>{" "}
                     reference

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react"
 import { createTheme, responsiveFontSizes } from "@mui/material"
 import ThemedLayout from "../../components/ui/ThemedLayout"
-import JDDevice from "../../../jacdac-ts/src/jdom/device"
+import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import { isReading, isValueOrIntensity } from "../../../jacdac-ts/src/jdom/spec"
 import { strcmp } from "../../../jacdac-ts/src/jdom/utils"
 import Helmet from "react-helmet"

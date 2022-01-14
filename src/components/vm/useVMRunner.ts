@@ -7,8 +7,8 @@ import {
 } from "../../../jacdac-ts/src/vm/runner"
 import AppContext from "../AppContext"
 import { ERROR, TRACE } from "../../../jacdac-ts/src/jdom/constants"
-import Flags from "../../../jacdac-ts/src/jdom/flags"
-import RoleManager from "../../../jacdac-ts/src/jdom/rolemanager"
+import { Flags } from "../../../jacdac-ts/src/jdom/flags"
+import { RoleManager } from "../../../jacdac-ts/src/jdom/rolemanager"
 
 export default function useVMRunner(
     roleManager: RoleManager,

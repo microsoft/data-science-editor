@@ -1,12 +1,12 @@
 import React, { CSSProperties, useState } from "react"
-import JDDevice from "../../../jacdac-ts/src/jdom/device"
+import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import CmdButton from "../CmdButton"
 import useServiceProvider from "../hooks/useServiceProvider"
 import useDeviceName from "./useDeviceName"
 import { rgbToHtmlColor } from "../../../jacdac-ts/src/jdom/utils"
 import useChange from "../../jacdac/useChange"
 import IdentifyDialog from "../dialogs/IdentifyDialog"
-import JDServerServiceProvider from "../../../jacdac-ts/src/jdom/servers/serverserviceprovider"
+import { JDServerServiceProvider } from "../../../jacdac-ts/src/jdom/servers/serverserviceprovider"
 import DeviceIcon from "./DeviceIcon"
 
 export default function DeviceAvatar(props: {

@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material"
 import React, { useContext } from "react"
 import { SRV_BOOTLOADER } from "../../jacdac-ts/src/jdom/constants"
-import JDDevice from "../../jacdac-ts/src/jdom/device"
+import { JDDevice } from "../../jacdac-ts/src/jdom/device"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import DeviceCard from "./devices/DeviceCard"
 import useGridBreakpoints from "./useGridBreakpoints"

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import JDEvent from "../../jacdac-ts/src/jdom/event"
+import { JDEvent } from "../../jacdac-ts/src/jdom/event"
 import { CHANGE } from "../../jacdac-ts/src/jdom/constants"
 
 export default function useEventCount(event: JDEvent) {

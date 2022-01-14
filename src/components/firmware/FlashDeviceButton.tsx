@@ -8,7 +8,7 @@ import {
 } from "@mui/material"
 import { Alert } from "@mui/material"
 import React, { useContext, useEffect, useState } from "react"
-import JDDevice from "../../../jacdac-ts/src/jdom/device"
+import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import {
     flashFirmwareBlob,
     updateApplicable,

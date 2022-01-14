@@ -17,7 +17,7 @@ import FileSystemContext, { FileSystemProvider } from "../FileSystemContext"
 import ServiceManagerContext from "../ServiceManagerContext"
 import { resolveBlockServices } from "../blockly/WorkspaceContext"
 
-import Flags from "../../../jacdac-ts/src/jdom/flags"
+import { Flags } from "../../../jacdac-ts/src/jdom/flags"
 import Suspense from "../ui/Suspense"
 import { visitToolbox, MB_WARNINGS_CATEGORY } from "../blockly/toolbox"
 import FieldDataSet from "../FieldDataSet"

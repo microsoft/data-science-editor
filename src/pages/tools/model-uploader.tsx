@@ -5,13 +5,13 @@ import {
     SRV_MODEL_RUNNER,
     ModelRunnerReg,
 } from "../../../jacdac-ts/src/jdom/constants"
-import JDService from "../../../jacdac-ts/src/jdom/service"
+import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import ServiceList from "../../components/ServiceList"
 import ConnectAlert from "../../components/alert/ConnectAlert"
 import { useDbJSON, useDbUint8Array } from "../../components/useDb"
 import Alert from "../../components/ui/Alert"
 import { Button } from "gatsby-theme-material-ui"
-import ModelRunnerClient from "../../../jacdac-ts/src/clients/modelrunnerclient"
+import { ModelRunnerClient } from "../../../jacdac-ts/src/clients/modelrunnerclient"
 import RegisterInput from "../../components/RegisterInput"
 import CircularProgressWithLabel from "../../components/ui/CircularProgressWithLabel"
 import SensorAggregatorClient, {

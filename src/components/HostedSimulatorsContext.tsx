@@ -11,7 +11,7 @@ import React, {
 } from "react"
 import { PACKET_PROCESS, PACKET_SEND } from "../../jacdac-ts/src/jdom/constants"
 import { inIFrame } from "../../jacdac-ts/src/jdom/iframeclient"
-import Packet from "../../jacdac-ts/src/jdom/packet"
+import { Packet } from "../../jacdac-ts/src/jdom/packet"
 import { randomDeviceId } from "../../jacdac-ts/src/jdom/random"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import useWindowEvent from "./hooks/useWindowEvent"
@@ -23,7 +23,7 @@ import {
 import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
 import Suspense from "./ui/Suspense"
 import { UIFlags } from "../jacdac/providerbus"
-import Flags from "../../jacdac-ts/src/jdom/flags"
+import { Flags } from "../../jacdac-ts/src/jdom/flags"
 
 const PREFIX = "HostedSimulatorsContext"
 

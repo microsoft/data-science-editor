@@ -1,8 +1,8 @@
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import { CHANGE } from "../../../jacdac-ts/src/jdom/constants"
-import JDBridge from "../../../jacdac-ts/src/jdom/bridge"
+import { JDBridge } from "../../../jacdac-ts/src/jdom/bridge"
 import Peer, { DataConnection } from "peerjs"
-import Flags from "../../../jacdac-ts/src/jdom/flags"
+import { Flags } from "../../../jacdac-ts/src/jdom/flags"
 
 export interface PeerConnection {
     label: string

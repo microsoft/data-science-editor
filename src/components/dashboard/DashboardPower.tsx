@@ -10,7 +10,7 @@ import {
 } from "../../jacdac/useRegisterValue"
 import SvgWidget from "../widgets/SvgWidget"
 import useServiceServer from "../hooks/useServiceServer"
-import ReflectedLightServer from "../../../jacdac-ts/src/servers/reflectedlightserver"
+import { ReflectedLightServer } from "../../../jacdac-ts/src/servers/reflectedlightserver"
 import PowerButton from "../widgets/PowerButton"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import useRegister from "../hooks/useRegister"

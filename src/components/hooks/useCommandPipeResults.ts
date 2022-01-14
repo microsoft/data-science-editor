@@ -1,8 +1,8 @@
 import { DependencyList, useEffect, useState } from "react"
 import { EVENT } from "../../../jacdac-ts/src/jdom/constants"
-import JDEvent from "../../../jacdac-ts/src/jdom/event"
+import { JDEvent } from "../../../jacdac-ts/src/jdom/event"
 import { PackedValues } from "../../../jacdac-ts/src/jdom/pack"
-import JDService from "../../../jacdac-ts/src/jdom/service"
+import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import useChange from "../../jacdac/useChange"
 import useMounted from "./useMounted"
 

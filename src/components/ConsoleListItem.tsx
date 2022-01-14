@@ -1,7 +1,7 @@
 import React from "react"
 import { styled } from "@mui/material/styles"
 import { ListItem, Typography, ListItemIcon, Chip } from "@mui/material"
-import Packet from "../../jacdac-ts/src/jdom/packet"
+import { Packet } from "../../jacdac-ts/src/jdom/packet"
 import { decodePacketData } from "../../jacdac-ts/src/jdom/pretty"
 import clsx from "clsx"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports

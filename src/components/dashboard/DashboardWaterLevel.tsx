@@ -7,7 +7,7 @@ import useServiceServer from "../hooks/useServiceServer"
 import useWidgetSize from "../widgets/useWidgetSize"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import { Grid, Slider } from "@mui/material"
-import SensorServer from "../../../jacdac-ts/src/servers/sensorserver"
+import { SensorServer } from "../../../jacdac-ts/src/servers/sensorserver"
 import useRegister from "../hooks/useRegister"
 
 export default function DashbaordWaterLevel(props: DashboardServiceProps) {

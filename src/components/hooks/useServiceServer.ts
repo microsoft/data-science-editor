@@ -1,6 +1,6 @@
 import { useMemo } from "react"
-import JDService from "../../../jacdac-ts/src/jdom/service"
-import JDServiceServer from "../../../jacdac-ts/src/jdom/servers/serviceserver"
+import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import { JDServiceServer } from "../../../jacdac-ts/src/jdom/servers/serviceserver"
 import useServiceProvider from "./useServiceProvider"
 
 export default function useServiceServer<T extends JDServiceServer>(

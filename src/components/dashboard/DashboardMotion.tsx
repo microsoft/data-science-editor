@@ -5,7 +5,7 @@ import useServiceServer from "../hooks/useServiceServer"
 import SvgWidget from "../widgets/SvgWidget"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import useSvgButtonProps from "../hooks/useSvgButtonProps"
-import SensorServer from "../../../jacdac-ts/src/servers/sensorserver"
+import { SensorServer } from "../../../jacdac-ts/src/servers/sensorserver"
 import { MotionReg } from "../../../jacdac-ts/src/jdom/constants"
 import useRegister from "../hooks/useRegister"
 

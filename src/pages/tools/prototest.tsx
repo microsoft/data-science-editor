@@ -14,10 +14,10 @@ import {
     SRV_PROTO_TEST,
 } from "../../../jacdac-ts/src/jdom/constants"
 import useChange from "../../jacdac/useChange"
-import JDService from "../../../jacdac-ts/src/jdom/service"
-import JDRegister from "../../../jacdac-ts/src/jdom/register"
+import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import { JDRegister } from "../../../jacdac-ts/src/jdom/register"
 import ConnectAlert from "../../components/alert/ConnectAlert"
-import JDField from "../../../jacdac-ts/src/jdom/field"
+import { JDField } from "../../../jacdac-ts/src/jdom/field"
 import {
     jdpack,
     jdpackEqual,
@@ -28,14 +28,14 @@ import DeviceName from "../../components/devices/DeviceName"
 import DeviceActions from "../../components/devices/DeviceActions"
 import useEffectAsync from "../../components/useEffectAsync"
 import TestCard from "../../components/TestCard"
-import Packet from "../../../jacdac-ts/src/jdom/packet"
-import JDEvent from "../../../jacdac-ts/src/jdom/event"
+import { Packet } from "../../../jacdac-ts/src/jdom/packet"
+import { JDEvent } from "../../../jacdac-ts/src/jdom/event"
 import { AlertTitle } from "@mui/material"
 import Alert from "../../components/ui/Alert"
-import ProtocolTestServer from "../../../jacdac-ts/src/jdom/servers/protocoltestserver"
+import { ProtocolTestServer } from "../../../jacdac-ts/src/jdom/servers/protocoltestserver"
 import { Link } from "gatsby-theme-material-ui"
 import { cryptoRandomUint32 } from "../../../jacdac-ts/src/jdom/random"
-import JDServerServiceProvider from "../../../jacdac-ts/src/jdom/servers/serverserviceprovider"
+import { JDServerServiceProvider } from "../../../jacdac-ts/src/jdom/servers/serverserviceprovider"
 import { useId } from "react-use-id-hook"
 
 function randomFieldPayload(field: JDField) {

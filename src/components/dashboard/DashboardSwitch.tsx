@@ -5,7 +5,7 @@ import {
 } from "../../jacdac/useRegisterValue"
 import useServiceServer from "../hooks/useServiceServer"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
-import SwitchServer from "../../../jacdac-ts/src/servers/switchserver"
+import { SwitchServer } from "../../../jacdac-ts/src/servers/switchserver"
 import React from "react"
 import { Switch } from "@mui/material"
 import { useId } from "react-use-id-hook"

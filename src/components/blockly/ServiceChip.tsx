@@ -9,7 +9,7 @@ import { BlockSvg, FieldVariable } from "blockly"
 import { Chip } from "@mui/material"
 import { SENSOR_BLOCK } from "./toolbox"
 import { toServiceName, toServiceType } from "./dsl/servicesbase"
-import JDService from "../../../jacdac-ts/src/jdom/service"
+import { JDService } from "../../../jacdac-ts/src/jdom/service"
 
 export default function ServiceChip(props: { service: JDService }) {
     const { workspace } = useContext(BlockContext)

@@ -8,7 +8,7 @@ import SvgWidget from "../widgets/SvgWidget"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import useServiceServer from "../hooks/useServiceServer"
 import { Grid, Slider } from "@mui/material"
-import SensorServer from "../../../jacdac-ts/src/servers/sensorserver"
+import { SensorServer } from "../../../jacdac-ts/src/servers/sensorserver"
 import {
     CompassReg,
     SystemStatusCodes,

@@ -3,7 +3,7 @@
 import React from "react"
 import { Grid } from "@mui/material"
 import { uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
-import serviceProviderDefinitions from "../../../jacdac-ts/src/servers/servers"
+import { serviceProviderDefinitions } from "../../../jacdac-ts/src/servers/servers"
 import { hasServiceView } from "../../components/dashboard/DashboardServiceWidget"
 import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec"
 import { withPrefix } from "gatsby-link"

@@ -1,5 +1,5 @@
 import { CHANGE } from "../../../jacdac-ts/src/jdom/constants"
-import JDEventSource from "../../../jacdac-ts/src/jdom/eventsource"
+import { JDEventSource } from "../../../jacdac-ts/src/jdom/eventsource"
 
 import FieldDataSet, { Recording } from "../FieldDataSet"
 

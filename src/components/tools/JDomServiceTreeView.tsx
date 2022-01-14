@@ -10,7 +10,7 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import { JDomTreeViewProps, ServiceTreeItem } from "./JDomTreeViewItems"
-import JDService from "../../../jacdac-ts/src/jdom/service"
+import { JDService } from "../../../jacdac-ts/src/jdom/service"
 
 const PREFIX = "JDomServiceTreeView"
 

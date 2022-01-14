@@ -14,7 +14,7 @@ import {
     META_PIPE,
     META_TRACE,
 } from "../../../jacdac-ts/src/jdom/constants"
-import Packet from "../../../jacdac-ts/src/jdom/packet"
+import { Packet } from "../../../jacdac-ts/src/jdom/packet"
 import PacketBadge from "../PacketBadge"
 import PacketDataLayout from "../PacketDataLayout"
 import PacketList from "../PacketList"

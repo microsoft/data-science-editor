@@ -7,10 +7,10 @@ import React, {
 } from "react"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import { CHANGE, PROGRESS } from "../../jacdac-ts/src/jdom/constants"
-import Trace from "../../jacdac-ts/src/jdom/trace/trace"
-import TracePlayer from "../../jacdac-ts/src/jdom/trace/traceplayer"
-import TraceRecorder from "../../jacdac-ts/src/jdom/trace/tracerecorder"
-import TraceView from "../../jacdac-ts/src/jdom/trace/traceview"
+import { Trace } from "../../jacdac-ts/src/jdom/trace/trace"
+import { TracePlayer } from "../../jacdac-ts/src/jdom/trace/traceplayer"
+import { TraceRecorder } from "../../jacdac-ts/src/jdom/trace/tracerecorder"
+import { TraceView } from "../../jacdac-ts/src/jdom/trace/traceview"
 import useLocalStorage from "./hooks/useLocalStorage"
 
 export interface PacketsProps {

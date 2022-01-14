@@ -1,5 +1,5 @@
 import React from "react"
-import JDDevice from "../../../jacdac-ts/src/jdom/device"
+import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import AvatarGroup from "@mui/material/AvatarGroup"
 import DeviceAvatar from "./DeviceAvatar"
 

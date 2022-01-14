@@ -7,7 +7,7 @@ import useWidgetTheme from "../widgets/useWidgetTheme"
 import useServiceServer from "../hooks/useServiceServer"
 import useWidgetSize from "../widgets/useWidgetSize"
 import useSvgButtonProps from "../hooks/useSvgButtonProps"
-import TrafficLightServer from "../../../jacdac-ts/src/servers/trafficlightserver"
+import { TrafficLightServer } from "../../../jacdac-ts/src/servers/trafficlightserver"
 import useKeyboardNavigationProps from "../hooks/useKeyboardNavigationProps"
 import useRegister from "../hooks/useRegister"
 

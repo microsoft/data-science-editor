@@ -13,9 +13,9 @@ import {
     DEVICE_ANNOUNCE,
     DEVICE_DISCONNECT,
 } from "../../../jacdac-ts/src/jdom/constants"
-import JDEventSource from "../../../jacdac-ts/src/jdom/eventsource"
-import JDService from "../../../jacdac-ts/src/jdom/service"
-import RoleManager from "../../../jacdac-ts/src/jdom/rolemanager"
+import { JDEventSource } from "../../../jacdac-ts/src/jdom/eventsource"
+import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import { RoleManager } from "../../../jacdac-ts/src/jdom/rolemanager"
 import { VMProgramRunner } from "../../../jacdac-ts/src/vm/runner"
 import useChange from "../../jacdac/useChange"
 import { FileSystemDirectory } from "../fs/fsdom"

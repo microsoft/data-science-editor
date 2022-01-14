@@ -5,7 +5,7 @@ import {
     EVENT,
     SystemReg,
 } from "../../../jacdac-ts/src/jdom/constants"
-import ButtonServer from "../../../jacdac-ts/src/servers/buttonserver"
+import { ButtonServer } from "../../../jacdac-ts/src/servers/buttonserver"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import ButtonWidget from "../widgets/ButtonWidget"
 import useServiceServer from "../hooks/useServiceServer"

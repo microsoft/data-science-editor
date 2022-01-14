@@ -4,7 +4,7 @@ import {
     DEVICE_ANNOUNCE,
     SRV_CONTROL,
 } from "../../../jacdac-ts/src/jdom/constants"
-import Packet from "../../../jacdac-ts/src/jdom/packet"
+import { Packet } from "../../../jacdac-ts/src/jdom/packet"
 import useBus from "../../jacdac/useBus"
 
 export default function useForceProxy(proxy: boolean) {

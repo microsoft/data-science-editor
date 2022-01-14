@@ -2,7 +2,7 @@ import Blockly from "blockly"
 import { useEffect, useMemo } from "react"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
 import useServices from "../hooks/useServices"
-import Flags from "../../../jacdac-ts/src/jdom/flags"
+import { Flags } from "../../../jacdac-ts/src/jdom/flags"
 import { Theme, useTheme } from "@mui/material"
 import { registerFields } from "./fields/fields"
 import {

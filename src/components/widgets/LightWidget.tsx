@@ -4,10 +4,10 @@ import {
     LedPixelVariant,
     RENDER,
 } from "../../../jacdac-ts/src/jdom/constants"
-import LedPixelServer from "../../../jacdac-ts/src/servers/ledpixelserver"
+import { LedPixelServer } from "../../../jacdac-ts/src/servers/ledpixelserver"
 import SvgWidget from "../widgets/SvgWidget"
 import useWidgetTheme from "../widgets/useWidgetTheme"
-import JDService from "../../../jacdac-ts/src/jdom/service"
+import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import LoadingProgress from "../ui/LoadingProgress"
 import useRegister from "../hooks/useRegister"

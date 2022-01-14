@@ -1,5 +1,5 @@
 import Blockly, { Block } from "blockly"
-import Flags from "../../../jacdac-ts/src/jdom/flags"
+import { Flags } from "../../../jacdac-ts/src/jdom/flags"
 import { SMap, toMap } from "../../../jacdac-ts/src/jdom/utils"
 import BlockDomainSpecificLanguage, { resolveDsl } from "./dsl/dsl"
 import { ReactFieldBase } from "./fields/ReactFieldBase"

@@ -147,13 +147,13 @@ function FilterMenu(props: {
                     {
                         cmd: "requires-ack",
                         label: "Filter packet that require acks",
-                        value: true
+                        value: true,
                     },
                     {
                         cmd: "ack",
                         label: "Show ack packets",
-                        value: true
-                    },                    
+                        value: true,
+                    },
                     {
                         cmd: "announce",
                         value: false,

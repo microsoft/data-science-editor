@@ -2,7 +2,7 @@ import { useEffect, useState, useContext, useCallback } from "react"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import { startServiceProviderFromServiceClass } from "../../../jacdac-ts/src/servers/servers"
 import { BuzzerCmd, SRV_BUZZER } from "../../../jacdac-ts/src/jdom/constants"
-import Packet from "../../../jacdac-ts/src/jdom/packet"
+import { Packet } from "../../../jacdac-ts/src/jdom/packet"
 import useServices from "./useServices"
 import BuzzerServer, {
     BuzzerTone,

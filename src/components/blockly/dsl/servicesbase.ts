@@ -20,7 +20,7 @@ import {
     SRV_SERVO,
     SystemReg,
 } from "../../../../jacdac-ts/src/jdom/constants"
-import Flags from "../../../../jacdac-ts/src/jdom/flags"
+import { Flags } from "../../../../jacdac-ts/src/jdom/flags"
 import {
     isHighLevelEvent,
     isHighLevelRegister,
@@ -73,7 +73,7 @@ import {
 import { Variables } from "blockly"
 import { paletteColorByIndex } from "./palette"
 import { VariableJSON } from "./workspacejson"
-import JDService from "../../../../jacdac-ts/src/jdom/service"
+import { JDService } from "../../../../jacdac-ts/src/jdom/service"
 
 const SET_STATUS_LIGHT_BLOCK = "jacdac_set_status_light"
 const ROLE_BOUND_EVENT_BLOCK = "jacdac_role_bound_event"

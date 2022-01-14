@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, Grid } from "@mui/material"
 import React, { useCallback, useState } from "react"
 import { ControlAnnounceFlags } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
-import JDDevice from "../../../jacdac-ts/src/jdom/device"
+import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import useDeviceSpecification from "../../jacdac/useDeviceSpecification"
 import DeviceName from "../devices/DeviceName"
 import useDeviceImage from "../devices/useDeviceImage"

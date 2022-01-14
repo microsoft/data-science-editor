@@ -1,8 +1,8 @@
 import { useContext, useMemo } from "react"
 import useChange from "./useChange"
-import RoleManager from "../../jacdac-ts/src/jdom/rolemanager"
+import { RoleManager } from "../../jacdac-ts/src/jdom/rolemanager"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
-import JDService from "../../jacdac-ts/src/jdom/service"
+import { JDService } from "../../jacdac-ts/src/jdom/service"
 
 /**
  * A hook that allow to create a service role mapping

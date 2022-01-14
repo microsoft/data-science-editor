@@ -1,5 +1,5 @@
 import React from "react"
-import JDEvent from "../../jacdac-ts/src/jdom/event"
+import { JDEvent } from "../../jacdac-ts/src/jdom/event"
 import { Typography, Badge } from "@mui/material"
 import KindIcon from "./KindIcon"
 import useEventCount from "../jacdac/useEventCount"

@@ -1,6 +1,6 @@
 import { useContext } from "react"
-import JDDevice from "../../../jacdac-ts/src/jdom/device"
-import JDServiceProvider from "../../../jacdac-ts/src/jdom/servers/serviceprovider"
+import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
+import { JDServiceProvider } from "../../../jacdac-ts/src/jdom/servers/serviceprovider"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import useChange from "../../jacdac/useChange"
 

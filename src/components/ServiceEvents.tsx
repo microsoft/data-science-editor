@@ -1,5 +1,5 @@
 import React from "react"
-import JDService from "../../jacdac-ts/src/jdom/service"
+import { JDService } from "../../jacdac-ts/src/jdom/service"
 import { isEvent } from "../../jacdac-ts/src/jdom/spec"
 import EventInput from "./EventInput"
 import AutoGrid from "./ui/AutoGrid"

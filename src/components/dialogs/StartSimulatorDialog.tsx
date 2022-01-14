@@ -15,7 +15,7 @@ import servers, {
     addServiceProvider,
     ServiceProviderDefinition,
 } from "../../../jacdac-ts/src/servers/servers"
-import Flags from "../../../jacdac-ts/src/jdom/flags"
+import { Flags } from "../../../jacdac-ts/src/jdom/flags"
 import { delay, uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import useMediaQueries from "../hooks/useMediaQueries"

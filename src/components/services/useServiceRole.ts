@@ -1,5 +1,5 @@
 import { ROLE_CHANGE } from "../../../jacdac-ts/src/jdom/constants"
-import JDService from "../../../jacdac-ts/src/jdom/service"
+import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import useEventRaised from "../../jacdac/useEventRaised"
 
 export default function useServiceRole(service: JDService) {

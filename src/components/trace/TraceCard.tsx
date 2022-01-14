@@ -7,7 +7,7 @@ import {
 } from "@mui/material"
 import React, { useContext } from "react"
 import { prettyDuration } from "../../../jacdac-ts/src/jdom/pretty"
-import Trace from "../../../jacdac-ts/src/jdom/trace/trace"
+import { Trace } from "../../../jacdac-ts/src/jdom/trace/trace"
 import Markdown from "../ui/Markdown"
 import PacketsContext from "../PacketsContext"
 import { navigate } from "gatsby"

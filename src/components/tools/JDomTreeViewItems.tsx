@@ -1,8 +1,8 @@
 import React, { useMemo, useCallback } from "react"
-import JDDevice from "../../../jacdac-ts/src/jdom/device"
-import JDEvent from "../../../jacdac-ts/src/jdom/event"
-import JDService from "../../../jacdac-ts/src/jdom/service"
-import JDRegister from "../../../jacdac-ts/src/jdom/register"
+import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
+import { JDEvent } from "../../../jacdac-ts/src/jdom/event"
+import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import { JDRegister } from "../../../jacdac-ts/src/jdom/register"
 import useChange from "../../jacdac/useChange"
 import {
     isRegister,

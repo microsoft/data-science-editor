@@ -20,7 +20,7 @@ import {
     JD_SERVICE_INDEX_CRC_ACK,
     JD_SERVICE_INDEX_PIPE,
 } from "../../jacdac-ts/src/jdom/constants"
-import Packet from "../../jacdac-ts/src/jdom/packet"
+import { Packet } from "../../jacdac-ts/src/jdom/packet"
 import { fromHex, toHex } from "../../jacdac-ts/src/jdom/utils"
 import PaperBox from "./ui/PaperBox"
 import Tooltip from "./ui/Tooltip"

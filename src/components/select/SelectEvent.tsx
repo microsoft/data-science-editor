@@ -1,6 +1,6 @@
 import React from "react"
 import MenuItem from "@mui/material/MenuItem"
-import JDEvent from "../../../jacdac-ts/src/jdom/event"
+import { JDEvent } from "../../../jacdac-ts/src/jdom/event"
 import SelectWithLabel from "../ui/SelectWithLabel"
 
 export default function SelectEvent(props: {

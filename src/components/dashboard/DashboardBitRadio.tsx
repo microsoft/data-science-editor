@@ -3,7 +3,7 @@ import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { BitRadioCmd } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import { REPORT_RECEIVE } from "../../../jacdac-ts/src/jdom/constants"
 import { jdunpack, PackedValues } from "../../../jacdac-ts/src/jdom/pack"
-import Packet from "../../../jacdac-ts/src/jdom/packet"
+import { Packet } from "../../../jacdac-ts/src/jdom/packet"
 
 const HORIZON = 10
 

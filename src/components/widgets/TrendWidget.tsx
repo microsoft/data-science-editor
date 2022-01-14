@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react"
 import { CHANGE } from "../../../jacdac-ts/src/jdom/constants"
-import JDRegister from "../../../jacdac-ts/src/jdom/register"
+import { JDRegister } from "../../../jacdac-ts/src/jdom/register"
 import useAnimationFrame from "../hooks/useAnimationFrame"
 import useServiceServer from "../hooks/useServiceServer"
 import SvgWidget from "./SvgWidget"

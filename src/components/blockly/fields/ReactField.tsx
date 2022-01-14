@@ -11,7 +11,7 @@ import { Box } from "@mui/material"
 import { BlockDefinition } from "../toolbox"
 import { assert } from "../../../../jacdac-ts/src/jdom/utils"
 import { ValueProvider } from "./ValueContext"
-import JDEventSource from "../../../../jacdac-ts/src/jdom/eventsource"
+import { JDEventSource } from "../../../../jacdac-ts/src/jdom/eventsource"
 import { CHANGE } from "../../../../jacdac-ts/src/jdom/constants"
 import {
     BlockServices,

@@ -12,7 +12,7 @@ import {
     Typography,
 } from "@mui/material"
 import useServiceClient from "../../jacdac/useServiceClient"
-import AzureIoTHubHealthClient from "../../../jacdac-ts/src/clients/azureiothubhealthclient"
+import { AzureIoTHubHealthClient } from "../../../jacdac-ts/src/clients/azureiothubhealthclient"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import {
     AzureIotHubHealthCmd,

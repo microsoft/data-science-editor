@@ -27,7 +27,7 @@ import {
     MOBILE_TOOLS_DRAWER_WIDTH,
 } from "../layout"
 import BridgeButtons from "../ui/BridgeButtons"
-import Flags from "../../../jacdac-ts/src/jdom/flags"
+import { Flags } from "../../../jacdac-ts/src/jdom/flags"
 import DrawerToolsButton from "./DrawerToolsButton"
 import ConnectButtons from "../buttons/ConnectButtons"
 

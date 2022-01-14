@@ -1,7 +1,7 @@
 import { DependencyList, useEffect, useState } from "react"
 import { REPORT_UPDATE } from "../../jacdac-ts/src/jdom/constants"
 import { PackedValues } from "../../jacdac-ts/src/jdom/pack"
-import JDRegister from "../../jacdac-ts/src/jdom/register"
+import { JDRegister } from "../../jacdac-ts/src/jdom/register"
 import { ellipse } from "../../jacdac-ts/src/jdom/utils"
 import useAnalytics, { EventProperties } from "../components/hooks/useAnalytics"
 import useEventRaised from "./useEventRaised"

@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useMemo } from "react"
 import { REPORT_RECEIVE } from "../../jacdac-ts/src/jdom/constants"
-import JDRegister from "../../jacdac-ts/src/jdom/register"
+import { JDRegister } from "../../jacdac-ts/src/jdom/register"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import FieldDataSet from "./FieldDataSet"
 import Trend from "./Trend"

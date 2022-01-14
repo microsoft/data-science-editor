@@ -26,14 +26,14 @@ import {
     WifiReg,
     WifiEvent,
 } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
-import JDService from "../../../jacdac-ts/src/jdom/service"
+import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { toHex, unique } from "../../../jacdac-ts/src/jdom/utils"
 import useInterval from "../hooks/useInterval"
 import useEvent from "../hooks/useEvent"
 import useCommandPipeResults from "../hooks/useCommandPipeResults"
 import ChipList from "../ui/ChipList"
 import useServiceServer from "../hooks/useServiceServer"
-import WifiServer from "../../../jacdac-ts/src/servers/wifiserver"
+import { WifiServer } from "../../../jacdac-ts/src/servers/wifiserver"
 import { Alert, AlertTitle } from "@mui/material"
 import { EVENT } from "../../../jacdac-ts/src/jdom/constants"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"

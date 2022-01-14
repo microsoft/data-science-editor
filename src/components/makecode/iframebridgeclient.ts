@@ -10,8 +10,8 @@ import {
     SRV_UNIQUE_BRAIN,
     SystemReg,
 } from "../../../jacdac-ts/src/jdom/constants"
-import JDBus from "../../../jacdac-ts/src/jdom/bus"
-import JDClient from "../../../jacdac-ts/src/jdom/client"
+import { JDBus } from "../../../jacdac-ts/src/jdom/bus"
+import { JDClient } from "../../../jacdac-ts/src/jdom/client"
 import {
     CHANGE,
     DEVICE_ANNOUNCE,
@@ -19,10 +19,10 @@ import {
     PACKET_PROCESS,
     PACKET_SEND,
 } from "../../../jacdac-ts/src/jdom/constants"
-import JDDevice from "../../../jacdac-ts/src/jdom/device"
+import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import { resolveMakecodeServiceFromClassIdentifier } from "./services"
-import Packet from "../../../jacdac-ts/src/jdom/packet"
-import JDService from "../../../jacdac-ts/src/jdom/service"
+import { Packet } from "../../../jacdac-ts/src/jdom/packet"
+import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import {
     arrayConcatMany,
     debounce,
@@ -30,7 +30,7 @@ import {
     unique,
 } from "../../../jacdac-ts/src/jdom/utils"
 import { inIFrame } from "../../../jacdac-ts/src/jdom/iframeclient"
-import JDRegister from "../../../jacdac-ts/src/jdom/register"
+import { JDRegister } from "../../../jacdac-ts/src/jdom/register"
 
 export interface PacketMessage {
     channel: "jacdac"

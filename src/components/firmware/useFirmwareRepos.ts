@@ -9,7 +9,7 @@ import {
     SRV_BOOTLOADER,
 } from "../../../jacdac-ts/src/jdom/constants"
 import useEventRaised from "../../jacdac/useEventRaised"
-import Packet from "../../../jacdac-ts/src/jdom/packet"
+import { Packet } from "../../../jacdac-ts/src/jdom/packet"
 import useDeviceSpecifications from "../devices/useDeviceSpecifications"
 import useDeviceCatalog from "../devices/useDeviceCatalog"
 import { dependencyId } from "../../../jacdac-ts/src/jdom/eventsource"

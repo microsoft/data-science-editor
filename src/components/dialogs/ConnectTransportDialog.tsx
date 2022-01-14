@@ -15,10 +15,10 @@ import ConnectButton from "../buttons/ConnectButton"
 import useDeviceImage from "../devices/useDeviceImage"
 import CardMediaWithSkeleton from "../ui/CardMediaWithSkeleton"
 import useDeviceSpecifications from "../devices/useDeviceSpecifications"
-import Transport from "../../../jacdac-ts/src/jdom/transport/transport"
+import { Transport } from "../../../jacdac-ts/src/jdom/transport/transport"
 import DialogTitleWithClose from "../ui/DialogTitleWithClose"
 import GridHeader from "../ui/GridHeader"
-import Flags from "../../../jacdac-ts/src/jdom/flags"
+import { Flags } from "../../../jacdac-ts/src/jdom/flags"
 
 function ConnectDeviceCard(props: { device: jdspec.DeviceSpec }) {
     const { device } = props

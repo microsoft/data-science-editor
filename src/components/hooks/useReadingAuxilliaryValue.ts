@@ -1,5 +1,5 @@
 import { SystemReg } from "../../../jacdac-ts/src/jdom/constants"
-import JDRegister from "../../../jacdac-ts/src/jdom/register"
+import { JDRegister } from "../../../jacdac-ts/src/jdom/register"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 
 export default function useReadingAuxilliaryValue(

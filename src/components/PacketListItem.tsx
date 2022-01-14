@@ -1,7 +1,7 @@
 import React, { useContext } from "react"
 import { styled } from "@mui/material/styles"
 import { ListItem, ListItemIcon, ListItemText, Box } from "@mui/material"
-import Packet from "../../jacdac-ts/src/jdom/packet"
+import { Packet } from "../../jacdac-ts/src/jdom/packet"
 import PacketBadge from "./PacketBadge"
 import AppContext, { DrawerType } from "./AppContext"
 import {

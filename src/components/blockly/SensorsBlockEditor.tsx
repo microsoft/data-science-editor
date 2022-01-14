@@ -1,6 +1,6 @@
 import { Grid, NoSsr } from "@mui/material"
 import React, { useContext, useMemo } from "react"
-import Flags from "../../../jacdac-ts/src/jdom/flags"
+import { Flags } from "../../../jacdac-ts/src/jdom/flags"
 import { BlockProvider } from "./BlockContext"
 import BlockDiagnostics from "./BlockDiagnostics"
 import BlockEditor from "./BlockEditor"

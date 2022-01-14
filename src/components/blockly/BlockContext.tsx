@@ -12,7 +12,7 @@ import {
     DEVICE_DISCONNECT,
 } from "../../../jacdac-ts/src/jdom/constants"
 import { arrayConcatMany, toMap } from "../../../jacdac-ts/src/jdom/utils"
-import RoleManager from "../../../jacdac-ts/src/jdom/rolemanager"
+import { RoleManager } from "../../../jacdac-ts/src/jdom/rolemanager"
 import bus from "../../jacdac/providerbus"
 import useRoleManager from "../hooks/useRoleManager"
 import useLocalStorage from "../hooks/useLocalStorage"

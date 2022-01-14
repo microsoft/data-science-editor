@@ -11,7 +11,7 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import useDevices from "../hooks/useDevices"
 import { DeviceTreeItem, JDomTreeViewProps } from "./JDomTreeViewItems"
-import Flags from "../../../jacdac-ts/src/jdom/flags"
+import { Flags } from "../../../jacdac-ts/src/jdom/flags"
 
 const PREFIX = "JDomTreeView"
 const classes = {

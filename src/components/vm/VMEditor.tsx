@@ -6,7 +6,7 @@ import React, {
     useMemo,
     useState,
 } from "react"
-import Flags from "../../../jacdac-ts/src/jdom/flags"
+import { Flags } from "../../../jacdac-ts/src/jdom/flags"
 import useVMRunner from "./useVMRunner"
 import VMDiagnostics from "./VMDiagnostics"
 import VMToolbar from "./VMToolbar"

@@ -1,5 +1,5 @@
 import React, { useContext } from "react"
-import JDDevice from "../../../jacdac-ts/src/jdom/device"
+import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import FingerprintIcon from "@mui/icons-material/Fingerprint"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name

@@ -15,7 +15,7 @@ import {
     NEW_LISTENER,
     REMOVE_LISTENER,
 } from "../../../jacdac-ts/src/jdom/constants"
-import JDNode from "../../../jacdac-ts/src/jdom/node"
+import { JDNode } from "../../../jacdac-ts/src/jdom/node"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import PaperBox from "../ui/PaperBox"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports

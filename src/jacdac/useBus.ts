@@ -1,5 +1,5 @@
 import { useContext } from "react"
-import JDBus from "../../jacdac-ts/src/jdom/bus"
+import { JDBus } from "../../jacdac-ts/src/jdom/bus"
 import JacdacContext, { JacdacContextProps } from "./Context"
 
 /**

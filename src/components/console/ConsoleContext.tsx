@@ -11,7 +11,7 @@ import {
     SRV_LOGGER,
 } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import { PACKET_REPORT } from "../../../jacdac-ts/src/jdom/constants"
-import Packet from "../../../jacdac-ts/src/jdom/packet"
+import { Packet } from "../../../jacdac-ts/src/jdom/packet"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import { UIFlags } from "../../jacdac/providerbus"
 import useChange from "../../jacdac/useChange"

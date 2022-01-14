@@ -7,7 +7,7 @@ import useServiceServer from "../hooks/useServiceServer"
 import useWidgetSize from "../widgets/useWidgetSize"
 import useThrottledValue from "../hooks/useThrottledValue"
 import useSvgButtonProps from "../hooks/useSvgButtonProps"
-import ReflectedLightServer from "../../../jacdac-ts/src/servers/reflectedlightserver"
+import { ReflectedLightServer } from "../../../jacdac-ts/src/servers/reflectedlightserver"
 import {
     ReflectedLightReg,
     ReflectedLightVariant,

@@ -17,8 +17,8 @@ import {
     SRV_LED,
     SRV_ROLE_MANAGER,
 } from "../../../jacdac-ts/src/jdom/constants"
-import JDService from "../../../jacdac-ts/src/jdom/service"
-import Packet from "../../../jacdac-ts/src/jdom/packet"
+import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import { Packet } from "../../../jacdac-ts/src/jdom/packet"
 // tslint:disable-next-line: no-submodule-imports
 import Table from "@mui/material/Table"
 // tslint:disable-next-line: no-submodule-imports
@@ -39,7 +39,7 @@ import ServiceManagerContext from "../../components/ServiceManagerContext"
 import useEffectAsync from "../../components/useEffectAsync"
 import { delay } from "../../../jacdac-ts/src/jdom/utils"
 import { dependencyId } from "../../../jacdac-ts/src/jdom/eventsource"
-import JDDevice from "../../../jacdac-ts/src/jdom/device"
+import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import { lightEncode } from "../../../jacdac-ts/src/jdom/light"
 import { LedPixelCmd, LedCmd } from "../../../jacdac-ts/src/jdom/constants"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"

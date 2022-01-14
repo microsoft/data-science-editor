@@ -10,7 +10,7 @@ import {
 import { Alert, AlertTitle } from "@mui/material"
 import React from "react"
 import { jdunpack, PackedValues } from "../../jacdac-ts/src/jdom/pack"
-import Packet from "../../jacdac-ts/src/jdom/packet"
+import { Packet } from "../../jacdac-ts/src/jdom/packet"
 import { unpackedToObject } from "../../jacdac-ts/src/jdom/packobject"
 import { toHex } from "../../jacdac-ts/src/jdom/utils"
 import CodeBlock from "./CodeBlock"

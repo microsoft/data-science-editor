@@ -6,7 +6,7 @@ import {
 } from "../../jacdac/useRegisterValue"
 import useServiceServer from "../hooks/useServiceServer"
 import useWidgetTheme from "../widgets/useWidgetTheme"
-import SensorServer from "../../../jacdac-ts/src/servers/sensorserver"
+import { SensorServer } from "../../../jacdac-ts/src/servers/sensorserver"
 import { LightBulbReg } from "../../../jacdac-ts/src/jdom/constants"
 import useRegister from "../hooks/useRegister"
 import { CircularProgress, Grid, Slider } from "@mui/material"

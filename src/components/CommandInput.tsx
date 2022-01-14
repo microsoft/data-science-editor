@@ -1,7 +1,7 @@
 import React, { useContext } from "react"
 import { Typography } from "@mui/material"
 import { InPipeReader } from "../../jacdac-ts/src/jdom/pipes"
-import JDService from "../../jacdac-ts/src/jdom/service"
+import { JDService } from "../../jacdac-ts/src/jdom/service"
 import DeviceName from "./devices/DeviceName"
 import { isReportOf } from "../../jacdac-ts/src/jdom/spec"
 import { packArguments } from "../../jacdac-ts/src/jdom/command"
@@ -10,7 +10,7 @@ import {
     printPacket,
     serviceName,
 } from "../../jacdac-ts/src/jdom/pretty"
-import Packet from "../../jacdac-ts/src/jdom/packet"
+import { Packet } from "../../jacdac-ts/src/jdom/packet"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import CmdButton from "./CmdButton"
 import { PackedValues } from "../../jacdac-ts/src/jdom/pack"

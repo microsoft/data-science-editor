@@ -8,7 +8,7 @@ import useServiceServer from "../hooks/useServiceServer"
 import { useId } from "react-use-id-hook"
 import useThrottledValue from "../hooks/useThrottledValue"
 import { Grid, Slider } from "@mui/material"
-import SensorServer from "../../../jacdac-ts/src/servers/sensorserver"
+import { SensorServer } from "../../../jacdac-ts/src/servers/sensorserver"
 import LoadingProgress from "../ui/LoadingProgress"
 import useRegister from "../hooks/useRegister"
 
