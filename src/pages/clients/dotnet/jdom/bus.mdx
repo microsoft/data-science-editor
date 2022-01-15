@@ -1,0 +1,37 @@
+# JDBus
+
+A **bus** is the top-level [JDOM node](/clients/dotnet/jdom/).
+It processes the incoming and outcoming packets,
+handles the connection to the underlying communiction transport
+and maintains a set of active [devices](/clients/dotnet/jdom/device/) nodes.
+
+- .NET Core: [Jacdac.NET](https://www.nuget.org/packages/Jacdac.NET/)
+- TinyCLR: Not on nuget yet.
+
+```cs
+using Jacdac;
+
+var bus = new JDBus(...);
+// dump the state of all known devices, services and registers
+bus.Changed += (s,e) => Console.WriteLine(bus.Describe());
+```
+
+The JDom provides a low-level access to the Jacdac infrastrure.
+
+## Recipes
+
+### Listing devices
+
+You can query the bus at receive a snapshot of the [devices](/clients/dotnet/jdom/device/).
+
+```cs
+var devices = bus.GetDevices()
+foreach(var device in devices)
+    Console.WriteLine(device)
+```
+
+## Events
+
+All bus state mutation are advertised by events. You can listen or subscribe to those events.
+At the JDom level, all event handlers are run within the same thread of the caller;
+so it is important to avoid blocking during a handler or you might start missing packets.

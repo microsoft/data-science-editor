@@ -1,0 +1,42 @@
+---
+title: JDOM
+order: 1
+---
+
+# .NET JDOM
+
+The JDOM module is a dependency-free JavaScript object model
+that reflects the state of the Jacdac elements:
+
+-   A **[bus](/clients/javascript/jdom/bus/)** is made of connected devices.
+-   A **[device](/clients/javascript/jdom/device/)** may host **services**.
+-   A **[service](/clients/javascript/jdom/service/)** has **[registers](/clients/javascript/jdom/register/)** and **[events](/clients/javascript/jdom/event/)**, accepts **commands**,
+    and may return **acks**.
+-   A **[register](/clients/javascript/jdom/register/)** is an addressed data location, organized in **[fields](/clients/javascript/jdom/field/)**,
+    , that may be get, set or streamed.
+-   Virtual servers to simulate devices.
+
+All the above elements are nodes in the [JDOM](/clients/javascript/jdom/). All elements implement a event emitter and observable pattern to
+easily data-bind them in a variety of UI frameworks.
+
+
+```cs
+using Jacdac;
+using Jacdac.Transports.Spi;
+
+var bus = new JDBus();
+bus.DeviceConnected += (s,e) => {
+    var device = e.Device;
+    Console.WriteLine($"{device} connected");
+    var services = device.GetServices();
+    foreach(var service in services) 
+    {
+        Console.WriteLine($"  {service}");
+        if (service.ServiceClass == Constants.ServiceClasses.Button) 
+        {
+            var up = service.GetEvent(Constants.ButtonEvent.Up);
+            up.Changed += (s, e) => Console.WriteLine($"  {service} is up!")
+        }
+    }
+};
+```
