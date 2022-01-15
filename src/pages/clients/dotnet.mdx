@@ -19,6 +19,15 @@ More information
 
 ![A JacHAT bridge device](./dotnet/jachat.jpg)
 
+## Overview
+
+Jacdac.NET provides a set of strongly-typed client classes that allow to interact with Jacdac physical or simulated modules.
+
+The client layer is built on top of the [JDom](/clients/dotnet/jdom/), an object model of the Jacdac bus, devices and services.
+
+The JDom layer communicates the transport layer to transfer packets.
+The transports use SPI, USB, UART, Web sockets depending on the platform and available hardware.
+
 ## What's next?
 
 -   [JDom](/clients/dotnet/jdom/)
