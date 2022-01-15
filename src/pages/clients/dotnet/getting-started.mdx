@@ -1,0 +1,149 @@
+---
+title: Getting started
+order: 0
+---
+
+# Getting started
+
+** You do not need any hardware to do this tutorial. **
+
+In this tutorial, we'll install the tool and build a small
+application that controls an LED with a button.
+
+### Launch the devtools
+
+Start a devtools server and open the dashboard at http://localhost:8081/.
+We'll be able to create simulated buttons in the dashboard.
+
+```
+> jacdac.devtools
+```
+
+To install this tool, run
+
+```
+dotnet tool install -g jacdac.devtools
+```
+
+### Setting up your project in .NET cli + VS Code
+
+If you are using the .NET cli, create a new console application
+
+```
+dotnet new console
+```
+
+and add Jacdac nuget packages.
+
+```
+dotnet add package jacdac.net
+dotnet add package jacdac.net.clients
+dotnet add package jacdac.net.transports.websockets
+```
+
+Launch Visual Studio Code with the C# extension or Visual Studio to build your project.
+```
+code .
+```
+
+### Start the Jacdac bus
+
+Let's start by creating a Jacdac bus connected to the [devtools](/clients/dotnet/devtools/).
+
+```cs
+using Jacdac;
+using Jacdac.Transports.WebSockets;
+
+var bus = new JDBus(WebSocketTransport.Create());
+// keep the app alive, make sure it comes last
+Thread.Sleep(Timeout.Infinite);
+```
+
+Launch your app and go back to the dashboard. You should see a new device, 
+mostly empty.
+
+### Let there be a button
+
+We instantiate a `ButtonClient` class by passing the `bus`
+and the **role** name. The role name will be also displayed in the 
+web dashboard.
+
+```cs
+using Jacdac.Clients;
+...
+var button = new ButtonClient(bus, "btn");
+```
+
+For tinkering purposes, we add event handler to the `Down` event 
+and display something on the console.
+
+```cs
+button.Down += (s,e) => Console.WritLine("down");
+```
+
+The `button` client will automatically be bound to a [button service](/services/button/)
+once the role manager finds one on the bus. 
+
+Launch your application, go to the dashboard. 
+Start a button simulator, as Jacdac binds the `button` role to that simulated service, you will
+see the `btn` name show up in the user interface.
+You should see the `down` message show up on your console application.
+
+If you have a physical Jacdac button module, you can connect it to the dashboard and use it as well.
+
+### Let there be light
+
+Similarly to the button, we add a `LedClient` and use `SetColor` control it's color.
+We change the `Down` handler to show red color (in the same format as hex HTML colors)
+and `Up` to turn off the LED.
+
+```cs
+var led = new LedClient(bus, "led");
+// colors
+uint red = 0xff0000;
+uint off = 0x000000;
+// show red when down
+button.Down += (s,e) => led.SetColor(red);
+// show up when up
+button.Up += (s,e) => led.SetColor(off);
+```
+
+Launch your application and go back to the dashboard. 
+Start an LED simulator and see that it gets bound. Test that when you press the button,
+the LED goes red and back when the button is released.
+
+## Blink
+
+```cs
+uint blue = 0x0000ff;
+// show switch between red and blue
+var counter = 0;
+button.Down += (s,e) => led.SetColor(counter++ % 2 == 0 ? blue : red);
+```
+
+Launch again your application and see that you get a nice blinking effect of the LED.
+
+That's it your code is ready, you can now deploy to your [Raspberry Pi](/clients/dotnet/raspberry-pi) or other platforms.
+
+```cs
+using Jacdac;
+using Jacdac.Clients;
+using Jacdac.Transports.WebSockets;
+
+var bus = new JDBus(WebSocketTransport.Create());
+var button = new ButtonClient(bus, "btn");
+var led = new LedClient(bus, "led");
+
+uint red = 0xff0000;
+uint blue = 0x0000ff;
+uint off = 0;
+
+var counter = 0;
+button.Down += (s,e) => led.SetColor(red);
+button.Up += (s,e) => led.SetColor(off);
+button.Hold += (s,e) => led.SetColor(counter++ % 2 == 0 ? blue : red);
+
+// keep the app alive
+Thread.Sleep(Timeout.Infinite);
+```
+
