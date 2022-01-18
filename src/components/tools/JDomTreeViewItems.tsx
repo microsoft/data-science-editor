@@ -254,7 +254,7 @@ export function RegisterTreeItem(
         JDomTreeViewProps
 ) {
     const { register } = props
-    const { specification, id } = register
+    const { specification, id, notImplemented } = register
     const optional = !!specification?.optional
     const labelText = humanify(
         `${specification?.name || id}${optional ? "?" : ""}`
@@ -271,8 +271,10 @@ export function RegisterTreeItem(
     )
     const failedGet = attempts > 2
 
+    // not implemented
+    if (notImplemented) return null
     // if register is optional and no data, hide
-    if (optional && failedGet && humanValue === undefined) return <></>
+    if (optional && failedGet && humanValue === undefined) return null
 
     return (
         <StyledTreeItem
