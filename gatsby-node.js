@@ -298,8 +298,34 @@ async function generateServicesJSON() {
             "services",
             `x${srv.classIdentifier.toString(16)}.json`
         )
-        //console.log(`json x${srv.classIdentifier.toString(16)} => ${f}`)
         await fs.outputFile(f, JSON.stringify(srv, null, 2))
+    }
+
+    for (const srv of services) {
+        const f = path.join(
+            dir,
+            "services",
+            "lite",
+            `x${srv.classIdentifier.toString(16)}.json`
+        )
+        const clone = JSON.parse(JSON.stringify(srv))
+        delete clone.notes;
+        delete clone.enums;
+        delete clone.constants;
+        delete clone.extends;
+        delete clone.shortName;
+        delete clone.name;
+        delete clone.tags;
+        for(var pkt of clone.packets) {
+            delete pkt.description
+            delete pkt.derived
+            delete pkt.identifierName
+            if (pkt.fields.length <= 1)
+                delete pkt.fields
+            else
+                pkt.fields = pkt.fields.map(f => f.name);
+        }
+        await fs.outputFile(f, JSON.stringify(clone, null, 2))
     }
 
     // DeviceTwins
@@ -339,11 +365,11 @@ async function createVersions() {
 // access to any information necessary to programmatically
 // create pages.
 exports.createPages = async ({ graphql, actions, reporter }) => {
+    await generateServicesJSON()
     await createServicePages(graphql, actions, reporter)
     await createSpecPages(graphql, actions, reporter)
     await createDevicePages(graphql, actions, reporter)
     await createDeviceQRPages(actions, reporter)
-    await generateServicesJSON()
     await createWorkers()
     await createVersions()
 }
