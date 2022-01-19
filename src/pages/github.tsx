@@ -32,6 +32,7 @@ export default function Page() {
                 repos={[
                     "microsoft/jacdac-c",
                     "microsoft/jacdac-stm32x0",
+                    "microsoft/jacdac-msr-modules",
                     "microsoft/jacdac-esp32",
                     "microsoft/jacdac-padauk",
                 ]}
