@@ -84,9 +84,9 @@ function JacScriptEditorWithContext() {
             <Grid item xs={12}>
                 <BlockEditor editorId={JACSCRIPT_EDITOR_ID} />
             </Grid>
+            <JacscriptDiagnostics program={jscProgram} />
             {Flags.diagnostics && (
                 <>
-                    <JacscriptDiagnostics program={jscProgram} />
                     <VMDiagnostics program={program} />
                     <BlockDiagnostics />
                 </>
