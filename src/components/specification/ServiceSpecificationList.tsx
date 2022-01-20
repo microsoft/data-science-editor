@@ -1,7 +1,7 @@
 import { Chip, Grid, List, ListItem, ListItemText } from "@mui/material"
 import React, { useMemo } from "react"
 import { isInfrastructure } from "../../../jacdac-ts/src/jdom/spec"
-import { arrayShuffle } from "../../../jacdac-ts/src/jdom/utils"
+import { arrayShuffle, ellipseFirstSentence } from "../../../jacdac-ts/src/jdom/utils"
 import GridHeader from "../ui/GridHeader"
 import { Link } from "gatsby-theme-material-ui"
 import MakeCodeIcon from "../icons/MakeCodeIcon"
@@ -44,7 +44,7 @@ function ServiceSpecificatinListItem(props: { service: jdspec.ServiceSpec }) {
                     <ChipList>
                         <Markdown
                             components={components}
-                            source={notes["short"]}
+                            source={ellipseFirstSentence(notes["short"])}
                         />
                         {tags?.map(tag => (
                             <Chip key={tag} size="small" label={tag} />
