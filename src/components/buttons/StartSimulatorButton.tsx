@@ -4,7 +4,7 @@ import AddIcon from "@mui/icons-material/Add"
 import { useContext } from "react"
 import AppContext from "../AppContext"
 
-export default function VMStartSimulatorButton() {
+export default function StartSimulatorButton() {
     const { toggleShowDeviceHostsDialog } = useContext(AppContext)
     const handleShowStartSimulator = () => toggleShowDeviceHostsDialog()
     return (

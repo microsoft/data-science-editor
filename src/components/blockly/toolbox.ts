@@ -215,6 +215,7 @@ export const TABLE_PREVIEW_MAX_ITEMS = 48
 export const VM_WARNINGS_CATEGORY = "vm"
 export const JSON_WARNINGS_CATEGORY = "json"
 export const MB_WARNINGS_CATEGORY = "mb"
+export const JACSCRIPT_WARNINGS_CATEGORY = "jcs"
 
 export const WORKSPACE_FILENAME = `blocks.json`
 

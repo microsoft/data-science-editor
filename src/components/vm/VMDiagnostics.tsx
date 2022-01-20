@@ -1,4 +1,4 @@
-import { Grid, Typography } from "@mui/material"
+import { Grid } from "@mui/material"
 import React from "react"
 import { VMProgram } from "../../../jacdac-ts/src/vm/ir"
 import CodeBlock from "../CodeBlock"
@@ -7,7 +7,7 @@ export default function VMDiagnostics(props: { program: VMProgram }) {
     const { program } = props
     return (
         <Grid item xs={12}>
-            <Typography variant="subtitle1">VM</Typography>
+            <h3>VM</h3>
             <CodeBlock
                 className="json"
                 downloadName={"test.json.vm"}

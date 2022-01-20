@@ -1,4 +1,4 @@
-import { Grid, Typography } from "@mui/material"
+import { Grid } from "@mui/material"
 import React, { useContext } from "react"
 import CodeBlock from "../CodeBlock"
 import BlockContext from "./BlockContext"
@@ -8,7 +8,7 @@ export default function BlockDiagnostics() {
     return (
         <>
             <Grid item xs={12}>
-                <Typography variant="subtitle1">Blockly JSON</Typography>
+                <h3>Blockly JSON</h3>
                 <CodeBlock
                     className="json"
                     downloadName={"test.json"}
@@ -18,7 +18,7 @@ export default function BlockDiagnostics() {
                 </CodeBlock>
             </Grid>
             <Grid item xs={12}>
-                <Typography variant="subtitle1">Blockly XML</Typography>
+                <h3>Blockly XML</h3>
                 <CodeBlock className="xml">{workspaceXml}</CodeBlock>
             </Grid>
         </>

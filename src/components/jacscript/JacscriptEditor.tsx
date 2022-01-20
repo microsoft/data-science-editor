@@ -7,87 +7,65 @@ import React, {
     useState,
 } from "react"
 import { Flags } from "../../../jacdac-ts/src/jdom/flags"
-import useVMRunner from "./useVMRunner"
-import VMDiagnostics from "./VMDiagnostics"
+import VMDiagnostics from "../vm/VMDiagnostics"
 import BlockRolesToolbar from "../blockly/BlockRolesToolbar"
-import { VMProgram } from "../../../jacdac-ts/src/vm/ir"
 import BlockContext, { BlockProvider } from "../blockly/BlockContext"
 import BlockDiagnostics from "../blockly/BlockDiagnostics"
-import workspaceJSONToVMProgram from "./VMgenerator"
+import workspaceJSONToVMProgram from "../vm/VMgenerator"
 import BlockEditor from "../blockly/BlockEditor"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
-import vmDsls from "./vmdsls"
-import { VMStatus } from "../../../jacdac-ts/src/vm/runner"
-import { VM_WARNINGS_CATEGORY, WORKSPACE_FILENAME } from "../blockly/toolbox"
+import {
+    JACSCRIPT_WARNINGS_CATEGORY,
+    WORKSPACE_FILENAME,
+} from "../blockly/toolbox"
 import FileTabs from "../fs/FileTabs"
 import { WorkspaceFile } from "../blockly/dsl/workspacejson"
 import FileSystemContext from "../FileSystemContext"
-import { resolveWorkspaceServices } from "../blockly/WorkspaceContext"
-import VMRunnerButtons from "./VMRunnerButtons"
+import jacscriptDsls from "./jacscriptdsls"
+import { VMProgram } from "../../../jacdac-ts/src/vm/ir"
+import JacscriptDiagnostics from "./JacscriptDiagnostics"
+import { JacScriptProgram, toJacScript } from "../../../jacdac-ts/src/vm/ir2jacscript"
 
-const VM_EDITOR_ID = "vm"
-const VM_SOURCE_STORAGE_KEY = "tools:vmeditor"
-const VM_NEW_FILE_CONTENT = JSON.stringify({
-    editor: VM_EDITOR_ID,
+const JACSCRIPT_EDITOR_ID = "jcs"
+const JACSCRIPT_SOURCE_STORAGE_KEY = "tools:jacscripteditor"
+const JACSCRIPT_NEW_FILE_CONTENT = JSON.stringify({
+    editor: JACSCRIPT_EDITOR_ID,
     xml: "",
 } as WorkspaceFile)
 
-function VMEditorWithContext() {
-    const {
-        dsls,
-        workspace,
-        workspaceJSON,
-        roleManager,
-        setWarnings,
-        dragging,
-    } = useContext(BlockContext)
-    const { fileSystem } = useContext(FileSystemContext)
+function JacScriptEditorWithContext() {
+    const { dsls, workspaceJSON, roleManager, setWarnings } =
+        useContext(BlockContext)
     const [program, setProgram] = useState<VMProgram>()
-    const autoStart = true
-    const { runner, run, cancel } = useVMRunner(roleManager, program, autoStart)
+    const [jscProgram, setJscProgram] = useState<JacScriptProgram>();
+    const { fileSystem } = useContext(FileSystemContext)
 
-    // don't run the VM while dragging as it glitches the Ui
-    useEffect(() => {
-        if (runner?.status === VMStatus.Running) cancel()
-    }, [runner, dragging])
     useEffect(() => {
         try {
             const newProgram = workspaceJSONToVMProgram(workspaceJSON, dsls)
-            if (JSON.stringify(newProgram) !== JSON.stringify(program))
+            if (JSON.stringify(newProgram) !== JSON.stringify(program)) {
                 setProgram(newProgram)
+                const jsc = toJacScript(newProgram);
+                setJscProgram(jsc);
+            }
         } catch (e) {
             console.error(e)
             setProgram(undefined)
+            setJscProgram(undefined)
         }
     }, [dsls, workspaceJSON])
     useEffect(
-        () =>
-            program &&
-            roleManager?.updateRoles([
-                ...program.roles,
-                ...program.serverRoles.map(r => ({
-                    role: r.role,
-                    serviceClass: r.serviceClass,
-                    preferredDeviceId: "TBD",
-                })),
-            ]),
+        () => program && roleManager?.updateRoles([...program.roles]),
         [roleManager, program]
     )
     useEffect(
         () =>
             setWarnings(
-                VM_WARNINGS_CATEGORY,
+                JACSCRIPT_WARNINGS_CATEGORY,
                 arrayConcatMany(program?.handlers.map(h => h.errors))
             ),
         [program]
     )
-
-    useEffect(() => {
-        const services = resolveWorkspaceServices(workspace)
-        if (services) {
-            services.runner = runner
-        }
-    }, [workspace, runner])
 
     return (
         <Grid container direction="column" spacing={1}>
@@ -95,25 +73,20 @@ function VMEditorWithContext() {
                 <Grid item xs={12}>
                     <FileTabs
                         newFileName={WORKSPACE_FILENAME}
-                        newFileContent={VM_NEW_FILE_CONTENT}
+                        newFileContent={JACSCRIPT_NEW_FILE_CONTENT}
                         hideFiles={true}
                     />
                 </Grid>
             )}
             <Grid item xs={12}>
-                <BlockRolesToolbar>
-                    <VMRunnerButtons
-                        runner={runner}
-                        run={run}
-                        cancel={cancel}
-                    />
-                </BlockRolesToolbar>
+                <BlockRolesToolbar></BlockRolesToolbar>
             </Grid>
             <Grid item xs={12}>
-                <BlockEditor editorId={VM_EDITOR_ID} />
+                <BlockEditor editorId={JACSCRIPT_EDITOR_ID} />
             </Grid>
             {Flags.diagnostics && (
                 <>
+                    <JacscriptDiagnostics program={jscProgram} />
                     <VMDiagnostics program={program} />
                     <BlockDiagnostics />
                 </>
@@ -122,15 +95,15 @@ function VMEditorWithContext() {
     )
 }
 
-export default function VMEditor() {
+export default function JacscriptEditor() {
     const dsls = useMemo(() => {
-        return vmDsls
+        return jacscriptDsls
     }, [])
     const handleOnBeforeSaveWorkspaceFile = useCallback(
         (file: WorkspaceFile) => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const f = file as any
-            f.vm = workspaceJSONToVMProgram(file.json, dsls)
+            const program = workspaceJSONToVMProgram(file.json, dsls)
+            file.jsc = toJacScript(program)
         },
         []
     )
@@ -138,7 +111,7 @@ export default function VMEditor() {
     return (
         <NoSsr>
             <BlockProvider
-                storageKey={VM_SOURCE_STORAGE_KEY}
+                storageKey={JACSCRIPT_SOURCE_STORAGE_KEY}
                 dsls={dsls}
                 onBeforeSaveWorkspaceFile={
                     Flags.diagnostics
@@ -146,7 +119,7 @@ export default function VMEditor() {
                         : undefined
                 }
             >
-                <VMEditorWithContext />
+                <JacScriptEditorWithContext />
             </BlockProvider>
         </NoSsr>
     )
