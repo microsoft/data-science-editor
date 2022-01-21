@@ -24,7 +24,10 @@ import FileSystemContext from "../FileSystemContext"
 import jacscriptDsls from "./jacscriptdsls"
 import { VMProgram } from "../../../jacdac-ts/src/vm/ir"
 import JacscriptDiagnostics from "./JacscriptDiagnostics"
-import { JacScriptProgram, toJacScript } from "../../../jacdac-ts/src/vm/ir2jacscript"
+import {
+    JacScriptProgram,
+    toJacScript,
+} from "../../../jacdac-ts/src/vm/ir2jacscript"
 import useEffectAsync from "../useEffectAsync"
 import { jscCompile } from "../blockly/dsl/workers/vm.proxy"
 import type { VMCompileResponse } from "../../workers/vm/vm.worker"
@@ -40,8 +43,8 @@ function JacScriptEditorWithContext() {
     const { dsls, workspaceJSON, roleManager, setWarnings } =
         useContext(BlockContext)
     const [program, setProgram] = useState<VMProgram>()
-    const [jscProgram, setJscProgram] = useState<JacScriptProgram>();
-    const [jscCompiled, setJscCompiled] = useState<VMCompileResponse>();
+    const [jscProgram, setJscProgram] = useState<JacScriptProgram>()
+    const [jscCompiled, setJscCompiled] = useState<VMCompileResponse>()
     const { fileSystem } = useContext(FileSystemContext)
 
     useEffect(() => {
@@ -49,8 +52,8 @@ function JacScriptEditorWithContext() {
             const newProgram = workspaceJSONToVMProgram(workspaceJSON, dsls)
             if (JSON.stringify(newProgram) !== JSON.stringify(program)) {
                 setProgram(newProgram)
-                const jsc = toJacScript(newProgram);
-                setJscProgram(jsc);
+                const jsc = toJacScript(newProgram)
+                setJscProgram(jsc)
             }
         } catch (e) {
             console.error(e)
@@ -70,37 +73,47 @@ function JacScriptEditorWithContext() {
             ),
         [program]
     )
-    useEffectAsync(async (mounted) => {
-        const res = jscProgram && await jscCompile(jscProgram.program.join("\n"))
-        console.log({ res, mounted: mounted() })
-        if (mounted())
-            setJscCompiled(res)
-    }, [jscProgram]);
+    useEffectAsync(
+        async mounted => {
+            const res =
+                jscProgram && (await jscCompile(jscProgram.program.join("\n")))
+            console.log({ res, mounted: mounted() })
+            if (mounted()) setJscCompiled(res)
+        },
+        [jscProgram]
+    )
 
     return (
-        <Grid container direction="column" spacing={1}>
-            {!!fileSystem && (
-                <Grid item xs={12}>
-                    <FileTabs
-                        newFileName={WORKSPACE_FILENAME}
-                        newFileContent={JACSCRIPT_NEW_FILE_CONTENT}
-                        hideFiles={true}
-                    />
+        <Grid container spacing={1}>
+            <Grid item xs={12} sm={8}>
+                <Grid container direction="column" spacing={1}>
+                    {!!fileSystem && (
+                        <Grid item xs={12}>
+                            <FileTabs
+                                newFileName={WORKSPACE_FILENAME}
+                                newFileContent={JACSCRIPT_NEW_FILE_CONTENT}
+                                hideFiles={true}
+                            />
+                        </Grid>
+                    )}
+                    <Grid item xs={12}>
+                        <BlockRolesToolbar></BlockRolesToolbar>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <BlockEditor editorId={JACSCRIPT_EDITOR_ID} />
+                    </Grid>
+                    {Flags.diagnostics && (
+                        <>
+                            <VMDiagnostics program={program} />
+                            <BlockDiagnostics />
+                        </>
+                    )}
                 </Grid>
-            )}
-            <Grid item xs={12}>
-                <BlockRolesToolbar></BlockRolesToolbar>
             </Grid>
-            <Grid item xs={12}>
-                <BlockEditor editorId={JACSCRIPT_EDITOR_ID} />
-            </Grid>
-            <JacscriptDiagnostics program={jscProgram} compiled={jscCompiled} />
-            {Flags.diagnostics && (
-                <>
-                    <VMDiagnostics program={program} />
-                    <BlockDiagnostics />
-                </>
-            )}
+            <JacscriptDiagnostics
+                        program={jscProgram}
+                        compiled={jscCompiled}
+                    />
         </Grid>
     )
 }

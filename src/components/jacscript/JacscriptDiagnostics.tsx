@@ -11,7 +11,7 @@ export default function JacscriptDiagnostics(props: {
     const { program, compiled } = props
     const { logs, errors } = compiled || {}
     return (
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={4}>
             <h3>Jacscript</h3>
             <CodeBlock
                 className="javascript"
