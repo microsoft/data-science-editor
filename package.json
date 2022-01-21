@@ -132,9 +132,13 @@
   "engines": {
     "node": ">=14.17.0"
   },
+  "workspaces": [
+    "jacdac-ts",
+    "jacdac-ts/jacscript"
+  ],
   "scripts": {
     "setup": "git submodule update --init --recursive && git pull && yarn install --frozen-lockfile",
-    "postinstall": "yarn buildml4f && yarn buildworkers && cd jacdac-ts && yarn install --frozen-lockfile && yarn dist",
+    "postinstall": "cd jacdac-ts && yarn dist && cd jacscript && yarn build && cd ../.. && yarn buildml4f && yarn buildworkers",
     "pullsubmodules": "git submodule update --init --recursive",
     "lint": "node node_modules/eslint/bin/eslint.js src/**/*.ts src/**/*.tsx",
     "clean": "node node_modules/gatsby/cli.js clean",
