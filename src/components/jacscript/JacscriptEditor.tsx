@@ -25,6 +25,9 @@ import jacscriptDsls from "./jacscriptdsls"
 import { VMProgram } from "../../../jacdac-ts/src/vm/ir"
 import JacscriptDiagnostics from "./JacscriptDiagnostics"
 import { JacScriptProgram, toJacScript } from "../../../jacdac-ts/src/vm/ir2jacscript"
+import useEffectAsync from "../useEffectAsync"
+import { jscCompile } from "../blockly/dsl/workers/vm.proxy"
+import type { VMCompileResponse } from "../../workers/vm/vm.worker"
 
 const JACSCRIPT_EDITOR_ID = "jcs"
 const JACSCRIPT_SOURCE_STORAGE_KEY = "tools:jacscripteditor"
@@ -38,6 +41,7 @@ function JacScriptEditorWithContext() {
         useContext(BlockContext)
     const [program, setProgram] = useState<VMProgram>()
     const [jscProgram, setJscProgram] = useState<JacScriptProgram>();
+    const [jscCompiled, setJscCompiled] = useState<VMCompileResponse>();
     const { fileSystem } = useContext(FileSystemContext)
 
     useEffect(() => {
@@ -66,6 +70,12 @@ function JacScriptEditorWithContext() {
             ),
         [program]
     )
+    useEffectAsync(async (mounted) => {
+        const res = jscProgram && await jscCompile(jscProgram.program.join("\n"))
+        console.log({ res, mounted: mounted() })
+        if (mounted())
+            setJscCompiled(res)
+    }, [jscProgram]);
 
     return (
         <Grid container direction="column" spacing={1}>
@@ -84,7 +94,7 @@ function JacScriptEditorWithContext() {
             <Grid item xs={12}>
                 <BlockEditor editorId={JACSCRIPT_EDITOR_ID} />
             </Grid>
-            <JacscriptDiagnostics program={jscProgram} />
+            <JacscriptDiagnostics program={jscProgram} compiled={jscCompiled} />
             {Flags.diagnostics && (
                 <>
                     <VMDiagnostics program={program} />

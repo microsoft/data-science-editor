@@ -1,10 +1,17 @@
-import type { VMRequest } from "../../../../workers/vm/dist/node_modules/vm.worker"
+import type { VMCompileRequest, VMCompileResponse } from "../../../../workers/vm/dist/node_modules/vm.worker"
 import workerProxy from "./proxy"
 
-export default async function doSomethingVM(
-    message: VMRequest
+export async function jscCompile(
+    source: string
     // eslint-disable-next-line @typescript-eslint/ban-types
-): Promise<any> {
+): Promise<VMCompileResponse> {
     const worker = workerProxy("vm")
-    return worker.postMessage(message)
+    console.log("vm: compile", { source })
+    const res = await worker.postMessage<VMCompileRequest, VMCompileResponse>({
+        worker: "vm",
+        type: "compile",
+        source,
+    })
+    console.log("vm: compiled", { ...res })
+    return res
 }
