@@ -29,8 +29,16 @@ import {
     toJacScript,
 } from "../../../jacdac-ts/src/vm/ir2jacscript"
 import useEffectAsync from "../useEffectAsync"
-import { jscCompile } from "../blockly/dsl/workers/vm.proxy"
+import {
+    jscCompile,
+    jscCommand,
+    jscBridge,
+} from "../blockly/dsl/workers/vm.proxy"
 import type { VMCompileResponse } from "../../workers/vm/vm.worker"
+import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
+import PlayArrowIcon from "@mui/icons-material/PlayArrow"
+import StopIcon from "@mui/icons-material/Stop"
+import useChange from "../../jacdac/useChange"
 
 const JACSCRIPT_EDITOR_ID = "jcs"
 const JACSCRIPT_SOURCE_STORAGE_KEY = "tools:jacscripteditor"
@@ -38,6 +46,30 @@ const JACSCRIPT_NEW_FILE_CONTENT = JSON.stringify({
     editor: JACSCRIPT_EDITOR_ID,
     xml: "",
 } as WorkspaceFile)
+
+function JacScriptExecutor(props: { jscCompiled: VMCompileResponse }) {
+    const { jscCompiled } = props
+    const bridge = useMemo(() => jscBridge(), [])
+    const state = useChange(bridge, _ => _?.state)
+    const stopped = state === undefined
+    const disabled = !jscCompiled
+
+    const handleRun = () => jscCommand("start")
+    const handleStop = () => jscCommand("stop")
+
+    return (
+        <Grid item>
+            <IconButtonWithTooltip
+                title={stopped ? "start" : "stop"}
+                disabled={disabled}
+                color={stopped ? "primary" : "default"}
+                onClick={stopped ? handleRun : handleStop}
+            >
+                {stopped ? <PlayArrowIcon /> : <StopIcon />}
+            </IconButtonWithTooltip>
+        </Grid>
+    )
+}
 
 function JacScriptEditorWithContext() {
     const { dsls, workspaceJSON, roleManager, setWarnings } =
@@ -97,7 +129,9 @@ function JacScriptEditorWithContext() {
                         </Grid>
                     )}
                     <Grid item xs={12}>
-                        <BlockRolesToolbar></BlockRolesToolbar>
+                        <BlockRolesToolbar>
+                            <JacScriptExecutor jscCompiled={jscCompiled} />
+                        </BlockRolesToolbar>
                     </Grid>
                     <Grid item xs={12}>
                         <BlockEditor editorId={JACSCRIPT_EDITOR_ID} />
@@ -110,10 +144,7 @@ function JacScriptEditorWithContext() {
                     )}
                 </Grid>
             </Grid>
-            <JacscriptDiagnostics
-                        program={jscProgram}
-                        compiled={jscCompiled}
-                    />
+            <JacscriptDiagnostics program={jscProgram} compiled={jscCompiled} />
         </Grid>
     )
 }

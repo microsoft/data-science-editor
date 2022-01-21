@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React, { useContext, useMemo } from "react"
 import BlockContext from "./BlockContext"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
@@ -27,19 +27,20 @@ export default function RoleChip(props: {
     const { role, service, serviceClass, preferredDeviceId } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const serviceServer = useServiceServer(service)
+    const specification = useMemo(
+        () => serviceSpecificationFromClassIdentifier(serviceClass),
+        [serviceClass]
+    )
+
     const handleRoleClick = () => {
         // spin off simulator
-        if (!service && !preferredDeviceId) {
-            const specification =
-                serviceSpecificationFromClassIdentifier(serviceClass)
-            if (specification) {
-                addServiceProvider(
-                    bus,
-                    serviceProviderDefinitionFromServiceClass(
-                        specification.classIdentifier
-                    )
+        if (!service && !preferredDeviceId && specification) {
+            addServiceProvider(
+                bus,
+                serviceProviderDefinitionFromServiceClass(
+                    specification.classIdentifier
                 )
-            }
+            )
         }
         // add twin block
         if (workspace) {
@@ -59,12 +60,12 @@ export default function RoleChip(props: {
                 twinBlock = workspace.newBlock(TWIN_BLOCK) as BlockSvg
                 let variable = workspace.getVariable(
                     role,
-                    toRoleType(service.specification, true)
+                    toRoleType(specification, true)
                 )
                 if (!variable)
                     variable = workspace.getVariable(
                         role,
-                        toRoleType(service.specification, false)
+                        toRoleType(specification, false)
                     )
                 console.debug(`new twin`, { twinBlock, variable })
                 const field = twinBlock.inputList[0].fieldRow.find(

@@ -33,7 +33,7 @@ export class WorkerProxy extends JDEventSource {
     private handleMessage(event: MessageEvent) {
         const { data: message } = event
         const { id, worker } = message
-        const pending = this.pendings[id]
+        const pending = id && this.pendings[id]
         if (pending) {
             assert(worker === message.worker)
             pending.resolve(message)
