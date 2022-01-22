@@ -23,7 +23,7 @@ function BridgeButton(props: { bridge: JDBridge; className: string }) {
 export default function BridgeButtons(props: { className?: string }) {
     const { className } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const bridges = useChange(bus, _ => _?.bridges)
+    const bridges = useChange(bus, _ => _?.bridges?.filter(b => !b.infrastructure))
 
     if (!bridges?.length) return null
 

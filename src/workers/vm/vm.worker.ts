@@ -1,5 +1,5 @@
 import { compile, JacError, Host, RunnerState, Runner } from "jacscript"
-import { JDBus, Packet, PACKET_SEND, toHex } from "jacdac-ts"
+import { JDBus, localStorageSetting, Packet, PACKET_SEND, toHex } from "jacdac-ts"
 
 
 export type VMState = RunnerState
@@ -129,6 +129,7 @@ const handlers: { [index: string]: (props: any) => object | Promise<object> } =
                 await stop()
                 const { binary, dbg } = res
                 runner = new Runner(bus, binary, dbg)
+                runner.options.setting = localStorageSetting
             }
 
             return <Partial<VMCompileResponse>>{
