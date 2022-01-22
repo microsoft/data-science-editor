@@ -13,11 +13,15 @@ import {
     SRV_BOOTLOADER,
     SRV_BUZZER,
     SRV_CONTROL,
+    SRV_DASHBOARD,
     SRV_GAMEPAD,
+    SRV_INFRASTRUCTURE,
     SRV_LOGGER,
     SRV_PROTO_TEST,
+    SRV_PROXY,
     SRV_ROLE_MANAGER,
     SRV_SERVO,
+    SRV_UNIQUE_BRAIN,
     SystemReg,
 } from "../../../../jacdac-ts/src/jdom/constants"
 import { Flags } from "../../../../jacdac-ts/src/jdom/flags"
@@ -109,6 +113,10 @@ const ignoredServices = [
     SRV_ROLE_MANAGER,
     SRV_PROTO_TEST,
     SRV_BOOTLOADER,
+    SRV_INFRASTRUCTURE,
+    SRV_DASHBOARD,
+    SRV_PROXY,
+    SRV_UNIQUE_BRAIN
 ]
 
 const customMessages = [
