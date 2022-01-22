@@ -49,7 +49,13 @@ export interface VMPacketRequest extends VMMessage {
 }
 
 
-const bus = new JDBus()
+const bus = new JDBus(
+    null,
+    {
+        client: false,
+        disableRoleManager: true,
+    }
+)
 bus.stop()
 let runner: Runner
 
