@@ -211,7 +211,9 @@ function ServiceSpecificationTreeItem(props: { service: JDService }) {
 
     const { classIdentifier } = specification
     const nodeId = `${id}:spec`
-    const labelText = (specification?.notes["short"] || specification.name).split('.', 1)[0] + "."
+    const labelText =
+        (specification?.notes["short"] || specification.name).split(".", 1)[0] +
+        "."
     const labelTo = `/services/${specification.shortId}/`
 
     return (
@@ -225,9 +227,14 @@ function ServiceSpecificationTreeItem(props: { service: JDService }) {
 }
 
 export function ServiceTreeItem(
-    props: { service: JDService, showSpecification?: boolean } & StyledTreeViewItemProps & JDomTreeViewProps
+    props: {
+        service: JDService
+        showSpecification?: boolean
+        showMembersOnly?: boolean
+    } & StyledTreeViewItemProps &
+        JDomTreeViewProps
 ) {
-    const { service, showSpecification } = props
+    const { service, showSpecification, showMembersOnly } = props
     const { isMixin, name, id } = useMemo(() => service, [service])
     const instanceName = useInstanceName(service)
     const readingRegister = useBestRegister(service)
@@ -237,6 +244,17 @@ export function ServiceTreeItem(
     })
 
     const labelText = name + (instanceName ? ` ${instanceName}` : "")
+    const members = (
+        <>
+            {showSpecification && (
+                <ServiceSpecificationTreeItem service={service} />
+            )}
+            <ServiceMembersTreeItems service={service} {...props} />
+        </>
+    )
+
+    if (showMembersOnly) return members
+
     return (
         <StyledTreeItem
             nodeId={id}
@@ -244,8 +262,7 @@ export function ServiceTreeItem(
             labelInfo={reading}
             kind={isMixin ? SERVICE_MIXIN_NODE_NAME : SERVICE_NODE_NAME}
         >
-            {showSpecification && <ServiceSpecificationTreeItem service={service} />}
-            <ServiceMembersTreeItems service={service} {...props} />
+            {members}
         </StyledTreeItem>
     )
 }

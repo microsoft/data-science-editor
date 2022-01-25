@@ -22,6 +22,7 @@ const classes = {
 const StyledTreeView = styled(TreeView)(({ theme }) => ({
     [`&.${classes.root}`]: {
         flexGrow: 1,
+        color: "#fff !important"
     },
 
     [`&.${classes.margins}`]: {
@@ -66,6 +67,7 @@ export default function JDomServiceTreeView(
                 service={service}
                 expanded={expanded}
                 selected={selected}
+                showMembersOnly={true}
                 {...other}
             />
         </StyledTreeView>
