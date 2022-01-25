@@ -8,7 +8,7 @@ import { assert } from "../../../../jacdac-ts/src/jdom/utils"
 import LEDColorField from "./LEDColorField"
 import TwinField from "./TwinField"
 import JDomTreeField from "./JDomTreeField"
-import WatchValueField from "./WatchValueField"
+//import WatchValueField from "./WatchValueField"
 import LogViewField from "./LogViewField"
 import VariablesField from "./VariablesFields"
 import DataTableField from "./DataTableField"
@@ -74,7 +74,7 @@ export function registerFields() {
 
         GaugeWidgetField,
 
-        WatchValueField,
+        //WatchValueField,
         LogViewField,
 
         VariablesField,

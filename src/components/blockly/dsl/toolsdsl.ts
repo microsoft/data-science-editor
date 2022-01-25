@@ -3,12 +3,10 @@ import { toIdentifier } from "../../../../jacdac-ts/src/vm/compile"
 import { CmdWithErrors, makeVMBase } from "../../jacscript/JacscriptGenerator"
 import LogViewField from "../fields/LogViewField"
 import VariablesField from "../fields/VariablesFields"
-import WatchValueField from "../fields/WatchValueField"
+//import WatchValueField from "../fields/WatchValueField"
 import {
     BlockReference,
     CODE_STATEMENT_TYPE,
-    DATA_SCIENCE_STATEMENT_TYPE,
-    identityTransformData,
     InputDefinition,
     LabelDefinition,
     toolsColour,
@@ -44,6 +42,7 @@ const toolsDSL: BlockDomainSpecificLanguage = {
             helpUrl: "",
             template: "meta",
         },
+        /*
         {
             kind: "block",
             type: WATCH_BLOCK,
@@ -65,6 +64,7 @@ const toolsDSL: BlockDomainSpecificLanguage = {
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             transformData: identityTransformData,
         },
+        */
         {
             kind: "block",
             type: LOG_BLOCK,
