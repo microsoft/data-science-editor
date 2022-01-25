@@ -1,7 +1,7 @@
+import { toIdentifier } from "../../../../jacdac-ts/src/vm/compile"
 import jsep from "jsep"
 import { ExpressionWithErrors } from "../../jacscript/JacscriptGenerator"
 import {
-    BlockDefinition,
     BlockReference,
     CategoryDefinition,
     OptionsInputDefinition,
@@ -83,10 +83,8 @@ const mathDsl: BlockDomainSpecificLanguage = {
             args0: [],
             output: "Number",
             style: "math_blocks",
-            vm: function () {
-                return Math.random()
-            },
         },
+        /* TODO
         <BlockDefinition>{
             kind: "block",
             type: "jacdac_math_clamp",
@@ -122,7 +120,6 @@ const mathDsl: BlockDomainSpecificLanguage = {
                     : value
             },
         },
-        /* TODO
         {
             kind: "block",
             type: "jacdac_math_map",
@@ -195,6 +192,19 @@ const mathDsl: BlockDomainSpecificLanguage = {
     }): ExpressionWithErrors => {
         const { type, inputs } = block
         switch (type) {
+            case "jacdac_math_random": {
+                return {
+                    expr: <jsep.CallExpression>{
+                        type: "CallExpression",
+                        arguments: [],
+                        callee: <jsep.Literal>{
+                            type: "Literal",
+                            raw: "Math.random",
+                        },
+                    },
+                    errors: [],
+                }
+            }
             case "math_single": // built-in blockly
             case "jacdac_math_single": {
                 const argument = blockToExpressionInner(event, inputs[0].child)

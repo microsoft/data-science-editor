@@ -46,7 +46,7 @@ export const processErrors = (block: BlockJSON, errors: VMError[]) => {
     })
 }
 
-export default function workspaceJSONToVMProgram(
+export default function workspaceJSONToJacScriptProgram(
     workspace: WorkspaceJSON,
     dsls: BlockDomainSpecificLanguage[]
 ): VMProgram {

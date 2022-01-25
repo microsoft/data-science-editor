@@ -84,8 +84,6 @@ const jsonDSL: BlockDomainSpecificLanguage = {
                     output,
                     colour,
                     template: JSON_FIELD_GET_TEMPLATE,
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    vm: (value: any, name: string) => value?.[name],
                 }
         ),
         {
@@ -106,8 +104,6 @@ const jsonDSL: BlockDomainSpecificLanguage = {
             ],
             output: BOOLEAN_TYPE,
             colour,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            vm: (value: any, name: string) => !!value?.[name],
         },
     ],
     createCategory: () => [

@@ -11,7 +11,7 @@ import VMDiagnostics from "./VMDiagnostics"
 import BlockRolesToolbar from "../blockly/BlockRolesToolbar"
 import BlockContext, { BlockProvider } from "../blockly/BlockContext"
 import BlockDiagnostics from "../blockly/BlockDiagnostics"
-import workspaceJSONToVMProgram from "./JacscriptGenerator"
+import workspaceJSONToJacScriptProgram from "./JacscriptGenerator"
 import BlockEditor from "../blockly/BlockEditor"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
 import {
@@ -88,7 +88,7 @@ function JacScriptEditorWithContext() {
 
     useEffect(() => {
         try {
-            const newProgram = workspaceJSONToVMProgram(workspaceJSON, dsls)
+            const newProgram = workspaceJSONToJacScriptProgram(workspaceJSON, dsls)
             if (JSON.stringify(newProgram) !== JSON.stringify(program)) {
                 setProgram(newProgram)
                 const jsc = toJacScript(newProgram)
@@ -162,7 +162,7 @@ export default function JacscriptEditor() {
     const handleOnBeforeSaveWorkspaceFile = useCallback(
         (file: WorkspaceFile) => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const program = workspaceJSONToVMProgram(file.json, dsls)
+            const program = workspaceJSONToJacScriptProgram(file.json, dsls)
             file.jsc = toJacScript(program)
         },
         []

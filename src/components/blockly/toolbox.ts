@@ -113,10 +113,6 @@ export interface BlockDefinition extends BlockReference {
     template?: BlockTemplate
     dsl?: string
 
-    // js implementation to be called by VM
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    vm?: (...args: any[]) => any
-
     // data transformation
     transformData?: BlockDataSetTransform
 
