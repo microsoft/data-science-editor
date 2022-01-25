@@ -105,6 +105,7 @@ export function DeviceTreeItem(
                 <ServiceTreeItem
                     key={service.nodeId}
                     service={service}
+                    showSpecification={true}
                     {...other}
                 />
             ))}
@@ -224,9 +225,9 @@ function ServiceSpecificationTreeItem(props: { service: JDService }) {
 }
 
 export function ServiceTreeItem(
-    props: { service: JDService } & StyledTreeViewItemProps & JDomTreeViewProps
+    props: { service: JDService, showSpecification?: boolean } & StyledTreeViewItemProps & JDomTreeViewProps
 ) {
-    const { service } = props
+    const { service, showSpecification } = props
     const { isMixin, name, id } = useMemo(() => service, [service])
     const instanceName = useInstanceName(service)
     const readingRegister = useBestRegister(service)
@@ -243,7 +244,7 @@ export function ServiceTreeItem(
             labelInfo={reading}
             kind={isMixin ? SERVICE_MIXIN_NODE_NAME : SERVICE_NODE_NAME}
         >
-            <ServiceSpecificationTreeItem service={service} />
+            {showSpecification && <ServiceSpecificationTreeItem service={service} />}
             <ServiceMembersTreeItems service={service} {...props} />
         </StyledTreeItem>
     )
