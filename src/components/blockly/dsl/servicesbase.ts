@@ -32,6 +32,7 @@ import {
     isSensor,
     serviceSpecifications,
     serviceSpecificationFromClassIdentifier,
+    isReading,
 } from "../../../../jacdac-ts/src/jdom/spec"
 import {
     arrayConcatMany,
@@ -58,6 +59,7 @@ import {
     EventFieldDefinition,
     InputDefinition,
     JSON_TYPE,
+    LabelDefinition,
     NUMBER_TYPE,
     OptionsInputDefinition,
     RegisterBlockDefinition,
@@ -78,6 +80,7 @@ import { Variables } from "blockly"
 import { paletteColorByIndex } from "./palette"
 import { VariableJSON } from "./workspacejson"
 import { JDService } from "../../../../jacdac-ts/src/jdom/service"
+import { groupBy } from "../../../../jacdac-ts/src/jdom/utils"
 
 const SET_STATUS_LIGHT_BLOCK = "jacdac_set_status_light"
 const ROLE_BOUND_EVENT_BLOCK = "jacdac_role_bound_event"
@@ -116,7 +119,7 @@ const ignoredServices = [
     SRV_INFRASTRUCTURE,
     SRV_DASHBOARD,
     SRV_PROXY,
-    SRV_UNIQUE_BRAIN
+    SRV_UNIQUE_BRAIN,
 ]
 
 const customMessages = [
@@ -423,6 +426,14 @@ export class ServicesBaseDSL {
     protected _eventFieldBlocks: EventFieldDefinition[] = []
     protected serviceColor: (srv: jdspec.ServiceSpec) => string
 
+    protected assignGroup(register: jdspec.PacketInfo) {
+        return isReading(register) ||
+            register.identifier === SystemReg.Value ||
+            register.identifier === SystemReg.Intensity
+            ? ""
+            : "Configuration"
+    }
+
     protected makeRegisterSimpleGetBlocks(
         registers: ServiceRegister[],
         client = true
@@ -445,7 +456,7 @@ export class ServicesBaseDSL {
                 service,
                 register,
                 field: register.fields[0],
-
+                group: this.assignGroup(register),
                 template: "register_get",
             })
         )
@@ -483,7 +494,7 @@ export class ServicesBaseDSL {
                 register,
                 previousStatement: CODE_STATEMENT_TYPE,
                 nextStatement: CODE_STATEMENT_TYPE,
-
+                group: this.assignGroup(register),
                 template: "register_set",
             }))
     }
@@ -498,7 +509,7 @@ export class ServicesBaseDSL {
                 ({ register }) =>
                     register.fields.length === 1 &&
                     isNumericType(register.fields[0]) &&
-                    register.identifier !== SystemReg.Intensity
+                    isReading(register)
             )
             .map<RegisterBlockDefinition>(({ service, register }) => ({
                 kind: "block",
@@ -559,7 +570,7 @@ export class ServicesBaseDSL {
                 helpUrl: serviceHelp(service),
                 service,
                 register,
-
+                group: this.assignGroup(register),
                 template: "register_get",
             }))
     }
@@ -598,7 +609,7 @@ export class ServicesBaseDSL {
                 service,
                 register,
                 field,
-
+                group: this.assignGroup(register),
                 template: "register_get",
             })
         )
@@ -729,6 +740,7 @@ export class ServicesBaseDSL {
                     kind: "block",
                     type: block.type,
                     values: block.values,
+                    group: "Events"
                 }))
 
         const makeCategory = (
@@ -737,6 +749,11 @@ export class ServicesBaseDSL {
             serviceBlocks: ServiceBlockDefinition[],
             eventFieldBLocks: EventFieldDefinition[]
         ) => {
+            const fieldBlocks = getFieldBlocks(service, eventFieldBLocks)
+            const groupedServiceBlocks = groupBy(
+                <ServiceBlockDefinition[]>[...serviceBlocks, ...fieldBlocks],
+                b => b.group || ""
+            )
             return {
                 kind: "category",
                 name: service.name + (isClient ? "" : " Server"),
@@ -758,13 +775,18 @@ export class ServicesBaseDSL {
                                 toRoleType(service, isClient)
                             ),
                     },
-                    ...serviceBlocks.map<BlockReference>(block => ({
-                        kind: "block",
-                        type: block.type,
-                        values: block.values,
-                    })),
-                    ...getFieldBlocks(service, eventFieldBLocks),
-                ],
+                    ...arrayConcatMany(
+                        Object.keys(groupedServiceBlocks).map(group => [
+                            group
+                                ? <LabelDefinition>{
+                                      kind: "label",
+                                      text: group,
+                                  }
+                                : undefined,
+                            ...groupedServiceBlocks[group],
+                        ])
+                    ),
+                ].filter(b => !!b),
             }
         }
 

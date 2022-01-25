@@ -134,6 +134,7 @@ export const identityTransformData = async (block: Block, data: object[]) =>
 export interface ServiceBlockDefinition extends BlockDefinition {
     template: BlockTemplate
     service: jdspec.ServiceSpec
+    group?: string
 }
 
 export interface ServiceBlockDefinitionFactory<T extends BlockDefinition> {

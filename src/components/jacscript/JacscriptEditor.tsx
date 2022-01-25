@@ -59,6 +59,11 @@ function JacScriptExecutor(props: { jscCompiled: VMCompileResponse }) {
     const handleRun = () => jscCommand("start")
     const handleStop = () => jscCommand("stop")
 
+    useEffect(() => {
+        // final stop
+        jscCommand("stop")
+    }, [])
+
     return (
         <Grid item>
             <IconButtonWithTooltip

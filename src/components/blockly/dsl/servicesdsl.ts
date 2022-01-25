@@ -19,6 +19,7 @@ import {
     EventBlockDefinition,
     identityTransformData,
     InputDefinition,
+    LabelDefinition,
     OptionsInputDefinition,
     toolsColour,
     TWIN_BLOCK,
@@ -449,7 +450,7 @@ export class ServicesBlockDomainSpecificLanguage
             },
         ]
 
-        return [
+        return <BlockDefinition[]>[
             ...this._serviceBlocks,
             ...this._eventFieldBlocks,
             ...this._roleBlocks,
