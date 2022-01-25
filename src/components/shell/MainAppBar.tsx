@@ -14,10 +14,8 @@ import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import OpenDashboardButton from "../buttons/OpenDashboardButton"
 import PacketStats from "./PacketStats"
 import { Link } from "gatsby-theme-material-ui"
-import ForumIcon from "@mui/icons-material/Forum"
 import { UIFlags } from "../../jacdac/providerbus"
 import { HideOnScroll } from "../ui/HideOnScroll"
-import OpenVMEditorButton from "../buttons/OpenVMEditorButton"
 import {
     DRAWER_WIDTH,
     MOBILE_BREAKPOINT,
@@ -146,9 +144,6 @@ function MainToolbar() {
                 full={"disconnected"}
             />
             <OpenDashboardButton className={clsx(classes.menuButton)} />
-            {false && (
-                <OpenVMEditorButton className={clsx(classes.menuButton)} />
-            )}
             <GitHubButton
                 className={clsx(
                     classes.menuButton,

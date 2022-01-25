@@ -7,7 +7,7 @@ import React, {
     useState,
 } from "react"
 import { Flags } from "../../../jacdac-ts/src/jdom/flags"
-import VMDiagnostics from "../vm/VMDiagnostics"
+import VMDiagnostics from "./VMDiagnostics"
 import BlockRolesToolbar from "../blockly/BlockRolesToolbar"
 import BlockContext, { BlockProvider } from "../blockly/BlockContext"
 import BlockDiagnostics from "../blockly/BlockDiagnostics"
