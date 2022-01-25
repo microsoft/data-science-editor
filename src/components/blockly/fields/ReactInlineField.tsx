@@ -46,6 +46,7 @@ export default class ReactInlineField<T = unknown> extends ReactField<T> {
                 this.size_.height = contentRect.height
                 fo.setAttribute("width", this.size_.width + "")
                 fo.setAttribute("height", this.size_.height + "")
+                fo.setAttribute("color", "#fff")
                 this.forceRerender()
                 const b = this.sourceBlock_
                 if (b?.workspace) {
