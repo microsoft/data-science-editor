@@ -9,7 +9,6 @@ import LEDColorField from "./LEDColorField"
 import TwinField from "./TwinField"
 import JDomTreeField from "./JDomTreeField"
 //import WatchValueField from "./WatchValueField"
-import LogViewField from "./LogViewField"
 import VariablesField from "./VariablesFields"
 import DataTableField from "./DataTableField"
 import DataColumnChooserField from "./DataColumnChooserField"
@@ -73,9 +72,6 @@ export function registerFields() {
         JDomTreeField,
 
         GaugeWidgetField,
-
-        //WatchValueField,
-        LogViewField,
 
         VariablesField,
         DataTableField,

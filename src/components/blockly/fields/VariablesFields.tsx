@@ -1,8 +1,5 @@
 import { styled } from "@mui/material/styles"
-import React, { useContext, useEffect, useState } from "react"
-import { VM_GLOBAL_CHANGE } from "../../../../jacdac-ts/src/vm/events"
-import { atomic } from "../../../../jacdac-ts/src/vm/utils"
-import WorkspaceContext from "../WorkspaceContext"
+import React, {  } from "react"
 import { ReactFieldJSON } from "./ReactField"
 import ReactInlineField from "./ReactInlineField"
 
@@ -27,6 +24,8 @@ const Root = styled("div")(({ theme }) => ({
 }))
 
 function VariablesWidget() {
+    return <>todo</>
+    /*
     const { runner } = useContext(WorkspaceContext)
 
     const [variables, setVariables] = useState<
@@ -56,6 +55,7 @@ function VariablesWidget() {
             )}
         </>
     )
+    */
 }
 
 export default class VariablesField extends ReactInlineField {

@@ -1,7 +1,6 @@
 import jsep from "jsep"
 import { toIdentifier } from "../../../../jacdac-ts/src/vm/compile"
 import { CmdWithErrors, makeVMBase } from "../../jacscript/JacscriptGenerator"
-import LogViewField from "../fields/LogViewField"
 import VariablesField from "../fields/VariablesFields"
 //import WatchValueField from "../fields/WatchValueField"
 import {
@@ -81,24 +80,6 @@ const toolsDSL: BlockDomainSpecificLanguage = {
             nextStatement: CODE_STATEMENT_TYPE,
             tooltip: `Log an entry to the console`,
             helpUrl: "",
-        },
-        {
-            kind: "block",
-            type: VIEW_LOG_BLOCK,
-            message0: `console %1 %2`,
-            args0: [
-                {
-                    type: "input_dummy",
-                },
-                <InputDefinition>{
-                    type: LogViewField.KEY,
-                    name: "watch",
-                },
-            ],
-            colour,
-            inputsInline: false,
-            tooltip: `View console content`,
-            template: "meta",
         },
     ],
     createCategory: () => [
