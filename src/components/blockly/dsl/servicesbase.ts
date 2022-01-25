@@ -68,7 +68,10 @@ import {
     STRING_TYPE,
     VariableInputDefinition,
 } from "../toolbox"
-import { ExpressionWithErrors, makeVMBase } from "../../jacscript/JacscriptGenerator"
+import {
+    ExpressionWithErrors,
+    makeVMBase,
+} from "../../jacscript/JacscriptGenerator"
 import {
     CompileCommandToVMOptions,
     CompileEventToVMOptions,
@@ -85,6 +88,7 @@ import { groupBy } from "../../../../jacdac-ts/src/jdom/utils"
 const SET_STATUS_LIGHT_BLOCK = "jacdac_set_status_light"
 const ROLE_BOUND_EVENT_BLOCK = "jacdac_role_bound_event"
 const ROLE_BOUND_BLOCK = "jacdac_role_bound"
+export const LOG_BLOCK = "tools_log"
 
 function isBooleanField(field: jdspec.PacketMember) {
     return field.type === "bool"
@@ -740,7 +744,7 @@ export class ServicesBaseDSL {
                     kind: "block",
                     type: block.type,
                     values: block.values,
-                    group: "Events"
+                    group: "Events",
                 }))
 
         const makeCategory = (
@@ -1027,11 +1031,33 @@ export class ServicesBaseDSL {
                 switch (type) {
                     case SET_STATUS_LIGHT_BLOCK: {
                         console.log("SET_STATUS")
+                        break
                     }
+                    case LOG_BLOCK: {
+                        const { expr, errors } = blockToExpression(
+                            undefined,
+                            inputs[0].child
+                        )
+                        return {
+                            cmd: makeVMBase(block, {
+                                type: "CallExpression",
+                                arguments: [expr],
+                                callee: <jsep.Literal>{
+                                    type: "Literal",
+                                    raw: "console.log",
+                                },
+                            }),
+                            errors,
+                        }
+                    }
+                    default:
+                        console.log(type)
+                        break
                 }
             }
         }
 
+        console.log(options)
         return undefined
     }
 }

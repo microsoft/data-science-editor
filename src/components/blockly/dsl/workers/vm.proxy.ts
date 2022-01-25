@@ -31,10 +31,6 @@ class JacScriptBridge extends JDBridge {
                     state !== this.state ||
                     JSON.stringify(this.variables) !== JSON.stringify(variables)
                 ) {
-                    console.debug("vm.proxy: received state", {
-                        state,
-                        variables,
-                    })
                     this.state = state
                     this.variables = variables
                     this.emit(CHANGE)

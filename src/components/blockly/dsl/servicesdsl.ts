@@ -19,7 +19,6 @@ import {
     EventBlockDefinition,
     identityTransformData,
     InputDefinition,
-    LabelDefinition,
     OptionsInputDefinition,
     toolsColour,
     TWIN_BLOCK,
@@ -42,13 +41,16 @@ import {
     serviceHelp,
     ServicesBaseDSL,
     toRoleType,
+    LOG_BLOCK
 } from "./servicesbase"
 import { humanify } from "../../../../jacdac-ts/jacdac-spec/spectool/jdspec"
+import VariablesField from "../fields/VariablesFields"
 
 const SET_STATUS_LIGHT_BLOCK = "jacdac_set_status_light"
 const ROLE_BOUND_EVENT_BLOCK = "jacdac_role_bound_event"
 const ROLE_BOUND_BLOCK = "jacdac_role_bound"
 const INSPECT_BLOCK = "jacdac_tools_inspect"
+const VARIABLES_BLOCK = "tools_variables_view"
 const commandColor = "#8c6a1d"
 
 export class ServicesBlockDomainSpecificLanguage
@@ -448,6 +450,42 @@ export class ServicesBlockDomainSpecificLanguage
                 helpUrl: "",
                 template: "meta",
             },
+            {
+                kind: "block",
+                type: VARIABLES_BLOCK,
+                message0: `variables %1 %2`,
+                args0: [
+                    {
+                        type: "input_dummy",
+                    },
+                    {
+                        type: VariablesField.KEY,
+                        name: "variables",
+                    },
+                ],
+                colour: toolsColour,
+                inputsInline: false,
+                tooltip: `Watch variables values`,
+                helpUrl: "",
+                template: "meta",
+            },   
+            {
+                kind: "block",
+                type: LOG_BLOCK,
+                message0: `log %1`,
+                args0: [
+                    <InputDefinition>{
+                        type: "input_value",
+                        name: "value",
+                    },
+                ],
+                colour: toolsColour,
+                inputsInline: true,
+                previousStatement: CODE_STATEMENT_TYPE,
+                nextStatement: CODE_STATEMENT_TYPE,
+                tooltip: `Log an entry to the console`,
+                helpUrl: "",
+            },
         ]
 
         return <BlockDefinition[]>[
@@ -505,6 +543,17 @@ export class ServicesBlockDomainSpecificLanguage
                     kind: "block",
                     type: INSPECT_BLOCK,
                 },
+                <BlockReference>{
+                    kind: "block",
+                    type: VARIABLES_BLOCK,
+                },
+                <BlockReference>{
+                    kind: "block",
+                    type: LOG_BLOCK,
+                    values: {
+                        value: { kind: "block", type: "text" },
+                    },
+                },                
             ],
         }
 
