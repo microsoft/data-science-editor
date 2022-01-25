@@ -86,7 +86,7 @@ import { JDService } from "../../../../jacdac-ts/src/jdom/service"
 import { groupBy } from "../../../../jacdac-ts/src/jdom/utils"
 
 const SET_STATUS_LIGHT_BLOCK = "jacdac_set_status_light"
-const ROLE_BOUND_EVENT_BLOCK = "jacdac_role_bound_event"
+export const ROLE_BOUND_EVENT_BLOCK = "jacdac_role_bound_event"
 const ROLE_BOUND_BLOCK = "jacdac_role_bound"
 export const LOG_BLOCK = "tools_log"
 
@@ -885,6 +885,14 @@ export class ServicesBaseDSL {
                 switch (type) {
                     case ROLE_BOUND_EVENT_BLOCK: {
                         const { value: role } = inputs[0].fields["role"]
+                        if (role === "none")
+                            return <CompileEventToVMResult>{
+                                expression: <jsep.CallExpression>{
+                                    type: "CallExpression",
+                                    arguments: [],
+                                    callee: toIdentifier("nop"),
+                                },
+                            }
                         const { value: eventName } = inputs[0].fields["event"]
                         return makeAwaitEvent(
                             "roleBound",

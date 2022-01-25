@@ -57,7 +57,8 @@ export default function workspaceJSONToJacScriptProgram(
     const [roles, serverRoles]: [VMRole[], VMRole[]] = splitFilter(
         workspace.variables
             .filter(v => BUILTIN_TYPES.indexOf(v.type) < 0)
-            .map(parseRoleType),
+            .map(parseRoleType)
+            .filter(r => !isNaN(r.serviceClass)),
         r => r.client
     )
 

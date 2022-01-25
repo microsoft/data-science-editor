@@ -41,13 +41,13 @@ import {
     serviceHelp,
     ServicesBaseDSL,
     toRoleType,
-    LOG_BLOCK
+    LOG_BLOCK,
+    ROLE_BOUND_EVENT_BLOCK
 } from "./servicesbase"
 import { humanify } from "../../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import VariablesField from "../fields/VariablesFields"
 
 const SET_STATUS_LIGHT_BLOCK = "jacdac_set_status_light"
-const ROLE_BOUND_EVENT_BLOCK = "jacdac_role_bound_event"
 const ROLE_BOUND_BLOCK = "jacdac_role_bound"
 const INSPECT_BLOCK = "jacdac_tools_inspect"
 const VARIABLES_BLOCK = "tools_variables_view"
@@ -304,7 +304,7 @@ export class ServicesBlockDomainSpecificLanguage
                     <VariableInputDefinition>{
                         type: "field_variable",
                         name: "role",
-                        variable: "any",
+                        variable: "none",
                         variableTypes: [
                             "client",
                             ...supportedServices.map(srv => toRoleType(srv)),
@@ -335,7 +335,7 @@ export class ServicesBlockDomainSpecificLanguage
                     <VariableInputDefinition>{
                         type: "field_variable",
                         name: "role",
-                        variable: "any",
+                        variable: "none",
                         variableTypes: [
                             "client",
                             ...supportedServices.map(srv => toRoleType(srv)),
