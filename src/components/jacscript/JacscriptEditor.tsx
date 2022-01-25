@@ -11,7 +11,7 @@ import VMDiagnostics from "../vm/VMDiagnostics"
 import BlockRolesToolbar from "../blockly/BlockRolesToolbar"
 import BlockContext, { BlockProvider } from "../blockly/BlockContext"
 import BlockDiagnostics from "../blockly/BlockDiagnostics"
-import workspaceJSONToVMProgram from "../vm/VMgenerator"
+import workspaceJSONToVMProgram from "./JacscriptGenerator"
 import BlockEditor from "../blockly/BlockEditor"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
 import {

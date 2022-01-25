@@ -1,6 +1,6 @@
 import jsep from "jsep"
 import { toIdentifier } from "../../../../jacdac-ts/src/vm/compile"
-import { CmdWithErrors, makeVMBase } from "../../vm/VMgenerator"
+import { CmdWithErrors, makeVMBase } from "../../jacscript/JacscriptGenerator"
 import LogViewField from "../fields/LogViewField"
 import VariablesField from "../fields/VariablesFields"
 import WatchValueField from "../fields/WatchValueField"

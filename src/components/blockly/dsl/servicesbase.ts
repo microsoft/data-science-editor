@@ -68,7 +68,7 @@ import {
     STRING_TYPE,
     VariableInputDefinition,
 } from "../toolbox"
-import { ExpressionWithErrors, makeVMBase } from "../../vm/VMgenerator"
+import { ExpressionWithErrors, makeVMBase } from "../../jacscript/JacscriptGenerator"
 import {
     CompileCommandToVMOptions,
     CompileEventToVMOptions,

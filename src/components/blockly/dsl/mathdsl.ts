@@ -1,5 +1,5 @@
 import jsep from "jsep"
-import { ExpressionWithErrors } from "../../vm/VMgenerator"
+import { ExpressionWithErrors } from "../../jacscript/JacscriptGenerator"
 import {
     BlockDefinition,
     BlockReference,
@@ -122,6 +122,7 @@ const mathDsl: BlockDomainSpecificLanguage = {
                     : value
             },
         },
+        /* TODO
         {
             kind: "block",
             type: "jacdac_math_map",
@@ -155,7 +156,7 @@ const mathDsl: BlockDomainSpecificLanguage = {
             ],
             output: "Number",
             style: "math_blocks",
-        },
+        }, */
     ],
     createCategory: () => [
         <CategoryDefinition>{
@@ -182,7 +183,7 @@ const mathDsl: BlockDomainSpecificLanguage = {
                     },
                 },
                 <BlockReference>{ kind: "block", type: "jacdac_math_random" },
-                { kind: "block", type: "jacdac_math_map" },
+                //{ kind: "block", type: "jacdac_math_map" },
                 { kind: "block", type: "math_number" },
             ],
         },

@@ -8,7 +8,7 @@ import {
     SeparatorDefinition,
     ValueInputDefinition,
 } from "../toolbox"
-import { makeVMBase, processErrors } from "../../vm/VMgenerator"
+import { makeVMBase, processErrors } from "../../jacscript/JacscriptGenerator"
 import BlockDomainSpecificLanguage from "./dsl"
 import { paletteColorByIndex } from "./palette"
 
@@ -122,7 +122,7 @@ const loopsDsl: BlockDomainSpecificLanguage = {
                     makeVMBase(block, {
                         type: "CallExpression",
                         arguments: [time],
-                        callee: toIdentifier("wait"),
+                        callee: toIdentifier("every"),
                     }) as VMCommand
                 ).command,
                 errors: processErrors(block, errors),

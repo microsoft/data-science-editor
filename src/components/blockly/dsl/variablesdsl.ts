@@ -4,7 +4,7 @@ import {
     toIdentifier,
     toMemberExpression,
 } from "../../../../jacdac-ts/src/vm/compile"
-import { makeVMBase } from "../../vm/VMgenerator"
+import { makeVMBase } from "../../jacscript/JacscriptGenerator"
 
 const variablesDsl: BlockDomainSpecificLanguage = {
     id: "variables",
