@@ -1,14 +1,6 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, {  } from "react"
 import { ReactFieldJSON } from "./ReactField"
-import { Box, Grid, Typography, useTheme } from "@mui/material"
-import WorkspaceContext from "../WorkspaceContext"
 import ReactInlineField from "./ReactInlineField"
-import { PointerBoundary } from "./PointerBoundary"
-import { VM_WATCH_CHANGE } from "../../../../jacdac-ts/src/vm/events"
-import { roundWithPrecision } from "../../../../jacdac-ts/src/jdom/utils"
-import useBlockData from "../useBlockData"
-import JacdacContext, { JacdacContextProps } from "../../../jacdac/Context"
-import SwitchWithLabel from "../../ui/SwitchWithLabel"
 
 export type WatchValueType = boolean | string | number
 
