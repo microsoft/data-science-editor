@@ -74,7 +74,7 @@ export default function workspaceJSONToVMProgram(
                 throw new EmptyExpression()
             }
             const { type, value, inputs } = block
-            console.log(`block2e`, { ev, block, type, value, inputs })
+            //console.log(`block2e`, { ev, block, type, value, inputs })
 
             if (value !== undefined)
                 // literal
@@ -144,7 +144,7 @@ export default function workspaceJSONToVMProgram(
         block: BlockJSON
     ): CmdWithErrors => {
         const { type, inputs } = block
-        console.debug(`block2c`, { event, type, block, inputs })
+        //console.debug(`block2c`, { event, type, block, inputs })
         switch (type) {
             case "dynamic_if": {
                 const thenHandler: VMHandler = {

@@ -12,12 +12,9 @@ import workerProxy, { WorkerProxy } from "./proxy"
 import bus from "../../../../jacdac/providerbus"
 import { CHANGE, MESSAGE } from "../../../../../jacdac-ts/src/jdom/constants"
 import { JDBridge } from "../../../../../jacdac-ts/src/jdom/bridge"
-import { toHex } from "../../../../../jacdac-ts/src/jdom/utils"
-
-export type JscState = VMState
 
 class VMBridge extends JDBridge {
-    state: VMState;
+    state: VMState = "stopped"
     constructor(readonly worker: WorkerProxy) {
         super()
         worker.on(MESSAGE, (msg: VMRequest) => {
@@ -29,8 +26,10 @@ class VMBridge extends JDBridge {
             } else if (type === "state") {
                 const { state } = msg as VMStateResponse
                 //console.debug("vm.proxy: received state", { state })
-                this.state = state;
-                this.emit(CHANGE);
+                if (state !== this.state) {
+                    this.state = state;
+                    this.emit(CHANGE);    
+                }
             }
         })
     }
@@ -60,7 +59,8 @@ export function jscBridge() {
  * @returns
  */
 export async function jscCompile(
-    source: string
+    source: string,
+    restart?: boolean
     // eslint-disable-next-line @typescript-eslint/ban-types
 ): Promise<VMCompileResponse> {
     const worker = workerProxy("vm")
@@ -68,6 +68,7 @@ export async function jscCompile(
         worker: "vm",
         type: "compile",
         source,
+        restart
     })
     return res
 }
@@ -96,6 +97,7 @@ export async function jscCommand(
     const bridge = jscBridge()
     if (action === "start") bridge.bus = bus
     else bridge.bus = undefined
+    console.log(`jsc: command ${action}`)
     const res = await bridge.worker.postMessage<
         VMCommandRequest,
         VMStateResponse

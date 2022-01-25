@@ -51,8 +51,10 @@ function JacScriptExecutor(props: { jscCompiled: VMCompileResponse }) {
     const { jscCompiled } = props
     const bridge = useMemo(() => jscBridge(), [])
     const state = useChange(bridge, _ => _?.state)
-    const stopped = state === undefined
-    const disabled = !jscCompiled
+    const running = state === "running"
+    const initializing = state === "initializing"
+    const stopped = !running
+    const disabled =  !jscCompiled || initializing
 
     const handleRun = () => jscCommand("start")
     const handleStop = () => jscCommand("stop")
@@ -60,7 +62,7 @@ function JacScriptExecutor(props: { jscCompiled: VMCompileResponse }) {
     return (
         <Grid item>
             <IconButtonWithTooltip
-                title={stopped ? "start" : "stop"}
+                title={running ? "stop" : "start"}
                 disabled={disabled}
                 color={stopped ? "primary" : "default"}
                 onClick={stopped ? handleRun : handleStop}
@@ -107,9 +109,8 @@ function JacScriptEditorWithContext() {
     )
     useEffectAsync(
         async mounted => {
-            const res =
-                jscProgram && (await jscCompile(jscProgram.program.join("\n")))
-            console.log({ res, mounted: mounted() })
+            const src = jscProgram?.program.join("\n")
+            const res = src && (await jscCompile(src, true))
             if (mounted()) setJscCompiled(res)
         },
         [jscProgram]
