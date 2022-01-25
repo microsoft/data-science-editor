@@ -1,7 +1,6 @@
 import type {
     VMCompileRequest,
     VMCompileResponse,
-    VMStateRequest,
     VMStateResponse,
     VMState,
     VMCommandRequest,
@@ -18,7 +17,7 @@ class JacScriptBridge extends JDBridge {
     variables: Record<string, number>
 
     constructor(readonly worker: WorkerProxy) {
-        super()
+        super(true)
         worker.on(MESSAGE, (msg: VMRequest) => {
             const { type } = msg
             if (type === "packet") {

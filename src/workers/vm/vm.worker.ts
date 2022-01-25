@@ -144,7 +144,10 @@ const handlers: { [index: string]: (props: any) => object | Promise<object> } =
                 runner.on(CHANGE, postState)
                 runner.on(GLOBALS_UPDATED, postState)
 
-                if (restart) await start() // background start
+                if (restart) {
+                    console.debug("vm.worker: restart")
+                    await start() // background start
+                }
             }
 
             return <Partial<VMCompileResponse>>{
