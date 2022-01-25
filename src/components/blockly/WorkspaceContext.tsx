@@ -16,7 +16,6 @@ import {
 import { JDEventSource } from "../../../jacdac-ts/src/jdom/eventsource"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { RoleManager } from "../../../jacdac-ts/src/jdom/rolemanager"
-import { VMProgramRunner } from "../../../jacdac-ts/src/vm/runner"
 import useChange from "../../jacdac/useChange"
 import { FileSystemDirectory } from "../fs/fsdom"
 import ReactField from "./fields/ReactField"
@@ -30,7 +29,6 @@ export class WorkspaceServices extends JDEventSource {
 
     private _workspaceJSON: WorkspaceJSON
 
-    private _runner: VMProgramRunner
     private _roleManager: RoleManager
 
     constructor() {
@@ -45,17 +43,6 @@ export class WorkspaceServices extends JDEventSource {
         if (value !== this._workspaceJSON) {
             this._workspaceJSON = value
             this.emit(WorkspaceServices.WORKSPACE_CHANGE)
-        }
-    }
-
-    get runner() {
-        return this._runner
-    }
-
-    set runner(value: VMProgramRunner) {
-        if (this._runner !== value) {
-            this._runner = value
-            this.emit(CHANGE)
         }
     }
 
@@ -192,7 +179,6 @@ export interface WorkspaceContextProps {
     role?: string
     roleServiceClass?: number
     twinService?: JDService
-    runner?: VMProgramRunner
 }
 
 export const WorkspaceContext = createContext<WorkspaceContextProps>({
@@ -205,7 +191,6 @@ export const WorkspaceContext = createContext<WorkspaceContextProps>({
     role: undefined,
     roleServiceClass: undefined,
     twinService: undefined,
-    runner: undefined,
 })
 WorkspaceContext.displayName = "Workspace"
 
@@ -224,7 +209,6 @@ export function WorkspaceProvider(props: {
     const workspace = sourceBlock?.workspace as WorkspaceSvg
     const services = resolveWorkspaceServices(workspace)
     const roleManager = useChange(services, _ => _?.roleManager)
-    const runner = useChange(services, _ => _?.runner)
     const [dragging, setDragging] = useState(!!workspace?.isDragging())
 
     const resolveRole = () => {
@@ -282,7 +266,7 @@ export function WorkspaceProvider(props: {
             setServiceId(resolveServiceId())
             setFlyout(!!newSourceBlock?.isInFlyout)
         })
-    }, [field, workspace, runner])
+    }, [field, workspace])
 
     // resolve current role service
     useEffect(() => {
@@ -296,7 +280,7 @@ export function WorkspaceProvider(props: {
             ),
         ]
         return () => unsubs.forEach(unsub => unsub?.())
-    }, [role, serviceId, roleManager, runner])
+    }, [role, serviceId, roleManager])
 
     const handleWorkspaceEvent = useCallback(
         (event: Events.Abstract & { type: string }) => {
@@ -323,7 +307,6 @@ export function WorkspaceProvider(props: {
                 role,
                 roleServiceClass,
                 twinService,
-                runner,
                 flyout,
             }}
         >

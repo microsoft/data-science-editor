@@ -4,17 +4,20 @@ import { Box, Grid, Typography, useTheme } from "@mui/material"
 import WorkspaceContext from "../WorkspaceContext"
 import ReactInlineField from "./ReactInlineField"
 import { PointerBoundary } from "./PointerBoundary"
-import { WatchValueType } from "../../../../jacdac-ts/src/vm/runner"
 import { VM_WATCH_CHANGE } from "../../../../jacdac-ts/src/vm/events"
 import { roundWithPrecision } from "../../../../jacdac-ts/src/jdom/utils"
 import useBlockData from "../useBlockData"
 import JacdacContext, { JacdacContextProps } from "../../../jacdac/Context"
 import SwitchWithLabel from "../../ui/SwitchWithLabel"
 
+export type WatchValueType = boolean | string | number
+
 const HORIZON = 10
 function WatchValueWidget() {
+    return <>TODO</>
+    /*
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const { runner, sourceId, sourceBlock } = useContext(WorkspaceContext)
+    const { sourceId, sourceBlock } = useContext(WorkspaceContext)
     const { data, setData } = useBlockData<{
         time: number
         value: number
@@ -88,6 +91,7 @@ function WatchValueWidget() {
             </Grid>
         </Box>
     )
+    */
 }
 
 export default class WatchValueField extends ReactInlineField {
