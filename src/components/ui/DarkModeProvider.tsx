@@ -29,9 +29,9 @@ export default function DarkModeProvider(props: {
     const [darkModeMounted, setMounted] = useState(false)
 
     const setMode = (mode: PaletteType) => {
-        if (mode === darkMode) return // nothing to do
+        if (mode === darkMode || fixedDarkMode) return // nothing to do
 
-        if (!fixedDarkMode && typeof window !== "undefined")
+        if (typeof window !== "undefined")
             window.localStorage.setItem(KEY, mode)
         setDarkMode(mode)
     }

@@ -14,7 +14,6 @@ export const DEFAULT_COLORS = [
     },
     { name: "blue", value: 0x0000ff },
     { name: "green", value: 0x00ff00 },
-    { name: "yellow", value: 0xffff00 },
     { name: "black", value: 0x010101 },
 ]
 

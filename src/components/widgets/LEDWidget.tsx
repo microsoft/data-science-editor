@@ -271,16 +271,18 @@ export default function LEDWidget(props: {
                     ledCount={ledCount}
                 />
             </Grid>
-            <LEDWidgetController
-                color={color}
-                waveLength={waveLength}
-                ledColor={ledColor}
-                onLedColorChange={onLedColorChange}
-                speed={speed}
-                onSpeedChange={onSpeedChange}
-                brightness={brightness}
-                onBrightnessChange={onBrightnessChange}
-            />
+            <Grid item xs={12}>
+                <LEDWidgetController
+                    color={color}
+                    waveLength={waveLength}
+                    ledColor={ledColor}
+                    onLedColorChange={onLedColorChange}
+                    speed={speed}
+                    onSpeedChange={onSpeedChange}
+                    brightness={brightness}
+                    onBrightnessChange={onBrightnessChange}
+                />
+            </Grid>
         </Grid>
     )
 }

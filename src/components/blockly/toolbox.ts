@@ -193,7 +193,7 @@ export const MODEL_BLOCK_LAYER_STATEMENT_TYPE = "ModelBlockLayerStatement"
 export const TWIN_BLOCK = "jacdac_tools_twin"
 export const SENSOR_BLOCK = "jacdac_sensors_sensor"
 
-export const toolsColour = paletteColorByIndex(-1)
+export const toolsColour = "#303030"
 export const sensorsColour = paletteColorByIndex(0)
 
 export const CHART_WIDTH = 468
