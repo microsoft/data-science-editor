@@ -1,6 +1,7 @@
 import { compile, JacError, Host, RunnerState, Runner } from "jacscript"
 import {
     CHANGE,
+    GLOBALS_UPDATED,
     JDBus,
     localStorageSetting,
     Packet,
@@ -38,6 +39,7 @@ export interface VMStateRequest extends VMMessage {
 
 export interface VMStateResponse extends VMMessage {
     state?: VMState
+    variables?: Record<string, number>
 }
 
 export interface VMCommandRequest extends VMMessage {
@@ -96,11 +98,13 @@ const states: Record<RunnerState, VMState> = {
 
 function postState() {
     const state = states[runner?.state] || RunnerState.Stopped
+    const variables = runner?.globals()
     console.log(`jscw: state ${state}`)
     self.postMessage(<VMStateResponse>{
         type: "state",
         worker: "vm",
         state,
+        variables
     })
 }
 
@@ -138,6 +142,7 @@ const handlers: { [index: string]: (props: any) => object | Promise<object> } =
                 runner = new Runner(bus, binary, dbg)
                 runner.options.setting = localStorageSetting
                 runner.on(CHANGE, postState)
+                runner.on(GLOBALS_UPDATED, postState)
 
                 if (restart) await start() // background start
             }
@@ -152,6 +157,7 @@ const handlers: { [index: string]: (props: any) => object | Promise<object> } =
         state: () =>
             <Partial<VMStateResponse>>{
                 state: states[runner?.state] || RunnerState.Stopped,
+                variables: runner?.globals()
             },
         command: async (props: VMCommandRequest) => {
             const { action } = props

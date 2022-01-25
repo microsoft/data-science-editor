@@ -13,8 +13,10 @@ import bus from "../../../../jacdac/providerbus"
 import { CHANGE, MESSAGE } from "../../../../../jacdac-ts/src/jdom/constants"
 import { JDBridge } from "../../../../../jacdac-ts/src/jdom/bridge"
 
-class VMBridge extends JDBridge {
+class JacScriptBridge extends JDBridge {
     state: VMState = "stopped"
+    variables: Record<string, number>
+
     constructor(readonly worker: WorkerProxy) {
         super()
         worker.on(MESSAGE, (msg: VMRequest) => {
@@ -24,11 +26,18 @@ class VMBridge extends JDBridge {
                 //console.debug("vm.proxy: received packet from worker", toHex(data))
                 bridge.receivePacket(data)
             } else if (type === "state") {
-                const { state } = msg as VMStateResponse
-                //console.debug("vm.proxy: received state", { state })
-                if (state !== this.state) {
-                    this.state = state;
-                    this.emit(CHANGE);    
+                const { state, variables } = msg as VMStateResponse
+                if (
+                    state !== this.state ||
+                    JSON.stringify(this.variables) !== JSON.stringify(variables)
+                ) {
+                    console.debug("vm.proxy: received state", {
+                        state,
+                        variables,
+                    })
+                    this.state = state
+                    this.variables = variables
+                    this.emit(CHANGE)
                 }
             }
         })
@@ -44,11 +53,11 @@ class VMBridge extends JDBridge {
     }
 }
 
-let bridge: VMBridge
-export function jscBridge() {
+let bridge: JacScriptBridge
+export function jacScriptBridge() {
     if (!bridge) {
         const worker = workerProxy("vm")
-        bridge = new VMBridge(worker)
+        bridge = new JacScriptBridge(worker)
     }
     return bridge
 }
@@ -58,7 +67,7 @@ export function jscBridge() {
  * @param source
  * @returns
  */
-export async function jscCompile(
+export async function jacScriptCompile(
     source: string,
     restart?: boolean
     // eslint-disable-next-line @typescript-eslint/ban-types
@@ -68,22 +77,9 @@ export async function jscCompile(
         worker: "vm",
         type: "compile",
         source,
-        restart
+        restart,
     })
     return res
-}
-
-/**
- * Queries the execution state of the runner
- * @returns
- */
-export async function jscState(): Promise<VMState> {
-    const worker = workerProxy("vm")
-    const res = await worker.postMessage<VMStateRequest, VMStateResponse>({
-        worker: "vm",
-        type: "state",
-    })
-    return res?.state
 }
 
 /**
@@ -91,10 +87,10 @@ export async function jscState(): Promise<VMState> {
  * @param source
  * @returns
  */
-export async function jscCommand(
+export async function jacScriptCommand(
     action: "start" | "stop"
 ): Promise<VMStateResponse> {
-    const bridge = jscBridge()
+    const bridge = jacScriptBridge()
     if (action === "start") bridge.bus = bus
     else bridge.bus = undefined
     console.log(`jsc: command ${action}`)

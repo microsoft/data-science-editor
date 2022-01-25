@@ -30,9 +30,9 @@ import {
 } from "../../../jacdac-ts/src/vm/ir2jacscript"
 import useEffectAsync from "../useEffectAsync"
 import {
-    jscCompile,
-    jscCommand,
-    jscBridge,
+    jacScriptCompile,
+    jacScriptCommand,
+    jacScriptBridge,
 } from "../blockly/dsl/workers/vm.proxy"
 import type { VMCompileResponse } from "../../workers/vm/vm.worker"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
@@ -49,19 +49,19 @@ const JACSCRIPT_NEW_FILE_CONTENT = JSON.stringify({
 
 function JacScriptExecutor(props: { jscCompiled: VMCompileResponse }) {
     const { jscCompiled } = props
-    const bridge = useMemo(() => jscBridge(), [])
+    const bridge = useMemo(() => jacScriptBridge(), [])
     const state = useChange(bridge, _ => _?.state)
     const running = state === "running"
     const initializing = state === "initializing"
     const stopped = !running
     const disabled =  !jscCompiled || initializing
 
-    const handleRun = () => jscCommand("start")
-    const handleStop = () => jscCommand("stop")
+    const handleRun = () => jacScriptCommand("start")
+    const handleStop = () => jacScriptCommand("stop")
 
     useEffect(() => {
         // final stop
-        jscCommand("stop")
+        jacScriptCommand("stop")
     }, [])
 
     return (
@@ -115,7 +115,7 @@ function JacScriptEditorWithContext() {
     useEffectAsync(
         async mounted => {
             const src = jscProgram?.program.join("\n")
-            const res = src && (await jscCompile(src, true))
+            const res = src && (await jacScriptCompile(src, true))
             if (mounted()) setJscCompiled(res)
         },
         [jscProgram]

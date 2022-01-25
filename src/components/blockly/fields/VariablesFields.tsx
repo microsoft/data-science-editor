@@ -1,5 +1,7 @@
 import { styled } from "@mui/material/styles"
-import React, {  } from "react"
+import React, { useMemo } from "react"
+import useChange from "../../../jacdac/useChange"
+import { jacScriptBridge } from "../dsl/workers/vm.proxy"
 import { ReactFieldJSON } from "./ReactField"
 import ReactInlineField from "./ReactInlineField"
 
@@ -24,38 +26,22 @@ const Root = styled("div")(({ theme }) => ({
 }))
 
 function VariablesWidget() {
-    return <>todo</>
-    /*
-    const { runner } = useContext(WorkspaceContext)
+    const bridge = useMemo(() => jacScriptBridge(), [])
+    const variables = useChange(bridge, _ => _?.variables)
 
-    const [variables, setVariables] = useState<
-        { name: string; value: atomic }[]
-    >(runner?.globals())
-    useEffect(
-        () =>
-            runner?.subscribe(VM_GLOBAL_CHANGE, () =>
-                setVariables(runner.globals())
-            ),
-        [runner]
-    )
-
+    if (!variables) return null
     return (
-        <>
-            {variables && (
-                <table className={classes.table}>
-                    <tbody>
-                        {variables?.map(({ name, value }) => (
-                            <tr key={name}>
-                                <td>{name}</td>
-                                <td>{value}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            )}
-        </>
+        <table className={classes.table}>
+            <tbody>
+                {Object.entries(variables).map(([ name, value ]) => (
+                    <tr key={name}>
+                        <td>{name}</td>
+                        <td>{value}</td>
+                    </tr>
+                ))}
+            </tbody>
+        </table>
     )
-    */
 }
 
 export default class VariablesField extends ReactInlineField {
