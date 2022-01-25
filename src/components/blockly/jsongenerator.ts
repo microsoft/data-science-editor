@@ -27,6 +27,9 @@ export function workspaceToJSON(
             text_input: block => block.getFieldValue("TEXT"),
             math_number: block => Number(block.getFieldValue("NUM") || "0"),
             logic_boolean: block => block.getFieldValue("BOOL") === "TRUE",
+            jacdac_byte: block => Number(block.getFieldValue("value") || "0"),
+            jacdac_percent: block => Number(block.getFieldValue("value") || "0") / 100.0,
+            jacdac_ratio: block => Number(block.getFieldValue("value") || "0"),
         }
 
     const variableToJSON = (variable: Blockly.VariableModel): VariableJSON => ({
