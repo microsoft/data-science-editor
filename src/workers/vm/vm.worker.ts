@@ -97,7 +97,7 @@ const states: Record<RunnerState, VMState> = {
 }
 
 function postState() {
-    const state = states[runner?.state] || RunnerState.Stopped
+    const state = states[runner?.state ?? RunnerState.Stopped]
     const variables = runner?.globals()
     console.log(`jscw: state ${state}`)
     self.postMessage(<VMStateResponse>{
