@@ -153,7 +153,6 @@
     "docsserve": "node node_modules/gatsby/cli.js serve",
     "dockerdocs": "node node_modules/gatsby/cli.js develop --host:0.0.0.0",
     "buildspecs": "cd jacdac-ts && yarn buildspecs  && cd .. && cp -r jacdac-ts/jacdac-spec/services/generated/makecode/* pxt-jacdac && cp -r jacdac-ts/jacdac-spec/services/generated/python/* jacdac-python/jacdac && rm jacdac-dotnet/Jacdac/Constants/*.cs && cp -r jacdac-ts/jacdac-spec/services/generated/cs/* jacdac-dotnet/Jacdac",
-    "watchts": "cd jacdac-ts && yarn watch",
     "buildml4f": "cd ml4f && yarn",
     "buildpxt": "cd pxt-jacdac && sh mk.sh",
     "buildmodels": "cd static/models && sh mk.sh",
@@ -170,6 +169,8 @@
     "watchworkertf": "cd src/workers/tf && node ../../../node_modules/microbundle/dist/cli.js watch -f modern --no-compress --types --ts-config tsconfig.json",
     "watchworkervm": "cd src/workers/vm && node ../../../node_modules/microbundle/dist/cli.js watch -f modern --no-compress --types --ts-config tsconfig.json",
     "watchworkercad": "cd src/workers/cad && node ../../../node_modules/microbundle/dist/cli.js watch -f modern --no-compress --types --ts-config tsconfig.json",
+    "watchts": "cd jacdac-ts && yarn watch",
+    "watchjacscript": "cd jacdac-ts/jacscript && yarn watch",
     "buildcssamples": "cd jacdac-dotnet && snippets.bat"
   },
   "repository": {
