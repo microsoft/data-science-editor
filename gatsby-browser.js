@@ -49,9 +49,13 @@ function tryUpdate(force) {
 
 export const onRouteUpdate = async ({ location }, options) => {
     if (window.analytics && window.analytics.page) window.analytics.page()
-    const reg = await navigator.serviceWorker.getRegistration()
-    if (reg) reg.update()
-    else tryUpdate()
+    try {
+        const reg = await navigator.serviceWorker.getRegistration()
+        if (reg) reg.update()
+        else tryUpdate()
+    } catch(e) {
+        console.debug(e)
+    }
 }
 
 export const onServiceWorkerUpdateReady = () => {
