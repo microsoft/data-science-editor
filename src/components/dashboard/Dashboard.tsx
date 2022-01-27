@@ -22,6 +22,7 @@ import { Flags } from "../../../jacdac-ts/src/jdom/flags"
 import HostedSimulatorsContext from "../HostedSimulatorsContext"
 import FirmwareAlert from "../firmware/FirmwareAlert"
 import useBus from "../../jacdac/useBus"
+import StartSimulatorButton from "../buttons/StartSimulatorButton"
 
 function defaultDeviceSort(l: JDDevice, r: JDDevice): number {
     const srvScore = (srv: jdspec.ServiceSpec) =>
@@ -85,8 +86,6 @@ export default function Dashboard(props: DashboardProps) {
     const { isHostedSimulator, clearHostedSimulators } = useContext(
         HostedSimulatorsContext
     )
-    const { toggleShowDeviceHostsDialog } = useContext(AppContext)
-    const handleShowStartSimulator = () => toggleShowDeviceHostsDialog()
     const devices = useDevices({
         announced: true,
         ignoreInfrastructure: !Flags.diagnostics,
@@ -124,13 +123,7 @@ export default function Dashboard(props: DashboardProps) {
                                     <DevicesIcon />
                                 </IconButtonWithTooltip>
                             )}
-                            <IconButtonWithTooltip
-                                trackName="dashboard.simulators.start"
-                                title="start simulator"
-                                onClick={handleShowStartSimulator}
-                            >
-                                <AddIcon />
-                            </IconButtonWithTooltip>
+                            <StartSimulatorButton trackName="dashboard.simulators.start" />
                             <IconButtonWithTooltip
                                 trackName="dashboard.simulators.clear"
                                 title="clear simulators"
