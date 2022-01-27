@@ -57,6 +57,7 @@ import FileTabs from "../../components/fs/FileTabs"
 import FileSystemContext from "../../components/FileSystemContext"
 import useChange from "../../jacdac/useChange"
 import GridHeader from "../../components/ui/GridHeader"
+import useSnackbar from "../../components/hooks/useSnackbar"
 
 const LIVE_HORIZON = 24
 function createDataSet(
@@ -81,8 +82,9 @@ const COLLECTOR_START_DELAY = "jacdac:collector:startdelay"
 
 export default function Collector() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const { toggleShowDeviceHostsDialog, enqueueSnackbar } =
+    const { toggleShowDeviceHostsDialog } =
         useContext(AppContext)
+    const { enqueueSnackbar} = useSnackbar()
     const handleShowStartSimulator = () =>
         toggleShowDeviceHostsDialog({ sensor: true })
     const { fileSystem } = useContext(FileSystemContext)

@@ -41,9 +41,9 @@ import {
 } from "../../../jacdac-ts/src/jdom/constants"
 import { UIFlags } from "../../jacdac/providerbus"
 import { resolveUnit } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
-import JacdacIcon from "../icons/JacdacIcon"
 import useBus from "../../jacdac/useBus"
 import useChange from "../../jacdac/useChange"
+import useSnackbar from "../hooks/useSnackbar"
 
 const PREFIX = "ToolsDrawer"
 
@@ -125,8 +125,7 @@ export default function ToolsDrawer() {
     } = useContext(AppContext)
     const bus = useBus()
     const passive = useChange(bus, _ => _.passive)
-    const { enqueueSnackbar } =
-        useContext(AppContext)
+    const { enqueueSnackbar } = useSnackbar()
     const { toggleDarkMode, darkMode } = useContext(DarkModeContext)
     const { converters, setConverter } = useUnitConverters()
     const handleShowStartSimulator = () => toggleShowDeviceHostsDialog()
