@@ -54,7 +54,6 @@ import useSnackbar from "../hooks/useSnackbar"
 
 export interface BlockProps {
     editorId: string
-    setEditorId: (id: string) => void
 
     dsls: BlockDomainSpecificLanguage[]
     workspace: WorkspaceSvg
@@ -70,7 +69,6 @@ export interface BlockProps {
 
 const BlockContext = createContext<BlockProps>({
     editorId: "",
-    setEditorId: () => {},
     dsls: [],
     workspace: undefined,
     workspaceXml: undefined,
@@ -90,12 +88,13 @@ export default BlockContext
 
 // eslint-disable-next-line react/prop-types
 export function BlockProvider(props: {
+    editorId: string
     storageKey: string
     dsls: BlockDomainSpecificLanguage[]
     onBeforeSaveWorkspaceFile?: (file: WorkspaceFile) => void
     children: ReactNode
 }) {
-    const { storageKey, dsls, children, onBeforeSaveWorkspaceFile } = props
+    const { editorId, storageKey, dsls, children, onBeforeSaveWorkspaceFile } = props
     const { setError } = useSnackbar()
     const { fileSystem } = useContext(FileSystemContext)
     const workspaceDirectory = useChange(fileSystem, _ => _?.workingDirectory)
@@ -117,7 +116,6 @@ export function BlockProvider(props: {
         }[]
     >([])
     const [dragging, setDragging] = useState(false)
-    const [editorId, setEditorId] = useState("")
 
     const setWorkspaceXml = (xml: string) => {
         _setWorkspaceXml(xml)
@@ -367,7 +365,6 @@ export function BlockProvider(props: {
         <BlockContext.Provider
             value={{
                 editorId,
-                setEditorId,
                 dsls,
                 workspace,
                 workspaceXml,

@@ -369,7 +369,7 @@ function ModelBlockEditorWithContext(props: {
     const toggleTrainModelDialog = () => toggleDialog("model")
     const toggleTestModelDialog = () => toggleDialog("trained_model")
     const toggleNewClassifierDialog = () => toggleDialog("classifier")
-    const toggleDialog = (dialog) => {
+    const toggleDialog = dialog => {
         if (dialog != "none") setVisibleDialog(dialog)
         else setVisibleDialog("none")
     }
@@ -712,7 +712,7 @@ function ModelBlockEditorWithContext(props: {
                 </Grid>
             )}
             <Grid item xs={12}>
-                <BlockEditor editorId={MB_EDITOR_ID} />
+                <BlockEditor />
                 {Flags.diagnostics && <BlockDiagnostics />}
                 <Suspense>
                     <ModelBlockDialogs
@@ -744,7 +744,11 @@ export default function ModelBlockEditor() {
     return (
         <NoSsr>
             <FileSystemProvider>
-                <BlockProvider storageKey={MB_SOURCE_STORAGE_KEY} dsls={dsls}>
+                <BlockProvider
+                    editorId={MB_EDITOR_ID}
+                    storageKey={MB_SOURCE_STORAGE_KEY}
+                    dsls={dsls}
+                >
                     <ModelBlockEditorWithContext
                         allRecordings={recordings}
                         trainedModels={models}

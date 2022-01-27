@@ -43,7 +43,7 @@ function SensorsEditorWithContext() {
                 </Grid>
             )}
             <Grid item xs={12}>
-                <BlockEditor editorId={SENSORS_EDITOR_ID} />
+                <BlockEditor />
             </Grid>
             {Flags.diagnostics && <BlockDiagnostics />}
         </Grid>
@@ -70,7 +70,7 @@ export default function DSBlockEditor() {
 
     return (
         <NoSsr>
-            <BlockProvider storageKey={SENSORS_SOURCE_STORAGE_KEY} dsls={dsls}>
+            <BlockProvider editorId={SENSORS_EDITOR_ID} storageKey={SENSORS_SOURCE_STORAGE_KEY} dsls={dsls}>
                 <SensorsEditorWithContext />
             </BlockProvider>
         </NoSsr>

@@ -143,7 +143,7 @@ function JacScriptEditorWithContext() {
                         </BlockRolesToolbar>
                     </Grid>
                     <Grid item xs={12}>
-                        <BlockEditor editorId={JACSCRIPT_EDITOR_ID} />
+                        <BlockEditor />
                     </Grid>
                     {Flags.diagnostics && (
                         <>
@@ -174,6 +174,7 @@ export default function JacscriptEditor() {
     return (
         <NoSsr>
             <BlockProvider
+                editorId={JACSCRIPT_EDITOR_ID}
                 storageKey={JACSCRIPT_SOURCE_STORAGE_KEY}
                 dsls={dsls}
                 onBeforeSaveWorkspaceFile={

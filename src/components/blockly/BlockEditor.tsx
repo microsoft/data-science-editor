@@ -48,29 +48,18 @@ const Root = styled("div")(({ theme }) => ({
     },
 }))
 
-function SuspendedBlockEditor(props: { editorId: string; className?: string }) {
-    const { editorId, className } = props
+function SuspendedBlockEditor(props: { className?: string }) {
+    const { className } = props
     const {
         toolboxConfiguration,
         workspaceXml,
         setWorkspace,
         setWorkspaceXml,
-        setEditorId,
     } = useContext(BlockContext)
 
     const { darkMode } = useContext(DarkModeContext)
     const { setError } = useSnackbar()
     const theme = darkMode === "dark" ? DarkTheme : Theme
-
-    // setup editor id in context
-    useEffect(() => {
-        console.log(`set editor id ${editorId}`)
-        setEditorId(editorId)
-        return () => {
-            console.log("clear editor id")
-            setEditorId("")
-        }
-    }, [editorId])
 
     // ReactBlockly
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -144,7 +133,6 @@ function SuspendedBlockEditor(props: { editorId: string; className?: string }) {
 }
 
 export default function BlockEditor(props: {
-    editorId: string
     className?: string
 }) {
     const { toolboxConfiguration } = useContext(BlockContext)

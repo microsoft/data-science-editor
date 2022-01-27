@@ -39,7 +39,7 @@ function DSEditorWithContext() {
                 </Grid>
             )}
             <Grid item xs={12}>
-                <BlockEditor editorId={DS_EDITOR_ID} />
+                <BlockEditor />
             </Grid>
             {Flags.diagnostics && <BlockDiagnostics />}
         </Grid>
@@ -66,7 +66,7 @@ export default function DSBlockEditor() {
 
     return (
         <NoSsr>
-            <BlockProvider storageKey={DS_SOURCE_STORAGE_KEY} dsls={dsls}>
+            <BlockProvider editorId={DS_EDITOR_ID}  storageKey={DS_SOURCE_STORAGE_KEY} dsls={dsls}>
                 <DSEditorWithContext />
             </BlockProvider>
         </NoSsr>
