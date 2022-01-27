@@ -1,4 +1,4 @@
-import { Grid, NoSsr } from "@mui/material"
+import { Chip, Grid, NoSsr } from "@mui/material"
 import React, {
     useCallback,
     useContext,
@@ -39,6 +39,7 @@ import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import PlayArrowIcon from "@mui/icons-material/PlayArrow"
 import StopIcon from "@mui/icons-material/Stop"
 import useChange from "../../jacdac/useChange"
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 
 const JACSCRIPT_EDITOR_ID = "jcs"
 const JACSCRIPT_SOURCE_STORAGE_KEY = "tools:jacscripteditor"
@@ -47,8 +48,11 @@ const JACSCRIPT_NEW_FILE_CONTENT = JSON.stringify({
     xml: "",
 } as WorkspaceFile)
 
-function JacScriptExecutor(props: { jscCompiled: VMCompileResponse }) {
-    const { jscCompiled } = props
+function JacScriptExecutor(props: {
+    jscCompiled: VMCompileResponse
+    useChip?: boolean
+}) {
+    const { jscCompiled, useChip } = props
     const bridge = useMemo(() => jacScriptBridge(), [])
     const state = useChange(bridge, _ => _?.state)
     const running = state === "running"
@@ -59,21 +63,31 @@ function JacScriptExecutor(props: { jscCompiled: VMCompileResponse }) {
     const handleRun = () => jacScriptCommand("start")
     const handleStop = () => jacScriptCommand("stop")
 
-    useEffect(() => {
-        // final stop
-        jacScriptCommand("stop")
-    }, [])
+    const title = initializing ? "starting" : running ? "stop" : "start"
+    const color = stopped ? "primary" : "default"
+    const onClick = stopped ? handleRun : handleStop
+    const icon = initializing ? <HourglassEmptyIcon /> : stopped ? <PlayArrowIcon /> : <StopIcon />
 
     return (
         <Grid item>
-            <IconButtonWithTooltip
-                title={running ? "stop" : "start"}
-                disabled={disabled}
-                color={stopped ? "primary" : "default"}
-                onClick={stopped ? handleRun : handleStop}
-            >
-                {stopped ? <PlayArrowIcon /> : <StopIcon />}
-            </IconButtonWithTooltip>
+            {useChip ? (
+                <Chip
+                    label={title}
+                    icon={icon}
+                    color={color}
+                    onClick={onClick}
+                    disabled={disabled}
+                />
+            ) : (
+                <IconButtonWithTooltip
+                    title={title}
+                    disabled={disabled}
+                    color={color}
+                    onClick={onClick}
+                >
+                    {icon}
+                </IconButtonWithTooltip>
+            )}
         </Grid>
     )
 }
@@ -124,11 +138,12 @@ function JacScriptEditorWithContext() {
         [jscProgram]
     )
     useEffect(() => {
-        if (jscCompiled)
-            jacScriptCommand("start");
-        else
-            jacScriptCommand("stop");
+        if (jscCompiled) jacScriptCommand("start")
+        else jacScriptCommand("stop")
     }, [jscCompiled])
+
+    // final cleanup on exit
+    useEffect(() => () => { jacScriptCommand("stop") }, [])
 
     return (
         <Grid container spacing={1}>
@@ -145,7 +160,7 @@ function JacScriptEditorWithContext() {
                     )}
                     <Grid item xs={12}>
                         <BlockRolesToolbar>
-                            <JacScriptExecutor jscCompiled={jscCompiled} />
+                            <JacScriptExecutor jscCompiled={jscCompiled} useChip={true} />
                         </BlockRolesToolbar>
                     </Grid>
                     <Grid item xs={12}>
