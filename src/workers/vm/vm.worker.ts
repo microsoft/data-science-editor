@@ -18,7 +18,11 @@ export interface VMMessage {
 }
 
 export interface VMRequest extends VMMessage {
-    type?: string
+    type?: string    
+}
+
+export interface VMResponse extends VMRequest {
+    error?: string
 }
 
 export interface VMCompileRequest extends VMMessage {
@@ -74,9 +78,17 @@ bus.on(PACKET_SEND, (pkt: Packet) => {
 })
 
 class WorkerHost implements Host {
-    files: Record<string, Uint8Array | string> = {}
-    logs = ""
-    errors: JacError[] = []
+    files: Record<string, Uint8Array | string> 
+    logs: string
+    errors: JacError[]
+
+    constructor() {
+        this.files = {}
+        this.logs = ""
+        this.errors = []
+
+        this.error = this.error.bind(this)
+    }
 
     write(filename: string, contents: Uint8Array | string) {
         this.files[filename] = contents
@@ -202,8 +214,10 @@ async function handleMessage(event: MessageEvent) {
             self.postMessage(resp)
         }
     } catch (e) {
+        console.debug(`vm: error ${e + ""}`, e)
         self.postMessage({
             id,
+            type,
             worker,
             error: e + "",
         })

@@ -54,7 +54,7 @@ function JacScriptExecutor(props: { jscCompiled: VMCompileResponse }) {
     const running = state === "running"
     const initializing = state === "initializing"
     const stopped = !running
-    const disabled =  !jscCompiled || initializing
+    const disabled = !jscCompiled || initializing
 
     const handleRun = () => jacScriptCommand("start")
     const handleStop = () => jacScriptCommand("stop")
@@ -88,7 +88,10 @@ function JacScriptEditorWithContext() {
 
     useEffect(() => {
         try {
-            const newProgram = workspaceJSONToJacScriptProgram(workspaceJSON, dsls)
+            const newProgram = workspaceJSONToJacScriptProgram(
+                workspaceJSON,
+                dsls
+            )
             if (JSON.stringify(newProgram) !== JSON.stringify(program)) {
                 setProgram(newProgram)
                 const jsc = toJacScript(newProgram)

@@ -36,6 +36,8 @@ export class WorkerProxy extends JDEventSource {
         const pending = id && this.pendings[id]
         if (pending) {
             assert(worker === message.worker)
+            if (message.error)
+                console.debug(`${this.workerid}: error: ${message.error}`, message)
             pending.resolve(message)
         } else {
             this.emit(MESSAGE, event.data)
