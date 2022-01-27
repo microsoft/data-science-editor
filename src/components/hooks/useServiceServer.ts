@@ -7,7 +7,8 @@ export default function useServiceServer<T extends JDServiceServer>(
     service: JDService,
     createTwin?: () => T
 ) {
-    const provider = useServiceProvider(service?.device)
+    const device = service?.device
+    const provider = useServiceProvider(device)
     const twin = useMemo<T>(() => {
         if (provider) return undefined
         let twin = service?.twin as T
@@ -16,6 +17,6 @@ export default function useServiceServer<T extends JDServiceServer>(
             if (twin) service.twin = twin
         }
         return twin
-    }, [service, provider, service?.changeId])
+    }, [device, provider, service?.changeId])
     return (provider?.service(service?.serviceIndex) as T) || twin
 }

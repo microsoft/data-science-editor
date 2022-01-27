@@ -1,9 +1,8 @@
-import React, { useContext, useMemo } from "react"
+import React, { useContext } from "react"
 import BlockContext from "./BlockContext"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import DeviceAvatar from "../devices/DeviceAvatar"
-import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import {
     addServiceProvider,
@@ -16,6 +15,7 @@ import CancelIcon from "@mui/icons-material/Cancel"
 import { Chip, Tooltip } from "@mui/material"
 import { TWIN_BLOCK } from "./toolbox"
 import { toRoleType } from "./dsl/servicesbase"
+import { useServiceSpecificationFromServiceClass } from "../../jacdac/useServiceSpecification"
 
 export default function RoleChip(props: {
     role: string
@@ -27,10 +27,7 @@ export default function RoleChip(props: {
     const { role, service, serviceClass, preferredDeviceId } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const serviceServer = useServiceServer(service)
-    const specification = useMemo(
-        () => serviceSpecificationFromClassIdentifier(serviceClass),
-        [serviceClass]
-    )
+    const specification = useServiceSpecificationFromServiceClass(serviceClass)
 
     const handleRoleClick = () => {
         // spin off simulator
