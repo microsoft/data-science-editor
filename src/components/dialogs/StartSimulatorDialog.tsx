@@ -8,7 +8,6 @@ import {
     ListItem,
     TextField,
 } from "@mui/material"
-import AppContext from "../AppContext"
 import React, { useContext, useMemo, useRef } from "react"
 import { useId } from "react-use-id-hook"
 import {
@@ -31,8 +30,8 @@ import {
     serviceSpecificationFromClassIdentifier,
 } from "../../../jacdac-ts/src/jdom/spec"
 import DialogTitleWithClose from "../ui/DialogTitleWithClose"
-import useKeyboardNavigation from "../hooks/useKeyboardNavigation"
 import useKeyboardNavigationProps from "../hooks/useKeyboardNavigationProps"
+import useSnackbar from "../hooks/useSnackbar"
 
 const miniSearchOptions = {
     fields: ["name", "description"],
@@ -49,7 +48,7 @@ export default function StartSimulatorDialog(props: {
 }) {
     const { open, onClose, sensor } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const { enqueueSnackbar } = useContext(AppContext)
+    const { enqueueSnackbar } = useSnackbar()
     const { addHostedSimulator } = useContext(HostedSimulatorsContext)
     const { trackEvent } = useAnalytics()
     const { mobile } = useMediaQueries()

@@ -1,8 +1,8 @@
-import React, { useContext, useMemo, useState } from "react"
+import React, { useMemo, useState } from "react"
 import useWindowEvent from "../hooks/useWindowEvent"
 import { Button, ButtonProps } from "@mui/material"
-import AppContext from "../AppContext"
 import useAnalytics from "../hooks/useAnalytics"
+import useSnackbar from "../hooks/useSnackbar"
 
 function usePWAInfo() {
     const standAlone = useMemo(
@@ -18,7 +18,7 @@ export default function InstallPWAButton(props: ButtonProps) {
     const { standAlone } = usePWAInfo()
     const [visible, setVisible] = useState(false)
     const [promptInstall, setPromptInstall] = useState(null)
-    const { enqueueSnackbar } = useContext(AppContext)
+    const { enqueueSnackbar } = useSnackbar()
     const { trackEvent } = useAnalytics()
 
     // listen for prompt

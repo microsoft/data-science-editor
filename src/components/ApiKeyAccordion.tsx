@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext, useState } from "react"
+import React, { ReactNode, useState } from "react"
 import useEffectAsync from "./useEffectAsync"
 import Alert from "./ui/Alert"
 import {
@@ -16,7 +16,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline"
 import { useId } from "react-use-id-hook"
-import AppContext from "./AppContext"
+import useSnackbar from "./hooks/useSnackbar"
 
 export default function ApiKeyAccordion(props: {
     title?: string
@@ -32,7 +32,7 @@ export default function ApiKeyAccordion(props: {
     const [key, setKey] = useState("")
     const [expanded, setExpanded] = useState(!apiKey || defaultExpanded)
     const [validated, setValidated] = useState(false)
-    const { enqueueSnackbar } = useContext(AppContext)
+    const { enqueueSnackbar } = useSnackbar()
 
     useEffectAsync(
         async mounted => {

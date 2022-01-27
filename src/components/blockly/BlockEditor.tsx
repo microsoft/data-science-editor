@@ -64,8 +64,12 @@ function SuspendedBlockEditor(props: { editorId: string; className?: string }) {
 
     // setup editor id in context
     useEffect(() => {
+        console.log(`set editor id ${editorId}`)
         setEditorId(editorId)
-        return () => setEditorId("")
+        return () => {
+            console.log("clear editor id")
+            setEditorId("")
+        }
     }, [editorId])
 
     // ReactBlockly

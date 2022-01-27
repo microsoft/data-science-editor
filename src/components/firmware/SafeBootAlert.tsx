@@ -1,21 +1,21 @@
 import { Box, Button, Typography } from "@mui/material"
-import React, { useContext, useEffect, useState } from "react"
+import React, { useContext } from "react"
 // tslint:disable-next-line: no-submodule-imports
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import Alert from "../ui/Alert"
 import DbContext, { DbContextProps } from "../DbContext"
 // tslint:disable-next-line: match-default-export-name tslint:disable-next-line: no-submodule-imports
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever"
-import AppContext from "../AppContext"
 import SwitchWithLabel from "../ui/SwitchWithLabel"
 import useForceProxy from "../devices/useForceProxy"
 import useChange from "../../jacdac/useChange"
+import useSnackbar from "../hooks/useSnackbar"
 
 export default function SafeBootAlert(props: { proxy?: boolean }) {
     const { proxy } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { db } = useContext<DbContextProps>(DbContext)
-    const { enqueueSnackbar } = useContext(AppContext)
+    const { enqueueSnackbar } = useSnackbar()
     const safeBoot = useChange(bus, _ => _.safeBoot)
     const firmwares = db?.firmwares
 
