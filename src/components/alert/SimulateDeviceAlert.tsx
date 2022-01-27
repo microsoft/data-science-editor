@@ -13,16 +13,16 @@ import {
 } from "../../../jacdac-ts/src/jdom/constants"
 import { startServiceProviderFromServiceClass } from "../../../jacdac-ts/src/servers/servers"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
-import AppContext from "../AppContext"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import AddIcon from "@mui/icons-material/Add"
 import Alert from "../ui/Alert"
+import SimulatorDialogsContext from "../SimulatorsDialogContext"
 
 export function SimulateDeviceHint() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const handleStartSimulator = (serviceClass: number) => () =>
         startServiceProviderFromServiceClass(bus, serviceClass)
-    const { toggleShowDeviceHostsDialog } = useContext(AppContext)
+    const { toggleShowDeviceHostsDialog } = useContext(SimulatorDialogsContext)
     const handleShowStartSimulator = () => toggleShowDeviceHostsDialog()
     return (
         <>

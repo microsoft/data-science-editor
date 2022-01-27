@@ -30,7 +30,7 @@ import SettingsIcon from "@mui/icons-material/Settings"
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord"
 import VideoCallIcon from "@mui/icons-material/VideoCall"
 import MakeCodeIcon from "../icons/MakeCodeIcon"
-import TextSnippetIcon from '@mui/icons-material/TextSnippet';
+import TextSnippetIcon from "@mui/icons-material/TextSnippet"
 
 import DarkModeContext from "../ui/DarkModeContext"
 import KindIcon from "../KindIcon"
@@ -44,6 +44,7 @@ import { resolveUnit } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import useBus from "../../jacdac/useBus"
 import useChange from "../../jacdac/useChange"
 import useSnackbar from "../hooks/useSnackbar"
+import SimulatorDialogsContext from "../SimulatorsDialogContext"
 
 const PREFIX = "ToolsDrawer"
 
@@ -116,13 +117,9 @@ function ToolsListItem(props: {
 }
 
 export default function ToolsDrawer() {
-    const {
-        toolsMenu,
-        setToolsMenu,
-        toggleShowDeviceHostsDialog,
-        showWebCam,
-        setShowWebCam,
-    } = useContext(AppContext)
+    const { toolsMenu, setToolsMenu, showWebCam, setShowWebCam } =
+        useContext(AppContext)
+    const { toggleShowDeviceHostsDialog } = useContext(SimulatorDialogsContext)
     const bus = useBus()
     const passive = useChange(bus, _ => _.passive)
     const { enqueueSnackbar } = useSnackbar()
@@ -150,7 +147,7 @@ export default function ToolsDrawer() {
         setToolsMenu(false)
         toggleDarkMode()
     }
-    const handleTogglePassive = () => bus.passive = !bus.passive
+    const handleTogglePassive = () => (bus.passive = !bus.passive)
     const links = [
         {
             text: "Start simulator",
@@ -186,7 +183,7 @@ export default function ToolsDrawer() {
         {
             text: "Trace Analyzer",
             to: "/tools/player/",
-            icon: <TextSnippetIcon/>,
+            icon: <TextSnippetIcon />,
         },
         {
             // separator
@@ -222,7 +219,7 @@ export default function ToolsDrawer() {
         {
             text: passive ? "Passive mode" : "Active mode",
             title: "In passive mode, the browser does not send any Jacdac packets.",
-            action: handleTogglePassive
+            action: handleTogglePassive,
         },
         ...converters.map(({ unit, name, names }) => ({
             text: `${name} (change to ${names

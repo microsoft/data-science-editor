@@ -1,6 +1,5 @@
 import React, {
     createContext,
-    lazy,
     useContext,
     useEffect,
     useState,
@@ -12,21 +11,12 @@ import useBus from "../jacdac/useBus"
 import useSnackbar from "./hooks/useSnackbar"
 import PacketsContext from "./PacketsContext"
 
-import Suspense from "./ui/Suspense"
-const StartSimulatorDialog = lazy(
-    () => import("./dialogs/StartSimulatorDialog")
-)
-
 export enum DrawerType {
     None,
     Toc,
     Packets,
     Dom,
     Console,
-}
-
-export interface ShowDeviceHostsOptions {
-    sensor?: boolean
 }
 
 export interface AppProps {
@@ -36,7 +26,6 @@ export interface AppProps {
     setSearchQuery: (s: string) => void
     toolsMenu: boolean
     setToolsMenu: (visible: boolean) => void
-    toggleShowDeviceHostsDialog: (options?: ShowDeviceHostsOptions) => void
     selectedPacket: Packet
     setSelectedPacket: (pkt: Packet) => void
     showWebCam: boolean
@@ -50,7 +39,6 @@ const AppContext = createContext<AppProps>({
     setSearchQuery: () => {},
     toolsMenu: false,
     setToolsMenu: () => {},
-    toggleShowDeviceHostsDialog: () => {},
     selectedPacket: undefined,
     setSelectedPacket: () => {},
     showWebCam: false,
@@ -67,8 +55,6 @@ export const AppProvider = ({ children }) => {
     const [type, setType] = useState(DrawerType.None)
     const [searchQuery, setSearchQuery] = useState("")
     const [toolsMenu, _setToolsMenu] = useState(false)
-    const [showDeviceHostsDialog, setShowDeviceHostsDialog] = useState(false)
-    const [showDeviceHostsSensors, setShowDeviceHostsSensors] = useState(false)
     const [selectedPacket, setSelectedPacket] = useState<Packet>(undefined)
     const [showWebCam, setShowWebCam] = useState(false)
     const { setError } = useSnackbar()
@@ -94,13 +80,6 @@ export const AppProvider = ({ children }) => {
         []
     )
 
-    const toggleShowDeviceHostsDialog = (options?: ShowDeviceHostsOptions) => {
-        const b = !showDeviceHostsDialog
-        if (b) setShowDeviceHostsSensors(!!options?.sensor)
-        setShowDeviceHostsDialog(b)
-        if (!b) setToolsMenu(false)
-    }
-
     return (
         <AppContext.Provider
             value={{
@@ -110,7 +89,6 @@ export const AppProvider = ({ children }) => {
                 setSearchQuery,
                 toolsMenu,
                 setToolsMenu,
-                toggleShowDeviceHostsDialog,
                 selectedPacket,
                 setSelectedPacket,
                 showWebCam,
@@ -118,13 +96,6 @@ export const AppProvider = ({ children }) => {
             }}
         >
             {children}
-            <Suspense>
-                <StartSimulatorDialog
-                    open={showDeviceHostsDialog}
-                    onClose={toggleShowDeviceHostsDialog}
-                    sensor={showDeviceHostsSensors}
-                />
-            </Suspense>
         </AppContext.Provider>
     )
 }

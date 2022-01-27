@@ -16,7 +16,6 @@ import AddIcon from "@mui/icons-material/Add"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 
 import ServiceManagerContext from "../ServiceManagerContext"
-import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 
 import useChange from "../../jacdac/useChange"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
@@ -33,7 +32,8 @@ import FieldDataSet from "../FieldDataSet"
 import MBDataSet, { arraysEqual } from "./MBDataSet"
 import { DATASET_NAME } from "./ModelEditor"
 import Suspense from "../ui/Suspense"
-import AppContext from "../AppContext"
+import SimulatorDialogsContext from "../SimulatorsDialogContext"
+import useBus from "../../jacdac/useBus"
 
 const DataSetPlot = lazy(() => import("./components/DataSetPlot"))
 
@@ -68,8 +68,8 @@ export default function CollectData(props: {
     const chartProps = props.chartProps
 
     const { fileStorage } = useContext(ServiceManagerContext)
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const { toggleShowDeviceHostsDialog } = useContext(AppContext)
+    const bus = useBus()
+    const { toggleShowDeviceHostsDialog } = useContext(SimulatorDialogsContext)
     const handleShowStartSimulator = () => toggleShowDeviceHostsDialog()
     const readingRegisters = useChange(bus, bus =>
         arrayConcatMany(

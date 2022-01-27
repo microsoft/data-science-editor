@@ -20,6 +20,7 @@ import { FileSystemProvider } from "../FileSystemContext"
 import { AppInsightsErrorBoundary } from "../hooks/useAnalytics"
 import { HostedSimulatorsProvider } from "../HostedSimulatorsContext"
 import { ConsoleProvider } from "../console/ConsoleContext"
+import { SimulatorDialogsProvider } from "../SimulatorsDialogContext"
 
 /*
 declare module "@mui/styles/defaultTheme" {
@@ -51,30 +52,32 @@ export default function ThemedLayout(props: {
                                                     <ServiceManagerProvider>
                                                         <PacketsProvider>
                                                             <AppProvider>
-                                                                <ConsoleProvider>
-                                                                    <MakeCodeSnippetProvider>
-                                                                        <CssBaseline />
-                                                                        <Helmet>
-                                                                            <link
-                                                                                rel="preconnect"
-                                                                                href="https://fonts.googleapis.com"
-                                                                                crossOrigin="anonymous"
-                                                                            />
-                                                                            <link
-                                                                                rel="preconnect"
-                                                                                href="https://raw.githubusercontent.com"
-                                                                                crossOrigin="anonymous"
-                                                                            />
-                                                                            <meta
-                                                                                name="viewport"
-                                                                                content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
-                                                                            />
-                                                                        </Helmet>
-                                                                        {
-                                                                            children
-                                                                        }
-                                                                    </MakeCodeSnippetProvider>
-                                                                </ConsoleProvider>
+                                                                <SimulatorDialogsProvider>
+                                                                    <ConsoleProvider>
+                                                                        <MakeCodeSnippetProvider>
+                                                                            <CssBaseline />
+                                                                            <Helmet>
+                                                                                <link
+                                                                                    rel="preconnect"
+                                                                                    href="https://fonts.googleapis.com"
+                                                                                    crossOrigin="anonymous"
+                                                                                />
+                                                                                <link
+                                                                                    rel="preconnect"
+                                                                                    href="https://raw.githubusercontent.com"
+                                                                                    crossOrigin="anonymous"
+                                                                                />
+                                                                                <meta
+                                                                                    name="viewport"
+                                                                                    content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
+                                                                                />
+                                                                            </Helmet>
+                                                                            {
+                                                                                children
+                                                                            }
+                                                                        </MakeCodeSnippetProvider>
+                                                                    </ConsoleProvider>
+                                                                </SimulatorDialogsProvider>
                                                             </AppProvider>
                                                         </PacketsProvider>
                                                     </ServiceManagerProvider>

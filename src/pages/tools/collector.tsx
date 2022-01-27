@@ -8,7 +8,6 @@ import {
     Card,
     CardActions,
 } from "@mui/material"
-import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import PlayArrowIcon from "@mui/icons-material/PlayArrow"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
@@ -26,7 +25,6 @@ import SelectEvent from "../../components/select/SelectEvent"
 import { JDEvent } from "../../../jacdac-ts/src/jdom/event"
 import {
     EVENT,
-    REPORT_UPDATE,
     SRV_SENSOR_AGGREGATOR,
 } from "../../../jacdac-ts/src/jdom/constants"
 import {
@@ -48,7 +46,6 @@ import useDevices from "../../components/hooks/useDevices"
 import { useId } from "react-use-id-hook"
 import DashboardDeviceItem from "../../components/dashboard/DashboardDeviceItem"
 import IconButtonWithTooltip from "../../components/ui/IconButtonWithTooltip"
-import AppContext from "../../components/AppContext"
 import AddIcon from "@mui/icons-material/Add"
 import useServices from "../../components/hooks/useServices"
 import { delay } from "../../../jacdac-ts/src/jdom/utils"
@@ -58,6 +55,8 @@ import FileSystemContext from "../../components/FileSystemContext"
 import useChange from "../../jacdac/useChange"
 import GridHeader from "../../components/ui/GridHeader"
 import useSnackbar from "../../components/hooks/useSnackbar"
+import SimulatorDialogsContext from "../../components/SimulatorsDialogContext"
+import useBus from "../../jacdac/useBus"
 
 const LIVE_HORIZON = 24
 function createDataSet(
@@ -81,9 +80,9 @@ const COLLECTOR_SAMPLING_DURATION = "jacdac:collector:samplingduration"
 const COLLECTOR_START_DELAY = "jacdac:collector:startdelay"
 
 export default function Collector() {
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const bus = useBus()
     const { toggleShowDeviceHostsDialog } =
-        useContext(AppContext)
+        useContext(SimulatorDialogsContext)
     const { enqueueSnackbar} = useSnackbar()
     const handleShowStartSimulator = () =>
         toggleShowDeviceHostsDialog({ sensor: true })
