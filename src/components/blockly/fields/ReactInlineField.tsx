@@ -9,6 +9,7 @@ import AppTheme from "../../ui/AppTheme"
 import Blockly, { Events } from "blockly"
 import { WorkspaceProvider } from "../WorkspaceContext"
 import { WebAudioProvider } from "../../ui/WebAudioContext"
+import { SnackbarProvider } from "notistack"
 
 export default class ReactInlineField<T = unknown> extends ReactField<T> {
     protected container: HTMLDivElement
@@ -85,15 +86,19 @@ export default class ReactInlineField<T = unknown> extends ReactField<T> {
     renderBlock(): ReactNode {
         return (
             <WorkspaceProvider field={this}>
-                <DarkModeProvider fixedDarkMode="dark">
-                    <IdProvider>
-                        <WebAudioProvider>
-                            <JacdacProvider>
-                                <AppTheme>{this.renderInlineField()}</AppTheme>
-                            </JacdacProvider>
-                        </WebAudioProvider>
-                    </IdProvider>
-                </DarkModeProvider>
+                <SnackbarProvider maxSnack={1} dense={true}>
+                    <DarkModeProvider fixedDarkMode="dark">
+                        <IdProvider>
+                            <WebAudioProvider>
+                                <JacdacProvider>
+                                    <AppTheme>
+                                        {this.renderInlineField()}
+                                    </AppTheme>
+                                </JacdacProvider>
+                            </WebAudioProvider>
+                        </IdProvider>
+                    </DarkModeProvider>
+                </SnackbarProvider>
             </WorkspaceProvider>
         )
     }
