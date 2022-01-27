@@ -45,6 +45,7 @@ import useBus from "../../jacdac/useBus"
 import useChange from "../../jacdac/useChange"
 import useSnackbar from "../hooks/useSnackbar"
 import SimulatorDialogsContext from "../SimulatorsDialogContext"
+import JacdacIcon from "../icons/JacdacIcon"
 
 const PREFIX = "ToolsDrawer"
 
@@ -192,6 +193,11 @@ export default function ToolsDrawer() {
             text: "MakeCode",
             to: "/clients/makecode/",
             icon: <MakeCodeIcon />,
+        },
+        {
+            text: "JacScript",
+            to: "/editors/jacscript/",
+            icon: <JacdacIcon />,
         },
         /*
         {
