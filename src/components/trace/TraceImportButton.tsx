@@ -10,6 +10,7 @@ import AppContext from "../AppContext"
 import { Trace } from "../../../jacdac-ts/src/jdom/trace/trace"
 
 import Suspense from "../ui/Suspense"
+import useSnackbar from "../hooks/useSnackbar"
 const ImportButton = lazy(() => import("../ImportButton"))
 
 export default function TraceImportButton(props: {
@@ -18,7 +19,7 @@ export default function TraceImportButton(props: {
 }) {
     const { icon, disabled } = props
     const { recording, setReplayTrace } = useContext(PacketsContext)
-    const { setError } = useContext(AppContext)
+    const { setError } = useSnackbar()
     const [importing, setImporting] = useState(false)
 
     const handleFiles = async (files: File[]) => {

@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react"
 import AppContext from "../AppContext"
 import { isWebSerialSupported } from "../../../jacdac-ts/src/jdom/transport/webserial"
 import { SourceMap } from "./ConsoleContext"
+import useSnackbar from "../hooks/useSnackbar"
 
 function resolveAddr(sourceMap: Record<string, number[]>, addr: number) {
     const offsets = [-2, -4, 0]
@@ -44,7 +45,7 @@ function expandStackTrace(
 
 export default function useConsoleSerial(sourceMap: SourceMap) {
     const supported = isWebSerialSupported()
-    const { setError } = useContext(AppContext)
+    const { setError } = useSnackbar()
     const [port, setPort] = useState<SerialPort>()
     const connected = !!port
 

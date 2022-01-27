@@ -24,8 +24,8 @@ import { randomDeviceId } from "../../jacdac-ts/src/jdom/random"
 import { Button } from "gatsby-material-ui-components"
 import ServiceManagerContext from "./ServiceManagerContext"
 import Suspense from "./ui/Suspense"
-import AppContext from "./AppContext"
 import SystemUpdateAltIcon from "@mui/icons-material/SystemUpdateAlt"
+import useSnackbar from "./hooks/useSnackbar"
 
 const ImportButton = lazy(() => import("./ImportButton"))
 
@@ -179,7 +179,7 @@ function AddSettingRow(props: {
 
 function ImportSettingsButton(props: { client: SettingsClient }) {
     const { client } = props
-    const { setError } = useContext(AppContext)
+    const { setError } = useSnackbar()
 
     const handleFilesUploaded = async (files: File[]) => {
         for (const file of files) {

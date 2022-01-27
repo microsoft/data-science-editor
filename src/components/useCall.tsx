@@ -1,11 +1,11 @@
-import React, { useContext, useState } from "react"
+import React, { useState } from "react"
 import Alert from "./ui/Alert"
-import AppContext from "./AppContext"
+import useSnackbar from "./hooks/useSnackbar"
 
 export type ProgressHandler = (p: number) => void
 
 export default function useCall() {
-    const { setError: setAppError } = useContext(AppContext)
+    const { setError: setAppError } = useSnackbar()
     const [error, setError] = useState<Error>()
     const [running, setRunning] = useState(false)
     const [progress, setProgress] = useState(0)

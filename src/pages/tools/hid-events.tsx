@@ -1,12 +1,4 @@
-import React, {
-    lazy,
-    useCallback,
-    useContext,
-    useEffect,
-    useRef,
-    useState,
-} from "react"
-import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
+import React, { lazy, useCallback, useEffect, useRef, useState } from "react"
 import {
     Card,
     CardActions,
@@ -51,12 +43,15 @@ import DeviceCardHeader from "../../components/devices/DeviceCardHeader"
 import useGridBreakpoints from "../../components/useGridBreakpoints"
 import Suspense from "../../components/ui/Suspense"
 import useServiceProviderFromServiceClass from "../../components/hooks/useServiceProviderFromServiceClass"
-import AppContext from "../../components/AppContext"
 import { AlertTitle } from "@mui/material"
 import { renderKeyboardKey } from "../../../jacdac-ts/src/servers/hidkeyboardserver"
 import DialogTitleWithClose from "../../components/ui/DialogTitleWithClose"
+import useSnackbar from "../../components/hooks/useSnackbar"
+import useBus from "../../jacdac/useBus"
 const ImportButton = lazy(() => import("../../components/ImportButton"))
-const KeyboardKeyInput = lazy(() => import("../../components/ui/KeyboardKeyInput"))
+const KeyboardKeyInput = lazy(
+    () => import("../../components/ui/KeyboardKeyInput")
+)
 
 // all settings keys are prefixed with this string
 const PREFIX = "@ke_"
@@ -220,8 +215,8 @@ function SelectHIDEvent(props: { onAdd: (hidEvent: HIDEvent) => void }) {
 }
 
 export default function HIDEvents() {
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const { setError } = useContext(AppContext)
+    const bus = useBus()
+    const { setError } = useSnackbar()
     const settingsServices = useServices({ serviceClass: SRV_SETTINGS })
     const [settingsService, setSettingsService] = useState<JDService>()
     const [hidEvents, setHIDEvents] = useState<HIDEvent[]>([])

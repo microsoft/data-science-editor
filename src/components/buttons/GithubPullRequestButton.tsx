@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from "react"
+import React, {  useMemo, useState } from "react"
 import { Octokit } from "@octokit/core"
 import { createPullRequest } from "octokit-plugin-create-pull-request"
 import { Button, Link } from "gatsby-theme-material-ui"
@@ -11,14 +11,13 @@ import {
     TextField,
     Typography,
 } from "@mui/material"
-import { GITHUB_API_KEY } from "../github"
-import AppContext from "../AppContext"
 import GitHubIcon from "@mui/icons-material/GitHub"
 import ApiKeyAccordion from "../ApiKeyAccordion"
 import { useId } from "react-use-id-hook"
 import LoadingProgress from "../ui/LoadingProgress"
 import { toHex } from "../../../jacdac-ts/src/jdom/utils"
 import { anyRandomUint32 } from "../../../jacdac-ts/src/jdom/random"
+import useSnackbar from "../hooks/useSnackbar"
 
 export type GithubPullRequestFiles = Record<
     string,
@@ -46,7 +45,7 @@ export default function GithubPullRequestButton(
     const [, setResponse] = useState(undefined)
     const [busy, setBusy] = useState(false)
     const [githubToken, setGithubToken] = useState("")
-    const { setError: setAppError, enqueueSnackbar } = useContext(AppContext)
+    const { setError: setAppError, enqueueSnackbar } = useSnackbar()
     const [confirmDialog, setConfirmDialog] = useState(false)
     const bodyId = useId()
     const [body, setBody] = useState(description)

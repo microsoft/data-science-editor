@@ -1,12 +1,11 @@
 import React, { useContext } from "react"
-import AppContext from "../AppContext"
+import useSnackbar from "../hooks/useSnackbar"
 import ImportButton from "../ImportButton"
 import ConsoleContext from "./ConsoleContext"
 
 export default function ConsoleImportSourceMapButton() {
     const { setSourceMap } = useContext(ConsoleContext)
-    const { enqueueSnackbar } = useContext(AppContext)
-    const { setError } = useContext(AppContext)
+    const { enqueueSnackbar, setError } = useSnackbar()
 
     const handleFilesUploaded = async (files: File[]) => {
         const file = files[0]

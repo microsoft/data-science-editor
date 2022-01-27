@@ -6,7 +6,6 @@ import Theme from "@blockly/theme-modern"
 import DarkTheme from "@blockly/theme-dark"
 import BlocklyModalDialogs from "./BlocklyModalDialogs"
 import DarkModeContext from "../ui/DarkModeContext"
-import AppContext from "../AppContext"
 import clsx from "clsx"
 import { withPrefix } from "gatsby"
 import { Flags } from "../../../jacdac-ts/src/jdom/flags"
@@ -14,6 +13,7 @@ import BlockContext from "./BlockContext"
 import { useBlockMinimap } from "./BlockMinimap"
 import BrowserCompatibilityAlert from "../ui/BrowserCompatibilityAlert"
 import { UIFlags } from "../../jacdac/providerbus"
+import useSnackbar from "../hooks/useSnackbar"
 
 const PREFIX = "BlockEditor"
 
@@ -59,7 +59,7 @@ function SuspendedBlockEditor(props: { editorId: string; className?: string }) {
     } = useContext(BlockContext)
 
     const { darkMode } = useContext(DarkModeContext)
-    const { setError } = useContext(AppContext)
+    const { setError } = useSnackbar()
     const theme = darkMode === "dark" ? DarkTheme : Theme
 
     // setup editor id in context

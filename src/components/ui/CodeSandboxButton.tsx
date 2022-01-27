@@ -1,9 +1,9 @@
-import React, { useContext, useState } from "react"
-import AppContext from "../AppContext"
+import React, { useState } from "react"
 import EditIcon from "@mui/icons-material/Edit"
 import IconButtonWithTooltip from "./IconButtonWithTooltip"
 import useMediaQueries from "../hooks/useMediaQueries"
 import { Button } from "gatsby-material-ui-components"
+import useSnackbar from "../hooks/useSnackbar"
 
 export default function CodeSandboxButton(props: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -11,7 +11,7 @@ export default function CodeSandboxButton(props: {
     startFile?: string
 }) {
     const { files, startFile } = props
-    const { setError } = useContext(AppContext)
+    const { setError } = useSnackbar()
     const { mobile } = useMediaQueries()
     const [importing, setImporting] = useState(false)
 

@@ -37,7 +37,6 @@ import {
     WorkspaceServices,
     WorkspaceWithServices,
 } from "./WorkspaceContext"
-import AppContext from "../AppContext"
 import { WorkspaceFile, WorkspaceJSON } from "./dsl/workspacejson"
 import useEffectAsync from "../useEffectAsync"
 import useChange from "../../jacdac/useChange"
@@ -50,12 +49,8 @@ import {
     DslWorkspaceFileMessage,
 } from "./dsl/iframedsl"
 import { AllOptions } from "./fields/IFrameDataChooserField"
-import {
-    dashify,
-    humanify,
-} from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
-import { isSensor } from "../../../jacdac-ts/src/jdom/spec"
 import { toServiceName, toServiceType } from "./dsl/servicesbase"
+import useSnackbar from "../hooks/useSnackbar"
 
 export interface BlockProps {
     editorId: string
@@ -101,7 +96,7 @@ export function BlockProvider(props: {
     children: ReactNode
 }) {
     const { storageKey, dsls, children, onBeforeSaveWorkspaceFile } = props
-    const { setError } = useContext(AppContext)
+    const { setError } = useSnackbar()
     const { fileSystem } = useContext(FileSystemContext)
     const workspaceDirectory = useChange(fileSystem, _ => _?.workingDirectory)
     const workspaceFile = useChange(workspaceDirectory, _ =>

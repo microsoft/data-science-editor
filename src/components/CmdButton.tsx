@@ -8,7 +8,6 @@ import React, {
     useEffect,
     useState,
 } from "react"
-import AppContext from "./AppContext"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import ErrorIcon from "@mui/icons-material/Error"
 import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
@@ -16,6 +15,7 @@ import useAnalytics, { EventProperties } from "./hooks/useAnalytics"
 import useMounted from "./hooks/useMounted"
 import clsx from "clsx"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
+import useSnackbar from "./hooks/useSnackbar"
 
 const PREFIX = "CmdButton"
 
@@ -84,7 +84,7 @@ export default function CmdButton(props: {
         ...others
     } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const { setError: setAppError } = useContext(AppContext)
+    const { setError: setAppError } = useSnackbar()
 
     const [working, setWorking] = useState(false)
     const [ack, setAck] = useState(false)

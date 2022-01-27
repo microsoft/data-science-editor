@@ -11,6 +11,7 @@ import { JSONTryParse, toMap } from "../../../jacdac-ts/src/jdom/utils"
 import MakeCodeIcon from "../icons/MakeCodeIcon"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import useMediaQueries from "../hooks/useMediaQueries"
+import useSnackbar from "../hooks/useSnackbar"
 
 interface Request {
     code: string
@@ -27,7 +28,7 @@ interface Rendered {
 
 function MakeCodeButton(props: { req: Request }) {
     const { req } = props
-    const { setError } = useContext(AppContext)
+    const { setError } = useSnackbar()
     const { mobile } = useMediaQueries()
     const [importing, setImporting] = useState(false)
     const { code, options } = req

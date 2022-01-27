@@ -1,18 +1,15 @@
-import { useSnackbar } from "notistack"
 import React, {
     createContext,
     lazy,
-    ReactNode,
     useContext,
     useEffect,
     useState,
 } from "react"
 import { ERROR } from "../../jacdac-ts/src/jdom/constants"
-import { errorCode } from "../../jacdac-ts/src/jdom/error"
 import { Packet } from "../../jacdac-ts/src/jdom/packet"
 import { isCancelError } from "../../jacdac-ts/src/jdom/utils"
-import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
-import useAnalytics from "./hooks/useAnalytics"
+import useBus from "../jacdac/useBus"
+import useSnackbar from "./hooks/useSnackbar"
 import PacketsContext from "./PacketsContext"
 
 import Suspense from "./ui/Suspense"
@@ -39,12 +36,6 @@ export interface AppProps {
     setSearchQuery: (s: string) => void
     toolsMenu: boolean
     setToolsMenu: (visible: boolean) => void
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    setError: (error: any) => void
-    enqueueSnackbar: (
-        message: string | ReactNode,
-        variant?: "success" | "warning" | "info"
-    ) => void
     toggleShowDeviceHostsDialog: (options?: ShowDeviceHostsOptions) => void
     selectedPacket: Packet
     setSelectedPacket: (pkt: Packet) => void
@@ -59,8 +50,6 @@ const AppContext = createContext<AppProps>({
     setSearchQuery: () => {},
     toolsMenu: false,
     setToolsMenu: () => {},
-    setError: () => {},
-    enqueueSnackbar: () => {},
     toggleShowDeviceHostsDialog: () => {},
     selectedPacket: undefined,
     setSelectedPacket: () => {},
@@ -73,40 +62,16 @@ export default AppContext
 
 // eslint-disable-next-line react/prop-types
 export const AppProvider = ({ children }) => {
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const bus = useBus()
     const { setSilent } = useContext(PacketsContext)
     const [type, setType] = useState(DrawerType.None)
     const [searchQuery, setSearchQuery] = useState("")
     const [toolsMenu, _setToolsMenu] = useState(false)
     const [showDeviceHostsDialog, setShowDeviceHostsDialog] = useState(false)
     const [showDeviceHostsSensors, setShowDeviceHostsSensors] = useState(false)
-    const { trackError } = useAnalytics()
     const [selectedPacket, setSelectedPacket] = useState<Packet>(undefined)
     const [showWebCam, setShowWebCam] = useState(false)
-
-    const { enqueueSnackbar: _enqueueSnackbar } = useSnackbar()
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const setError = (e: any) => {
-        if (!e || isCancelError(e)) return
-        const msg = e?.message || e + ""
-        const code = errorCode(e)
-
-        console.error(msg, { code, error: e })
-        trackError?.(e, {
-            code,
-        })
-        _enqueueSnackbar(msg, {
-            variant: "error",
-            autoHideDuration: code ? 8000 : 4000,
-            preventDuplicate: true,
-        })
-    }
-
-    const enqueueSnackbar = (
-        message: string | ReactNode,
-        variant?: "success" | "warning" | "info"
-    ) => _enqueueSnackbar(message, { variant })
+    const { setError } = useSnackbar()
 
     const setDrawerType = (type: DrawerType) => {
         if (type !== DrawerType.None) _setToolsMenu(false)
@@ -145,8 +110,6 @@ export const AppProvider = ({ children }) => {
                 setSearchQuery,
                 toolsMenu,
                 setToolsMenu,
-                setError,
-                enqueueSnackbar,
                 toggleShowDeviceHostsDialog,
                 selectedPacket,
                 setSelectedPacket,

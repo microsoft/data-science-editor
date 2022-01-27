@@ -1,11 +1,10 @@
 import { Box, Typography } from "@mui/material"
 import DeviceName from "./devices/DeviceName"
 import Alert from "./ui/Alert"
-import React, { useContext, useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 // tslint:disable-next-line: no-submodule-imports
 import { JDRegister } from "../../jacdac-ts/src/jdom/register"
 import { REPORT_UPDATE, SystemReg } from "../../jacdac-ts/src/jdom/constants"
-import AppContext from "./AppContext"
 import MembersInput from "./fields/MembersInput"
 import RegisterTrend from "./RegisterTrend"
 import IconButtonWithProgress from "./ui/IconButtonWithProgress"
@@ -13,6 +12,7 @@ import useRegisterServer from "./hooks/useRegisterServer"
 import useReadingAuxilliaryValue from "./hooks/useReadingAuxilliaryValue"
 import useChange from "../jacdac/useChange"
 import { isReadOnlyRegister } from "../../jacdac-ts/src/jdom/spec"
+import useSnackbar from "./hooks/useSnackbar"
 
 export type RegisterInputVariant = "widget" | ""
 
@@ -45,7 +45,7 @@ export default function RegisterInput(props: {
     const { service, specification } = register
     const { device } = service
     const { fields, code } = register
-    const { setError: setAppError } = useContext(AppContext)
+    const { setError: setAppError } = useSnackbar()
     const [working, setWorking] = useState(false)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [args, setArgs] = useState<any[]>(register.unpackedValue || [])

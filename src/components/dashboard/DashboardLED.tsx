@@ -10,14 +10,14 @@ import {
 } from "../../../jacdac-ts/src/jdom/constants"
 import LoadingProgress from "../ui/LoadingProgress"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
-import AppContext from "../AppContext"
 import LEDWidget from "../widgets/LEDWidget"
 import useRegister from "../hooks/useRegister"
 import { Packet } from "../../../jacdac-ts/src/jdom/packet"
+import useSnackbar from "../hooks/useSnackbar"
 
 export default function DashboardLED(props: DashboardServiceProps) {
     const { service } = props
-    const { setError } = useContext(AppContext)
+    const { setError } = useSnackbar()
     const server = useServiceServer<LEDServer>(service)
     const themeColor = server ? "secondary" : "primary"
 

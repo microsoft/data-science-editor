@@ -26,6 +26,7 @@ import DialogTitleWithClose from "../ui/DialogTitleWithClose"
 import { useLatestReleaseAsset } from "../github"
 import useBus from "../../jacdac/useBus"
 import { semverCmp } from "../semver"
+import useSnackbar from "../hooks/useSnackbar"
 
 function DragAndDropUpdateButton(props: {
     firmwareVersion: string
@@ -132,8 +133,8 @@ export function FlashDeviceButton(props: {
     ignoreFirmwareCheck?: boolean
 }) {
     const { device, blob, ignoreFirmwareCheck } = props
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const { setError } = useContext(AppContext)
+    const bus = useBus()
+    const { setError } = useSnackbar()
     const { trackEvent, trackError } = useAnalytics()
     const [progress, setProgress] = useState(0)
     const specification = useDeviceSpecification(device)

@@ -26,10 +26,10 @@ import DeviceCardHeader from "../../components/devices/DeviceCardHeader"
 import useGridBreakpoints from "../../components/useGridBreakpoints"
 import Suspense from "../../components/ui/Suspense"
 import useServiceProviderFromServiceClass from "../../components/hooks/useServiceProviderFromServiceClass"
-import AppContext from "../../components/AppContext"
 const ImportButton = lazy(() => import("../../components/ImportButton"))
 import ServiceManagerContext from "../../components/ServiceManagerContext"
 import ShareIcon from "@mui/icons-material/Share"
+import useSnackbar from "../../components/hooks/useSnackbar"
 
 // all settings keys are prefixed with this string
 const PREFIX = "@ph_"
@@ -58,7 +58,7 @@ function bufferToPhrase(key: string, data: Uint8Array): Phrase {
 }
 
 export default function HIDEvents() {
-    const { setError } = useContext(AppContext)
+    const { setError } = useSnackbar()
     const settingsServices = useServices({ serviceClass: SRV_SETTINGS })
     const [settingsService, setSettingsService] = useState<JDService>()
     const [phrases, setPhrases] = useState<Phrase[]>([])

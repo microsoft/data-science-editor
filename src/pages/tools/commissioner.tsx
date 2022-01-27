@@ -1,9 +1,6 @@
 import React, { useState, useContext, useEffect, useCallback } from "react"
 // tslint:disable-next-line: no-submodule-imports
 import { Grid, Button, TextField } from "@mui/material"
-import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
-// tslint:disable-next-line: no-submodule-imports match-default-export-name
-// tslint:disable-next-line: no-submodule-imports match-default-export-name
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import SaveIcon from "@mui/icons-material/Save"
 import CheckCircle from "@mui/icons-material/CheckCircle"
@@ -46,9 +43,10 @@ import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
 import FileSystemContext from "../../components/FileSystemContext"
 import FileTabs from "../../components/fs/FileTabs"
 import useChange from "../../jacdac/useChange"
-import AppContext from "../../components/AppContext"
 import { ControlReg } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import { LedPixelReg } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
+import useSnackbar from "../../components/hooks/useSnackbar"
+import useBus from "../../jacdac/useBus"
 
 interface ServiceDescriptor {
     name: string
@@ -262,8 +260,8 @@ async function StatusLEDTest(device: JDDevice) {
 }
 
 export default function Commissioner() {
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const { setError, enqueueSnackbar } = useContext(AppContext)
+    const bus = useBus()
+    const { setError, enqueueSnackbar } = useSnackbar()
     const { fileSystem } = useContext(FileSystemContext)
     const workingFile = useChange(fileSystem, _ => _?.workingFile)
     const [filterBrains, setFilterBrains] = useState<boolean>(true)
