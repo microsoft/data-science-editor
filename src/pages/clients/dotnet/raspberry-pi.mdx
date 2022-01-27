@@ -29,7 +29,7 @@ while still interacting with physical and simulated sensors.
 
 This mode will shorten your development cycle, until you are ready to test things on the "bare metal".
 
-- install `libgpiod-dev` to support fast SPI operations
+- install `libgpiod-dev` to support fast SPI operations. For sanity sake, reboot the pi after doing the update.
 
 ```
 sudo apt install -y libgpiod-dev
@@ -87,3 +87,7 @@ bus.AddTransport(SpiTransport.Create());
 ## What's next? Blinky!
 
 Now that your development environment is ready, try to build [Blinky](/clients/dotnet/projects/blinky)!
+
+## Troubleshooting
+
+If you are using other application that talk SPI, the pins might have been locked and not properly released. A reboot typically takes care of fixing things.
