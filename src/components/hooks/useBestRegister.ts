@@ -6,10 +6,11 @@ import {
     isValue,
     isValueOrIntensity,
 } from "../../../jacdac-ts/src/jdom/spec"
+import { useServiceSpecification } from "../../jacdac/useServiceSpecification"
 
 export default function useBestRegister(service: JDService) {
+    const specification = useServiceSpecification(service)
     return useMemo(() => {
-        const specification = service?.specification
         const hasReading = specification?.packets.some(reg => isReading(reg))
         if (hasReading) return service.register(SystemReg.Reading)
         const hasValue = specification?.packets.some(reg => isValue(reg))
@@ -19,5 +20,5 @@ export default function useBestRegister(service: JDService) {
         )
         if (hasIntensity) return service.register(SystemReg.Intensity)
         return undefined
-    }, [service])
+    }, [service, specification])
 }
