@@ -1,6 +1,9 @@
 import React, { CSSProperties } from "react"
 import { Grid, Slider, Typography } from "@mui/material"
-import { roundWithPrecision } from "../../../jacdac-ts/src/jdom/utils"
+import {
+    renderWithPrecision,
+    roundWithPrecision,
+} from "../../../jacdac-ts/src/jdom/utils"
 import useWidgetTheme from "./useWidgetTheme"
 import useUnitConverter from "../ui/useUnitConverter"
 /// <reference path="../../../jacdac-ts/jacdac-spec/spectool/jdspec.d.ts" />
@@ -36,19 +39,14 @@ export default function ValueWithUnitWidget(props: {
     const precision =
         step === undefined ? 1 : step < 1 ? Math.ceil(-Math.log10(step)) : 0
     const hasValue = !isNaN(value)
-    const valueText = hasValue
-        ? roundWithPrecision(value, precision).toLocaleString()
-        : "--"
+    const valueText = hasValue ? renderWithPrecision(value, precision) : "--"
     const valueTextLength =
-        roundWithPrecision(value, precision)
-            .toLocaleString()
-            .replace(/[,.]/, "").length + precision
-
+        Math.round(roundWithPrecision(value, precision)).toLocaleString()
+            .length + precision
+    console.log({ value, step, precision, valueText, valueTextLength })
     const { textPrimary } = useWidgetTheme(color)
     const valueVariant =
-        valueTextLength < 4
-            ? "h1"
-            : valueTextLength < 7
+        valueTextLength < 7
             ? "h2"
             : valueTextLength < 9
             ? "h3"
@@ -58,7 +56,7 @@ export default function ValueWithUnitWidget(props: {
     const valueStyle: CSSProperties = {
         color: textPrimary,
         minWidth: `2em`,
-        fontVariantNumeric: "tabular-nums"
+        fontVariantNumeric: "tabular-nums",
     }
     const unitStyle: CSSProperties = {
         color: textPrimary,
