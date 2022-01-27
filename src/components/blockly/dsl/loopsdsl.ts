@@ -23,7 +23,7 @@ const loopsDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: WAIT_BLOCK,
-            message0: "wait %1 s",
+            message0: "wait %1",
             args0: [
                 <ValueInputDefinition>{
                     type: "input_value",
@@ -52,7 +52,7 @@ const loopsDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: REPEAT_EVERY_BLOCK,
-            message0: `repeat every %1s`,
+            message0: `repeat every %1`,
             args0: [
                 <InputDefinition>{
                     type: "input_value",

@@ -120,39 +120,31 @@ export class ServicesBlockDomainSpecificLanguage
                     <CustomBlockDefinition>{
                         kind: "block",
                         type: `fade`,
-                        message0: `fade %1 to %2 at speed %3`,
+                        message0: `set %1 to %2`,
                         args0: [
                             roleVariable(service),
                             {
                                 type: "input_value",
                                 name: "color",
                                 check: "Number",
-                            },
-                            {
-                                type: "input_value",
-                                name: "speed",
-                                check: "Number",
-                            },
+                            }
                         ],
                         values: {
                             color: {
                                 kind: "block",
                                 type: LEDColorField.SHADOW.type,
-                            },
-                            speed: {
-                                kind: "block",
-                                type: "jacdac_ratio",
-                            },
+                            }
                         },
                         colour: this.serviceColor(service),
                         inputsInline: true,
                         previousStatement: CODE_STATEMENT_TYPE,
                         nextStatement: CODE_STATEMENT_TYPE,
-                        tooltip: `Fade LED color`,
+                        tooltip: `Set LED color`,
                         helpUrl: serviceHelp(service),
                         service,
-                        expression: `role.animate((color >> 16) & 0xff, (color >> 8) & 0xff, (color >> 0) & 0xff, speed * 0xff)`,
+                        expression: `$role.animate(($color >> 16) & 0xff, ($color >> 8) & 0xff, ($color >> 0) & 0xff, 0)`,
                         template: "custom",
+                        group: ''
                     }
             ),
             ...resolveService(SRV_SEVEN_SEGMENT_DISPLAY).map(
