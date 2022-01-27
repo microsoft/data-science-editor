@@ -1,6 +1,6 @@
 import React, { CSSProperties } from "react"
 import { Grid, Slider, Typography } from "@mui/material"
-import { isSet, roundWithPrecision } from "../../../jacdac-ts/src/jdom/utils"
+import { roundWithPrecision } from "../../../jacdac-ts/src/jdom/utils"
 import useWidgetTheme from "./useWidgetTheme"
 import useUnitConverter from "../ui/useUnitConverter"
 /// <reference path="../../../jacdac-ts/jacdac-spec/spectool/jdspec.d.ts" />
@@ -45,7 +45,6 @@ export default function ValueWithUnitWidget(props: {
             .replace(/[,.]/, "").length + precision
 
     const { textPrimary } = useWidgetTheme(color)
-    //console.log({ min, max, step, precision })
     const valueVariant =
         valueTextLength < 4
             ? "h1"
@@ -59,6 +58,7 @@ export default function ValueWithUnitWidget(props: {
     const valueStyle: CSSProperties = {
         color: textPrimary,
         minWidth: `2em`,
+        fontVariantNumeric: "tabular-nums"
     }
     const unitStyle: CSSProperties = {
         color: textPrimary,

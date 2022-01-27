@@ -59,11 +59,12 @@ const Root = styled("div")(() => ({
         "& th": {
             position: "sticky",
             top: 0,
-            background: "#fff"
+            background: "#fff",
         },
         "& td": {
             borderColor: "#ccc",
             borderRightStyle: "solid 1px",
+            fontVariantNumeric: "tabular-nums",
         },
     },
 }))
