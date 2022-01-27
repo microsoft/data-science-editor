@@ -78,12 +78,20 @@ export default function workspaceJSONToJacScriptProgram(
             //console.log(`block2e`, { ev, block, type, value, inputs })
 
             if (value !== undefined)
+                if (type === "text")
+                    // literal
+                    return <jsep.Literal>{
+                        type: "Literal",
+                        value: value,
+                        raw: `"${value}"`,
+                    }
                 // literal
-                return <jsep.Literal>{
-                    type: "Literal",
-                    value: value,
-                    raw: value + "",
-                }
+                else
+                    return <jsep.Literal>{
+                        type: "Literal",
+                        value: value,
+                        raw: value + "",
+                    }
 
             const dsl = resolveDsl(dsls, type)
             if (!dsl) {
