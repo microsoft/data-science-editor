@@ -369,7 +369,7 @@ function RegisterInputItem(props: {
 }) {
     const { service, registerCode, visible } = props
     const register = useRegister(service, registerCode)
-    return <RegisterInput register={register} visible={visible} />
+    return <RegisterInput register={register} visible={visible} showRegisterName={true} />
 }
 
 export default function DashboardLEDPixel(props: DashboardServiceProps) {
