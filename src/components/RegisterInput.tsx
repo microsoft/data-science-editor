@@ -110,6 +110,8 @@ export default function RegisterInput(props: {
             // don't send set commands to rw registers
             if (!isReadOnlyRegister(register.specification))
                 await register.sendSetPackedAsync(values, true)
+            // force refresh in any case
+            register.scheduleRefresh()
         } catch (e) {
             setAppError(e)
         } finally {
