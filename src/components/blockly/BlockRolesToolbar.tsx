@@ -17,7 +17,7 @@ export default function BlockRolesToolbar(props: {
         >
             {children}
             <Grid item>
-                <StartSimulatorButton />
+                <StartSimulatorButton useChip={true} />
             </Grid>
             <BlockClientRoles />
         </Grid>

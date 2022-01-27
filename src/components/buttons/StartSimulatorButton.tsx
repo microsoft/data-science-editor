@@ -3,18 +3,34 @@ import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import AddIcon from "@mui/icons-material/Add"
 import { useContext } from "react"
 import SimulatorDialogsContext from "../SimulatorsDialogContext"
+import { Chip } from "@mui/material"
 
-export default function StartSimulatorButton(props: { trackName?: string }) {
-    const { trackName } = props
+export default function StartSimulatorButton(props: {
+    trackName?: string
+    useChip?: boolean
+}) {
+    const { trackName, useChip } = props
     const { toggleShowDeviceHostsDialog } = useContext(SimulatorDialogsContext)
-    const handleShowStartSimulator = () => toggleShowDeviceHostsDialog()
-    return (
-        <IconButtonWithTooltip
-            title="start simulator"
-            trackName={trackName}
-            onClick={handleShowStartSimulator}
-        >
-            <AddIcon />
-        </IconButtonWithTooltip>
-    )
+    const handleShowStartSimulator = () =>
+        toggleShowDeviceHostsDialog({ trackName })
+
+    if (useChip)
+        return (
+            <Chip
+                label="start simulator"
+                variant="outlined"
+                icon={<AddIcon />}
+                onClick={handleShowStartSimulator}
+            />
+        )
+    else
+        return (
+            <IconButtonWithTooltip
+                title="start simulator"
+                trackName={trackName}
+                onClick={handleShowStartSimulator}
+            >
+                <AddIcon />
+            </IconButtonWithTooltip>
+        )
 }

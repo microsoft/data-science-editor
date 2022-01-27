@@ -118,11 +118,17 @@ function JacScriptEditorWithContext() {
     useEffectAsync(
         async mounted => {
             const src = jscProgram?.program.join("\n")
-            const res = src && (await jacScriptCompile(src, true))
+            const res = src && (await jacScriptCompile(src))
             if (mounted()) setJscCompiled(res)
         },
         [jscProgram]
     )
+    useEffect(() => {
+        if (jscCompiled)
+            jacScriptCommand("start");
+        else
+            jacScriptCommand("stop");
+    }, [jscCompiled])
 
     return (
         <Grid container spacing={1}>

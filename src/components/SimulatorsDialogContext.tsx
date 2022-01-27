@@ -7,12 +7,14 @@ import React, {
 
 import Suspense from "./ui/Suspense"
 import AppContext from "./AppContext"
+import useAnalytics from "./hooks/useAnalytics"
 const StartSimulatorDialog = lazy(
     () => import("./dialogs/StartSimulatorDialog")
 )
 
 export interface ShowDeviceHostsOptions {
     sensor?: boolean
+    trackName?: string
 }
 
 export interface SimulatorDialogsProps {
@@ -31,8 +33,11 @@ export const SimulatorDialogsProvider = ({ children }) => {
     const [showDeviceHostsDialog, setShowDeviceHostsDialog] = useState(false)
     const [showDeviceHostsSensors, setShowDeviceHostsSensors] = useState(false)
     const { setToolsMenu } = useContext(AppContext)
+    const { trackEvent } = useAnalytics()
 
     const toggleShowDeviceHostsDialog = (options?: ShowDeviceHostsOptions) => {
+        if (options?.trackName)
+            trackEvent(options?.trackName)
         const b = !showDeviceHostsDialog
         if (b) setShowDeviceHostsSensors(!!options?.sensor)
         setShowDeviceHostsDialog(b)
