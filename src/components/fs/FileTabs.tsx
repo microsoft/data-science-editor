@@ -50,6 +50,16 @@ export default function FileTabs(props: {
             <Grid item>
                 <FileSystemChip />
             </Grid>
+            {root && newFileContent && (
+                <Grid item>
+                    <FileNewFileChip
+                        name={newFileName}
+                        content={newFileContent}
+                        label={newFileLabel}
+                        extension={newFileExtension}
+                    />
+                </Grid>
+            )}
             {!hideDirectories &&
                 directories?.map(node => (
                     <Grid item key={node.name}>
@@ -70,16 +80,6 @@ export default function FileTabs(props: {
                         />
                     </Grid>
                 ))}
-            {root && newFileContent && (
-                <Grid item>
-                    <FileNewFileChip
-                        name={newFileName}
-                        content={newFileContent}
-                        label={newFileLabel}
-                        extension={newFileExtension}
-                    />
-                </Grid>
-            )}
         </Grid>
     )
 }
