@@ -11,7 +11,7 @@ export default function ServoWidget(props: {
     toggleOff?: () => void
 }) {
     const { toggleOff, angle, offset, color, enabled } = props
-    const { background, controlBackground, active, textPrimary } =
+    const { background, controlBackground, active, textPrimary, textProps } =
         useWidgetTheme(color)
 
     const cx = 78
@@ -38,7 +38,7 @@ export default function ServoWidget(props: {
                 transform={transform}
                 d="M93.782 55.623c-.032-3.809-.19-6.403-.352-7.023h-.002c-.93-3.558-6.621-6.73-14.793-6.73-8.17 0-14.649 3.016-14.795 6.73-.25 6.419-4.049 62.795 13.561 62.806 14.308.008 16.52-39.277 16.38-55.783zm-8.05.08a7.178 7.178 0 010 .012 7.178 7.178 0 01-7.179 7.176 7.178 7.178 0 01-7.177-7.176 7.178 7.178 0 017.177-7.178 7.178 7.178 0 017.178 7.166z"
             />
-            <text x={w / 2} y={30} textAnchor="middle" fill={textPrimary}>
+            <text {...textProps} x={w / 2} y={30} textAnchor="middle" fill={textPrimary}>
                 {text}
             </text>
             {toggleOff && (
