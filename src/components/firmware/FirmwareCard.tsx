@@ -50,7 +50,7 @@ export default function FirmwareCard(props: { slug: string }) {
     // initialize with latest release
     useEffect(() => {
         if (releases?.length && !release) setRelease(releases[0])
-    }, [releases])
+    }, [releases, release])
 
     const handleReleaseChange = (ev: SelectChangeEvent<string>) => {
         const v = ev.target.value as string

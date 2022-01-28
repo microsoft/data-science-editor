@@ -3,20 +3,17 @@ import {
     Typography,
     Dialog,
     DialogContent,
-    DialogContentText,
     Grid,
 } from "@mui/material"
 import { Alert } from "@mui/material"
-import React, { useContext, useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import {
     flashFirmwareBlob,
     updateApplicable,
     FirmwareBlob,
 } from "../../../jacdac-ts/src/jdom/flashing"
-import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import CircularProgressWithLabel from "../ui/CircularProgressWithLabel"
-import AppContext from "../AppContext"
 import useChange from "../../jacdac/useChange"
 import useMounted from "./../hooks/useMounted"
 import useAnalytics from "../hooks/useAnalytics"
@@ -27,6 +24,7 @@ import { useLatestReleaseAsset } from "../github"
 import useBus from "../../jacdac/useBus"
 import { semverCmp } from "../semver"
 import useSnackbar from "../hooks/useSnackbar"
+import { ControlReg } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 
 function DragAndDropUpdateButton(props: {
     firmwareVersion: string
@@ -184,6 +182,8 @@ export function FlashDeviceButton(props: {
             if (mounted()) setError(e)
         } finally {
             device.flashing = false
+            // rebuild device
+            bus.removeDevice(device.deviceId)
         }
     }
 
