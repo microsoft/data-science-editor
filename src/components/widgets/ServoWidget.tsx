@@ -27,7 +27,7 @@ export default function ServoWidget(props: {
 
     return (
         <SvgWidget title={`servo at angle ${angle}`} width={w} height={h}>
-            <path fill={background} d="M158.502 10.687H0v89.75h158.502z" />
+            <rect fill={background} x={0} y={10.687} width={158.62} height={89.75} rx={4} ry={4} />
             <path
                 fill={controlBackground}
                 d="M125.545 55.641c0-24.994-20.26-45.256-45.254-45.256-17.882.016-34.077 9.446-41.328 25.79-2.655.024-4.192.076-6.35.07-11.158 0-20.204 9.046-20.204 20.204 0 11.158 9.046 20.203 20.203 20.203 2.389-.005 4.354-.332 6.997-.256 7.56 15.59 23.356 24.485 40.682 24.5 24.992 0 45.254-20.264 45.254-45.256z"
