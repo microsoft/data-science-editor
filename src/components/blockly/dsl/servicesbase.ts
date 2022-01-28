@@ -16,6 +16,8 @@ import {
     SRV_DASHBOARD,
     SRV_GAMEPAD,
     SRV_INFRASTRUCTURE,
+    SRV_JACSCRIPT_CLOUD,
+    SRV_JACSCRIPT_CONDITION,
     SRV_LOGGER,
     SRV_PROTO_TEST,
     SRV_PROXY,
@@ -124,6 +126,8 @@ const ignoredServices = [
     SRV_DASHBOARD,
     SRV_PROXY,
     SRV_UNIQUE_BRAIN,
+    SRV_JACSCRIPT_CLOUD,
+    SRV_JACSCRIPT_CONDITION
 ]
 
 const customMessages = [
