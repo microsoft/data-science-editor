@@ -132,7 +132,7 @@ const Root = styled("div")(({ theme }) => ({
 }))
 
 export const TOC_DRAWER_WIDTH = 18
-export const DRAWER_WIDTH = 40
+export const DRAWER_WIDTH = 42
 export const TOOLS_DRAWER_WIDTH = 22
 export const MOBILE_DRAWER_WIDTH = 20
 export const MOBILE_TOOLS_DRAWER_WIDTH = 18
