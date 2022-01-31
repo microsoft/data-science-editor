@@ -176,7 +176,8 @@ export default function SilkQRCode(props: {
 }) {
     const { url, layer, mirror = true, size = 0.3, margin = 1 } = props
     const eagleLayer = layer ?? mirror ? 21 : 22
-
+    const args = url.split("/")
+    const vanity = args[args.length - 1]
     const { altium, kicad, scr, image, error, numBlocks } = useQRCodeSCR(
         url,
         eagleLayer,
@@ -206,7 +207,7 @@ export default function SilkQRCode(props: {
                         <Button
                             href={imageUri}
                             variant="outlined"
-                            download="qrcode.svg"
+                            download={`${vanity}.svg`}
                         >
                             Download SVG
                         </Button>
@@ -217,7 +218,7 @@ export default function SilkQRCode(props: {
                         <Button
                             href={scrUri}
                             variant="outlined"
-                            download="qrcode.scr"
+                            download={`${vanity}.scr`}
                         >
                             Download SCR for Eagle
                         </Button>
@@ -228,7 +229,7 @@ export default function SilkQRCode(props: {
                         <Button
                             href={kicadUri}
                             variant="outlined"
-                            download="QrCode.kicad_mod"
+                            download={`${vanity}.kicard_mod`}
                         >
                             Download kicad_mod
                         </Button>
@@ -239,7 +240,7 @@ export default function SilkQRCode(props: {
                         <Button
                             href={altiumUri}
                             variant="outlined"
-                            download="QrCode.txt"
+                            download={`${vanity}.txt`}
                         >
                             Download CSV for Altium
                         </Button>
