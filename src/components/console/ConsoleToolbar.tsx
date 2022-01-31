@@ -18,6 +18,7 @@ import useChange from "../../jacdac/useChange"
 import { LoggerPriority } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import { useId } from "react-use-id-hook"
 import ServiceManagerContext from "../ServiceManagerContext"
+import OpenInNewIcon from "@mui/icons-material/OpenInNew"
 
 function ClearButton() {
     const { clear } = useContext(ConsoleContext)
@@ -37,6 +38,14 @@ function SaveButton() {
     return (
         <IconButtonWithTooltip title="save" onClick={handleSave}>
             <SaveAltIcon />
+        </IconButtonWithTooltip>
+    )
+}
+
+function PopOutButton() {
+    return (
+        <IconButtonWithTooltip title="pop out" to="/tools/console/">
+            <OpenInNewIcon />
         </IconButtonWithTooltip>
     )
 }
@@ -122,6 +131,9 @@ export default function ConsoleToolbar() {
             </Grid>
             <Grid item>
                 <MinLoggerPrioritySelect />
+            </Grid>
+            <Grid item>
+                <PopOutButton />
             </Grid>
             <Grid item>{!!sourceMap && "source map loaded"}</Grid>
         </Grid>

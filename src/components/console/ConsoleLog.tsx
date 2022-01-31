@@ -13,7 +13,7 @@ const classes = {
 const StyledAutoScroll = styled(AutoScroll)(() => ({
     [`&.${classes.root}`]: {
         backgroundColor: "#242424",
-        height: "calc(100vh - 7.05rem)",
+        height: "calc(100vh - 11.05rem)",
     },
 }))
 
