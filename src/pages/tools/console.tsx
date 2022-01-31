@@ -1,6 +1,14 @@
-import React from "react"
-import Console from "../../components/console/Console"
+import { NoSsr } from "@mui/material"
+import React, { lazy } from "react"
+import Suspense from "../../components/ui/Suspense"
+const Console = lazy(() => import("../../components/console/Console"))
 
 export default function Page() {
-    return <Console hidePopout={true} />
+    return (
+        <NoSsr>
+            <Suspense>
+                <Console hidePopout={true} />
+            </Suspense>
+        </NoSsr>
+    )
 }
