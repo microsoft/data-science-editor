@@ -110,10 +110,11 @@ function SearchKeywordField() {
     )
 }
 
-export default function ConsoleToolbar() {
+export default function ConsoleToolbar(props: { hidePopout?: boolean }) {
     const { sourceMap } = useContext(ConsoleContext)
+    const { hidePopout } = props
     return (
-        <Grid sx={{ mb: 0.5 }} container spacing={1} direction="row">
+        <Grid sx={{ mb: 0.5 }} container spacing={1} direction="row" alignItems="center">
             <Grid item>
                 <ConsoleSerialButton />
             </Grid>
@@ -132,9 +133,11 @@ export default function ConsoleToolbar() {
             <Grid item>
                 <MinLoggerPrioritySelect />
             </Grid>
-            <Grid item>
-                <PopOutButton />
-            </Grid>
+            {!hidePopout && (
+                <Grid item>
+                    <PopOutButton />
+                </Grid>
+            )}
             <Grid item>{!!sourceMap && "source map loaded"}</Grid>
         </Grid>
     )

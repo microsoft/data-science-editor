@@ -4,12 +4,12 @@ import ConsoleLog from "./ConsoleLog"
 import ConsoleToolbar from "./ConsoleToolbar"
 
 /** Delay load */
-export default function Console() {
+export default function Console(props: { hidePopout?: boolean }) {
     return (
         <NoSsr>
             <Paper square elevation={1}>
                 <Box display="flex">
-                    <ConsoleToolbar />
+                    <ConsoleToolbar {...props} />
                 </Box>
             </Paper>
             <ConsoleLog />

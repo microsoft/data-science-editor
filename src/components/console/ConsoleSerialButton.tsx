@@ -13,7 +13,7 @@ export default function ConsoleSerialButton(props: IconButtonProps) {
     return (
         <IconButtonWithTooltip
             onClick={handleClick}
-            color={connected ? "primary" : "default"}
+            selected={connected}
             title={
                 connected
                     ? `connected to serial console`
