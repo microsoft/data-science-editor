@@ -40,7 +40,7 @@ export default function ConsoleLog() {
     return (
         <StyledAutoScroll
             className={classes.root}
-            height="calc(100vh - 7.05rem)"
+            height="calc(100vh - 11.05rem)"
             autoScroll={autoScroll}
             setAutoScroll={setAutoScroll}
         >
