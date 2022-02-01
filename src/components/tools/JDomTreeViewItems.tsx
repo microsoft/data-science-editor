@@ -8,6 +8,7 @@ import {
     isRegister,
     isEvent,
     identifierToUrlPath,
+    isInfrastructure,
 } from "../../../jacdac-ts/src/jdom/spec"
 import { useRegisterHumanValue } from "../../jacdac/useRegisterValue"
 import useEventCount from "../../jacdac/useEventCount"
@@ -15,16 +16,12 @@ import DeviceActions from "../devices/DeviceActions"
 import {
     LOST,
     FOUND,
-    SRV_CONTROL,
-    SRV_LOGGER,
     GET_ATTEMPT,
     SERVICE_NODE_NAME,
     REGISTER_NODE_NAME,
     EVENT_NODE_NAME,
     SERVICE_MIXIN_NODE_NAME,
     ControlAnnounceFlags,
-    SRV_ROLE_MANAGER,
-    SRV_SETTINGS,
     ANNOUNCE,
 } from "../../../jacdac-ts/src/jdom/constants"
 import useEventRaised from "../../jacdac/useEventRaised"
@@ -68,13 +65,7 @@ export function DeviceTreeItem(
     const { dropped, restarts } = useChange(device.stats, _ => _.current)
     const serviceNames = ellipseJoin(
         services
-            .filter(
-                service =>
-                    service.serviceClass !== SRV_CONTROL &&
-                    service.serviceClass !== SRV_LOGGER &&
-                    service.serviceClass !== SRV_ROLE_MANAGER &&
-                    service.serviceClass !== SRV_SETTINGS
-            )
+            .filter(srv => !isInfrastructure(srv.specification))
             .map(service => service.name),
         18
     )
