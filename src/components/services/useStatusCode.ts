@@ -6,14 +6,14 @@ import {
 } from "../../jacdac/useRegisterValue"
 import useRegister from "../hooks/useRegister"
 
-export default function useInstanceName(
+export default function useStatusCode(
     service: JDService,
     options?: RegisterOptions
 ) {
-    const instanceNameRegister = useRegister(service, SystemReg.InstanceName)
-    const [instanceName] = useRegisterUnpackedValue<[string]>(
-        instanceNameRegister,
+    const register = useRegister(service, SystemReg.StatusCode)
+    const [code = 0, vendorCode = 0] = useRegisterUnpackedValue<[number, number]>(
+        register,
         options
     )
-    return instanceName
+    return { code, vendorCode }
 }

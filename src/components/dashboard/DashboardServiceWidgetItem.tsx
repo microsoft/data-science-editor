@@ -7,6 +7,7 @@ import ServiceRole from "../services/ServiceRole"
 import useInstanceName from "../services/useInstanceName"
 import useChange from "../../jacdac/useChange"
 import RegisterTrend from "../RegisterTrend"
+import StatusCodeAlert from "../services/StatusCodeAlert"
 
 export default function DashboardServiceWidgetItem(
     props: React.Attributes & DashboardServiceProps
@@ -18,6 +19,7 @@ export default function DashboardServiceWidgetItem(
         () => charts && reading?.fields.some(f => f.unit),
         [charts, reading]
     )
+    const statusCodeAlert = <StatusCodeAlert service={service} {...rest} />
 
     return (
         <Grid item>
@@ -38,6 +40,11 @@ export default function DashboardServiceWidgetItem(
                     </Grid>
                 )}
             </Grid>
+            {statusCodeAlert && (
+                <Grid item xs={12}>
+                    {statusCodeAlert}
+                </Grid>
+            )}
             <DashboardServiceWidget {...props} />
             {hasTrend && (
                 <Grid item xs={12}>
