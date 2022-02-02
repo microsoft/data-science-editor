@@ -15,6 +15,10 @@ const codes: Record<number, Record<number, (srv: JDService) => string>> = {
             "Waiting for WiFi credentials.",
     },
 }
+const severities: Record<SystemStatusCodes, "error" | "warning" | "info"> = {
+    [SystemStatusCodes.Sleeping]: "info",
+    [SystemStatusCodes.Initializing]: "info",
+}
 
 export default function StatusCodeAlert(
     props: {
@@ -25,9 +29,9 @@ export default function StatusCodeAlert(
     const { serviceClass } = service
     const { code, vendorCode } = useStatusCode(service, rest)
     if (code === 0 && vendorCode === 0) return null
-
+    const severity = severities[code] || "warning"
     return (
-        <Alert severity="warning">
+        <Alert severity={severity}>
             {!!code && (
                 <Typography variant="caption">
                     {humanify(

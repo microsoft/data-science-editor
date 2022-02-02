@@ -42,7 +42,6 @@ const renderers = {
         const values = reg?.unpackedValue || []
         const [code, vendorCode] = values as [number, number]
         if (code === undefined) return "?"
-        if (code === 0 && vendorCode === 0) return "ok"
         let r = humanify(SystemStatusCodes[code])?.toLowerCase() || code.toString(16)
         if (vendorCode) {
             r += `, vendor: 0x${code.toString(16)}`
