@@ -1,10 +1,10 @@
 import React from "react"
 import { Alert, Typography } from "@mui/material"
-import { JDService } from "../../../../jacdac-ts/src/jdom/service"
+import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { RegisterOptions } from "../../jacdac/useRegisterValue"
 import useStatusCode from "./useStatusCode"
-import { SystemStatusCodes } from "../../../../jacdac-ts/jacdac-spec/dist/specconstants"
-import { humanify } from "../../../../jacdac-ts/jacdac-spec/spectool/jdspec"
+import { SystemStatusCodes } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
+import { humanify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 
 export default function StatusCodeAlert(
     props: {
