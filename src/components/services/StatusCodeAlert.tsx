@@ -15,9 +15,10 @@ const codes: Record<number, Record<number, (srv: JDService) => string>> = {
             "Waiting for WiFi credentials.",
     },
 }
-const severities: Record<SystemStatusCodes, "error" | "warning" | "info"> = {
+const severities: Record<number, "error" | "warning" | "info"> = {
     [SystemStatusCodes.Sleeping]: "info",
     [SystemStatusCodes.Initializing]: "info",
+    [SystemStatusCodes.Calibrating]: "info",
 }
 
 export default function StatusCodeAlert(
