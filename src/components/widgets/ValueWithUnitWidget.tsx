@@ -43,7 +43,6 @@ export default function ValueWithUnitWidget(props: {
     const valueTextLength =
         Math.round(roundWithPrecision(value, precision)).toLocaleString()
             .length + precision
-    console.log({ value, step, precision, valueText, valueTextLength })
     const { textPrimary } = useWidgetTheme(color)
     const valueVariant =
         valueTextLength < 7
