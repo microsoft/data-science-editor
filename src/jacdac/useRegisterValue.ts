@@ -1,5 +1,9 @@
-import { DependencyList, useEffect, useState } from "react"
-import { REPORT_UPDATE } from "../../jacdac-ts/src/jdom/constants"
+import { humanify } from "../../jacdac-ts/jacdac-spec/spectool/jdspec"
+import {
+    BaseReg,
+    REPORT_UPDATE,
+    SystemStatusCodes,
+} from "../../jacdac-ts/src/jdom/constants"
 import { PackedValues } from "../../jacdac-ts/src/jdom/pack"
 import { JDRegister } from "../../jacdac-ts/src/jdom/register"
 import { ellipse } from "../../jacdac-ts/src/jdom/utils"
@@ -33,12 +37,27 @@ export interface HumanRegisterOptions extends RegisterOptions {
     maxLength?: number
 }
 
+const renderers = {
+    [BaseReg.StatusCode]: (reg: JDRegister) => {
+        const values = reg?.unpackedValue || []
+        const [code, vendorCode] = values as [number, number]
+        if (code === undefined) return "?"
+        if (code === 0 && vendorCode === 0) return "ok"
+        let r = humanify(SystemStatusCodes[code])?.toLowerCase() || code.toString(16)
+        if (vendorCode) {
+            r += `, vendor: 0x${code.toString(16)}`
+        }
+        return r
+    },
+}
+
 export function useRegisterHumanValue(
     register: JDRegister,
     options?: HumanRegisterOptions
 ): string {
     const { visible, maxLength } = options || { visible: true }
     const { trackError } = useAnalytics()
+    const renderer = register && renderers[register.code]
 
     return useEventRaised(
         REPORT_UPDATE,
@@ -46,7 +65,10 @@ export function useRegisterHumanValue(
         _ =>
             readRegisterValue(
                 _,
-                __ => ellipse(__?.humanValue, maxLength),
+                __ =>
+                    renderer
+                        ? renderer(__)
+                        : ellipse(__?.humanValue, maxLength),
                 "???",
                 trackError
             ),
