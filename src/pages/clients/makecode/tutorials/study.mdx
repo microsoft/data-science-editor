@@ -81,7 +81,7 @@ With the slider connected, check it has appeared in the MakeCode editor and clic
 
 ### Step 3
 
-Grab the `on slider position changed by 5` from the modules block category. Then, take a `plot bar graph` block from the "Led" category and place it inside the `on slider position changed by 5` block.
+Grab the `on potentiometer1 position changed by 5` from the modules block category. Then, take a `plot bar graph` block from the "Led" category and place it inside the `on potentiometer1 position changed by 5` block.
 
 ```blocks
 modules.potentiometer1.onPositionChangedBy(5, function () {
@@ -94,7 +94,7 @@ modules.potentiometer1.onPositionChangedBy(5, function () {
 
 ### Step 4
 
-From the modules drawer, grab the "potentiometer1 position" and place it on the first "0" of the "plot bar graph" block:
+From the modules category, grab the "potentiometer1 position" and place it on the first "0" of the "plot bar graph" block:
 
 ```blocks
 modules.potentiometer1.onPositionChangedBy(5, function () {
@@ -120,13 +120,13 @@ modules.potentiometer1.onPositionChangedBy(5, function () {
 
 ### Step 6
 
-That's it! Now, when you move the slider position, you will see a poportional change to the number of Leds displayed on the micro:bit display.
+That's it! Now, when you move the position of your physical slider, you will see a poportional change to the number of Leds displayed on the micro:bit simulators' display.
 
 ![a screenshot of a user changing the slider and the simulator updating](./makecode-slider-proportional-change.gif)
 
 ### (optional) Step 7
 
-Just like any MakeCode program, you can click the download button to see the same program running on your physical micro:bit!
+Just like any MakeCode program, you can click the download button to see the same program running on your physical micro:bit! When the program is downloaded, the physical slider will change the number of Leds displayed on the physical micro:bit's display.
 
 ## Task 2
 
