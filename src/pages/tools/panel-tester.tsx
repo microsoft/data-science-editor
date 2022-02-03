@@ -4,6 +4,7 @@ import {
     Stack,
     AccordionDetails,
     Chip,
+    Typography,
 } from "@mui/material"
 import React, { createElement, useEffect, useMemo, useState } from "react"
 import useLocalStorage from "../../components/hooks/useLocalStorage"
@@ -70,7 +71,7 @@ function Manifest(props: {
     return (
         <Accordion expanded={expanded} onChange={handleExpanded}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                {panel && (
+                {panel ? (
                     <ChipList>
                         {panel?.devices.map(device => (
                             <PanelDeviceChip
@@ -79,6 +80,10 @@ function Manifest(props: {
                             />
                         ))}
                     </ChipList>
+                ) : (
+                    <Typography variant="body1">
+                        Invalid configuration
+                    </Typography>
                 )}
             </AccordionSummary>
             <AccordionDetails style={{ display: "block" }}>
@@ -147,7 +152,7 @@ function TestIcon(props: { node: TestNode }) {
 }
 
 const testComponents = {
-    [DEVICE_TEST_KIND]: DeviceTestTreeItem
+    [DEVICE_TEST_KIND]: DeviceTestTreeItem,
 }
 
 function TestTreeItem(props: { node: TestNode }) {
@@ -168,18 +173,20 @@ function TestTreeItem(props: { node: TestNode }) {
             {...rest}
         >
             {testNode}
-            {!!nodeChildren.length && <>
-                {nodeChildren.map(child => (
-                    <TestTreeItem key={child.id} node={child} {...rest} />
-                ))}
-            </>}
+            {!!nodeChildren.length && (
+                <>
+                    {nodeChildren.map(child => (
+                        <TestTreeItem key={child.id} node={child} {...rest} />
+                    ))}
+                </>
+            )}
         </StyledTreeItem>
     )
 }
 
 function DeviceTestTreeItem(props: { node: TestNode }) {
     const { node } = props
-    const { device } = (node as DeviceTest)
+    const { device } = node as DeviceTest
     if (!device) return null
     return <AnnounceFlagsTreeItem device={device} showIdentify={true} />
 }
@@ -229,6 +236,10 @@ export default function PanelTester() {
         [manifestSource]
     )
     const [panelTest, setPanelTest] = useState<PanelTest>(undefined)
+    useEffect(() => {
+        bus.streaming =true;
+        return () => bus.streaming = false;
+    })
     useEffect(() => {
         if (panelSpec) {
             const p = createPanelTest(bus, panelSpec)
