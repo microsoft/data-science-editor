@@ -40,6 +40,8 @@ import useBestRegister from "../hooks/useBestRegister"
 import { humanify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import useDeviceSpecification from "../../jacdac/useDeviceSpecification"
 import DeviceAvatar from "../devices/DeviceAvatar"
+import DeviceProductInformationTreeItem from "../devices/DeviceInformationTreeItem"
+import AnnounceFlagsTreeItem from "../devices/AnnounceFlagsTreeItem"
 
 export interface JDomTreeViewProps extends StyledTreeViewProps {
     deviceFilter?: (devices: JDDevice) => boolean
@@ -100,62 +102,6 @@ export function DeviceTreeItem(
                 />
             ))}
         </StyledTreeItem>
-    )
-}
-
-function DeviceProductInformationTreeItem(props: { device: JDDevice }) {
-    const { device } = props
-    const { id } = device
-    const specification = useDeviceSpecification(device)
-    if (!specification) return null
-
-    const to = `/devices/${identifierToUrlPath(specification.id)}`
-    return (
-        <StyledTreeItem
-            nodeId={`${id}:catalog`}
-            labelTo={to}
-            labelText={specification.name}
-            labelInfo={specification.company}
-        />
-    )
-}
-
-function AnnounceFlagsTreeItem(props: { device: JDDevice }) {
-    const { device } = props
-    const { announceFlags, id, deviceId, restartCounter, proxy } = device
-
-    const text = [
-        deviceId,
-        proxy && "proxy",
-        announceFlags & ControlAnnounceFlags.IsClient && "client",
-        announceFlags & ControlAnnounceFlags.SupportsACK && "acks",
-        announceFlags & ControlAnnounceFlags.SupportsBroadcast && "broadcast",
-        announceFlags & ControlAnnounceFlags.SupportsFrames && "frames",
-        (announceFlags & ControlAnnounceFlags.StatusLightRgbFade) ===
-            ControlAnnounceFlags.StatusLightMono && "mono status LED",
-        (announceFlags & ControlAnnounceFlags.StatusLightRgbFade) ===
-            ControlAnnounceFlags.StatusLightRgbNoFade &&
-            "rgb no fade status LED",
-        (announceFlags & ControlAnnounceFlags.StatusLightRgbFade) ===
-            ControlAnnounceFlags.StatusLightRgbFade && "rgb fade status LED",
-        restartCounter < 0xf ? `restart#${restartCounter}` : undefined,
-    ]
-        .filter(f => !!f)
-        .join(", ")
-
-    return (
-        <StyledTreeItem
-            nodeId={`${id}:flags`}
-            labelText={text}
-            actions={
-                <DeviceActions
-                    device={device}
-                    showReset={true}
-                    showProxy={true}
-                    hideIdentity={true}
-                />
-            }
-        ></StyledTreeItem>
     )
 }
 

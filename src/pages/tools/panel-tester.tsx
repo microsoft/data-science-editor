@@ -5,7 +5,7 @@ import {
     AccordionDetails,
     Chip,
 } from "@mui/material"
-import React, { useEffect, useMemo, useState } from "react"
+import React, { createElement, useEffect, useMemo, useState } from "react"
 import useLocalStorage from "../../components/hooks/useLocalStorage"
 import HighlightTextField from "../../components/ui/HighlightTextField"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
@@ -22,6 +22,8 @@ import {
     tryParsePanelTestSpec,
     TestNode,
     TestState,
+    DeviceTest,
+    DEVICE_TEST_KIND,
 } from "../../../jacdac-ts/src/jdom/testdom"
 import useBus from "../../jacdac/useBus"
 import { styled } from "@mui/material/styles"
@@ -35,6 +37,8 @@ import QuestionMarkIcon from "@mui/icons-material/QuestionMark"
 import ErrorIcon from "@mui/icons-material/Error"
 import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 import useChange from "../../jacdac/useChange"
+import DeviceProductInformationTreeItem from "../../components/devices/DeviceInformationTreeItem"
+import AnnounceFlagsTreeItem from "../../components/devices/AnnounceFlagsTreeItem"
 
 const PANEL_MANIFEST_KEY = "panel-test-manifest"
 
@@ -139,10 +143,18 @@ function TestIcon(props: { node: TestNode }) {
     }
 }
 
+const testComponents = {
+    [DEVICE_TEST_KIND]: DeviceTestTreeItem
+}
+
 function TestTreeItem(props: { node: TestNode }) {
     const { node, ...rest } = props
-    const { id, children } = node
+    const { id, nodeKind, children: nodeChildren } = node
     const { label, error } = useChange(node, _ => _ ? ({ label: _.label, error: _.error }) : {})
+
+    const testComponent = testComponents[nodeKind]
+    const testNode = testComponent ? createElement(testComponent, props) : null
+
     return (
         <StyledTreeItem
             nodeId={id}
@@ -151,13 +163,20 @@ function TestTreeItem(props: { node: TestNode }) {
             icon={<TestIcon node={node} />}
             {...rest}
         >
-            {!!children.length && <>
-                {children.map(child => (
+            {testNode}
+            {!!nodeChildren.length && <>
+                {nodeChildren.map(child => (
                     <TestTreeItem key={child.id} node={child} {...rest} />
                 ))}
             </>}
         </StyledTreeItem>
     )
+}
+
+function DeviceTestTreeItem(props: { node: TestNode }) {
+    const { node } = props
+    const { device } = (node as DeviceTest)
+    return <AnnounceFlagsTreeItem device={device} showIdentify={true} />
 }
 
 function PanelTestTreeView(props: { panel: PanelTest }) {
