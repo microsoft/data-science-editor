@@ -153,7 +153,7 @@ function TestTreeItem(props: { node: TestNode }) {
     const { label, error } = useChange(node, _ => _ ? ({ label: _.label, error: _.error }) : {})
 
     const testComponent = testComponents[nodeKind]
-    const testNode = testComponent ? createElement(testComponent, props) : null
+    const testNode = testComponent && node ? createElement(testComponent, props) : null
 
     return (
         <StyledTreeItem
