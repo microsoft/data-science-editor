@@ -5,55 +5,50 @@ import {
     AccordionDetails,
     Chip,
 } from "@mui/material"
-import React, { useMemo, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import useLocalStorage from "../../components/hooks/useLocalStorage"
 import HighlightTextField from "../../components/ui/HighlightTextField"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import Markdown from "../../components/ui/Markdown"
-import { JSONTryParse } from "../../../jacdac-ts/src/jdom/utils"
 import ChipList from "../../components/ui/ChipList"
 import useDeviceImage from "../../components/devices/useDeviceImage"
-import { useDeviceSpecificationFromIdentifier } from "../../jacdac/useDeviceSpecification"
+import { useDeviceSpecificationFromProductIdentifier } from "../../jacdac/useDeviceSpecification"
 import ImageAvatar from "../../components/tools/ImageAvatar"
-import useDevices from "../../components/hooks/useDevices"
-import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
-import { isInfrastructure } from "../../../jacdac-ts/src/jdom/spec"
+import {
+    createPanelTest,
+    PanelTest,
+    PanelTestSpec,
+    PanelDeviceTestSpec,
+    tryParsePanelTestSpec,
+    TestNode,
+    TestState,
+} from "../../../jacdac-ts/src/jdom/testdom"
+import useBus from "../../jacdac/useBus"
+import { styled } from "@mui/material/styles"
+import clsx from "clsx"
+import { TreeView } from "@mui/lab"
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
+import ArrowRightIcon from "@mui/icons-material/ArrowRight"
+import StyledTreeItem from "../../components/ui/StyledTreeItem"
+import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty"
+import QuestionMarkIcon from "@mui/icons-material/QuestionMark"
+import ErrorIcon from "@mui/icons-material/Error"
+import CheckCircleIcon from "@mui/icons-material/CheckCircle"
+import useChange from "../../jacdac/useChange"
 
 const PANEL_MANIFEST_KEY = "panel-test-manifest"
 
-interface PanelDeviceSpec {
-    id: string
-    count: number
-}
-
-interface PanelSpec {
-    id?: string
-    devices: PanelDeviceSpec[]
-}
-
-function tryParseManifest(source: string) {
-    const json = JSONTryParse(source) as PanelSpec
-    if (
-        json?.id &&
-        json.devices &&
-        Array.isArray(json.devices) &&
-        json.devices.every(d => !!d.id && d.count > 0)
-    )
-        return json
-
-    return undefined
-}
-
-function PanelDeviceChip(props: { device: PanelDeviceSpec }) {
+function PanelDeviceChip(props: { device: PanelDeviceTestSpec }) {
     const { device } = props
-    const { id, count } = device
-    const specification = useDeviceSpecificationFromIdentifier(id)
+    const { productIdentifier, count } = device
+    const specification =
+        useDeviceSpecificationFromProductIdentifier(productIdentifier)
     const imageUrl = useDeviceImage(specification, "avatar")
     const name = specification?.name || "?"
 
     return (
         <Chip
-            icon={<ImageAvatar src={imageUrl} alt={id} avatar={true} />}
+            icon={<ImageAvatar src={imageUrl} alt={name} avatar={true} />}
             label={`${name} x ${count}`}
             size="small"
         />
@@ -63,7 +58,7 @@ function PanelDeviceChip(props: { device: PanelDeviceSpec }) {
 function Manifest(props: {
     source?: string
     setSource: (v: string) => void
-    panel: PanelSpec
+    panel: PanelTestSpec
 }) {
     const { source, setSource, panel } = props
     const [expanded, setExpanded] = useState(!source)
@@ -75,7 +70,10 @@ function Manifest(props: {
                 {panel && (
                     <ChipList>
                         {panel?.devices.map(device => (
-                            <PanelDeviceChip key={device.id} device={device} />
+                            <PanelDeviceChip
+                                key={device.productIdentifier}
+                                device={device}
+                            />
                         ))}
                     </ChipList>
                 )}
@@ -93,13 +91,11 @@ function Manifest(props: {
 
 A JSON formatted manifest containing an array of device specification reference and their expected item count:
 \`\`\`js
-{
-    // (optional) panel identifier
-    id?: string
+export interface PanelTestSpec {
+    id: string
     devices: {
-        // device identifier in Jacdac catalog
-        id: string,
-        // expected number of devices in the panel
+        productIdentifier: number
+        services: number[]
         count: number
     }[]
 }
@@ -112,80 +108,113 @@ A JSON formatted manifest containing an array of device specification reference 
     )
 }
 
-function PanelDeviceVerifier(props: {
-    specification: jdspec.DeviceSpec
-    device: JDDevice
-}) {
-    const { specification, device } = props
-    const { deviceId, shortId } = device
-    const count = specification.services.length
-    const services = device.services()
-    const found = services.filter(srv => !isInfrastructure(srv.specification)).length
+const PREFIX = "TestTreeView"
+const classes = {
+    root: `${PREFIX}-root`,
+    margins: `${PREFIX}-margins`,
+}
+const StyledTreeView = styled(TreeView)(({ theme }) => ({
+    [`&.${classes.root}`]: {
+        flexGrow: 1,
+    },
 
+    [`&.${classes.margins}`]: {
+        marginLeft: theme.spacing(0.5),
+        marginRight: theme.spacing(0.5),
+    },
+}))
+
+function TestIcon(props: { node: TestNode }) {
+    const { node } = props
+    const state = useChange(node, _ => _?.state)
+    switch (state) {
+        case TestState.Running:
+            return <HourglassEmptyIcon />
+        case TestState.Fail:
+            return <ErrorIcon />
+        case TestState.Pass:
+            return <CheckCircleIcon />
+        default:
+            return <QuestionMarkIcon />
+    }
+}
+
+function TestTreeItem(props: { node: TestNode }) {
+    const { node, ...rest } = props
+    const { id, children } = node
+    const { label, error } = useChange(node, _ => _ ? ({ label: _.label, error: _.error }) : {})
     return (
-        <tr>
-            <td>{shortId} ({deviceId})</td>
-            <td>{count}</td>
-            <td>{found}</td>
-        </tr>
+        <StyledTreeItem
+            nodeId={id}
+            labelText={label}
+            alert={error}
+            icon={<TestIcon node={node} />}
+            {...rest}
+        >
+            {!!children.length && <>
+                {children.map(child => (
+                    <TestTreeItem key={child.id} node={child} {...rest} />
+                ))}
+            </>}
+        </StyledTreeItem>
     )
 }
 
-function PanelDevicesVerifier(props: { id: string; count: number }) {
-    const { id, count } = props
-    const specification = useDeviceSpecificationFromIdentifier(id)
-    const { productIdentifiers, name } = specification
-    const devices = useDevices({
-        ignoreInfrastructure: true,
-        physical: true,
-    }).filter(d => productIdentifiers.indexOf(d.productIdentifier) > -1)
-
-    const found = devices.length
-
-    return (
-        <>
-            <tr key={id}>
-                <td>{name}</td>
-                <td>{count}</td>
-                <td>{found}</td>
-            </tr>
-            {devices?.map(device => (
-                <PanelDeviceVerifier
-                    key={device.id}
-                    specification={specification}
-                    device={device}
-                />
-            ))}
-        </>
-    )
-}
-
-function PanelVerifier(props: { panel: PanelSpec }) {
+function PanelTestTreeView(props: { panel: PanelTest }) {
     const { panel } = props
-    const { devices: deviceSpecs } = panel
+    const [expanded, setExpanded] = useState<string[]>([])
+    const [selected, setSelected] = useState<string[]>([])
+    const handleToggle = (
+        event: React.ChangeEvent<unknown>,
+        nodeIds: string[]
+    ) => {
+        setExpanded(nodeIds)
+    }
+
+    const handleSelect = (
+        event: React.ChangeEvent<unknown>,
+        nodeIds: string[]
+    ) => {
+        setSelected(nodeIds)
+    }
+
     return (
-        <table>
-            <tr>
-                <th>device id</th>
-                <th>count</th>
-                <th>found</th>
-            </tr>
-            {deviceSpecs.map(({ id, count }) => (
-                <PanelDevicesVerifier key={id} id={id} count={count} />
-            ))}
-        </table>
+        <StyledTreeView
+            className={clsx(classes.root, classes.margins)}
+            defaultCollapseIcon={<ArrowDropDownIcon />}
+            defaultExpandIcon={<ArrowRightIcon />}
+            defaultEndIcon={<div style={{ width: 12 }} />}
+            expanded={expanded}
+            selected={selected}
+            onNodeToggle={handleToggle}
+            onNodeSelect={handleSelect}
+        >
+            <TestTreeItem node={panel} />
+        </StyledTreeView>
     )
 }
 
 export default function PanelTester() {
+    const bus = useBus()
     const [manifestSource, setManifestSource] = useLocalStorage(
         PANEL_MANIFEST_KEY,
         ""
     )
-    const panel = useMemo(
-        () => tryParseManifest(manifestSource),
+    const panelSpec = useMemo(
+        () => tryParsePanelTestSpec(manifestSource),
         [manifestSource]
     )
+    const [panelTest, setPanelTest] = useState<PanelTest>(undefined)
+    useEffect(() => {
+        if (panelSpec) {
+            const p = createPanelTest(bus, panelSpec)
+            setPanelTest(p)
+            return () => (p.bus = undefined)
+        } else {
+            setPanelTest(undefined)
+            return undefined
+        }
+    }, [panelSpec])
 
     return (
         <Stack spacing={1}>
@@ -193,9 +222,9 @@ export default function PanelTester() {
             <Manifest
                 source={manifestSource}
                 setSource={setManifestSource}
-                panel={panel}
+                panel={panelSpec}
             />
-            {panel && <PanelVerifier panel={panel} />}
+            {panelTest && <PanelTestTreeView panel={panelTest} />}
         </Stack>
     )
 }

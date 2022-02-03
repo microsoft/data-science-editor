@@ -31,11 +31,10 @@ import {
     roundWithPrecision,
 } from "../../../jacdac-ts/src/jdom/utils"
 import useDeviceName from "../devices/useDeviceName"
-import {
-    StyledTreeItem,
+import StyledTreeItem, {
     StyledTreeViewItemProps,
     StyledTreeViewProps,
-} from "../ui/StyledTreeView"
+} from "../ui/StyledTreeItem"
 import useInstanceName from "../services/useInstanceName"
 import useBestRegister from "../hooks/useBestRegister"
 import { humanify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
@@ -117,7 +116,7 @@ function DeviceProductInformationTreeItem(props: { device: JDDevice }) {
             labelTo={to}
             labelText={specification.name}
             labelInfo={specification.company}
-        ></StyledTreeItem>
+        />
     )
 }
 

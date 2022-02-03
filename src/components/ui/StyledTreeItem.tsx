@@ -103,7 +103,7 @@ export interface StyledTreeViewProps {
     onSelect?: (selected: string[]) => void
 }
 
-export function StyledTreeItem(
+export default function StyledTreeItem(
     props: TreeItemProps & {
         nodeId: string
         bgColor?: string
