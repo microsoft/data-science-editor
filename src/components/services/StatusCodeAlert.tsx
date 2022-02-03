@@ -29,7 +29,13 @@ export default function StatusCodeAlert(
     const { service, ...rest } = props
     const { serviceClass } = service
     const { code, vendorCode } = useStatusCode(service, rest)
-    if (code === 0 && vendorCode === 0) return null
+    if (
+        (code === SystemStatusCodes.Ready ||
+            code === SystemStatusCodes.Sleeping) &&
+        (vendorCode === SystemStatusCodes.Ready ||
+            code === SystemStatusCodes.Sleeping)
+    )
+        return null
     const severity = severities[code] || "warning"
     return (
         <Alert severity={severity}>
