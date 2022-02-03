@@ -153,7 +153,8 @@ const testComponents = {
 function TestTreeItem(props: { node: TestNode }) {
     const { node, ...rest } = props
     const { id, nodeKind, children: nodeChildren } = node
-    const { label, error } = useChange(node, _ => _ ? ({ label: _.label, error: _.error }) : {})
+    const label = useChange(node, _ => _?.label)
+    const error = useChange(node, _ => _?.error)
 
     const testComponent = testComponents[nodeKind]
     const testNode = testComponent ? createElement(testComponent, props) : null
