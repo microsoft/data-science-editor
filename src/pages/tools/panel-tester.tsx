@@ -18,10 +18,10 @@ import {
     createPanelTest,
     PanelTest,
     PanelTestSpec,
-    PanelDeviceTestSpec,
     tryParsePanelTestSpec,
     TestNode,
     TestState,
+    DeviceTestSpec,
     DeviceTest,
     DEVICE_TEST_KIND,
 } from "../../../jacdac-ts/src/jdom/testdom"
@@ -37,12 +37,11 @@ import QuestionMarkIcon from "@mui/icons-material/QuestionMark"
 import ErrorIcon from "@mui/icons-material/Error"
 import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 import useChange from "../../jacdac/useChange"
-import DeviceProductInformationTreeItem from "../../components/devices/DeviceInformationTreeItem"
 import AnnounceFlagsTreeItem from "../../components/devices/AnnounceFlagsTreeItem"
 
 const PANEL_MANIFEST_KEY = "panel-test-manifest"
 
-function PanelDeviceChip(props: { device: PanelDeviceTestSpec }) {
+function PanelDeviceChip(props: { device: DeviceTestSpec }) {
     const { device } = props
     const { productIdentifier, count } = device
     const specification =
