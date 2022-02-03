@@ -99,8 +99,12 @@ export interface PanelTestSpec {
     id: string
     devices: {
         productIdentifier: number
-        services: number[]
         count: number
+        firmwareVersion?: string
+        services: {
+            serviceClass: number
+            count?: number
+        }[]
     }[]
 }
 \`\`\`
