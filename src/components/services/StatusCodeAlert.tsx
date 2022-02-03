@@ -31,9 +31,9 @@ export default function StatusCodeAlert(
     const { code, vendorCode } = useStatusCode(service, rest)
     if (
         (code === SystemStatusCodes.Ready ||
-            code === SystemStatusCodes.Sleeping) &&
-        (vendorCode === SystemStatusCodes.Ready ||
-            code === SystemStatusCodes.Sleeping)
+            code === SystemStatusCodes.Sleeping ||
+            code === SystemStatusCodes.Initializing) &&
+        vendorCode === 0
     )
         return null
     const severity = severities[code] || "warning"
