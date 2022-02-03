@@ -129,13 +129,13 @@ function TestIcon(props: { node: TestNode }) {
     const state = useChange(node, _ => _?.state)
     switch (state) {
         case TestState.Running:
-            return <HourglassEmptyIcon />
+            return <HourglassEmptyIcon color="action" />
         case TestState.Fail:
-            return <ErrorIcon />
+            return <ErrorIcon color="error" />
         case TestState.Pass:
-            return <CheckCircleIcon />
+            return <CheckCircleIcon color="success" />
         default:
-            return <QuestionMarkIcon />
+            return <QuestionMarkIcon color="warning" />
     }
 }
 
@@ -217,13 +217,14 @@ export default function PanelTester() {
     }, [panelSpec])
 
     return (
-        <Stack spacing={1}>
+        <Stack spacing={3}>
             <h1>Panel Tester</h1>
             <Manifest
                 source={manifestSource}
                 setSource={setManifestSource}
                 panel={panelSpec}
             />
+            <h2>Test Explorer</h2>
             {panelTest && <PanelTestTreeView panel={panelTest} />}
         </Stack>
     )
