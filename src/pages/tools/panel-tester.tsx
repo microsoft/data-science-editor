@@ -262,6 +262,25 @@ function PanelTestTreeView(props: { panel: PanelTest }) {
     )
 }
 
+function Results(props: { panel: PanelTest }) {
+    const { panel } = props
+    const [expanded, setExpanded] = useState(false)
+    const handleExpanded = () => setExpanded(v => !v)
+
+    const label = useChange(panel, _ => _.label)
+
+    return (
+        <Accordion expanded={expanded} onChange={handleExpanded}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Chip icon={<TestIcon node={panel} />} label={label} />
+            </AccordionSummary>
+            <AccordionDetails style={{ display: "block" }}>
+                <PanelTestTreeView panel={panel} />
+            </AccordionDetails>
+        </Accordion>
+    )
+}
+
 export default function PanelTester() {
     const bus = useBus()
     const [manifestSource, setManifestSource] = useLocalStorage(
@@ -272,7 +291,7 @@ export default function PanelTester() {
         () => tryParsePanelTestSpec(manifestSource),
         [manifestSource]
     )
-    const [panelTest, setPanelTest] = useState<PanelTest>(undefined)
+    const [panel, setPanel] = useState<PanelTest>(undefined)
     useEffect(() => {
         bus.streaming = true
         return () => {
@@ -282,10 +301,10 @@ export default function PanelTester() {
     useEffect(() => {
         if (panelSpec) {
             const p = createPanelTest(bus, panelSpec)
-            setPanelTest(p)
+            setPanel(p)
             return () => (p.bus = undefined)
         } else {
-            setPanelTest(undefined)
+            setPanel(undefined)
             return undefined
         }
     }, [panelSpec])
@@ -298,8 +317,7 @@ export default function PanelTester() {
                 setSource={setManifestSource}
                 panel={panelSpec}
             />
-            <h2>Test Explorer</h2>
-            {panelTest && <PanelTestTreeView panel={panelTest} />}
+            {panel && <Results panel={panel} />}
         </Stack>
     )
 }
