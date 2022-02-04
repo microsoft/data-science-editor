@@ -54,7 +54,6 @@ import CopyButton from "../../components/ui/CopyButton"
 import { delay } from "../../../jacdac-ts/src/jdom/utils"
 
 const PANEL_MANIFEST_KEY = "panel-test-manifest"
-const PANEL_URL_EXPORT_KEY = "panel-test-export-url"
 
 function PanelDeviceChip(props: { device: DeviceTestSpec }) {
     const { device } = props
@@ -102,6 +101,7 @@ function Manifest(props: {
             </AccordionSummary>
             <AccordionDetails style={{ display: "block" }}>
                 <Stack spacing={1}>
+                    <h2>Configuration</h2>
                     <HighlightTextField
                         code={source}
                         language={"json"}
@@ -128,6 +128,37 @@ export interface PanelTestSpec {
             count?: number
         }[]
     }[]
+    oracles?: {
+        serviceClass: number | string
+        deviceId: string
+        tolerance?: number
+    }[]
+}
+\`\`\`
+
+For example, a panel with 20 modules with a humidity and temperature services, using an additional device \`38ce43597a4f9e69\`
+as oracle would be defined as
+\`\`\`json
+{
+    "id": "example",
+    "devices": [{
+        "productIdentifier": "0x3156cfd7",
+        "count": 20,
+        "services": [{
+            "name": "humidity"
+        }, {
+            "name": "temperature"
+        }]
+    }],
+    "oracles": [{
+        "serviceClass": "humidity",
+        "deviceId": "38ce43597a4f9e69",
+        "tolerance": 1
+    }, {
+        "serviceClass": "temperature",
+        "deviceId": "38ce43597a4f9e69",
+        "tolerance": 1
+    }]
 }
 \`\`\`
 `}
@@ -159,13 +190,20 @@ function TestIcon(props: { node: TestNode }) {
     const state = useChange(node, _ => _?.state)
     switch (state) {
         case TestState.Running:
-            return <HourglassEmptyIcon color="action" />
+            return (
+                <HourglassEmptyIcon aria-label="test running" color="action" />
+            )
         case TestState.Fail:
-            return <ErrorIcon color="error" />
+            return <ErrorIcon aria-label="test fail" color="error" />
         case TestState.Pass:
-            return <CheckCircleIcon color="success" />
+            return <CheckCircleIcon aria-label="test pass" color="success" />
         default:
-            return <QuestionMarkIcon color="warning" />
+            return (
+                <QuestionMarkIcon
+                    aria-label="test indeterminate"
+                    color="warning"
+                />
+            )
     }
 }
 
@@ -272,12 +310,12 @@ function Results(props: { panel: PanelTest }) {
     const [expanded, setExpanded] = useState(false)
     const handleExpanded = () => setExpanded(v => !v)
 
-    const label = useChange(panel, _ => _.label)
-
     return (
         <Accordion expanded={expanded} onChange={handleExpanded}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Chip icon={<TestIcon node={panel} />} label={label} />
+                <h2>
+                    Test Result: <TestIcon node={panel} />
+                </h2>
             </AccordionSummary>
             <AccordionDetails style={{ display: "block" }}>
                 <PanelTestTreeView panel={panel} />
