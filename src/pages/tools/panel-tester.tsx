@@ -5,6 +5,7 @@ import {
     AccordionDetails,
     Chip,
     Typography,
+    Grid,
 } from "@mui/material"
 import React, { createElement, useEffect, useMemo, useState } from "react"
 import useLocalStorage from "../../components/hooks/useLocalStorage"
@@ -49,8 +50,11 @@ import {
     EventTreeItem,
     RegisterTreeItem,
 } from "../../components/tools/JDomTreeViewItems"
+import CopyButton from "../../components/ui/CopyButton"
+import { delay } from "../../../jacdac-ts/src/jdom/utils"
 
 const PANEL_MANIFEST_KEY = "panel-test-manifest"
+const PANEL_URL_EXPORT_KEY = "panel-test-export-url"
 
 function PanelDeviceChip(props: { device: DeviceTestSpec }) {
     const { device } = props
@@ -116,7 +120,8 @@ export interface PanelTestSpec {
         productIdentifier: number | string
         count: number
         firmwareVersion?: string
-        services: {
+        // optional if device in catalog
+        services?: {
             name?: string
             // decimal or hex as string
             serviceClass?: number | string
@@ -281,6 +286,34 @@ function Results(props: { panel: PanelTest }) {
     )
 }
 
+function Exports(props: { panel: PanelTest }) {
+    const { panel } = props
+
+    const serialize = async () => {
+        const repo = process.env.GATSBY_GITHUB_REPOSITORY
+        const sha = process.env.GATSBY_GITHUB_SHA
+        panel.deviceTests
+            .map(d => d.device)
+            .filter(d => !!d)
+            .forEach(d => d.refreshFirmwareInfo())
+        await delay(500)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const r: any = panel.export()
+        if (repo && sha) r.jacdac = { repo, sha }
+        return JSON.stringify(r, null, 2)
+    }
+
+    return (
+        <Grid container spacing={1}>
+            <CopyButton
+                variant="outlined"
+                onCopy={serialize}
+                label="export to clipboard"
+            />
+        </Grid>
+    )
+}
+
 export default function PanelTester() {
     const bus = useBus()
     const [manifestSource, setManifestSource] = useLocalStorage(
@@ -318,6 +351,7 @@ export default function PanelTester() {
                 panel={panelSpec}
             />
             {panel && <Results panel={panel} />}
+            {panel && <Exports panel={panel} />}
         </Stack>
     )
 }

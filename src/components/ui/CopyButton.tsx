@@ -13,7 +13,8 @@ export default function CopyButton(props: {
     title?: string
     onCopy: () => Promise<string | HTMLCanvasElement>
     className?: string
-    size?: "small"
+    size?: "small",
+    variant?: "outlined" | "contained"
 }) {
     const { label, title = "copy data to clipboard", onCopy, ...rest } = props
     const [copied, setCopied] = useState<boolean>(undefined)
