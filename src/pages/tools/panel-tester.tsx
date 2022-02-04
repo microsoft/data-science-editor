@@ -112,11 +112,14 @@ A JSON formatted manifest containing an array of device specification reference 
 export interface PanelTestSpec {
     id: string
     devices: {
-        productIdentifier: number
+        // decimal or hex as string
+        productIdentifier: number | string
         count: number
         firmwareVersion?: string
         services: {
-            serviceClass: number
+            name?: string
+            // decimal or hex as string
+            serviceClass?: number | string
             count?: number
         }[]
     }[]
