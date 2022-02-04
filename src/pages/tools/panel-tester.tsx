@@ -25,6 +25,8 @@ import {
     DeviceTestSpec,
     DeviceTest,
     DEVICE_TEST_KIND,
+    REGISTER_TEST_KIND,
+    RegisterTest,
 } from "../../../jacdac-ts/src/jdom/testdom"
 import useBus from "../../jacdac/useBus"
 import { styled } from "@mui/material/styles"
@@ -32,13 +34,16 @@ import clsx from "clsx"
 import { TreeView } from "@mui/lab"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 import ArrowRightIcon from "@mui/icons-material/ArrowRight"
-import StyledTreeItem from "../../components/ui/StyledTreeItem"
+import StyledTreeItem, {
+    StyledTreeViewItemProps,
+} from "../../components/ui/StyledTreeItem"
 import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty"
 import QuestionMarkIcon from "@mui/icons-material/QuestionMark"
 import ErrorIcon from "@mui/icons-material/Error"
 import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 import useChange from "../../jacdac/useChange"
 import AnnounceFlagsTreeItem from "../../components/devices/AnnounceFlagsTreeItem"
+import { RegisterTreeItem } from "../../components/tools/JDomTreeViewItems"
 
 const PANEL_MANIFEST_KEY = "panel-test-manifest"
 
@@ -152,7 +157,8 @@ function TestIcon(props: { node: TestNode }) {
 }
 
 const testComponents = {
-    [DEVICE_TEST_KIND]: DeviceTestTreeItem,
+    [DEVICE_TEST_KIND]: DeviceTestTreeItemExtra,
+    [REGISTER_TEST_KIND]: RegisterTestTreeItemExtra,
 }
 
 function TestTreeItem(props: { node: TestNode }) {
@@ -184,11 +190,24 @@ function TestTreeItem(props: { node: TestNode }) {
     )
 }
 
-function DeviceTestTreeItem(props: { node: TestNode }) {
-    const { node } = props
+function DeviceTestTreeItemExtra(
+    props: { node: TestNode } & StyledTreeViewItemProps
+) {
+    const { node, ...rest } = props
     const { device } = node as DeviceTest
     if (!device) return null
-    return <AnnounceFlagsTreeItem device={device} showIdentify={true} />
+    return (
+        <AnnounceFlagsTreeItem device={device} showIdentify={true} {...rest} />
+    )
+}
+
+function RegisterTestTreeItemExtra(
+    props: { node: TestNode } & StyledTreeViewItemProps
+) {
+    const { node, ...rest } = props
+    const { register } = node as RegisterTest
+    if (!register) return null
+    return <RegisterTreeItem register={register} {...rest} />
 }
 
 function PanelTestTreeView(props: { panel: PanelTest }) {
@@ -237,9 +256,11 @@ export default function PanelTester() {
     )
     const [panelTest, setPanelTest] = useState<PanelTest>(undefined)
     useEffect(() => {
-        bus.streaming =true;
-        return () => bus.streaming = false;
-    })
+        bus.streaming = true
+        return () => {
+            bus.streaming = false
+        }
+    }, [bus])
     useEffect(() => {
         if (panelSpec) {
             const p = createPanelTest(bus, panelSpec)

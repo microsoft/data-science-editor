@@ -7,12 +7,10 @@ import useChange from "../../jacdac/useChange"
 import {
     isRegister,
     isEvent,
-    identifierToUrlPath,
     isInfrastructure,
 } from "../../../jacdac-ts/src/jdom/spec"
 import { useRegisterHumanValue } from "../../jacdac/useRegisterValue"
 import useEventCount from "../../jacdac/useEventCount"
-import DeviceActions from "../devices/DeviceActions"
 import {
     LOST,
     FOUND,
@@ -21,7 +19,6 @@ import {
     REGISTER_NODE_NAME,
     EVENT_NODE_NAME,
     SERVICE_MIXIN_NODE_NAME,
-    ControlAnnounceFlags,
     ANNOUNCE,
 } from "../../../jacdac-ts/src/jdom/constants"
 import useEventRaised from "../../jacdac/useEventRaised"
@@ -38,7 +35,6 @@ import StyledTreeItem, {
 import useInstanceName from "../services/useInstanceName"
 import useBestRegister from "../hooks/useBestRegister"
 import { humanify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
-import useDeviceSpecification from "../../jacdac/useDeviceSpecification"
 import DeviceAvatar from "../devices/DeviceAvatar"
 import DeviceProductInformationTreeItem from "../devices/DeviceInformationTreeItem"
 import AnnounceFlagsTreeItem from "../devices/AnnounceFlagsTreeItem"
