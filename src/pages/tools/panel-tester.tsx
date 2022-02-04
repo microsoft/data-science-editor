@@ -27,6 +27,8 @@ import {
     DEVICE_TEST_KIND,
     REGISTER_TEST_KIND,
     RegisterTest,
+    EVENT_TEST_KIND,
+    EventTest,
 } from "../../../jacdac-ts/src/jdom/testdom"
 import useBus from "../../jacdac/useBus"
 import { styled } from "@mui/material/styles"
@@ -43,7 +45,10 @@ import ErrorIcon from "@mui/icons-material/Error"
 import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 import useChange from "../../jacdac/useChange"
 import AnnounceFlagsTreeItem from "../../components/devices/AnnounceFlagsTreeItem"
-import { RegisterTreeItem } from "../../components/tools/JDomTreeViewItems"
+import {
+    EventTreeItem,
+    RegisterTreeItem,
+} from "../../components/tools/JDomTreeViewItems"
 
 const PANEL_MANIFEST_KEY = "panel-test-manifest"
 
@@ -159,6 +164,7 @@ function TestIcon(props: { node: TestNode }) {
 const testComponents = {
     [DEVICE_TEST_KIND]: DeviceTestTreeItemExtra,
     [REGISTER_TEST_KIND]: RegisterTestTreeItemExtra,
+    [EVENT_TEST_KIND]: EventTestTreeItemExtra,
 }
 
 function TestTreeItem(props: { node: TestNode }) {
@@ -208,6 +214,15 @@ function RegisterTestTreeItemExtra(
     const { register } = node as RegisterTest
     if (!register) return null
     return <RegisterTreeItem register={register} {...rest} />
+}
+
+function EventTestTreeItemExtra(
+    props: { node: TestNode } & StyledTreeViewItemProps
+) {
+    const { node, ...rest } = props
+    const { event } = node as EventTest
+    if (!event) return null
+    return <EventTreeItem event={event} {...rest} />
 }
 
 function PanelTestTreeView(props: { panel: PanelTest }) {
