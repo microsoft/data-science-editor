@@ -13,7 +13,7 @@ import { toMap } from "../../../jacdac-ts/src/jdom/utils"
 const SilkQRCode = lazy(() => import("../../components/widgets/SilkQrCode"))
 
 import { graphql } from "gatsby"
-import { Button } from "gatsby-theme-material-ui"
+import { Button, Link } from "gatsby-theme-material-ui"
 import { Alert } from "@mui/material"
 import useDeviceCatalog from "../../components/devices/useDeviceCatalog"
 
@@ -79,7 +79,12 @@ export default function DeviceQRCodeGenerator(props: {
     }
     return (
         <>
-            <h1>Silk QR Code generator</h1>
+            <Alert severity="error">
+                This page is reserved for registering Microsoft Jacdac modules.
+                For other companies, using{" "}
+                <Link to="/tools/device-qr-code/">tools/device-qr-code/</Link>.
+            </Alert>
+            <h1>Silk QR Code generator for Microsoft modules</h1>
             <p>
                 Enter a short URL HTTP://AKA.MS/<strong>vanity name</strong> to
                 be encoded as a silk compatible QR code. If you use a link, make
