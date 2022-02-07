@@ -6,8 +6,15 @@ import {
     Chip,
     Typography,
     Grid,
+    TextField,
 } from "@mui/material"
-import React, { createElement, useEffect, useMemo, useState } from "react"
+import React, {
+    ChangeEvent,
+    createElement,
+    useEffect,
+    useMemo,
+    useState,
+} from "react"
 import useLocalStorage from "../../components/hooks/useLocalStorage"
 import HighlightTextField from "../../components/ui/HighlightTextField"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
@@ -52,8 +59,12 @@ import {
 } from "../../components/tools/JDomTreeViewItems"
 import CopyButton from "../../components/ui/CopyButton"
 import { delay } from "../../../jacdac-ts/src/jdom/utils"
+import { useId } from "react-use-id-hook"
+import { Button } from "gatsby-theme-material-ui"
+import useSnackbar from "../../components/hooks/useSnackbar"
 
 const PANEL_MANIFEST_KEY = "panel-test-manifest"
+const PANEL_UPLOAD_URL = "panel-test-post-url"
 
 function PanelDeviceChip(props: { device: DeviceTestSpec }) {
     const { device } = props
@@ -330,6 +341,13 @@ function Results(props: { panel: PanelTest }) {
 
 function Exports(props: { panel: PanelTest }) {
     const { panel } = props
+    const urlId = useId()
+    const tokenId = useId()
+    const [url, setUrl] = useLocalStorage(PANEL_UPLOAD_URL, "")
+    const [token, setToken] = useState("")
+    const [posting, setPosting] = useState(false)
+    const { setError, enqueueSnackbar } = useSnackbar()
+    const urlError = !!url && !/https?:\/\//i.test(url)
 
     const serialize = async () => {
         const repo = process.env.GATSBY_GITHUB_REPOSITORY
@@ -345,14 +363,82 @@ function Exports(props: { panel: PanelTest }) {
         return JSON.stringify(r, null, 2)
     }
 
+    const handleUrlChange = (ev: ChangeEvent<HTMLInputElement>) => {
+        setUrl(ev.target.value?.trim() || "")
+    }
+    const handleTokenChange = (ev: ChangeEvent<HTMLInputElement>) => {
+        setToken(ev.target.value)
+    }
+
+    const handlePost = async () => {
+        try {
+            setPosting(true)
+            const body = await serialize()
+            const req: any = {
+                headers: {
+                    "content-type": "application/json",
+                },
+                method: "post",
+                url,
+                body,
+            }
+            if (token) req.headers.authorization = token
+            const res = await fetch(req)
+            if (res.status === 200) enqueueSnackbar(`results posted`)
+            else setError(`error while posting results (status ${res.status})`)
+        } catch (e) {
+            setError(e)
+        } finally {
+            setPosting(false)
+        }
+    }
+
     return (
-        <Grid container spacing={1}>
-            <CopyButton
-                variant="outlined"
-                onCopy={serialize}
-                label="export to clipboard"
-            />
-        </Grid>
+        <>
+            <h3>Export</h3>
+            <Grid container spacing={1}>
+                <Grid item>
+                    <TextField
+                        id={urlId}
+                        label={"Upload url"}
+                        value={url}
+                        size="small"
+                        onChange={handleUrlChange}
+                        helperText={urlError || "Url to an POST web api that receives the results as a JSON payload"}
+                        error={!!urlError}
+                    />
+                </Grid>
+                <Grid item>
+                    <TextField
+                        id={tokenId}
+                        label={"Authorization header"}
+                        value={token}
+                        size="small"
+                        onChange={handleTokenChange}
+                        helperText={
+                            "Optional Authorization header content (i.e. token)"
+                        }
+                    />
+                </Grid>
+                <Grid item>
+                    <Button
+                        aria-label="Post test results to a user provided API url"
+                        disabled={!url || !!urlError || posting}
+                        variant="outlined"
+                        onClick={handlePost}
+                    >
+                        Post
+                    </Button>
+                </Grid>
+                <Grid item xs={12}>
+                    <CopyButton
+                        variant="outlined"
+                        onCopy={serialize}
+                        label="export to clipboard"
+                    />
+                </Grid>
+            </Grid>
+        </>
     )
 }
 
@@ -375,13 +461,16 @@ export default function PanelTester() {
     }, [bus])
     useEffect(() => {
         if (panelSpec) {
-            const p = createPanelTest(bus, panelSpec)
-            setPanel(p)
-            return () => (p.bus = undefined)
-        } else {
-            setPanel(undefined)
-            return undefined
+            try {
+                const p = createPanelTest(bus, panelSpec)
+                setPanel(p)
+                return () => (p.bus = undefined)
+            } catch (e) {
+                console.debug(e)
+            }
         }
+        setPanel(undefined)
+        return undefined
     }, [panelSpec])
 
     return (
