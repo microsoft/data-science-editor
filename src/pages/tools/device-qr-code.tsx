@@ -42,7 +42,7 @@ export default function DeviceQRCodeGenerator() {
                         placeholder=""
                         onChange={handleUrlChange}
                         error={!!error}
-                        helperText={error || "Use _very_ short URL and CAPITAL letters for best results."}
+                        helperText={error || "Use _very_ short URL and only CAPITAL letters and numbers for best results, eg., HTTP://AKA.MS/123ABC"}
                     />
                 </Grid>
                 <Grid item>
