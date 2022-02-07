@@ -1,4 +1,4 @@
-import React from "react"
+import React, { ReactNode } from "react"
 import { styled } from "@mui/material/styles"
 import TreeItem, { TreeItemProps } from "@mui/lab/TreeItem"
 import Typography from "@mui/material/Typography"
@@ -115,7 +115,8 @@ export default function StyledTreeItem(
         labelInfo?: string
         labelText: string
         labelTo?: string
-        actions?: JSX.Element | JSX.Element[]
+        actions?: JSX.Element | JSX.Element[],
+        children?: ReactNode
     }
 ) {
     const {

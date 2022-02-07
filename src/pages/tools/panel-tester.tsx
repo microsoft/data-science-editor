@@ -37,6 +37,7 @@ import {
     RegisterTest,
     EVENT_TEST_KIND,
     EventTest,
+    ServiceTest,
 } from "../../../jacdac-ts/src/jdom/testdom"
 import useBus from "../../jacdac/useBus"
 import { styled } from "@mui/material/styles"
@@ -62,6 +63,8 @@ import { delay } from "../../../jacdac-ts/src/jdom/utils"
 import { useId } from "react-use-id-hook"
 import { Button } from "gatsby-theme-material-ui"
 import useSnackbar from "../../components/hooks/useSnackbar"
+import { SERVICE_TEST_KIND } from "jacdac-ts"
+import DashboardServiceWidget from "../../components/dashboard/DashboardServiceWidget"
 
 const PANEL_MANIFEST_KEY = "panel-test-manifest"
 const PANEL_UPLOAD_URL = "panel-test-post-url"
@@ -123,7 +126,7 @@ function Manifest(props: {
 #### Manifest Format                        
 
 A JSON formatted manifest containing an array of device specification reference and their expected item count:
-\`\`\`js
+\`\`\`typescript
 export interface PanelTestSpec {
     id: string
     devices: {
@@ -222,6 +225,7 @@ const testComponents = {
     [DEVICE_TEST_KIND]: DeviceTestTreeItemExtra,
     [REGISTER_TEST_KIND]: RegisterTestTreeItemExtra,
     [EVENT_TEST_KIND]: EventTestTreeItemExtra,
+    [SERVICE_TEST_KIND]: ServiceTestTreeItemExtra,
 }
 
 function TestTreeItem(props: { node: TestNode }) {
@@ -265,6 +269,19 @@ function DeviceTestTreeItemExtra(
     if (!device) return null
     return (
         <AnnounceFlagsTreeItem device={device} showIdentify={true} {...rest} />
+    )
+}
+
+function ServiceTestTreeItemExtra(
+    props: { node: TestNode } & StyledTreeViewItemProps
+) {
+    const { node, ...rest } = props
+    const { service } = node as ServiceTest
+    if (!service) return null
+    return (
+        <StyledTreeItem nodeId={node?.id + ".widget"} labelText="twin" {...rest}>
+            <DashboardServiceWidget service={service} expanded={false} />
+        </StyledTreeItem>
     )
 }
 
@@ -404,7 +421,10 @@ function Exports(props: { panel: PanelTest }) {
                         value={url}
                         size="small"
                         onChange={handleUrlChange}
-                        helperText={urlError || "Url to an POST web api that receives the results as a JSON payload"}
+                        helperText={
+                            urlError ||
+                            "Url to an POST web api that receives the results as a JSON payload"
+                        }
                         error={!!urlError}
                     />
                 </Grid>
