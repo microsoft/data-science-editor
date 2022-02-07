@@ -217,8 +217,8 @@ function TestTreeItem(props: { node: TestNode }) {
     const { node, ...rest } = props
     const { id, nodeKind, children: nodeChildren } = node
     const label = useChange(node, _ => _?.label)
-    const error = useChange(node, _ => _?.error)
     const info = useChange(node, _ => _?.info)
+    const output = useChange(node, _ => _?.output)
 
     const testComponent = testComponents[nodeKind]
     const testNode = testComponent ? createElement(testComponent, props) : null
@@ -228,11 +228,13 @@ function TestTreeItem(props: { node: TestNode }) {
             nodeId={id}
             labelText={label}
             labelInfo={info}
-            alert={error}
             icon={<TestIcon node={node} />}
             {...rest}
         >
             {testNode}
+            {output && (
+                <StyledTreeItem nodeId={id + ":output"} labelText={output} />
+            )}
             {!!nodeChildren.length && (
                 <>
                     {nodeChildren.map(child => (
