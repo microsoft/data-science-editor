@@ -404,7 +404,7 @@ export default function DeviceRegistration() {
                 </Grid>
                 <Grid item xs={12}>
                     <TextField
-                        id={firmwareSourceId}
+                        id={hardwareDesignId}
                         fullWidth={true}
                         helperText="public URL to the hardware design files"
                         label="Hardware design files"
