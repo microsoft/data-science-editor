@@ -1,4 +1,4 @@
-import React, {  useMemo, useState } from "react"
+import React, { useMemo, useState } from "react"
 import { Octokit } from "@octokit/core"
 import { createPullRequest } from "octokit-plugin-create-pull-request"
 import { Button, Link } from "gatsby-theme-material-ui"
@@ -18,6 +18,7 @@ import LoadingProgress from "../ui/LoadingProgress"
 import { toHex } from "../../../jacdac-ts/src/jdom/utils"
 import { anyRandomUint32 } from "../../../jacdac-ts/src/jdom/random"
 import useSnackbar from "../hooks/useSnackbar"
+import useAnalytics from "../hooks/useAnalytics"
 
 export type GithubPullRequestFiles = Record<
     string,
@@ -44,6 +45,7 @@ export default function GithubPullRequestButton(
     } = props
     const [, setResponse] = useState(undefined)
     const [busy, setBusy] = useState(false)
+    const { trackEvent } = useAnalytics()
     const [githubToken, setGithubToken] = useState("")
     const { setError: setAppError, enqueueSnackbar } = useSnackbar()
     const [confirmDialog, setConfirmDialog] = useState(false)
@@ -64,6 +66,7 @@ export default function GithubPullRequestButton(
         setBusy(true)
         setConfirmDialog(false)
         try {
+            trackEvent("github.pullrequest.start")
             const MyOctokit = Octokit.plugin(createPullRequest)
             const octokit = new MyOctokit({
                 auth: githubToken,
@@ -84,7 +87,8 @@ export default function GithubPullRequestButton(
                     },
                 ],
             })
-
+            console.debug(`request status ${result.status}`)
+            trackEvent("github.pullrequest.status", { status: result.status })
             if (result.status === 201) {
                 setResponse(result.data)
                 const url = result.data.html_url
@@ -107,6 +111,7 @@ export default function GithubPullRequestButton(
                 setResponse(undefined)
             }
         } catch (e) {
+            trackEvent("github.pullrequest.error")
             setAppError(e)
         } finally {
             setBusy(false)
@@ -168,7 +173,10 @@ export default function GithubPullRequestButton(
                         >
                             https://github.com/settings/tokens/new
                         </Link>{" "}
-                        and generate a new personal access token with **repo**
+                        and generate a new personal access token with{" "}
+                        <b>
+                            <code>repo</code>
+                        </b>
                         scope.
                     </ApiKeyAccordion>
                 </DialogContent>
