@@ -45,6 +45,25 @@
                 var frameUrl = "https://microsoft.github.io/jacdac-docs/dashboard/" + search + "#" + sender
                     
                 var ws
+
+                // iframe dashboard -> node.js
+                window.addEventListener("message", function (msg) {
+                    var data = msg.data
+                    if (
+                        data &&
+                        data.type === "messagepacket" &&
+                        data.channel === "jacdac"
+                    ) {
+                        if (
+                            (ws === null || ws === void 0
+                                ? void 0
+                                : ws.readyState) === WebSocket.OPEN
+                        ) {
+                            ws.send(data.data)
+                        }
+                    }
+                })
+
                 var connectSocket = function () {
                     // already connected or connecting
                     if (ws) return
@@ -79,23 +98,6 @@
                     ws.addEventListener("error", function (e) {
                         if (opened) console.debug("devtools: error", e)
                         ws === null || ws === void 0 ? void 0 : ws.close()
-                    })
-                    // iframe dashboard -> node.js
-                    window.addEventListener("message", function (msg) {
-                        var data = msg.data
-                        if (
-                            data &&
-                            data.type === "messagepacket" &&
-                            data.channel === "jacdac"
-                        ) {
-                            if (
-                                (ws === null || ws === void 0
-                                    ? void 0
-                                    : ws.readyState) === WebSocket.OPEN
-                            ) {
-                                ws.send(data.data)
-                            }
-                        }
                     })
                 }
                 // start background connection
