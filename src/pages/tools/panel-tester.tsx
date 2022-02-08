@@ -38,6 +38,7 @@ import {
     EVENT_TEST_KIND,
     EventTest,
     ServiceTest,
+    REGISTER_ORACLE_KIND,
 } from "../../../jacdac-ts/src/jdom/testdom"
 import useBus from "../../jacdac/useBus"
 import { styled } from "@mui/material/styles"
@@ -226,6 +227,7 @@ const testComponents = {
     [REGISTER_TEST_KIND]: RegisterTestTreeItemExtra,
     [EVENT_TEST_KIND]: EventTestTreeItemExtra,
     [SERVICE_TEST_KIND]: ServiceTestTreeItemExtra,
+    [REGISTER_ORACLE_KIND]: RegisterTestTreeItemExtra,
 }
 
 function TestTreeItem(props: { node: TestNode }) {
@@ -275,14 +277,10 @@ function DeviceTestTreeItemExtra(
 function ServiceTestTreeItemExtra(
     props: { node: TestNode } & StyledTreeViewItemProps
 ) {
-    const { node, ...rest } = props
+    const { node } = props
     const { service } = node as ServiceTest
     if (!service) return null
-    return (
-        <StyledTreeItem nodeId={node?.id + ".widget"} labelText="twin" {...rest}>
-            <DashboardServiceWidget service={service} expanded={false} />
-        </StyledTreeItem>
-    )
+    return <DashboardServiceWidget service={service} expanded={false} />
 }
 
 function RegisterTestTreeItemExtra(
@@ -473,12 +471,6 @@ export default function PanelTester() {
         [manifestSource]
     )
     const [panel, setPanel] = useState<PanelTest>(undefined)
-    useEffect(() => {
-        bus.streaming = true
-        return () => {
-            bus.streaming = false
-        }
-    }, [bus])
     useEffect(() => {
         if (panelSpec) {
             try {
