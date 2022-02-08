@@ -50,7 +50,8 @@ import { GithubPullRequestFiles } from "../../components/buttons/GithubPullReque
 import useDeviceSpecifications from "../../components/devices/useDeviceSpecifications"
 import useDeviceCatalog from "../../components/devices/useDeviceCatalog"
 import GridHeader from "../../components/ui/GridHeader"
-
+import { JD_SERVICE_INDEX_CTRL } from "../../../jacdac-ts/src/jdom/constants"
+import ClearIcon from "@mui/icons-material/Clear"
 const GithubPullRequestButton = lazy(
     () => import("../../components/buttons/GithubPullRequestButton")
 )
@@ -142,6 +143,14 @@ export default function DeviceRegistration() {
         includeDeprecated: true,
         includeExperimental: true,
     })
+    const handleClear = () =>
+        setDevice({
+            id: "my-device",
+            name: "My device",
+            services: [],
+            productIdentifiers: [],
+            repo: "",
+        } as jdspec.DeviceSpec)
     const handleServiceAdd = (srv: jdspec.ServiceSpec) => {
         console.log(`add`, srv.classIdentifier)
         device.services.push(srv.classIdentifier)
@@ -271,17 +280,18 @@ export default function DeviceRegistration() {
         />
     )
     const handleImportDevice = (dev: JDDevice) => async () => {
-        const controlService = dev.service(0)
+        const controlService = dev.service(JD_SERVICE_INDEX_CTRL)
         const descrReg = controlService.register(ControlReg.DeviceDescription)
         await descrReg.refresh(true)
 
         const fw = await dev.resolveProductIdentifier()
         if (fw) device.productIdentifiers = [fw]
+        else device.productIdentifiers = []
         device.services = dev
             .services()
             .filter(srv => !isInfrastructure(srv.specification))
             .map(srv => srv.serviceClass)
-        device.description = descrReg.stringValue
+        device.name = device.description = descrReg.stringValue
         updateDevice()
     }
 
@@ -304,7 +314,12 @@ export default function DeviceRegistration() {
 
     return (
         <>
-            <h1>Device Registration</h1>
+            <h1>
+                Device Registration
+                <IconButtonWithTooltip title="New Device" onClick={handleClear}>
+                    <ClearIcon />
+                </IconButtonWithTooltip>
+            </h1>
             <p>
                 Compose a device from various services, prepare the metadata and
                 register it to the{" "}
@@ -317,7 +332,11 @@ export default function DeviceRegistration() {
                 {devices.map(dev => (
                     <Grid item key={dev.id} {...gridBreakpoints}>
                         <Card>
-                            <DeviceCardHeader device={dev} />
+                            <DeviceCardHeader
+                                device={dev}
+                                showAvatar={true}
+                                showDescription={true}
+                            />
                             <CardActions>
                                 <Button
                                     variant="outlined"
@@ -348,69 +367,6 @@ export default function DeviceRegistration() {
                         value={device?.company}
                         error={companyError}
                         onValueChange={handleCompanyChanged}
-                    />
-                </Grid>
-                <GridHeader title="Firmware" />
-                <Grid item xs={12}>
-                    <Autocomplete
-                        id={repoId}
-                        freeSolo={true}
-                        autoComplete
-                        placeholder="https://github.com/..."
-                        inputValue={device.repo || ""}
-                        onInputChange={handleRepoChange}
-                        options={companyRepos}
-                        renderInput={renderRepoInput}
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        id={firmwareSourceId}
-                        fullWidth={true}
-                        helperText="public URL to the firmware sources."
-                        label="Firmware source code"
-                        value={device?.firmwareSource}
-                        onChange={handleFirmwareSourceChanged}
-                        variant={variant}
-                    />
-                </Grid>
-                <GridHeader title="Hardware" />
-                <Grid item xs={12}>
-                    <TextField
-                        id={designIdentifierId}
-                        fullWidth={true}
-                        helperText="A unique identifier for this hardware design."
-                        label="Hardware design identifier"
-                        value={device?.designIdentifier}
-                        onChange={handleDesignIdentifier}
-                        variant={variant}
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        id={hardwareVersionId}
-                        fullWidth={true}
-                        error={!!versionError}
-                        helperText={versionError}
-                        label="Version"
-                        value={device?.version}
-                        onChange={handleVersion}
-                        variant={variant}
-                    />
-                    <Typography variant="caption">
-                        Revision identifier for this hardware design using
-                        semver format (v1.0, v1.1, ...).
-                    </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        id={hardwareDesignId}
-                        fullWidth={true}
-                        helperText="public URL to the hardware design files"
-                        label="Hardware design files"
-                        value={device?.hardwareDesign}
-                        onChange={handleHardwareDesignChanged}
-                        variant={variant}
                     />
                 </Grid>
                 <GridHeader title="Services" />
@@ -550,7 +506,7 @@ export default function DeviceRegistration() {
                 </Grid>
                 <Grid item xs={12}>
                     <PaperBox>
-                        <Typography>Catalog image</Typography>
+                        <Typography>Image</Typography>
                         <ImportImageCanvas
                             width={DEVICE_IMAGE_WIDTH}
                             height={DEVICE_IMAGE_HEIGHT}
@@ -563,6 +519,69 @@ export default function DeviceRegistration() {
                             <Alert severity="error">{imageError}</Alert>
                         )}
                     </PaperBox>
+                </Grid>
+                <GridHeader title="Firmware information (optional)" />
+                <Grid item xs={12}>
+                    <Autocomplete
+                        id={repoId}
+                        freeSolo={true}
+                        autoComplete
+                        placeholder="https://github.com/..."
+                        inputValue={device.repo || ""}
+                        onInputChange={handleRepoChange}
+                        options={companyRepos}
+                        renderInput={renderRepoInput}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        id={firmwareSourceId}
+                        fullWidth={true}
+                        helperText="public URL to the firmware sources."
+                        label="Firmware source code"
+                        value={device?.firmwareSource}
+                        onChange={handleFirmwareSourceChanged}
+                        variant={variant}
+                    />
+                </Grid>
+                <GridHeader title="Hardware design (optional)" />
+                <Grid item xs={12}>
+                    <TextField
+                        id={designIdentifierId}
+                        fullWidth={true}
+                        helperText="A unique identifier for this hardware design."
+                        label="Hardware design identifier"
+                        value={device?.designIdentifier}
+                        onChange={handleDesignIdentifier}
+                        variant={variant}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        id={hardwareVersionId}
+                        fullWidth={true}
+                        error={!!versionError}
+                        helperText={versionError}
+                        label="Version"
+                        value={device?.version}
+                        onChange={handleVersion}
+                        variant={variant}
+                    />
+                    <Typography variant="caption">
+                        Revision identifier for this hardware design using
+                        semver format (v1.0, v1.1, ...).
+                    </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        id={hardwareDesignId}
+                        fullWidth={true}
+                        helperText="public URL to the hardware design files"
+                        label="Hardware design files"
+                        value={device?.hardwareDesign}
+                        onChange={handleHardwareDesignChanged}
+                        variant={variant}
+                    />
                 </Grid>
                 <Grid item xs={12}>
                     <Suspense>

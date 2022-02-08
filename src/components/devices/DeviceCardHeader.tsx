@@ -16,6 +16,7 @@ import { identifierToUrlPath } from "../../../jacdac-ts/src/jdom/spec"
 import DeviceAvatar from "./DeviceAvatar"
 import useChange from "../../jacdac/useChange"
 import useRegister from "../hooks/useRegister"
+import useDeviceDescription from "../../jacdac/useDeviceDescription"
 
 function DeviceFirmwareVersionChip(props: { device: JDDevice }) {
     const { device } = props
@@ -70,6 +71,7 @@ export default function DeviceCardHeader(props: {
     showMedia?: boolean
     showSettings?: boolean
     showReset?: boolean
+    showDescription?: boolean
 }) {
     const {
         device,
@@ -80,8 +82,10 @@ export default function DeviceCardHeader(props: {
         showAvatar,
         showSettings,
         showReset,
+        showDescription,
     } = props
     const specification = useDeviceSpecification(device)
+    const description = useDeviceDescription(showDescription && device)
 
     return (
         <>
@@ -114,11 +118,13 @@ export default function DeviceCardHeader(props: {
                                 {[
                                     specification?.name,
                                     showDeviceId && device.deviceId,
+                                    showDescription && description,
                                 ]
                                     .filter(s => !!s)
                                     .join(", ")}
                             </Typography>
                         </Grid>
+
                         {showFirmware && (
                             <Grid item>
                                 <DeviceFirmwareVersionChip device={device} />
