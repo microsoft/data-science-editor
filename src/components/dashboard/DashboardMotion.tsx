@@ -26,9 +26,17 @@ export default function DashboardMotion(props: DashboardServiceProps) {
         server && handleDown
     )
 
+    const title = moving ? "movement detected" : "idle"
+    const widgetSize = `clamp(3rem, 10vw, 10vh)`
     const w = 64
     return (
-        <SvgWidget tabIndex={0} width={w} height={w}>
+        <SvgWidget
+            title={title}
+            tabIndex={0}
+            size={widgetSize}
+            width={w}
+            height={w}
+        >
             <path
                 fill={background}
                 d="M1.707 3.28v18.41a32 32 0 000 20.62v18.41a1.967 1.967 0 001.967 1.967h19.253a32 32 0 0018.146 0h19.253a1.967 1.967 0 001.967-1.967V42.31a32 32 0 000-20.62V3.28a1.967 1.967 0 00-1.967-1.967H41.073a32 32 0 00-18.146 0H3.674A1.967 1.967 0 001.707 3.28z"
