@@ -9,10 +9,10 @@ All the pixels on a strip can be set to a color using the `setAll` method:
 
 ```blocks
 input.onButtonPressed(Button.A, () => {
-    modules.ledPixel1.setAll(0x00ff00)
+    modules.ledStrip1.setAll(0x00ff00)
 })
 input.onButtonPressed(Button.B, () => {
-    modules.ledPixel1.setAll(0xff0000)
+    modules.ledStrip1.setAll(0xff0000)
 })
 ```
 
@@ -20,8 +20,8 @@ The brightness of the strip can be set and retrieved as follows:
 
 ```blocks
 input.onButtonPressed(Button.A, () => {
-    modules.ledPixel1.setBrightness(85)
-    let brightness = modules.ledPixel1.brightness()
+    modules.ledStrip1.setBrightness(85)
+    let brightness = modules.ledStrip1.brightness()
     basic.showNumber(brightness)
 })
 ```
@@ -32,10 +32,10 @@ of pixels supported by the underlying hardware.
 
 ```blocks
 input.onButtonPressed(Button.A, () => {
-    modules.ledPixel1.setAll(0)
-    let n = modules.ledPixel1.numPixels()
+    modules.ledStrip1.setAll(0)
+    let n = modules.ledStrip1.numPixels()
     for(let i = 0; i <= n - 1; i++) {
-        modules.ledPixel1.setPixel(i, 0x00ff00)
+        modules.ledStrip1.setPixel(i, 0x00ff00)
         basic.pause(200)
     }
 })
@@ -48,10 +48,10 @@ that can be triggered via the `showAnimation` method:
 
 ```blocks
 input.onButtonPressed(Button.A, () => {
-    modules.ledPixel1.showAnimation(modules.ledPixelAnimations.sparkle, 2000)
+    modules.ledStrip1.showAnimation(modules.ledPixelAnimations.sparkle, 2000)
 })
 input.onButtonPressed(Button.B, () => {
-    modules.ledPixel1.showAnimation(modules.ledPixelAnimations.firefly, 2000)
+    modules.ledStrip1.showAnimation(modules.ledPixelAnimations.firefly, 2000)
 })
 ```
 
@@ -64,12 +64,12 @@ and effects.
 ```
 function runEncoded(prog: string, args?: number[]) {
     let encoded = jacdac.lightEncode(prog, args)
-    modules.ledPixel1.runProgram(encoded)
+    modules.ledStrip1.runProgram(encoded)
 }
 
 input.onButtonPressed(Button.A, () => {
      runEncoded("rotfwd 1")
-     modules.ledPixel1.setPixel(0, 0x00ff00)
+     modules.ledStrip1.setPixel(0, 0x00ff00)
 })
 ```
 

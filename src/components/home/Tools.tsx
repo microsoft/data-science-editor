@@ -9,7 +9,7 @@ import {
     SRV_BUTTON,
     SRV_GAMEPAD,
     SRV_DOT_MATRIX,
-    SRV_LED_PIXEL,
+    SRV_LED_STRIP,
     SRV_POTENTIOMETER,
     SRV_ROLE_MANAGER,
     SRV_SERVO,
@@ -25,7 +25,7 @@ export default function Tools() {
     useServiceProviderFromServiceClass(SRV_GAMEPAD)
     useServiceProviderFromServiceClass(SRV_SERVO)
     useServiceProviderFromServiceClass(SRV_POTENTIOMETER)
-    useServiceProviderFromServiceClass(SRV_LED_PIXEL)
+    useServiceProviderFromServiceClass(SRV_LED_STRIP)
     useServiceProviderFromServiceClass(SRV_DOT_MATRIX)
     const { setDrawerType } = useContext(AppContext)
     const handleShowDeviceTree = () => setDrawerType(DrawerType.Dom)

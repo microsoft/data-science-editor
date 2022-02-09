@@ -10,7 +10,7 @@ import useDevices from "../../components/hooks/useDevices"
 import {
     PACKET_RECEIVE,
     SRV_CONTROL,
-    SRV_LED_PIXEL,
+    SRV_LED_STRIP,
     SRV_LED,
     SRV_ROLE_MANAGER,
 } from "../../../jacdac-ts/src/jdom/constants"
@@ -38,13 +38,13 @@ import { delay } from "../../../jacdac-ts/src/jdom/utils"
 import { dependencyId } from "../../../jacdac-ts/src/jdom/eventsource"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import { lightEncode } from "../../../jacdac-ts/src/jdom/light"
-import { LedPixelCmd, LedCmd } from "../../../jacdac-ts/src/jdom/constants"
+import { LedStripCmd, LedCmd } from "../../../jacdac-ts/src/jdom/constants"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
 import FileSystemContext from "../../components/FileSystemContext"
 import FileTabs from "../../components/fs/FileTabs"
 import useChange from "../../jacdac/useChange"
 import { ControlReg } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
-import { LedPixelReg } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
+import { LedStripReg } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import useSnackbar from "../../components/hooks/useSnackbar"
 import useBus from "../../jacdac/useBus"
 
@@ -211,7 +211,7 @@ function DataSetTable(props: {
 }
 
 async function LEDTest(service: JDService) {
-    const numPixels = service.register(LedPixelReg.NumPixels)
+    const numPixels = service.register(LedStripReg.NumPixels)
     await numPixels.refresh(true)
     const colors = [0x0000ff, 0x00ff00, 0xff0000]
     while (service.device.connected) {
@@ -224,7 +224,7 @@ async function LEDTest(service: JDService) {
                 )
 
                 if (service.device.connected)
-                    await service?.sendCmdAsync(LedPixelCmd.Run, encoded)
+                    await service?.sendCmdAsync(LedStripCmd.Run, encoded)
                 else break
                 await delay(50)
             }
@@ -288,7 +288,7 @@ export default function Commissioner() {
         StatusLEDTest(d)
         for (const srv of d.services()) {
             switch (srv.serviceClass) {
-                case SRV_LED_PIXEL:
+                case SRV_LED_STRIP:
                     LEDTest(srv)
                     break
                 case SRV_LED:

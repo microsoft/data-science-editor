@@ -25,11 +25,12 @@ import AddIcon from "@mui/icons-material/Add"
 import PlayArrowIcon from "@mui/icons-material/PlayArrow"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import useServiceServer from "../hooks/useServiceServer"
-import { LedPixelServer } from "../../../jacdac-ts/src/servers/ledpixelserver"
+import { LedStripServer } from "../../../jacdac-ts/src/servers/ledstripserver"
 import LightWidget from "../widgets/LightWidget"
 import {
-    LedPixelCmd,
-    LedPixelReg,
+    LedStripCmd,
+    LedStripReg,
+    LedStripVariant,
     REFRESH,
 } from "../../../jacdac-ts/src/jdom/constants"
 import ColorButtons, { DEFAULT_COLORS } from "../widgets/ColorButtons"
@@ -129,7 +130,7 @@ function LightCommand(props: { service: JDService; expanded: boolean }) {
         if (!encoded) return
         try {
             setSending(true)
-            await service.sendCmdAsync(LedPixelCmd.Run, encoded)
+            await service.sendCmdAsync(LedStripCmd.Run, encoded)
         } finally {
             setSending(false)
         }
@@ -354,12 +355,12 @@ function EffectButtons(props: {
 }
 
 const configureRegisters = [
-    LedPixelReg.Brightness,
-    LedPixelReg.ActualBrightness,
-    LedPixelReg.NumPixels,
-    LedPixelReg.MaxPixels,
-    LedPixelReg.LightType,
-    LedPixelReg.MaxPower,
+    LedStripReg.Brightness,
+    LedStripReg.ActualBrightness,
+    LedStripReg.NumPixels,
+    LedStripReg.MaxPixels,
+    LedStripReg.LightType,
+    LedStripReg.MaxPower,
 ]
 
 function RegisterInputItem(props: {
@@ -369,19 +370,25 @@ function RegisterInputItem(props: {
 }) {
     const { service, registerCode, visible } = props
     const register = useRegister(service, registerCode)
-    return <RegisterInput register={register} visible={visible} showRegisterName={true} />
+    return (
+        <RegisterInput
+            register={register}
+            visible={visible}
+            showRegisterName={true}
+        />
+    )
 }
 
-export default function DashboardLEDPixel(props: DashboardServiceProps) {
+export default function DashboardLEDStrip(props: DashboardServiceProps) {
     const { service, services, expanded, visible } = props
     const [configure, setConfigure] = useState(false)
     const animationCounter = useRef(0)
     const [penColor, setPenColor] = useState<number>(undefined)
     const [gradientColors, setGradientColors] = useState<number[]>([])
     const [effect, setEffect] = useState("")
-    const server = useServiceServer<LedPixelServer>(
+    const server = useServiceServer<LedStripServer>(
         service,
-        () => new LedPixelServer()
+        () => new LedStripServer({ variant: LedStripVariant.Strip })
     )
     const handleColorChange = (newColor: number) =>
         setPenColor(current => (newColor === current ? undefined : newColor))
@@ -403,7 +410,7 @@ export default function DashboardLEDPixel(props: DashboardServiceProps) {
 show 20`,
             [index, penColor]
         )
-        await service?.sendCmdAsync(LedPixelCmd.Run, encoded)
+        await service?.sendCmdAsync(LedStripCmd.Run, encoded)
     }
     const toggleConfigure = () => setConfigure(c => !c)
     const handleAddGradientColor = () =>
@@ -427,7 +434,7 @@ show 20`,
                     command.push(effect)
                     command.push(`show 0`)
                     const encoded = lightEncode(command.join("\n"), args)
-                    service?.sendCmdAsync(LedPixelCmd.Run, encoded)
+                    service?.sendCmdAsync(LedStripCmd.Run, encoded)
                 }
             }),
         [service, effect, penColor]
@@ -446,15 +453,24 @@ show 20`,
             const args = [penColor, ...gradientColors].map(c => c || 0)
             const encoded = lightEncode(command.join("\n"), args)
             console.log({ command, args })
-            service?.sendCmdAsync(LedPixelCmd.Run, encoded)
+            service?.sendCmdAsync(LedStripCmd.Run, encoded)
         }
     }, [service, penColor, gradientColors])
-
+    const registers = useMemo(
+        () => ({
+            numPixels: LedStripReg.NumPixels,
+            variant: LedStripReg.Variant,
+            actualBrightness: LedStripReg.ActualBrightness,
+            numColumns: LedStripReg.NumColumns,
+        }),
+        []
+    )
     return (
         <>
             {server && (
                 <LightWidget
                     server={server}
+                    registers={registers}
                     widgetCount={services.length}
                     onLedClick={handleLedClick}
                     {...props}

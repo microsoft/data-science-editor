@@ -16,7 +16,8 @@ import {
     SRV_GAMEPAD,
     SRV_LED,
     SRV_DOT_MATRIX,
-    SRV_LED_PIXEL,
+    SRV_LED_STRIP,
+    SRV_LED_DISPLAY,
     SRV_MATRIX_KEYPAD,
     SRV_MOTION,
     SRV_POWER,
@@ -72,7 +73,8 @@ import useRegister from "../hooks/useRegister"
 const DashboardServo = lazy(() => import("./DashboardServo"))
 const DashboardAccelerometer = lazy(() => import("./DashboardAccelerometer"))
 const DashboardBuzzer = lazy(() => import("./DashboardBuzzer"))
-const DashboardLEDPixel = lazy(() => import("./DashboardLEDPixel"))
+const DashboardLEDStrip = lazy(() => import("./DashboardLEDStrip"))
+const DashboardLEDDisplay = lazy(() => import("./DashboardLEDDisplay"))
 const DashboardRoleManager = lazy(() => import("./DashboardRoleManager"))
 const DashboardTrafficLight = lazy(() => import("./DashboardTrafficLight"))
 const DashboardCharacterScreen = lazy(
@@ -150,8 +152,12 @@ const serviceViews: {
         component: DashboardBuzzer,
         weight: () => 6,
     },
-    [SRV_LED_PIXEL]: {
-        component: DashboardLEDPixel,
+    [SRV_LED_STRIP]: {
+        component: DashboardLEDStrip,
+        weight: () => 3,
+    },
+    [SRV_LED_DISPLAY]: {
+        component: DashboardLEDDisplay,
         weight: () => 3,
     },
     [SRV_ACCELEROMETER]: {

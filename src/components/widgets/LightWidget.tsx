@@ -1,10 +1,7 @@
 import React, { useEffect, useRef } from "react"
-import {
-    LedPixelReg,
-    LedPixelVariant,
-    RENDER,
-} from "../../../jacdac-ts/src/jdom/constants"
-import { LedPixelServer } from "../../../jacdac-ts/src/servers/ledpixelserver"
+import { LedStripVariant, LedDisplayVariant , RENDER } from "../../../jacdac-ts/src/jdom/constants"
+import { LedStripServer } from "../../../jacdac-ts/src/servers/ledstripserver"
+import { LedDisplayServer } from "../../../jacdac-ts/src/servers/leddisplayserver"
 import SvgWidget from "../widgets/SvgWidget"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
@@ -78,10 +75,10 @@ function setRgbLeds(
 }
 
 function LightStripWidget(props: {
-    lightVariant: LedPixelVariant
+    lightVariant: LedStripVariant | LedDisplayVariant
     numPixels: number
     actualBrightness: number
-    server: LedPixelServer
+    server: LedStripServer | LedDisplayServer
     widgetSize?: string
     onLedClick?: (index: number) => void
 }) {
@@ -99,8 +96,8 @@ function LightStripWidget(props: {
     const neoradius = 6
     const neocircleradius = neoradius + 1
     const sw = neoradius * 2.8
-    const isJewel = lightVariant === LedPixelVariant.Jewel
-    const isRing = lightVariant === LedPixelVariant.Ring
+    const isJewel = lightVariant === LedStripVariant.Jewel
+    const isRing = lightVariant === LedStripVariant.Ring
     const handleLedClick = (index: number) =>
         onLedClick ? () => onLedClick(index) : undefined
 
@@ -140,7 +137,7 @@ function LightStripWidget(props: {
     let height: number
 
     let d = ""
-    if (lightVariant === LedPixelVariant.Stick) {
+    if (lightVariant === LedStripVariant.Stick) {
         const dx = neoradius * 3
         d = `M 0 ${dx}`
         for (let i = 0; i < numPixels; ++i) {
@@ -148,7 +145,7 @@ function LightStripWidget(props: {
         }
         width = numPixels * dx
         height = 2 * dx
-    } else if (lightVariant === LedPixelVariant.Strip) {
+    } else if (lightVariant === LedStripVariant.Strip) {
         const side = Math.ceil(Math.sqrt(numPixels) * 1.6108)
 
         let i = 0
@@ -228,9 +225,9 @@ function LightStripWidget(props: {
 }
 
 function LightMatrixWidget(props: {
-    lightVariant: LedPixelVariant
+    lightVariant: LedStripVariant | LedDisplayVariant
     actualBrightness: number
-    server: LedPixelServer
+    server: LedStripServer | LedDisplayServer
     widgetSize?: string
     columns: number
     rows: number
@@ -316,29 +313,37 @@ function LightMatrixWidget(props: {
     )
 }
 
+export interface LedServerRegs {
+    numPixels: number
+    variant: number
+    actualBrightness: number
+    numColumns: number
+}
+
 export default function LightWidget(props: {
-    server: LedPixelServer
+    server: LedStripServer | LedDisplayServer
+    registers: LedServerRegs
     variant?: "icon" | ""
     service: JDService
     widgetCount?: number
     visible?: boolean
     onLedClick?: (index: number) => void
 }) {
-    const { service, server, onLedClick } = props
+    const { service, server, registers, onLedClick } = props
 
-    const numPixelsRegister = useRegister(service, LedPixelReg.NumPixels)
-    const variantRegister = useRegister(service, LedPixelReg.Variant)
+    const numPixelsRegister = useRegister(service, registers.numPixels)
+    const variantRegister = useRegister(service, registers.variant)
     const actualBrightnessRegister = useRegister(
         service,
-        LedPixelReg.ActualBrightness
+        registers.actualBrightness
     )
-    const numColumnsRegister = useRegister(service, LedPixelReg.NumColumns)
+    const numColumnsRegister = useRegister(service, registers.numColumns)
 
     const [numPixels] = useRegisterUnpackedValue<[number]>(
         numPixelsRegister,
         props
     )
-    const [lightVariant] = useRegisterUnpackedValue<[LedPixelVariant]>(
+    const [lightVariant] = useRegisterUnpackedValue<[LedStripVariant | LedDisplayVariant]>(
         variantRegister,
         props
     )
@@ -356,7 +361,7 @@ export default function LightWidget(props: {
 
     if (!numPixels) return null
 
-    if (lightVariant === LedPixelVariant.Matrix) {
+    if (lightVariant === LedStripVariant.Matrix) {
         const columns = numColumns || Math.floor(Math.sqrt(numPixels))
         const rows = Math.floor(numPixels / columns)
         return (

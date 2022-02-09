@@ -64,7 +64,7 @@ import { delay } from "../../../jacdac-ts/src/jdom/utils"
 import { useId } from "react-use-id-hook"
 import { Button } from "gatsby-theme-material-ui"
 import useSnackbar from "../../components/hooks/useSnackbar"
-import { SERVICE_TEST_KIND } from "jacdac-ts"
+import { SERVICE_TEST_KIND } from "../../../jacdac-ts"
 import DashboardServiceWidget from "../../components/dashboard/DashboardServiceWidget"
 
 const PANEL_MANIFEST_KEY = "panel-test-manifest"
