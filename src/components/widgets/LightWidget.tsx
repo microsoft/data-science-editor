@@ -80,10 +80,10 @@ function setRgbLeds(
 
 function LightStripWidget(props: {
     colors: () => Uint8Array
+    subscribeColors?: (handler: () => void) => () => void,
     lightVariant: LedStripVariant | LedDisplayVariant
     numPixels: number
     actualBrightness: number
-    server: LedStripServer | LedDisplayServer
     widgetSize?: string
     onLedClick?: (index: number) => void
 }) {
@@ -91,7 +91,7 @@ function LightStripWidget(props: {
         lightVariant,
         numPixels,
         actualBrightness,
-        server,
+        subscribeColors,
         widgetSize,
         onLedClick,
         colors,
@@ -136,7 +136,7 @@ function LightStripWidget(props: {
     }, [lightVariant, numPixels, pathRef.current, pixelsRef.current])
 
     // render when new colors are in
-    useEffect(() => server?.subscribe(RENDER, paint), [server])
+    useEffect(() => subscribeColors?.(paint), [paint, subscribeColors])
 
     let width: number
     let height: number
@@ -231,15 +231,15 @@ function LightStripWidget(props: {
 
 function LightMatrixWidget(props: {
     colors: () => Uint8Array
+    subscribeColors: (handler: () => void) => () => void,
     lightVariant: LedStripVariant | LedDisplayVariant
     actualBrightness: number
-    server: LedStripServer | LedDisplayServer
     widgetSize?: string
     columns: number
     rows: number
     onLedClick?: (index: number) => void
 }) {
-    const { columns, rows, server, widgetSize, onLedClick, colors } = props
+    const { columns, rows, subscribeColors, widgetSize, onLedClick, colors } = props
     const { background, controlBackground } = useWidgetTheme()
 
     const widgetRef = useRef<SVGGElement>()
@@ -304,7 +304,7 @@ function LightMatrixWidget(props: {
     useEffect(paint, [columns, rows, paint, widgetRef.current])
 
     // render when new colors are in
-    useEffect(() => server?.subscribe(RENDER, paint), [server])
+    useEffect(() => subscribeColors?.(paint), [paint, subscribeColors])
 
     return (
         <SvgWidget width={w} height={h} size={widgetSize}>
@@ -332,7 +332,7 @@ export interface LedServerRegs {
 
 export default function LightWidget(props: {
     colors: () => Uint8Array
-    server?: LedStripServer | LedDisplayServer
+    subscribeColors: (handler: () => void) => () => void,
     registers: LedServerRegs
     variant?: "icon" | ""
     service: JDService
@@ -340,7 +340,7 @@ export default function LightWidget(props: {
     visible?: boolean
     onLedClick?: (index: number) => void
 }) {
-    const { service, colors, server, registers, onLedClick } = props
+    const { service, colors, subscribeColors, registers, onLedClick } = props
 
     const numPixelsRegister = useRegister(service, registers.numPixels)
     const variantRegister = useRegister(service, registers.variant)
@@ -377,9 +377,9 @@ export default function LightWidget(props: {
         return (
             <LightMatrixWidget
                 colors={colors}
+                subscribeColors={subscribeColors}
                 lightVariant={lightVariant}
                 actualBrightness={actualBrightness}
-                server={server}
                 columns={columns}
                 rows={rows}
                 onLedClick={onLedClick}
@@ -389,10 +389,10 @@ export default function LightWidget(props: {
         return (
             <LightStripWidget
                 colors={colors}
+                subscribeColors={subscribeColors}
                 numPixels={numPixels}
                 lightVariant={lightVariant}
                 actualBrightness={actualBrightness}
-                server={server}
                 onLedClick={onLedClick}
             />
         )

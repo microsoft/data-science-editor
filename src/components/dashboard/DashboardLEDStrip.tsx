@@ -33,6 +33,7 @@ import {
     LedStripReg,
     LedStripVariant,
     REFRESH,
+    RENDER,
 } from "../../../jacdac-ts/src/jdom/constants"
 import ColorButtons, { DEFAULT_COLORS } from "../widgets/ColorButtons"
 import Suspense from "../ui/Suspense"
@@ -467,12 +468,16 @@ show 20`,
         }),
         []
     )
+    const subscribeColors = useCallback(
+        handler => server?.subscribe(RENDER, handler),
+        [server]
+    )
     return (
         <>
             {server && (
                 <LightWidget
                     colors={colors}
-                    server={server}
+                    subscribeColors={subscribeColors}
                     registers={registers}
                     widgetCount={services.length}
                     onLedClick={handleLedClick}

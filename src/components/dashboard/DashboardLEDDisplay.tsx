@@ -18,6 +18,8 @@ import { LedDisplayServer } from "../../../jacdac-ts/src/servers/leddisplayserve
 import { write24, bufferEq } from "../../../jacdac-ts/src/jdom/utils"
 import LoadingProgress from "../ui/LoadingProgress"
 import useChange from "../../jacdac/useChange"
+import { JDNode } from "jacdac-ts/src/jdom/node"
+import { JDEventSource } from "../../../jacdac-ts/src/jdom/eventsource"
 
 const configureRegisters = [
     LedDisplayReg.Brightness,
@@ -48,7 +50,7 @@ export default function DashboardLEDDisplay(props: DashboardServiceProps) {
     const [penColor, setPenColor] = useState<number>(undefined)
     const [configure, setConfigure] = useState(false)
     const colorsRef = useRef<Uint8Array>(new Uint8Array(0))
-    const server = useServiceServer<LedDisplayServer>(service)
+    const clientRef = useRef(new JDEventSource())
     const toggleConfigure = () => setConfigure(c => !c)
     const handleColorChange = (newColor: number) =>
         setPenColor(current => (newColor === current ? undefined : newColor))
@@ -62,7 +64,7 @@ export default function DashboardLEDDisplay(props: DashboardServiceProps) {
         write24(newPixels, index * 3, penColor)
         await pixelsRegister.sendSetPackedAsync([newPixels], true)
         colorsRef.current = newPixels
-        server?.emit(RENDER)
+        clientRef.current.emit(RENDER)
     }
 
     const registers = useMemo(
@@ -81,19 +83,23 @@ export default function DashboardLEDDisplay(props: DashboardServiceProps) {
                 const [pixels] = pixelsRegister.unpackedValue
                 if (pixels && !bufferEq(colorsRef.current, pixels)) {
                     colorsRef.current = pixels.slice(0)
-                    server?.emit(RENDER)
+                    clientRef.current.emit(RENDER)
                 }
             }),
-        [pixelsRegister, server]
+        [pixelsRegister]
     )
     const colors: () => Uint8Array = useCallback(() => colorsRef.current, [])
+    const subscribeColors = useCallback(
+        handler => clientRef.current.subscribe(RENDER, handler),
+        []
+    )
 
     if (!hasData) return <LoadingProgress />
     return (
         <>
             <LightWidget
                 colors={colors}
-                server={server}
+                subscribeColors={subscribeColors}
                 registers={registers}
                 widgetCount={services.length}
                 onLedClick={handleLedClick}
