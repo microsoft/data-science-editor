@@ -11,10 +11,10 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/jacdac-ts/dist/jacdac-cli.js",
-            "args": ["--serial=true", "-p"],
+            "program": "${workspaceFolder}/jacdac-cli/dist/cli.js",
+            "args": ["stream", "--serial=true", "-p"],
             "outFiles": [
-                "${workspaceFolder}/jacdac-ts/dist/*.js"
+                "${workspaceFolder}/jacdac-cli/dist/*.js"
             ]
         },
         {
@@ -24,10 +24,10 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/jacdac-ts/dist/jacdac-cli.js",
-            "args": ["--usb", "-p"],
+            "program": "${workspaceFolder}/jacdac-cli/dist/cli.js",
+            "args": ["stream", "--usb", "-p"],
             "outFiles": [
-                "${workspaceFolder}/jacdac-ts/dist/*.js"
+                "${workspaceFolder}/jacdac-cli/dist/*.js"
             ]
         }
     ]
