@@ -1,5 +1,9 @@
-import React, { useEffect, useRef } from "react"
-import { LedStripVariant, LedDisplayVariant , RENDER } from "../../../jacdac-ts/src/jdom/constants"
+import React, { useCallback, useEffect, useRef } from "react"
+import {
+    LedStripVariant,
+    LedDisplayVariant,
+    RENDER,
+} from "../../../jacdac-ts/src/jdom/constants"
 import { LedStripServer } from "../../../jacdac-ts/src/servers/ledstripserver"
 import { LedDisplayServer } from "../../../jacdac-ts/src/servers/leddisplayserver"
 import SvgWidget from "../widgets/SvgWidget"
@@ -75,6 +79,7 @@ function setRgbLeds(
 }
 
 function LightStripWidget(props: {
+    colors: () => Uint8Array
     lightVariant: LedStripVariant | LedDisplayVariant
     numPixels: number
     actualBrightness: number
@@ -89,6 +94,7 @@ function LightStripWidget(props: {
         server,
         widgetSize,
         onLedClick,
+        colors,
     } = props
     const { background, controlBackground } = useWidgetTheme()
     const pathRef = useRef<SVGPathElement>(undefined)
@@ -102,10 +108,9 @@ function LightStripWidget(props: {
         onLedClick ? () => onLedClick(index) : undefined
 
     // paint svg via dom
-    const paint = () => {
-        //console.log('paint')
-        setRgbLeds(pixelsRef.current, server?.colors, neocircleradius)
-    }
+    const paint = useCallback(() => {
+        setRgbLeds(pixelsRef.current, colors(), neocircleradius)
+    }, [colors, neocircleradius])
 
     // reposition pixels along the path
     useEffect(() => {
@@ -225,6 +230,7 @@ function LightStripWidget(props: {
 }
 
 function LightMatrixWidget(props: {
+    colors: () => Uint8Array
     lightVariant: LedStripVariant | LedDisplayVariant
     actualBrightness: number
     server: LedStripServer | LedDisplayServer
@@ -233,7 +239,7 @@ function LightMatrixWidget(props: {
     rows: number
     onLedClick?: (index: number) => void
 }) {
-    const { columns, rows, server, widgetSize, onLedClick } = props
+    const { columns, rows, server, widgetSize, onLedClick, colors } = props
     const { background, controlBackground } = useWidgetTheme()
 
     const widgetRef = useRef<SVGGElement>()
@@ -249,7 +255,10 @@ function LightMatrixWidget(props: {
         onLedClick ? () => onLedClick(index) : undefined
 
     // paint svg via dom
-    const paint = () => setRgbLeds(widgetRef.current, server?.colors)
+    const paint = () => {
+        console.log("paint")
+        setRgbLeds(widgetRef.current, colors())
+    }
 
     // add leds
     const render = () => {
@@ -292,7 +301,7 @@ function LightMatrixWidget(props: {
     }
 
     // render when DOM render
-    useEffect(paint, [columns, rows, widgetRef.current])
+    useEffect(paint, [columns, rows, paint, widgetRef.current])
 
     // render when new colors are in
     useEffect(() => server?.subscribe(RENDER, paint), [server])
@@ -314,6 +323,7 @@ function LightMatrixWidget(props: {
 }
 
 export interface LedServerRegs {
+    pixels?: number
     numPixels: number
     variant: number
     actualBrightness: number
@@ -321,7 +331,8 @@ export interface LedServerRegs {
 }
 
 export default function LightWidget(props: {
-    server: LedStripServer | LedDisplayServer
+    colors: () => Uint8Array
+    server?: LedStripServer | LedDisplayServer
     registers: LedServerRegs
     variant?: "icon" | ""
     service: JDService
@@ -329,7 +340,7 @@ export default function LightWidget(props: {
     visible?: boolean
     onLedClick?: (index: number) => void
 }) {
-    const { service, server, registers, onLedClick } = props
+    const { service, colors, server, registers, onLedClick } = props
 
     const numPixelsRegister = useRegister(service, registers.numPixels)
     const variantRegister = useRegister(service, registers.variant)
@@ -343,10 +354,9 @@ export default function LightWidget(props: {
         numPixelsRegister,
         props
     )
-    const [lightVariant] = useRegisterUnpackedValue<[LedStripVariant | LedDisplayVariant]>(
-        variantRegister,
-        props
-    )
+    const [lightVariant] = useRegisterUnpackedValue<
+        [LedStripVariant | LedDisplayVariant]
+    >(variantRegister, props)
     const [actualBrightness] = useRegisterUnpackedValue<[number]>(
         actualBrightnessRegister,
         props
@@ -366,6 +376,7 @@ export default function LightWidget(props: {
         const rows = Math.floor(numPixels / columns)
         return (
             <LightMatrixWidget
+                colors={colors}
                 lightVariant={lightVariant}
                 actualBrightness={actualBrightness}
                 server={server}
@@ -377,6 +388,7 @@ export default function LightWidget(props: {
     } else
         return (
             <LightStripWidget
+                colors={colors}
                 numPixels={numPixels}
                 lightVariant={lightVariant}
                 actualBrightness={actualBrightness}

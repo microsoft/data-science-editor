@@ -8,6 +8,7 @@ import {
 import React, {
     ChangeEvent,
     lazy,
+    useCallback,
     useEffect,
     useMemo,
     useRef,
@@ -456,6 +457,7 @@ show 20`,
             service?.sendCmdAsync(LedStripCmd.Run, encoded)
         }
     }, [service, penColor, gradientColors])
+    const colors = useCallback(() => server?.colors, [server])
     const registers = useMemo(
         () => ({
             numPixels: LedStripReg.NumPixels,
@@ -469,6 +471,7 @@ show 20`,
         <>
             {server && (
                 <LightWidget
+                    colors={colors}
                     server={server}
                     registers={registers}
                     widgetCount={services.length}
