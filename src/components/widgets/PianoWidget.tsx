@@ -9,7 +9,7 @@ export default function PianoWidget(props: {
 }) {
     const { playTone } = props
     const firstNote = MidiNumbers.fromNote("c4")
-    const lastNote = MidiNumbers.fromNote("f5")
+    const lastNote = MidiNumbers.fromNote("d5")
     const keyboardShortcuts = KeyboardShortcuts.create({
         firstNote: firstNote,
         lastNote: lastNote,
@@ -28,7 +28,7 @@ export default function PianoWidget(props: {
         <Box mb={1} mt={1}>
             <Piano
                 id={pianoId}
-                width={400}
+                width={320}
                 noteRange={{ first: firstNote, last: lastNote }}
                 playNote={midiNumber => {
                     const frequency = midiFrequencies[midiNumber]

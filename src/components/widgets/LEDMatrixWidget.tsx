@@ -35,8 +35,10 @@ export default function LEDMatrixWidget(props: {
     // no data about layout
     if (rows === undefined || columns === undefined) return <LoadingProgress />
 
+    const widgetSize = `clamp(5rem, 16vw, 16vh)`
+
     // compute size
-    const minOpacity = 0.3
+    const minOpacity = 0.6
     const pw = 8
     const ph = 8
     const ps = 0.5
@@ -133,7 +135,7 @@ export default function LEDMatrixWidget(props: {
 
     const { boxEls, ledEls } = render()
     return (
-        <SvgWidget width={w} height={h}>
+        <SvgWidget size={widgetSize} width={w} height={h}>
             <rect
                 x={0}
                 y={0}

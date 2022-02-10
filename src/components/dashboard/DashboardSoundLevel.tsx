@@ -1,9 +1,6 @@
 import React, { useEffect } from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
-import {
-    useRegisterBoolValue,
-    useRegisterUnpackedValue,
-} from "../../jacdac/useRegisterValue"
+import { useRegisterBoolValue } from "../../jacdac/useRegisterValue"
 import useServiceServer from "../hooks/useServiceServer"
 import { Grid } from "@mui/material"
 import MicIcon from "@mui/icons-material/Mic"
@@ -13,7 +10,6 @@ import IconButtonWithProgress from "../ui/IconButtonWithProgress"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import useMicrophoneVolume from "../hooks/useMicrophoneVolume"
 import TrendWidget from "../widgets/TrendWidget"
-import LoadingProgress from "../ui/LoadingProgress"
 import useRegister from "../hooks/useRegister"
 import MicrophoneSettingsButton from "../ui/MicrophoneSettingsButton"
 
@@ -25,7 +21,6 @@ function HostMicrophoneButton(props: {
     const { server, service, visible } = props
 
     const enabledRegister = useRegister(service, SoundLevelReg.Enabled)
-
     const enabled = useRegisterBoolValue(enabledRegister, props)
     const { volume, onClickActivateMicrophone } = useMicrophoneVolume(
         enabled && !!server,
@@ -65,14 +60,7 @@ function HostMicrophoneButton(props: {
 export default function DashboardSoundLevel(props: DashboardServiceProps) {
     const { visible, service } = props
     const soundLevelRegister = useRegister(service, SoundLevelReg.SoundLevel)
-    const [soundLevel] = useRegisterUnpackedValue<[number]>(
-        soundLevelRegister,
-        props
-    )
     const server = useServiceServer<AnalogSensorServer>(service)
-
-    if (soundLevel === undefined) return <LoadingProgress />
-
     return (
         <Grid container direction="column">
             <Grid item>
@@ -92,9 +80,11 @@ export default function DashboardSoundLevel(props: DashboardServiceProps) {
                             visible={visible}
                         />
                     </Grid>
-                    <Grid item>
-                        <MicrophoneSettingsButton />
-                    </Grid>
+                    {server && (
+                        <Grid item>
+                            <MicrophoneSettingsButton />
+                        </Grid>
+                    )}
                 </Grid>
             </Grid>
         </Grid>

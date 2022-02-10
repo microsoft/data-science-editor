@@ -212,11 +212,13 @@ export default function MemberInput(props: {
         const min = signed ? -1 : 0
         const max = 1
         const step = resolution !== undefined ? resolution : 0.01
-        if (isWidget)
+        if (isWidget) {
+            const size = `clamp(5rem, 16vw, 16vh)`
             return (
                 <GaugeWidget
                     tabIndex={0}
                     label={label}
+                    size={size}
                     value={value as number}
                     color={color}
                     variant={signed ? "fountain" : undefined}
@@ -229,6 +231,7 @@ export default function MemberInput(props: {
                     toggleOff={toggleOff}
                 />
             )
+        }
 
         return (
             <Slider
