@@ -21,9 +21,9 @@ export default function Connector() {
             <SplitGrid
                 style={{ paddingTop: 0 }}
                 title="Connector"
-                description="Jacdac uses 3-pin custom-designed connectors to quickly interface development boards with sensors, relays and more."
-                buttonText="Go to specification"
-                buttonUrl="https://github.com/microsoft/jacdac-ddk/tree/main/connector"
+                description="Jacdac uses 3-pin custom-designed connector to quickly interface development boards with sensors, relays and more."
+                buttonText="Device Development Kit"
+                buttonUrl="/ddk/"
                 imageColumns={6}
                 image={<StaticImage src="./tangled.png" alt="Tangled cable" />}
             />
@@ -141,67 +141,12 @@ export default function Connector() {
                 }
             />
 
-            <CarouselGrid>
-                <Grid item xs={12} sm={4}>
-                    <FeatureItem
-                        startImage={
-                            <StaticImage
-                                width={64}
-                                src="./hotplugicon.svg"
-                                alt="Icon of two plugs connecting"
-                            />
-                        }
-                        description="Hot plug discovery"
-                        caption="The device catalog lists the registered Jacdac devices that can be automatically detected on the bus. The catalog information provides vendor information, the services supported by a device, firmware, and pictures."
-                    />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                    <FeatureItem
-                        startImage={
-                            <StaticImage
-                                width={64}
-                                src="./threepins.png"
-                                alt="3 bars"
-                            />
-                        }
-                        description="Three pins."
-                        caption="The packets are transmitted serially on hardware using a 3-wire cable."
-                    />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                    <FeatureItem
-                        startImage={
-                            <StaticImage
-                                width={64}
-                                src="./pcbicon.png"
-                                alt="PCB icon"
-                            />
-                        }
-                        description="Accepts 1.6mm PCBs."
-                        caption="Integrate Jacdac into your web site or node.js application using out TypeScript/JavaScript npm library."
-                    />
-                </Grid>
-            </CarouselGrid>
-
-            <CenterGrid
-                subtitle="More cables. More ideas."
-                description="Become a Jacdac partner by developing and selling your own ideas of what the cables should look like. As long as they plug into the PCB edge connector on the modules, they are good to go!"
-                buttonText="View PCB footprint"
-                buttonVariant="link"
-                buttonUrl="https://github.com/microsoft/jacdac-ddk/blob/main/connector/JACDAC_PCB_Edge_Connector_Drawing_JD-PEC-01_rev_01.pdf"
-                image={
-                    <StaticImage
-                        src="./pcbfootprint.png"
-                        alt="Connector PCB footprint."
-                    />
-                }
-            />
             <CenterGrid
                 subtitle="Can I add Jacdac to my PCB?"
                 description="Absolutely. We would be thrilled if you used a Jacdac PCB connector on your board or product! You can use the name Jacdac without royalties or attribution."
                 buttonText="Integrate Jacdac into your hardware"
                 buttonVariant="link"
-                buttonUrl="https://github.com/microsoft/jacdac-ddk/tree/main/connector"
+                buttonUrl="/ddk/"
             />
         </Grid>
     )

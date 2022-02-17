@@ -1,0 +1,36 @@
+---
+title: Device taxonomy
+order: 4
+---
+
+## Jacdac Device Taxonomoy
+
+Architecturally, a key idea behind Jacdac is a separation of concerns between the worlds of _client_ code (applications) and _server_ firmware that interfaces with sensors/actuators. The Jacdac protocol and services are abstractions that achieve this separation, creating a client/server architecture. This architecture naturally results in the following categories of Jacdac devices:
+
+### Brains
+
+A Jacdac _brain_ is a Jacdac device that runs application/client code that makes use of services that are available on the Jacdac bus to achieve some end-user scenario.
+A _dedicated_ Jacdac brain contains a re-programmable MCU and little else; it leverages Jacdac services for all its input and output.
+An _integrated_ Jacdac brain combines an MCU with on-board input and output and can typically operate stand-alone;
+in this case the Jacdac bus provides a way to add additional capabilities to the device.
+An example integrated Jacdac brain would be a programmable robot base with built-in motors and
+collision sensors that uses the Jacdac interface and protocol to support the connection of Jacdac modules
+that provide new capabilities such as light and sound detection, a line following sensor, etc.
+
+### Modules
+
+A Jacdac _module_ can be thought of as a very small server that makes one or more sensors and/or actuators available to other Jacdac devices on the bus.
+In the most straightforward implementation, a module is a small PCB that includes an MCU connected to an on-board sensor or actuator. The MCU firmware exposes this component via [services](https://microsoft.github.io/jacdac-docs/services/) advertised over the Jacdac bus. What distinguishes a module from a Jacdac brain is that a module usually does not execute application code.
+
+### Power supplies
+
+The Jacdac bus supports power delivery in addition to communications. Jacdac devices may be designed to consume power from the bus, to provide power to the bus, to be independently powered, or to alternatve between these modes. Typically, Jacdac modules such as basic sensors and actuators will be bus-powered which makes them simple to design and to use. Jacdac brains may also be bus-powered, but in some cases they will be designed to be the power source for the Jacdac bus; a good example of this is the programmable robot base mentioned above. If none of the brains or modules on the bus provide power, or in scenarios where additional power is required, a _Jacdac power supply_ will be required and must be plugged into the bus.
+
+### Adaptors, or "Jacdaptors"
+
+Jacdac can provide a convenient way to add functionality to existing electronics prototyping platforms including micro:bit, Raspberry Pi and Arduino.
+This requires suitable firmware to be developed and a physical layer adaptor that providing a suitable electrical interface to a Jacdac connector.
+We call this a _Jacdaptor_.
+
+A USB Jacdaptor allows a Jacdac bus to be connected to a laptop or desktop.
+WebUSB allows browser-based applications to connect to the Jacdac bus.
