@@ -15,18 +15,6 @@ const DeviceSpecificationList = lazy(
     () => import("../specification/DeviceSpecificationList")
 )
 
-/*
-const ModelViewer = lazy(() => import("./models/ModelViewer"))
-const GLBModel = lazy(() => import("./models/GLBModel"))
-<Grid item xs={12}>
-<Suspense>
-    <ModelViewer responsive={true}>
-        <GLBModel name={"jmhidserversf441v03"} />
-    </ModelViewer>
-</Suspense>
-</Grid>
-*/
-
 export default function Hardware() {
     const { imgStyle } = useContext(DarkModeContext)
     const { mobile, medium } = useMediaQueries()
@@ -39,21 +27,9 @@ export default function Hardware() {
             alignContent="center"
             alignItems="center"
         >
-            <SplitGrid
-                title="Hardware"
-                subtitle3="Integrate Jacdac into your devices."
-                imageColumns={6}
-                buttonText="Hardware Specification"
-                buttonUrl="/reference/hardware-specification/"
-                image={
-                    <StaticImage
-                        src="./pcbfootprint.png"
-                        alt="PCB connector footprint"
-                    />
-                }
-            />
 
-            <CenterGrid
+            <SplitGrid
+                right={true}
                 subtitle="Plug-and-play"
                 description="Every Jacdac device has a tiny micro-controller that runs the Jacdac protocol and communicates over the bus."
                 image={
@@ -63,39 +39,6 @@ export default function Hardware() {
                         imgStyle={imgStyle}
                     />
                 }
-            />
-
-            <SplitGrid
-                right={false}
-                subtitle="3-wire serial"
-                description="Jacdac packets are sent serially among physical devices over a single data line along with a regulated power line."
-                image={
-                    <StaticImage
-                        src="./bustopology.png"
-                        alt="Bus topology"
-                        imgStyle={imgStyle}
-                    />
-                }
-                buttonText={"Learn more"}
-                buttonVariant="link"
-                buttonUrl="/protocol/"
-            />
-
-            <SplitGrid
-                right={true}
-                subtitle="8-bit and up"
-                description="Firmware fits on 8-bit micro-controllers to minimize costs"
-                imageColumns={8}
-                image={
-                    <StaticImage
-                        src="./jacdacsinglergbledmodule.png"
-                        alt="A LED module"
-                        imgStyle={imgStyle}
-                    />
-                }
-                buttonText="Device Development Kit"
-                buttonVariant="link"
-                buttonUrl="https://github.com/microsoft/jacdac-ddk"
             />
 
             <SplitGrid
@@ -117,6 +60,22 @@ export default function Hardware() {
 
             <SplitGrid
                 right={true}
+                subtitle="3-wire serial"
+                description="Jacdac packets are sent serially among physical devices over a single data line along with a regulated power line."
+                image={
+                    <StaticImage
+                        src="./bustopology.png"
+                        alt="Bus topology"
+                        imgStyle={imgStyle}
+                    />
+                }
+                buttonText={"Learn more"}
+                buttonVariant="link"
+                buttonUrl="/reference/protocol/"
+            />
+
+            {/* <SplitGrid
+                right={false}
                 subtitle="Power... negotiated"
                 description="Power is regulated and negotiated on the bus to minimize brown-outs, etc."
                 imageColumns={8}
@@ -127,92 +86,16 @@ export default function Hardware() {
                         imgStyle={imgStyle}
                     />
                 }
-            />
-
-            <SplitGrid
-                right={false}
-                subtitle="Firmware Updates"
-                description="Jacdac scans for registered devices and can upgrade firmware over the bus."
-                imageColumns={4}
-                image={
-                    <StaticImage
-                        src="./firmwareupdate.png"
-                        alt="A device with firmware up-to-date"
-                    />
-                }
-                buttonText={"Register device"}
-                buttonVariant="link"
-                buttonUrl="/tools/device-registration/"
-            />
-
-            <Grid item xs={12}>
-                <Suspense>
-                    <DeviceSpecificationList count={cols} shuffle={true} />
-                </Suspense>
-            </Grid>
-
-            <CarouselGrid>
-                <Grid item xs={12} sm={4}>
-                    <FeatureItem
-                        startImage={<TelegramIcon fontSize="large" />}
-                        description="Cheap."
-                        caption="Add Jacdac to your PCB for a few cents."
-                    />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                    <FeatureItem
-                        startImage={<CameraIcon fontSize="large" />}
-                        description="Flexible."
-                        caption="Hot swap plug-and-play with extensive web tooling."
-                    />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                    <FeatureItem
-                        startImage={<PowerSettingsNewIcon fontSize="large" />}
-                        description="Extensible."
-                        caption="Specify your own services and deploy them on your devices."
-                    />
-                </Grid>
-            </CarouselGrid>
-
-            <SplitGrid
-                right={true}
-                subtitle="For Manufacturers"
-                description="Create Jacdac devices."
-                imageColumns={8}
-                buttonText="Hardware Specification"
-                buttonUrl="/reference/hardware-specification/"
-                buttonVariant="link"
-                image={
-                    <StaticImage
-                        src="./beautifysimple.png"
-                        alt="An array of Jacdac modules"
-                        imgStyle={imgStyle}
-                    />
-                }
-            />
+            /> */}
 
             <CenterGrid
-                subtitle="Can I add Jacdac to my PCB?"
-                description="Absolutely. We would be thrilled if you used a Jacdac PCB connector on your board or product! You can use the name Jacdac without royalties or attribution."
-                buttonText="Integrate Jacdac into your hardware"
+                subtitle="For Manufacturers"
+                description="Create Jacdac devices."
+                buttonText="Device Development Kit"
+                buttonUrl="/ddk/"
                 buttonVariant="link"
-                buttonUrl="/hardware/connector"
             />
 
-            <SplitGrid
-                subtitle="Kit"
-                subtitle3="Hardware Module Kit"
-                imageColumns={6}
-                image={
-                    <StaticImage
-                        src="./kittop.jpg"
-                        alt="Kit cardboard view from top"
-                    />
-                }
-                buttonText="Unbox"
-                buttonUrl="/hardware/kit/"
-            />
         </Grid>
     )
 }

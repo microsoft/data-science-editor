@@ -111,7 +111,7 @@ export default function Connector() {
 
             <CenterGrid
                 subtitle="Lower costs. Higher efficiency."
-                description="Not requiring a female port mounted on the Jacdac modules means less sourcing and assembly costs. On top of that, our PCB edge and cable connector have been tested extensively to ensure a consistent experience up to 1500 cycles."
+                description="The PCB edge connector means less sourcing and assembly costs. On top of that, our PCB edge and cable connector have been tested extensively to ensure a consistent experience up to 1500 cycles."
                 image={
                     <video
                         autoPlay={true}
