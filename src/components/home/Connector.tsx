@@ -111,7 +111,7 @@ export default function Connector() {
 
             <CenterGrid
                 subtitle="Lower costs. Higher efficiency."
-                description="Not requiring a female port mounted on the Jacdac modules means less sourcing and assembly costs. On top of that, our PCB edge and cable connector have been tested extensively to ensure a consistent experience up to 1500 cycles."
+                description="The PCB edge connector means less sourcing and assembly costs. On top of that, our PCB edge and cable connector have been tested extensively to ensure a consistent experience up to 1500 cycles."
                 image={
                     <video
                         autoPlay={true}
@@ -125,19 +125,6 @@ export default function Connector() {
                             type="video/mp4"
                         />
                     </video>
-                }
-            />
-
-            <SplitGrid
-                right={true}
-                subtitle="Three length."
-                description="The device catalog lists the registered Jacdac devices that can be automatically detected on the bus. The catalog information provides vendor information, the services supported by a device, firmware, and pictures."
-                imageColumns={6}
-                image={
-                    <StaticImage
-                        src="./1500mm.png"
-                        alt="A rolled up 1500mm Jacdac cable"
-                    />
                 }
             />
 

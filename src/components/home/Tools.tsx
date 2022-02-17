@@ -127,11 +127,6 @@ export default function Tools() {
                 onButtonClick={handleShowPacketConsole}
             />
 
-            <CenterGrid
-                subtitle2="Data Science tools."
-                description="Collect data, train and push models."
-            />
-
             <SplitGrid
                 right={false}
                 subtitle="Data collector."
@@ -164,7 +159,7 @@ export default function Tools() {
 
             <CenterGrid
                 subtitle2="Can I build my own tools?"
-                description="Absolutely! You can our JavaScript package to build your own Jacdac tooling."
+                description="Absolutely! You can use the JavaScript package to build your own Jacdac tooling."
                 buttonText="Integrate Jacdac into your web app"
                 buttonVariant="link"
                 buttonUrl="/clients/javascript/"

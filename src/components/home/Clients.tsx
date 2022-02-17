@@ -14,11 +14,11 @@ export default function Clients() {
             alignContent="center"
             alignItems="center"
         >
-            <SplitGrid
-                title="Client SDKs"
-                subtitle3="Integrate Jacdac with JavaScript, Python, .NET, MakeCode..."
-                imageColumns={6}
-                image={<StaticImage src="./dashboard.png" alt="Dashboard" />}
+            <CenterGrid
+                title="Jacdac Programming"
+                subtitle3="via JavaScript, Python, .NET, MakeCode, ..."
+                // imageColumns={6}
+                // image={<StaticImage src="./dashboard.png" alt="Dashboard" />}
             />
 
             <SplitGrid
@@ -109,41 +109,6 @@ export default function Clients() {
                         alt="A p5js program that controls color with sliders."
                     />
                 }
-            />
-
-            <SplitGrid
-                right={true}
-                subtitle="React"
-                imageColumns={7}
-                description="Context and Hooks for your React apps."
-                buttonText="react-jacdac documentation"
-                buttonVariant="link"
-                buttonUrl="/clients/react"
-                image={<StaticImage src="./react.png" alt="React logo." />}
-            />
-
-            <SplitGrid
-                right={false}
-                subtitle="A-Frame"
-                imageColumns={7}
-                description="Put Reality back into Virtual Reality."
-                buttonText="A-Frame demo"
-                buttonVariant="link"
-                buttonUrl="/clients/a-frame"
-                image={
-                    <StaticImage
-                        src="./a-frame.jpg"
-                        alt="Control the radius of a sphere using a slider using our Javascript SDK."
-                    />
-                }
-            />
-
-            <CenterGrid
-                subtitle2="Can I embed the dashboard in my web pages?"
-                description="Absolutely! With a few lines of HTML, you'll get a dashboard in your web pages."
-                buttonText="Copy HTML code to add Jacdac to your web site."
-                buttonVariant="link"
-                buttonUrl="/clients/embed/"
             />
         </Grid>
     )
