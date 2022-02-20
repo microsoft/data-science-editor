@@ -125,8 +125,8 @@ export default function Toc(props: { pagePath: string }) {
         // convert pages into tree
         const toc: TocNode[] = [
             {
-                name: "Home",
-                path: "/",
+                name: "Overview",
+                path: "/overview/",
                 order: 0,
             },
             {
@@ -137,12 +137,12 @@ export default function Toc(props: { pagePath: string }) {
             {
                 name: "Device Catalog",
                 path: "/devices/",
-                order: 0.4,
+                order: 0.2,
             },
             {
-                name: "Hardware",
-                path: "/hardware/",
-                order: 0.45,
+                name: "Service Catalog",
+                path: "/services/",
+                order: 0.3,
             },
             {
                 name: "Application Programming",
@@ -155,12 +155,7 @@ export default function Toc(props: { pagePath: string }) {
                 order: 0.6,
             },
             {
-                name: "Service Catalog",
-                path: "/services/",
-                order: 0.7,
-            },
-            {
-                name: "Device Development Kit",
+                name: "Device Development",
                 path: "/ddk/",
                 order: 0.8,
             },
@@ -175,9 +170,8 @@ export default function Toc(props: { pagePath: string }) {
             .map(node => node.node)
             .filter(
                 node =>
-                    !!node.frontmatter?.title ||
-                    (!!node.headings.length &&
-                        !/404/.test(node.headings[0].value))
+                    !!node.frontmatter?.title && 
+                    node.fields.slug !== "/"
             )
             .filter(node => !node.frontmatter || !node.frontmatter?.hideToc)
             .map(node => {
@@ -199,7 +193,7 @@ export default function Toc(props: { pagePath: string }) {
     const TocListItem = (props: { entry: TocNode; level: number }) => {
         const { entry, level } = props
         const { path, children, name } = entry
-        const selected = pagePath === path
+        const selected = pagePath === path || (pagePath === "/" && path === "/overview/")
         const sub = level === 1 || !!children?.length
         const showSub = sub && !!children?.length && pagePath.startsWith(path)
 
@@ -244,7 +238,7 @@ export default function Toc(props: { pagePath: string }) {
         <StyledList dense className={classes.root}>
             {tree.map(entry => (
                 // eslint-disable-next-line react/prop-types
-                <TocListItem key={entry.path} entry={entry} level={0} />
+                <TocListItem key={entry.path} entry={entry} level={1} />
             ))}
         </StyledList>
     )

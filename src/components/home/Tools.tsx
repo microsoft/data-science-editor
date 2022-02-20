@@ -56,7 +56,7 @@ export default function Tools() {
             alignItems="center"
         >
             <SplitGrid
-                title="Tools"
+                title="Web Tools"
                 subtitle3="Visualize, debug, sniff, track, record, replay, update... from your browser."
                 imageColumns={6}
                 image={<StaticImage src="./dashboard.png" alt="Dashboard" />}
@@ -65,7 +65,7 @@ export default function Tools() {
             <SplitGrid
                 right={true}
                 subtitle="Dashboard"
-                description="Visualize and interact with physical or simulated devices in the dashboard."
+                description="Visualize and interact with digital twins of physical devices, or simulated devices, in the dashboard."
                 image={
                     <Grid container spacing={1}>
                         {dashboards.map(device => (

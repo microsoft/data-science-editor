@@ -80,22 +80,6 @@ export default function Clients() {
             />
 
             <SplitGrid
-                right={true}
-                imageColumns={8}
-                subtitle="Node-RED"
-                description="Add Jacdac to your Node-RED flows."
-                buttonText="Jacdac node"
-                buttonVariant="link"
-                buttonUrl="https://flows.nodered.org/node/node-red-contrib-jacdac"
-                image={
-                    <StaticImage
-                        src="./nodered.png"
-                        alt="Jacdac nodes for Node-RED"
-                    />
-                }
-            />
-
-            <SplitGrid
                 right={false}
                 subtitle="p5*js"
                 imageColumns={8}
@@ -107,6 +91,22 @@ export default function Clients() {
                     <StaticImage
                         src="./p5js.jpg"
                         alt="A p5js program that controls color with sliders."
+                    />
+                }
+            />
+
+            <SplitGrid
+                right={true}
+                imageColumns={8}
+                subtitle="Node-RED"
+                description="Add Jacdac to your Node-RED flows."
+                buttonText="Jacdac node"
+                buttonVariant="link"
+                buttonUrl="https://flows.nodered.org/node/node-red-contrib-jacdac"
+                image={
+                    <StaticImage
+                        src="./nodered.png"
+                        alt="Jacdac nodes for Node-RED"
                     />
                 }
             />

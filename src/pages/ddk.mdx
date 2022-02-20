@@ -1,6 +1,5 @@
 ---
 title: Device Development Kit
-order: 5
 hideBreadcrumbs: true
 ---
 
@@ -8,10 +7,10 @@ hideBreadcrumbs: true
 
 The Jacdac Device Development Kit (DDK) is for 3rd party hardware designers, firmware developers and manufacturers who wish to create their own Jacdac [devices](/devices). A Jacdac device has at least the following three features:
 
--   it has a [Jacdac edge connector](/reference/connector/) for joining the device to the Jacdac bus
-    using [Jacdac cables](/reference/connector/#cable);
+-   it has a [Jacdac edge connector](/ddk/connector/) for joining the device to the Jacdac bus
+    using [Jacdac cables](/ddk/connector/#cable);
 -   it implements the [Jacdac protocol](/reference/protocol/) to communicate over the bus via the connector;
--   it follows the [design guidelines](/reference/design/) in this DDK.
+-   it follows the [design guidelines](/ddk/design/) in this DDK.
 
 Additionally, Jacdac devices may supply power to the bus and/or consume power from the bus. A common realization of a Jacdac device is a printed circuit board (PCB) that includes a microcontroller unit (MCU) connected to a specific set of components including sensors, actuators, network interfaces and/or power supplies. [Read more](/ddk/devices) about the different kinds of Jacdac devices.
 
@@ -23,7 +22,7 @@ Consult our [FAQ](/ddk/faq) to find answers to frequently asked questions.
 
 The Jacdac DDK supports 3rd party module development via the following steps:
 
-1. choosing on-board components and incorporating them in a [hardware design](/reference/design);
+1. choosing on-board components and incorporating them in a [hardware design](/ddk/design);
 2. identifying the [services](/services/) to represent the chosen components;
 3. building [firmware](/ddk/firmware/) to expose the components on the Jacdac bus;
 4. validating the hardware using the dashboard;

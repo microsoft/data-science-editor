@@ -365,6 +365,7 @@ async function createVersions() {
 // access to any information necessary to programmatically
 // create pages.
 exports.createPages = async ({ graphql, actions, reporter }) => {
+    const { createRedirect } = actions
     await generateServicesJSON()
     await createServicePages(graphql, actions, reporter)
     await createSpecPages(graphql, actions, reporter)
@@ -372,6 +373,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     await createDeviceQRPages(actions, reporter)
     await createWorkers()
     await createVersions()
+    // createRedirect({ fromPath: '', toPath: '/overview/', isPermanent: true });
 }
 
 exports.onCreateNode = ({ node, actions, getNode }) => {

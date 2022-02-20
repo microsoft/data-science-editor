@@ -13,7 +13,7 @@ export default function Page() {
                 <Alert severity="info">
                     <AlertTitle>Register your device</AlertTitle>
                     Known devices are specified in the{" "}
-                    <Link to="/reference/device-definition/">
+                    <Link to="/ddk/device-definition/">
                         device catalog repository
                     </Link>
                     . New devices can be submitted with the{" "}
