@@ -229,7 +229,7 @@ export default function SilkQRCode(props: {
                         <Button
                             href={kicadUri}
                             variant="outlined"
-                            download={`${vanity}.kicard_mod`}
+                            download={`${vanity}.kicad_mod`}
                         >
                             Download kicad_mod
                         </Button>
