@@ -3,11 +3,15 @@ title: Device taxonomy
 order: 0
 ---
 
-## Jacdac Device Taxonomoy
+## Jacdac Device Taxonomy
 
-Architecturally, a key idea behind Jacdac is a separation of concerns between the worlds of _client_ code (applications) and _server_ firmware that interfaces with sensors/actuators. The Jacdac protocol and services are abstractions that achieve this separation, creating a client/server architecture. This architecture naturally results in the following categories of Jacdac devices:
+Architecturally, a key idea behind Jacdac is a separation of concerns between the worlds of _client_ code (applications) and _server_ firmware that interfaces with sensors/actuators. The Jacdac protocol and services are abstractions that achieve this separation, creating a client/server architecture
 
-### Brains
+![Jacdac client/server architecture](./clientServer.png)
+
+This architecture naturally results in the following categories of Jacdac devices.
+
+### Brains (Clients)
 
 A Jacdac _brain_ is a Jacdac device that runs application/client code that makes use of services that are available on the Jacdac bus to achieve some end-user scenario.
 A _dedicated_ Jacdac brain contains a re-programmable MCU and little else; it leverages Jacdac services for all its input and output.
@@ -17,10 +21,34 @@ An example integrated Jacdac brain would be a programmable robot base with built
 collision sensors that uses the Jacdac interface and protocol to support the connection of Jacdac modules
 that provide new capabilities such as light and sound detection, a line following sensor, etc.
 
-### Modules
+Examples of brains, featuring three different MCUs, include:
+* [JM Brain ESP32 v0.3](/devices/microsoft/research/jmbrainesp3248v03)
+* [JM Brain F4 v0.2](/devices/microsoft/research/jmbrainf441v02)
+* [JM Brain RP2040 v0.1](/devices/microsoft/research/jmbrainrp204059v01)
+
+Additionally, Jacdac supports a variety of [MakeCode devices](/clients/makecode) as brains, including the micro:bit V2, which is an example of an integrated brain, as it has a number of sensors on board.
+
+### Modules (Servers)
 
 A Jacdac _module_ can be thought of as a very small server that makes one or more sensors and/or actuators available to other Jacdac devices on the bus.
-In the most straightforward implementation, a module is a small PCB that includes an MCU connected to an on-board sensor or actuator. The MCU firmware exposes this component via [services](https://microsoft.github.io/jacdac-docs/services/) advertised over the Jacdac bus. What distinguishes a module from a Jacdac brain is that a module usually does not execute application code.
+In the most straightforward implementation, a module is a small PCB that includes an MCU connected to an on-board sensor or actuator. The MCU firmware exposes this component via [services](/services/) advertised over the Jacdac bus. What distinguishes a module from a Jacdac brain is that a module usually does not execute application code.
+
+Most of the devices listed in the [device catalog](/devices) are modules. A few examples include:
+
+* [JM Accelerometer v1.0](/devices/microsoft/research/jmaccelerometer30v10)
+* [JM RGB LED Ring v2.1](/devices/microsoft/research/jmrgbledring37v21)
+* [JM Rotary Control + Button v1.1](/devices/microsoft/research/jmrotarycontrolbuttonv11)
+
+### Client and Server
+
+As the micro:bit V2 has an integrated set of input and output features, it can act as either a brain (client),  a module (server), or even both together.
+Two programs created for the micro:bit V2 show this dual capability:
+- this [micro:bit-as-server program](https://github.com/microsoft/pxt-jacdac/blob/master/devices/microbit) contains nine Jacdac servers, each of which exposes a feature of the micro:bit via a Jacdac server
+- this [micro:bit-as-client program](https://github.com/microsoft/pxt-jacdac/tree/master/tools/microbit-oob) programs the micro:bit V2 to listen for external Jacdac modules joining or leaving the Jacdac bus, and responds in a variety of ways
+
+The following screen snapshot of the [dashboard](/dashboard) shows the digital twins of the services exposed by the micro:bit-as-server.
+
+![micro:bit as server](./microbitAsServers.PNG)
 
 ### Power supplies
 
