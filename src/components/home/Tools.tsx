@@ -64,8 +64,8 @@ export default function Tools() {
 
             <SplitGrid
                 right={true}
-                subtitle="Dashboard"
-                description="Visualize and interact with digital twins of physical devices, or simulated devices, in the dashboard."
+                subtitle="Digital Twins and Simulators."
+                description="Visualize and interact with digital twins of physical devices, or simulated devices. Interact with the simulators on the left. To see more details, open the device tree."
                 image={
                     <Grid container spacing={1}>
                         {dashboards.map(device => (
@@ -76,35 +76,6 @@ export default function Tools() {
                             </Grid>
                         ))}
                     </Grid>
-                }
-                buttonText="Try the dashboard"
-                buttonVariant="link"
-                buttonUrl="/dashboard/"
-            />
-
-            <SplitGrid
-                right={false}
-                subtitle="Simulators."
-                description="Spin up virtual device and services to test your client software. Both physical and simulated devices can interact together."
-                image={
-                    <>
-                        {simulator && (
-                            <Suspense>
-                                <DashboardDevice device={simulator} />
-                            </Suspense>
-                        )}
-                    </>
-                }
-            />
-
-            <SplitGrid
-                right={true}
-                subtitle="Device Tree"
-                description="Inspect devices, services, registers and events in the device tree."
-                image={
-                    <Suspense>
-                        <JDomTreeView />
-                    </Suspense>
                 }
                 buttonText="Open Device Tree"
                 buttonVariant="link"
@@ -138,21 +109,6 @@ export default function Tools() {
                     <StaticImage
                         src="./recordit.png"
                         alt="Data collector user interface"
-                    />
-                }
-            />
-
-            <SplitGrid
-                right={true}
-                subtitle="JupyterLab 2.0."
-                description="Collect data from your JupyterLab notebooks."
-                buttonText="Collect data"
-                buttonVariant="link"
-                buttonUrl="/tools/jupyterlab/"
-                image={
-                    <StaticImage
-                        src="./jupyterlab.png"
-                        alt="Screenshot of Jupyter lab"
                     />
                 }
             />

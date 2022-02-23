@@ -56,12 +56,12 @@ export default function Home() {
             />
 
             <SplitGrid
-                right={false}
-                subtitle="Edge Connector"
-                description="Jacdac's PCB edge connector is robust, double-sided, low cost."
-                buttonText="Edge connector"
+                right={true}
+                subtitle="Connector and Cable"
+                description="Jacdac's PCB edge connector is robust, double-sided, and low cost. Cables make plug-and-play simple and error-free."
+                buttonText="Connector and cable"
                 buttonVariant="link"
-                buttonUrl="/overview/connector/"
+                buttonUrl="/overview/connectorcable/"
                 imageColumns={6}
                 image={
                     <StaticImage
@@ -74,19 +74,22 @@ export default function Home() {
 
             <SplitGrid
                 right={false}
-                subtitle="Cable"
-                description="Cables make plug-and-play simple and error-free."
-                buttonText="Cable"
+                subtitle="Services"
+                description="Jacdac services provide software an abstract view of a device's features. Services are defined in terms of registers, commands and events."
+                buttonText="Explore services"
                 buttonVariant="link"
-                buttonUrl="/overview/cable/"
-                imageColumns={6}
-                image={<StaticImage src="./ucable.png" alt="Short cable" />}
+                buttonUrl="/services/"
+                image={
+                    <StaticImage
+                        src="./dashboard.png"
+                        alt="Dashboard of devices"
+                    />
+                }
             />
-
 
             <SplitGrid
                 right={false}
-                subtitle="Programming"
+                subtitle="Client Programming"
                 description="Program with JavaScript, .NET, Python, MakeCode, ..."
                 buttonText="Program Jacdac"
                 buttonVariant="link"
@@ -104,17 +107,19 @@ export default function Home() {
                 image={<StaticImage src="./devicetree.png" alt="Device tree" />}
             />
 
-            <SplitGrid
-                right={false}
-                subtitle="Services"
-                description="Jacdac services provide software an abstract view of a device's features. Services are defined in terms of registers, commands and events."
-                buttonText="Explore services"
+        <SplitGrid
+                right={true}
+                subtitle="For Manufacturers"
+                description="Add Jacdac to your devices. Schematics, footprints, libraries, open source hardware designs."
+                imageColumns={6}
+                centered={true}
+                buttonText="Device Development Kit"
+                buttonUrl="/ddk/"
                 buttonVariant="link"
-                buttonUrl="/services/"
                 image={
                     <StaticImage
-                        src="./dashboard.png"
-                        alt="Dashboard of devices"
+                        src="./pcbfootprint.png"
+                        alt="PCB connector footprint"
                     />
                 }
             />
@@ -154,23 +159,6 @@ export default function Home() {
                     />
                 </Grid>
             </CarouselGrid>
-
-            <SplitGrid
-                right={true}
-                subtitle="For Manufacturers"
-                description="Add Jacdac to your devices. Schematics, footprints, libraries, open source hardware designs."
-                imageColumns={6}
-                centered={true}
-                buttonText="Device Development Kit"
-                buttonUrl="/ddk/"
-                buttonVariant="link"
-                image={
-                    <StaticImage
-                        src="./pcbfootprint.png"
-                        alt="PCB connector footprint"
-                    />
-                }
-            />
         </Grid>
     )
 }

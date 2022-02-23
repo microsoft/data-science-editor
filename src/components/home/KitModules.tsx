@@ -42,7 +42,7 @@ export default function KitModules() {
                 subtitle="Plug and Play"
                 description="The micro:bit V2 from the Kit comes with firmware that will automatically use any of the modules in your kit."
                 caption="Slot the micro:bit in the Jacdapter then try to connect various modules to see what happens."
-                buttonUrl="/hardware/kit/oob/"
+                buttonUrl="/overview/kit/oob/"
                 buttonVariant="link"
                 buttonText="Download again"
                 image={

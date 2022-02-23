@@ -15,7 +15,7 @@ export default function Clients() {
             alignItems="center"
         >
             <CenterGrid
-                title="Jacdac Programming"
+                title="Client Programming"
                 subtitle3="via JavaScript, Python, .NET, MakeCode, ..."
                 // imageColumns={6}
                 // image={<StaticImage src="./dashboard.png" alt="Dashboard" />}

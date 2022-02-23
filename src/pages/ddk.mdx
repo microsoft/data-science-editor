@@ -7,34 +7,31 @@ hideBreadcrumbs: true
 
 The Jacdac Device Development Kit (DDK) is for 3rd party hardware designers, firmware developers and manufacturers who wish to create their own Jacdac [devices](/devices). A Jacdac device has at least the following three features:
 
--   it has a [Jacdac edge connector](/ddk/connector/) for joining the device to the Jacdac bus
-    using [Jacdac cables](/ddk/connector/#cable);
+-   it has a [Jacdac edge connector](/ddk/design#pcb-edge-connector) for joining the device to the Jacdac bus
+    using [Jacdac cables](/ddk/design#cable-connectors-and-assemblies) (note that devices that have a USB connection can support Jacdac over USB in order to communicate with a web browser);
 -   it implements the [Jacdac protocol](/reference/protocol/) to communicate over the bus via the connector;
 -   it follows the [design guidelines](/ddk/design/) in this DDK.
 
-Additionally, Jacdac devices may supply power to the bus and/or consume power from the bus. A common realization of a Jacdac device is a printed circuit board (PCB) that includes a microcontroller unit (MCU) connected to a specific set of components including sensors, actuators, network interfaces and/or power supplies. [Read more](/ddk/devices) about the different kinds of Jacdac devices.
+Additionally, Jacdac devices may supply power to the bus and/or consume power from the bus. A common realization of a Jacdac device is a printed circuit board (PCB) that includes a microcontroller unit (MCU) connected to a specific set of components including sensors, actuators, network interfaces and/or power supplies. [Read more](/ddk/taxonomy) about the different kinds of Jacdac devices (brains, modules, power supplies, adaptors).
 
 Consult our [FAQ](/ddk/faq) to find answers to frequently asked questions.
 
 ## Key elements of the Jacdac DDK
 
-### Jacdac modules
-
-The Jacdac DDK supports 3rd party module development via the following steps:
+The Jacdac DDK supports 3rd party device development via the following steps:
 
 1. choosing on-board components and incorporating them in a [hardware design](/ddk/design);
 2. identifying the [services](/services/) to represent the chosen components;
 3. building [firmware](/ddk/firmware/) to expose the components on the Jacdac bus;
-4. validating the hardware using the dashboard;
+4. validating the hardware using the [dashboard](/dashboard);
 5. manufacturing the hardware;
-6. [registration](/tools/device-registration) of the finalised device in the Jacdac catalog;
+6. [registering](/tools/device-registration) the device in the Jacdac [device catalog](/devices);
 
-Our current Jacdac module hardware and firmware designs target the PADAUK 8-bit and STM32x0 32-bit families of MCUs.
+Our current Jacdac hardware and firmware designs target the PADAUK 8-bit and STM32x0 32-bit families of MCUs.
 STM32x0 support includes a Jacdac bootloader service that allows MCU firmware to be updated over Jacdac.
 We strongly encourage you to take advantage of our hardware and firmware reference implementations to simplify the above steps.
-
-### Other Jacdac devices
 
 We will make hardware and firmware reference implementations of Jacdac brains,
 Jacdac power supplies and Jacdaptors available in due course
 at https://github.com/microsoft/jacdac-ddk.
+
