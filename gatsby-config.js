@@ -43,22 +43,8 @@ module.exports = {
         {
             resolve: `gatsby-source-filesystem`,
             options: {
-                name: `images`,
-                path: `${__dirname}/jacdac-ts/jacdac-spec/spec/images`,
-            },
-        },
-        {
-            resolve: `gatsby-source-filesystem`,
-            options: {
                 name: `pages`,
                 path: `${__dirname}/src/pages`,
-            },
-        },
-        {
-            resolve: `gatsby-source-filesystem`,
-            options: {
-                name: `specPages`,
-                path: `${__dirname}/jacdac-ts/jacdac-spec/spec`,
             },
         },
         {

@@ -1,0 +1,118 @@
+---
+title: micro:bit accessories
+hideToc: true
+order: 50
+---
+
+# micro:bit Accessories
+
+Jacdac can be integrated into existing and future micro:bit accessories with different level of investment.
+Jacdac brings **simulators** and **digital twins** of sensors/actuators:
+
+-   **simulators** allows the user to easily test sensor/actuator without having to use the hardware
+-   **digital twins** provides a live view on the sensor/actuator state
+-   **standardized blocks** provided by the Jacdac project, means you have to maintain less extensions for your hardware
+
+As of today, Jacdac runs on **micro:bit V2** exclusively and uses pin **12**.
+
+Overview:
+
+
+
+## Level 0: Existing accessories
+
+In this level of integration, the accessory does not have to have any hardware support for Jacdac (and may also be using pin 12).
+By providing a new extension that exposes the sensors as Jacdac server, the users will benefit from **simulators** and **digital twins**.
+This level of integration can be applied to any existing micro:bit accessory, with or without hardware support (Remember that this only applies to micro:bit V2 board).
+
+### Integration steps
+
+-   [ ] fork your existing extension that supports your board and remove all the block annotation
+-   [ ] add references to the service client libraries to pull in the service constants
+-   [ ] add a function that launches servers for each sensor
+-   [ ] wire up the function to start when running on hardware
+
+```ts
+namespace myExtension {
+    function start() {
+        if (!jacdac.isSimulator()) {
+            // start servers only on hardware
+            TODO
+        }
+        //
+        if (jacdac.checkProxy()) {
+            // custom proxy code
+            jacdac.proxyFinalize()
+        }
+    }
+    start()
+}
+```
+
+If your hardware is already using pin 12, disable that feature in Jacdac
+
+```ts
+TODO
+```
+
+-   Pros
+    -   retrofit existing accessories
+    -   simulation
+    -   digital twin
+-   Cons
+    -   micro:bit v2 only
+    -   extension required
+    -   no Jacdac connector
+
+## Level 1: Unpowered physical connector
+
+In this scenario, you integrate one or more [Jacdac PCB edge connectors](/ddk/design#pcb-edge-connector) into your design, with the JD_DATA line connected to micro:bit pin 12 through the required [signal conditioning](/ddk/design#signalling) circuit.
+
+-   [ ] Jacdac PCB connector specification TODO
+-   [ ] Jacdac data line requirements TODO
+
+On the software side, the same approach applies in Level 0.
+
+-   Pros
+    -   retrofit existing accessories
+    -   simulator
+    -   digital twin
+    -   Jacdac connector at minimal cost
+-   Cons
+    -   new hardware design needed
+    -   micro:bit v2 only
+    -   extension required
+    -   Unpowered connector means user has to add a power source on the Jacdac bus
+
+## Level 2: Powered physical connector
+
+In this scenario, the Jacdac connector is powered using the required regulation circuit documented at ...
+
+-   Pros
+    -   simulator
+    -   digital twin
+    -   Powered connector means module will just work when connected
+-   Cons
+    -   new hardware design needed
+    -   micro:bit v2 only
+    -   extension required
+    -   additional cost for power regulator
+
+Note that if your accessory already has a power regulator, you might already have the required circuitery in place.
+
+## Level 3: Onboard Jacdac server with MCU
+
+In this scenario, the accessory contains an MCU that implements the Jacdac server protocol.
+In this case, you do not need to provide any extension as the user will be able to use the built-in Jacdac client libraries.
+
+-   Pros
+    -   simulator
+    -   digital twin
+    -   no extension required
+    -   compatible with any Jacdac hardware, including Raspberry Pi
+-   Cons
+    -   MCU and power regulator circuitery add cost
+
+
+## Power considerations
+

@@ -1,23 +1,26 @@
 ---
-title: Device taxonomy
-order: 0
+title: Client/Server Architecture
+order: 1
 ---
 
-## Jacdac Device Taxonomy
+## Client/Server Architecture
 
-Architecturally, a key idea behind Jacdac is a separation of concerns between the worlds of _client_ code (applications) and _server_ firmware that interfaces with sensors/actuators. The Jacdac protocol and services are abstractions that achieve this separation, creating a client/server architecture
+Architecturally, a key idea behind Jacdac is a separation of concerns between the worlds of _client_ code (applications) and _server_ firmware that interfaces with sensors/actuators. Jacdac [services](/services) are abstractions that achieve this separation, creating a client/server architecture, supported by the Jacdac [protocol](/reference)
 
 ![Jacdac client/server architecture](./clientServer.png)
 
-This architecture naturally results in the following categories of Jacdac devices.
+This architecture naturally results in the following categories of Jacdac [devices](/devices):
+* [Brains](#brains-clients) are [programmable clients](/clients)
+* [Modules](#modules-servers) are servers exposing one or more [services](/services)
+* [Jacdaptors](#jacdaptors) are adaptors that allow Jacdac to play nicely with other hardware platforms, such as the micro:bit and Raspberry Pi
+* [Power supplies](#power-supplies)
 
 ### Brains (Clients)
 
-A Jacdac _brain_ is a Jacdac device that runs application/client code that makes use of services that are available on the Jacdac bus to achieve some end-user scenario.
-A _dedicated_ Jacdac brain contains a re-programmable MCU and little else; it leverages Jacdac services for all its input and output.
-An _integrated_ Jacdac brain combines an MCU with on-board input and output and can typically operate stand-alone;
-in this case the Jacdac bus provides a way to add additional capabilities to the device.
-An example integrated Jacdac brain would be a programmable robot base with built-in motors and
+A Jacdac _brain_ is a Jacdac device that runs application/client code that makes use of services that are available on the Jacdac bus to achieve some end-user scenario:
+
+* A _dedicated_ Jacdac brain contains a re-programmable MCU and little else; it leverages Jacdac [services](/services) for all its input and output.
+* An _integrated_ Jacdac brain combines an MCU with on-board input and output and can typically operate stand-alone; in this case the Jacdac bus provides a way to add additional capabilities to the device. An example integrated Jacdac brain would be a programmable robot base with built-in motors and
 collision sensors that uses the Jacdac interface and protocol to support the connection of Jacdac modules
 that provide new capabilities such as light and sound detection, a line following sensor, etc.
 
@@ -50,15 +53,27 @@ The following screen snapshot of the [dashboard](/dashboard) shows the digital t
 
 ![micro:bit as server](./microbitAsServers.PNG)
 
+### Jacdaptors
+
+Jacdac can provide a convenient way to add functionality to existing electronics prototyping platforms including micro:bit, Raspberry Pi and Arduino.
+This requires suitable firmware to be developed and a physical layer adaptor that providing a suitable electrical interface to a Jacdac connector.
+We call this a _Jacdaptor_. A USB Jacdaptor allows a Jacdac bus to be connected to a laptop or desktop.
+WebUSB allows browser-based applications to connect to the Jacdac bus.  The current set of Jacdaptors includes:
+- [micro:bit V2](/devices/microbit/foundation/microbitv2), programmable via [MakeCode](/clients/makecode)
+- [Raspberry Pi](/devices/microsoft/research/jmspibridgev37v37), programmable via [Python](/clients/python), [.NET](/clients/dotnet), or [JavaScript](/clients/javascript)
+- [USB](/devices/microsoft/research/jmbrainf441v02), to a laptop/desktop programmable via [Python](/clients/python), [.NET](/clients/dotnet), or [JavaScript](/clients/javascript)
+
+In the above cases, the Jacaptor bridges the Jacdac bus to an existing programmable device (micro:bit, Raspberry Pi, Laptop/Desktop), or brain.
+
+We also have created a Jacdaptor for the [Click ecosystem](https://www.mikroe.com/click) of sensors:
+- [Click](/devices/microsoft/research/jmclickcolorv32)
+
+In the above case, the Jacdaptor extends the Jacdac bus to an existing ecosystem of sensors, or module.
+
 ### Power supplies
 
 The Jacdac bus supports power delivery in addition to communications. Jacdac devices may be designed to consume power from the bus, to provide power to the bus, to be independently powered, or to alternatve between these modes. Typically, Jacdac modules such as basic sensors and actuators will be bus-powered which makes them simple to design and to use. Jacdac brains may also be bus-powered, but in some cases they will be designed to be the power source for the Jacdac bus; a good example of this is the programmable robot base mentioned above. If none of the brains or modules on the bus provide power, or in scenarios where additional power is required, a _Jacdac power supply_ will be required and must be plugged into the bus.
 
-### Adaptors, or "Jacdaptors"
+### Read more about it
 
-Jacdac can provide a convenient way to add functionality to existing electronics prototyping platforms including micro:bit, Raspberry Pi and Arduino.
-This requires suitable firmware to be developed and a physical layer adaptor that providing a suitable electrical interface to a Jacdac connector.
-We call this a _Jacdaptor_.
-
-A USB Jacdaptor allows a Jacdac bus to be connected to a laptop or desktop.
-WebUSB allows browser-based applications to connect to the Jacdac bus.
+For more information about the open source Jacdac hardware design and software, see the [Device Development Kit](/ddk).

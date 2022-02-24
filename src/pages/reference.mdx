@@ -22,8 +22,7 @@ requirements that improve interoperability at the hardware level.
 
 ![OSI 7 layer stack vs Jacdac stack](/reference/osi-and-jacdac-stack.png)
 
-A Jacdac [device](/devices) is any device that exposes the [Jacdac PCB edge connector](/ddk/design#pcb-edge-connector)
-and implements the Jacdac protocol. As illustrated above, the protocol consists of three 
+As illustrated above, the Jacdac protocol consists of three 
 core software/firmware layers and several hardware layers.
 An overview of these is given below, followed by detailed descriptions of each layer.
 
@@ -48,7 +47,7 @@ There also a set of common commands that must be implemented by Jacdac devices t
 including functionality like `reset` and `time since boot`.
 
 Most Jacdac users will never need to write a service: the major use case is for users
-to [program applications](/clients) that interact with Jacdac devices and services.
+to [program applications](/clients) that interact with Jacdac devices through services.
 Using Jacdac in microcontroller applications is incredibly easy and only
 requires a software stack that has a compatible Jacdac physical layer.
 

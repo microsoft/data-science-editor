@@ -72,10 +72,29 @@ export default function Home() {
                 }
             />
 
+            
             <SplitGrid
                 right={false}
+                subtitle="Clients and Servers"
+                description="A Jacdac device can be a client and/or server. Jacdaptors allow Jacdac to integrate with other ecosystems."
+                buttonText="Clients and Servers"
+                buttonVariant="link"
+                buttonUrl="/overview/clientserver/"
+                imageColumns={6}
+                image={
+                    <StaticImage
+                        src="./clientServer.png"
+                        alt="Clients and Servers"
+                        imgStyle={imgStyle}
+                    />
+                }
+            />
+
+
+            <SplitGrid
+                right={true}
                 subtitle="Services"
-                description="Jacdac services provide software an abstract view of a device's features. Services are defined in terms of registers, commands and events."
+                description="Jacdac services provide a fine-grained but abstract view of a device's features."
                 buttonText="Explore services"
                 buttonVariant="link"
                 buttonUrl="/services/"
@@ -98,7 +117,7 @@ export default function Home() {
             />
 
             <SplitGrid
-                right={false}
+                right={true}
                 subtitle="Web Tools"
                 description="Visualize, debug, sniff, track, record, replay, update... from your browser."
                 buttonText="Get productive with Jacdac"
@@ -108,9 +127,9 @@ export default function Home() {
             />
 
         <SplitGrid
-                right={true}
+                right={false}
                 subtitle="For Manufacturers"
-                description="Add Jacdac to your devices. Schematics, footprints, libraries, open source hardware designs."
+                description="Add Jacdac to your devices. Schematics, footprints, libraries, firmware, hardware designs - all open source."
                 imageColumns={6}
                 centered={true}
                 buttonText="Device Development Kit"
