@@ -76,7 +76,7 @@ export default function Home() {
             <SplitGrid
                 right={false}
                 subtitle="Clients and Servers"
-                description="A Jacdac device can be a client and/or server. Jacdaptors allow Jacdac to integrate with other ecosystems."
+                description="A Jacdac device can be a client and/or server"
                 buttonText="Clients and Servers"
                 buttonVariant="link"
                 buttonUrl="/overview/clientserver/"
@@ -90,11 +90,28 @@ export default function Home() {
                 }
             />
 
-
+                        
             <SplitGrid
                 right={true}
+                subtitle="Plays well with others"
+                description="Jacdaptors allow Jacdac to integrate with other ecosystems"
+                buttonText="Jacdaptors"
+                buttonVariant="link"
+                buttonUrl="/overview/jacdaptors"
+                imageColumns={6}
+                image={
+                    <StaticImage
+                        src="./playswell.png"
+                        alt="Jacdaptors for USB, Raspberry Pi and micro:bit"
+                        imgStyle={imgStyle}
+                    />
+                }
+            />
+
+            <SplitGrid
+                right={false}
                 subtitle="Services"
-                description="Jacdac services provide a fine-grained but abstract view of a device's features."
+                description="Jacdac services provide a fine-grained but abstract view of a device's features"
                 buttonText="Explore services"
                 buttonVariant="link"
                 buttonUrl="/services/"
@@ -107,7 +124,7 @@ export default function Home() {
             />
 
             <SplitGrid
-                right={false}
+                right={true}
                 subtitle="Client Programming"
                 description="Program with JavaScript, .NET, Python, MakeCode, ..."
                 buttonText="Program Jacdac"
@@ -117,9 +134,9 @@ export default function Home() {
             />
 
             <SplitGrid
-                right={true}
+                right={false}
                 subtitle="Web Tools"
-                description="Visualize, debug, sniff, track, record, replay, update... from your browser."
+                description="Visualize, debug, sniff, track, record, replay, update... from your browser"
                 buttonText="Get productive with Jacdac"
                 buttonVariant="link"
                 buttonUrl="/tools/"
@@ -127,7 +144,7 @@ export default function Home() {
             />
 
         <SplitGrid
-                right={false}
+                right={true}
                 subtitle="For Manufacturers"
                 description="Add Jacdac to your devices. Schematics, footprints, libraries, firmware, hardware designs - all open source."
                 imageColumns={6}

@@ -12,8 +12,8 @@ Architecturally, a key idea behind Jacdac is a separation of concerns between th
 This architecture naturally results in the following categories of Jacdac [devices](/devices):
 * [Brains](#brains-clients) are [programmable clients](/clients)
 * [Modules](#modules-servers) are servers exposing one or more [services](/services)
-* [Jacdaptors](#jacdaptors) are adaptors that allow Jacdac to play nicely with other hardware platforms, such as the micro:bit and Raspberry Pi
 * [Power supplies](#power-supplies)
+* [Jacdaptors](/overview/jacdaptors) are adaptors that allow Jacdac to play nicely with other hardware platforms, such as the micro:bit and Raspberry Pi
 
 ### Brains (Clients)
 
@@ -42,7 +42,7 @@ Most of the devices listed in the [device catalog](/devices) are modules. A few 
 * [JM RGB LED Ring v2.1](/devices/microsoft/research/jmrgbledring37v21)
 * [JM Rotary Control + Button v1.1](/devices/microsoft/research/jmrotarycontrolbuttonv11)
 
-### Client and Server
+### Micro:bit examples: client and server
 
 As the micro:bit V2 has an integrated set of input and output features, it can act as either a brain (client),  a module (server), or even both together.
 Two programs created for the micro:bit V2 show this dual capability:
@@ -52,23 +52,6 @@ Two programs created for the micro:bit V2 show this dual capability:
 The following screen snapshot of the [dashboard](/dashboard) shows the digital twins of the services exposed by the micro:bit-as-server.
 
 ![micro:bit as server](./microbitAsServers.PNG)
-
-### Jacdaptors
-
-Jacdac can provide a convenient way to add functionality to existing electronics prototyping platforms including micro:bit, Raspberry Pi and Arduino.
-This requires suitable firmware to be developed and a physical layer adaptor that providing a suitable electrical interface to a Jacdac connector.
-We call this a _Jacdaptor_. A USB Jacdaptor allows a Jacdac bus to be connected to a laptop or desktop.
-WebUSB allows browser-based applications to connect to the Jacdac bus.  The current set of Jacdaptors includes:
-- [micro:bit V2](/devices/microbit/foundation/microbitv2), programmable via [MakeCode](/clients/makecode)
-- [Raspberry Pi](/devices/microsoft/research/jmspibridgev37v37), programmable via [Python](/clients/python), [.NET](/clients/dotnet), or [JavaScript](/clients/javascript)
-- [USB](/devices/microsoft/research/jmbrainf441v02), to a laptop/desktop programmable via [Python](/clients/python), [.NET](/clients/dotnet), or [JavaScript](/clients/javascript)
-
-In the above cases, the Jacaptor bridges the Jacdac bus to an existing programmable device (micro:bit, Raspberry Pi, Laptop/Desktop), or brain.
-
-We also have created a Jacdaptor for the [Click ecosystem](https://www.mikroe.com/click) of sensors:
-- [Click](/devices/microsoft/research/jmclickcolorv32)
-
-In the above case, the Jacdaptor extends the Jacdac bus to an existing ecosystem of sensors, or module.
 
 ### Power supplies
 
