@@ -1,7 +1,6 @@
 import React, { CSSProperties, SVGAttributes, useRef } from "react"
 import useWidgetTheme from "./useWidgetTheme"
 import SvgWidget from "./SvgWidget"
-import useThrottledValue from "../hooks/useThrottledValue"
 import { closestPoint, describeArc, svgPointerPoint } from "./svgutils"
 import PowerButton from "./PowerButton"
 import { Grid, Slider } from "@mui/material"
@@ -51,7 +50,7 @@ export default function GaugeWidget(props: {
     const sa = -135
     const ea = 135
     const _step = step || (max - min) / 10
-    const displayValue = useThrottledValue(value, (max - min) * 5)
+    const displayValue = value //useThrottledValue(value, (max - min) * 10)
 
     const computeArc = (v: number) => {
         if (variant === "fountain") {
