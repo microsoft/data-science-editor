@@ -259,7 +259,7 @@ export default function SilkQRCode(props: {
                                         <a
                                             href={imageUri}
                                             title="Download image"
-                                            download="qr-code.png"
+                                            download="qr-code.svg"
                                         >
                                             <img
                                                 className="pixelated"
@@ -280,7 +280,7 @@ export default function SilkQRCode(props: {
                                         <a
                                             href={imageUri}
                                             title="Download image"
-                                            download="qr-code.png"
+                                            download="qr-code.svg"
                                         >
                                             <img
                                                 className="pixelated"
