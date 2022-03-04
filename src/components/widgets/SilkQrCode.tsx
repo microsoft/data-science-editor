@@ -11,15 +11,13 @@ export interface QRCodeProps {
     layer?: number
     size?: number
     mirror?: boolean
-    margin?: number
 }
 
 function useQRCodeSCR(
     url: string,
     layer: number,
     size: number,
-    mirror: boolean,
-    margin: number
+    mirror: boolean
 ) {
     const [image, setImage] = useState<string>(undefined)
     const [scr, setScr] = useState<string>(undefined)
@@ -27,7 +25,7 @@ function useQRCodeSCR(
     const [altium, setAltium] = useState<string>(undefined)
     const [numBlocks, setNumBlocks] = useState<number>(undefined)
     const [error, setError] = useState<string>(undefined)
-    const deps = [url, layer, size, mirror, margin]
+    const deps = [url, layer, size, mirror]
 
     useEffect(() => setError(undefined), deps)
 
@@ -41,20 +39,21 @@ function useQRCodeSCR(
             const qr = QRCode.create(url, {
                 errorCorrectionLevel: "medium",
             })
-            let numBlocks = qr.modules.size
+            const numBlocks = qr.modules.size
+            setNumBlocks(numBlocks)
+
             let ptr = 0
-            const code = {}
+            const code: Record<string, boolean> = {}
             for (let y = 0; y < numBlocks; ++y) {
                 for (let x = 0; x < numBlocks; ++x) {
                     const xx = !mirror ? numBlocks - x - 1 : x
-                    code[`${xx + margin},${numBlocks - y - 1 + margin}`] =
+                    code[`${xx},${numBlocks - y - 1}`] =
                         !!qr.modules.data[ptr++]
                 }
             }
-            setNumBlocks(numBlocks)
 
             const utfcode: string = await QRCode.toString(url, {
-                margin: 1,
+                margin: 0,
                 scale: 1,
                 errorCorrectionLevel: "medium",
                 type: "utf8",
@@ -76,7 +75,6 @@ function useQRCodeSCR(
             let altium =
                 "Object Kind\tLayer\tNet\tX1\tY1\tX2\tY2\tKeepout\tLocked\tRotation\tSolder Mask Expansion\tSolder Mask Expansion Mode\tPaste Mask Expansion\tPaste Mask Expansion Mode\r\n"
 
-            numBlocks += 2 * margin
             const mid = (numBlocks * size) / 2
 
             /*
@@ -172,18 +170,16 @@ export default function SilkQRCode(props: {
     layer?: number
     size?: number
     mirror?: boolean
-    margin?: number
 }) {
-    const { url, layer, mirror = true, size = 0.3, margin = 1 } = props
+    const { url, layer, mirror = true, size = 0.3 } = props
     const eagleLayer = layer ?? mirror ? 21 : 22
-    const args = url.replace(/\/$/, '').split("/") // trim any trailing slash
+    const args = url.replace(/\/$/, "").split("/") // trim any trailing slash
     const vanity = args[args.length - 1]
     const { altium, kicad, scr, image, error, numBlocks } = useQRCodeSCR(
         url,
         eagleLayer,
         size,
-        mirror,
-        margin
+        mirror
     )
 
     if (!url) return null
@@ -197,7 +193,7 @@ export default function SilkQRCode(props: {
     const altiumUri =
         altium && `data:text/plain;charset=UTF-8,${encodeURIComponent(altium)}`
 
-    const widthmm = roundWithPrecision(size * numBlocks, 2, Math.ceil)
+    const widthmm = roundWithPrecision(size * numBlocks, 3, Math.ceil)
     return (
         <>
             {error && <Alert severity="warning">{error}</Alert>}
