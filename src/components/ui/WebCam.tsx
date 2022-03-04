@@ -4,10 +4,13 @@ import {
     CardContent,
     CardHeader,
     CardMedia,
+    FormControlLabel,
     FormControl,
     MenuItem,
     Select,
     SelectChangeEvent,
+    Checkbox,
+    Grid,
 } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import React, { useContext, useEffect, useRef, useState } from "react"
@@ -59,6 +62,7 @@ export default function WebCam() {
     const [devices, setDevices] = useState<MediaDeviceInfo[]>()
     const [deviceId, setDeviceId] = useLocalStorage("webcam_deviceid", "")
     const [working, setWorking] = useState(false)
+    const [flip, setFlip] = useLocalStorage("webcam_flip", false)
     const nodeRef = useRef<HTMLSpanElement>()
     const streamRef = useRef<MediaStream>()
     const videoRef = useRef<HTMLVideoElement>()
@@ -73,6 +77,9 @@ export default function WebCam() {
     const handleSettings = () => {
         console.debug(`toggle settings`, { settingsOpen })
         setSettingsOpen(!settingsOpen)
+    }
+    const handleFlipChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setFlip(event.target.checked)
     }
     const handleDeviceChange = (
         ev: SelectChangeEvent<string>
@@ -109,10 +116,13 @@ export default function WebCam() {
         try {
             setWorking(true)
             stop()
-            const filter: MediaStreamConstraints = {
+            const filter: any | MediaStreamConstraints = {
                 video: {
                     width: { ideal: 1920 },
                     height: { ideal: 1080 },
+                    focusMode: "manual",
+                    exposureMode: "manual",
+                    whiteBalanceMode: "manual",
                 },
                 audio: false,
             }
@@ -122,13 +132,18 @@ export default function WebCam() {
                 ]
 
             const stream = await navigator.mediaDevices.getUserMedia(filter)
+            // const track = stream.getVideoTracks()[0]
+            // console.log({
+            //     capabilities: track.getCapabilities(),
+            //     constraints: track.getConstraints(),
+            //     settings: track.getSettings(),
+            // })
             streamRef.current = stream
             const video = videoRef.current
             video.srcObject = stream
             await video.play()
 
             console.debug(`webcam: play started`)
-            setSettingsOpen(false)
         } catch (e) {
             console.debug(`webcam: play failed`)
             console.error(e)
@@ -180,31 +195,58 @@ export default function WebCam() {
                     <Card className={classes.card}>
                         <CardHeader
                             title={
-                                settingsOpen &&
-                                devices && (
-                                    <FormControl
-                                        variant="outlined"
-                                        size="small"
-                                    >
-                                        <Select
-                                            title="select a webcam"
-                                            open={settingsOpen}
-                                            onChange={handleDeviceChange}
-                                            value={deviceId || ""}
-                                            disabled={working}
-                                        >
-                                            {devices?.map(
-                                                ({ deviceId, label }) => (
-                                                    <MenuItem
-                                                        key={deviceId}
-                                                        value={deviceId}
+                                settingsOpen && (
+                                    <Grid container spacing={1}>
+                                        {devices && (
+                                            <Grid item>
+                                                <FormControl
+                                                    variant="outlined"
+                                                    size="small"
+                                                >
+                                                    <Select
+                                                        title="select a webcam"
+                                                        onChange={
+                                                            handleDeviceChange
+                                                        }
+                                                        value={deviceId || ""}
+                                                        disabled={working}
                                                     >
-                                                        {label}
-                                                    </MenuItem>
-                                                )
-                                            )}
-                                        </Select>
-                                    </FormControl>
+                                                        {devices?.map(
+                                                            ({
+                                                                deviceId,
+                                                                label,
+                                                            }) => (
+                                                                <MenuItem
+                                                                    key={
+                                                                        deviceId
+                                                                    }
+                                                                    value={
+                                                                        deviceId
+                                                                    }
+                                                                >
+                                                                    {label}
+                                                                </MenuItem>
+                                                            )
+                                                        )}
+                                                    </Select>
+                                                </FormControl>
+                                            </Grid>
+                                        )}
+                                        <Grid item>
+                                            <FormControlLabel
+                                                label="rotate 180"
+                                                control={
+                                                    <Checkbox
+                                                        checked={flip}
+                                                        size="small"
+                                                        onChange={
+                                                            handleFlipChange
+                                                        }
+                                                    />
+                                                }
+                                            />
+                                        </Grid>
+                                    </Grid>
                                 )
                             }
                             action={
@@ -261,13 +303,12 @@ export default function WebCam() {
                         <CardMedia>
                             <div
                                 className="hostedcontainer"
-                                style={
-                                    !minimize
-                                        ? {
-                                              width: "85vw",
-                                          }
-                                        : undefined
-                                }
+                                style={{
+                                    width: !minimize ? "90vw" : undefined,
+                                    transform: flip
+                                        ? "rotate(180deg)"
+                                        : undefined,
+                                }}
                             >
                                 <video
                                     autoPlay
