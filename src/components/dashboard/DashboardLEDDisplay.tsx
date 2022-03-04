@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
-import useServiceServer from "../hooks/useServiceServer"
 import LightWidget from "../widgets/LightWidget"
 import {
     LedDisplayReg,
@@ -14,11 +13,9 @@ import ColorButtons from "../widgets/ColorButtons"
 import useRegister from "../hooks/useRegister"
 import SettingsIcon from "@mui/icons-material/Settings"
 import RegisterInput from "../RegisterInput"
-import { LedDisplayServer } from "../../../jacdac-ts/src/servers/leddisplayserver"
-import { write24, bufferEq } from "../../../jacdac-ts/src/jdom/utils"
+import { bufferEq } from "../../../jacdac-ts/src/jdom/utils"
 import LoadingProgress from "../ui/LoadingProgress"
 import useChange from "../../jacdac/useChange"
-import { JDNode } from "jacdac-ts/src/jdom/node"
 import { JDEventSource } from "../../../jacdac-ts/src/jdom/eventsource"
 
 const configureRegisters = [
@@ -61,7 +58,10 @@ export default function DashboardLEDDisplay(props: DashboardServiceProps) {
         if (index >= pixels.length * 3) return
 
         const newPixels = pixels.slice(0)
-        write24(newPixels, index * 3, penColor)
+        const k = index * 3
+        newPixels[k] = (penColor >> 16) & 0xff
+        newPixels[k + 1] = (penColor >> 8) & 0xff
+        newPixels[k + 2] = penColor & 0xff
         await pixelsRegister.sendSetPackedAsync([newPixels], true)
         colorsRef.current = newPixels
         clientRef.current.emit(RENDER)

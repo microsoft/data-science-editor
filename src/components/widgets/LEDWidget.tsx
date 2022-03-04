@@ -6,62 +6,6 @@ import SliderWithLabel from "../ui/SliderWithLabel"
 import ColorButtons from "./ColorButtons"
 import { rgbToHtmlColor } from "../../../jacdac-ts/src/jdom/utils"
 
-// https://academo.org/demos/wavelength-to-colour-relationship/#:~:text=According%20to%20your%20tool%2C%20light%20at%20405nm%20corresponds,%280%2C0%2C255%29%2C%20has%20a%20quite%20longer%20wavelength%20of%20440nm.
-function nmToRGB(wavelength: number): number {
-    const Gamma = 0.8
-    const IntensityMax = 255
-    let factor: number, red: number, green: number, blue: number
-    if (wavelength >= 380 && wavelength < 440) {
-        red = -(wavelength - 440) / (440 - 380)
-        green = 0.0
-        blue = 1.0
-    } else if (wavelength >= 440 && wavelength < 490) {
-        red = 0.0
-        green = (wavelength - 440) / (490 - 440)
-        blue = 1.0
-    } else if (wavelength >= 490 && wavelength < 510) {
-        red = 0.0
-        green = 1.0
-        blue = -(wavelength - 510) / (510 - 490)
-    } else if (wavelength >= 510 && wavelength < 580) {
-        red = (wavelength - 510) / (580 - 510)
-        green = 1.0
-        blue = 0.0
-    } else if (wavelength >= 580 && wavelength < 645) {
-        red = 1.0
-        green = -(wavelength - 645) / (645 - 580)
-        blue = 0.0
-    } else if (wavelength >= 645 && wavelength < 781) {
-        red = 1.0
-        green = 0.0
-        blue = 0.0
-    } else {
-        red = 0.0
-        green = 0.0
-        blue = 0.0
-    }
-    // Let the intensity fall off near the vision limits
-    if (wavelength >= 380 && wavelength < 420) {
-        factor = 0.3 + (0.7 * (wavelength - 380)) / (420 - 380)
-    } else if (wavelength >= 420 && wavelength < 701) {
-        factor = 1.0
-    } else if (wavelength >= 701 && wavelength < 781) {
-        factor = 0.3 + (0.7 * (780 - wavelength)) / (780 - 700)
-    } else {
-        factor = 0.0
-    }
-    if (red !== 0) {
-        red = Math.round(IntensityMax * Math.pow(red * factor, Gamma))
-    }
-    if (green !== 0) {
-        green = Math.round(IntensityMax * Math.pow(green * factor, Gamma))
-    }
-    if (blue !== 0) {
-        blue = Math.round(IntensityMax * Math.pow(blue * factor, Gamma))
-    }
-    return ((red & 0xff) << 16) | ((green & 0xff) << 8) | (blue & 0xff)
-}
-
 function LEDWidgetController(props: {
     color: "primary" | "secondary"
     waveLength?: number
