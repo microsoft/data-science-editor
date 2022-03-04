@@ -4,10 +4,8 @@ import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import { isReading, isValueOrIntensity } from "../../../jacdac-ts/src/jdom/spec"
 import { splitFilter, strcmp } from "../../../jacdac-ts/src/jdom/utils"
 import useDevices from "../hooks/useDevices"
-import AppContext from "../AppContext"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import DashboardDeviceGroup from "./DashboardDeviceGroup"
-import AddIcon from "@mui/icons-material/Add"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import ClearIcon from "@mui/icons-material/Clear"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
