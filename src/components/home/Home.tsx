@@ -76,14 +76,14 @@ export default function Home() {
             <SplitGrid
                 right={false}
                 subtitle="Clients and Servers"
-                description="A Jacdac device can be a client and/or server"
+                description="Most Jacdac devices are either clients (brains) or servers (modules). A device can be both a client and server as well."
                 buttonText="Clients and Servers"
                 buttonVariant="link"
                 buttonUrl="/overview/clientserver/"
                 imageColumns={6}
                 image={
                     <StaticImage
-                        src="./clientServer.png"
+                        src="./jdBus.PNG"
                         alt="Clients and Servers"
                         imgStyle={imgStyle}
                     />
