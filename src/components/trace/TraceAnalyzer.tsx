@@ -32,7 +32,7 @@ export default function TraceAnalyzer() {
             <Container>
                 <p>
                     No trace loaded.{" "}
-                    <Link to="/software/traces">
+                    <Link to="/tools/traces">
                         Learn how to collect a trace.
                     </Link>
                 </p>

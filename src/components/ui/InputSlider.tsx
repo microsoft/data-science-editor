@@ -1,4 +1,4 @@
-import { Grid, Input, Mark, Slider, Typography } from "@mui/material"
+import { Grid, Input, Slider, Typography } from "@mui/material"
 import React from "react"
 import { useId } from "react-use-id-hook"
 
@@ -14,7 +14,7 @@ export default function InputSlider(props: {
     step?: number
     label?: string
     disabled?: boolean
-    marks?: boolean | Mark[]
+    marks?: boolean | { label?: string; value: number }[]
     type?: string
 }) {
     const {

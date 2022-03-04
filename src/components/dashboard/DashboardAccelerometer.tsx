@@ -6,7 +6,7 @@ import useWidgetTheme from "../widgets/useWidgetTheme"
 import useServiceServer from "../hooks/useServiceServer"
 import { SensorServer } from "../../../jacdac-ts/src/servers/sensorserver"
 import { JDRegister } from "../../../jacdac-ts/src/jdom/register"
-import { Grid, Mark, NoSsr } from "@mui/material"
+import { Grid, NoSsr } from "@mui/material"
 import { roundWithPrecision } from "../../../jacdac-ts/src/jdom/utils"
 import { Vector } from "../widgets/threeutils"
 import LoadingProgress from "../ui/LoadingProgress"
@@ -63,7 +63,7 @@ function Sliders(props: {
     const min = -2
     const max = 2
     const step = 0.1
-    const marks: Mark[] = [
+    const marks = [
         {
             value: 0,
         },

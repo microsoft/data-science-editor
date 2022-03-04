@@ -189,12 +189,7 @@ export default function CanvasWidget(props: {
             />
             {showAxes && <Axis />}
             <Cube {...others} />
-            <OrbitControls
-                addEventListener={undefined}
-                hasEventListener={undefined}
-                removeEventListener={undefined}
-                dispatchEvent={undefined}
-            />
+            <OrbitControls />
         </Canvas>
     )
 }

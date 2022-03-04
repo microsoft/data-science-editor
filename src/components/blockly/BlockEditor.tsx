@@ -78,10 +78,7 @@ function SuspendedBlockEditor(props: { className?: string }) {
             theme,
             oneBasedIndex: false,
             move: {
-                scrollbars: {
-                    vertical: true,
-                    horizontal: true,
-                },
+                scrollbars: true,
             },
             media: withPrefix("blockly/media/"),
             zoom: {
@@ -99,7 +96,8 @@ function SuspendedBlockEditor(props: { className?: string }) {
             console.error(`error loading blocks`)
             setError("Error loading blocks...")
         },
-    }) as { workspace: WorkspaceSvg; xml: string }
+        // TODO: fix typing
+    } as any) as { workspace: WorkspaceSvg; xml: string }
 
     // store ref
     useEffect(() => setWorkspace(workspace), [workspace])
@@ -132,9 +130,7 @@ function SuspendedBlockEditor(props: { className?: string }) {
     )
 }
 
-export default function BlockEditor(props: {
-    className?: string
-}) {
+export default function BlockEditor(props: { className?: string }) {
     const { toolboxConfiguration } = useContext(BlockContext)
 
     if (!toolboxConfiguration) return null
