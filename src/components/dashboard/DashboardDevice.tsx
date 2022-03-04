@@ -31,9 +31,6 @@ import { dependencyId } from "../../../jacdac-ts/src/jdom/eventsource"
 import useMediaQueries from "../hooks/useMediaQueries"
 import { DeviceLostAlert } from "../alert/DeviceLostAlert"
 import { DeviceProxyAlert } from "../alert/DeviceProxyAlert"
-import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
-import BarChartIcon from "@mui/icons-material/BarChart"
-import { isSensor } from "../../../jacdac-ts/src/jdom/spec"
 
 const ignoredServices = [
     SRV_CONTROL,
@@ -48,19 +45,9 @@ export default function DashboardDevice(
     props: {
         device: JDDevice
         variant?: "icon" | ""
-        charts?: boolean
-        setCharts?: (value: boolean) => void
     } & DashboardDeviceProps
 ) {
-    const {
-        device,
-        serviceFilter,
-        variant,
-        showAvatar,
-        showHeader,
-        charts,
-        setCharts,
-    } = props
+    const { device, serviceFilter, variant, showAvatar, showHeader } = props
     const { xs: mobile } = useMediaQueries()
 
     const name = useDeviceName(device)
@@ -73,9 +60,6 @@ export default function DashboardDevice(
                 (!serviceFilter || serviceFilter(service))
         )
     )
-    const sensors = services.filter(srv => isSensor(srv.specification))
-    const showChart = !!setCharts && !!sensors.length
-    const handleChartChanged = () => setCharts(!charts)
 
     // refresh when visible
     const serviceGridRef = useRef<HTMLDivElement>()
@@ -100,12 +84,11 @@ export default function DashboardDevice(
                         services={services}
                         variant={variant}
                         visible={visible}
-                        charts={charts}
                     />
                 ))}
             </Grid>
         ),
-        [dependencyId(services), variant, visible, charts]
+        [dependencyId(services), variant, visible]
     )
 
     if (!showHeader)
@@ -127,18 +110,7 @@ export default function DashboardDevice(
                         hideIdentity={true}
                         showReset={false}
                         showSettings={false}
-                    >
-                        {showChart && (
-                            <IconButtonWithTooltip
-                                title={
-                                    charts ? "chart visible" : "chart hidden"
-                                }
-                                onClick={handleChartChanged}
-                            >
-                                <BarChartIcon />
-                            </IconButtonWithTooltip>
-                        )}
-                    </DeviceActions>
+                    />
                 }
                 title={<DeviceName showShortId={false} device={device} />}
                 subheader={

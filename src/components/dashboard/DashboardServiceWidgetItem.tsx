@@ -1,24 +1,17 @@
 import { Grid, Typography } from "@mui/material"
-import React, { useMemo } from "react"
+import React from "react"
 import DashboardServiceWidget, {
     DashboardServiceProps,
 } from "./DashboardServiceWidget"
 import ServiceRole from "../services/ServiceRole"
 import useInstanceName from "../services/useInstanceName"
-import useChange from "../../jacdac/useChange"
-import RegisterTrend from "../RegisterTrend"
 import StatusCodeAlert from "../services/StatusCodeAlert"
 
 export default function DashboardServiceWidgetItem(
     props: React.Attributes & DashboardServiceProps
 ): JSX.Element {
-    const { service, charts, ...rest } = props
+    const { service, ...rest } = props
     const instanceName = useInstanceName(service, rest)
-    const reading = useChange(service, srv => srv?.readingRegister)
-    const hasTrend = useMemo(
-        () => charts && reading?.fields.some(f => f.unit),
-        [charts, reading]
-    )
     const statusCodeAlert = <StatusCodeAlert service={service} {...rest} />
 
     return (
@@ -46,16 +39,6 @@ export default function DashboardServiceWidgetItem(
                 </Grid>
             )}
             <DashboardServiceWidget {...props} />
-            {hasTrend && (
-                <Grid item xs={12}>
-                    <RegisterTrend
-                        register={reading}
-                        mini={false}
-                        height={18}
-                        interval={250}
-                    />
-                </Grid>
-            )}
         </Grid>
     )
 }

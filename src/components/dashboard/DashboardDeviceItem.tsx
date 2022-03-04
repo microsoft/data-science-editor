@@ -16,7 +16,6 @@ export default function DashboardDeviceItem(
 ) {
     const { device, variant, ...other } = props
     const { drawerType } = useContext(AppContext)
-    const [charts, setCharts] = useState(false)
     const breakpoints: GridBreakpoints = useChange(
         device,
         () => {
@@ -49,13 +48,13 @@ export default function DashboardDeviceItem(
                     xl: "auto",
                 }
         },
-        [drawerType, charts]
+        [drawerType]
     )
 
     // based on size, expanded or reduce widget size
     return (
         <Grid item {...breakpoints}>
-            <DashboardDevice device={device} variant={variant} charts={charts} setCharts={setCharts} {...other} />
+            <DashboardDevice device={device} variant={variant} {...other} />
         </Grid>
     )
 }
