@@ -479,7 +479,7 @@ show 20`,
                     colors={colors}
                     subscribeColors={subscribeColors}
                     registers={registers}
-                    widgetCount={services.length}
+                    widgetCount={services?.length}
                     onLedClick={handleLedClick}
                     {...props}
                 />

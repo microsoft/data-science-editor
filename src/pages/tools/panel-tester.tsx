@@ -10,8 +10,6 @@ import {
 } from "@mui/material"
 import React, {
     ChangeEvent,
-    createElement,
-    useEffect,
     useMemo,
     useState,
 } from "react"
@@ -24,48 +22,19 @@ import useDeviceImage from "../../components/devices/useDeviceImage"
 import { useDeviceSpecificationFromProductIdentifier } from "../../jacdac/useDeviceSpecification"
 import ImageAvatar from "../../components/tools/ImageAvatar"
 import {
-    createPanelTest,
     PanelTest,
     PanelTestSpec,
     tryParsePanelTestSpec,
-    TestNode,
-    TestState,
     DeviceTestSpec,
-    DeviceTest,
-    DEVICE_TEST_KIND,
-    REGISTER_TEST_KIND,
-    RegisterTest,
-    EVENT_TEST_KIND,
-    EventTest,
-    ServiceTest,
-    REGISTER_ORACLE_KIND,
 } from "../../../jacdac-ts/src/jdom/testdom"
-import useBus from "../../jacdac/useBus"
-import { styled } from "@mui/material/styles"
-import clsx from "clsx"
-import { TreeView } from "@mui/lab"
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
-import ArrowRightIcon from "@mui/icons-material/ArrowRight"
-import StyledTreeItem, {
-    StyledTreeViewItemProps,
-} from "../../components/ui/StyledTreeItem"
-import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty"
-import QuestionMarkIcon from "@mui/icons-material/QuestionMark"
-import ErrorIcon from "@mui/icons-material/Error"
-import CheckCircleIcon from "@mui/icons-material/CheckCircle"
-import useChange from "../../jacdac/useChange"
-import AnnounceFlagsTreeItem from "../../components/devices/AnnounceFlagsTreeItem"
-import {
-    EventTreeItem,
-    RegisterTreeItem,
-} from "../../components/tools/JDomTreeViewItems"
 import CopyButton from "../../components/ui/CopyButton"
 import { delay } from "../../../jacdac-ts/src/jdom/utils"
 import { useId } from "react-use-id-hook"
 import { Button } from "gatsby-theme-material-ui"
 import useSnackbar from "../../components/hooks/useSnackbar"
-import { SERVICE_TEST_KIND } from "../../../jacdac-ts"
-import DashboardServiceWidget from "../../components/dashboard/DashboardServiceWidget"
+import usePanelTest from "../../components/testdom/usePanelTest"
+import TestIcon from "../../components/icons/TestIcon"
+import PanelTestTreeView from "../../components/testdom/PanelTestTreeView"
 
 const PANEL_MANIFEST_KEY = "panel-test-manifest"
 const PANEL_UPLOAD_URL = "panel-test-post-url"
@@ -184,157 +153,6 @@ as oracle would be defined as
     )
 }
 
-const PREFIX = "TestTreeView"
-const classes = {
-    root: `${PREFIX}-root`,
-    margins: `${PREFIX}-margins`,
-}
-const StyledTreeView = styled(TreeView)(({ theme }) => ({
-    [`&.${classes.root}`]: {
-        flexGrow: 1,
-    },
-
-    [`&.${classes.margins}`]: {
-        marginLeft: theme.spacing(0.5),
-        marginRight: theme.spacing(0.5),
-    },
-}))
-
-function TestIcon(props: { node: TestNode }) {
-    const { node } = props
-    const state = useChange(node, _ => _?.state)
-    switch (state) {
-        case TestState.Running:
-            return (
-                <HourglassEmptyIcon aria-label="test running" color="action" />
-            )
-        case TestState.Fail:
-            return <ErrorIcon aria-label="test fail" color="error" />
-        case TestState.Pass:
-            return <CheckCircleIcon aria-label="test pass" color="success" />
-        default:
-            return (
-                <QuestionMarkIcon
-                    aria-label="test indeterminate"
-                    color="warning"
-                />
-            )
-    }
-}
-
-const testComponents = {
-    [DEVICE_TEST_KIND]: DeviceTestTreeItemExtra,
-    [REGISTER_TEST_KIND]: RegisterTestTreeItemExtra,
-    [EVENT_TEST_KIND]: EventTestTreeItemExtra,
-    [SERVICE_TEST_KIND]: ServiceTestTreeItemExtra,
-    [REGISTER_ORACLE_KIND]: RegisterTestTreeItemExtra,
-}
-
-function TestTreeItem(props: { node: TestNode }) {
-    const { node, ...rest } = props
-    const { id, nodeKind, children: nodeChildren } = node
-    const label = useChange(node, _ => _?.label)
-    const info = useChange(node, _ => _?.info)
-    const output = useChange(node, _ => _?.output)
-
-    const testComponent = testComponents[nodeKind]
-    const testNode = testComponent ? createElement(testComponent, props) : null
-
-    return (
-        <StyledTreeItem
-            nodeId={id}
-            labelText={label}
-            labelInfo={info}
-            icon={<TestIcon node={node} />}
-            {...rest}
-        >
-            {testNode}
-            {output && (
-                <StyledTreeItem nodeId={id + ":output"} labelText={output} />
-            )}
-            {!!nodeChildren.length && (
-                <>
-                    {nodeChildren.map(child => (
-                        <TestTreeItem key={child.id} node={child} {...rest} />
-                    ))}
-                </>
-            )}
-        </StyledTreeItem>
-    )
-}
-
-function DeviceTestTreeItemExtra(
-    props: { node: TestNode } & StyledTreeViewItemProps
-) {
-    const { node, ...rest } = props
-    const { device } = node as DeviceTest
-    if (!device) return null
-    return (
-        <AnnounceFlagsTreeItem device={device} showIdentify={true} {...rest} />
-    )
-}
-
-function ServiceTestTreeItemExtra(
-    props: { node: TestNode } & StyledTreeViewItemProps
-) {
-    const { node } = props
-    const { service } = node as ServiceTest
-    if (!service) return null
-    return <DashboardServiceWidget service={service} expanded={false} />
-}
-
-function RegisterTestTreeItemExtra(
-    props: { node: TestNode } & StyledTreeViewItemProps
-) {
-    const { node, ...rest } = props
-    const { register } = node as RegisterTest
-    if (!register) return null
-    return <RegisterTreeItem register={register} {...rest} />
-}
-
-function EventTestTreeItemExtra(
-    props: { node: TestNode } & StyledTreeViewItemProps
-) {
-    const { node, ...rest } = props
-    const { event } = node as EventTest
-    if (!event) return null
-    return <EventTreeItem event={event} {...rest} />
-}
-
-function PanelTestTreeView(props: { panel: PanelTest }) {
-    const { panel } = props
-    const [expanded, setExpanded] = useState<string[]>([])
-    const [selected, setSelected] = useState<string[]>([])
-    const handleToggle = (
-        event: React.ChangeEvent<unknown>,
-        nodeIds: string[]
-    ) => {
-        setExpanded(nodeIds)
-    }
-
-    const handleSelect = (
-        event: React.ChangeEvent<unknown>,
-        nodeIds: string[]
-    ) => {
-        setSelected(nodeIds)
-    }
-
-    return (
-        <StyledTreeView
-            className={clsx(classes.root, classes.margins)}
-            defaultCollapseIcon={<ArrowDropDownIcon />}
-            defaultExpandIcon={<ArrowRightIcon />}
-            defaultEndIcon={<div style={{ width: 12 }} />}
-            expanded={expanded}
-            selected={selected}
-            onNodeToggle={handleToggle}
-            onNodeSelect={handleSelect}
-        >
-            <TestTreeItem node={panel} />
-        </StyledTreeView>
-    )
-}
-
 function Results(props: { panel: PanelTest }) {
     const { panel } = props
     const [expanded, setExpanded] = useState(false)
@@ -348,7 +166,7 @@ function Results(props: { panel: PanelTest }) {
                 </h2>
             </AccordionSummary>
             <AccordionDetails style={{ display: "block" }}>
-                <PanelTestTreeView panel={panel} />
+                <PanelTestTreeView panel={panel} showTwins={true} />
             </AccordionDetails>
         </Accordion>
     )
@@ -461,7 +279,6 @@ function Exports(props: { panel: PanelTest }) {
 }
 
 export default function PanelTester() {
-    const bus = useBus()
     const [manifestSource, setManifestSource] = useLocalStorage(
         PANEL_MANIFEST_KEY,
         ""
@@ -470,20 +287,7 @@ export default function PanelTester() {
         () => tryParsePanelTestSpec(manifestSource),
         [manifestSource]
     )
-    const [panel, setPanel] = useState<PanelTest>(undefined)
-    useEffect(() => {
-        if (panelSpec) {
-            try {
-                const p = createPanelTest(bus, panelSpec)
-                setPanel(p)
-                return () => (p.bus = undefined)
-            } catch (e) {
-                console.debug(e)
-            }
-        }
-        setPanel(undefined)
-        return undefined
-    }, [panelSpec])
+    const panel = usePanelTest(panelSpec)
 
     return (
         <Stack spacing={3}>

@@ -101,7 +101,7 @@ export default function DashboardLEDDisplay(props: DashboardServiceProps) {
                 colors={colors}
                 subscribeColors={subscribeColors}
                 registers={registers}
-                widgetCount={services.length}
+                widgetCount={services?.length}
                 onLedClick={handleLedClick}
                 {...props}
             />
