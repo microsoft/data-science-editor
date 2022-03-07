@@ -22,6 +22,12 @@ import {
 } from "../../../jacdac-ts/src/jdom/constants"
 import PanelTestTreeView from "../../components/testdom/PanelTestTreeView"
 
+const ignoredDevices = [
+    SRV_UNIQUE_BRAIN,
+    SRV_DASHBOARD,
+    SRV_BRIDGE,
+    SRV_INFRASTRUCTURE,
+]
 const ignoredServices = [
     SRV_CONTROL,
     SRV_ROLE_MANAGER,
@@ -43,7 +49,9 @@ export default function Page() {
         physical: true,
         announced: true,
         ignoreInfrastructure: true,
-    }).sort((l, r) => -(l.created - r.created))
+    })
+        .filter(d => !ignoredDevices.some(sc => d.hasService(sc)))
+        .sort((l, r) => -(l.created - r.created))
     const device = devices[0]
     const productIdentifier = useDeviceProductIdentifier(device)
     const testSpec = useMemo<PanelTestSpec>(
