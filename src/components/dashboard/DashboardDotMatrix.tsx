@@ -9,6 +9,8 @@ import useServiceServer from "../hooks/useServiceServer"
 import useChange from "../../jacdac/useChange"
 import LEDMatrixWidget from "../widgets/LEDMatrixWidget"
 import useRegister from "../hooks/useRegister"
+import { Grid } from "@mui/material"
+import RegisterInput from "../RegisterInput"
 
 export default function DashboardDotMatrixDisplay(
     props: DashboardServiceProps
@@ -39,14 +41,25 @@ export default function DashboardDotMatrixDisplay(
         dotsRegister.sendSetAsync(newLeds, true)
     }
     return (
-        <LEDMatrixWidget
-            leds={dots}
-            brightness={brightness}
-            rows={rows}
-            columns={columns}
-            color={color}
-            onChange={handleChange}
-            dots={variant === DotMatrixVariant.Braille}
-        />
+        <Grid container spacing={1} justifyContent="center" flexDirection="column">
+            <Grid item xs={12}>
+                <LEDMatrixWidget
+                    leds={dots}
+                    brightness={brightness}
+                    rows={rows}
+                    columns={columns}
+                    color={color}
+                    onChange={handleChange}
+                    dots={variant === DotMatrixVariant.Braille}
+                />
+            </Grid>
+            <Grid item xs={12}>
+                <RegisterInput
+                    register={brightnessRegister}
+                    showRegisterName={true}
+                    visible={props.visible}
+                />
+            </Grid>
+        </Grid>
     )
 }
