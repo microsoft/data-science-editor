@@ -136,7 +136,9 @@ export default function PanelTestTreeView(props: {
     defaultExpanded?: boolean
 }) {
     const { panel, skipPanel, defaultExpanded, ...rest } = props
-    const [expanded, setExpanded] = useState<string[]>(defaultExpanded ? [] : [])
+    const [expanded, setExpanded] = useState<string[]>(
+        defaultExpanded ? panel.descendants.map(d => d.id) : []
+    )
     const [selected, setSelected] = useState<string[]>([])
     const handleToggle = (
         event: React.ChangeEvent<unknown>,

@@ -87,7 +87,7 @@ export default function Page() {
                 )}
                 {test && (
                     <Grid item>
-                        <PanelTestTreeView panel={test} skipPanel={true} />
+                        <PanelTestTreeView panel={test} skipPanel={true} defaultExpanded={true} />
                     </Grid>
                 )}
             </Grid>
