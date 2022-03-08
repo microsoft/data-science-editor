@@ -112,7 +112,7 @@ function ServiceTestTreeItemExtra(
     const { node, showTwins } = props
     const { service } = node as ServiceTest
     if (!service || !showTwins) return null
-    return <DashboardServiceWidget service={service} expanded={false} />
+    return <DashboardServiceWidget service={service} expanded={false} visible={true} />
 }
 
 function RegisterTestTreeItemExtra(

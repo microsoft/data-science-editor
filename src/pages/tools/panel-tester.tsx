@@ -207,7 +207,7 @@ as oracle would be defined as
 
 function Results(props: { panel: PanelTest }) {
     const { panel } = props
-    const [expanded, setExpanded] = useState(false)
+    const [expanded, setExpanded] = useState(true)
     const handleExpanded = () => setExpanded(v => !v)
 
     return (
@@ -218,7 +218,7 @@ function Results(props: { panel: PanelTest }) {
                 </h2>
             </AccordionSummary>
             <AccordionDetails style={{ display: "block" }}>
-                <PanelTestTreeView panel={panel} showTwins={true} />
+                <PanelTestTreeView panel={panel} showTwins={true} defaultExpanded={true} />
             </AccordionDetails>
         </Accordion>
     )
