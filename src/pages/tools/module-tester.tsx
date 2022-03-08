@@ -4,21 +4,6 @@ import DashboardDeviceItem from "../../components/dashboard/DashboardDeviceItem"
 import useDevices from "../../components/hooks/useDevices"
 import usePanelTest from "../../components/testdom/usePanelTest"
 import useDeviceProductIdentifier from "../../jacdac/useDeviceProductIdentifier"
-import {
-    SRV_BOOTLOADER,
-    SRV_BRIDGE,
-    SRV_CONTROL,
-    SRV_DASHBOARD,
-    SRV_INFRASTRUCTURE,
-    SRV_JACSCRIPT_CLOUD,
-    SRV_JACSCRIPT_CONDITION,
-    SRV_LOGGER,
-    SRV_PROTO_TEST,
-    SRV_PROXY,
-    SRV_ROLE_MANAGER,
-    SRV_SETTINGS,
-    SRV_UNIQUE_BRAIN,
-} from "../../../jacdac-ts/src/jdom/constants"
 import PanelTestTreeView from "../../components/testdom/PanelTestTreeView"
 import FirmwareLoader from "../../components/firmware/FirmwareLoader"
 import FirmwareCardGrid from "../../components/firmware/FirmwareCardGrid"
@@ -27,28 +12,10 @@ import { PanelTest } from "../../../jacdac-ts/src/testdom/nodes"
 import { FlashDeviceButton } from "../../components/firmware/FlashDeviceButton"
 import useDeviceFirmwareBlob from "../../components/firmware/useDeviceFirmwareBlob"
 import useChange from "../../jacdac/useChange"
-
-const ignoredDevices = [
-    SRV_UNIQUE_BRAIN,
-    SRV_DASHBOARD,
-    SRV_BRIDGE,
-    SRV_INFRASTRUCTURE,
-]
-const ignoredServices = [
-    SRV_CONTROL,
-    SRV_ROLE_MANAGER,
-    SRV_LOGGER,
-    SRV_SETTINGS,
-    SRV_BOOTLOADER,
-    SRV_PROTO_TEST,
-    SRV_INFRASTRUCTURE,
-    SRV_PROXY,
-    SRV_UNIQUE_BRAIN,
-    SRV_DASHBOARD,
-    SRV_BRIDGE,
-    SRV_JACSCRIPT_CLOUD,
-    SRV_JACSCRIPT_CONDITION,
-]
+import {
+    filterTestDevice,
+    filterTestService,
+} from "../../components/testdom/filters"
 
 function DeviceTestItem(props: { test: PanelTest; device: JDDevice }) {
     const { device, test } = props
@@ -94,7 +61,7 @@ export default function Page() {
         announced: true,
         ignoreInfrastructure: true,
     })
-        .filter(d => !ignoredDevices.some(sc => d.hasService(sc)))
+        .filter(filterTestDevice)
         .sort((l, r) => -(l.created - r.created))
     const device = devices[0]
     const productIdentifier = useDeviceProductIdentifier(device)
@@ -109,7 +76,7 @@ export default function Page() {
                         productIdentifier,
                         count: 1,
                         services: device.serviceClasses
-                            .filter(sc => ignoredServices.indexOf(sc) < 0)
+                            .filter(filterTestService)
                             .map(sc => ({ serviceClass: sc })),
                     },
                 ],

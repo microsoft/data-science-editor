@@ -5,6 +5,7 @@ import {
     AccordionDetails,
     Chip,
     Typography,
+    Button,
 } from "@mui/material"
 import React, { useMemo, useState } from "react"
 import useLocalStorage from "../../components/hooks/useLocalStorage"
@@ -19,6 +20,7 @@ import { PanelTest } from "../../../jacdac-ts/src/testdom/nodes"
 import {
     PanelTestSpec,
     DeviceTestSpec,
+    ServiceTestSpec,
 } from "../../../jacdac-ts/src/testdom/spec"
 import { tryParsePanelTestSpec } from "../../../jacdac-ts/src/testdom/compiler"
 import usePanelTest from "../../components/testdom/usePanelTest"
@@ -26,6 +28,11 @@ import TestIcon from "../../components/icons/TestIcon"
 import PanelTestTreeView from "../../components/testdom/PanelTestTreeView"
 import PanelTestExport from "../../components/testdom/PanelTestExport"
 import FirmwareLoader from "../../components/firmware/FirmwareLoader"
+import useBus from "../../jacdac/useBus"
+import {
+    filterTestDevice,
+    filterTestService,
+} from "../../components/testdom/filters"
 
 const PANEL_MANIFEST_KEY = "panel-test-manifest"
 
@@ -54,6 +61,52 @@ function Manifest(props: {
     const { source, setSource, panel } = props
     const [expanded, setExpanded] = useState(!source)
     const handleExpanded = () => setExpanded(v => !v)
+    const bus = useBus()
+
+    const handleCapture = async () => {
+        const devices = bus
+            .devices({
+                physical: true,
+                announced: true,
+                ignoreInfrastructure: true,
+            })
+            .filter(filterTestDevice)
+        const dids: Record<number, DeviceTestSpec> = {}
+        for (const device of devices) {
+            const pid = await device.resolveProductIdentifier()
+            if (!pid) continue
+            const services = device
+                .services()
+                .filter(srv => filterTestService(srv.serviceClass))
+            if (!services.length) continue
+            const did =
+                dids[pid] ||
+                (dids[pid] = {
+                    productIdentifier: pid,
+                    services: services.map(
+                        srv =>
+                            ({
+                                name: srv.specification?.shortId,
+                                serviceClass: srv.serviceClass,
+                                count: 0,
+                            } as ServiceTestSpec)
+                    ),
+                    count: 0,
+                })
+            did.count++
+            for (const service of services)
+                did.services.find(
+                    srv => srv.serviceClass === service.serviceClass
+                ).count++
+
+            const panel: PanelTestSpec = {
+                id: "",
+                devices: Object.values(dids),
+                oracles: [],
+            }
+            setSource(JSON.stringify(panel, null, 2))
+        }
+    }
 
     return (
         <Accordion expanded={expanded} onChange={handleExpanded}>
@@ -75,7 +128,16 @@ function Manifest(props: {
             </AccordionSummary>
             <AccordionDetails style={{ display: "block" }}>
                 <Stack spacing={1}>
-                    <h2>Configuration</h2>
+                    <h2>
+                        Configuration
+                        <Button
+                            title="Generate manifest for current connected devices"
+                            variant="outlined"
+                            onClick={handleCapture}
+                        >
+                            Capture current
+                        </Button>
+                    </h2>
                     <HighlightTextField
                         code={source}
                         language={"json"}

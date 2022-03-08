@@ -134,7 +134,7 @@ export default function PanelTestTreeView(props: {
     skipPanel?: boolean
     defaultExpanded?: boolean
 }) {
-    const { panel, skipPanel, defaultExpanded, ...rest } = props
+    const { panel, skipPanel, defaultExpanded, showTwins, ...rest } = props
     const [expanded, setExpanded] = useState<string[]>(
         defaultExpanded ? panel.descendants.map(d => d.id) : []
     )
@@ -166,10 +166,10 @@ export default function PanelTestTreeView(props: {
         >
             {skipPanel ? (
                 panel.children.map(child => (
-                    <TestTreeItem key={child.id} node={child} {...rest} />
+                    <TestTreeItem key={child.id} node={child} showTwins={showTwins} {...rest} />
                 ))
             ) : (
-                <TestTreeItem node={panel} {...rest} />
+                <TestTreeItem node={panel}  showTwins={showTwins} {...rest} />
             )}
         </StyledTreeView>
     )
