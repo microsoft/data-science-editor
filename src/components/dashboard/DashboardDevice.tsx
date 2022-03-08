@@ -31,6 +31,7 @@ import { dependencyId } from "../../../jacdac-ts/src/jdom/eventsource"
 import useMediaQueries from "../hooks/useMediaQueries"
 import { DeviceLostAlert } from "../alert/DeviceLostAlert"
 import { DeviceProxyAlert } from "../alert/DeviceProxyAlert"
+import { DeviceBootloaderAlert } from "../alert/DeviceBootloaderAlert"
 
 const ignoredServices = [
     SRV_CONTROL,
@@ -125,6 +126,7 @@ export default function DashboardDevice(
             />
             <CardContent style={{ paddingTop: 0 }}>
                 <DeviceLostAlert device={device} />
+                <DeviceBootloaderAlert device={device} />
                 <DeviceProxyAlert device={device} />
                 <ServiceWidgets />
             </CardContent>
