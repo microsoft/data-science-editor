@@ -6,9 +6,9 @@ import { isReading, isValueOrIntensity } from "../../../jacdac-ts/src/jdom/spec"
 import { strcmp } from "../../../jacdac-ts/src/jdom/utils"
 import Helmet from "react-helmet"
 import Dashboard from "../../components/dashboard/Dashboard"
-import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import DarkModeContext from "../../components/ui/DarkModeContext"
 import IFrameBridgeClient from "../../components/makecode/iframebridgeclient"
+import useBus from "../../jacdac/useBus"
 
 /**
  * To debug locally:
@@ -47,12 +47,16 @@ function deviceSort(l: JDDevice, r: JDDevice): number {
 }
 
 function Carousel() {
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const bus = useBus()
     const iframeBridge = bus.nodeData[
         IFrameBridgeClient.DATA_ID
     ] as IFrameBridgeClient
     const deviceFilter = iframeBridge?.deviceFilter.bind(iframeBridge)
     const serviceFilter = iframeBridge?.serviceFilter.bind(iframeBridge)
+
+    useEffect(() => {
+        bus.streaming = true
+    }, [])
 
     return (
         <Dashboard
