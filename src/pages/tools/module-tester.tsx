@@ -93,7 +93,7 @@ export default function Page() {
             <Grid container spacing={1}>
                 {device && <DeviceTestItem test={test} device={device} />}
             </Grid>
-            <h3>Firmwares</h3>
+            <h2>Firmwares</h2>
             <FirmwareCardGrid />
         </>
     )
