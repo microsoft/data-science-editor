@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
-import { createPanelTest, PanelTest, PanelTestSpec } from "../../../jacdac-ts/src/jdom/testdom";
-import useBus from "../../jacdac/useBus";
+import { useEffect, useState } from "react"
+import { PanelTestSpec } from "../../../jacdac-ts/src/testdom/spec"
+import { PanelTest } from "../../../jacdac-ts/src/testdom/nodes"
+import { createPanelTest } from "../../../jacdac-ts/src/testdom/compiler"
+import useBus from "../../jacdac/useBus"
 
 export default function usePanelTest(panelSpec: PanelTestSpec) {
     const bus = useBus()

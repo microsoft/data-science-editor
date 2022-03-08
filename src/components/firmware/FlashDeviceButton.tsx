@@ -1,10 +1,4 @@
-import {
-    Button,
-    Typography,
-    Dialog,
-    DialogContent,
-    Grid,
-} from "@mui/material"
+import { Button, Typography, Dialog, DialogContent, Grid } from "@mui/material"
 import { Alert } from "@mui/material"
 import React, { useEffect, useState } from "react"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
@@ -129,8 +123,9 @@ export function FlashDeviceButton(props: {
     device: JDDevice
     blob: FirmwareBlob
     ignoreFirmwareCheck?: boolean
+    hideUpToDate?: boolean
 }) {
-    const { device, blob, ignoreFirmwareCheck } = props
+    const { device, blob, ignoreFirmwareCheck, hideUpToDate } = props
     const bus = useBus()
     const { setError } = useSnackbar()
     const { trackEvent, trackError } = useAnalytics()
@@ -187,6 +182,8 @@ export function FlashDeviceButton(props: {
         }
     }
 
+    if (hideUpToDate && upToDate) return null
+
     if (firmwares?.length)
         return (
             <Grid container spacing={1} direction="row">
@@ -213,9 +210,13 @@ export function FlashDeviceButton(props: {
     ) : firmwareInfo || update ? (
         <>
             {upToDate ? (
-                <Alert severity="success">Up to date!</Alert>
+                <Alert severity="success">
+                    Up to date!
+                </Alert>
             ) : (
-                <Alert severity="warning">{blob.version} available</Alert>
+                <Alert severity="warning">
+                    {blob.version} available
+                </Alert>
             )}
             {(!upToDate || ignoreFirmwareCheck) && firmwareInfo && (
                 <Button

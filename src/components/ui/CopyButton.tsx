@@ -7,16 +7,22 @@ import { Button } from "@mui/material"
 import useMounted from "../hooks/useMounted"
 import { delay } from "../../../jacdac-ts/src/jdom/utils"
 
-
 export default function CopyButton(props: {
     label?: string
     title?: string
     onCopy: () => Promise<string | HTMLCanvasElement>
     className?: string
-    size?: "small",
+    size?: "small"
     variant?: "outlined" | "contained"
+    disabled?: boolean
 }) {
-    const { label, title = "copy data to clipboard", onCopy, ...rest } = props
+    const {
+        label,
+        title = "copy data to clipboard",
+        disabled,
+        onCopy,
+        ...rest
+    } = props
     const [copied, setCopied] = useState<boolean>(undefined)
     const mounted = useMounted()
     const handleClick = async (ev: React.MouseEvent<HTMLButtonElement>) => {
@@ -46,7 +52,7 @@ export default function CopyButton(props: {
             if (mounted()) setCopied(undefined)
         }
     }
-    const disabled = copied !== undefined
+    const hasCopied = copied !== undefined
     const text =
         copied === true
             ? "Copied!"
@@ -56,8 +62,9 @@ export default function CopyButton(props: {
     return label ? (
         <Button
             title={title}
+            disabled={disabled || hasCopied}
             {...rest}
-            onClick={disabled ? undefined : handleClick}
+            onClick={hasCopied ? undefined : handleClick}
         >
             {text}
         </Button>

@@ -4,7 +4,8 @@ import QuestionMarkIcon from "@mui/icons-material/QuestionMark"
 import ErrorIcon from "@mui/icons-material/Error"
 import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 import useChange from "../../jacdac/useChange"
-import { TestNode, TestState } from "../../../jacdac-ts/src/jdom/testdom"
+import { TestNode } from "../../../jacdac-ts/src/testdom/nodes"
+import { TestState } from "../../../jacdac-ts/src/testdom/spec"
 
 export default function TestIcon(props: { node: TestNode }) {
     const { node } = props

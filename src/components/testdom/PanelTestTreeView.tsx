@@ -4,13 +4,13 @@ import {
     TestNode,
     DeviceTest,
     DEVICE_TEST_KIND,
-    REGISTER_TEST_KIND,
     RegisterTest,
     EVENT_TEST_KIND,
     EventTest,
     ServiceTest,
     REGISTER_ORACLE_KIND,
-} from "../../../jacdac-ts/src/jdom/testdom"
+    SERVICE_TEST_KIND,
+} from "../../../jacdac-ts/src/testdom/nodes"
 import { styled } from "@mui/material/styles"
 import clsx from "clsx"
 import { TreeView } from "@mui/lab"
@@ -25,7 +25,6 @@ import {
     EventTreeItem,
     RegisterTreeItem,
 } from "../../components/tools/JDomTreeViewItems"
-import { SERVICE_TEST_KIND } from "../../../jacdac-ts"
 import DashboardServiceWidget from "../../components/dashboard/DashboardServiceWidget"
 import TestIcon from "../icons/TestIcon"
 
