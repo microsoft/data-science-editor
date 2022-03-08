@@ -28,6 +28,7 @@ import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import { PanelTest } from "../../../jacdac-ts/src/testdom/nodes"
 import { FlashDeviceButton } from "../../components/firmware/FlashDeviceButton"
 import useDeviceFirmwareBlob from "../../components/firmware/useDeviceFirmwareBlob"
+import useChange from "../../jacdac/useChange"
 
 const ignoredDevices = [
     SRV_UNIQUE_BRAIN,
@@ -56,26 +57,25 @@ function DeviceTestItem(props: { test: PanelTest; device: JDDevice }) {
     const blob = useDeviceFirmwareBlob(device)
     return (
         <>
-            {device && (
-                <DashboardDeviceItem
-                    key={device.id}
-                    device={device}
-                    showAvatar={true}
-                    showHeader={true}
-                />
-            )}
-            {test && (
-                <Grid item xs>
-                    <Grid container direction="column" spacing={1}>
-                        {blob && (
-                            <Grid item>
-                                <FlashDeviceButton
-                                    device={device}
-                                    blob={blob}
-                                    hideUpToDate={true}
-                                />
-                            </Grid>
-                        )}
+            <DashboardDeviceItem
+                key={device.id}
+                device={device}
+                showAvatar={true}
+                showHeader={true}
+            />
+            <Grid item xs>
+                <Grid container direction="column" spacing={1}>
+                    {blob && (
+                        <Grid item>
+                            <FlashDeviceButton
+                                device={device}
+                                blob={blob}
+                                hideUpToDate={true}
+                                autoStart={true}
+                            />
+                        </Grid>
+                    )}
+                    {test && (
                         <Grid item xs={12}>
                             <PanelTestTreeView
                                 panel={test}
@@ -83,9 +83,9 @@ function DeviceTestItem(props: { test: PanelTest; device: JDDevice }) {
                                 defaultExpanded={true}
                             />
                         </Grid>
-                    </Grid>
+                    )}
                 </Grid>
-            )}
+            </Grid>
         </>
     )
 }
@@ -100,9 +100,11 @@ export default function Page() {
         .sort((l, r) => -(l.created - r.created))
     const device = devices[0]
     const productIdentifier = useDeviceProductIdentifier(device)
-    const testSpec = useMemo<PanelTestSpec>(
-        () =>
-            device &&
+    const testSpec = useChange(
+        device,
+        _ =>
+            _ &&
+            !_.flashing &&
             productIdentifier && {
                 devices: [
                     {
@@ -114,7 +116,7 @@ export default function Page() {
                     },
                 ],
             },
-        [device, productIdentifier]
+        [productIdentifier]
     )
     const test = usePanelTest(testSpec)
 
@@ -124,9 +126,7 @@ export default function Page() {
             <h1>Module Tester</h1>
             <p>Only the last connected module is shown on this view.</p>
             <Grid container spacing={1}>
-                {test && device && (
-                    <DeviceTestItem test={test} device={device} />
-                )}
+                {device && <DeviceTestItem test={test} device={device} />}
             </Grid>
             <PanelTestExport panel={test} />
             <h3>Firmwares</h3>

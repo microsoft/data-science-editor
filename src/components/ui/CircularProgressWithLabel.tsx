@@ -9,6 +9,7 @@ import {
 export default function CircularProgressWithLabel(
     props: CircularProgressProps & { value: number }
 ) {
+    const { value } = props
     return (
         <Box position="relative" display="inline-flex">
             <CircularProgress variant="determinate" {...props} />
@@ -26,7 +27,7 @@ export default function CircularProgressWithLabel(
                     variant="caption"
                     component="div"
                     color="textSecondary"
-                >{`${Math.round(props.value)}%`}</Typography>
+                >{`${Math.round(value)}%`}</Typography>
             </Box>
         </Box>
     )

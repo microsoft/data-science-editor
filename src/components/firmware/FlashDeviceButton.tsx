@@ -18,7 +18,6 @@ import { useLatestReleaseAsset } from "../github"
 import useBus from "../../jacdac/useBus"
 import { semverCmp } from "../semver"
 import useSnackbar from "../hooks/useSnackbar"
-import { ControlReg } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 
 function DragAndDropUpdateButton(props: {
     firmwareVersion: string
@@ -124,8 +123,9 @@ export function FlashDeviceButton(props: {
     blob: FirmwareBlob
     ignoreFirmwareCheck?: boolean
     hideUpToDate?: boolean
+    autoStart?: boolean
 }) {
-    const { device, blob, ignoreFirmwareCheck, hideUpToDate } = props
+    const { device, blob, ignoreFirmwareCheck, hideUpToDate, autoStart } = props
     const bus = useBus()
     const { setError } = useSnackbar()
     const { trackEvent, trackError } = useAnalytics()
@@ -158,8 +158,8 @@ export function FlashDeviceButton(props: {
         }
         trackEvent("flash.start", props)
         try {
-            setProgress(0)
             device.flashing = true // don't refresh registers while flashing
+            setProgress(0)
             const updateCandidates = [firmwareInfo]
             await flashFirmwareBlob(
                 bus,
@@ -181,6 +181,10 @@ export function FlashDeviceButton(props: {
             bus.removeDevice(device.deviceId)
         }
     }
+
+    useEffect(() => {
+        if (autoStart && firmwareInfo && update && !upToDate) handleFlashing()
+    }, [device, autoStart, firmwareInfo, update, upToDate])
 
     if (hideUpToDate && upToDate) return null
 
@@ -206,17 +210,18 @@ export function FlashDeviceButton(props: {
     ) : missing ? (
         <Alert severity="info">No firmware available</Alert>
     ) : flashing ? (
-        <CircularProgressWithLabel value={progress} />
+        <>
+            <Typography variant="caption" component="div" color="textSecondary">
+                Updating firmware
+            </Typography>
+            <CircularProgressWithLabel value={progress} />
+        </>
     ) : firmwareInfo || update ? (
         <>
             {upToDate ? (
-                <Alert severity="success">
-                    Up to date!
-                </Alert>
+                <Alert severity="success">Up to date!</Alert>
             ) : (
-                <Alert severity="warning">
-                    {blob.version} available
-                </Alert>
+                <Alert severity="warning">{blob.version} available</Alert>
             )}
             {(!upToDate || ignoreFirmwareCheck) && firmwareInfo && (
                 <Button
