@@ -21,6 +21,7 @@ import {
     SRV_UNIQUE_BRAIN,
 } from "../../../jacdac-ts/src/jdom/constants"
 import PanelTestTreeView from "../../components/testdom/PanelTestTreeView"
+import FirmwareLoader from "../../components/firmware/FirmwareLoader"
 
 const ignoredDevices = [
     SRV_UNIQUE_BRAIN,
@@ -74,6 +75,7 @@ export default function Page() {
 
     return (
         <>
+            <FirmwareLoader />
             <h1>Module Tester</h1>
             <p>Only the last connected module is shown on this view.</p>
             <Grid container spacing={1}>
@@ -87,7 +89,11 @@ export default function Page() {
                 )}
                 {test && (
                     <Grid item>
-                        <PanelTestTreeView panel={test} skipPanel={true} defaultExpanded={true} />
+                        <PanelTestTreeView
+                            panel={test}
+                            skipPanel={true}
+                            defaultExpanded={true}
+                        />
                     </Grid>
                 )}
             </Grid>

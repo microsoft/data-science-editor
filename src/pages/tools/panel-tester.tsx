@@ -8,11 +8,7 @@ import {
     Grid,
     TextField,
 } from "@mui/material"
-import React, {
-    ChangeEvent,
-    useMemo,
-    useState,
-} from "react"
+import React, { ChangeEvent, useMemo, useState } from "react"
 import useLocalStorage from "../../components/hooks/useLocalStorage"
 import HighlightTextField from "../../components/ui/HighlightTextField"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
@@ -35,6 +31,7 @@ import useSnackbar from "../../components/hooks/useSnackbar"
 import usePanelTest from "../../components/testdom/usePanelTest"
 import TestIcon from "../../components/icons/TestIcon"
 import PanelTestTreeView from "../../components/testdom/PanelTestTreeView"
+import FirmwareLoader from "../../components/firmware/FirmwareLoader"
 
 const PANEL_MANIFEST_KEY = "panel-test-manifest"
 const PANEL_UPLOAD_URL = "panel-test-post-url"
@@ -291,6 +288,7 @@ export default function PanelTester() {
 
     return (
         <Stack spacing={3}>
+            <FirmwareLoader />
             <h1>Panel Tester</h1>
             <Manifest
                 source={manifestSource}
