@@ -58,7 +58,7 @@ interface TestNodeProps {
 }
 
 function TestTreeItem(props: TestNodeProps) {
-    const { node, ...rest } = props
+    const { node, showTwins, ...rest } = props
     const { id, nodeKind, children: nodeChildren } = node
     const label = useChange(node, _ => _?.label)
     const info = useChange(node, _ => _?.info)
@@ -82,7 +82,12 @@ function TestTreeItem(props: TestNodeProps) {
             {!!nodeChildren.length && (
                 <>
                     {nodeChildren.map(child => (
-                        <TestTreeItem key={child.id} node={child} {...rest} />
+                        <TestTreeItem
+                            key={child.id}
+                            node={child}
+                            showTinws={showTwins}
+                            {...rest}
+                        />
                     ))}
                 </>
             )}
@@ -166,10 +171,15 @@ export default function PanelTestTreeView(props: {
         >
             {skipPanel ? (
                 panel.children.map(child => (
-                    <TestTreeItem key={child.id} node={child} showTwins={showTwins} {...rest} />
+                    <TestTreeItem
+                        key={child.id}
+                        node={child}
+                        showTwins={showTwins}
+                        {...rest}
+                    />
                 ))
             ) : (
-                <TestTreeItem node={panel}  showTwins={showTwins} {...rest} />
+                <TestTreeItem node={panel} showTwins={showTwins} {...rest} />
             )}
         </StyledTreeView>
     )
