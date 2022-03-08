@@ -85,7 +85,7 @@ function TestTreeItem(props: TestNodeProps) {
                         <TestTreeItem
                             key={child.id}
                             node={child}
-                            showTinws={showTwins}
+                            showTwins={showTwins}
                             {...rest}
                         />
                     ))}
