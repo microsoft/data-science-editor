@@ -47,7 +47,7 @@ const StyledTreeView = styled(TreeView)(({ theme }) => ({
 
 const testComponents = {
     [DEVICE_TEST_KIND]: DeviceTestTreeItemExtra,
-    [REGISTER_TEST_KIND]: RegisterTestTreeItemExtra,
+    //[REGISTER_TEST_KIND]: RegisterTestTreeItemExtra,
     [EVENT_TEST_KIND]: EventTestTreeItemExtra,
     [SERVICE_TEST_KIND]: ServiceTestTreeItemExtra,
     [REGISTER_ORACLE_KIND]: RegisterTestTreeItemExtra,
