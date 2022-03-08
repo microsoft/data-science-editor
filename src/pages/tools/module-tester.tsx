@@ -1,6 +1,5 @@
 import { Grid } from "@mui/material"
-import { PanelTestSpec } from "../../../jacdac-ts/src/testdom/spec"
-import React, { useMemo } from "react"
+import React from "react"
 import DashboardDeviceItem from "../../components/dashboard/DashboardDeviceItem"
 import useDevices from "../../components/hooks/useDevices"
 import usePanelTest from "../../components/testdom/usePanelTest"
@@ -23,7 +22,6 @@ import {
 import PanelTestTreeView from "../../components/testdom/PanelTestTreeView"
 import FirmwareLoader from "../../components/firmware/FirmwareLoader"
 import FirmwareCardGrid from "../../components/firmware/FirmwareCardGrid"
-import PanelTestExport from "../../components/testdom/PanelTestExport"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import { PanelTest } from "../../../jacdac-ts/src/testdom/nodes"
 import { FlashDeviceButton } from "../../components/firmware/FlashDeviceButton"
@@ -128,7 +126,6 @@ export default function Page() {
             <Grid container spacing={1}>
                 {device && <DeviceTestItem test={test} device={device} />}
             </Grid>
-            <PanelTestExport panel={test} />
             <h3>Firmwares</h3>
             <FirmwareCardGrid />
         </>
