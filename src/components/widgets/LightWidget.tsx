@@ -77,7 +77,7 @@ function setRgbLeds(
 
 function LightStripWidget(props: {
     colors: () => Uint8Array
-    subscribeColors?: (handler: () => void) => () => void,
+    subscribeColors?: (handler: () => void) => () => void
     lightVariant: LedStripVariant | LedDisplayVariant
     numPixels: number
     actualBrightness: number
@@ -205,13 +205,13 @@ function LightStripWidget(props: {
                             const fireClick = useFireKey(handleClick)
                             return (
                                 <circle
-                                    className="clickeable"
+                                    className="clickeable pixel"
                                     key={"pixel" + i}
                                     r={neocircleradius}
                                     cx={width >> 1}
                                     cy={height >> 1}
                                     stroke={controlBackground}
-                                    strokeWidth={1}
+                                    strokeWidth={1 + (i == 0 ? 0.5 : 0)}
                                     aria-label={`pixel ${i}`}
                                     onPointerDown={handleClick}
                                     onKeyDown={fireClick}
@@ -228,7 +228,7 @@ function LightStripWidget(props: {
 
 function LightMatrixWidget(props: {
     colors: () => Uint8Array
-    subscribeColors: (handler: () => void) => () => void,
+    subscribeColors: (handler: () => void) => () => void
     lightVariant: LedStripVariant | LedDisplayVariant
     actualBrightness: number
     widgetSize?: string
@@ -236,7 +236,8 @@ function LightMatrixWidget(props: {
     rows: number
     onLedClick?: (index: number) => void
 }) {
-    const { columns, rows, subscribeColors, widgetSize, onLedClick, colors } = props
+    const { columns, rows, subscribeColors, widgetSize, onLedClick, colors } =
+        props
     const { background, controlBackground } = useWidgetTheme()
 
     const widgetRef = useRef<SVGGElement>()
@@ -329,7 +330,7 @@ export interface LedServerRegs {
 
 export default function LightWidget(props: {
     colors: () => Uint8Array
-    subscribeColors: (handler: () => void) => () => void,
+    subscribeColors: (handler: () => void) => () => void
     registers: LedServerRegs
     variant?: "icon" | ""
     service: JDService

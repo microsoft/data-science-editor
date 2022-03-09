@@ -695,6 +695,9 @@ footer {
 .dark .clickeable:focus {
     stroke: #fff;
 }
+.clickeable.pixel:hover {
+    stroke-width: 2
+}
 .no-pointer-events {
     pointer-events: none;
     user-select: none;
