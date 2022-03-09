@@ -10,7 +10,7 @@ import {
     filterTestService,
 } from "../../components/testdom/filters"
 import DeviceTestItem from "../../components/testdom/DeviceTestItem"
-import { DeviceTestSpec } from "../../../jacdac-ts/dist/types/src/jdom/testdom"
+import { DeviceTestSpec } from "../../../jacdac-ts/src/testdom/spec"
 import useDeviceTest from "../../components/testdom/useDeviceTest"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 
