@@ -2,10 +2,7 @@ import React, { useCallback, useEffect, useRef } from "react"
 import {
     LedStripVariant,
     LedDisplayVariant,
-    RENDER,
 } from "../../../jacdac-ts/src/jdom/constants"
-import { LedStripServer } from "../../../jacdac-ts/src/servers/ledstripserver"
-import { LedDisplayServer } from "../../../jacdac-ts/src/servers/leddisplayserver"
 import SvgWidget from "../widgets/SvgWidget"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
@@ -183,7 +180,7 @@ function LightStripWidget(props: {
         const wm = width - 2 * margin
         d = `M ${margin},${
             height >> 1
-        } a ${ringradius},${ringradius} 0 1,0 ${wm},0 a ${ringradius},${ringradius} 0 1,0 -${wm}, 0`
+        } a ${ringradius},${ringradius} 0 0,1 ${wm},0 a ${ringradius},${ringradius} 0 0,1 -${wm}, 0`
     }
 
     // tune opacity to account for global opacity
