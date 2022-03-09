@@ -154,7 +154,6 @@ export default function Dashboard(props: DashboardProps) {
                 devices={physicals}
                 {...other}
             >
-                <FirmwareAlert />
                 {showConnect && !physicals.length && (
                     <Grid item xs={12}>
                         <ConnectAlert closeable={true} />
