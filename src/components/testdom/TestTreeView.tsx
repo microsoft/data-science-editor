@@ -1,6 +1,5 @@
 import React, { createElement, useState } from "react"
 import {
-    PanelTest,
     TestNode,
     DeviceTest,
     DEVICE_TEST_KIND,
@@ -18,14 +17,14 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 import ArrowRightIcon from "@mui/icons-material/ArrowRight"
 import StyledTreeItem, {
     StyledTreeViewItemProps,
-} from "../../components/ui/StyledTreeItem"
+} from "../ui/StyledTreeItem"
 import useChange from "../../jacdac/useChange"
-import AnnounceFlagsTreeItem from "../../components/devices/AnnounceFlagsTreeItem"
+import AnnounceFlagsTreeItem from "../devices/AnnounceFlagsTreeItem"
 import {
     EventTreeItem,
     RegisterTreeItem,
-} from "../../components/tools/JDomTreeViewItems"
-import DashboardServiceWidget from "../../components/dashboard/DashboardServiceWidget"
+} from "../tools/JDomTreeViewItems"
+import DashboardServiceWidget from "../dashboard/DashboardServiceWidget"
 import TestIcon from "../icons/TestIcon"
 
 const PREFIX = "TestTreeView"
@@ -112,7 +111,13 @@ function ServiceTestTreeItemExtra(
     const { node, showTwins } = props
     const { service } = node as ServiceTest
     if (!service || !showTwins) return null
-    return <DashboardServiceWidget service={service} expanded={false} visible={true} />
+    return (
+        <DashboardServiceWidget
+            service={service}
+            expanded={false}
+            visible={true}
+        />
+    )
 }
 
 function RegisterTestTreeItemExtra(
@@ -133,13 +138,19 @@ function EventTestTreeItemExtra(
     return <EventTreeItem event={event} {...rest} />
 }
 
-export default function PanelTestTreeView(props: {
-    panel: PanelTest
+export default function TestTreeView(props: {
+    test: TestNode
     showTwins?: boolean
     skipPanel?: boolean
     defaultExpanded?: boolean
 }) {
-    const { panel, skipPanel, defaultExpanded, showTwins, ...rest } = props
+    const {
+        test: panel,
+        skipPanel,
+        defaultExpanded,
+        showTwins,
+        ...rest
+    } = props
     const [expanded, setExpanded] = useState<string[]>(
         defaultExpanded ? panel.descendants.map(d => d.id) : []
     )

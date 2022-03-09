@@ -1,58 +1,39 @@
 import { Grid } from "@mui/material"
 import React from "react"
-import DashboardDeviceItem from "../../components/dashboard/DashboardDeviceItem"
 import useDevices from "../../components/hooks/useDevices"
-import usePanelTest from "../../components/testdom/usePanelTest"
 import useDeviceProductIdentifier from "../../jacdac/useDeviceProductIdentifier"
-import PanelTestTreeView from "../../components/testdom/PanelTestTreeView"
 import FirmwareLoader from "../../components/firmware/FirmwareLoader"
 import FirmwareCardGrid from "../../components/firmware/FirmwareCardGrid"
-import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
-import { PanelTest } from "../../../jacdac-ts/src/testdom/nodes"
-import { FlashDeviceButton } from "../../components/firmware/FlashDeviceButton"
-import useDeviceFirmwareBlob from "../../components/firmware/useDeviceFirmwareBlob"
 import useChange from "../../jacdac/useChange"
 import {
     filterTestDevice,
     filterTestService,
 } from "../../components/testdom/filters"
+import DeviceTestItem from "../../components/testdom/DeviceTestItem"
+import { DeviceTestSpec } from "../../../jacdac-ts/dist/types/src/jdom/testdom"
+import useDeviceTest from "../../components/testdom/useDeviceTest"
+import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 
-function DeviceTestItem(props: { test: PanelTest; device: JDDevice }) {
-    const { device, test } = props
-    const blob = useDeviceFirmwareBlob(device)
-    return (
-        <>
-            <DashboardDeviceItem
-                key={device.id}
-                device={device}
-                showAvatar={true}
-                showHeader={true}
-            />
-            <Grid item xs>
-                <Grid container direction="column" spacing={1}>
-                    {blob && (
-                        <Grid item>
-                            <FlashDeviceButton
-                                device={device}
-                                blob={blob}
-                                hideUpToDate={true}
-                                autoStart={true}
-                            />
-                        </Grid>
-                    )}
-                    {test && (
-                        <Grid item xs={12}>
-                            <PanelTestTreeView
-                                panel={test}
-                                skipPanel={true}
-                                defaultExpanded={true}
-                            />
-                        </Grid>
-                    )}
-                </Grid>
-            </Grid>
-        </>
+function DeviceItem(props: { device: JDDevice }) {
+    const { device } = props
+    const productIdentifier = useDeviceProductIdentifier(device)
+    const testSpec = useChange(
+        device,
+        _ =>
+            _ &&
+            !_.flashing &&
+            productIdentifier &&
+            ({
+                productIdentifier,
+                services: device.serviceClasses
+                    .filter(filterTestService)
+                    .map(sc => ({ serviceClass: sc })),
+            } as DeviceTestSpec),
+        [productIdentifier]
     )
+    const test = useDeviceTest(device, testSpec)
+    if (!device) return null
+    return <DeviceTestItem test={test} device={device} />
 }
 
 export default function Page() {
@@ -63,35 +44,17 @@ export default function Page() {
     })
         .filter(filterTestDevice)
         .sort((l, r) => -(l.created - r.created))
-    const device = devices[0]
-    const productIdentifier = useDeviceProductIdentifier(device)
-    const testSpec = useChange(
-        device,
-        _ =>
-            _ &&
-            !_.flashing &&
-            productIdentifier && {
-                devices: [
-                    {
-                        productIdentifier,
-                        count: 1,
-                        services: device.serviceClasses
-                            .filter(filterTestService)
-                            .map(sc => ({ serviceClass: sc })),
-                    },
-                ],
-            },
-        [productIdentifier]
-    )
-    const test = usePanelTest(testSpec)
-
     return (
         <>
             <FirmwareLoader />
             <h1>Module Tester</h1>
             <p>Only the last connected module is shown on this view.</p>
             <Grid container spacing={1}>
-                {device && <DeviceTestItem test={test} device={device} />}
+                {devices?.map(device => (
+                    <Grid key={device.id} item xs={12}>
+                        <DeviceItem device={device} />
+                    </Grid>
+                ))}
             </Grid>
             <h2>Firmwares</h2>
             <FirmwareCardGrid />

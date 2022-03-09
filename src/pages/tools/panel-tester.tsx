@@ -25,7 +25,7 @@ import {
 import { tryParsePanelTestSpec } from "../../../jacdac-ts/src/testdom/compiler"
 import usePanelTest from "../../components/testdom/usePanelTest"
 import TestIcon from "../../components/icons/TestIcon"
-import PanelTestTreeView from "../../components/testdom/PanelTestTreeView"
+import TestTreeView from "../../components/testdom/TestTreeView"
 import PanelTestExport from "../../components/testdom/PanelTestExport"
 import FirmwareLoader from "../../components/firmware/FirmwareLoader"
 import useBus from "../../jacdac/useBus"
@@ -218,7 +218,11 @@ function Results(props: { panel: PanelTest }) {
                 </h2>
             </AccordionSummary>
             <AccordionDetails style={{ display: "block" }}>
-                <PanelTestTreeView panel={panel} showTwins={true} defaultExpanded={true} />
+                <TestTreeView
+                    test={panel}
+                    showTwins={true}
+                    defaultExpanded={true}
+                />
             </AccordionDetails>
         </Accordion>
     )

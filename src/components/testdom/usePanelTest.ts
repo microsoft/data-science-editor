@@ -11,6 +11,8 @@ export default function usePanelTest(panelSpec: PanelTestSpec) {
         if (panelSpec) {
             try {
                 const p = createPanelTest(bus, panelSpec)
+                if (p)
+                    p.bus = bus
                 setPanel(p)
                 return () => (p.bus = undefined)
             } catch (e) {
