@@ -447,7 +447,7 @@ export default function DeviceRegistration() {
                     <PaperBox elevation={1}>
                         <Typography color="inherit">Services</Typography>
                         {device.services?.map((id, i) => (
-                            <Box component="span" m={0.5} key={id}>
+                            <Box component="span" m={0.5} key={`${id}.${i}`}>
                                 <Chip
                                     label={
                                         serviceSpecificationFromClassIdentifier(
