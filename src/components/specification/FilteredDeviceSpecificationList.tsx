@@ -1,10 +1,9 @@
-import { Box } from "@mui/material"
+import { Grid } from "@mui/material"
 import React, { useMemo, useState } from "react"
 import { arrayConcatMany, unique } from "../../../jacdac-ts/src/jdom/utils"
 import useBus from "../../jacdac/useBus"
 import useChange from "../../jacdac/useChange"
 import TransportIcon from "../icons/TransportIcon"
-import ChipList from "../ui/ChipList"
 import FilterChip from "../ui/FilterChip"
 import DeviceSpecificationList from "./DeviceSpecificationList"
 import ServiceSpecificationSelect from "./ServiceSpecificationSelect"
@@ -58,46 +57,55 @@ export default function FilteredDeviceSpecificationList(props: {
     )
     return (
         <>
-            <Box display="flex" mb={1}>
-                <ServiceSpecificationSelect
-                    label="Filter by Service"
-                    serviceClass={serviceClass}
-                    setServiceClass={handleServiceChanged}
-                    hasRegisteredDevice={true}
-                />
-                <ChipList>
+            <Grid sx={{ mb: 1 }} container spacing={1}>
+                <Grid item xs>
+                    <ServiceSpecificationSelect
+                        label="Filter by Service"
+                        serviceClass={serviceClass}
+                        setServiceClass={handleServiceChanged}
+                        hasRegisteredDevice={true}
+                    />
+                </Grid>
+                <Grid item>
                     <FilterChip
                         label="firmware code"
                         value={firmwareSources}
                         onClick={handleSetFirmwareSources}
                     />
+                </Grid>
+                <Grid item>
                     <FilterChip
                         label="hardware design"
                         value={hardwareDesign}
                         onClick={handleSetHardwareDesign}
                     />
+                </Grid>
+                <Grid item>
                     <FilterChip
                         label="USB"
                         value={usb}
                         onClick={handleSetUSB}
                         icon={<TransportIcon type="usb" />}
                     />
+                </Grid>
+                <Grid item>
                     <FilterChip
                         label="Serial"
                         value={serial}
                         onClick={handleSetSerial}
                         icon={<TransportIcon type="serial" />}
                     />
-                    {tags?.map(tag => (
+                </Grid>
+                {tags?.map(tag => (
+                    <Grid item key={tag}>
                         <FilterChip
-                            key={tag}
                             label={tag}
                             value={selectedTags.indexOf(tag) > -1}
                             onClick={handleSetSelectedTag(tag)}
                         />
-                    ))}
-                </ChipList>
-            </Box>
+                    </Grid>
+                ))}
+            </Grid>
             <DeviceSpecificationList
                 {...others}
                 firmwareSources={firmwareSources}

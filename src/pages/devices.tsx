@@ -12,11 +12,7 @@ export default function Page() {
             <Box mt={2}>
                 <Alert severity="info">
                     <AlertTitle>Register your device</AlertTitle>
-                    Known devices are specified in the{" "}
-                    <Link to="/ddk/device-definition/">
-                        device catalog repository
-                    </Link>
-                    . New devices can be submitted with the{" "}
+                    New devices can be submitted with the{" "}
                     <Link to="/tools/device-registration/">
                         device registration
                     </Link>
