@@ -16,6 +16,7 @@ import DeviceSpecificationList from "./DeviceSpecificationList"
 import StructuredData from "../ui/StructuredData"
 import useDeviceSpecifications from "../devices/useDeviceSpecifications"
 import { Link } from "gatsby-theme-material-ui"
+import { uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
 
 function DeviceStructuredData(props: { device: jdspec.DeviceSpec }) {
     const { device } = props
@@ -138,7 +139,11 @@ export default function DeviceSpecification(props: {
                 <>
                     <h3>Services</h3>
                     <Grid container spacing={2}>
-                        {services
+                        {uniqueMap(
+                            services,
+                            id => id.toString(16),
+                            id => id
+                        )
                             .map(serviceClass => ({
                                 serviceClass,
                                 spec: serviceSpecificationFromClassIdentifier(

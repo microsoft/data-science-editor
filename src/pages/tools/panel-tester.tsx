@@ -33,6 +33,7 @@ import {
     filterTestDevice,
     filterTestService,
 } from "../../components/testdom/filters"
+import { uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
 
 const PANEL_MANIFEST_KEY = "panel-test-manifest"
 
@@ -83,7 +84,11 @@ function Manifest(props: {
                 dids[pid] ||
                 (dids[pid] = {
                     productIdentifier: pid,
-                    services: services.map(
+                    services: uniqueMap(
+                        services,
+                        srv => srv.serviceClass.toString(16),
+                        srv => srv
+                    ).map(
                         srv =>
                             ({
                                 name: srv.specification?.shortId,
