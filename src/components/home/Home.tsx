@@ -1,6 +1,6 @@
 import { Grid } from "@mui/material"
 import { StaticImage } from "gatsby-plugin-image"
-import React, { useContext } from "react"
+import React, { lazy, useContext, Suspense } from "react"
 import CarouselGrid from "./CarouselGrid"
 import CenterGrid from "./CenterGrid"
 import FeatureItem from "./FeatureItem"
@@ -11,6 +11,7 @@ import FindReplaceIcon from "@mui/icons-material/FindReplace"
 import SubscriptionsIcon from "@mui/icons-material/Subscriptions"
 import HTML5Image from "./HTML5Image"
 import DarkModeContext from "../ui/DarkModeContext"
+const JacdapterImageList = lazy(() => import("./JacdaptorImageList"))
 
 export default function Home() {
     const { imgStyle } = useContext(DarkModeContext)
@@ -72,7 +73,6 @@ export default function Home() {
                 }
             />
 
-            
             <SplitGrid
                 right={false}
                 subtitle="Clients and Servers"
@@ -90,28 +90,25 @@ export default function Home() {
                 }
             />
 
-                        
             <SplitGrid
                 right={true}
                 subtitle="Plays well with others"
-                description="Jacdaptors allow Jacdac to integrate with other ecosystems"
+                description="Jacdaptors allow Jacdac to integrate with other ecosystems."
                 buttonText="Jacdaptors"
                 buttonVariant="link"
                 buttonUrl="/overview/jacdaptors"
                 imageColumns={6}
                 image={
-                    <StaticImage
-                        src="./playswell.png"
-                        alt="Jacdaptors for USB, Raspberry Pi and micro:bit"
-                        imgStyle={imgStyle}
-                    />
+                    <Suspense fallback={null}>
+                        <JacdapterImageList />
+                    </Suspense>
                 }
             />
 
             <SplitGrid
                 right={false}
                 subtitle="Services"
-                description="Jacdac services provide a fine-grained but abstract view of a device's features"
+                description="Jacdac services provide a fine-grained but abstract view of a device's features."
                 buttonText="Explore services"
                 buttonVariant="link"
                 buttonUrl="/services/"
@@ -143,7 +140,7 @@ export default function Home() {
                 image={<StaticImage src="./devicetree.png" alt="Device tree" />}
             />
 
-        <SplitGrid
+            <SplitGrid
                 right={true}
                 subtitle="For Manufacturers"
                 description="Add Jacdac to your devices. Schematics, footprints, libraries, firmware, hardware designs - all open source."
