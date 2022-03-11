@@ -18,7 +18,6 @@ import SimulateDeviceAlert from "../alert/SimulateDeviceAlert"
 import MakeCodeAddBlocksButton from "../makecode/MakeCodeAddBlocksButton"
 import { Flags } from "../../../jacdac-ts/src/jdom/flags"
 import HostedSimulatorsContext from "../HostedSimulatorsContext"
-import FirmwareAlert from "../firmware/FirmwareAlert"
 import useBus from "../../jacdac/useBus"
 import StartSimulatorButton from "../buttons/StartSimulatorButton"
 
@@ -58,6 +57,7 @@ function defaultDeviceFilter(d: JDDevice): boolean {
 export interface DashboardDeviceProps {
     showHeader?: boolean
     showAvatar?: boolean
+    showReset?: boolean
     serviceFilter?: (srv: JDService) => boolean
 }
 

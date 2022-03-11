@@ -20,6 +20,7 @@ export default function DeviceTestItem(props: {
                 device={device}
                 showAvatar={true}
                 showHeader={true}
+                showReset={true}
             />
             <Grid item xs>
                 <Grid container direction="column" spacing={1}>

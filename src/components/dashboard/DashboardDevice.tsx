@@ -48,7 +48,14 @@ export default function DashboardDevice(
         variant?: "icon" | ""
     } & DashboardDeviceProps
 ) {
-    const { device, serviceFilter, variant, showAvatar, showHeader } = props
+    const {
+        device,
+        serviceFilter,
+        variant,
+        showAvatar,
+        showHeader,
+        showReset,
+    } = props
     const { xs: mobile } = useMediaQueries()
 
     const name = useDeviceName(device)
@@ -109,7 +116,7 @@ export default function DashboardDevice(
                         device={device}
                         showStop={true}
                         hideIdentity={true}
-                        showReset={false}
+                        showReset={showReset}
                         showSettings={false}
                     />
                 }
