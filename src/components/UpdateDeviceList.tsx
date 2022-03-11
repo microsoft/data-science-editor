@@ -44,16 +44,12 @@ export default function UpdateDeviceList(props: { autoStart?: boolean }) {
             ignoreSimulators: true,
         },
         [safeBoot]
+    ).filter(
+        (dev, _, devs) =>
+            safeBoot || // show all devices
+            !dev.hasService(SRV_BOOTLOADER) || // show non-bootloader devices
+            !devs.some(d => isDualDeviceId(d.deviceId, dev.deviceId)) // show bootloaders which don't have the application device listed
     )
-        .filter(
-            (dev, _, devs) =>
-                safeBoot || // show all devices
-                !dev.hasService(SRV_BOOTLOADER) || // show non-bootloader devices
-                !devs.some(d => isDualDeviceId(d.deviceId, dev.deviceId)) // show bootloaders which don't have the application device listed
-        )
-        .sort(
-            (l, r) => -(l.productIdentifier || 0) + (r.productIdentifier || 0)
-        )
 
     return (
         <Grid container spacing={2}>
