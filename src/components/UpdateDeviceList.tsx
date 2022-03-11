@@ -9,6 +9,7 @@ import useChange from "../jacdac/useChange"
 import useDevices from "./hooks/useDevices"
 import { FlashDeviceButton } from "./firmware/FlashDeviceButton"
 import useDeviceFirmwareBlob from "./firmware/useDeviceFirmwareBlob"
+import { isDualDeviceId } from "../../jacdac-ts/src/jdom/spec"
 
 function UpdateDeviceCard(props: { device: JDDevice }) {
     const { device } = props
@@ -28,7 +29,7 @@ export default function UpdateDeviceList() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const gridBreakpoints = useGridBreakpoints(3)
     const safeBoot = useChange(bus, b => b.safeBoot)
-    const devices = useDevices(
+    let devices = useDevices(
         {
             announced: true,
             ignoreInfrastructure: true,
@@ -36,7 +37,13 @@ export default function UpdateDeviceList() {
         },
         [safeBoot]
     )
-        .filter(dev => safeBoot || !dev.hasService(SRV_BOOTLOADER))
+    devices = devices
+        .filter(
+            dev =>
+                safeBoot || // show all devices
+                !dev.hasService(SRV_BOOTLOADER) || // show non-bootloader devices
+                !devices.some(d => isDualDeviceId(d.deviceId, dev.deviceId)) // show bootloaders which don't have the application device listed
+        )
         .sort(
             (l, r) => -(l.productIdentifier || 0) + (r.productIdentifier || 0)
         )
