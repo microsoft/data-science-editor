@@ -25,7 +25,7 @@ function DeviceItem(props: { device: JDDevice }) {
         device,
         _ =>
             _ &&
-            !_.flashing &&
+            !_.firmwareUpdater &&
             productIdentifier &&
             ({
                 productIdentifier,

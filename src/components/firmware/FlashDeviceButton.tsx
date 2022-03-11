@@ -9,7 +9,6 @@ import {
 } from "../../../jacdac-ts/src/jdom/flashing"
 import CircularProgressWithLabel from "../ui/CircularProgressWithLabel"
 import useChange from "../../jacdac/useChange"
-import useMounted from "./../hooks/useMounted"
 import useAnalytics from "../hooks/useAnalytics"
 import useDeviceSpecification from "../../jacdac/useDeviceSpecification"
 import { Link } from "gatsby-material-ui-components"
@@ -18,7 +17,7 @@ import { useLatestReleaseAsset } from "../github"
 import useBus from "../../jacdac/useBus"
 import { semverCmp } from "../semver"
 import useSnackbar from "../hooks/useSnackbar"
-import { SRV_BOOTLOADER } from "../../../jacdac-ts/src/jdom/constants"
+import { PROGRESS, SRV_BOOTLOADER } from "../../../jacdac-ts/src/jdom/constants"
 
 function DragAndDropUpdateButton(props: {
     firmwareVersion: string
@@ -132,9 +131,10 @@ export function FlashDeviceButton(props: {
     const { trackEvent, trackError } = useAnalytics()
     const [progress, setProgress] = useState(0)
     const specification = useDeviceSpecification(device)
-    const bootloader = useChange(device, d => d?.hasService(SRV_BOOTLOADER))
     const firmwares = specification?.firmwares
-    const firmwareInfo = useChange(device, d => d?.firmwareInfo)
+    const bootloader = useChange(device, _ => _?.hasService(SRV_BOOTLOADER))
+    const firmwareUpdater = useChange(device, _ => _?.firmwareUpdater)
+    const firmwareInfo = useChange(device, _ => _?.firmwareInfo)
     const update =
         ignoreFirmwareCheck ||
         (blob?.version &&
@@ -144,15 +144,21 @@ export function FlashDeviceButton(props: {
         blob?.version &&
         firmwareInfo?.version &&
         blob.version === firmwareInfo.version
-    const flashing = useChange(device, d => !!d?.flashing)
     const unsupported = specification && !specification.repo
     const missing = !device || !blob
-    const disabled = flashing
+    const disabled = !!firmwareUpdater
     const color = update && !upToDate ? "primary" : "inherit"
-    const mounted = useMounted()
+
+    useEffect(
+        () =>
+            firmwareUpdater?.subscribe(PROGRESS, (v: number) =>
+                setProgress(v * 100)
+            ),
+        [firmwareUpdater]
+    )
 
     const handleFlashing = async () => {
-        if (device.flashing) return
+        if (device.firmwareUpdater) return
         const props = {
             productId: firmwareInfo.productIdentifier,
             name: firmwareInfo.name,
@@ -161,25 +167,21 @@ export function FlashDeviceButton(props: {
         console.debug("start flash", { ...props, device })
         trackEvent("flash.start", props)
         try {
-            device.flashing = true // don't refresh registers while flashing
             setProgress(0)
             const updateCandidates = [firmwareInfo]
             await flashFirmwareBlob(
                 bus,
                 blob,
                 updateCandidates,
-                ignoreFirmwareCheck,
-                prog => {
-                    if (mounted()) setProgress(prog)
-                }
+                ignoreFirmwareCheck
             )
             trackEvent("flash.success", props)
         } catch (e) {
             trackError(e, props)
             trackEvent("flash.error", props)
-            if (mounted()) setError(e)
+            setError(e)
         } finally {
-            device.flashing = false
+            console.debug("end flash", { ...props, device })
             // rebuild device
             bus.removeDevice(device.deviceId)
         }
@@ -221,7 +223,7 @@ export function FlashDeviceButton(props: {
         <Alert severity="info">No registered firmware</Alert>
     ) : missing ? (
         <Alert severity="info">No firmware available</Alert>
-    ) : flashing ? (
+    ) : firmwareUpdater ? (
         <>
             <Typography variant="caption" component="div" color="textSecondary">
                 Updating firmware
@@ -243,7 +245,7 @@ export function FlashDeviceButton(props: {
                     color={color}
                     onClick={handleFlashing}
                 >
-                    Flash
+                    Update
                 </Button>
             )}
         </>

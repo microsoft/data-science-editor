@@ -14,7 +14,7 @@ export function DeviceLostAlert(props: { device: JDDevice }) {
     const lost = useEventRaised([LOST, FOUND], device, dev => !!dev?.lost)
     const flashing = useChange(
         device,
-        _ => _?.hasService(SRV_BOOTLOADER) || _?.flashing
+        _ => _?.hasService(SRV_BOOTLOADER) || !!_?.firmwareUpdater
     )
     if (!lost || flashing) return null
     return <Alert severity="info">Device lost...</Alert>
