@@ -13,6 +13,8 @@ import DeviceTestItem from "../../components/testdom/DeviceTestItem"
 import { DeviceTestSpec } from "../../../jacdac-ts/src/testdom/spec"
 import useDeviceTest from "../../components/testdom/useDeviceTest"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
+import SafeBootAlert from "../../components/firmware/SafeBootAlert"
+import ManualFirmwareAlert from "../../components/firmware/ManualFirmwareAlert"
 
 function DeviceItem(props: { device: JDDevice }) {
     const { device } = props
@@ -58,6 +60,8 @@ export default function Page() {
             </Grid>
             <h2>Firmwares</h2>
             <FirmwareCardGrid />
+            <SafeBootAlert />
+            <ManualFirmwareAlert />
         </>
     )
 }

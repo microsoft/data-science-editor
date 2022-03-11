@@ -2,18 +2,20 @@ import React, { useContext } from "react"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import FingerprintIcon from "@mui/icons-material/Fingerprint"
-// tslint:disable-next-line: no-submodule-imports match-default-export-name
-import RefreshIcon from "@mui/icons-material/Refresh"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import CmdButton from "../CmdButton"
 import useServiceProvider from "../hooks/useServiceProvider"
 import CloseIcon from "@mui/icons-material/Close"
 import SettingsIcon from "@mui/icons-material/Settings"
-import { SRV_SETTINGS, SRV_UNIQUE_BRAIN } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
+import {
+    SRV_SETTINGS,
+    SRV_UNIQUE_BRAIN,
+} from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import useChange from "../../jacdac/useChange"
 import { navigate } from "gatsby-link"
 import HostedSimulatorsContext from "../HostedSimulatorsContext"
-import CableIcon from '@mui/icons-material/Cable';
+import CableIcon from "@mui/icons-material/Cable"
+import DeviceResetButton from "./DeviceResetButton"
 export default function DeviceActions(props: {
     device: JDDevice
     showSettings?: boolean
@@ -30,7 +32,7 @@ export default function DeviceActions(props: {
         children,
         hideIdentity,
         showStop,
-        showProxy
+        showProxy,
     } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { removeHostedSimulator, isHostedSimulator } = useContext(
@@ -42,10 +44,12 @@ export default function DeviceActions(props: {
         device,
         _ => _.services({ serviceClass: SRV_SETTINGS })?.[0]
     )
-    const _showProxy = useChange(device, _ =>   showProxy && _.hasService(SRV_UNIQUE_BRAIN))
+    const _showProxy = useChange(
+        device,
+        _ => showProxy && _.hasService(SRV_UNIQUE_BRAIN)
+    )
 
     const handleIdentify = async () => await device.identify()
-    const handleReset = async () => await device.reset()
     const handleProxy = async () => await device.startProxy()
     const handleStop = async () => {
         removeHostedSimulator(deviceId)
@@ -94,15 +98,7 @@ export default function DeviceActions(props: {
                     icon={<CableIcon />}
                 />
             )}
-            {showReset && (
-                <CmdButton
-                    trackName="device.reset"
-                    size="small"
-                    title="reset"
-                    onClick={handleReset}
-                    icon={<RefreshIcon />}
-                />
-            )}
+            {showReset && <DeviceResetButton device={device} />}
         </>
     )
 }

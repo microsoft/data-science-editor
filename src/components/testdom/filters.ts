@@ -1,5 +1,4 @@
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
-import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import {
     SRV_BOOTLOADER,
     SRV_BRIDGE,
@@ -21,6 +20,7 @@ const ignoredDevices = [
     SRV_DASHBOARD,
     SRV_BRIDGE,
     SRV_INFRASTRUCTURE,
+    SRV_PROXY,
 ]
 const ignoredServices = [
     SRV_CONTROL,
