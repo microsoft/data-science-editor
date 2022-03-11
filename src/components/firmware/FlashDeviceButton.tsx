@@ -169,7 +169,6 @@ export function FlashDeviceButton(props: {
         trackEvent("flash.start", props)
         try {
             setProgress(0)
-            device.firmwareUpdater = new FirmwareUpdater(device, blob, ignoreFirmwareCheck)
             const updateCandidates = [firmwareInfo]
             await flashFirmwareBlob(
                 bus,
