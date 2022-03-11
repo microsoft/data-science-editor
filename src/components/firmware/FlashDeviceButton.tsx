@@ -18,6 +18,7 @@ import { useLatestReleaseAsset } from "../github"
 import useBus from "../../jacdac/useBus"
 import { semverCmp } from "../semver"
 import useSnackbar from "../hooks/useSnackbar"
+import { SRV_BOOTLOADER } from "../../../jacdac-ts/src/jdom/constants"
 
 function DragAndDropUpdateButton(props: {
     firmwareVersion: string
@@ -131,6 +132,7 @@ export function FlashDeviceButton(props: {
     const { trackEvent, trackError } = useAnalytics()
     const [progress, setProgress] = useState(0)
     const specification = useDeviceSpecification(device)
+    const bootloader = useChange(device, d => d?.hasService(SRV_BOOTLOADER))
     const firmwares = specification?.firmwares
     const firmwareInfo = useChange(device, d => d?.firmwareInfo)
     const update =
@@ -156,6 +158,7 @@ export function FlashDeviceButton(props: {
             name: firmwareInfo.name,
             version: firmwareInfo.version,
         }
+        console.debug("start flash", { ...props, device })
         trackEvent("flash.start", props)
         try {
             device.flashing = true // don't refresh registers while flashing
@@ -183,8 +186,15 @@ export function FlashDeviceButton(props: {
     }
 
     useEffect(() => {
-        if (autoStart && firmwareInfo && update && !upToDate) handleFlashing()
-    }, [device, autoStart, firmwareInfo, update, upToDate])
+        if (
+            device &&
+            autoStart &&
+            firmwareInfo &&
+            (bootloader || (update && !upToDate))
+        ) {
+            handleFlashing()
+        }
+    }, [device, autoStart, firmwareInfo, bootloader, update, upToDate])
 
     if (hideUpToDate && upToDate) return null
 
