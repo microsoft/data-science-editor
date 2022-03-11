@@ -23,10 +23,10 @@ export default function useFirmwareRepos(showAllRepos?: boolean) {
         bus.devices({ announced: true, ignoreInfrastructure: true })
     )
     const bootloaders = devices.filter(device =>
-        device.hasService(SRV_BOOTLOADER)
+        device.bootloader
     )
     const registers = devices
-        .filter(device => !device.hasService(SRV_BOOTLOADER)) // not a bootloader
+        .filter(device => !device.bootloader) // not a bootloader
         .map(device =>
             device.service(0)?.register(ControlReg.ProductIdentifier)
         )

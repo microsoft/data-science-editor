@@ -6,6 +6,7 @@ import {
     flashFirmwareBlob,
     updateApplicable,
     FirmwareBlob,
+    FirmwareUpdater,
 } from "../../../jacdac-ts/src/jdom/flashing"
 import CircularProgressWithLabel from "../ui/CircularProgressWithLabel"
 import useChange from "../../jacdac/useChange"
@@ -17,7 +18,7 @@ import { useLatestReleaseAsset } from "../github"
 import useBus from "../../jacdac/useBus"
 import { semverCmp } from "../semver"
 import useSnackbar from "../hooks/useSnackbar"
-import { PROGRESS, SRV_BOOTLOADER } from "../../../jacdac-ts/src/jdom/constants"
+import { PROGRESS } from "../../../jacdac-ts/src/jdom/constants"
 
 function DragAndDropUpdateButton(props: {
     firmwareVersion: string
@@ -132,7 +133,7 @@ export function FlashDeviceButton(props: {
     const [progress, setProgress] = useState(0)
     const specification = useDeviceSpecification(device)
     const firmwares = specification?.firmwares
-    const bootloader = useChange(device, _ => _?.hasService(SRV_BOOTLOADER))
+    const bootloader = useChange(device, _ => _?.bootloader)
     const firmwareUpdater = useChange(device, _ => _?.firmwareUpdater)
     const firmwareInfo = useChange(device, _ => _?.firmwareInfo)
     const update =
@@ -168,6 +169,7 @@ export function FlashDeviceButton(props: {
         trackEvent("flash.start", props)
         try {
             setProgress(0)
+            device.firmwareUpdater = new FirmwareUpdater(device, blob, ignoreFirmwareCheck)
             const updateCandidates = [firmwareInfo]
             await flashFirmwareBlob(
                 bus,

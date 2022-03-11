@@ -1,9 +1,5 @@
 import React from "react"
-import {
-    LOST,
-    FOUND,
-    SRV_BOOTLOADER,
-} from "../../../jacdac-ts/src/jdom/constants"
+import { LOST, FOUND } from "../../../jacdac-ts/src/jdom/constants"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import useChange from "../../jacdac/useChange"
 import useEventRaised from "../../jacdac/useEventRaised"
@@ -14,7 +10,7 @@ export function DeviceLostAlert(props: { device: JDDevice }) {
     const lost = useEventRaised([LOST, FOUND], device, dev => !!dev?.lost)
     const flashing = useChange(
         device,
-        _ => _?.hasService(SRV_BOOTLOADER) || !!_?.firmwareUpdater
+        _ => _?.bootloader || !!_?.firmwareUpdater
     )
     if (!lost || flashing) return null
     return <Alert severity="info">Device lost...</Alert>

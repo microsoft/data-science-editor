@@ -1,6 +1,5 @@
 import { Grid } from "@mui/material"
 import React, { useContext } from "react"
-import { SRV_BOOTLOADER } from "../../jacdac-ts/src/jdom/constants"
 import { JDDevice } from "../../jacdac-ts/src/jdom/device"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import DeviceCard from "./devices/DeviceCard"
@@ -47,7 +46,7 @@ export default function UpdateDeviceList(props: { autoStart?: boolean }) {
     ).filter(
         (dev, _, devs) =>
             safeBoot || // show all devices
-            !dev.hasService(SRV_BOOTLOADER) || // show non-bootloader devices
+            !dev.bootloader || // show non-bootloader devices
             !devs.some(d => isDualDeviceId(d.deviceId, dev.deviceId)) // show bootloaders which don't have the application device listed
     )
 
