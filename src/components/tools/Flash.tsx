@@ -20,7 +20,10 @@ import useFirmwareBlobs from "../firmware/useFirmwareBlobs"
 import GridHeader from "../ui/GridHeader"
 import { groupBy } from "../../../jacdac-ts/src/jdom/utils"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
-import { FLASH_MAX_DEVICES } from "../../../jacdac-ts/src/jdom/constants"
+import {
+    FLASH_MAX_DEVICES,
+    SRV_BOOTLOADER,
+} from "../../../jacdac-ts/src/jdom/constants"
 import useChange from "../../jacdac/useChange"
 import Alert from "../ui/Alert"
 import { AlertTitle } from "@mui/material"
@@ -79,7 +82,8 @@ export default function Flash() {
                     from GitHub. Please try again later.
                 </Alert>
             )}
-            {devices?.length > FLASH_MAX_DEVICES && (
+            {devices?.filter(d => !d.hasService(SRV_BOOTLOADER))?.length >
+                FLASH_MAX_DEVICES && (
                 <Alert severity="error">
                     <AlertTitle>Too many connected devices</AlertTitle>
                     Please unplug some of your devices before updating.
