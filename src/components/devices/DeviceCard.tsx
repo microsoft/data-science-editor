@@ -67,6 +67,7 @@ export default function DeviceCard(props: {
     showTemperature?: boolean
     showFirmware?: boolean
     showDescription?: boolean
+    showReset?: boolean
 }) {
     const {
         device,
@@ -78,6 +79,7 @@ export default function DeviceCard(props: {
         showTemperature,
         showFirmware,
         showServices,
+        showReset,
     } = props
 
     const services = useChange(device, () =>
@@ -92,6 +94,7 @@ export default function DeviceCard(props: {
                 showTemperature={showTemperature}
                 showFirmware={showFirmware}
                 showMedia={true}
+                showReset={showReset}
             />
             {(showDescription || content) && (
                 <CardContent>

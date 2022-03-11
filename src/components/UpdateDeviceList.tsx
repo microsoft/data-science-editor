@@ -19,6 +19,7 @@ function UpdateDeviceCard(props: { device: JDDevice; autoStart?: boolean }) {
         <DeviceCard
             device={device}
             showFirmware={true}
+            showReset={true}
             // tslint:disable-next-line: react-this-binding-issue
             action={
                 <FlashDeviceButton
