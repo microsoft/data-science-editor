@@ -190,7 +190,9 @@ export function FlashDeviceButton(props: {
             device &&
             autoStart &&
             firmwareInfo &&
-            (bootloader || (update && !upToDate))
+            !bootloader &&
+            update &&
+            !upToDate
         ) {
             handleFlashing()
         }
