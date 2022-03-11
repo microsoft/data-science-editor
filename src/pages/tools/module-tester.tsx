@@ -15,6 +15,8 @@ import useDeviceTest from "../../components/testdom/useDeviceTest"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import SafeBootAlert from "../../components/firmware/SafeBootAlert"
 import ManualFirmwareAlert from "../../components/firmware/ManualFirmwareAlert"
+import { SRV_BOOTLOADER } from "../../../jacdac-ts/src/jdom/constants"
+import { isDualDeviceId } from "../../../jacdac-ts/src/jdom/spec"
 
 function DeviceItem(props: { device: JDDevice }) {
     const { device } = props
@@ -44,8 +46,14 @@ export default function Page() {
         announced: true,
         ignoreInfrastructure: true,
     })
+        .filter(
+            (dev, _, devs) =>
+                !dev.hasService(SRV_BOOTLOADER) || // show non-bootloader devices
+                !devs.some(d => isDualDeviceId(d.deviceId, dev.deviceId)) // show bootloaders which don't have the application device listed
+        )
         .filter(filterTestDevice)
         .sort((l, r) => -(l.created - r.created))
+
     return (
         <>
             <FirmwareLoader />

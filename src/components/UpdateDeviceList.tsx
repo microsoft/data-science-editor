@@ -29,7 +29,7 @@ export default function UpdateDeviceList() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const gridBreakpoints = useGridBreakpoints(3)
     const safeBoot = useChange(bus, b => b.safeBoot)
-    let devices = useDevices(
+    const devices = useDevices(
         {
             announced: true,
             ignoreInfrastructure: true,
@@ -37,12 +37,11 @@ export default function UpdateDeviceList() {
         },
         [safeBoot]
     )
-    devices = devices
         .filter(
-            dev =>
+            (dev, _, devs) =>
                 safeBoot || // show all devices
                 !dev.hasService(SRV_BOOTLOADER) || // show non-bootloader devices
-                !devices.some(d => isDualDeviceId(d.deviceId, dev.deviceId)) // show bootloaders which don't have the application device listed
+                !devs.some(d => isDualDeviceId(d.deviceId, dev.deviceId)) // show bootloaders which don't have the application device listed
         )
         .sort(
             (l, r) => -(l.productIdentifier || 0) + (r.productIdentifier || 0)
