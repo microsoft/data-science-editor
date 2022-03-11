@@ -6,10 +6,10 @@ import Alert from "../ui/Alert"
 import DbContext, { DbContextProps } from "../DbContext"
 // tslint:disable-next-line: match-default-export-name tslint:disable-next-line: no-submodule-imports
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever"
-import SwitchWithLabel from "../ui/SwitchWithLabel"
 import useForceProxy from "../devices/useForceProxy"
 import useChange from "../../jacdac/useChange"
 import useSnackbar from "../hooks/useSnackbar"
+import AlertSwitch from "../ui/AlertSwitch"
 
 export default function SafeBootAlert(props: { proxy?: boolean }) {
     const { proxy } = props
@@ -27,27 +27,18 @@ export default function SafeBootAlert(props: { proxy?: boolean }) {
     useForceProxy(safeBoot || proxy)
     return (
         <>
-            <Alert severity="info">
-                <SwitchWithLabel
-                    checked={safeBoot}
-                    onChange={handleRecovery}
-                    label={
-                        <Typography component="span" variant="body1">
-                            recovery mode
-                        </Typography>
-                    }
-                />
-                <Box mr={1}>
-                    <Typography component="span" variant="caption">
-                        If your module is malfunctioning from the start, you can
-                        flash it in bootloader mode. Turn on recovery mode and
-                        unplug/replug any malfunctioning device to switch it to
-                        bootloader mode (glowing status LED). Once your module
-                        is flashed, turn off recovery mode and unplug/replug
-                        your module again.
-                    </Typography>
-                </Box>
-            </Alert>
+            <AlertSwitch
+                severity="info"
+                title="recovery mode"
+                checked={safeBoot}
+                onChecked={handleRecovery}
+            >
+                If your module is malfunctioning from the start, you can flash
+                it in bootloader mode. Turn on recovery mode and unplug/replug
+                any malfunctioning device to switch it to bootloader mode
+                (glowing status LED). Once your module is flashed, turn off
+                recovery mode and unplug/replug your module again.
+            </AlertSwitch>
             {safeBoot && (
                 <Alert severity="warning">
                     <Button

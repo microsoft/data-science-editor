@@ -1,10 +1,4 @@
-import {
-    Box,
-    Grid,
-    MenuItem,
-    SelectChangeEvent,
-    Typography,
-} from "@mui/material"
+import { Grid, MenuItem, SelectChangeEvent, Typography } from "@mui/material"
 import React, { useContext, useState } from "react"
 // tslint:disable-next-line: no-submodule-imports
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
@@ -17,8 +11,8 @@ import { FirmwareBlob } from "../../../jacdac-ts/src/jdom/flashing"
 import { FlashDeviceButton } from "./FlashDeviceButton"
 import { unique } from "../../../jacdac-ts/src/jdom/utils"
 import SelectDevice from "../select/SelectDevice"
-import SwitchWithLabel from "../ui/SwitchWithLabel"
 import useChange from "../../jacdac/useChange"
+import AlertSwitch from "../ui/AlertSwitch"
 
 const fwid = (fw: FirmwareBlob) =>
     fw ? `${fw.store},${fw.productIdentifier},${fw.version}` : ""
@@ -120,22 +114,14 @@ export default function ManualFirmwareAlert() {
 
     return (
         <>
-            <Alert severity="info">
-                <SwitchWithLabel
-                    value={enabled}
-                    onChange={handleToggle}
-                    label={
-                        <Typography component="span" variant="body1">
-                            manual mode
-                        </Typography>
-                    }
-                />
-                <Box mr={1}>
-                    <Typography component="span" variant="caption">
-                        Manually select which firmware to upload on your device.
-                    </Typography>
-                </Box>
-            </Alert>
+            <AlertSwitch
+                severity="info"
+                checked={enabled}
+                onChecked={handleToggle}
+                title="manual mode"
+            >
+                Manually select which firmware to upload on your device.
+            </AlertSwitch>
             {enabled && (
                 <Alert severity="warning">
                     <ManualFirmware />

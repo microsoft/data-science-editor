@@ -11,8 +11,8 @@ import { FlashDeviceButton } from "./firmware/FlashDeviceButton"
 import useDeviceFirmwareBlob from "./firmware/useDeviceFirmwareBlob"
 import { isDualDeviceId } from "../../jacdac-ts/src/jdom/spec"
 
-function UpdateDeviceCard(props: { device: JDDevice }) {
-    const { device } = props
+function UpdateDeviceCard(props: { device: JDDevice; autoStart?: boolean }) {
+    const { device, autoStart } = props
     const blob = useDeviceFirmwareBlob(device)
 
     return (
@@ -20,12 +20,19 @@ function UpdateDeviceCard(props: { device: JDDevice }) {
             device={device}
             showFirmware={true}
             // tslint:disable-next-line: react-this-binding-issue
-            action={<FlashDeviceButton device={device} blob={blob} />}
+            action={
+                <FlashDeviceButton
+                    device={device}
+                    blob={blob}
+                    autoStart={autoStart}
+                />
+            }
         />
     )
 }
 
-export default function UpdateDeviceList() {
+export default function UpdateDeviceList(props: { autoStart?: boolean }) {
+    const { autoStart } = props
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const gridBreakpoints = useGridBreakpoints(3)
     const safeBoot = useChange(bus, b => b.safeBoot)
@@ -51,7 +58,7 @@ export default function UpdateDeviceList() {
         <Grid container spacing={2}>
             {devices.map(device => (
                 <Grid key={device.id} item {...gridBreakpoints}>
-                    <UpdateDeviceCard device={device} />
+                    <UpdateDeviceCard device={device} autoStart={autoStart} />
                 </Grid>
             ))}
         </Grid>
