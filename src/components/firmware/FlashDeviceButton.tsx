@@ -5,7 +5,6 @@ import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import {
     updateApplicable,
     FirmwareBlob,
-    flashDevice,
     FirmwareUpdater,
 } from "../../../jacdac-ts/src/jdom/flashing"
 import CircularProgressWithLabel from "../ui/CircularProgressWithLabel"
