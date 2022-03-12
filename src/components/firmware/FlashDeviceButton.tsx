@@ -3,9 +3,9 @@ import { Alert } from "@mui/material"
 import React, { useEffect, useState } from "react"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import {
-    flashFirmwareBlob,
     updateApplicable,
     FirmwareBlob,
+    flashDevice,
     FirmwareUpdater,
 } from "../../../jacdac-ts/src/jdom/flashing"
 import CircularProgressWithLabel from "../ui/CircularProgressWithLabel"
@@ -167,15 +167,12 @@ export function FlashDeviceButton(props: {
         }
         console.debug("start flash", { ...props, device })
         trackEvent("flash.start", props)
+        const updater = new FirmwareUpdater(device.bus, blob)
         try {
+            device.firmwareUpdater = updater
             setProgress(0)
             const updateCandidates = [firmwareInfo]
-            await flashFirmwareBlob(
-                bus,
-                blob,
-                updateCandidates,
-                ignoreFirmwareCheck
-            )
+            await updater.flash(updateCandidates, ignoreFirmwareCheck)
             trackEvent("flash.success", props)
         } catch (e) {
             trackError(e, props)
