@@ -38,12 +38,13 @@ class JacScriptBridge extends JDBridge {
         })
     }
 
-    protected sendPacket(data: Uint8Array): void {
+    protected sendPacket(data: Uint8Array, sender: string): void {
         //console.debug("vm.proxy: send packet to worker", toHex(data))
         this.worker.postMessage({
             worker: "vm",
             type: "packet",
             data,
+            sender,
         })
     }
 }
