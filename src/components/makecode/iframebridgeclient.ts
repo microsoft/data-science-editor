@@ -31,6 +31,7 @@ import {
 } from "../../../jacdac-ts/src/jdom/utils"
 import { inIFrame } from "../../../jacdac-ts/src/jdom/iframeclient"
 import { JDRegister } from "../../../jacdac-ts/src/jdom/register"
+import { randomDeviceId } from "../../../jacdac-ts/src/jdom/random"
 
 export interface PacketMessage {
     channel: "jacdac"
@@ -102,7 +103,7 @@ const ignoredServices = [
 export class IFrameBridgeClient extends JDClient {
     static DATA_ID = "makecodeiframeclient"
     // this is a unique id used to trace packets sent by this bridge
-    readonly bridgeId = "bridge" + Math.random()
+    readonly bridgeId = "bridge" + randomDeviceId()
     readonly hosted = inIFrame()
     packetSent = 0
     packetProcessed = 0
