@@ -189,7 +189,12 @@ export default function DeviceRegistration() {
             ? "Preferred format is vN.N"
             : ""
     const ok =
-        !nameError && !linkError && !idError && !imageError && !companyError
+        !nameError &&
+        !linkError &&
+        !idError &&
+        !imageError &&
+        !companyError &&
+        !versionError
 
     const route = device.id?.split("-").join("/")
     const modulePath = ok && `devices/${route}.json`
@@ -368,6 +373,22 @@ export default function DeviceRegistration() {
                         error={companyError}
                         onValueChange={handleCompanyChanged}
                     />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        id={hardwareVersionId}
+                        fullWidth={true}
+                        error={!!versionError}
+                        helperText={versionError}
+                        label="Version*"
+                        value={device?.version}
+                        onChange={handleVersion}
+                        variant={variant}
+                    />
+                    <Typography variant="caption">
+                        Revision identifier for this hardware design using
+                        semver format (v1.0, v1.1, ...).
+                    </Typography>
                 </Grid>
                 <GridHeader title="Services" />
                 <Grid item xs={12}>
@@ -555,22 +576,6 @@ export default function DeviceRegistration() {
                         onChange={handleDesignIdentifier}
                         variant={variant}
                     />
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        id={hardwareVersionId}
-                        fullWidth={true}
-                        error={!!versionError}
-                        helperText={versionError}
-                        label="Version"
-                        value={device?.version}
-                        onChange={handleVersion}
-                        variant={variant}
-                    />
-                    <Typography variant="caption">
-                        Revision identifier for this hardware design using
-                        semver format (v1.0, v1.1, ...).
-                    </Typography>
                 </Grid>
                 <Grid item xs={12}>
                     <TextField
