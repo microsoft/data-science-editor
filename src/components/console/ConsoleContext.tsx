@@ -123,7 +123,7 @@ function useJacscriptManagerLogger() {
                     const { device } = pkt
                     const { shortId } = device
                     const [counter, flags, content] =
-                        pkt.jdunpack<[string]>("u8 u8 s")[0]
+                        pkt.jdunpack<[number, number, string]>("u8 u8 s")
                     const prefix = content.startsWith(`${shortId}.`)
                         ? ""
                         : `${shortId}> `
