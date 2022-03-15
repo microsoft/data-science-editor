@@ -80,7 +80,7 @@ function CompanySelect(props: {
         <TextField
             {...params}
             error={!!error}
-            label="Company"
+            label="Company*"
             helperText={error || helperText}
             variant="outlined"
         />
@@ -285,19 +285,32 @@ export default function DeviceRegistration() {
         />
     )
     const handleImportDevice = (dev: JDDevice) => async () => {
+        const d: jdspec.DeviceSpec = {
+            id: "my-device",
+            name: "My device",
+            company: "",
+            services: [],
+            productIdentifiers: [],
+            repo: "",
+        }
         const controlService = dev.service(JD_SERVICE_INDEX_CTRL)
         const descrReg = controlService.register(ControlReg.DeviceDescription)
-        await descrReg.refresh(true)
+        await descrReg.refresh()
 
         const fw = await dev.resolveProductIdentifier()
-        if (fw) device.productIdentifiers = [fw]
-        else device.productIdentifiers = []
-        device.services = dev
+        if (fw) d.productIdentifiers = [fw]
+        else d.productIdentifiers = []
+        d.services = dev
             .services()
             .filter(srv => !isInfrastructure(srv.specification))
             .map(srv => srv.serviceClass)
-        device.name = device.description = descrReg.stringValue
-        updateDevice()
+        d.name = device.description = descrReg.stringValue
+        d.name?.replace(/\wv\d+.\d+\w/, m => {
+            device.version = m
+            return ""
+        })
+
+        setDevice(d)
     }
 
     // eslint-disable-next-line @typescript-eslint/ban-types
@@ -380,7 +393,7 @@ export default function DeviceRegistration() {
                         fullWidth={true}
                         error={!!versionError}
                         helperText={versionError}
-                        label="Version*"
+                        label="Version"
                         value={device?.version}
                         onChange={handleVersion}
                         variant={variant}
