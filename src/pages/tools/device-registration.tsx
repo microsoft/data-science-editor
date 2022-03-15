@@ -513,7 +513,7 @@ export default function DeviceRegistration() {
                             onImageImported={handleImageImported}
                         />
                         <Typography variant="caption" component="div">
-                            {`Import an image of the device, at least ${DEVICE_IMAGE_WIDTH}x${DEVICE_IMAGE_HEIGHT}.`}
+                            {`Import an image of the device: must be at least ${DEVICE_IMAGE_WIDTH}x${DEVICE_IMAGE_HEIGHT}, device must be fully visible on a wood (preferrably bamboo background).`}
                         </Typography>
                         {imageError && (
                             <Alert severity="error">{imageError}</Alert>
