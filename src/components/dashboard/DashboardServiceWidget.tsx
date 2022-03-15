@@ -51,6 +51,7 @@ import {
     SRV_RELAY,
     SRV_LIGHT_BULB,
     SRV_BRAILLE_DISPLAY,
+    SRV_JACSCRIPT_MANAGER,
 } from "../../../jacdac-ts/src/jdom/constants"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { isRegister } from "../../../jacdac-ts/src/jdom/spec"
@@ -123,6 +124,9 @@ const DashboardCODALMessageBus = lazy(
 )
 const DashboardRelay = lazy(() => import("./DashboardRelay"))
 const DashboardLightBulb = lazy(() => import("./DashboardLightBulb"))
+const DashboardJacscriptManager = lazy(
+    () => import("./DashboardJascriptManager")
+)
 
 export interface DashboardServiceProps {
     service: JDService
@@ -301,6 +305,9 @@ const serviceViews: {
     },
     [SRV_LIGHT_BULB]: {
         component: DashboardLightBulb,
+    },
+    [SRV_JACSCRIPT_MANAGER]: {
+        component: DashboardJacscriptManager,
     },
 }
 

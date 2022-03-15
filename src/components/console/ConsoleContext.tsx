@@ -1,19 +1,15 @@
-import React, {
-    createContext,
-    useContext,
-    useEffect,
-    useMemo,
-    useState,
-} from "react"
+import React, { createContext, useEffect, useMemo, useState } from "react"
 import {
     LoggerCmd,
     LoggerPriority,
     SRV_LOGGER,
+    SRV_JACSCRIPT_MANAGER,
+    JacscriptManagerCmd,
 } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import { PACKET_REPORT } from "../../../jacdac-ts/src/jdom/constants"
 import { Packet } from "../../../jacdac-ts/src/jdom/packet"
-import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import { UIFlags } from "../../jacdac/providerbus"
+import useBus from "../../jacdac/useBus"
 import useChange from "../../jacdac/useChange"
 import useAnalytics from "../hooks/useAnalytics"
 import useConsoleSerial from "./useConsoleSerial"
@@ -79,7 +75,7 @@ const MAX_MESSAGES = 5000
 const MAX_MESSAGES_SPILL = 500
 
 function useJacdacLogger() {
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const bus = useBus()
     useEffect(
         () =>
             bus.subscribe(PACKET_REPORT, (pkt: Packet) => {
@@ -114,8 +110,33 @@ function useJacdacLogger() {
     )
 }
 
+function useJacscriptManagerLogger() {
+    const bus = useBus()
+    useEffect(
+        () =>
+            bus.subscribe(PACKET_REPORT, (pkt: Packet) => {
+                if (
+                    pkt.serviceClass === SRV_JACSCRIPT_MANAGER &&
+                    pkt.isReport &&
+                    pkt.serviceCommand === JacscriptManagerCmd.LogMessage
+                ) {
+                    const { device } = pkt
+                    const { shortId } = device
+                    const [counter, flags, content] =
+                        pkt.jdunpack<[string]>("u8 u8 s")[0]
+                    const prefix = content.startsWith(`${shortId}.`)
+                        ? ""
+                        : `${shortId}> `
+                    const message = `${prefix}${content.trimEnd()}`
+                    console.log(message)
+                }
+            }),
+        []
+    )
+}
+
 function useFilter() {
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const bus = useBus()
     const minLoggerPriority = useChange(bus, _ => _.minLoggerPriority)
     return useMemo(() => {
         const filter: Methods[] = []
@@ -165,6 +186,7 @@ export const ConsoleProvider = ({ children }) => {
     const { trackTrace } = useAnalytics()
     const filter = useFilter()
     useJacdacLogger()
+    useJacscriptManagerLogger()
 
     const appendLog = log => {
         if (UIFlags.consoleinsights) trackTrace(log.data[0], log.method)
