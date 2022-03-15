@@ -8,7 +8,7 @@ export default function Page() {
             <h1>Service Specification Editor</h1>
             <p>
                 Read the{" "}
-                <Link to="/reference/service-specification">
+                <Link to="/reference/service-specification/">
                     service specifiation
                 </Link>{" "}
                 documentation. Use the packet console to monitor packets from

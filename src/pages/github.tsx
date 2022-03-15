@@ -35,6 +35,7 @@ export default function Page() {
                     "microsoft/jacdac-msr-modules",
                     "microsoft/jacdac-esp32",
                     "microsoft/jacdac-padauk",
+                    "microsoft/jacdac-posix",
                 ]}
                 showDescription={true}
             />

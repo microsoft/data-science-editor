@@ -1,7 +1,17 @@
-import { Chip, Grid, List, ListItem, ListItemText } from "@mui/material"
+import {
+    Chip,
+    Grid,
+    List,
+    ListItem,
+    ListItemText,
+    Typography,
+} from "@mui/material"
 import React, { useMemo } from "react"
 import { isInfrastructure } from "../../../jacdac-ts/src/jdom/spec"
-import { arrayShuffle, ellipseFirstSentence } from "../../../jacdac-ts/src/jdom/utils"
+import {
+    arrayShuffle,
+    ellipseFirstSentence,
+} from "../../../jacdac-ts/src/jdom/utils"
 import GridHeader from "../ui/GridHeader"
 import { Link } from "gatsby-theme-material-ui"
 import MakeCodeIcon from "../icons/MakeCodeIcon"
@@ -13,15 +23,10 @@ import { serviceProviderDefinitionFromServiceClass } from "../../../jacdac-ts/sr
 import KindIcon from "../KindIcon"
 import ChipList from "../ui/ChipList"
 import JacdacIcon from "../icons/JacdacIcon"
-import Markdown from "../ui/Markdown"
 import { resolveMakecodeServiceFromClassIdentifier } from "../makecode/services"
 import { isMixinService } from "../../../jacdac-ts/jacdac-spec/spectool/jdutils"
 import useDeviceCatalog from "../devices/useDeviceCatalog"
 import useChange from "../../jacdac/useChange"
-
-const components = {
-    p: "div",
-}
 
 function ServiceSpecificatinListItem(props: { service: jdspec.ServiceSpec }) {
     const { service } = props
@@ -39,13 +44,13 @@ function ServiceSpecificatinListItem(props: { service: jdspec.ServiceSpec }) {
         <Link to={`/services/${shortId}`} style={{ textDecoration: "none" }}>
             <ListItemText
                 key={classIdentifier}
+                disableTypography={true}
                 primary={name}
                 secondary={
                     <ChipList>
-                        <Markdown
-                            components={components}
-                            source={ellipseFirstSentence(notes["short"])}
-                        />
+                        <Typography variant="caption">
+                            {ellipseFirstSentence(notes["short"])}
+                        </Typography>
                         {tags?.map(tag => (
                             <Chip key={tag} size="small" label={tag} />
                         ))}

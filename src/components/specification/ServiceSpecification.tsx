@@ -13,7 +13,7 @@ import PacketSpecification from "./PacketSpecification"
 import IDChip from "../IDChip"
 import Markdown from "../ui/Markdown"
 import EnumSpecification from "../EnumSpecification"
-import { Box, Grid } from "@mui/material"
+import { Box, Grid, Typography } from "@mui/material"
 import ServiceSpecificationStatusAlert from "./ServiceSpecificationStatusAlert"
 import useServiceProviderFromServiceClass from "../hooks/useServiceProviderFromServiceClass"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
@@ -78,9 +78,11 @@ export default function ServiceSpecification(props: {
                 </Box>
             </h1>
             <ServiceSpecificationStatusAlert specification={node} />
-            <Markdown key="notesshort" source={node.notes.short} />
+            {node.notes.short && (
+                <Typography variant="body2">{node.notes.short}</Typography>
+            )}
             {!!node.extends?.length && (
-                <p key="extends">
+                <div>
                     <span>Extends </span>
                     {node.extends.map((extend, i) => (
                         <Fragment key={`extend${extend}`}>
@@ -94,7 +96,7 @@ export default function ServiceSpecification(props: {
                         </Fragment>
                     ))}
                     .
-                </p>
+                </div>
             )}
             <Markdown key="noteslong" source={node.notes.long || ""} />
             <DashboardServiceDevices serviceClass={classIdentifier} />
