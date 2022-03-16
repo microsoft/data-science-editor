@@ -2,7 +2,7 @@ import React, { useMemo } from "react"
 import IDChip from "../IDChip"
 import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec"
 import ServiceSpecificationCard from "./ServiceSpecificationCard"
-import { Box, Chip, Grid } from "@mui/material"
+import { AlertTitle, Box, Chip, Grid } from "@mui/material"
 import useGridBreakpoints from "../useGridBreakpoints"
 import Markdown from "../ui/Markdown"
 import DeviceSpecificationSource from "./DeviceSpecificationSource"
@@ -15,8 +15,9 @@ import { semverCmp } from "../semver"
 import DeviceSpecificationList from "./DeviceSpecificationList"
 import StructuredData from "../ui/StructuredData"
 import useDeviceSpecifications from "../devices/useDeviceSpecifications"
-import { Link } from "gatsby-theme-material-ui"
+import { Button, Link } from "gatsby-theme-material-ui"
 import { uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
+import Alert from "../ui/Alert"
 
 function DeviceStructuredData(props: { device: jdspec.DeviceSpec }) {
     const { device } = props
@@ -65,6 +66,7 @@ export default function DeviceSpecification(props: {
         designIdentifier,
         hardwareDesign,
         firmwareSource,
+        storeLink,
     } = device
     const { services } = device
     const specifications = useDeviceSpecifications()
@@ -85,9 +87,25 @@ export default function DeviceSpecification(props: {
     return (
         <>
             <DeviceStructuredData device={device} />
+            {!storeLink && (
+                <Alert severity="info">
+                    <AlertTitle>Prototype Hardware</AlertTitle>
+                    This device is a prototype <b>not</b> available for
+                    purchase.
+                </Alert>
+            )}
             <h2 key="title">
                 {name}
                 {!!version && ` v${version}`}
+                {storeLink && (
+                    <Button
+                        href={storeLink}
+                        variant="contained"
+                        color="primary"
+                    >
+                        Buy
+                    </Button>
+                )}
             </h2>
             <ChipList>
                 <Chip size="small" label={company} />
@@ -111,30 +129,6 @@ export default function DeviceSpecification(props: {
                 <img alt={`device ${name}`} src={imageUrl} loading="lazy" />
             </Box>
             {description && <Markdown source={description} />}
-            {repo && <FirmwareCard slug={repo} />}
-            {!!firmwares && (
-                <>
-                    <h3>Firmwares</h3>
-                    <p>
-                        Drag and drop the files below to your device drive. You
-                        might have to press the bootloader button once to see
-                        this drive.
-                    </p>
-                    <ul>
-                        {firmwares.map(({ name, url }) => (
-                            <li key={url}>
-                                <DownloadFirmwareButton
-                                    url={url}
-                                    name={name}
-                                    variant="outlined"
-                                >
-                                    {name}
-                                </DownloadFirmwareButton>
-                            </li>
-                        ))}
-                    </ul>
-                </>
-            )}
             {!!services?.length && (
                 <>
                     <h3>Services</h3>
@@ -165,21 +159,50 @@ export default function DeviceSpecification(props: {
                     </Grid>
                 </>
             )}
+            {repo && (
+                <>
+                    <h3>Firmware</h3>
+                    <FirmwareCard slug={repo} />
+                </>
+            )}
+            {!!firmwares && (
+                <>
+                    <h3>Firmware</h3>
+                    <p>
+                        Drag and drop the files below to your device drive. You
+                        might have to press the bootloader button once to see
+                        this drive.
+                    </p>
+                    <ul>
+                        {firmwares.map(({ name, url }) => (
+                            <li key={url}>
+                                <DownloadFirmwareButton
+                                    url={url}
+                                    name={name}
+                                    variant="outlined"
+                                >
+                                    {name}
+                                </DownloadFirmwareButton>
+                            </li>
+                        ))}
+                    </ul>
+                </>
+            )}
             {(hardwareDesign || firmwareSource) && (
                 <>
                     <h3>Sources</h3>
                     <ul>
-                        {hardwareDesign && (
-                            <li>
-                                <Link target="_blank" href={hardwareDesign}>
-                                    Hardware design
-                                </Link>
-                            </li>
-                        )}
                         {firmwareSource && (
                             <li>
                                 <Link target="_blank" href={firmwareSource}>
                                     Firmware code
+                                </Link>
+                            </li>
+                        )}
+                        {hardwareDesign && (
+                            <li>
+                                <Link target="_blank" href={hardwareDesign}>
+                                    Hardware design
                                 </Link>
                             </li>
                         )}
