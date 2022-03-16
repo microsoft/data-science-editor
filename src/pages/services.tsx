@@ -229,28 +229,14 @@ export default function ServiceCatalog() {
                     />
                 </Grid>
             </Grid>
-            <h2>See also</h2>
+            <h2>Need a new service?</h2>
             <p>
-                Known services are specified in
-                <Link href="https://github.com/microsoft/jacdac/tree/main/services">
-                    https://github.com/microsoft/jacdac/tree/main/services
-                </Link>
-                . Use the{" "}
+                Add a new service using the
                 <Link href="/tools/service-editor/">
                     Service Specification Editor
-                </Link>{" "}
-                and send us a pull request to register your own service.
+                </Link>
+                .
             </p>
-            <ul>
-                <li>
-                    <Link to="/devices/">Devices</Link>
-                </li>
-                <li>
-                    <Link to="/tools/service-editor/">
-                        Service Specification Editor
-                    </Link>
-                </li>
-            </ul>
         </>
     )
 }
