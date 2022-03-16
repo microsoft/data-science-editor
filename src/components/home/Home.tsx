@@ -1,4 +1,5 @@
 import { Grid } from "@mui/material"
+import { withPrefix } from "gatsby-link"
 import { StaticImage } from "gatsby-plugin-image"
 import React, { lazy, useContext, Suspense } from "react"
 import CarouselGrid from "./CarouselGrid"
@@ -85,7 +86,7 @@ export default function Home() {
                     <img
                         loading="lazy"
                         alt="jacdac bus"
-                        src="/images/jdbus.drawio.svg"
+                        src={withPrefix("/images/jdbus.drawio.svg")}
                         style={imgStyle}
                     />
                 }
