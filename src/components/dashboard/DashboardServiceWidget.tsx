@@ -377,50 +377,63 @@ function IntensityWidget(
     )
 }
 
-function DefaultWidget(props: DashboardServiceProps) {
-    const { service, visible } = props
-    const { specification } = service
-    const register = useMemo(() => {
-        const rspec = specification?.packets.find(
-            pkt =>
-                isRegister(pkt) &&
-                collapsedRegisters.indexOf(pkt.identifier) > -1
-        )
-        return service.register(rspec?.identifier)
-    }, [service])
-
-    if (!register)
-        // nothing to see here
-        return null
-
-    // if register is value, disable if enabled is 0.
+function DefaultRegisterWidget(
+    props: { register: JDRegister } & DashboardServiceProps
+) {
+    const { register, ...rest } = props
     if (register.specification.identifier == SystemReg.Value) {
-        const intensityRegister = useRegister(
-            register.service,
-            SystemReg.Intensity
-        )
+        const intensityRegister = props.service.register(SystemReg.Intensity)
         return (
             <ValueWidget
                 valueRegister={register}
                 intensityRegister={intensityRegister}
-                {...props}
+                {...rest}
             />
         )
-    }
+    } else if (register.specification.identifier === SystemReg.Intensity)
+        return <IntensityWidget intensityRegister={register} {...rest} />
+    else
+        return (
+            <RegisterInput
+                register={register}
+                variant={"widget"}
+                showServiceName={false}
+                showRegisterName={false}
+                hideMissingValues={true}
+                visible={props.visible}
+            />
+        )
+}
 
-    // case of no streaming,value just intensity, like a relay
-    if (register.specification.identifier === SystemReg.Intensity)
-        return <IntensityWidget intensityRegister={register} {...props} />
+function DefaultWidget(props: DashboardServiceProps) {
+    const { service } = props
+    const { specification } = service
+    const registers = useMemo(
+        () =>
+            specification?.packets
+                .filter(
+                    pkt =>
+                        isRegister(pkt) &&
+                        collapsedRegisters.indexOf(pkt.identifier) > -1
+                )
+                .map(rspec => service.register(rspec.identifier)),
+        [service]
+    )
+
+    if (!registers?.length)
+        // nothing to see here
+        return null
 
     return (
-        <RegisterInput
-            register={register}
-            variant={"widget"}
-            showServiceName={false}
-            showRegisterName={false}
-            hideMissingValues={true}
-            visible={visible}
-        />
+        <>
+            {registers.map(register => (
+                <DefaultRegisterWidget
+                    key={register.id}
+                    register={register}
+                    {...props}
+                />
+            ))}
+        </>
     )
 }
 
