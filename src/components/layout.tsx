@@ -25,6 +25,8 @@ import MainAppBar from "./shell/MainAppBar"
 import { AlertTitle } from "@mui/material"
 import { UIFlags } from "../jacdac/providerbus"
 import DevToolsAlert from "./alert/DevToolsAlert"
+
+const SimulatorCommands = lazy(() => import("./commands/SimulatorCommands"))
 const TraceAlert = lazy(() => import("./shell/TraceAlert"))
 const WebDiagnostics = lazy(() => import("./shell/WebDiagnostics"))
 const AppDrawer = lazy(() => import("./shell/AppDrawer"))
@@ -251,6 +253,9 @@ function LayoutWithContext(props: LayoutProps) {
 
     const InnerMainSection = () => (
         <>
+            <Suspense>
+                <SimulatorCommands />
+            </Suspense>
             <Suspense>
                 <TraceAlert />
             </Suspense>
