@@ -47,7 +47,7 @@ This command launches a simulator from the list of existing simulator templates.
                         .join(", ")}
 * service names: ${serviceSpecifications()
                         .filter(sc => !isInfrastructure(sc))
-                        .map(s => `_\`${s.shortId}"\``)
+                        .map(s => `\`"${s.shortId}"\``)
                         .join(", ")}
 `,
                     handler: async (bus, args: { name: string }) => {
