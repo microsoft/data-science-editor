@@ -231,8 +231,8 @@ export default function ServiceCatalog() {
             </Grid>
             <h2>Need a new service?</h2>
             <p>
-                Add a new service using the
-                <Link href="/tools/service-editor/">
+                Add a new service using the {" "}
+                <Link to="/tools/service-editor/">
                     Service Specification Editor
                 </Link>
                 .
