@@ -75,7 +75,7 @@ export interface HostedSimulatorsContextProps {
     isHostedSimulator: (deviceId: string) => boolean
 }
 
-const HostedSimulatorsContext = createContext<HostedSimulatorsContextProps>({
+export const HostedSimulatorsContext = createContext<HostedSimulatorsContextProps>({
     addHostedSimulator: () => {},
     removeHostedSimulator: () => {},
     clearHostedSimulators: () => {},
@@ -84,7 +84,11 @@ const HostedSimulatorsContext = createContext<HostedSimulatorsContextProps>({
 
 HostedSimulatorsContext.displayName = "hostedSims"
 
-export default HostedSimulatorsContext
+export default function useHostedSimulators() {
+    const ctx = useContext(HostedSimulatorsContext)
+    if (!ctx) throw Error("HostedSimulatorContext not configured")
+    return ctx
+}
 
 export function hostedSimulatorDefinitions(): HostedSimulatorDefinition[] {
     // TODO: support in iframe as well

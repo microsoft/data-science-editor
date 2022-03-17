@@ -17,10 +17,10 @@ import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import SimulateDeviceAlert from "../alert/SimulateDeviceAlert"
 import MakeCodeAddBlocksButton from "../makecode/MakeCodeAddBlocksButton"
 import { Flags } from "../../../jacdac-ts/src/jdom/flags"
-import HostedSimulatorsContext from "../HostedSimulatorsContext"
 import useBus from "../../jacdac/useBus"
 import StartSimulatorButton from "../buttons/StartSimulatorButton"
 import { defaultDeviceFilter, defaultDeviceSort } from "./filters"
+import useHostedSimulators from "../HostedSimulatorsContext"
 
 export interface DashboardDeviceProps {
     showHeader?: boolean
@@ -49,9 +49,7 @@ export default function Dashboard(props: DashboardProps) {
         ...other
     } = props
     const bus = useBus()
-    const { isHostedSimulator, clearHostedSimulators } = useContext(
-        HostedSimulatorsContext
-    )
+    const { isHostedSimulator, clearHostedSimulators } = useHostedSimulators()
     const devices = useDevices({
         announced: true,
         ignoreInfrastructure: !Flags.diagnostics,

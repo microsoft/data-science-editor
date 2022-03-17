@@ -1,8 +1,7 @@
-import React, { useContext } from "react"
+import React from "react"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import FingerprintIcon from "@mui/icons-material/Fingerprint"
-import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import CmdButton from "../CmdButton"
 import useServiceProvider from "../hooks/useServiceProvider"
 import CloseIcon from "@mui/icons-material/Close"
@@ -13,9 +12,10 @@ import {
 } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import useChange from "../../jacdac/useChange"
 import { navigate } from "gatsby-link"
-import HostedSimulatorsContext from "../HostedSimulatorsContext"
 import CableIcon from "@mui/icons-material/Cable"
 import DeviceResetButton from "./DeviceResetButton"
+import useHostedSimulators from "../HostedSimulatorsContext"
+import useBus from "../../jacdac/useBus"
 export default function DeviceActions(props: {
     device: JDDevice
     showSettings?: boolean
@@ -34,10 +34,8 @@ export default function DeviceActions(props: {
         showStop,
         showProxy,
     } = props
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const { removeHostedSimulator, isHostedSimulator } = useContext(
-        HostedSimulatorsContext
-    )
+    const { bus } = useBus()
+    const { removeHostedSimulator, isHostedSimulator } = useHostedSimulators()
     const { deviceId } = device
     const provider = useServiceProvider(device)
     const settings = useChange(

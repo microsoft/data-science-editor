@@ -8,7 +8,7 @@ import {
     ListItem,
     TextField,
 } from "@mui/material"
-import React, { useContext, useMemo, useRef } from "react"
+import React, { useMemo, useRef } from "react"
 import { useId } from "react-use-id-hook"
 import {
     serviceProviderDefinitions,
@@ -17,9 +17,8 @@ import {
 } from "../../../jacdac-ts/src/servers/servers"
 import { Flags } from "../../../jacdac-ts/src/jdom/flags"
 import { delay, uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
-import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import useMediaQueries from "../hooks/useMediaQueries"
-import HostedSimulatorsContext, {
+import useHostedSimulators, {
     HostedSimulatorDefinition,
     hostedSimulatorDefinitions,
 } from "../HostedSimulatorsContext"
@@ -32,6 +31,7 @@ import {
 import DialogTitleWithClose from "../ui/DialogTitleWithClose"
 import useKeyboardNavigationProps from "../hooks/useKeyboardNavigationProps"
 import useSnackbar from "../hooks/useSnackbar"
+import useBus from "../../jacdac/useBus"
 
 const miniSearchOptions = {
     fields: ["name", "description"],
@@ -47,9 +47,9 @@ export default function StartSimulatorDialog(props: {
     sensor: boolean
 }) {
     const { open, onClose, sensor } = props
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const { bus } = useBus()
     const { enqueueSnackbar } = useSnackbar()
-    const { addHostedSimulator } = useContext(HostedSimulatorsContext)
+    const { addHostedSimulator } = useHostedSimulators()
     const { trackEvent } = useAnalytics()
     const { mobile } = useMediaQueries()
     const searchId = useId()
@@ -120,7 +120,9 @@ export default function StartSimulatorDialog(props: {
         }
     const handleAddAll = async () => {
         const allProviderDefinitions = uniqueMap(
-            serviceProviderDefinitions().filter(hd => hd.serviceClasses.length === 1),
+            serviceProviderDefinitions().filter(
+                hd => hd.serviceClasses.length === 1
+            ),
             hd => hd.serviceClasses[0].toString(),
             h => h
         )
