@@ -47,7 +47,7 @@ export default function StartSimulatorDialog(props: {
     sensor: boolean
 }) {
     const { open, onClose, sensor } = props
-    const { bus } = useBus()
+    const bus = useBus()
     const { enqueueSnackbar } = useSnackbar()
     const { addHostedSimulator } = useHostedSimulators()
     const { trackEvent } = useAnalytics()

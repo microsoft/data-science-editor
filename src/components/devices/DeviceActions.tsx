@@ -34,7 +34,7 @@ export default function DeviceActions(props: {
         showStop,
         showProxy,
     } = props
-    const { bus } = useBus()
+    const bus = useBus()
     const { removeHostedSimulator, isHostedSimulator } = useHostedSimulators()
     const { deviceId } = device
     const provider = useServiceProvider(device)
