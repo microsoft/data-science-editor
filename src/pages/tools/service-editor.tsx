@@ -9,7 +9,7 @@ export default function Page() {
             <p>
                 Read the{" "}
                 <Link to="/reference/service-specification/">
-                    service specifiation
+                    service specification
                 </Link>{" "}
                 documentation. Use the packet console to monitor packets from
                 your devices.
