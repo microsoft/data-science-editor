@@ -15,6 +15,8 @@ import useHostedSimulators, {
     hostedSimulatorDefinitions,
 } from "../HostedSimulatorsContext"
 
+export const COMMAND_BUS_CONNECT = "bus.connect"
+export const COMMAND_BUS_DISCONNECT = "bus.disconnect"
 export const COMMAND_SIMULATOR_START = "simulator.start"
 
 export default function SimulatorCommands() {
@@ -24,6 +26,16 @@ export default function SimulatorCommands() {
     useEffect(
         () =>
             addCommands([
+                {
+                    id: COMMAND_BUS_CONNECT,
+                    description: "start connecting the bus",
+                    handler: bus => bus.connect(),
+                },
+                {
+                    id: COMMAND_BUS_DISCONNECT,
+                    description: "disconnect the bus",
+                    handler: bus => bus.disconnect(),
+                },
                 {
                     id: COMMAND_SIMULATOR_START,
                     description:
