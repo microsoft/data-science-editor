@@ -52,6 +52,10 @@ yarn setup
 
 **Do not use npm**
 
+#### Updating dependencies
+
+Use [npm-check-updates](https://www.npmjs.com/package/npm-check-updates) to upgrade all dependencies expect blockly*, tfjs, mdx.
+
 ### VS Code
 
 You are welcome to use any editor you want! Visual Studio Code

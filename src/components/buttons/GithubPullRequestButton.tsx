@@ -83,7 +83,7 @@ export default function GithubPullRequestButton(
                 changes: [
                     {
                         files,
-                        commit: `added files`,
+                        commit: title,
                     },
                 ],
             })
