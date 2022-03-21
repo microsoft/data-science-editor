@@ -7,9 +7,10 @@ import createCsvWorker from "../../../../workers/csv/workerloader"
 import createDataWorker from "../../../../workers/data/workerloader"
 import createTFWorker from "../../../../workers/tf/workerloader"
 import createVMWorker from "../../../../workers/vm/workerloader"
+import createJacscriptWorker from "../../../../workers/jacscript/workerloader"
 import createCadWorker from "../../../../workers/cad/workerloader"
 
-export type VMType = "data" | "csv" | "tf" | "vm" | "cad"
+export type VMType = "data" | "csv" | "tf" | "vm" | "cad" | "jacscript"
 
 export interface WorkerMessage {
     worker: VMType
@@ -37,7 +38,10 @@ export class WorkerProxy extends JDEventSource {
         if (pending) {
             assert(worker === message.worker)
             if (message.error)
-                console.debug(`${this.workerid}: error: ${message.error}`, message)
+                console.debug(
+                    `${this.workerid}: error: ${message.error}`,
+                    message
+                )
             pending.resolve(message)
         } else {
             this.emit(MESSAGE, event.data)
@@ -61,6 +65,7 @@ const loaders = {
     tf: createTFWorker,
     vm: createVMWorker,
     cad: createCadWorker,
+    jacscript: createJacscriptWorker,
 }
 export default function workerProxy(workerid: VMType) {
     const worker =

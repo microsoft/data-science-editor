@@ -1,4 +1,4 @@
-import React, { Fragment, useContext } from "react"
+import React, { Fragment } from "react"
 import { Link } from "gatsby-theme-material-ui"
 import {
     serviceSpecificationFromName,
@@ -16,14 +16,12 @@ import EnumSpecification from "../EnumSpecification"
 import { Box, Grid, Typography } from "@mui/material"
 import ServiceSpecificationStatusAlert from "./ServiceSpecificationStatusAlert"
 import useServiceProviderFromServiceClass from "../hooks/useServiceProviderFromServiceClass"
-import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
-import useChange from "../../jacdac/useChange"
 import DashbardDeviceItem from "../dashboard/DashboardDeviceItem"
+import useDevices from "../hooks/useDevices"
 
 function DashboardServiceDevices(props: { serviceClass: number }) {
     const { serviceClass } = props
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const devices = useChange(bus, b => b.devices({ serviceClass }))
+    const devices = useDevices({ serviceClass })
     return (
         <Grid container spacing={1}>
             {devices.map(device => (

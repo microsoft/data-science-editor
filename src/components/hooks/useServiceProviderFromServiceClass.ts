@@ -1,14 +1,14 @@
-import { useContext, useEffect } from "react"
+import { useEffect } from "react"
 import {
     addServiceProvider,
     serviceProviderDefinitionFromServiceClass,
 } from "../../../jacdac-ts/src/servers/servers"
-import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
+import useBus from "../../jacdac/useBus"
 
 export default function useServiceProviderFromServiceClass(
     serviceClass: number
 ): void {
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const bus = useBus()
 
     // run once
     useEffect(() => {

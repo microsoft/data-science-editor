@@ -1,4 +1,4 @@
-import { compile, JacError, Host, RunnerState, Runner } from "jacscript"
+import { JacError, RunnerState, Runner, DebugInfo } from "jacscript"
 import {
     CHANGE,
     GLOBALS_UPDATED,
@@ -18,23 +18,18 @@ export interface VMMessage {
 }
 
 export interface VMRequest extends VMMessage {
-    type?: string    
+    type?: string
 }
 
 export interface VMResponse extends VMRequest {
     error?: string
 }
 
-export interface VMCompileRequest extends VMMessage {
-    type: "compile"
-    source: string
+export interface VMDeployRequest extends VMMessage {
+    type: "deploy"
+    binary: Uint8Array
+    debugInfo: unknown
     restart?: boolean
-}
-
-export interface VMCompileResponse extends VMMessage {
-    files: Record<string, Uint8Array | string>
-    logs: string
-    errors: VMError[]
 }
 
 export interface VMStateRequest extends VMMessage {
@@ -49,10 +44,6 @@ export interface VMStateResponse extends VMMessage {
 export interface VMCommandRequest extends VMMessage {
     type: "command"
     action: "start" | "stop"
-}
-
-export interface VMRunResponse extends VMCompileResponse {
-    state: VMState
 }
 
 export interface VMPacketRequest extends VMMessage {
@@ -77,30 +68,6 @@ bus.on(PACKET_SEND, (pkt: Packet) => {
     })
 })
 
-class WorkerHost implements Host {
-    files: Record<string, Uint8Array | string> 
-    logs: string
-    errors: JacError[]
-
-    constructor() {
-        this.files = {}
-        this.logs = ""
-        this.errors = []
-
-        this.error = this.error.bind(this)
-    }
-
-    write(filename: string, contents: Uint8Array | string) {
-        this.files[filename] = contents
-    }
-    log(msg: string): void {
-        this.logs += msg + "\n"
-    }
-    error(err: JacError) {
-        this.errors.push(err)
-    }
-}
-
 const states: Record<RunnerState, VMState> = {
     [RunnerState.Stopped]: "stopped",
     [RunnerState.Error]: "error",
@@ -111,24 +78,24 @@ const states: Record<RunnerState, VMState> = {
 function postState() {
     const state = states[runner?.state ?? RunnerState.Stopped]
     const variables = runner?.globals()
-    console.log(`jscw: state ${state}`)
+    console.log(`jdvm worker: state ${state}`)
     self.postMessage(<VMStateResponse>{
         type: "state",
         worker: "vm",
         state,
-        variables
+        variables,
     })
 }
 
 async function start() {
-    console.log(`jscw: start`)
+    console.log(`jdvm worker: start`)
     bus.start()
     runner?.run()
     postState()
 }
 
 async function stop() {
-    console.log(`jscw: stop`)
+    console.log(`jdvm worker: stop`)
     runner?.stop()
     await bus.stop()
     postState()
@@ -143,36 +110,26 @@ const handlers: { [index: string]: (props: any) => object | Promise<object> } =
             //console.log("vm.worker: received packet from proxy", toHex(data))
             return undefined
         },
-        compile: async (props: VMCompileRequest) => {
-            const { source, restart } = props
-            const host = new WorkerHost()
-            const res = compile(host, source)
+        deploy: async (props: VMDeployRequest) => {
+            await stop()
+            const { binary, debugInfo, restart } = props
+            runner = new Runner(bus, binary, debugInfo as DebugInfo)
+            runner.options.setting = localStorageSetting
+            runner.on(CHANGE, postState)
+            runner.on(GLOBALS_UPDATED, postState)
 
-            if (res.success) {
-                await stop()
-                const { binary, dbg } = res
-                runner = new Runner(bus, binary, dbg)
-                runner.options.setting = localStorageSetting
-                runner.on(CHANGE, postState)
-                runner.on(GLOBALS_UPDATED, postState)
-
-                if (restart) {
-                    console.debug("vm.worker: restart")
-                    await start() // background start
-                }
+            if (restart) {
+                console.debug("jdvm worker: restart")
+                await start() // background start
             }
-
-            return <Partial<VMCompileResponse>>{
-                ...res,
-                files: host.files,
-                logs: host.logs,
-                errors: host.errors,
+            return <Partial<VMStateResponse>>{
+                state: states[runner?.state] || RunnerState.Stopped,
             }
         },
         state: () =>
             <Partial<VMStateResponse>>{
                 state: states[runner?.state] || RunnerState.Stopped,
-                variables: runner?.globals()
+                variables: runner?.globals(),
             },
         command: async (props: VMCommandRequest) => {
             const { action } = props
@@ -185,7 +142,7 @@ const handlers: { [index: string]: (props: any) => object | Promise<object> } =
                     await start()
                     break
             }
-            return <Partial<VMRunResponse>>{
+            return <Partial<VMStateResponse>>{
                 state: states[runner?.state] || RunnerState.Stopped,
             }
         },
@@ -214,7 +171,7 @@ async function handleMessage(event: MessageEvent) {
             self.postMessage(resp)
         }
     } catch (e) {
-        console.debug(`vm: error ${e + ""}`, e)
+        console.debug(`jdvm worker: error ${e + ""}`, e)
         self.postMessage({
             id,
             type,

@@ -1,7 +1,7 @@
 import { styled } from "@mui/material/styles"
 import React, { useMemo } from "react"
 import useChange from "../../../jacdac/useChange"
-import { jacScriptBridge } from "../dsl/workers/vm.proxy"
+import { jacscriptBridge } from "../dsl/workers/vm.proxy"
 import { ReactFieldJSON } from "./ReactField"
 import ReactInlineField from "./ReactInlineField"
 
@@ -26,14 +26,14 @@ const Root = styled("div")(({ theme }) => ({
 }))
 
 function VariablesWidget() {
-    const bridge = useMemo(() => jacScriptBridge(), [])
+    const bridge = useMemo(() => jacscriptBridge(), [])
     const variables = useChange(bridge, _ => _?.variables)
 
     if (!variables) return null
     return (
         <table className={classes.table}>
             <tbody>
-                {Object.entries(variables).map(([ name, value ]) => (
+                {Object.entries(variables).map(([name, value]) => (
                     <tr key={name}>
                         <td>{name}</td>
                         <td>{value}</td>

@@ -11,7 +11,7 @@ import VMDiagnostics from "./VMDiagnostics"
 import BlockRolesToolbar from "../blockly/BlockRolesToolbar"
 import BlockContext, { BlockProvider } from "../blockly/BlockContext"
 import BlockDiagnostics from "../blockly/BlockDiagnostics"
-import workspaceJSONToJacScriptProgram from "./JacscriptGenerator"
+import workspaceJSONToJacscriptProgram from "./JacscriptGenerator"
 import BlockEditor from "../blockly/BlockEditor"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
 import {
@@ -25,21 +25,31 @@ import jacscriptDsls from "./jacscriptdsls"
 import { VMProgram } from "../../../jacdac-ts/src/vm/ir"
 import JacscriptDiagnostics from "./JacscriptDiagnostics"
 import {
-    JacScriptProgram,
-    toJacScript,
+    JacscriptProgram,
+    toJacscript,
 } from "../../../jacdac-ts/src/vm/ir2jacscript"
 import useEffectAsync from "../useEffectAsync"
+import { jacscriptCompile } from "../blockly/dsl/workers/jacscript.proxy"
+import type { JacscriptCompileResponse } from "../../workers/jacscript/jacscript.worker"
+import useRegister from "../hooks/useRegister"
 import {
-    jacScriptCompile,
-    jacScriptCommand,
-    jacScriptBridge,
-} from "../blockly/dsl/workers/vm.proxy"
-import type { VMCompileResponse } from "../../workers/vm/vm.worker"
-import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
-import PlayArrowIcon from "@mui/icons-material/PlayArrow"
-import StopIcon from "@mui/icons-material/Stop"
-import useChange from "../../jacdac/useChange"
-import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
+    JacscriptManagerCmd,
+    JacscriptManagerReg,
+    SRV_JACSCRIPT_MANAGER,
+} from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
+import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import {
+    useRegisterBoolValue,
+    useRegisterUnpackedValue,
+} from "../../jacdac/useRegisterValue"
+import DeviceAvatar from "../devices/DeviceAvatar"
+import useBus from "../../jacdac/useBus"
+import useServices from "../hooks/useServices"
+import { addServiceProvider } from "../../../jacdac-ts/src/servers/servers"
+import { createVMJacscriptManagerServer } from "../blockly/dsl/workers/vm.proxy"
+import useServiceServer from "../hooks/useServiceServer"
+import { JacscriptManagerServer } from "../../../jacdac-ts/src/servers/jacscriptmanagerserver"
+import { OutPipe } from "../../../jacdac-ts/src/jdom/pipes"
 
 const JACSCRIPT_EDITOR_ID = "jcs"
 const JACSCRIPT_SOURCE_STORAGE_KEY = "tools:jacscripteditor"
@@ -48,67 +58,79 @@ const JACSCRIPT_NEW_FILE_CONTENT = JSON.stringify({
     xml: "",
 } as WorkspaceFile)
 
-function JacScriptExecutor(props: {
-    jscCompiled: VMCompileResponse
-    useChip?: boolean
-}) {
-    const { jscCompiled, useChip } = props
-    const bridge = useMemo(() => jacScriptBridge(), [])
-    const state = useChange(bridge, _ => _?.state)
-    const running = state === "running"
-    const initializing = state === "initializing"
+function JacscriptExecutor(props: { service: JDService }) {
+    const { service } = props
+
+    const runningRegister = useRegister(service, JacscriptManagerReg.Running)
+    const programSizeRegister = useRegister(
+        service,
+        JacscriptManagerReg.ProgramSize
+    )
+
+    const running = useRegisterBoolValue(runningRegister)
+    const [programSize] =
+        useRegisterUnpackedValue<[number]>(programSizeRegister)
+
     const stopped = !running
-    const disabled = !jscCompiled || initializing
+    const disabled = !service || !programSize
 
-    const handleRun = () => jacScriptCommand("start")
-    const handleStop = () => jacScriptCommand("stop")
+    const handleRun = () => runningRegister?.sendSetBoolAsync(true, true)
+    const handleStop = () => runningRegister?.sendSetBoolAsync(false, true)
 
-    const title = initializing ? "starting" : running ? "stop" : "start"
-    const color = stopped ? "primary" : "default"
-    const onClick = stopped ? handleRun : handleStop
-    const icon = initializing ? <HourglassEmptyIcon /> : stopped ? <PlayArrowIcon /> : <StopIcon />
+    const label = disabled ? "..." : running ? "stop" : "start"
+    const title = disabled
+        ? "loading..."
+        : running
+        ? "stop running code"
+        : "start running code"
 
     return (
-        <Grid item>
-            {useChip ? (
-                <Chip
-                    label={title}
-                    icon={icon}
-                    color={color}
-                    onClick={onClick}
-                    disabled={disabled}
-                />
-            ) : (
-                <IconButtonWithTooltip
-                    title={title}
-                    disabled={disabled}
-                    color={color}
-                    onClick={onClick}
-                >
-                    {icon}
-                </IconButtonWithTooltip>
-            )}
-        </Grid>
+        <Chip
+            label={label}
+            title={title}
+            variant={service ? undefined : "outlined"}
+            avatar={service && <DeviceAvatar device={service.device} />}
+            onClick={stopped ? handleRun : handleStop}
+            disabled={disabled}
+        />
     )
 }
 
-function JacScriptEditorWithContext() {
+function JacscriptEditorWithContext() {
     const { dsls, workspaceJSON, roleManager, setWarnings } =
         useContext(BlockContext)
+    const bus = useBus()
     const [program, setProgram] = useState<VMProgram>()
-    const [jscProgram, setJscProgram] = useState<JacScriptProgram>()
-    const [jscCompiled, setJscCompiled] = useState<VMCompileResponse>()
+    const [jscProgram, setJscProgram] = useState<JacscriptProgram>()
+    const [jscCompiled, setJscCompiled] = useState<JacscriptCompileResponse>()
     const { fileSystem } = useContext(FileSystemContext)
+
+    // grab the first jacscript manager, favor physical services first
+    const services = useServices({ serviceClass: SRV_JACSCRIPT_MANAGER }).sort(
+        (l, r) => -(l.device.isPhysical ? 1 : 0) + (r.device.isPhysical ? 1 : 0)
+    )
+    const service = services[0]
+    const server = useServiceServer<JacscriptManagerServer>(service)
+
+    // spinup vm jacscript manager
+    useEffect(() => {
+        const provider = addServiceProvider(bus, {
+            name: "vm jacscript manager",
+            serviceClasses: [SRV_JACSCRIPT_MANAGER],
+            services: () => [createVMJacscriptManagerServer()],
+        })
+        return () => bus.removeServiceProvider(provider)
+    }, [])
 
     useEffect(() => {
         try {
-            const newProgram = workspaceJSONToJacScriptProgram(
+            const newProgram = workspaceJSONToJacscriptProgram(
                 workspaceJSON,
                 dsls
             )
             if (JSON.stringify(newProgram) !== JSON.stringify(program)) {
                 setProgram(newProgram)
-                const jsc = toJacScript(newProgram)
+                const jsc = toJacscript(newProgram)
                 setJscProgram(jsc)
             }
         } catch (e) {
@@ -132,19 +154,25 @@ function JacScriptEditorWithContext() {
     useEffectAsync(
         async mounted => {
             const src = jscProgram?.program.join("\n")
-            const res = src && (await jacScriptCompile(src))
+            const res = src && (await jacscriptCompile(src))
             if (mounted()) setJscCompiled(res)
         },
         [jscProgram]
     )
-    useEffect(() => {
-        if (jscCompiled) jacScriptCommand("start")
-        else jacScriptCommand("stop")
-    }, [jscCompiled])
-
-    // final cleanup on exit
-    useEffect(() => () => { jacScriptCommand("stop") }, [])
-
+    useEffectAsync(async () => {
+        const { binary, debugInfo } = jscCompiled || {}
+        if (!service) return
+        if (server) server.setBytecode(binary, debugInfo)
+        else {
+            await OutPipe.sendBytes(
+                service,
+                JacscriptManagerCmd.DeployBytecode,
+                binary || new Uint8Array(0)
+            )
+        }
+        //if (jscCompiled) jacscriptCommand("start")
+        //else jacscriptCommand("stop")
+    }, [service, server, jscCompiled])
     return (
         <Grid container spacing={1}>
             <Grid item xs={12} sm={8}>
@@ -160,7 +188,9 @@ function JacScriptEditorWithContext() {
                     )}
                     <Grid item xs={12}>
                         <BlockRolesToolbar>
-                            <JacScriptExecutor jscCompiled={jscCompiled} useChip={true} />
+                            <Grid item>
+                                <JacscriptExecutor service={service} />
+                            </Grid>
                         </BlockRolesToolbar>
                     </Grid>
                     <Grid item xs={12}>
@@ -186,8 +216,8 @@ export default function JacscriptEditor() {
     const handleOnBeforeSaveWorkspaceFile = useCallback(
         (file: WorkspaceFile) => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const program = workspaceJSONToJacScriptProgram(file.json, dsls)
-            file.jsc = toJacScript(program)
+            const program = workspaceJSONToJacscriptProgram(file.json, dsls)
+            file.jsc = toJacscript(program)
         },
         []
     )
@@ -204,7 +234,7 @@ export default function JacscriptEditor() {
                         : undefined
                 }
             >
-                <JacScriptEditorWithContext />
+                <JacscriptEditorWithContext />
             </BlockProvider>
         </NoSsr>
     )

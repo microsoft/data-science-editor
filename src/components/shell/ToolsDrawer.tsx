@@ -195,7 +195,7 @@ export default function ToolsDrawer() {
             icon: <MakeCodeIcon />,
         },
         {
-            text: "JacScript",
+            text: "Jacscript",
             to: "/editors/jacscript/",
             icon: <JacdacIcon />,
         },

@@ -17,7 +17,8 @@ export default function StartSimulatorButton(props: {
     if (useChip)
         return (
             <Chip
-                label="start simulator"
+                label="simulator"
+                title="start new device simulator"
                 variant="outlined"
                 icon={<AddIcon />}
                 onClick={handleShowStartSimulator}

@@ -23,7 +23,7 @@ import { JDEvent } from "../../../jacdac-ts/src/jdom/event"
 import IconButtonWithTooltip from "../../components/ui/IconButtonWithTooltip"
 import DeleteIcon from "@mui/icons-material/Delete"
 import { SettingsClient } from "../../../jacdac-ts/src/jdom/clients/settingsclient"
-import useServiceClient from "../../components/useServiceClient"
+import useServiceClient from "../../jacdac/useServiceClient"
 import {
     arrayConcatMany,
     clone,

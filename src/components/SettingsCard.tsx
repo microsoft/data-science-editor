@@ -8,7 +8,7 @@ import React, {
 } from "react"
 import { JDService } from "../../jacdac-ts/src/jdom/service"
 import DeviceCardHeader from "./devices/DeviceCardHeader"
-import useServiceClient from "./useServiceClient"
+import useServiceClient from "../jacdac/useServiceClient"
 import { SettingsClient } from "../../jacdac-ts/src/jdom/clients/settingsclient"
 import { useChangeAsync } from "../jacdac/useChange"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name

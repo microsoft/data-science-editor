@@ -1,5 +1,5 @@
 import { VMProgram } from "../../../../jacdac-ts/src/vm/ir"
-import { JacScriptProgram } from "../../../../jacdac-ts/src/vm/ir2jacscript"
+import { JacscriptProgram } from "../../../../jacdac-ts/src/vm/ir2jacscript"
 import { tidyHeaders } from "../fields/tidy"
 import { BlockDataSet } from "../toolbox"
 
@@ -91,5 +91,5 @@ export interface WorkspaceFile {
     xml: string
     json: WorkspaceJSON
     vm?: VMProgram
-    jsc?: JacScriptProgram
+    jsc?: JacscriptProgram
 }
