@@ -6,7 +6,7 @@ import {
 } from "../../../jacdac-ts/src/jdom/spec"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import { CardActionArea } from "gatsby-theme-material-ui"
-import { arrayShuffle } from "../../../jacdac-ts/src/jdom/utils"
+import { arrayShuffle, uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
 import useDeviceImage from "../devices/useDeviceImage"
 import {
     escapeDeviceIdentifier,
@@ -21,17 +21,14 @@ function DeviceSpecificationCard(props: {
     size: "list" | "preview" | "catalog"
 }) {
     const { specification, size } = props
-    const {
-        id,
-        name,
-        company,
-        services,
-        hardwareDesign,
-        firmwareSource,
-        repo,
-    } = specification
+    const { id, name, company, services, hardwareDesign, firmwareSource } =
+        specification
     const imageUrl = useDeviceImage(specification, size)
-    const serviceNames = services
+    const serviceNames = uniqueMap(
+        services,
+        srv => srv + "",
+        srv => srv
+    )
         ?.map(sc =>
             humanify(
                 serviceSpecificationFromClassIdentifier(

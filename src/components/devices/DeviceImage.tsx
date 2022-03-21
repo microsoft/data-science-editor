@@ -12,5 +12,12 @@ export default function DeviceImage(props: {
 
     if (!url) return null
 
-    return <img src={url} alt={spec.name} loading="lazy" />
+    return (
+        <img
+            style={{ aspectRatio: "3 / 2", margin: 0 }}
+            src={url}
+            alt={spec.name}
+            loading="lazy"
+        />
+    )
 }

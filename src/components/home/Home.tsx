@@ -12,7 +12,7 @@ import FindReplaceIcon from "@mui/icons-material/FindReplace"
 import SubscriptionsIcon from "@mui/icons-material/Subscriptions"
 import HTML5Image from "./HTML5Image"
 import DarkModeContext from "../ui/DarkModeContext"
-const JacdapterImageList = lazy(() => import("./JacdaptorImageList"))
+const JacdaptorImageList = lazy(() => import("./JacdaptorImageList"))
 
 export default function Home() {
     const { imgStyle } = useContext(DarkModeContext)
@@ -102,7 +102,7 @@ export default function Home() {
                 imageColumns={6}
                 image={
                     <Suspense fallback={null}>
-                        <JacdapterImageList />
+                        <JacdaptorImageList />
                     </Suspense>
                 }
             />
