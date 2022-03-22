@@ -10,6 +10,7 @@ export interface QRCodeProps {
     url: string
     layer?: number
     size?: number
+    margin?: number
     mirror?: boolean
 }
 
@@ -17,6 +18,7 @@ function useQRCodeSCR(
     url: string,
     layer: number,
     size: number,
+    margin: number,
     mirror: boolean
 ) {
     const [image, setImage] = useState<string>(undefined)
@@ -25,7 +27,7 @@ function useQRCodeSCR(
     const [altium, setAltium] = useState<string>(undefined)
     const [numBlocks, setNumBlocks] = useState<number>(undefined)
     const [error, setError] = useState<string>(undefined)
-    const deps = [url, layer, size, mirror]
+    const deps = [url, layer, size, mirror, margin]
 
     useEffect(() => setError(undefined), deps)
 
@@ -47,13 +49,13 @@ function useQRCodeSCR(
             for (let y = 0; y < numBlocks; ++y) {
                 for (let x = 0; x < numBlocks; ++x) {
                     const xx = !mirror ? numBlocks - x - 1 : x
-                    code[`${xx},${numBlocks - y - 1}`] =
+                    code[`${xx + margin},${numBlocks - y - 1 + margin}`] =
                         !!qr.modules.data[ptr++]
                 }
             }
 
             const utfcode: string = await QRCode.toString(url, {
-                margin: 0,
+                margin,
                 scale: 1,
                 errorCorrectionLevel: "medium",
                 type: "utf8",
@@ -75,7 +77,8 @@ function useQRCodeSCR(
             let altium =
                 "Object Kind\tLayer\tNet\tX1\tY1\tX2\tY2\tKeepout\tLocked\tRotation\tSolder Mask Expansion\tSolder Mask Expansion Mode\tPaste Mask Expansion\tPaste Mask Expansion Mode\r\n"
 
-            const mid = (numBlocks * size) / 2
+            const numBlocksWithMargins = numBlocks + 2 * margin
+            const mid = (numBlocksWithMargins * size) / 2
 
             /*
             kicad +=
@@ -169,9 +172,10 @@ export default function SilkQRCode(props: {
     url: string
     layer?: number
     size?: number
+    margin?: number
     mirror?: boolean
 }) {
-    const { url, layer, mirror = true, size = 0.3 } = props
+    const { url, layer, mirror = true, size = 0.3, margin = 1 } = props
     const eagleLayer = layer ?? mirror ? 21 : 22
     const args = url.replace(/\/$/, "").split("/") // trim any trailing slash
     const vanity = args[args.length - 1]
@@ -179,8 +183,10 @@ export default function SilkQRCode(props: {
         url,
         eagleLayer,
         size,
+        margin,
         mirror
     )
+    const numBlocksWithMargins = numBlocks + margin * 2
 
     if (!url) return null
 
@@ -193,7 +199,11 @@ export default function SilkQRCode(props: {
     const altiumUri =
         altium && `data:text/plain;charset=UTF-8,${encodeURIComponent(altium)}`
 
-    const widthmm = roundWithPrecision(size * numBlocks, 3, Math.ceil)
+    const widthmm = roundWithPrecision(
+        size * numBlocksWithMargins,
+        3,
+        Math.ceil
+    )
     return (
         <>
             {error && <Alert severity="warning">{error}</Alert>}
@@ -249,7 +259,7 @@ export default function SilkQRCode(props: {
                                 <Card>
                                     <CardHeader
                                         title="original size"
-                                        subheader={`${widthmm}x${widthmm}mm`}
+                                        subheader={`${widthmm}x${widthmm}mm, ${numBlocks}x${numBlocks}`}
                                     />
                                     <CardContent sx={{ textAlign: "center" }}>
                                         <a
@@ -261,6 +271,7 @@ export default function SilkQRCode(props: {
                                                 className="pixelated"
                                                 style={{
                                                     width: `${widthmm}mm`,
+                                                    border: "solid 1px #aaa",
                                                 }}
                                                 src={imageUri}
                                                 alt={`QR code of ${url} scaled 1:1`}
@@ -280,7 +291,10 @@ export default function SilkQRCode(props: {
                                         >
                                             <img
                                                 className="pixelated"
-                                                style={{ width: `10rem` }}
+                                                style={{
+                                                    width: `10rem`,
+                                                    border: "solid 1px #aaa",
+                                                }}
                                                 src={imageUri}
                                                 alt={`QR code of ${url}`}
                                             />
