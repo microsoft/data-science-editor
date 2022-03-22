@@ -28,6 +28,7 @@ import WifiIcon from "@mui/icons-material/Wifi"
 import SettingsIcon from "@mui/icons-material/Settings"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord"
+import BugReportIcon from "@mui/icons-material/BugReport"
 import VideoCallIcon from "@mui/icons-material/VideoCall"
 import MakeCodeIcon from "../icons/MakeCodeIcon"
 import TextSnippetIcon from "@mui/icons-material/TextSnippet"
@@ -185,6 +186,11 @@ export default function ToolsDrawer() {
             text: "Trace Analyzer",
             to: "/tools/player/",
             icon: <TextSnippetIcon />,
+        },
+        {
+            text: "Module Tester",
+            to: "/tools/module-tester/",
+            icon: <BugReportIcon />,
         },
         {
             // separator
