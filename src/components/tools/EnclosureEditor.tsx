@@ -15,115 +15,66 @@ const EnclosureGenerator = lazy(() => import("./EnclosureGenerator"))
 const STORAGE_KEY = "jacdac:enclosureeditorkey_source"
 const OPTIONS_STORAGE_KEY = "jacdac:enclosureeditorkey_options"
 const DEFAULT_OPTIONS = {
-    legs: { type: "well" },
-    cover: {
-        mounts: {
-            type: "ring",
-        },
-    },
+    cover: {},
 }
 const modules: EnclosureModel[] = [
-    {
-        name: "humidity",
-        box: {
-            width: 32.5,
-            height: 20,
-            depth: 5.5,
-        },
-        rings: [
-            {
-                x: 10,
-                y: 2.5,
-            },
-            {
-                x: 10,
-                y: -2.5,
-            },
-            {
-                x: -7.5,
-                y: 2.5,
-            },
-            {
-                x: -7.5,
-                y: -2.5,
-            },
-        ],
-        components: [
-            {
-                x: -5,
-                y: 0,
-                type: "led",
-            },
-            {
-                x: 6,
-                y: 2.4,
-                type: "circle",
-                radius: 2,
-            },
-        ],
-        connectors: [
-            {
-                x: -20,
-                y: 0,
-                dir: "left",
-                type: "jacdac",
-            },
-        ],
+    { width: 20, height: 20 },
+    { width: 30, height: 30 },
+    { width: 30, height: 20 },
+    { width: 60, height: 30 },
+].map(({ width, height }) => ({
+    name: `${width}x${height}`,
+    box: {
+        width: width + 8,
+        height: height + 5,
+        depth: 5.5,
     },
-    {
-        name: "accelerometer",
-        box: {
-            width: 29,
-            height: 22,
-            depth: 5.5,
+    rings: [
+        {
+            x: width >> 1,
+            y: height >> 1,
         },
-        rings: [
-            {
-                x: 7.5,
-                y: 7.5,
-            },
-            {
-                x: -7.5,
-                y: -7.5,
-            },
-            {
-                x: -7.5,
-                y: 7.5,
-            },
-            {
-                x: 7.5,
-                y: -7.5,
-            },
-        ],
-        components: [
-            {
-                x: 0,
-                y: 7,
-                type: "led",
-            },
-            {
-                x: 7,
-                y: 3,
-                type: "circle",
-                radius: 4,
-            },
-        ],
-        connectors: [
-            {
-                x: 0,
-                y: 7.5,
-                dir: "top",
-                type: "jacdac",
-            },
-            {
-                x: 0,
-                y: -7.5,
-                dir: "bottom",
-                type: "jacdac",
-            },
-        ],
-    },
-]
+        {
+            x: width >> 1,
+            y: -(height >> 1),
+        },
+        {
+            x: -(width >> 1),
+            y: -(height >> 1),
+        },
+        {
+            x: -(width >> 1),
+            y: height >> 1,
+        },
+    ],
+    components: [
+        {
+            x: 0,
+            y: 6,
+            type: "led",
+        },
+        {
+            x: 0,
+            y: 0,
+            type: "circle",
+            radius: 2,
+        },
+    ],
+    connectors: [
+        {
+            x: -(width >> 1) + 2,
+            y: 0,
+            dir: "left",
+            type: "jacdac",
+        },
+        {
+            x: (width >> 1) - 2,
+            y: 0,
+            dir: "right",
+            type: "jacdac",
+        },
+    ],
+}))
 
 function ExampleMenu(props: { setSource: (source: string) => void }) {
     const { setSource } = props

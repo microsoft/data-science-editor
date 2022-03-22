@@ -1,4 +1,4 @@
-import { primitives, transforms, booleans, extrusions } from "@jscad/modeling"
+import { primitives, transforms, booleans } from "@jscad/modeling"
 import { Geom3 } from "@jscad/modeling/src/geometries/types"
 import stlSerializer from "@jscad/stl-serializer"
 const { cuboid, cylinder, roundedCuboid } = primitives
@@ -26,7 +26,7 @@ const dirAngles = {
 }
 
 const ringGap = 2.5
-const ringRadius = 2.15 / 2
+const ringRadius = 2.5 / 2
 const pcbWidth = 1.6
 const snapHeight = 1.5
 
