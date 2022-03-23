@@ -33,6 +33,7 @@ const modules: EnclosureModel[] = [
         {
             x: width >> 1,
             y: height >> 1,
+            notch: "right",
         },
         {
             x: width >> 1,

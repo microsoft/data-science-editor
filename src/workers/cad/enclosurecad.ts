@@ -35,6 +35,7 @@ const wallRadius = wall / 2
 const segments = 32
 const legSegments = 64
 const snapRadius = 2.1
+const notchRadius = 1
 
 export interface EnclosureModel {
     name: string
@@ -43,7 +44,11 @@ export interface EnclosureModel {
         height: number
         depth: number
     }
-    rings: { x: number; y: number }[]
+    rings: {
+        x: number
+        y: number
+        notch?: "top" | "bottom" | "left" | "right"
+    }[]
     components?: {
         x: number
         y: number
@@ -287,7 +292,7 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
     )
 
     // add snap fit ring mounts
-    const snap = (x, y, h, hc) =>
+    const snap = (x: number, y: number, h: number, hc: number) =>
         union(
             translate(
                 [x, y, 0],
@@ -308,7 +313,13 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
                 })
             )
         )
-    const mounts = [
+    const mounts: {
+        x: number
+        y: number
+        h: number
+        hc: number
+        notch?: "top" | "bottom" | "left" | "right"
+    }[] = [
         ...rings.map(p => ({ ...p, h: snapHeight, hc: pcbWidth })),
         ...(cover?.mounts?.type === "ring"
             ? coverSnaps.map(p => ({ ...p, h: depth, hc: wall }))
@@ -318,6 +329,39 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
         model,
         ...mounts.map(ring => snap(ring.x, ring.y, ring.h, ring.hc))
     )
+    const notches = mounts.filter(m => m.notch)
+    if (notches.length) {
+        const notchx = {
+            left: -1,
+            right: 1,
+            top: 0,
+            bottom: 0,
+        }
+        const notchy = {
+            left: 0,
+            right: 1,
+            top: 1,
+            bottom: -1,
+        }
+        model = union(
+            model,
+            ...notches.map(({ x, y, notch, h, hc }) =>
+                translate(
+                    [
+                        x + notchx[notch] * (snapRadius + notchRadius),
+                        y + notchy[notch] * (snapRadius - notchRadius),
+                        wall,
+                    ],
+                    cylinder({
+                        radius: notchRadius - printPrecision / 2,
+                        height: h + hc,
+                        center: [0, 0, h / 2],
+                        segments: segments >> 1,
+                    })
+                )
+            )
+        )
+    }
 
     return [model, coverModel].filter(m => !!m)
 }
