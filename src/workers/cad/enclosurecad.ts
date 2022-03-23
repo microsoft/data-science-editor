@@ -26,7 +26,7 @@ const dirAngles = {
 }
 
 const ringGap = 2.5
-const ringRadius = 3.2 / 2
+const ringRadius = 3.6 / 2
 const pcbWidth = 1.6
 const snapHeight = 1.5
 
@@ -34,7 +34,7 @@ const wall = pcbWidth
 const wallRadius = wall / 2
 const segments = 32
 const legSegments = 64
-const snapRadius = 2.1
+const snapRadius = 2.5
 const notchRadius = 1
 
 export interface EnclosureModel {
