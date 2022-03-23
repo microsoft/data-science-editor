@@ -92,12 +92,12 @@ function useQRCodeSCR(
                 `(effects (font (size 1 1) (thickness 0.15))))\n`
                 */
 
-            for (let y = 0; y < numBlocks; y++) {
+            for (let y = 0; y < numBlocksWithMargins; y++) {
                 let x = 0
-                while (x < numBlocks) {
+                while (x < numBlocksWithMargins) {
                     while (code[`${x},${y}`]) x++
                     let xe = x
-                    while (xe < numBlocks && !code[`${xe},${y}`]) xe++
+                    while (xe < numBlocksWithMargins && !code[`${xe},${y}`]) xe++
                     const x0 = x * size
                     const y0 = y * size
                     const x1 = xe * size
@@ -135,7 +135,7 @@ function useQRCodeSCR(
 
             const frame = (x0: number, y0: number, x1: number, y1: number) => {
                 const q = (n: number) =>
-                    (n * ((numBlocks * size) / 2 + 0.0001)).toFixed(4)
+                    (n * ((numBlocksWithMargins * size) / 2 + 0.0001)).toFixed(4)
                 kicad +=
                     `(fp_line (start ${q(x0)} ${q(y0)}) ` +
                     `(end ${q(x1)} ${q(y1)}) ` +
@@ -147,8 +147,8 @@ function useQRCodeSCR(
             frame(1, 1, 1, -1)
             kicad += ")\n"
 
-            const max_x = f(numBlocks * size)
-            const max_y = f(numBlocks * size)
+            const max_x = f(numBlocksWithMargins * size)
+            const max_y = f(numBlocksWithMargins * size)
 
             scr += `GRID LAST;\n`
             scr += `DISPLAY NONE ?? ${layer};\n`
@@ -177,8 +177,8 @@ export default function SilkQRCode(props: {
 }) {
     const { url, layer, mirror = true, size = 0.3, margin = 1 } = props
     const eagleLayer = layer ?? mirror ? 21 : 22
-    const args = url.replace(/\/$/, "").split("/") // trim any trailing slash
-    const vanity = args[args.length - 1]
+    const args = (url ?? "").replace(/\/$/, "").split("/") // trim any trailing slash
+    const vanity = args[args.length - 1] ?? ""
     const { altium, kicad, scr, image, error, numBlocks } = useQRCodeSCR(
         url,
         eagleLayer,
