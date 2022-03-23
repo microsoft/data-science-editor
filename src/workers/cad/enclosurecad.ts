@@ -7,7 +7,7 @@ const { union, subtract } = booleans
 
 const connectorSpecs = {
     jacdac: {
-        width: 9.5,
+        width: 9.7,
         height: 5,
         offset: [0, 0, 0],
     },
@@ -86,7 +86,7 @@ export interface EnclosureFile {
 export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
     const { box, rings, connectors, components } = m
     const { width, height, depth } = box
-    const { cover, legs, printPrecision = 0.55 } = options
+    const { cover, legs, printPrecision = 0.4 } = options
 
     let coverModel: Geom3
     // box
@@ -350,12 +350,12 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
                     [
                         x + notchx[notch] * (snapRadius + notchRadius),
                         y + notchy[notch] * (snapRadius - notchRadius),
-                        wall,
+                        0,
                     ],
                     cylinder({
                         radius: notchRadius - printPrecision / 2,
-                        height: h + hc,
-                        center: [0, 0, h / 2],
+                        height: h + hc + wall,
+                        center: [0, 0, (h + hc + wall) / 2],
                         segments: segments >> 1,
                     })
                 )
