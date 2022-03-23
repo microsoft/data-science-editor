@@ -7,7 +7,7 @@ const { union, subtract } = booleans
 
 const connectorSpecs = {
     jacdac: {
-        width: 10,
+        width: 9.5,
         height: 5,
         offset: [0, 0, 0],
     },
@@ -26,7 +26,7 @@ const dirAngles = {
 }
 
 const ringGap = 2.5
-const ringRadius = 2.5 / 2
+const ringRadius = 3 / 2
 const pcbWidth = 1.6
 const snapHeight = 1.5
 
@@ -182,7 +182,7 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
             }),
             cuboid({
                 size: [10, 10, wall],
-                center: [width / 2, 0, depth + wall + wall / 2],
+                center: [0, height / 2, depth + wall + wall / 2],
             })
         )
     )

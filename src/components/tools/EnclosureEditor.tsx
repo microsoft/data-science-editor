@@ -26,14 +26,13 @@ const modules: EnclosureModel[] = [
     name: `${width}x${height}`,
     box: {
         width: width + 8,
-        height: height + 5,
+        height: height + 8,
         depth: 5.5,
     },
     rings: [
         {
             x: width >> 1,
             y: height >> 1,
-            notch: "right",
         },
         {
             x: width >> 1,
@@ -46,12 +45,13 @@ const modules: EnclosureModel[] = [
         {
             x: -(width >> 1),
             y: height >> 1,
+            notch: "right",
         },
     ],
     components: [
         {
-            x: 0,
-            y: 6,
+            x: -5,
+            y: 1,
             type: "led",
         },
         {
