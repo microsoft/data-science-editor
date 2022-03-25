@@ -26,7 +26,7 @@ const dirAngles = {
 }
 
 const ringGap = 2.5
-const ringRadius = 3.8 / 2
+const ringRadius = 3.6 / 2
 const pcbWidth = 1.6
 const snapHeight = 1.5
 
@@ -320,7 +320,7 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
         hc: number
         notch?: "top" | "bottom" | "left" | "right"
     }[] = [
-        ...rings.map(p => ({ ...p, h: snapHeight, hc: pcbWidth })),
+        ...rings.map(p => ({ ...p, h: snapHeight, hc: pcbWidth + 0.5 })),
         ...(cover?.mounts?.type === "ring"
             ? coverSnaps.map(p => ({ ...p, h: depth, hc: wall }))
             : []),
