@@ -85,7 +85,6 @@ export default function EnclosureGenerator(props: {
         [files]
     )
     const handleClick = () => updateUrl()
-
     return (
         <Grid container spacing={1}>
             <Grid item xs={12}>
