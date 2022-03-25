@@ -84,6 +84,11 @@ export default function EnclosureGenerator(props: {
         () => () => files?.forEach(({ url }) => URL.revokeObjectURL(url)),
         [files]
     )
+
+    useEffect(() => {
+        if (module) updateUrl()
+    }, [])
+
     const handleClick = () => updateUrl()
     return (
         <Grid container spacing={1}>

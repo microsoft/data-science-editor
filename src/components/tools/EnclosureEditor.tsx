@@ -141,10 +141,10 @@ function EnclosureDesign(props: {
     }
 
     useEffect(() => {
-        const model = generateGridEnclosureModel(gridWidth, gridHeight)
+        const model = generateGridEnclosureModel(gridWidth, gridHeight, depth)
         const source = JSON.stringify(model, null, 4)
         setSource(source)
-    }, [gridWidth, gridHeight])
+    }, [gridWidth, gridHeight, depth])
 
     useEffect(() => {
         const options: EnclosureOptions = {
