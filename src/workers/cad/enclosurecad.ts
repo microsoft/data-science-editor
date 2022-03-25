@@ -26,7 +26,7 @@ const dirAngles = {
 }
 
 const ringGap = 2.5
-const ringRadius = 3.6 / 2
+const ringRadius = 3.8 / 2
 const pcbWidth = 1.6
 const snapHeight = 1.5
 
