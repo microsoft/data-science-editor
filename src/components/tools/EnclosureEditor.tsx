@@ -31,7 +31,7 @@ function generateGridEnclosureModel(
 ): EnclosureModel {
     const width = gridWidth * 10
     const height = gridHeight * 10
-    const c = 7
+    const c = 8
     const boxWidth = width + c
     const boxHeight = height + c
     return {
