@@ -7,8 +7,8 @@ const { union, subtract } = booleans
 
 const connectorSpecs = {
     jacdac: {
-        width: 9.7,
-        height: 5,
+        width: 9.8,
+        height: 5.1,
         offset: [0, 0, 0],
     },
     usbc: {
@@ -26,7 +26,7 @@ const dirAngles = {
 }
 
 const ringGap = 2.5
-const ringRadius = 3.6 / 2
+const ringRadius = 3.55 / 2
 const pcbWidth = 1.6
 const snapHeight = 1.5
 
@@ -320,7 +320,11 @@ export const convert = (m: EnclosureModel, options: EnclosureOptions = {}) => {
         hc: number
         notch?: "top" | "bottom" | "left" | "right"
     }[] = [
-        ...rings.map(p => ({ ...p, h: snapHeight, hc: pcbWidth + 0.5 })),
+        ...rings.map(p => ({
+            ...p,
+            h: snapHeight,
+            hc: pcbWidth + printPrecision / 2,
+        })),
         ...(cover?.mounts?.type === "ring"
             ? coverSnaps.map(p => ({ ...p, h: depth, hc: wall }))
             : []),
