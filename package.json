@@ -68,7 +68,7 @@
     "gatsby-remark-embed-snippet": "^7.10.0",
     "gatsby-remark-external-links": "0.0.4",
     "gatsby-remark-images": "^6.10.1",
-    "gatsby-remark-makecode": "^1.0.22",
+    "gatsby-remark-makecode": "^1.0.23",
     "gatsby-remark-static-images": "^1.2.1",
     "gatsby-source-filesystem": "^4.10.0",
     "gatsby-theme-material-ui": "^5.1.0",
