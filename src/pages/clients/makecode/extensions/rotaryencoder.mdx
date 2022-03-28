@@ -9,7 +9,7 @@ The `position` method returns the current position.
 The program below outputs the current position whenever it changes by one click:
 
 ```blocks
-modules.rotaryEncoder1.onPositionChangedBy(1, () => {
+modules.rotaryEncoder1.onPositionChanged(() => {
     led.stopAnimation()
     basic.showNumber(modules.rotaryEncoder1.position())
 })
