@@ -117,6 +117,10 @@ export default function MakeCodeSnippet(props: { renderedSource: string }) {
             }>(renderedSource, {}),
         [renderedSource]
     )
+    const snippet = useMemo(
+        () => source && parseMakeCodeSnippet(source),
+        [source]
+    )
     const { url, req } = rendered || {}
     const tabs = ["blocks", "typescript"]
     const { editor, setEditor } = useContext(MakeCodeSnippetContext)
@@ -128,8 +132,10 @@ export default function MakeCodeSnippet(props: { renderedSource: string }) {
         if (newValue < tabs.length - 1) setEditor(tabs[newValue])
         setTab(newValue)
     }
-    const snippet = useMemo(() => parseMakeCodeSnippet(source), [source])
-    const { code } = snippet
+    const { code } = snippet || {}
+
+    if (!code)
+        return <CodeBlock className="typescript">{renderedSource}</CodeBlock>
 
     return (
         <PaperBox>

@@ -22,22 +22,6 @@ input.onButtonPressed(Button.B, function () {
 })
 ```
 
-The events `on` and `off`, with associated event handlers
-are fired when the relay transitions. Normally closed relays will energize when active,
-and normally closed (NC) relays will energize when inactive.
-
-```blocks
-modules.relay1.onOn(() => {
-    led.stopAnimation()
-    basic.showString("A")
-})
-
-modules.relay1.onOff(() => {
-    led.stopAnimation()
-    basic.showString("I")
-})
-```
-
 ## See Also
 
 -   [service specification](/services/relay/)
