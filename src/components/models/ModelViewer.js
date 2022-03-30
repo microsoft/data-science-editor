@@ -2,7 +2,7 @@ import React, { Suspense, useRef } from "react"
 import { Canvas } from "@react-three/fiber"
 import { OrbitControls, Stage } from "@react-three/drei"
 import FullscreenIcon from "@mui/icons-material/Fullscreen"
-import IconButtonWithTooltip from "../../ui/IconButtonWithTooltip"
+import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 
 export default function ModelViewer(props) {
     // eslint-disable-next-line react/prop-types

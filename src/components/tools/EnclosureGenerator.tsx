@@ -7,6 +7,7 @@ import {
     CardHeader,
     CardMedia,
     Grid,
+    NoSsr,
 } from "@mui/material"
 import Suspense from "../ui/Suspense"
 import { convertToSTL } from "../blockly/dsl/workers/cad.proxy"
@@ -19,37 +20,7 @@ import useMounted from "../hooks/useMounted"
 import { CircularProgress } from "@mui/material"
 import { Alert } from "@mui/material"
 
-const ModelViewer = lazy(() => import("../home/models/ModelViewer"))
-const STLModel = lazy(() => import("../home/models/STLModel"))
-
-function STLModelCard(props: { name: string; url: string; color: string }) {
-    const { name, url, color } = props
-    const fn = `${name}.stl`
-    return (
-        <Card>
-            <CardHeader title={fn} />
-            <CardMedia>
-                <Suspense>
-                    <ModelViewer
-                        responsive={true}
-                        style={{
-                            position: "relative",
-                            height: "20rem",
-                            width: "100%",
-                        }}
-                    >
-                        <STLModel url={url} color={color} />
-                    </ModelViewer>
-                </Suspense>
-            </CardMedia>
-            <CardActions>
-                <Button href={url} variant="outlined" download={fn}>
-                    Download
-                </Button>
-            </CardActions>
-        </Card>
-    )
-}
+const STLModelCard = lazy(() => import("../models/STLModelCard"))
 
 export default function EnclosureGenerator(props: {
     module: EnclosureModel
@@ -118,7 +89,11 @@ export default function EnclosureGenerator(props: {
             )}
             {files?.map(file => (
                 <Grid item key={file.name} {...gridBreakpoints}>
-                    <STLModelCard {...file} color={color} />
+                    <NoSsr>
+                        <Suspense>
+                            <STLModelCard {...file} color={color} />
+                        </Suspense>
+                    </NoSsr>
                 </Grid>
             ))}
         </Grid>
