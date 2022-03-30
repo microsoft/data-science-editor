@@ -1,5 +1,5 @@
 import { MenuItem, SelectChangeEvent } from "@mui/material"
-import React, { ChangeEvent } from "react"
+import React from "react"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import SelectWithLabel from "../ui/SelectWithLabel"
 

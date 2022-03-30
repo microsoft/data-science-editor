@@ -16,6 +16,8 @@ import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import SafeBootAlert from "../../components/firmware/SafeBootAlert"
 import ManualFirmwareAlert from "../../components/firmware/ManualFirmwareAlert"
 import { isDualDeviceId } from "../../../jacdac-ts/src/jdom/spec"
+import PowerSupplySection from "../../components/testdom/PowerSupplySection"
+import { useId } from "react-use-id-hook"
 
 function DeviceItem(props: { device: JDDevice }) {
     const { device } = props
@@ -40,6 +42,7 @@ function DeviceItem(props: { device: JDDevice }) {
 }
 
 export default function Page() {
+    const devicesId = useId()
     const devices = useDevices({
         physical: true,
         announced: true,
@@ -57,14 +60,16 @@ export default function Page() {
         <>
             <FirmwareLoader />
             <h1>Module Tester</h1>
-            <p>Only the last connected module is shown on this view.</p>
-            <Grid container spacing={1}>
-                {devices?.map(device => (
-                    <Grid key={device.id} item xs={12}>
-                        <DeviceItem device={device} />
-                    </Grid>
-                ))}
-            </Grid>
+            <PowerSupplySection />
+            <section id={devicesId}>
+                <Grid container spacing={1}>
+                    {devices?.map(device => (
+                        <Grid key={device.id} item xs={12}>
+                            <DeviceItem device={device} />
+                        </Grid>
+                    ))}
+                </Grid>
+            </section>
             <h2>Firmwares</h2>
             <FirmwareCardGrid />
             <SafeBootAlert />
