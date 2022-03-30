@@ -15,18 +15,13 @@ import clsx from "clsx"
 import { TreeView } from "@mui/lab"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 import ArrowRightIcon from "@mui/icons-material/ArrowRight"
-import StyledTreeItem, {
-    StyledTreeViewItemProps,
-} from "../ui/StyledTreeItem"
+import StyledTreeItem, { StyledTreeViewItemProps } from "../ui/StyledTreeItem"
 import useChange from "../../jacdac/useChange"
 import AnnounceFlagsTreeItem from "../devices/AnnounceFlagsTreeItem"
-import {
-    EventTreeItem,
-    RegisterTreeItem,
-} from "../tools/JDomTreeViewItems"
+import { EventTreeItem, RegisterTreeItem } from "../tools/JDomTreeViewItems"
 import DashboardServiceWidget from "../dashboard/DashboardServiceWidget"
 import TestIcon from "../icons/TestIcon"
-
+import InfoIcon from "@mui/icons-material/Info"
 const PREFIX = "TestTreeView"
 const classes = {
     root: `${PREFIX}-root`,
@@ -62,6 +57,7 @@ function TestTreeItem(props: TestNodeProps) {
     const label = useChange(node, _ => _?.label)
     const info = useChange(node, _ => _?.info)
     const output = useChange(node, _ => _?.output)
+    const description = useChange(node, _ => _?.description)
 
     const testComponent = testComponents[nodeKind]
     const testNode = testComponent ? createElement(testComponent, props) : null
@@ -78,18 +74,23 @@ function TestTreeItem(props: TestNodeProps) {
             {output && (
                 <StyledTreeItem nodeId={id + ":output"} labelText={output} />
             )}
-            {!!nodeChildren.length && (
-                <>
-                    {nodeChildren.map(child => (
-                        <TestTreeItem
-                            key={child.id}
-                            node={child}
-                            showTwins={showTwins}
-                            {...rest}
-                        />
-                    ))}
-                </>
-            )}
+            <>
+                {description && (
+                    <StyledTreeItem
+                        nodeId={id + ":descr"}
+                        icon={<InfoIcon color="info" />}                        
+                        labelText={description}
+                    />
+                )}
+                {nodeChildren?.map(child => (
+                    <TestTreeItem
+                        key={child.id}
+                        node={child}
+                        showTwins={showTwins}
+                        {...rest}
+                    />
+                ))}
+            </>
         </StyledTreeItem>
     )
 }
