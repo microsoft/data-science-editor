@@ -17,7 +17,6 @@ import {
 import useServiceProviderFromServiceClass from "../hooks/useServiceProviderFromServiceClass"
 import useDevices from "../hooks/useDevices"
 import DashboardDevice from "../dashboard/DashboardDevice"
-const JDomTreeView = lazy(() => import("../tools/JDomTreeView"))
 const PacketView = lazy(() => import("../tools/PacketView"))
 
 export default function Tools() {
@@ -41,12 +40,6 @@ export default function Tools() {
                 !dev.hasService(simulatorClass)
         )
         .slice(0, 4)
-    const simulator = useDevices({
-        ignoreInfrastructure: true,
-        announced: true,
-        serviceClass: simulatorClass,
-    })?.[0]
-
     return (
         <Grid
             container
