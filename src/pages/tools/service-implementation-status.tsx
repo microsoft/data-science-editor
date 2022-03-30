@@ -11,6 +11,7 @@ import { serviceProviderDefinitionFromServiceClass } from "../../../jacdac-ts/sr
 import useDeviceCatalog from "../../components/devices/useDeviceCatalog"
 import useChange from "../../jacdac/useChange"
 import { resolveMakecodeServiceFromClassIdentifier } from "../../components/makecode/services"
+import { withPrefix } from "gatsby"
 
 function ServiceStatus(props: { service: jdspec.ServiceSpec }) {
     const { service } = props
@@ -30,7 +31,7 @@ function ServiceStatus(props: { service: jdspec.ServiceSpec }) {
     return (
         <tr>
             <td>
-                <a href={`/services/${shortId}/`}>{name}</a>
+                <a href={withPrefix(`/services/${shortId}/`)}>{name}</a>
             </td>
             <td>{devices?.length || ""}</td>
             <td>{available(serviceProvider)}</td>
