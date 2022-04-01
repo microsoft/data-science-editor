@@ -8,6 +8,7 @@ import {
     SRV_JACSCRIPT_CLOUD,
     SRV_JACSCRIPT_CONDITION,
     SRV_LOGGER,
+    SRV_POWER_SUPPLY,
     SRV_PROTO_TEST,
     SRV_PROXY,
     SRV_ROLE_MANAGER,
@@ -36,6 +37,7 @@ const ignoredServices = [
     SRV_BRIDGE,
     SRV_JACSCRIPT_CLOUD,
     SRV_JACSCRIPT_CONDITION,
+    SRV_POWER_SUPPLY,
 ]
 
 export function filterTestDevice(device: JDDevice) {
