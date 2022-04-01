@@ -22,6 +22,7 @@ const ignoredDevices = [
     SRV_BRIDGE,
     SRV_INFRASTRUCTURE,
     SRV_PROXY,
+    SRV_POWER_SUPPLY,
 ]
 const ignoredServices = [
     SRV_CONTROL,
@@ -37,7 +38,6 @@ const ignoredServices = [
     SRV_BRIDGE,
     SRV_JACSCRIPT_CLOUD,
     SRV_JACSCRIPT_CONDITION,
-    SRV_POWER_SUPPLY,
 ]
 
 export function filterTestDevice(device: JDDevice) {
