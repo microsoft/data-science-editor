@@ -4,6 +4,8 @@ import {
     SRV_BRIDGE,
     SRV_CONTROL,
     SRV_DASHBOARD,
+    SRV_DC_CURRENT_MEASUREMENT,
+    SRV_DC_VOLTAGE_MEASUREMENT,
     SRV_INFRASTRUCTURE,
     SRV_JACSCRIPT_CLOUD,
     SRV_JACSCRIPT_CONDITION,
@@ -11,6 +13,7 @@ import {
     SRV_POWER_SUPPLY,
     SRV_PROTO_TEST,
     SRV_PROXY,
+    SRV_RELAY,
     SRV_ROLE_MANAGER,
     SRV_SETTINGS,
     SRV_UNIQUE_BRAIN,
@@ -22,7 +25,6 @@ const ignoredDevices = [
     SRV_BRIDGE,
     SRV_INFRASTRUCTURE,
     SRV_PROXY,
-    SRV_POWER_SUPPLY,
 ]
 const ignoredServices = [
     SRV_CONTROL,
@@ -40,7 +42,20 @@ const ignoredServices = [
     SRV_JACSCRIPT_CONDITION,
 ]
 
+export function isModuleTester(device: JDDevice) {
+    return (
+        device.announced &&
+        device.hasService(SRV_POWER_SUPPLY) &&
+        device.hasService(SRV_DC_CURRENT_MEASUREMENT) &&
+        device.hasService(SRV_DC_VOLTAGE_MEASUREMENT) &&
+        device.hasService(SRV_RELAY)
+    )
+}
+
 export function filterTestDevice(device: JDDevice) {
+    // module tester
+    if (isModuleTester(device)) return false
+
     return !ignoredDevices.some(sc => device.hasService(sc))
 }
 

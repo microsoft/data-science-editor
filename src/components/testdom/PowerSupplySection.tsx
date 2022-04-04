@@ -1,23 +1,45 @@
 import { Grid } from "@mui/material"
-import { SRV_POWER_SUPPLY } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
-import useServices from "../hooks/useServices"
+import {
+    SRV_DC_CURRENT_MEASUREMENT,
+    SRV_DC_VOLTAGE_MEASUREMENT,
+    SRV_POWER_SUPPLY,
+    SRV_RELAY,
+} from "../../../jacdac-ts/src/jdom/constants"
 import React from "react"
-import DashboardServiceWidgetItem from "../dashboard/DashboardServiceWidgetItem"
 import { useId } from "react-use-id-hook"
+import useDevices from "../hooks/useDevices"
+import { isModuleTester } from "./filters"
+import DashboardDevice from "../dashboard/DashboardDevice"
+import { JDService } from "../../../jacdac-ts"
+
+function powerSupplyServiceFilter(service: JDService) {
+    return (
+        [
+            SRV_POWER_SUPPLY,
+            SRV_DC_VOLTAGE_MEASUREMENT,
+            SRV_DC_CURRENT_MEASUREMENT,
+            SRV_RELAY,
+        ].indexOf(service.serviceClass) > -1
+    )
+}
 
 export default function PowerSupplySection() {
     const sectionId = useId()
-    const services = useServices({ serviceClass: SRV_POWER_SUPPLY })
-    if (!services?.length) return null
+    const devices = useDevices({
+        serviceClass: SRV_POWER_SUPPLY,
+        announced: true,
+    }).filter(isModuleTester)
+    if (!devices?.length) return null
 
     return (
         <section id={sectionId}>
+            <h2>Power Supply</h2>
             <Grid container spacing={1}>
-                {services.map(service => (
-                    <DashboardServiceWidgetItem
-                        key={service.nodeId}
-                        service={service}
-                        visible={true}
+                {devices.map(device => (
+                    <DashboardDevice
+                        key={device.nodeId}
+                        device={device}
+                        serviceFilter={powerSupplyServiceFilter}
                     />
                 ))}
             </Grid>
