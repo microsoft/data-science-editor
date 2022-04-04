@@ -61,6 +61,7 @@ export default function Page() {
             <FirmwareLoader />
             <h1>Module Tester</h1>
             <PowerSupplySection />
+            <h2>Devices</h2>
             <section id={devicesId}>
                 <Grid container spacing={1}>
                     {devices?.map(device => (
