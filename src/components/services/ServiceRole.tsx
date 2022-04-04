@@ -16,7 +16,8 @@ export default function ServiceRole(props: { service: JDService }) {
 
     const [showSelectRoleDialog, setShowSelectRoleDialog] = useState(false)
     const roleManager = useRoleManagerClient()
-    const role = useServiceRole(service)
+    const roleUri = useServiceRole(service)
+    const role = roleUri?.pathname
     const handleOpen = () => setShowSelectRoleDialog(true)
     const handleClose = () => setShowSelectRoleDialog(false)
 

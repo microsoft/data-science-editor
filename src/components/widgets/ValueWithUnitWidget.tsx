@@ -14,7 +14,6 @@ function useDebouncedValueTextLength(valueText: string) {
     else
         debouncedRef.current =
             debouncedRef.current * (1 - alpha) + valueTextLength * alpha
-    console.log({ deb: debouncedRef.current, valueTextLength })
     return Math.ceil(debouncedRef.current)
 }
 

@@ -29,6 +29,8 @@ export default function RoleChip(props: {
     const serviceServer = useServiceServer(service)
     const specification = useServiceSpecificationFromServiceClass(serviceClass)
 
+    const roleName = role.split("?", 1)[0]
+
     const handleRoleClick = () => {
         // spin off simulator
         if (!service && !preferredDeviceId && specification) {
@@ -81,7 +83,7 @@ export default function RoleChip(props: {
     const handleDelete = () => bus.removeServiceProvider(serviceServer.device)
     return (
         <Chip
-            label={role}
+            label={roleName}
             variant={service ? undefined : "outlined"}
             avatar={service && <DeviceAvatar device={service.device} />}
             onClick={handleRoleClick}
