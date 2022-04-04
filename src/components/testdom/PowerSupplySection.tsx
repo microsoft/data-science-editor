@@ -10,7 +10,7 @@ import { useId } from "react-use-id-hook"
 import useDevices from "../hooks/useDevices"
 import { isModuleTester } from "./filters"
 import DashboardDevice from "../dashboard/DashboardDevice"
-import { JDService } from "../../../jacdac-ts"
+import { JDService } from "../../../jacdac-ts/src/jdom/service"
 
 function powerSupplyServiceFilter(service: JDService) {
     return (
