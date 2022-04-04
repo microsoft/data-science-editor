@@ -1,12 +1,22 @@
-import React, { CSSProperties } from "react"
+import React, { CSSProperties, useRef } from "react"
 import { Grid, Slider, Typography } from "@mui/material"
-import {
-    renderWithPrecision,
-    roundWithPrecision,
-} from "../../../jacdac-ts/src/jdom/utils"
+import { renderWithPrecision } from "../../../jacdac-ts/src/jdom/utils"
 import useWidgetTheme from "./useWidgetTheme"
 import useUnitConverter from "../ui/useUnitConverter"
 /// <reference path="../../../jacdac-ts/jacdac-spec/spectool/jdspec.d.ts" />
+
+function useDebouncedValueTextLength(valueText: string) {
+    const valueTextLength = valueText.length
+    const debouncedRef = useRef(valueTextLength)
+    const alpha = 0.05
+    if (debouncedRef.current < valueTextLength)
+        debouncedRef.current = valueTextLength
+    else
+        debouncedRef.current =
+            debouncedRef.current * (1 - alpha) + valueTextLength * alpha
+    console.log({ deb: debouncedRef.current, valueTextLength })
+    return Math.ceil(debouncedRef.current)
+}
 
 export default function ValueWithUnitWidget(props: {
     value: number
@@ -40,9 +50,7 @@ export default function ValueWithUnitWidget(props: {
         step === undefined ? 1 : step < 1 ? Math.ceil(-Math.log10(step)) : 0
     const hasValue = !isNaN(value)
     const valueText = hasValue ? renderWithPrecision(value, precision) : "--"
-    const valueTextLength =
-        Math.round(roundWithPrecision(value, precision)).toLocaleString()
-            .length + precision
+    const valueTextLength = useDebouncedValueTextLength(valueText)
     const { textPrimary } = useWidgetTheme(color)
     const valueVariant =
         valueTextLength < 7
@@ -54,7 +62,7 @@ export default function ValueWithUnitWidget(props: {
             : "h6"
     const valueStyle: CSSProperties = {
         color: textPrimary,
-        minWidth: `2em`,
+        minWidth: `${valueTextLength / 2}em`,
         fontVariantNumeric: "tabular-nums",
     }
     const unitStyle: CSSProperties = {
