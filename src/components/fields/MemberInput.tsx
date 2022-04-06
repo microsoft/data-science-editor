@@ -212,6 +212,8 @@ export default function MemberInput(props: {
         const min = signed ? -1 : 0
         const max = 1
         const step = resolution !== undefined ? resolution : 0.01
+        const digits = Math.ceil(-Math.log10(step))
+        const nvalue = roundWithPrecision(value as number, digits)
         if (isWidget) {
             const size = `clamp(6rem, 12vw, 12vh)`
             return (
@@ -219,7 +221,7 @@ export default function MemberInput(props: {
                     tabIndex={0}
                     label={label}
                     size={size}
-                    value={value as number}
+                    value={nvalue}
                     color={color}
                     variant={signed ? "fountain" : undefined}
                     min={min}
@@ -237,7 +239,7 @@ export default function MemberInput(props: {
             <Slider
                 aria-label={label}
                 color={color}
-                value={value as number}
+                value={nvalue}
                 valueLabelFormat={percentValueFormat}
                 onChange={disabled ? undefined : handleSliderChange}
                 min={min}
