@@ -30,6 +30,10 @@ export interface DashboardDeviceProps {
 
 export interface DashboardProps extends DashboardDeviceProps {
     hideSimulators?: boolean
+    showSimulatorHeader?: boolean
+    showSimulatorAvatar?: boolean
+    showDeviceHeader?: boolean
+    showDeviceAvatar?: boolean
     showStartSimulators?: boolean
     showStartRoleSimulators?: boolean
     showConnect?: boolean
@@ -43,6 +47,12 @@ export default function Dashboard(props: DashboardProps) {
         showConnect,
         showStartSimulators,
         showStartRoleSimulators,
+        showHeader,
+        showAvatar,
+        showSimulatorHeader,
+        showSimulatorAvatar,
+        showDeviceHeader,
+        showDeviceAvatar,
         deviceSort = defaultDeviceSort,
         deviceFilter = defaultDeviceFilter,
         ...other
@@ -97,6 +107,8 @@ export default function Dashboard(props: DashboardProps) {
                         </>
                     }
                     devices={simulators}
+                    showHeader={showHeader || showSimulatorHeader}
+                    showAvatar={showAvatar || showSimulatorAvatar}
                     {...other}
                 >
                     {showStartSimulators && !simulators?.length && (
@@ -117,6 +129,8 @@ export default function Dashboard(props: DashboardProps) {
                     )
                 }
                 devices={physicals}
+                showHeader={showHeader || showDeviceHeader}
+                showAvatar={showAvatar || showDeviceAvatar}
                 {...other}
             >
                 {showConnect && !physicals.length && (
