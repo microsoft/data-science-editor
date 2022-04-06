@@ -383,7 +383,8 @@ export default function LightWidget(props: {
                 onLedClick={onLedClick}
             />
         )
-    } else
+    } else {
+        const widgetSize = `clamp(6rem, 18vw, 18vh)`
         return (
             <LightStripWidget
                 colors={colors}
@@ -392,6 +393,8 @@ export default function LightWidget(props: {
                 lightVariant={lightVariant}
                 actualBrightness={actualBrightness}
                 onLedClick={onLedClick}
+                widgetSize={widgetSize}
             />
         )
+    }
 }

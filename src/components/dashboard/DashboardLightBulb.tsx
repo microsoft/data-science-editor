@@ -9,10 +9,11 @@ import useWidgetTheme from "../widgets/useWidgetTheme"
 import { SensorServer } from "../../../jacdac-ts/src/servers/sensorserver"
 import { LightBulbReg } from "../../../jacdac-ts/src/jdom/constants"
 import useRegister from "../hooks/useRegister"
-import { CircularProgress, Grid, Slider } from "@mui/material"
+import { Grid, Slider } from "@mui/material"
 import SvgWidget from "../widgets/SvgWidget"
 import useThrottledValue from "../hooks/useThrottledValue"
 import PowerButton from "../widgets/PowerButton"
+import DashboardRegisterValueFallback from "./DashboardRegisterValueFallback"
 
 export default function DashboardLightBulb(props: DashboardServiceProps) {
     const { service } = props
@@ -32,7 +33,8 @@ export default function DashboardLightBulb(props: DashboardServiceProps) {
     const dimmeableRegister = useRegister(service, LightBulbReg.Dimmable)
     const dimmeable = useRegisterBoolValue(dimmeableRegister, props)
 
-    if (brightness === undefined) return <CircularProgress />
+    if (brightness === undefined)
+        return <DashboardRegisterValueFallback register={brightnessRegister} />
 
     const handleChecked = () =>
         brightnessRegister.sendSetPackedAsync([brightness > 0 ? 0 : 1], true)

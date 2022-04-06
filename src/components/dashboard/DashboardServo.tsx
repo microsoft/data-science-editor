@@ -46,6 +46,7 @@ export default function DashboardServo(props: DashboardServiceProps) {
     const color = server ? "secondary" : "primary"
 
     const toggleOff = () => enabledRegister.sendSetBoolAsync(!enabled, true)
+    const widgetSize = `clamp(5rem, 16vw, 16vh)`
 
     return (
         <Grid container alignContent="center">
@@ -56,6 +57,7 @@ export default function DashboardServo(props: DashboardServiceProps) {
                     color={color}
                     enabled={enabled}
                     toggleOff={toggleOff}
+                    widgetSize={widgetSize}
                 />
             </Grid>
             <Grid item xs={12}>

@@ -97,32 +97,35 @@ export default function DashboardLEDDisplay(props: DashboardServiceProps) {
     if (!hasData) return <LoadingProgress />
     return (
         <>
-            <LightWidget
-                colors={colors}
-                subscribeColors={subscribeColors}
-                registers={registers}
-                widgetCount={services?.length}
-                onLedClick={handleLedClick}
-                {...props}
-            />
-            <Grid container direction="column" spacing={1}>
+            <Grid container direction="column" spacing={1} alignItems="center">
+                <Grid item xs={12}>
+                    <LightWidget
+                        colors={colors}
+                        subscribeColors={subscribeColors}
+                        registers={registers}
+                        widgetCount={services?.length}
+                        onLedClick={handleLedClick}
+                        {...props}
+                    />
+                </Grid>
                 <Grid item>
                     <ColorButtons
                         color={penColor}
                         onColorChange={handleColorChange}
-                    />
-                </Grid>
-                <Grid item>
-                    <IconButtonWithTooltip
-                        title={
-                            configure
-                                ? "Hide configuration"
-                                : "Show configuration"
-                        }
-                        onClick={toggleConfigure}
                     >
-                        <SettingsIcon />
-                    </IconButtonWithTooltip>
+                        <Grid item>
+                            <IconButtonWithTooltip
+                                title={
+                                    configure
+                                        ? "Hide configuration"
+                                        : "Show configuration"
+                                }
+                                onClick={toggleConfigure}
+                            >
+                                <SettingsIcon />
+                            </IconButtonWithTooltip>
+                        </Grid>
+                    </ColorButtons>
                 </Grid>
 
                 {configure &&

@@ -6,6 +6,7 @@ import useRegister from "../hooks/useRegister"
 import useServiceServer from "../hooks/useServiceServer"
 import SwitchWithLabel from "../ui/SwitchWithLabel"
 import useWidgetTheme from "../widgets/useWidgetTheme"
+import DashboardRegisterValueFallback from "./DashboardRegisterValueFallback"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 
 export default function DashboardRelay(props: DashboardServiceProps) {
@@ -19,7 +20,8 @@ export default function DashboardRelay(props: DashboardServiceProps) {
     const handleClose = (event: unknown, checked) =>
         activeRegister?.sendSetBoolAsync(checked, true)
 
-    if (active === undefined) return <CircularProgress />
+    if (active === undefined)
+        return <DashboardRegisterValueFallback register={activeRegister} />
 
     const labelStyle: CSSProperties = {
         color: textPrimary,

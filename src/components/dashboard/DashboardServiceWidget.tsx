@@ -152,7 +152,7 @@ const serviceViews: {
     },
     [SRV_BUZZER]: {
         component: DashboardBuzzer,
-        weight: () => 6,
+        weight: () => 3,
     },
     [SRV_LED_STRIP]: {
         component: DashboardLEDStrip,
@@ -466,7 +466,7 @@ export default function DashboardServiceWidget(
                         color={color}
                         disableShrink={true}
                         variant={"indeterminate"}
-                        size={"3em"}
+                        size={"2rem"}
                     />
                 }
             >

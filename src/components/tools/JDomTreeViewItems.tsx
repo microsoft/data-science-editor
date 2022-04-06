@@ -59,7 +59,8 @@ export function DeviceTreeItem(
             srv => !serviceFilter || serviceFilter(srv)
         )
     )
-    const { dropped, restarts } = useChange(device.stats, _ => _.current)
+    const stats = useChange(device, _ => _.stats)
+    const { dropped, restarts } = useChange(stats, _ => _.current)
     const serviceNames = ellipseJoin(
         services
             .filter(srv => !isInfrastructure(srv.specification))
