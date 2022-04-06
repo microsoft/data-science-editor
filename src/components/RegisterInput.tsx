@@ -13,7 +13,7 @@ import useReadingAuxilliaryValue from "./hooks/useReadingAuxilliaryValue"
 import useChange from "../jacdac/useChange"
 import { isReadOnlyRegister } from "../../jacdac-ts/src/jdom/spec"
 import useSnackbar from "./hooks/useSnackbar"
-import { humanify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
+import { humanify } from "../../jacdac-ts/jacdac-spec/spectool/jdspec"
 
 export type RegisterInputVariant = "widget" | ""
 

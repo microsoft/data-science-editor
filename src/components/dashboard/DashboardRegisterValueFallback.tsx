@@ -1,5 +1,5 @@
 import React from "react"
-import { humanify } from "../../../../jacdac-ts/jacdac-spec/spectool/jdspec"
+import { humanify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import { JDRegister } from "../../../jacdac-ts/src/jdom/register"
 import useServiceServer from "../hooks/useServiceServer"
 import IconButtonWithProgress from "../ui/IconButtonWithProgress"
