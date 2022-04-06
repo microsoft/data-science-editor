@@ -14,9 +14,9 @@ import useRegister from "../hooks/useRegister"
 import SettingsIcon from "@mui/icons-material/Settings"
 import RegisterInput from "../RegisterInput"
 import { bufferEq } from "../../../jacdac-ts/src/jdom/utils"
-import LoadingProgress from "../ui/LoadingProgress"
 import useChange from "../../jacdac/useChange"
 import { JDEventSource } from "../../../jacdac-ts/src/jdom/eventsource"
+import DashboardRegisterValueFallback from "./DashboardRegisterValueFallback"
 
 const configureRegisters = [
     LedDisplayReg.Brightness,
@@ -94,7 +94,8 @@ export default function DashboardLEDDisplay(props: DashboardServiceProps) {
         []
     )
 
-    if (!hasData) return <LoadingProgress />
+    if (!hasData)
+        return <DashboardRegisterValueFallback register={pixelsRegister} />
     return (
         <>
             <Grid container direction="column" spacing={1} alignItems="center">

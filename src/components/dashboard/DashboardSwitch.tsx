@@ -10,8 +10,9 @@ import React from "react"
 import { Switch } from "@mui/material"
 import { useId } from "react-use-id-hook"
 import ButtonWidget from "../widgets/ButtonWidget"
-import LoadingProgress from "../ui/LoadingProgress"
 import useRegister from "../hooks/useRegister"
+import OptionalTooltip from "../widgets/OptionalTooltip"
+import DashboardRegisterValueFallback from "./DashboardRegisterValueFallback"
 
 export default function DashboardSwitch(props: DashboardServiceProps) {
     const { service } = props
@@ -27,31 +28,37 @@ export default function DashboardSwitch(props: DashboardServiceProps) {
     const server = useServiceServer<SwitchServer>(service)
     const color = server ? "secondary" : "primary"
     const widgetSize = `clamp(5em, 25vw, 100%)`
+    const title = !server ? "Use the physical switch!" : undefined
 
     const handleToggle = () => server?.toggle?.()
 
-    if (on === undefined) return <LoadingProgress />
+    if (on === undefined)
+        return <DashboardRegisterValueFallback register={activeRegister} />
 
     switch (switchVariant) {
         case SwitchVariant.PushButton:
             return (
-                <ButtonWidget
-                    checked={on}
-                    color={color}
-                    label={on ? "on" : "off"}
-                    onDown={server && handleToggle}
-                    size={widgetSize}
-                />
+                <OptionalTooltip title={title}>
+                    <ButtonWidget
+                        checked={on}
+                        color={color}
+                        label={on ? "active" : "inactive"}
+                        onDown={server && handleToggle}
+                        size={widgetSize}
+                    />
+                </OptionalTooltip>
             )
         default:
             return (
                 <>
-                    <Switch
-                        aria-labelledby={labelId}
-                        color={color}
-                        checked={on}
-                        onChange={server && handleToggle}
-                    />
+                    <OptionalTooltip title={title}>
+                        <Switch
+                            aria-labelledby={labelId}
+                            color={color}
+                            checked={on}
+                            onChange={server && handleToggle}
+                        />
+                    </OptionalTooltip>
                     <label id={labelId}>{on ? "on" : "off"}</label>
                 </>
             )

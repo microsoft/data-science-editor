@@ -9,9 +9,9 @@ import SvgWidget from "../widgets/SvgWidget"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import { Grid } from "@mui/material"
 import RegisterInput from "../RegisterInput"
-import LoadingProgress from "../ui/LoadingProgress"
 import useServiceServer from "../hooks/useServiceServer"
 import useRegister from "../hooks/useRegister"
+import DashboardRegisterValueFallback from "./DashboardRegisterValueFallback"
 
 export default function DashboardSevenSegmentDisplay(
     props: DashboardServiceProps
@@ -49,7 +49,8 @@ export default function DashboardSevenSegmentDisplay(
     const color = server ? "secondary" : "primary"
     const { active, background } = useWidgetTheme(color)
 
-    if (digitCount === undefined) return <LoadingProgress />
+    if (digitCount === undefined)
+        return <DashboardRegisterValueFallback register={digitCountRegister} />
 
     const md = 4
     const rs = 4

@@ -10,11 +10,11 @@ import { Grid, NoSsr } from "@mui/material"
 import { roundWithPrecision } from "../../../jacdac-ts/src/jdom/utils"
 import CanvasWidget from "../widgets/CanvasWidget"
 import { Vector } from "../widgets/threeutils"
-import LoadingProgress from "../ui/LoadingProgress"
 import Suspense from "../ui/Suspense"
 import SliderWithLabel from "../ui/SliderWithLabel"
 import useRegister from "../hooks/useRegister"
 import MaxReadingField from "./MaxReadingField"
+import DashboardRegisterValueFallback from "./DashboardRegisterValueFallback"
 
 function Sliders(props: {
     server: SensorServer<[number, number, number]>
@@ -60,7 +60,8 @@ function Sliders(props: {
     }
     const valueDisplay = (v: number) => `${roundWithPrecision(v, 1)}°/s`
 
-    if (!rates?.length) return <LoadingProgress />
+    if (!rates?.length)
+        return <DashboardRegisterValueFallback register={register} />
     const [x, y, z] = rates
     const step = 1
     const marks = [

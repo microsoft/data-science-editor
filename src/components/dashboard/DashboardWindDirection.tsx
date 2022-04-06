@@ -9,8 +9,8 @@ import { useId } from "react-use-id-hook"
 import useThrottledValue from "../hooks/useThrottledValue"
 import { Grid, Slider } from "@mui/material"
 import { SensorServer } from "../../../jacdac-ts/src/servers/sensorserver"
-import LoadingProgress from "../ui/LoadingProgress"
 import useRegister from "../hooks/useRegister"
+import DashboardRegisterValueFallback from "./DashboardRegisterValueFallback"
 
 export default function DashboardWindDirection(props: DashboardServiceProps) {
     const { service } = props
@@ -31,7 +31,8 @@ export default function DashboardWindDirection(props: DashboardServiceProps) {
 
     const a = useThrottledValue(direction, 360)
 
-    if (direction === undefined) return <LoadingProgress />
+    if (direction === undefined)
+        return <DashboardRegisterValueFallback register={directionRegister} />
 
     const w = 64
     const h = 64

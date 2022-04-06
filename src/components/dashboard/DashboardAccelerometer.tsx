@@ -9,12 +9,12 @@ import { JDRegister } from "../../../jacdac-ts/src/jdom/register"
 import { Grid, NoSsr } from "@mui/material"
 import { roundWithPrecision } from "../../../jacdac-ts/src/jdom/utils"
 import { Vector } from "../widgets/threeutils"
-import LoadingProgress from "../ui/LoadingProgress"
 import Suspense from "../ui/Suspense"
 import SliderWithLabel from "../ui/SliderWithLabel"
 import useRegister from "../hooks/useRegister"
 import { useId } from "react-use-id-hook"
 import MaxReadingField from "./MaxReadingField"
+import DashboardRegisterValueFallback from "./DashboardRegisterValueFallback"
 
 const CanvasWidget = lazy(() => import("../widgets/CanvasWidget"))
 
@@ -57,7 +57,8 @@ function Sliders(props: {
         await register.sendGetAsync()
     }
 
-    if (!forces?.length) return <LoadingProgress />
+    if (!forces?.length)
+        return <DashboardRegisterValueFallback register={register} />
 
     const [x, y, z] = forces
     const min = -2

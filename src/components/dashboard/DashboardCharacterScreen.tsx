@@ -7,13 +7,13 @@ import {
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import { Grid, TextField } from "@mui/material"
-import LoadingProgress from "../ui/LoadingProgress"
 import useRegister from "../hooks/useRegister"
 import CmdButton from "../CmdButton"
 import ClearIcon from "@mui/icons-material/Clear"
 import EditIcon from "@mui/icons-material/Edit"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import CharacterScreenWidget from "../widgets/CharacterScreenWidget"
+import DashboardRegisterValueFallback from "./DashboardRegisterValueFallback"
 
 // https://en.wikipedia.org/wiki/Braille_ASCII
 const BRAILE_CHARACTERS = {
@@ -141,7 +141,12 @@ export default function DashboardCharacterScreen(props: DashboardServiceProps) {
         if (!fieldMessage && message) setFieldMessage(message)
     }, [message])
 
-    if (rows === undefined || columns === undefined) return <LoadingProgress /> // size unknown
+    if (rows === undefined || columns === undefined)
+        return (
+            <DashboardRegisterValueFallback
+                register={rows === undefined ? columnsRegister : rowsRegister}
+            />
+        ) // size unknown
 
     const converter: (s: string) => string =
         variant === CharacterScreenVariant.Braille ? brailify : s => s

@@ -14,8 +14,8 @@ import { ReflectedLightServer } from "../../../jacdac-ts/src/servers/reflectedli
 import PowerButton from "../widgets/PowerButton"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import useRegister from "../hooks/useRegister"
-import LoadingProgress from "../ui/LoadingProgress"
 import { humanify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
+import DashboardRegisterValueFallback from "./DashboardRegisterValueFallback"
 
 export default function DashboardPower(props: DashboardServiceProps) {
     const { service } = props
@@ -38,7 +38,8 @@ export default function DashboardPower(props: DashboardServiceProps) {
     const color = server ? "secondary" : "primary"
     const { background, active, textProps } = useWidgetTheme(color)
 
-    if (powerStatus === undefined) return <LoadingProgress />
+    if (powerStatus === undefined)
+        return <DashboardRegisterValueFallback register={powerStatusRegister} />
 
     const w = 64
     const h = w + 16
