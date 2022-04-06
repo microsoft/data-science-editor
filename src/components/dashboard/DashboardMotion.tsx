@@ -28,7 +28,7 @@ export default function DashboardMotion(props: DashboardServiceProps) {
     )
 
     const title = moving ? "movement detected" : "idle"
-    const widgetSize = `clamp(3rem, 10vw, 10vh)`
+    const widgetSize = `clamp(5rem, 10vw, 10vh)`
     const w = 64
     return (
         <OptionalTooltip

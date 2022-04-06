@@ -213,7 +213,7 @@ export default function MemberInput(props: {
         const max = 1
         const step = resolution !== undefined ? resolution : 0.01
         if (isWidget) {
-            const size = `clamp(5rem, 16vw, 16vh)`
+            const size = `clamp(6rem, 12vw, 12vh)`
             return (
                 <GaugeWidget
                     tabIndex={0}
