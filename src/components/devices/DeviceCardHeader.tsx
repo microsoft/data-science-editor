@@ -101,15 +101,7 @@ export default function DeviceCardHeader(props: {
                     />
                 }
                 title={
-                    <Link
-                        color="textPrimary"
-                        underline="hover"
-                        to={`/devices/${
-                            identifierToUrlPath(specification?.id) || ""
-                        }`}
-                    >
-                        <DeviceName device={device} />
-                    </Link>
+                    <DeviceName device={device} linkToSpecification={true} />
                 }
                 subheader={
                     <Grid container spacing={1}>

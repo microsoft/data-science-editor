@@ -25,7 +25,7 @@ export default function DeviceName(props: {
     const name = useDeviceName(device) || ""
     const { shortId } = device
     const Name = () => (
-        <span>
+        <>
             <span>{name}</span>
             {!name && showShortId && shortId}
             {showShortId && name && name !== shortId && (
@@ -35,14 +35,14 @@ export default function DeviceName(props: {
                 </Typography>
             )}
             {serviceIndex !== undefined && `[${serviceIndex}]`}
-        </span>
+        </>
     )
     if (linkToSpecification && specification)
         return (
             <Link
                 onClick={onLinkClick}
                 color="textPrimary"
-                to={`/devices/${identifierToUrlPath(specification.id)}`}
+                to={`/devices/${identifierToUrlPath(specification.id)}/`}
                 underline="hover"
             >
                 <Name />

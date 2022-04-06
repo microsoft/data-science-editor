@@ -23,7 +23,5 @@
         "*.mdx": "markdown"
     },
     "git.detectSubmodulesLimit": 20,
-    "[xml]": {
-        "editor.defaultFormatter": "redhat.vscode-xml"
-    }
+    "editor.formatOnSave": true
 }
