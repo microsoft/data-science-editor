@@ -5,7 +5,7 @@ import { UIFlags } from "../../jacdac/providerbus"
 const memStorage: Record<string, unknown> = {}
 
 const PREFIX = "jacdac:"
-export default function useStorage<T>(
+export default function useStorage<T = string>(
     storage: Storage,
     key: string,
     initialValue?: T

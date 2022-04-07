@@ -7,7 +7,7 @@ const storage = (() => {
         return undefined
     }
 })()
-export default function useSessionStorage<T>(
+export default function useSessionStorage<T = string>(
     key: string,
     initialValue?: T
 ): [T, (value: T) => void] {

@@ -7,7 +7,7 @@ const storage = (() => {
         return undefined
     }
 })()
-export default function useLocalStorage<T>(
+export default function useLocalStorage<T = string>(
     key: string,
     initialValue?: T
 ): [T, (value: T) => void] {
