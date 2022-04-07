@@ -10,31 +10,75 @@ Jacdac can be integrated into existing and future micro:bit accessories with dif
 Jacdac brings **simulators** and **digital twins** of sensors/actuators:
 
 -   **simulators** allows the user to easily test sensor/actuator without having to use the hardware
--   **digital twins** provides a live view on the sensor/actuator state
+-   **digital twins** provides a live view on the physical sensor/actuator state in the editor
 -   **standardized blocks** provided by the Jacdac project, means you have to maintain less extensions for your hardware
 
 As of today, Jacdac runs on **micro:bit V2** exclusively and uses pin **12**.
 
-Overview:
-
-
-
 ## Level 0: Existing accessories
 
-In this level of integration, the accessory does not have to have any hardware support for Jacdac (and may also be using pin 12).
-By providing a new extension that exposes the sensors as Jacdac server, the users will benefit from **simulators** and **digital twins**.
-This level of integration can be applied to any existing micro:bit accessory, with or without hardware support (Remember that this only applies to micro:bit V2 board).
+The accessory sensors and actuators are surfaced as Jacdac servers by wrapping the existing extension into a Jacdac compatibility layer.
+This solution adds no cost and will work for existing accessories.
+
+### Pros
+
+-   No hardware changes to existing accessories
+-   No software changes to existing extension code
+-   Support for simulators and digital twins
+-   Support for standardized Jacdac blocks
+-   No new GitHub repository needed, Jacdac extension code stored in a subfolder
+
+### Cons
+
+-   No hardware Jacdac connector
+-   Existing blocs are hidden to avoid confusion. Jacdac service blocks may have less options.
 
 ### Integration steps
 
--   [ ] fork your existing extension that supports your board and remove all the block annotation
--   [ ] add references to the service client libraries to pull in the service constants
+-   install the makecode command line tool
+
+```
+npm install -g makecode
+```
+
+-   [ ] add a `mkc.json` file next to the `pxt.json` file in your extension with the following content
+
+```json
+{
+    "targetWebsite": "https://makecode.microbit.org/",
+    "links": {
+        "PACKAGE_NAME": "."
+    }
+}
+```
+
+where `PACKAGE_NAME` is the name of your extension in `pxt.json`.
+
+-   create a `jacdac` subfolder, and move to that folder
+
+```
+mkdir jacdac
+cd jacdac
+```
+
+-   [ ] run makecode init to configure the folder
+
+```
+makecode init microbit --jacdac
+```
+
+-   [ ] add references to the service client libraries you need. For example, to use a button, do
+
+```
+makecode add jacdac-button
+```
+
 -   [ ] add a function that launches servers for each sensor
 -   [ ] wire up the function to start when running on hardware
 
 ```ts
-namespace myExtension {
-    function start() {
+namespace servers {
+    function startServers() {
         if (!jacdac.isSimulator()) {
             // start servers only on hardware
             TODO
@@ -45,7 +89,7 @@ namespace myExtension {
             jacdac.proxyFinalize()
         }
     }
-    start()
+    startServers()
 }
 ```
 
@@ -113,6 +157,4 @@ In this case, you do not need to provide any extension as the user will be able 
 -   Cons
     -   MCU and power regulator circuitery add cost
 
-
 ## Power considerations
-
