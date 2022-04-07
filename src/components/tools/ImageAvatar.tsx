@@ -1,7 +1,6 @@
 import { Avatar } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import React from "react"
-import JacdacIcon from "../icons/JacdacIcon"
 
 const PREFIX = "ImageAvatar"
 const classes = {
@@ -16,8 +15,8 @@ const StyledAvatar = styled("span")(({ theme }) => ({
     },
 
     [`& .${classes.small}`]: {
-        width: theme.spacing(3),
-        height: theme.spacing(3),
+        width: theme.spacing(2),
+        height: theme.spacing(2),
         marginRight: theme.spacing(0.5),
     },
 
@@ -42,9 +41,7 @@ export default function ImageAvatar(props: {
             : size === "large"
             ? classes.large
             : undefined
-    return !src ? (
-        <JacdacIcon />
-    ) : (
+    return (
         <StyledAvatar>
             <Avatar
                 className={sizeClassName}

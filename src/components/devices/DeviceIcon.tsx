@@ -6,8 +6,8 @@ import useServiceProvider from "../hooks/useServiceProvider"
 import KindIcon from "../KindIcon"
 import useDeviceImage from "./useDeviceImage"
 import { JDServerServiceProvider } from "../../../jacdac-ts/src/jdom/servers/serverserviceprovider"
-import JacdacIcon from "../icons/JacdacIcon"
 import ImageAvatar from "../tools/ImageAvatar"
+import { withPrefix } from "gatsby"
 
 export default function DeviceIcon(props: {
     device: JDDevice
@@ -16,19 +16,15 @@ export default function DeviceIcon(props: {
 }) {
     const { device, size, avatar } = props
     const specification = useDeviceSpecification(device)
-    const imageUrl = useDeviceImage(specification, "avatar")
+    const imageUrl =
+        useDeviceImage(specification, "avatar") ||
+        withPrefix("images/missing-device.svg")
+    const name = specification?.name || "Image of the device"
 
     const server = useServiceProvider<JDServerServiceProvider>(device)
     return server ? (
         <KindIcon kind={VIRTUAL_DEVICE_NODE_NAME} />
-    ) : !imageUrl ? (
-        <JacdacIcon />
     ) : (
-        <ImageAvatar
-            size={size}
-            alt={specification?.name || "Image of the device"}
-            src={imageUrl}
-            avatar={avatar}
-        />
+        <ImageAvatar size={size} alt={name} src={imageUrl} avatar={avatar} />
     )
 }
