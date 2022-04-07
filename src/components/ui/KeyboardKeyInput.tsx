@@ -4,7 +4,7 @@ import { HidKeyboardModifiers } from "../../../jacdac-ts/jacdac-spec/dist/specco
 import Keyboard from "react-simple-keyboard"
 import "react-simple-keyboard/build/css/index.css"
 import DarkModeContext from "./DarkModeContext"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 import {
     modifierCodes,
     renderKeyboardKey,

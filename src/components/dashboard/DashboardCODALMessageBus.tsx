@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useState } from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { CodalMessageBusCmd } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 import { Grid, TextField } from "@mui/material"
 import SendIcon from "@mui/icons-material/Send"
 import CmdButton from "../CmdButton"
@@ -9,7 +9,7 @@ import CmdButton from "../CmdButton"
 export default function DashboardCODALMessageBus(props: DashboardServiceProps) {
     const { service } = props
     const sourceId = useId()
-    const valueId = useId()
+    const valueId = sourceId + "value"
     const [source, setSource] = useState("")
     const [value, setValue] = useState("")
 

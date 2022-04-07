@@ -4,7 +4,7 @@ import useLocalStorage from "../../components/hooks/useLocalStorage"
 import { PanelTest } from "../../../jacdac-ts/src/testdom/nodes"
 import CopyButton from "../../components/ui/CopyButton"
 import { delay } from "../../../jacdac-ts/src/jdom/utils"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 import { Button } from "gatsby-theme-material-ui"
 import useSnackbar from "../../components/hooks/useSnackbar"
 
@@ -13,7 +13,7 @@ const PANEL_UPLOAD_URL = "panel-test-post-url"
 export default function PanelTestExport(props: { panel: PanelTest }) {
     const { panel } = props
     const urlId = useId()
-    const tokenId = useId()
+    const tokenId = urlId + "-token"
     const [url, setUrl] = useLocalStorage(PANEL_UPLOAD_URL, "")
     const [token, setToken] = useState("")
     const [posting, setPosting] = useState(false)

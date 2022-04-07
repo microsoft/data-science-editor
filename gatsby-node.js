@@ -309,21 +309,19 @@ async function generateServicesJSON() {
             `x${srv.classIdentifier.toString(16)}.json`
         )
         const clone = JSON.parse(JSON.stringify(srv))
-        delete clone.notes;
-        delete clone.enums;
-        delete clone.constants;
-        delete clone.extends;
-        delete clone.shortName;
-        delete clone.name;
-        delete clone.tags;
-        for(var pkt of clone.packets) {
+        delete clone.notes
+        delete clone.enums
+        delete clone.constants
+        delete clone.extends
+        delete clone.shortName
+        delete clone.name
+        delete clone.tags
+        for (var pkt of clone.packets) {
             delete pkt.description
             delete pkt.derived
             delete pkt.identifierName
-            if (pkt.fields.length <= 1)
-                delete pkt.fields
-            else
-                pkt.fields = pkt.fields.map(f => f.name);
+            if (pkt.fields.length <= 1) delete pkt.fields
+            else pkt.fields = pkt.fields.map(f => f.name)
         }
         await fs.outputFile(f, JSON.stringify(clone, null, 2))
     }
@@ -407,14 +405,11 @@ exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
         assert: require.resolve("assert/"),
         fs: false,
         net: false,
-        webusb: false
+        webusb: false,
     }
     if (stage.startsWith("develop")) {
         setWebpackConfig({
             resolve: {
-                alias: {
-                    "react-dom": "@hot-loader/react-dom",
-                },
                 fallback,
             },
             plugins,

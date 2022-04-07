@@ -4,7 +4,7 @@ import { Button } from "@mui/material"
 import OpenInBrowserIcon from "@mui/icons-material/OpenInBrowser"
 import IconButton from "@mui/material/IconButton"
 import { toArray } from "../../jacdac-ts/src/jdom/utils"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 
 const MAX_SIZE = 5000000
 

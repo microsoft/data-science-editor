@@ -8,7 +8,7 @@ import {
 import Blockly from "blockly"
 import { Button } from "gatsby-theme-material-ui"
 import React, { ChangeEvent, useEffect, useRef, useState } from "react"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 
 export default function BlocklyModalDialogs() {
     const [dialogType, setDialogType] = useState<

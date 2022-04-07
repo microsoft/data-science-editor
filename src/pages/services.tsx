@@ -15,7 +15,7 @@ import {
     SERVICE_MIXIN_NODE_NAME,
     VIRTUAL_DEVICE_NODE_NAME,
 } from "../../jacdac-ts/src/jdom/constants"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 import { Link } from "gatsby-theme-material-ui"
 import { resolveMakecodeServiceFromClassIdentifier } from "../components/makecode/services"
 import CheckCircleIcon from "@mui/icons-material/CheckCircle"

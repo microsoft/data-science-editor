@@ -5,8 +5,7 @@ import {
     SRV_POWER_SUPPLY,
     SRV_RELAY,
 } from "../../../jacdac-ts/src/jdom/constants"
-import React from "react"
-import { useId } from "react-use-id-hook"
+import React, { useId } from "react"
 import useDevices from "../hooks/useDevices"
 import { isModuleTester } from "./filters"
 import DashboardDevice from "../dashboard/DashboardDevice"

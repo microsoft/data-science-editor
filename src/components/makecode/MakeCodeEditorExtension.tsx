@@ -20,7 +20,7 @@ import CmdButton from "../CmdButton"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import SaveIcon from "@mui/icons-material/Save"
 import { camelize } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 import {
     resolveMakecodeService,
     resolveMakecodeServiceFromClassIdentifier,

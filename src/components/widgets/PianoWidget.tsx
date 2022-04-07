@@ -2,7 +2,7 @@ import { Box } from "@mui/material"
 import React, { useMemo } from "react"
 import { Piano, KeyboardShortcuts, MidiNumbers } from "react-piano"
 import "react-piano/dist/styles.css"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 
 export default function PianoWidget(props: {
     playTone: (frequency: number) => Promise<void>
@@ -10,11 +10,17 @@ export default function PianoWidget(props: {
     const { playTone } = props
     const firstNote = MidiNumbers.fromNote("c4")
     const lastNote = MidiNumbers.fromNote("d5")
-    const keyboardShortcuts = KeyboardShortcuts.create({
-        firstNote: firstNote,
-        lastNote: lastNote,
-        keyboardConfig: KeyboardShortcuts.HOME_ROW,
-    })
+    /*
+    const keyboardShortcuts = useMemo(
+        () =>
+            KeyboardShortcuts.create({
+                firstNote: firstNote,
+                lastNote: lastNote,
+                keyboardConfig: KeyboardShortcuts.HOME_ROW,
+            }),
+        [firstNote, lastNote]
+    )
+    */
     const midiFrequencies = useMemo(
         () =>
             new Array(127)
@@ -37,7 +43,7 @@ export default function PianoWidget(props: {
                 stopNote={() => {
                     // not supported
                 }}
-                keyboardShortcuts={keyboardShortcuts}
+                //keyboardShortcuts={keyboardShortcuts}
             />
         </Box>
     )

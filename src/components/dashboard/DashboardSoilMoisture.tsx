@@ -8,7 +8,7 @@ import { SensorServer } from "../../../jacdac-ts/src/servers/sensorserver"
 import { Grid, Slider } from "@mui/material"
 import SoilMoistureWidget from "../widgets/SoilMoistureWidget"
 import useRegister from "../hooks/useRegister"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 
 export default function DashboardSoilMoisture(props: DashboardServiceProps) {
     const { service, services, variant } = props

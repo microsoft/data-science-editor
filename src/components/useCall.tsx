@@ -6,7 +6,7 @@ export type ProgressHandler = (p: number) => void
 
 export default function useCall() {
     const { setError: setAppError } = useSnackbar()
-    const [error, setError] = useState<Error>()
+    const [error, setError] = useState<any>()
     const [running, setRunning] = useState(false)
     const [progress, setProgress] = useState(0)
 
@@ -17,7 +17,7 @@ export default function useCall() {
             setRunning(true)
             setError(undefined)
             handler(handleProgress)
-        } catch (e) {
+        } catch (e: unknown) {
             setError(e)
             setAppError(e)
         } finally {
@@ -31,7 +31,7 @@ export default function useCall() {
             setRunning(true)
             setError(undefined)
             await handler(handleProgress)
-        } catch (e) {
+        } catch (e: unknown) {
             setError(e)
             setAppError(e)
         } finally {

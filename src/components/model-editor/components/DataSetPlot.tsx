@@ -3,7 +3,7 @@ import { Box, Grid, MenuItem, Select } from "@mui/material"
 import FieldDataSet from "../../FieldDataSet"
 import Suspense from "../../ui/Suspense"
 import MBDataSet from "../MBDataSet"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 
 const VegaLite = lazy(() => import("../../charts/VegaLite"))
 

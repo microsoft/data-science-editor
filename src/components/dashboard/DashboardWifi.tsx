@@ -16,7 +16,7 @@ import {
     Typography,
 } from "@mui/material"
 import useWidgetTheme from "../widgets/useWidgetTheme"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 import SettingsIcon from "@mui/icons-material/Settings"
 import CmdButton from "../CmdButton"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"

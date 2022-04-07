@@ -1,6 +1,6 @@
 import React from "react"
 import { Box, Typography } from "@mui/material"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 
 export default function TabPanel(props: {
     children?: React.ReactNode

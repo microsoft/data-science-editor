@@ -20,7 +20,7 @@ import {
     AzureIotHubHealthEvent,
     AzureIotHubHealthReg,
 } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 import SettingsIcon from "@mui/icons-material/Settings"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import CmdButton from "../CmdButton"

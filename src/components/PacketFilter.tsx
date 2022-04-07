@@ -26,7 +26,7 @@ import {
     isRegister,
 } from "../../jacdac-ts/src/jdom/spec"
 import Tooltip from "./ui/Tooltip"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 import PacketControlButtons from "./PacketListButtons"
 
 const PREFIX = "PacketFilter"

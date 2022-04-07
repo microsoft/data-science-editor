@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography"
 import KindIcon from "../KindIcon"
 import WarningIcon from "@mui/icons-material/Warning"
 
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 import { Link } from "gatsby-material-ui-components"
 import { Tooltip } from "@mui/material"
 import { ellipse } from "../../../jacdac-ts/src/jdom/utils"

@@ -76,7 +76,7 @@ export default function Page() {
     const rawTheme = createTheme({
         palette: {
             primary: {
-                main: "#63c",
+                main: "#85e",
             },
             secondary: {
                 main: "#ffc400",

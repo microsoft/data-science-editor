@@ -9,7 +9,7 @@ import {
 import AddIcon from "@mui/icons-material/Add"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 
 export default function AddServiceIconButton(props: {
     onAdd: (service: jdspec.ServiceSpec) => void

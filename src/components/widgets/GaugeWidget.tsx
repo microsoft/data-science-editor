@@ -35,7 +35,8 @@ export default function GaugeWidget(props: {
         tabIndex,
         label,
     } = props
-    const { background, active, textProps } = useWidgetTheme(color)
+    const { background, active, textProps, controlBackground } =
+        useWidgetTheme(color)
 
     const sliderPathRef = useRef<SVGPathElement>()
     const w = 120
@@ -103,7 +104,7 @@ export default function GaugeWidget(props: {
                     <path
                         ref={sliderPathRef}
                         strokeWidth={sw}
-                        stroke={background}
+                        stroke={controlBackground}
                         d={db}
                         strokeLinecap={lineCap}
                         fill="transparent"

@@ -1,6 +1,6 @@
 import { Box, CircularProgress, useTheme } from "@mui/material"
 import React, { AriaAttributes, ReactNode } from "react"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 
 export interface CircularProgressBoxProps {
     progress?: number

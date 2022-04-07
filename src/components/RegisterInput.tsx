@@ -91,13 +91,12 @@ export default function RegisterInput(props: {
     useEffect(() => {
         const vs = register.unpackedValue
         if (vs !== undefined) setArgs(vs)
-        return (
-            visible &&
-            register.subscribe(REPORT_UPDATE, () => {
-                const vs = register.unpackedValue
-                if (vs !== undefined) setArgs(vs)
-            })
-        )
+        return visible
+            ? register.subscribe(REPORT_UPDATE, () => {
+                  const vs = register.unpackedValue
+                  if (vs !== undefined) setArgs(vs)
+              })
+            : undefined
     }, [register, visible])
     const handleRefresh = () => {
         register.refresh(true)

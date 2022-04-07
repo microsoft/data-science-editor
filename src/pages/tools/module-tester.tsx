@@ -17,7 +17,7 @@ import SafeBootAlert from "../../components/firmware/SafeBootAlert"
 import ManualFirmwareAlert from "../../components/firmware/ManualFirmwareAlert"
 import { isDualDeviceId } from "../../../jacdac-ts/src/jdom/spec"
 import PowerSupplySection from "../../components/testdom/PowerSupplySection"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 
 function DeviceItem(props: { device: JDDevice }) {
     const { device } = props

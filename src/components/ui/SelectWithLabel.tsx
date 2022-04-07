@@ -7,7 +7,7 @@ import {
     SelectChangeEvent,
 } from "@mui/material"
 import React, { ChangeEvent, ReactNode } from "react"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 
 export default function SelectWithLabel(props: {
     required?: boolean
@@ -39,9 +39,9 @@ export default function SelectWithLabel(props: {
         type,
         none,
     } = props
-    const labelId = useId()
-    const descrId = useId()
     const id = useId()
+    const labelId = id + "-label"
+    const descrId = id + "-descr"
     const hasDescr = !!helperText || !!error
 
     return (

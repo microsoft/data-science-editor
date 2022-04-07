@@ -3,7 +3,6 @@ import ReactDOM from "react-dom"
 import ReactField from "./ReactField"
 import { child } from "../../widgets/svg"
 import DarkModeProvider from "../../ui/DarkModeProvider"
-import { IdProvider } from "react-use-id-hook"
 import JacdacProvider from "../../../jacdac/Provider"
 import AppTheme from "../../ui/AppTheme"
 import Blockly, { Events } from "blockly"
@@ -88,15 +87,11 @@ export default class ReactInlineField<T = unknown> extends ReactField<T> {
             <WorkspaceProvider field={this}>
                 <SnackbarProvider maxSnack={1} dense={true}>
                     <DarkModeProvider fixedDarkMode="dark">
-                        <IdProvider>
-                            <WebAudioProvider>
-                                <JacdacProvider>
-                                    <AppTheme>
-                                        {this.renderInlineField()}
-                                    </AppTheme>
-                                </JacdacProvider>
-                            </WebAudioProvider>
-                        </IdProvider>
+                        <WebAudioProvider>
+                            <JacdacProvider>
+                                <AppTheme>{this.renderInlineField()}</AppTheme>
+                            </JacdacProvider>
+                        </WebAudioProvider>
                     </DarkModeProvider>
                 </SnackbarProvider>
             </WorkspaceProvider>

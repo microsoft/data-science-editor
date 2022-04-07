@@ -7,12 +7,12 @@ export default function useWindowEvent<K extends keyof WindowEventMap>(
     deps?: DependencyList
 ) {
     useEffect(() => {
-        if (typeof window === "undefined" || !listener) return undefined // SSR
+        if (typeof self === "undefined" || !listener) return undefined // SSR
 
         // initiate the event handler
-        window.addEventListener<K>(type, listener, passive)
+        self.addEventListener<K>(type, listener, passive)
 
         // this will clean up the event every time the component is re-rendered
-        return () => window.removeEventListener<K>(type, listener)
+        return () => self.removeEventListener<K>(type, listener)
     }, [type, listener, passive, ...(deps || [])])
 }

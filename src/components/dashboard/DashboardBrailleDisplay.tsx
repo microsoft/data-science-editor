@@ -13,7 +13,7 @@ import ClearIcon from "@mui/icons-material/Clear"
 import EditIcon from "@mui/icons-material/Edit"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import CharacterScreenWidget from "../widgets/CharacterScreenWidget"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew"
 
 // https://en.wikipedia.org/wiki/Braille_ASCII

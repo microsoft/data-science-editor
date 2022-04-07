@@ -13,7 +13,7 @@ import CheckIcon from "@mui/icons-material/Check"
 import Alert from "./ui/Alert"
 import { Button } from "gatsby-theme-material-ui"
 import { NoSsr } from "@mui/material"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 import useDeviceCatalog from "./devices/useDeviceCatalog"
 
 export default function RandomGenerator(props: {

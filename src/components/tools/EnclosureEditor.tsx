@@ -9,7 +9,7 @@ import type {
 } from "../../workers/cad/dist/node_modules/enclosurecad"
 import Suspense from "../ui/Suspense"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 import SliderWithLabel from "../ui/SliderWithLabel"
 import SwitchWithLabel from "../ui/SwitchWithLabel"
 import { Flags } from "../../../jacdac-ts/src/jdom/flags"
@@ -120,10 +120,11 @@ function EnclosureDesign(props: {
     const [depth, setDepth] = useState(6)
     const [legs, setLegs] = useState(true)
 
-    const gridHeightId = useId()
-    const gridWidthId = useId()
-    const depthId = useId()
-    const legsId = useId()
+    const id = useId()
+    const gridHeightId = id + "-height"
+    const gridWidthId = id + "-width"
+    const depthId = id + "-depth"
+    const legsId = id + "-legs"
 
     const handleGridWidth: any = (
         event: React.ChangeEvent<unknown>,

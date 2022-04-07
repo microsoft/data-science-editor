@@ -1,7 +1,7 @@
 import React from "react"
 import SvgWidget from "../widgets/SvgWidget"
 import useWidgetTheme from "../widgets/useWidgetTheme"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 
 export default function SoilMoistureWidget(props: {
     value: number

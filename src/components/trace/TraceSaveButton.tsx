@@ -46,7 +46,7 @@ ${serializeLogs(logs)}
 
 \`\`\`yaml
 jacdac: https://github.com/${repo}/commit/${sha}
-user-agent: ${typeof window !== undefined && window.navigator.userAgent}
+user-agent: ${typeof window !== "undefined" && window.navigator.userAgent}
 \`\`\`
 
 `

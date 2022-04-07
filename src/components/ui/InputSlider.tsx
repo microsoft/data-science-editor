@@ -1,6 +1,6 @@
 import { Grid, Input, Slider, Typography } from "@mui/material"
 import React from "react"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 
 export default function InputSlider(props: {
     value: number
@@ -32,8 +32,8 @@ export default function InputSlider(props: {
     } = props
     const readOnly = !onChange
     const sliderId = useId()
-    const inputId = useId()
-    const labelId = useId()
+    const inputId = sliderId + "-input"
+    const labelId = sliderId + "-label"
 
     const handleSliderChange = (
         event: unknown,

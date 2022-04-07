@@ -4,7 +4,6 @@ import ReactDOM from "react-dom"
 import Blockly from "blockly"
 import JacdacProvider from "../../../jacdac/Provider"
 import { ReactNode } from "react"
-import { IdProvider } from "react-use-id-hook"
 import DarkModeProvider from "../../ui/DarkModeProvider"
 import AppTheme from "../../ui/AppTheme"
 import { Box } from "@mui/material"
@@ -152,26 +151,24 @@ export default class ReactField<T> extends ReactFieldBase<T> {
             <WorkspaceProvider field={this}>
                 <SnackbarProvider maxSnack={1} dense={true}>
                     <DarkModeProvider fixedDarkMode={this.darkMode}>
-                        <IdProvider>
-                            <WebAudioProvider>
-                                <JacdacProvider>
-                                    <AppTheme>
-                                        <ValueProvider
-                                            value={this.value}
-                                            onValueChange={onValueChange}
+                        <WebAudioProvider>
+                            <JacdacProvider>
+                                <AppTheme>
+                                    <ValueProvider
+                                        value={this.value}
+                                        onValueChange={onValueChange}
+                                    >
+                                        <Box
+                                            m={0.5}
+                                            borderRadius="0.25rempx"
+                                            bgcolor="background.paper"
                                         >
-                                            <Box
-                                                m={0.5}
-                                                borderRadius="0.25rempx"
-                                                bgcolor="background.paper"
-                                            >
-                                                {this.renderField()}
-                                            </Box>
-                                        </ValueProvider>
-                                    </AppTheme>
-                                </JacdacProvider>
-                            </WebAudioProvider>
-                        </IdProvider>
+                                            {this.renderField()}
+                                        </Box>
+                                    </ValueProvider>
+                                </AppTheme>
+                            </JacdacProvider>
+                        </WebAudioProvider>
                     </DarkModeProvider>
                 </SnackbarProvider>
             </WorkspaceProvider>

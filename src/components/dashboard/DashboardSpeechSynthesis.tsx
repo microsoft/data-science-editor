@@ -8,7 +8,7 @@ import { Grid, TextField } from "@mui/material"
 import VoiceChatIcon from "@mui/icons-material/VoiceChat"
 import CmdButton from "../CmdButton"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 import useRegister from "../hooks/useRegister"
 
 export default function DashboardSpeechSynthesis(props: DashboardServiceProps) {

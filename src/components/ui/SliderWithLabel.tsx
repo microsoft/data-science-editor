@@ -1,6 +1,6 @@
 import { Slider, SliderProps, Typography } from "@mui/material"
 import React from "react"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 
 export default function SliderWithLabel(
     props: {
@@ -9,7 +9,7 @@ export default function SliderWithLabel(
 ) {
     const { label, ...others } = props
     const labelId = useId()
-    const sliderId = useId()
+    const sliderId = labelId + "sliderId"
 
     return (
         <>

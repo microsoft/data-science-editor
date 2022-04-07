@@ -14,6 +14,7 @@ import { IFrameTransport } from "../../jacdac-ts/src/embed/transport"
 import DarkModeContext from "./ui/DarkModeContext"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import { UIFlags } from "../jacdac/providerbus"
+import useWindowEvent from "./hooks/useWindowEvent"
 
 export interface ISettings {
     get(key: string): string
@@ -26,8 +27,7 @@ export class LocalStorageSettings implements ISettings {
     constructor(private readonly key: string) {
         this.live =
             JSONTryParse<Record<string, string>>(
-                typeof window !== "undefined" &&
-                    window.localStorage.getItem(key)
+                typeof self !== "undefined" && self.localStorage.getItem(key)
             ) || {}
     }
     get(key: string): string {
@@ -36,16 +36,15 @@ export class LocalStorageSettings implements ISettings {
     set(key: string, value: string): void {
         if (value === undefined || value === null) delete this.live[key]
         else this.live[key] = value
-        if (typeof window !== "undefined")
-            window.localStorage.setItem(
+        if (typeof self !== "undefined")
+            self.localStorage.setItem(
                 this.key,
                 JSON.stringify(this.live, null, 2)
             )
     }
     clear() {
         this.live = {}
-        if (typeof window !== "undefined")
-            window.localStorage.removeItem(this.key)
+        if (typeof self !== "undefined") self.localStorage.removeItem(this.key)
     }
 }
 
@@ -83,15 +82,7 @@ export const ServiceManagerProvider = ({ children }) => {
         }
     }
 
-    // receiving messages
-    useEffect(() => {
-        if (typeof window !== "undefined") {
-            window.addEventListener("message", handleMessage, false)
-            return () => window.removeEventListener("message", handleMessage)
-        }
-        return () => {}
-    }, [])
-
+    useWindowEvent("message", handleMessage)
     return (
         <ServiceManagerContext.Provider value={propsRef.current}>
             {children}

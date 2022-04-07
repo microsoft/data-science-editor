@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import React from "react"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import GridHeader from "../ui/GridHeader"
 import { DashboardDeviceProps } from "./Dashboard"

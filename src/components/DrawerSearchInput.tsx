@@ -3,7 +3,7 @@ import React, { useContext, useState } from "react"
 import TextField from "@mui/material/TextField"
 // tslint:disable-next-line: no-submodule-imports
 import AppContext from "./AppContext"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 import { InputAdornment } from "@mui/material"
 import ClearIcon from "@mui/icons-material/Clear"
 import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"

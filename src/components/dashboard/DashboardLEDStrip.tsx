@@ -422,23 +422,24 @@ show 20`,
     const animationSkip = 1
     useEffect(
         () =>
-            effect &&
-            bus.subscribe(REFRESH, () => {
-                const a = (animationCounter.current =
-                    animationCounter.current + 1)
-                if (a % animationSkip === 0) {
-                    const command: string[] = []
-                    const args: number[] = []
-                    if (!isNaN(penColor) && !gradientColors.length) {
-                        command.push(`setone 0 #`)
-                        args.push(penColor)
-                    }
-                    command.push(effect)
-                    command.push(`show 0`)
-                    const encoded = lightEncode(command.join("\n"), args)
-                    service?.sendCmdAsync(LedStripCmd.Run, encoded)
-                }
-            }),
+            effect
+                ? bus.subscribe(REFRESH, () => {
+                      const a = (animationCounter.current =
+                          animationCounter.current + 1)
+                      if (a % animationSkip === 0) {
+                          const command: string[] = []
+                          const args: number[] = []
+                          if (!isNaN(penColor) && !gradientColors.length) {
+                              command.push(`setone 0 #`)
+                              args.push(penColor)
+                          }
+                          command.push(effect)
+                          command.push(`show 0`)
+                          const encoded = lightEncode(command.join("\n"), args)
+                          service?.sendCmdAsync(LedStripCmd.Run, encoded)
+                      }
+                  })
+                : undefined,
         [service, effect, penColor]
     )
 

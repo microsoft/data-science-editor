@@ -35,10 +35,10 @@ export class MakeCodeEditorExtensionClient extends JDClient {
     constructor() {
         super()
         this.handleMessage = this.handleMessage.bind(this)
-        if (typeof window !== "undefined") {
-            window.addEventListener("message", this.handleMessage, false)
+        if (typeof self !== "undefined") {
+            self.addEventListener("message", this.handleMessage, false)
             this.mount(() =>
-                window.removeEventListener("message", this.handleMessage)
+                self.removeEventListener("message", this.handleMessage)
             )
         }
         // always refresh on load

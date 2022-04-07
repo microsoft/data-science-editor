@@ -13,7 +13,7 @@ import {
 } from "@mui/material"
 import GitHubIcon from "@mui/icons-material/GitHub"
 import ApiKeyAccordion from "../ApiKeyAccordion"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 import LoadingProgress from "../ui/LoadingProgress"
 import { toHex } from "../../../jacdac-ts/src/jdom/utils"
 import { anyRandomUint32 } from "../../../jacdac-ts/src/jdom/random"

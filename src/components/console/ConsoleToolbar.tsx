@@ -16,7 +16,7 @@ import {
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import useChange from "../../jacdac/useChange"
 import { LoggerPriority } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 import ServiceManagerContext from "../ServiceManagerContext"
 import OpenInNewIcon from "@mui/icons-material/OpenInNew"
 

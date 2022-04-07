@@ -8,7 +8,7 @@ import { PointerBoundary } from "../PointerBoundary"
 
 import WorkspaceContext from "../../WorkspaceContext"
 
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 import ExpandModelBlockField from "./ExpandModelBlockField"
 
 const PREFIX = "ConvLayerBlockField"

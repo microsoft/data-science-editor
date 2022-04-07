@@ -1,4 +1,4 @@
-import React, { Suspense, useRef } from "react"
+import React, { useRef } from "react"
 import { Canvas } from "@react-three/fiber"
 import { OrbitControls, Stage } from "@react-three/drei"
 import FullscreenIcon from "@mui/icons-material/Fullscreen"
@@ -32,17 +32,15 @@ export default function ModelViewer(props) {
             }
         >
             <Canvas shadows dpr={[1, 2]} camera={{ fov: 50 }}>
-                <Suspense fallback={null}>
-                    <Stage
-                        controls={ref}
-                        intensity={0.5}
-                        contactShadow
-                        shadows
-                        adjustCamera
-                    >
-                        {children}
-                    </Stage>
-                </Suspense>
+                <Stage
+                    controls={ref}
+                    intensity={0.5}
+                    contactShadow
+                    shadows
+                    adjustCamera
+                >
+                    {children}
+                </Stage>
                 <OrbitControls ref={ref} autoRotate={!!autoRotate} />
             </Canvas>
             {supportsFullScreen && (

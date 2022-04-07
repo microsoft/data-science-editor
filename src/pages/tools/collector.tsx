@@ -43,7 +43,7 @@ import useChartPalette from "../../components/useChartPalette"
 import { isSensor } from "../../../jacdac-ts/src/jdom/spec"
 import useEvents from "../../components/hooks/useEvents"
 import useDevices from "../../components/hooks/useDevices"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 import DashboardDeviceItem from "../../components/dashboard/DashboardDeviceItem"
 import IconButtonWithTooltip from "../../components/ui/IconButtonWithTooltip"
 import AddIcon from "@mui/icons-material/Add"
@@ -81,9 +81,8 @@ const COLLECTOR_START_DELAY = "jacdac:collector:startdelay"
 
 export default function Collector() {
     const bus = useBus()
-    const { toggleShowDeviceHostsDialog } =
-        useContext(SimulatorDialogsContext)
-    const { enqueueSnackbar} = useSnackbar()
+    const { toggleShowDeviceHostsDialog } = useContext(SimulatorDialogsContext)
+    const { enqueueSnackbar } = useSnackbar()
     const handleShowStartSimulator = () =>
         toggleShowDeviceHostsDialog({ sensor: true })
     const { fileSystem } = useContext(FileSystemContext)
@@ -144,10 +143,11 @@ export default function Collector() {
     const triggerEvent = bus.node(triggerEventId) as JDEvent
     const startEnabled = !starting && !!recordingRegisters?.length
     const events = useEvents({ ignoreChange: true })
-    const samplingIntervalId = useId()
-    const samplingDurationId = useId()
-    const startDelayId = useId()
-    const prefixId = useId()
+    const id = useId()
+    const samplingIntervalId = id + "-samplinginterval"
+    const samplingDurationId = id + "-samplingduration"
+    const startDelayId = id + "-startdelay"
+    const prefixId = id + "-prefix"
 
     useEffect(() => {
         //console.log(`trigger event`, triggerEventId, triggerEvent)

@@ -9,7 +9,7 @@ import {
 } from "@mui/material"
 import React, { ChangeEvent, useContext, useState } from "react"
 import AddIcon from "@mui/icons-material/Add"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 import FileSystemContext from "../FileSystemContext"
 
 export default function FileNewFileChip(props: {

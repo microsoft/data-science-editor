@@ -25,8 +25,6 @@ import SystemUpdateAltIcon from "@mui/icons-material/SystemUpdateAlt"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import WifiIcon from "@mui/icons-material/Wifi"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import SettingsIcon from "@mui/icons-material/Settings"
-// tslint:disable-next-line: no-submodule-imports match-default-export-name
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord"
 import BugReportIcon from "@mui/icons-material/BugReport"
 import VideoCallIcon from "@mui/icons-material/VideoCall"
@@ -161,22 +159,12 @@ export default function ToolsDrawer() {
             to: "/tools/collector/",
             icon: <FiberManualRecordIcon />,
         },
-        UIFlags.webcam && {
-            text: showWebCam ? "Stop WebCam" : "Start WebCam",
-            icon: <VideoCallIcon />,
-            action: () => setShowWebCam(!showWebCam),
-        },
         UIFlags.peers && {
             text: "Peers",
             to: "/tools/peers/",
             icon: <WifiIcon />,
         },
         {},
-        {
-            text: "Device Settings",
-            to: "/tools/settings/",
-            icon: <SettingsIcon />,
-        },
         {
             text: "Firmware Update",
             to: "/tools/updater/",
@@ -239,6 +227,11 @@ export default function ToolsDrawer() {
                 .join(", ")})`,
             action: handleUnitClick(unit, name, names),
         })),
+        UIFlags.webcam && {
+            text: showWebCam ? "Stop WebCam" : "Start WebCam",
+            icon: <VideoCallIcon />,
+            action: () => setShowWebCam(!showWebCam),
+        },
     ].filter(l => !!l)
 
     if (!toolsMenu) return null

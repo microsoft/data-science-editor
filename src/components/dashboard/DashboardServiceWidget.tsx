@@ -152,7 +152,7 @@ const serviceViews: {
     },
     [SRV_BUZZER]: {
         component: DashboardBuzzer,
-        weight: () => 3,
+        weight: () => 4,
     },
     [SRV_LED_STRIP]: {
         component: DashboardLEDStrip,

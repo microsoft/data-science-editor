@@ -9,7 +9,7 @@ export default function BrowserCompatibilityAlert(props: {
 }) {
     const { filter, label } = props
     const compatible = useMemo(() => {
-        if (typeof window !== undefined) {
+        if (typeof window !== "undefined") {
             const browser = getParser(window.navigator.userAgent)
             return browser.satisfies(filter)
         }

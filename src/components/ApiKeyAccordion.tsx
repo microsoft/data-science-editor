@@ -15,7 +15,7 @@ import { Button } from "gatsby-theme-material-ui"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 import useSnackbar from "./hooks/useSnackbar"
 
 export default function ApiKeyAccordion(props: {

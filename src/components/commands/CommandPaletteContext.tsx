@@ -51,15 +51,10 @@ export const CommandPaletteProvider = ({ children }) => {
         if (!options) return undefined
 
         const ids = options.map(c => c.id)
-        options.forEach(option => {
-            const { id } = option
-            if (commands.find(c => c.id === id))
-                throw Error(`command ${id} already registered`)
-        })
-        setCommands([...commands, ...options])
+        setCommands(cmds => [...cmds, ...options])
         console.debug(`command: added ${ids.join(", ")}`)
         return () => {
-            setCommands(commands.filter(c => ids.indexOf(c.id) < 0))
+            setCommands(cmds => cmds.filter(c => ids.indexOf(c.id) < 0))
             console.debug(`command: removed ${ids.join(", ")}`)
         }
     }

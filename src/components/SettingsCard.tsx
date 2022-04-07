@@ -16,7 +16,7 @@ import DeleteIcon from "@mui/icons-material/Delete"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import AddIcon from "@mui/icons-material/Add"
 import CmdButton from "./CmdButton"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 import LoadingProgress from "./ui/LoadingProgress"
 import SwitchWithLabel from "./ui/SwitchWithLabel"
 import { bufferToString } from "../../jacdac-ts/src/jdom/utils"
@@ -26,6 +26,7 @@ import ServiceManagerContext from "./ServiceManagerContext"
 import Suspense from "./ui/Suspense"
 import SystemUpdateAltIcon from "@mui/icons-material/SystemUpdateAlt"
 import useSnackbar from "./hooks/useSnackbar"
+import useAnalytics from "./hooks/useAnalytics"
 
 const ImportButton = lazy(() => import("./ImportButton"))
 
@@ -44,7 +45,7 @@ function SettingRow(props: {
         await client.deleteValue(name)
     }
     const keyId = useId()
-    const valueId = useId()
+    const valueId = keyId + "-value"
     const nameError = ""
     const valueError = ""
     return (
@@ -100,7 +101,7 @@ function AddSettingRow(props: {
     const [value, setValue] = useState("")
     const [secret, setSecret] = useState(showSecrets)
     const keyId = useId()
-    const valueId = useId()
+    const valueId = keyId + "-value"
 
     const handleNameChange = (ev: ChangeEvent<HTMLInputElement>) => {
         setName(ev.target.value.trim())
@@ -222,18 +223,27 @@ export default function SettingsCard(props: {
 }) {
     const { service, mutable, keyPrefix = "", showSecrets, autoKey } = props
     const { fileStorage } = useContext(ServiceManagerContext)
+    const { trackError } = useAnalytics()
     const factory = useCallback(srv => new SettingsClient(srv), [])
     const client = useServiceClient(service, factory)
     const values = useChangeAsync(
         client,
         async c => {
-            const keys = await c?.list()
-            return keys
-                ?.filter(({ key }) => !keyPrefix || key.startsWith(keyPrefix))
-                .map(({ key, value }) => ({
-                    key,
-                    value: bufferToString(value),
-                }))
+            try {
+                const keys = await c?.list()
+                return keys
+                    ?.filter(
+                        ({ key }) => !keyPrefix || key.startsWith(keyPrefix)
+                    )
+                    .map(({ key, value }) => ({
+                        key,
+                        value: bufferToString(value),
+                    }))
+            } catch (e) {
+                trackError(e)
+                console.debug(e)
+                return []
+            }
         },
         [keyPrefix]
     )

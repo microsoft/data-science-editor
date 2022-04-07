@@ -26,7 +26,7 @@ import useWidgetSize from "../widgets/useWidgetSize"
 import ValueWithUnitWidget from "../widgets/ValueWithUnitWidget"
 import useUnitIcon from "../hooks/useUnitIcon"
 import { PackedSimpleValue } from "../../../jacdac-ts/src/jdom/pack"
-import { useId } from "react-use-id-hook"
+import { useId } from "react"
 import LoadingProgress from "../ui/LoadingProgress"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 
