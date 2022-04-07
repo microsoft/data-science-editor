@@ -1,66 +1,18 @@
-import {
-    ControlReg,
-    JD_SERVICE_INDEX_CTRL,
-} from "../../../jacdac-ts/src/jdom/constants"
-import { CardHeader, Chip, Grid, Typography } from "@mui/material"
+import { CardHeader, Grid, Typography } from "@mui/material"
 // tslint:disable-next-line: no-submodule-imports
-import { Link } from "gatsby-theme-material-ui"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
-import React from "react"
-import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
+import React, { lazy } from "react"
 import DeviceActions from "./DeviceActions"
 import DeviceName from "./DeviceName"
 import DeviceCardMedia from "./DeviceCardMedia"
 import useDeviceSpecification from "../../jacdac/useDeviceSpecification"
-import { identifierToUrlPath } from "../../../jacdac-ts/src/jdom/spec"
 import DeviceAvatar from "./DeviceAvatar"
-import useChange from "../../jacdac/useChange"
-import useRegister from "../hooks/useRegister"
 import useDeviceDescription from "../../jacdac/useDeviceDescription"
-
-function DeviceFirmwareVersionChip(props: { device: JDDevice }) {
-    const { device } = props
-    const specification = useDeviceSpecification(device)
-    const control = useChange(device, _ => _?.service(JD_SERVICE_INDEX_CTRL))
-    const productIdentifierRegister = useRegister(
-        control,
-        ControlReg.ProductIdentifier
-    )
-    const [productIdentifier] = useRegisterUnpackedValue<[number]>(
-        productIdentifierRegister
-    )
-    const firmwareVersionRegister = useRegister(
-        control,
-        ControlReg.FirmwareVersion
-    )
-    const [firmwareVersion] = useRegisterUnpackedValue<[string]>(
-        firmwareVersionRegister
-    )
-    if (firmwareVersion == undefined) return null
-
-    const firmwareName =
-        !!productIdentifier &&
-        specification?.firmwares?.find(
-            fw => fw.productIdentifier === productIdentifier
-        )?.name
-
-    return (
-        <Chip
-            size="small"
-            label={[firmwareName, firmwareVersion].filter(f => !!f).join(" ")}
-        />
-    )
-}
-
-function DeviceTemperatureChip(props: { device: JDDevice }) {
-    const { device } = props
-    const tempRegister = useChange(device, _ =>
-        _?.service(0)?.register(ControlReg.McuTemperature)
-    )
-    const [temperature] = useRegisterUnpackedValue<[number]>(tempRegister)
-    if (isNaN(temperature)) return null
-    return <Chip size="small" label={`${temperature}°`} />
-}
+import Suspense from "../ui/Suspense"
+const DeviceFirmwareVersionChip = lazy(
+    () => import("./DeviceFirmwareVersionChip")
+)
+const DeviceTemperatureChip = lazy(() => import("./DeviceTemperatureChip"))
 
 export default function DeviceCardHeader(props: {
     device: JDDevice
@@ -119,12 +71,18 @@ export default function DeviceCardHeader(props: {
 
                         {showFirmware && (
                             <Grid item>
-                                <DeviceFirmwareVersionChip device={device} />
+                                <Suspense>
+                                    <DeviceFirmwareVersionChip
+                                        device={device}
+                                    />
+                                </Suspense>
                             </Grid>
                         )}
                         {showTemperature && (
                             <Grid item>
-                                <DeviceTemperatureChip device={device} />
+                                <Suspense>
+                                    <DeviceTemperatureChip device={device} />
+                                </Suspense>
                             </Grid>
                         )}
                     </Grid>
