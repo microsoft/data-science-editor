@@ -15,98 +15,22 @@ Jacdac brings **simulators** and **digital twins** of sensors/actuators:
 
 As of today, Jacdac runs on **micro:bit V2** exclusively and uses pin **12**.
 
-## Level 0: Existing accessories
+## Level 0: [Software only Jacdac](/ddk/microbit/software-only-accessory/) for Existing accessories
 
 The accessory sensors and actuators are surfaced as Jacdac servers by wrapping the existing extension into a Jacdac compatibility layer.
 This solution adds no cost and will work for existing accessories.
-
-### Pros
-
--   No hardware changes to existing accessories
--   No software changes to existing extension code
--   Support for simulators and digital twins
--   Support for standardized Jacdac blocks
--   No new GitHub repository needed, Jacdac extension code stored in a subfolder
-
-### Cons
-
--   No hardware Jacdac connector
--   Existing blocs are hidden to avoid confusion. Jacdac service blocks may have less options.
-
-### Integration steps
-
--   install the makecode command line tool
-
-```
-npm install -g makecode
-```
-
--   [ ] add a `mkc.json` file next to the `pxt.json` file in your extension with the following content
-
-```json
-{
-    "targetWebsite": "https://makecode.microbit.org/",
-    "links": {
-        "PACKAGE_NAME": "."
-    }
-}
-```
-
-where `PACKAGE_NAME` is the name of your extension in `pxt.json`.
-
--   create a `jacdac` subfolder, and move to that folder
-
-```
-mkdir jacdac
-cd jacdac
-```
-
--   [ ] run makecode init to configure the folder
-
-```
-makecode init microbit --jacdac
-```
-
--   [ ] add references to the service client libraries you need. For example, to use a button, do
-
-```
-makecode add jacdac-button
-```
-
--   [ ] add a function that launches servers for each sensor
--   [ ] wire up the function to start when running on hardware
-
-```ts
-namespace servers {
-    function startServers() {
-        if (!jacdac.isSimulator()) {
-            // start servers only on hardware
-            TODO
-        }
-        //
-        if (jacdac.checkProxy()) {
-            // custom proxy code
-            jacdac.proxyFinalize()
-        }
-    }
-    startServers()
-}
-```
-
-If your hardware is already using pin 12, disable that feature in Jacdac
-
-```ts
-TODO
-```
 
 -   Pros
     -   retrofit existing accessories
     -   simulation
     -   digital twin
+    -   no modification to existing extensions
 -   Cons
     -   micro:bit v2 only
     -   extension required
     -   no Jacdac connector
+
+*   [Get started](/ddk/microbit/software-only-accessory/)
 
 ## Level 1: Unpowered physical connector
 
