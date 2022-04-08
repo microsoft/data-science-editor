@@ -51,19 +51,19 @@ export default function DashboardTrafficLight(props: DashboardServiceProps) {
     const widgetRef = useRef<SVGGElement>()
 
     const redRegister = useRegister(service, TrafficLightReg.Red)
-    const orangeRegister = useRegister(service, TrafficLightReg.Orange)
+    const yellowRegister = useRegister(service, TrafficLightReg.Yellow)
     const greenRegister = useRegister(service, TrafficLightReg.Green)
 
     const red = useRegisterBoolValue(redRegister, props)
-    const orange = useRegisterBoolValue(orangeRegister, props)
+    const yellow = useRegisterBoolValue(yellowRegister, props)
     const green = useRegisterBoolValue(greenRegister, props)
 
     const lightRegs = [
         TrafficLightReg.Red,
-        TrafficLightReg.Orange,
+        TrafficLightReg.Yellow,
         TrafficLightReg.Green,
     ]
-    const lights = [red, orange, green]
+    const lights = [red, yellow, green]
 
     const server = useServiceServer<TrafficLightServer>(service)
     const color = server ? "secondary" : "primary"
