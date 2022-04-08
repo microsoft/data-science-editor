@@ -94,4 +94,20 @@ namespace modules {
 -   make sure to add `?device=self` to the contructor name
 -   test your extension, you should be able to use the simulator and the hardware values!
 
-### Step 3: create a release
+> Don't forget to create a release so that your latest code changes are picked up by MakeCode!
+
+### Step 3: Register accessory and update device identifier
+
+To improve the user experience, register your accessory at https://microsoft.github.io/jacdac-docs/tools/device-registration/.
+The user will be able to see a picture of the device and get more information from the dashboard.
+
+- open https://microsoft.github.io/jacdac-docs/tools/device-registration/
+- go through the registration process and copy the project identifier
+- edit `main.ts` with the project identifier
+
+```typescript
+namespace servers {
+    jacdac.productIdentifier = 0x....
+    ...
+}
+```

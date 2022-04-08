@@ -27,6 +27,7 @@ This solution adds no cost and will work for existing accessories.
     -   no modification to existing extension code
     -   same github repository for code
 -   Cons
+    -   extension required
     -   no Jacdac connector
     -   micro:bit v2 only (Jacdac is not supported on v1)
 
@@ -34,23 +35,22 @@ This solution adds no cost and will work for existing accessories.
 
 ## Level 1: Unpowered physical connector
 
-In this scenario, you integrate one or more [Jacdac PCB edge connectors](/ddk/design#pcb-edge-connector) into your design, with the JD_DATA line connected to micro:bit pin 12 through the required [signal conditioning](/ddk/design#signalling) circuit.
+In this scenario, you integrate one or more [Jacdac PCB edge connectors](/ddk/design#pcb-edge-connector) into your design, with the `JD_DATA` line connected to micro:bit pin 12 through the required [signal conditioning](/ddk/design#signalling) circuit.
 
--   [ ] Jacdac PCB connector specification TODO
--   [ ] Jacdac data line requirements TODO
-
-On the software side, the same approach applies in Level 0.
+On the software side, the same approach applies in Software-Only Jacdac.
 
 -   Pros
     -   retrofit existing accessories
     -   simulator
     -   digital twin
+    -   no modification to existing extension code
+    -   same github repository for code
     -   Jacdac connector at minimal cost
 -   Cons
     -   new hardware design needed
-    -   micro:bit v2 only
     -   extension required
     -   Unpowered connector means user has to add a power source on the Jacdac bus
+    -   micro:bit v2 only (Jacdac is not supported on v1)
 
 ## Level 2: Powered physical connector
 
@@ -59,12 +59,14 @@ In this scenario, the Jacdac connector is powered using the required regulation 
 -   Pros
     -   simulator
     -   digital twin
+    -   no modification to existing extension code
+    -   same github repository for code
     -   Powered connector means module will just work when connected
 -   Cons
     -   new hardware design needed
-    -   micro:bit v2 only
     -   extension required
     -   additional cost for power regulator
+    -   micro:bit v2 only (Jacdac is not supported on v1)
 
 Note that if your accessory already has a power regulator, you might already have the required circuitery in place.
 
@@ -80,5 +82,3 @@ In this case, you do not need to provide any extension as the user will be able 
     -   compatible with any Jacdac hardware, including Raspberry Pi
 -   Cons
     -   MCU and power regulator circuitery add cost
-
-## Power considerations
