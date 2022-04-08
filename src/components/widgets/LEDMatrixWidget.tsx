@@ -4,7 +4,7 @@ import useWidgetTheme from "./useWidgetTheme"
 import useFireKey from "../hooks/useFireKey"
 import useKeyboardNavigationProps from "../hooks/useKeyboardNavigationProps"
 import LoadingProgress from "../ui/LoadingProgress"
-import { toggleBit } from "../../../jacdac-ts/src/jdom/utils"
+import { getBit, toggleBit } from "../../../jacdac-ts/src/jdom/utils"
 
 export default function LEDMatrixWidget(props: {
     leds: Uint8Array
@@ -47,14 +47,14 @@ export default function LEDMatrixWidget(props: {
     const w = columns * pw + (columns + 1) * m
     const h = rows * ph + (rows + 1) * m
 
-    const columnspadded = columns + (8 - (columns % 8))
+    const column_size = (rows + 7) >> 3
 
     const handleLedClick =
         (bitindex: number) => (ev: React.PointerEvent<SVGRectElement>) => {
             if (ev && !ev.buttons) return
             let newLeds = currentLeds.slice(0)
             // ensure that newLeds has the right size
-            const n = rows * columnspadded
+            const n = columns * column_size
             if (newLeds.length !== n) {
                 if (newLeds.length > n) newLeds = newLeds.slice(0, n)
                 else {
@@ -100,10 +100,8 @@ export default function LEDMatrixWidget(props: {
                 )
                 boxEls.push(box)
 
-                const bitindex = row * columnspadded + col
-                const byte = currentLeds?.[bitindex >> 3]
-                const bit = bitindex % 8
-                const on = 1 === ((byte >> bit) & 1)
+                const bitindex = row + col * column_size * 8
+                const on = getBit(currentLeds ?? new Uint8Array(0), bitindex)
                 const handleClick = handleLedClick(bitindex)
                 const fireClick = useFireKey(handleClick)
 

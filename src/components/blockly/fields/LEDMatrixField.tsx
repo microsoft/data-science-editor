@@ -1,5 +1,5 @@
 import React, { lazy, ReactNode } from "react"
-import { fromHex, toHex } from "../../../../jacdac-ts/src/jdom/utils"
+import { fromHex, getBit, toHex } from "../../../../jacdac-ts/src/jdom/utils"
 import Suspense from "../../ui/Suspense"
 import { ReactFieldJSON, VALUE_CHANGE } from "./ReactField"
 import ReactImageField from "./ReactImageField"
@@ -44,7 +44,7 @@ export default class LEDMatrixField extends ReactImageField<LEDMatrixFieldValue>
     renderValue(): string {
         const { leds, rows, columns } = this.value
         // render current state to LEDmatrix field
-        const columnspadded = columns + (8 - (columns % 8))
+        const column_size = (rows + 7) >> 3
         const ledsBytes = fromHex(leds)
         const cvs = document.createElement("canvas")
         const b = 3
@@ -60,10 +60,8 @@ export default class LEDMatrixField extends ReactImageField<LEDMatrixFieldValue>
         ctx.fillStyle = "blue"
         for (let x = 0; x < columns; ++x) {
             for (let y = 0; y < rows; ++y) {
-                const bitindex = y * columnspadded + x
-                const byte = ledsBytes[bitindex >> 3]
-                const bit = bitindex % 8
-                const on = 1 === ((byte >> bit) & 1)
+                const bitindex = x * column_size * 8 + y
+                const on = getBit(ledsBytes, bitindex)
                 ctx.fillStyle = on ? "#ffc400" : "#000"
                 ctx.fillRect(x * (pw + b) + b, y * (ph + b) + b, pw, ph)
             }
