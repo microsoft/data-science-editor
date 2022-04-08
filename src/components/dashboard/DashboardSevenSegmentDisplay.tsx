@@ -114,7 +114,7 @@ export default function DashboardSevenSegmentDisplay(
         return (
             <>
                 <path
-                    fill={background}
+                    fill={controlBackground}
                     stroke="none"
                     d={`M ${props.mx} ${
                         props.my
@@ -141,7 +141,7 @@ export default function DashboardSevenSegmentDisplay(
         return (
             <>
                 <circle
-                    fill={background}
+                    fill={controlBackground}
                     stroke="none"
                     r={rs}
                     cx={mx}
