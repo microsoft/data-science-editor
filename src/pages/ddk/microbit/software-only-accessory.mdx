@@ -9,8 +9,89 @@ This solution adds no cost and will work for existing accessories.
     -   digital twin
     -   no modification to existing extensions
 -   Cons
-    -   micro:bit v2 only
-    -   extension required
     -   no Jacdac connector
+    -   micro:bit v2 only (Jacdac is not supported on v1)
 
 ## How to
+
+For the purpose of this example, let's assume we have an extension `https://github.com/company/pxt-thing/` with blocks in the `thing` namespace.
+
+### Step 1: preparing the new extension
+
+We are going to create a new _nested_ extension that adds Jacdac and hides the existing blocks.
+
+-   open https://makecode.microbit.org/
+-   import your repository url **with /jacdac** appended. This will create a new extension in the same repository. MakeCode will ask you to confirm to create a subfolder, accep
+
+    t
+
+> If you repo is `https://github.com/company/pxt-thing/`, import `https://github.com/company/pxt-thing/jacdac`
+
+-   rename the project to `jacdac-thing` where `thing` is the name of your package (replace `pxt-` with `jacdac-`)
+-   switch to JavaScript
+-   expand the Explorer view and delete `main.blocks`
+-   in the editor, add your extension github repository (`https://github.com/company/pxt-thing/`) as an extension
+-   add the Jacdac extension to the project (search for `jacdac`)
+-   once the simulator, the Jacdac dashboard will show up under the micro:bit
+-   start simulators for the [services](https://microsoft.github.io/jacdac-docs/services/) you want to support
+-   click on the `Add Blocks` button and import all the necessary extension to support those simulators
+-   copy the following template in `main.ts`
+
+```typescript
+//% deprecated
+namespace TODO_REPLACE_THIS_WITH_BLOCK_NAMESPACE {}
+
+namespace servers {
+    jacdac.startSelfServers(() => [])
+}
+
+namespace modules {}
+```
+
+-   replace `TODO_REPLACE_THIS_WITH_BLOCK_NAMESPACE` with the namespace that contains your blocks to hide them
+
+### Step 2: add sensor servers
+
+The easiest servers a simple sensor that return a single numerical value.
+
+Let's assume that our extension has a function `thing.lightLevel()` that returns a number `[0..1023]` from a light sensor resistor.
+We want to wrap this function as a [light level](https://microsoft.github.io/jacdac-docs/services/lightlevel/) server.
+
+-   start a `light level` simulator
+-   click **Add Blocks** to import the light level constants and clients
+-   update `main.ts` with the following code
+
+```typescript
+namespace servers {
+    jacdac.startSelfServers(() => [
+        jacdac.createSimpleSensorServer(
+            "",
+            jacdac.SRV_LIGHT_LEVEL,
+            "u0.16",
+            () => thing.lightLevel() / 1023
+        ),
+    ])
+}
+```
+
+Notice that we rescale the value returned by `thing.lightLevel()` to match the `[0..1]` range.
+
+-   update `main.ts` with a light level client
+
+```typescript
+namespace modules {
+    /**
+     * The thing light level sensor
+     */
+    //% fixedInstance whenUsed block="thing light level"
+    export const thingLightLevel = new LightLevelClient(
+        "thing light level?device=self"
+    )
+}
+```
+
+-   make sure to update the `thing light level` name in the comment, and contructor string
+-   make sure to add `?device=self` to the contructor name
+-   test your extension, you should be able to use the simulator and the hardware values!
+
+### Step 3: create a release

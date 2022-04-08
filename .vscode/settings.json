@@ -23,7 +23,6 @@
         "*.mdx": "markdown"
     },
     "git.detectSubmodulesLimit": 20,
-    "editor.formatOnSave": true,
     "[svg]": {
         "editor.defaultFormatter": "jock.svg"
     }
