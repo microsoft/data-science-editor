@@ -42,7 +42,10 @@ We are going to create a new _nested_ extension that adds Jacdac and hides the e
 namespace TODO_REPLACE_THIS_WITH_BLOCK_NAMESPACE {}
 
 namespace servers {
-    jacdac.startSelfServers(() => [])
+    function start() {
+        jacdac.startSelfServers(() => [])
+    }
+    start()
 }
 
 namespace modules {}
@@ -63,14 +66,17 @@ We want to wrap this function as a [light level](https://microsoft.github.io/jac
 
 ```typescript
 namespace servers {
-    jacdac.startSelfServers(() => [
-        jacdac.createSimpleSensorServer(
-            "",
-            jacdac.SRV_LIGHT_LEVEL,
-            "u0.16",
-            () => thing.lightLevel() / 1023
-        ),
-    ])
+    function start() {
+        jacdac.startSelfServers(() => [
+            jacdac.createSimpleSensorServer(
+                "",
+                jacdac.SRV_LIGHT_LEVEL,
+                "u0.16",
+                () => thing.lightLevel() / 1023
+            ),
+        ])
+    }
+    start()
 }
 ```
 
@@ -107,7 +113,10 @@ The user will be able to see a picture of the device and get more information fr
 
 ```typescript
 namespace servers {
-    jacdac.productIdentifier = 0x....
+    function start() {
+        jacdac.productIdentifier = 0x....
+        ...
+    }
     ...
 }
 ```
