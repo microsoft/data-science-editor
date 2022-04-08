@@ -59,11 +59,12 @@ export default function DashboardLightBulb(props: DashboardServiceProps) {
         : on
         ? "on"
         : "off"
+    const widgetSize = `clamp(4rem, 12vw, 12vh)`
 
     return (
         <Grid container spacing={1}>
             <Grid item xs={12}>
-                <SvgWidget tabIndex={0} width={w} height={w}>
+                <SvgWidget tabIndex={0} width={w} height={w} size={widgetSize}>
                     <circle
                         cx={cx}
                         cy={cx}
