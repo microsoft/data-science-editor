@@ -61,7 +61,7 @@ export default function DashboardSevenSegmentDisplay(
 
     const w = digitCount * (wd + 4 * md) + md
     const h = 2 * md + 3 * hd + 2 * hs
-    const opacity = 0.5 + 0.5 * (brightness || 0)
+    const opacity = 0.5 + 0.5 * (brightness === undefined ? 1 : brightness)
 
     /*
     GFEDCBA DP
@@ -135,7 +135,7 @@ export default function DashboardSevenSegmentDisplay(
     }
 
     const DotSegment = (props: { digit: number }) => {
-        const bit = (props.digit & 0B10000000) == 0B10000000
+        const bit = (props.digit & 0b10000000) == 0b10000000
         const mx = rs + wd + 2 * rs
         const my = rs + 2 * hd + 2 * hs
         return (
@@ -170,7 +170,7 @@ export default function DashboardSevenSegmentDisplay(
                     mx={rs}
                     my={rs + hs + hd}
                     digit={digit}
-                    mask={0B01000000}
+                    mask={0b01000000}
                 />
 
                 <VerticalSegment
@@ -178,7 +178,7 @@ export default function DashboardSevenSegmentDisplay(
                     mx={rs}
                     my={rs}
                     digit={digit}
-                    mask={0B00100000}
+                    mask={0b00100000}
                 />
 
                 <VerticalSegment
@@ -186,7 +186,7 @@ export default function DashboardSevenSegmentDisplay(
                     mx={rs}
                     my={rs + hd + hs}
                     digit={digit}
-                    mask={0B00010000}
+                    mask={0b00010000}
                 />
 
                 <HorizontalSegment
@@ -194,7 +194,7 @@ export default function DashboardSevenSegmentDisplay(
                     mx={rs}
                     my={rs + 2 * hd + 2 * hs}
                     digit={digit}
-                    mask={0B00001000}
+                    mask={0b00001000}
                 />
 
                 <VerticalSegment
@@ -202,14 +202,14 @@ export default function DashboardSevenSegmentDisplay(
                     mx={rs + wd}
                     my={rs + hd + hs}
                     digit={digit}
-                    mask={0B00000100}
+                    mask={0b00000100}
                 />
                 <VerticalSegment
                     key="B"
                     mx={rs + wd}
                     my={rs}
                     digit={digit}
-                    mask={0B00000010}
+                    mask={0b00000010}
                 />
 
                 <HorizontalSegment
@@ -217,7 +217,7 @@ export default function DashboardSevenSegmentDisplay(
                     mx={rs}
                     my={rs}
                     digit={digit}
-                    mask={0B00000001}
+                    mask={0b00000001}
                 />
 
                 {decimalPoint && <DotSegment digit={digit} />}
@@ -241,12 +241,14 @@ export default function DashboardSevenSegmentDisplay(
                         ))}
                 </SvgWidget>
             </Grid>
-            <Grid item>
-                <RegisterInput
-                    register={brightnessRegister}
-                    visible={visible}
-                />
-            </Grid>
+            {brightness !== undefined && (
+                <Grid item>
+                    <RegisterInput
+                        register={brightnessRegister}
+                        visible={visible}
+                    />
+                </Grid>
+            )}
         </Grid>
     )
 }
