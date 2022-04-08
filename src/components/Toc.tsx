@@ -174,9 +174,7 @@ export default function Toc(props: { pagePath: string }) {
         data.allMdx.edges
             .map(node => node.node)
             .filter(
-                node =>
-                    !!node.frontmatter?.title && 
-                    node.fields.slug !== "/"
+                node => !!node.frontmatter?.title && node.fields.slug !== "/"
             )
             .filter(node => !node.frontmatter || !node.frontmatter?.hideToc)
             .map(node => {
@@ -198,7 +196,8 @@ export default function Toc(props: { pagePath: string }) {
     const TocListItem = (props: { entry: TocNode; level: number }) => {
         const { entry, level } = props
         const { path, children, name } = entry
-        const selected = pagePath === path || (pagePath === "/" && path === "/overview/")
+        const selected =
+            pagePath === path || (pagePath === "/" && path === "/overview/")
         const sub = level === 1 || !!children?.length
         const showSub = sub && !!children?.length && pagePath.startsWith(path)
 

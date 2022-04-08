@@ -75,12 +75,13 @@ export interface HostedSimulatorsContextProps {
     isHostedSimulator: (deviceId: string) => boolean
 }
 
-export const HostedSimulatorsContext = createContext<HostedSimulatorsContextProps>({
-    addHostedSimulator: () => {},
-    removeHostedSimulator: () => {},
-    clearHostedSimulators: () => {},
-    isHostedSimulator: () => false,
-})
+export const HostedSimulatorsContext =
+    createContext<HostedSimulatorsContextProps>({
+        addHostedSimulator: () => {},
+        removeHostedSimulator: () => {},
+        clearHostedSimulators: () => {},
+        isHostedSimulator: () => false,
+    })
 
 HostedSimulatorsContext.displayName = "hostedSims"
 

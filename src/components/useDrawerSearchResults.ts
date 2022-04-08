@@ -14,8 +14,9 @@ export function useDrawerSearchResults(): SearchResult[] {
     const { searchQuery: _searchQuery } = useContext(AppContext)
     const [searchQuery] = useDebounce(_searchQuery, 500)
     // debounce duplicate search
-    const lastResult =
-        useRef<{ searchQuery: string; nodes: SearchResult[] }>(undefined)
+    const lastResult = useRef<{ searchQuery: string; nodes: SearchResult[] }>(
+        undefined
+    )
     if (lastResult.current?.searchQuery === searchQuery)
         return lastResult.current.nodes
 

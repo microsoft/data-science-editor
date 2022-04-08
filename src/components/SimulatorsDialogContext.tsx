@@ -1,9 +1,4 @@
-import React, {
-    createContext,
-    lazy,
-    useContext,
-    useState,
-} from "react"
+import React, { createContext, lazy, useContext, useState } from "react"
 
 import Suspense from "./ui/Suspense"
 import AppContext from "./AppContext"
@@ -36,8 +31,7 @@ export const SimulatorDialogsProvider = ({ children }) => {
     const { trackEvent } = useAnalytics()
 
     const toggleShowDeviceHostsDialog = (options?: ShowDeviceHostsOptions) => {
-        if (options?.trackName)
-            trackEvent(options?.trackName)
+        if (options?.trackName) trackEvent(options?.trackName)
         const b = !showDeviceHostsDialog
         if (b) setShowDeviceHostsSensors(!!options?.sensor)
         setShowDeviceHostsDialog(b)
