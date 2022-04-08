@@ -47,7 +47,7 @@ export default function DashboardSevenSegmentDisplay(
 
     const server = useServiceServer(service)
     const color = server ? "secondary" : "primary"
-    const { active, controlBackground } = useWidgetTheme(color)
+    const { active, background, controlBackground } = useWidgetTheme(color)
 
     if (digitCount === undefined)
         return <DashboardRegisterValueFallback register={digitCountRegister} />
@@ -61,15 +61,15 @@ export default function DashboardSevenSegmentDisplay(
 
     const w = digitCount * (wd + 4 * md) + md
     const h = 2 * md + 3 * hd + 2 * hs
-    const opacity = brightness || 0
+    const opacity = 0.5 + 0.5 * (brightness || 0)
 
     /*
     GFEDCBA DP
     - A -
     |   |
-    G   B
+    F   B
     |   |
-    - F -
+    - G -
     |   |   -
     E   C  |DP|
     - D -   -
@@ -85,7 +85,7 @@ export default function DashboardSevenSegmentDisplay(
         return (
             <>
                 <path
-                    fill={controlBackground}
+                    fill={background}
                     stroke="none"
                     d={`M ${props.mx} ${
                         props.my
@@ -114,7 +114,7 @@ export default function DashboardSevenSegmentDisplay(
         return (
             <>
                 <path
-                    fill={controlBackground}
+                    fill={background}
                     stroke="none"
                     d={`M ${props.mx} ${
                         props.my
@@ -135,13 +135,13 @@ export default function DashboardSevenSegmentDisplay(
     }
 
     const DotSegment = (props: { digit: number }) => {
-        const bit = (props.digit & 0x80) == 0x80
+        const bit = (props.digit & 0B10000000) == 0B10000000
         const mx = rs + wd + 2 * rs
         const my = rs + 2 * hd + 2 * hs
         return (
             <>
                 <circle
-                    fill={controlBackground}
+                    fill={background}
                     stroke="none"
                     r={rs}
                     cx={mx}
@@ -165,20 +165,20 @@ export default function DashboardSevenSegmentDisplay(
         const { x, y, digit } = dprops
         return (
             <g transform={`translate(${x}, ${y})`}>
-                <VerticalSegment
-                    key="G"
-                    mx={rs}
-                    my={rs}
-                    digit={digit}
-                    mask={0x01}
-                />
-
                 <HorizontalSegment
-                    key="F"
+                    key="G"
                     mx={rs}
                     my={rs + hs + hd}
                     digit={digit}
-                    mask={0x02}
+                    mask={0B01000000}
+                />
+
+                <VerticalSegment
+                    key="F"
+                    mx={rs}
+                    my={rs}
+                    digit={digit}
+                    mask={0B00100000}
                 />
 
                 <VerticalSegment
@@ -186,7 +186,7 @@ export default function DashboardSevenSegmentDisplay(
                     mx={rs}
                     my={rs + hd + hs}
                     digit={digit}
-                    mask={0x04}
+                    mask={0B00010000}
                 />
 
                 <HorizontalSegment
@@ -194,7 +194,7 @@ export default function DashboardSevenSegmentDisplay(
                     mx={rs}
                     my={rs + 2 * hd + 2 * hs}
                     digit={digit}
-                    mask={0x08}
+                    mask={0B00001000}
                 />
 
                 <VerticalSegment
@@ -202,14 +202,14 @@ export default function DashboardSevenSegmentDisplay(
                     mx={rs + wd}
                     my={rs + hd + hs}
                     digit={digit}
-                    mask={0x10}
+                    mask={0B00000100}
                 />
                 <VerticalSegment
                     key="B"
                     mx={rs + wd}
                     my={rs}
                     digit={digit}
-                    mask={0x20}
+                    mask={0B00000010}
                 />
 
                 <HorizontalSegment
@@ -217,7 +217,7 @@ export default function DashboardSevenSegmentDisplay(
                     mx={rs}
                     my={rs}
                     digit={digit}
-                    mask={0x40}
+                    mask={0B00000001}
                 />
 
                 {decimalPoint && <DotSegment digit={digit} />}
@@ -228,7 +228,7 @@ export default function DashboardSevenSegmentDisplay(
     return (
         <Grid container direction="column">
             <Grid item xs={12}>
-                <SvgWidget width={w} height={h}>
+                <SvgWidget width={w} height={h} background={controlBackground}>
                     {Array(digitCount)
                         .fill(0)
                         .map((_, i) => (
