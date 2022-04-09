@@ -21,20 +21,12 @@ For the purpose of this example, let's assume we have an extension `https://gith
 We are going to create a new _nested_ extension that adds Jacdac and hides the existing blocks.
 
 -   open https://makecode.microbit.org/
--   import your repository url **with /jacdac** appended. This will create a new extension in the same repository. MakeCode will ask you to confirm to create a subfolder, accep
-
-    t
-
-> If you repo is `https://github.com/company/pxt-thing/`, import `https://github.com/company/pxt-thing/jacdac`
-
+-   import your repository url with **/jacdac** appended. This will create a new extension in the same repository (if you repo is https://github.com/company/pxt-thing/, import https://github.com/company/pxt-thing/jacdac).
 -   rename the project to `jacdac-thing` where `thing` is the name of your package (replace `pxt-` with `jacdac-`)
--   switch to JavaScript
--   expand the Explorer view and delete `main.blocks`
+-   switch to **JavaScript**
+-   expand the **Explorer** view and delete `main.blocks`
 -   in the editor, add your extension github repository (`https://github.com/company/pxt-thing/`) as an extension
 -   add the Jacdac extension to the project (search for `jacdac`)
--   once the simulator, the Jacdac dashboard will show up under the micro:bit
--   start simulators for the [services](https://microsoft.github.io/jacdac-docs/services/) you want to support
--   click on the `Add Blocks` button and import all the necessary extension to support those simulators
 -   copy the following template in `main.ts`
 
 ```typescript
@@ -43,12 +35,19 @@ namespace TODO_REPLACE_THIS_WITH_BLOCK_NAMESPACE {}
 
 namespace servers {
     function start() {
-        jacdac.startSelfServers(() => [])
+        // uncomment after device registration
+        // jacdac.productIdentifier = ...
+
+        jacdac.startSelfServers(() => [
+            // instantiate servers here
+        ])
     }
     start()
 }
 
-namespace modules {}
+namespace modules {
+    // add client fixed instances here
+}
 ```
 
 -   replace `TODO_REPLACE_THIS_WITH_BLOCK_NAMESPACE` with the namespace that contains your blocks to hide them
@@ -82,6 +81,8 @@ namespace servers {
 
 Notice that we rescale the value returned by `thing.lightLevel()` to match the `[0..1]` range.
 
+-   start a **light level** simulator in the Jacdac dashbaord
+-   click on **Add Blocks** to import the `jacdac-light-level` blocks
 -   update `main.ts` with a light level client
 
 ```typescript
@@ -102,14 +103,19 @@ namespace modules {
 
 > Don't forget to create a release so that your latest code changes are picked up by MakeCode!
 
-### Step 3: Register accessory and update device identifier
+### Step 3: Implement a custom server
+
+If your module requires to implement another server, please reach out to the jacdac team at 
+https://github.com/microsoft/jacdac/discussions.
+
+### Step 4: Register accessory and update device identifier
 
 To improve the user experience, register your accessory at https://microsoft.github.io/jacdac-docs/tools/device-registration/.
 The user will be able to see a picture of the device and get more information from the dashboard.
 
-- open https://microsoft.github.io/jacdac-docs/tools/device-registration/
-- go through the registration process and copy the project identifier
-- edit `main.ts` with the project identifier
+-   open https://microsoft.github.io/jacdac-docs/tools/device-registration/
+-   go through the registration process and copy the project identifier
+-   edit `main.ts` with the project identifier
 
 ```typescript
 namespace servers {
