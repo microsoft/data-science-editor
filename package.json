@@ -149,7 +149,7 @@
     "docsbuild": "node node_modules/gatsby/cli.js build",
     "docsserve": "node node_modules/gatsby/cli.js serve",
     "dockerdocs": "node node_modules/gatsby/cli.js develop --host:0.0.0.0",
-    "buildspecs": "cd jacdac-ts && yarn buildspecs && yarn prettier && cd .. && cp -r jacdac-ts/jacdac-spec/services/generated/makecode/* pxt-jacdac && cp -r jacdac-ts/jacdac-spec/services/generated/python/* jacdac-python/jacdac && rm jacdac-dotnet/Jacdac/Constants/*.cs && cp -r jacdac-ts/jacdac-spec/services/generated/cs/* jacdac-dotnet/Jacdac && yarn prettier",
+    "buildspecs": "cd jacdac-ts && yarn buildspecs && yarn prettier && cd .. && cp -r jacdac-ts/jacdac-spec/services/generated/makecode/* pxt-jacdac && cp -r jacdac-ts/jacdac-spec/services/generated/python/* jacdac-python/jacdac && rm jacdac-dotnet/Jacdac/Constants/*.cs && cp -r jacdac-ts/jacdac-spec/services/generated/cs/* jacdac-dotnet/Jacdac && yarn prettier && cd pxt-jacdac && sh update-clients.sh",
     "buildml4f": "cd ml4f && yarn",
     "buildpxt": "cd pxt-jacdac && sh mk.sh",
     "buildmodels": "cd static/models && sh mk.sh",
