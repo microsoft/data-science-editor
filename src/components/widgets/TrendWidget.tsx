@@ -12,8 +12,9 @@ export default function TrendWidget(props: {
     max: number
     horizon: number
     size?: string
+    thresholds?: number[]
 }) {
-    const { register, min, max, horizon, size } = props
+    const { register, min, max, horizon, size, thresholds } = props
     const server = useServiceServer(register.service)
     const color = server ? "secondary" : "primary"
     const { background, controlBackground, active } = useWidgetTheme(color)
@@ -65,6 +66,17 @@ export default function TrendWidget(props: {
                 strokeWidth={m / 2}
                 ref={pathRef}
             />
+            {thresholds?.map((threshold, i) => (
+                <line
+                    key={i}
+                    stroke={background}
+                    strokeWidth={m * 2}
+                    x1={0}
+                    x2={w}
+                    y1={h - m - (threshold - min) * dy}
+                    y2={h - m - (threshold - min) * dy}
+                />
+            ))}
         </SvgWidget>
     )
 }
