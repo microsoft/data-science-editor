@@ -24,19 +24,18 @@ export default function RandomGenerator(props: {
     const fieldId = useId()
     const deviceCatalog = useDeviceCatalog()
 
-    const [value, setValue] = useState(
+    const compute = () =>
         device
-            ? deviceCatalog.uniqueDeviceId()
-            : deviceCatalog.uniqueServiceId()
-    )
-    const [copySuccess, setCopySuccess] = useState(false)
-
-    const handleRegenerate = () => {
-        const v = device
             ? deviceCatalog.uniqueDeviceId()
             : firmware
             ? deviceCatalog.uniqueFirmwareId()
             : deviceCatalog.uniqueServiceId()
+
+    const [value, setValue] = useState(compute())
+    const [copySuccess, setCopySuccess] = useState(false)
+
+    const handleRegenerate = () => {
+        const v = compute()
         setValue(v)
         setCopySuccess(false)
     }
