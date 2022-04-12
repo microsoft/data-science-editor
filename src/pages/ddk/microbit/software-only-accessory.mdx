@@ -20,12 +20,11 @@ For the purpose of this example, let's assume we have an extension `https://gith
 
 We are going to create a new _nested_ extension that adds Jacdac and hides the existing blocks.
 
--   open https://makecode.microbit.org/
+-   open https://makecode.microbit.org/beta/ **make sure to use the beta until all fixes are released**
 -   import your repository url with **/jacdac** appended. This will create a new extension in the same repository (if you repo is https://github.com/company/pxt-thing/, import https://github.com/company/pxt-thing/jacdac).
 -   rename the project to `jacdac-thing` where `thing` is the name of your package (replace `pxt-` with `jacdac-`)
 -   switch to **JavaScript**
 -   expand the **Explorer** view and delete `main.blocks`
--   in the editor, add your extension github repository (`https://github.com/company/pxt-thing/`) as an extension
 -   add the Jacdac extension to the project (search for `jacdac`)
 -   copy the following template in `main.ts`
 
@@ -34,16 +33,16 @@ We are going to create a new _nested_ extension that adds Jacdac and hides the e
 namespace TODO_REPLACE_THIS_WITH_BLOCK_NAMESPACE {}
 
 namespace modules {
-    // add client fixed instances here
+    // TODO:  add client fixed instances here
 }
 
 namespace servers {
     function start() {
-        // uncomment after device registration
+        // TODO: update with new program identifier
         // jacdac.productIdentifier = ...
 
         jacdac.startSelfServers(() => [
-            // instantiate servers here
+            // TODO: instantiate servers here
         ])
     }
     start()
@@ -105,16 +104,21 @@ namespace modules {
 
 ### Step 3: Implement a custom server
 
-If your module requires to implement another server, please reach out to the jacdac team at 
+If your module requires to implement another server, please reach out to the jacdac team at
 https://github.com/microsoft/jacdac/discussions.
 
-### Step 4: Register accessory and update device identifier
+### Step 4: Add product identifier
 
-To improve the user experience, register your accessory at https://microsoft.github.io/jacdac-docs/tools/device-registration/.
-The user will be able to see a picture of the device and get more information from the dashboard.
+A product identifier will allow Jacdac and MakeCode
+to provide a better experience to the user, like
+showing a picture of pointing to a help page.
+The first step is to generate a new id and
+integrate it into the source.
 
--   open https://microsoft.github.io/jacdac-docs/tools/device-registration/
--   go through the registration process and copy the project identifier
+-   generate a new product identifier
+
+    <RandomGenerator firmware={true} />
+
 -   edit `main.ts` with the project identifier
 
 ```typescript
@@ -126,3 +130,14 @@ namespace servers {
     ...
 }
 ```
+
+### Step 5: Register accessory and update device identifier
+
+To improve the user experience, register your accessory at https://microsoft.github.io/jacdac-docs/tools/device-registration/.
+The user will be able to see a picture of the device and get more information from the dashboard.
+
+-   download your extension to a micro:bit
+-   open https://microsoft.github.io/jacdac-docs/tools/device-registration/
+-   connect to the micro:bit
+-   import the device information
+-   finish the registration
