@@ -6,7 +6,7 @@ import {
     Paper,
     Typography,
 } from "@mui/material"
-import React, { useCallback, useRef } from "react"
+import React, { useCallback, useRef, lazy } from "react"
 import {
     SRV_CONTROL,
     SRV_LOGGER,
@@ -30,8 +30,11 @@ import useIntersectionObserver from "../hooks/useIntersectionObserver"
 import { dependencyId } from "../../../jacdac-ts/src/jdom/eventsource"
 import useMediaQueries from "../hooks/useMediaQueries"
 import { DeviceLostAlert } from "../alert/DeviceLostAlert"
-import { DeviceProxyAlert } from "../alert/DeviceProxyAlert"
-import { DeviceBootloaderAlert } from "../alert/DeviceBootloaderAlert"
+import Suspense from "../ui/Suspense"
+const DeviceProxyAlert = lazy(() => import("../alert/DeviceProxyAlert"))
+const DeviceBootloaderAlert = lazy(
+    () => import("../alert/DeviceBootloaderAlert")
+)
 
 const ignoredServices = [
     SRV_CONTROL,
@@ -55,6 +58,7 @@ export default function DashboardDevice(
         showAvatar,
         showHeader,
         showReset,
+        showDeviceProxyAlert,
     } = props
     const { xs: mobile } = useMediaQueries()
 
@@ -133,8 +137,14 @@ export default function DashboardDevice(
             />
             <CardContent style={{ paddingTop: 0 }}>
                 <DeviceLostAlert device={device} />
-                <DeviceBootloaderAlert device={device} />
-                <DeviceProxyAlert device={device} />
+                <Suspense fallback={null}>
+                    <DeviceBootloaderAlert device={device} />
+                </Suspense>
+                {showDeviceProxyAlert && (
+                    <Suspense>
+                        <DeviceProxyAlert device={device} />
+                    </Suspense>
+                )}
                 <ServiceWidgets />
             </CardContent>
         </Card>

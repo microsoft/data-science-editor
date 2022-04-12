@@ -5,7 +5,7 @@ import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import useChange from "../../jacdac/useChange"
 import Alert from "../ui/Alert"
 
-export function DeviceProxyAlert(props: { device: JDDevice }) {
+export default function DeviceProxyAlert(props: { device: JDDevice }) {
     const { device } = props
     const proxy = useChange(device, _ => _?.proxy)
     const handleReset = () => device?.reset()

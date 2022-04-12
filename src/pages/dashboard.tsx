@@ -21,6 +21,7 @@ export default function Page() {
                 showConnect={true}
                 showStartSimulators={true}
                 showStartRoleSimulators={true}
+                showDeviceProxyAlert={true}
             />
         </>
     )

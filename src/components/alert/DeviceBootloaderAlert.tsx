@@ -4,7 +4,7 @@ import useChange from "../../jacdac/useChange"
 import DeviceResetButton from "../devices/DeviceResetButton"
 import Alert from "../ui/Alert"
 
-export function DeviceBootloaderAlert(props: { device: JDDevice }) {
+export default function DeviceBootloaderAlert(props: { device: JDDevice }) {
     const { device } = props
     const bootloader = useChange(device, _ => _?.bootloader)
     if (!bootloader) return null

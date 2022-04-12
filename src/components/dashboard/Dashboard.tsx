@@ -25,6 +25,7 @@ export interface DashboardDeviceProps {
     showHeader?: boolean
     showAvatar?: boolean
     showReset?: boolean
+    showDeviceProxyAlert?: boolean
     serviceFilter?: (srv: JDService) => boolean
 }
 
