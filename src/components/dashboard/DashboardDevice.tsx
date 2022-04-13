@@ -9,6 +9,7 @@ import {
 import React, { useCallback, useRef, lazy } from "react"
 import {
     SRV_CONTROL,
+    SRV_INFRASTRUCTURE,
     SRV_LOGGER,
     SRV_PROTO_TEST,
     SRV_PROXY,
@@ -42,6 +43,7 @@ const ignoredServices = [
     SRV_SETTINGS,
     SRV_PROTO_TEST,
     SRV_PROXY,
+    SRV_INFRASTRUCTURE,
     SRV_UNIQUE_BRAIN,
 ]
 

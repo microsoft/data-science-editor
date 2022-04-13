@@ -43,7 +43,6 @@ import {
     SystemReg,
     SRV_HID_KEYBOARD,
     SRV_HID_MOUSE,
-    //SRV_AZURE_IOT_HUB,
     SRV_AZURE_IOT_HUB_HEALTH,
     SRV_WIFI,
     SRV_VIBRATION_MOTOR,
@@ -68,7 +67,6 @@ import DashboardButton from "./DashboardButton"
 import DashboardRotaryEncoder from "./DashboardRotaryEncoder"
 import DashboardSwitch from "./DashboardSwitch"
 import useServiceServer from "../hooks/useServiceServer"
-import useRegister from "../hooks/useRegister"
 
 // lazy devices
 const DashboardServo = lazy(() => import("./DashboardServo"))
@@ -417,6 +415,16 @@ function DefaultWidget(props: DashboardServiceProps) {
                         isRegister(pkt) &&
                         collapsedRegisters.indexOf(pkt.identifier) > -1
                 )
+                // if value, skip bool intensity
+                .filter(
+                    (pkt, i, pkts) =>
+                        !(
+                            pkt.identifier === SystemReg.Intensity &&
+                            pkt.fields.length == 1 &&
+                            pkt.fields[0].type === "bool"
+                        ) || !pkts.some(pk => pk.identifier === SystemReg.Value)
+                )
+                // map
                 .map(rspec => service.register(rspec.identifier)),
         [service]
     )
