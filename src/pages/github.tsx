@@ -1,6 +1,6 @@
 import { Link } from "gatsby-theme-material-ui"
 import React from "react"
-import GithubRepositoryList from "../components/GithubRespositoryList"
+import GithubRepositoryList from "../components/github/GithubRespositoryList"
 
 export default function Page() {
     return (

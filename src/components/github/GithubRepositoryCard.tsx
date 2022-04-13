@@ -1,7 +1,7 @@
 import React from "react"
 // tslint:disable-next-line: no-submodule-imports
 import { Card, CardContent, Typography } from "@mui/material"
-import { useRepository } from "./github"
+import { useRepository } from "../github"
 import GithubRepositoryCardHeader from "./GithubRepositoryCardHeader"
 
 export default function GithubRepositoryCard(props: {

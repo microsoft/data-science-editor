@@ -7,10 +7,10 @@ import {
     useFetchJSON,
     useLatestFirmwareRelease,
     useRepository,
-} from "./github"
+} from "../github"
 import GitHubIcon from "@mui/icons-material/GitHub"
 import { Link } from "gatsby-theme-material-ui"
-import LoadingProgress from "./ui/LoadingProgress"
+import LoadingProgress from "../ui/LoadingProgress"
 
 function MakeCodeFolderLink(props: {
     slug: string
