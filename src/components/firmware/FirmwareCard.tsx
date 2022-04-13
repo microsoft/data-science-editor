@@ -21,7 +21,7 @@ import {
     useLatestFirmwareReleases,
 } from "../github"
 import { useFirmwareBlob } from "./useFirmwareBlobs"
-import GithubRepositoryCardHeader from "../GithubRepositoryCardHeader"
+import GithubRepositoryCardHeader from "../github/GithubRepositoryCardHeader"
 import Alert from "../ui/Alert"
 import { Link } from "gatsby-theme-material-ui"
 import SelectWithLabel from "../ui/SelectWithLabel"
