@@ -18,15 +18,13 @@ function MakeCodeFolderLink(props: {
     repo: GithubRepository
 }) {
     const { slug, folder, repo } = props
+    const branch = repo.default_branch
     const { response: pxtJson } = useFetchJSON<{
         name: string
         description: string
-    }>(slug, repo.default_branch, "pxt.json", "application/json")
+    }>(slug, branch, "pxt.json", "application/json")
     return (
-        <Link
-            href={`${repo.html_url}/tree/${repo.default_branch}/${folder}`}
-            target="blank"
-        >
+        <Link href={`${repo.html_url}/tree/${branch}/${folder}`} target="blank">
             <Typography component="span" variant="h5">
                 {`${repo.name}/ ${pxtJson?.name || folder}`}
             </Typography>
@@ -39,14 +37,17 @@ export default function GithubRepositoryCardHeader(props: {
     showRelease?: boolean
 }) {
     const { slug, showRelease } = props
-    const { response: repo, loading: repoLoading, status } = useRepository(slug)
+    const { repoPath, folder } = normalizeSlug(slug)
+    const {
+        response: repo,
+        loading: repoLoading,
+        status,
+    } = useRepository(repoPath)
     const { response: release } = useLatestFirmwareRelease(showRelease && slug)
-    const { folder } = normalizeSlug(slug)
-
     const title = repo ? (
         <>
             <Typography component="span" variant="h6">
-                {repo.organization?.login}
+                {repo.organization?.login || repo.owner?.login}
             </Typography>
             <Box component="span" ml={0.5} mr={0.5}>
                 /
@@ -64,7 +65,7 @@ export default function GithubRepositoryCardHeader(props: {
     ) : (
         <>
             <Link
-                href={`https://github.com/${slug}`}
+                href={`https://github.com/${repoPath}`}
                 target="_blank"
                 underline="hover"
             >
@@ -73,9 +74,14 @@ export default function GithubRepositoryCardHeader(props: {
                 </Typography>
             </Link>
             {repoLoading && <LoadingProgress />}
+            {status === 403 && (
+                <Typography component="p" variant="caption">
+                    Github query throttled, please wait.
+                </Typography>
+            )}
             {status !== 403 && !repoLoading && !repo && (
                 <Typography component="p" variant="caption">
-                    Unable to find repository.
+                    Unable to find repository (status {status}).
                 </Typography>
             )}
         </>
