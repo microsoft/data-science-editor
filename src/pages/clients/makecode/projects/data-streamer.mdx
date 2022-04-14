@@ -22,9 +22,9 @@ dep: data-streamer=github:microsoft/pxt-data-streamer
 basic.forever(function () {
     led.toggle(0, 0)
     dataStreamer.writeNumberArray([
-        modules.thermometer1.temperature(),
+        modules.temperature1.temperature(),
         modules.humidity1.humidity(),
-        modules.barometer1.pressure(),
+        modules.airPressure1.pressure(),
         modules.lightLevel1.lightLevel()
     ])
     dataStreamer.writeLine()
