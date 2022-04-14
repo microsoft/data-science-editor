@@ -2,7 +2,6 @@ import React from "react"
 // tslint:disable-next-line: no-submodule-imports
 import { Box, CardHeader, Typography } from "@mui/material"
 import {
-    GithubRepository,
     normalizeSlug,
     useLatestFirmwareRelease,
     useRepository,
@@ -10,18 +9,7 @@ import {
 import GitHubIcon from "@mui/icons-material/GitHub"
 import { Link } from "gatsby-theme-material-ui"
 import LoadingProgress from "../ui/LoadingProgress"
-
-function MakeCodeFolderLink(props: { folder: string; repo: GithubRepository }) {
-    const { folder, repo } = props
-    const branch = repo.default_branch
-    return (
-        <Link href={`${repo.html_url}/tree/${branch}/${folder}`} target="blank">
-            <Typography component="span" variant="h5">
-                {`${repo.name}/ ${folder}`}
-            </Typography>
-        </Link>
-    )
-}
+import MakeCodeGithubFolderLink from "../makecode/MakeCodeGithubFolderLink"
 
 export default function GithubRepositoryCardHeader(props: {
     slug: string
@@ -44,7 +32,7 @@ export default function GithubRepositoryCardHeader(props: {
                 /
             </Box>
             {folder ? (
-                <MakeCodeFolderLink folder={folder} repo={repo} />
+                <MakeCodeGithubFolderLink folder={folder} repo={repo} />
             ) : (
                 <Link href={repo.html_url} target="_blank" underline="hover">
                     <Typography component="span" variant="h5">

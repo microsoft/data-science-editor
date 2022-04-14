@@ -1,4 +1,5 @@
-import { useFetchJSON } from "../github"
+import { rawUrl } from "../github"
+import useFetch from "../useFetch"
 
 export interface PxtJson {
     name: string
@@ -8,11 +9,7 @@ export interface PxtJson {
 }
 
 export default function usePxtJson(slug: string, branch?: string) {
-    const { response: pxtJson } = useFetchJSON<PxtJson>(
-        slug,
-        branch || "master",
-        "pxt.json",
-        "application/json"
-    )
+    const url = rawUrl(slug, branch, "pxt.json")
+    const { response: pxtJson } = useFetch<PxtJson>(url)
     return pxtJson
 }

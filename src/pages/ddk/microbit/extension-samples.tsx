@@ -16,11 +16,15 @@ export default function Samples() {
     ].map(r => `${r}/jacdac`)
     return (
         <>
-            <h1>Jacdac extension samples</h1>
+            <h1>MakeCode/Jacdac accessory extension samples</h1>
+            <p>
+                This page links to a number of accessory extension repositories
+                with the software-only Jacdac layer implemented.
+            </p>
             <GithubRepositoryList
                 repos={repos}
                 showDescription={true}
-                showRelease={true}
+                showDependencies={true}
             />
         </>
     )

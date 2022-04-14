@@ -6,6 +6,7 @@ export default function GithubRepositoryList(props: {
     repos: string[]
     showDescription?: boolean
     showRelease?: boolean
+    showDependencies?: boolean
 }) {
     const { repos, ...others } = props
     return (

@@ -124,6 +124,19 @@ export async function fetchLatestFirmwareRelease(
     throw new Error(`unknown status code ${resp.status}`)
 }
 
+export function rawUrl(slug: string, branch: string, path: string) {
+    const { repoPath, folder } = normalizeSlug(slug)
+    const url = `https://raw.githubusercontent.com/${[
+        repoPath,
+        branch,
+        folder,
+        path,
+    ]
+        .filter(p => !!p)
+        .join("/")}`
+    return url
+}
+
 export async function fetchFirmwareReleaseBinary(
     slug: string,
     version: string
