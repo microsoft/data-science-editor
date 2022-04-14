@@ -1,13 +1,6 @@
 import React from "react"
 // tslint:disable-next-line: no-submodule-imports
-import {
-    Card,
-    CardContent,
-    List,
-    ListItem,
-    ListItemText,
-    Typography,
-} from "@mui/material"
+import { Card, CardContent, Typography } from "@mui/material"
 import { useRepository } from "../github"
 import GithubRepositoryCardHeader from "./GithubRepositoryCardHeader"
 import usePxtJson from "../makecode/usePxtJson"
@@ -17,22 +10,20 @@ function MakeCodeDependencies(props: { slug: string; branch: string }) {
     const pxt = usePxtJson(slug, branch)
     const dependencies: Record<string, string> = pxt?.dependencies || {}
     const jds = Object.entries(dependencies).filter(([, value]) =>
-        /microsoft\/pxt-jacdac\/\w/i.test(value)
+        /^github:microsoft\/pxt-jacdac\/\w/i.test(value)
     )
     console.log({ dependencies, jds })
     if (!jds.length) return null
 
     return (
-        <List dense={true}>
-            <ListItem dense={true}>
-                <ListItemText primary={"Jacdac dependencies"} />
-            </ListItem>
+        <Typography variant="caption">
+            Jacdac dependencies:
             {jds.map(([key, value]) => (
-                <ListItem key={key} dense={true}>
-                    <ListItemText primary={value.replace(/^github:/, '')} secondary={key} />
-                </ListItem>
+                <span style={{ marginLeft: "0.5em" }} key={key}>
+                    {value.replace(/^github:microsoft\/pxt-jacdac\//i, "")},
+                </span>
             ))}
-        </List>
+        </Typography>
     )
 }
 
