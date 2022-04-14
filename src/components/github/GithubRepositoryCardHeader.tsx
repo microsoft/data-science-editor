@@ -4,7 +4,6 @@ import { Box, CardHeader, Typography } from "@mui/material"
 import {
     GithubRepository,
     normalizeSlug,
-    useFetchJSON,
     useLatestFirmwareRelease,
     useRepository,
 } from "../github"
@@ -12,21 +11,13 @@ import GitHubIcon from "@mui/icons-material/GitHub"
 import { Link } from "gatsby-theme-material-ui"
 import LoadingProgress from "../ui/LoadingProgress"
 
-function MakeCodeFolderLink(props: {
-    slug: string
-    folder: string
-    repo: GithubRepository
-}) {
-    const { slug, folder, repo } = props
+function MakeCodeFolderLink(props: { folder: string; repo: GithubRepository }) {
+    const { folder, repo } = props
     const branch = repo.default_branch
-    const { response: pxtJson } = useFetchJSON<{
-        name: string
-        description: string
-    }>(slug, branch, "pxt.json", "application/json")
     return (
         <Link href={`${repo.html_url}/tree/${branch}/${folder}`} target="blank">
             <Typography component="span" variant="h5">
-                {`${repo.name}/ ${pxtJson?.name || folder}`}
+                {`${repo.name}/ ${folder}`}
             </Typography>
         </Link>
     )
@@ -53,7 +44,7 @@ export default function GithubRepositoryCardHeader(props: {
                 /
             </Box>
             {folder ? (
-                <MakeCodeFolderLink slug={slug} folder={folder} repo={repo} />
+                <MakeCodeFolderLink folder={folder} repo={repo} />
             ) : (
                 <Link href={repo.html_url} target="_blank" underline="hover">
                     <Typography component="span" variant="h5">

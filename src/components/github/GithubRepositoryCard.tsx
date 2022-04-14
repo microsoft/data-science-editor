@@ -16,11 +16,9 @@ export default function GithubRepositoryCard(props: {
     return (
         <Card>
             <GithubRepositoryCardHeader slug={slug} showRelease={showRelease} />
-            {description && (
-                <CardContent>
-                    {description && <Typography>{description}</Typography>}
-                </CardContent>
-            )}
+            <CardContent>
+                {description && <Typography>{description}</Typography>}
+            </CardContent>
         </Card>
     )
 }
