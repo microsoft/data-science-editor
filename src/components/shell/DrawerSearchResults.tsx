@@ -1,6 +1,6 @@
 import { Link } from "gatsby-theme-material-ui"
 import React from "react"
-import Alert from "./ui/Alert"
+import Alert from "../ui/Alert"
 
 import { useDrawerSearchResults } from "./useDrawerSearchResults"
 import { List, ListItem, ListItemText } from "@mui/material"

@@ -2,12 +2,12 @@ import React, { useContext, useState } from "react"
 // tslint:disable-next-line: no-submodule-imports
 import TextField from "@mui/material/TextField"
 // tslint:disable-next-line: no-submodule-imports
-import AppContext from "./AppContext"
+import AppContext from "../AppContext"
 import { useId } from "react"
 import { InputAdornment } from "@mui/material"
 import ClearIcon from "@mui/icons-material/Clear"
-import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
-import { delay } from "../../jacdac-ts/src/jdom/utils"
+import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
+import { delay } from "jacdac-ts/src/jdom/utils"
 
 export default function DrawerSearchInput() {
     const { searchQuery, setSearchQuery } = useContext(AppContext)

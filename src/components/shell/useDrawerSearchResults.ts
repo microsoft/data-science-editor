@@ -1,7 +1,7 @@
 import { useContext, useRef } from "react"
 import { useDebounce } from "use-debounce"
-import AppContext from "./AppContext"
-import useSearchIndex from "./useSearchIndex"
+import AppContext from "../AppContext"
+import useSearchIndex from "../useSearchIndex"
 
 export interface SearchResult {
     url: string
