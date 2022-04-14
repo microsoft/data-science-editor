@@ -5,8 +5,11 @@ import Alert from "../ui/Alert"
 import { useDrawerSearchResults } from "./useDrawerSearchResults"
 import { List, ListItem, ListItemText } from "@mui/material"
 
-export default function DrawerSearchResults() {
-    const results = useDrawerSearchResults()
+export default function DrawerSearchResults(props: {
+    searchQuery: string
+}) {
+    const { searchQuery } = props
+    const results = useDrawerSearchResults(searchQuery)
     return (
         <List dense={true}>
             {!results.length && (

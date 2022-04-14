@@ -1,4 +1,4 @@
-import React, { lazy, useContext } from "react"
+import React, { lazy, useContext, useState } from "react"
 import { styled } from "@mui/material/styles"
 import { Drawer, Divider } from "@mui/material"
 import Suspense from "../ui/Suspense"
@@ -82,7 +82,8 @@ const Console = lazy(() => import("../console/Console"))
 export default function AppDrawer(props: { pagePath: string }) {
     const { pagePath } = props
 
-    const { drawerType, setDrawerType, searchQuery } = useContext(AppContext)
+    const [searchQuery, setSearchQuery] = useState("")
+    const { drawerType, setDrawerType } = useContext(AppContext)
     const open = drawerType !== DrawerType.None
     const showSearchResults = drawerType === DrawerType.Toc && !!searchQuery
 
@@ -107,7 +108,10 @@ export default function AppDrawer(props: { pagePath: string }) {
                 {toc && (
                     <div className={classes.fluid}>
                         <Suspense>
-                            <DrawerSearchInput />
+                            <DrawerSearchInput
+                                searchQuery={searchQuery}
+                                setSearchQuery={setSearchQuery}
+                            />
                         </Suspense>
                     </div>
                 )}
@@ -129,7 +133,7 @@ export default function AppDrawer(props: { pagePath: string }) {
             <Divider />
             {showSearchResults && (
                 <Suspense>
-                    <DrawerSearchResults />
+                    <DrawerSearchResults searchQuery={searchQuery} />
                 </Suspense>
             )}
             {!showSearchResults && drawerType === DrawerType.Toc && (
