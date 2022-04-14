@@ -9,6 +9,7 @@ export default function Samples() {
         "pelikhan/pxt-kitronik-stopbit",
         "pelikhan/pxt-kitronik-viewtext32",
         "pelikhan/pxt-kitronik-lampbit",
+        "pelikhan/pxt-kitronik-simple-servo",
         "pelikhan/monkmakes-7-segment",
         "pelikhan/pxt-envirobit",
         "pelikhan/pxt-weather-bit",
