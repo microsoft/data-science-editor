@@ -21,6 +21,8 @@ export default function Samples() {
                 This page links to a number of accessory extension repositories
                 with the software-only Jacdac layer implemented.
             </p>
+            <p>These samples can be tested from MakeCode by importing 
+                the repository path into the Add Extension dialog.</p>
             <GithubRepositoryList
                 repos={repos}
                 showDescription={true}

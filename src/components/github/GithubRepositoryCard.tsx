@@ -24,9 +24,12 @@ function MakeCodeDependencies(props: { slug: string; branch: string }) {
 
     return (
         <List dense={true}>
+            <ListItem dense={true}>
+                <ListItemText primary={"Jacdac dependencies"} />
+            </ListItem>
             {jds.map(([key, value]) => (
                 <ListItem key={key} dense={true}>
-                    <ListItemText primary={value} secondary={key} />
+                    <ListItemText primary={value.replace(/^github:/, '')} secondary={key} />
                 </ListItem>
             ))}
         </List>
