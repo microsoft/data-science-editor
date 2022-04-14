@@ -8,10 +8,8 @@ import DashboardDeviceGroup from "./DashboardDeviceGroup"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import ClearIcon from "@mui/icons-material/Clear"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import DevicesIcon from "@mui/icons-material/Devices"
 import ConnectAlert from "../alert/ConnectAlert"
 import ConnectButtons from "../buttons/ConnectButtons"
-import useRoleManagerClient from "../services/useRoleManagerClient"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import SimulateDeviceAlert from "../alert/SimulateDeviceAlert"
 import MakeCodeAddBlocksButton from "../makecode/MakeCodeAddBlocksButton"
@@ -20,6 +18,7 @@ import useBus from "../../jacdac/useBus"
 import StartSimulatorButton from "../buttons/StartSimulatorButton"
 import { defaultDeviceFilter, defaultDeviceSort } from "./filters"
 import useHostedSimulators from "../HostedSimulatorsContext"
+import StartMissingSimulatorsButton from "../buttons/StartMissingSimulatorsButton"
 
 export interface DashboardDeviceProps {
     showHeader?: boolean
@@ -72,12 +71,10 @@ export default function Dashboard(props: DashboardProps) {
             !!bus.findServiceProvider(d.deviceId) ||
             isHostedSimulator(d.deviceId)
     )
-    const roleManager = useRoleManagerClient()
     const handleClearSimulators = () => {
         clearHostedSimulators()
         bus.clearServiceProviders()
     }
-    const handleStartSimulators = () => roleManager?.startSimulators()
 
     return (
         <>
@@ -88,14 +85,7 @@ export default function Dashboard(props: DashboardProps) {
                     action={
                         <>
                             {showStartRoleSimulators && (
-                                <IconButtonWithTooltip
-                                    trackName="dashboard.simulators.missing"
-                                    title="start missing simulators"
-                                    onClick={handleStartSimulators}
-                                    disabled={!roleManager}
-                                >
-                                    <DevicesIcon />
-                                </IconButtonWithTooltip>
+                                <StartMissingSimulatorsButton trackName="dashboard.simulators.missing" />
                             )}
                             <StartSimulatorButton trackName="dashboard.simulators.start" />
                             <IconButtonWithTooltip

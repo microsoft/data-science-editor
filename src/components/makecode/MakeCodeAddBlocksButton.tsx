@@ -1,13 +1,13 @@
 import { Box } from "@mui/material"
 import { Button } from "gatsby-theme-material-ui"
-import React, { useContext, useMemo } from "react"
-import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
+import React, { useMemo } from "react"
 import useChange from "../../jacdac/useChange"
 import IFrameBridgeClient from "./iframebridgeclient"
 import MakeCodeIcon from "../../components/icons/MakeCodeIcon"
+import useBus from "../../jacdac/useBus"
 
 export default function MakeCodeAddBlocksButton() {
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const bus = useBus()
     const iframeBridge = bus.nodeData[
         IFrameBridgeClient.DATA_ID
     ] as IFrameBridgeClient
