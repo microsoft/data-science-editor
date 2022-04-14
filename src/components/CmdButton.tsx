@@ -1,21 +1,15 @@
 import { darken, lighten } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import { Button } from "gatsby-theme-material-ui"
-import React, {
-    CSSProperties,
-    ReactNode,
-    useContext,
-    useEffect,
-    useState,
-} from "react"
+import React, { CSSProperties, ReactNode, useEffect, useState } from "react"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import ErrorIcon from "@mui/icons-material/Error"
 import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
 import useAnalytics, { EventProperties } from "./hooks/useAnalytics"
 import useMounted from "./hooks/useMounted"
 import clsx from "clsx"
-import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import useSnackbar from "./hooks/useSnackbar"
+import useBus from "../jacdac/useBus"
 
 const PREFIX = "CmdButton"
 
@@ -83,7 +77,7 @@ export default function CmdButton(props: {
         color,
         ...others
     } = props
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const bus = useBus()
     const { setError: setAppError } = useSnackbar()
 
     const [working, setWorking] = useState(false)

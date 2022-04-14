@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React from "react"
 import { Typography } from "@mui/material"
 import { InPipeReader } from "../../jacdac-ts/src/jdom/pipes"
 import { JDService } from "../../jacdac-ts/src/jdom/service"
@@ -11,9 +11,9 @@ import {
     serviceName,
 } from "../../jacdac-ts/src/jdom/pretty"
 import { Packet } from "../../jacdac-ts/src/jdom/packet"
-import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import CmdButton from "./CmdButton"
 import { PackedValues } from "../../jacdac-ts/src/jdom/pack"
+import useBus from "../jacdac/useBus"
 
 function hasPipeReport(info: jdspec.PacketInfo) {
     return info.fields.find(f => f.type == "pipe")
@@ -27,7 +27,7 @@ export default function CommandInput(props: {
     setReports?: (reports: DecodedPacket[]) => void
 }) {
     const { service, command, showDeviceName, args, setReports } = props
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const bus = useBus()
 
     const { specification } = service
     const requiredArgLength =
