@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import React, { lazy, useMemo, useState } from "react"
-import { Grid, Link } from "@mui/material"
+import { Grid } from "@mui/material"
 import useLocalStorage from "../../components/hooks/useLocalStorage"
 import { clone, unique } from "../../../jacdac-ts/src/jdom/utils"
 import {
@@ -52,6 +52,8 @@ import useDeviceCatalog from "../../components/devices/useDeviceCatalog"
 import GridHeader from "../../components/ui/GridHeader"
 import { JD_SERVICE_INDEX_CTRL } from "../../../jacdac-ts/src/jdom/constants"
 import ClearIcon from "@mui/icons-material/Clear"
+import { withPrefix } from "gatsby"
+import { Link } from "gatsby-theme-material-ui"
 const GithubPullRequestButton = lazy(
     () => import("../../components/buttons/GithubPullRequestButton")
 )
@@ -341,9 +343,12 @@ export default function DeviceRegistration() {
                 </IconButtonWithTooltip>
             </h1>
             <p>
-                Compose a device from various services, prepare the metadata and
-                register it to the{" "}
-                <Link href="/devices/" underline="hover">
+                Compose a device from various services, prepare the
+                <Link to="/ddk/device-definition/" underline="hover">
+                    metadata
+                </Link>
+                and register it to the
+                <Link to="/devices/" underline="hover">
                     Devices catalog
                 </Link>
                 .
