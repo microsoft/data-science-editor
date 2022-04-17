@@ -25,9 +25,19 @@ function ServiceButtons(props: {
                     Playground
                 </Button>
             </Grid>
+            <Grid item>
+                <Button
+                    color="secondary"
+                    variant="contained"
+                    to={`/tools/module-tester/`}
+                >
+                    Test
+                </Button>
+            </Grid>
             {makecodeSlug && (
                 <Grid item>
                     <Button
+                        color="secondary"
                         variant="contained"
                         to={makecodeSlug}
                         startIcon={<MakeCodeIcon />}

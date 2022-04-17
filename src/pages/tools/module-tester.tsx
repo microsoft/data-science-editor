@@ -60,6 +60,9 @@ export default function Page() {
         <>
             <FirmwareLoader />
             <h1>Module Tester</h1>
+            <p>
+                Connect your module and follow the instructions to run a compliance test.
+            </p>
             <PowerSupplySection />
             <h2>Devices</h2>
             <section id={devicesId}>

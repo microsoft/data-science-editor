@@ -21,8 +21,15 @@ function DeviceSpecificationCard(props: {
     size: "list" | "preview" | "catalog"
 }) {
     const { specification, size } = props
-    const { id, name, company, services, hardwareDesign, firmwareSource } =
-        specification
+    const {
+        id,
+        name,
+        company,
+        services,
+        hardwareDesign,
+        firmwareSource,
+        storeLink,
+    } = specification
     const imageUrl = useDeviceImage(specification, size)
     const serviceNames = uniqueMap(
         services,
@@ -60,6 +67,7 @@ function DeviceSpecificationCard(props: {
                         {company}
                     </Typography>
                     <ChipList>
+                        {!storeLink && <Chip size="small" label="prototype" />}
                         {firmwareSource && (
                             <Chip size="small" label="firmware code" />
                         )}
