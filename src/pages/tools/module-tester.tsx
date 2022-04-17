@@ -18,6 +18,7 @@ import ManualFirmwareAlert from "../../components/firmware/ManualFirmwareAlert"
 import { isDualDeviceId } from "../../../jacdac-ts/src/jdom/spec"
 import PowerSupplySection from "../../components/testdom/PowerSupplySection"
 import { useId } from "react"
+import ConnectAlert from "../../components/alert/ConnectAlert"
 
 function DeviceItem(props: { device: JDDevice }) {
     const { device } = props
@@ -61,18 +62,23 @@ export default function Page() {
             <FirmwareLoader />
             <h1>Module Tester</h1>
             <p>
-                Connect your module and follow the instructions to run a compliance test.
+                Connect your module and follow the instructions to run a
+                compliance test.
             </p>
             <PowerSupplySection />
             <h2>Devices</h2>
             <section id={devicesId}>
-                <Grid container spacing={1}>
-                    {devices?.map(device => (
-                        <Grid key={device.id} item xs={12}>
-                            <DeviceItem device={device} />
-                        </Grid>
-                    ))}
-                </Grid>
+                {devices?.length ? (
+                    <Grid container spacing={1}>
+                        {devices?.map(device => (
+                            <Grid key={device.id} item xs={12}>
+                                <DeviceItem device={device} />
+                            </Grid>
+                        ))}
+                    </Grid>
+                ) : (
+                    <ConnectAlert />
+                )}
             </section>
             <h2>Firmwares</h2>
             <FirmwareCardGrid />
