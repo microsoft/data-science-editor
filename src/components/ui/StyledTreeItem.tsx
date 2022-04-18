@@ -113,9 +113,9 @@ export default function StyledTreeItem(
         warning?: boolean
         alert?: string
         labelInfo?: string
-        labelText: string
+        labelText?: string
         labelTo?: string
-        actions?: JSX.Element | JSX.Element[],
+        actions?: JSX.Element | JSX.Element[]
         children?: ReactNode
     }
 ) {
@@ -152,23 +152,25 @@ export default function StyledTreeItem(
                             className={classes.labelIcon}
                         />
                     )}
-                    <Typography
-                        component="span"
-                        variant="body2"
-                        className={classes.labelText}
-                    >
-                        {labelTo ? (
-                            <Link
-                                color="textPrimary"
-                                to={labelTo}
-                                underline="hover"
-                            >
-                                {labelText}
-                            </Link>
-                        ) : (
-                            labelText
-                        )}
-                    </Typography>
+                    {labelText && (
+                        <Typography
+                            component="span"
+                            variant="body2"
+                            className={classes.labelText}
+                        >
+                            {labelTo ? (
+                                <Link
+                                    color="textPrimary"
+                                    to={labelTo}
+                                    underline="hover"
+                                >
+                                    {labelText}
+                                </Link>
+                            ) : (
+                                labelText
+                            )}
+                        </Typography>
+                    )}
                     {alert && "!"}
                     <Typography
                         component="span"
@@ -176,10 +178,7 @@ export default function StyledTreeItem(
                         color="inherit"
                     >
                         {alert && (
-                            <Typography
-                                variant="caption"
-                                component="span"
-                            >
+                            <Typography variant="caption" component="span">
                                 {alert},
                             </Typography>
                         )}
