@@ -1,4 +1,4 @@
-import React, { createElement, useState } from "react"
+import React, { createElement, useId, useState } from "react"
 import {
     TestNode,
     DeviceTest,
@@ -22,6 +22,8 @@ import { EventTreeItem, RegisterTreeItem } from "../tools/JDomTreeViewItems"
 import DashboardServiceWidget from "../dashboard/DashboardServiceWidget"
 import TestIcon from "../icons/TestIcon"
 import InfoIcon from "@mui/icons-material/Info"
+import { Button } from "gatsby-theme-material-ui"
+import { TestState } from "../../../jacdac-ts/src/testdom/spec"
 const PREFIX = "TestTreeView"
 const classes = {
     root: `${PREFIX}-root`,
@@ -40,10 +42,9 @@ const StyledTreeView = styled(TreeView)(({ theme }) => ({
 
 const testComponents = {
     [DEVICE_TEST_KIND]: DeviceTestTreeItemExtra,
-    //[REGISTER_TEST_KIND]: RegisterTestTreeItemExtra,
     [EVENT_TEST_KIND]: EventTestTreeItemExtra,
     [SERVICE_TEST_KIND]: ServiceTestTreeItemExtra,
-    [REGISTER_ORACLE_KIND]: RegisterTestTreeItemExtra,
+    [REGISTER_ORACLE_KIND]: RegisterOracleTestTreeItemExtra,
 }
 
 interface TestNodeProps {
@@ -58,9 +59,13 @@ function TestTreeItem(props: TestNodeProps) {
     const info = useChange(node, _ => _?.info)
     const output = useChange(node, _ => _?.output)
     const description = useChange(node, _ => _?.description)
+    const manualSteps = useChange(node, _ => _?.manualSteps)
+    const { prepare: prepareStep } = manualSteps || {}
 
     const testComponent = testComponents[nodeKind]
     const testNode = testComponent ? createElement(testComponent, props) : null
+
+    const handlePrepared = () => (node.state = TestState.Running)
 
     return (
         <StyledTreeItem
@@ -71,6 +76,17 @@ function TestTreeItem(props: TestNodeProps) {
             {...rest}
         >
             {testNode}
+            {prepareStep && (
+                <StyledTreeItem
+                    nodeId={id + ":manual:prepare"}
+                    labelText={prepareStep}
+                    actions={
+                        <Button variant="outlined" onClick={handlePrepared}>
+                            ready
+                        </Button>
+                    }
+                />
+            )}
             {output && (
                 <StyledTreeItem nodeId={id + ":output"} labelText={output} />
             )}
@@ -78,7 +94,7 @@ function TestTreeItem(props: TestNodeProps) {
                 {description && (
                     <StyledTreeItem
                         nodeId={id + ":descr"}
-                        icon={<InfoIcon color="info" />}                        
+                        icon={<InfoIcon color="info" />}
                         labelText={description}
                     />
                 )}
@@ -121,7 +137,7 @@ function ServiceTestTreeItemExtra(
     )
 }
 
-function RegisterTestTreeItemExtra(
+function RegisterOracleTestTreeItemExtra(
     props: TestNodeProps & StyledTreeViewItemProps
 ) {
     const { node, ...rest } = props
