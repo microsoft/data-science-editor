@@ -51,6 +51,7 @@ import {
     SRV_LIGHT_BULB,
     SRV_BRAILLE_DISPLAY,
     SRV_JACSCRIPT_MANAGER,
+    SRV_HID_JOYSTICK,
 } from "../../../jacdac-ts/src/jdom/constants"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { isRegister } from "../../../jacdac-ts/src/jdom/spec"
@@ -111,6 +112,7 @@ const DashboardSolenoid = lazy(() => import("./DashboardSolenoid"))
 const DashboardBitRadio = lazy(() => import("./DashboardBitRadio"))
 const DashboardHIDKeyboard = lazy(() => import("./DashboardHIDKeyboard"))
 const DashboardHIDMouse = lazy(() => import("./DashboardHIDMouse"))
+const DashboardHIDJoystick = lazy(() => import("./DashboardHIDJoystick"))
 //const DashboardAzureIoTHub = lazy(() => import("./DashboardAzureIoTHub"))
 const DashboardAzureIoTHubHealth = lazy(
     () => import("./DashboardAzureIoTHubHealth")
@@ -274,6 +276,10 @@ const serviceViews: {
     },
     [SRV_HID_MOUSE]: {
         component: DashboardHIDMouse,
+        weight: () => 2,
+    },
+    [SRV_HID_JOYSTICK]: {
+        component: DashboardHIDJoystick,
         weight: () => 2,
     },
     /*
