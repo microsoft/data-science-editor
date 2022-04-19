@@ -1,4 +1,4 @@
-import { Button, Grid, Slider } from "@mui/material"
+import { Button, Grid } from "@mui/material"
 import React, { useEffect, useRef } from "react"
 import {
     HidJoystickCmd,
@@ -8,6 +8,9 @@ import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import useRegister from "../hooks/useRegister"
 import SliderWithLabel from "../ui/SliderWithLabel"
+import useServiceServer from "../hooks/useServiceServer"
+import { HIDJoystickServer } from "../../../jacdac-ts/src/servers/hidjoystickserver"
+import useChange from "../../jacdac/useChange"
 
 function AxisWidget(props: DashboardServiceProps) {
     const { service } = props
@@ -58,6 +61,8 @@ function AxisWidget(props: DashboardServiceProps) {
 function ButtonsWidget(props: DashboardServiceProps) {
     const { service } = props
 
+    const server = useServiceServer<HIDJoystickServer>(service)
+    const serverButtons = useChange(server, _ => _?.buttons)
     const buttonCountRegister = useRegister(service, HidJoystickReg.ButtonCount)
     const [buttonCount = 0] = useRegisterUnpackedValue(
         buttonCountRegister,
@@ -91,7 +96,11 @@ function ButtonsWidget(props: DashboardServiceProps) {
                     <Grid item key={`button${i}`}>
                         <Button
                             size="small"
-                            variant="outlined"
+                            variant={
+                                serverButtons?.[i] > 127
+                                    ? "contained"
+                                    : "outlined"
+                            }
                             title={`button ${i}`}
                             onPointerDown={handleButtonDown(i)}
                             onPointerUp={handleButtonUp(i)}
