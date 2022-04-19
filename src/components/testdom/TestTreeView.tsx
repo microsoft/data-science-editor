@@ -65,7 +65,9 @@ function TestTreeItem(props: TestNodeProps) {
     const testComponent = testComponents[nodeKind]
     const testNode = testComponent ? createElement(testComponent, props) : null
 
-    const handlePrepared = () => (node.state = TestState.Running)
+    const handlePrepared = () => {
+        node.prepared()
+    }
 
     return (
         <StyledTreeItem
@@ -82,7 +84,7 @@ function TestTreeItem(props: TestNodeProps) {
                     labelText={prepareStep}
                     actions={
                         <Button variant="outlined" onClick={handlePrepared}>
-                            ready
+                            Test
                         </Button>
                     }
                 />
