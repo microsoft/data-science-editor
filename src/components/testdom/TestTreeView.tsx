@@ -1,11 +1,9 @@
-import React, { createElement, useId, useState } from "react"
+import React, { createElement, useState } from "react"
 import {
     TestNode,
     DeviceTest,
     DEVICE_TEST_KIND,
     RegisterTest,
-    EVENT_TEST_KIND,
-    EventTest,
     ServiceTest,
     REGISTER_ORACLE_KIND,
     SERVICE_TEST_KIND,
@@ -18,10 +16,10 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight"
 import StyledTreeItem, { StyledTreeViewItemProps } from "../ui/StyledTreeItem"
 import useChange from "../../jacdac/useChange"
 import AnnounceFlagsTreeItem from "../devices/AnnounceFlagsTreeItem"
-import { EventTreeItem, RegisterTreeItem } from "../tools/JDomTreeViewItems"
+import { RegisterTreeItem } from "../tools/JDomTreeViewItems"
 import DashboardServiceWidget from "../dashboard/DashboardServiceWidget"
 import TestIcon from "../icons/TestIcon"
-import InfoIcon from "@mui/icons-material/Info"
+import PanToolIcon from "@mui/icons-material/PanTool"
 import { Button } from "gatsby-theme-material-ui"
 import { TestState } from "../../../jacdac-ts/src/testdom/spec"
 const PREFIX = "TestTreeView"
@@ -42,7 +40,6 @@ const StyledTreeView = styled(TreeView)(({ theme }) => ({
 
 const testComponents = {
     [DEVICE_TEST_KIND]: DeviceTestTreeItemExtra,
-    [EVENT_TEST_KIND]: EventTestTreeItemExtra,
     [SERVICE_TEST_KIND]: ServiceTestTreeItemExtra,
     [REGISTER_ORACLE_KIND]: RegisterOracleTestTreeItemExtra,
 }
@@ -60,6 +57,7 @@ function TestTreeItem(props: TestNodeProps) {
     const output = useChange(node, _ => _?.output)
     const description = useChange(node, _ => _?.description)
     const manualSteps = useChange(node, _ => _?.manualSteps)
+    const state = useChange(node, _ => _?.state)
     const { prepare: prepareStep } = manualSteps || {}
 
     const testComponent = testComponents[nodeKind]
@@ -78,37 +76,42 @@ function TestTreeItem(props: TestNodeProps) {
             {...rest}
         >
             {testNode}
-            {prepareStep && (
+            {description && (
                 <StyledTreeItem
-                    nodeId={id + ":manual:prepare"}
-                    labelText={prepareStep}
-                    actions={
-                        <Button variant="outlined" onClick={handlePrepared}>
-                            Test
-                        </Button>
-                    }
+                    nodeId={id + ":descr"}
+                    labelText={description}
+                    labelTextVariant="caption"
                 />
             )}
+            {prepareStep &&
+                (state === TestState.Indeterminate ||
+                    state === TestState.Fail) && (
+                    <StyledTreeItem
+                        nodeId={id + ":manual:prepare"}
+                        labelText={prepareStep}
+                        icon={<PanToolIcon fontSize="small" color="warning" />}
+                        actions={
+                            <Button
+                                variant="contained"
+                                color="warning"
+                                onClick={handlePrepared}
+                            >
+                                Test
+                            </Button>
+                        }
+                    />
+                )}
             {output && (
                 <StyledTreeItem nodeId={id + ":output"} labelText={output} />
             )}
-            <>
-                {description && (
-                    <StyledTreeItem
-                        nodeId={id + ":descr"}
-                        icon={<InfoIcon color="info" />}
-                        labelText={description}
-                    />
-                )}
-                {nodeChildren?.map(child => (
-                    <TestTreeItem
-                        key={child.id}
-                        node={child}
-                        showTwins={showTwins}
-                        {...rest}
-                    />
-                ))}
-            </>
+            {nodeChildren?.map(child => (
+                <TestTreeItem
+                    key={child.id}
+                    node={child}
+                    showTwins={showTwins}
+                    {...rest}
+                />
+            ))}
         </StyledTreeItem>
     )
 }
@@ -146,15 +149,6 @@ function RegisterOracleTestTreeItemExtra(
     const { register } = node as RegisterTest
     if (!register) return null
     return <RegisterTreeItem register={register} {...rest} />
-}
-
-function EventTestTreeItemExtra(
-    props: TestNodeProps & StyledTreeViewItemProps
-) {
-    const { node, ...rest } = props
-    const { event } = node as EventTest
-    if (!event) return null
-    return <EventTreeItem event={event} {...rest} />
 }
 
 export default function TestTreeView(props: {

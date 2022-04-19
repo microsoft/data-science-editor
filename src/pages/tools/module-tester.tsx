@@ -1,5 +1,5 @@
-import { Grid } from "@mui/material"
-import React from "react"
+import { Grid, Tab, Tabs } from "@mui/material"
+import React, { useState } from "react"
 import useDevices from "../../components/hooks/useDevices"
 import useDeviceProductIdentifier from "../../jacdac/useDeviceProductIdentifier"
 import FirmwareLoader from "../../components/firmware/FirmwareLoader"
@@ -17,8 +17,8 @@ import SafeBootAlert from "../../components/firmware/SafeBootAlert"
 import ManualFirmwareAlert from "../../components/firmware/ManualFirmwareAlert"
 import { isDualDeviceId } from "../../../jacdac-ts/src/jdom/spec"
 import PowerSupplySection from "../../components/testdom/PowerSupplySection"
-import { useId } from "react"
 import ConnectAlert from "../../components/alert/ConnectAlert"
+import TabPanel from "../../components/ui/TabPanel"
 
 function DeviceItem(props: { device: JDDevice }) {
     const { device } = props
@@ -43,7 +43,7 @@ function DeviceItem(props: { device: JDDevice }) {
 }
 
 export default function Page() {
-    const devicesId = useId()
+    const [tab, setTab] = useState(0)
     const devices = useDevices({
         physical: true,
         announced: true,
@@ -56,18 +56,27 @@ export default function Page() {
         )
         .filter(filterTestDevice)
         .sort((l, r) => -(l.created - r.created))
+    const handleTabChange = (
+        event: React.ChangeEvent<unknown>,
+        newValue: number
+    ) => {
+        setTab(newValue)
+    }
 
     return (
         <>
             <FirmwareLoader />
-            <h1>Module Tester</h1>
-            <p>
-                Connect your module and follow the instructions to run a
-                compliance test.
-            </p>
-            <PowerSupplySection />
-            <h2>Devices</h2>
-            <section id={devicesId}>
+            <h1>Server Tester</h1>
+            <Tabs
+                value={tab}
+                onChange={handleTabChange}
+                aria-label="Testing services in devices"
+            >
+                <Tab label={`Devices`} />
+                <Tab label={`Firmwares`} />
+            </Tabs>
+            <TabPanel value={tab} index={0}>
+                <PowerSupplySection />
                 {devices?.length ? (
                     <Grid container spacing={1}>
                         {devices?.map(device => (
@@ -77,13 +86,20 @@ export default function Page() {
                         ))}
                     </Grid>
                 ) : (
-                    <ConnectAlert />
+                    <>
+                        <p>
+                            Connect your module and follow the instructions to
+                            run a compliance test.
+                        </p>
+                        <ConnectAlert />
+                    </>
                 )}
-            </section>
-            <h2>Firmwares</h2>
-            <FirmwareCardGrid />
-            <SafeBootAlert />
-            <ManualFirmwareAlert />
+            </TabPanel>
+            <TabPanel value={tab} index={1}>
+                <FirmwareCardGrid />
+                <SafeBootAlert />
+                <ManualFirmwareAlert />
+            </TabPanel>
         </>
     )
 }

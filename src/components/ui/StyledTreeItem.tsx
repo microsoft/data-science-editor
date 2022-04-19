@@ -114,6 +114,7 @@ export default function StyledTreeItem(
         alert?: string
         labelInfo?: string
         labelText?: string
+        labelTextVariant?: "caption" | "subtitle1" | "subtitle2"
         labelTo?: string
         actions?: JSX.Element | JSX.Element[]
         children?: ReactNode
@@ -122,6 +123,7 @@ export default function StyledTreeItem(
     const {
         labelText,
         labelTo,
+        labelTextVariant,
         kind,
         icon,
         labelInfo,
@@ -155,7 +157,7 @@ export default function StyledTreeItem(
                     {labelText && (
                         <Typography
                             component="span"
-                            variant="body2"
+                            variant={labelTextVariant || "body2"}
                             className={classes.labelText}
                         >
                             {labelTo ? (
