@@ -12,7 +12,6 @@ function MakeCodeDependencies(props: { slug: string; branch: string }) {
     const jds = Object.entries(dependencies).filter(([, value]) =>
         /^github:microsoft\/pxt-jacdac\/\w/i.test(value)
     )
-    console.log({ dependencies, jds })
     if (!jds.length) return null
 
     return (
@@ -32,14 +31,25 @@ export default function GithubRepositoryCard(props: {
     showRelease?: boolean
     showDescription?: boolean
     showDependencies?: boolean
+    showMakeCodeButton?: boolean
 }) {
-    const { slug, showRelease, showDescription, showDependencies } = props
+    const {
+        slug,
+        showRelease,
+        showDescription,
+        showDependencies,
+        showMakeCodeButton,
+    } = props
     const { response: repo } = useRepository(slug)
     const description = showDescription && repo?.description
 
     return (
         <Card>
-            <GithubRepositoryCardHeader slug={slug} showRelease={showRelease} />
+            <GithubRepositoryCardHeader
+                slug={slug}
+                showRelease={showRelease}
+                showMakeCodeButton={showMakeCodeButton}
+            />
             <CardContent>
                 {description && <Typography>{description}</Typography>}
                 {showDependencies && (

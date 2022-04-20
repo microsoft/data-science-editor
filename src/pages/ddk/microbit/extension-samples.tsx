@@ -36,6 +36,7 @@ export default function Samples() {
                 repos={repos}
                 showDescription={true}
                 showDependencies={true}
+                showMakeCodeButton={true}
             />
         </>
     )

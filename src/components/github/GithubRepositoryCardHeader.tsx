@@ -10,19 +10,23 @@ import GitHubIcon from "@mui/icons-material/GitHub"
 import { Link } from "gatsby-theme-material-ui"
 import LoadingProgress from "../ui/LoadingProgress"
 import MakeCodeGithubFolderLink from "../makecode/MakeCodeGithubFolderLink"
+import MakeCodeOpenSnippetButton from "../makecode/MakeCodeOpenSnippetButton"
 
 export default function GithubRepositoryCardHeader(props: {
     slug: string
     showRelease?: boolean
+    showMakeCodeButton?: boolean
 }) {
-    const { slug, showRelease } = props
+    const { slug, showRelease, showMakeCodeButton } = props
     const { repoPath, folder } = normalizeSlug(slug)
     const {
         response: repo,
         loading: repoLoading,
         status,
     } = useRepository(repoPath)
-    const { response: release } = useLatestFirmwareRelease(showRelease && slug)
+    const { response: release } = useLatestFirmwareRelease(
+        (showRelease || showMakeCodeButton) && slug
+    )
     const title = repo ? (
         <>
             <Typography component="span" variant="h6">
@@ -70,6 +74,7 @@ export default function GithubRepositoryCardHeader(props: {
         <CardHeader
             title={title}
             subheader={
+                showRelease &&
                 release && (
                     <Link
                         color="textSecondary"
@@ -81,6 +86,18 @@ export default function GithubRepositoryCardHeader(props: {
                 )
             }
             avatar={<GitHubIcon />}
+            actions={
+                <>
+                    {showMakeCodeButton && release && (
+                        <MakeCodeOpenSnippetButton
+                            code=""
+                            options={{
+                                package: `github:${repoPath}#${release.version}`,
+                            }}
+                        />
+                    )}
+                </>
+            }
         />
     )
 }
