@@ -30,7 +30,7 @@ export default function Samples() {
             </p>
             <p>
                 These samples can be tested from MakeCode by importing the
-                repository path into the Add Extension dialog.
+                repository path into the <code>Add Extension</code> dialog.
             </p>
             <GithubRepositoryList
                 repos={repos}

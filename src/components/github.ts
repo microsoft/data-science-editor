@@ -77,6 +77,8 @@ export function normalizeSlug(slug: string) {
     const parts = cleaned.split("/")
     return {
         repoPath: `${parts[0]}/${parts[1]}`,
+        owner: parts[0],
+        name: parts[1],
         folder: parts.slice(2).join("/"),
     }
 }

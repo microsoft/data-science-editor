@@ -18,15 +18,13 @@ export default function GithubRepositoryCardHeader(props: {
     showMakeCodeButton?: boolean
 }) {
     const { slug, showRelease, showMakeCodeButton } = props
-    const { repoPath, folder } = normalizeSlug(slug)
+    const { repoPath, folder, name: repoName } = normalizeSlug(slug)
     const {
         response: repo,
         loading: repoLoading,
         status,
     } = useRepository(repoPath)
-    const { response: release } = useLatestFirmwareRelease(
-        (showRelease || showMakeCodeButton) && slug
-    )
+    const { response: release } = useLatestFirmwareRelease(showRelease && slug)
     const title = repo ? (
         <>
             <Typography component="span" variant="h6">
@@ -86,17 +84,15 @@ export default function GithubRepositoryCardHeader(props: {
                 )
             }
             avatar={<GitHubIcon />}
-            actions={
-                <>
-                    {showMakeCodeButton && release && (
-                        <MakeCodeOpenSnippetButton
-                            code=""
-                            options={{
-                                package: `github:${repoPath}#${release.version}`,
-                            }}
-                        />
-                    )}
-                </>
+            action={
+                showMakeCodeButton && (
+                    <MakeCodeOpenSnippetButton
+                        code=""
+                        options={{
+                            package: `${repoName}=github:${repoPath},${repoName}-jacdac=github:${slug}`,
+                        }}
+                    />
+                )
             }
         />
     )
