@@ -89,7 +89,7 @@ export default function GithubRepositoryCardHeader(props: {
                     <MakeCodeOpenSnippetButton
                         code=""
                         options={{
-                            package: `${repoName}=github:${repoPath},${repoName}-jacdac=github:${slug}`,
+                            package: `${repoName}-jacdac=github:${slug}`,
                         }}
                     />
                 )
