@@ -58,14 +58,14 @@ function TestTreeItem(props: TestNodeProps) {
     const description = useChange(node, _ => _?.description)
     const manualSteps = useChange(node, _ => _?.manualSteps)
     const state = useChange(node, _ => _?.state)
-    const { prepare: prepareStep } = manualSteps || {}
+    const { prepare: prepareStep, validate: validateStep } = manualSteps || {}
 
     const testComponent = testComponents[nodeKind]
     const testNode = testComponent ? createElement(testComponent, props) : null
 
-    const handlePrepared = () => {
-        node.prepared()
-    }
+    const handlePrepared = () => node.prepared()
+    const handlePass = () => (node.state = TestState.Pass)
+    const handleFail = () => (node.state = TestState.Fail)
 
     return (
         <StyledTreeItem
@@ -101,6 +101,32 @@ function TestTreeItem(props: TestNodeProps) {
                         }
                     />
                 )}
+            {validateStep && state === TestState.Running && (
+                <StyledTreeItem
+                    nodeId={id + ":manual:validate"}
+                    labelText={validateStep}
+                    icon={<PanToolIcon fontSize="small" color="warning" />}
+                    actions={
+                        <>
+                            <Button
+                                sx={{ marginRight: 0.5 }}
+                                variant="contained"
+                                color="success"
+                                onClick={handlePass}
+                            >
+                                Pass
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="error"
+                                onClick={handleFail}
+                            >
+                                Fail
+                            </Button>{" "}
+                        </>
+                    }
+                />
+            )}
             {output && (
                 <StyledTreeItem nodeId={id + ":output"} labelText={output} />
             )}
