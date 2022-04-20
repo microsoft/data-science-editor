@@ -7,7 +7,10 @@ import {
 import DbContext, { DbContextProps } from "../DbContext"
 import { useChangeAsync } from "../../jacdac/useChange"
 import { unique } from "../../../jacdac-ts/src/jdom/utils"
-import { fetchLatestFirmwareRelease, fetchFirmwareReleaseBinary } from "../github"
+import {
+    fetchLatestFirmwareRelease,
+    fetchFirmwareReleaseBinary,
+} from "../github"
 import useIdleCallback from "../hooks/useIdleCallback"
 import useMounted from "../hooks/useMounted"
 import useAnalytics from "../hooks/useAnalytics"
@@ -79,7 +82,17 @@ export default function useFirmwareBlobs() {
         }
     }, [db, firmwares, throttled])
     // reload firmwares
-    useIdleCallback(loadFirmwares, 5000, [db, firmwares])
+    useIdleCallback(
+        () => {
+            try {
+                loadFirmwares()
+            } catch (e) {
+                console.debug(e)
+            }
+        },
+        5000,
+        [db, firmwares]
+    )
     // update bus with info on changes
     useChangeAsync(
         firmwares,
