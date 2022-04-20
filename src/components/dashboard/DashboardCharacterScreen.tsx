@@ -150,7 +150,7 @@ export default function DashboardCharacterScreen(props: DashboardServiceProps) {
 
     const converter: (s: string) => string =
         variant === CharacterScreenVariant.Braille ? brailify : s => s
-    const cmessage = message.split("").map(converter).join("")
+    const cmessage = message?.split("").map(converter).join("")
     const rtl = textDirection === CharacterScreenTextDirection.RightToLeft
 
     return (
