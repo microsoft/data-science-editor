@@ -5,27 +5,43 @@ import MakeCodeIcon from "../icons/MakeCodeIcon"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import useMediaQueries from "../hooks/useMediaQueries"
 import useSnackbar from "../hooks/useSnackbar"
+import usePxtJson from "../makecode/usePxtJson"
 
 export default function MakeCodeOpenSnippetButton(props: {
     name?: string
-    code: string
+    code?: string
     options?: { package?: string }
+    slug?: string
+    branch?: string
 }) {
     const { setError } = useSnackbar()
     const { mobile } = useMediaQueries()
     const [importing, setImporting] = useState(false)
-    const { code, options, name = "Jacdac demo" } = props
-    const md = "\n"
-    const target = "microbit"
-    const editor = "https://makecode.microbit.org/beta/"
-    const deps = options?.package?.split(",").map(dep => dep.split("=", 2))
-    const dependencies =
-        toMap(
-            deps,
-            deps => deps[0],
-            deps => deps[1]
-        ) || {}
+    const {
+        code = "",
+        options,
+        name = "Jacdac demo",
+        slug,
+        branch = "master",
+    } = props
+    const pxt = usePxtJson(slug, branch)
+    const disabled = importing || (slug && !pxt)
+
+    console.log({ ...props, pxt, disabled })
+
     const handleClick = async () => {
+        const md = "\n"
+        const target = "microbit"
+        const editor = "https://makecode.microbit.org/beta/"
+        const deps = options?.package?.split(",").map(dep => dep.split("=", 2))
+        const dependencies =
+            toMap(
+                deps,
+                deps => deps[0],
+                deps => deps[1]
+            ) || {}
+        if (pxt) dependencies[pxt.name] = `github:${slug}#v${pxt.version}`
+
         try {
             setImporting(true)
             const x = await fetch("https://makecode.com/api/scripts", {
@@ -71,7 +87,7 @@ export default function MakeCodeOpenSnippetButton(props: {
         <IconButtonWithTooltip
             onClick={handleClick}
             color="primary"
-            disabled={importing}
+            disabled={disabled}
             title="Try in MakeCode"
         >
             <MakeCodeIcon />
@@ -81,7 +97,7 @@ export default function MakeCodeOpenSnippetButton(props: {
             variant="outlined"
             color="primary"
             onClick={handleClick}
-            disabled={importing}
+            disabled={disabled}
             startIcon={<MakeCodeIcon />}
         >
             Try in MakeCode

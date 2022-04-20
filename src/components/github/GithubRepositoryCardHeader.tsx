@@ -1,4 +1,4 @@
-import React from "react"
+import React, { lazy } from "react"
 // tslint:disable-next-line: no-submodule-imports
 import { Box, CardHeader, Typography } from "@mui/material"
 import {
@@ -9,8 +9,13 @@ import {
 import GitHubIcon from "@mui/icons-material/GitHub"
 import { Link } from "gatsby-theme-material-ui"
 import LoadingProgress from "../ui/LoadingProgress"
-import MakeCodeGithubFolderLink from "../makecode/MakeCodeGithubFolderLink"
-import MakeCodeOpenSnippetButton from "../makecode/MakeCodeOpenSnippetButton"
+import Suspense from "../ui/Suspense"
+const MakeCodeGithubFolderLink = lazy(
+    () => import("../makecode/MakeCodeGithubFolderLink")
+)
+const MakeCodeOpenSnippetButton = lazy(
+    () => import("../makecode/MakeCodeOpenSnippetButton")
+)
 
 export default function GithubRepositoryCardHeader(props: {
     slug: string
@@ -18,7 +23,7 @@ export default function GithubRepositoryCardHeader(props: {
     showMakeCodeButton?: boolean
 }) {
     const { slug, showRelease, showMakeCodeButton } = props
-    const { repoPath, folder, name: repoName } = normalizeSlug(slug)
+    const { repoPath, folder } = normalizeSlug(slug)
     const {
         response: repo,
         loading: repoLoading,
@@ -34,7 +39,10 @@ export default function GithubRepositoryCardHeader(props: {
                 /
             </Box>
             {folder ? (
-                <MakeCodeGithubFolderLink folder={folder} repo={repo} />
+                <Suspense>
+                    {" "}
+                    <MakeCodeGithubFolderLink folder={folder} repo={repo} />
+                </Suspense>
             ) : (
                 <Link href={repo.html_url} target="_blank" underline="hover">
                     <Typography component="span" variant="h5">
@@ -86,12 +94,9 @@ export default function GithubRepositoryCardHeader(props: {
             avatar={<GitHubIcon />}
             action={
                 showMakeCodeButton && (
-                    <MakeCodeOpenSnippetButton
-                        code=""
-                        options={{
-                            package: `${repoName}-jacdac=github:${slug}`,
-                        }}
-                    />
+                    <Suspense>
+                        <MakeCodeOpenSnippetButton slug={slug} />
+                    </Suspense>
                 )
             }
         />
