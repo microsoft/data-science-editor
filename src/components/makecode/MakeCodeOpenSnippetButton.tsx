@@ -27,8 +27,6 @@ export default function MakeCodeOpenSnippetButton(props: {
     const pxt = usePxtJson(slug, branch)
     const disabled = importing || (slug && !pxt)
 
-    console.log({ ...props, pxt, disabled })
-
     const handleClick = async () => {
         const md = "\n"
         const target = "microbit"
