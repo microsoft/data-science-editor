@@ -120,7 +120,7 @@ export default function DashboardCharacterScreen(props: DashboardServiceProps) {
         variantRegister,
         props
     )
-    const [brightness] = useRegisterUnpackedValue<[number]>(brightnessRegister)
+    const [brightness] = useRegisterUnpackedValue<[number]>(brightnessRegister, props)
 
     const [fieldMessage, setFieldMessage] = useState(message)
 
@@ -144,7 +144,7 @@ export default function DashboardCharacterScreen(props: DashboardServiceProps) {
     if (rows === undefined || columns === undefined)
         return (
             <DashboardRegisterValueFallback
-                register={rows === undefined ? columnsRegister : rowsRegister}
+                register={rows === undefined ? rowsRegister : columnsRegister}
             />
         ) // size unknown
 
