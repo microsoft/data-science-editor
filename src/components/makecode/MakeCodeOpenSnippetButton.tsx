@@ -17,7 +17,7 @@ export default function MakeCodeOpenSnippetButton(props: {
     const { code, options, name = "Jacdac demo" } = props
     const md = "\n"
     const target = "microbit"
-    const editor = "https://makecode.microbit.org/"
+    const editor = "https://makecode.microbit.org/beta/"
     const deps = options?.package?.split(",").map(dep => dep.split("=", 2))
     const dependencies =
         toMap(
