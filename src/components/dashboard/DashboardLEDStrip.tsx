@@ -313,8 +313,8 @@ function EffectButtons(props: {
                     selected={rot < 0}
                     title={
                         rot < 0
-                            ? `rotate counter clockwize, ${rot} per frame`
-                            : `rotate counter clockwize`
+                            ? `rotate counter clockwise, ${rot} per frame`
+                            : `rotate counter clockwise`
                     }
                     onClick={handleCounterRotChanged}
                 >
@@ -326,8 +326,8 @@ function EffectButtons(props: {
                     selected={rot > 0}
                     title={
                         rot > 0
-                            ? `rotate clockwize, ${rot} per frame`
-                            : `rotate clockwize`
+                            ? `rotate clockwise, ${rot} per frame`
+                            : `rotate clockwise`
                     }
                     onClick={handleRotChanged}
                 >
