@@ -1,12 +1,12 @@
 import React, { useContext, useMemo } from "react"
 import { styled } from "@mui/material/styles"
-import { List, ListItem, Typography, useTheme, Box } from "@mui/material"
+import { List, ListItem, Typography, useTheme } from "@mui/material"
 import { Link } from "gatsby-theme-material-ui"
 // tslint:disable-next-line: no-submodule-imports
 import ListItemText from "@mui/material/ListItemText"
-import AppContext, { DrawerType } from "./AppContext"
+import AppContext, { DrawerType } from "../AppContext"
 import { graphql, useStaticQuery } from "gatsby"
-import useMediaQueries from "./hooks/useMediaQueries"
+import useMediaQueries from "../hooks/useMediaQueries"
 
 const PREFIX = "Toc"
 

@@ -25,12 +25,12 @@ import MainAppBar from "./shell/MainAppBar"
 import { AlertTitle } from "@mui/material"
 import { UIFlags } from "../jacdac/providerbus"
 import DevToolsAlert from "./alert/DevToolsAlert"
+import AppDrawer from "./shell/AppDrawer"
+import ToolsDrawer from "./shell/ToolsDrawer"
 
 const SimulatorCommands = lazy(() => import("./commands/SimulatorCommands"))
 const TraceAlert = lazy(() => import("./shell/TraceAlert"))
 const WebDiagnostics = lazy(() => import("./shell/WebDiagnostics"))
-const AppDrawer = lazy(() => import("./shell/AppDrawer"))
-const ToolsDrawer = lazy(() => import("./shell/ToolsDrawer"))
 const WebCam = lazy(() => import("./ui/WebCam"))
 const PassiveAlert = lazy(() => import("./shell/PassiveAlert"))
 const DataEditorAppBar = lazy(() => import("./shell/DataEditorAppBar"))
@@ -315,15 +315,9 @@ function LayoutWithContext(props: LayoutProps) {
                     <nav>
                         {appBar}
                         {drawerType !== DrawerType.None && (
-                            <Suspense>
-                                <AppDrawer pagePath={path} />
-                            </Suspense>
+                            <AppDrawer pagePath={path} />
                         )}
-                        {toolsMenu && (
-                            <Suspense>
-                                <ToolsDrawer />
-                            </Suspense>
-                        )}
+                        {toolsMenu && <ToolsDrawer />}
                     </nav>
                 )}
                 {container ? (

@@ -11,6 +11,12 @@ import AppContext, { DrawerType } from "../AppContext"
 import PacketRecorder from "../PacketRecorder"
 import DrawerToolsButtonGroup from "./DrawerToolsButtonGroup"
 import ConnectAlert from "../alert/ConnectAlert"
+import Toc from "./Toc"
+const PacketView = lazy(() => import("../tools/PacketView"))
+const JDomTreeView = lazy(() => import("../tools/JDomTreeView"))
+const DrawerSearchResults = lazy(() => import("./DrawerSearchResults"))
+const DrawerSearchInput = lazy(() => import("./DrawerSearchInput"))
+const Console = lazy(() => import("../console/Console"))
 
 const PREFIX = "AppDrawer"
 
@@ -72,13 +78,6 @@ const StyledDrawer = styled(Drawer)(({ theme }) => ({
     },
 }))
 
-const Toc = lazy(() => import("../Toc"))
-const PacketView = lazy(() => import("../tools/PacketView"))
-const JDomTreeView = lazy(() => import("../tools/JDomTreeView"))
-const DrawerSearchResults = lazy(() => import("./DrawerSearchResults"))
-const DrawerSearchInput = lazy(() => import("./DrawerSearchInput"))
-const Console = lazy(() => import("../console/Console"))
-
 export default function AppDrawer(props: { pagePath: string }) {
     const { pagePath } = props
 
@@ -137,9 +136,7 @@ export default function AppDrawer(props: { pagePath: string }) {
                 </Suspense>
             )}
             {!showSearchResults && drawerType === DrawerType.Toc && (
-                <Suspense>
-                    <Toc pagePath={pagePath} />
-                </Suspense>
+                <Toc pagePath={pagePath} />
             )}
             {!showSearchResults && drawerType === DrawerType.Packets && (
                 <Suspense>
