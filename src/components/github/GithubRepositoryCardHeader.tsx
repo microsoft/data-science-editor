@@ -23,7 +23,7 @@ export default function GithubRepositoryCardHeader(props: {
     showMakeCodeButton?: boolean
 }) {
     const { slug, showRelease, showMakeCodeButton } = props
-    const { repoPath, folder } = normalizeSlug(slug)
+    const { repoPath, folder, name: repoName } = normalizeSlug(slug)
     const {
         response: repo,
         loading: repoLoading,
@@ -95,7 +95,7 @@ export default function GithubRepositoryCardHeader(props: {
             action={
                 showMakeCodeButton && (
                     <Suspense>
-                        <MakeCodeOpenSnippetButton slug={slug} />
+                        <MakeCodeOpenSnippetButton name={`${repoName} with jacdac`} slug={slug} />
                     </Suspense>
                 )
             }
