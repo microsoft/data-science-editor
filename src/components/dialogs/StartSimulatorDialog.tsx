@@ -8,7 +8,7 @@ import {
     ListItem,
     TextField,
 } from "@mui/material"
-import React, { useMemo, useRef } from "react"
+import React, { useEffect, useMemo, useRef, useState } from "react"
 import { useId } from "react"
 import {
     serviceProviderDefinitions,
@@ -53,6 +53,7 @@ export default function StartSimulatorDialog(props: {
     const { trackEvent } = useAnalytics()
     const { mobile } = useMediaQueries()
     const searchId = useId()
+    const [query, setQuery] = useState("")
     const deviceHostDialogId = searchId + "-devhostdialog"
     const deviceHostLabelId = searchId + "-devhostlabel"
     const contentRef = useRef<HTMLElement>()
@@ -102,9 +103,7 @@ export default function StartSimulatorDialog(props: {
         documents,
         miniSearchOptions
     )
-    const handleSearchChange = event => {
-        search(event.target.value)
-    }
+    const handleSearchChange = event => setQuery(event.target.value)
 
     const handleProviderDefinition =
         (provider: ServiceProviderDefinition) => () => {
@@ -139,6 +138,12 @@ export default function StartSimulatorDialog(props: {
 
     const keyboardProps = useKeyboardNavigationProps(contentRef.current, true)
 
+    useEffect(() => {
+        search?.(query)
+    }, [search, query])
+
+    const results = (!query ? documents : searchResults) || documents
+
     return (
         <Dialog
             id={deviceHostDialogId}
@@ -165,27 +170,26 @@ export default function StartSimulatorDialog(props: {
                     fullWidth={true}
                     size="small"
                     autoFocus={true}
+                    value={query}
                     onChange={handleSearchChange}
                     autoComplete="off"
                     {...keyboardProps}
                 />
                 <List sx={{ height: mobile ? undefined : "min(32rem, 80vh)" }}>
-                    {(searchResults || documents).map(
-                        ({ id, name, server, simulator }) => (
-                            <ListItem
-                                button
-                                key={id}
-                                onClick={
-                                    server
-                                        ? handleProviderDefinition(server)
-                                        : handleHostedSimulator(simulator)
-                                }
-                                {...keyboardProps}
-                            >
-                                {name}
-                            </ListItem>
-                        )
-                    )}
+                    {results.map(({ id, name, server, simulator }) => (
+                        <ListItem
+                            button
+                            key={id}
+                            onClick={
+                                server
+                                    ? handleProviderDefinition(server)
+                                    : handleHostedSimulator(simulator)
+                            }
+                            {...keyboardProps}
+                        >
+                            {name}
+                        </ListItem>
+                    ))}
                 </List>
             </DialogContent>
             {Flags.diagnostics && (
