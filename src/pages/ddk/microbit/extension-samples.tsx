@@ -5,15 +5,20 @@ export default function Samples() {
     const repos = [
         "pelikhan/pxt-makerbit-motor",
         "pelikhan/pxt-makerbit-touch",
+        "pelikhan/pxt-makerbit-lcd1602",
+
         "pelikhan/pxt-kitronik-air-quality",
         "pelikhan/pxt-kitronik-stopbit",
         "pelikhan/pxt-kitronik-viewtext32",
         "pelikhan/pxt-kitronik-lampbit",
         "pelikhan/pxt-kitronik-simple-servo",
         "pelikhan/pxt-kitronik-motor-driver",
+
         "pelikhan/monkmakes-7-segment",
+
         "pelikhan/pxt-envirobit",
         "pelikhan/pxt-weather-bit",
+
         "pelikhan/pxt-robotbit",
     ].map(r => `${r}/jacdac`)
     return (
