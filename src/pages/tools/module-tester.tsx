@@ -66,7 +66,7 @@ export default function Page() {
     return (
         <>
             <FirmwareLoader />
-            <h1>Server Tester</h1>
+            <h1>Device Compliance Tester</h1>
             <Tabs
                 value={tab}
                 onChange={handleTabChange}
