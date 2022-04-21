@@ -10,7 +10,7 @@ export default function DeviceQRCodeGenerator() {
     const [size, setSize] = useState(0.3)
     const [error, setError] = useState("")
     const handleUrlChange = (ev: ChangeEvent<HTMLInputElement>) => {
-        const vanity = (ev.target.value || "").trim()
+        const vanity = (ev.target.value || "").trim().toLocaleUpperCase()
         setURL(vanity)
         setError(
             !/^https?:\/\/./i.test(vanity)
