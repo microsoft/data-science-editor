@@ -355,7 +355,7 @@ export default function LightWidget(props: {
     const [lightVariant] = useRegisterUnpackedValue<
         [LedStripVariant | LedDisplayVariant]
     >(variantRegister, props)
-    const [actualBrightness] = useRegisterUnpackedValue<[number]>(
+    const [actualBrightness = 0.5] = useRegisterUnpackedValue<[number]>(
         actualBrightnessRegister,
         props
     )
@@ -364,16 +364,8 @@ export default function LightWidget(props: {
         props
     )
 
-    if (numPixels === undefined || actualBrightness === undefined)
-        return (
-            <DashboardRegisterValueFallback
-                register={
-                    numPixels === undefined
-                        ? actualBrightnessRegister
-                        : numPixelsRegister
-                }
-            />
-        ) // nothing to render
+    if (numPixels === undefined)
+        return <DashboardRegisterValueFallback register={numPixelsRegister} /> // nothing to render
 
     if (!numPixels) return null
 
