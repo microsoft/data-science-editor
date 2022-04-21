@@ -6,7 +6,6 @@ import {
     useRegisterUnpackedValue,
 } from "../../jacdac/useRegisterValue"
 import { Grid, TextField } from "@mui/material"
-import LoadingProgress from "../ui/LoadingProgress"
 import useRegister from "../hooks/useRegister"
 import CmdButton from "../CmdButton"
 import ClearIcon from "@mui/icons-material/Clear"
