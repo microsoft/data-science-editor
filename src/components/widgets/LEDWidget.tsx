@@ -1,10 +1,12 @@
-import React from "react"
+import React, { useState } from "react"
 import SvgWidget from "../widgets/SvgWidget"
 import { Grid, Typography } from "@mui/material"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import SliderWithLabel from "../ui/SliderWithLabel"
 import ColorButtons from "./ColorButtons"
 import { rgbToHtmlColor } from "../../../jacdac-ts/src/jdom/utils"
+import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
+import EditIcon from "@mui/icons-material/Edit"
 
 function LEDWidgetController(props: {
     color: "primary" | "secondary"
@@ -26,6 +28,9 @@ function LEDWidgetController(props: {
         onBrightnessChange,
     } = props
 
+    const [edit, setEdit] = useState(false)
+    const handleEdit = () => setEdit(e => !e)
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleSpeedChange: any = (event: unknown, newSpeed: number) =>
         onSpeedChange(newSpeed)
@@ -43,9 +48,15 @@ function LEDWidgetController(props: {
                         color={ledColor}
                         onColorChange={onLedColorChange}
                     />
+                    <IconButtonWithTooltip
+                        title={!edit ? "show editor" : "hide editor"}
+                        onClick={handleEdit}
+                    >
+                        <EditIcon />
+                    </IconButtonWithTooltip>
                 </Grid>
             )}
-            {onSpeedChange && (
+            {onSpeedChange && edit && (
                 <Grid item xs={12}>
                     <SliderWithLabel
                         label={"speed"}
@@ -59,7 +70,7 @@ function LEDWidgetController(props: {
                     />
                 </Grid>
             )}
-            {onBrightnessChange && (
+            {onBrightnessChange && edit && (
                 <Grid item xs={12}>
                     <SliderWithLabel
                         label={"brightness"}
