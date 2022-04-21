@@ -55,12 +55,14 @@ import {
     useRegisterBoolValue,
     useRegisterUnpackedValue,
 } from "../../jacdac/useRegisterValue"
-import { CircularProgress, NoSsr } from "@mui/material"
+import { CircularProgress } from "@mui/material"
 
 // bundled
 import DashboardButton from "./DashboardButton"
 import DashboardRotaryEncoder from "./DashboardRotaryEncoder"
 import DashboardSwitch from "./DashboardSwitch"
+import DashboardGamepad from "./DashboardGamepad"
+import DashboardLED from "./DashboardLED"
 import useServiceServer from "../hooks/useServiceServer"
 import Suspense from "../ui/Suspense"
 
@@ -87,8 +89,6 @@ const DashboardSpeechSynthesis = lazy(
 )
 const DashboardSoilMoisture = lazy(() => import("./DashboardSoilMoisture"))
 const DashboardRealTimeClock = lazy(() => import("./DashboardRealTimeClock"))
-const DashboardLED = lazy(() => import("./DashboardLED"))
-const DashboardGamepad = lazy(() => import("./DashboardGamepad"))
 const DashboardSevenSegmentDisplay = lazy(
     () => import("./DashboardSevenSegmentDisplay")
 )
@@ -218,9 +218,11 @@ const serviceViews: {
     },
     [SRV_LED]: {
         component: DashboardLED,
+        bundled: true,
     },
     [SRV_GAMEPAD]: {
         component: DashboardGamepad,
+        bundled: true,
         weight: () => 3,
     },
     [SRV_SEVEN_SEGMENT_DISPLAY]: {
