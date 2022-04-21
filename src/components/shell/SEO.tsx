@@ -70,7 +70,7 @@ export default function SEO(props: {
                     content: metaDescription,
                 },
                 ...meta,
-            ]}
+            ].filter(({ content }) => !!content)}
         />
     )
 }
