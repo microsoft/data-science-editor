@@ -147,7 +147,7 @@ export default function StyledTreeItem(
                     {kind && !icon && (
                         <KindIcon kind={kind} className={classes.labelIcon} />
                     )}
-                    {icon}
+                    {icon && <span className={classes.labelIcon}>{icon}</span>}
                     {warning && (
                         <WarningIcon
                             color="error"
