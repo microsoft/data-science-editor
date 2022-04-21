@@ -1,5 +1,4 @@
-import { useContext, useEffect, useState } from "react"
-import AppContext from "../AppContext"
+import { useEffect, useRef, useState } from "react"
 import { isWebSerialSupported } from "../../../jacdac-ts/src/jdom/transport/webserial"
 import { SourceMap } from "./ConsoleContext"
 import useSnackbar from "../hooks/useSnackbar"
@@ -47,6 +46,7 @@ export default function useConsoleSerial(sourceMap: SourceMap) {
     const supported = isWebSerialSupported()
     const { setError } = useSnackbar()
     const [port, setPort] = useState<SerialPort>()
+    const closeRef = useRef<() => Promise<void>>()
     const connected = !!port
 
     // register disconnect
@@ -104,13 +104,18 @@ export default function useConsoleSerial(sourceMap: SourceMap) {
                         })
                 },
             })
-            port.readable
+            const writeStreamClosed = port.readable
                 .pipeThrough(new TextDecoderStream())
                 .pipeTo(appendStream)
+            closeRef.current = async () => {
+                await appendStream.close()
+                await writeStreamClosed
+            }
             setPort(port)
             console.debug(`serial console: connected`)
         } catch (e) {
             setError(e)
+            closeRef.current = undefined
             setPort(undefined)
         }
     }
@@ -120,11 +125,13 @@ export default function useConsoleSerial(sourceMap: SourceMap) {
         if (p) {
             console.log(`serial console: disconnect`)
             try {
+                if (closeRef.current) await closeRef.current()
                 await p.close()
             } catch (e) {
                 setError(e)
             }
         }
+        closeRef.current = undefined
         setPort(undefined)
     }
 
