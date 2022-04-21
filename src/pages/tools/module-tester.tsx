@@ -66,7 +66,7 @@ export default function Page() {
     return (
         <>
             <FirmwareLoader />
-            <h1>Device Compliance Tester</h1>
+            <h1>Device Tester</h1>
             <Tabs
                 value={tab}
                 onChange={handleTabChange}
@@ -88,7 +88,7 @@ export default function Page() {
                 ) : (
                     <>
                         <p>
-                            Connect your module and follow the instructions to
+                            Connect your device and follow the instructions to
                             run a compliance test.
                         </p>
                         <ConnectAlert />
