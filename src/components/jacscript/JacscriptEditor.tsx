@@ -30,7 +30,7 @@ import {
 } from "../../../jacdac-ts/src/vm/ir2jacscript"
 import useEffectAsync from "../useEffectAsync"
 import { jacscriptCompile } from "../blockly/dsl/workers/jacscript.proxy"
-import type { JacscriptCompileResponse } from "../../workers/jacscript/jacscript.worker"
+import type { JacscriptCompileResponse } from "../../workers/jacscript/jacscript-worker"
 import useRegister from "../hooks/useRegister"
 import {
     JacscriptManagerCmd,
@@ -45,10 +45,7 @@ import {
 import DeviceAvatar from "../devices/DeviceAvatar"
 import useBus from "../../jacdac/useBus"
 import useServices from "../hooks/useServices"
-import { addServiceProvider } from "../../../jacdac-ts/src/servers/servers"
-import { createVMJacscriptManagerServer } from "../blockly/dsl/workers/vm.proxy"
-import useServiceServer from "../hooks/useServiceServer"
-import { JacscriptManagerServer } from "../../../jacdac-ts/src/servers/jacscriptmanagerserver"
+import { jacscriptBridge } from "../blockly/dsl/workers/vm.proxy"
 import { OutPipe } from "../../../jacdac-ts/src/jdom/pipes"
 
 const JACSCRIPT_EDITOR_ID = "jcs"
@@ -110,16 +107,12 @@ function JacscriptEditorWithContext() {
         (l, r) => -(l.device.isPhysical ? 1 : 0) + (r.device.isPhysical ? 1 : 0)
     )
     const service = services[0]
-    const server = useServiceServer<JacscriptManagerServer>(service)
 
-    // spinup vm jacscript manager
     useEffect(() => {
-        const provider = addServiceProvider(bus, {
-            name: "vm jacscript manager",
-            serviceClasses: [SRV_JACSCRIPT_MANAGER],
-            services: () => [createVMJacscriptManagerServer()],
-        })
-        return () => bus.removeServiceProvider(provider)
+        // start the bridge (and worker)
+        const _bridge = jacscriptBridge()
+        // currently now way to stop it
+        return () => {}
     }, [])
 
     useEffect(() => {
@@ -162,17 +155,14 @@ function JacscriptEditorWithContext() {
     useEffectAsync(async () => {
         const { binary, debugInfo } = jscCompiled || {}
         if (!service) return
-        if (server) server.setBytecode(binary, debugInfo)
-        else {
-            await OutPipe.sendBytes(
-                service,
-                JacscriptManagerCmd.DeployBytecode,
-                binary || new Uint8Array(0)
-            )
-        }
+        await OutPipe.sendBytes(
+            service,
+            JacscriptManagerCmd.DeployBytecode,
+            binary || new Uint8Array(0)
+        )
         //if (jscCompiled) jacscriptCommand("start")
         //else jacscriptCommand("stop")
-    }, [service, server, jscCompiled])
+    }, [service, jscCompiled])
     return (
         <Grid container spacing={1}>
             <Grid item xs={12} sm={8}>

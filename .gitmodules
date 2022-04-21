@@ -31,3 +31,6 @@
 [submodule "jacdac-dotnet"]
 	path = jacdac-dotnet
 	url = https://github.com/microsoft/jacdac-dotnet
+[submodule "jacscript"]
+	path = jacscript
+	url = https://github.com/microsoft/jacscript

@@ -1,7 +1,7 @@
 {
   "name": "jacscript-worker",
   "type": "module",
-  "source": "jacscript.worker.ts",
+  "source": "jacscript-worker.ts",
   "main": "./dist/node_modules/jacscript-worker.umd.js",
   "module": "./dist/node_modules/jacscript-worker.cjs.js",
   "exports": "./dist/node_modules/jacscript-worker.js",

@@ -2,7 +2,7 @@ import { Grid } from "@mui/material"
 import React from "react"
 import CodeBlock from "../CodeBlock"
 import { JacscriptProgram } from "../../../jacdac-ts/src/vm/ir2jacscript"
-import { JacscriptCompileResponse } from "../../workers/jacscript/jacscript.worker"
+import type { JacscriptCompileResponse } from "../../workers/jacscript/jacscript-worker"
 
 export default function JacscriptDiagnostics(props: {
     program: JacscriptProgram
