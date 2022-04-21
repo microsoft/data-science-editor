@@ -52,10 +52,10 @@ export const CommandPaletteProvider = ({ children }) => {
 
         const ids = options.map(c => c.id)
         setCommands(cmds => [...cmds, ...options])
-        console.debug(`command: added ${ids.join(", ")}`)
+        //console.debug(`command: added ${ids.join(", ")}`)
         return () => {
             setCommands(cmds => cmds.filter(c => ids.indexOf(c.id) < 0))
-            console.debug(`command: removed ${ids.join(", ")}`)
+            //console.debug(`command: removed ${ids.join(", ")}`)
         }
     }
     const runCommandUnsafe = async (id: string, args: unknown) => {
