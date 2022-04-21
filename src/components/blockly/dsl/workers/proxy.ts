@@ -22,13 +22,26 @@ export interface WorkerResponse {
 }
 
 export class WorkerProxy extends JDEventSource {
-    readonly pendings: SMap<{
-        resolve: (res: any) => void
-        reject: (err: any) => void
-    }> = {}
+    readonly pendings: Record<
+        string,
+        {
+            resolve: (res: any) => void
+            reject: (err: any) => void
+        }
+    > = {}
     constructor(readonly worker: Worker, readonly workerid: VMType) {
         super()
-        this.worker.addEventListener("message", this.handleMessage.bind(this))
+        this.handleMessage = this.handleMessage.bind(this)
+        this.worker.addEventListener("message", this.handleMessage)
+    }
+
+    terminate() {
+        delete _workers[this.workerid]
+        this.worker.removeEventListener("message", this.handleMessage)
+        this.worker.terminate()
+        Object.values(this.pendings).forEach(({ reject }) =>
+            reject(new Error("worker terminated"))
+        )
     }
 
     private handleMessage(event: MessageEvent) {
