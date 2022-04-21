@@ -1,6 +1,7 @@
-import React, { lazy, Suspense } from "react"
+import React, { lazy } from "react"
 import Dashboard from "../components/dashboard/Dashboard"
 import { useLocationSearchParamBoolean } from "../components/hooks/useLocationSearchParam"
+import Suspense from "../components/ui/Suspense"
 import { UIFlags } from "../jacdac/providerbus"
 const DataStreamer = lazy(() => import("../components/tools/DataStreamer"))
 
@@ -11,7 +12,7 @@ export default function Page() {
     return (
         <>
             {dataStreamer && (
-                <Suspense fallback={null}>
+                <Suspense>
                     <DataStreamer />
                 </Suspense>
             )}

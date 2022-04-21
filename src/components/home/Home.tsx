@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material"
 import { withPrefix } from "gatsby-link"
 import { StaticImage } from "gatsby-plugin-image"
-import React, { lazy, useContext, Suspense } from "react"
+import React, { lazy, useContext } from "react"
 import CarouselGrid from "./CarouselGrid"
 import CenterGrid from "./CenterGrid"
 import FeatureItem from "./FeatureItem"
@@ -12,6 +12,7 @@ import FindReplaceIcon from "@mui/icons-material/FindReplace"
 import SubscriptionsIcon from "@mui/icons-material/Subscriptions"
 import HTML5Image from "./HTML5Image"
 import DarkModeContext from "../ui/DarkModeContext"
+import Suspense from "../ui/Suspense"
 const JacdaptorImageList = lazy(() => import("./JacdaptorImageList"))
 
 export default function Home() {
@@ -101,7 +102,7 @@ export default function Home() {
                 buttonUrl="/overview/jacdaptors"
                 imageColumns={6}
                 image={
-                    <Suspense fallback={null}>
+                    <Suspense>
                         <JacdaptorImageList />
                     </Suspense>
                 }
