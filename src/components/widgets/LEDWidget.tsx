@@ -28,9 +28,6 @@ function LEDWidgetController(props: {
         onBrightnessChange,
     } = props
 
-    const [edit, setEdit] = useState(false)
-    const handleEdit = () => setEdit(e => !e)
-
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleSpeedChange: any = (event: unknown, newSpeed: number) =>
         onSpeedChange(newSpeed)
@@ -48,15 +45,9 @@ function LEDWidgetController(props: {
                         color={ledColor}
                         onColorChange={onLedColorChange}
                     />
-                    <IconButtonWithTooltip
-                        title={!edit ? "show editor" : "hide editor"}
-                        onClick={handleEdit}
-                    >
-                        <EditIcon />
-                    </IconButtonWithTooltip>
                 </Grid>
             )}
-            {onSpeedChange && edit && (
+            {onSpeedChange && (
                 <Grid item xs={12}>
                     <SliderWithLabel
                         label={"speed"}
@@ -70,7 +61,7 @@ function LEDWidgetController(props: {
                     />
                 </Grid>
             )}
-            {onBrightnessChange && edit && (
+            {onBrightnessChange && (
                 <Grid item xs={12}>
                     <SliderWithLabel
                         label={"brightness"}
@@ -93,8 +84,10 @@ function LEDWidgetBulb(props: {
     waveLength?: number
     ledCount?: number
     ledColor: number
+    edit?: boolean
+    onEdit?: () => void
 }) {
-    const { color, ledCount, ledColor } = props
+    const { color, ledCount, ledColor, edit, onEdit } = props
     const r = (ledColor >> 16) & 0xff
     const g = (ledColor >> 8) & 0xff
     const b = (ledColor >> 0) & 0xff
@@ -190,6 +183,14 @@ function LEDWidgetBulb(props: {
                     {rgbToHtmlColor(ledColor)}
                 </Typography>
             </Grid>
+            <Grid item>
+                <IconButtonWithTooltip
+                    title={!edit ? "show editor" : "hide editor"}
+                    onClick={onEdit}
+                >
+                    <EditIcon />
+                </IconButtonWithTooltip>
+            </Grid>
         </Grid>
     )
 }
@@ -216,6 +217,8 @@ export default function LEDWidget(props: {
         brightness = 16,
         onBrightnessChange,
     } = props
+    const [edit, setEdit] = useState(false)
+    const handleEdit = () => setEdit(e => !e)
 
     return (
         <Grid container spacing={1} alignItems="center" alignContent="center">
@@ -224,20 +227,24 @@ export default function LEDWidget(props: {
                     color={color}
                     ledColor={ledColor}
                     ledCount={ledCount}
+                    edit={edit}
+                    onEdit={handleEdit}
                 />
             </Grid>
-            <Grid item xs={12}>
-                <LEDWidgetController
-                    color={color}
-                    waveLength={waveLength}
-                    ledColor={ledColor}
-                    onLedColorChange={onLedColorChange}
-                    speed={speed}
-                    onSpeedChange={onSpeedChange}
-                    brightness={brightness}
-                    onBrightnessChange={onBrightnessChange}
-                />
-            </Grid>
+            {edit && (
+                <Grid item xs={12}>
+                    <LEDWidgetController
+                        color={color}
+                        waveLength={waveLength}
+                        ledColor={ledColor}
+                        onLedColorChange={onLedColorChange}
+                        speed={speed}
+                        onSpeedChange={onSpeedChange}
+                        brightness={brightness}
+                        onBrightnessChange={onBrightnessChange}
+                    />
+                </Grid>
+            )}
         </Grid>
     )
 }
