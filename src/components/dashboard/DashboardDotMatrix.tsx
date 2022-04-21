@@ -11,6 +11,7 @@ import LEDMatrixWidget from "../widgets/LEDMatrixWidget"
 import useRegister from "../hooks/useRegister"
 import { Grid } from "@mui/material"
 import RegisterInput from "../RegisterInput"
+import DashboardRegisterValueFallback from "./DashboardRegisterValueFallback"
 
 export default function DashboardDotMatrixDisplay(
     props: DashboardServiceProps
@@ -40,8 +41,21 @@ export default function DashboardDotMatrixDisplay(
     const handleChange = (newLeds: Uint8Array) => {
         dotsRegister.sendSetAsync(newLeds, true)
     }
+
+    if (rows === undefined || columns === undefined)
+        return (
+            <DashboardRegisterValueFallback
+                register={rows === undefined ? rowsRegister : columnsRegister}
+            />
+        )
+
     return (
-        <Grid container spacing={1} justifyContent="center" flexDirection="column">
+        <Grid
+            container
+            spacing={1}
+            justifyContent="center"
+            flexDirection="column"
+        >
             <Grid item xs={12}>
                 <LEDMatrixWidget
                     leds={dots}

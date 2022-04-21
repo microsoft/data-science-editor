@@ -11,6 +11,7 @@ import LoadingProgress from "../ui/LoadingProgress"
 import useRegister from "../hooks/useRegister"
 import SyncIcon from "@mui/icons-material/Sync"
 import CmdButton from "../CmdButton"
+import DashboardRegisterValueFallback from "./DashboardRegisterValueFallback"
 
 export default function DashboardRealTimeClock(props: DashboardServiceProps) {
     const { service } = props
@@ -41,7 +42,9 @@ export default function DashboardRealTimeClock(props: DashboardServiceProps) {
         ])
     }
 
-    if (year === undefined) return <LoadingProgress />
+    if (year === undefined)
+        return <DashboardRegisterValueFallback register={localTimeRegister} />
+
     const t = new Date(year, month - 1, dayOfMonth, hour, min, seconds)
     const date = t.toLocaleDateString()
     const time = t.toLocaleTimeString()
@@ -74,7 +77,11 @@ export default function DashboardRealTimeClock(props: DashboardServiceProps) {
                 </Grid>
             </Grid>
             <Grid item>
-                <CmdButton title="Sync time" onClick={handleSync} icon={<SyncIcon />} />
+                <CmdButton
+                    title="Sync time"
+                    onClick={handleSync}
+                    icon={<SyncIcon />}
+                />
             </Grid>
         </Grid>
     )

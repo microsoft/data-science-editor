@@ -15,10 +15,10 @@ import {
 import SvgWidget from "../widgets/SvgWidget"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import useSvgButtonProps from "../hooks/useSvgButtonProps"
-import LoadingProgress from "../ui/LoadingProgress"
 import useAnimationFrame from "../hooks/useAnimationFrame"
 import useRegister from "../hooks/useRegister"
 import OptionalTooltip from "../widgets/OptionalTooltip"
+import DashboardRegisterValueFallback from "./DashboardRegisterValueFallback"
 
 const buttonLabels = {
     [GamepadButtons.Left]: "\u25C4",
@@ -384,7 +384,12 @@ export default function DashboardGamepad(props: DashboardServiceProps) {
     const padr = 2.6 * cw
 
     // need button info
-    if (buttonsAvailable === undefined) return <LoadingProgress />
+    if (buttonsAvailable === undefined)
+        return (
+            <DashboardRegisterValueFallback
+                register={buttonsAvailableRegister}
+            />
+        )
 
     return (
         <OptionalTooltip

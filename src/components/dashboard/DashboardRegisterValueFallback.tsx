@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { humanify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import { JDRegister } from "../../../jacdac-ts/src/jdom/register"
 import useServiceServer from "../hooks/useServiceServer"
@@ -13,6 +13,9 @@ export default function DashboardRegisterValueFallback(props: {
     const color = server ? "secondary" : "primary"
     const handleRefresh = () => register?.sendGetAsync()
     const registerName = humanify(register.name)
+
+    // try forcing a refresh
+    useEffect(() => register?.scheduleRefresh(), [register])
 
     return (
         <IconButtonWithProgress

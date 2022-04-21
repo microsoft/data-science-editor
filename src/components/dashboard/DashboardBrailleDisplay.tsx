@@ -15,6 +15,7 @@ import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import CharacterScreenWidget from "../widgets/CharacterScreenWidget"
 import { useId } from "react"
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew"
+import DashboardRegisterValueFallback from "./DashboardRegisterValueFallback"
 
 // https://en.wikipedia.org/wiki/Braille_ASCII
 const BRAILE_CHARACTERS = {
@@ -132,7 +133,8 @@ export default function DashboardBrailleDisplay(props: DashboardServiceProps) {
         if (!fieldMessage && patterns) setFieldMessage(patterns)
     }, [patterns])
 
-    if (length === undefined) return <LoadingProgress /> // size unknown
+    if (length === undefined)
+        return <DashboardRegisterValueFallback register={lengthRegister} />
 
     return (
         <Grid container spacing={1}>
