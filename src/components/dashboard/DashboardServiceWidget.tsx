@@ -1,10 +1,4 @@
-import React, {
-    createElement,
-    FunctionComponent,
-    lazy,
-    useMemo,
-    Suspense,
-} from "react"
+import React, { createElement, FunctionComponent, lazy, useMemo } from "react"
 import {
     SRV_ACCELEROMETER,
     SRV_BUTTON,
@@ -68,6 +62,7 @@ import DashboardButton from "./DashboardButton"
 import DashboardRotaryEncoder from "./DashboardRotaryEncoder"
 import DashboardSwitch from "./DashboardSwitch"
 import useServiceServer from "../hooks/useServiceServer"
+import Suspense from "../ui/Suspense"
 
 // lazy devices
 const DashboardServo = lazy(() => import("./DashboardServo"))
@@ -473,21 +468,19 @@ export default function DashboardServiceWidget(
 
     // lazy loading
     return (
-        <NoSsr>
-            <Suspense
-                fallback={
-                    <CircularProgress
-                        aria-label={`loading widget...`}
-                        color={color}
-                        disableShrink={true}
-                        variant={"indeterminate"}
-                        size={"1rem"}
-                    />
-                }
-            >
-                {createElement(component, props)}
-            </Suspense>
-        </NoSsr>
+        <Suspense
+            fallback={
+                <CircularProgress
+                    aria-label={`loading widget...`}
+                    color={color}
+                    disableShrink={true}
+                    variant={"indeterminate"}
+                    size={"1rem"}
+                />
+            }
+        >
+            {createElement(component, props)}
+        </Suspense>
     )
 }
 
