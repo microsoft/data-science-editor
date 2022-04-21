@@ -15,7 +15,7 @@ export default function DashboardRegisterValueFallback(props: {
     const registerName = humanify(register.name)
 
     // try forcing a refresh
-    useEffect(() => register?.scheduleRefresh(), [register])
+    useEffect(() => { register?.sendGetAsync() }, [register])
 
     return (
         <IconButtonWithProgress
