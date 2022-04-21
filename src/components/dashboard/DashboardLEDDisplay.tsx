@@ -67,15 +67,12 @@ export default function DashboardLEDDisplay(props: DashboardServiceProps) {
         clientRef.current.emit(RENDER)
     }
 
-    const registers = useMemo(
-        () => ({
-            numPixels: LedDisplayReg.NumPixels,
-            variant: LedDisplayReg.Variant,
-            actualBrightness: LedDisplayReg.ActualBrightness,
-            numColumns: LedDisplayReg.NumColumns,
-        }),
-        []
-    )
+    const registers = {
+        numPixels: LedDisplayReg.NumPixels,
+        variant: LedDisplayReg.Variant,
+        actualBrightness: LedDisplayReg.ActualBrightness,
+        numColumns: LedDisplayReg.NumColumns,
+    }
 
     useEffect(
         () =>
@@ -96,6 +93,7 @@ export default function DashboardLEDDisplay(props: DashboardServiceProps) {
 
     if (!hasData)
         return <DashboardRegisterValueFallback register={pixelsRegister} />
+
     return (
         <>
             <Grid container direction="column" spacing={1} alignItems="center">
