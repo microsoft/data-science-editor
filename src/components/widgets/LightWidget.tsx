@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef } from "react"
 import {
     LedStripVariant,
-    LedDisplayVariant,
+    LedVariant,
 } from "../../../jacdac-ts/src/jdom/constants"
 import SvgWidget from "../widgets/SvgWidget"
 import useWidgetTheme from "../widgets/useWidgetTheme"
@@ -78,7 +78,7 @@ function setRgbLeds(
 function LightStripWidget(props: {
     colors: () => Uint8Array
     subscribeColors?: (handler: () => void) => () => void
-    lightVariant: LedStripVariant | LedDisplayVariant
+    lightVariant: LedStripVariant | LedVariant
     numPixels: number
     actualBrightness: number
     widgetSize?: string
@@ -229,7 +229,7 @@ function LightStripWidget(props: {
 function LightMatrixWidget(props: {
     colors: () => Uint8Array
     subscribeColors: (handler: () => void) => () => void
-    lightVariant: LedStripVariant | LedDisplayVariant
+    lightVariant: LedStripVariant | LedVariant
     actualBrightness: number
     widgetSize?: string
     columns: number
@@ -353,7 +353,7 @@ export default function LightWidget(props: {
         props
     )
     const [lightVariant] = useRegisterUnpackedValue<
-        [LedStripVariant | LedDisplayVariant]
+        [LedStripVariant | LedVariant]
     >(variantRegister, props)
     const [actualBrightness = 0.5] = useRegisterUnpackedValue<[number]>(
         actualBrightnessRegister,

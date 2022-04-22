@@ -1,101 +1,143 @@
-import React, { useEffect, useState } from "react"
+import { Grid } from "@mui/material"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
-import useServiceServer from "../hooks/useServiceServer"
-import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
-import { LEDServer } from "../../../jacdac-ts/src/servers/ledserver"
+import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
+import LightWidget from "../widgets/LightWidget"
 import {
-    COMMAND_RECEIVE,
-    LedCmd,
     LedReg,
+    RENDER,
+    REPORT_UPDATE,
 } from "../../../jacdac-ts/src/jdom/constants"
-import LoadingProgress from "../ui/LoadingProgress"
-import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
-import LEDWidget from "../widgets/LEDWidget"
+import ColorButtons from "../widgets/ColorButtons"
 import useRegister from "../hooks/useRegister"
-import { Packet } from "../../../jacdac-ts/src/jdom/packet"
-import useSnackbar from "../hooks/useSnackbar"
+import SettingsIcon from "@mui/icons-material/Settings"
+import RegisterInput from "../RegisterInput"
+import { bufferEq } from "../../../jacdac-ts/src/jdom/utils"
+import useChange from "../../jacdac/useChange"
+import { JDEventSource } from "../../../jacdac-ts/src/jdom/eventsource"
+import DashboardRegisterValueFallback from "./DashboardRegisterValueFallback"
+
+const configureRegisters = [
+    LedReg.Brightness,
+    LedReg.ActualBrightness,
+    LedReg.MaxPower,
+]
+
+function RegisterInputItem(props: {
+    service: JDService
+    registerCode: number
+    visible: boolean
+}) {
+    const { service, registerCode, visible } = props
+    const register = useRegister(service, registerCode)
+    return (
+        <RegisterInput
+            register={register}
+            visible={visible}
+            showRegisterName={true}
+        />
+    )
+}
 
 export default function DashboardLED(props: DashboardServiceProps) {
-    const { service } = props
-    const { setError } = useSnackbar()
-    const server = useServiceServer<LEDServer>(service)
-    const themeColor = server ? "secondary" : "primary"
+    const { service, services, visible } = props
+    const pixelsRegister = useRegister(service, LedReg.Pixels)
+    const hasData = useChange(pixelsRegister, _ => !!_?.data)
+    const [penColor, setPenColor] = useState<number>(undefined)
+    const [configure, setConfigure] = useState(false)
+    const colorsRef = useRef<Uint8Array>(new Uint8Array(0))
+    const clientRef = useRef(new JDEventSource())
+    const toggleConfigure = () => setConfigure(c => !c)
+    const handleColorChange = (newColor: number) =>
+        setPenColor(current => (newColor === current ? undefined : newColor))
+    const handleLedClick: (index: number) => void = async (index: number) => {
+        if (isNaN(penColor)) return
 
-    const [speed, setSpeed] = useState(64)
-    const [brightness, setBrightness] = useState(32)
+        const pixels = colorsRef.current
+        if (index >= pixels.length * 3) return
 
-    const colorRegister = useRegister(service, LedReg.Color)
-    const [r, g, b] = useRegisterUnpackedValue<[number, number, number]>(
-        colorRegister,
-        props
-    )
-    const [uiColor, setUiColor] = useState((r << 16) | (g << 8) | b)
-    const [uiSpeed, setUiSpeed] = useState(speed)
-
-    const waveLengthRegister = useRegister(service, LedReg.WaveLength)
-    const [waveLength] = useRegisterUnpackedValue<[number]>(
-        waveLengthRegister,
-        props
-    )
-    const ledCountRegister = useRegister(service, LedReg.LedCount)
-    const [ledCount] = useRegisterUnpackedValue<[number]>(
-        ledCountRegister,
-        props
-    )
-
-    const setRgb = async (rgb: number) => {
-        const r = ((((rgb >> 16) & 0xff) * brightness) >> 8) & 0xff
-        const g = ((((rgb >> 8) & 0xff) * brightness) >> 8) & 0xff
-        const b = ((((rgb >> 0) & 0xff) * brightness) >> 8) & 0xff
-        try {
-            await service.sendCmdAsync(
-                LedCmd.Animate,
-                jdpack<[number, number, number, number]>("u8 u8 u8 u8", [
-                    r,
-                    g,
-                    b,
-                    speed,
-                ])
-            )
-            setUiColor((r << 16) | (g << 8) | b)
-            setUiSpeed(speed)
-        } catch (e) {
-            setError(e)
-        }
+        const newPixels = pixels.slice(0)
+        const k = index * 3
+        newPixels[k] = (penColor >> 16) & 0xff
+        newPixels[k + 1] = (penColor >> 8) & 0xff
+        newPixels[k + 2] = penColor & 0xff
+        await pixelsRegister.sendSetPackedAsync([newPixels], true)
+        colorsRef.current = newPixels
+        clientRef.current.emit(RENDER)
     }
 
-    // sniff animate call
+    const registers = {
+        numPixels: LedReg.NumPixels,
+        variant: LedReg.Variant,
+        actualBrightness: LedReg.ActualBrightness,
+        numColumns: LedReg.NumColumns,
+    }
+
     useEffect(
         () =>
-            service?.subscribe(COMMAND_RECEIVE, (pkt: Packet) => {
-                if (pkt.serviceCommand === LedCmd.Animate) {
-                    const [r, g, b, s] =
-                        pkt.jdunpack<[number, number, number, number]>(
-                            "u8 u8 u8 u8"
-                        )
-                    setUiColor((r << 16) | (g << 8) | b)
-                    setUiSpeed(s)
+            pixelsRegister?.subscribe(REPORT_UPDATE, () => {
+                const [pixels] = pixelsRegister.unpackedValue
+                if (pixels && !bufferEq(colorsRef.current, pixels)) {
+                    colorsRef.current = pixels.slice(0)
+                    clientRef.current.emit(RENDER)
                 }
             }),
-        [service]
+        [pixelsRegister]
+    )
+    const colors: () => Uint8Array = useCallback(() => colorsRef.current, [])
+    const subscribeColors = useCallback(
+        handler => clientRef.current.subscribe(RENDER, handler),
+        []
     )
 
-    // sync color
-    useEffect(() => setUiColor((r << 16) | (g << 8) | b), [r, g, b])
-    // nothing to see
-    if (isNaN(uiColor)) return <LoadingProgress />
+    if (!hasData)
+        return <DashboardRegisterValueFallback register={pixelsRegister} />
 
     return (
-        <LEDWidget
-            color={themeColor}
-            ledColor={uiColor}
-            waveLength={waveLength}
-            ledCount={ledCount}
-            onLedColorChange={setRgb}
-            speed={speed}
-            onSpeedChange={setSpeed}
-            brightness={brightness}
-            onBrightnessChange={setBrightness}
-        />
+        <>
+            <Grid container direction="column" spacing={1} alignItems="center">
+                <Grid item xs={12}>
+                    <LightWidget
+                        colors={colors}
+                        subscribeColors={subscribeColors}
+                        registers={registers}
+                        widgetCount={services?.length}
+                        onLedClick={handleLedClick}
+                        {...props}
+                    />
+                </Grid>
+                <Grid item>
+                    <ColorButtons
+                        color={penColor}
+                        onColorChange={handleColorChange}
+                    >
+                        <Grid item>
+                            <IconButtonWithTooltip
+                                title={
+                                    configure
+                                        ? "Hide configuration"
+                                        : "Show configuration"
+                                }
+                                onClick={toggleConfigure}
+                            >
+                                <SettingsIcon />
+                            </IconButtonWithTooltip>
+                        </Grid>
+                    </ColorButtons>
+                </Grid>
+
+                {configure &&
+                    configureRegisters.map(code => (
+                        <Grid item key={code}>
+                            <RegisterInputItem
+                                service={service}
+                                registerCode={code}
+                                visible={visible}
+                            />
+                        </Grid>
+                    ))}
+            </Grid>
+        </>
     )
 }
