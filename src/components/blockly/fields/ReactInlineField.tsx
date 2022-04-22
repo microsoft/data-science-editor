@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react"
-import ReactDOM from "react-dom"
+import { createRoot } from "react-dom/client"
 import ReactField from "./ReactField"
 import { child } from "../../widgets/svg"
 import DarkModeProvider from "../../ui/DarkModeProvider"
@@ -13,6 +13,8 @@ import { SnackbarProvider } from "notistack"
 export default class ReactInlineField<T = unknown> extends ReactField<T> {
     protected container: HTMLDivElement
     protected resizeObserver: ResizeObserver
+    // React root
+    private root_: any
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     constructor(options?: any) {
@@ -58,14 +60,16 @@ export default class ReactInlineField<T = unknown> extends ReactField<T> {
         )
         this.resizeObserver.observe(this.container)
 
-        ReactDOM.render(this.renderBlock(), this.container)
+        this.root_ = createRoot(this.container)
+        this.root_.render(this.renderBlock())
         return fo
     }
 
     dispose() {
         if (this.container) {
-            ReactDOM.unmountComponentAtNode(this.container)
+            this.root_?.unmount()
             this.container = undefined
+            this.root_ = undefined
         }
         if (this.resizeObserver) {
             this.resizeObserver.disconnect()

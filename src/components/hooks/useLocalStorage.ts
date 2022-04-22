@@ -2,7 +2,7 @@ import useStorage from "./useStorage"
 
 const storage = (() => {
     try {
-        typeof window !== "undefined" && window.localStorage
+        return typeof window !== "undefined" && window.localStorage
     } catch {
         return undefined
     }

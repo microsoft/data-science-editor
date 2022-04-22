@@ -5,7 +5,8 @@
         "types": [],
         "module": "ESNext",
         "moduleResolution": "node",
-        "declaration": true
+        "declaration": true,
+        "allowSyntheticDefaultImports": true
     },
     "exclude": ["node_modules"]
 }

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react"
-import ReactDOM from "react-dom"
+import { createRoot } from "react-dom/client"
 import Blockly from "blockly"
 import JacdacProvider from "../../../jacdac/Provider"
 import { ReactNode } from "react"
@@ -39,6 +39,8 @@ export default class ReactField<T> extends ReactFieldBase<T> {
     SERIALIZABLE = true
     public readonly events = new JDEventSource()
     protected div_: Element
+    // React root
+    private root_: any
     protected view: SVGElement
     protected darkMode: "light" | "dark" = "dark"
 
@@ -117,7 +119,8 @@ export default class ReactField<T> extends ReactFieldBase<T> {
 
     showEditor_() {
         this.div_ = Blockly.DropDownDiv.getContentDiv()
-        ReactDOM.render(this.render(), this.div_)
+        this.root_ = createRoot(this.div_)
+        this.root_.render(this.render())
         const border = this.sourceBlock_.getColourTertiary()
         Blockly.DropDownDiv.setColour(this.sourceBlock_.getColour(), border)
 
@@ -139,7 +142,8 @@ export default class ReactField<T> extends ReactFieldBase<T> {
         // this blows on hot reloads
         try {
             this.events.emit(UNMOUNT)
-            ReactDOM.unmountComponentAtNode(this.div_)
+            this.root_?.unmount()
+            this.root_ = undefined
         } catch (e) {
             console.error(e)
         }
@@ -181,6 +185,8 @@ export default class ReactField<T> extends ReactFieldBase<T> {
 
     dispose() {
         this.view = undefined
+        this.root_?.unmount()
+        this.root_ = undefined
         super.dispose()
     }
 }

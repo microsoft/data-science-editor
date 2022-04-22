@@ -1,4 +1,4 @@
-import React from "react"
+import React, { ChangeEvent } from "react"
 import { Alert, Grid } from "@mui/material"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import PlayArrowIcon from "@mui/icons-material/PlayArrow"
@@ -45,6 +45,14 @@ function JacscriptManagerToolbar(
 
     const handleRun = () => runningRegister?.sendSetBoolAsync(true, true)
     const handleStop = () => runningRegister?.sendSetBoolAsync(false, true)
+    const handleAutoStartChange = (
+        event: ChangeEvent<HTMLInputElement>,
+        checked: boolean
+    ) => autoStartRegister?.sendSetBoolAsync(checked, true)
+    const handleLoggingChange = (
+        event: ChangeEvent<HTMLInputElement>,
+        checked: boolean
+    ) => loggingRegister?.sendSetBoolAsync(checked, true)
 
     return (
         <Grid container spacing={1}>
@@ -61,6 +69,7 @@ function JacscriptManagerToolbar(
                     label="auto start"
                     checked={autoStart}
                     disabled={autoStart === undefined}
+                    onChange={handleAutoStartChange}
                 />
             </Grid>
             <Grid item>
@@ -68,6 +77,7 @@ function JacscriptManagerToolbar(
                     label="logging"
                     checked={logging}
                     disabled={logging === undefined}
+                    onChange={handleLoggingChange}
                 />
             </Grid>
             {noProgram && (

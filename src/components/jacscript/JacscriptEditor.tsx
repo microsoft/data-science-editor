@@ -43,7 +43,6 @@ import {
     useRegisterUnpackedValue,
 } from "../../jacdac/useRegisterValue"
 import DeviceAvatar from "../devices/DeviceAvatar"
-import useBus from "../../jacdac/useBus"
 import useServices from "../hooks/useServices"
 import { jacscriptBridge } from "../blockly/dsl/workers/vm.proxy"
 import { OutPipe } from "../../../jacdac-ts/src/jdom/pipes"
@@ -96,7 +95,6 @@ function JacscriptExecutor(props: { service: JDService }) {
 function JacscriptEditorWithContext() {
     const { dsls, workspaceJSON, roleManager, setWarnings } =
         useContext(BlockContext)
-    const bus = useBus()
     const [program, setProgram] = useState<VMProgram>()
     const [jscProgram, setJscProgram] = useState<JacscriptProgram>()
     const [jscCompiled, setJscCompiled] = useState<JacscriptCompileResponse>()
@@ -110,7 +108,7 @@ function JacscriptEditorWithContext() {
 
     useEffect(() => {
         // start the bridge (and worker)
-        const _bridge = jacscriptBridge()
+        jacscriptBridge()
         // currently now way to stop it
         return () => {}
     }, [])
