@@ -35,13 +35,13 @@ export class WorkerProxy extends JDEventSource {
         this.worker.addEventListener("message", this.handleMessage)
     }
 
-    terminate() {
+    unmount() {
         delete _workers[this.workerid]
         this.worker.removeEventListener("message", this.handleMessage)
         this.worker.terminate()
-        Object.values(this.pendings).forEach(({ reject }) =>
-            reject(new Error("worker terminated"))
-        )
+        //Object.values(this.pendings).forEach(({ reject }) =>
+        //    reject(new Error("worker terminated"))
+        //)
     }
 
     private handleMessage(event: MessageEvent) {

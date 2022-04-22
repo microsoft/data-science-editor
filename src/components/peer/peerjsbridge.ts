@@ -15,7 +15,7 @@ export default class PeerJSBridge extends JDBridge {
     private _connections: DataConnection[] = []
 
     constructor() {
-        super()
+        super("peers")
 
         const { diagnostics } = Flags
         this._peer = new Peer({ secure: true, debug: diagnostics ? 4 : 0 })

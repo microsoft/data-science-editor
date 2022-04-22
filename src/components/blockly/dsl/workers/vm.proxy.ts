@@ -5,10 +5,7 @@ import type {
     VMPacketRequest,
 } from "../../../../workers/vm/dist/node_modules/vm-worker"
 import workerProxy, { WorkerProxy } from "./proxy"
-import {
-    CHANGE,
-    MESSAGE,
-} from "../../../../../jacdac-ts/src/jdom/constants"
+import { CHANGE, MESSAGE } from "../../../../../jacdac-ts/src/jdom/constants"
 import { JDBridge } from "../../../../../jacdac-ts/src/jdom/bridge"
 import bus from "../../../../jacdac/providerbus"
 
@@ -17,7 +14,7 @@ class JacscriptBridge extends JDBridge {
     variables: Record<string, number>
 
     constructor(readonly worker: WorkerProxy) {
-        super(true)
+        super("vm", true)
         worker.on(MESSAGE, (msg: VMRequest) => {
             const { type } = msg
             if (type === "packet") {
@@ -39,7 +36,7 @@ class JacscriptBridge extends JDBridge {
     }
 
     protected sendPacket(data: Uint8Array, sender: string): void {
-        //console.debug("vm.proxy: send packet to worker", toHex(data))
+        //console.debug(`vm.proxy: send ${sender} packet to worker`, toHex(data))
         this.worker.postMessage({
             worker: "vm",
             type: "packet",
@@ -47,14 +44,24 @@ class JacscriptBridge extends JDBridge {
             sender,
         })
     }
+
+    unmount() {
+        this.worker.unmount()
+    }
 }
 
 let bridge: JacscriptBridge
-export function jacscriptBridge() {
-    if (!bridge) {
-        const worker = workerProxy("vm")
-        bridge = new JacscriptBridge(worker)
-        bridge.bus = bus
+export function mountJacscriptBridge() {
+    if (bridge) throw new Error("unmounted bridge")
+    const worker = workerProxy("vm")
+    const b = (bridge = new JacscriptBridge(worker))
+    bridge.bus = bus
+    return () => {
+        bridge = undefined
+        b.unmount()
     }
+}
+
+export function jacscriptBridge() {
     return bridge
 }

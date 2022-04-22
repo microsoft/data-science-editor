@@ -44,7 +44,7 @@ import {
 } from "../../jacdac/useRegisterValue"
 import DeviceAvatar from "../devices/DeviceAvatar"
 import useServices from "../hooks/useServices"
-import { jacscriptBridge } from "../blockly/dsl/workers/vm.proxy"
+import { mountJacscriptBridge } from "../blockly/dsl/workers/vm.proxy"
 import { OutPipe } from "../../../jacdac-ts/src/jdom/pipes"
 
 const JACSCRIPT_EDITOR_ID = "jcs"
@@ -106,13 +106,7 @@ function JacscriptEditorWithContext() {
     )
     const service = services[0]
 
-    useEffect(() => {
-        // start the bridge (and worker)
-        jacscriptBridge()
-        // currently now way to stop it
-        return () => {}
-    }, [])
-
+    useEffect(() => mountJacscriptBridge(), [])
     useEffect(() => {
         try {
             const newProgram = workspaceJSONToJacscriptProgram(

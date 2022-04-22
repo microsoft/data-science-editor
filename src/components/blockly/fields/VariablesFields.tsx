@@ -26,7 +26,7 @@ const Root = styled("div")(({ theme }) => ({
 }))
 
 function VariablesWidget() {
-    const bridge = useMemo(() => jacscriptBridge(), [])
+    const bridge = jacscriptBridge()
     const variables = useChange(bridge, _ => _?.variables)
 
     if (!variables) return null
