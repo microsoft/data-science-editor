@@ -11,7 +11,6 @@ const ConnectTransportDialog = lazy(
     () => import("../dialogs/ConnectTransportDialog")
 )
 
-
 function DisconnectedButton(props: {
     full?: "disconnected" | "always"
     className?: string
@@ -103,9 +102,11 @@ export default function ConnectButtons(props: {
                         ))}
                 </>
             )}
-            <Suspense>
-                <ConnectTransportDialog open={open} onClose={handleClose} />
-            </Suspense>
+            {open && (
+                <Suspense>
+                    <ConnectTransportDialog open={open} onClose={handleClose} />
+                </Suspense>
+            )}
         </>
     )
 }

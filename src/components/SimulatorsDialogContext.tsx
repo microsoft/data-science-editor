@@ -45,13 +45,15 @@ export const SimulatorDialogsProvider = ({ children }) => {
             }}
         >
             {children}
-            <Suspense>
-                <StartSimulatorDialog
-                    open={showDeviceHostsDialog}
-                    onClose={toggleShowDeviceHostsDialog}
-                    sensor={showDeviceHostsSensors}
-                />
-            </Suspense>
+            {showDeviceHostsDialog && (
+                <Suspense>
+                    <StartSimulatorDialog
+                        open={showDeviceHostsDialog}
+                        onClose={toggleShowDeviceHostsDialog}
+                        sensor={showDeviceHostsSensors}
+                    />
+                </Suspense>
+            )}
         </SimulatorDialogsContext.Provider>
     )
 }
