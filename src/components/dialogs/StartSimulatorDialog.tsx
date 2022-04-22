@@ -140,7 +140,7 @@ export default function StartSimulatorDialog(props: {
 
     useEffect(() => {
         search?.(query)
-    }, [search, query])
+    }, [query])
 
     const results = (!query ? documents : searchResults) || documents
 

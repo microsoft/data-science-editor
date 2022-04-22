@@ -22,7 +22,6 @@ export default function Suspense(props: {
             {
                 retry++
                 const status: number = (children as any).type?._payload?._status
-                //console.log({ status, retry })
                 if (!mounted || status === undefined || retry > 20) return
                 else if (status >= 1) setState(() => true)
                 else setTimeout(check, 200 + retry * 100)
