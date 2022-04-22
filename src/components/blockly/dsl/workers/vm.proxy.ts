@@ -23,11 +23,6 @@ class JacscriptBridge extends JDBridge {
                 const { type } = msg
                 if (type === "packet") {
                     const { data } = msg as VMPacketRequest
-                    console.debug(
-                        `vm.proxy ${this.bridgeId}: received ${this
-                            .recvCount++}`,
-                        toHex(data)
-                    )
                     bridge.receiveFrameOrPacket(data)
                 } else if (type === "state") {
                     const { state, variables } = msg as VMStateResponse
@@ -46,10 +41,6 @@ class JacscriptBridge extends JDBridge {
     }
 
     protected sendPacket(data: Uint8Array, sender: string): void {
-        console.debug(
-            `vm.proxy ${this.bridgeId}: send ${this.sendCount++}`,
-            toHex(data)
-        )
         this.worker.postMessage({
             worker: "vm",
             type: "packet",
