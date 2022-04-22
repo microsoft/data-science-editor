@@ -57,7 +57,7 @@ export default function DashboardRealTimeClock(props: DashboardServiceProps) {
                             tabIndex={0}
                             role="timer"
                             aria-label={date}
-                            variant="h6"
+                            variant="subtitle2"
                         >
                             {date}
                         </Typography>
@@ -68,7 +68,7 @@ export default function DashboardRealTimeClock(props: DashboardServiceProps) {
                             tabIndex={0}
                             role="timer"
                             aria-label={time}
-                            variant="h4"
+                            variant="subtitle1"
                         >
                             {time}
                         </Typography>

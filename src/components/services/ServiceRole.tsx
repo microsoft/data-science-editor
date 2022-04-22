@@ -1,6 +1,7 @@
 import { Button, styled } from "@mui/material"
 import React, { lazy, useState } from "react"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import { ellipse } from "../../../jacdac-ts/src/jdom/utils"
 import useChange from "../../jacdac/useChange"
 import Suspense from "../ui/Suspense"
 import useRoleManagerClient from "./useRoleManagerClient"
@@ -30,8 +31,12 @@ export default function ServiceRole(props: { service: JDService }) {
 
     return (
         <>
-            <RoleButton size="small" onClick={handleOpen}>
-                {role || "..."}
+            <RoleButton
+                title="Choose role for service"
+                size="small"
+                onClick={handleOpen}
+            >
+                {ellipse(role || "...", 16)}
             </RoleButton>
             {showSelectRoleDialog && (
                 <Suspense>
