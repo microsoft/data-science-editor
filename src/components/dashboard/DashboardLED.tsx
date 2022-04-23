@@ -9,7 +9,7 @@ import {
     RENDER,
     REPORT_UPDATE,
 } from "../../../jacdac-ts/src/jdom/constants"
-import ColorButtons from "../widgets/ColorButtons"
+import ColorButtons, { DEFAULT_COLORS } from "../widgets/ColorButtons"
 import useRegister from "../hooks/useRegister"
 import SettingsIcon from "@mui/icons-material/Settings"
 import RegisterInput from "../RegisterInput"
@@ -44,7 +44,7 @@ export default function DashboardLED(props: DashboardServiceProps) {
     const { service, services, visible } = props
     const pixelsRegister = useRegister(service, LedReg.Pixels)
     const hasData = useChange(pixelsRegister, _ => !!_?.data)
-    const [penColor, setPenColor] = useState<number>(undefined)
+    const [penColor, setPenColor] = useState<number>(DEFAULT_COLORS[0].value)
     const [configure, setConfigure] = useState(false)
     const colorsRef = useRef<Uint8Array>(new Uint8Array(0))
     const clientRef = useRef(new JDEventSource())
@@ -74,17 +74,18 @@ export default function DashboardLED(props: DashboardServiceProps) {
         numColumns: LedReg.NumColumns,
     }
 
-    useEffect(
-        () =>
-            pixelsRegister?.subscribe(REPORT_UPDATE, () => {
-                const [pixels] = pixelsRegister.unpackedValue
-                if (pixels && !bufferEq(colorsRef.current, pixels)) {
-                    colorsRef.current = pixels.slice(0)
-                    clientRef.current.emit(RENDER)
-                }
-            }),
-        [pixelsRegister]
-    )
+    useEffect(() => {
+        if (!pixelsRegister) return undefined
+        const updatePixels = () => {
+            const [pixels] = pixelsRegister.unpackedValue
+            if (pixels && !bufferEq(colorsRef.current, pixels)) {
+                colorsRef.current = pixels.slice(0)
+                clientRef.current.emit(RENDER)
+            }
+        }
+        updatePixels()
+        return pixelsRegister.subscribe(REPORT_UPDATE, updatePixels)
+    }, [pixelsRegister])
     const colors: () => Uint8Array = useCallback(() => colorsRef.current, [])
     const subscribeColors = useCallback(
         handler => clientRef.current.subscribe(RENDER, handler),
