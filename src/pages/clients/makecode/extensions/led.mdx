@@ -1,31 +1,43 @@
-# Single LED Pixel
+# LED
 
-This extension provides methods for working with a single
-LED. The `animate` method smoothly transitions to a RGB
-color (red = `0xff0000`, green = `0x00ff00`, blue = `0x0000ff`).
+The LED pixel extension provides methods for working with a fixed, small strip of programmable RGB LEDs. 
+For module with a large or variable number of LEDs, see the [LED strip](/clients/makecode/extensions/ledstrip/) service.
+
+## Direct control of pixels
+
+All the pixels can be set to a color using the `setAll` method:
 
 ```blocks
-input.onButtonPressed(Button.A, function () {
-    modules.led1.animate(0xff0000, 28)
+input.onButtonPressed(Button.A, () => {
+    modules.led1.setAll(0x00ff00)
 })
-input.onButtonPressed(Button.B, function () {
-    modules.led1.animate(0x007fff, 58)
-})
-input.onButtonPressed(Button.AB, function () {
-    modules.led1.animate(0x000000, 0)
+input.onButtonPressed(Button.B, () => {
+    modules.led1.setAll(0xff0000)
 })
 ```
 
-The composite color value (`color`) and individual RGB color values
-(`red`, `green`, `blue`) can be retrieved in JavaScript as follows:
+The brightness can be set and retrieved as follows:
 
-```typescript
-input.onButtonPressed(Button.A, function () {
-    modules.led1.animate(0x7f00ff, 10)
+```blocks
+input.onButtonPressed(Button.A, () => {
+    modules.led1.setBrightness(85)
+    let brightness = modules.led1.brightness()
+    basic.showNumber(brightness)
 })
-input.onButtonPressed(Button.B, function () {
-    // should print 127
-    basic.showNumber(modules.led1.red)
+```
+
+Pixels can be individually set using the `setPixel` method as shown in the
+example below, which also uses the `numPixels` method to get the number
+of pixels supported by the underlying hardware.
+
+```blocks
+input.onButtonPressed(Button.A, () => {
+    modules.led1.setAll(0)
+    let n = modules.led1.numPixels()
+    for(let i = 0; i <= n - 1; i++) {
+        modules.led1.setPixel(i, 0x00ff00)
+        basic.pause(200)
+    }
 })
 ```
 

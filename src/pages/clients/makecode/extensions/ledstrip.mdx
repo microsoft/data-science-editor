@@ -1,8 +1,8 @@
-# LED Pixel Strip
+# LED Strip
 
 The LED pixel extension provides methods for working with
 a strip of programmable RGB LEDs. 
-For module with a fixed, small number of LEDs, see the [LED display](/clients/makecode/extensions/leddisplay/) service.
+For module with a fixed, small number of LEDs, see the [LED](/clients/makecode/extensions/led/) service.
 
 ## Direct control of pixels
 
@@ -27,21 +27,6 @@ input.onButtonPressed(Button.A, () => {
 })
 ```
 
-Pixels can be individually set using the `setPixel` method as shown in the
-example below, which also uses the `numPixels` method to get the number
-of pixels supported by the underlying hardware.
-
-```blocks
-input.onButtonPressed(Button.A, () => {
-    modules.ledStrip1.setAll(0)
-    let n = modules.ledStrip1.numPixels()
-    for(let i = 0; i <= n - 1; i++) {
-        modules.ledStrip1.setPixel(i, 0x00ff00)
-        basic.pause(200)
-    }
-})
-```
-
 ## Built-in Animations
 
 The MakeCode extension provides support for a set of animations
@@ -58,7 +43,7 @@ input.onButtonPressed(Button.B, () => {
 
 ## Commands
 
-The [LED pixel service](/services/ledpixel) has
+The [LED service](/services/ledstrip) has
 a small command language that can be used to create your own animations
 and effects.
 
