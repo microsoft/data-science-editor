@@ -35,7 +35,7 @@ input.onButtonPressed(Button.A, () => {
     modules.led1.setAll(0)
     let n = modules.led1.numPixels()
     for(let i = 0; i <= n - 1; i++) {
-        modules.led1.setPixel(i, 0x00ff00)
+        modules.led1.setPixelColor(i, 0x00ff00)
         basic.pause(200)
     }
 })
