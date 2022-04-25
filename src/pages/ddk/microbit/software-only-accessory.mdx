@@ -95,13 +95,15 @@ namespace modules {
      */
     //% fixedInstance whenUsed block="thing light level"
     export const thingLightLevel = new LightLevelClient(
-        "thing light level?device=self"
+        "thing light level?dev=self"
     )
 }
 ```
 
 -   make sure to update the `thing light level` name in the comment, and contructor string
--   make sure to add `?device=self` to the contructor name
+-   make sure to add `?dev=self` to the contructor name
+-   if you have multiple services with the same service class, like multiple buttons or motors 
+add the service offset, 0-based index through those services, e.g `&srvo=1` 
 -   test your extension, you should be able to use the simulator and the hardware values!
 
 > Don't forget to create a release so that your latest code changes are picked up by MakeCode!
