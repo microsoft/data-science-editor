@@ -59,10 +59,13 @@ function JacscriptManagerToolbar(
             <Grid item>
                 <CmdButton
                     disabled={disabled}
+                    variant="outlined"
                     title={running ? "running" : "stopped"}
                     onClick={running ? handleStop : handleRun}
                     icon={running ? <StopIcon /> : <PlayArrowIcon />}
-                />
+                >
+                    {running ? "stop" : "start"}
+                </CmdButton>
             </Grid>
             <Grid item>
                 <SwitchWithLabel
