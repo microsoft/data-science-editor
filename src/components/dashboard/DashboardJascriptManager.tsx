@@ -70,7 +70,7 @@ function JacscriptManagerToolbar(
             <Grid item>
                 <SwitchWithLabel
                     label="auto start"
-                    checked={autoStart}
+                    checked={autoStart || false}
                     disabled={autoStart === undefined}
                     onChange={handleAutoStartChange}
                 />
@@ -78,7 +78,7 @@ function JacscriptManagerToolbar(
             <Grid item>
                 <SwitchWithLabel
                     label="logging"
-                    checked={logging}
+                    checked={logging || false}
                     disabled={logging === undefined}
                     onChange={handleLoggingChange}
                 />
