@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useEffect, useState } from "react"
+import React, {
+    createContext,
+    useContext,
+    useEffect,
+    useLayoutEffect,
+    useState,
+} from "react"
 import { ERROR } from "../../jacdac-ts/src/jdom/constants"
 import { Packet } from "../../jacdac-ts/src/jdom/packet"
 import { isCancelError } from "../../jacdac-ts/src/jdom/utils"
@@ -69,6 +75,11 @@ export const AppProvider = ({ children }) => {
             }),
         []
     )
+
+    useLayoutEffect(() => {
+        if (typeof window !== "undefined")
+            setTimeout(() => window.dispatchEvent(new Event("resize")), 1000)
+    }, [type, toolsMenu])
 
     return (
         <AppContext.Provider
