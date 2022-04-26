@@ -1,4 +1,4 @@
-import { Chip, Grid, NoSsr } from "@mui/material"
+import { Grid, NoSsr } from "@mui/material"
 import React, {
     useCallback,
     useContext,
@@ -31,21 +31,10 @@ import {
 import useEffectAsync from "../useEffectAsync"
 import { jacscriptCompile } from "../blockly/dsl/workers/jacscript.proxy"
 import type { JacscriptCompileResponse } from "../../workers/jacscript/jacscript-worker"
-import useRegister from "../hooks/useRegister"
-import {
-    JacscriptManagerCmd,
-    JacscriptManagerReg,
-    SRV_JACSCRIPT_MANAGER,
-} from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
-import { JDService } from "../../../jacdac-ts/src/jdom/service"
-import {
-    useRegisterBoolValue,
-    useRegisterUnpackedValue,
-} from "../../jacdac/useRegisterValue"
-import DeviceAvatar from "../devices/DeviceAvatar"
+import { SRV_JACSCRIPT_MANAGER } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import useServices from "../hooks/useServices"
 import { mountJacscriptBridge } from "../blockly/dsl/workers/vm.proxy"
-import { OutPipe } from "../../../jacdac-ts/src/jdom/pipes"
+import JacscriptManagerChip from "./JacscriptManagerChip"
 
 const JACSCRIPT_EDITOR_ID = "jcs"
 const JACSCRIPT_SOURCE_STORAGE_KEY = "tools:jacscripteditor"
@@ -53,44 +42,6 @@ const JACSCRIPT_NEW_FILE_CONTENT = JSON.stringify({
     editor: JACSCRIPT_EDITOR_ID,
     xml: "",
 } as WorkspaceFile)
-
-function JacscriptExecutor(props: { service: JDService }) {
-    const { service } = props
-
-    const runningRegister = useRegister(service, JacscriptManagerReg.Running)
-    const programSizeRegister = useRegister(
-        service,
-        JacscriptManagerReg.ProgramSize
-    )
-
-    const running = useRegisterBoolValue(runningRegister)
-    const [programSize] =
-        useRegisterUnpackedValue<[number]>(programSizeRegister)
-
-    const stopped = !running
-    const disabled = !service || !programSize
-
-    const handleRun = () => runningRegister?.sendSetBoolAsync(true, true)
-    const handleStop = () => runningRegister?.sendSetBoolAsync(false, true)
-
-    const label = disabled ? "..." : running ? "stop" : "start"
-    const title = disabled
-        ? "loading..."
-        : running
-        ? "stop running code"
-        : "start running code"
-
-    return (
-        <Chip
-            label={label}
-            title={title}
-            variant={service ? undefined : "outlined"}
-            avatar={service && <DeviceAvatar device={service.device} />}
-            onClick={stopped ? handleRun : handleStop}
-            disabled={disabled}
-        />
-    )
-}
 
 function JacscriptEditorWithContext() {
     const { dsls, workspaceJSON, roleManager, setWarnings } =
@@ -101,10 +52,8 @@ function JacscriptEditorWithContext() {
     const { fileSystem } = useContext(FileSystemContext)
 
     // grab the first jacscript manager, favor physical services first
-    const services = useServices({ serviceClass: SRV_JACSCRIPT_MANAGER }).sort(
-        (l, r) => -(l.device.isPhysical ? 1 : 0) + (r.device.isPhysical ? 1 : 0)
-    )
-    const service = services[0]
+    const services = useServices({ serviceClass: SRV_JACSCRIPT_MANAGER })
+    const [manager, setManager] = useState(services[0])
 
     useEffect(() => mountJacscriptBridge(), [])
     useEffect(() => {
@@ -144,17 +93,9 @@ function JacscriptEditorWithContext() {
         },
         [jscProgram]
     )
-    useEffectAsync(async () => {
-        const { binary, debugInfo } = jscCompiled || {}
-        if (!service) return
-        await OutPipe.sendBytes(
-            service,
-            JacscriptManagerCmd.DeployBytecode,
-            binary || new Uint8Array(0)
-        )
-        //if (jscCompiled) jacscriptCommand("start")
-        //else jacscriptCommand("stop")
-    }, [service, jscCompiled])
+
+    const handleSetSelected = service => () => setManager(service)
+
     return (
         <Grid container spacing={1}>
             <Grid item xs={12} sm={8}>
@@ -170,9 +111,16 @@ function JacscriptEditorWithContext() {
                     )}
                     <Grid item xs={12}>
                         <BlockRolesToolbar>
-                            <Grid item>
-                                <JacscriptExecutor service={service} />
-                            </Grid>
+                            {services.map(service => (
+                                <Grid item key={service.id}>
+                                    <JacscriptManagerChip
+                                        service={service}
+                                        selected={service === manager}
+                                        setSelected={handleSetSelected(service)}
+                                        jscCompiled={jscCompiled}
+                                    />
+                                </Grid>
+                            ))}
                         </BlockRolesToolbar>
                     </Grid>
                     <Grid item xs={12}>
