@@ -19,6 +19,7 @@ import {
     EventBlockDefinition,
     identityTransformData,
     InputDefinition,
+    loggingColour,
     OptionsInputDefinition,
     toolsColour,
     TWIN_BLOCK,
@@ -42,7 +43,7 @@ import {
     ServicesBaseDSL,
     toRoleType,
     LOG_BLOCK,
-    ROLE_BOUND_EVENT_BLOCK
+    ROLE_BOUND_EVENT_BLOCK,
 } from "./servicesbase"
 import { humanify } from "../../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import VariablesField from "../fields/VariablesFields"
@@ -127,13 +128,13 @@ export class ServicesBlockDomainSpecificLanguage
                                 type: "input_value",
                                 name: "color",
                                 check: "Number",
-                            }
+                            },
                         ],
                         values: {
                             color: {
                                 kind: "block",
                                 type: LEDColorField.SHADOW.type,
-                            }
+                            },
                         },
                         colour: this.serviceColor(service),
                         inputsInline: true,
@@ -144,7 +145,7 @@ export class ServicesBlockDomainSpecificLanguage
                         service,
                         expression: `$role.animate(($color >> 16) & 0xff, ($color >> 8) & 0xff, ($color >> 0) & 0xff, 0)`,
                         template: "custom",
-                        group: ''
+                        group: "",
                     }
             ),
             ...resolveService(SRV_SEVEN_SEGMENT_DISPLAY).map(
@@ -460,7 +461,9 @@ export class ServicesBlockDomainSpecificLanguage
                 tooltip: `Watch variables values`,
                 helpUrl: "",
                 template: "meta",
-            },   
+            },
+        ]
+        const loggerBlocks: BlockDefinition[] = [
             {
                 kind: "block",
                 type: LOG_BLOCK,
@@ -471,7 +474,7 @@ export class ServicesBlockDomainSpecificLanguage
                         name: "value",
                     },
                 ],
-                colour: toolsColour,
+                colour: loggingColour,
                 inputsInline: true,
                 previousStatement: CODE_STATEMENT_TYPE,
                 nextStatement: CODE_STATEMENT_TYPE,
@@ -484,6 +487,7 @@ export class ServicesBlockDomainSpecificLanguage
             ...this._serviceBlocks,
             ...this._eventFieldBlocks,
             ...this._roleBlocks,
+            ...loggerBlocks,
             ...toolsBlocks,
         ]
     }
@@ -522,9 +526,24 @@ export class ServicesBlockDomainSpecificLanguage
             ],
         }
 
-        const toolsCategory: CategoryDefinition = {
+        const loggingCategory: CategoryDefinition = {
             kind: "category",
-            name: "Tools",
+            name: "Logging",
+            colour: loggingColour,
+            contents: [
+                <BlockReference>{
+                    kind: "block",
+                    type: LOG_BLOCK,
+                    values: {
+                        value: { kind: "block", type: "text" },
+                    },
+                },
+            ],
+        }
+
+        const debugCategory: CategoryDefinition = {
+            kind: "category",
+            name: "Debug",
             colour: toolsColour,
             contents: [
                 <BlockReference>{
@@ -539,17 +558,15 @@ export class ServicesBlockDomainSpecificLanguage
                     kind: "block",
                     type: VARIABLES_BLOCK,
                 },
-                <BlockReference>{
-                    kind: "block",
-                    type: LOG_BLOCK,
-                    values: {
-                        value: { kind: "block", type: "text" },
-                    },
-                },                
             ],
         }
 
-        return [...clientServicesCategories, commonCategory, toolsCategory]
+        return [
+            ...clientServicesCategories,
+            commonCategory,
+            loggingCategory,
+            debugCategory,
+        ]
     }
 }
 const servicesDSL = new ServicesBlockDomainSpecificLanguage()
