@@ -10,8 +10,9 @@ import useDeviceFirmwareBlob from "../../components/firmware/useDeviceFirmwareBl
 export default function DeviceTestItem(props: {
     test: TestNode
     device: JDDevice
+    autoUpdate?: boolean
 }) {
-    const { device, test } = props
+    const { device, test, autoUpdate } = props
     const blob = useDeviceFirmwareBlob(device)
     return (
         <Grid container spacing={1}>
@@ -30,7 +31,7 @@ export default function DeviceTestItem(props: {
                                 device={device}
                                 blob={blob}
                                 hideUpToDate={true}
-                                autoStart={true}
+                                autoStart={autoUpdate}
                             />
                         </Grid>
                     )}

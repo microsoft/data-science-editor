@@ -19,9 +19,10 @@ import { isDualDeviceId } from "../../../jacdac-ts/src/jdom/spec"
 import PowerSupplySection from "../../components/testdom/PowerSupplySection"
 import ConnectAlert from "../../components/alert/ConnectAlert"
 import TabPanel from "../../components/ui/TabPanel"
+import AlertSwitch from "../../components/ui/AlertSwitch"
 
-function DeviceItem(props: { device: JDDevice }) {
-    const { device } = props
+function DeviceItem(props: { device: JDDevice; autoUpdate?: boolean }) {
+    const { device, autoUpdate } = props
     const productIdentifier = useDeviceProductIdentifier(device)
     const testSpec = useChange(
         device,
@@ -39,11 +40,14 @@ function DeviceItem(props: { device: JDDevice }) {
     )
     const test = useDeviceTest(device, testSpec)
     if (!device) return null
-    return <DeviceTestItem test={test} device={device} />
+    return (
+        <DeviceTestItem test={test} device={device} autoUpdate={autoUpdate} />
+    )
 }
 
 export default function Page() {
     const [tab, setTab] = useState(0)
+    const [autoUpdate, setAutoUpdate] = useState(false)
     const devices = useDevices({
         physical: true,
         announced: true,
@@ -62,6 +66,7 @@ export default function Page() {
     ) => {
         setTab(newValue)
     }
+    const handleAutoUpdateChange = checked => setAutoUpdate(checked)
 
     return (
         <>
@@ -81,7 +86,10 @@ export default function Page() {
                     <Grid container spacing={1}>
                         {devices?.map(device => (
                             <Grid key={device.id} item xs={12}>
-                                <DeviceItem device={device} />
+                                <DeviceItem
+                                    device={device}
+                                    autoUpdate={autoUpdate}
+                                />
                             </Grid>
                         ))}
                     </Grid>
@@ -97,6 +105,14 @@ export default function Page() {
             </TabPanel>
             <TabPanel value={tab} index={1}>
                 <FirmwareCardGrid />
+                <AlertSwitch
+                    severity="warning"
+                    checked={autoUpdate}
+                    onChecked={handleAutoUpdateChange}
+                    title="auto firmware update"
+                >
+                    Start firmware updates automatically when available.
+                </AlertSwitch>
                 <SafeBootAlert />
                 <ManualFirmwareAlert />
             </TabPanel>
