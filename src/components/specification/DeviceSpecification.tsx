@@ -15,9 +15,10 @@ import { semverCmp } from "../semver"
 import DeviceSpecificationList from "./DeviceSpecificationList"
 import StructuredData from "../ui/StructuredData"
 import useDeviceSpecifications from "../devices/useDeviceSpecifications"
-import { Button, Link } from "gatsby-theme-material-ui"
+import { Button } from "gatsby-theme-material-ui"
 import { uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
 import Alert from "../ui/Alert"
+import GithubRepositoryCard from "../github/GithubRepositoryCard"
 
 function DeviceStructuredData(props: { device: jdspec.DeviceSpec }) {
     const { device } = props
@@ -61,6 +62,7 @@ export default function DeviceSpecification(props: {
         company,
         productIdentifiers,
         repo,
+        makeCodeRepo,
         firmwares,
         version,
         designIdentifier,
@@ -99,11 +101,12 @@ export default function DeviceSpecification(props: {
                 {!!version && ` v${version}`}
                 {storeLink && (
                     <Button
+                        sx={{ marginLeft: 1 }}
                         href={storeLink}
-                        variant="contained"
+                        variant="outlined"
                         color="primary"
                     >
-                        Buy
+                        Buy Now
                     </Button>
                 )}
             </h2>
@@ -163,6 +166,17 @@ export default function DeviceSpecification(props: {
                 <>
                     <h3>Firmware</h3>
                     <FirmwareCard slug={repo} />
+                </>
+            )}
+            {makeCodeRepo && (
+                <>
+                    <h3>MakeCode Extension</h3>
+                    <GithubRepositoryCard
+                        slug={makeCodeRepo}
+                        showDescription={true}
+                        showDependencies={true}
+                        showMakeCodeButton={true}
+                    />
                 </>
             )}
             {!!firmwares && (

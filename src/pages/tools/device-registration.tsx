@@ -52,7 +52,6 @@ import useDeviceCatalog from "../../components/devices/useDeviceCatalog"
 import GridHeader from "../../components/ui/GridHeader"
 import { JD_SERVICE_INDEX_CTRL } from "../../../jacdac-ts/src/jdom/constants"
 import ClearIcon from "@mui/icons-material/Clear"
-import { withPrefix } from "gatsby"
 import { Link } from "gatsby-theme-material-ui"
 const GithubPullRequestButton = lazy(
     () => import("../../components/buttons/GithubPullRequestButton")
@@ -136,6 +135,7 @@ export default function DeviceRegistration() {
     const nameId = id + "-name"
     const firmwareMenuId = id + "-firmwaremenu"
     const repoId = id + "-repo"
+    const makeCodeRepoId = id + "-makecoderepo"
     const identifierId = id + "-identifier"
     const descriptionId = id + "-description"
     const homepageId = id + "-homepage"
@@ -143,6 +143,7 @@ export default function DeviceRegistration() {
     const designIdentifierId = id + "-designid"
     const hardwareDesignId = id + "-hwdesign"
     const firmwareSourceId = id + "-hwsource"
+    const storeLinkId = id + "-store"
     const specifications = useDeviceSpecifications({
         includeDeprecated: true,
         includeExperimental: true,
@@ -178,7 +179,11 @@ export default function DeviceRegistration() {
     const githubError =
         device.repo && !parsedRepo ? "invalid GitHub repository" : ""
     const linkError =
-        !device.link || /^https:\/\//.test(device.link)
+        !device.link || /^https:\/\//i.test(device.link)
+            ? ""
+            : "Must be https://..."
+    const storeLinkError =
+        !device.storeLink || /^https:\/\//i.test(device.storeLink)
             ? ""
             : "Must be https://..."
     const idError = !device.id
@@ -209,8 +214,11 @@ export default function DeviceRegistration() {
         updateDevice()
     }
     const handleRepoChange = (ev: unknown, newValue: string) => {
-        console.log(`new repo`, { newValue })
         device.repo = newValue
+        updateDevice()
+    }
+    const handleMakeCodeRepoChange = (ev: ChangeEvent<HTMLInputElement>) => {
+        device.makeCodeRepo = ev.target.value?.trim()
         updateDevice()
     }
     const handleLinkChange = (ev: ChangeEvent<HTMLInputElement>) => {
@@ -236,6 +244,9 @@ export default function DeviceRegistration() {
     const handleVersion = (ev: ChangeEvent<HTMLInputElement>) => {
         device.version = ev.target.value?.trim()
         updateDevice()
+    }
+    const handleStoreLinkChange = (ev: ChangeEvent<HTMLInputElement>) => {
+        device.storeLink = ev.target.value?.trim()
     }
     const handleFirmwareAddClick = (
         event: React.MouseEvent<HTMLButtonElement>
@@ -343,11 +354,11 @@ export default function DeviceRegistration() {
                 </IconButtonWithTooltip>
             </h1>
             <p>
-                Compose a device from various services, prepare the
+                Compose a device from various services, prepare the{" "}
                 <Link to="/ddk/device-definition/" underline="hover">
                     metadata
-                </Link>
-                and register it to the
+                </Link>{" "}
+                and register it to the{" "}
                 <Link to="/devices/" underline="hover">
                     Devices catalog
                 </Link>
@@ -534,13 +545,30 @@ export default function DeviceRegistration() {
                 <Grid item xs={12}>
                     <TextField
                         id={homepageId}
-                        label="Home page url"
+                        label="Home page URL"
                         error={!!linkError}
                         helperText={linkError}
                         fullWidth={true}
                         placeholder="https://..."
                         value={device.link || ""}
                         onChange={handleLinkChange}
+                        variant={variant}
+                        type="url"
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        id={storeLinkId}
+                        label="Store URL"
+                        error={!!storeLinkError}
+                        helperText={
+                            "URL where the device can be purchased" ||
+                            storeLinkError
+                        }
+                        fullWidth={true}
+                        placeholder="https://..."
+                        value={device.storeLink || ""}
+                        onChange={handleStoreLinkChange}
                         variant={variant}
                         type="url"
                     />
@@ -572,6 +600,17 @@ export default function DeviceRegistration() {
                         onInputChange={handleRepoChange}
                         options={companyRepos}
                         renderInput={renderRepoInput}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        id={makeCodeRepoId}
+                        fullWidth={true}
+                        helperText="URL to MakeCode extension"
+                        label="MakeCode extension"
+                        value={device?.makeCodeRepo}
+                        onChange={handleMakeCodeRepoChange}
+                        variant={variant}
                     />
                 </Grid>
                 <Grid item xs={12}>
