@@ -77,7 +77,7 @@ export default function DashboardLED(props: DashboardServiceProps) {
     useEffect(() => {
         if (!pixelsRegister) return undefined
         const updatePixels = () => {
-            const [pixels] = pixelsRegister.unpackedValue
+            const [pixels] = pixelsRegister.unpackedValue || []
             if (pixels && !bufferEq(colorsRef.current, pixels)) {
                 colorsRef.current = pixels.slice(0)
                 clientRef.current.emit(RENDER)
