@@ -186,7 +186,6 @@ export const ConsoleProvider = ({ children }) => {
     const [logs, setLogs] = useState([])
     const [autoScroll, setAutoScroll] = useState(true)
     const [sourceMap, setSourceMap] = useState<SourceMap>()
-    const { connected, connect, disconnect } = useConsoleSerial(sourceMap)
     const { trackTrace } = useAnalytics()
     const filter = useFilter()
 
@@ -199,6 +198,8 @@ export const ConsoleProvider = ({ children }) => {
             log,
         ])
     }, [])
+
+    const { connected, connect, disconnect } = useConsoleSerial(sourceMap, appendLog)
 
     useJacdacLogger(appendLog)
     useJacscriptManagerLogger(appendLog)
