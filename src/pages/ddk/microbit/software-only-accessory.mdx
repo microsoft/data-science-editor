@@ -1,6 +1,7 @@
 ---
 title: Software Only
 ---
+
 # micro:bit accessories with Software-Only Jacdac
 
 The accessory sensors and actuators are surfaced as Jacdac servers by wrapping the existing extension into a Jacdac compatibility layer.
@@ -16,7 +17,8 @@ This solution adds no cost and will work for existing accessories.
     -   micro:bit v2 only (Jacdac is not supported on v1)
 
 Here is a list of [Software Only Extension samples](/ddk/microbit/extension-samples/).
-## How to
+
+## Getting started
 
 For the purpose of this example, let's assume we have an extension `https://github.com/company/pxt-thing/` with blocks in the `thing` namespace.
 
@@ -25,8 +27,11 @@ For the purpose of this example, let's assume we have an extension `https://gith
 We are going to create a new _nested_ extension that adds Jacdac and hides the existing blocks.
 
 -   open https://makecode.microbit.org/beta/ **make sure to use the beta until all fixes are released**
--   import your repository url with **/jacdac** appended. This will create a new extension in the same repository (if you repo is https://github.com/company/pxt-thing/, import https://github.com/company/pxt-thing/jacdac).
--   rename the project to `jacdac-thing` where `thing` is the name of your package (replace `pxt-` with `jacdac-`)
+-   import your repository url with **/jacdac** appended. This will create a new extension in the same repository (if you repo is https://github.com/company/pxt-thing/, import https://github.com/company/pxt-thing/jacdac)
+
+    .
+
+-   rename the project to `thing-jacdac` where `thing` is the name of your package (remove `pxt-`)
 -   switch to **JavaScript**
 -   expand the **Explorer** view and delete `main.blocks`
 -   add the Jacdac extension to the project (search for `jacdac`)
@@ -37,14 +42,13 @@ We are going to create a new _nested_ extension that adds Jacdac and hides the e
 namespace TODO_REPLACE_THIS_WITH_BLOCK_NAMESPACE {}
 
 namespace modules {
-    // TODO:  add client fixed instances here
+    // TODO:  add client instances here
 }
 
 namespace servers {
     function start() {
         // TODO: update with new program identifier
         // jacdac.productIdentifier = ...
-
         jacdac.startSelfServers(() => [
             // TODO: instantiate servers here
         ])
@@ -71,9 +75,8 @@ namespace servers {
     function start() {
         jacdac.startSelfServers(() => [
             jacdac.createSimpleSensorServer(
-                "",
                 jacdac.SRV_LIGHT_LEVEL,
-                "u0.16",
+                jacdac.LightLevelRegPack.LightLevel,
                 () => thing.lightLevel() / 1023
             ),
         ])
@@ -102,18 +105,16 @@ namespace modules {
 
 -   make sure to update the `thing light level` name in the comment, and contructor string
 -   make sure to add `?dev=self` to the contructor name
--   if you have multiple services with the same service class, like multiple buttons or motors 
-add the service offset, 0-based index through those services, e.g `&srvo=1` 
 -   test your extension, you should be able to use the simulator and the hardware values!
 
 > Don't forget to create a release so that your latest code changes are picked up by MakeCode!
 
-### Step 3: Implement a custom server
+## Device Registration
 
-If your module requires to implement another server, please reach out to the jacdac team at
-https://github.com/microsoft/jacdac/discussions.
+To improve the user experience, register your accessory at https://microsoft.github.io/jacdac-docs/tools/device-registration/.
+The user will be able to see a picture of the device and get more information from the dashboard.
 
-### Step 4: Add product identifier
+### Step 1: Add product identifier
 
 A product identifier will allow Jacdac and MakeCode
 to provide a better experience to the user, like
@@ -123,7 +124,7 @@ integrate it into the source.
 
 -   generate a new product identifier
 
-    <RandomGenerator firmware={true} />
+<RandomGenerator firmware={true} />
 
 -   edit `main.ts` with the project identifier
 
@@ -137,13 +138,115 @@ namespace servers {
 }
 ```
 
-### Step 5: Register accessory and update device identifier
-
-To improve the user experience, register your accessory at https://microsoft.github.io/jacdac-docs/tools/device-registration/.
-The user will be able to see a picture of the device and get more information from the dashboard.
+### Step 2: Register device
 
 -   download your extension to a micro:bit
 -   open https://microsoft.github.io/jacdac-docs/tools/device-registration/
 -   connect to the micro:bit
 -   import the device information
 -   finish the registration
+
+## Advanced topics
+
+These customization are less common.
+
+### Implement a custom server
+
+If your module requires to implement another server, please reach out to the jacdac team at
+https://github.com/microsoft/jacdac/discussions.
+
+### Hardware Initialization
+
+Many accesories have to be initialized with a separate function call. 
+In such case, you should start the server in `initializing` state,
+run the hardware initization in the background and set the server to `ready` when done.
+Jacdac will not try to run the state of the sensor until it is ready.
+
+Back to our example, let's assume `thing.init()` needs to be called before any other function.
+We refactor the code as follows (see comments):
+
+```typescript
+namespace servers {
+    function start() {
+        ...
+        jacdac.startSelfServers(() => {
+            // step 1: store servers in array, we'll need those later
+            const servers = [
+                jacdac.createSimpleSensorServer(
+                    jacdac.SRV_LIGHT_LEVEL,
+                    jacdac.LightLevelRegPack.LightLevel,
+                    () => thing.lightLevel() / 1023,
+                    // step 2: start server in 'initializing' mode
+                    {
+                        statusCode: jacdac.SystemStatusCodes.Initializing
+                    }
+                ),
+            ]
+
+            // step 3: run initialization in background
+            control.runInBackground(() => {
+                // step 4: do native initialization
+                thing.init()
+                // step 5: tell servers hardware is ready
+                for(const server of servers)
+                    server.setStatusCode(jacdac.SystemStatusCode.Ready)
+            })
+
+            // step 5: return the servers
+            return servers
+        })
+    }
+    start()
+}
+```
+
+### Multiple same services
+
+If your device has multiple of the same service, like multiple buttons, servos, motors,
+you will want to make sure to explicitely specify the `service offset` in the role name.
+
+Going back to our example, let's assume that we have 2 light sensors on the device,
+where the second light sensor is read using `thing.lightLevel2()`.
+
+We start by add a second light level sensor in the `start` function.
+
+```typescript
+    function start() {
+        jacdac.startSelfServers(() => [
+            jacdac.createSimpleSensorServer(
+                jacdac.SRV_LIGHT_LEVEL,
+                jacdac.LightLevelRegPack.LightLevel,
+                () => thing.lightLevel() / 1023
+            ),
+            jacdac.createSimpleSensorServer(
+                jacdac.SRV_LIGHT_LEVEL,
+                jacdac.LightLevelRegPack.LightLevel,
+                () => thing.lightLevel2() / 1023
+            ),
+        ])
+    }
+```
+
+Then we add a second light level client in the `modules` section
+and we add `&srvo=...` arguments to the role name. `srvo` stands
+for the `service offset`, the index in the list of same service offset (not the absolute service index).
+In this case, the index in the list of light level services.
+
+```typescript
+namespace modules {
+    /**
+     * The thing light level sensor
+     */
+    //% fixedInstance whenUsed block="thing light level"
+    export const thingLightLevel = new LightLevelClient(
+        "thing light level1?dev=self&srvo=0"
+    )
+    /**
+     * The **second** thing light level sensor
+     */
+    //% fixedInstance whenUsed block="thing light level 2"
+    export const thingLightLevel = new LightLevelClient(
+        "thing light level 2?dev=self&srvo=1"
+    )
+}
+```
