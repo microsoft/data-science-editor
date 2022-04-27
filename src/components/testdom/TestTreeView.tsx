@@ -55,6 +55,7 @@ function TestTreeItem(props: TestNodeProps) {
     const label = useChange(node, _ => _?.label)
     const info = useChange(node, _ => _?.info)
     const output = useChange(node, _ => _?.output)
+    const factory = useChange(node, _ => _?.factory)
     const description = useChange(node, _ => _?.description)
     const manualSteps = useChange(node, _ => _?.manualSteps)
     const state = useChange(node, _ => _?.state)
@@ -91,13 +92,15 @@ function TestTreeItem(props: TestNodeProps) {
                         labelText={prepareStep}
                         icon={<PanToolIcon fontSize="small" color="warning" />}
                         actions={
-                            <Button
-                                variant="contained"
-                                color="warning"
-                                onClick={handlePrepared}
-                            >
-                                Test
-                            </Button>
+                            !factory ? (
+                                <Button
+                                    variant="contained"
+                                    color="warning"
+                                    onClick={handlePrepared}
+                                >
+                                    Test
+                                </Button>
+                            ) : undefined
                         }
                     />
                 )}
@@ -107,23 +110,25 @@ function TestTreeItem(props: TestNodeProps) {
                     labelText={validateStep}
                     icon={<PanToolIcon fontSize="small" color="warning" />}
                     actions={
-                        <>
-                            <Button
-                                sx={{ marginRight: 0.5 }}
-                                variant="contained"
-                                color="success"
-                                onClick={handlePass}
-                            >
-                                Pass
-                            </Button>
-                            <Button
-                                variant="contained"
-                                color="error"
-                                onClick={handleFail}
-                            >
-                                Fail
-                            </Button>{" "}
-                        </>
+                        !factory ? (
+                            <>
+                                <Button
+                                    sx={{ marginRight: 0.5 }}
+                                    variant="contained"
+                                    color="success"
+                                    onClick={handlePass}
+                                >
+                                    Pass
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    color="error"
+                                    onClick={handleFail}
+                                >
+                                    Fail
+                                </Button>{" "}
+                            </>
+                        ) : undefined
                     }
                 />
             )}

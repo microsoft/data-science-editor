@@ -17,12 +17,12 @@ import SafeBootAlert from "../../components/firmware/SafeBootAlert"
 import ManualFirmwareAlert from "../../components/firmware/ManualFirmwareAlert"
 import { isDualDeviceId } from "../../../jacdac-ts/src/jdom/spec"
 import PowerSupplySection from "../../components/testdom/PowerSupplySection"
-import ConnectAlert from "../../components/alert/ConnectAlert"
 import TabPanel from "../../components/ui/TabPanel"
 import AlertSwitch from "../../components/ui/AlertSwitch"
+import useProxy from "../../jacdac/useProxy"
 
-function DeviceItem(props: { device: JDDevice; autoUpdate?: boolean }) {
-    const { device, autoUpdate } = props
+function DeviceItem(props: { device: JDDevice; factory?: boolean, autoUpdate?: boolean }) {
+    const { device, factory, autoUpdate } = props
     const productIdentifier = useDeviceProductIdentifier(device)
     const testSpec = useChange(
         device,
@@ -32,11 +32,12 @@ function DeviceItem(props: { device: JDDevice; autoUpdate?: boolean }) {
             productIdentifier &&
             ({
                 productIdentifier,
+                factory,
                 services: device.serviceClasses
                     .filter(filterTestService)
                     .map(sc => ({ serviceClass: sc })),
             } as DeviceTestSpec),
-        [productIdentifier]
+        [productIdentifier, factory]
     )
     const test = useDeviceTest(device, testSpec)
     if (!device) return null
@@ -48,6 +49,12 @@ function DeviceItem(props: { device: JDDevice; autoUpdate?: boolean }) {
 export default function Page() {
     const [tab, setTab] = useState(0)
     const [autoUpdate, setAutoUpdate] = useState(false)
+    const [factory, setFactory] = useState(false)
+
+    // don't let a brain interfere
+    useProxy(true)
+
+    const handleSetFactory = (checked: boolean) => setFactory(checked)
     const devices = useDevices({
         physical: true,
         announced: true,
@@ -88,20 +95,27 @@ export default function Page() {
                             <Grid key={device.id} item xs={12}>
                                 <DeviceItem
                                     device={device}
+                                    factory={factory}
                                     autoUpdate={autoUpdate}
                                 />
                             </Grid>
                         ))}
                     </Grid>
                 ) : (
-                    <>
-                        <p>
-                            Connect your device and follow the instructions to
-                            run a compliance test.
-                        </p>
-                        <ConnectAlert />
-                    </>
+                    <p>
+                        Connect your device and follow the instructions to run a
+                        compliance test.
+                    </p>
                 )}
+                <AlertSwitch
+                    severity="info"
+                    title="factory mode"
+                    checked={factory}
+                    onChecked={handleSetFactory}
+                >
+                    Tests should be fast and automated in factory mode. Manual
+                    tests are disabled.
+                </AlertSwitch>
             </TabPanel>
             <TabPanel value={tab} index={1}>
                 <FirmwareCardGrid />
