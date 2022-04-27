@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react"
-import { REPORT_UPDATE } from "../../../jacdac-ts/src/jdom/constants"
+import { REPORT_RECEIVE } from "../../../jacdac-ts/src/jdom/constants"
 import { JDRegister } from "../../../jacdac-ts/src/jdom/register"
 import useAnimationFrame from "../hooks/useAnimationFrame"
 import useServiceServer from "../hooks/useServiceServer"
@@ -29,7 +29,7 @@ export default function TrendWidget(props: {
 
     useEffect(() => {
         dataRef.current = register ? [] : undefined // reset data
-        return register?.subscribe(REPORT_UPDATE, () => {
+        return register?.subscribe(REPORT_RECEIVE, () => {
             // register new value
             const [v] = register.unpackedValue as [number]
             const data = dataRef.current
