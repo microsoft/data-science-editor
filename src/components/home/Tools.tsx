@@ -92,7 +92,7 @@ export default function Tools() {
             />
 
             <SplitGrid
-                right={false}
+                right={true}
                 subtitle="Data collector."
                 description="Record any register data into a CSV file."
                 buttonText="Collect data"
@@ -106,8 +106,8 @@ export default function Tools() {
                 }
             />
 
-<SplitGrid
-                right={true}
+            <SplitGrid
+                right={false}
                 subtitle="Device Tester."
                 description="A compliance test suite for module development or the factory floor."
                 buttonText="Test your device"
