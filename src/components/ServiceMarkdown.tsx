@@ -29,7 +29,7 @@ function ServiceButtons(props: {
                 <Button
                     color="secondary"
                     variant="contained"
-                    to={`/tools/module-tester/`}
+                    to={`/tools/device-tester/`}
                 >
                     Test
                 </Button>

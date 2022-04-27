@@ -176,8 +176,8 @@ export default function ToolsDrawer() {
             icon: <TextSnippetIcon />,
         },
         {
-            text: "Module Tester",
-            to: "/tools/module-tester/",
+            text: "Device Tester",
+            to: "/tools/device-tester/",
             icon: <BugReportIcon />,
         },
         {

@@ -109,6 +109,18 @@ async function createServicePages(graphql, actions, reporter) {
     })
 }
 
+async function createRedirects(actions) {
+    const { createRedirect } = actions
+    const rs = [
+        {
+            fromPath: `/tools/module-tester/`,
+            toPath: `/tools/device-tester/`,
+            isPermanent: true,
+        },
+    ]
+    rs.map(createRedirect)
+}
+
 async function createDeviceQRPages(actions) {
     console.log(`generating device QR pages`)
     const { createRedirect } = actions
@@ -363,7 +375,6 @@ async function createVersions() {
 // access to any information necessary to programmatically
 // create pages.
 exports.createPages = async ({ graphql, actions, reporter }) => {
-    const { createRedirect } = actions
     await generateServicesJSON()
     await createServicePages(graphql, actions, reporter)
     await createSpecPages(graphql, actions, reporter)
@@ -371,7 +382,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     await createDeviceQRPages(actions, reporter)
     await createWorkers()
     await createVersions()
-    // createRedirect({ fromPath: '', toPath: '/overview/', isPermanent: true });
+    await createRedirects(actions)
 }
 
 exports.onCreateNode = ({ node, actions, getNode }) => {
