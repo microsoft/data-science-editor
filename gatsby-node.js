@@ -115,7 +115,6 @@ async function createRedirects(actions) {
         {
             fromPath: `/tools/module-tester/`,
             toPath: `/tools/device-tester/`,
-            isPermanent: true,
         },
     ]
     rs.forEach(createRedirect)
