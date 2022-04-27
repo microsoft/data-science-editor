@@ -343,7 +343,8 @@ export class IFrameBridgeClient extends JDClient {
                 )
             )
         )
-        const dependencies = Object.values(this._runOptions?.dependencies || {})
+        const runtimeDependencies = this._runOptions?.dependencies || {}
+        const dependencies = Object.values(runtimeDependencies)
             .filter(d => /^github:/.test(d))
             .map(d => /^github:([^#]+)(#.?)?/.exec(d)[1])
         if (dependencies?.length > 0) {
@@ -354,6 +355,7 @@ export class IFrameBridgeClient extends JDClient {
             })
         }
 
+        console.debug(`candidate extensions`, { extensions, dependencies, runtimeDependencies })
         return extensions
     }
 
