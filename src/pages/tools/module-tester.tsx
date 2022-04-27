@@ -21,7 +21,11 @@ import TabPanel from "../../components/ui/TabPanel"
 import AlertSwitch from "../../components/ui/AlertSwitch"
 import useProxy from "../../jacdac/useProxy"
 
-function DeviceItem(props: { device: JDDevice; factory?: boolean, autoUpdate?: boolean }) {
+function DeviceItem(props: {
+    device: JDDevice
+    factory?: boolean
+    autoUpdate?: boolean
+}) {
     const { device, factory, autoUpdate } = props
     const productIdentifier = useDeviceProductIdentifier(device)
     const testSpec = useChange(
@@ -116,9 +120,6 @@ export default function Page() {
                     Tests should be fast and automated in factory mode. Manual
                     tests are disabled.
                 </AlertSwitch>
-            </TabPanel>
-            <TabPanel value={tab} index={1}>
-                <FirmwareCardGrid />
                 <AlertSwitch
                     severity="warning"
                     checked={autoUpdate}
@@ -127,6 +128,9 @@ export default function Page() {
                 >
                     Start firmware updates automatically when available.
                 </AlertSwitch>
+            </TabPanel>
+            <TabPanel value={tab} index={1}>
+                <FirmwareCardGrid />
                 <SafeBootAlert />
                 <ManualFirmwareAlert />
             </TabPanel>
