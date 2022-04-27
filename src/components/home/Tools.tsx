@@ -97,11 +97,26 @@ export default function Tools() {
                 description="Record any register data into a CSV file."
                 buttonText="Collect data"
                 buttonVariant="link"
-                buttonUrl="/tools/collector"
+                buttonUrl="/tools/collector/"
                 image={
                     <StaticImage
                         src="./recordit.png"
                         alt="Data collector user interface"
+                    />
+                }
+            />
+
+<SplitGrid
+                right={true}
+                subtitle="Device Tester."
+                description="A compliance test suite for module development or the factory floor."
+                buttonText="Test your device"
+                buttonVariant="link"
+                buttonUrl="/tools/device-tester/"
+                image={
+                    <StaticImage
+                        src="./device-tester.png"
+                        alt="Device Tester contains a device twin of a device and a tree of unit tests"
                     />
                 }
             />
