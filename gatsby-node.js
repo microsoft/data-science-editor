@@ -118,7 +118,7 @@ async function createRedirects(actions) {
             isPermanent: true,
         },
     ]
-    rs.map(createRedirect)
+    rs.forEach(createRedirect)
 }
 
 async function createDeviceQRPages(actions) {
