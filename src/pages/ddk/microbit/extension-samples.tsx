@@ -3,24 +3,26 @@ import GithubRepositoryList from "../../../components/github/GithubRespositoryLi
 
 export default function Samples() {
     const repos = [
-        "pelikhan/pxt-makerbit-motor",
-        "pelikhan/pxt-makerbit-touch",
-        "pelikhan/pxt-makerbit-lcd1602",
+        "pelikhan/pxt-makerbit-motor/jacdac",
+        "pelikhan/pxt-makerbit-touch/jacdac",
+        "pelikhan/pxt-makerbit-lcd1602/jacdac",
 
-        "pelikhan/pxt-kitronik-air-quality",
-        "pelikhan/pxt-kitronik-stopbit",
-        "pelikhan/pxt-kitronik-viewtext32",
-        "pelikhan/pxt-kitronik-lampbit",
-        "pelikhan/pxt-kitronik-simple-servo",
-        "pelikhan/pxt-kitronik-motor-driver",
+        "pelikhan/pxt-kitronik-air-quality/jacdac",
+        "pelikhan/pxt-kitronik-stopbit/jacdac",
+        "pelikhan/pxt-kitronik-viewtext32/jacdac",
+        "pelikhan/pxt-kitronik-lampbit/jacdac",
+        "pelikhan/pxt-kitronik-simple-servo/jacdac",
+        "pelikhan/pxt-kitronik-motor-driver/jacdac",
 
-        "pelikhan/monkmakes-7-segment",
+        "pelikhan/monkmakes-7-segment/jacdac",
 
-        "pelikhan/pxt-envirobit",
-        "pelikhan/pxt-weather-bit",
+        "pelikhan/pxt-envirobit/jacdac",
+        "pelikhan/pxt-weather-bit/jacdac",
 
-        "pelikhan/pxt-robotbit",
-    ].map(r => `${r}/jacdac`)
+        "pelikhan/pxt-robotbit/jacdac",
+
+        "pelikhan/yahboom-microbit-led-jacdac/"
+    ]
     return (
         <>
             <h1>MakeCode/Jacdac accessory extension samples</h1>
