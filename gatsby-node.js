@@ -113,11 +113,11 @@ async function createRedirects(actions) {
     const { createRedirect } = actions
     const rs = [
         {
-            fromPath: `/tools/module-tester/`,
-            toPath: `/tools/device-tester/`,
+            fromPath: `/tools/module-tester`,
+            toPath: `/tools/device-tester`,
         },
     ]
-    rs.forEach(createRedirect)
+    rs.forEach(r => createRedirect(r))
 }
 
 async function createDeviceQRPages(actions) {
