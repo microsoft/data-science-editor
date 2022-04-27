@@ -1,4 +1,11 @@
-import { Button, Typography, Dialog, DialogContent, Grid } from "@mui/material"
+import {
+    Button,
+    Typography,
+    Dialog,
+    DialogContent,
+    Grid,
+    AlertTitle,
+} from "@mui/material"
 import { Alert } from "@mui/material"
 import React, { useEffect, useState } from "react"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
@@ -228,12 +235,10 @@ export function FlashDeviceButton(props: {
             <CircularProgressWithLabel value={progress} />
         </>
     ) : firmwareInfo || update ? (
-        <>
-            {upToDate ? (
-                <Alert severity="success">Up to date!</Alert>
-            ) : (
-                <Alert severity="warning">{blob.version} available</Alert>
-            )}
+        <Alert severity={upToDate ? "success" : "info"}>
+            <AlertTitle>
+                {upToDate ? "Up to date!" : `${blob.version} available`}
+            </AlertTitle>
             {(!upToDate || ignoreFirmwareCheck) && firmwareInfo && (
                 <Button
                     title={`Flash ${blob.version}`}
@@ -245,7 +250,7 @@ export function FlashDeviceButton(props: {
                     Update
                 </Button>
             )}
-        </>
+        </Alert>
     ) : (
         <Alert severity="info">No firmware available</Alert>
     )
