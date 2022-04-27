@@ -127,18 +127,17 @@ export default function DashboardLED(props: DashboardServiceProps) {
                         </Grid>
                     </ColorButtons>
                 </Grid>
-
-                {configure &&
-                    configureRegisters.map(code => (
-                        <Grid item key={code}>
-                            <RegisterInputItem
-                                service={service}
-                                registerCode={code}
-                                visible={visible}
-                            />
-                        </Grid>
-                    ))}
             </Grid>
+            {configure &&
+                configureRegisters.map(code => (
+                    <Grid item xs={12} key={code}>
+                        <RegisterInputItem
+                            service={service}
+                            registerCode={code}
+                            visible={visible}
+                        />
+                    </Grid>
+                ))}
         </>
     )
 }
