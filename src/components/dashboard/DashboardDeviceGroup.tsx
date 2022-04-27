@@ -17,6 +17,7 @@ export default function DeviceGroup(
         action?: JSX.Element
         devices: JDDevice[]
         children?: JSX.Element | JSX.Element[]
+        alwaysVisible?: boolean
     } & DashboardDeviceProps
 ) {
     const { title, action, devices, children, ...other } = props

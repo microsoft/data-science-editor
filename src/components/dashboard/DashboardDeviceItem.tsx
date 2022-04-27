@@ -12,6 +12,7 @@ export default function DashboardDeviceItem(
     props: {
         device: JDDevice
         variant?: "icon" | ""
+        alwaysVisbile?: boolean
     } & DashboardDeviceProps
 ) {
     const { device, variant, ...other } = props

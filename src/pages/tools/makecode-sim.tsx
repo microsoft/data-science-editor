@@ -67,6 +67,7 @@ function Carousel() {
             deviceFilter={deviceFilter}
             serviceFilter={serviceFilter}
             showStartRoleSimulators={true}
+            alwaysVisible={true}
         />
     )
 }

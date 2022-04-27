@@ -51,6 +51,7 @@ export default function DashboardDevice(
     props: {
         device: JDDevice
         variant?: "icon" | ""
+        alwaysVisible?: boolean
     } & DashboardDeviceProps
 ) {
     const {
@@ -61,6 +62,7 @@ export default function DashboardDevice(
         showHeader,
         showReset,
         showDeviceProxyAlert,
+        alwaysVisible,
     } = props
     const { xs: mobile } = useMediaQueries()
 
@@ -78,7 +80,8 @@ export default function DashboardDevice(
     // refresh when visible
     const serviceGridRef = useRef<HTMLDivElement>()
     const intersection = useIntersectionObserver(serviceGridRef)
-    const visible = !!intersection?.isIntersecting
+    const visible =
+        alwaysVisible || !intersection || !!intersection.isIntersecting
 
     const ServiceWidgets = useCallback(
         () => (
