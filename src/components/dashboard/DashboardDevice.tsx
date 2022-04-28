@@ -26,7 +26,6 @@ import useDeviceName from "../devices/useDeviceName"
 import { DashboardDeviceProps } from "./Dashboard"
 import useIntersectionObserver from "../hooks/useIntersectionObserver"
 import { dependencyId } from "../../../jacdac-ts/src/jdom/eventsource"
-import useMediaQueries from "../hooks/useMediaQueries"
 import { DeviceLostAlert } from "../alert/DeviceLostAlert"
 import Suspense from "../ui/Suspense"
 import useDeviceDescription from "../../jacdac/useDeviceDescription"
@@ -62,7 +61,6 @@ export default function DashboardDevice(
         showDeviceProxyAlert,
         alwaysVisible,
     } = props
-    const { xs: mobile } = useMediaQueries()
 
     const name = useDeviceName(device)
     const description = useDeviceDescription(device)
@@ -130,7 +128,7 @@ export default function DashboardDevice(
                 title={<DeviceName showShortId={false} device={device} />}
                 subheader={
                     <>
-                        {!mobile && description && (
+                        {description && (
                             <Typography variant="caption" gutterBottom>
                                 {description}
                             </Typography>
