@@ -1,6 +1,10 @@
 import { Packet } from "../../jacdac-ts/src/jdom/packet"
 import { useEffect } from "react"
-import { ControlCmd, DEVICE_ANNOUNCE, SRV_CONTROL } from "../../jacdac-ts/src/jdom/constants"
+import {
+    ControlCmd,
+    DEVICE_ANNOUNCE,
+    SRV_CONTROL,
+} from "../../jacdac-ts/src/jdom/constants"
 import useBus from "./useBus"
 
 /**

@@ -17,19 +17,25 @@ import useRegister from "../hooks/useRegister"
 
 function useActualAngle(service: JDService, visible: boolean) {
     const angleRegister = useRegister(service, ServoReg.Angle)
-    const [angle] = useRegisterUnpackedValue<[number]>(angleRegister, {
+    const [angle = 90] = useRegisterUnpackedValue<[number]>(angleRegister, {
         visible,
     })
+    const actualAngleRegister = useRegister(service, ServoReg.Angle)
+    const [actualAngle] = useRegisterUnpackedValue<[number]>(
+        actualAngleRegister,
+        {
+            visible,
+        }
+    )
     // sec/60deg
     const responseSpeedRegister = useRegister(service, ServoReg.ResponseSpeed)
-    const [responseSpeed] = useRegisterUnpackedValue<[number]>(
-        responseSpeedRegister,
-        { visible }
-    )
-    const rotationalSpeed = 60 / (responseSpeed || SG90_RESPONSE_SPEED)
-    const actualAngle = useThrottledValue(angle || 0, rotationalSpeed)
+    const [responseSpeed = SG90_RESPONSE_SPEED] = useRegisterUnpackedValue<
+        [number]
+    >(responseSpeedRegister, { visible })
+    const rotationalSpeed = 60 / responseSpeed
+    const computedAngle = useThrottledValue(angle, rotationalSpeed)
 
-    return actualAngle
+    return actualAngle !== undefined ? actualAngle : computedAngle
 }
 
 export default function DashboardServo(props: DashboardServiceProps) {

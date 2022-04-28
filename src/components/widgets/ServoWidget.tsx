@@ -18,8 +18,8 @@ export default function ServoWidget(props: {
     const cx = 78
     const cy = 55
 
-    const a = enabled ? angle + (offset || 0) : 0
-    const transform = `rotate(${-a}, ${cx}, ${cy})`
+    const a = enabled ? angle + (offset || 0) : 90
+    const transform = `rotate(${-a + 90}, ${cx}, ${cy})`
     const h = 111.406
     const w = 158.50195
     const pr = 14
