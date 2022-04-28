@@ -1,7 +1,8 @@
 import { Dialog, DialogContent, Grid, Typography } from "@mui/material"
 import React, { lazy, useCallback } from "react"
-import { ControlAnnounceFlags } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
+import { ControlAnnounceFlags } from "../../../jacdac-ts/src/jdom/constants"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
+import useDeviceDescription from "../../jacdac/useDeviceDescription"
 import useDeviceSpecification from "../../jacdac/useDeviceSpecification"
 import DeviceName from "../devices/DeviceName"
 import useInterval from "../hooks/useInterval"
@@ -16,6 +17,7 @@ export default function IdentifyDialog(props: {
     onClose: () => void
 }) {
     const { device, open, onClose } = props
+    const description = useDeviceDescription(device)
     const handleSendIdentify = useCallback(
         async () => await device.identify(),
         [device]
@@ -41,13 +43,12 @@ export default function IdentifyDialog(props: {
             </DialogTitleWithClose>
             <DialogContent>
                 <Grid container alignItems="center" alignContent={"center"}>
-                    {specification && (
+                    {(description || specification) && (
                         <Grid item xs={12}>
-                            <Typography variant="caption">
+                            <Typography variant="subtitle1">
                                 {[
-                                    specification.name,
-                                    specification.version,
-                                    specification.description,
+                                    description || specification?.name,
+                                    specification?.version,
                                 ]
                                     .filter(s => !!s)
                                     .join(", ")}

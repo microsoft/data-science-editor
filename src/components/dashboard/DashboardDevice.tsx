@@ -19,9 +19,6 @@ import {
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import useChange from "../../jacdac/useChange"
 import DeviceName from "../devices/DeviceName"
-// tslint:disable-next-line: no-submodule-imports match-default-export-name
-// tslint:disable-next-line: no-submodule-imports match-default-export-name
-import useDeviceSpecification from "../../jacdac/useDeviceSpecification"
 import DeviceAvatar from "../devices/DeviceAvatar"
 import DashboardServiceWidgetItem from "./DashboardServiceWidgetItem"
 import DeviceActions from "../devices/DeviceActions"
@@ -32,6 +29,7 @@ import { dependencyId } from "../../../jacdac-ts/src/jdom/eventsource"
 import useMediaQueries from "../hooks/useMediaQueries"
 import { DeviceLostAlert } from "../alert/DeviceLostAlert"
 import Suspense from "../ui/Suspense"
+import useDeviceDescription from "../../jacdac/useDeviceDescription"
 const DeviceProxyAlert = lazy(() => import("../alert/DeviceProxyAlert"))
 const DeviceBootloaderAlert = lazy(
     () => import("../alert/DeviceBootloaderAlert")
@@ -67,7 +65,7 @@ export default function DashboardDevice(
     const { xs: mobile } = useMediaQueries()
 
     const name = useDeviceName(device)
-    const specification = useDeviceSpecification(device)
+    const description = useDeviceDescription(device)
     const services = useChange(device, _ =>
         _?.services({ specification: true }).filter(
             service =>
@@ -132,9 +130,9 @@ export default function DashboardDevice(
                 title={<DeviceName showShortId={false} device={device} />}
                 subheader={
                     <>
-                        {!mobile && specification && (
+                        {!mobile && description && (
                             <Typography variant="caption" gutterBottom>
-                                {specification.name}
+                                {description}
                             </Typography>
                         )}
                     </>
