@@ -8,32 +8,11 @@ import useRoleManagerClient from "./useRoleManagerClient"
 import useServiceRole from "./useServiceRole"
 const SelectRoleDialog = lazy(() => import("../dialogs/SelectRoleDialog"))
 
-const MAX_NAME_LENGTH = 16
-const MIN_CHAR_FIRST_WORD = 3
-const ELLIPSE = "…"
+const MAX_NAME_LENGTH = 20
 
 const RoleButton = styled(Button)({
     textTransform: "none",
 })
-
-function renderRoleName(role: string) {
-    let n = role || ELLIPSE
-    const overflow = n.length - MAX_NAME_LENGTH
-    if (overflow >= 0) {
-        const parts = n.split(/\s+/g)
-        const first =
-            parts[0].slice(
-                0,
-                Math.max(
-                    MIN_CHAR_FIRST_WORD,
-                    parts[0].length - overflow - ELLIPSE.length - 2
-                )
-            ) + ELLIPSE
-        if (parts[0].length > first.length) parts[0] = first
-        n = parts.join(" ")
-    }
-    return ellipse(n, MAX_NAME_LENGTH, ELLIPSE)
-}
 
 export default function ServiceRole(props: { service: JDService }) {
     const { service } = props
@@ -52,7 +31,7 @@ export default function ServiceRole(props: { service: JDService }) {
     // hide if no role manager or role not compatible with required roles
     if (!hasRoleForService) return null
 
-    const name = renderRoleName(role)
+    const name = ellipse(role, MAX_NAME_LENGTH)
     return (
         <>
             <RoleButton
