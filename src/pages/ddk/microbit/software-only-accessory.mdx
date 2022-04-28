@@ -49,6 +49,8 @@ namespace servers {
     function start() {
         // TODO: update with new program identifier
         // jacdac.productIdentifier = ...
+        // TODO: add short device description
+        // jacdac.deviceDescription = ...
         jacdac.startSelfServers(() => [
             // TODO: instantiate servers here
         ])
@@ -126,12 +128,13 @@ integrate it into the source.
 
 <RandomGenerator firmware={true} />
 
--   edit `main.ts` with the project identifier
+-   edit `main.ts` with the project identifier and a device description if you haven't updated it yet
 
 ```typescript
 namespace servers {
     function start() {
         jacdac.productIdentifier = 0x....
+        jacdac.deviceDescription = ...
         ...
     }
     ...
