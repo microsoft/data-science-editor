@@ -55,7 +55,9 @@ export default function MakeCodeOpenSnippetButton(props: {
                     editor: "blocksprj",
                     text: {
                         "README.md": md,
-                        "main.blocks": `<xml xmlns="http://www.w3.org/1999/xhtml"></xml>`,
+                        "main.blocks": code
+                            ? ""
+                            : `<xml xmlns="http://www.w3.org/1999/xhtml"></xml>`,
                         "main.ts": code,
                         "pxt.json": JSON.stringify({
                             name: name,
