@@ -6,10 +6,10 @@ import Alert from "../ui/Alert"
 import DbContext, { DbContextProps } from "../DbContext"
 // tslint:disable-next-line: match-default-export-name tslint:disable-next-line: no-submodule-imports
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever"
-import useForceProxy from "../devices/useForceProxy"
 import useChange from "../../jacdac/useChange"
 import useSnackbar from "../hooks/useSnackbar"
 import AlertSwitch from "../ui/AlertSwitch"
+import useProxy from "../../jacdac/useProxy"
 
 export default function SafeBootAlert(props: { proxy?: boolean }) {
     const { proxy } = props
@@ -24,7 +24,7 @@ export default function SafeBootAlert(props: { proxy?: boolean }) {
         await firmwares.clear()
         enqueueSnackbar("firmwares cleared", "info")
     }
-    useForceProxy(safeBoot || proxy)
+    useProxy(safeBoot || proxy)
     return (
         <>
             <AlertSwitch
