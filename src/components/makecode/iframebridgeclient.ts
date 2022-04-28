@@ -321,7 +321,7 @@ export class IFrameBridgeClient extends JDClient {
     }
 
     get candidateExtensions(): string[] {
-        if (!this.packetProcessed && !this._runOptions?.dependencies)
+        if (!this.packetProcessed || !this._runOptions?.dependencies)
             // bridge is not active
             return []
 
