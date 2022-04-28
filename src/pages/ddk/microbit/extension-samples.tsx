@@ -13,6 +13,7 @@ export default function Samples() {
         "pelikhan/pxt-kitronik-lampbit/jacdac",
         "pelikhan/pxt-kitronik-simple-servo/jacdac",
         "pelikhan/pxt-kitronik-motor-driver/jacdac",
+        "pelikhan/pxt-kitronik-zip-64/jacdac",
 
         "pelikhan/monkmakes-7-segment/jacdac",
 
@@ -21,7 +22,7 @@ export default function Samples() {
 
         "pelikhan/pxt-robotbit/jacdac",
 
-        "pelikhan/yahboom-microbit-led-jacdac/"
+        "pelikhan/yahboom-microbit-led-jacdac/",
     ]
     return (
         <>
