@@ -247,6 +247,7 @@ export default function DeviceRegistration() {
     }
     const handleStoreLinkChange = (ev: ChangeEvent<HTMLInputElement>) => {
         device.storeLink = ev.target.value?.trim()
+        updateDevice()
     }
     const handleFirmwareAddClick = (
         event: React.MouseEvent<HTMLButtonElement>
