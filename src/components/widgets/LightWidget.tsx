@@ -254,7 +254,6 @@ function LightMatrixWidget(props: {
 
     // paint svg via dom
     const paint = () => {
-        console.log("paint")
         setRgbLeds(widgetRef.current, colors())
     }
 
