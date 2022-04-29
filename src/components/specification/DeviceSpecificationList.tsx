@@ -88,6 +88,7 @@ export default function DeviceSpecificationList(props: {
     requiredServiceClasses?: number[]
     devices?: jdspec.DeviceSpec[]
     updates?: boolean
+    buyNow?: boolean
     firmwareSources?: boolean
     hardwareDesign?: boolean
     transports?: jdspec.TransportType[]
@@ -100,6 +101,7 @@ export default function DeviceSpecificationList(props: {
         company,
         devices,
         updates,
+        buyNow,
         hardwareDesign,
         firmwareSources,
         transports,
@@ -123,6 +125,7 @@ export default function DeviceSpecificationList(props: {
                     )
             )
         if (updates) r = r.filter(spec => spec.repo)
+        if (buyNow) r = r.filter(spec => !!spec.storeLink)
         if (hardwareDesign) r = r.filter(spec => spec.hardwareDesign)
         if (firmwareSources) r = r.filter(spec => spec.firmwareSource)
         if (transports?.length)
@@ -140,6 +143,7 @@ export default function DeviceSpecificationList(props: {
         JSON.stringify(devices?.map(d => d.id)),
         specifications,
         updates,
+        buyNow,
         hardwareDesign,
         firmwareSources,
         transports?.join(","),

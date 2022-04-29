@@ -24,6 +24,8 @@ export default function FilteredDeviceSpecificationList(props: {
     const [hardwareDesign, setHardwareDesign] = useState(false)
     const [usb, setUsb] = useState(false)
     const [serial, setSerial] = useState(false)
+    const [buyNow, setBuyNow] = useState(false)
+
     const requiredServiceClasses = !isNaN(serviceClass) && [serviceClass]
 
     const tags = useChange(deviceCatalog, _ =>
@@ -41,6 +43,7 @@ export default function FilteredDeviceSpecificationList(props: {
     const handleSetHardwareDesign = () => setHardwareDesign(c => !c)
     const handleSetUSB = () => setUsb(c => !c)
     const handleSetSerial = () => setSerial(c => !c)
+    const handleBuyNow = () => setBuyNow(c => !c)
     const handleSetSelectedTag = (tag: string) => () =>
         setSelectedTags(ts => {
             const i = ts.indexOf(tag)
@@ -64,6 +67,13 @@ export default function FilteredDeviceSpecificationList(props: {
                         serviceClass={serviceClass}
                         setServiceClass={handleServiceChanged}
                         hasRegisteredDevice={true}
+                    />
+                </Grid>
+                <Grid item>
+                    <FilterChip
+                        label="buy now"
+                        value={buyNow}
+                        onClick={handleBuyNow}
                     />
                 </Grid>
                 <Grid item>
@@ -108,6 +118,7 @@ export default function FilteredDeviceSpecificationList(props: {
             </Grid>
             <DeviceSpecificationList
                 {...others}
+                buyNow={buyNow}
                 firmwareSources={firmwareSources}
                 hardwareDesign={hardwareDesign}
                 requiredServiceClasses={requiredServiceClasses}
