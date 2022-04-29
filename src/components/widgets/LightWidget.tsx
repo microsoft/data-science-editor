@@ -143,7 +143,7 @@ function LightStripWidget(props: {
         const dx = neoradius * 3
         d = `M 0 ${dx}`
         for (let i = 0; i < numPixels; ++i) {
-            d += ` h ${dx} 0`
+            d += ` h ${dx}`
         }
         width = numPixels * dx
         height = 2 * dx
@@ -362,6 +362,7 @@ export default function LightWidget(props: {
         numColumnsRegister,
         props
     )
+    const widgetSize = `clamp(1rem, 100vw, 20vh)`
 
     if (numPixels === undefined)
         return <DashboardRegisterValueFallback register={numPixelsRegister} /> // nothing to render
@@ -385,6 +386,7 @@ export default function LightWidget(props: {
     } else {
         return (
             <LightStripWidget
+                widgetSize={widgetSize}
                 colors={colors}
                 subscribeColors={subscribeColors}
                 numPixels={numPixels}
