@@ -73,7 +73,9 @@ function contentsToFirmwareReleases(contents: GithubContent[]) {
 
 export function normalizeSlug(slug: string) {
     if (!slug) return {}
-    const cleaned = slug.replace(/^https:\/\/github.com\//, "")
+    const cleaned = slug
+        .replace(/^https:\/\/github.com\//, "")
+        .replace(/\/tree\/master/, "")
     const parts = cleaned.split("/")
     return {
         repoPath: `${parts[0]}/${parts[1]}`,
@@ -88,9 +90,8 @@ export interface GitHubApiOptions {
 }
 
 export function parseRepoUrl(url: string): { owner: string; name: string } {
-    const m = /^https:\/\/github\.com\/([^/ \t]+)\/([^/ \t]+)\/?$/.exec(
-        url || ""
-    )
+    const u = (url || "").replace(/\/tree\/master/, "")
+    const m = /^https:\/\/github\.com\/([^/ \t]+)\/([^/ \t]+)\/?$/.exec(u)
     if (m) return { owner: m[1], name: m[2] }
     return undefined
 }
