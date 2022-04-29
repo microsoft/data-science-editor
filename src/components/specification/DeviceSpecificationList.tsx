@@ -147,6 +147,7 @@ export default function DeviceSpecificationList(props: {
                 ].some(s => s?.toLowerCase()?.indexOf(query.toLowerCase()) > -1)
             )
         if (shuffle) arrayShuffle(r)
+        else r.sort((a,b) => (a.connector === "none" ? 1 : 0) - (b.connector === "none" ? 1 : 0))
         if (count !== undefined) r = r.slice(0, count)
         return r
     }, [
