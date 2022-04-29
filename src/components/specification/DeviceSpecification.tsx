@@ -79,7 +79,8 @@ export default function DeviceSpecification(props: {
     const others = specifications
         .filter(
             spec =>
-                (spec.designIdentifier === designIdentifier ||
+                ((designIdentifier &&
+                    spec.designIdentifier === designIdentifier) ||
                     (spec.company === device.company &&
                         spec.name === device.name)) &&
                 spec.version !== undefined
