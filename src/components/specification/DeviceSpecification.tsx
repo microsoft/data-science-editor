@@ -79,6 +79,7 @@ export default function DeviceSpecification(props: {
     const others = specifications
         .filter(
             spec =>
+                spec.id !== device.id &&
                 ((designIdentifier &&
                     spec.designIdentifier === designIdentifier) ||
                     (spec.company === device.company &&
