@@ -139,7 +139,7 @@ function LightStripWidget(props: {
     let height: number
 
     let d = ""
-    if (lightVariant === LedStripVariant.Stick) {
+    if (lightVariant === LedStripVariant.Stick || numPixels == 1) {
         const dx = neoradius * 3
         d = `M 0 ${dx}`
         for (let i = 0; i < numPixels; ++i) {
