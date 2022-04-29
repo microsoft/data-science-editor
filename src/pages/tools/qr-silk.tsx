@@ -89,7 +89,7 @@ export default function DeviceQRCodeGenerator(props: {
                 Enter a short URL HTTP://AKA.MS/<strong>vanity name</strong> to
                 be encoded as a silk compatible QR code. If you use a link, make
                 sure to update{" "}
-                <a href="https://github.com/microsoft/jacdac/blob/main/devices/microsoft/research/qr-url-device-map.csv">
+                <a href="https://github.com/microsoft/jacdac/blob/main/devices/microsoft-research/qr-url-device-map.csv">
                     GitHub
                 </a>
                 .

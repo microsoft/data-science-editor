@@ -19,8 +19,6 @@ import { Button, Link } from "gatsby-theme-material-ui"
 import { uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
 import Alert from "../ui/Alert"
 import GithubRepositoryCard from "../github/GithubRepositoryCard"
-import JacdacIcon from "../icons/JacdacIcon"
-import { humanify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 
 function DeviceStructuredData(props: { device: jdspec.DeviceSpec }) {
     const { device } = props
@@ -78,16 +76,15 @@ export default function DeviceSpecification(props: {
     const gridBreakpoints = useGridBreakpoints()
     const imageUrl = useDeviceImage(device, "catalog")
 
-    const others =
-        designIdentifier &&
-        specifications
-            .filter(
-                spec =>
-                    spec.id !== device.id &&
-                    spec.designIdentifier === designIdentifier &&
-                    spec.version !== undefined
-            )
-            ?.sort((l, r) => semverCmp(l.version, r.version))
+    const others = specifications
+        .filter(
+            spec =>
+                (spec.designIdentifier === designIdentifier ||
+                    (spec.company === device.company &&
+                        spec.name === device.name)) &&
+                spec.version !== undefined
+        )
+        ?.sort((l, r) => semverCmp(l.version, r.version))
 
     return (
         <>
@@ -138,14 +135,6 @@ export default function DeviceSpecification(props: {
                         filter={`pid:0x${identifier.toString(16)}`}
                     />
                 ))}
-                {connector !== "none" && (
-                    <Chip
-                        aria-label={`PCB connector: ${humanify(connector)}`}
-                        icon={<JacdacIcon />}
-                        size="small"
-                        label={humanify(connector)}
-                    />
-                )}
             </ChipList>
             <Box mt={1}>
                 <img alt={`device ${name}`} src={imageUrl} loading="lazy" />

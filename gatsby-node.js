@@ -124,7 +124,7 @@ async function createDeviceQRPages(actions) {
     console.log(`generating device QR pages`)
     const { createRedirect } = actions
     const csv = fs.readFileSync(
-        "./jacdac-ts/jacdac-spec/devices/microsoft/research/qr-url-device-map.csv",
+        "./jacdac-ts/jacdac-spec/devices/microsoft-research/qr-url-device-map.csv",
         "utf-8"
     )
     const designidcol = "designid"
@@ -139,7 +139,7 @@ async function createDeviceQRPages(actions) {
         const p = `/devices/codes/${vanity}/`
         const toPath = spec
             ? `/devices/0x${productid.toString(16)}/`
-            : `/devices/microsoft/research/`
+            : `/devices/microsoft-research/`
         const r = { fromPath: p, toPath }
         await createRedirect(r)
     }

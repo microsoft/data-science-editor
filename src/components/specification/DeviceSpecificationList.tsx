@@ -25,6 +25,7 @@ function DeviceSpecificationCard(props: {
     const {
         id,
         name,
+        version,
         company,
         services,
         hardwareDesign,
@@ -60,6 +61,15 @@ function DeviceSpecificationCard(props: {
                         component="div"
                     >
                         {name}
+                        {version && (
+                            <Typography
+                                sx={{ ml: 1 }}
+                                variant="caption"
+                                component="span"
+                            >
+                                v{version}
+                            </Typography>
+                        )}
                     </Typography>
                     <Typography component="div" variant="subtitle2">
                         {serviceNames || "no services"}
@@ -147,7 +157,12 @@ export default function DeviceSpecificationList(props: {
                 ].some(s => s?.toLowerCase()?.indexOf(query.toLowerCase()) > -1)
             )
         if (shuffle) arrayShuffle(r)
-        else r.sort((a,b) => (a.connector === "none" ? 1 : 0) - (b.connector === "none" ? 1 : 0))
+        else
+            r.sort(
+                (a, b) =>
+                    (a.connector === "none" ? 1 : 0) -
+                    (b.connector === "none" ? 1 : 0)
+            )
         if (count !== undefined) r = r.slice(0, count)
         return r
     }, [

@@ -7,7 +7,7 @@ export default function JacdapterImageList() {
         <ImageList cols={2} gap={1}>
             {[
                 {
-                    id: "microbit-foundation-microbitv2",
+                    id: "microbit-educational-foundation-microbitv2",
                     title: "micro:bit V2",
                 },
                 {
