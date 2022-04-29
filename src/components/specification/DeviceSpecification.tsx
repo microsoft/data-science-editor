@@ -116,9 +116,9 @@ export default function DeviceSpecification(props: {
             {connector === "none" && (
                 <Alert severity="warning">
                     <AlertTitle>No edge connector available.</AlertTitle>
-                    This device does not have a Jacdac PCB edge connector. While
-                    programmable it as a Jacdac device, it is not possible to
-                    connect other devices with a cable.
+                    This device does <b>not</b> have a Jacdac PCB edge
+                    connector. It is programmable as a Jacdac device but it
+                    cannot be connected to other devices with a cable.
                 </Alert>
             )}
             <ChipList>
