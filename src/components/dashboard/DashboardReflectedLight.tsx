@@ -4,7 +4,6 @@ import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import SvgWidget from "../widgets/SvgWidget"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import useServiceServer from "../hooks/useServiceServer"
-import useWidgetSize from "../widgets/useWidgetSize"
 import useThrottledValue from "../hooks/useThrottledValue"
 import useSvgButtonProps from "../hooks/useSvgButtonProps"
 import { ReflectedLightServer } from "../../../jacdac-ts/src/servers/reflectedlightserver"
@@ -15,7 +14,7 @@ import {
 import useRegister from "../hooks/useRegister"
 
 export default function DashboardReflectedLight(props: DashboardServiceProps) {
-    const { service, services, variant } = props
+    const { service } = props
 
     const brighessRegister = useRegister(service, ReflectedLightReg.Brightness)
     const variantRegister = useRegister(service, ReflectedLightReg.Variant)
@@ -32,7 +31,7 @@ export default function DashboardReflectedLight(props: DashboardServiceProps) {
     const server = useServiceServer<ReflectedLightServer>(service)
     const color = server ? "secondary" : "primary"
     const { background, controlBackground } = useWidgetTheme(color)
-    const widgetSize = useWidgetSize(variant, services?.length)
+    const widgetSize = `clamp(3rem, 10vw, 10vh)`
 
     const maxValue = 1.0
     const handleDown = () => {
@@ -65,6 +64,7 @@ export default function DashboardReflectedLight(props: DashboardServiceProps) {
                 height={h}
                 fill={dark}
                 aria-label="dark area"
+                {...buttonProps}
             />
             <rect
                 x={w >> 1}
@@ -73,6 +73,7 @@ export default function DashboardReflectedLight(props: DashboardServiceProps) {
                 height={h}
                 fill={bright}
                 aria-label="bright area"
+                {...buttonProps}
             />
             <g transform={`translate(${x}, ${h - m - sh})`}>
                 <rect
