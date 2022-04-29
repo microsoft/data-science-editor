@@ -11,5 +11,5 @@ export default function Page(props: { pageContext: { node: { id: string } } }) {
         _ => _.specificationFromIdentifier(id),
         [id]
     )
-    return <DeviceSpecification device={specification} showSource={true} />
+    return <DeviceSpecification device={specification} />
 }

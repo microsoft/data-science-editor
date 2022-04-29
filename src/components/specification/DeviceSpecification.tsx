@@ -19,6 +19,8 @@ import { Button, Link } from "gatsby-theme-material-ui"
 import { uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
 import Alert from "../ui/Alert"
 import GithubRepositoryCard from "../github/GithubRepositoryCard"
+import JacdacIcon from "../icons/JacdacIcon"
+import { humanify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 
 function DeviceStructuredData(props: { device: jdspec.DeviceSpec }) {
     const { device } = props
@@ -69,6 +71,7 @@ export default function DeviceSpecification(props: {
         hardwareDesign,
         firmwareSource,
         storeLink,
+        connector = "edge",
     } = device
     const { services } = device
     const specifications = useDeviceSpecifications()
@@ -110,6 +113,14 @@ export default function DeviceSpecification(props: {
                     </Button>
                 )}
             </h2>
+            {connector === "none" && (
+                <Alert severity="warning">
+                    <AlertTitle>No edge connector available.</AlertTitle>
+                    This device does not have a Jacdac PCB edge connector. While
+                    programmable it as a Jacdac device, it is not possible to
+                    connect other devices with a cable.
+                </Alert>
+            )}
             <ChipList>
                 <Chip size="small" label={company} />
                 {designIdentifier && (
@@ -127,6 +138,14 @@ export default function DeviceSpecification(props: {
                         filter={`pid:0x${identifier.toString(16)}`}
                     />
                 ))}
+                {connector !== "none" && (
+                    <Chip
+                        aria-label={`PCB connector: ${humanify(connector)}`}
+                        icon={<JacdacIcon />}
+                        size="small"
+                        label={humanify(connector)}
+                    />
+                )}
             </ChipList>
             <Box mt={1}>
                 <img alt={`device ${name}`} src={imageUrl} loading="lazy" />
