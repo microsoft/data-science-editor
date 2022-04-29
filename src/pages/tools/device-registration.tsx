@@ -72,8 +72,6 @@ function CompanySelect(props: {
     )
     const id = useId()
     const companyId = id + "-company"
-    const helperText =
-        "Name of the company manufacturing this device. The company name will be used to generate the module identifier."
 
     const handleChange = (ev: unknown, newValue: string) => setCompany(newValue)
     const renderInputs = params => (
@@ -81,7 +79,7 @@ function CompanySelect(props: {
             {...params}
             error={!!error}
             label="Company*"
-            helperText={error || helperText}
+            helperText={error}
             variant="outlined"
         />
     )
@@ -96,7 +94,6 @@ function CompanySelect(props: {
             options={companies}
             renderInput={renderInputs}
             inputValue={company}
-            aria-label={helperText}
             onInputChange={handleChange}
         />
     )
@@ -111,6 +108,7 @@ export default function DeviceRegistration() {
             services: [],
             productIdentifiers: [],
             repo: "",
+            version: "",
         } as jdspec.DeviceSpec
     )
     const gridBreakpoints = useGridBreakpoints()
@@ -147,14 +145,16 @@ export default function DeviceRegistration() {
         includeDeprecated: true,
         includeExperimental: true,
     })
-    const handleClear = () =>
+    const handleClear = () => {
         setDevice({
             id: "my-device",
-            name: "My device",
+            name: "",
             services: [],
             productIdentifiers: [],
             repo: "",
         } as jdspec.DeviceSpec)
+        setImageDataURI(undefined)
+    }
     const handleServiceAdd = (srv: jdspec.ServiceSpec) => {
         console.log(`add`, srv.classIdentifier)
         device.services.push(srv.classIdentifier)
@@ -172,8 +172,14 @@ export default function DeviceRegistration() {
     )
     const { firmwareBlobs } = useFirmwareBlob(device.repo)
     const variant = "outlined"
-    const companyError = !device.company ? "Entry the company name" : ""
-    const nameError = device.name?.length > 32 ? "name too long" : undefined
+    const companyError =
+        device.company?.length > 64
+            ? "Company is too long (max 64 characters)"
+            : undefined
+    const nameError =
+        device.name?.length > 64
+            ? "Name is too long (max 64 characters)"
+            : undefined
     const parsedRepo = parseRepoUrl(device.repo)
     const githubError =
         device.repo && !parsedRepo ? "invalid GitHub repository" : ""
@@ -393,27 +399,37 @@ export default function DeviceRegistration() {
                         helperText={nameError}
                         fullWidth={true}
                         label="Name"
-                        placeholder="My module"
+                        placeholder="My device"
                         value={device.name || ""}
                         onChange={handleNameChange}
                         variant={variant}
                     />
+                    <Typography variant="caption">
+                        Name of the device, without company or version. The name
+                        will be used to generate the device identifier.
+                    </Typography>
                 </Grid>
                 <Grid item xs={12}>
                     <CompanySelect
-                        company={device?.company}
+                        company={device?.company || ""}
                         error={companyError}
                         setCompany={handleCompanyChanged}
                     />
+                    <Typography variant="caption">
+                        Name of the company manufacturing this device. The
+                        company name will be used to generate the device
+                        identifier.
+                    </Typography>
                 </Grid>
                 <Grid item xs={12}>
                     <TextField
                         id={hardwareVersionId}
+                        required
                         fullWidth={true}
                         error={!!versionError}
                         helperText={versionError}
                         label="Version"
-                        value={device?.version}
+                        value={device?.version || ""}
                         onChange={handleVersion}
                         variant={variant}
                     />
