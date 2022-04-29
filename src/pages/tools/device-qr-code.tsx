@@ -1,5 +1,5 @@
 import { Alert, Grid, TextField } from "@mui/material"
-import React, { ChangeEvent, lazy, useState } from "react"
+import React, { ChangeEvent, lazy, startTransition, useState } from "react"
 import Suspense from "../../components/ui/Suspense"
 import SwitchWithLabel from "../../components/ui/SwitchWithLabel"
 const SilkQRCode = lazy(() => import("../../components/widgets/SilkQrCode"))
@@ -9,22 +9,25 @@ export default function DeviceQRCodeGenerator() {
     const [mirror, setMirror] = useState(false)
     const [size, setSize] = useState(0.3)
     const [error, setError] = useState("")
-    const handleUrlChange = (ev: ChangeEvent<HTMLInputElement>) => {
-        const vanity = (ev.target.value || "").trim().toLocaleUpperCase()
-        setURL(vanity)
-        setError(
-            !/^https?:\/\/./i.test(vanity)
-                ? "Must start with http:// or https://"
-                : undefined
-        )
-    }
-    const handleSizeChange = (ev: ChangeEvent<HTMLInputElement>) => {
-        const s = Number(ev.target.value)
-        if (!isNaN(s)) setSize(s)
-    }
-    const handleMirror = (ev: ChangeEvent<HTMLInputElement>) => {
-        setMirror(!!ev.target.checked)
-    }
+    const handleUrlChange = (ev: ChangeEvent<HTMLInputElement>) =>
+        startTransition(() => {
+            const vanity = (ev.target.value || "").trim().toLocaleUpperCase()
+            setURL(vanity)
+            setError(
+                !/^https?:\/\/./i.test(vanity)
+                    ? "Must start with http:// or https://"
+                    : undefined
+            )
+        })
+    const handleSizeChange = (ev: ChangeEvent<HTMLInputElement>) =>
+        startTransition(() => {
+            const s = Number(ev.target.value)
+            if (!isNaN(s)) setSize(s)
+        })
+    const handleMirror = (ev: ChangeEvent<HTMLInputElement>) =>
+        startTransition(() => {
+            setMirror(!!ev.target.checked)
+        })
     return (
         <>
             <h1>Device Silk QR Code generator</h1>
@@ -42,7 +45,10 @@ export default function DeviceQRCodeGenerator() {
                         placeholder=""
                         onChange={handleUrlChange}
                         error={!!error}
-                        helperText={error || "Use _very_ short URL and only CAPITAL letters and numbers for best results, eg., HTTP://AKA.MS/123ABC"}
+                        helperText={
+                            error ||
+                            "Use _very_ short URL and only CAPITAL letters and numbers for best results, eg., HTTP://.../123ABC"
+                        }
                     />
                 </Grid>
                 <Grid item>
