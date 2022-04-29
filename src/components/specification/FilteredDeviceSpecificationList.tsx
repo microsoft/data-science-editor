@@ -1,5 +1,5 @@
-import { Grid } from "@mui/material"
-import React, { useMemo, useState } from "react"
+import { Grid, TextField } from "@mui/material"
+import React, { ChangeEvent, startTransition, useMemo, useState } from "react"
 import { arrayConcatMany, unique } from "../../../jacdac-ts/src/jdom/utils"
 import useBus from "../../jacdac/useBus"
 import useChange from "../../jacdac/useChange"
@@ -20,6 +20,7 @@ export default function FilteredDeviceSpecificationList(props: {
     const [serviceClass, setServiceClass] = useState<number>(NaN)
     const handleServiceChanged = value => setServiceClass(value)
 
+    const [query, setQuery] = useState("")
     const [firmwareSources, setFirmwareSources] = useState(false)
     const [hardwareDesign, setHardwareDesign] = useState(false)
     const [usb, setUsb] = useState(false)
@@ -39,6 +40,8 @@ export default function FilteredDeviceSpecificationList(props: {
     )
     const [selectedTags, setSelectedTags] = useState<string[]>([])
 
+    const handleSearchQueryChange = (e: ChangeEvent<HTMLInputElement>) =>
+        startTransition(() => setQuery(e.target.value))
     const handleSetFirmwareSources = () => setFirmwareSources(c => !c)
     const handleSetHardwareDesign = () => setHardwareDesign(c => !c)
     const handleSetUSB = () => setUsb(c => !c)
@@ -61,6 +64,18 @@ export default function FilteredDeviceSpecificationList(props: {
     return (
         <>
             <Grid sx={{ mb: 1 }} container spacing={1}>
+                <Grid item xs={12}>
+                    <TextField
+                        tabIndex={0}
+                        type="search"
+                        value={query}
+                        fullWidth={true}
+                        size="small"
+                        label="Search devices"
+                        aria-label="Search devices"
+                        onChange={handleSearchQueryChange}
+                    />
+                </Grid>
                 <Grid item xs>
                     <ServiceSpecificationSelect
                         label="Filter by Service"
@@ -118,6 +133,7 @@ export default function FilteredDeviceSpecificationList(props: {
             </Grid>
             <DeviceSpecificationList
                 {...others}
+                query={query}
                 buyNow={buyNow}
                 firmwareSources={firmwareSources}
                 hardwareDesign={hardwareDesign}

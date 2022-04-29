@@ -15,6 +15,7 @@ import {
 import useDeviceSpecifications from "../devices/useDeviceSpecifications"
 import useGridBreakpoints from "../useGridBreakpoints"
 import ChipList from "../ui/ChipList"
+import { serviceName } from "../../../jacdac-ts/src/jdom/pretty"
 
 function DeviceSpecificationCard(props: {
     specification: jdspec.DeviceSpec
@@ -82,6 +83,7 @@ function DeviceSpecificationCard(props: {
 }
 
 export default function DeviceSpecificationList(props: {
+    query?: string
     count?: number
     shuffle?: boolean
     company?: string
@@ -95,6 +97,7 @@ export default function DeviceSpecificationList(props: {
     tags?: string[]
 }) {
     const {
+        query,
         count,
         shuffle,
         requiredServiceClasses,
@@ -132,10 +135,22 @@ export default function DeviceSpecificationList(props: {
             r = r.filter(spec => transports.indexOf(spec.transport?.type) > -1)
         if (tags?.length)
             r = r.filter(spec => spec.tags?.find(tag => tags.includes(tag)))
+        if (query)
+            r = r.filter(spec =>
+                [
+                    spec.name,
+                    spec.description,
+                    spec.company,
+                    ...(spec.productIdentifiers || []).map(p => p.toString(16)),
+                    ...spec.services.map(p => p.toString(16)),
+                    ...spec.services.map(srv => serviceName(srv)),
+                ].some(s => s?.toLowerCase()?.indexOf(query.toLowerCase()) > -1)
+            )
         if (shuffle) arrayShuffle(r)
         if (count !== undefined) r = r.slice(0, count)
         return r
     }, [
+        query,
         requiredServiceClasses,
         shuffle,
         count,
@@ -154,7 +169,11 @@ export default function DeviceSpecificationList(props: {
 
     if (!specs.length)
         return (
-            <Typography variant="body1">No device registered yet.</Typography>
+            <Typography variant="body1">
+                {query
+                    ? `No device matching the search criterias.`
+                    : `No device registered yet.`}
+            </Typography>
         )
 
     return (
