@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useContext } from "react"
+import React, { ChangeEvent, startTransition, useContext } from "react"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import ConsoleContext, { serializeLogs } from "./ConsoleContext"
 import ConsoleImportSourceMapButton from "./ConsoleImportSourceMapButton"
@@ -93,9 +93,7 @@ function MinLoggerPrioritySelect() {
 
 function SearchKeywordField() {
     const { searchKeywords, setSearchKeywords } = useContext(ConsoleContext)
-    const handleChange = (ev: ChangeEvent<HTMLInputElement>) => {
-        setSearchKeywords(ev.target.value)
-    }
+    const handleChange = (ev: ChangeEvent<HTMLInputElement>) => startTransition(() => setSearchKeywords(ev.target.value))
     return (
         <TextField
             style={{ marginTop: "0.25rem" }}

@@ -1,5 +1,5 @@
 import { Chip, Divider, Grid, InputAdornment, TextField } from "@mui/material"
-import React, { useMemo, useState } from "react"
+import React, { startTransition, useMemo, useState } from "react"
 import ServiceSpecificationList from "../components/specification/ServiceSpecificationList"
 import { useDebounce } from "use-debounce"
 import SearchIcon from "@mui/icons-material/Search"
@@ -93,12 +93,13 @@ export default function ServiceCatalog() {
         if (sensors) r = r.filter(srv => isSensor(srv))
         return r
     }, [deboundedFilter])
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setFilter({
-            ...filter,
-            query: event.target.value,
-        })
-    }
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+        startTransition(() =>
+            setFilter({
+                ...filter,
+                query: event.target.value,
+            })
+        )
     const handleTagClick = (t: string) => () => {
         setFilter({ ...filter, tag: tag === t ? "" : t })
     }

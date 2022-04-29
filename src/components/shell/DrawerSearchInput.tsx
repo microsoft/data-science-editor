@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { startTransition, useState } from "react"
 // tslint:disable-next-line: no-submodule-imports
 import TextField from "@mui/material/TextField"
 // tslint:disable-next-line: no-submodule-imports
@@ -16,9 +16,8 @@ export default function DrawerSearchInput(props: {
     const [focused, setFocused] = useState(false)
     const textId = useId()
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchQuery(event.target.value)
-    }
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+        startTransition(() => setSearchQuery(event.target.value))
     const handleClear = () => setSearchQuery("")
     const handleFocus = () => setFocused(true)
     const handleBlur = async () => {
