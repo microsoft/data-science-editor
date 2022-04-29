@@ -237,20 +237,16 @@ async function createDevicePages(graphql, actions, reporter) {
     const companies = new Set(devices.map(node => node.company))
     //console.log(companies)
     for (const company of companies.keys()) {
-        const cp = escapeDeviceIdentifier(company).split(/-/g)
-        cp.forEach((part, i) => {
-            const cps = cp.slice(0, i + 1)
-            const c = cps.join("-")
-            const p = `/devices/${cps.join("/")}`
-            console.log(`device company page`, { p })
-            createPage({
-                path: p,
-                component: slash(companyTemplate),
-                context: {
-                    company: c,
-                    title: `${c} devices`,
-                },
-            })
+        const cp = escapeDeviceIdentifier(company)
+        const p = `/devices/${cp}`
+        console.log(`device company page`, { p })
+        createPage({
+            path: p,
+            component: slash(companyTemplate),
+            context: {
+                company: company,
+                title: `${company} devices`,
+            },
         })
     }
 }
