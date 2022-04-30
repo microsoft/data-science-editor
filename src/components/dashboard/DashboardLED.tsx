@@ -11,12 +11,12 @@ import {
 } from "../../../jacdac-ts/src/jdom/constants"
 import ColorButtons, { DEFAULT_COLORS } from "../widgets/ColorButtons"
 import useRegister from "../hooks/useRegister"
-import SettingsIcon from "@mui/icons-material/Settings"
 import RegisterInput from "../RegisterInput"
 import { bufferEq } from "../../../jacdac-ts/src/jdom/utils"
 import useChange from "../../jacdac/useChange"
 import { JDEventSource } from "../../../jacdac-ts/src/jdom/eventsource"
 import DashboardRegisterValueFallback from "./DashboardRegisterValueFallback"
+import EditIcon from "@mui/icons-material/Edit"
 
 const configureRegisters = [
     LedReg.Brightness,
@@ -97,37 +97,24 @@ export default function DashboardLED(props: DashboardServiceProps) {
 
     return (
         <>
-            <Grid container direction="column" spacing={1} alignItems="center">
-                <Grid item xs={12}>
-                    <LightWidget
-                        colors={colors}
-                        subscribeColors={subscribeColors}
-                        registers={registers}
-                        widgetCount={services?.length}
-                        onLedClick={handleLedClick}
-                        {...props}
-                    />
-                </Grid>
+            <Grid item xs={12}>
+                <LightWidget
+                    colors={colors}
+                    subscribeColors={subscribeColors}
+                    registers={registers}
+                    widgetCount={services?.length}
+                    onLedClick={handleLedClick}
+                    {...props}
+                />
+            </Grid>
+            {configure && (
                 <Grid item>
                     <ColorButtons
                         color={penColor}
                         onColorChange={handleColorChange}
-                    >
-                        <Grid item>
-                            <IconButtonWithTooltip
-                                title={
-                                    configure
-                                        ? "Hide configuration"
-                                        : "Show configuration"
-                                }
-                                onClick={toggleConfigure}
-                            >
-                                <SettingsIcon />
-                            </IconButtonWithTooltip>
-                        </Grid>
-                    </ColorButtons>
+                    />
                 </Grid>
-            </Grid>
+            )}
             {configure &&
                 configureRegisters.map(code => (
                     <Grid item xs={12} key={code}>
@@ -138,6 +125,16 @@ export default function DashboardLED(props: DashboardServiceProps) {
                         />
                     </Grid>
                 ))}
+            <Grid item>
+                <IconButtonWithTooltip
+                    title={
+                        configure ? "Hide configuration" : "Show configuration"
+                    }
+                    onClick={toggleConfigure}
+                >
+                    <EditIcon />
+                </IconButtonWithTooltip>
+            </Grid>
         </>
     )
 }
