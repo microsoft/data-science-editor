@@ -64,15 +64,7 @@ function HostMicrophoneButton(props: {
 export default function DashboardSoundLevel(props: DashboardServiceProps) {
     const { visible, service } = props
     const soundLevelRegister = useRegister(service, SoundLevelReg.SoundLevel)
-    const loudThresholdRegister = useRegister(
-        service,
-        SoundLevelReg.LoudThreshold
-    )
     const server = useServiceServer<AnalogSensorServer>(service)
-    const [loudThreshold] = useRegisterUnpackedValue(
-        loudThresholdRegister,
-        props
-    )
 
     return (
         <Grid container direction="column">
@@ -81,10 +73,7 @@ export default function DashboardSoundLevel(props: DashboardServiceProps) {
                     register={soundLevelRegister}
                     min={0}
                     max={1}
-                    horizon={64}
-                    thresholds={
-                        loudThreshold != undefined ? [loudThreshold] : undefined
-                    }
+                    horizon={32}
                 />
             </Grid>
             <Grid item>
