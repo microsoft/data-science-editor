@@ -7,8 +7,8 @@ import React, { ReactNode, useState } from "react"
 const PREFIX = "Alert"
 
 const classes = {
-    root: `${PREFIX}-root`,
-    icon: `${PREFIX}-icon`,
+    root: `${PREFIX}root`,
+    icon: `${PREFIX}icon`,
 }
 
 const StyledCollapse = styled(Collapse)(({ theme }) => ({

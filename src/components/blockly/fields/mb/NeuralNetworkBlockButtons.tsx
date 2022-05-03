@@ -13,8 +13,8 @@ import WorkspaceContext from "../../WorkspaceContext"
 const PREFIX = "NeuralNetworkBlockButtons"
 
 const classes = {
-    numberField: `${PREFIX}-numberField`,
-    buttonContainer: `${PREFIX}-buttonContainer`,
+    numberField: `${PREFIX}numberField`,
+    buttonContainer: `${PREFIX}buttonContainer`,
 }
 
 const Root = styled("div")(({ theme }) => ({

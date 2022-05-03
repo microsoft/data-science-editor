@@ -6,8 +6,8 @@ import clsx from "clsx"
 const PREFIX = "GridHeader"
 
 const classes = {
-    hr: `${PREFIX}-hr`,
-    start: `${PREFIX}-start`,
+    hr: `${PREFIX}hr`,
+    start: `${PREFIX}start`,
 }
 
 const StyledGrid = styled(Grid)(({ theme }) => ({

@@ -23,10 +23,10 @@ import MembersInput from "./fields/MembersInput"
 const PREFIX = "ServiceCard"
 
 const classes = {
-    root: `${PREFIX}-root`,
-    bullet: `${PREFIX}-bullet`,
-    title: `${PREFIX}-title`,
-    pos: `${PREFIX}-pos`,
+    root: `${PREFIX}root`,
+    bullet: `${PREFIX}bullet`,
+    title: `${PREFIX}title`,
+    pos: `${PREFIX}pos`,
 }
 
 const StyledCard = styled(Card)({

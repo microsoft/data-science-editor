@@ -19,10 +19,10 @@ import { isInfrastructure } from "../../../jacdac-ts/src/jdom/spec"
 const PREFIX = "DeviceCard"
 
 const classes = {
-    root: `${PREFIX}-root`,
-    bullet: `${PREFIX}-bullet`,
-    title: `${PREFIX}-title`,
-    pos: `${PREFIX}-pos`,
+    root: `${PREFIX}root`,
+    bullet: `${PREFIX}bullet`,
+    title: `${PREFIX}title`,
+    pos: `${PREFIX}pos`,
 }
 
 const StyledCard = styled(Card)(() => ({

@@ -4,10 +4,10 @@ import React from "react"
 
 const PREFIX = "ImageAvatar"
 const classes = {
-    img: `${PREFIX}-img`,
-    small: `${PREFIX}-small`,
-    default: `${PREFIX}-default`,
-    large: `${PREFIX}-large`,
+    img: `${PREFIX}img`,
+    small: `${PREFIX}small`,
+    default: `${PREFIX}default`,
+    large: `${PREFIX}large`,
 }
 
 const StyledAvatar = styled("span")(({ theme }) => ({

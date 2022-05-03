@@ -17,7 +17,7 @@ const CHART_SVG_MAX_ITEMS = 256
 
 const PREFIX = "VegaLiteChart"
 const classes = {
-    button: `${PREFIX}-button`,
+    button: `${PREFIX}button`,
 }
 
 const VegaLite = lazy(() => import("./VegaLite"))

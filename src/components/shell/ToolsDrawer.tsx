@@ -49,9 +49,9 @@ import JacdacIcon from "../icons/JacdacIcon"
 const PREFIX = "ToolsDrawer"
 
 const classes = {
-    drawer: `${PREFIX}-drawer`,
-    drawerPaper: `${PREFIX}-drawerPaper`,
-    drawerHeader: `${PREFIX}-drawerHeader`,
+    drawer: `${PREFIX}drawer`,
+    drawerPaper: `${PREFIX}drawerPaper`,
+    drawerHeader: `${PREFIX}drawerHeader`,
 }
 
 const StyledDrawer = styled(Drawer)(({ theme }) => ({

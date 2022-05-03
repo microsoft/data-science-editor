@@ -15,8 +15,8 @@ import { Flags } from "../../../jacdac-ts/src/jdom/flags"
 
 const PREFIX = "JDomTreeView"
 const classes = {
-    root: `${PREFIX}-root`,
-    margins: `${PREFIX}-margins`,
+    root: `${PREFIX}root`,
+    margins: `${PREFIX}margins`,
 }
 const StyledTreeView = styled(TreeView)(({ theme }) => ({
     [`&.${classes.root}`]: {

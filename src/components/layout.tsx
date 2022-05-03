@@ -38,16 +38,16 @@ const DataEditorAppBar = lazy(() => import("./shell/DataEditorAppBar"))
 const PREFIX = "Layout"
 
 const classes = {
-    root: `${PREFIX}-root`,
-    hideMobile: `${PREFIX}-hideMobile`,
-    drawerHeader: `${PREFIX}-drawerHeader`,
-    content: `${PREFIX}-content`,
-    contentPadding: `${PREFIX}-contentPadding`,
-    container: `${PREFIX}-container`,
-    mainContent: `${PREFIX}-mainContent`,
-    appBarShift: `${PREFIX}-appBarShift`,
-    tocBarShift: `${PREFIX}-tocBarShift`,
-    toolBarShift: `${PREFIX}-toolBarShift`,
+    root: `${PREFIX}Root`,
+    hideMobile: `${PREFIX}HideMobile`,
+    drawerHeader: `${PREFIX}DrawerHeader`,
+    content: `${PREFIX}Content`,
+    contentPadding: `${PREFIX}ContentPadding`,
+    container: `${PREFIX}Container`,
+    mainContent: `${PREFIX}MainContent`,
+    appBarShift: `${PREFIX}AppBarShift`,
+    tocBarShift: `${PREFIX}TocBarShift`,
+    toolBarShift: `${PREFIX}ToolBarShift`,
 }
 
 const Root = styled("div")(({ theme }) => ({

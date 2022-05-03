@@ -35,13 +35,13 @@ const InstallPWAButton = lazy(() => import("../ui/InstallPWAButton"))
 const PREFIX = "MainAppBar"
 
 const classes = {
-    grow: `${PREFIX}-grow`,
-    appBar: `${PREFIX}-appBar`,
-    appBarShift: `${PREFIX}-appBarShift`,
-    tocBarShift: `${PREFIX}-tocBarShift`,
-    toolBarShift: `${PREFIX}-toolBarShift`,
-    menuButton: `${PREFIX}-menuButton`,
-    hideMobile: `${PREFIX}-hideMobile`,
+    grow: `${PREFIX}grow`,
+    appBar: `${PREFIX}appBar`,
+    appBarShift: `${PREFIX}appBarShift`,
+    tocBarShift: `${PREFIX}tocBarShift`,
+    toolBarShift: `${PREFIX}toolBarShift`,
+    menuButton: `${PREFIX}menuButton`,
+    hideMobile: `${PREFIX}hideMobile`,
 }
 
 const Root = styled("div")(({ theme }) => ({

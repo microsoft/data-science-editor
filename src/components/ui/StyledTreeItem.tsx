@@ -13,15 +13,15 @@ import { ellipse } from "../../../jacdac-ts/src/jdom/utils"
 const PREFIX = "StyledTreeView"
 
 const classes = {
-    root: `${PREFIX}-root`,
-    content: `${PREFIX}-content`,
-    group: `${PREFIX}-group`,
-    expanded: `${PREFIX}-expanded`,
-    selected: `${PREFIX}-selected`,
-    label: `${PREFIX}-label`,
-    labelRoot: `${PREFIX}-labelRoot`,
-    labelIcon: `${PREFIX}-labelIcon`,
-    labelText: `${PREFIX}-labelText`,
+    root: `${PREFIX}root`,
+    content: `${PREFIX}content`,
+    group: `${PREFIX}group`,
+    expanded: `${PREFIX}expanded`,
+    selected: `${PREFIX}selected`,
+    label: `${PREFIX}label`,
+    labelRoot: `${PREFIX}labelRoot`,
+    labelIcon: `${PREFIX}labelIcon`,
+    labelText: `${PREFIX}labelText`,
 }
 
 const Root = styled("div")(({ theme }) => ({

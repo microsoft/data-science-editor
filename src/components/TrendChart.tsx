@@ -6,7 +6,7 @@ import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 const PREFIX = "TrendChart"
 
 const classes = {
-    mini: `${PREFIX}-mini`,
+    mini: `${PREFIX}mini`,
 }
 
 const Root = styled("div")(() => ({

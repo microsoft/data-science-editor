@@ -7,7 +7,7 @@ import TraceSaveButton from "../trace/TraceSaveButton"
 const PREFIX = "Footer"
 
 const classes = {
-    footer: `${PREFIX}-footer`,
+    footer: `${PREFIX}footer`,
 }
 
 const Root = styled("footer")(({ theme }) => ({

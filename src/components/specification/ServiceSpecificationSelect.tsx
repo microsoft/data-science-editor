@@ -7,7 +7,7 @@ import useDeviceCatalog from "../devices/useDeviceCatalog"
 const PREFIX = "ServiceSpecificationSelect"
 
 const classes = {
-    root: `${PREFIX}-root`,
+    root: `${PREFIX}root`,
 }
 
 const StyledTextField = styled(TextField)(() => ({

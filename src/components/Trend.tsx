@@ -10,8 +10,8 @@ import useChange from "../jacdac/useChange"
 const PREFIX = "Trend"
 
 const classes = {
-    graph: `${PREFIX}-graph`,
-    mini: `${PREFIX}-mini`,
+    graph: `${PREFIX}graph`,
+    mini: `${PREFIX}mini`,
 }
 
 const Root = styled("div")(({ theme }) => ({

@@ -18,7 +18,7 @@ import useSnackbar from "../hooks/useSnackbar"
 const PREFIX = "BlockEditor"
 
 const classes = {
-    editor: `${PREFIX}-editor`,
+    editor: `${PREFIX}editor`,
 }
 
 const Root = styled("div")(({ theme }) => ({

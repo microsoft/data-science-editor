@@ -11,7 +11,7 @@ import useMediaQueries from "../hooks/useMediaQueries"
 const PREFIX = "Toc"
 
 const classes = {
-    root: `${PREFIX}-root`,
+    root: `${PREFIX}root`,
 }
 
 const StyledList = styled(List)(({ theme }) => ({

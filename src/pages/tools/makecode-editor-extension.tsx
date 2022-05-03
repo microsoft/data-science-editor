@@ -9,7 +9,7 @@ import DarkModeContext from "../../components/ui/DarkModeContext"
 const PREFIX = "makecode-editor-extension"
 
 const classes = {
-    content: `${PREFIX}-content`,
+    content: `${PREFIX}content`,
 }
 
 const Root = styled("div")(({ theme }) => ({

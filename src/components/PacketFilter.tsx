@@ -32,9 +32,9 @@ import PacketControlButtons from "./PacketListButtons"
 const PREFIX = "PacketFilter"
 
 const classes = {
-    input: `${PREFIX}-input`,
-    iconButton: `${PREFIX}-iconButton`,
-    divider: `${PREFIX}-divider`,
+    input: `${PREFIX}input`,
+    iconButton: `${PREFIX}iconButton`,
+    divider: `${PREFIX}divider`,
 }
 
 // TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.

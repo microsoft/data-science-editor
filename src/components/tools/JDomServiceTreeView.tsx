@@ -15,8 +15,8 @@ import { JDService } from "../../../jacdac-ts/src/jdom/service"
 const PREFIX = "JDomServiceTreeView"
 
 const classes = {
-    root: `${PREFIX}-root`,
-    margins: `${PREFIX}-margins`,
+    root: `${PREFIX}root`,
+    margins: `${PREFIX}margins`,
 }
 
 const StyledTreeView = styled(TreeView)(({ theme }) => ({

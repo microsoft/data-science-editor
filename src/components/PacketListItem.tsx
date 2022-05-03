@@ -18,7 +18,7 @@ import useMediaQueries from "./hooks/useMediaQueries"
 const PREFIX = "PacketListItem"
 
 const classes = {
-    item: `${PREFIX}-item`,
+    item: `${PREFIX}item`,
 }
 
 const StyledListItem = styled(ListItem)(() => ({

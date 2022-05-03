@@ -22,14 +22,14 @@ import useChartPalette from "../../useChartPalette"
 const PREFIX = "ModelBlockDialogs"
 
 const classes = {
-    root: `${PREFIX}-root`,
-    grow: `${PREFIX}-grow`,
-    field: `${PREFIX}-field`,
-    segment: `${PREFIX}-segment`,
-    row: `${PREFIX}-row`,
-    buttons: `${PREFIX}-buttons`,
-    trend: `${PREFIX}-trend`,
-    vmiddle: `${PREFIX}-vmiddle`,
+    root: `${PREFIX}root`,
+    grow: `${PREFIX}grow`,
+    field: `${PREFIX}field`,
+    segment: `${PREFIX}segment`,
+    row: `${PREFIX}row`,
+    buttons: `${PREFIX}buttons`,
+    trend: `${PREFIX}trend`,
+    vmiddle: `${PREFIX}vmiddle`,
 }
 
 // TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.

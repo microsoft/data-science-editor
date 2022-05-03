@@ -13,12 +13,12 @@ import { JSONTryParse } from "../../jacdac-ts/src/jdom/utils"
 const PREFIX = "ConsoleListItem"
 
 const classes = {
-    device: `${PREFIX}-device`,
-    item: `${PREFIX}-item`,
-    debug: `${PREFIX}-debug`,
-    log: `${PREFIX}-log`,
-    warn: `${PREFIX}-warn`,
-    error: `${PREFIX}-error`,
+    device: `${PREFIX}Device`,
+    item: `${PREFIX}Item`,
+    debug: `${PREFIX}Debug`,
+    log: `${PREFIX}Log`,
+    warn: `${PREFIX}Warn`,
+    error: `${PREFIX}Error`,
 }
 
 const StyledListItem = styled(ListItem)(({ theme }) => ({

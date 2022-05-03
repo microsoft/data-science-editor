@@ -8,10 +8,10 @@ import JacdacIcon from "../icons/JacdacIcon"
 const PREFIX = "FeatureItem"
 
 const classes = {
-    centered: `${PREFIX}-centered`,
-    description: `${PREFIX}-description`,
-    caption: `${PREFIX}-caption`,
-    button: `${PREFIX}-button`,
+    centered: `${PREFIX}centered`,
+    description: `${PREFIX}description`,
+    caption: `${PREFIX}caption`,
+    button: `${PREFIX}button`,
 }
 
 // TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.

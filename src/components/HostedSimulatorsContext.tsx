@@ -28,8 +28,8 @@ import { Flags } from "../../jacdac-ts/src/jdom/flags"
 const PREFIX = "HostedSimulatorsContext"
 
 const classes = {
-    cardContainer: `${PREFIX}-cardContainer`,
-    card: `${PREFIX}-card`,
+    cardContainer: `${PREFIX}CardContainer`,
+    card: `${PREFIX}Card`,
 }
 
 const Root = styled("div")(() => ({

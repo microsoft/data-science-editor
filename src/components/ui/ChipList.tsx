@@ -4,7 +4,7 @@ import React, { ReactNode } from "react"
 const PREFIX = "ChipList"
 
 const classes = {
-    root: `${PREFIX}-root`,
+    root: `${PREFIX}root`,
 }
 
 const Root = styled("span")(({ theme }) => ({

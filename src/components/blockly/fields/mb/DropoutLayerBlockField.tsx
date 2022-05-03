@@ -14,8 +14,8 @@ import ExpandModelBlockField from "./ExpandModelBlockField"
 const PREFIX = "DropoutLayerBlockField"
 
 const classes = {
-    fieldContainer: `${PREFIX}-fieldContainer`,
-    field: `${PREFIX}-field`,
+    fieldContainer: `${PREFIX}fieldContainer`,
+    field: `${PREFIX}field`,
 }
 
 const Root = styled("div")(({ theme }) => ({

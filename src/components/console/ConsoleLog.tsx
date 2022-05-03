@@ -7,7 +7,7 @@ import AutoScroll from "../ui/AutoScroll"
 const PREFIX = "ConsoleLog"
 
 const classes = {
-    root: `${PREFIX}-root`,
+    root: `${PREFIX}root`,
 }
 
 const StyledAutoScroll = styled(AutoScroll)(() => ({

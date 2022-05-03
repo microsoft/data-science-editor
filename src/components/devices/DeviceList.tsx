@@ -10,7 +10,7 @@ import useGridBreakpoints from "../useGridBreakpoints"
 const PREFIX = "DeviceList"
 
 const classes = {
-    root: `${PREFIX}-root`,
+    root: `${PREFIX}root`,
 }
 
 const StyledGrid = styled(Grid)(({ theme }) => ({

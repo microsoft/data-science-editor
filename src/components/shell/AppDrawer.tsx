@@ -21,14 +21,14 @@ const Console = lazy(() => import("../console/Console"))
 const PREFIX = "AppDrawer"
 
 const classes = {
-    drawer: `${PREFIX}-drawer`,
-    drawerPaper: `${PREFIX}-drawerPaper`,
-    tocDrawer: `${PREFIX}-tocDrawer`,
-    tocDrawerPaper: `${PREFIX}-tocDrawerPaper`,
-    drawerHeader: `${PREFIX}-drawerHeader`,
-    alertButton: `${PREFIX}-alertButton`,
-    mdx: `${PREFIX}-mdx`,
-    fluid: `${PREFIX}-fluid`,
+    drawer: `${PREFIX}drawer`,
+    drawerPaper: `${PREFIX}drawerPaper`,
+    tocDrawer: `${PREFIX}tocDrawer`,
+    tocDrawerPaper: `${PREFIX}tocDrawerPaper`,
+    drawerHeader: `${PREFIX}drawerHeader`,
+    alertButton: `${PREFIX}alertButton`,
+    mdx: `${PREFIX}mdx`,
+    fluid: `${PREFIX}fluid`,
 }
 
 const StyledDrawer = styled(Drawer)(({ theme }) => ({

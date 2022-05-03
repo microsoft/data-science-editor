@@ -15,9 +15,9 @@ import useMediaQueries from "../hooks/useMediaQueries"
 const PREFIX = "KeyboardKeyInput"
 
 const classes = {
-    capture: `${PREFIX}-capture`,
-    darkKeyboard: `${PREFIX}-darkKeyboard`,
-    keyboard: `${PREFIX}-keyboard`,
+    capture: `${PREFIX}capture`,
+    darkKeyboard: `${PREFIX}darkKeyboard`,
+    keyboard: `${PREFIX}keyboard`,
 }
 
 const Root = styled("div")(({ theme }) => ({

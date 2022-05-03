@@ -21,7 +21,7 @@ import MouseIcon from "@mui/icons-material/MouseOutlined"
 const PREFIX = "DashboardHIDMouse"
 
 const classes = {
-    capture: `${PREFIX}-capture`,
+    capture: `${PREFIX}capture`,
 }
 
 const StyledGrid = styled(Grid)(({ theme }) => ({

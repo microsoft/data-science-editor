@@ -8,9 +8,9 @@ import Suspense from "./Suspense"
 const PREFIX = "ImageImportCanvas"
 
 const classes = {
-    root: `${PREFIX}-root`,
-    img: `${PREFIX}-img`,
-    btn: `${PREFIX}-btn`,
+    root: `${PREFIX}root`,
+    img: `${PREFIX}img`,
+    btn: `${PREFIX}btn`,
 }
 
 const Root = styled("div")(({ theme }) => ({

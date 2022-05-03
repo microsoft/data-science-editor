@@ -19,7 +19,7 @@ import SaveAltIcon from "@mui/icons-material/SaveAlt"
 const PREFIX = "VegaLiteWidget"
 
 const classes = {
-    button: `${PREFIX}-button`,
+    button: `${PREFIX}button`,
 }
 
 const Root = styled("div")(() => ({

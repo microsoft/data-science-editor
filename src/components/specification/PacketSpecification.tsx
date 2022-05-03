@@ -20,9 +20,9 @@ import PacketSpecificationSource from "./PacketSpecificationSource"
 const PREFIX = "PacketSpecification"
 
 const classes = {
-    root: `${PREFIX}-root`,
-    field: `${PREFIX}-field`,
-    chip: `${PREFIX}-chip`,
+    root: `${PREFIX}root`,
+    field: `${PREFIX}field`,
+    chip: `${PREFIX}chip`,
 }
 
 const Root = styled("div")(({ theme }) => ({

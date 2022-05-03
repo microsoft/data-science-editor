@@ -24,8 +24,8 @@ import { Button } from "gatsby-theme-material-ui"
 import { TestState } from "../../../jacdac-ts/src/testdom/spec"
 const PREFIX = "TestTreeView"
 const classes = {
-    root: `${PREFIX}-root`,
-    margins: `${PREFIX}-margins`,
+    root: `${PREFIX}root`,
+    margins: `${PREFIX}margins`,
 }
 const StyledTreeView = styled(TreeView)(({ theme }) => ({
     [`&.${classes.root}`]: {

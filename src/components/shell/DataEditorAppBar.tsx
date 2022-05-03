@@ -12,9 +12,9 @@ import { Link } from "gatsby-theme-material-ui"
 const PREFIX = "DataEditorApp"
 
 const classes = {
-    grow: `${PREFIX}-grow`,
-    appBar: `${PREFIX}-appBar`,
-    menuButton: `${PREFIX}-menuButton`,
+    grow: `${PREFIX}grow`,
+    appBar: `${PREFIX}appBar`,
+    menuButton: `${PREFIX}menuButton`,
 }
 
 const StyledBox = styled(Box)(({ theme }) => ({

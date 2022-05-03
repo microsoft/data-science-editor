@@ -14,8 +14,8 @@ import useBus from "../jacdac/useBus"
 const PREFIX = "CmdButton"
 
 const classes = {
-    ack: `${PREFIX}-ack`,
-    error: `${PREFIX}-error`,
+    ack: `${PREFIX}Ack`,
+    error: `${PREFIX}Error`,
 }
 
 const Root = styled("span")(({ theme }) => ({

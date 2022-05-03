@@ -1,5 +1,5 @@
 import { styled } from "@mui/material/styles"
-import React, { useMemo } from "react"
+import React from "react"
 import useChange from "../../../jacdac/useChange"
 import { jacscriptBridge } from "../dsl/workers/vm.proxy"
 import { ReactFieldJSON } from "./ReactField"
@@ -8,7 +8,7 @@ import ReactInlineField from "./ReactInlineField"
 const PREFIX = "VariablesFields"
 
 const classes = {
-    table: `${PREFIX}-table`,
+    table: `${PREFIX}table`,
 }
 
 const Root = styled("div")(({ theme }) => ({

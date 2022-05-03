@@ -9,8 +9,8 @@ import { PointerBoundary } from "../PointerBoundary"
 const PREFIX = "FlattenLayerBlockField"
 
 const classes = {
-    fieldContainer: `${PREFIX}-fieldContainer`,
-    field: `${PREFIX}-field`,
+    fieldContainer: `${PREFIX}fieldContainer`,
+    field: `${PREFIX}field`,
 }
 
 // TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.

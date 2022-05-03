@@ -15,14 +15,14 @@ import MBModel from "./MBModel"
 const PREFIX = "DATASET_NAME"
 
 const classes = {
-    root: `${PREFIX}-root`,
-    grow: `${PREFIX}-grow`,
-    field: `${PREFIX}-field`,
-    segment: `${PREFIX}-segment`,
-    row: `${PREFIX}-row`,
-    buttons: `${PREFIX}-buttons`,
-    trend: `${PREFIX}-trend`,
-    vmiddle: `${PREFIX}-vmiddle`,
+    root: `${PREFIX}root`,
+    grow: `${PREFIX}grow`,
+    field: `${PREFIX}field`,
+    segment: `${PREFIX}segment`,
+    row: `${PREFIX}row`,
+    buttons: `${PREFIX}buttons`,
+    trend: `${PREFIX}trend`,
+    vmiddle: `${PREFIX}vmiddle`,
 }
 
 const StyledBox = styled(Box)(({ theme }) => ({

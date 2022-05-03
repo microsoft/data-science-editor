@@ -30,8 +30,8 @@ import Draggable from "react-draggable"
 const PREFIX = "WebCam"
 
 const classes = {
-    cardContainer: `${PREFIX}-cardContainer`,
-    card: `${PREFIX}-card`,
+    cardContainer: `${PREFIX}cardContainer`,
+    card: `${PREFIX}card`,
 }
 
 const Root = styled("div")(() => ({
