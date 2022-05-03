@@ -21,7 +21,7 @@ const classes = {
 }
 
 // TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
-const Root = styled("div")(() => ({
+const Root = styled("div")((props: StylesProps) => ({
     background: "#fff",
     color: "#000",
 
@@ -36,7 +36,7 @@ const Root = styled("div")(() => ({
         color: "grey",
     },
 
-    [`& .${classes.root}`]: (props: StylesProps) => ({
+    [`& .${classes.root}`]: {
         marginTop: "0.25rem",
         paddingLeft: "0.5rem",
         paddingRight: "0.5rem",
@@ -46,7 +46,7 @@ const Root = styled("div")(() => ({
         width: `calc(${TABLE_WIDTH}px - 0.25rem)`,
         height: `calc(${props.tableHeight}px - 0.25rem)`,
         overflow: "auto",
-    }),
+    },
 
     [`& .${classes.table}`]: {
         margin: "0.25rem",
@@ -148,7 +148,7 @@ export default function DataTableWidget(props: {
     }
 
     return (
-        <Root sx={{ height: `${tableHeight}px - 0.25rem)` }}>
+        <Root tableHeight={tableHeight} sx={{ height: `${tableHeight}px - 0.25rem)` }}>
             <PointerBoundary className={classes.root}>
                 <Grid container direction="column" spacing={1}>
                     <Grid item xs={12}>
