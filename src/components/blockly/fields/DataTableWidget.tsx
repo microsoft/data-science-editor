@@ -14,15 +14,16 @@ import { humanify } from "../../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 const PREFIX = "DataTableWidget"
 
 const classes = {
-    empty: `${PREFIX}-empty`,
-    button: `${PREFIX}-button`,
-    root: `${PREFIX}-root`,
-    table: `${PREFIX}-table`,
+    empty: `${PREFIX}Empty`,
+    button: `${PREFIX}Button`,
+    root: `${PREFIX}Root`,
+    table: `${PREFIX}Table`,
 }
 
 // TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
 const Root = styled("div")(() => ({
     background: "#fff",
+    color: "#000",
 
     [`& .${classes.empty}`]: {
         paddingLeft: "0.5rem",
