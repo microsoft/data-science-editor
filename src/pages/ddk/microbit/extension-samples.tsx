@@ -25,6 +25,8 @@ export default function Samples() {
         "pelikhan/pxt-robotbit/jacdac",
 
         "pelikhan/yahboom-microbit-led-jacdac/",
+
+        "pelikhan/pxt-k-bit/jacdac",
     ]
     return (
         <>
