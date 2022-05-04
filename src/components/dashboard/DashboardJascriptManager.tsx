@@ -38,7 +38,6 @@ function JacscriptManagerToolbar(
     const logging = useRegisterBoolValue(loggingRegister, rest)
     const [statusCode] = useRegisterUnpackedValue(statusCodeRegister, rest)
 
-    const noProgram = statusCode === SystemStatusCodes.WaitingForInput
     const disabled =
         statusCode === undefined ||
         statusCode === SystemStatusCodes.WaitingForInput
@@ -83,11 +82,6 @@ function JacscriptManagerToolbar(
                     onChange={handleLoggingChange}
                 />
             </Grid>
-            {noProgram && (
-                <Grid item xs={12}>
-                    <Alert severity="warning">Waiting for valid program.</Alert>
-                </Grid>
-            )}
         </Grid>
     )
 }
