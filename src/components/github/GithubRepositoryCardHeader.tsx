@@ -9,8 +9,8 @@ import {
 import GitHubIcon from "@mui/icons-material/GitHub"
 import { Link } from "gatsby-theme-material-ui"
 import LoadingProgress from "../ui/LoadingProgress"
-import MakeCodeGithubFolderLink from "../makecode/MakeCodeGithubFolderLink"
 import MakeCodeOpenSnippetButton from "../makecode/MakeCodeOpenSnippetButton"
+import MakeCodeGithubImportLink from "../makecode/MakeCodeGithubImportLink"
 
 export default function GithubRepositoryCardHeader(props: {
     slug: string
@@ -34,7 +34,7 @@ export default function GithubRepositoryCardHeader(props: {
                 /
             </Box>
             {folder ? (
-                <MakeCodeGithubFolderLink folder={folder} repo={repo} />
+                <MakeCodeGithubImportLink slug={slug} />
             ) : (
                 <Link href={repo.html_url} target="_blank" underline="hover">
                     <Typography component="span" variant="h5">
@@ -86,10 +86,10 @@ export default function GithubRepositoryCardHeader(props: {
             avatar={<GitHubIcon />}
             action={
                 showMakeCodeButton && (
-                        <MakeCodeOpenSnippetButton
-                            name={`${repoName} with jacdac`}
-                            slug={slug}
-                        />
+                    <MakeCodeOpenSnippetButton
+                        name={`${repoName} with jacdac`}
+                        slug={slug}
+                    />
                 )
             }
         />
