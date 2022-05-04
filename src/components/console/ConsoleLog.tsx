@@ -17,7 +17,7 @@ const StyledAutoScroll = styled(AutoScroll)(() => ({
     },
 }))
 
-export default function ConsoleLog(props: { hook?: boolean, height?: string }) {
+export default function ConsoleLog(props: { hook?: boolean; height?: string }) {
     const { hook, height } = props
     const {
         logs,
@@ -53,6 +53,10 @@ export default function ConsoleLog(props: { hook?: boolean, height?: string }) {
                 variant="dark"
                 logGrouping={true}
                 filter={filter}
+                styles={{
+                    BASE_FONT_SIZE: "13px",
+                    LOG_INFO_COLOR: "rgb(89,136,243)"
+                }}
                 linkifyOptions={{
                     defaultProtocol: "https",
                     nl2br: false,
