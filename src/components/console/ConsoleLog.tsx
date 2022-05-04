@@ -17,8 +17,8 @@ const StyledAutoScroll = styled(AutoScroll)(() => ({
     },
 }))
 
-export default function ConsoleLog(props: { hook?: boolean }) {
-    const { hook } = props
+export default function ConsoleLog(props: { hook?: boolean, height?: string }) {
+    const { hook, height } = props
     const {
         logs,
         filter,
@@ -43,7 +43,7 @@ export default function ConsoleLog(props: { hook?: boolean }) {
     return (
         <StyledAutoScroll
             className={classes.root}
-            height="calc(100vh - 11.05rem)"
+            height={height || "calc(100vh - 11.05rem)"}
             autoScroll={autoScroll}
             setAutoScroll={setAutoScroll}
         >
