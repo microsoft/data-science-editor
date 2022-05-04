@@ -30,6 +30,7 @@ import BugReportIcon from "@mui/icons-material/BugReport"
 import VideoCallIcon from "@mui/icons-material/VideoCall"
 import MakeCodeIcon from "../icons/MakeCodeIcon"
 import TextSnippetIcon from "@mui/icons-material/TextSnippet"
+import ExtensionIcon from "@mui/icons-material/Extension"
 
 import DarkModeContext from "../ui/DarkModeContext"
 import KindIcon from "../KindIcon"
@@ -189,9 +190,9 @@ export default function ToolsDrawer() {
             icon: <MakeCodeIcon />,
         },
         {
-            text: "Jacscript",
+            text: "Jacscript Editor",
             to: "/editors/jacscript/",
-            icon: <JacdacIcon />,
+            icon: <ExtensionIcon />,
         },
         /*
         {
