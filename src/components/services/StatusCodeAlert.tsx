@@ -1,5 +1,5 @@
 import React from "react"
-import { Alert, Typography } from "@mui/material"
+import { Typography } from "@mui/material"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { RegisterOptions } from "../../jacdac/useRegisterValue"
 import useStatusCode from "./useStatusCode"
@@ -8,6 +8,7 @@ import {
     SystemStatusCodes,
 } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import { humanify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
+import Alert from "../ui/Alert"
 
 const codes: Record<number, Record<number, (srv: JDService) => string>> = {
     [SRV_WIFI]: {
