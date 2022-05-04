@@ -53,6 +53,13 @@ export default function ConsoleLog(props: { hook?: boolean }) {
                 variant="dark"
                 logGrouping={true}
                 filter={filter}
+                linkifyOptions={{
+                    defaultProtocol: "https",
+                    nl2br: false,
+                    rel: "noopened",
+                    tagName: "span",
+                    validate: true,
+                }}
                 searchKeywords={searchKeywords}
             />
         </StyledAutoScroll>
