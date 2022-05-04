@@ -14,6 +14,7 @@ const StyledAutoScroll = styled(AutoScroll)(() => ({
     [`&.${classes.root}`]: {
         backgroundColor: "#1d1d1d",
         height: "calc(100vh - 11.05rem)",
+        fontWeight: "600",
     },
 }))
 
@@ -55,7 +56,7 @@ export default function ConsoleLog(props: { hook?: boolean; height?: string }) {
                 filter={filter}
                 styles={{
                     BASE_FONT_SIZE: "13px",
-                    LOG_INFO_COLOR: "rgb(89,136,243)"
+                    LOG_INFO_COLOR: "rgb(89,136,243)",
                 }}
                 linkifyOptions={{
                     defaultProtocol: "https",
