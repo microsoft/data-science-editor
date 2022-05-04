@@ -1,4 +1,10 @@
-import React, { createContext, useCallback, useEffect, useMemo, useState } from "react"
+import React, {
+    createContext,
+    useCallback,
+    useEffect,
+    useMemo,
+    useState,
+} from "react"
 import {
     LoggerCmd,
     LoggerPriority,
@@ -79,9 +85,8 @@ const methods = {
     [LoggerPriority.Error]: "error",
     [LoggerPriority.Log]: "log",
     [LoggerPriority.Silent]: "",
-    [LoggerPriority.Warning]: "warn"
+    [LoggerPriority.Warning]: "warn",
 }
-
 
 function useJacdacLogger(appendLog: (log: Message) => void) {
     const bus = useBus()
@@ -92,7 +97,8 @@ function useJacdacLogger(appendLog: (log: Message) => void) {
                     const priority =
                         LoggerPriority.Debug +
                         (pkt.serviceCommand - LoggerCmd.Debug)
-                    if (priority === LoggerPriority.Silent) return
+                    const method = methods[priority]
+                    if (!method) return
 
                     const { device } = pkt
                     const { shortId } = device
@@ -101,14 +107,14 @@ function useJacdacLogger(appendLog: (log: Message) => void) {
                         ? ""
                         : `${shortId}> `
                     const message = `${prefix}${content.trimEnd()}`
-                    const method = methods[priority]
                     appendLog({
                         method,
-                        data: [message]
+                        data: [message],
                     })
                 }
             }),
-        [appendLog])
+        [appendLog]
+    )
 }
 
 function useJacscriptManagerLogger(appendLog: (log: Message) => void) {
@@ -131,7 +137,7 @@ function useJacscriptManagerLogger(appendLog: (log: Message) => void) {
                     const message = `${prefix}${content.trimEnd()}`
                     appendLog({
                         method: "log",
-                        data: [message]
+                        data: [message],
                     })
                 }
             }),
@@ -199,7 +205,10 @@ export const ConsoleProvider = ({ children }) => {
         ])
     }, [])
 
-    const { connected, connect, disconnect } = useConsoleSerial(sourceMap, appendLog)
+    const { connected, connect, disconnect } = useConsoleSerial(
+        sourceMap,
+        appendLog
+    )
 
     useJacdacLogger(appendLog)
     useJacscriptManagerLogger(appendLog)
