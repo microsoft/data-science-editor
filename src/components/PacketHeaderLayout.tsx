@@ -39,7 +39,7 @@ function HeaderMap(props: { header: Uint8Array } & SlotProps) {
     const { header, offset, size, name } = props
     const bytes = header.slice(offset, offset + size)
     return (
-        <Tooltip title={name}>
+        <Tooltip title={name} sx={{ mr: 0.5 }}>
             <span>{toHex(bytes)}</span>
         </Tooltip>
     )
