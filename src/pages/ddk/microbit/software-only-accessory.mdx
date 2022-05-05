@@ -203,6 +203,16 @@ namespace servers {
 }
 ```
 
+### Pin 12: disable single wire serial
+
+If you hardware is already actively using pin 12 (`P12`), you will need 
+to disable the Jacdac single wire serial transport. 
+Add the following code anywhere in your project.
+
+```typescript
+namespace userconfig { export const PIN_JACK_TX = 0xdead }
+```
+
 ### Multiple same services
 
 If your device has multiple of the same service, like multiple buttons, servos, motors,
