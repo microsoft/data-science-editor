@@ -63,7 +63,8 @@ namespace servers {
 
 ### Step 2: add sensor servers
 
-The easiest servers a simple sensor that return a single numerical value.
+Many sensor servers are sensors that return a single numerical value.
+These sensors can be implemented easily using `jacdac.createSimpleSensorServer`.
 
 Let's assume that our extension has a function `thing.lightLevel()` that returns a number `[0..1023]` from a light sensor resistor.
 We want to wrap this function as a [light level](https://microsoft.github.io/jacdac-docs/services/lightlevel/) server.
@@ -110,6 +111,29 @@ namespace modules {
 -   test your extension, you should be able to use the simulator and the hardware values!
 
 > Don't forget to create a release so that your latest code changes are picked up by MakeCode!
+
+### Step 3: add actuator servers
+
+Many actuators implement a `value` and `intensity` register. These servers
+can be implemented using `jacdac.createActuatorServer`.
+
+
+This example spins up a motor server.
+
+```typescript
+    jacdac.createActuatorServer(
+        jacdac.SRV_MOTOR,
+        jacdac.MotorRegPack.Speed,
+        jacdac.MotorRegPack.Enabled,
+        (server) => {
+            const enabled = server.intensity > 0
+            const speed = server.value
+            setMotorSpeed(enabled ? speed : 0)
+        }, {
+        instanceName: "ML",
+        statusCode: jacdac.SystemStatusCodes.Initializing,
+    }),
+```
 
 ## Device Registration
 
