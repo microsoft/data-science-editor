@@ -234,10 +234,11 @@ async function createDevicePages(graphql, actions, reporter) {
     }
 
     // create device company routes
-    const companies = new Set(devices.map(node => node.company))
+    const companies = {}
+    devices.forEach(node => companies[escapeDeviceIdentifier(node.company)] = node.company)
     //console.log(companies)
-    for (const company of companies.keys()) {
-        const cp = escapeDeviceIdentifier(company)
+    for (const cp of Object.keys(companies)) {
+        const company = companies[cp]
         const p = `/devices/${cp}`
         console.log(`device company page`, { p })
         createPage({
