@@ -156,7 +156,6 @@ export default function ModelOutput(props: {
         }
     }
     const startStreamingRegisters = () => {
-        console.log(`start streaming`)
         const streamers = recordingRegisters?.map(reg =>
             reg.subscribe(REPORT_UPDATE, () => {})
         )
