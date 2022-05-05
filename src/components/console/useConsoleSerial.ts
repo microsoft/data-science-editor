@@ -92,19 +92,21 @@ export default function useConsoleSerial(
                         )
                         .forEach(line => {
                             const m = /^\s*(W|I|E)\s+\(\d+\)\s*/.exec(line)
-                            const level = m?.[1]
-                            const method =
-                                level == "W"
-                                    ? "warn"
-                                    : level == "I"
-                                    ? "info"
-                                    : level == "E"
-                                    ? "error"
-                                    : level == "D"
-                                    ? "debug"
-                                    : "log"
-                            const data = [line.slice(m[0].length)]
-                            appendLog({ method, data })
+                            if (m) {
+                                const level = m[1]
+                                const method =
+                                    level == "W"
+                                        ? "warn"
+                                        : level == "I"
+                                        ? "info"
+                                        : level == "E"
+                                        ? "error"
+                                        : level == "D"
+                                        ? "debug"
+                                        : "log"
+                                const data = [line.slice(m[0].length)]
+                                appendLog({ method, data })
+                            } else appendLog({ method: "log", data: [line] })
                         })
                 },
             })
