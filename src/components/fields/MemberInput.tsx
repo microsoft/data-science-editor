@@ -234,7 +234,7 @@ export default function MemberInput(props: {
                     valueLabel={percentValueLabelFormat}
                     onChange={readOnly ? undefined : handleSliderWidgetChange}
                     off={off}
-                    toggleOff={toggleOff}
+                    toggleOff={readOnly ? undefined : toggleOff}
                 />
             )
         }
