@@ -68,6 +68,7 @@ export default function TwinWidget() {
                         service={twinService}
                         visible={true}
                         variant="icon"
+                        controlled={true}
                     />
                 </PointerBoundary>
             </Grid>
