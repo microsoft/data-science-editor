@@ -8,12 +8,12 @@ import useBestRegister from "../../hooks/useBestRegister"
 import { useEffect } from "react"
 import { REPORT_UPDATE } from "../../../../jacdac-ts/src/jdom/constants"
 import useBlockData from "../useBlockData"
-import JacdacContext, { JacdacContextProps } from "../../../jacdac/Context"
 import { toMap } from "../../../../jacdac-ts/src/jdom/utils"
+import useBus from "../../../jacdac/useBus"
 
 const DEFAULT_HORIZON = 30 // 10 seconds
 export default function TwinWidget() {
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const bus = useBus()
     const { twinService, flyout, sourceBlock } = useContext(WorkspaceContext)
     const { data, setData } = useBlockData(sourceBlock, [], 50)
     const currentDataRef = useRef<{ time: number }[]>([])

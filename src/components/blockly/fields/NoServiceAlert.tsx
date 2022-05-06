@@ -2,13 +2,13 @@ import React, { CSSProperties, useContext } from "react"
 import { Button, useTheme } from "@mui/material"
 import AddIcon from "@mui/icons-material/Add"
 import { startServiceProviderFromServiceClass } from "../../../../jacdac-ts/src/servers/servers"
-import JacdacContext, { JacdacContextProps } from "../../../jacdac/Context"
 import WorkspaceContext from "../WorkspaceContext"
 import { serviceSpecificationFromClassIdentifier } from "../../../../jacdac-ts/src/jdom/spec"
 import { Alert } from "@mui/material"
+import useBus from "../../../jacdac/useBus"
 
 export default function NoServiceAlert() {
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const bus = useBus()
     const { twinService, roleServiceClass, flyout } =
         useContext(WorkspaceContext)
     const theme = useTheme()

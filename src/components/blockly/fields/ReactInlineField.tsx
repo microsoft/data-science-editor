@@ -44,8 +44,8 @@ export default class ReactInlineField<T = unknown> extends ReactField<T> {
             (entries: ResizeObserverEntry[]) => {
                 const entry = entries[0]
                 const { contentRect } = entry
-                this.size_.width = contentRect.width
-                this.size_.height = contentRect.height
+                this.size_.width = Math.max(16, contentRect.width)
+                this.size_.height = Math.max(16, contentRect.height)
                 fo.setAttribute("width", this.size_.width + "")
                 fo.setAttribute("height", this.size_.height + "")
                 fo.setAttribute("color", "#fff")
