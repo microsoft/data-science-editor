@@ -11,7 +11,7 @@ import useRegister from "../hooks/useRegister"
 import { useId } from "react"
 
 export default function DashboardSoilMoisture(props: DashboardServiceProps) {
-    const { service, services, variant } = props
+    const { service, services, variant, controlled } = props
     const moistureReg = useRegister(service, SoilMoistureReg.Moisture)
     const [value] = useRegisterUnpackedValue<[number]>(moistureReg, props)
     const widgetSize = useWidgetSize(variant, services?.length)
@@ -36,7 +36,7 @@ export default function DashboardSoilMoisture(props: DashboardServiceProps) {
                     size={widgetSize}
                 />
             </Grid>
-            {server && hasValue && (
+            {(server || !controlled) && hasValue && (
                 <Grid item xs>
                     <Slider
                         id={sliderId}

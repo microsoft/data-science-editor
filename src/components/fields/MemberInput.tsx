@@ -68,9 +68,10 @@ export default function MemberInput(props: {
     } = props
     const { typicalMin, typicalMax, absoluteMin, absoluteMax, type } =
         specification
+    const { kind } = serviceMemberSpecification
     const enumInfo = serviceSpecification.enums?.[specification.type]
     const disabled = !setValue
-    const readOnly = controlled || disabled
+    const readOnly = disabled || (controlled && kind !== "ro")
     const [errorText, setErrorText] = useState("")
     const [textValue, setTextValue] = useState("")
     const valueString = memberValueToString(value, specification)
@@ -183,9 +184,7 @@ export default function MemberInput(props: {
                 control={
                     <Switch
                         checked={!!value}
-                        onChange={
-                            readOnly ? undefined : handleChecked
-                        }
+                        onChange={readOnly ? undefined : handleChecked}
                         color={color}
                     />
                 }
