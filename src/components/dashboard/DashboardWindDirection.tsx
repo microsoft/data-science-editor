@@ -28,6 +28,7 @@ export default function DashboardWindDirection(props: DashboardServiceProps) {
     const color = server ? "secondary" : "primary"
     const { background, controlBackground, active } = useWidgetTheme(color)
     const arrowHeadId = useId()
+    const widgetSize = `clamp(3rem, 10vw, 10vh)`
 
     const a = useThrottledValue(direction, 360)
 
@@ -52,7 +53,7 @@ export default function DashboardWindDirection(props: DashboardServiceProps) {
     return (
         <Grid container direction="column">
             <Grid item xs={12}>
-                <SvgWidget width={w} height={h}>
+                <SvgWidget width={w} height={h} size={widgetSize}>
                     <defs>
                         <marker
                             id={arrowHeadId}

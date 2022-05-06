@@ -55,11 +55,12 @@ export default function DashboardCompass(props: DashboardServiceProps) {
     }
     const valueDisplay = (angle: number) => `${Math.round(angle)}°`
     const toggleOff = () => enabledRegister.sendSetBoolAsync(off, true)
+    const widgetSize = `clamp(3rem, 10vw, 10vh)`
 
     return (
         <Grid container direction="column">
             <Grid item xs={12}>
-                <SvgWidget width={w} height={h}>
+                <SvgWidget width={w} height={h} size={widgetSize}>
                     <circle
                         cx={cx}
                         cy={cy}

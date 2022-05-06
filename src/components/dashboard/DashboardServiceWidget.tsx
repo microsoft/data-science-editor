@@ -198,6 +198,7 @@ const serviceViews: {
     [SRV_DOT_MATRIX]: {
         component: DashboardDotMatrix,
         weight: () => 3,
+        expandable: true,
     },
     [SRV_WIND_DIRECTION]: {
         component: DashboardWindDirection,
@@ -241,7 +242,7 @@ const serviceViews: {
     },
     [SRV_COLOR]: {
         component: DashboardColor,
-        weight: () => 2,
+        weight: () => 1,
     },
     [SRV_SOUND_PLAYER]: {
         component: DashboardSoundPlayer,
@@ -260,7 +261,7 @@ const serviceViews: {
     [SRV_GYROSCOPE]: {
         component: DashboardGyroscope,
         weight: () => 3,
-        expandable: true
+        expandable: true,
     },
     [SRV_SOUND_SPECTRUM]: {
         component: DashboardSoundSpectrum,

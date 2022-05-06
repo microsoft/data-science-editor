@@ -23,23 +23,26 @@ export default function BytesBarGraphWidget(props: {
 
     useEffect(
         () =>
-            visible &&
-            register?.subscribe(REPORT_UPDATE, () => {
-                // render outside of react loop
-                const { current } = pathRef
-                const bins = register.data
-                if (!current || !bins) return
+            visible
+                ? register?.subscribe(REPORT_UPDATE, () => {
+                      // render outside of react loop
+                      const { current } = pathRef
+                      const bins = register.data
+                      if (!current || !bins) return
 
-                const dx = (w - 2 * m) / bins.length
-                const dw = (w - 2 * m) / (bins.length * 6)
-                let d = `M ${m} ${h - m} `
-                for (let i = 0; i < bins.length; ++i) {
-                    const bin = bins[i]
-                    d += ` v ${-dy * bin} h ${dx - dw} v ${dy * bin} h ${dw}`
-                }
-                d += " z"
-                current.setAttribute("d", d)
-            }),
+                      const dx = (w - 2 * m) / bins.length
+                      const dw = (w - 2 * m) / (bins.length * 6)
+                      let d = `M ${m} ${h - m} `
+                      for (let i = 0; i < bins.length; ++i) {
+                          const bin = bins[i]
+                          d += ` v ${-dy * bin} h ${dx - dw} v ${
+                              dy * bin
+                          } h ${dw}`
+                      }
+                      d += " z"
+                      current.setAttribute("d", d)
+                  })
+                : undefined,
         [register, visible, pathRef.current]
     )
 
