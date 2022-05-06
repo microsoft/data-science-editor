@@ -133,6 +133,8 @@ export interface DashboardServiceProps {
     visible?: boolean
     // a programming experience is controlling the device
     controlled?: boolean
+    // show a button to toggle an advanced interaction mode
+    expandable?: boolean
 }
 export type DashboardServiceComponent = FunctionComponent<DashboardServiceProps>
 
@@ -141,6 +143,8 @@ const serviceViews: {
         component: DashboardServiceComponent
         bundled?: boolean
         weight?: (service: JDService) => number
+        // show a button to toggle an advanced interaction mode
+        expandable?: boolean
     }
 } = {
     [SRV_ROLE_MANAGER]: {
@@ -158,6 +162,7 @@ const serviceViews: {
     [SRV_LED]: {
         component: DashboardLED,
         weight: () => 3,
+        expandable: true,
     },
     [SRV_ACCELEROMETER]: {
         component: DashboardAccelerometer,
@@ -450,6 +455,10 @@ function DefaultWidget(props: DashboardServiceProps) {
     )
 }
 
+export function isExpandableView(serviceClass: number) {
+    return !!serviceViews[serviceClass]?.expandable
+}
+
 export function hasServiceView(serviceClass: number) {
     return !!serviceViews[serviceClass]
 }
@@ -463,6 +472,7 @@ export default function DashboardServiceWidget(
         serviceViews[specification.classIdentifier] || {}
     const server = useServiceServer(service)
     const color = server ? "secondary" : "primary"
+
     // no special support
     if (!component) return createElement(DefaultWidget, props)
 

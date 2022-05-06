@@ -41,14 +41,12 @@ function RegisterInputItem(props: {
 }
 
 export default function DashboardLED(props: DashboardServiceProps) {
-    const { service, services, visible, controlled } = props
+    const { service, services, visible, expanded } = props
     const pixelsRegister = useRegister(service, LedReg.Pixels)
     const hasData = useChange(pixelsRegister, _ => !!_?.data)
     const [penColor, setPenColor] = useState<number>(DEFAULT_COLORS[0].value)
-    const [configure, setConfigure] = useState(false)
     const colorsRef = useRef<Uint8Array>(new Uint8Array(0))
     const clientRef = useRef(new JDEventSource())
-    const toggleConfigure = () => setConfigure(c => !c)
     const handleColorChange = (newColor: number) =>
         setPenColor(current => (newColor === current ? undefined : newColor))
     const handleLedClick: (index: number) => void = async (index: number) => {
@@ -107,7 +105,7 @@ export default function DashboardLED(props: DashboardServiceProps) {
                     {...props}
                 />
             </Grid>
-            {configure && (
+            {expanded && (
                 <Grid item>
                     <ColorButtons
                         color={penColor}
@@ -115,7 +113,7 @@ export default function DashboardLED(props: DashboardServiceProps) {
                     />
                 </Grid>
             )}
-            {configure &&
+            {expanded &&
                 configureRegisters.map(code => (
                     <Grid item xs={12} key={code}>
                         <RegisterInputItem
@@ -125,20 +123,6 @@ export default function DashboardLED(props: DashboardServiceProps) {
                         />
                     </Grid>
                 ))}
-            {!controlled && (
-                <Grid item>
-                    <IconButtonWithTooltip
-                        title={
-                            configure
-                                ? "Hide configuration"
-                                : "Show configuration"
-                        }
-                        onClick={toggleConfigure}
-                    >
-                        <EditIcon />
-                    </IconButtonWithTooltip>
-                </Grid>
-            )}
         </>
     )
 }

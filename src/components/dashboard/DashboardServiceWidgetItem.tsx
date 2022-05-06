@@ -1,44 +1,41 @@
-import { Grid, Typography } from "@mui/material"
-import React from "react"
+import { Grid } from "@mui/material"
+import React, { useEffect, useState } from "react"
 import DashboardServiceWidget, {
     DashboardServiceProps,
+    isExpandableView,
 } from "./DashboardServiceWidget"
-import ServiceRole from "../services/ServiceRole"
-import useInstanceName from "../services/useInstanceName"
 import StatusCodeAlert from "../services/StatusCodeAlert"
+import DashboardServiceWidgetItemHeader from "./DashboardServiceWidgetItemHeader"
 
 export default function DashboardServiceWidgetItem(
     props: React.Attributes & DashboardServiceProps
 ): JSX.Element {
-    const { service, ...rest } = props
-    const instanceName = useInstanceName(service, rest)
+    const { service, controlled, ...rest } = props
+    const { serviceClass } = service
+    const expandable = props.expandable || isExpandableView(serviceClass)
+    const [expanded, setExpanded] = useState<boolean>(
+        !controlled && expandable ? false : undefined
+    )
     const statusCodeAlert = <StatusCodeAlert service={service} {...rest} />
+    const toggleExpanded = () => setExpanded(e => !e)
+
+    useEffect(() => {
+        setExpanded(!controlled && expandable ? false : undefined)
+    }, [controlled, expandable])
 
     return (
         <Grid item>
-            <Grid container spacing={1} alignItems="center">
-                <Grid item xs>
-                    <ServiceRole service={service} />
-                </Grid>
-                {instanceName && (
-                    <Grid item>
-                        <Typography
-                            className="no-pointer-events"
-                            variant="caption"
-                            component="span"
-                            style={{ float: "right" }}
-                        >
-                            {instanceName}
-                        </Typography>
-                    </Grid>
-                )}
-            </Grid>
+            <DashboardServiceWidgetItemHeader
+                {...props}
+                expanded={expanded}
+                toggleExpanded={toggleExpanded}
+            />
             {statusCodeAlert && (
                 <Grid item xs={12}>
                     {statusCodeAlert}
                 </Grid>
             )}
-            <DashboardServiceWidget {...props} />
+            <DashboardServiceWidget {...props} expanded={expanded} />
         </Grid>
     )
 }
