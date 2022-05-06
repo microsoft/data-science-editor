@@ -131,6 +131,8 @@ export interface DashboardServiceProps {
     variant?: "icon" | ""
     // the dashboard html element is in the view
     visible?: boolean
+    // a programming experience is controlling the device
+    controlled?: boolean
 }
 export type DashboardServiceComponent = FunctionComponent<DashboardServiceProps>
 

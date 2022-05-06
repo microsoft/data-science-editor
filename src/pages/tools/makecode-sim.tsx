@@ -68,6 +68,8 @@ function Carousel() {
             serviceFilter={serviceFilter}
             showStartRoleSimulators={true}
             alwaysVisible={true}
+            variant="icon"
+            controlled={true}
         />
     )
 }

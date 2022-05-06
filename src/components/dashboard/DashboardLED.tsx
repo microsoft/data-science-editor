@@ -41,7 +41,7 @@ function RegisterInputItem(props: {
 }
 
 export default function DashboardLED(props: DashboardServiceProps) {
-    const { service, services, visible } = props
+    const { service, services, visible, controlled } = props
     const pixelsRegister = useRegister(service, LedReg.Pixels)
     const hasData = useChange(pixelsRegister, _ => !!_?.data)
     const [penColor, setPenColor] = useState<number>(DEFAULT_COLORS[0].value)
@@ -125,16 +125,20 @@ export default function DashboardLED(props: DashboardServiceProps) {
                         />
                     </Grid>
                 ))}
-            <Grid item>
-                <IconButtonWithTooltip
-                    title={
-                        configure ? "Hide configuration" : "Show configuration"
-                    }
-                    onClick={toggleConfigure}
-                >
-                    <EditIcon />
-                </IconButtonWithTooltip>
-            </Grid>
+            {!controlled && (
+                <Grid item>
+                    <IconButtonWithTooltip
+                        title={
+                            configure
+                                ? "Hide configuration"
+                                : "Show configuration"
+                        }
+                        onClick={toggleConfigure}
+                    >
+                        <EditIcon />
+                    </IconButtonWithTooltip>
+                </Grid>
+            )}
         </>
     )
 }

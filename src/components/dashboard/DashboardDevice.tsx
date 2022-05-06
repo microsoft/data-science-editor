@@ -1,11 +1,4 @@
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    Grid,
-    Paper,
-    Typography,
-} from "@mui/material"
+import { Card, CardContent, Grid, Paper } from "@mui/material"
 import React, { useCallback, useRef, lazy } from "react"
 import {
     SRV_CONTROL,
@@ -18,17 +11,14 @@ import {
 } from "../../../jacdac-ts/src/jdom/constants"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import useChange from "../../jacdac/useChange"
-import DeviceName from "../devices/DeviceName"
-import DeviceAvatar from "../devices/DeviceAvatar"
 import DashboardServiceWidgetItem from "./DashboardServiceWidgetItem"
-import DeviceActions from "../devices/DeviceActions"
 import useDeviceName from "../devices/useDeviceName"
 import { DashboardDeviceProps } from "./Dashboard"
 import useIntersectionObserver from "../hooks/useIntersectionObserver"
 import { dependencyId } from "../../../jacdac-ts/src/jdom/eventsource"
 import { DeviceLostAlert } from "../alert/DeviceLostAlert"
 import Suspense from "../ui/Suspense"
-import useDeviceDescription from "../../jacdac/useDeviceDescription"
+import DashboardDeviceCardHeader from "./DashboardDeviceCardHeader"
 const DeviceProxyAlert = lazy(() => import("../alert/DeviceProxyAlert"))
 const DeviceBootloaderAlert = lazy(
     () => import("../alert/DeviceBootloaderAlert")
@@ -47,8 +37,6 @@ const ignoredServices = [
 export default function DashboardDevice(
     props: {
         device: JDDevice
-        variant?: "icon" | ""
-        alwaysVisible?: boolean
     } & DashboardDeviceProps
 ) {
     const {
@@ -60,10 +48,10 @@ export default function DashboardDevice(
         showReset,
         showDeviceProxyAlert,
         alwaysVisible,
+        controlled,
     } = props
 
     const name = useDeviceName(device)
-    const description = useDeviceDescription(device)
     const services = useChange(device, _ =>
         _?.services({ specification: true }).filter(
             service =>
@@ -97,11 +85,12 @@ export default function DashboardDevice(
                         services={services}
                         variant={variant}
                         visible={visible}
+                        controlled={controlled}
                     />
                 ))}
             </Grid>
         ),
-        [dependencyId(services), variant, visible]
+        [dependencyId(services), variant, visible, controlled]
     )
 
     if (!showHeader)
@@ -113,28 +102,10 @@ export default function DashboardDevice(
 
     return (
         <Card aria-live="polite" aria-label={`device ${name} started`}>
-            <CardHeader
-                style={{ paddingBottom: 0 }}
-                avatar={showAvatar && <DeviceAvatar device={device} />}
-                action={
-                    <DeviceActions
-                        device={device}
-                        showStop={true}
-                        hideIdentity={true}
-                        showReset={showReset}
-                        showSettings={false}
-                    />
-                }
-                title={<DeviceName showShortId={false} device={device} />}
-                subheader={
-                    <>
-                        {description && (
-                            <Typography variant="caption" gutterBottom>
-                                {description}
-                            </Typography>
-                        )}
-                    </>
-                }
+            <DashboardDeviceCardHeader
+                device={device}
+                showAvatar={showAvatar}
+                showReset={showReset}
             />
             <CardContent style={{ paddingTop: 0 }}>
                 <DeviceLostAlert device={device} />

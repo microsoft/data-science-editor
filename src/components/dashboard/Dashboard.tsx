@@ -25,9 +25,11 @@ export interface DashboardDeviceProps {
     showAvatar?: boolean
     showReset?: boolean
     showDeviceProxyAlert?: boolean
+    controlled?: boolean
     serviceFilter?: (srv: JDService) => boolean
+    variant?: "icon" | ""
+    alwaysVisible?: boolean
 }
-
 export interface DashboardProps extends DashboardDeviceProps {
     hideSimulators?: boolean
     showSimulatorHeader?: boolean
@@ -39,7 +41,6 @@ export interface DashboardProps extends DashboardDeviceProps {
     showConnect?: boolean
     deviceFilter?: (d: JDDevice) => boolean
     deviceSort?: (l: JDDevice, r: JDDevice) => number
-    alwaysVisible?: boolean
 }
 
 export default function Dashboard(props: DashboardProps) {
