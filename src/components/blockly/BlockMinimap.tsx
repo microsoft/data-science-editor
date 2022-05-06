@@ -130,6 +130,9 @@ function BlockMiniMap(props: {
         [workspace]
     )
     useWorkspaceEvent(workspace, handleChange)
+    useEffect(() => {
+        if (workspace) handleMetrics()
+    }, [workspace])
     const handleCenterView = (event: React.PointerEvent<Element>) => {
         event.preventDefault()
         event.stopPropagation()
