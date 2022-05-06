@@ -161,6 +161,7 @@ const serviceViews: {
     [SRV_ACCELEROMETER]: {
         component: DashboardAccelerometer,
         weight: () => 3,
+        expandable: true,
     },
     [SRV_ROTARY_ENCODER]: {
         component: DashboardRotaryEncoder,
@@ -184,6 +185,7 @@ const serviceViews: {
     [SRV_CHARACTER_SCREEN]: {
         component: DashboardCharacterScreen,
         weight: () => 3,
+        expandable: true,
     },
     [SRV_BRAILLE_DISPLAY]: {
         component: DashboardBrailleDisplay,
@@ -217,6 +219,7 @@ const serviceViews: {
     },
     [SRV_REAL_TIME_CLOCK]: {
         component: DashboardRealTimeClock,
+        expandable: true,
     },
     [SRV_LED_SINGLE]: {
         component: DashboardLEDSingle,
@@ -228,6 +231,7 @@ const serviceViews: {
     },
     [SRV_SEVEN_SEGMENT_DISPLAY]: {
         component: DashboardSevenSegmentDisplay,
+        expandable: true,
     },
     [SRV_MOTION]: {
         component: DashboardMotion,
@@ -256,6 +260,7 @@ const serviceViews: {
     [SRV_GYROSCOPE]: {
         component: DashboardGyroscope,
         weight: () => 3,
+        expandable: true
     },
     [SRV_SOUND_SPECTRUM]: {
         component: DashboardSoundSpectrum,

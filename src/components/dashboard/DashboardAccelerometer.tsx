@@ -130,7 +130,7 @@ function lerp(v0: number, v1: number, t: number) {
 }
 
 export default function DashboardAccelerometer(props: DashboardServiceProps) {
-    const { service, visible } = props
+    const { service, visible, expanded } = props
     const register = useRegister(service, AccelerometerReg.Forces)
     useRegisterUnpackedValue<[number, number, number]>(register, props)
     const server =
@@ -167,11 +167,19 @@ export default function DashboardAccelerometer(props: DashboardServiceProps) {
                     </Suspense>
                 </NoSsr>
             </Grid>
-            <Sliders server={server} register={register} visible={visible} />
-            <MaxReadingField
-                registerCode={AccelerometerReg.MaxForce}
-                {...props}
-            />
+            {expanded && (
+                <Sliders
+                    server={server}
+                    register={register}
+                    visible={visible}
+                />
+            )}
+            {expanded && (
+                <MaxReadingField
+                    registerCode={AccelerometerReg.MaxForce}
+                    {...props}
+                />
+            )}
         </Grid>
     )
 }

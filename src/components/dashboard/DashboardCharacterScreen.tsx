@@ -93,7 +93,7 @@ function brailify(s: string) {
 }
 
 export default function DashboardCharacterScreen(props: DashboardServiceProps) {
-    const { service } = props
+    const { service, expanded } = props
 
     const messageRegister = useRegister(service, CharacterScreenReg.Message)
     const rowsRegister = useRegister(service, CharacterScreenReg.Rows)
@@ -107,8 +107,6 @@ export default function DashboardCharacterScreen(props: DashboardServiceProps) {
         service,
         CharacterScreenReg.Brightness
     )
-
-    const [edit, setEdit] = useState(false)
     const [message] = useRegisterUnpackedValue<[string]>(messageRegister, props)
     const [rows] = useRegisterUnpackedValue<[number]>(rowsRegister, props)
     const [columns] = useRegisterUnpackedValue<[number]>(columnsRegister, props)
@@ -120,7 +118,10 @@ export default function DashboardCharacterScreen(props: DashboardServiceProps) {
         variantRegister,
         props
     )
-    const [brightness] = useRegisterUnpackedValue<[number]>(brightnessRegister, props)
+    const [brightness] = useRegisterUnpackedValue<[number]>(
+        brightnessRegister,
+        props
+    )
 
     const [fieldMessage, setFieldMessage] = useState(message)
 
@@ -134,7 +135,6 @@ export default function DashboardCharacterScreen(props: DashboardServiceProps) {
         setFieldMessage(ev.target.value)
         await messageRegister.sendSetStringAsync(ev.target.value, true)
     }
-    const handleEdit = () => setEdit(e => !e)
 
     // set first value of message
     useEffect(() => {
@@ -155,7 +155,7 @@ export default function DashboardCharacterScreen(props: DashboardServiceProps) {
 
     return (
         <Grid container spacing={1}>
-            {edit && (
+            {expanded && (
                 <Grid item xs={12}>
                     <Grid container spacing={1}>
                         <Grid item xs>
@@ -186,14 +186,6 @@ export default function DashboardCharacterScreen(props: DashboardServiceProps) {
                     message={cmessage}
                     disabled={brightness === 0}
                 />
-            </Grid>
-            <Grid item>
-                <IconButtonWithTooltip
-                    title={!edit ? "show editor" : "hide editor"}
-                    onClick={handleEdit}
-                >
-                    <EditIcon />
-                </IconButtonWithTooltip>
             </Grid>
         </Grid>
     )

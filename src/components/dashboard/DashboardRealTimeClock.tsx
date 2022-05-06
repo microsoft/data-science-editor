@@ -13,7 +13,7 @@ import CmdButton from "../CmdButton"
 import DashboardRegisterValueFallback from "./DashboardRegisterValueFallback"
 
 export default function DashboardRealTimeClock(props: DashboardServiceProps) {
-    const { service } = props
+    const { service, expanded } = props
 
     const localTimeRegister = useRegister(service, RealTimeClockReg.LocalTime)
     const [year, month, dayOfMonth, dayOfWeek, hour, min, seconds] =
@@ -75,13 +75,17 @@ export default function DashboardRealTimeClock(props: DashboardServiceProps) {
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid item>
-                <CmdButton
-                    title="Sync time"
-                    onClick={handleSync}
-                    icon={<SyncIcon />}
-                />
-            </Grid>
+            {expanded && (
+                <Grid item>
+                    <CmdButton
+                        title="Sync time"
+                        onClick={handleSync}
+                        icon={<SyncIcon />}
+                    >
+                        Sync
+                    </CmdButton>
+                </Grid>
+            )}
         </Grid>
     )
 }

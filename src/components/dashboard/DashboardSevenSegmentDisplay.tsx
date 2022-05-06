@@ -16,7 +16,7 @@ import DashboardRegisterValueFallback from "./DashboardRegisterValueFallback"
 export default function DashboardSevenSegmentDisplay(
     props: DashboardServiceProps
 ) {
-    const { service, visible } = props
+    const { service, visible, expanded } = props
 
     const digitsRegister = useRegister(service, SevenSegmentDisplayReg.Digits)
     const brightnessRegister = useRegister(
@@ -241,7 +241,7 @@ export default function DashboardSevenSegmentDisplay(
                         ))}
                 </SvgWidget>
             </Grid>
-            {brightness !== undefined && (
+            {expanded && brightness !== undefined && (
                 <Grid item>
                     <RegisterInput
                         register={brightnessRegister}

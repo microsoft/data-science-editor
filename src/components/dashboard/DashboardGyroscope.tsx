@@ -118,7 +118,7 @@ function Sliders(props: {
 }
 
 export default function DashboardGyroscope(props: DashboardServiceProps) {
-    const { service, visible } = props
+    const { service, visible, expanded } = props
     const register = useRegister(service, GyroscopeReg.RotationRates)
     useRegisterUnpackedValue<[number, number, number]>(register, props)
     const server =
@@ -151,14 +151,19 @@ export default function DashboardGyroscope(props: DashboardServiceProps) {
                     </Suspense>
                 </NoSsr>
             </Grid>
-            {server && (
+            {expanded && (
                 <Sliders
                     server={server}
                     register={register}
                     visible={visible}
                 />
             )}
-            <MaxReadingField registerCode={GyroscopeReg.MaxRate} {...props} />
+            {expanded && (
+                <MaxReadingField
+                    registerCode={GyroscopeReg.MaxRate}
+                    {...props}
+                />
+            )}
         </Grid>
     )
 }
