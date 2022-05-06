@@ -32,26 +32,7 @@ This solution adds no cost and will work for existing accessories.
 
 **[Get started with Software only Jacdac](/ddk/microbit/software-only-accessory/)**
 
-## Level 1: Unpowered physical connector
-
-In this scenario, you integrate one or more [Jacdac PCB edge connectors](/ddk/design#pcb-edge-connector) into your design, with the `JD_DATA` line connected to micro:bit pin 12 through the required [signal conditioning](/ddk/design#signalling) circuit.
-
-On the software side, the same approach applies in Software-Only Jacdac.
-
--   Pros
-    -   retrofit existing accessories
-    -   simulator
-    -   digital twin
-    -   no modification to existing extension code
-    -   same github repository for code
-    -   Jacdac connector at minimal cost
--   Cons
-    -   new hardware design needed
-    -   extension required
-    -   Unpowered connector means user has to add a power source on the Jacdac bus
-    -   micro:bit v2 only (Jacdac is not supported on v1)
-
-## Level 2: Powered physical connector
+## Level 1: Low Powered physical connector
 
 In this scenario, the Jacdac connector is powered using the required regulation circuit documented at ...
 
@@ -69,7 +50,7 @@ In this scenario, the Jacdac connector is powered using the required regulation 
 
 Note that if your accessory already has a power regulator, you might already have the required circuitery in place.
 
-## Level 3: Onboard Jacdac server with MCU
+## Level 2: Onboard Jacdac server with MCU
 
 In this scenario, the accessory contains an MCU that implements the Jacdac server protocol.
 In this case, you do not need to provide any extension as the user will be able to use the built-in Jacdac client libraries.
@@ -81,3 +62,27 @@ In this case, you do not need to provide any extension as the user will be able 
     -   compatible with any Jacdac hardware, including Raspberry Pi
 -   Cons
     -   MCU and power regulator circuitery add cost
+
+## Last resort: Unpowered physical connector
+
+In this scenario, you integrate one or more [Jacdac PCB edge connectors](/ddk/design#pcb-edge-connector) into your design, with the `JD_DATA` line connected to micro:bit pin 12 through the required [signal conditioning](/ddk/design#signalling) circuit. The power line is **not** connected.
+
+On the software side, the same approach applies in Software-Only Jacdac.
+
+This approach is not recommended as it will lead
+to a confusing experience for users where 
+modules won't be powered unless another power module
+is on the Jacdac line.
+
+-   Pros
+    -   retrofit existing accessories
+    -   simulator
+    -   digital twin
+    -   no modification to existing extension code
+    -   same github repository for code
+    -   Jacdac connector at minimal cost
+-   Cons
+    -   new hardware design needed
+    -   extension required
+    -   Unpowered connector means user has to add a power source on the Jacdac bus
+    -   micro:bit v2 only (Jacdac is not supported on v1)
