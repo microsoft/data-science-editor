@@ -1,4 +1,4 @@
-import React, { createElement, FunctionComponent, lazy, useMemo } from "react"
+import React, { createElement, FunctionComponent, lazy } from "react"
 import {
     SRV_ACCELEROMETER,
     SRV_BUTTON,
@@ -34,7 +34,6 @@ import {
     SRV_WATER_LEVEL,
     SRV_WIND_DIRECTION,
     SRV_BIT_RADIO,
-    SystemReg,
     SRV_HID_KEYBOARD,
     SRV_HID_MOUSE,
     SRV_AZURE_IOT_HUB_HEALTH,
@@ -48,13 +47,6 @@ import {
     SRV_HID_JOYSTICK,
 } from "../../../jacdac-ts/src/jdom/constants"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
-import { isRegister } from "../../../jacdac-ts/src/jdom/spec"
-import RegisterInput from "../RegisterInput"
-import { JDRegister } from "../../../jacdac-ts/src/jdom/register"
-import {
-    useRegisterBoolValue,
-    useRegisterUnpackedValue,
-} from "../../jacdac/useRegisterValue"
 import { CircularProgress } from "@mui/material"
 
 // bundled
@@ -64,6 +56,7 @@ import DashboardSwitch from "./DashboardSwitch"
 import DashboardGamepad from "./DashboardGamepad"
 import useServiceServer from "../hooks/useServiceServer"
 import Suspense from "../ui/Suspense"
+import DashboardServiceDefaultWidget from "./DashboardServiceDefaultWidget"
 
 // lazy devices
 const DashboardServo = lazy(() => import("./DashboardServo"))
@@ -338,7 +331,7 @@ export default function DashboardServiceWidget(
     const color = server ? "secondary" : "primary"
 
     // no special support
-    if (!component) return createElement(DefaultWidget, props)
+    if (!component) return createElement(DashboardServiceDefaultWidget, props)
 
     // precompiled
     if (bundled) return createElement(component, props)

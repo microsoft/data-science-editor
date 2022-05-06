@@ -46,6 +46,7 @@ export default function MemberInput(props: {
     showLoading?: boolean
     off?: boolean
     toggleOff?: () => void
+    controlled?: boolean
 }) {
     const {
         specification,
@@ -63,11 +64,13 @@ export default function MemberInput(props: {
         showLoading,
         off,
         toggleOff,
+        controlled,
     } = props
     const { typicalMin, typicalMax, absoluteMin, absoluteMax, type } =
         specification
     const enumInfo = serviceSpecification.enums?.[specification.type]
     const disabled = !setValue
+    const readOnly = controlled || disabled
     const [errorText, setErrorText] = useState("")
     const [textValue, setTextValue] = useState("")
     const valueString = memberValueToString(value, specification)
@@ -180,7 +183,9 @@ export default function MemberInput(props: {
                 control={
                     <Switch
                         checked={!!value}
-                        onChange={disabled ? undefined : handleChecked}
+                        onChange={
+                            readOnly ? undefined : handleChecked
+                        }
                         color={color}
                     />
                 }
@@ -198,7 +203,7 @@ export default function MemberInput(props: {
                         ? valueToFlags(enumInfo, value as number)
                         : (value as number)
                 }
-                onChange={handleEnumChange}
+                onChange={!controlled ? handleEnumChange : undefined}
             >
                 {Object.keys(enumInfo.members).map(n => (
                     <MenuItem key={n} value={enumInfo.members[n]}>
@@ -228,7 +233,7 @@ export default function MemberInput(props: {
                     max={max}
                     step={step}
                     valueLabel={percentValueLabelFormat}
-                    onChange={disabled ? undefined : handleSliderWidgetChange}
+                    onChange={readOnly ? undefined : handleSliderWidgetChange}
                     off={off}
                     toggleOff={toggleOff}
                 />
@@ -241,7 +246,7 @@ export default function MemberInput(props: {
                 color={color}
                 value={nvalue}
                 valueLabelFormat={percentValueFormat}
-                onChange={disabled ? undefined : handleSliderChange}
+                onChange={readOnly ? undefined : handleSliderChange}
                 min={min}
                 max={max}
                 step={step}
@@ -283,7 +288,7 @@ export default function MemberInput(props: {
                     step={step}
                     secondaryLabel={errorValue}
                     color={color}
-                    onChange={disabled ? undefined : handleSliderWidgetChange}
+                    onChange={readOnly ? undefined : handleSliderWidgetChange}
                 />
             )
 
@@ -292,7 +297,7 @@ export default function MemberInput(props: {
                 value={value as number}
                 color={color}
                 valueLabelFormat={off ? offFormat : valueLabelFormat}
-                onChange={disabled ? undefined : handleSliderChange}
+                onChange={readOnly ? undefined : handleSliderChange}
                 min={minValue}
                 max={maxValue}
                 step={step}
@@ -313,7 +318,7 @@ export default function MemberInput(props: {
                     readOnly: disabled,
                 }}
                 helperText={helperText}
-                onChange={disabled ? undefined : handleChange}
+                onChange={readOnly ? undefined : handleChange}
                 required={value === undefined}
                 error={!!errorText}
                 type={"text"}
@@ -345,7 +350,7 @@ export default function MemberInput(props: {
                     readOnly: disabled,
                 }}
                 helperText={helperText}
-                onChange={disabled ? undefined : handleChange}
+                onChange={readOnly ? undefined : handleChange}
                 required={value === undefined}
                 error={!!errorText}
                 type={inputType}

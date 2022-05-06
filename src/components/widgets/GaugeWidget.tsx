@@ -42,7 +42,7 @@ export default function GaugeWidget(props: {
     const w = 120
     const h = 120
     const m = 8
-    const roff = 30
+    const roff = 20
     const riff = 10
     const sw = m << 1
     const cx = w >> 1

@@ -21,7 +21,7 @@ function ValueWidget(
         intensityRegister: JDRegister
     } & DashboardServiceProps
 ) {
-    const { valueRegister, intensityRegister, ...others } = props
+    const { valueRegister, intensityRegister, controlled, ...others } = props
     const { visible } = others
     const hasIntensityBool =
         intensityRegister?.specification?.fields[0]?.type === "bool"
@@ -44,6 +44,7 @@ function ValueWidget(
             off={off}
             toggleOff={hasIntensityBool ? toggleOff : undefined}
             visible={visible}
+            controlled={controlled}
         />
     )
 }
@@ -51,7 +52,7 @@ function ValueWidget(
 function IntensityWidget(
     props: { intensityRegister: JDRegister } & DashboardServiceProps
 ) {
-    const { intensityRegister, ...others } = props
+    const { intensityRegister, controlled, ...others } = props
     const { visible } = others
 
     const hasIntensityBool =
@@ -71,6 +72,7 @@ function IntensityWidget(
             hideMissingValues={true}
             off={off}
             visible={visible}
+            controlled={controlled}
         />
     )
 }
@@ -78,18 +80,25 @@ function IntensityWidget(
 function DefaultRegisterWidget(
     props: { register: JDRegister } & DashboardServiceProps
 ) {
-    const { register, ...rest } = props
+    const { register, controlled, ...rest } = props
     if (register.specification.identifier == SystemReg.Value) {
         const intensityRegister = props.service.register(SystemReg.Intensity)
         return (
             <ValueWidget
                 valueRegister={register}
                 intensityRegister={intensityRegister}
+                controlled={controlled}
                 {...rest}
             />
         )
     } else if (register.specification.identifier === SystemReg.Intensity)
-        return <IntensityWidget intensityRegister={register} {...rest} />
+        return (
+            <IntensityWidget
+                intensityRegister={register}
+                controlled={controlled}
+                {...rest}
+            />
+        )
     else
         return (
             <RegisterInput
@@ -99,6 +108,7 @@ function DefaultRegisterWidget(
                 showRegisterName={false}
                 hideMissingValues={true}
                 visible={props.visible}
+                controlled={controlled}
             />
         )
 }

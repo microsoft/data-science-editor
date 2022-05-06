@@ -29,6 +29,7 @@ export default function RegisterInput(props: {
     off?: boolean
     toggleOff?: () => void
     visible?: boolean
+    controlled?: boolean
 }) {
     const {
         register,
@@ -42,6 +43,7 @@ export default function RegisterInput(props: {
         off,
         toggleOff,
         visible,
+        controlled,
     } = props
     const { service, specification } = register
     const { device } = service
@@ -185,6 +187,7 @@ export default function RegisterInput(props: {
                     error={readingError}
                     off={off}
                     toggleOff={toggleOff}
+                    controlled={controlled}
                 />
             )}
         </>

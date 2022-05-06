@@ -19,6 +19,7 @@ export default function MembersInput(props: {
     error?: number[]
     off?: boolean
     toggleOff?: () => void
+    controlled?: boolean
 }) {
     const {
         serviceSpecification,
@@ -35,6 +36,7 @@ export default function MembersInput(props: {
         error,
         off,
         toggleOff,
+        controlled,
     } = props
     const setValue = (index: number) => (value: PackedSimpleValue) => {
         const c = values.slice(0)
@@ -43,7 +45,7 @@ export default function MembersInput(props: {
     }
 
     return (
-        <Grid container spacing={1}>
+        <Grid container spacing={1} direction="column">
             {specifications.map((field, fieldi) => {
                 const value = values?.[fieldi]
                 return (
@@ -65,6 +67,7 @@ export default function MembersInput(props: {
                             error={error?.[fieldi]}
                             off={off}
                             toggleOff={toggleOff}
+                            controlled={controlled}
                         />
                     </Grid>
                 )
