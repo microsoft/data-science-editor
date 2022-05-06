@@ -186,7 +186,8 @@ const serviceViews: {
     },
     [SRV_BRAILLE_DISPLAY]: {
         component: DashboardBrailleDisplay,
-        weight: () => 3,
+        weight: () => 2,
+        expandable: true,
     },
     [SRV_RAIN_GAUGE]: {
         component: DashboardRainGauge,
