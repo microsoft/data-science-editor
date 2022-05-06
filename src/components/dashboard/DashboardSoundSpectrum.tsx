@@ -81,14 +81,14 @@ function HostMicrophoneButton(props: {
     // update volume on demand
     useEffect(
         () =>
-            visible &&
-            enabled &&
-            server?.subscribe(REFRESH, () => {
-                const v = spectrum?.()
-                if (v !== undefined) {
-                    server.reading.setValues([v], true)
-                }
-            }),
+            visible && enabled
+                ? server?.subscribe(REFRESH, () => {
+                      const v = spectrum?.()
+                      if (v !== undefined) {
+                          server.reading.setValues([v], true)
+                      }
+                  })
+                : undefined,
         [server, spectrum, visible]
     )
 
