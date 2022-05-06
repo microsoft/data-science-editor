@@ -151,6 +151,7 @@ const serviceViews: {
     [SRV_LED_STRIP]: {
         component: DashboardLEDStrip,
         weight: () => 3,
+        expandable: true,
     },
     [SRV_LED]: {
         component: DashboardLED,

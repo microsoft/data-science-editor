@@ -485,45 +485,50 @@ show 20`,
                     {...props}
                 />
             )}
-            <Grid container direction="column" spacing={1}>
-                <Grid item>
-                    <EffectButtons
-                        setEffect={setEffect}
-                        configure={configure}
-                        toggleConfigure={toggleConfigure}
-                        addGradientColor={handleAddGradientColor}
-                    />
-                </Grid>
-                <Grid item>
-                    <ColorButtons
-                        color={penColor}
-                        onColorChange={handleColorChange}
-                    />
-                </Grid>
-                {gradientColors.map((gradientColor, index) => (
-                    <Grid item key={`gradient${index}`}>
-                        <ColorButtons
-                            color={gradientColor}
-                            onColorChange={handleGradientColorChange(index)}
+            {expanded && (
+                <Grid container direction="column" spacing={1}>
+                    <Grid item>
+                        <EffectButtons
+                            setEffect={setEffect}
+                            configure={configure}
+                            toggleConfigure={toggleConfigure}
+                            addGradientColor={handleAddGradientColor}
                         />
                     </Grid>
-                ))}
-                {expanded && (
                     <Grid item>
-                        <LightCommand service={service} expanded={expanded} />
+                        <ColorButtons
+                            color={penColor}
+                            onColorChange={handleColorChange}
+                        />
                     </Grid>
-                )}
-                {configure &&
-                    configureRegisters.map(code => (
-                        <Grid item key={code}>
-                            <RegisterInputItem
-                                service={service}
-                                registerCode={code}
-                                visible={visible}
+                    {gradientColors.map((gradientColor, index) => (
+                        <Grid item key={`gradient${index}`}>
+                            <ColorButtons
+                                color={gradientColor}
+                                onColorChange={handleGradientColorChange(index)}
                             />
                         </Grid>
                     ))}
-            </Grid>
+                    {configure && (
+                        <Grid item>
+                            <LightCommand
+                                service={service}
+                                expanded={expanded}
+                            />
+                        </Grid>
+                    )}
+                    {configure &&
+                        configureRegisters.map(code => (
+                            <Grid item key={code}>
+                                <RegisterInputItem
+                                    service={service}
+                                    registerCode={code}
+                                    visible={visible}
+                                />
+                            </Grid>
+                        ))}
+                </Grid>
+            )}
         </>
     )
 }
