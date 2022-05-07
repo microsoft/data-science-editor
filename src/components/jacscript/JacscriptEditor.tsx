@@ -8,7 +8,6 @@ import React, {
 } from "react"
 import { Flags } from "../../../jacdac-ts/src/jdom/flags"
 import VMDiagnostics from "./VMDiagnostics"
-import BlockRolesToolbar from "../blockly/BlockRolesToolbar"
 import BlockContext, { BlockProvider } from "../blockly/BlockContext"
 import BlockDiagnostics from "../blockly/BlockDiagnostics"
 import workspaceJSONToJacscriptProgram from "./JacscriptGenerator"
@@ -16,11 +15,8 @@ import BlockEditor from "../blockly/BlockEditor"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
 import {
     JACSCRIPT_WARNINGS_CATEGORY,
-    WORKSPACE_FILENAME,
 } from "../blockly/toolbox"
-import FileTabs from "../fs/FileTabs"
 import { WorkspaceFile } from "../blockly/dsl/workspacejson"
-import FileSystemContext from "../FileSystemContext"
 import jacscriptDsls from "./jacscriptdsls"
 import { VMProgram } from "../../../jacdac-ts/src/vm/ir"
 import JacscriptDiagnostics from "./JacscriptDiagnostics"
@@ -31,14 +27,12 @@ import {
 import useEffectAsync from "../useEffectAsync"
 import { jacscriptCompile } from "../blockly/dsl/workers/jacscript.proxy"
 import type { JacscriptCompileResponse } from "../../workers/jacscript/jacscript-worker"
-import { SRV_JACSCRIPT_MANAGER } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
-import useServices from "../hooks/useServices"
 import { mountJacscriptBridge } from "../blockly/dsl/workers/vm.proxy"
-import JacscriptManagerChip from "./JacscriptManagerChip"
+import JacscriptEditorToolbar from "./JacscriptEditorToolbar"
 
-const JACSCRIPT_EDITOR_ID = "jcs"
+export const JACSCRIPT_EDITOR_ID = "jcs"
 const JACSCRIPT_SOURCE_STORAGE_KEY = "tools:jacscripteditor"
-const JACSCRIPT_NEW_FILE_CONTENT = JSON.stringify({
+export const JACSCRIPT_NEW_FILE_CONTENT = JSON.stringify({
     editor: JACSCRIPT_EDITOR_ID,
     xml: "",
 } as WorkspaceFile)
@@ -49,11 +43,6 @@ function JacscriptEditorWithContext() {
     const [program, setProgram] = useState<VMProgram>()
     const [jscProgram, setJscProgram] = useState<JacscriptProgram>()
     const [jscCompiled, setJscCompiled] = useState<JacscriptCompileResponse>()
-    const { fileSystem } = useContext(FileSystemContext)
-
-    // grab the first jacscript manager, favor physical services first
-    const services = useServices({ serviceClass: SRV_JACSCRIPT_MANAGER })
-    const [manager, setManager] = useState(services[0])
 
     useEffect(() => mountJacscriptBridge(), [])
     useEffect(() => {
@@ -94,35 +83,11 @@ function JacscriptEditorWithContext() {
         [jscProgram]
     )
 
-    const handleSetSelected = service => () => setManager(service)
-
     return (
         <Grid container spacing={1}>
             <Grid item xs={12} sm={8}>
                 <Grid container direction="column" spacing={1}>
-                    {!!fileSystem && (
-                        <Grid item xs={12}>
-                            <FileTabs
-                                newFileName={WORKSPACE_FILENAME}
-                                newFileContent={JACSCRIPT_NEW_FILE_CONTENT}
-                                hideFiles={true}
-                            />
-                        </Grid>
-                    )}
-                    <Grid item xs={12}>
-                        <BlockRolesToolbar>
-                            {services.map(service => (
-                                <Grid item key={service.id}>
-                                    <JacscriptManagerChip
-                                        service={service}
-                                        selected={service === manager}
-                                        setSelected={handleSetSelected(service)}
-                                        jscCompiled={jscCompiled}
-                                    />
-                                </Grid>
-                            ))}
-                        </BlockRolesToolbar>
-                    </Grid>
+                    <JacscriptEditorToolbar jscCompiled={jscCompiled} />
                     <Grid item xs={12}>
                         <BlockEditor />
                     </Grid>
