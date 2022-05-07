@@ -19,6 +19,7 @@ import {
     EventBlockDefinition,
     identityTransformData,
     InputDefinition,
+    LabelDefinition,
     OptionsInputDefinition,
     toolsColour,
     TWIN_BLOCK,
@@ -42,6 +43,7 @@ import {
     ServicesBaseDSL,
     toRoleType,
     LOG_BLOCK,
+    LOG_VALUE_BLOCK,
     ROLE_BOUND_EVENT_BLOCK,
     CONSOLE_BLOCK,
 } from "./servicesbase"
@@ -484,6 +486,27 @@ export class ServicesBlockDomainSpecificLanguage
             },
             {
                 kind: "block",
+                type: LOG_VALUE_BLOCK,
+                message0: `log value %1 = %2`,
+                args0: [
+                    <InputDefinition>{
+                        type: "input_value",
+                        name: "value",
+                    },
+                    <InputDefinition>{
+                        type: "input_value",
+                        name: "arg",
+                    },
+                ],
+                colour: toolsColour,
+                inputsInline: true,
+                previousStatement: CODE_STATEMENT_TYPE,
+                nextStatement: CODE_STATEMENT_TYPE,
+                tooltip: `Log a name value pair to the console`,
+                helpUrl: "",
+            },
+            {
+                kind: "block",
                 type: CONSOLE_BLOCK,
                 message0: `console %1 %2`,
                 args0: [
@@ -551,6 +574,10 @@ export class ServicesBlockDomainSpecificLanguage
             name: "Debug",
             colour: toolsColour,
             contents: [
+                <LabelDefinition>{
+                    kind: "label",
+                    text: "Console",
+                },
                 <BlockReference>{
                     kind: "block",
                     type: LOG_BLOCK,
@@ -560,7 +587,19 @@ export class ServicesBlockDomainSpecificLanguage
                 },
                 <BlockReference>{
                     kind: "block",
+                    type: LOG_VALUE_BLOCK,
+                    values: {
+                        value: { kind: "block", type: "text" },
+                        arg: { kind: "block", type: "math_number" },
+                    },
+                },
+                <BlockReference>{
+                    kind: "block",
                     type: CONSOLE_BLOCK,
+                },
+                <LabelDefinition>{
+                    kind: "label",
+                    text: "Device Twins",
                 },
                 <BlockReference>{
                     kind: "block",
