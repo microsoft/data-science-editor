@@ -6,11 +6,20 @@ import DarkModeProvider from "../../ui/DarkModeProvider"
 import JacdacProvider from "../../../jacdac/Provider"
 import AppTheme from "../../ui/AppTheme"
 import Blockly, { Events } from "blockly"
-import { WorkspaceProvider } from "../WorkspaceContext"
+import {
+    FieldWithServices,
+    resolveBlockServices,
+    resolveWorkspaceServices,
+    WorkspaceProvider,
+} from "../WorkspaceContext"
 import { WebAudioProvider } from "../../ui/WebAudioContext"
 import { SnackbarProvider } from "notistack"
+import { CHANGE } from "../../../../jacdac-ts/src/jdom/constants"
 
-export default class ReactInlineField<T = unknown> extends ReactField<T> {
+export default class ReactInlineField<T = unknown>
+    extends ReactField<T>
+    implements FieldWithServices
+{
     protected container: HTMLDivElement
     protected resizeObserver: ResizeObserver
     // React root
@@ -84,6 +93,10 @@ export default class ReactInlineField<T = unknown> extends ReactField<T> {
 
     renderInlineField(): ReactNode {
         return null
+    }
+
+    notifyServicesChanged() {
+        this.inlineRoot_?.render(this.renderBlock())
     }
 
     renderBlock(): ReactNode {

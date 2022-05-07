@@ -253,20 +253,25 @@ export function WorkspaceProvider(props: {
     )
     const roleServiceClass = useChange(
         roleManager,
-        _ => _?.roles().find(r => r.role === role)?.serviceClass
+        _ => _?.roles().find(r => r.role === role)?.serviceClass,
+        [role]
     )
     const [flyout, setFlyout] = useState(!!sourceBlock?.isInFlyout)
 
+    const updateRole = () => {
+        const newRole = resolveRole()
+        const newSourceBlock = field?.getSourceBlock()
+        setSourceBlock(newSourceBlock)
+        setRole(newRole)
+        setServiceId(resolveServiceId())
+        setFlyout(!!newSourceBlock?.isInFlyout)
+    }
+
     // resolve role
-    useEffect(() => {
-        return field?.events.subscribe(CHANGE, () => {
-            const newSourceBlock = field.getSourceBlock()
-            setSourceBlock(newSourceBlock)
-            setRole(resolveRole())
-            setServiceId(resolveServiceId())
-            setFlyout(!!newSourceBlock?.isInFlyout)
-        })
-    }, [field, workspace])
+    useEffect(
+        () => field?.events.subscribe(CHANGE, updateRole),
+        [field, workspace]
+    )
 
     // resolve current role service
     useEffect(() => {

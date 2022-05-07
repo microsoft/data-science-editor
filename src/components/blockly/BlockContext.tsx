@@ -94,7 +94,8 @@ export function BlockProvider(props: {
     onBeforeSaveWorkspaceFile?: (file: WorkspaceFile) => void
     children: ReactNode
 }) {
-    const { editorId, storageKey, dsls, children, onBeforeSaveWorkspaceFile } = props
+    const { editorId, storageKey, dsls, children, onBeforeSaveWorkspaceFile } =
+        props
     const { setError } = useSnackbar()
     const { fileSystem } = useContext(FileSystemContext)
     const workspaceDirectory = useChange(fileSystem, _ => _?.workingDirectory)
@@ -146,19 +147,16 @@ export function BlockProvider(props: {
 
     const toolboxConfiguration = useToolbox(dsls, workspaceJSON)
     const initializeBlockServices = (block: BlockWithServices) => {
-        if (block?.jacdacServices?.initialized) return
+        if (!block || block?.jacdacServices?.initialized) return
 
         let services = block.jacdacServices
-        if (!services) {
-            services = block.jacdacServices = new BlockServices()
-            block.inputList?.forEach(i =>
-                i.fieldRow?.forEach(f =>
-                    (
-                        f as unknown as FieldWithServices
-                    ).notifyServicesChanged?.()
-                )
-            )
-        }
+        if (!services) services = block.jacdacServices = new BlockServices()
+        block.inputList?.forEach(i =>
+            i.fieldRow?.forEach(f => {
+                const fs = f as unknown as FieldWithServices
+                fs?.notifyServicesChanged?.()
+            })
+        )
         services.initialized = true
         registerDataSolver(block)
     }
@@ -170,21 +168,21 @@ export function BlockProvider(props: {
             services?.clearData()
         } else services?.emit(CHANGE)
     }
-
+    const initAllBlockServices = () =>
+        workspace
+            ?.getAllBlocks(false)
+            .forEach(b => initializeBlockServices(b as BlockWithServices))
     const handleWorkspaceEvent = (event: {
         type: string
         workspaceId: string
     }) => {
         const { type, workspaceId } = event
         if (workspaceId !== workspace.id) return
-        //console.log(`blockly: ${type}`, event)
         if (type === Events.BLOCK_DRAG) {
             const dragEvent = event as Events.BlockDrag
             setDragging(!!dragEvent.isStart)
         } else if (type === Events.FINISHED_LOADING) {
-            workspace
-                .getAllBlocks(false)
-                .forEach(b => initializeBlockServices(b as BlockWithServices))
+            initAllBlockServices()
         } else if (type === Events.BLOCK_CREATE) {
             const bev = event as unknown as Events.BlockCreate
             const block = workspace.getBlockById(
@@ -303,6 +301,7 @@ export function BlockProvider(props: {
             ...dsls.map(dsl => dsl.createWorkspaceChangeListener?.(workspace)),
         ].filter(c => !!c)
         handlers.forEach(handler => workspace?.addChangeListener(handler))
+        initAllBlockServices()
         return () =>
             handlers?.forEach(handler =>
                 workspace?.removeChangeListener(handler)
