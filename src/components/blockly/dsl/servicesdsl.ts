@@ -352,7 +352,7 @@ export class ServicesBlockDomainSpecificLanguage
                     <VariableInputDefinition>{
                         type: "field_variable",
                         name: "role",
-                        variable: "all",
+                        variable: "none",
                         variableTypes: [
                             "client",
                             ...supportedServices.map(srv => toRoleType(srv)),

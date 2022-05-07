@@ -62,10 +62,11 @@ const shadowDsl: BlockDomainSpecificLanguage = {
                     type: "field_dropdown",
                     name: "value",
                     options: [
+                        ["1s", "1"],
                         ["0.1s", "0.1"],
                         ["0.5s", "0.5"],
-                        ["1s", "1"],
                         ["5s", "5"],
+                        ["15s", "15"],
                         ["30s", "30"],
                         ["1min", "60"],
                         ["5min", "360"],
