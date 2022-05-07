@@ -92,6 +92,7 @@ const SET_STATUS_LIGHT_BLOCK = "jacdac_set_status_light"
 export const ROLE_BOUND_EVENT_BLOCK = "jacdac_role_bound_event"
 const ROLE_BOUND_BLOCK = "jacdac_role_bound"
 export const LOG_BLOCK = "tools_log"
+export const CONSOLE_BLOCK = "console_display"
 
 function isBooleanField(field: jdspec.PacketMember) {
     return field.type === "bool"

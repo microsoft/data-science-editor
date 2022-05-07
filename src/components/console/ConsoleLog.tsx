@@ -15,6 +15,7 @@ const StyledAutoScroll = styled(AutoScroll)(() => ({
         backgroundColor: "#1d1d1d",
         height: "calc(100vh - 11.05rem)",
         fontWeight: "600",
+        minWidth: "22rem",
     },
 }))
 

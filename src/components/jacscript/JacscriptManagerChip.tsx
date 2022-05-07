@@ -98,7 +98,7 @@ export default function JacscriptManagerChip(props: {
         <Chip
             label={label}
             title={title}
-            color={selected ? "primary" : undefined}
+            color={selected ? "secondary" : undefined}
             variant={selected ? "filled" : undefined}
             avatar={<DeviceAvatar device={service.device} />}
             onClick={handleClick}

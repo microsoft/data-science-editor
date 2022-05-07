@@ -6,15 +6,9 @@ import DarkModeProvider from "../../ui/DarkModeProvider"
 import JacdacProvider from "../../../jacdac/Provider"
 import AppTheme from "../../ui/AppTheme"
 import Blockly, { Events } from "blockly"
-import {
-    FieldWithServices,
-    resolveBlockServices,
-    resolveWorkspaceServices,
-    WorkspaceProvider,
-} from "../WorkspaceContext"
+import { FieldWithServices, WorkspaceProvider } from "../WorkspaceContext"
 import { WebAudioProvider } from "../../ui/WebAudioContext"
 import { SnackbarProvider } from "notistack"
-import { CHANGE } from "../../../../jacdac-ts/src/jdom/constants"
 
 export default class ReactInlineField<T = unknown>
     extends ReactField<T>

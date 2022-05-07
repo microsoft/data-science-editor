@@ -19,7 +19,6 @@ import {
     EventBlockDefinition,
     identityTransformData,
     InputDefinition,
-    loggingColour,
     OptionsInputDefinition,
     toolsColour,
     TWIN_BLOCK,
@@ -44,9 +43,11 @@ import {
     toRoleType,
     LOG_BLOCK,
     ROLE_BOUND_EVENT_BLOCK,
+    CONSOLE_BLOCK,
 } from "./servicesbase"
 import { humanify } from "../../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import VariablesField from "../fields/VariablesFields"
+import ConsoleField from "../fields/ConsoleField"
 
 const SET_STATUS_LIGHT_BLOCK = "jacdac_set_status_light"
 const ROLE_BOUND_BLOCK = "jacdac_role_bound"
@@ -474,12 +475,31 @@ export class ServicesBlockDomainSpecificLanguage
                         name: "value",
                     },
                 ],
-                colour: loggingColour,
+                colour: toolsColour,
                 inputsInline: true,
                 previousStatement: CODE_STATEMENT_TYPE,
                 nextStatement: CODE_STATEMENT_TYPE,
                 tooltip: `Log an entry to the console`,
                 helpUrl: "",
+            },
+            {
+                kind: "block",
+                type: CONSOLE_BLOCK,
+                message0: `console %1 %2`,
+                args0: [
+                    {
+                        type: "input_dummy",
+                    },
+                    <InputDefinition>{
+                        type: ConsoleField.KEY,
+                        name: "console",
+                    },
+                ],
+                colour: toolsColour,
+                inputsInline: false,
+                tooltip: `Display console messages`,
+                helpUrl: "",
+                template: "meta",
             },
         ]
 
@@ -526,10 +546,10 @@ export class ServicesBlockDomainSpecificLanguage
             ],
         }
 
-        const loggingCategory: CategoryDefinition = {
+        const debugCategory: CategoryDefinition = {
             kind: "category",
-            name: "Logging",
-            colour: loggingColour,
+            name: "Debug",
+            colour: toolsColour,
             contents: [
                 <BlockReference>{
                     kind: "block",
@@ -538,14 +558,10 @@ export class ServicesBlockDomainSpecificLanguage
                         value: { kind: "block", type: "text" },
                     },
                 },
-            ],
-        }
-
-        const debugCategory: CategoryDefinition = {
-            kind: "category",
-            name: "Debug",
-            colour: toolsColour,
-            contents: [
+                <BlockReference>{
+                    kind: "block",
+                    type: CONSOLE_BLOCK,
+                },
                 <BlockReference>{
                     kind: "block",
                     type: TWIN_BLOCK,
@@ -561,12 +577,7 @@ export class ServicesBlockDomainSpecificLanguage
             ],
         }
 
-        return [
-            ...clientServicesCategories,
-            commonCategory,
-            loggingCategory,
-            debugCategory,
-        ]
+        return [...clientServicesCategories, commonCategory, debugCategory]
     }
 }
 const servicesDSL = new ServicesBlockDomainSpecificLanguage()
