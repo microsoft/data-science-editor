@@ -12,7 +12,6 @@ import ConnectAlert from "../alert/ConnectAlert"
 import ConnectButtons from "../buttons/ConnectButtons"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import SimulateDeviceAlert from "../alert/SimulateDeviceAlert"
-import MakeCodeAddBlocksButton from "../makecode/MakeCodeAddBlocksButton"
 import { Flags } from "../../../jacdac-ts/src/jdom/flags"
 import useBus from "../../jacdac/useBus"
 import StartSimulatorButton from "../buttons/StartSimulatorButton"
@@ -80,7 +79,6 @@ export default function Dashboard(props: DashboardProps) {
 
     return (
         <>
-            <MakeCodeAddBlocksButton />
             {!hideSimulators && (
                 <DashboardDeviceGroup
                     title="Simulators"

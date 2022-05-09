@@ -9,6 +9,7 @@ import Dashboard from "../../components/dashboard/Dashboard"
 import DarkModeContext from "../../components/ui/DarkModeContext"
 import IFrameBridgeClient from "../../components/makecode/iframebridgeclient"
 import useBus from "../../jacdac/useBus"
+import MakeCodeAddBlocksButton from "../../components/makecode/MakeCodeAddBlocksButton"
 
 /**
  * To debug locally:
@@ -59,18 +60,21 @@ function Carousel() {
     }, [])
 
     return (
-        <Dashboard
-            showHeader={false}
-            showDeviceHeader={true}
-            showDeviceAvatar={true}
-            deviceSort={deviceSort}
-            deviceFilter={deviceFilter}
-            serviceFilter={serviceFilter}
-            showStartRoleSimulators={true}
-            alwaysVisible={true}
-            variant="icon"
-            controlled={true}
-        />
+        <>
+            <MakeCodeAddBlocksButton />
+            <Dashboard
+                showHeader={false}
+                showDeviceHeader={true}
+                showDeviceAvatar={true}
+                deviceSort={deviceSort}
+                deviceFilter={deviceFilter}
+                serviceFilter={serviceFilter}
+                showStartRoleSimulators={false}
+                alwaysVisible={true}
+                variant="icon"
+                controlled={true}
+            />
+        </>
     )
 }
 
