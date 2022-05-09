@@ -41,7 +41,7 @@ export default function MakeCodeAddBlocksButton() {
                 hideOnDisabled={true}
                 variant="contained"
             >
-                Start sims
+                Start simulators
             </StartMissingSimulatorsButton>
         </Box>
     )
