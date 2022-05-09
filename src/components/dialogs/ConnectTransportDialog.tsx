@@ -19,9 +19,12 @@ import { Transport } from "../../../jacdac-ts/src/jdom/transport/transport"
 import DialogTitleWithClose from "../ui/DialogTitleWithClose"
 import GridHeader from "../ui/GridHeader"
 import { Flags } from "../../../jacdac-ts/src/jdom/flags"
+import { Link } from "gatsby-theme-material-ui"
 
 function ConnectDeviceCard(props: { device: jdspec.DeviceSpec }) {
     const { device } = props
+    const { name, firmwares } = device
+    const firmware = firmwares?.[0]
     const image = useDeviceImage(device, "preview")
     const theme = useTheme()
     return (
@@ -31,7 +34,19 @@ function ConnectDeviceCard(props: { device: jdspec.DeviceSpec }) {
                 image={image}
                 height={theme.spacing(12)}
             />
-            <CardHeader subheader={device.name} />
+            <CardHeader subheader={name} />
+            {!!firmware && (
+                <CardActions>
+                    <Link
+                        variant="caption"
+                        color="inherit"
+                        href={firmware.url}
+                        title="Download firwmare to connect Jacdac devices"
+                    >
+                        Download firmware
+                    </Link>
+                </CardActions>
+            )}
         </Card>
     )
 }
