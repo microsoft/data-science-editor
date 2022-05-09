@@ -52,13 +52,15 @@ function DeviceItem(props: {
 
 export default function Page() {
     const [tab, setTab] = useState(0)
+    const [proxy, setProxy] = useState(false)
     const [autoUpdate, setAutoUpdate] = useState(false)
     const [factory, setFactory] = useState(false)
 
     // don't let a brain interfere
-    useProxy(true)
+    useProxy(proxy)
 
     const handleSetFactory = (checked: boolean) => setFactory(checked)
+    const handleSetProxy = (checked: boolean) => setProxy(checked)
     const devices = useDevices({
         physical: true,
         announced: true,
@@ -119,6 +121,14 @@ export default function Page() {
                 >
                     Tests should be fast and automated in factory mode. Manual
                     tests are disabled.
+                </AlertSwitch>
+                <AlertSwitch
+                    severity="info"
+                    title="automatic dongle mode"
+                    checked={proxy}
+                    onChecked={handleSetProxy}
+                >
+                    Force brains to enter dongle mode, to avoid application interfere with testing.
                 </AlertSwitch>
                 <AlertSwitch
                     severity="warning"
