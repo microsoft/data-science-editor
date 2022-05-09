@@ -1,11 +1,11 @@
-import { Chip, Divider, Grid, InputAdornment, TextField } from "@mui/material"
-import React, { startTransition, useMemo, useState } from "react"
+import { Divider, Grid, InputAdornment, TextField } from "@mui/material"
+import React, { useMemo, useState } from "react"
 import ServiceSpecificationList from "../components/specification/ServiceSpecificationList"
 import { useDebounce } from "use-debounce"
 import SearchIcon from "@mui/icons-material/Search"
 import ChipList from "../components/ui/ChipList"
 import { isSensor, serviceSpecifications } from "../../jacdac-ts/src/jdom/spec"
-import { arrayConcatMany, hexNum, unique } from "../../jacdac-ts/src/jdom/utils"
+import { arrayConcatMany, unique } from "../../jacdac-ts/src/jdom/utils"
 import MakeCodeIcon from "../components/icons/MakeCodeIcon"
 import KindIcon from "../components/KindIcon"
 import { serviceProviderDefinitionFromServiceClass } from "../../jacdac-ts/src/servers/servers"
@@ -94,12 +94,10 @@ export default function ServiceCatalog() {
         return r
     }, [deboundedFilter])
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
-        startTransition(() =>
-            setFilter({
-                ...filter,
-                query: event.target.value,
-            })
-        )
+        setFilter({
+            ...filter,
+            query: event.target.value,
+        })
     const handleTagClick = (t: string) => () => {
         setFilter({ ...filter, tag: tag === t ? "" : t })
     }
