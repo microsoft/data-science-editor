@@ -2,7 +2,6 @@ import { Grid } from "@mui/material"
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
-import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import LightWidget from "../widgets/LightWidget"
 import {
     LedReg,
@@ -16,7 +15,6 @@ import { bufferEq } from "../../../jacdac-ts/src/jdom/utils"
 import useChange from "../../jacdac/useChange"
 import { JDEventSource } from "../../../jacdac-ts/src/jdom/eventsource"
 import DashboardRegisterValueFallback from "./DashboardRegisterValueFallback"
-import EditIcon from "@mui/icons-material/Edit"
 
 const configureRegisters = [
     LedReg.Brightness,

@@ -39,7 +39,7 @@ function useActualAngle(service: JDService, visible: boolean) {
 }
 
 export default function DashboardServo(props: DashboardServiceProps) {
-    const { service, visible } = props
+    const { service, visible, expanded } = props
 
     const enabledRegister = useRegister(service, ServoReg.Enabled)
     const enabled = useRegisterBoolValue(enabledRegister, props)
@@ -66,9 +66,11 @@ export default function DashboardServo(props: DashboardServiceProps) {
                     widgetSize={widgetSize}
                 />
             </Grid>
-            <Grid item xs={12}>
-                <RegisterInput register={angleRegister} visible={visible} />
-            </Grid>
+            {expanded && (
+                <Grid item xs={12}>
+                    <RegisterInput register={angleRegister} visible={visible} />
+                </Grid>
+            )}
         </Grid>
     )
 }
