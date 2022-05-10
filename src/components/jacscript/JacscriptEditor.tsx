@@ -13,9 +13,7 @@ import BlockDiagnostics from "../blockly/BlockDiagnostics"
 import workspaceJSONToJacscriptProgram from "./JacscriptGenerator"
 import BlockEditor from "../blockly/BlockEditor"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
-import {
-    JACSCRIPT_WARNINGS_CATEGORY,
-} from "../blockly/toolbox"
+import { JACSCRIPT_WARNINGS_CATEGORY } from "../blockly/toolbox"
 import { WorkspaceFile } from "../blockly/dsl/workspacejson"
 import jacscriptDsls from "./jacscriptdsls"
 import { VMProgram } from "../../../jacdac-ts/src/vm/ir"

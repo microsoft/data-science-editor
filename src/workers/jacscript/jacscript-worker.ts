@@ -26,7 +26,8 @@ export interface JacscriptSpecsRequest extends JacscriptRequest {
 export interface JacscriptCompileResponse extends JacscriptMessage {
     success: boolean
     binary: Uint8Array
-    debugInfo: unknown /* DebugInfo */
+    dbg: unknown /* DebugInfo */
+    clientSpecs: jdspec.ServiceSpec[]
     files: Record<string, Uint8Array | string>
     logs: string
     errors: JacscriptError[]
@@ -62,7 +63,7 @@ class WorkerHost implements Host {
     getSpecs(): jdspec.ServiceSpec[] {
         return this.specs
     }
-    verifyBytecode(buf: Uint8Array, dbgInfo?: DebugInfo): void {
+    verifyBytecode(buf: Uint8Array, dbg?: DebugInfo): void {
         const r = this.vmMod.jacsDeploy(buf)
         if (r != 0) throw new Error("verification failed: " + r)
     }
