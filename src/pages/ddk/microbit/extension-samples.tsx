@@ -17,6 +17,7 @@ export default function Samples() {
         "pelikhan/pxt-kitronik-accessbit/jacdac",
         "pelikhan/pxt-kitronik-servo-lite/jacdac",
         "pelikhan/pxt-kitronik-i2c-16-servo/jacdac",
+        "pelikhan/kitronik-zip-halo-jacdac",
 
         "pelikhan/pxt-gamer-bit/jacdac",
 
