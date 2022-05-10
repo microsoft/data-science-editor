@@ -5,6 +5,7 @@ import useChange from "../../jacdac/useChange"
 import IFrameBridgeClient from "./iframebridgeclient"
 import MakeCodeIcon from "../../components/icons/MakeCodeIcon"
 import useBus from "../../jacdac/useBus"
+import StartMissingSimulatorsButton from "../buttons/StartMissingSimulatorsButton"
 
 export default function MakeCodeAddBlocksButton() {
     const bus = useBus()
@@ -20,19 +21,28 @@ export default function MakeCodeAddBlocksButton() {
         []
     )
 
-    if (!isMakeCodeTool || !extensions?.length) return null
+    if (!isMakeCodeTool) return null
+
     return (
         <Box m={1}>
-            <Button
-                size="medium"
-                color="primary"
+            {!!extensions?.length && (
+                <Button
+                    size="medium"
+                    color="primary"
+                    variant="contained"
+                    startIcon={<MakeCodeIcon />}
+                    onClick={handleAdd}
+                    aria-label={"Add blocks"}
+                >
+                    Add blocks
+                </Button>
+            )}
+            <StartMissingSimulatorsButton
+                hideOnDisabled={true}
                 variant="contained"
-                startIcon={<MakeCodeIcon />}
-                onClick={handleAdd}
-                aria-label={"Add blocks"}
             >
-                Add blocks
-            </Button>
+                Start simulators
+            </StartMissingSimulatorsButton>
         </Box>
     )
 }
