@@ -31,6 +31,7 @@ export default function Samples() {
         "pelikhan/yahboom-microbit-led-jacdac/",
 
         "pelikhan/pxt-k-bit/jacdac",
+        "pelikhan/keystudio-relay-breakout/",
     ]
     return (
         <>
