@@ -27,6 +27,7 @@ export default function MakeCodeAddBlocksButton() {
         <Box m={1}>
             {!!extensions?.length && (
                 <Button
+                    sx={{ mr: 1 }}
                     size="medium"
                     color="primary"
                     variant="contained"
