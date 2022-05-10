@@ -310,7 +310,10 @@ export default function DashboardGamepad(props: DashboardServiceProps) {
 
     // buttonsAvailable should be defined by now
     const analog = !(buttonsAvailable & GAMEPAD_DPAD_BUTTONS)
-    const hasButtons = !!(buttonsAvailable & ~GAMEPAD_DPAD_BUTTONS)
+    const hasABButtons = !!(
+        buttonsAvailable &
+        (GamepadButtons.A | GamepadButtons.B)
+    )
 
     const w = 256
     const h = 128
@@ -359,16 +362,28 @@ export default function DashboardGamepad(props: DashboardServiceProps) {
                     cy: ch * 2.75,
                     small: false,
                 },
-                { id: GamepadButtons.Menu, cx: cw * 7, cy: scy, small: true },
+                {
+                    id: GamepadButtons.X,
+                    cx: cw * 8.5,
+                    cy: ch * 0.75,
+                    small: false,
+                },
+                {
+                    id: GamepadButtons.Y,
+                    cx: cw * 7.5,
+                    cy: ch * 2.25,
+                    small: false,
+                },
+                { id: GamepadButtons.Menu, cx: cw * 6, cy: scy, small: true },
                 {
                     id: GamepadButtons.Select,
-                    cx: cw * 6,
+                    cx: cw * 5,
                     cy: scy,
                     small: true,
                 },
 
-                { id: GamepadButtons.Exit, cx: cw * 8, cy: scy, small: true },
-                { id: GamepadButtons.Reset, cx: cw * 9, cy: scy, small: true },
+                { id: GamepadButtons.Exit, cx: cw * 7, cy: scy, small: true },
+                { id: GamepadButtons.Reset, cx: cw * 8, cy: scy, small: true },
             ].filter(p => !!(p.id & buttonsAvailable)),
         [buttonsAvailable]
     )
@@ -377,6 +392,7 @@ export default function DashboardGamepad(props: DashboardServiceProps) {
 
     const abx = cw * 8 + 1
     const aby = ch * 3 + 4
+
     const abr = cw / 2
     const abw = cw * 5 - 6
     const padcx = 3 * cw
@@ -415,7 +431,7 @@ export default function DashboardGamepad(props: DashboardServiceProps) {
                         <GamepadWidget {...props} />
                     </g>
                 )}
-                {hasButtons && (
+                {hasABButtons && (
                     <rect
                         transform={`rotate(-66, ${abx}, ${aby})`}
                         x={abx}
