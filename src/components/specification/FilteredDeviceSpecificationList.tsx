@@ -26,6 +26,7 @@ export default function FilteredDeviceSpecificationList(props: {
     const [usb, setUsb] = useState(false)
     const [serial, setSerial] = useState(false)
     const [buyNow, setBuyNow] = useState(false)
+    const [makeCode, setMakeCode] = useState(false)
 
     const requiredServiceClasses = !isNaN(serviceClass) && [serviceClass]
 
@@ -47,6 +48,7 @@ export default function FilteredDeviceSpecificationList(props: {
     const handleSetUSB = () => setUsb(c => !c)
     const handleSetSerial = () => setSerial(c => !c)
     const handleBuyNow = () => setBuyNow(c => !c)
+    const handleMakeCode = () => setMakeCode(c => !c)
     const handleSetSelectedTag = (tag: string) => () =>
         setSelectedTags(ts => {
             const i = ts.indexOf(tag)
@@ -93,6 +95,13 @@ export default function FilteredDeviceSpecificationList(props: {
                 </Grid>
                 <Grid item>
                     <FilterChip
+                        label="MakeCode extension required"
+                        value={makeCode}
+                        onClick={handleMakeCode}
+                    />
+                </Grid>
+                <Grid item>
+                    <FilterChip
                         label="firmware code"
                         value={firmwareSources}
                         onClick={handleSetFirmwareSources}
@@ -135,6 +144,7 @@ export default function FilteredDeviceSpecificationList(props: {
                 {...others}
                 query={query}
                 buyNow={buyNow}
+                makeCode={makeCode}
                 firmwareSources={firmwareSources}
                 hardwareDesign={hardwareDesign}
                 requiredServiceClasses={requiredServiceClasses}
