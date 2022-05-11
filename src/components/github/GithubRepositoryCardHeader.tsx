@@ -16,8 +16,10 @@ export default function GithubRepositoryCardHeader(props: {
     slug: string
     showRelease?: boolean
     showMakeCodeButton?: boolean
+    showMakeCodeImportButton?: boolean
 }) {
-    const { slug, showRelease, showMakeCodeButton } = props
+    const { slug, showRelease, showMakeCodeButton, showMakeCodeImportButton } =
+        props
     const { repoPath, folder, name: repoName } = normalizeSlug(slug)
     const {
         response: repo,
@@ -33,8 +35,8 @@ export default function GithubRepositoryCardHeader(props: {
             <Box component="span" ml={0.5} mr={0.5}>
                 /
             </Box>
-            {folder ? (
-                <MakeCodeGithubImportLink slug={slug} />
+            {folder && showMakeCodeImportButton ? (
+                <MakeCodeGithubImportLink slug={repoPath} />
             ) : (
                 <Link href={repo.html_url} target="_blank" underline="hover">
                     <Typography component="span" variant="h5">

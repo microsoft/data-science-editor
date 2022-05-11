@@ -14,6 +14,7 @@ export default function GithubRepositoryCard(props: {
     showDescription?: boolean
     showDependencies?: boolean
     showMakeCodeButton?: boolean
+    showMakeCodeImportButton?: boolean
 }) {
     const {
         slug,
@@ -21,6 +22,7 @@ export default function GithubRepositoryCard(props: {
         showDescription,
         showDependencies,
         showMakeCodeButton,
+        showMakeCodeImportButton,
     } = props
     const { response: repo } = useRepository(slug)
     const description = showDescription && repo?.description
@@ -31,6 +33,7 @@ export default function GithubRepositoryCard(props: {
                 slug={slug}
                 showRelease={showRelease}
                 showMakeCodeButton={showMakeCodeButton}
+                showMakeCodeImportButton={showMakeCodeImportButton}
             />
             <CardContent>
                 {description && <Typography>{description}</Typography>}

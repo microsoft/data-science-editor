@@ -8,6 +8,7 @@ export default function GithubRepositoryList(props: {
     showRelease?: boolean
     showDependencies?: boolean
     showMakeCodeButton?: boolean
+    showMakeCodeImportButton?: boolean
 }) {
     const { repos, ...others } = props
     return (

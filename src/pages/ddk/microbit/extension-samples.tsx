@@ -52,6 +52,7 @@ export default function Samples() {
                 showDescription={true}
                 showDependencies={true}
                 showMakeCodeButton={true}
+                showMakeCodeImportButton={true}
             />
         </>
     )
