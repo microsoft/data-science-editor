@@ -31,6 +31,7 @@ function DeviceSpecificationCard(props: {
         hardwareDesign,
         firmwareSource,
         storeLink,
+        makeCodeRepo,
     } = specification
     const imageUrl = useDeviceImage(specification, size)
     const serviceNames = uniqueMap(
@@ -79,11 +80,25 @@ function DeviceSpecificationCard(props: {
                     </Typography>
                     <ChipList>
                         {!storeLink && <Chip size="small" label="prototype" />}
+                        {makeCodeRepo && (
+                            <Chip
+                                size="small"
+                                label="MakeCode extension available."
+                            />
+                        )}
                         {firmwareSource && (
-                            <Chip size="small" label="firmware code" />
+                            <Chip
+                                size="small"
+                                label="firmware code"
+                                title="Firmware source is avaiable."
+                            />
                         )}
                         {hardwareDesign && (
-                            <Chip size="small" label="hardware design" />
+                            <Chip
+                                size="small"
+                                label="hardware design"
+                                title="Hardware design files available."
+                            />
                         )}
                     </ChipList>
                 </CardContent>
