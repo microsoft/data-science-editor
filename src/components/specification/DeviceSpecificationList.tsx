@@ -83,7 +83,8 @@ function DeviceSpecificationCard(props: {
                         {makeCodeRepo && (
                             <Chip
                                 size="small"
-                                label="MakeCode extension available."
+                                label="MakeCode"
+                                title="MakeCode extension available."
                             />
                         )}
                         {firmwareSource && (
