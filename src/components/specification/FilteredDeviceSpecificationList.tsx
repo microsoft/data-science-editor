@@ -95,7 +95,7 @@ export default function FilteredDeviceSpecificationList(props: {
                 </Grid>
                 <Grid item>
                     <FilterChip
-                        label="MakeCode extension required"
+                        label="MakeCode"
                         value={makeCode}
                         onClick={handleMakeCode}
                     />
