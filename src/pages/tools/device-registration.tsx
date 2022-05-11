@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import React, { lazy, useMemo, useState } from "react"
-import { Grid } from "@mui/material"
+import { Grid, Select, SelectChangeEvent } from "@mui/material"
 import useLocalStorage from "../../components/hooks/useLocalStorage"
 import { clone, unique } from "../../../jacdac-ts/src/jdom/utils"
 import {
@@ -141,6 +141,7 @@ export default function DeviceRegistration() {
     const hardwareDesignId = id + "-hwdesign"
     const firmwareSourceId = id + "-hwsource"
     const storeLinkId = id + "-store"
+    const connectorId = id + "-connector"
     const specifications = useDeviceSpecifications({
         includeDeprecated: true,
         includeExperimental: true,
@@ -293,6 +294,13 @@ export default function DeviceRegistration() {
         device.hardwareDesign = ev.target.value?.trim()
         updateDevice()
     }
+    const handleConnectorChanged = (
+        ev: SelectChangeEvent<jdspec.ConnectorType>
+    ) => {
+        device.connector = ev.target.value as jdspec.ConnectorType
+        if (device.connector === "edge") delete device.connector
+        updateDevice()
+    }
     const renderRepoInput = params => (
         <TextField
             {...params}
@@ -315,6 +323,7 @@ export default function DeviceRegistration() {
             productIdentifiers: [],
             repo: "",
         }
+
         const controlService = dev.service(JD_SERVICE_INDEX_CTRL)
         const descrReg = controlService.register(ControlReg.DeviceDescription)
         await descrReg.refresh()
@@ -326,7 +335,10 @@ export default function DeviceRegistration() {
             .services()
             .filter(srv => !isInfrastructure(srv.specification))
             .map(srv => srv.serviceClass)
-        d.name = device.description = descrReg.stringValue
+        const description = (descrReg.stringValue || "").split(/\s+/g)
+        d.company = description.shift() || ""
+        d.name = description.join(" ")
+        d.description = ""
         d.name?.replace(/\wv\d+.\d+\w/, m => {
             device.version = m
             return ""
@@ -528,6 +540,36 @@ export default function DeviceRegistration() {
                             </Box>
                         ))}
                         <AddServiceIconButton onAdd={handleServiceAdd} />
+                    </PaperBox>
+                </Grid>
+                <Grid item xs={12}>
+                    <PaperBox elevation={1}>
+                        <Typography color="inherit">
+                            Jacdac Connector
+                        </Typography>
+                        <Select
+                            id={connectorId}
+                            fullWidth={true}
+                            size="small"
+                            value={device.connector || "edge"}
+                            onChange={handleConnectorChanged}
+                        >
+                            <MenuItem value="none">None</MenuItem>
+                            <MenuItem value="edge">
+                                PCB edge connector, unpowered
+                            </MenuItem>
+                            <MenuItem value="edgeLowPower">
+                                PCB edge connector, low power
+                            </MenuItem>
+                            <MenuItem value="edgeHighPower">
+                                PCB edge connector, high power
+                            </MenuItem>
+                        </Select>
+                        <Typography variant="caption" component="div">
+                            The type of Jacdac connector present on the
+                            hardware, and the type of power connection available
+                            on this connector.
+                        </Typography>
                     </PaperBox>
                 </Grid>
                 <GridHeader title="Catalog" />
