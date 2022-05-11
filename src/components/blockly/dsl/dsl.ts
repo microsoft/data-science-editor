@@ -10,7 +10,10 @@ import {
     resolveBlockDefinition,
     ServiceBlockDefinition,
 } from "../toolbox"
-import { CmdWithErrors, ExpressionWithErrors } from "../../jacscript/JacscriptGenerator"
+import {
+    CmdWithErrors,
+    ExpressionWithErrors,
+} from "../../jacscript/JacscriptGenerator"
 import { BlockJSON, WorkspaceFile, WorkspaceJSON } from "./workspacejson"
 
 export interface CreateBlocksOptions {

@@ -18,15 +18,9 @@ import { WorkspaceFile } from "../blockly/dsl/workspacejson"
 import jacscriptDsls from "./jacscriptdsls"
 import { VMProgram } from "../../../jacdac-ts/src/vm/ir"
 import JacscriptDiagnostics from "./JacscriptDiagnostics"
-import {
-    JacscriptProgram,
-    toJacscript,
-} from "../../../jacdac-ts/src/vm/ir2jacscript"
-import useEffectAsync from "../useEffectAsync"
-import { jacscriptCompile } from "../blockly/dsl/workers/jacscript.proxy"
-import type { JacscriptCompileResponse } from "../../workers/jacscript/jacscript-worker"
-import { mountJacscriptBridge } from "../blockly/dsl/workers/vm.proxy"
+import { toJacscript } from "../../../jacdac-ts/src/vm/ir2jacscript"
 import JacscriptEditorToolbar from "./JacscriptEditorToolbar"
+import useJacscript, { JacscriptProvider } from "./JacscriptContext"
 
 export const JACSCRIPT_EDITOR_ID = "jcs"
 const JACSCRIPT_SOURCE_STORAGE_KEY = "tools:jacscripteditor"
@@ -39,10 +33,12 @@ function JacscriptEditorWithContext() {
     const { dsls, workspaceJSON, roleManager, setWarnings } =
         useContext(BlockContext)
     const [program, setProgram] = useState<VMProgram>()
-    const [jscProgram, setJscProgram] = useState<JacscriptProgram>()
-    const [jscCompiled, setJscCompiled] = useState<JacscriptCompileResponse>()
+    const {
+        program: jscProgram,
+        setProgram: setJscProgram,
+        compiled: jscCompiled,
+    } = useJacscript()
 
-    useEffect(() => mountJacscriptBridge(), [])
     useEffect(() => {
         try {
             const newProgram = workspaceJSONToJacscriptProgram(
@@ -71,14 +67,6 @@ function JacscriptEditorWithContext() {
                 arrayConcatMany(program?.handlers.map(h => h.errors))
             ),
         [program]
-    )
-    useEffectAsync(
-        async mounted => {
-            const src = jscProgram?.program.join("\n")
-            const res = src && (await jacscriptCompile(src))
-            if (mounted()) setJscCompiled(res)
-        },
-        [jscProgram]
     )
 
     return (
@@ -117,18 +105,20 @@ export default function JacscriptEditor() {
 
     return (
         <NoSsr>
-            <BlockProvider
-                editorId={JACSCRIPT_EDITOR_ID}
-                storageKey={JACSCRIPT_SOURCE_STORAGE_KEY}
-                dsls={dsls}
-                onBeforeSaveWorkspaceFile={
-                    Flags.diagnostics
-                        ? handleOnBeforeSaveWorkspaceFile
-                        : undefined
-                }
-            >
-                <JacscriptEditorWithContext />
-            </BlockProvider>
+            <JacscriptProvider>
+                <BlockProvider
+                    editorId={JACSCRIPT_EDITOR_ID}
+                    storageKey={JACSCRIPT_SOURCE_STORAGE_KEY}
+                    dsls={dsls}
+                    onBeforeSaveWorkspaceFile={
+                        Flags.diagnostics
+                            ? handleOnBeforeSaveWorkspaceFile
+                            : undefined
+                    }
+                >
+                    <JacscriptEditorWithContext />
+                </BlockProvider>
+            </JacscriptProvider>
         </NoSsr>
     )
 }

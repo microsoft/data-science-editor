@@ -116,7 +116,11 @@ export default function useToolbox(
 
         const dslsCategories = arrayConcatMany(
             dsls.map(dsl =>
-                dsl?.createCategory?.({ theme, source, liveServices })
+                dsl?.createCategory?.({
+                    theme,
+                    source,
+                    liveServices,
+                })
             )
         )
             .filter(cat => !!cat)
