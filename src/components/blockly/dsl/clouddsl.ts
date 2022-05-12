@@ -114,18 +114,14 @@ const cloudDsl: BlockDomainSpecificLanguage = {
     ],
     compileExpressionToVM: (options: CompileExpressionToVMOptions) => {
         const { block } = options
-        const { type, inputs } = block
+        const { type } = block
         switch (type) {
             case JACSCRIPT_CLOUD_CONNECTED_BLOCK: {
                 return <ExpressionWithErrors>{
-                    expr: makeVMBase(block, {
-                        type: "CallExpression",
-                        arguments: [],
-                        callee: <jsep.Literal>{
-                            type: "Literal",
-                            raw: "cloud.connected",
-                        },
-                    }),
+                    expr: <jsep.Literal>{
+                        type: "Literal",
+                        raw: "cloud.connected",
+                    },
                     errors: [],
                 }
             }
