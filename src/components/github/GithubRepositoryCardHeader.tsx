@@ -36,9 +36,13 @@ export default function GithubRepositoryCardHeader(props: {
                 /
             </Box>
             {folder && showMakeCodeImportButton ? (
-                <MakeCodeGithubImportLink slug={repoPath} />
+                <MakeCodeGithubImportLink slug={slug} />
             ) : (
-                <Link href={repo.html_url} target="_blank" underline="hover">
+                <Link
+                    href={`https://github.com/${repoPath}/${folder || ""}`}
+                    target="_blank"
+                    underline="hover"
+                >
                     <Typography component="span" variant="h5">
                         {repo.name}
                     </Typography>
