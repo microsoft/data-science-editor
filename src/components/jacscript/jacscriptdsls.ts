@@ -7,10 +7,12 @@ import fieldsDsl from "../blockly/dsl/fieldsdsl"
 import variablesDsl from "../blockly/dsl/variablesdsl"
 import chartDsl from "../blockly/dsl/chartdsl"
 import cloudDsl from "../blockly/dsl/clouddsl"
+import debugDsl from "../blockly/dsl/debugdsl"
 
 const jacscriptDsls = [
     servicesDSL,
     cloudDsl,
+    debugDsl,
     loopsDsl,
     logicDsl,
     mathDsl,

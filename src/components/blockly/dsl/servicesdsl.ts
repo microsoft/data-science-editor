@@ -42,10 +42,7 @@ import {
     serviceHelp,
     ServicesBaseDSL,
     toRoleType,
-    LOG_BLOCK,
-    LOG_VALUE_BLOCK,
     ROLE_BOUND_EVENT_BLOCK,
-    CONSOLE_BLOCK,
     ROLE_BOUND_BLOCK,
     SET_STATUS_LIGHT_BLOCK,
 } from "./servicesbase"
@@ -54,7 +51,6 @@ import VariablesField from "../fields/VariablesFields"
 import ConsoleField from "../fields/ConsoleField"
 
 const INSPECT_BLOCK = "jacdac_tools_inspect"
-const VARIABLES_BLOCK = "tools_variables_view"
 const commandColor = "#8c6a1d"
 
 export class ServicesBlockDomainSpecificLanguage
@@ -436,91 +432,12 @@ export class ServicesBlockDomainSpecificLanguage
                 helpUrl: "",
                 template: "meta",
             },
-            {
-                kind: "block",
-                type: VARIABLES_BLOCK,
-                message0: `variables %1 %2`,
-                args0: [
-                    {
-                        type: "input_dummy",
-                    },
-                    {
-                        type: VariablesField.KEY,
-                        name: "variables",
-                    },
-                ],
-                colour: toolsColour,
-                inputsInline: false,
-                tooltip: `Watch variables values`,
-                helpUrl: "",
-                template: "meta",
-            },
-        ]
-        const loggerBlocks: BlockDefinition[] = [
-            {
-                kind: "block",
-                type: LOG_BLOCK,
-                message0: `log %1`,
-                args0: [
-                    <InputDefinition>{
-                        type: "input_value",
-                        name: "value",
-                    },
-                ],
-                colour: toolsColour,
-                inputsInline: true,
-                previousStatement: CODE_STATEMENT_TYPE,
-                nextStatement: CODE_STATEMENT_TYPE,
-                tooltip: `Log an entry to the console`,
-                helpUrl: "",
-            },
-            {
-                kind: "block",
-                type: LOG_VALUE_BLOCK,
-                message0: `log value %1 = %2`,
-                args0: [
-                    <InputDefinition>{
-                        type: "input_value",
-                        name: "value",
-                    },
-                    <InputDefinition>{
-                        type: "input_value",
-                        name: "arg",
-                    },
-                ],
-                colour: toolsColour,
-                inputsInline: true,
-                previousStatement: CODE_STATEMENT_TYPE,
-                nextStatement: CODE_STATEMENT_TYPE,
-                tooltip: `Log a name value pair to the console`,
-                helpUrl: "",
-            },
-            {
-                kind: "block",
-                type: CONSOLE_BLOCK,
-                message0: `console %1 %2`,
-                args0: [
-                    {
-                        type: "input_dummy",
-                    },
-                    <InputDefinition>{
-                        type: ConsoleField.KEY,
-                        name: "console",
-                    },
-                ],
-                colour: toolsColour,
-                inputsInline: false,
-                tooltip: `Display console messages`,
-                helpUrl: "",
-                template: "meta",
-            },
         ]
 
         return <BlockDefinition[]>[
             ...this._serviceBlocks,
             ...this._eventFieldBlocks,
             ...this._roleBlocks,
-            ...loggerBlocks,
             ...toolsBlocks,
         ]
     }
@@ -571,38 +488,7 @@ export class ServicesBlockDomainSpecificLanguage
             ],
         }
 
-        const debugCategory: CategoryDefinition = {
-            kind: "category",
-            name: "Debug",
-            colour: toolsColour,
-            contents: [
-                <BlockReference>{
-                    kind: "block",
-                    type: LOG_BLOCK,
-                    values: {
-                        value: { kind: "block", type: "text" },
-                    },
-                },
-                <BlockReference>{
-                    kind: "block",
-                    type: LOG_VALUE_BLOCK,
-                    values: {
-                        value: { kind: "block", type: "text" },
-                        arg: { kind: "block", type: "math_number" },
-                    },
-                },
-                <BlockReference>{
-                    kind: "block",
-                    type: CONSOLE_BLOCK,
-                },
-                <BlockReference>{
-                    kind: "block",
-                    type: VARIABLES_BLOCK,
-                },
-            ],
-        }
-
-        return [...clientServicesCategories, commonCategory, debugCategory]
+        return [...clientServicesCategories, commonCategory]
     }
 }
 const servicesDSL = new ServicesBlockDomainSpecificLanguage()

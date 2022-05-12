@@ -21,7 +21,6 @@ import {
     SRV_PROXY,
     SRV_ROLE_MANAGER,
     SRV_UNIQUE_BRAIN,
-    SystemReg,
 } from "../../../../jacdac-ts/src/jdom/constants"
 import { Flags } from "../../../../jacdac-ts/src/jdom/flags"
 import {
@@ -86,9 +85,6 @@ import { groupBy } from "../../../../jacdac-ts/src/jdom/utils"
 export const SET_STATUS_LIGHT_BLOCK = "jacdac_set_status_light"
 export const ROLE_BOUND_EVENT_BLOCK = "jacdac_role_bound_event"
 export const ROLE_BOUND_BLOCK = "jacdac_role_bound"
-export const LOG_BLOCK = "tools_log"
-export const LOG_VALUE_BLOCK = "tools_log_value"
-export const CONSOLE_BLOCK = "tools_console_display"
 
 function isBooleanField(field: jdspec.PacketMember) {
     return field.type === "bool"
@@ -1016,39 +1012,6 @@ export class ServicesBaseDSL {
                                 callee: <jsep.Literal>{
                                     type: "Literal",
                                     raw: "control.setStatusLight",
-                                },
-                            }),
-                            errors,
-                        }
-                    }
-                    case LOG_VALUE_BLOCK: {
-                        const exprsErrors = inputs
-                            .filter(i => i.child)
-                            .map(a => blockToExpression(undefined, a.child))
-                        return {
-                            cmd: makeVMBase(block, {
-                                type: "CallExpression",
-                                arguments: exprsErrors.map(e => e.expr),
-                                callee: <jsep.Literal>{
-                                    type: "Literal",
-                                    raw: "console.log",
-                                },
-                            }),
-                            errors: exprsErrors.flatMap(e => e.errors),
-                        }
-                    }
-                    case LOG_BLOCK: {
-                        const { expr, errors } = blockToExpression(
-                            undefined,
-                            inputs[0].child
-                        )
-                        return {
-                            cmd: makeVMBase(block, {
-                                type: "CallExpression",
-                                arguments: [expr],
-                                callee: <jsep.Literal>{
-                                    type: "Literal",
-                                    raw: "console.log",
                                 },
                             }),
                             errors,

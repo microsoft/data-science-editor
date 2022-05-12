@@ -17,7 +17,7 @@ const UPLOAD_ARGS = 1
 
 const cloudDsl: BlockDomainSpecificLanguage = {
     id: "cloud",
-    createBlocks: options => [
+    createBlocks: () => [
         {
             kind: "block",
             type: JACSCRIPT_CLOUD_UPLOAD_BLOCK,
@@ -48,7 +48,7 @@ const cloudDsl: BlockDomainSpecificLanguage = {
             inputsInline: true,
         },
     ],
-    createCategory: options => [
+    createCategory: () => [
         <CategoryDefinition>{
             kind: "category",
             name: "Cloud",
