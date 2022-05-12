@@ -1,6 +1,10 @@
 import jsep from "jsep"
 import { toMap } from "../../../../jacdac-ts/src/jdom/utils"
 import {
+    toIdentifier,
+    toMemberExpression,
+} from "../../../../jacdac-ts/src/vm/compile"
+import {
     ExpressionWithErrors,
     makeVMBase,
 } from "../../jacscript/JacscriptGenerator"
@@ -13,6 +17,8 @@ import {
 } from "../toolbox"
 import BlockDomainSpecificLanguage, {
     CompileCommandToVMOptions,
+    CompileEventToVMOptions,
+    CompileEventToVMResult,
     CompileExpressionToVMOptions,
 } from "./dsl"
 import { paletteColorByIndex } from "./palette"
@@ -118,10 +124,7 @@ const cloudDsl: BlockDomainSpecificLanguage = {
         switch (type) {
             case JACSCRIPT_CLOUD_CONNECTED_BLOCK: {
                 return <ExpressionWithErrors>{
-                    expr: <jsep.Literal>{
-                        type: "Literal",
-                        raw: "cloud.connected",
-                    },
+                    expr: toMemberExpression("cloud", "connected"),
                     errors: [],
                 }
             }
@@ -129,25 +132,48 @@ const cloudDsl: BlockDomainSpecificLanguage = {
                 return undefined
         }
     },
+    compileEventToVM: (
+        options: CompileEventToVMOptions
+    ): CompileEventToVMResult => {
+        const { block } = options
+        const { type, inputs } = block
+        console.log(options)
+        switch (type) {
+            case JACSCRIPT_CLOUD_MESSAGE_BLOCK: {
+                const label = inputs[0].fields["label"].value as string
+                if (!label)
+                    return <CompileEventToVMResult>{
+                        expression: <jsep.CallExpression>{
+                            type: "CallExpression",
+                            arguments: [],
+                            callee: toIdentifier("nop"),
+                        },
+                    }
+
+                return <CompileEventToVMResult>{
+                    expression: <jsep.CallExpression>{
+                        type: "CallExpression",
+                        arguments: [
+                            <jsep.Literal>{
+                                type: "Literal",
+                                value: label,
+                                raw: `"${label}"`,
+                            },
+                        ],
+                        callee: toIdentifier("cloudMethod"),
+                    },
+                }
+            }
+        }
+        return undefined
+    },
     compileCommandToVM: (options: CompileCommandToVMOptions) => {
         const { block, blockToExpression } = options
         const { type, inputs } = block
         switch (type) {
-            case JACSCRIPT_CLOUD_CONNECTED_BLOCK: {
-                return {
-                    cmd: makeVMBase(block, {
-                        type: "CallExpression",
-                        arguments: [],
-                        callee: <jsep.Literal>{
-                            type: "Literal",
-                            raw: "cloud.connected",
-                        },
-                    }),
-                    errors: [],
-                }
-            }
             case JACSCRIPT_CLOUD_UPLOAD_BLOCK: {
-                const label = inputs[0].fields["label"].value as string
+                let label = inputs[0].fields["label"].value as string
+                if (label === undefined) label = ""
                 const exprsErrors = inputs
                     .filter(i => i.child)
                     .map(a => blockToExpression(undefined, a.child))
@@ -162,10 +188,7 @@ const cloudDsl: BlockDomainSpecificLanguage = {
                             },
                             ...exprsErrors.map(e => e.expr),
                         ],
-                        callee: <jsep.Literal>{
-                            type: "Literal",
-                            raw: "cloud.upload",
-                        },
+                        callee: toMemberExpression("cloud", "upload"),
                     }),
                     errors: exprsErrors.flatMap(e => e.errors),
                 }
