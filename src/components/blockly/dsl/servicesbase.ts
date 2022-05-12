@@ -143,43 +143,6 @@ const customMessages = [
     },
 ]
 
-// internal helper functions
-const customShadows = [
-    {
-        serviceClass: SRV_SERVO,
-        kind: "rw",
-        identifier: ServoReg.Angle,
-        field: "_",
-        shadow: <BlockDefinition>{
-            kind: "block",
-            type: ServoAngleField.SHADOW.type,
-        },
-    },
-    {
-        serviceClass: SRV_BUZZER,
-        kind: "command",
-        identifier: BuzzerCmd.PlayNote,
-        field: "frequency",
-        shadow: <BlockDefinition>{
-            kind: "block",
-            type: NoteField.SHADOW.type,
-        },
-    },
-]
-
-const lookupCustomShadow = (
-    service: jdspec.ServiceSpec,
-    info: jdspec.PacketInfo,
-    field: jdspec.PacketMember
-) =>
-    customShadows.find(
-        cs =>
-            cs.serviceClass === service.classIdentifier &&
-            cs.kind == info.kind &&
-            cs.identifier === info.identifier &&
-            cs.field == field.name
-    )?.shadow
-
 const fieldsSupported = (pkt: jdspec.PacketInfo) =>
     pkt.fields.every(toBlocklyType)
 
@@ -191,9 +154,10 @@ const fieldToShadow = (
     info: jdspec.PacketInfo,
     field: jdspec.PacketMember
 ): BlockReference =>
-    lookupCustomShadow(service, info, field) ||
-    (isBooleanField(field)
+    isBooleanField(field)
         ? { kind: "block", type: "jacdac_on_off" }
+        : field.unit === "AudHz"
+        ? { kind: "block", type: NoteField.SHADOW.type }
         : isStringField(field)
         ? { kind: "block", type: "text" }
         : field.unit === "°"
@@ -213,7 +177,7 @@ const fieldToShadow = (
               value: field.defaultValue || 0,
               min: field.typicalMin || field.absoluteMin,
               max: field.typicalMax || field.absoluteMax,
-          })
+          }
 
 const variableName = (srv: jdspec.ServiceSpec, client: boolean) =>
     `${humanify(srv.camelName).toLowerCase()}${client ? "" : " server"} 1`
