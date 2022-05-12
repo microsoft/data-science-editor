@@ -7,11 +7,8 @@ import {
     isNumericType,
 } from "../../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import {
-    BuzzerCmd,
     GamepadReg,
-    ServoReg,
     SRV_BOOTLOADER,
-    SRV_BUZZER,
     SRV_CONTROL,
     SRV_DASHBOARD,
     SRV_GAMEPAD,
@@ -23,7 +20,6 @@ import {
     SRV_PROTO_TEST,
     SRV_PROXY,
     SRV_ROLE_MANAGER,
-    SRV_SERVO,
     SRV_UNIQUE_BRAIN,
     SystemReg,
 } from "../../../../jacdac-ts/src/jdom/constants"
@@ -49,7 +45,6 @@ import {
 } from "../../../../jacdac-ts/src/vm/compile"
 import { VMError } from "../../../../jacdac-ts/src/vm/ir"
 import NoteField from "../fields/NoteField"
-import ServoAngleField from "../fields/ServoAngleField"
 import {
     BlockDefinition,
     BlockReference,
@@ -158,8 +153,10 @@ const fieldToShadow = (
         ? { kind: "block", type: "jacdac_on_off" }
         : field.unit === "AudHz"
         ? { kind: "block", type: NoteField.SHADOW.type }
-        : isStringField(field)
-        ? { kind: "block", type: "text" }
+        : field.unit === "ms"
+        ? { kind: "block", type: "jacdac_time_picker_ms" }
+        : field.unit === "s"
+        ? { kind: "block", type: "jacdac_time_picker" }
         : field.unit === "°"
         ? {
               kind: "block",
@@ -169,6 +166,8 @@ const fieldToShadow = (
         ? { kind: "block", type: "jacdac_ratio" }
         : /^%/.test(field.unit)
         ? { kind: "block", type: "jacdac_percent" }
+        : isStringField(field)
+        ? { kind: "block", type: "text" }
         : field.type === "u8"
         ? { kind: "block", type: "jacdac_byte" }
         : {
