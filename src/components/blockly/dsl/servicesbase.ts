@@ -402,11 +402,7 @@ export class ServicesBaseDSL {
     protected serviceColor: (srv: jdspec.ServiceSpec) => string
 
     protected assignGroup(register: jdspec.PacketInfo) {
-        return isReading(register) ||
-            register.identifier === SystemReg.Value ||
-            register.identifier === SystemReg.Intensity
-            ? ""
-            : "Configuration"
+        return register?.kind === "const" ? "Configuration" : ""
     }
 
     protected makeRegisterSimpleGetBlocks(
