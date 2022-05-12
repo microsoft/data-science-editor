@@ -45,6 +45,7 @@ import {
     SRV_BRAILLE_DISPLAY,
     SRV_JACSCRIPT_MANAGER,
     SRV_HID_JOYSTICK,
+    SRV_JACSCRIPT_CLOUD,
 } from "../../../jacdac-ts/src/jdom/constants"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { CircularProgress } from "@mui/material"
@@ -113,8 +114,9 @@ const DashboardCODALMessageBus = lazy(
 const DashboardRelay = lazy(() => import("./DashboardRelay"))
 const DashboardLightBulb = lazy(() => import("./DashboardLightBulb"))
 const DashboardJacscriptManager = lazy(
-    () => import("./DashboardJascriptManager")
+    () => import("./DashboardJacscriptManager")
 )
+const DashboardJacscriptCloud = lazy(() => import("./DashboardJacscriptCloud"))
 
 export interface DashboardServiceProps {
     service: JDService
@@ -318,6 +320,11 @@ const serviceViews: {
     },
     [SRV_JACSCRIPT_MANAGER]: {
         component: DashboardJacscriptManager,
+    },
+    [SRV_JACSCRIPT_CLOUD]: {
+        component: DashboardJacscriptCloud,
+        expandable: true,
+        weight: () => 3,
     },
 }
 

@@ -88,9 +88,9 @@ import { VariableJSON } from "./workspacejson"
 import { JDService } from "../../../../jacdac-ts/src/jdom/service"
 import { groupBy } from "../../../../jacdac-ts/src/jdom/utils"
 
-const SET_STATUS_LIGHT_BLOCK = "jacdac_set_status_light"
+export const SET_STATUS_LIGHT_BLOCK = "jacdac_set_status_light"
 export const ROLE_BOUND_EVENT_BLOCK = "jacdac_role_bound_event"
-const ROLE_BOUND_BLOCK = "jacdac_role_bound"
+export const ROLE_BOUND_BLOCK = "jacdac_role_bound"
 export const LOG_BLOCK = "tools_log"
 export const LOG_VALUE_BLOCK = "tools_log_value"
 export const CONSOLE_BLOCK = "tools_console_display"
@@ -1046,8 +1046,21 @@ export class ServicesBaseDSL {
                 const { type } = block
                 switch (type) {
                     case SET_STATUS_LIGHT_BLOCK: {
-                        console.log("SET_STATUS")
-                        break
+                        const { expr, errors } = blockToExpression(
+                            undefined,
+                            inputs[0].child
+                        )
+                        return {
+                            cmd: makeVMBase(block, {
+                                type: "CallExpression",
+                                arguments: [expr],
+                                callee: <jsep.Literal>{
+                                    type: "Literal",
+                                    raw: "control.setStatusLight",
+                                },
+                            }),
+                            errors,
+                        }
                     }
                     case LOG_VALUE_BLOCK: {
                         const exprsErrors = inputs

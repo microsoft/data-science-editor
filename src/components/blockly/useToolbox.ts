@@ -18,6 +18,7 @@ import BlockDomainSpecificLanguage from "./dsl/dsl"
 import { addDataPreviewField } from "./fields/DataPreviewField"
 import { WorkspaceJSON } from "./dsl/workspacejson"
 import useAsyncMemo from "../hooks/useAsyncMemo"
+import { dependencyId } from "../../../jacdac-ts/src/jdom/eventsource"
 
 // overrides blockly emboss filter for svg elements
 Blockly.BlockSvg.prototype.setHighlighted = function (highlighted) {
@@ -138,13 +139,7 @@ export default function useToolbox(
             kind: "categoryToolbox",
             contents,
         }
-    }, [
-        blocks,
-        theme,
-        dsls,
-        source,
-        (liveServices || []).map(srv => srv.id).join(","),
-    ])
+    }, [blocks, theme, dsls, source, dependencyId(liveServices)])
 
     return toolboxConfiguration
 }
