@@ -1,11 +1,10 @@
 import React, { ChangeEvent, useEffect, useId, useState } from "react"
-import { Button, Grid, TextField, Typography } from "@mui/material"
+import { Grid, TextField, Typography } from "@mui/material"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import useServiceServer from "../hooks/useServiceServer"
 import {
-    JacscriptCloudCommandResponse,
     JacscriptCloudServer,
     JacscriptCloudUploadRequest,
     UPLOAD,
@@ -17,7 +16,10 @@ import {
     JacscriptCloudReg,
 } from "../../../jacdac-ts/src/jdom/constants"
 import useRegister from "../hooks/useRegister"
-import { useRegisterBoolValue } from "../../jacdac/useRegisterValue"
+import {
+    useRegisterBoolValue,
+    useRegisterUnpackedValue,
+} from "../../jacdac/useRegisterValue"
 import SwitchWithLabel from "../ui/SwitchWithLabel"
 import DashboardRegisterValueFallback from "./DashboardRegisterValueFallback"
 import CmdButton from "../CmdButton"
@@ -120,11 +122,19 @@ export default function DashboardJacscriptCloud(props: DashboardServiceProps) {
     const bus = useBus()
 
     const connectedRegister = useRegister(service, JacscriptCloudReg.Connected)
+    const connectionNameRegister = useRegister(
+        service,
+        JacscriptCloudReg.ConnectionName
+    )
     const cloudCommandEvent = useEvent(
         service,
         JacscriptCloudEvent.CloudCommand
     )
     const connected = useRegisterBoolValue(connectedRegister, props)
+    const [connectionName] = useRegisterUnpackedValue<[string]>(
+        connectionNameRegister,
+        props
+    )
     const server = useServiceServer<JacscriptCloudServer>(
         service,
         () => new JacscriptCloudServer()
@@ -179,7 +189,9 @@ export default function DashboardJacscriptCloud(props: DashboardServiceProps) {
     return (
         <Grid container spacing={1}>
             <Grid item xs={12}>
-                <Typography variant="caption">Jacscript Cloud</Typography>
+                <Typography variant="caption">
+                    {connectionName || "no connection"}
+                </Typography>
             </Grid>
             <Grid item xs={12}>
                 <SwitchWithLabel
