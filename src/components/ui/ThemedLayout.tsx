@@ -42,7 +42,7 @@ export default function ThemedLayout(props: {
                         <DbProvider>
                             <FileSystemProvider>
                                 <WebAudioProvider>
-                                    <JacdacProvider connectOnStart={true}>
+                                    <JacdacProvider>
                                         <HostedSimulatorsProvider>
                                             <ServiceManagerProvider>
                                                 <PacketsProvider>
