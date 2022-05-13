@@ -38,7 +38,6 @@ export function JacscriptProvider(props: { children: ReactNode }) {
         async mounted => {
             const src = program?.program.join("\n")
             const res = src && (await jacscriptCompile(src))
-            console.log(res)
             if (mounted()) setCompiled(res)
         },
         [program]

@@ -55,9 +55,12 @@ import {
     toIdentifier,
     toMemberExpression,
 } from "../../../../jacdac-ts/src/vm/compile"
+import { makeVMBase } from "../../jacscript/JacscriptGenerator"
+import { toMap } from "../../../../jacdac-ts/src/jdom/utils"
 
 const INSPECT_BLOCK = "jacdac_tools_inspect"
 const commandColor = "#8c6a1d"
+const JACSCRIPT_CLOUD_UPLOAD_ARGS = 3
 
 export class ServicesBlockDomainSpecificLanguage
     extends ServicesBaseDSL
@@ -92,8 +95,87 @@ export class ServicesBlockDomainSpecificLanguage
                 service =>
                     <CustomBlockDefinition>{
                         kind: "block",
+                        type: "upload",
+                        colour: this.serviceColor(service),
+                        message0: `upload %1 %2 ${Array(
+                            JACSCRIPT_CLOUD_UPLOAD_ARGS
+                        )
+                            .fill(0)
+                            .map((_, i) => `%${i + 3}`)
+                            .join(" ")}`,
+                        args0: [
+                            roleVariable(service),
+                            <TextInputDefinition>{
+                                type: "field_input",
+                                name: "label",
+                                spellcheck: false,
+                                text: "data",
+                            },
+                            ...Array(JACSCRIPT_CLOUD_UPLOAD_ARGS)
+                                .fill(0)
+                                .map(
+                                    (_, i) =>
+                                        <ValueInputDefinition>{
+                                            type: "input_value",
+                                            name: `arg${i}`,
+                                            check: "Number",
+                                        }
+                                ),
+                        ],
+                        values: {
+                            ...toMap(
+                                Array(1).fill(0),
+                                (_, i) => `arg${i}`,
+                                (_, i) => ({
+                                    name: `arg${i}`,
+                                    kind: "block",
+                                    type: "math_number",
+                                })
+                            ),
+                        },
+                        previousStatement: CODE_STATEMENT_TYPE,
+                        nextStatement: CODE_STATEMENT_TYPE,
+                        inputsInline: true,
+                        helpUrl: serviceHelp(service),
+                        service,
+                        tooltip: `Register a handler for a given cloud method`,
+                        template: "custom",
+                        compileCommand: options => {
+                            const { block, blockToExpression } = options
+                            const { inputs } = block
+                            let label = inputs[0].fields["label"]
+                                .value as string
+                            if (label === undefined) label = ""
+                            const exprsErrors = inputs
+                                .filter(i => i.child)
+                                .map(a => blockToExpression(undefined, a.child))
+                            return {
+                                cmd: makeVMBase(block, {
+                                    type: "CallExpression",
+                                    arguments: [
+                                        <jsep.Literal>{
+                                            type: "Literal",
+                                            value: label,
+                                            raw: `"${label}"`,
+                                        },
+                                        ...exprsErrors.map(e => e.expr),
+                                    ],
+                                    callee: toMemberExpression(
+                                        "cloud",
+                                        "upload"
+                                    ),
+                                }),
+                                errors: exprsErrors.flatMap(e => e.errors),
+                            }
+                        },
+                    }
+            ),
+            ...resolveService(SRV_JACSCRIPT_CLOUD).map(
+                service =>
+                    <CustomBlockDefinition>{
+                        kind: "block",
                         type: "on_method",
-                        message0: `on cloud message %1 %2`,
+                        message0: `on %1 message %2`,
                         colour: this.serviceColor(service),
                         args0: [
                             roleVariable(service),
@@ -101,6 +183,7 @@ export class ServicesBlockDomainSpecificLanguage
                                 type: "field_input",
                                 name: "label",
                                 spellcheck: false,
+                                text: "ping",
                             },
                         ],
                         nextStatement: CODE_STATEMENT_TYPE,
@@ -110,7 +193,7 @@ export class ServicesBlockDomainSpecificLanguage
                         tooltip: `Register a handler for a given cloud method`,
                         template: "custom",
                         compileEvent: (options: CompileCommandToVMOptions) => {
-                            const { block, blockToExpression } = options
+                            const { block } = options
                             const { inputs } = block
                             const label = inputs[0].fields["label"]
                                 .value as string
