@@ -32,6 +32,8 @@ import {
 import { JDDevice } from "../../jacdac-ts/src/jdom/device"
 import { isInfrastructure } from "../../jacdac-ts/src/jdom/spec"
 import { inIFrame } from "../../jacdac-ts/src/jdom/iframeclient"
+import createAzureIotHubServiceDefinition from "../components/jacscript/azureiotconnector"
+import { addServiceProviderDefinition } from "../../jacdac-ts/src/servers/servers"
 
 function sniffQueryArguments() {
     if (typeof window === "undefined" || typeof URLSearchParams === "undefined")
@@ -235,6 +237,8 @@ function createBus(): JDBus {
             }
         })
         if (!args.bus) b.stop()
+
+        addServiceProviderDefinition(createAzureIotHubServiceDefinition())
     }
 
     return b

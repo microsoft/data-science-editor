@@ -8,7 +8,6 @@ import workerProxy, { WorkerProxy } from "./proxy"
 import { CHANGE, MESSAGE } from "../../../../../jacdac-ts/src/jdom/constants"
 import { JDBridge } from "../../../../../jacdac-ts/src/jdom/bridge"
 import bus from "../../../../jacdac/providerbus"
-import { toHex } from "../../../../../jacdac-ts/src/jdom/utils"
 
 class JacscriptBridge extends JDBridge {
     state: VMState = "stopped"
@@ -58,6 +57,7 @@ class JacscriptBridge extends JDBridge {
 let bridge: JacscriptBridge
 export function mountJacscriptBridge() {
     if (bridge) throw new Error("unmounted bridge")
+
     const worker = workerProxy("vm")
     const b = (bridge = new JacscriptBridge(worker))
     bridge.bus = bus

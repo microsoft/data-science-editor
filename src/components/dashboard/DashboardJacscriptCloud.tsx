@@ -197,7 +197,7 @@ export default function DashboardJacscriptCloud(props: DashboardServiceProps) {
                 <SwitchWithLabel
                     checked={connected}
                     label="connected"
-                    readOnly={!server}
+                    readOnly={!server || server.controlled}
                     color={color}
                     onChange={handleConnected}
                 />
