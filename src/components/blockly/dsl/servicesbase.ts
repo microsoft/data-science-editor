@@ -51,6 +51,7 @@ import {
     CategoryDefinition,
     CODE_STATEMENT_TYPE,
     CommandBlockDefinition,
+    CustomBlockDefinition,
     EventBlockDefinition,
     EventFieldDefinition,
     InputDefinition,
@@ -813,6 +814,10 @@ export class ServicesBaseDSL {
         const { template } = definition
 
         switch (template) {
+            case "custom": {
+                const { compileEvent } = definition as CustomBlockDefinition
+                return compileEvent(options)                
+            }
             case "event": {
                 const { value: role } = inputs[0].fields["role"]
                 const { value: eventName } = inputs[0].fields["event"]
@@ -941,9 +946,7 @@ export class ServicesBaseDSL {
             case "register_set": {
                 // TODO: need to handle the case of writing a register with fields
                 const { register } = definition as RegisterBlockDefinition
-                const exprsErrors = inputs.map(a => {
-                    return blockToExpression(event, a.child)
-                })
+                const exprsErrors = inputs.map(a => blockToExpression(event, a.child))
                 const { value: role } = inputs[0].fields.role
                 return {
                     cmd: makeVMBase(block, {

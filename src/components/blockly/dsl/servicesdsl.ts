@@ -3,6 +3,7 @@ import {
     SRV_LED,
     SRV_DOT_MATRIX,
     SRV_SEVEN_SEGMENT_DISPLAY,
+    SRV_JACSCRIPT_CLOUD,
 } from "../../../../jacdac-ts/src/jdom/constants"
 
 import KeyboardKeyField from "../fields/KeyboardKeyField"
@@ -21,12 +22,14 @@ import {
     InputDefinition,
     LabelDefinition,
     OptionsInputDefinition,
-    toolsColour,
+    TextInputDefinition,
     TWIN_BLOCK,
     ValueInputDefinition,
     VariableInputDefinition,
 } from "../toolbox"
 import BlockDomainSpecificLanguage, {
+    CompileCommandToVMOptions,
+    CompileEventToVMResult,
     CreateBlocksOptions,
     CreateCategoryOptions,
 } from "./dsl"
@@ -47,8 +50,11 @@ import {
     SET_STATUS_LIGHT_BLOCK,
 } from "./servicesbase"
 import { humanify } from "../../../../jacdac-ts/jacdac-spec/spectool/jdspec"
-import VariablesField from "../fields/VariablesFields"
-import ConsoleField from "../fields/ConsoleField"
+import jsep from "jsep"
+import {
+    toIdentifier,
+    toMemberExpression,
+} from "../../../../jacdac-ts/src/vm/compile"
 
 const INSPECT_BLOCK = "jacdac_tools_inspect"
 const commandColor = "#8c6a1d"
@@ -82,6 +88,59 @@ export class ServicesBlockDomainSpecificLanguage
             allServices.filter(srv => srv.classIdentifier === cls)
 
         const customClientBlockDefinitions: CustomBlockDefinition[] = [
+            ...resolveService(SRV_JACSCRIPT_CLOUD).map(
+                service =>
+                    <CustomBlockDefinition>{
+                        kind: "block",
+                        type: "on_method",
+                        message0: `on cloud message %1 %2`,
+                        colour: this.serviceColor(service),
+                        args0: [
+                            roleVariable(service),
+                            <TextInputDefinition>{
+                                type: "field_input",
+                                name: "label",
+                                spellcheck: false,
+                            },
+                        ],
+                        nextStatement: CODE_STATEMENT_TYPE,
+                        inputsInline: true,
+                        helpUrl: serviceHelp(service),
+                        service,
+                        tooltip: `Register a handler for a given cloud method`,
+                        template: "custom",
+                        compileEvent: (options: CompileCommandToVMOptions) => {
+                            const { block, blockToExpression } = options
+                            const { inputs } = block
+                            const label = inputs[0].fields["label"]
+                                .value as string
+                            if (!label)
+                                return <CompileEventToVMResult>{
+                                    expression: <jsep.CallExpression>{
+                                        type: "CallExpression",
+                                        arguments: [],
+                                        callee: toIdentifier("nop"),
+                                    },
+                                }
+
+                            const { value: role } = inputs[0].fields["role"]
+                            return <CompileEventToVMResult>{
+                                expression: <jsep.CallExpression>{
+                                    type: "CallExpression",
+                                    arguments: [
+                                        toIdentifier(role.toString()),
+                                        <jsep.Literal>{
+                                            type: "Literal",
+                                            value: label,
+                                            raw: `"${label}"`,
+                                        },
+                                    ],
+                                    callee: toIdentifier("cloudMethod"),
+                                },
+                            }
+                        },
+                    }
+            ),
             ...resolveService(SRV_HID_KEYBOARD).map(
                 service =>
                     <CustomBlockDefinition>{

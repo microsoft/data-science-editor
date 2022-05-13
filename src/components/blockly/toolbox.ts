@@ -2,6 +2,7 @@ import { SMap } from "../../../jacdac-ts/src/jdom/utils"
 import Blockly, { Block, Workspace } from "blockly"
 import { BlockWithServices } from "./WorkspaceContext"
 import { paletteColorByIndex } from "./dsl/palette"
+import { CompileEventToVMOptions, CompileEventToVMResult } from "./dsl/dsl"
 
 export const NEW_PROJET_XML = '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>'
 
@@ -171,6 +172,7 @@ export interface CustomBlockDefinition extends ServiceBlockDefinition {
     kind: "block"
     template: "custom"
     expression?: string
+    compileEvent?: (options: CompileEventToVMOptions) => CompileEventToVMResult
 }
 
 export const JSON_TYPE = "JSON"
