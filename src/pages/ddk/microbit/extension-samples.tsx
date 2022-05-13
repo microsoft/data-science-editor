@@ -34,7 +34,7 @@ export default function Samples() {
         "pelikhan/pxt-k-bit/jacdac",
         "pelikhan/keystudio-relay-breakout-jacdac/",
 
-        "pxt-dfrobot_maqueenplus_v20/jacdac",
+        "pelikhan/pxt-dfrobot_maqueenplus_v20/jacdac",
     ]
     return (
         <>
