@@ -146,6 +146,7 @@ export class ServicesBlockDomainSpecificLanguage
                             let label = inputs[0].fields["label"]
                                 .value as string
                             if (label === undefined) label = ""
+                            const { value: role } = inputs[0].fields["role"]
                             const exprsErrors = inputs
                                 .filter(i => i.child)
                                 .map(a => blockToExpression(undefined, a.child))
@@ -161,7 +162,7 @@ export class ServicesBlockDomainSpecificLanguage
                                         ...exprsErrors.map(e => e.expr),
                                     ],
                                     callee: toMemberExpression(
-                                        "cloud",
+                                        role.toString(),
                                         "upload"
                                     ),
                                 }),
