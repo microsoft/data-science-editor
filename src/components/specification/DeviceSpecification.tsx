@@ -119,16 +119,6 @@ export default function DeviceSpecification(props: {
             <h2 key="title">
                 {name}
                 {!!version && ` v${version}`}
-                {link && (
-                    <Button
-                        sx={{ ml: 1 }}
-                        href={link}
-                        variant="outlined"
-                        color="inherit"
-                    >
-                        Home
-                    </Button>
-                )}
                 {storeLink && (
                     <Button
                         sx={{ ml: 1 }}
@@ -170,6 +160,15 @@ export default function DeviceSpecification(props: {
                 <img alt={`device ${name}`} src={imageUrl} loading="lazy" />
             </Box>
             {description && <Markdown source={description} />}
+            {link && (
+                <p>
+                    Learn more about
+                    <Link sx={{ ml: 1 }} href={link}>
+                        {name}
+                    </Link>
+                    .
+                </p>
+            )}
             {!!deviceSpecs?.length && (
                 <>
                     <h3>Kit Devices</h3>
