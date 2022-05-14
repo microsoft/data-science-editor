@@ -19,6 +19,10 @@ import { Button, Link } from "gatsby-theme-material-ui"
 import { uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
 import Alert from "../ui/Alert"
 import GithubRepositoryCard from "../github/GithubRepositoryCard"
+import { deviceCatalog } from "../../../jacdac-ts/src/jdom/catalog"
+import DeviceSpecificationCard from "./DeviceSpecificationCard"
+import { dependencyId } from "../../../jacdac-ts/src/jdom/eventsource"
+import useChange from "../../jacdac/useChange"
 
 function DeviceStructuredData(props: { device: jdspec.DeviceSpec }) {
     const { device } = props
@@ -57,6 +61,7 @@ export default function DeviceSpecification(props: {
 }) {
     const { device, showSource } = props
     const {
+        id,
         name,
         description,
         company,
@@ -70,11 +75,24 @@ export default function DeviceSpecification(props: {
         firmwareSource,
         storeLink,
         connector = "edge",
+        devices,
     } = device
     const { services } = device
     const specifications = useDeviceSpecifications()
     const gridBreakpoints = useGridBreakpoints()
     const imageUrl = useDeviceImage(device, "catalog")
+    console.log({ devices })
+    const deviceSpecs = useChange(
+        deviceCatalog,
+        _ =>
+            devices
+                ?.map(id => _.specificationFromIdentifier(id))
+                .filter(s => !!s),
+        [devices?.join(",")]
+    )
+    const kitSpecs = useChange(deviceCatalog, _ =>
+        _.specifications().filter(s => s.devices?.indexOf(id) > -1)
+    )
 
     const others = specifications
         .filter(
@@ -142,6 +160,44 @@ export default function DeviceSpecification(props: {
                 <img alt={`device ${name}`} src={imageUrl} loading="lazy" />
             </Box>
             {description && <Markdown source={description} />}
+            {!!deviceSpecs?.length && (
+                <>
+                    <h3>Kit Devices</h3>
+                    <Grid container spacing={2}>
+                        {deviceSpecs.map(specification => (
+                            <Grid
+                                key={specification.id}
+                                item
+                                {...gridBreakpoints}
+                            >
+                                <DeviceSpecificationCard
+                                    specification={specification}
+                                    size={"catalog"}
+                                />
+                            </Grid>
+                        ))}
+                    </Grid>{" "}
+                </>
+            )}
+            {!!kitSpecs?.length && (
+                <>
+                    <h3>Kits</h3>
+                    <Grid container spacing={2}>
+                        {kitSpecs.map(specification => (
+                            <Grid
+                                key={specification.id}
+                                item
+                                {...gridBreakpoints}
+                            >
+                                <DeviceSpecificationCard
+                                    specification={specification}
+                                    size={"catalog"}
+                                />
+                            </Grid>
+                        ))}
+                    </Grid>
+                </>
+            )}
             {!!services?.length && (
                 <>
                     <h3>Services</h3>
