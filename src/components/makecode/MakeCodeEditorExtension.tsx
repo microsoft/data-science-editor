@@ -42,7 +42,7 @@ namespace ${ns} {
 ${config.roles
     .map(
         role => `
-    //% fixedInstance block="${role.name}"
+    //% fixedInstance whenUsed block="${role.name}"
     export const ${camelize(role.name)} = new ${
             resolveMakecodeServiceFromClassIdentifier(role.service).client.qName
         }("${camelize(role.name)}");
@@ -114,16 +114,17 @@ function ClientRoleRow(props: {
                         fullWidth={true}
                         error={!!nameError}
                         variant="outlined"
-                        label="name"
+                        label="role name"
                         helperText={nameError}
                         value={name}
+                        size="small"
                         onChange={handleComponentNameChange}
                     />
                 </Grid>
                 <Grid item xs={4} md={4}>
                     <ServiceSpecificationSelect
                         variant="outlined"
-                        label="service"
+                        label="role service"
                         serviceClass={service}
                         setServiceClass={handleSetService}
                         error={serviceError}
@@ -131,7 +132,7 @@ function ClientRoleRow(props: {
                 </Grid>
                 <Grid item>
                     <IconButtonWithTooltip
-                        title="Remove service"
+                        title="Remove role"
                         onClick={handleComponentDelete}
                     >
                         <DeleteIcon />

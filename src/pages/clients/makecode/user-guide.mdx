@@ -37,8 +37,8 @@ When running your code, Jacdac binds the modules detected on the bus with the **
 Each service comes with a default role which is typically what you start with. For example `button1` is the default role for buttons.
 
 ```blocks
-modules.button1.onUp(function () {
-    basic.showIcon(IconNames.SmallHeart)
+modules.button1.onEvent(jacdac.ButtonEvent.Up, function () {
+    basic.showIcon(IconNames.Heart)
 })
 ```
 
@@ -47,8 +47,9 @@ However, if you want to create a program with multiple buttons, you would need t
 ### Blocks editor
 
 -   Open the **Modules** drawer
--   Click **Settings** to open the roles editor
--   Add and remove roles and go back
+-   Click **Configure Roles** to open the roles editor
+-   Add and remove roles
+-   Press **Save** and go back to the editor
 
 Once reloaded, you should be able to select your roles in the block drop downs.
 
