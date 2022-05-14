@@ -39,25 +39,37 @@ function RegisterInputItem(props: {
 }
 
 export default function DashboardLED(props: DashboardServiceProps) {
-    const { service, services, visible, expanded } = props
+    const { service, services, visible, expanded, controlled } = props
     const pixelsRegister = useRegister(service, LedReg.Pixels)
     const hasData = useChange(pixelsRegister, _ => !!_?.data)
     const [penColor, setPenColor] = useState<number>(DEFAULT_COLORS[0].value)
     const colorsRef = useRef<Uint8Array>(new Uint8Array(0))
     const clientRef = useRef(new JDEventSource())
+    const canLedClick = !isNaN(penColor) && expanded && !controlled
+
     const handleColorChange = (newColor: number) =>
         setPenColor(current => (newColor === current ? undefined : newColor))
     const handleLedClick: (index: number) => void = async (index: number) => {
-        if (isNaN(penColor)) return
-
         const pixels = colorsRef.current
         if (index >= pixels.length * 3) return
 
         const newPixels = pixels.slice(0)
         const k = index * 3
-        newPixels[k] = (penColor >> 16) & 0xff
-        newPixels[k + 1] = (penColor >> 8) & 0xff
-        newPixels[k + 2] = penColor & 0xff
+        let r = (penColor >> 16) & 0xff
+        let g = (penColor >> 8) & 0xff
+        let b = penColor & 0xff
+        if (
+            newPixels[k] == r &&
+            newPixels[k + 1] == g &&
+            newPixels[k + 2] == b
+        ) {
+            r = 0
+            g = 0
+            b = 0
+        }
+        newPixels[k] = r
+        newPixels[k + 1] = g
+        newPixels[k + 2] = b
         await pixelsRegister.sendSetPackedAsync([newPixels], true)
         colorsRef.current = newPixels
         clientRef.current.emit(RENDER)
@@ -99,7 +111,7 @@ export default function DashboardLED(props: DashboardServiceProps) {
                     subscribeColors={subscribeColors}
                     registers={registers}
                     widgetCount={services?.length}
-                    onLedClick={handleLedClick}
+                    onLedClick={canLedClick ? handleLedClick : undefined}
                     {...props}
                 />
             </Grid>

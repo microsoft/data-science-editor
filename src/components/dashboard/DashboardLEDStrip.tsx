@@ -382,12 +382,13 @@ function RegisterInputItem(props: {
 }
 
 export default function DashboardLEDStrip(props: DashboardServiceProps) {
-    const { service, services, expanded, visible } = props
+    const { service, services, expanded, visible, controlled } = props
     const [configure, setConfigure] = useState(false)
     const animationCounter = useRef(0)
     const [penColor, setPenColor] = useState<number>(undefined)
     const [gradientColors, setGradientColors] = useState<number[]>([])
     const [effect, setEffect] = useState("")
+    const canLedClick = !isNaN(penColor) && expanded && !controlled
     const server = useServiceServer<LedStripServer>(
         service,
         () => new LedStripServer({ variant: LedStripVariant.Strip })
@@ -405,8 +406,6 @@ export default function DashboardLEDStrip(props: DashboardServiceProps) {
                   ]
         )
     const handleLedClick: (index: number) => void = async (index: number) => {
-        if (isNaN(penColor)) return
-
         const encoded = lightEncode(
             `setone % #
 show 20`,
@@ -481,7 +480,7 @@ show 20`,
                     subscribeColors={subscribeColors}
                     registers={registers}
                     widgetCount={services?.length}
-                    onLedClick={handleLedClick}
+                    onLedClick={canLedClick ? handleLedClick : undefined}
                     {...props}
                 />
             )}

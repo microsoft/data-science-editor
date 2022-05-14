@@ -101,8 +101,6 @@ function LightStripWidget(props: {
     const sw = neoradius * 2.8
     const isJewel = lightVariant === LedStripVariant.Jewel
     const isRing = lightVariant === LedStripVariant.Ring
-    const handleLedClick = (index: number) =>
-        onLedClick ? () => onLedClick(index) : undefined
 
     // paint svg via dom
     const paint = useCallback(() => {
@@ -201,11 +199,15 @@ function LightStripWidget(props: {
                     {Array(numPixels)
                         .fill(0)
                         .map((_, i) => {
-                            const handleClick = handleLedClick(i)
+                            const handleClick = onLedClick
+                                ? () => onLedClick(i)
+                                : undefined
                             const fireClick = useFireKey(handleClick)
                             return (
                                 <circle
-                                    className="clickeable pixel"
+                                    className={`${
+                                        fireClick ? "clickeable" : ""
+                                    } pixel`}
                                     key={"pixel" + i}
                                     r={neocircleradius}
                                     cx={width >> 1}
@@ -249,8 +251,6 @@ function LightMatrixWidget(props: {
     const m = 2
     const w = columns * pw + (columns + 1) * m
     const h = rows * ph + (rows + 1) * m
-    const handleLedClick = (index: number) =>
-        onLedClick ? () => onLedClick(index) : undefined
 
     // paint svg via dom
     const paint = () => {
@@ -267,12 +267,14 @@ function LightMatrixWidget(props: {
             for (let col = 0; col < columns; col++) {
                 const index = row * columns + col
                 const label = `pixel ${index} at ${row},${col}`
-                const handleClick = handleLedClick(index)
+                const handleClick = onLedClick
+                    ? () => onLedClick(index)
+                    : undefined
                 const fireClick = useFireKey(handleClick)
 
                 ledEls.push(
                     <rect
-                        className="clickeable"
+                        className={fireClick ? "clickeable" : ""}
                         key={`l${row}-${col}`}
                         x={x}
                         y={y}
