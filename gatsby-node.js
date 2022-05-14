@@ -122,6 +122,7 @@ async function createRedirects(actions) {
 
 async function createDeviceQRPages(actions) {
     console.log(`generating device QR pages`)
+    // legacy CSV file
     const { createRedirect } = actions
     const csv = fs.readFileSync(
         "./jacdac-ts/jacdac-spec/devices/microsoft-research/qr-url-device-map.csv",
@@ -134,6 +135,7 @@ async function createDeviceQRPages(actions) {
     const data = csvData.data.filter(d => !!d[designidcol])
     for (const qr of data) {
         const vanity = qr[vanitycol].trim()
+        if (!vanity) continue
         const productid = parseInt(qr[productidcol], 16)
         const spec = deviceCatalog.specificationFromProductIdentifier(productid)
         const p = `/devices/codes/${vanity}/`
@@ -141,8 +143,27 @@ async function createDeviceQRPages(actions) {
             ? `/devices/0x${productid.toString(16)}/`
             : `/devices/microsoft-research/`
         const r = { fromPath: p, toPath }
+        console.debug(`redirect ${r.fromPath} -> ${r.toPath}`)
         await createRedirect(r)
     }
+
+    // new way using msr codes
+    for (const spec of deviceCatalog
+        .specifications({ company: "Microsoft Research" })
+        .filter(
+            spec =>
+                spec.productIdentifiers?.length &&
+                !isNaN(parseInt(spec.designIdentifier))
+        )) {
+        const di = parseInt(spec.designIdentifier)
+        const vanity = `msr${di < 100 ? "0" : ""}${di < 10 ? "0" : ""}${di}`
+        const p = `/devices/codes/${vanity}/`
+        const toPath = `/devices/0x${spec.productIdentifiers[0].toString(16)}/`
+        const r = { fromPath: p, toPath }
+        console.debug(`redirect ${r.fromPath} -> ${r.toPath}`)
+        await createRedirect(r)
+    }
+
     console.log(`devices qr code redirect created`)
 }
 
@@ -235,7 +256,9 @@ async function createDevicePages(graphql, actions, reporter) {
 
     // create device company routes
     const companies = {}
-    devices.forEach(node => companies[escapeDeviceIdentifier(node.company)] = node.company)
+    devices.forEach(
+        node => (companies[escapeDeviceIdentifier(node.company)] = node.company)
+    )
     //console.log(companies)
     for (const cp of Object.keys(companies)) {
         const company = companies[cp]
