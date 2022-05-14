@@ -1,4 +1,4 @@
-import { Grid, TextField } from "@mui/material"
+import { Grid, TextField, Typography } from "@mui/material"
 import React, { ChangeEvent, useEffect, useMemo, useState } from "react"
 import {
     clone,
@@ -203,6 +203,17 @@ export default function MakeCodeEditorExtension() {
 
     return (
         <Grid container direction="row" spacing={2}>
+            <Grid item xs={12}>
+                <Typography variant="subtitle1">Configure roles</Typography>
+                <Typography variant="caption">
+                    The roles define which Jacdac services (sensor or actuators)
+                    are needed in your program. Use this dialog to define
+                    multiple roles using the same type of service, like multiple
+                    button roles. For each services, there is always a default
+                    role (for example <code>button1</code>) that is already
+                    defined.
+                </Typography>
+            </Grid>
             {configuration.roles?.map((c, i) => (
                 <ClientRoleRow
                     key={"config" + i}
