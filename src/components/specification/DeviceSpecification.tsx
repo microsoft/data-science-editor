@@ -123,7 +123,7 @@ export default function DeviceSpecification(props: {
                     <Button
                         sx={{ ml: 1 }}
                         href={storeLink}
-                        variant="contained"
+                        variant="outlined"
                         color="primary"
                     >
                         Buy Now
