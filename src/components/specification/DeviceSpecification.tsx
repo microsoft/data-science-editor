@@ -21,7 +21,6 @@ import Alert from "../ui/Alert"
 import GithubRepositoryCard from "../github/GithubRepositoryCard"
 import { deviceCatalog } from "../../../jacdac-ts/src/jdom/catalog"
 import DeviceSpecificationCard from "./DeviceSpecificationCard"
-import { dependencyId } from "../../../jacdac-ts/src/jdom/eventsource"
 import useChange from "../../jacdac/useChange"
 
 function DeviceStructuredData(props: { device: jdspec.DeviceSpec }) {
@@ -73,6 +72,7 @@ export default function DeviceSpecification(props: {
         designIdentifier,
         hardwareDesign,
         firmwareSource,
+        link,
         storeLink,
         connector = "edge",
         devices,
@@ -119,11 +119,21 @@ export default function DeviceSpecification(props: {
             <h2 key="title">
                 {name}
                 {!!version && ` v${version}`}
+                {link && (
+                    <Button
+                        sx={{ ml: 1 }}
+                        href={link}
+                        variant="outlined"
+                        color="inherit"
+                    >
+                        Home
+                    </Button>
+                )}
                 {storeLink && (
                     <Button
-                        sx={{ marginLeft: 1 }}
+                        sx={{ ml: 1 }}
                         href={storeLink}
-                        variant="outlined"
+                        variant="contained"
                         color="primary"
                     >
                         Buy Now
