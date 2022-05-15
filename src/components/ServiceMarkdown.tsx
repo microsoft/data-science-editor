@@ -5,7 +5,6 @@ import { Button, Link } from "gatsby-theme-material-ui"
 import DeviceSpecificationList from "./specification/DeviceSpecificationList"
 import { serviceSpecificationFromClassIdentifier } from "../../jacdac-ts/src/jdom/spec"
 import { Grid } from "@mui/material"
-import ServiceSpecificationSource from "./specification/ServiceSpecificationSource"
 import MakeCodeIcon from "./icons/MakeCodeIcon"
 
 function ServiceButtons(props: {
@@ -71,9 +70,6 @@ export default function ServiceMarkdown(props: {
             <DeviceSpecificationList
                 requiredServiceClasses={[classIdentifier]}
             />
-
-            <h2>Sources</h2>
-            <ServiceSpecificationSource serviceSpecification={service} />
 
             <h2> See Also</h2>
             <ul>
