@@ -57,6 +57,7 @@ function Carousel() {
 
     useEffect(() => {
         bus.streaming = true
+        bus.broadcastDisconnectRequest()
     }, [])
 
     return (

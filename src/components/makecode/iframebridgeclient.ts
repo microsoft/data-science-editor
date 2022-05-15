@@ -246,6 +246,7 @@ export class IFrameBridgeClient extends JDClient {
             case "run": {
                 // simulation is starting
                 this._runOptions = msg as SimulatorRunOptions
+                this.bus.broadcastDisconnectRequest()
                 this.emit(CHANGE)
                 break
             }
