@@ -1,4 +1,3 @@
-import { toIdentifier } from "../../../../jacdac-ts/src/vm/compile"
 import jsep from "jsep"
 import { ExpressionWithErrors } from "../../jacscript/JacscriptGenerator"
 import {
@@ -15,6 +14,13 @@ const ops = {
     MULTIPLY: "*",
     DIVIDE: "/",
     MINUS: "-",
+}
+const fns = {
+    ABS: "abs",
+    ROOT: "sqrt",
+    LN: "log2",
+    LOG10: "log10",
+    EXP: "exp",
 }
 
 const mathDsl: BlockDomainSpecificLanguage = {
@@ -63,6 +69,10 @@ const mathDsl: BlockDomainSpecificLanguage = {
                     options: [
                         ["-", "NEG"],
                         ["%{BKY_MATH_SINGLE_OP_ABSOLUTE}", "ABS"],
+                        ["%{BKY_MATH_SINGLE_OP_ROOT}", "ROOT"],
+                        ["ln", "LN"],
+                        ["log10", "LOG10"],
+                        ["e^", "EXP"],
                     ],
                 },
                 <ValueInputDefinition>{
@@ -78,82 +88,33 @@ const mathDsl: BlockDomainSpecificLanguage = {
         },
         {
             kind: "block",
+            type: "jacdac_math_constant",
+            message0: "%1",
+            args0: [
+                <OptionsInputDefinition>{
+                    type: "field_dropdown",
+                    name: "CONSTANT",
+                    options: [
+                        ["\u03c0", "PI"],
+                        ["e", "E"],
+                        ["sqrt(2)", "SQRT2"],
+                        ["sqrt(\u00bd)", "SQRT1_2"],
+                    ],
+                },
+            ],
+            output: "Number",
+            style: "math_blocks",
+            tooltip: "%{BKY_MATH_CONSTANT_TOOLTIP}",
+            helpUrl: "%{BKY_MATH_CONSTANT_HELPURL}",
+        },
+        {
+            kind: "block",
             type: "jacdac_math_random",
             message0: "random",
             args0: [],
             output: "Number",
             style: "math_blocks",
         },
-        /* TODO
-        <BlockDefinition>{
-            kind: "block",
-            type: "jacdac_math_clamp",
-            message0: "clamp %1 in [%2, %3]",
-            args0: [
-                <ValueInputDefinition>{
-                    type: "input_value",
-                    name: "value",
-                    check: "Number",
-                },
-                <ValueInputDefinition>{
-                    type: "input_value",
-                    name: "minInclusive",
-                    check: "Number",
-                },
-                <ValueInputDefinition>{
-                    type: "input_value",
-                    name: "maxInclusive",
-                    check: "Number",
-                },
-            ],
-            output: "Number",
-            style: "math_blocks",
-            vm: function (
-                value: number,
-                minInclusive: number,
-                maxInclusive: number
-            ) {
-                return value < minInclusive
-                    ? minInclusive
-                    : value > maxInclusive
-                    ? maxInclusive
-                    : value
-            },
-        },
-        {
-            kind: "block",
-            type: "jacdac_math_map",
-            message0: "map %1 from [%2, %3] to [%4, %5]",
-            args0: [
-                <ValueInputDefinition>{
-                    type: "input_value",
-                    name: "value",
-                    check: "Number",
-                },
-                <ValueInputDefinition>{
-                    type: "input_value",
-                    name: "fromMin",
-                    check: "Number",
-                },
-                <ValueInputDefinition>{
-                    type: "input_value",
-                    name: "fromMax",
-                    check: "Number",
-                },
-                <ValueInputDefinition>{
-                    type: "input_value",
-                    name: "toMin",
-                    check: "Number",
-                },
-                <ValueInputDefinition>{
-                    type: "input_value",
-                    name: "toMax",
-                    check: "Number",
-                },
-            ],
-            output: "Number",
-            style: "math_blocks",
-        }, */
     ],
     createCategory: () => [
         <CategoryDefinition>{
@@ -180,7 +141,7 @@ const mathDsl: BlockDomainSpecificLanguage = {
                     },
                 },
                 <BlockReference>{ kind: "block", type: "jacdac_math_random" },
-                //{ kind: "block", type: "jacdac_math_map" },
+                { kind: "block", type: "jacdac_math_constant" },
                 { kind: "block", type: "math_number" },
             ],
         },
@@ -192,6 +153,16 @@ const mathDsl: BlockDomainSpecificLanguage = {
     }): ExpressionWithErrors => {
         const { type, inputs } = block
         switch (type) {
+            case "jacdac_math_constant": {
+                const cst = inputs[0].fields["constant"].value.toString()
+                return {
+                    expr: <jsep.Literal>{
+                        type: "Literal",
+                        raw: `Math.${cst}`,
+                    },
+                    errors: [],
+                }
+            }
             case "jacdac_math_random": {
                 return {
                     expr: <jsep.CallExpression>{
@@ -210,12 +181,22 @@ const mathDsl: BlockDomainSpecificLanguage = {
                 const argument = blockToExpressionInner(event, inputs[0].child)
                 const op = inputs[0].fields["op"].value as string
                 return {
-                    expr: <jsep.UnaryExpression>{
-                        type: "UnaryExpression",
-                        operator: ops[op] || op,
-                        argument,
-                        prefix: false, // TODO: handle math-negate
-                    },
+                    expr:
+                        op === "NEG"
+                            ? <jsep.UnaryExpression>{
+                                  type: "UnaryExpression",
+                                  operator: ops[op] || op,
+                                  argument,
+                                  prefix: false, // TODO: handle math-negate
+                              }
+                            : <jsep.CallExpression>{
+                                  type: "CallExpression",
+                                  arguments: [argument],
+                                  callee: <jsep.Literal>{
+                                      type: "Literal",
+                                      raw: `Math.${fns[op] || op}`,
+                                  },
+                              },
                     errors: [],
                 }
             }
