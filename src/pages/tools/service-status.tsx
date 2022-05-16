@@ -42,12 +42,12 @@ function ServiceStatus(props: {
     const makecodeExtension =
         makecode && makecodeExtensions.indexOf(shortId.toLowerCase()) > -1
 
-    const available = (value: unknown) =>
+    const available = (value: unknown, allowMissing = false) =>
         typeof value === "number" && value ? (
             <Chip icon={<CheckIcon color="success" />} label={value} />
         ) : value ? (
             <CheckIcon color="success" />
-        ) : (
+        ) : allowMissing ? null : (
             <ClearIcon color="warning" />
         )
 
@@ -58,7 +58,7 @@ function ServiceStatus(props: {
             </td>
             <td>{available(devices?.length)}</td>
             <td>{available(serviceProvider)}</td>
-            <td>{available(customTest)}</td>
+            <td>{available(customTest, true)}</td>
             <td>
                 {makecode
                     ? makecode.client.generated
