@@ -20,7 +20,7 @@ The accessory sensors and actuators are surfaced as Jacdac servers by wrapping t
 This solution adds no cost and will work for existing accessories.
 
 -   Pros
-    -   retrofit existing accessories
+    -   **retrofit existing accessories**
     -   simulation
     -   digital twin
     -   no modification to existing extension code
@@ -34,7 +34,9 @@ This solution adds no cost and will work for existing accessories.
 
 ## Level 1: Low Powered physical connector
 
-In this scenario, the Jacdac connector is powered using the required regulation circuit documented at ...
+In this scenario, you integrate one or more [Jacdac PCB edge connectors](/ddk/design#pcb-edge-connector) into your design, 
+with the Jacdac line connected to micro:bit pin 12 through the required [signal conditioning](/ddk/design#signalling) circuit
+and a [low power supply](/ddk/design/#overview-of-jacdac-power-sharing) circuit.
 
 -   Pros
     -   simulator
@@ -65,12 +67,13 @@ In this case, you do not need to provide any extension as the user will be able 
 
 ## Last resort: Unpowered physical connector
 
-In this scenario, you integrate one or more [Jacdac PCB edge connectors](/ddk/design#pcb-edge-connector) into your design, with the `JD_DATA` line connected to micro:bit pin 12 through the required [signal conditioning](/ddk/design#signalling) circuit. The power line is **not** connected.
+In this scenario, you integrate one or more [Jacdac PCB edge connectors](/ddk/design#pcb-edge-connector) into your design, 
+with the `JD_DATA` line connected to micro:bit pin 12 through the required [signal conditioning](/ddk/design#signalling) circuit. The power line is **not** connected.
 
 On the software side, the same approach applies in Software-Only Jacdac.
 
 This approach is not recommended as it will lead
-to a confusing experience for users where 
+to a confusing experience for users where
 modules won't be powered unless another power module
 is on the Jacdac line.
 
