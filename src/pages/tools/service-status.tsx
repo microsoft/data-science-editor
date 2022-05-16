@@ -15,6 +15,14 @@ import { graphql, useStaticQuery, withPrefix } from "gatsby"
 import CheckIcon from "@mui/icons-material/Check"
 import ClearIcon from "@mui/icons-material/Clear"
 import { Chip } from "@mui/material"
+
+const statuses: Record<jdspec.StabilityStatus, string> = {
+    stable: "Stable",
+    rc: "Release Candidate",
+    experimental: "Experimental",
+    deprecated: "Deprecated",
+}
+
 function ServiceStatus(props: {
     service: jdspec.ServiceSpec
     makecodeExtensions: string[]
@@ -29,6 +37,7 @@ function ServiceStatus(props: {
         serviceProviderDefinitionFromServiceClass(classIdentifier)
     const testRule = resolveTestRules(classIdentifier)
     const testCommand = resolveServiceCommandTest(classIdentifier)
+    const customTest = !!testRule?.length || testCommand
     const makecode = resolveMakecodeServiceFromClassIdentifier(classIdentifier)
     const makecodeExtension =
         makecode && makecodeExtensions.indexOf(shortId.toLowerCase()) > -1
@@ -49,8 +58,7 @@ function ServiceStatus(props: {
             </td>
             <td>{available(devices?.length)}</td>
             <td>{available(serviceProvider)}</td>
-            <td>{available(testRule?.length)}</td>
-            <td>{available(testCommand)}</td>
+            <td>{available(customTest)}</td>
             <td>
                 {makecode
                     ? makecode.client.generated
@@ -60,6 +68,40 @@ function ServiceStatus(props: {
             </td>
             <td>{available(makecodeExtension)}</td>
         </tr>
+    )
+}
+
+function ServiceStatusSection(props: {
+    status: jdspec.StabilityStatus
+    services: jdspec.ServiceSpec[]
+    makecodeExtensions: string[]
+}) {
+    const { status, services, makecodeExtensions } = props
+    return (
+        <>
+            <h2>{statuses[status]}</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>name</th>
+                        <th>devices</th>
+                        <th>simulator</th>
+                        <th>custom tests</th>
+                        <th>MakeCode Extension</th>
+                        <th>MakeCode Docs</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {services?.map(service => (
+                        <ServiceStatus
+                            key={service.shortId}
+                            service={service}
+                            makecodeExtensions={makecodeExtensions}
+                        />
+                    ))}
+                </tbody>
+            </table>
+        </>
     )
 }
 
@@ -111,37 +153,22 @@ export default function Page() {
             fields.slug.slice("/clients/makecode/extensions/".length, -1)
         )
         .map(p => p.toLowerCase())
-    console.log({ makecodeExtensions })
 
-    const services = serviceSpecifications().sort(
-        (l, r) => (isInfrastructure(l) ? 1 : 0) - (isInfrastructure(r) ? 1 : 0)
+    const services = serviceSpecifications().filter(
+        srv => !isInfrastructure(srv)
     )
 
     return (
         <>
             <h1>Service Implementation Status</h1>
-            <table>
-                <thead>
-                    <tr>
-                        <th>name</th>
-                        <th>devices</th>
-                        <th>simulator</th>
-                        <th>test rules</th>
-                        <th>test commands</th>
-                        <th>MakeCode Extension</th>
-                        <th>MakeCode Docs</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {services?.map(service => (
-                        <ServiceStatus
-                            key={service.shortId}
-                            service={service}
-                            makecodeExtensions={makecodeExtensions}
-                        />
-                    ))}
-                </tbody>
-            </table>
+            {Object.keys(statuses).map((status: jdspec.StabilityStatus) => (
+                <ServiceStatusSection
+                    key={status}
+                    status={status}
+                    services={services.filter(srv => srv.status === status)}
+                    makecodeExtensions={makecodeExtensions}
+                />
+            ))}
         </>
     )
 }

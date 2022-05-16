@@ -228,14 +228,21 @@ export default function ServiceCatalog() {
                     />
                 </Grid>
             </Grid>
-            <h2>Need a new service?</h2>
-            <p>
-                Add a new service using the{" "}
-                <Link to="/tools/service-editor/">
-                    Service Specification Editor
-                </Link>
-                .
-            </p>
+            <h2>See Also</h2>
+            <ul>
+                <li>
+                    Add a new service using the{" "}
+                    <Link to="/tools/service-editor/">
+                        Service Specification Editor
+                    </Link>
+                    .
+                </li>
+                <li>
+                    See the{" "}
+                    <Link to="/tools/service-status/">service status</Link> page
+                    for the current level of support a services .
+                </li>
+            </ul>
         </>
     )
 }
