@@ -55,10 +55,9 @@ function JacscriptEditorWithContext() {
             setJscProgram(undefined)
         }
     }, [dsls, workspaceJSON])
-    useEffect(
-        () => program && roleManager?.updateRoles([...program.roles]),
-        [roleManager, program]
-    )
+    useEffect(() => {
+        program && roleManager?.updateRoles([...program.roles])
+    }, [roleManager, program])
     useEffect(
         () =>
             setWarnings(

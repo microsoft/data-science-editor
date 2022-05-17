@@ -1,8 +1,11 @@
-import { compile, JacError, Host, DebugInfo } from "jacscript-compiler"
+import { compile, JacError, Host } from "jacscript-compiler"
+import type { DebugInfo } from "jacscript-compiler"
 import type { JacsModule } from "jacscript-vm"
 import vmMod from "jacscript-vm"
 
 export type JacscriptError = JacError
+
+export type JacscriptDebugInfo = DebugInfo
 
 export interface JacscriptMessage {
     worker: "jacscript"
@@ -26,7 +29,7 @@ export interface JacscriptSpecsRequest extends JacscriptRequest {
 export interface JacscriptCompileResponse extends JacscriptMessage {
     success: boolean
     binary: Uint8Array
-    dbg: unknown /* DebugInfo */
+    dbg: JacscriptDebugInfo
     clientSpecs: jdspec.ServiceSpec[]
     files: Record<string, Uint8Array | string>
     logs: string

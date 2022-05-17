@@ -13,7 +13,6 @@ import { mountJacscriptBridge } from "../blockly/dsl/workers/vm.proxy"
 import useServices from "../hooks/useServices"
 import { SRV_JACSCRIPT_MANAGER } from "../../../jacdac-ts/src/jdom/constants"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
-import useRoleManager from "../hooks/useRoleManager"
 
 export interface JacscriptProps {
     program?: JacscriptProgram
