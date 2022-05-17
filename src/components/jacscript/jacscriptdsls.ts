@@ -5,7 +5,6 @@ import mathDsl from "../blockly/dsl/mathdsl"
 import shadowDsl from "../blockly/dsl/shadowdsl"
 import fieldsDsl from "../blockly/dsl/fieldsdsl"
 import variablesDsl from "../blockly/dsl/variablesdsl"
-import chartDsl from "../blockly/dsl/chartdsl"
 import debugDsl from "../blockly/dsl/debugdsl"
 
 const jacscriptDsls = [
@@ -15,7 +14,6 @@ const jacscriptDsls = [
     logicDsl,
     mathDsl,
     variablesDsl,
-    chartDsl,
     shadowDsl,
     fieldsDsl,
 ]
