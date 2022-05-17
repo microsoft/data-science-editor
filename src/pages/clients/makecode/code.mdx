@@ -18,7 +18,7 @@ Those programs can be authored and compiled with excellent tooling support in Vi
 
 -   install [Code](https://code.visualstudio.com/)
 -   install [Node.JS](https://nodejs.org/en/download/)
--   install the [MKC](https://github.com/microsoft/pxt-mkc), the MakeCode command line tool
+-   install [makecode](https://github.com/microsoft/pxt-makecode), the MakeCode command line tool
 
 ```
 npm install -g -u makecode
@@ -31,15 +31,15 @@ npm install -g -u makecode
 -   use the makecode cli to initialize the project for the microbit + Jacdac
 
 ```
-mkc init microbit jacdac
+makecode init microbit jacdac
 ```
 
 ## Adding dependencies
 
-Based on which service you plan to use, add the corresponding MakeCode extensions using `mkc add`.
+Based on which service you plan to use, add the corresponding MakeCode extensions using `makecode add`.
 
 ```
-mkc add jacdac-button jacdac-led
+makecode add jacdac-button jacdac-led
 ```
 
 ## Installing dependencies
@@ -47,33 +47,33 @@ mkc add jacdac-button jacdac-led
 Download and save MakeCode extensions to the file system so that the TypeScript autocompletion, typechecking can use them.
 
 ```
-mkc install
+makecode install
 ```
 
 ## Building
 
--   launch mkc in watch mode
+-   launch makecode in watch mode
 
 ```
-mkc build --watch
+makecode build --watch
 ```
 
--   open `main.ts` in Code and start editing. mkc will automatically rebuild your changes when a change is detected.
+-   open `main.ts` in Code and start editing. makecode will automatically rebuild your changes when a change is detected.
 
 ## Building and serving a simulator
 
 The ``serve`` command will launch a JavaScript build in watch mode and host the simulator in a web page. The page auto-reloads on changes.
 
 ```
-mkc serve
+makecode serve
 ```
 
 You can load the local simulator into the [Jacdac Web devtools](/clients/javascript/debugging).
 
 ## Building and deploying
 
--   launch mkc in watch mode (`-w`) and auto-deploy (`-d`)
+-   launch makecode in watch mode (`-w`) and auto-deploy (`-d`)
 
 ```
-mkc build --watch --deploy
+makecode build --watch --deploy
 ```
