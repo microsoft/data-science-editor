@@ -12,7 +12,7 @@ function ConsoleWidget() {
     return (
         <ConsoleProvider>
             <Suspense>
-                <Console height="16rem" />
+                <Console height="12rem" />
             </Suspense>
         </ConsoleProvider>
     )
