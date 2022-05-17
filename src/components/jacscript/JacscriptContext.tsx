@@ -10,12 +10,18 @@ import useEffectAsync from "../useEffectAsync"
 import { jacscriptCompile } from "../blockly/dsl/workers/jacscript.proxy"
 import type { JacscriptCompileResponse } from "../../workers/jacscript/jacscript-worker"
 import { mountJacscriptBridge } from "../blockly/dsl/workers/vm.proxy"
+import useServices from "../hooks/useServices"
+import { SRV_JACSCRIPT_MANAGER } from "../../../jacdac-ts/src/jdom/constants"
+import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import useRoleManager from "../hooks/useRoleManager"
 
 export interface JacscriptProps {
     program?: JacscriptProgram
     setProgram: (program: JacscriptProgram) => void
     compiled?: JacscriptCompileResponse
     clientSpecs?: jdspec.ServiceSpec[]
+    manager?: JDService
+    setManager: (manager: JDService) => void
 }
 
 export const JacscriptContext = createContext<JacscriptProps>({
@@ -23,6 +29,8 @@ export const JacscriptContext = createContext<JacscriptProps>({
     setProgram: () => {},
     compiled: undefined,
     clientSpecs: undefined,
+    manager: undefined,
+    setManager: () => {},
 })
 JacscriptContext.displayName = "Jacscript"
 
@@ -31,6 +39,8 @@ export function JacscriptProvider(props: { children: ReactNode }) {
     const [program, setProgram_] = useState<JacscriptProgram>()
     const [compiled, setCompiled] = useState<JacscriptCompileResponse>()
     const [clientSpecs, setClientSpecs] = useState<jdspec.ServiceSpec[]>()
+    const services = useServices({ serviceClass: SRV_JACSCRIPT_MANAGER })
+    const [manager, setManager] = useState(services[0])
 
     useEffect(() => mountJacscriptBridge(), [])
     // if program changes, recompile
@@ -62,6 +72,8 @@ export function JacscriptProvider(props: { children: ReactNode }) {
                 setProgram,
                 compiled,
                 clientSpecs,
+                manager,
+                setManager,
             }}
         >
             {children}
@@ -74,6 +86,7 @@ export default function useJacscript(): JacscriptProps {
     return (
         res || {
             setProgram: () => {},
+            setManager: () => {},
         }
     )
 }

@@ -1,14 +1,10 @@
 import { Grid } from "@mui/material"
 import React from "react"
 import CodeBlock from "../CodeBlock"
-import { JacscriptProgram } from "../../../jacdac-ts/src/vm/ir2jacscript"
-import type { JacscriptCompileResponse } from "../../workers/jacscript/jacscript-worker"
+import useJacscript from "./JacscriptContext"
 
-export default function JacscriptDiagnostics(props: {
-    program: JacscriptProgram
-    compiled: JacscriptCompileResponse
-}) {
-    const { program, compiled } = props
+export default function JacscriptDiagnostics() {
+    const { program, compiled } = useJacscript()
     const { logs, errors } = compiled || {}
     return (
         <Grid item xs={12} sm={4}>

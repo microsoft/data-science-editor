@@ -12,16 +12,16 @@ import DeviceAvatar from "../devices/DeviceAvatar"
 import useEffectAsync from "../useEffectAsync"
 import useEvent from "../hooks/useEvent"
 import { EVENT } from "../../../jacdac-ts/src/jdom/constants"
-import type { JacscriptCompileResponse } from "../../workers/jacscript/jacscript-worker"
 import { OutPipe } from "../../../jacdac-ts/src/jdom/pipes"
+import useJacscript from "./JacscriptContext"
 
 export default function JacscriptManagerChip(props: {
     service: JDService
     selected: boolean
     setSelected: () => void
-    jscCompiled: JacscriptCompileResponse
 }) {
-    const { service, selected, setSelected, jscCompiled } = props
+    const { service, selected, setSelected } = props
+    const { compiled: jscCompiled } = useJacscript()
     const [deploying, setDeploying] = useState(false)
 
     const statusCodeChangedEvent = useEvent(

@@ -1,5 +1,6 @@
 import { Grid, NoSsr } from "@mui/material"
 import React, {
+    lazy,
     useCallback,
     useContext,
     useEffect,
@@ -7,9 +8,7 @@ import React, {
     useState,
 } from "react"
 import { Flags } from "../../../jacdac-ts/src/jdom/flags"
-import VMDiagnostics from "./VMDiagnostics"
 import BlockContext, { BlockProvider } from "../blockly/BlockContext"
-import BlockDiagnostics from "../blockly/BlockDiagnostics"
 import workspaceJSONToJacscriptProgram from "./JacscriptGenerator"
 import BlockEditor from "../blockly/BlockEditor"
 import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
@@ -17,10 +16,14 @@ import { JACSCRIPT_WARNINGS_CATEGORY } from "../blockly/toolbox"
 import { WorkspaceFile } from "../blockly/dsl/workspacejson"
 import jacscriptDsls from "./jacscriptdsls"
 import { VMProgram } from "../../../jacdac-ts/src/vm/ir"
-import JacscriptDiagnostics from "./JacscriptDiagnostics"
 import { toJacscript } from "../../../jacdac-ts/src/vm/ir2jacscript"
 import JacscriptEditorToolbar from "./JacscriptEditorToolbar"
 import useJacscript, { JacscriptProvider } from "./JacscriptContext"
+
+import Suspense from "../ui/Suspense"
+const JacscriptDiagnostics = lazy(() => import("./JacscriptDiagnostics"))
+const VMDiagnostics = lazy(() => import("./VMDiagnostics"))
+const BlockDiagnostics = lazy(() => import("../blockly/BlockDiagnostics"))
 
 export const JACSCRIPT_EDITOR_ID = "jcs"
 const JACSCRIPT_SOURCE_STORAGE_KEY = "tools:jacscripteditor"
@@ -33,11 +36,7 @@ function JacscriptEditorWithContext() {
     const { dsls, workspaceJSON, roleManager, setWarnings } =
         useContext(BlockContext)
     const [program, setProgram] = useState<VMProgram>()
-    const {
-        program: jscProgram,
-        setProgram: setJscProgram,
-        compiled: jscCompiled,
-    } = useJacscript()
+    const { setProgram: setJscProgram } = useJacscript()
 
     useEffect(() => {
         try {
@@ -73,19 +72,27 @@ function JacscriptEditorWithContext() {
         <Grid container spacing={1}>
             <Grid item xs={12} sm={8}>
                 <Grid container direction="column" spacing={1}>
-                    <JacscriptEditorToolbar jscCompiled={jscCompiled} />
+                    <JacscriptEditorToolbar />
                     <Grid item xs={12}>
                         <BlockEditor />
                     </Grid>
                     {Flags.diagnostics && (
                         <>
-                            <VMDiagnostics program={program} />
-                            <BlockDiagnostics />
+                            <Suspense>
+                                <VMDiagnostics program={program} />
+                            </Suspense>
+                            <Suspense>
+                                <BlockDiagnostics />
+                            </Suspense>
                         </>
                     )}
                 </Grid>
             </Grid>
-            <JacscriptDiagnostics program={jscProgram} compiled={jscCompiled} />
+            <Grid item>
+                <Suspense>
+                    <JacscriptDiagnostics />
+                </Suspense>
+            </Grid>
         </Grid>
     )
 }
