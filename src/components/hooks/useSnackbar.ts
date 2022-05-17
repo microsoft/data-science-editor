@@ -6,7 +6,7 @@ import useAnalytics from "./useAnalytics"
 
 export default function useSnackbar() {
     const { trackError } = useAnalytics()
-    const { enqueueSnackbar: _enqueueSnackbar } = NoistackUseSnackbar()
+    const { enqueueSnackbar: _enqueueSnackbar } = NoistackUseSnackbar() || {}
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const setError = (e: any) => {
@@ -18,7 +18,7 @@ export default function useSnackbar() {
         trackError?.(e, {
             code,
         })
-        _enqueueSnackbar(msg, {
+        _enqueueSnackbar?.(msg, {
             variant: "error",
             autoHideDuration: code ? 8000 : 4000,
             preventDuplicate: true,
@@ -28,10 +28,10 @@ export default function useSnackbar() {
     const enqueueSnackbar = (
         message: string | ReactNode,
         variant?: "success" | "warning" | "info"
-    ) => _enqueueSnackbar(message, { variant })
+    ) => _enqueueSnackbar?.(message, { variant })
 
     return {
         enqueueSnackbar,
-        setError
+        setError,
     }
 }

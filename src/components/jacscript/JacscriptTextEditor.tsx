@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react"
+import React, { lazy, useContext, useEffect } from "react"
 import { Grid, NoSsr } from "@mui/material"
 import useLocalStorage from "../hooks/useLocalStorage"
 import HighlightTextField from "../ui/HighlightTextField"
@@ -10,6 +10,20 @@ import FileSystemContext from "../FileSystemContext"
 import useEffectAsync from "../useEffectAsync"
 import useSnackbar from "../hooks/useSnackbar"
 import FileTabs from "../fs/FileTabs"
+import useRoleManager from "../hooks/useRoleManager"
+import {
+    addServiceProvider,
+    serviceProviderDefinitionFromServiceClass,
+} from "../../../jacdac-ts/src/servers/servers"
+import RolesToolbar from "../roles/RolesToolbar"
+import {
+    LiveRoleBinding,
+    RoleBinding,
+} from "../../../jacdac-ts/src/jdom/rolemanager"
+import useBus from "../../jacdac/useBus"
+import Suspense from "../ui/Suspense"
+
+const Dashboard = lazy(() => import("../dashboard/Dashboard"))
 
 const STORAGE_KEY = "jacdac:jacscripttexteditorsource"
 const JACSCRIPT_FILENAME = "fw.js"
@@ -18,6 +32,8 @@ const JACSCRIPT_NEW_FILE_CONTENT = ""
 function JacscriptTextEditorWithContext() {
     const { setProgram, compiled } = useJacscript()
     const { setError } = useSnackbar()
+    const bus = useBus()
+    const roleManager = useRoleManager()
     const { fileSystem } = useContext(FileSystemContext)
     const workspaceDirectory = useChange(fileSystem, _ => _?.workingDirectory)
     const workspaceFile = useChange(workspaceDirectory, _ =>
@@ -61,6 +77,29 @@ function JacscriptTextEditorWithContext() {
         },
         [source, workspaceFile]
     )
+    // update roles
+    useEffect(() => {
+        compiled &&
+            roleManager?.updateRoles([
+                ...compiled.dbg.roles.map(r => ({
+                    role: r.name,
+                    serviceClass: r.serviceClass,
+                })),
+            ])
+    }, [roleManager, compiled])
+
+    // start role on demand
+    const handleRoleClick = (role: RoleBinding) => {
+        const { service, preferredDeviceId, serviceClass } =
+            role as LiveRoleBinding
+        // spin off simulator
+        if (!service && !preferredDeviceId) {
+            addServiceProvider(
+                bus,
+                serviceProviderDefinitionFromServiceClass(serviceClass)
+            )
+        }
+    }
 
     const annotations = compiled?.errors?.map(
         error =>
@@ -70,6 +109,7 @@ function JacscriptTextEditorWithContext() {
                 message: error.message,
             } as jdspec.Diagnostic)
     )
+
     return (
         <Grid spacing={1} container>
             {!!fileSystem && (
@@ -82,9 +122,12 @@ function JacscriptTextEditorWithContext() {
                 </Grid>
             )}
             <Grid item xs={12}>
-                <Grid container direction="column" spacing={1}>
+                <RolesToolbar
+                    roleManager={roleManager}
+                    onRoleClick={handleRoleClick}
+                >
                     <JacscriptManagerChipItems />
-                </Grid>
+                </RolesToolbar>
             </Grid>
             <Grid item xs={12}>
                 <HighlightTextField
@@ -93,6 +136,15 @@ function JacscriptTextEditorWithContext() {
                     onChange={setSource}
                     annotations={annotations}
                 />
+            </Grid>
+            <Grid item xs={12}>
+                <Suspense>
+                    <Dashboard
+                        showHeader={true}
+                        showAvatar={true}
+                        alwaysVisible={true}
+                    />
+                </Suspense>
             </Grid>
         </Grid>
     )
