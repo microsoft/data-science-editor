@@ -129,7 +129,7 @@ function JacscriptTextEditorWithContext() {
                     <JacscriptManagerChipItems />
                 </RolesToolbar>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} lg={6}>
                 <HighlightTextField
                     code={source}
                     language={"javascript"}
@@ -137,7 +137,7 @@ function JacscriptTextEditorWithContext() {
                     annotations={annotations}
                 />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} lg={6}>
                 <Suspense>
                     <Dashboard
                         showHeader={true}
