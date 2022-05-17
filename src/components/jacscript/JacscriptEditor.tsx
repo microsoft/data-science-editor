@@ -69,29 +69,29 @@ function JacscriptEditorWithContext() {
 
     return (
         <Grid container spacing={1}>
-            <Grid item xs={12} sm={8}>
-                <Grid container direction="column" spacing={1}>
-                    <JacscriptEditorToolbar />
-                    <Grid item xs={12}>
-                        <BlockEditor />
-                    </Grid>
-                    {Flags.diagnostics && (
-                        <>
-                            <Suspense>
-                                <VMDiagnostics program={program} />
-                            </Suspense>
-                            <Suspense>
-                                <BlockDiagnostics />
-                            </Suspense>
-                        </>
-                    )}
-                </Grid>
+            <JacscriptEditorToolbar />
+            <Grid item xs={12} sm={Flags.diagnostics ? 8 : 12}>
+                <BlockEditor />
             </Grid>
-            <Grid item>
+            <Grid item xs={12} sm={Flags.diagnostics ? 4 : 12}>
                 <Suspense>
                     <JacscriptDiagnostics />
                 </Suspense>
             </Grid>
+            {Flags.diagnostics && (
+                <Grid item xs={12}>
+                    <Suspense>
+                        <VMDiagnostics program={program} />
+                    </Suspense>
+                </Grid>
+            )}
+            {Flags.diagnostics && (
+                <Grid item xs={12}>
+                    <Suspense>
+                        <BlockDiagnostics />
+                    </Suspense>
+                </Grid>
+            )}
         </Grid>
     )
 }

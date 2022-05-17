@@ -10,8 +10,7 @@ import useEffectAsync from "../useEffectAsync"
 import { jacscriptCompile } from "../blockly/dsl/workers/jacscript.proxy"
 import type { JacscriptCompileResponse } from "../../workers/jacscript/jacscript-worker"
 import { mountJacscriptBridge } from "../blockly/dsl/workers/vm.proxy"
-import useServices from "../hooks/useServices"
-import { SRV_JACSCRIPT_MANAGER } from "../../../jacdac-ts/src/jdom/constants"
+import { DISCONNECT } from "../../../jacdac-ts/src/jdom/constants"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 
 export interface JacscriptProps {
@@ -38,10 +37,16 @@ export function JacscriptProvider(props: { children: ReactNode }) {
     const [program, setProgram_] = useState<JacscriptProgram>()
     const [compiled, setCompiled] = useState<JacscriptCompileResponse>()
     const [clientSpecs, setClientSpecs] = useState<jdspec.ServiceSpec[]>()
-    const services = useServices({ serviceClass: SRV_JACSCRIPT_MANAGER })
-    const [manager, setManager] = useState(services[0])
+    const [manager, setManager] = useState<JDService>(undefined)
 
+    // launch worker
     useEffect(() => mountJacscriptBridge(), [])
+    // unbind manager service if disconnected
+    useEffect(
+        () =>
+            manager?.device?.subscribe(DISCONNECT, () => setManager(undefined)),
+        [manager]
+    )
     // if program changes, recompile
     useEffectAsync(
         async mounted => {
@@ -59,6 +64,7 @@ export function JacscriptProvider(props: { children: ReactNode }) {
         )
             setClientSpecs(compiled?.clientSpecs)
     }, [compiled])
+
     const setProgram = (newProgram: JacscriptProgram) => {
         if (JSON.stringify(program) !== JSON.stringify(newProgram))
             setProgram_(newProgram)

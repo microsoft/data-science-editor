@@ -1,4 +1,3 @@
-import { Grid } from "@mui/material"
 import React from "react"
 import CodeBlock from "../CodeBlock"
 import useJacscript from "./JacscriptContext"
@@ -7,7 +6,7 @@ export default function JacscriptDiagnostics() {
     const { program, compiled } = useJacscript()
     const { logs, errors } = compiled || {}
     return (
-        <Grid item xs={12} sm={4}>
+        <>
             <h3>Jacscript</h3>
             <CodeBlock
                 className="javascript"
@@ -16,17 +15,27 @@ export default function JacscriptDiagnostics() {
             >
                 {program?.program.join("\n") || "--"}
             </CodeBlock>
-            <h4>Logs</h4>
-            {logs && <pre>{logs}</pre>}
-            <h5>Errors</h5>
-            <ul>
-                {errors?.map(error => (
-                    <li key={`${error.line}:${error.column}:${error.message}`}>
-                        {error.line}:{error.column}&gt; {error.message}
-                        <pre>{error.codeFragment}</pre>
-                    </li>
-                ))}
-            </ul>
-        </Grid>
+            {!!logs && (
+                <>
+                    <h4>Logs</h4>
+                    <pre>{logs}</pre>
+                </>
+            )}
+            {!!errors?.length && (
+                <>
+                    <h4>Errors</h4>
+                    <ul>
+                        {errors?.map(error => (
+                            <li
+                                key={`${error.line}:${error.column}:${error.message}`}
+                            >
+                                {error.line}:{error.column}&gt; {error.message}
+                                <pre>{error.codeFragment}</pre>
+                            </li>
+                        ))}
+                    </ul>
+                </>
+            )}
+        </>
     )
 }
