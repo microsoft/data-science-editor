@@ -16,21 +16,20 @@ the three events, as shown in the small example below
 
 ```blocks
 let holdCount = 0
-modules.button1.onUp(function () {
-    led.stopAnimation()
-    basic.showString("U")
-})
-modules.button1.onDown(function () {
+modules.button1.onEvent(jacdac.ButtonEvent.Down, function () {
     holdCount = 0
     led.stopAnimation()
     basic.showString("D")
 })
-modules.button1.onHold(function () {
+modules.button1.onEvent(jacdac.ButtonEvent.Up, function () {
+    led.stopAnimation()
+    basic.showString("U")
+})
+modules.button1.onEvent(jacdac.ButtonEvent.Hold, function () {
     holdCount += 1
     led.stopAnimation()
     basic.showNumber(holdCount)
 })
-
 ```
 
 ## Button state (pressed, pressure)

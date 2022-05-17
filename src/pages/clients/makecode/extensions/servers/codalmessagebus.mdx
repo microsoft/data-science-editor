@@ -9,7 +9,7 @@ This is useful if you need to trigger code running on the embedded device from a
 You will need to add this extension manually in MakeCode.
 
 -   Open **Extensions**
--   Search for https://github.com/microsoft/pxt-jacdac/codal-message-Bus
+-   Search for https://github.com/microsoft/pxt-jacdac/codal-message-bus-server
 -   Include the extension found
 
 ## Usage
@@ -31,7 +31,7 @@ dep: jacdac-codal-message-bus-server=github:microsoft/pxt-jacdac/codal-message-b
 -----
 servers.codalMessageBus.start()
 control.onEvent(10000, 1, () => {
-    basic.showIcon(IconName.Happy)
+    basic.showIcon(IconNames.Happy)
 })
 ```
 

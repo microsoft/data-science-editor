@@ -42,37 +42,22 @@ The accelerometer supports a variety of (debounced) events, including:
 -   _force_2g, force_3g, force_6g, force_8g_: emitted when force in any direction exceeds the given threshold.
 
 ```blocks
-modules.accelerometer1.onTiltUp(() => {
-    basic.showArrow(ArrowNames.North)
-})
-
-modules.accelerometer1.onTiltDown(() => {
-    basic.showArrow(ArrowNames.South)
-})
-
-modules.accelerometer1.onTiltLeft(() => {
+modules.accelerometer1.onEvent(jacdac.AccelerometerEvent.TiltLeft, function () {
     basic.showArrow(ArrowNames.West)
 })
-
-modules.accelerometer1.onTiltRight(() => {
+modules.accelerometer1.onEvent(jacdac.AccelerometerEvent.TiltUp, function () {
+    basic.showArrow(ArrowNames.North)
+})
+modules.accelerometer1.onEvent(jacdac.AccelerometerEvent.TiltRight, function () {
     basic.showArrow(ArrowNames.East)
 })
-
-modules.accelerometer1.onShake(function () {
+modules.accelerometer1.onEvent(jacdac.AccelerometerEvent.TiltDown, function () {
+    basic.showArrow(ArrowNames.South)
+})
+modules.accelerometer1.onEvent(jacdac.AccelerometerEvent.Shake, function () {
     basic.showIcon(IconNames.Heart)
 })
 ```
-
-## JM Accelerometer v1.0
-
-The [JM Accelerometer v1.0](/devices/microsoft-research/jmaccelerometer30v10) module
-has silk screen of (X,Y,Z) axis (arrows are positive vectors) where
-
--   the X-axis indicates the **bottom edge** of the module
--   the Y-axis indicates the **left edge** of the module
--   the Z-axis is oriented towards the sky when the module is lying flat, as shown in the picture below
-
-<DeviceImage id="microsoft-research-jmaccelerometer30v10" size="catalog" />
 
 ## See Also
 
