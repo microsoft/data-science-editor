@@ -12,6 +12,7 @@ export default function MakeCodeProjects() {
                     }
                     frontmatter: {
                         title?: string
+                        order?: number
                     }
                     headings: {
                         value: string
@@ -34,6 +35,7 @@ export default function MakeCodeProjects() {
                         }
                         frontmatter {
                             title
+                            order
                         }
                         headings {
                             value
@@ -45,7 +47,13 @@ export default function MakeCodeProjects() {
     `)
     const nodes = query.allMdx.edges
         .map(edge => edge.node)
-        .sort((l, r) => l.fields.slug.localeCompare(r.fields.slug))
+        .sort((l, r) => {
+            const c =
+                -(Number(l.frontmatter?.order) || 0) +
+                (Number(r.frontmatter?.order) || 0)
+            if (c) return c
+            return l.fields.slug.localeCompare(r.fields.slug)
+        })
     return (
         <PageLinkList
             nodes={nodes.map(({ fields, frontmatter, headings }) => ({
