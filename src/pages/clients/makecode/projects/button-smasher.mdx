@@ -1,0 +1,17 @@
+# Button smasher
+
+This little application is a button smasher
+game for the micro:bit V2. It allows you to increment the counter for 10 seconds... good luck!
+
+```blocks
+let counter = 0
+modules.button1.onEvent(jacdac.ButtonEvent.Down, function () {
+    if (input.runningTime() < 10000) {
+        counter += 1
+        led.stopAnimation()
+    }
+})
+basic.forever(function () {
+    basic.showNumber(counter)
+})
+```
