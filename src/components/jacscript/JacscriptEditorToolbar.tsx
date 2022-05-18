@@ -1,14 +1,14 @@
 import { Grid } from "@mui/material"
-import React, { useContext } from "react"
+import React from "react"
 import BlockRolesToolbar from "../blockly/BlockRolesToolbar"
 import { WORKSPACE_FILENAME } from "../blockly/toolbox"
 import FileTabs from "../fs/FileTabs"
-import FileSystemContext from "../FileSystemContext"
+import useFileSystem from "../FileSystemContext"
 import { JACSCRIPT_NEW_FILE_CONTENT } from "./JacscriptEditor"
 import JacscriptManagerChipItems from "./JacscriptManagerChipItems"
 
 export default function JacscriptEditorToolbar() {
-    const { fileSystem } = useContext(FileSystemContext)
+    const { fileSystem } = useFileSystem()
 
     return (
         <>

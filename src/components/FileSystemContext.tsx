@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode, useMemo } from "react"
+import React, { createContext, ReactNode, useContext, useMemo } from "react"
 import { fileSystemHandleSupported } from "./fs/fs"
 import { FileSystem, FileSystemDirectory } from "./fs/fsdom"
 
@@ -7,13 +7,16 @@ export interface FileSystemProps {
     showDirectoryPicker?: (options?: DirectoryPickerOptions) => Promise<void>
 }
 
-const FileSystemContext = createContext<FileSystemProps>({
+export const FileSystemContext = createContext<FileSystemProps>({
     fileSystem: undefined,
     showDirectoryPicker: undefined,
 })
 FileSystemContext.displayName = "fs"
 
-export default FileSystemContext
+export default function useFileSystem(): FileSystemProps {
+    const ctx = useContext(FileSystemContext)
+    return ctx
+}
 
 // eslint-disable-next-line react/prop-types
 export function FileSystemProvider(props: { children: ReactNode }) {

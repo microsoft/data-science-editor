@@ -10,7 +10,7 @@ import {
 import React, { ChangeEvent, useContext, useState } from "react"
 import AddIcon from "@mui/icons-material/Add"
 import { useId } from "react"
-import FileSystemContext from "../FileSystemContext"
+import useFileSystem from "../FileSystemContext"
 
 export default function FileNewFileChip(props: {
     name?: string
@@ -24,7 +24,7 @@ export default function FileNewFileChip(props: {
         label,
         extension,
     } = props
-    const { fileSystem } = useContext(FileSystemContext)
+    const { fileSystem } = useFileSystem()
     const [open, setOpen] = useState(false)
     const [value, setValue] = useState("")
     const valueId = useId()

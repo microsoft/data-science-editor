@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material"
-import React, { useContext, useRef } from "react"
+import React, { useRef } from "react"
 import useKeyboardNavigationProps from "../hooks/useKeyboardNavigationProps"
-import FileSystemContext from "../FileSystemContext"
+import useFileSystem from "../FileSystemContext"
 import useChange from "../../jacdac/useChange"
 import FileSystemChip from "./FileSystemChip"
 import FileNewFileChip from "./FileNewFileChip"
@@ -27,7 +27,7 @@ export default function FileTabs(props: {
         newFileLabel,
         newFileExtension,
     } = props
-    const { fileSystem } = useContext(FileSystemContext)
+    const { fileSystem } = useFileSystem()
     const root = useChange(fileSystem, _ => _?.root)
     const workingDirectory = useChange(fileSystem, _ => _?.workingDirectory)
     const workingFile = useChange(fileSystem, _ => _?.workingFile)

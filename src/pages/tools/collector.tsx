@@ -51,7 +51,7 @@ import useServices from "../../components/hooks/useServices"
 import { delay } from "../../../jacdac-ts/src/jdom/utils"
 import useLocalStorage from "../../components/hooks/useLocalStorage"
 import FileTabs from "../../components/fs/FileTabs"
-import FileSystemContext from "../../components/FileSystemContext"
+import useFileSystem from "../../components/FileSystemContext"
 import useChange from "../../jacdac/useChange"
 import GridHeader from "../../components/ui/GridHeader"
 import useSnackbar from "../../components/hooks/useSnackbar"
@@ -85,7 +85,7 @@ export default function Collector() {
     const { enqueueSnackbar } = useSnackbar()
     const handleShowStartSimulator = () =>
         toggleShowDeviceHostsDialog({ sensor: true })
-    const { fileSystem } = useContext(FileSystemContext)
+    const { fileSystem } = useFileSystem()
     const root = useChange(fileSystem, _ => _?.root)
     const { fileStorage } = useContext(ServiceManagerContext)
     const [registerIdsChecked, setRegisterIdsChecked] = useState<string[]>([])

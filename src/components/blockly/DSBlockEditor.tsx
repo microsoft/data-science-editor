@@ -10,7 +10,7 @@ import dataDsl from "./dsl/datadsl"
 import chartDsl from "./dsl/chartdsl"
 import fieldsDsl from "./dsl/fieldsdsl"
 import { WORKSPACE_FILENAME } from "./toolbox"
-import FileSystemContext from "../FileSystemContext"
+import useFileSystem from "../FileSystemContext"
 import { createIFrameDSL } from "./dsl/iframedsl"
 import { useLocationSearchParamBoolean } from "../hooks/useLocationSearchParam"
 import dataSetDsl from "./dsl/datasetdsl"
@@ -25,7 +25,7 @@ const DS_NEW_FILE_CONTENT = JSON.stringify({
 } as WorkspaceFile)
 
 function DSEditorWithContext() {
-    const { fileSystem } = useContext(FileSystemContext)
+    const { fileSystem } = useFileSystem()
 
     return (
         <Grid container direction="column" spacing={1}>
@@ -66,7 +66,11 @@ export default function DSBlockEditor() {
 
     return (
         <NoSsr>
-            <BlockProvider editorId={DS_EDITOR_ID}  storageKey={DS_SOURCE_STORAGE_KEY} dsls={dsls}>
+            <BlockProvider
+                editorId={DS_EDITOR_ID}
+                storageKey={DS_SOURCE_STORAGE_KEY}
+                dsls={dsls}
+            >
                 <DSEditorWithContext />
             </BlockProvider>
         </NoSsr>

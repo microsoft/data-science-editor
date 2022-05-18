@@ -1,4 +1,4 @@
-import React, { lazy, useContext, useEffect } from "react"
+import React, { lazy, useEffect } from "react"
 import { Grid, NoSsr } from "@mui/material"
 import useLocalStorage from "../hooks/useLocalStorage"
 import HighlightTextField from "../ui/HighlightTextField"
@@ -6,7 +6,7 @@ import useJacscript, { JacscriptProvider } from "./JacscriptContext"
 import { useDebounce } from "use-debounce"
 import JacscriptManagerChipItems from "./JacscriptManagerChipItems"
 import useChange from "../../jacdac/useChange"
-import FileSystemContext from "../FileSystemContext"
+import useFileSystem from "../FileSystemContext"
 import useEffectAsync from "../useEffectAsync"
 import useSnackbar from "../hooks/useSnackbar"
 import FileTabs from "../fs/FileTabs"
@@ -34,7 +34,7 @@ function JacscriptTextEditorWithContext() {
     const { setError } = useSnackbar()
     const bus = useBus()
     const roleManager = useRoleManager()
-    const { fileSystem } = useContext(FileSystemContext)
+    const { fileSystem } = useFileSystem()
     const workspaceDirectory = useChange(fileSystem, _ => _?.workingDirectory)
     const workspaceFile = useChange(workspaceDirectory, _ =>
         _?.file(JACSCRIPT_FILENAME, { create: true })

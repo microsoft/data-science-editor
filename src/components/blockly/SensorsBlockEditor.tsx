@@ -10,7 +10,7 @@ import dataDsl from "./dsl/datadsl"
 import chartDsl from "./dsl/chartdsl"
 import fieldsDsl from "./dsl/fieldsdsl"
 import { WORKSPACE_FILENAME } from "./toolbox"
-import FileSystemContext from "../FileSystemContext"
+import useFileSystem from "../FileSystemContext"
 import { createIFrameDSL } from "./dsl/iframedsl"
 import { useLocationSearchParamBoolean } from "../hooks/useLocationSearchParam"
 import dataVarDsl from "./dsl/datavardsl"
@@ -26,7 +26,7 @@ const SENSORS_NEW_FILE_CONTENT = JSON.stringify({
 } as WorkspaceFile)
 
 function SensorsEditorWithContext() {
-    const { fileSystem } = useContext(FileSystemContext)
+    const { fileSystem } = useFileSystem()
 
     return (
         <Grid container direction="column" spacing={1}>

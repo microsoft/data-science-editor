@@ -40,7 +40,6 @@ import {
 import { WorkspaceFile, WorkspaceJSON } from "./dsl/workspacejson"
 import useEffectAsync from "../useEffectAsync"
 import useChange from "../../jacdac/useChange"
-import FileSystemContext from "../FileSystemContext"
 import { resolveBlockWarnings } from "./WorkspaceContext"
 import useWindowEvent from "../hooks/useWindowEvent"
 import {
@@ -51,6 +50,7 @@ import {
 import { AllOptions } from "./fields/IFrameDataChooserField"
 import { toServiceName, toServiceType } from "./dsl/servicesbase"
 import useSnackbar from "../hooks/useSnackbar"
+import useFileSystem from "../FileSystemContext"
 
 export interface BlockProps {
     editorId: string
@@ -97,7 +97,7 @@ export function BlockProvider(props: {
     const { editorId, storageKey, dsls, children, onBeforeSaveWorkspaceFile } =
         props
     const { setError } = useSnackbar()
-    const { fileSystem } = useContext(FileSystemContext)
+    const { fileSystem } = useFileSystem()
     const workspaceDirectory = useChange(fileSystem, _ => _?.workingDirectory)
     const workspaceFile = useChange(workspaceDirectory, _ =>
         _?.file(WORKSPACE_FILENAME, { create: true })

@@ -13,7 +13,7 @@ import { visitWorkspace } from "../blockly/dsl/workspacevisitor"
 
 import { BlockJSON, WorkspaceFile } from "../blockly/dsl/workspacejson"
 import { WORKSPACE_FILENAME } from "../blockly/toolbox"
-import FileSystemContext, { FileSystemProvider } from "../FileSystemContext"
+import useFileSystem, { FileSystemProvider } from "../FileSystemContext"
 import ServiceManagerContext from "../ServiceManagerContext"
 import { resolveBlockServices } from "../blockly/WorkspaceContext"
 
@@ -80,7 +80,7 @@ function ModelBlockEditorWithContext(props: {
     const { workspace, workspaceJSON, toolboxConfiguration } =
         useContext(BlockContext)
 
-    const { fileSystem } = useContext(FileSystemContext)
+    const { fileSystem } = useFileSystem()
     const { fileStorage } = useContext(ServiceManagerContext)
 
     /* For data storage */
