@@ -60,8 +60,8 @@ export default function MakeCodeProjects(props: { serviceName?: string }) {
     // order nodes
     nodes.sort((l, r) => {
         const c =
-            -(Number(l.frontmatter?.order) || 0) +
-            (Number(r.frontmatter?.order) || 0)
+            -(Number(l.frontmatter?.order) || 50) +
+            (Number(r.frontmatter?.order) || 50)
         if (c) return c
         return l.fields.slug.localeCompare(r.fields.slug)
     })
