@@ -103,7 +103,15 @@ module.exports = {
                     default: require.resolve("./src/components/Page.tsx"),
                 },
                 gatsbyRemarkPlugins: [
-                    wsl || offline ? undefined : "gatsby-remark-makecode",
+                    wsl || offline
+                        ? undefined
+                        : {
+                              resolve: "gatsby-remark-makecode",
+                              options: {
+                                  editorUrl:
+                                      "https://makecode.microbit.org/beta",
+                              },
+                          },
                     "gatsby-remark-autolink-headers",
                     "gatsby-remark-external-links",
                     {
@@ -118,7 +126,6 @@ module.exports = {
                     },
                     "gatsby-remark-static-images",
                     "gatsby-remark-embed-snippet",
-
                 ].filter(plugin => !!plugin),
             },
         },
@@ -126,7 +133,15 @@ module.exports = {
             resolve: `gatsby-transformer-remark`,
             options: {
                 plugins: [
-                    wsl ? undefined : "gatsby-remark-makecode",
+                    wsl || offline
+                        ? undefined
+                        : {
+                              resolve: "gatsby-remark-makecode",
+                              options: {
+                                  editorUrl:
+                                      "https://makecode.microbit.org/beta",
+                              },
+                          },
                     "gatsby-remark-autolink-headers",
                     "gatsby-remark-external-links",
                     {
@@ -140,7 +155,7 @@ module.exports = {
                         },
                     },
                     "gatsby-remark-static-images",
-                    "gatsby-remark-embed-snippet"
+                    "gatsby-remark-embed-snippet",
                 ].filter(plugin => !!plugin),
             },
         },
