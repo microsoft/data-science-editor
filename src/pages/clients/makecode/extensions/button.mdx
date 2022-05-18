@@ -1,18 +1,15 @@
 # Button
 
 The button extension provides event handlers for the events
-*down*, *up*, and *hold*, as well as methods for accessing the underlying
-state of a button. 
+_down_, _up_, and _hold_, as well as methods for accessing the underlying
+state of a button.
 
 ## Events
 
-The (unbounced) *down* event is raised when the
-button is pressed, while the (unbounced) *up* event is raised when the button is released.
-The *hold* event is generated if the button is held for more than 1/2 second,
+The (unbounced) _down_ event is raised when the
+button is pressed, while the (unbounced) _up_ event is raised when the button is released.
+The _hold_ event is generated if the button is held for more than 1/2 second,
 and every 1/2 second after that until the button is released.
-
-There are three handlers (*onDown*, *onUp*, and *onHold*) for each of
-the three events, as shown in the small example below
 
 ```blocks
 let holdCount = 0
@@ -49,11 +46,11 @@ basic.forever(() => {
 })
 ```
 
-The lower-level state of the button is accessible via the the `pressure` method,
-which ranges in value from 0-100. Depending on the type of button, 
+The lower-level state of the button is accessible via the the `pressure` method in Javascript,
+which ranges in value from 0-100. Depending on the type of button,
 the pressed state will be reached with a certain threshold, in the example below 70%.
 
-```blocks
+```sts
 basic.forever(() => {
     if (modules.button1.pressure() >= 70) {
         led.stopAnimation()
@@ -68,6 +65,24 @@ basic.forever(() => {
 })
 ```
 
+## Example: Button smasher
+
+This little application is a button smasher
+game for the micro:bit V2. It allows you to increment the counter for 10 seconds... good luck!
+
+```blocks
+let counter = 0
+modules.button1.onEvent(jacdac.ButtonEvent.Down, function () {
+    if (input.runningTime() < 10000) {
+        counter += 1
+        led.stopAnimation()
+    }
+})
+basic.forever(function () {
+    basic.showNumber(counter)
+})
+```
+
 ## See Also
 
-- [service specification](/services/button/)
+-   [service specification](/services/button/)
