@@ -12,6 +12,8 @@ import {
 } from "@mui/material"
 
 import Suspense from "./ui/Suspense"
+
+const MakeCodeProjects = lazy(() => import("./makecode/MakeCodeProjects"))
 const CodeBlock = lazy(() => import("./CodeBlock"))
 const RandomGenerator = lazy(() => import("./RandomGenerator"))
 const TraceList = lazy(() => import("./trace/TraceList"))
@@ -76,6 +78,11 @@ export default function useMdxComponents() {
             DeviceImage: props => (
                 <Suspense>
                     <DeviceImage {...props} />
+                </Suspense>
+            ),
+            MakeCodeProjects: props => (
+                <Suspense>
+                    <MakeCodeProjects {...props} />
                 </Suspense>
             ),
         }),
