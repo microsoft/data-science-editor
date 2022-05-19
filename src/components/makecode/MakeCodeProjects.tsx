@@ -16,6 +16,7 @@ export default function MakeCodeProjects(props: { serviceName?: string }) {
                         title?: string
                         order?: number
                         services?: string
+                        description?: string
                     }
                     headings: {
                         value: string
@@ -40,6 +41,7 @@ export default function MakeCodeProjects(props: { serviceName?: string }) {
                             title
                             order
                             services
+                            description
                         }
                         headings {
                             value
@@ -58,18 +60,20 @@ export default function MakeCodeProjects(props: { serviceName?: string }) {
             node => node.frontmatter.services?.indexOf(spec.shortId) > -1
         )
     // order nodes
-    nodes.sort((l, r) => {
-        const c =
-            -(Number(l.frontmatter?.order) || 50) +
-            (Number(r.frontmatter?.order) || 50)
+    nodes = nodes.sort((l, r) => {
+        const lo = Number(l.frontmatter?.order) || 50
+        const ro = Number(r.frontmatter?.order) || 50
+        const c = lo - ro
         if (c) return c
         return l.fields.slug.localeCompare(r.fields.slug)
     })
+
     return (
         <PageLinkList
             nodes={nodes.map(({ fields, frontmatter, headings }) => ({
                 slug: fields.slug,
                 title: frontmatter.title || headings?.[0]?.value,
+                description: frontmatter.description,
             }))}
         />
     )

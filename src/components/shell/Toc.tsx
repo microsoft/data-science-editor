@@ -127,7 +127,7 @@ export default function Toc(props: { pagePath: string }) {
             {
                 name: "Overview",
                 path: "/overview/",
-                order: 0,
+                order: 0.01,
             },
             {
                 name: "Device Dashboard",
