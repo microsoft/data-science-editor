@@ -12,6 +12,7 @@ export default function MakeCodeExtensions() {
                     }
                     frontmatter: {
                         title?: string
+                        description?: string
                     }
                     headings: {
                         value: string
@@ -34,6 +35,7 @@ export default function MakeCodeExtensions() {
                         }
                         frontmatter {
                             title
+                            description
                         }
                         headings {
                             value
