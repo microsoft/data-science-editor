@@ -74,6 +74,7 @@ export default function MakeCodeProjects(props: { serviceName?: string }) {
                 slug: fields.slug,
                 title: frontmatter.title || headings?.[0]?.value,
                 description: frontmatter.description,
+                services: frontmatter.services
             }))}
         />
     )
