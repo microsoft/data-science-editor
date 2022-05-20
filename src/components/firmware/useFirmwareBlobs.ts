@@ -35,7 +35,7 @@ export default function useFirmwareBlobs() {
                 .filter(spec => !!spec?.productIdentifiers?.length) // needs some product identifiers
                 .map(spec => spec.repo)
                 .filter(repo => /^https:\/\/github.com\//.test(repo))
-                .map(repo => repo.substr("https://github.com/".length))
+                .map(repo => repo.substring("https://github.com/".length))
         )
         console.debug(`firmware: found ${slugs.join(", ")}`)
         for (const slug of slugs) {
@@ -45,7 +45,7 @@ export default function useFirmwareBlobs() {
                 const age = Date.now() - time
                 console.debug(`firmware: ${slug} age ${prettyDuration(age)}`)
                 if (age < 3600_000) {
-                    console.debug(`firmware: skipping fresh firmware ${slug}`)
+                    // console.debug(`firmware: skipping fresh firmware ${slug}`)
                     continue
                 }
             }
