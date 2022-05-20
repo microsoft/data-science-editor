@@ -17,7 +17,7 @@ As of today, Jacdac runs on **micro:bit V2** exclusively and uses pin **12**.
 ## [Software only Jacdac](/ddk/microbit/software-only-accessory/) for Existing accessories
 
 The accessory sensors and actuators are surfaced as Jacdac servers by wrapping the existing extension into a Jacdac compatibility layer.
-This solution adds no cost and will work for existing accessories.
+**This solution adds no cost and will work for existing accessories.**
 
 -   Pros
     -   **retrofit existing accessories**
@@ -64,18 +64,19 @@ In this case, you do not need to provide any extension as the user will be able 
     -   no extension required
     -   compatible with any Jacdac hardware, including Raspberry Pi
 -   Cons
-    -   MCU and power regulator circuitery add cost
+    -   additional cost for power regulator and MCU
+
+The Jacdac team provides firmware for extreme low cast MCUs like the [PADAIK](https://github.com/microsoft/jacdac-padauk) to reduce the cost impact. Follow the [hardware design guidance](/ddk/design/) for this option.
 
 ## Unpowered physical connector
 
 In this scenario, you integrate one or more [Jacdac PCB edge connectors](/ddk/design#pcb-edge-connector) into your design, 
-with the `JD_DATA` line connected to micro:bit pin 12 through the required [signal conditioning](/ddk/design#signalling) circuit. The power line is **not** connected.
+with the `JD_DATA` line connected to micro:bit **pin 12** through the required [signal conditioning](/ddk/design#signalling) circuit. The power line is **not** connected.
 
 On the software side, the same approach applies in Software-Only Jacdac.
 
-This approach is not recommended as it will lead
-to a confusing experience for users where
-modules won't be powered unless another power module
+However, this approach is not recommended as it will lead
+to a confusing experience for users where modules won't be powered unless another power module
 is on the Jacdac line.
 
 -   Pros
@@ -86,7 +87,7 @@ is on the Jacdac line.
     -   same github repository for code
     -   Jacdac connector at minimal cost
 -   Cons
+    -   Confusing user experience
     -   new hardware design needed
     -   extension required
-    -   Unpowered connector means user has to add a power source on the Jacdac bus
     -   micro:bit v2 only (Jacdac is not supported on v1)
