@@ -6,6 +6,11 @@ import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import { TestNode } from "../../../jacdac-ts/src/testdom/nodes"
 import { FlashDeviceButton } from "../../components/firmware/FlashDeviceButton"
 import useDeviceFirmwareBlob from "../../components/firmware/useDeviceFirmwareBlob"
+import { useDeviceTestExporter } from "./DeviceTestExporter"
+import useChange from "../../jacdac/useChange"
+import { TestUploadState } from "../../../jacdac-ts/src/testdom/spec"
+import TestUploadStateIcon from "./TestUploadStateIcon"
+import TestUploadStateMessage from "./TestUploadStateMessage"
 
 export default function DeviceTestItem(props: {
     test: TestNode
@@ -14,6 +19,10 @@ export default function DeviceTestItem(props: {
 }) {
     const { device, test, autoUpdate } = props
     const blob = useDeviceFirmwareBlob(device)
+    const uploadState = useChange(test, _ => _?.uploadState)
+
+    useDeviceTestExporter(test)
+
     return (
         <Grid container spacing={1}>
             <DashboardDeviceItem
@@ -42,6 +51,18 @@ export default function DeviceTestItem(props: {
                                 skipPanel={true}
                                 defaultExpanded={true}
                             />
+                        </Grid>
+                    )}
+                    {uploadState !== TestUploadState.Local && (
+                        <Grid item xs={12}>
+                            <Grid container spacing={1} direction="row">
+                                <Grid item>
+                                    <TestUploadStateIcon node={test} />
+                                </Grid>
+                                <Grid item>
+                                    <TestUploadStateMessage node={test} />
+                                </Grid>
+                            </Grid>
                         </Grid>
                     )}
                 </Grid>

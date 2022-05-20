@@ -22,6 +22,7 @@ import AlertSwitch from "../../components/ui/AlertSwitch"
 import useProxy from "../../jacdac/useProxy"
 import useBusWithMode from "../../jacdac/useBusWithMode"
 import useLocalStorage from "../../components/hooks/useLocalStorage"
+import DeviceTestExporter from "../../components/testdom/DeviceTestExporter"
 
 const FACTORY_MODE_STORAGE_KEY = "jacdac_device_tester_factory"
 
@@ -58,7 +59,10 @@ export default function Page() {
     const [tab, setTab] = useState(0)
     const [proxy, setProxy] = useState(false)
     const [autoUpdate, setAutoUpdate] = useState(false)
-    const [factory, setFactory] = useLocalStorage(FACTORY_MODE_STORAGE_KEY, false)
+    const [factory, setFactory] = useLocalStorage(
+        FACTORY_MODE_STORAGE_KEY,
+        false
+    )
 
     // don't let a brain interfere
     useProxy(proxy)
@@ -127,6 +131,7 @@ export default function Page() {
                 >
                     Tests should be fast and automated in factory mode. Manual
                     tests are <b>disabled</b>.
+                    <DeviceTestExporter />
                 </AlertSwitch>
                 <AlertSwitch
                     severity="info"

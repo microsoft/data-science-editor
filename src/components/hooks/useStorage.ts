@@ -4,6 +4,24 @@ import { UIFlags } from "../../jacdac/providerbus"
 // enabled when storage=0
 const memStorage: Record<string, unknown> = {}
 
+export function getStorageItem<T>(storage: Storage, key: string): T {
+    const pkey = PREFIX + key
+    if (UIFlags.storage) {
+        try {
+            // Get from local storage by key
+            const item = storage?.getItem(pkey)
+            // Parse stored json or if none return initialValue
+            return item && JSON.parse(item)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    // use in-memory
+    const v = memStorage[key]
+    return v as T
+}
+
 const PREFIX = "jacdac:"
 export default function useStorage<T = string>(
     storage: Storage,

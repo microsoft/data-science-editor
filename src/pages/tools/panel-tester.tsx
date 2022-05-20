@@ -10,9 +10,9 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import { PanelTest } from "../../../jacdac-ts/src/testdom/nodes"
 import { tryParsePanelTestSpec } from "../../../jacdac-ts/src/testdom/compiler"
 import usePanelTest from "../../components/testdom/usePanelTest"
-import TestIcon from "../../components/icons/TestIcon"
+import TestStateIcon from "../../components/testdom/TestStateIcon"
 import TestTreeView from "../../components/testdom/TestTreeView"
-import PanelTestExport from "../../components/testdom/PanelTestExport"
+import DeviceTestExporter from "../../components/testdom/DeviceTestExporter"
 import FirmwareLoader from "../../components/firmware/FirmwareLoader"
 import PanelSpecEditor from "../../components/testdom/PanelSpecEditor"
 
@@ -27,7 +27,7 @@ function Results(props: { panel: PanelTest }) {
         <Accordion expanded={expanded} onChange={handleExpanded}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <h2>
-                    Test Result: <TestIcon node={panel} />
+                    Test Result: <TestStateIcon node={panel} />
                 </h2>
             </AccordionSummary>
             <AccordionDetails style={{ display: "block" }}>
@@ -62,7 +62,7 @@ export default function PanelTester() {
                 panel={panelSpec}
             />
             {panel && <Results panel={panel} />}
-            {panel && <PanelTestExport panel={panel} />}
+            {panel && <DeviceTestExporter />}
         </Stack>
     )
 }

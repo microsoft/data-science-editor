@@ -18,7 +18,7 @@ import useChange from "../../jacdac/useChange"
 import AnnounceFlagsTreeItem from "../devices/AnnounceFlagsTreeItem"
 import { RegisterTreeItem } from "../tools/JDomTreeViewItems"
 import DashboardServiceWidget from "../dashboard/DashboardServiceWidget"
-import TestIcon from "../icons/TestIcon"
+import TestStateIcon from "./TestStateIcon"
 import PanToolIcon from "@mui/icons-material/PanTool"
 import { Button } from "gatsby-theme-material-ui"
 import { TestState } from "../../../jacdac-ts/src/testdom/spec"
@@ -73,7 +73,7 @@ function TestTreeItem(props: TestNodeProps) {
             nodeId={id}
             labelText={label}
             labelInfo={info}
-            icon={<TestIcon node={node} />}
+            icon={<TestStateIcon node={node} />}
             {...rest}
         >
             {testNode}

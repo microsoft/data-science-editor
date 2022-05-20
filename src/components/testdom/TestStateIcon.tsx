@@ -7,7 +7,7 @@ import useChange from "../../jacdac/useChange"
 import { TestNode } from "../../../jacdac-ts/src/testdom/nodes"
 import { TestState } from "../../../jacdac-ts/src/testdom/spec"
 
-export default function TestIcon(props: { node: TestNode }) {
+export default function TestStateIcon(props: { node: TestNode }) {
     const { node } = props
     const state = useChange(node, _ => _?.state)
     switch (state) {
