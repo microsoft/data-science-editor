@@ -1,4 +1,4 @@
-import { Grid, TextField } from "@mui/material"
+import { Grid, TextField, Typography } from "@mui/material"
 import React, { ChangeEvent, useEffect } from "react"
 import useLocalStorage from "../hooks/useLocalStorage"
 import {
@@ -9,9 +9,12 @@ import { useId } from "react"
 import { STATE_CHANGE } from "../../../jacdac-ts/src/jdom/constants"
 import { TestState, TestUploadState } from "../../../jacdac-ts/src/testdom/spec"
 import { getStorageItem } from "../hooks/useStorage"
+import HighlightTextField from "../ui/HighlightTextField"
+import { JSONTryParse } from "../../../jacdac-ts/src/jdom/utils"
 
 const PANEL_UPLOAD_URL = "device-tester-post-url"
 const PANEL_UPLOAD_AUTH = "device-tester-post-auth"
+const PANEL_UPLOAD_CUSTOM = "device-tester-post-custom"
 
 export function useDeviceTestExporter(test: TestNode) {
     const serialize = (node: TestNode) => {
@@ -19,7 +22,7 @@ export function useDeviceTestExporter(test: TestNode) {
         const sha = process.env.GATSBY_GITHUB_SHA
         const r: any = node.export()
         if (repo && sha) r.jacdac = { host: window.location?.host, repo, sha }
-        return JSON.stringify(r, null, 2)
+        return r
     }
 
     const handlePost = async (node: TestNode) => {
@@ -31,11 +34,16 @@ export function useDeviceTestExporter(test: TestNode) {
             window.localStorage,
             PANEL_UPLOAD_AUTH
         )
+        const custom = getStorageItem<string>(
+            window.localStorage,
+            PANEL_UPLOAD_CUSTOM
+        )
 
         if (!url) return
         try {
             node.uploadState = TestUploadState.Uploading
             const body = serialize(node)
+            if (custom) body.custom = JSONTryParse(custom)
             console.debug(
                 `test upload: post result of ${node.id} to ${url}`,
                 body,
@@ -47,7 +55,7 @@ export function useDeviceTestExporter(test: TestNode) {
                     authorization: token,
                 },
                 method: "post",
-                body,
+                body: JSON.stringify(body),
             }
             const res = await fetch(url, init)
             console.debug(`test upload: ${res.status}`, res)
@@ -82,8 +90,9 @@ export function useDeviceTestExporter(test: TestNode) {
 export default function DeviceTestExporter() {
     const urlId = useId()
     const tokenId = urlId + "-token"
-    const [url, setUrl] = useLocalStorage(PANEL_UPLOAD_URL, "")
-    const [token, setToken] = useLocalStorage(PANEL_UPLOAD_AUTH, "")
+    const [url, setUrl] = useLocalStorage<string>(PANEL_UPLOAD_URL, "")
+    const [token, setToken] = useLocalStorage<string>(PANEL_UPLOAD_AUTH, "")
+    const [custom, setCustom] = useLocalStorage<string>(PANEL_UPLOAD_CUSTOM, "")
     const urlError =
         !!url && !/https?:\/\//i.test(url)
             ? "URL must start with https://"
@@ -124,6 +133,17 @@ export default function DeviceTestExporter() {
                         "Optional Authorization header content (i.e. token)"
                     }
                 />
+            </Grid>
+            <Grid item xs={12}>
+                <HighlightTextField
+                    code={custom}
+                    language="json"
+                    onChange={setCustom}
+                    minHeight="5em"
+                />
+                <Typography variant="caption">
+                    Custom JSON to be added to the result upload. 
+                </Typography>
             </Grid>
         </Grid>
     )

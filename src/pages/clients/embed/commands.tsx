@@ -42,7 +42,7 @@ function CommandTester() {
             <Grid item xs={12}>
                 <HighlightTextField
                     code={source}
-                    language={"json"}
+                    language="json"
                     onChange={setSource}
                 />
             </Grid>

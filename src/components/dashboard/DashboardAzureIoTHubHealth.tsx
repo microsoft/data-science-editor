@@ -1,7 +1,6 @@
 import React, { ChangeEvent, useCallback, useState } from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import {
-    Badge,
     Chip,
     Dialog,
     DialogActions,

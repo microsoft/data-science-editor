@@ -115,7 +115,7 @@ export default function PanelSpecEditor(props: {
                     </h2>
                     <HighlightTextField
                         code={source}
-                        language={"json"}
+                        language="json"
                         onChange={setSource}
                     />
                     <Markdown

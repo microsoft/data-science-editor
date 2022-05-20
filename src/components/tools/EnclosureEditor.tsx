@@ -258,7 +258,7 @@ export default function EnclosureEditor() {
                     </IconButtonWithTooltip>
                     <HighlightTextField
                         code={source}
-                        language={"json"}
+                        language="json"
                         onChange={setSource}
                     />
                 </Grid>

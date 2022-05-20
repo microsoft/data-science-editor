@@ -47,7 +47,7 @@ export default function DeviceSpecificationSource(props: {
                 <TabPanel key={`convjson`} value={tab} index={index++}>
                     <Snippet
                         value={JSON.stringify(spec, null, 2)}
-                        mode={"json"}
+                        mode="json"
                     />
                 </TabPanel>
             )}
