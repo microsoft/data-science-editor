@@ -13,11 +13,11 @@ import ConnectButtons from "../buttons/ConnectButtons"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import SimulateDeviceAlert from "../alert/SimulateDeviceAlert"
 import { Flags } from "../../../jacdac-ts/src/jdom/flags"
-import { useBusMode } from "../../jacdac/useBus"
 import StartSimulatorButton from "../buttons/StartSimulatorButton"
 import { defaultDeviceFilter, defaultDeviceSort } from "./filters"
 import useHostedSimulators from "../HostedSimulatorsContext"
 import StartMissingSimulatorsButton from "../buttons/StartMissingSimulatorsButton"
+import useBusWithMode from "../../jacdac/useBusWithMode"
 
 export interface DashboardDeviceProps {
     showHeader?: boolean
@@ -58,7 +58,7 @@ export default function Dashboard(props: DashboardProps) {
         deviceFilter = defaultDeviceFilter,
         ...other
     } = props
-    const bus = useBusMode({ autoConnect: true })
+    const bus = useBusWithMode({ autoConnect: true })
     const { isHostedSimulator, clearHostedSimulators } = useHostedSimulators()
     const devices = useDevices({
         announced: true,

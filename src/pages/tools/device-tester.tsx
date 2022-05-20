@@ -20,6 +20,10 @@ import PowerSupplySection from "../../components/testdom/PowerSupplySection"
 import TabPanel from "../../components/ui/TabPanel"
 import AlertSwitch from "../../components/ui/AlertSwitch"
 import useProxy from "../../jacdac/useProxy"
+import useBusWithMode from "../../jacdac/useBusWithMode"
+import useLocalStorage from "../../components/hooks/useLocalStorage"
+
+const FACTORY_MODE_STORAGE_KEY = "jacdac_device_tester_factory"
 
 function DeviceItem(props: {
     device: JDDevice
@@ -54,10 +58,12 @@ export default function Page() {
     const [tab, setTab] = useState(0)
     const [proxy, setProxy] = useState(false)
     const [autoUpdate, setAutoUpdate] = useState(false)
-    const [factory, setFactory] = useState(false)
+    const [factory, setFactory] = useLocalStorage(FACTORY_MODE_STORAGE_KEY, false)
 
     // don't let a brain interfere
     useProxy(proxy)
+    // auto-connect
+    useBusWithMode({ autoConnect: true })
 
     const handleSetFactory = (checked: boolean) => setFactory(checked)
     const handleSetProxy = (checked: boolean) => setProxy(checked)
@@ -114,13 +120,13 @@ export default function Page() {
                     </p>
                 )}
                 <AlertSwitch
-                    severity="info"
+                    severity="success"
                     title="factory mode"
                     checked={factory}
                     onChecked={handleSetFactory}
                 >
                     Tests should be fast and automated in factory mode. Manual
-                    tests are disabled.
+                    tests are <b>disabled</b>.
                 </AlertSwitch>
                 <AlertSwitch
                     severity="info"
@@ -128,7 +134,8 @@ export default function Page() {
                     checked={proxy}
                     onChecked={handleSetProxy}
                 >
-                    Force brains to enter dongle mode, to avoid application interfere with testing.
+                    Force brains to enter dongle mode, to avoid application
+                    interfere with testing.
                 </AlertSwitch>
                 <AlertSwitch
                     severity="warning"
