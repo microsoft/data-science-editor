@@ -162,24 +162,27 @@ module.exports = {
         {
             resolve: `@gatsby-contrib/gatsby-plugin-elasticlunr-search`,
             options: {
-                fields: [`title`, `description`, `body`],
+                fields: [`title`, `description`, `body`, `tags`],
                 resolvers: {
                     Mdx: {
                         title: node => node.frontmatter.title,
                         description: node => node.frontmatter.description,
                         body: node => node.rawBody,
+                        tags: node => node.frontmatter.tags || "",
                         url: node => node.frontmatter.path || node.fields.slug,
                     },
                     ServicesJson: {
                         title: node => node.name,
                         description: node => node.notes["short"],
                         body: node => node.source,
+                        tags: node => node.tags,
                         url: node => `/services/${node.shortId}/`,
                     },
                     DevicesJson: {
                         title: node => node.name,
                         description: node => node.description,
                         body: node => node.company,
+                        tags: node => node.tags,
                         url: node =>
                             `/devices/${identifierToUrlPath(node.jsonId)}/`,
                     },
