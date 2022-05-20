@@ -4,13 +4,11 @@ import useLocalStorage from "../hooks/useLocalStorage"
 import {
     DEVICE_TEST_KIND,
     TestNode,
-    DeviceTest,
 } from "../../../jacdac-ts/src/testdom/nodes"
 import { useId } from "react"
 import { STATE_CHANGE } from "../../../jacdac-ts/src/jdom/constants"
 import { TestState, TestUploadState } from "../../../jacdac-ts/src/testdom/spec"
 import { getStorageItem } from "../hooks/useStorage"
-import { delay } from "../../../jacdac-ts/src/jdom/utils"
 
 const PANEL_UPLOAD_URL = "device-tester-post-url"
 const PANEL_UPLOAD_AUTH = "device-tester-post-auth"

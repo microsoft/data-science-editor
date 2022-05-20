@@ -131,7 +131,7 @@ export default function Page() {
                 >
                     Tests should be fast and automated in factory mode. Manual
                     tests are <b>disabled</b>.
-                    <DeviceTestExporter />
+                    {factory && <DeviceTestExporter />}
                 </AlertSwitch>
                 <AlertSwitch
                     severity="info"
