@@ -1,12 +1,10 @@
-import React, { useContext, useMemo } from "react"
+import React, { useMemo } from "react"
 import { styled } from "@mui/material/styles"
 import { List, ListItem, Typography, useTheme } from "@mui/material"
 import { Link } from "gatsby-theme-material-ui"
 // tslint:disable-next-line: no-submodule-imports
 import ListItemText from "@mui/material/ListItemText"
-import AppContext, { DrawerType } from "../AppContext"
 import { graphql, useStaticQuery } from "gatsby"
-import useMediaQueries from "../hooks/useMediaQueries"
 
 const PREFIX = "Toc"
 
@@ -71,8 +69,6 @@ function treeifyToc(toc: TocNode[]) {
 
 export default function Toc(props: { pagePath: string }) {
     const { pagePath } = props
-    const { setDrawerType } = useContext(AppContext)
-    const { mobile } = useMediaQueries()
     const theme = useTheme()
 
     const data = useStaticQuery(graphql`
@@ -116,10 +112,6 @@ export default function Toc(props: { pagePath: string }) {
         }
       } 
    */
-
-    const handleClick = () => {
-        if (mobile) setDrawerType(DrawerType.None)
-    }
 
     const tree = useMemo(() => {
         // convert pages into tree
@@ -211,7 +203,6 @@ export default function Toc(props: { pagePath: string }) {
                 >
                     <Link
                         style={{ color: theme.palette.text.primary }}
-                        onClick={handleClick}
                         to={path}
                         underline="none"
                     >
