@@ -68,7 +68,6 @@ export default function Page() {
             <GithubRepositoryList
                 repos={[
                     "microsoft/pxt-jacdac/tools/multitool",
-                    "microsoft/pxt-jacdac/tools/hid-events",
                     "microsoft/pxt-jacdac/devices/microbit",
                     "microsoft/pxt-jacdac/tools/microbit-oob",
                 ]}

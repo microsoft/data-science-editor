@@ -37,13 +37,13 @@ export default function useFirmwareBlobs() {
                 .filter(repo => /^https:\/\/github.com\//.test(repo))
                 .map(repo => repo.substring("https://github.com/".length))
         )
-        console.debug(`firmware: found ${slugs.join(", ")}`)
+        //console.debug(`firmware: found ${slugs.join(", ")}`)
         for (const slug of slugs) {
             const fw = await firmwares.get(slug)
             if (fw) {
                 const { time } = fw
                 const age = Date.now() - time
-                console.debug(`firmware: ${slug} age ${prettyDuration(age)}`)
+                //console.debug(`firmware: ${slug} age ${prettyDuration(age)}`)
                 if (age < 3600_000) {
                     // console.debug(`firmware: skipping fresh firmware ${slug}`)
                     continue

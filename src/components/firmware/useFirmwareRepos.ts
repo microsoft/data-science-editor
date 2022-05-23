@@ -1,5 +1,4 @@
-import { useContext, useState } from "react"
-import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
+import { useState } from "react"
 import useEffectAsync from "../useEffectAsync"
 import { unique } from "../../../jacdac-ts/src/jdom/utils"
 import {
@@ -13,18 +12,20 @@ import { Packet } from "../../../jacdac-ts/src/jdom/packet"
 import useDeviceSpecifications from "../devices/useDeviceSpecifications"
 import useDeviceCatalog from "../devices/useDeviceCatalog"
 import { dependencyId } from "../../../jacdac-ts/src/jdom/eventsource"
+import useBus from "../../jacdac/useBus"
 
 export default function useFirmwareRepos(showAllRepos?: boolean) {
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const bus = useBus()
     const [repos, setRepos] = useState<string[]>([])
     const specifications = useDeviceSpecifications()
     const deviceCatalog = useDeviceCatalog()
-    const devices = useEventRaised(DEVICE_CHANGE, bus, () =>
-        bus.devices({ announced: true, ignoreInfrastructure: true })
+    const devices = useEventRaised(
+        DEVICE_CHANGE,
+        bus,
+        () => bus.devices({ announced: true, ignoreInfrastructure: true }),
+        []
     )
-    const bootloaders = devices.filter(device =>
-        device.bootloader
-    )
+    const bootloaders = devices.filter(device => device.bootloader)
     const registers = devices
         .filter(device => !device.bootloader) // not a bootloader
         .map(device =>

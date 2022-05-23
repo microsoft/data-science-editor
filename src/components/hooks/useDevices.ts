@@ -1,13 +1,15 @@
-import { DependencyList, useContext } from "react"
+import { DependencyList } from "react"
 import { DeviceFilter } from "../../../jacdac-ts/src/jdom/filters/devicefilter"
-import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
+import useBus from "../../jacdac/useBus"
 import useChange from "../../jacdac/useChange"
 
 export default function useDevices(
     options?: DeviceFilter,
     deps: DependencyList = []
 ) {
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const bus = useBus()
+    // although devices returns a new array on each query
+    // device instances are memoized
     const devices = useChange(bus, _ => _.devices(options), [
         JSON.stringify(options),
         ...deps,

@@ -10,8 +10,6 @@ import { Box, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material"
 import React, { useContext, useEffect, useState } from "react"
 import KindIcon, { allKinds, kindName } from "./KindIcon"
 import PacketsContext from "./PacketsContext"
-import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
-import useChange from "../jacdac/useChange"
 import DeviceName from "./devices/DeviceName"
 import { useDebounce } from "use-debounce"
 import { arrayConcatMany, uniqueMap } from "../../jacdac-ts/src/jdom/utils"
@@ -28,6 +26,7 @@ import {
 import Tooltip from "./ui/Tooltip"
 import { useId } from "react"
 import PacketControlButtons from "./PacketListButtons"
+import useDevices from "./hooks/useDevices"
 
 const PREFIX = "PacketFilter"
 
@@ -61,11 +60,10 @@ function FilterMenu(props: {
     handleAddFilter: (k: string) => void
 }) {
     const { text, icon, className, handleAddFilter } = props
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
     const kinds = allKinds()
 
-    const devices = useChange(bus, b => b.devices())
+    const devices = useDevices()
     const services = uniqueMap(
         arrayConcatMany(devices.map(device => device.services())),
         service => service.serviceClass.toString(),

@@ -13,7 +13,6 @@ import {
     ProtoTestReg,
     SRV_PROTO_TEST,
 } from "../../../jacdac-ts/src/jdom/constants"
-import useChange from "../../jacdac/useChange"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { JDRegister } from "../../../jacdac-ts/src/jdom/register"
 import ConnectAlert from "../../components/alert/ConnectAlert"
@@ -37,6 +36,8 @@ import { Link } from "gatsby-theme-material-ui"
 import { cryptoRandomUint32 } from "../../../jacdac-ts/src/jdom/random"
 import { JDServerServiceProvider } from "../../../jacdac-ts/src/jdom/servers/serverserviceprovider"
 import { useId } from "react"
+import useServices from "../../components/hooks/useServices"
+import useBus from "../../jacdac/useBus"
 
 function randomFieldPayload(field: JDField) {
     const { specification } = field
@@ -278,13 +279,11 @@ function ServiceProtocolTest(props: { service: JDService }) {
 }
 
 export default function ProtocolTest() {
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
+    const bus = useBus()
     const labelId = useId()
     const switchId = labelId + "-switch"
     const [host, setHost] = useState(false)
-    const services = useChange(bus, b =>
-        b.services({ serviceClass: SRV_PROTO_TEST })
-    )
+    const services = useServices({ serviceClass: SRV_PROTO_TEST })
 
     const toggleHost = () => setHost(!host)
 

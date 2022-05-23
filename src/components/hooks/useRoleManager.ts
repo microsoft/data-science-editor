@@ -4,8 +4,6 @@ import useBus from "../../jacdac/useBus"
 
 export default function useRoleManager() {
     const bus = useBus()
-    const roleManager = useMemo(() => {
-        return bus ? new RoleManager(bus) : undefined
-    }, [bus])
+    const roleManager = useMemo(() => new RoleManager(bus), [bus])
     return roleManager
 }

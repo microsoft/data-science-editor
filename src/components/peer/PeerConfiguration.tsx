@@ -21,8 +21,7 @@ import LoadingProgress from "../ui/LoadingProgress"
 function PeerItem(props: { peer: PeerJSBridge }) {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { peer } = props
-    const { id } = useChange(peer, _ => _) || {}
-    useChange(peer)
+    const id = useChange(peer, _ => _?.id)
 
     const handleStop = () => {
         peer.bus = undefined

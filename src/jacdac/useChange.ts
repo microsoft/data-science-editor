@@ -7,9 +7,10 @@ import useEventRaised from "./useEventRaised"
 export default function useChange<TNode extends IEventSource, TValue>(
     node: TNode,
     query?: (n: TNode) => TValue,
-    deps?: React.DependencyList
+    deps?: React.DependencyList,
+    isEqual?: (a: TValue, b: TValue) => boolean
 ): TValue {
-    return useEventRaised(CHANGE, node, query, deps)
+    return useEventRaised(CHANGE, node, query, deps, isEqual)
 }
 
 export function useChangeAsync<TNode extends IEventSource, TValue>(

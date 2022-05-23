@@ -62,7 +62,8 @@ export function DeviceTreeItem(
         )
     )
     const stats = useChange(device, _ => _.stats)
-    const { dropped, restarts } = useChange(stats, _ => _.current)
+    const dropped = useChange(stats, _ => _.dropped)
+    const restarts = useChange(stats, _ => _.restarts)
     const serviceNames = ellipseJoin(
         services
             .filter(srv => !isInfrastructure(srv.specification))

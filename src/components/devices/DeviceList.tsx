@@ -1,11 +1,11 @@
-import React, { useContext } from "react"
+import React from "react"
 import { styled } from "@mui/material/styles"
 import { Grid } from "@mui/material"
 import DeviceCard from "./DeviceCard"
 import ServiceCard from "../ServiceCard"
-import useChange from "../../jacdac/useChange"
-import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import useGridBreakpoints from "../useGridBreakpoints"
+import useDevices from "../hooks/useDevices"
+import useServices from "../hooks/useServices"
 
 const PREFIX = "DeviceList"
 
@@ -43,9 +43,8 @@ export default function DeviceList(props: {
         eventIdentifiers,
         commandIdentifier,
     } = props
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const devices = useChange(bus, n => n.devices({ serviceClass }))
-    const services = useChange(bus, n => n.services({ serviceClass }))
+    const devices = useDevices({ serviceClass })
+    const services = useServices({ serviceClass })
 
     const hasServiceClass = serviceClass !== undefined
     const gridBreakpoints = useGridBreakpoints(devices?.length)

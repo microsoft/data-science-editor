@@ -46,7 +46,8 @@ function DeviceItem(props: {
                     .filter(filterTestService)
                     .map(sc => ({ serviceClass: sc })),
             } as DeviceTestSpec),
-        [productIdentifier, factory]
+        [productIdentifier, factory],
+        (a, b) => JSON.stringify(a) === JSON.stringify(b)
     )
     const test = useDeviceTest(device, testSpec)
     if (!device) return null

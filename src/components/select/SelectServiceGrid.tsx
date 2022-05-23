@@ -1,11 +1,10 @@
-import React, { useContext } from "react"
+import React from "react"
 import useGridBreakpoints from "../useGridBreakpoints"
-import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
-import useChange from "../../jacdac/useChange"
 import { Grid, Card, CardActions, Button } from "@mui/material"
 import DeviceCardHeader from "../devices/DeviceCardHeader"
 import Alert from "../ui/Alert"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import useServices from "../hooks/useServices"
 
 export default function SelectServiceGrid(props: {
     serviceClass: number
@@ -13,9 +12,8 @@ export default function SelectServiceGrid(props: {
     disabled?: boolean
     onSelect: (service: JDService) => void
 }) {
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { serviceClass, buttonText, onSelect, disabled } = props
-    const services = useChange(bus, n => n.services({ serviceClass }), [])
+    const services = useServices({ serviceClass })
     const gridBreakpoints = useGridBreakpoints()
 
     const handleSelect = (service: JDService) => () => onSelect(service)

@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React from "react"
 import {
     Grid,
     CardContent,
@@ -7,13 +7,12 @@ import {
     Switch,
     Box,
 } from "@mui/material"
-import useChange from "../jacdac/useChange"
-import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import useGridBreakpoints from "./useGridBreakpoints"
 import DeviceCardHeader from "./devices/DeviceCardHeader"
 import { JDService } from "../../jacdac-ts/src/jdom/service"
 import { DeviceLostAlert } from "./alert/DeviceLostAlert"
 import Alert from "./ui/Alert"
+import useServices from "./hooks/useServices"
 
 function ServiceListItem(props: {
     service: JDService
@@ -72,8 +71,7 @@ export default function ServiceList(props: {
         actions,
         alertMissing,
     } = props
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const services = useChange(bus, n => n.services({ serviceClass }))
+    const services = useServices({ serviceClass })
     const gridBreakpoints = useGridBreakpoints(services?.length)
 
     const handleSelected = (service: JDService) => selected && selected(service)

@@ -48,7 +48,14 @@ export default function DashboardDeviceItem(
                     xl: "auto",
                 }
         },
-        [drawerType]
+        [drawerType],
+        (a, b) =>
+            a.xs == b.xs &&
+            a.sm == b.sm &&
+            a.md == b.md &&
+            a.sm == b.sm &&
+            a.lg == b.lg &&
+            a.xl == b.xl
     )
 
     // based on size, expanded or reduce widget size

@@ -182,7 +182,7 @@ function createBus(): JDBus {
                     productId
                 )?.id
             const uptime = d.uptime
-            const { restarts, announce } = d.stats.current
+            const { restarts, announce } = d.stats
             return {
                 deviceId: d.anonymizedDeviceId,
                 source: d.source?.split("-", 1)[0]?.toLowerCase(),
