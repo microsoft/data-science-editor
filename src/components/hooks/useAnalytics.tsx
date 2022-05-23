@@ -1,4 +1,4 @@
-import { Component, ErrorInfo, ReactNode } from "react"
+import React, { Component, ErrorInfo, ReactNode } from "react"
 /*
 import {
     ApplicationInsights,
@@ -75,7 +75,7 @@ const trackError: (exception: Error, properties?: EventProperties) => void =
         : () => {}
 
 const severities = {
-/*
+    /*
     debug: SeverityLevel.Verbose,
     warn: SeverityLevel.Warning,
     error: SeverityLevel.Error,
@@ -137,7 +137,7 @@ export class AppInsightsErrorBoundary extends Component<Props, State> {
 
     public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
         trackError?.(error, errorInfo as unknown as EventProperties)
-        console.error("Uncaught error:", error, errorInfo)
+        console.error("render error caught", { error, errorInfo })
         if (/ChunkLoadError/i.test(error.message)) {
             this.chunkLoadErrorCount++
             // if online, and too many chunk errors reload
@@ -153,6 +153,9 @@ export class AppInsightsErrorBoundary extends Component<Props, State> {
     }
 
     public render() {
+        if (this.state.hasError) {
+            return <h1>Something went wrong. Please reload the page.</h1>
+        }
         return this.props.children
     }
 }
