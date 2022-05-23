@@ -1,7 +1,8 @@
-import { arrayEq, assert } from "../../jacdac-ts/src/jdom/utils"
+import { assert } from "../../jacdac-ts/src/jdom/utils"
 import { useMemo, DependencyList } from "react"
 import { IEventSource } from "../../jacdac-ts/src/jdom/eventsource"
 import { useSyncExternalStoreWithSelector } from "use-sync-external-store/with-selector"
+import { packedValuesIsEqual } from "../../jacdac-ts/src/jdom/pack"
 
 /**
  * A hook to track event and update a state snapshot
@@ -26,17 +27,7 @@ export default function useEventRaised<
                 const unsubscribe = node?.subscribe(eventName, onStoreChanged)
                 return () => unsubscribe?.()
             },
-            isEqual: isEqual
-                ? isEqual
-                : (a: TValue, b: TValue) => {
-                      if (Array.isArray(a)) {
-                          const e = arrayEq(
-                              a as unknown as unknown[],
-                              b as unknown as unknown[]
-                          )
-                          return e
-                      } else return Object.is(a, b)
-                  },
+            isEqual: isEqual || packedValuesIsEqual,
         }),
         [node, ...(deps || [])]
     )

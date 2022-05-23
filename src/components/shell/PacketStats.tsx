@@ -10,7 +10,12 @@ export default function PacketStats() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const { stats: packetStats } = bus
     const { mobile } = useMediaQueries()
-    const current = useChange(packetStats, _ => _.current)
+    const current = useChange(
+        packetStats,
+        _ => _.current,
+        [],
+        (a, b) => JSON.stringify(a) === JSON.stringify(b)
+    )
     const { diagnostics } = Flags
 
     if (mobile || !current.bytes) return null
