@@ -1,10 +1,6 @@
 import React, { useMemo } from "react"
 import { Grid, Typography } from "@mui/material"
-// tslint:disable-next-line: match-default-export-name no-submodule-imports
-import { arrayShuffle } from "../../../jacdac-ts/src/jdom/utils"
-import {
-    escapeDeviceIdentifier,
-} from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
+import { escapeDeviceIdentifier } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import useDeviceSpecifications from "../devices/useDeviceSpecifications"
 import useGridBreakpoints from "../useGridBreakpoints"
 import { serviceName } from "../../../jacdac-ts/src/jdom/pretty"
@@ -13,7 +9,6 @@ import DeviceSpecificationCard from "./DeviceSpecificationCard"
 export default function DeviceSpecificationList(props: {
     query?: string
     count?: number
-    shuffle?: boolean
     company?: string
     requiredServiceClasses?: number[]
     devices?: jdspec.DeviceSpec[]
@@ -28,7 +23,6 @@ export default function DeviceSpecificationList(props: {
     const {
         query,
         count,
-        shuffle,
         requiredServiceClasses,
         company,
         devices,
@@ -42,7 +36,7 @@ export default function DeviceSpecificationList(props: {
     } = props
     const specifications = useDeviceSpecifications()
     const specs = useMemo(() => {
-        let r = devices || specifications
+        let r = (devices || specifications).slice(0)
         if (company) {
             const lc = escapeDeviceIdentifier(company)
             r = r.filter(spec =>
@@ -77,19 +71,16 @@ export default function DeviceSpecificationList(props: {
                     ...spec.services.map(srv => serviceName(srv)),
                 ].some(s => s?.toLowerCase()?.indexOf(query.toLowerCase()) > -1)
             )
-        if (shuffle) arrayShuffle(r)
-        else
-            r.sort(
-                (a, b) =>
-                    (a.connector === "none" ? 1 : 0) -
-                    (b.connector === "none" ? 1 : 0)
-            )
+        r.sort(
+            (a, b) =>
+                (a.connector === "none" ? 1 : 0) -
+                (b.connector === "none" ? 1 : 0)
+        )
         if (count !== undefined) r = r.slice(0, count)
         return r
     }, [
         query,
         requiredServiceClasses,
-        shuffle,
         count,
         company,
         JSON.stringify(devices?.map(d => d.id)),

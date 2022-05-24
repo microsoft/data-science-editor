@@ -64,9 +64,9 @@ export default function useFirmwareBlobs() {
                 return
             }
             setThrottled(false)
-            console.log(
-                `firmware: fetch binary release ${slug} ${release.version}`
-            )
+            //console.debug(
+            //    `firmware: fetch binary release ${slug} ${release.version}`
+            //)
             const firmware = await fetchFirmwareReleaseBinary(
                 slug,
                 release.version

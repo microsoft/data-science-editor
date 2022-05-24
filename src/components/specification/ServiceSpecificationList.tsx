@@ -9,7 +9,6 @@ import {
 import React, { useMemo } from "react"
 import { isInfrastructure } from "../../../jacdac-ts/src/jdom/spec"
 import {
-    arrayShuffle,
     ellipseFirstSentence,
 } from "../../../jacdac-ts/src/jdom/utils"
 import GridHeader from "../ui/GridHeader"
@@ -97,22 +96,20 @@ export default function ServiceSpecificationList(props: {
     services: jdspec.ServiceSpec[]
     title?: string
     count?: number
-    shuffle?: boolean
     infrastructure?: boolean
     status?: jdspec.StabilityStatus[]
 }) {
-    const { services, title, count, shuffle, status, infrastructure } = props
+    const { services, title, count, status, infrastructure } = props
     const specs = useMemo(() => {
         let r = services
         if (status !== undefined)
             r = r.filter(spec => status.indexOf(spec.status) > -1)
         if (infrastructure !== undefined)
             r = r.filter(spec => isInfrastructure(spec) == infrastructure)
-        if (shuffle) arrayShuffle(r)
-        else r.sort((l, r) => l.name.localeCompare(r.name))
+        r.sort((l, r) => l.name.localeCompare(r.name))
         if (count !== undefined) r = r.slice(0, count)
         return r
-    }, [services, count, shuffle, status, infrastructure])
+    }, [services, count, status, infrastructure])
 
     if (!specs?.length) return null
 
