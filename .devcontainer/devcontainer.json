@@ -65,7 +65,7 @@
                 },
                 "microsoft/jacdac-cli": {
                     "permissions": {
-                        "permissions": "write-all"
+                        "content": "write"
                     }
                 },
                 "microsoft/jacdac-python": {
