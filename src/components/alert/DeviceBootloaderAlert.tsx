@@ -10,7 +10,8 @@ export default function DeviceBootloaderAlert(props: { device: JDDevice }) {
     if (!bootloader) return null
     return (
         <Alert severity="info">
-            Bootloader mode <DeviceResetButton device={device} />
+            Bootloader mode{" "}
+            <DeviceResetButton device={device} showLabel={true} />
         </Alert>
     )
 }

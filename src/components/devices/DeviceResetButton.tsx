@@ -4,8 +4,11 @@ import CmdButton from "../CmdButton"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import RefreshIcon from "@mui/icons-material/Refresh"
 
-export default function DeviceResetButton(props: { device: JDDevice }) {
-    const { device } = props
+export default function DeviceResetButton(props: {
+    device: JDDevice
+    showLabel?: boolean
+}) {
+    const { device, showLabel } = props
     const handleReset = async () => await device.reset()
     return (
         <CmdButton
@@ -15,6 +18,8 @@ export default function DeviceResetButton(props: { device: JDDevice }) {
             title="reset"
             onClick={handleReset}
             icon={<RefreshIcon />}
-        />
+        >
+            {showLabel ? "Reset" : null}
+        </CmdButton>
     )
 }
