@@ -23,5 +23,81 @@
     // Specifies a command that should be run after the container has been created.
     "postCreateCommand": "yarn setup",
     // Comment out the next line to run as root instead.
-    "remoteUser": "node"
+    "remoteUser": "node",
+    "customizations": {
+        "codespaces": {
+            "repositories": {
+                "microsoft/jacdac-ts": {
+                    "permissions": {
+                        "permissions": "write-all"
+                    }
+                },
+                "microsoft/jacdac-ddk": {
+                    "permissions": {
+                        "permissions": "write-all"
+                    }
+                },
+                "microsoft/jupyter-jacdac": {
+                    "permissions": {
+                        "permissions": "write-all"
+                    }
+                },
+                "microsoft/node-red-contrib-jacdac": {
+                    "permissions": {
+                        "permissions": "write-all"
+                    }
+                },
+                "microsoft/ml4f": {
+                    "permissions": {
+                        "permissions": "write-all"
+                    }
+                },
+                "microsoft/gatsby-remark-makecode": {
+                    "permissions": {
+                        "permissions": "write-all"
+                    }
+                },
+                "microsoft/react-jacdac": {
+                    "permissions": {
+                        "permissions": "write-all"
+                    }
+                },
+                "microsoft/jacdac-cli": {
+                    "permissions": {
+                        "permissions": "write-all"
+                    }
+                },
+                "microsoft/jacdac-python": {
+                    "permissions": {
+                        "permissions": "write-all"
+                    }
+                },
+                "microsoft/pxt-jacdac": {
+                    "permissions": {
+                        "permissions": "write-all"
+                    }
+                },
+                "microsoft/jacdac-dotnet": {
+                    "permissions": {
+                        "permissions": "write-all"
+                    }
+                },
+                "microsoft/jacscript": {
+                    "permissions": {
+                        "permissions": "write-all"
+                    }
+                },
+                "microsoft/jacdac": {
+                    "permissions": {
+                        "permissions": "write-all"
+                    }
+                },
+                "microsoft/jacdac-c": {
+                    "permissions": {
+                        "permissions": "write-all"
+                    }
+                }
+            }
+        }
+    }
 }
