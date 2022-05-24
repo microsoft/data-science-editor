@@ -1,7 +1,7 @@
 import { DeviceSpecificationOptions } from "../../../jacdac-ts/src/jdom/catalog"
 import { arrayEq } from "../../../jacdac-ts/src/jdom/utils"
-import useDeviceCatalog from "../../../react-jacdac/src/hooks/useDeviceCatalog"
 import useChange from "../../jacdac/useChange"
+import useDeviceCatalog from "./useDeviceCatalog"
 
 export default function useDeviceSpecifications(
     options?: DeviceSpecificationOptions
