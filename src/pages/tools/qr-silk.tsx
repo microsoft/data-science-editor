@@ -126,9 +126,6 @@ export default function DeviceQRCodeGenerator(props: {
                 </Grid>
             </Grid>
             <h2>URL</h2>
-            <pre>
-                <a href={url}>{url}</a>
-            </pre>
             {known && (
                 <>
                     <h2>Reserved device entry</h2>
