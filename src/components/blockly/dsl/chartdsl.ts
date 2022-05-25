@@ -3,6 +3,9 @@ import {
     BlockDefinition,
     BlockReference,
     CategoryDefinition,
+    char2DSettingsSchema,
+    charMapSettingsSchema,
+    chartSettingsSchema,
     DataColumnInputDefinition,
     DATA_SCIENCE_STATEMENT_TYPE,
     DummyInputDefinition,
@@ -25,7 +28,6 @@ import type { VisualizationSpec } from "react-vega"
 import type { Mark } from "vega-lite/build/src/mark"
 import { tidyHeaders, tidyResolveFieldColumn } from "../fields/tidy"
 import { Block } from "blockly"
-import type { JSONSchema4 } from "json-schema"
 import JSONSettingsField, {
     JSONSettingsInputDefinition,
 } from "../fields/JSONSettingsField"
@@ -42,94 +44,6 @@ const CHART_SHOW_TABLE_BLOCK = "chart_show_table"
 const VEGA_LAYER_BLOCK = "vega_layer"
 const VEGA_ENCODING_BLOCK = "vega_encoding"
 const VEGA_STATEMENT_TYPE = "vegaStatementType"
-
-const chartSettingsSchema: JSONSchema4 = {
-    type: "object",
-    properties: {
-        title: {
-            type: "string",
-            title: "Chart title",
-        },
-    },
-}
-const axisSchema: JSONSchema4 = {
-    type: "object",
-    properties: {
-        title: {
-            type: "string",
-            title: "Title",
-        },
-    },
-}
-const scaleSchema: JSONSchema4 = {
-    type: "object",
-    properties: {
-        domainMin: {
-            type: "number",
-            title: "minimum",
-            description: "Sets the minimum value in the scale domain",
-        },
-        domainMax: {
-            type: "number",
-            title: "maximum",
-            description: "Sets the maximum value in the scale domain",
-        },
-    },
-}
-const encodingSettingsSchema: JSONSchema4 = {
-    type: "object",
-    properties: {
-        axis: axisSchema,
-    },
-}
-const encodingNumberSettingsSchema: JSONSchema4 = {
-    type: "object",
-    properties: {
-        scale: scaleSchema,
-        axis: axisSchema,
-    },
-}
-const char2DSettingsSchema: JSONSchema4 = {
-    type: "object",
-    properties: {
-        title: {
-            type: "string",
-            title: "Chart title",
-        },
-        encoding: {
-            type: "object",
-            properties: {
-                x: {
-                    title: "X",
-                    ...encodingNumberSettingsSchema,
-                },
-                y: {
-                    title: "Y",
-                    ...encodingNumberSettingsSchema,
-                },
-            },
-        },
-    },
-}
-const charMapSettingsSchema: JSONSchema4 = {
-    type: "object",
-    properties: {
-        title: {
-            type: "string",
-            title: "Chart title",
-        },
-        encoding: {
-            index: {
-                title: "Index",
-                ...encodingSettingsSchema,
-            },
-            value: {
-                title: "Value",
-                ...encodingNumberSettingsSchema,
-            },
-        },
-    },
-}
 
 const colour = paletteColorByIndex(4)
 const chartDsl: BlockDomainSpecificLanguage = {

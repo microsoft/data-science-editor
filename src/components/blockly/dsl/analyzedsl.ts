@@ -28,10 +28,13 @@ import postTransformData from "./workers/data.proxy"
 import DataColumnChooserField from "../fields/DataColumnChooserField"
 import { tidyResolveFieldColumn } from "../fields/tidy"
 import GaugeWidgetField from "../fields/GaugeWidgetField"
+import LinePlotField from "../fields/chart/LinePlotField"
 
 const DASHBOARD_GAUGE_BLOCK = "jacdac_widget_gauge"
 const RECORD_WINDOW_BLOCK = "jacdac_analyze_record_window"
 const ROLLING_SUMMARY_BLOCK = "jacdac_analyze_rolling_summary"
+
+const SERIES_LINEPLOT_BLOCK = "series_chart_lineplot"
 
 const colour = analyzeColour
 const analyzeDsl: BlockDomainSpecificLanguage = {
@@ -183,6 +186,45 @@ const analyzeDsl: BlockDomainSpecificLanguage = {
                 inputsInline: false,
                 transformData: identityTransformData,
             },
+            /*
+            <BlockDefinition>{
+                kind: "block",
+                type: SERIES_LINEPLOT_BLOCK,
+                tooltip: "Renders the block data in a line chart",
+                message0: "time serie of y %1 %2 %3 %4 %5",
+                args0: [
+                    <DataColumnInputDefinition>{
+                        type: DataColumnChooserField.KEY,
+                        name: "y",
+                        dataType: "number",
+                    },
+                    <DataColumnInputDefinition>{
+                        type: DataColumnChooserField.KEY,
+                        name: "y2",
+                        dataType: "number",
+                    },
+                    <DataColumnInputDefinition>{
+                        type: DataColumnChooserField.KEY,
+                        name: "y3",
+                        dataType: "number",
+                    },
+                    <DummyInputDefinition>{
+                        type: "input_dummy",
+                    },
+                    {
+                        type: LinePlotField.KEY,
+                        name: "plot",
+                    },
+                ],
+                previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
+                nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+                colour,
+                template: "meta",
+                inputsInline: false,
+                dataPreviewField: false,
+                transformData: identityTransformData,
+            },
+            */
         ]
     },
 
@@ -195,7 +237,7 @@ const analyzeDsl: BlockDomainSpecificLanguage = {
                 contents: [
                     <LabelDefinition>{
                         kind: "label",
-                        text: "Aggregators"
+                        text: "Aggregators",
                     },
                     <BlockReference>{
                         kind: "block",
@@ -210,8 +252,14 @@ const analyzeDsl: BlockDomainSpecificLanguage = {
                     },
                     <LabelDefinition>{
                         kind: "label",
-                        text: "Widgets"
+                        text: "Widgets",
                     },
+                    /*
+                    <BlockReference>{
+                        kind: "block",
+                        type: SERIES_LINEPLOT_BLOCK,
+                    },
+                    */
                     <BlockReference>{
                         kind: "block",
                         type: DASHBOARD_GAUGE_BLOCK,
