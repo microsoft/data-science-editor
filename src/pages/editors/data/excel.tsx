@@ -17,7 +17,6 @@ export default function Home() {
             alignItems="center"
         >
             <CenterGrid
-                hideJacdacIcon={true}
                 title="Data Science Editor"
                 subtitle="for Excel Web"
                 image={

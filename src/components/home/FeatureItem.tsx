@@ -3,7 +3,6 @@ import { styled } from "@mui/material/styles"
 import { Button, Link } from "gatsby-theme-material-ui"
 import React, { ReactNode } from "react"
 import clsx from "clsx"
-import JacdacIcon from "../icons/JacdacIcon"
 
 const PREFIX = "FeatureItem"
 
@@ -48,7 +47,6 @@ export interface FeatureItemProps {
     buttonVariant?: "outlined" | "contained" | "link"
     onButtonClick?: () => void
     image?: ReactNode
-    hideJacdacIcon?: boolean
 }
 
 export default function FeatureItem(props: FeatureItemProps) {
@@ -67,7 +65,6 @@ export default function FeatureItem(props: FeatureItemProps) {
         image,
         centered,
         onButtonClick,
-        hideJacdacIcon,
     } = props
 
     const centeredCls = centered && classes.centered
@@ -82,15 +79,6 @@ export default function FeatureItem(props: FeatureItemProps) {
             {title && (
                 <Grid item xs={12}>
                     <Typography variant="h1" className={cls}>
-                        {!hideJacdacIcon && (
-                            <JacdacIcon
-                                fontSize="large"
-                                style={{
-                                    fontSize: "4rem",
-                                    verticalAlign: "middle",
-                                }}
-                            />
-                        )}
                         <span style={{ fontWeight: "bold" }}>{title}</span>
                     </Typography>
                 </Grid>
