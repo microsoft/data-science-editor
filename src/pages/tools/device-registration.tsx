@@ -710,7 +710,8 @@ export default function DeviceRegistration() {
                         fullWidth={true}
                         helperText="URL to MakeCode extension"
                         label="MakeCode extension"
-                        value={device?.makeCodeRepo}
+                        placeholder="https://github.com/..."
+                        value={device?.makeCodeRepo || ""}
                         onChange={handleMakeCodeRepoChange}
                         variant={variant}
                     />
@@ -722,7 +723,7 @@ export default function DeviceRegistration() {
                         helperText="public URL to the firmware sources. If possible, provide a deep link to the relevant source files."
                         label="Firmware source repository"
                         placeholder="https://github.com/..."
-                        value={device?.firmwareSource}
+                        value={device?.firmwareSource || ""}
                         onChange={handleFirmwareSourceChanged}
                         variant={variant}
                     />
