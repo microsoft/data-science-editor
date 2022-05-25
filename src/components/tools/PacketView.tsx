@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import React, { startTransition, useContext, useEffect, useState } from "react"
 import PacketListItem from "../PacketListItem"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import PacketsContext from "../PacketsContext"
@@ -7,7 +7,7 @@ import { FixedSizeList, ListChildComponentProps } from "react-window"
 import AutoSizer from "react-virtualized-auto-sizer"
 import PacketFilter from "../PacketFilter"
 import { TracePacketProps } from "../../../jacdac-ts/src/jdom/trace/traceview"
-import useChange from "../../jacdac/useChange"
+import { CHANGE } from "../../../jacdac-ts/src/jdom/constants"
 
 interface VirtualListData {
     packets: TracePacketProps[]
@@ -41,7 +41,13 @@ function VirtualPacketList(props: { showTime?: boolean }) {
         view.filteredPackets
     )
 
-    useChange(view, _ => setPackets(_.filteredPackets))
+    useEffect(
+        () =>
+            view?.subscribe(CHANGE, () =>
+                startTransition(() => setPackets(view.filteredPackets))
+            ),
+        [view]
+    )
 
     const itemData: VirtualListData = {
         showTime,
