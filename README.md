@@ -90,6 +90,10 @@ yarn develop
 
 If you are offline, set the `JACDAC_OFFLINE=1` environment variable.
 
+```
+export JACDAC_OFFLINE=1
+```
+
 -   browse to the local server
 
 ```

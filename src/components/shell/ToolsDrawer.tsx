@@ -31,6 +31,7 @@ import VideoCallIcon from "@mui/icons-material/VideoCall"
 import MakeCodeIcon from "../icons/MakeCodeIcon"
 import TextSnippetIcon from "@mui/icons-material/TextSnippet"
 import ExtensionIcon from "@mui/icons-material/Extension"
+import QrCodeIcon from "@mui/icons-material/QrCode"
 
 import DarkModeContext from "../ui/DarkModeContext"
 import KindIcon from "../KindIcon"
@@ -45,7 +46,6 @@ import useBus from "../../jacdac/useBus"
 import useChange from "../../jacdac/useChange"
 import useSnackbar from "../hooks/useSnackbar"
 import SimulatorDialogsContext from "../SimulatorsDialogContext"
-import JacdacIcon from "../icons/JacdacIcon"
 
 const PREFIX = "ToolsDrawer"
 
@@ -213,6 +213,11 @@ export default function ToolsDrawer() {
             text: "Device registration",
             to: "/tools/device-registration/",
             icon: <KindIcon kind={DEVICE_NODE_NAME} />,
+        },
+        {
+            text: "Device QR Code",
+            to: "/tools/device-qr-code/",
+            icon: <QrCodeIcon />,
         },
         {
             // separator

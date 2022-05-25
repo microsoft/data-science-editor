@@ -32,10 +32,6 @@ export default function DeviceQRCodeGenerator() {
         <>
             <h1>Device Silk QR Code generator</h1>
             <p>Enter a short URL to be encoded as a silk compatible QR code.</p>
-            <Alert severity="info" sx={{ mb: 1 }}>
-                Keep the url as short as possible and use capital letters to get
-                the smallest QR code.
-            </Alert>
             <Grid container spacing={1}>
                 <Grid item xs>
                     <TextField
@@ -69,6 +65,10 @@ export default function DeviceQRCodeGenerator() {
                     />
                 </Grid>
             </Grid>
+            <Alert severity="info" sx={{ mb: 1 }}>
+                Keep the url as short as possible and use capital letters to get
+                the smallest QR code.
+            </Alert>
             {url && !error && (
                 <>
                     <h2>

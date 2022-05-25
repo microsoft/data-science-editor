@@ -74,7 +74,7 @@ export default function DeviceSpecification(props: {
         firmwareSource,
         link,
         storeLink,
-        connector = "edge",
+        connector = "edgeIndependent",
         devices,
     } = device
     const { services } = device
@@ -130,12 +130,23 @@ export default function DeviceSpecification(props: {
                     </Button>
                 )}
             </h2>
-            {connector === "none" && (
+            {connector === "noConnector" && (
                 <Alert severity="warning">
-                    <AlertTitle>No edge connector available.</AlertTitle>
+                    <AlertTitle>No PCB edge connector available.</AlertTitle>
                     This device does <b>not</b> have a Jacdac PCB edge
                     connector. It is programmable as a Jacdac device but it
                     cannot be connected to other devices with a cable.
+                </Alert>
+            )}
+            {connector === "edgeIndependent" && (
+                <Alert severity="warning">
+                    <AlertTitle>
+                        Independently powered PCB edge connector available.
+                    </AlertTitle>
+                    This device has a Jacdac PCB edge connector without a power
+                    connection. It is programmable as a Jacdac device and it can
+                    be connected to other devices with a cable, but it will not
+                    provide to modules or consume power the Jacdac bus.
                 </Alert>
             )}
             <ChipList>

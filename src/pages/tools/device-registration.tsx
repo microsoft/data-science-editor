@@ -67,9 +67,10 @@ function CompanySelect(props: {
     const { company, setCompany, error } = props
     const specifications = useDeviceSpecifications()
     const companies = useMemo(
-        () => unique(specifications.map(dev => dev.company)),
+        () => unique(specifications.map(dev => dev.company)).sort(),
         [specifications]
     )
+    console.log({ companies })
     const id = useId()
     const companyId = id + "-company"
 
@@ -137,7 +138,6 @@ export default function DeviceRegistration() {
     const descriptionId = id + "-description"
     const homepageId = id + "-homepage"
     const hardwareVersionId = id + "-hwversion"
-    const designIdentifierId = id + "-designid"
     const hardwareDesignId = id + "-hwdesign"
     const firmwareSourceId = id + "-hwsource"
     const storeLinkId = id + "-store"
@@ -244,10 +244,6 @@ export default function DeviceRegistration() {
         device.productIdentifiers.splice(i, 1)
         updateDevice()
     }
-    const handleDesignIdentifier = (ev: ChangeEvent<HTMLInputElement>) => {
-        device.designIdentifier = ev.target.value?.trim()
-        updateDevice()
-    }
     const handleVersion = (ev: ChangeEvent<HTMLInputElement>) => {
         device.version = ev.target.value?.trim()
         updateDevice()
@@ -298,7 +294,7 @@ export default function DeviceRegistration() {
         ev: SelectChangeEvent<jdspec.ConnectorType>
     ) => {
         device.connector = ev.target.value as jdspec.ConnectorType
-        if (device.connector === "edge") delete device.connector
+        if (device.connector === "edgeIndependent") delete device.connector
         updateDevice()
     }
     const renderRepoInput = params => (
@@ -368,18 +364,21 @@ export default function DeviceRegistration() {
         <>
             <h1>
                 Device Registration
-                <IconButtonWithTooltip title="New Device" onClick={handleClear}>
+                <IconButtonWithTooltip
+                    sx={{ ml: 1 }}
+                    title="New Device"
+                    onClick={handleClear}
+                >
                     <ClearIcon />
                 </IconButtonWithTooltip>
             </h1>
             <p>
-                Compose a device from various services, prepare the{" "}
-                <Link to="/ddk/device-definition/" underline="hover">
-                    metadata
-                </Link>{" "}
-                and register it to the{" "}
+                Fill in <b>Device Name</b>, <b>Company</b> and <b>Version</b> to
+                uniquely identify your device. Fill in the additional fields
+                with information about your devices and click on{" "}
+                <b>Start Registration</b> to request an entry in the{" "}
                 <Link to="/devices/" underline="hover">
-                    Devices catalog
+                    Device Catalog
                 </Link>
                 .
             </p>
@@ -410,7 +409,7 @@ export default function DeviceRegistration() {
                         error={!!nameError}
                         helperText={nameError}
                         fullWidth={true}
-                        label="Name"
+                        label="Device Name"
                         placeholder="My device"
                         value={device.name || ""}
                         onChange={handleNameChange}
@@ -450,6 +449,48 @@ export default function DeviceRegistration() {
                         semver format (v1.0, v1.1, ...).
                     </Typography>
                 </Grid>
+                <GridHeader title="Auto-generated Links" />
+                <Grid item xs={12}>
+                    <TextField
+                        id={identifierId}
+                        disabled
+                        error={!!idError}
+                        helperText={idError}
+                        fullWidth={true}
+                        label="Device Identifier"
+                        variant={variant}
+                        value={device.id || ""}
+                    />
+                    <Typography variant="caption">
+                        This generated identifer is a URL friendly string
+                        created from your company and product name.
+                    </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        id={urlId}
+                        disabled
+                        error={!!idError}
+                        helperText={idError}
+                        fullWidth={true}
+                        label="Device Catalog URL"
+                        variant={variant}
+                        value={`https://microsoft.github.io/jacdac-docs/${identifierToUrlPath(
+                            device.id
+                        )}/`}
+                    />
+                    <Typography variant="caption">
+                        The auto-generated URL that links to the page for this
+                        device in the Device Catalog. If this URL is too long
+                        for a QR Code, use a URL shortening service. To generate
+                        a QR Code for your PCB, use the{" "}
+                        <Link to="/tools/device-qr-code/">
+                            Device QR Code Generator
+                        </Link>{" "}
+                        page.
+                    </Typography>
+                </Grid>
+
                 <GridHeader title="Services" />
                 <Grid item xs={12}>
                     <PaperBox elevation={1}>
@@ -520,7 +561,7 @@ export default function DeviceRegistration() {
                         <Typography variant="caption" component="div">
                             Product identifiers uniquely identify your hardware
                             on the Jacdac bus. Each revision of your hardware
-                            may have a different identifier.
+                            should have a different identifier.
                         </Typography>
                     </PaperBox>
                 </Grid>
@@ -551,24 +592,42 @@ export default function DeviceRegistration() {
                             id={connectorId}
                             fullWidth={true}
                             size="small"
-                            value={device.connector || "edge"}
+                            value={device.connector || "edgeIndependent"}
                             onChange={handleConnectorChanged}
                         >
-                            <MenuItem value="none">None</MenuItem>
-                            <MenuItem value="edge">
-                                PCB edge connector, unpowered
+                            <MenuItem value="noConnector">
+                                No PCB edge connector
                             </MenuItem>
-                            <MenuItem value="edgeLowPower">
-                                PCB edge connector, low power
+                            <MenuItem value="edgeIndependent">
+                                PCB edge connector, independently powered.
                             </MenuItem>
-                            <MenuItem value="edgeHighPower">
-                                PCB edge connector, high power
+                            <MenuItem value="edgeConsumer">
+                                PCB edge connector, consumer - power always
+                                taken from Jacdac bus
+                            </MenuItem>
+                            <MenuItem value="edgeLowCurrentProvider">
+                                PCB edge connector, low current provider - power
+                                always provided to the Jacdac bus
+                            </MenuItem>
+                            <MenuItem value="edgeHighCurrentProvider">
+                                PCB edge connector, high current provider
+                            </MenuItem>
+                            <MenuItem value="edgeLowCurrentProviderConsumer">
+                                PCB edge connector, low current provider or
+                                consumer
+                            </MenuItem>
+                            <MenuItem value="edgeHighCurrentProviderConsumer">
+                                PCB edge connector, high current provider or
+                                consumer
                             </MenuItem>
                         </Select>
                         <Typography variant="caption" component="div">
-                            The type of Jacdac connector present on the
-                            hardware, and the type of power connection available
-                            on this connector.
+                            Choose the type of Jacdac connector present on the
+                            hardware, and the type of type of{" "}
+                            <Link to="/ddk/design/#power-supply-sharing">
+                                power supply sharing
+                            </Link>
+                            .
                         </Typography>
                     </PaperBox>
                 </Grid>
@@ -633,7 +692,7 @@ export default function DeviceRegistration() {
                         )}
                     </PaperBox>
                 </Grid>
-                <GridHeader title="Firmware information (optional)" />
+                <GridHeader title="Firmware and hardware information (optional)" />
                 <Grid item xs={12}>
                     <Autocomplete
                         id={repoId}
@@ -661,22 +720,11 @@ export default function DeviceRegistration() {
                     <TextField
                         id={firmwareSourceId}
                         fullWidth={true}
-                        helperText="public URL to the firmware sources."
-                        label="Firmware source code"
+                        helperText="public URL to the firmware sources. If possible, provide a deep link to the relevant source files."
+                        label="Firmware source repository"
+                        placeholder="https://github.com/..."
                         value={device?.firmwareSource}
                         onChange={handleFirmwareSourceChanged}
-                        variant={variant}
-                    />
-                </Grid>
-                <GridHeader title="Hardware design (optional)" />
-                <Grid item xs={12}>
-                    <TextField
-                        id={designIdentifierId}
-                        fullWidth={true}
-                        helperText="A unique identifier for this hardware design."
-                        label="Hardware design identifier"
-                        value={device?.designIdentifier}
-                        onChange={handleDesignIdentifier}
                         variant={variant}
                     />
                 </Grid>
@@ -684,52 +732,21 @@ export default function DeviceRegistration() {
                     <TextField
                         id={hardwareDesignId}
                         fullWidth={true}
-                        helperText="public URL to the hardware design files"
-                        label="Hardware design files"
+                        helperText="public URL to the repositry of hardware design files. If possible, provide a deep link to the relevant source files."
+                        label="Hardware design repository"
+                        placeholder="https://github.com/..."
                         value={device?.hardwareDesign}
                         onChange={handleHardwareDesignChanged}
                         variant={variant}
                     />
                 </Grid>
-                <GridHeader title="Links" />
-                <Grid item xs={12}>
-                    <TextField
-                        id={identifierId}
-                        disabled
-                        error={!!idError}
-                        fullWidth={true}
-                        label="Identifier"
-                        variant={variant}
-                        value={device.id || ""}
-                    />
-                    <Typography variant="caption">
-                        This generated identifer is a URL friendly string
-                        created from your company and product name.
-                    </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        id={urlId}
-                        disabled
-                        error={!!idError}
-                        fullWidth={true}
-                        label="URL"
-                        variant={variant}
-                        value={`https://microsoft.github.io/jacdac-docs/${identifierToUrlPath(
-                            device.id
-                        )}/`}
-                    />
-                    <Typography variant="caption">
-                        The final auto-generated URL for this device.
-                    </Typography>
-                </Grid>
                 <Grid item xs={12}>
                     <Suspense>
                         <GithubPullRequestButton
-                            label={"register device"}
+                            label={"start registration"}
                             title={`Device: ${device.name}`}
                             head={`devices/${device.id}`}
-                            description={`This pull request registers a new device for Jacdac.`}
+                            description={`This pull request will start the registration of your device in the Jacdac catalog.`}
                             files={files}
                         />
                     </Suspense>

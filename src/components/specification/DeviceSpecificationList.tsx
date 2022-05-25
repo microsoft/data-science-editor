@@ -73,8 +73,8 @@ export default function DeviceSpecificationList(props: {
             )
         r.sort(
             (a, b) =>
-                (a.connector === "none" ? 1 : 0) -
-                (b.connector === "none" ? 1 : 0)
+                (a.connector === "noConnector" ? 1 : 0) -
+                (b.connector === "noConnector" ? 1 : 0)
         )
         if (count !== undefined) r = r.slice(0, count)
         return r
