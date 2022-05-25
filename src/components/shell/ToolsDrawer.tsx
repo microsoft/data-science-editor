@@ -177,11 +177,6 @@ export default function ToolsDrawer() {
             icon: <TextSnippetIcon />,
         },
         {
-            text: "Device Tester",
-            to: "/tools/device-tester/",
-            icon: <BugReportIcon />,
-        },
-        {
             // separator
         },
         {
@@ -218,6 +213,11 @@ export default function ToolsDrawer() {
             text: "Device QR Code",
             to: "/tools/device-qr-code/",
             icon: <QrCodeIcon />,
+        },
+        {
+            text: "Device Tester",
+            to: "/tools/device-tester/",
+            icon: <BugReportIcon />,
         },
         {
             // separator
