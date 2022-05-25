@@ -70,7 +70,6 @@ function CompanySelect(props: {
         () => unique(specifications.map(dev => dev.company)).sort(),
         [specifications]
     )
-    console.log({ companies })
     const id = useId()
     const companyId = id + "-company"
 
