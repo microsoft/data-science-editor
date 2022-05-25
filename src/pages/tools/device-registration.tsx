@@ -293,7 +293,7 @@ export default function DeviceRegistration() {
         ev: SelectChangeEvent<jdspec.ConnectorType>
     ) => {
         device.connector = ev.target.value as jdspec.ConnectorType
-        if (device.connector === "edgeIndependent") delete device.connector
+        if (device.connector === "edgeConsumer") delete device.connector
         updateDevice()
     }
     const renderRepoInput = params => (
@@ -591,7 +591,7 @@ export default function DeviceRegistration() {
                             id={connectorId}
                             fullWidth={true}
                             size="small"
-                            value={device.connector || "edgeIndependent"}
+                            value={device.connector || "edgeConsumer"}
                             onChange={handleConnectorChanged}
                         >
                             <MenuItem value="noConnector">
