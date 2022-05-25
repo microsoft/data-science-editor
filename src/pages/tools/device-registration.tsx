@@ -376,7 +376,7 @@ export default function DeviceRegistration() {
                 uniquely identify your device. Fill in the additional fields
                 with information about your devices and click on{" "}
                 <b>Start Registration</b> to request an entry in the{" "}
-                <Link to="/devices/" underline="hover">
+                <Link target="_blank" to="/devices/" underline="hover">
                     Device Catalog
                 </Link>
                 .
@@ -483,7 +483,7 @@ export default function DeviceRegistration() {
                         device in the Device Catalog. If this URL is too long
                         for a QR Code, use a URL shortening service. To generate
                         a QR Code for your PCB, use the{" "}
-                        <Link to="/tools/device-qr-code/">
+                        <Link target="_blank" to="/tools/device-qr-code/">
                             Device QR Code Generator
                         </Link>{" "}
                         page.
@@ -623,7 +623,7 @@ export default function DeviceRegistration() {
                         <Typography variant="caption" component="div">
                             Choose the type of Jacdac connector present on the
                             hardware, and the type of type of{" "}
-                            <Link to="/ddk/design/#power-supply-sharing">
+                            <Link target="_blank" to="/ddk/design/#power-supply-sharing">
                                 power supply sharing
                             </Link>
                             .
