@@ -64,7 +64,7 @@ export default class GaugeWidgetField extends ReactInlineField {
 
     protected createContainer(): HTMLDivElement {
         const c = document.createElement("div")
-        c.style.width = "20rem"
+        c.style.width = "12rem"
         return c
     }
 
