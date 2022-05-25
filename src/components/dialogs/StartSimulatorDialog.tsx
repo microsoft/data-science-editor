@@ -8,7 +8,13 @@ import {
     ListItem,
     TextField,
 } from "@mui/material"
-import React, { startTransition, useEffect, useMemo, useRef, useState } from "react"
+import React, {
+    startTransition,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react"
 import { useId } from "react"
 import {
     serviceProviderDefinitions,
@@ -103,7 +109,7 @@ export default function StartSimulatorDialog(props: {
         documents,
         miniSearchOptions
     )
-    const handleSearchChange = event => startTransition(() => setQuery(event.target.value))
+    const handleSearchChange = event => setQuery(event.target.value)
 
     const handleProviderDefinition =
         (provider: ServiceProviderDefinition) => () => {
@@ -138,8 +144,11 @@ export default function StartSimulatorDialog(props: {
 
     const keyboardProps = useKeyboardNavigationProps(contentRef.current, true)
 
+    // delay query
     useEffect(() => {
-        search?.(query)
+        startTransition(() => {
+            search?.(query)
+        })
     }, [query])
 
     const results = (!query ? documents : searchResults) || documents

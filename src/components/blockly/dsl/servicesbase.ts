@@ -442,7 +442,7 @@ export class ServicesBaseDSL {
                 }`,
                 message0: isEnabledRegister(register)
                     ? `set %1 %2`
-                    : `set %1 ${register.name} to ${
+                    : `set %1 ${humanify(register.name)} to ${
                           register.fields.length === 1
                               ? "%2"
                               : fieldsToMessage(register)
@@ -491,7 +491,7 @@ export class ServicesBaseDSL {
                 inputsInline: true,
                 nextStatement: CODE_STATEMENT_TYPE,
                 colour: this.serviceColor(service),
-                tooltip: `Event raised when ${register.name} changes`,
+                tooltip: `Event raised when ${humanify(register.name)} changes`,
                 helpUrl: serviceHelp(service),
                 service,
                 register,
