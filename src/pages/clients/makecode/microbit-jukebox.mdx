@@ -1,0 +1,49 @@
+---
+title: Micro:bit Jukebox
+hideToc: true
+order: 100
+---
+
+import DownloadFirmwareButton from "../../../components/ui/DownloadFirmwareButton"
+
+#  Micro:bit Jukebox
+
+The micro:bit jukebox is a program that reacts to Jacdac modules that are connected to 
+the micro:bit V2 over the Jacdac bus.
+
+![Animation of a button connected to the micro:bit V2](./microbit-jukebox.gif)
+
+## What to expect?
+
+-   Plug the micro:bit into the Jacdaptor (make sure the front of the micro:bit and raised numbers on the plastic edge connector of Jacdaptor are both visible)
+
+-   Supply power to the micro:bit
+
+-   When a Jacdac module is added to or removed from the bus, the micro:bit displays the new count of devices on the bus
+
+-   When a Jacdac button module is attached, the micro:bit will respond to the following events as follows
+
+    -   Down: display a first icon on 5x5 LEDs and play a note (eight different icons and notes supported, for up to eight buttons)
+    -   Hold: display a second icon
+    -   Up: clear display
+
+-   When a Jacdac sensor (slider, rotary encoder) is attached and the sensor value changes appreciably,
+    micro:bit will display a bar chart showing the magnitude of the reading register, or will display the value as a number
+
+-   When a Jacdac actuator (RGB LED strip) is attached, the micro:bit will send a command to it based
+    on which button of micro:bit is pressed (A, B, A+B)
+
+-   When a LED strip and a potentiometer (slider) are connected, the potentiometer will control the LED brightness
+-   When a LED strip and a rotary encoder are connected, the rotary encoder will rotate the LEDs on the strip
+
+## Download again
+
+The micro:bit Jukebox experience is a MakeCode program that you can download or even modify!
+
+<DownloadFirmwareButton
+    variant="contained"
+    url="https://github.com/microsoft/pxt-jacdac/releases/latest/download/microbit-jukebox.hex"
+    name="microbit-jukebox.hex"
+>
+    Download firmware
+</DownloadFirmwareButton>

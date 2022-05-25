@@ -69,7 +69,7 @@ export default function Page() {
                 repos={[
                     "microsoft/pxt-jacdac/tools/multitool",
                     "microsoft/pxt-jacdac/devices/microbit",
-                    "microsoft/pxt-jacdac/tools/microbit-oob",
+                    "microsoft/pxt-jacdac/tools/microbit-jukebox",
                 ]}
                 showDescription={false}
             />
