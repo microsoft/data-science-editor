@@ -186,12 +186,11 @@ const analyzeDsl: BlockDomainSpecificLanguage = {
                 inputsInline: false,
                 transformData: identityTransformData,
             },
-            /*
             <BlockDefinition>{
                 kind: "block",
                 type: SERIES_LINEPLOT_BLOCK,
                 tooltip: "Renders the block data in a line chart",
-                message0: "time serie of y %1 %2 %3 %4 %5",
+                message0: "time series %1 %2 %3 %4 %5",
                 args0: [
                     <DataColumnInputDefinition>{
                         type: DataColumnChooserField.KEY,
@@ -224,7 +223,6 @@ const analyzeDsl: BlockDomainSpecificLanguage = {
                 dataPreviewField: false,
                 transformData: identityTransformData,
             },
-            */
         ]
     },
 
@@ -254,12 +252,10 @@ const analyzeDsl: BlockDomainSpecificLanguage = {
                         kind: "label",
                         text: "Widgets",
                     },
-                    /*
                     <BlockReference>{
                         kind: "block",
                         type: SERIES_LINEPLOT_BLOCK,
                     },
-                    */
                     <BlockReference>{
                         kind: "block",
                         type: DASHBOARD_GAUGE_BLOCK,

@@ -6,12 +6,17 @@ import useBlockData from "../../useBlockData"
 import type { VisualizationSpec } from "react-vega"
 import VegaLiteWidget from "./VegaLiteWidget"
 import { tidyResolveHeader } from "../tidy"
-import { LINE_MAX_ITEMS } from "../../toolbox"
+import { LINE_MAX_ITEMS, resolveBlockDefinition } from "../../toolbox"
 
 function LinePlotWidget() {
     const { sourceBlock } = useContext(WorkspaceContext)
     const { data } = useBlockData(sourceBlock)
-    const x = tidyResolveHeader(data, sourceBlock?.getFieldValue("x"), "number")
+    const def = resolveBlockDefinition(sourceBlock.type)
+    const x = tidyResolveHeader(
+        data,
+        def.args0[0].name === "x" ? sourceBlock?.getFieldValue("x") : "time",
+        "number"
+    )
     const ys = ["y", "y2", "y3"]
         .map(n =>
             tidyResolveHeader(data, sourceBlock?.getFieldValue(n), "number")
