@@ -33,6 +33,8 @@ import { paletteColorByIndex } from "./palette"
 const RECORD_WINDOW_BLOCK = "jacdac_record_window"
 const ROLLING_SUMMARY_BLOCK = "jacdac_rolling_summary"
 
+const colour = paletteColorByIndex(1)
+
 export class SensorsBlockDomainSpecificLanguage
     extends ServicesBaseDSL
     implements BlockDomainSpecificLanguage
@@ -40,7 +42,6 @@ export class SensorsBlockDomainSpecificLanguage
     id = "jacdacSensors"
 
     createBlocks(options: CreateBlocksOptions): BlockDefinition[] {
-        const colour = paletteColorByIndex(1)
         return [
             {
                 kind: "block",
@@ -160,7 +161,7 @@ export class SensorsBlockDomainSpecificLanguage
             {
                 kind: "category",
                 name: "Sensors",
-                colour: sensorsColour,
+                colour,
                 contents: [
                     <BlockReference>{
                         kind: "block",
