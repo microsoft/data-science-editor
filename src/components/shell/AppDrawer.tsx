@@ -153,7 +153,14 @@ export default function AppDrawer(props: { pagePath: string }) {
             )}
             {!showSearchResults && drawerType === DrawerType.Console && (
                 <Suspense>
-                    <Console showToolbar={true} height="calc(100vh - 7rem)" />
+                    <Console
+                        showToolbar={true}
+                        showFiles={true}
+                        showSerial={true}
+                        showPopout={true}
+                        showLevel={true}
+                        height="calc(100vh - 7rem)"
+                    />
                 </Suspense>
             )}
         </StyledDrawer>

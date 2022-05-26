@@ -1,3 +1,4 @@
+import { Stack } from "@mui/material"
 import React, { lazy, useContext } from "react"
 import { ConsoleProvider } from "../../console/ConsoleContext"
 import Suspense from "../../ui/Suspense"
@@ -13,9 +14,11 @@ function ConsoleWidget() {
     return (
         <ConsoleProvider>
             <PointerBoundary>
-                <Suspense>
-                    <Console height="12rem" />
-                </Suspense>
+                <Stack spacing={1}>
+                    <Suspense>
+                        <Console height="16rem" showBottomToolbar={true} />
+                    </Suspense>
+                </Stack>
             </PointerBoundary>
         </ConsoleProvider>
     )

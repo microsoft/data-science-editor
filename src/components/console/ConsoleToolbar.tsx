@@ -12,6 +12,7 @@ import {
     Select,
     SelectChangeEvent,
     TextField,
+    Typography,
 } from "@mui/material"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import useChange from "../../jacdac/useChange"
@@ -90,7 +91,9 @@ function MinLoggerPrioritySelect() {
             >
                 {levels.map(level => (
                     <MenuItem key={level} value={level}>
-                        {LoggerPriority[level]}
+                        <Typography variant="caption">
+                            {LoggerPriority[level]}
+                        </Typography>
                     </MenuItem>
                 ))}
             </Select>
@@ -116,9 +119,16 @@ function SearchKeywordField() {
     )
 }
 
-export default function ConsoleToolbar(props: { hidePopout?: boolean }) {
+export interface ConsoleToolbarOptions {
+    showPopout?: boolean
+    showFiles?: boolean
+    showSerial?: boolean
+    showLevel?: boolean
+}
+
+export default function ConsoleToolbar(props: ConsoleToolbarOptions) {
     const { sourceMap } = useContext(ConsoleContext)
-    const { hidePopout } = props
+    const { showPopout, showFiles, showSerial, showLevel } = props
     return (
         <Grid
             sx={{ mb: 0.5 }}
@@ -127,25 +137,33 @@ export default function ConsoleToolbar(props: { hidePopout?: boolean }) {
             direction="row"
             alignItems="center"
         >
-            <Grid item>
-                <ConsoleSerialButton />
-            </Grid>
+            {showSerial && (
+                <Grid item>
+                    <ConsoleSerialButton />
+                </Grid>
+            )}
             <Grid item>
                 <ClearButton />
             </Grid>
-            <Grid item>
-                <SaveButton />
-            </Grid>
-            <Grid item>
-                <ConsoleImportSourceMapButton />
-            </Grid>
+            {showFiles && (
+                <Grid item>
+                    <SaveButton />
+                </Grid>
+            )}
+            {showFiles && (
+                <Grid item>
+                    <ConsoleImportSourceMapButton />
+                </Grid>
+            )}
             <Grid item>
                 <SearchKeywordField />
             </Grid>
-            <Grid item>
-                <MinLoggerPrioritySelect />
-            </Grid>
-            {!hidePopout && (
+            {showLevel && (
+                <Grid item>
+                    <MinLoggerPrioritySelect />
+                </Grid>
+            )}
+            {showPopout && (
                 <Grid item>
                     <PopOutButton />
                 </Grid>
