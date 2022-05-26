@@ -21,6 +21,7 @@ export default function GithubRepositoryCardHeader(props: {
     const { slug, showRelease, showMakeCodeButton, showMakeCodeImportButton } =
         props
     const { repoPath, folder, name: repoName } = normalizeSlug(slug)
+    console.log({ repoPath, folder, repoName })
     const {
         response: repo,
         loading: repoLoading,
@@ -94,7 +95,7 @@ export default function GithubRepositoryCardHeader(props: {
                     target="_blank"
                     underline="hover"
                     title="Open repository in github.com"
-                    href={`https://github.com/${slug}`}
+                    href={`https://github.com/${repoPath}`}
                 >
                     <GitHubIcon />
                 </Link>
