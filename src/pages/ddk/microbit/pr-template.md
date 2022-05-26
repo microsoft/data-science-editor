@@ -25,6 +25,15 @@ about the details of this approach. You can also review a list of similar [softw
 Please do not hesitate to contact us through this pull request or at jacdac-tap@microsoft.com 
 if you have any question or want to schedule a call.
 
+## How to test this extension as a user?
+
+- Click on https://microsoft.github.io/jacdac-docs/ddk/microbit/extension-samples/
+- Find the extension for this accessory
+- Click on **Try MakeCode** to open a project that as a user
+- Use the blocks from the **Modules** toolbox
+
+You can follow the [micro:bit Jacdac guide](https://microsoft.github.io/jacdac-docs/clients/makecode/) to learn how Jacdac integrates into MakeCode
+
 ## TODOs
 
 - [ ] merge this pull request
