@@ -14,13 +14,13 @@ is [backward compatible](https://microsoft.github.io/jacdac-docs/ddk/microbit/so
 
 The benefits for the users and you will be:
 
--   Simulators: Jacdac enables simulations of all sensors and actuators
--   Digital twins: Jacdac surfaces the hardware state directly into the MakeCode editor
--   Standardized blocks and lessons: the programming will be done through
+-   **Simulator** Jacdac enables simulations of all sensors and actuators
+-   **Digital twins** Jacdac surfaces the hardware state directly into the MakeCode editor
+-   **Standardized blocks and lessons** the programming will be done through
 Jacdac blocks maintained by the Microsoft team
 
 We recommend reading the [Jacdac software only accessory](https://microsoft.github.io/jacdac-docs/ddk/microbit/software-only-accessory/) documentation page to learn more 
-about the details of this approach.
+about the details of this approach. You can also review a list of similar [software only extensions](https://microsoft.github.io/jacdac-docs/ddk/microbit/extension-samples/).
 
 Please do not hesitate to contact us through this pull request or at jacdac-tap@microsoft.com 
 if you have any question or want to schedule a call.
