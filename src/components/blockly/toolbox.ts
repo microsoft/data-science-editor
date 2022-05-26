@@ -153,7 +153,7 @@ export function resolveBlockDefinition<T extends BlockDefinition>(
 }
 
 export interface EventBlockDefinition extends ServiceBlockDefinition {
-    template: EventTemplate | EventWaitTemplate
+    template: EventTemplate
     events: jdspec.PacketInfo[]
 }
 
