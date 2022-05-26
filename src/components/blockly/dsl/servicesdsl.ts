@@ -663,5 +663,5 @@ export class ServicesBlockDomainSpecificLanguage
         return [...clientServicesCategories, commonCategory]
     }
 }
-const servicesDSL = new ServicesBlockDomainSpecificLanguage()
-export default servicesDSL
+const servicesDsl = new ServicesBlockDomainSpecificLanguage()
+export default servicesDsl

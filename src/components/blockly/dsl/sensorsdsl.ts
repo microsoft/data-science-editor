@@ -6,7 +6,6 @@ import {
     identityTransformData,
     InputDefinition,
     VariableInputDefinition,
-    sensorsColour,
     SENSOR_BLOCK,
     SeparatorDefinition,
     NumberInputDefinition,
@@ -29,6 +28,7 @@ import { Block } from "blockly"
 import postTransformData from "./workers/data.proxy"
 import DataColumnChooserField from "../fields/DataColumnChooserField"
 import { tidyResolveFieldColumn } from "../fields/tidy"
+import { paletteColorByIndex } from "./palette"
 
 const RECORD_WINDOW_BLOCK = "jacdac_record_window"
 const ROLLING_SUMMARY_BLOCK = "jacdac_rolling_summary"
@@ -40,7 +40,7 @@ export class SensorsBlockDomainSpecificLanguage
     id = "jacdacSensors"
 
     createBlocks(options: CreateBlocksOptions): BlockDefinition[] {
-        const colour = sensorsColour
+        const colour = paletteColorByIndex(1)
         return [
             {
                 kind: "block",

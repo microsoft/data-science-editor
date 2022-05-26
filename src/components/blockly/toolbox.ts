@@ -1,7 +1,6 @@
 import { SMap } from "../../../jacdac-ts/src/jdom/utils"
 import Blockly, { Block, Workspace } from "blockly"
 import { BlockWithServices } from "./WorkspaceContext"
-import { paletteColorByIndex } from "./dsl/palette"
 import {
     CompileCommandToVMOptions,
     CompileEventToVMOptions,
@@ -204,7 +203,6 @@ export const SENSOR_BLOCK = "jacdac_sensors_sensor"
 
 export const toolsColour = "#303030"
 export const analyzeColour = "#404040"
-export const sensorsColour = paletteColorByIndex(0)
 
 export const CHART_WIDTH = 468
 export const CHART_HEIGHT = 240
