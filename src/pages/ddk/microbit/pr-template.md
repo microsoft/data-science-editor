@@ -27,6 +27,8 @@ if you have any question or want to schedule a call.
 
 ## How to test this extension as a user?
 
+**This features requires to beta editor of MakeCode at https://makecode.microbit.org/beta.**
+
 - Click on https://microsoft.github.io/jacdac-docs/ddk/microbit/extension-samples/
 - Find the extension for this accessory
 - Click on **Try MakeCode** to open a project that as a user
