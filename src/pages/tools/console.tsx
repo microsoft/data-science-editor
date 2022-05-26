@@ -5,7 +5,13 @@ const Console = lazy(() => import("../../components/console/Console"))
 export default function Page() {
     return (
         <Suspense>
-            <Console showToolbar={true} hidePopout={true} />
+            <Console
+                showToolbar={true}
+                showFiles={true}
+                showLevel={true}
+                showPopout={false}
+                showSerial={true}
+            />
         </Suspense>
     )
 }
