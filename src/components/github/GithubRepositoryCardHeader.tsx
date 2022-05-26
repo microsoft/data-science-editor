@@ -89,7 +89,16 @@ export default function GithubRepositoryCardHeader(props: {
                     </Link>
                 )
             }
-            avatar={<GitHubIcon />}
+            avatar={
+                <Link
+                    target="_blank"
+                    underline="hover"
+                    title="Open repository in github.com"
+                    href={`https://github.com/${slug}`}
+                >
+                    <GitHubIcon />
+                </Link>
+            }
             action={
                 showMakeCodeButton && (
                     <MakeCodeOpenSnippetButton
