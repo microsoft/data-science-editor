@@ -351,7 +351,7 @@ export class ServicesBlockDomainSpecificLanguage
             return def
         })
 
-        const eventClientBlocks = events.map<EventBlockDefinition>(
+        const eventSubscribeClientBlocks = events.map<EventBlockDefinition>(
             ({ service, events }) => ({
                 kind: "block",
                 type: `jacdac_events_${service.shortId}`,
@@ -371,6 +371,34 @@ export class ServicesBlockDomainSpecificLanguage
                 inputsInline: true,
                 nextStatement: CODE_STATEMENT_TYPE,
                 tooltip: `Events for the ${service.name} service`,
+                helpUrl: serviceHelp(service),
+                service,
+                events,
+                template: "event",
+            })
+        )
+
+        const eventWaitClientBlocks = events.map<EventBlockDefinition>(
+            ({ service, events }) => ({
+                kind: "block",
+                type: `jacdac_events_wait_${service.shortId}`,
+                message0: `wait %1 for %2`,
+                args0: [
+                    roleVariable(service),
+                    <InputDefinition>{
+                        type: "field_dropdown",
+                        name: "event",
+                        options: events.map(event => [
+                            humanify(event.name),
+                            event.name,
+                        ]),
+                    },
+                ],
+                colour: this.serviceColor(service),
+                inputsInline: true,
+                previousStatement: CODE_STATEMENT_TYPE,
+                nextStatement: CODE_STATEMENT_TYPE,
+                tooltip: `Wait for event for the ${service.name} service`,
                 helpUrl: serviceHelp(service),
                 service,
                 events,
@@ -415,7 +443,8 @@ export class ServicesBlockDomainSpecificLanguage
         )
 
         this._serviceBlocks = [
-            ...eventClientBlocks,
+            ...eventSubscribeClientBlocks,
+            ...eventWaitClientBlocks,
             ...registerSimpleGetClientBlocks,
             ...registerEnumGetClientBlocks,
             ...registerNumericsGetClientBlocks,

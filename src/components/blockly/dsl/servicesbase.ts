@@ -667,7 +667,11 @@ export class ServicesBaseDSL {
                     block,
                     definition: resolveBlockDefinition(block.type),
                 }))
-                .filter(({ definition }) => definition?.template === "event")
+                .filter(
+                    ({ definition }) =>
+                        definition?.template === "event" ||
+                        definition?.template === "eventWait"
+                )
                 .map(({ block, definition }) => {
                     const { events } = definition as EventBlockDefinition
                     if (events.length === 1) return events[0]
@@ -966,6 +970,21 @@ export class ServicesBaseDSL {
                         { definition }
                     )
                 return compileCommand(options)
+            }
+            case "event": {
+                const { value: role } = inputs[0].fields["role"]
+                const { value: eventName } = inputs[0].fields["event"]
+                return {
+                    cmd: makeVMBase(block, {
+                        type: "CallExpression",
+                        arguments: [],
+                        callee: toMemberExpression(
+                            role as string,
+                            toMemberExpression(eventName as string, "wait")
+                        ),
+                    }),
+                    errors: [],
+                }
             }
             case "register_set": {
                 // TODO: need to handle the case of writing a register with fields
