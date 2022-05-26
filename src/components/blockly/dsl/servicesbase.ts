@@ -423,7 +423,9 @@ export class ServicesBaseDSL {
                 }`,
                 message0:
                     customMessage(service, register, register.fields[0])?.get ||
-                    `%1 ${humanify(register.name)}${prettySimpleUint(register)}`,
+                    `%1 ${humanify(register.name)}${prettySimpleUint(
+                        register
+                    )}`,
                 args0: [roleVariable(service, client)],
                 inputsInline: true,
                 output: toBlocklyType(register.fields[0]),
@@ -493,7 +495,9 @@ export class ServicesBaseDSL {
                 type: `jacdac_change_by_events_${service.shortId}_${
                     register.name
                 }${client ? "" : "_server"}`,
-                message0: `on %1 ${humanify(register.name)} change by %2${prettySimpleUint(register)}`,
+                message0: `on %1 ${humanify(
+                    register.name
+                )} change by %2${prettySimpleUint(register)}`,
                 args0: [
                     roleVariable(service, client),
                     ...fieldsToFieldInputs(register),
@@ -956,6 +960,11 @@ export class ServicesBaseDSL {
         switch (template) {
             case "custom": {
                 const { compileCommand } = definition as CustomBlockDefinition
+                if (!compileCommand)
+                    console.error(
+                        "custom block definition missing compileCommand",
+                        { definition }
+                    )
                 return compileCommand(options)
             }
             case "register_set": {
