@@ -35,5 +35,8 @@ Once the pull request is merged, we will update the catalog to point to it rathe
 
 ## Future accessories TODO
 
-Review the [micro:bit accessory Jacdac integration guide](https://microsoft.github.io/jacdac-docs/ddk/microbit/) to learn how you can integrate Jacdac into your future accessories
+- [ ] Review the [micro:bit accessory Jacdac integration guide](https://microsoft.github.io/jacdac-docs/ddk/microbit/) to learn how you can integrate Jacdac into your future accessories
 for a better user experience. We provide various options to integrate Jacdac into your hardware at minimal cost.
+- [ ] Review the [Jacdac Device Development Kit] for more details about hardware integration
+of Jacdac in general.
+- [ ] Contact us if you have any question about adding Jacdac to your next accessory.
