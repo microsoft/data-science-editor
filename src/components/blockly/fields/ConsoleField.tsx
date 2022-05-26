@@ -2,6 +2,7 @@ import React, { lazy, useContext } from "react"
 import { ConsoleProvider } from "../../console/ConsoleContext"
 import Suspense from "../../ui/Suspense"
 import WorkspaceContext from "../WorkspaceContext"
+import { PointerBoundary } from "./PointerBoundary"
 import { ReactFieldJSON } from "./ReactField"
 import ReactInlineField from "./ReactInlineField"
 const Console = lazy(() => import("../../console/Console"))
@@ -11,9 +12,11 @@ function ConsoleWidget() {
     if (flyout) return null
     return (
         <ConsoleProvider>
-            <Suspense>
-                <Console height="12rem" />
-            </Suspense>
+            <PointerBoundary>
+                <Suspense>
+                    <Console height="12rem" />
+                </Suspense>
+            </PointerBoundary>
         </ConsoleProvider>
     )
 }
