@@ -13,7 +13,6 @@ import BlockDomainSpecificLanguage, { CompileCommandToVMOptions } from "./dsl"
 const VARIABLES_BLOCK = "jacdac_variables_view"
 const colour = toolsColour
 const LOG_BLOCK = "jacdac_log"
-const LOG_VALUE_BLOCK = "jacdac_log_value"
 const CONSOLE_BLOCK = "jacdac_console_display"
 
 const debugDsl: BlockDomainSpecificLanguage = {
@@ -22,11 +21,23 @@ const debugDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: LOG_BLOCK,
-            message0: `log %1`,
+            message0: `log %1 %2 %3 %4`,
             args0: [
                 <InputDefinition>{
                     type: "input_value",
-                    name: "value",
+                    name: "value0",
+                },
+                <InputDefinition>{
+                    type: "input_value",
+                    name: "value1",
+                },
+                <InputDefinition>{
+                    type: "input_value",
+                    name: "value2",
+                },
+                <InputDefinition>{
+                    type: "input_value",
+                    name: "value3",
                 },
             ],
             colour,
@@ -34,27 +45,6 @@ const debugDsl: BlockDomainSpecificLanguage = {
             previousStatement: CODE_STATEMENT_TYPE,
             nextStatement: CODE_STATEMENT_TYPE,
             tooltip: `Log an entry to the console`,
-            helpUrl: "",
-        },
-        {
-            kind: "block",
-            type: LOG_VALUE_BLOCK,
-            message0: `log value %1 = %2`,
-            args0: [
-                <InputDefinition>{
-                    type: "input_value",
-                    name: "value",
-                },
-                <InputDefinition>{
-                    type: "input_value",
-                    name: "arg",
-                },
-            ],
-            colour,
-            inputsInline: true,
-            previousStatement: CODE_STATEMENT_TYPE,
-            nextStatement: CODE_STATEMENT_TYPE,
-            tooltip: `Log a name value pair to the console`,
             helpUrl: "",
         },
         {
@@ -106,15 +96,15 @@ const debugDsl: BlockDomainSpecificLanguage = {
                     kind: "block",
                     type: LOG_BLOCK,
                     values: {
-                        value: { kind: "block", type: "text" },
+                        value0: { kind: "block", type: "text" },
                     },
                 },
                 <BlockReference>{
                     kind: "block",
-                    type: LOG_VALUE_BLOCK,
+                    type: LOG_BLOCK,
                     values: {
-                        value: { kind: "block", type: "text" },
-                        arg: { kind: "block", type: "math_number" },
+                        value0: { kind: "block", type: "text" },
+                        value1: { kind: "block", type: "math_number" },
                     },
                 },
                 <BlockReference>{
@@ -125,6 +115,10 @@ const debugDsl: BlockDomainSpecificLanguage = {
                     kind: "block",
                     type: VARIABLES_BLOCK,
                 },
+                <BlockReference>{
+                    kind: "block",
+                    type: "text",
+                },
             ],
         },
     ],
@@ -132,7 +126,7 @@ const debugDsl: BlockDomainSpecificLanguage = {
         const { block, blockToExpression } = options
         const { type, inputs } = block
         switch (type) {
-            case LOG_VALUE_BLOCK: {
+            case LOG_BLOCK: {
                 const exprsErrors = inputs
                     .filter(i => i.child)
                     .map(a => blockToExpression(undefined, a.child))
@@ -146,23 +140,6 @@ const debugDsl: BlockDomainSpecificLanguage = {
                         },
                     }),
                     errors: exprsErrors.flatMap(e => e.errors),
-                }
-            }
-            case LOG_BLOCK: {
-                const { expr, errors } = blockToExpression(
-                    undefined,
-                    inputs[0].child
-                )
-                return {
-                    cmd: makeVMBase(block, {
-                        type: "CallExpression",
-                        arguments: [expr],
-                        callee: <jsep.Literal>{
-                            type: "Literal",
-                            raw: "console.log",
-                        },
-                    }),
-                    errors,
                 }
             }
             default:
