@@ -30,6 +30,7 @@ import {
     serviceSpecifications,
     serviceSpecificationFromClassIdentifier,
     isReading,
+    isValueOrIntensity,
 } from "../../../../jacdac-ts/src/jdom/spec"
 import {
     arrayConcatMany,
@@ -81,6 +82,7 @@ import { paletteColorByIndex } from "./palette"
 import { VariableJSON } from "./workspacejson"
 import { JDService } from "../../../../jacdac-ts/src/jdom/service"
 import { groupBy } from "../../../../jacdac-ts/src/jdom/utils"
+import { prettyUnit } from "../../../../jacdac-ts/src/jdom/pretty"
 
 export const SET_STATUS_LIGHT_BLOCK = "jacdac_set_status_light"
 export const ROLE_BOUND_EVENT_BLOCK = "jacdac_role_bound_event"
@@ -390,6 +392,11 @@ export const getServiceInfo = () => {
     }
 }
 
+function prettySimpleUint(pkt: jdspec.PacketInfo) {
+    const s = prettyUnit(pkt.fields[0].unit)
+    return s ? ` (${s})` : ""
+}
+
 export class ServicesBaseDSL {
     // only state required across methods of class
     protected _serviceBlocks: ServiceBlockDefinition[] = []
@@ -397,7 +404,11 @@ export class ServicesBaseDSL {
     protected serviceColor: (srv: jdspec.ServiceSpec) => string
 
     protected assignGroup(register: jdspec.PacketInfo) {
-        return register?.kind === "const" ? "Configuration" : ""
+        return isValueOrIntensity(register) ||
+            isReading(register) ||
+            register.client
+            ? ""
+            : "Configuration"
     }
 
     protected makeRegisterSimpleGetBlocks(
@@ -412,7 +423,7 @@ export class ServicesBaseDSL {
                 }`,
                 message0:
                     customMessage(service, register, register.fields[0])?.get ||
-                    `%1 ${humanify(register.name)}`,
+                    `%1 ${humanify(register.name)}${prettySimpleUint(register)}`,
                 args0: [roleVariable(service, client)],
                 inputsInline: true,
                 output: toBlocklyType(register.fields[0]),
@@ -441,12 +452,12 @@ export class ServicesBaseDSL {
                     client ? "" : "_server"
                 }`,
                 message0: isEnabledRegister(register)
-                    ? `set %1 %2`
+                    ? `set %1 %2${prettySimpleUint(register)}`
                     : `set %1 ${humanify(register.name)} to ${
                           register.fields.length === 1
                               ? "%2"
                               : fieldsToMessage(register)
-                      }`,
+                      }${prettySimpleUint(register)}`,
                 args0: [
                     roleVariable(service, client),
                     ...fieldsToFieldInputs(register),
@@ -482,7 +493,7 @@ export class ServicesBaseDSL {
                 type: `jacdac_change_by_events_${service.shortId}_${
                     register.name
                 }${client ? "" : "_server"}`,
-                message0: `on %1 ${humanify(register.name)} change by %2`,
+                message0: `on %1 ${humanify(register.name)} change by %2${prettySimpleUint(register)}`,
                 args0: [
                     roleVariable(service, client),
                     ...fieldsToFieldInputs(register),

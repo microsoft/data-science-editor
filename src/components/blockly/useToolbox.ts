@@ -168,7 +168,7 @@ export function useToolboxButtons(
         // cleanup
         return () =>
             buttons.forEach(button =>
-                workspace.removeButtonCallback(button.callbackKey)
+                workspace?.removeButtonCallback(button.callbackKey)
             )
     }, [workspace, toolboxConfiguration])
 }
