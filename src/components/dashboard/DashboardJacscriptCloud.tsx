@@ -153,9 +153,7 @@ export default function DashboardJacscriptCloud(props: DashboardServiceProps) {
                 setMsgs(prev =>
                     [
                         ...prev,
-                        `${bus.timestamp | 0}> command: ${status}, ${args
-                            .map(r => r[0])
-                            .join(", ")}`,
+                        `command: ${status}, ${args.map(r => r[0]).join(", ")}`,
                     ].slice(-10)
                 )
             }),
@@ -168,9 +166,7 @@ export default function DashboardJacscriptCloud(props: DashboardServiceProps) {
                 setMsgs(prev =>
                     [
                         ...prev,
-                        `${bus.timestamp | 0}> upload: ${
-                            req.label
-                        } -> ${req.args.join(", ")}`,
+                        `upload: ${req.label} -> ${req.args.join(", ")}`,
                     ].slice(-10)
                 )
             }),
