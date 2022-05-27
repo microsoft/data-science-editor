@@ -4,7 +4,11 @@ import {
     toBase64,
 } from "../../../jacdac-ts/src/jdom/buffer"
 import MQTT from "paho-mqtt"
-import { fromUTF8, stringToUint8Array } from "../../../jacdac-ts/src/jdom/utils"
+import {
+    fromUTF8,
+    stringToUint8Array,
+    toHex,
+} from "../../../jacdac-ts/src/jdom/utils"
 import { JDEventSource } from "../../../jacdac-ts/src/jdom/eventsource"
 import {
     AzureIotHubHealthConnectionStatus,
@@ -20,8 +24,10 @@ import { AzureIoTHubHealthServer } from "../../../jacdac-ts/src/servers/azureiot
 import { ServiceProviderDefinition } from "../../../jacdac-ts/src/servers/servers"
 import {
     JacscriptCloudServer,
+    JacscriptCloudUploadBinRequest,
     JacscriptCloudUploadRequest,
     UPLOAD,
+    UPLOAD_BIN,
 } from "../../../jacdac-ts/src/servers/jacscriptcloudserver"
 
 async function generateSasToken(
@@ -136,6 +142,10 @@ class AzureIoTHubConnector extends JDEventSource {
                 values,
             })
         )
+    }
+
+    public uploadBin(data: Uint8Array) {
+        this.publish(`devices/${this.clientId}/messages/events/`, toHex(data))
     }
 
     private emitDisconnect() {
@@ -375,6 +385,10 @@ export default function createAzureIotHubServiceDefinition(): ServiceProviderDef
             cloud.on(UPLOAD, (req: JacscriptCloudUploadRequest) => {
                 const { label, args } = req
                 connector.upload(label, args)
+            })
+            cloud.on(UPLOAD_BIN, (req: JacscriptCloudUploadBinRequest) => {
+                const { data } = req
+                connector.uploadBin(data)
             })
             connector.on(METHOD, (msg: MethodInvocation) => {
                 const { method } = msg
