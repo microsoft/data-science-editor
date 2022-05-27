@@ -26,6 +26,7 @@ export default function FilteredDeviceSpecificationList(props: {
     const [serial, setSerial] = useState(false)
     const [buyNow, setBuyNow] = useState(false)
     const [makeCode, setMakeCode] = useState(false)
+    const [ec30, setEC30] = useState(false)
 
     const requiredServiceClasses = !isNaN(serviceClass) && [serviceClass]
 
@@ -48,6 +49,7 @@ export default function FilteredDeviceSpecificationList(props: {
     const handleSetSerial = () => setSerial(c => !c)
     const handleBuyNow = () => setBuyNow(c => !c)
     const handleMakeCode = () => setMakeCode(c => !c)
+    const handleEC30 = () => setEC30(c => !c)
     const handleSetSelectedTag = (tag: string) => () =>
         setSelectedTags(ts => {
             const i = ts.indexOf(tag)
@@ -101,6 +103,13 @@ export default function FilteredDeviceSpecificationList(props: {
                 </Grid>
                 <Grid item>
                     <FilterChip
+                        label="EC30"
+                        value={ec30}
+                        onClick={handleEC30}
+                    />
+                </Grid>
+                <Grid item>
+                    <FilterChip
                         label="firmware code"
                         value={firmwareSources}
                         onClick={handleSetFirmwareSources}
@@ -149,6 +158,7 @@ export default function FilteredDeviceSpecificationList(props: {
                 requiredServiceClasses={requiredServiceClasses}
                 transports={transports}
                 tags={selectedTags}
+                ec30={ec30}
             />
         </>
     )

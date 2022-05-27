@@ -10,6 +10,10 @@ export const DEFAULT_OPTIONS: EnclosureOptions = {
     cover: {},
 }
 
+export function isEC30(shape: jdspec.Shape) {
+    return typeof shape === "string" && /^ec30_/.test(shape)
+}
+
 export function generateEC30EnclosureModel(
     gridWidth: number,
     gridHeight: number,

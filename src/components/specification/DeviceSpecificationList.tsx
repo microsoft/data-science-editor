@@ -6,6 +6,7 @@ import useGridBreakpoints from "../useGridBreakpoints"
 import { serviceName } from "../../../jacdac-ts/src/jdom/pretty"
 import DeviceSpecificationCard from "./DeviceSpecificationCard"
 import { arrayify } from "../../../jacdac-ts/src/jdom/utils"
+import { isEC30 } from "../enclosure/ec30"
 
 export default function DeviceSpecificationList(props: {
     query?: string
@@ -20,6 +21,7 @@ export default function DeviceSpecificationList(props: {
     hardwareDesign?: boolean
     transports?: jdspec.TransportType[]
     tags?: string[]
+    ec30?: boolean
 }) {
     const {
         query,
@@ -34,6 +36,7 @@ export default function DeviceSpecificationList(props: {
         firmwareSources,
         transports,
         tags,
+        ec30,
     } = props
     const specifications = useDeviceSpecifications()
     const specs = useMemo(() => {
@@ -56,6 +59,7 @@ export default function DeviceSpecificationList(props: {
         if (buyNow) r = r.filter(spec => !!spec.storeLink)
         if (hardwareDesign) r = r.filter(spec => spec.hardwareDesign)
         if (firmwareSources) r = r.filter(spec => spec.firmwareSource)
+        if (ec30) r = r.filter(spec => isEC30(spec.shape))
         if (makeCode)
             r = r.filter(spec => !!arrayify(spec.makeCodeRepo)?.length)
         if (transports?.length)
@@ -94,6 +98,7 @@ export default function DeviceSpecificationList(props: {
         firmwareSources,
         transports?.join(","),
         tags?.join(","),
+        ec30,
     ])
     const gridBreakpoints = useGridBreakpoints(specs.length)
     const size = specs?.length < 6 ? "catalog" : "preview"
