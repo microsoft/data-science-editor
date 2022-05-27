@@ -20,6 +20,7 @@ import { HostedSimulatorsProvider } from "../HostedSimulatorsContext"
 import { ConsoleProvider } from "../console/ConsoleContext"
 import { SimulatorDialogsProvider } from "../SimulatorsDialogContext"
 import { CommandPaletteProvider } from "../commands/CommandPaletteContext"
+import { YouTubeProvider } from "../youtube/YouTubeContext"
 
 /*
 declare module "@mui/styles/defaultTheme" {
@@ -47,34 +48,36 @@ export default function ThemedLayout(props: {
                                             <ServiceManagerProvider>
                                                 <PacketsProvider>
                                                     <AppProvider>
-                                                        <CommandPaletteProvider>
-                                                            <SimulatorDialogsProvider>
-                                                                <ConsoleProvider>
-                                                                    <MakeCodeSnippetProvider>
-                                                                        <CssBaseline />
-                                                                        <Helmet>
-                                                                            <link
-                                                                                rel="preconnect"
-                                                                                href="https://fonts.googleapis.com"
-                                                                                crossOrigin="anonymous"
-                                                                            />
-                                                                            <link
-                                                                                rel="preconnect"
-                                                                                href="https://raw.githubusercontent.com"
-                                                                                crossOrigin="anonymous"
-                                                                            />
-                                                                            <meta
-                                                                                name="viewport"
-                                                                                content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
-                                                                            />
-                                                                        </Helmet>
-                                                                        {
-                                                                            children
-                                                                        }
-                                                                    </MakeCodeSnippetProvider>
-                                                                </ConsoleProvider>
-                                                            </SimulatorDialogsProvider>
-                                                        </CommandPaletteProvider>
+                                                        <YouTubeProvider>
+                                                            <CommandPaletteProvider>
+                                                                <SimulatorDialogsProvider>
+                                                                    <ConsoleProvider>
+                                                                        <MakeCodeSnippetProvider>
+                                                                            <CssBaseline />
+                                                                            <Helmet>
+                                                                                <link
+                                                                                    rel="preconnect"
+                                                                                    href="https://fonts.googleapis.com"
+                                                                                    crossOrigin="anonymous"
+                                                                                />
+                                                                                <link
+                                                                                    rel="preconnect"
+                                                                                    href="https://raw.githubusercontent.com"
+                                                                                    crossOrigin="anonymous"
+                                                                                />
+                                                                                <meta
+                                                                                    name="viewport"
+                                                                                    content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
+                                                                                />
+                                                                            </Helmet>
+                                                                            {
+                                                                                children
+                                                                            }
+                                                                        </MakeCodeSnippetProvider>
+                                                                    </ConsoleProvider>
+                                                                </SimulatorDialogsProvider>
+                                                            </CommandPaletteProvider>
+                                                        </YouTubeProvider>
                                                     </AppProvider>
                                                 </PacketsProvider>
                                             </ServiceManagerProvider>

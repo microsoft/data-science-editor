@@ -19,6 +19,7 @@ const RandomGenerator = lazy(() => import("./RandomGenerator"))
 const TraceList = lazy(() => import("./trace/TraceList"))
 const SpecificationUnitList = lazy(() => import("./SpecificationUnitList"))
 const DeviceImage = lazy(() => import("./devices/DeviceImage"))
+const YouTubeButton = lazy(() => import("./youtube/YouTubeButton"))
 
 export default function useMdxComponents() {
     const theme = useTheme()
@@ -83,6 +84,11 @@ export default function useMdxComponents() {
             MakeCodeProjects: props => (
                 <Suspense>
                     <MakeCodeProjects {...props} />
+                </Suspense>
+            ),
+            YouTubeButton: props => (
+                <Suspense>
+                    <YouTubeButton {...props} />
                 </Suspense>
             ),
         }),

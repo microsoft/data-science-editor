@@ -23,6 +23,7 @@ import useMediaQueries from "./hooks/useMediaQueries"
 import MainAppBar from "./shell/MainAppBar"
 import { AlertTitle } from "@mui/material"
 import { UIFlags } from "../jacdac/providerbus"
+import YouTubeContext from "./youtube/YouTubeContext"
 
 const Breadcrumbs = lazy(() => import("./ui/Breadcrumbs"))
 const DevToolsAlert = lazy(() => import("./alert/DevToolsAlert"))
@@ -34,6 +35,7 @@ const WebDiagnostics = lazy(() => import("./shell/WebDiagnostics"))
 const WebCam = lazy(() => import("./ui/WebCam"))
 const PassiveAlert = lazy(() => import("./shell/PassiveAlert"))
 const DataEditorAppBar = lazy(() => import("./shell/DataEditorAppBar"))
+const YouTubePlayer = lazy(() => import("./youtube/YouTubePlayer"))
 
 const PREFIX = "Layout"
 
@@ -239,6 +241,7 @@ function LayoutWithContext(props: LayoutProps) {
 
     const { darkMode } = useContext(DarkModeContext)
     const { drawerType, toolsMenu, showWebCam } = useContext(AppContext)
+    const { videoId } = useContext(YouTubeContext)
     const drawerOpen = drawerType !== DrawerType.None
     const { medium } = useMediaQueries()
     const container = !medium && !fullWidthTools
@@ -344,6 +347,11 @@ function LayoutWithContext(props: LayoutProps) {
                 {showWebCam && (
                     <Suspense>
                         <WebCam />
+                    </Suspense>
+                )}
+                {!!videoId && (
+                    <Suspense>
+                        <YouTubePlayer />
                     </Suspense>
                 )}
             </div>
