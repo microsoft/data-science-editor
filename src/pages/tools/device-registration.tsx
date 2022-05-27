@@ -188,7 +188,7 @@ export default function DeviceRegistration() {
             ? ""
             : "Must be https://..."
     const storeLinkError =
-        !device.storeLink || /^https:\/\//i.test(device.storeLink)
+        !device.storeLink || /^https:\/\//i.test(device.storeLink as string)
             ? ""
             : "Must be https://..."
     const idError =

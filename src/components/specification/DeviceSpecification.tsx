@@ -78,6 +78,7 @@ export default function DeviceSpecification(props: {
         devices,
     } = device
     const makeCodeRepos = arrayify(makeCodeRepo)
+    const storeLinks = arrayify(storeLink)
     const { services } = device
     const specifications = useDeviceSpecifications()
     const gridBreakpoints = useGridBreakpoints()
@@ -110,7 +111,7 @@ export default function DeviceSpecification(props: {
     return (
         <>
             <DeviceStructuredData device={device} />
-            {!storeLink && (
+            {!storeLink?.length && (
                 <Alert severity="info">
                     <AlertTitle>Prototype Hardware</AlertTitle>
                     This device is a prototype <b>not</b> available for
@@ -120,16 +121,6 @@ export default function DeviceSpecification(props: {
             <h2 key="title">
                 {name}
                 {!!version && ` v${version}`}
-                {storeLink && (
-                    <Button
-                        sx={{ ml: 1 }}
-                        href={storeLink}
-                        variant="outlined"
-                        color="primary"
-                    >
-                        Buy Now
-                    </Button>
-                )}
             </h2>
             {connector === "noConnector" && (
                 <Alert severity="warning">
@@ -180,6 +171,22 @@ export default function DeviceSpecification(props: {
                     </Link>
                     .
                 </p>
+            )}
+            {!!storeLinks?.length && (
+                <>
+                    <h3>Buy now</h3>
+                    <p>
+                        Here is a list of resllers where you can buy this
+                        device.
+                    </p>
+                    <ul>
+                        {storeLinks.map(link => (
+                            <a key={link} href={link}>
+                                {link}
+                            </a>
+                        ))}
+                    </ul>
+                </>
             )}
             {!!deviceSpecs?.length && (
                 <>
