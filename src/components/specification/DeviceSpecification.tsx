@@ -76,7 +76,7 @@ export default function DeviceSpecification(props: {
         firmwareSource,
         link,
         storeLink,
-        connector = "edgeIndependent",
+        connector = "edgeConsumer",
         devices,
         shape,
     } = device
