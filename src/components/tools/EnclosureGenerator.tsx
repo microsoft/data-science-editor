@@ -1,14 +1,6 @@
 import React, { lazy, useEffect, useState } from "react"
 
-import {
-    Button,
-    Card,
-    CardActions,
-    CardHeader,
-    CardMedia,
-    Grid,
-    NoSsr,
-} from "@mui/material"
+import { Button, Grid, NoSsr } from "@mui/material"
 import Suspense from "../ui/Suspense"
 import { convertToSTL } from "../blockly/dsl/workers/cad.proxy"
 import type {

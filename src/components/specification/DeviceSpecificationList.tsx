@@ -5,6 +5,7 @@ import useDeviceSpecifications from "../devices/useDeviceSpecifications"
 import useGridBreakpoints from "../useGridBreakpoints"
 import { serviceName } from "../../../jacdac-ts/src/jdom/pretty"
 import DeviceSpecificationCard from "./DeviceSpecificationCard"
+import { arrayify } from "../../../jacdac-ts/src/jdom/utils"
 
 export default function DeviceSpecificationList(props: {
     query?: string
@@ -55,7 +56,8 @@ export default function DeviceSpecificationList(props: {
         if (buyNow) r = r.filter(spec => !!spec.storeLink)
         if (hardwareDesign) r = r.filter(spec => spec.hardwareDesign)
         if (firmwareSources) r = r.filter(spec => spec.firmwareSource)
-        if (makeCode) r = r.filter(spec => spec.makeCodeRepo)
+        if (makeCode)
+            r = r.filter(spec => !!arrayify(spec.makeCodeRepo)?.length)
         if (transports?.length)
             r = r.filter(spec => transports.indexOf(spec.transport?.type) > -1)
         if (tags?.length)

@@ -16,7 +16,7 @@ import DeviceSpecificationList from "./DeviceSpecificationList"
 import StructuredData from "../ui/StructuredData"
 import useDeviceSpecifications from "../devices/useDeviceSpecifications"
 import { Button, Link } from "gatsby-theme-material-ui"
-import { uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
+import { arrayify, uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
 import Alert from "../ui/Alert"
 import GithubRepositoryCard from "../github/GithubRepositoryCard"
 import { deviceCatalog } from "../../../jacdac-ts/src/jdom/catalog"
@@ -77,6 +77,8 @@ export default function DeviceSpecification(props: {
         connector = "edgeIndependent",
         devices,
     } = device
+    const makeCodeRepos = arrayify(makeCodeRepo)
+    const storeLinks = arrayify(storeLink)
     const { services } = device
     const specifications = useDeviceSpecifications()
     const gridBreakpoints = useGridBreakpoints()
@@ -109,7 +111,7 @@ export default function DeviceSpecification(props: {
     return (
         <>
             <DeviceStructuredData device={device} />
-            {!storeLink && (
+            {!storeLink?.length && (
                 <Alert severity="info">
                     <AlertTitle>Prototype Hardware</AlertTitle>
                     This device is a prototype <b>not</b> available for
@@ -119,16 +121,6 @@ export default function DeviceSpecification(props: {
             <h2 key="title">
                 {name}
                 {!!version && ` v${version}`}
-                {storeLink && (
-                    <Button
-                        sx={{ ml: 1 }}
-                        href={storeLink}
-                        variant="outlined"
-                        color="primary"
-                    >
-                        Buy Now
-                    </Button>
-                )}
             </h2>
             {connector === "noConnector" && (
                 <Alert severity="warning">
@@ -179,6 +171,22 @@ export default function DeviceSpecification(props: {
                     </Link>
                     .
                 </p>
+            )}
+            {!!storeLinks?.length && (
+                <>
+                    <h3>Buy now</h3>
+                    <p>
+                        Here is a list of resllers where you can buy this
+                        device.
+                    </p>
+                    <ul>
+                        {storeLinks.map(link => (
+                            <a key={link} href={link}>
+                                {link}
+                            </a>
+                        ))}
+                    </ul>
+                </>
             )}
             {!!deviceSpecs?.length && (
                 <>
@@ -254,15 +262,18 @@ export default function DeviceSpecification(props: {
                     <FirmwareCard slug={repo} />
                 </>
             )}
-            {makeCodeRepo && (
+            {!!makeCodeRepos?.length && (
                 <>
-                    <h3>MakeCode Extension</h3>
-                    <GithubRepositoryCard
-                        slug={makeCodeRepo}
-                        showDescription={true}
-                        showDependencies={true}
-                        showMakeCodeButton={true}
-                    />
+                    <h3>MakeCode</h3>
+                    {makeCodeRepos.map(repo => (
+                        <GithubRepositoryCard
+                            key={repo}
+                            slug={repo}
+                            showDescription={true}
+                            showDependencies={true}
+                            showMakeCodeButton={true}
+                        />
+                    ))}
                 </>
             )}
             {!!firmwares && (

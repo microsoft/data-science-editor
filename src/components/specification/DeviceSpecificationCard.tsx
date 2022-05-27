@@ -6,7 +6,7 @@ import {
 } from "../../../jacdac-ts/src/jdom/spec"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import { CardActionArea } from "gatsby-theme-material-ui"
-import { uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
+import { arrayify, uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
 import useDeviceImage from "../devices/useDeviceImage"
 import { humanify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import ChipList from "../ui/ChipList"
@@ -27,6 +27,7 @@ export default function DeviceSpecificationCard(props: {
         storeLink,
         makeCodeRepo,
     } = specification
+    const makeCodeRepos = arrayify(makeCodeRepo)
     const imageUrl = useDeviceImage(specification, size)
     const serviceNames = uniqueMap(
         services,
@@ -74,7 +75,7 @@ export default function DeviceSpecificationCard(props: {
                     </Typography>
                     <ChipList>
                         {!storeLink && <Chip size="small" label="prototype" />}
-                        {makeCodeRepo && (
+                        {!!makeCodeRepos?.length && (
                             <Chip
                                 size="small"
                                 label="MakeCode"
