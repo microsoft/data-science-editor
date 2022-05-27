@@ -1,8 +1,8 @@
-import React, { useMemo } from "react"
+import React, { lazy, useMemo } from "react"
 import IDChip from "../IDChip"
 import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec"
 import ServiceSpecificationCard from "./ServiceSpecificationCard"
-import { AlertTitle, Box, Chip, Grid } from "@mui/material"
+import { AlertTitle, Box, Chip, Grid, NoSsr } from "@mui/material"
 import useGridBreakpoints from "../useGridBreakpoints"
 import Markdown from "../ui/Markdown"
 import DeviceSpecificationSource from "./DeviceSpecificationSource"
@@ -15,13 +15,15 @@ import { semverCmp } from "../semver"
 import DeviceSpecificationList from "./DeviceSpecificationList"
 import StructuredData from "../ui/StructuredData"
 import useDeviceSpecifications from "../devices/useDeviceSpecifications"
-import { Button, Link } from "gatsby-theme-material-ui"
+import { Link } from "gatsby-theme-material-ui"
 import { arrayify, uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
 import Alert from "../ui/Alert"
 import GithubRepositoryCard from "../github/GithubRepositoryCard"
 import { deviceCatalog } from "../../../jacdac-ts/src/jdom/catalog"
 import DeviceSpecificationCard from "./DeviceSpecificationCard"
 import useChange from "../../jacdac/useChange"
+import Suspense from "../ui/Suspense"
+const Enclosure = lazy(() => import("../enclosure/Enclosure"))
 
 function DeviceStructuredData(props: { device: jdspec.DeviceSpec }) {
     const { device } = props
@@ -74,8 +76,9 @@ export default function DeviceSpecification(props: {
         firmwareSource,
         link,
         storeLink,
-        connector = "edgeIndependent",
+        connector = "edgeConsumer",
         devices,
+        shape,
     } = device
     const makeCodeRepos = arrayify(makeCodeRepo)
     const storeLinks = arrayify(storeLink)
@@ -297,6 +300,17 @@ export default function DeviceSpecification(props: {
                             </li>
                         ))}
                     </ul>
+                </>
+            )}
+            {shape && (
+                <>
+                    <h3>PCB Form Factor</h3>
+                    Generate a 3D-printable enclosure for this module.
+                    <NoSsr>
+                        <Suspense>
+                            <Enclosure shape={shape} />
+                        </Suspense>
+                    </NoSsr>
                 </>
             )}
             {(hardwareDesign || firmwareSource) && (

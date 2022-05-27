@@ -1,0 +1,31 @@
+import React, { lazy } from "react"
+import { useMemo } from "react"
+import type {
+    EnclosureModel,
+    EnclosureOptions,
+} from "../../workers/cad/dist/node_modules/enclosurecad"
+import Alert from "../ui/Alert"
+import Suspense from "../ui/Suspense"
+import { DEFAULT_OPTIONS, shapeToEC30 } from "./ec30"
+
+const EnclosureGenerator = lazy(() => import("../enclosure/EnclosureGenerator"))
+
+export default function Enclosure(props: {
+    shape: jdspec.Shape
+    depth?: number
+}) {
+    const { shape, depth } = props
+    const options = DEFAULT_OPTIONS
+    const model: EnclosureModel = useMemo(
+        () => shapeToEC30(shape, depth),
+        [shape, depth]
+    )
+    if (!model)
+        return <Alert severity="info">PCB form factor is not supported.</Alert>
+
+    return (
+        <Suspense>
+            <EnclosureGenerator model={model} options={options} />
+        </Suspense>
+    )
+}
