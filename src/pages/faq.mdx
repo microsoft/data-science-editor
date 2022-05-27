@@ -9,4 +9,23 @@ hideBreadcrumbs: true
 
 ## Can I use Jacdac without hardware?
 
+Yes! Jacdac provides web-based simulators for most of its [services](/services),
+and has been integrated with web-based programming environments like [MakeCode](/clients/makecode).
 
+## Existing connector/cable/protocols
+
+### Why did you design your own connector/cable/protocol?
+
+Good question! We experiemented with existing technology and
+found that it wasn't low-cost, reliable, robust, and dynamic enough to 
+provide the ``plug-and-play'' experience we were after. USB is great,
+but is high cost and limited by its host-peripheral design.
+
+### Why did you abandon using audio jacks and cables?
+
+The main issue with audio jack cables is that they are not designed to carry much power (Jacdac cables are rated at 1A). You get different voltage drop depending on what cable a user bought. This is a problem is you want to run a small servo or even a few neopixels on a module.
+Another issue is that the connector often short while plugging-in and out which may cut the power to your entire bus, resetting everything. Not a great end-user experience. There is also a risk users will plug Jacdac to their headphones, possibly burning them.
+
+### Why didn't you just use Qwiic connectors/cables and I2C?
+
+The Qwiic cables have to be really short (Jacdac cables can be a few meters) and are not designed for easy plug-in and out thousands of times. Also, I2C devices are not standardized, meaning you need a new driver in your software environment for every single accelerometer. Finally, I2C doesn't let you have multiple instances of the same device because of address collisions.
