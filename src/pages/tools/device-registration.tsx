@@ -598,7 +598,7 @@ export default function DeviceRegistration() {
                                 No PCB edge connector
                             </MenuItem>
                             <MenuItem value="edgeIndependent">
-                                PCB edge connector, independently powered.
+                                PCB edge connector, independently powered
                             </MenuItem>
                             <MenuItem value="edgeConsumer">
                                 PCB edge connector, consumer - power always
@@ -618,6 +618,9 @@ export default function DeviceRegistration() {
                             <MenuItem value="edgeHighCurrentProviderConsumer">
                                 PCB edge connector, high current provider or
                                 consumer
+                            </MenuItem>
+                            <MenuItem value="edgePassive">
+                                PCB edge connector, passive - passthrough for power and signal
                             </MenuItem>
                         </Select>
                         <Typography variant="caption" component="div">

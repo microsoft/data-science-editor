@@ -16,7 +16,7 @@ import DeviceSpecificationList from "./DeviceSpecificationList"
 import StructuredData from "../ui/StructuredData"
 import useDeviceSpecifications from "../devices/useDeviceSpecifications"
 import { Button, Link } from "gatsby-theme-material-ui"
-import { uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
+import { arrayify, uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
 import Alert from "../ui/Alert"
 import GithubRepositoryCard from "../github/GithubRepositoryCard"
 import { deviceCatalog } from "../../../jacdac-ts/src/jdom/catalog"
@@ -77,6 +77,7 @@ export default function DeviceSpecification(props: {
         connector = "edgeIndependent",
         devices,
     } = device
+    const makeCodeRepos = arrayify(makeCodeRepo)
     const { services } = device
     const specifications = useDeviceSpecifications()
     const gridBreakpoints = useGridBreakpoints()
@@ -254,15 +255,18 @@ export default function DeviceSpecification(props: {
                     <FirmwareCard slug={repo} />
                 </>
             )}
-            {makeCodeRepo && (
+            {!!makeCodeRepos?.length && (
                 <>
-                    <h3>MakeCode Extension</h3>
-                    <GithubRepositoryCard
-                        slug={makeCodeRepo}
-                        showDescription={true}
-                        showDependencies={true}
-                        showMakeCodeButton={true}
-                    />
+                    <h3>MakeCode</h3>
+                    {makeCodeRepos.map(repo => (
+                        <GithubRepositoryCard
+                            key={repo}
+                            slug={repo}
+                            showDescription={true}
+                            showDependencies={true}
+                            showMakeCodeButton={true}
+                        />
+                    ))}
                 </>
             )}
             {!!firmwares && (
