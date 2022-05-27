@@ -32,7 +32,7 @@ export default function Samples() {
         "pelikhan/Tiny-bitLib/jacdac",
         "pelikhan/yahboom-microbit-led-jacdac/",
 
-        "pelikhan/pxt-k-bit/jacdac",
+        "mworkfun/pxt-k-bit/jacdac",
         "pelikhan/keystudio-relay-breakout-jacdac/",
 
         "pelikhan/pxt-dfrobot_maqueenplus_v20/jacdac",
