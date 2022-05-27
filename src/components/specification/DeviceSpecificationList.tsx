@@ -59,7 +59,10 @@ export default function DeviceSpecificationList(props: {
         if (buyNow) r = r.filter(spec => !!spec.storeLink)
         if (hardwareDesign) r = r.filter(spec => spec.hardwareDesign)
         if (firmwareSources) r = r.filter(spec => spec.firmwareSource)
-        if (ec30) r = r.filter(spec => isEC30(spec.shape))
+        if (ec30)
+            r = r.filter(
+                spec => isEC30(spec.shape) || spec.tags?.indexOf("ec30") > -1
+            )
         if (makeCode)
             r = r.filter(spec => !!arrayify(spec.makeCodeRepo)?.length)
         if (transports?.length)

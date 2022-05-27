@@ -58,6 +58,11 @@ const GithubPullRequestButton = lazy(
     () => import("../../components/buttons/GithubPullRequestButton")
 )
 
+const sides = {
+    l: "left",
+    r: "right",
+}
+
 function CompanySelect(props: {
     error?: string
     onValueChange?: (name: string) => void
@@ -252,7 +257,9 @@ export default function DeviceRegistration() {
         device.storeLink = ev.target.value?.trim()
         updateDevice()
     }
-    const handleShapeChange = (ev: SelectChangeEvent<jdspec.JacdacConnectorType>) => {
+    const handleShapeChange = (
+        ev: SelectChangeEvent<jdspec.JacdacConnectorType>
+    ) => {
         device.shape = ev.target.value?.trim() as jdspec.ShapeWellKnown
         updateDevice()
     }
@@ -653,38 +660,31 @@ export default function DeviceRegistration() {
                             onChange={handleShapeChange}
                         >
                             <MenuItem value="">Unknown shape</MenuItem>
-                            <MenuItem value="ec30_2x2_l">
-                                EC30 grid, 20mm x 20mm, Jacdac edge connector on
-                                the left
-                            </MenuItem>
-                            <MenuItem value="ec30_2x2_lr">
-                                EC30 grid, 20mm x 20mm, Jacdac edge connector on
-                                the left and right
-                            </MenuItem>
-                            <MenuItem value="ec30_3x2_l">
-                                EC30 grid, 30mm x 20mm, Jacdac edge connector on
-                                the left
-                            </MenuItem>
-                            <MenuItem value="ec30_3x2_lr">
-                                EC30 grid, 30mm x 20mm, Jacdac edge connector on
-                                the left and right
-                            </MenuItem>
-                            <MenuItem value="ec30_3x3_l">
-                                EC30 grid, 30mm x 30mm, Jacdac edge connector on
-                                the left
-                            </MenuItem>
-                            <MenuItem value="ec30_3x3_lr">
-                                EC30 grid, 30mm x 30mm, Jacdac edge connector on
-                                the left and right
-                            </MenuItem>
-                            <MenuItem value="ec30_5x2_l">
-                                EC30 grid, 50mm x 30mm, Jacdac edge connector on
-                                the left
-                            </MenuItem>
-                            <MenuItem value="ec30_5x2_lr">
-                                EC30 grid, 50mm x 30mm, Jacdac edge connector on
-                                the left and right
-                            </MenuItem>
+                            {[
+                                "ec30_2x2_l",
+                                "ec30_2x2_lr",
+                                "ec30_3x2_l",
+                                "ec30_3x2_lr",
+                                "ec30_3x3_l",
+                                "ec30_3x3_lr",
+                                "ec30_4x2_l",
+                                "ec30_4x2_lr",
+                                "ec30_4x3_lr",
+                                "ec30_5x2_l",
+                                "ec30_5x2_lr",
+                                "ec30_5x3_lr",
+                                "ec30_6x2_l",
+                                "ec30_6x2_lr",
+                                "ec30_6x3_lr",
+                            ]
+                                .map(s => /^ec30_(\d+)x(\d+)_([lr]+)$/.exec(s))
+                                .map(([n, x, y, lr]) => (
+                                    <MenuItem key={n} value={n}>
+                                        EC30 grid, {x}0mm x {y}0mm, Jacdac edge
+                                        connector on the{" "}
+                                        {lr.split("").map(side => sides[side]).join(", ")}
+                                    </MenuItem>
+                                ))}
                         </Select>
                         <Typography variant="caption" component="div">
                             Choose the form factor of the PCB if applicable.
