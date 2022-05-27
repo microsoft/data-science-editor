@@ -5,27 +5,36 @@ order: 0
 
 # User guide
 
-## Mixing simulator and physical modules
+Please remember that Jacdac only works with the micro:bit V2, though you
+can create programs that use the micro:bit and Jacdac simulators without any hardware.
 
-You can use a mix of simulators or physical services to work on your code.
+## Jacdac simulators and physical modules
 
-In this example, we remove the button simulator and connect a physical keyboard cap module which implements the button service.
-Automatically, the Micro:bit simulator connects to the physical button and uses it in the code.
+You can use a mix of Jacdac simulators or actual Jacdac modules when programming
+the micro:bit. The micro:bit simulator can access physical Jacdac modules connected
+to the micro:bit V2 (via a [Jacdaptor](/devices/microbit-educational-foundation/microbitv2/)) 
+provided you also have connected MakeCode 
+to the micro:bit [using WebUSB](https://makecode.microbit.org/device/usb/webusb). 
+
+In the example below, we remove the button simulator and 
+connect a physical keycap module which implements the button service.
+The Micro:bit simulator connects to the physical button and uses it in the code.
 
 ![Hardware button show large and small heart when pressed](./hardwareheartbeat.gif)
 
 ## Dongle mode: "Only one brain"
 
 To avoid having the micro:bit simulator **and** the physical micro:bit running code **at the same time**,
-Jacdac automatically puts one of the two micro:bit in a **dongle mode** when restarting the simulator or downloading code into the physical device.
-In dongle mode, the Jacdac messages are transmitted by the MakeCode code is not executed.
+Jacdac automatically puts one of the two micro:bits in a **dongle mode** when restarting the simulator or 
+resetting the physical device,
+or downloading code into the physical device (which ends with a a reset of the device).
+The micro:bit in dongle mode does not execute the user's program.
 
 -   in dongle mode, the micro:bit scrolls `JACDAC DONGLE MODE PRESS A TO RESET`
 -   to exit dongle mode, **press any button or reset** - either the simulator or the physical device
 
-![Dongle icon on micro:bit screen](./proxyscreen.png)
-
--   when a physical micro:bit restarts, the simulator micro:bit enters dongle mode.
+A simulator restart or device reset changes dongle mode as follows:
+-   when a physical micro:bit resets, the simulator micro:bit enters dongle mode.
 -   when the simulator micro:bit restarts, the physical micro:bit enters dongle mode.
 -   in dongle mode, the physical micro:bit still transmits the Jacdac packets, so you can see physical services, but does not execute MakeCode code.
 
@@ -42,7 +51,7 @@ modules.button1.onEvent(jacdac.ButtonEvent.Up, function () {
 })
 ```
 
-However, if you want to create a program with multiple buttons, you would need to define additional roles in your program.
+However, if you want to create a program with multiple buttons, you will need to define additional roles in your program.
 
 ### Blocks editor
 
@@ -57,8 +66,9 @@ Once reloaded, you should be able to select your roles in the block drop downs.
 
 ### JavaScript editor
 
-Unfortunately, the role editor is not yet available in the JavaScript view. So you are left with 2 choices, go to blocks, add roles, go back to JavaScript.
-Or... add them manually by instantiating clients.
+Unfortunately, the role editor is not yet available in the JavaScript view. So you are left with two choices
+1. go to blocks, add roles, go back to JavaScript
+2. add the roles manually by instantiating clients, as shown below
 
 ```
 export const dotMatrix2 = new modules.DotMatrixClient("dot Matrix2")
@@ -94,3 +104,8 @@ Sometimes, you may have to update the Jacdac extension used in your project. Thi
 -   That's it!
 
 ![Updating references](./update.gif)
+
+## What's next?
+
+-   [Extensions](/clients/makecode/extensions/)
+-   [Projects](/clients/makecode/projects/)
