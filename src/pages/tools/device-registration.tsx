@@ -141,6 +141,7 @@ export default function DeviceRegistration() {
     const firmwareSourceId = id + "-hwsource"
     const storeLinkId = id + "-store"
     const connectorId = id + "-connector"
+    const shapeId = id + "-shape"
     const specifications = useDeviceSpecifications({
         includeDeprecated: true,
         includeExperimental: true,
@@ -251,6 +252,10 @@ export default function DeviceRegistration() {
         device.storeLink = ev.target.value?.trim()
         updateDevice()
     }
+    const handleShapeChange = (ev: ChangeEvent<HTMLInputElement>) => {
+        device.shape = ev.target.value?.trim()
+        updateDevice()
+    }
     const handleFirmwareAddClick = (
         event: React.MouseEvent<HTMLButtonElement>
     ) => {
@@ -290,9 +295,9 @@ export default function DeviceRegistration() {
         updateDevice()
     }
     const handleConnectorChanged = (
-        ev: SelectChangeEvent<jdspec.ConnectorType>
+        ev: SelectChangeEvent<jdspec.JacdacConnectorType>
     ) => {
-        device.connector = ev.target.value as jdspec.ConnectorType
+        device.connector = ev.target.value as jdspec.JacdacConnectorType
         if (device.connector === "edgeConsumer") delete device.connector
         updateDevice()
     }
@@ -620,16 +625,69 @@ export default function DeviceRegistration() {
                                 consumer
                             </MenuItem>
                             <MenuItem value="edgePassive">
-                                PCB edge connector, passive - passthrough for power and signal
+                                PCB edge connector, passive - passthrough for
+                                power and signal
                             </MenuItem>
                         </Select>
                         <Typography variant="caption" component="div">
                             Choose the type of Jacdac connector present on the
                             hardware, and the type of type of{" "}
-                            <Link target="_blank" to="/ddk/design/#power-supply-sharing">
+                            <Link
+                                target="_blank"
+                                to="/ddk/design/#power-supply-sharing"
+                            >
                                 power supply sharing
                             </Link>
                             .
+                        </Typography>
+                    </PaperBox>
+                </Grid>
+                <Grid item xs={12}>
+                    <PaperBox elevation={1}>
+                        <Typography color="inherit">PCB Form factor</Typography>
+                        <Select
+                            id={shapeId}
+                            fullWidth={true}
+                            size="small"
+                            value={device.shape || ""}
+                            onChange={handleConnectorChanged}
+                        >
+                            <MenuItem value="">Unknown shape</MenuItem>
+                            <MenuItem value="ec30_2x2_l">
+                                EC30 grid, 20mm x 20mm, Jacdac edge connector on
+                                the left
+                            </MenuItem>
+                            <MenuItem value="ec30_2x2_lr">
+                                EC30 grid, 20mm x 20mm, Jacdac edge connector on
+                                the left and right
+                            </MenuItem>
+                            <MenuItem value="ec30_3x2_l">
+                                EC30 grid, 30mm x 20mm, Jacdac edge connector on
+                                the left
+                            </MenuItem>
+                            <MenuItem value="ec30_3x2_lr">
+                                EC30 grid, 30mm x 20mm, Jacdac edge connector on
+                                the left and right
+                            </MenuItem>
+                            <MenuItem value="ec30_3x3_l">
+                                EC30 grid, 30mm x 30mm, Jacdac edge connector on
+                                the left
+                            </MenuItem>
+                            <MenuItem value="ec30_3x3_lr">
+                                EC30 grid, 30mm x 30mm, Jacdac edge connector on
+                                the left and right
+                            </MenuItem>
+                            <MenuItem value="ec30_5x2_l">
+                                EC30 grid, 50mm x 30mm, Jacdac edge connector on
+                                the left
+                            </MenuItem>
+                            <MenuItem value="ec30_5x2_lr">
+                                EC30 grid, 50mm x 30mm, Jacdac edge connector on
+                                the left and right
+                            </MenuItem>
+                        </Select>
+                        <Typography variant="caption" component="div">
+                            Choose the form factor of the PCB if applicable.
                         </Typography>
                     </PaperBox>
                 </Grid>

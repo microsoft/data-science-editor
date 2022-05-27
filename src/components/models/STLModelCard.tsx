@@ -1,4 +1,4 @@
-import React, { lazy } from "react"
+import React from "react"
 
 import {
     Button,
@@ -8,10 +8,8 @@ import {
     CardMedia,
     NoSsr,
 } from "@mui/material"
-import Suspense from "../ui/Suspense"
-
-const ModelViewer = lazy(() => import("../models/ModelViewer"))
-const STLModel = lazy(() => import("../models/STLModel"))
+import STLModel from "../models/STLModel"
+import ModelViewer from "../models/ModelViewer"
 
 export default function STLModelCard(props: {
     name: string
@@ -25,18 +23,16 @@ export default function STLModelCard(props: {
             <Card>
                 <CardHeader title={fn} />
                 <CardMedia>
-                    <Suspense>
-                        <ModelViewer
-                            responsive={true}
-                            style={{
-                                position: "relative",
-                                height: "20rem",
-                                width: "100%",
-                            }}
-                        >
-                            <STLModel url={url} color={color} />
-                        </ModelViewer>
-                    </Suspense>
+                    <ModelViewer
+                        responsive={true}
+                        style={{
+                            position: "relative",
+                            height: "20rem",
+                            width: "100%",
+                        }}
+                    >
+                        <STLModel url={url} color={color} />
+                    </ModelViewer>
                 </CardMedia>
                 <CardActions>
                     <Button href={url} variant="outlined" download={fn}>
