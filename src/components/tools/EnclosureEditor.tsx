@@ -13,102 +13,11 @@ import { useId } from "react"
 import SliderWithLabel from "../ui/SliderWithLabel"
 import SwitchWithLabel from "../ui/SwitchWithLabel"
 import { Flags } from "../../../jacdac-ts/src/jdom/flags"
-const EnclosureGenerator = lazy(() => import("./EnclosureGenerator"))
+import { DEFAULT_OPTIONS, generateEC30EnclosureModel } from "../enclosure/ec30"
+const EnclosureGenerator = lazy(() => import("../enclosure/EnclosureGenerator"))
 
 const STORAGE_KEY = "jacdac:enclosureeditorkey_source"
 const OPTIONS_STORAGE_KEY = "jacdac:enclosureeditorkey_options"
-const DEFAULT_OPTIONS: EnclosureOptions = {
-    legs: {
-        type: "well",
-    },
-    cover: {},
-}
-
-function generateGridEnclosureModel(
-    gridWidth: number,
-    gridHeight: number,
-    depth = 6
-): EnclosureModel {
-    const width = gridWidth * 10
-    const height = gridHeight * 10
-    const c = 8
-    const boxWidth = width + c
-    const boxHeight = height + c
-    return {
-        name: `${width}x${height}`,
-        box: {
-            width: boxWidth,
-            height: boxHeight,
-            depth,
-        },
-        rings: [
-            {
-                x: width >> 1,
-                y: height >> 1,
-            },
-            {
-                x: width >> 1,
-                y: -(height >> 1),
-            },
-            {
-                x: -(width >> 1),
-                y: -(height >> 1),
-            },
-            {
-                x: -(width >> 1),
-                y: height >> 1,
-            },
-        ],
-        components: [
-            {
-                x: -(width >> 1) + 1.5,
-                y: 0,
-                type: "led",
-            },
-            {
-                x: (width >> 1) - 1.5,
-                y: 0,
-                type: "led",
-            },
-            {
-                x: 0,
-                y: -(height >> 1) + 1.5,
-                type: "led",
-            },
-            {
-                x: 0,
-                y: (height >> 1) - 1.5,
-                type: "led",
-            },
-        ],
-        connectors: [
-            {
-                x: 0,
-                y: -(width >> 1) + 2,
-                dir: "bottom",
-                type: "jacdac",
-            },
-            {
-                x: 0,
-                y: (width >> 1) - 2,
-                dir: "top",
-                type: "jacdac",
-            },
-            {
-                x: -(width >> 1) + 2,
-                y: 0,
-                dir: "left",
-                type: "jacdac",
-            },
-            {
-                x: (width >> 1) - 2,
-                y: 0,
-                dir: "right",
-                type: "jacdac",
-            },
-        ],
-    }
-}
 
 function EnclosureDesign(props: {
     setSource: (src: string) => void
@@ -142,7 +51,7 @@ function EnclosureDesign(props: {
     }
 
     useEffect(() => {
-        const model = generateGridEnclosureModel(gridWidth, gridHeight, depth)
+        const model = generateEC30EnclosureModel(gridWidth, gridHeight, depth)
         const source = JSON.stringify(model, null, 4)
         setSource(source)
     }, [gridWidth, gridHeight, depth])
@@ -206,7 +115,7 @@ function EnclosureDesign(props: {
 export default function EnclosureEditor() {
     const [source, setSource] = useLocalStorage(
         STORAGE_KEY,
-        JSON.stringify(generateGridEnclosureModel(2, 2), null, 4)
+        JSON.stringify(generateEC30EnclosureModel(2, 2), null, 4)
     )
     const [options, setOptions] = useLocalStorage(
         OPTIONS_STORAGE_KEY,
@@ -229,7 +138,7 @@ export default function EnclosureEditor() {
         }
     }, [options])
     const handleRefreshSource = () =>
-        setSource(JSON.stringify(generateGridEnclosureModel(2, 2), null, 4))
+        setSource(JSON.stringify(generateEC30EnclosureModel(2, 2), null, 4))
     const handleRefreshOptions = () =>
         setOptions(JSON.stringify(DEFAULT_OPTIONS, null, 4))
     return (
@@ -238,9 +147,8 @@ export default function EnclosureEditor() {
             <Grid item xs={12}>
                 <Suspense>
                     <EnclosureGenerator
-                        module={enclosure}
+                        model={enclosure}
                         options={enclosureOptions}
-                        color="#888"
                     />
                 </Suspense>
             </Grid>

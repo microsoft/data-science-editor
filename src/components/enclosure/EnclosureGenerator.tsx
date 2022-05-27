@@ -15,11 +15,11 @@ import { Alert } from "@mui/material"
 const STLModelCard = lazy(() => import("../models/STLModelCard"))
 
 export default function EnclosureGenerator(props: {
-    module: EnclosureModel
+    model: EnclosureModel
     options?: EnclosureOptions
     color?: string
 }) {
-    const { color, module, options } = props
+    const { color = "#888", model, options } = props
     const [working, setWorking] = useState(false)
     const [files, setFiles] = useState<{ name: string; url: string }[]>()
     const gridBreakpoints = useGridBreakpoints(files?.length)
@@ -30,7 +30,7 @@ export default function EnclosureGenerator(props: {
         try {
             setStlError(undefined)
             setWorking(true)
-            const { stls: files, error } = await convertToSTL(module, options)
+            const { stls: files, error } = await convertToSTL(model, options)
             if (!mounted()) return
 
             const newFiles = files?.map(({ name, blob }) => ({
@@ -47,10 +47,6 @@ export default function EnclosureGenerator(props: {
         () => () => files?.forEach(({ url }) => URL.revokeObjectURL(url)),
         [files]
     )
-
-    useEffect(() => {
-        if (module) updateUrl()
-    }, [])
 
     const handleClick = () => updateUrl()
     return (
