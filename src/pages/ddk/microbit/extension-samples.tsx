@@ -22,7 +22,7 @@ export default function Samples() {
 
         "pelikhan/pxt-gamer-bit/jacdac",
 
-        "pelikhan/monkmakes-7-segment/jacdac",
+        "monkmakes/monkmakes-7-segment/jacdac",
 
         "pelikhan/pxt-envirobit/jacdac",
         "pelikhan/pxt-weather-bit/jacdac",
