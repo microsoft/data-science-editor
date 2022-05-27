@@ -252,8 +252,8 @@ export default function DeviceRegistration() {
         device.storeLink = ev.target.value?.trim()
         updateDevice()
     }
-    const handleShapeChange = (ev: ChangeEvent<HTMLInputElement>) => {
-        device.shape = ev.target.value?.trim()
+    const handleShapeChange = (ev: SelectChangeEvent<jdspec.JacdacConnectorType>) => {
+        device.shape = ev.target.value?.trim() as jdspec.ShapeWellKnown
         updateDevice()
     }
     const handleFirmwareAddClick = (
@@ -650,7 +650,7 @@ export default function DeviceRegistration() {
                             fullWidth={true}
                             size="small"
                             value={device.shape || ""}
-                            onChange={handleConnectorChanged}
+                            onChange={handleShapeChange}
                         >
                             <MenuItem value="">Unknown shape</MenuItem>
                             <MenuItem value="ec30_2x2_l">
