@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/media-has-caption */
-import { Card, CardContent, CardHeader, CardMedia } from "@mui/material"
+import { Card, CardContent, CardHeader, CardMedia, Grid } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import React, { ReactNode, useRef, useState } from "react"
 import SettingsIcon from "@mui/icons-material/Settings"
@@ -27,7 +27,6 @@ const Root = styled("div")(() => ({
     [`& .${classes.card}`]: {
         "& .hostedcontainer": {
             position: "relative",
-            width: "40vw",
         },
         "& video": {
             border: "none",
@@ -51,8 +50,8 @@ export default function DraggableCard(props: {
         children,
         settings,
         alert,
-        minimizeWidth = "20vh",
-        fullWidth = "80vh",
+        minimizeWidth = "clamp(10rem, 20vw, 20vh)",
+        fullWidth = "clamp(20rem, 80vh, 80vw)",
     } = props
     const [settingsOpen, setSettingsOpen] = useState(false)
     const [minimize, setMinimize] = useState(true)
@@ -78,37 +77,42 @@ export default function DraggableCard(props: {
                         <CardHeader
                             title={settingsOpen && settings}
                             action={
-                                <>
-                                    <IconButtonWithTooltip
-                                        size="small"
-                                        onClick={handleMinimize}
-                                        title={
-                                            minimize ? "Maximize" : "Minimize"
-                                        }
-                                    >
-                                        {minimize ? (
-                                            <MaximizeIcon />
-                                        ) : (
-                                            <MinimizeIcon />
-                                        )}
-                                    </IconButtonWithTooltip>
-                                    {settings && (
+                                <Grid container spacing={1} direction="row">
+                                    <Grid item>
                                         <IconButtonWithTooltip
-                                            size="small"
-                                            onClick={handleSettings}
-                                            title="Settings"
+                                            onClick={handleMinimize}
+                                            title={
+                                                minimize
+                                                    ? "Maximize"
+                                                    : "Minimize"
+                                            }
                                         >
-                                            <SettingsIcon />
+                                            {minimize ? (
+                                                <MaximizeIcon />
+                                            ) : (
+                                                <MinimizeIcon />
+                                            )}
                                         </IconButtonWithTooltip>
+                                    </Grid>
+                                    {settings && (
+                                        <Grid item>
+                                            <IconButtonWithTooltip
+                                                onClick={handleSettings}
+                                                title="Settings"
+                                            >
+                                                <SettingsIcon />
+                                            </IconButtonWithTooltip>
+                                        </Grid>
                                     )}
-                                    <IconButtonWithTooltip
-                                        size="small"
-                                        onClick={handleClose}
-                                        title="Close"
-                                    >
-                                        <CloseIcon />
-                                    </IconButtonWithTooltip>
-                                </>
+                                    <Grid item>
+                                        <IconButtonWithTooltip
+                                            onClick={handleClose}
+                                            title="Close"
+                                        >
+                                            <CloseIcon />
+                                        </IconButtonWithTooltip>
+                                    </Grid>
+                                </Grid>
                             }
                         />
                         {alert && <CardContent>{alert}</CardContent>}
