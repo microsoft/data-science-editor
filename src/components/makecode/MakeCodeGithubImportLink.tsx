@@ -8,7 +8,7 @@ export default function MakeCodeGithubImportLink(props: { slug: string }) {
     const importUrl = `https://makecode.microbit.org/beta#pub:github:${slug}`
 
     return (
-        <Link href={importUrl} target="blank">
+        <Link href={importUrl} target="blank" underline="hover" title={"open extension in MakeCode"}>
             <Typography component="span" variant="h5">
                 {slug}
             </Typography>
