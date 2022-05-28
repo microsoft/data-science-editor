@@ -4,9 +4,8 @@ import GithubRepositoryList from "../../../components/github/GithubRespositoryLi
 export default function Samples() {
     const repos = [
         "1010Technologies/pxt-makerbit-motor/jacdac",
-
-        "pelikhan/pxt-makerbit-touch/jacdac",
-        "pelikhan/pxt-makerbit-lcd1602/jacdac",
+        "1010Technologies/pxt-makerbit-touch/jacdac",
+        "1010Technologies/pxt-makerbit-lcd1602/jacdac",
 
         "pelikhan/pxt-kitronik-air-quality/jacdac",
         "pelikhan/pxt-kitronik-stopbit/jacdac",
