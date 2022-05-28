@@ -67,9 +67,7 @@ export default function ServiceMarkdown(props: {
             )}
 
             <h2>Registered Devices</h2>
-            <DeviceSpecificationList
-                requiredServiceClasses={[classIdentifier]}
-            />
+            <DeviceSpecificationList serviceClass={classIdentifier} />
 
             <h2> See Also</h2>
             <ul>

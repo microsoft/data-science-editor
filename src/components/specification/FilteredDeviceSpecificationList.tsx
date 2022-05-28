@@ -28,8 +28,6 @@ export default function FilteredDeviceSpecificationList(props: {
     const [makeCode, setMakeCode] = useState(false)
     const [ec30, setEC30] = useState(false)
 
-    const requiredServiceClasses = !isNaN(serviceClass) && [serviceClass]
-
     const tags = useChange(deviceCatalog, _ =>
         unique(
             arrayConcatMany(
@@ -157,7 +155,7 @@ export default function FilteredDeviceSpecificationList(props: {
                 makeCode={makeCode}
                 firmwareSources={firmwareSources}
                 hardwareDesign={hardwareDesign}
-                requiredServiceClasses={requiredServiceClasses}
+                serviceClass={serviceClass}
                 transports={transports}
                 tags={selectedTags}
                 ec30={ec30}

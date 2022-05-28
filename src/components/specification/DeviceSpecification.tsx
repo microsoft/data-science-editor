@@ -179,7 +179,7 @@ export default function DeviceSpecification(props: {
                 <>
                     <h3>Buy now</h3>
                     <p>
-                        Here is a list of resllers where you can buy this
+                        Here is a list of resellers where you can buy this
                         device.
                     </p>
                     <ul>

@@ -3,16 +3,18 @@ import { Grid, Typography } from "@mui/material"
 import { escapeDeviceIdentifier } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import useDeviceSpecifications from "../devices/useDeviceSpecifications"
 import useGridBreakpoints from "../useGridBreakpoints"
-import { serviceName } from "../../../jacdac-ts/src/jdom/pretty"
+import { serviceName as renderServiceName } from "../../../jacdac-ts/src/jdom/pretty"
 import DeviceSpecificationCard from "./DeviceSpecificationCard"
 import { arrayify } from "../../../jacdac-ts/src/jdom/utils"
 import { isEC30 } from "../enclosure/ec30"
+import { serviceSpecificationFromName } from "../../../jacdac-ts/src/jdom/spec"
 
 export default function DeviceSpecificationList(props: {
     query?: string
     count?: number
     company?: string
-    requiredServiceClasses?: number[]
+    serviceClass?: number
+    serviceName?: string
     devices?: jdspec.DeviceSpec[]
     updates?: boolean
     buyNow?: boolean
@@ -26,7 +28,8 @@ export default function DeviceSpecificationList(props: {
     const {
         query,
         count,
-        requiredServiceClasses,
+        serviceClass,
+        serviceName,
         company,
         devices,
         updates,
@@ -47,14 +50,15 @@ export default function DeviceSpecificationList(props: {
                 escapeDeviceIdentifier(spec.company).startsWith(lc)
             )
         }
-        if (requiredServiceClasses)
-            r = r.filter(
-                spec =>
-                    spec.services.length &&
-                    requiredServiceClasses.every(
-                        srv => spec.services.indexOf(srv) > -1
-                    )
-            )
+        if (!isNaN(serviceClass))
+            r = r.filter(spec => spec.services?.indexOf(serviceClass) - 1)
+        if (serviceName) {
+            const si = serviceSpecificationFromName(serviceName)
+            if (si)
+                r = r.filter(
+                    spec => spec.services?.indexOf(si.classIdentifier) > -1
+                )
+        }
         if (updates) r = r.filter(spec => spec.repo)
         if (buyNow) r = r.filter(spec => !!spec.storeLink)
         if (hardwareDesign) r = r.filter(spec => spec.hardwareDesign)
@@ -77,7 +81,7 @@ export default function DeviceSpecificationList(props: {
                     spec.company,
                     ...(spec.productIdentifiers || []).map(p => p.toString(16)),
                     ...spec.services.map(p => p.toString(16)),
-                    ...spec.services.map(srv => serviceName(srv)),
+                    ...spec.services.map(srv => renderServiceName(srv)),
                 ].some(s => s?.toLowerCase()?.indexOf(query.toLowerCase()) > -1)
             )
         r.sort(
@@ -89,7 +93,8 @@ export default function DeviceSpecificationList(props: {
         return r
     }, [
         query,
-        requiredServiceClasses,
+        serviceClass,
+        serviceName,
         count,
         company,
         JSON.stringify(devices?.map(d => d.id)),

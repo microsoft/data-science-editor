@@ -20,6 +20,7 @@ const TraceList = lazy(() => import("./trace/TraceList"))
 const SpecificationUnitList = lazy(() => import("./SpecificationUnitList"))
 const DeviceImage = lazy(() => import("./devices/DeviceImage"))
 const YouTubeButton = lazy(() => import("./youtube/YouTubeButton"))
+const DeviceSpecificationList = lazy(() => import("./specification/DeviceSpecificationList"))
 
 export default function useMdxComponents() {
     const theme = useTheme()
@@ -91,6 +92,11 @@ export default function useMdxComponents() {
                     <YouTubeButton {...props} />
                 </Suspense>
             ),
+            DeviceSpecificationList: props => (
+                <Suspense>
+                    <DeviceSpecificationList {...props}/>
+                </Suspense>
+            )
         }),
         []
     )
