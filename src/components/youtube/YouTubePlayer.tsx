@@ -1,34 +1,34 @@
-import React, { CSSProperties, useContext, useId } from "react"
+import React, { CSSProperties, lazy, useContext } from "react"
 import YouTubeContext from "./YouTubeContext"
-import YouTube from "react-youtube"
 import DraggableCard from "../ui/DraggableCard"
+import PlayCircleIcon from "@mui/icons-material/PlayCircle"
+import Suspense from "../ui/Suspense"
+const ReactPlayer = lazy(() => import("react-player/lazy"))
 
-const opts = {
-    height: "100%",
-    width: "100%",
-    playerVars: {
-        // https://developers.google.com/youtube/player_parameters
-        // don't auto play, really
-        autoplay: 0,
-        iv_load_policy: 3,
-        modestbranding: 1,
-        origin: `https://microsoft.github.io/`,
-        rel: 0,
-    },
-}
 const style: CSSProperties = {
     aspectRatio: "16 /9",
 }
 
 export default function YouTubePlayer() {
     const { videoId, setVideoId } = useContext(YouTubeContext)
-    const id = useId()
 
+    const url = `https://www.youtube.com/watch?v=${videoId}`
     const handleClose = () => setVideoId(undefined)
 
     return (
         <DraggableCard onClose={handleClose}>
-            <YouTube opts={opts} style={style} videoId={videoId} id={id} />
+            <Suspense>
+                <ReactPlayer
+                    playIcon={<PlayCircleIcon />}
+                    pip={false}
+                    playsinline={true}
+                    style={style}
+                    controls={true}
+                    url={url}
+                    width="100%"
+                    height="100%"
+                />
+            </Suspense>
         </DraggableCard>
     )
 }
