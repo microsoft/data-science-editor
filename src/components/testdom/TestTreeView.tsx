@@ -196,7 +196,7 @@ export default function TestTreeView(props: {
         ...rest
     } = props
     const [expanded, setExpanded] = useState<string[]>(
-        defaultExpanded ? panel.descendants.map(d => d.id) : []
+        defaultExpanded ? panel.children.map(d => d.id) : []
     )
     const [selected, setSelected] = useState<string[]>([])
     const handleToggle = (

@@ -103,7 +103,7 @@ export default function FilteredDeviceSpecificationList(props: {
                 </Grid>
                 <Grid item>
                     <FilterChip
-                        label="EC30"
+                        label="ec30"
                         value={ec30}
                         onClick={handleEC30}
                     />
@@ -138,15 +138,17 @@ export default function FilteredDeviceSpecificationList(props: {
                         icon={<TransportIcon type="serial" />}
                     />
                 </Grid>
-                {tags?.map(tag => (
-                    <Grid item key={tag}>
-                        <FilterChip
-                            label={tag}
-                            value={selectedTags.indexOf(tag) > -1}
-                            onClick={handleSetSelectedTag(tag)}
-                        />
-                    </Grid>
-                ))}
+                {tags
+                    ?.filter(t => t !== "ec30")
+                    .map(tag => (
+                        <Grid item key={tag}>
+                            <FilterChip
+                                label={tag}
+                                value={selectedTags.indexOf(tag) > -1}
+                                onClick={handleSetSelectedTag(tag)}
+                            />
+                        </Grid>
+                    ))}
             </Grid>
             <DeviceSpecificationList
                 {...others}
