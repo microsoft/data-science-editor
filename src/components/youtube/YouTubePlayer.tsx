@@ -8,7 +8,12 @@ const opts = {
     width: "100%",
     playerVars: {
         // https://developers.google.com/youtube/player_parameters
-        autoplay: 1,
+        // don't auto play, really
+        autoplay: 0,
+        iv_load_policy: 3,
+        modestbranding: 1,
+        origin: `https://microsoft.github.io/`,
+        rel: 0,
     },
 }
 const style: CSSProperties = {

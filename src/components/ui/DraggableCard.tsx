@@ -7,7 +7,7 @@ import IconButtonWithTooltip from "./IconButtonWithTooltip"
 import CloseIcon from "@mui/icons-material/Close"
 import MinimizeIcon from "@mui/icons-material/Minimize"
 import MaximizeIcon from "@mui/icons-material/Maximize"
-import Draggable from "react-draggable"
+import Draggable, { DraggableProps } from "react-draggable"
 
 const PREFIX = "DraggableCard"
 
@@ -18,7 +18,7 @@ const classes = {
 
 const Root = styled("div")(() => ({
     [`& .${classes.cardContainer}`]: {
-        zIndex: 1101,
+        zIndex: 2101,
         position: "absolute",
         right: "2rem",
         bottom: "3rem",
@@ -64,8 +64,7 @@ export default function DraggableCard(props: {
         setSettingsOpen(!settingsOpen)
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const draggableProps: any = {
+    const draggableProps: Partial<DraggableProps> = {
         nodeRef,
     }
 
