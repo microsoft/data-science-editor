@@ -1,9 +1,6 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 import {
-    Card,
     CardContent,
-    CardHeader,
-    CardMedia,
     FormControlLabel,
     FormControl,
     MenuItem,
@@ -12,58 +9,23 @@ import {
     Checkbox,
     Grid,
 } from "@mui/material"
-import { styled } from "@mui/material/styles"
 import React, { useContext, useEffect, useRef, useState } from "react"
 import useLocalStorage from "../hooks/useLocalStorage"
 import useEffectAsync from "../useEffectAsync"
-import SettingsIcon from "@mui/icons-material/Settings"
 import IconButtonWithTooltip from "./IconButtonWithTooltip"
 import useMounted from "../hooks/useMounted"
-import CloseIcon from "@mui/icons-material/Close"
 import AppContext from "../AppContext"
 import { Alert } from "@mui/material"
 import FullscreenIcon from "@mui/icons-material/Fullscreen"
-import MinimizeIcon from "@mui/icons-material/Minimize"
-import MaximizeIcon from "@mui/icons-material/Maximize"
-import Draggable from "react-draggable"
-
-const PREFIX = "WebCam"
-
-const classes = {
-    cardContainer: `${PREFIX}cardContainer`,
-    card: `${PREFIX}card`,
-}
-
-const Root = styled("div")(() => ({
-    [`& .${classes.cardContainer}`]: {
-        zIndex: 1101,
-        position: "absolute",
-        right: "2rem",
-        bottom: "3rem",
-    },
-
-    [`& .${classes.card}`]: {
-        "& .hostedcontainer": {
-            position: "relative",
-            width: "40vw",
-        },
-        "& video": {
-            border: "none",
-            position: "relative",
-            width: "100%",
-            height: "100%",
-        },
-    },
-}))
+import DraggableCard from "./DraggableCard"
+import VideoSettingsIcon from "@mui/icons-material/VideoSettings"
 
 export default function WebCam() {
     const { setShowWebCam } = useContext(AppContext)
-    const [minimize, setMinimize] = useState(true)
     const [devices, setDevices] = useState<MediaDeviceInfo[]>()
     const [deviceId, setDeviceId] = useLocalStorage("webcam_deviceid", "")
     const [working, setWorking] = useState(false)
     const [flip, setFlip] = useLocalStorage("webcam_flip", false)
-    const nodeRef = useRef<HTMLSpanElement>()
     const streamRef = useRef<MediaStream>()
     const videoRef = useRef<HTMLVideoElement>()
     const [settingsOpen, setSettingsOpen] = useState(false)
@@ -73,7 +35,6 @@ export default function WebCam() {
         typeof document !== "undefined" && !!document.fullscreenEnabled
 
     const handleClose = async () => await setShowWebCam(false)
-    const handleMinimize = () => setMinimize(!minimize)
     const handleSettings = () => {
         console.debug(`toggle settings`, { settingsOpen })
         setSettingsOpen(!settingsOpen)
@@ -183,144 +144,82 @@ export default function WebCam() {
 
     // cleanup
     useEffect(() => stop, [])
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const draggableProps: any = {
-        nodeRef,
-    }
 
     return (
-        <Root>
-            <Draggable {...draggableProps}>
-                <span ref={nodeRef} className={classes.cardContainer}>
-                    <Card className={classes.card}>
-                        <CardHeader
-                            title={
-                                settingsOpen && (
-                                    <Grid container spacing={1}>
-                                        {devices && (
-                                            <Grid item>
-                                                <FormControl
-                                                    variant="outlined"
-                                                    size="small"
-                                                >
-                                                    <Select
-                                                        title="select a webcam"
-                                                        onChange={
-                                                            handleDeviceChange
-                                                        }
-                                                        value={deviceId || ""}
-                                                        disabled={working}
-                                                    >
-                                                        {devices?.map(
-                                                            ({
-                                                                deviceId,
-                                                                label,
-                                                            }) => (
-                                                                <MenuItem
-                                                                    key={
-                                                                        deviceId
-                                                                    }
-                                                                    value={
-                                                                        deviceId
-                                                                    }
-                                                                >
-                                                                    {label}
-                                                                </MenuItem>
-                                                            )
-                                                        )}
-                                                    </Select>
-                                                </FormControl>
-                                            </Grid>
-                                        )}
-                                        <Grid item>
-                                            <FormControlLabel
-                                                label="rotate 180"
-                                                control={
-                                                    <Checkbox
-                                                        checked={flip}
-                                                        size="small"
-                                                        onChange={
-                                                            handleFlipChange
-                                                        }
-                                                    />
-                                                }
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                )
-                            }
-                            action={
-                                <>
-                                    {supportsFullScreen && (
-                                        <IconButtonWithTooltip
-                                            size="small"
-                                            onClick={handleFullScreen}
-                                            title="full screen"
-                                            disabled={working}
-                                        >
-                                            <FullscreenIcon />
-                                        </IconButtonWithTooltip>
-                                    )}
-                                    <IconButtonWithTooltip
-                                        size="small"
-                                        onClick={handleMinimize}
-                                        disabled={working}
-                                        title={
-                                            minimize ? "Maximize" : "Minimize"
-                                        }
-                                    >
-                                        {minimize ? (
-                                            <MaximizeIcon />
-                                        ) : (
-                                            <MinimizeIcon />
-                                        )}
-                                    </IconButtonWithTooltip>
-                                    <IconButtonWithTooltip
-                                        size="small"
-                                        onClick={handleSettings}
-                                        title="Settings"
+        <DraggableCard
+            onClose={handleClose}
+            title={
+                settingsOpen && (
+                    <Grid container spacing={1}>
+                        {devices && (
+                            <Grid item>
+                                <FormControl variant="outlined" size="small">
+                                    <Select
+                                        title="select a webcam"
+                                        onChange={handleDeviceChange}
+                                        value={deviceId || ""}
                                         disabled={working}
                                     >
-                                        <SettingsIcon />
-                                    </IconButtonWithTooltip>
-                                    <IconButtonWithTooltip
-                                        size="small"
-                                        onClick={handleClose}
-                                        title="Close"
-                                    >
-                                        <CloseIcon />
-                                    </IconButtonWithTooltip>
-                                </>
-                            }
-                        />
-                        {working && (
-                            <CardContent>
-                                <Alert severity="info">
-                                    starting camera...
-                                </Alert>
-                            </CardContent>
+                                        {devices?.map(({ deviceId, label }) => (
+                                            <MenuItem
+                                                key={deviceId}
+                                                value={deviceId}
+                                            >
+                                                {label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
                         )}
-                        <CardMedia>
-                            <div
-                                className="hostedcontainer"
-                                style={{
-                                    width: !minimize ? "90vw" : undefined,
-                                    transform: flip
-                                        ? "rotate(180deg)"
-                                        : undefined,
-                                }}
+                        <Grid item>
+                            <FormControlLabel
+                                label="rotate 180"
+                                control={
+                                    <Checkbox
+                                        checked={flip}
+                                        size="small"
+                                        onChange={handleFlipChange}
+                                    />
+                                }
+                            />
+                        </Grid>
+                    </Grid>
+                )
+            }
+            actionItems={
+                <>
+                    {supportsFullScreen && (
+                        <Grid item>
+                            <IconButtonWithTooltip
+                                size="small"
+                                onClick={handleFullScreen}
+                                title="full screen"
+                                disabled={working}
                             >
-                                <video
-                                    autoPlay
-                                    playsInline
-                                    ref={videoRef}
-                                    title="webcam"
-                                />
-                            </div>
-                        </CardMedia>
-                    </Card>
-                </span>
-            </Draggable>
-        </Root>
+                                <FullscreenIcon />
+                            </IconButtonWithTooltip>
+                        </Grid>
+                    )}
+                    <Grid item>
+                        <IconButtonWithTooltip
+                            onClick={handleSettings}
+                            title="Settings"
+                        >
+                            <VideoSettingsIcon />
+                        </IconButtonWithTooltip>
+                    </Grid>
+                </>
+            }
+            alert={
+                working && (
+                    <CardContent>
+                        <Alert severity="info">starting camera...</Alert>
+                    </CardContent>
+                )
+            }
+        >
+            <video autoPlay playsInline ref={videoRef} title="webcam" />
+        </DraggableCard>
     )
 }

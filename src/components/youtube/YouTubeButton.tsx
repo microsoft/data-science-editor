@@ -1,7 +1,7 @@
 import { ButtonProps } from "@mui/material"
 import { Button } from "gatsby-theme-material-ui"
 import React, { useContext } from "react"
-import useFireKey from "../hooks/useFireKey"
+import useMediaQueries from "../hooks/useMediaQueries"
 import YouTubeContext from "./YouTubeContext"
 
 export default function YouTubeButton(
@@ -10,17 +10,17 @@ export default function YouTubeButton(
     const { videoId, variant = "outlined", ...rest } = props
     const { setVideoId } = useContext(YouTubeContext)
     const handleClick = () => setVideoId(videoId)
-    const fireClick = useFireKey(handleClick)
+    const { mobile } = useMediaQueries()
+    const label = "Play Video"
 
     return (
         <Button
             variant={variant}
             {...rest}
-            onClick={handleClick}
-            onPointerDown={handleClick}
-            onKeyDown={fireClick}
+            onClick={mobile ? undefined : handleClick}
+            href={mobile ? `https://youtu.be/watch?v=${videoId}` : undefined}
         >
-            Play Video
+            {label}
         </Button>
     )
 }

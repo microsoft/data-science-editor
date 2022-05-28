@@ -2,7 +2,6 @@
 import { Card, CardContent, CardHeader, CardMedia, Grid } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import React, { ReactNode, useRef, useState } from "react"
-import SettingsIcon from "@mui/icons-material/Settings"
 import IconButtonWithTooltip from "./IconButtonWithTooltip"
 import CloseIcon from "@mui/icons-material/Close"
 import MinimizeIcon from "@mui/icons-material/Minimize"
@@ -40,29 +39,26 @@ const Root = styled("div")(() => ({
 export default function DraggableCard(props: {
     onClose: () => void
     alert?: ReactNode
-    settings?: ReactNode
+    title?: ReactNode
     children: ReactNode
     fullWidth?: string
     minimizeWidth?: string
+    actionItems?: ReactNode
 }) {
     const {
         onClose,
         children,
-        settings,
+        title,
+        actionItems,
         alert,
-        minimizeWidth = "clamp(10rem, 20vw, 20vh)",
-        fullWidth = "clamp(20rem, 80vh, 80vw)",
+        minimizeWidth = "clamp(12rem, 20vw, 20vh)",
+        fullWidth = "clamp(22rem, 80vh, 80vw)",
     } = props
-    const [settingsOpen, setSettingsOpen] = useState(false)
-    const [minimize, setMinimize] = useState(true)
+    const [minimize, setMinimize] = useState(false)
     const nodeRef = useRef<HTMLSpanElement>()
 
     const handleClose = async () => await onClose()
     const handleMinimize = () => setMinimize(!minimize)
-    const handleSettings = () => {
-        console.debug(`toggle settings`, { settingsOpen })
-        setSettingsOpen(!settingsOpen)
-    }
 
     const draggableProps: Partial<DraggableProps> = {
         nodeRef,
@@ -74,9 +70,10 @@ export default function DraggableCard(props: {
                 <span ref={nodeRef} className={classes.cardContainer}>
                     <Card className={classes.card}>
                         <CardHeader
-                            title={settingsOpen && settings}
+                            title={title}
                             action={
                                 <Grid container spacing={1} direction="row">
+                                    {actionItems}
                                     <Grid item>
                                         <IconButtonWithTooltip
                                             onClick={handleMinimize}
@@ -93,16 +90,6 @@ export default function DraggableCard(props: {
                                             )}
                                         </IconButtonWithTooltip>
                                     </Grid>
-                                    {settings && (
-                                        <Grid item>
-                                            <IconButtonWithTooltip
-                                                onClick={handleSettings}
-                                                title="Settings"
-                                            >
-                                                <SettingsIcon />
-                                            </IconButtonWithTooltip>
-                                        </Grid>
-                                    )}
                                     <Grid item>
                                         <IconButtonWithTooltip
                                             onClick={handleClose}
@@ -119,9 +106,7 @@ export default function DraggableCard(props: {
                             <div
                                 className="hostedcontainer"
                                 style={{
-                                    width: !minimize
-                                        ? minimizeWidth
-                                        : fullWidth,
+                                    width: minimize ? minimizeWidth : fullWidth,
                                 }}
                             >
                                 {children}
