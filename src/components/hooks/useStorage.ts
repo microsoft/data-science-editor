@@ -39,6 +39,7 @@ export default function useStorage<T = string>(
                 // Parse stored json or if none return initialValue
                 return (item && JSON.parse(item)) || initialValue
             } catch (error) {
+                storage?.removeItem(pkey)
                 console.log(error)
             }
         }

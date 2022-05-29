@@ -275,50 +275,6 @@ async function createDevicePages(graphql, actions, reporter) {
     }
 }
 
-async function createSpecPages(graphql, actions, reporter) {
-    console.log(`generating spec pages`)
-    const { createPage } = actions
-    const result = await graphql(`
-        {
-            allMdx {
-                edges {
-                    node {
-                        id
-                        fields {
-                            slug
-                        }
-                        parent {
-                            ... on File {
-                                sourceInstanceName
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    `)
-    if (result.errors) {
-        reporter.panicOnBuild('🚨  ERROR: Loading "createPages" query')
-    }
-    // Create pages.
-    const specs = result.data.allMdx.edges
-        .map(edge => edge.node)
-        .filter(node => node.parent.sourceInstanceName == "specPages")
-    // you'll call `createPage` for each result
-    specs.forEach(node => {
-        createPage({
-            // This is the slug you created before
-            // (or `node.frontmatter.slug`)
-            path: node.fields.slug,
-            // This component will wrap our MDX content
-            component: path.resolve(`./src/components/spec.tsx`),
-            context: {
-                id: node.id,
-            },
-        })
-    })
-}
-
 async function generateServicesJSON() {
     const dir = "./public"
     const services = serviceSpecifications()
@@ -396,7 +352,6 @@ async function createVersions() {
 exports.createPages = async ({ graphql, actions, reporter }) => {
     await generateServicesJSON()
     await createServicePages(graphql, actions, reporter)
-    await createSpecPages(graphql, actions, reporter)
     await createDevicePages(graphql, actions, reporter)
     await createDeviceQRPages(actions, reporter)
     await createWorkers()
