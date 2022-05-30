@@ -1,6 +1,6 @@
 import { Chip, List, ListItem, ListItemText, Typography } from "@mui/material"
 import { Link } from "gatsby-theme-material-ui"
-import React, { useMemo } from "react"
+import React, { ReactNode, useMemo } from "react"
 import { serviceSpecificationFromName } from "../../../jacdac-ts/src/jdom/spec"
 import ChipList from "./ChipList"
 
@@ -52,16 +52,20 @@ function PageLinkListItem(props: PageLinkListItemProps) {
 }
 
 export default function PageLinkList(props: {
+    header?: ReactNode
     nodes: PageLinkListItemProps[]
 }) {
-    const { nodes } = props
+    const { header, nodes } = props
     return (
         !!nodes?.length && (
-            <List>
-                {nodes?.map(node => (
-                    <PageLinkListItem key={node.slug} {...node} />
-                ))}
-            </List>
+            <>
+                {header}
+                <List>
+                    {nodes?.map(node => (
+                        <PageLinkListItem key={node.slug} {...node} />
+                    ))}
+                </List>
+            </>
         )
     )
 }

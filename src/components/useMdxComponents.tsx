@@ -14,13 +14,18 @@ import {
 import Suspense from "./ui/Suspense"
 
 const MakeCodeProjects = lazy(() => import("./makecode/MakeCodeProjects"))
+const MakeCodeExtensionFooter = lazy(
+    () => import("./makecode/MakeCodeExtensionFooter")
+)
 const CodeBlock = lazy(() => import("./CodeBlock"))
 const RandomGenerator = lazy(() => import("./RandomGenerator"))
 const TraceList = lazy(() => import("./trace/TraceList"))
 const SpecificationUnitList = lazy(() => import("./SpecificationUnitList"))
 const DeviceImage = lazy(() => import("./devices/DeviceImage"))
 const YouTubeButton = lazy(() => import("./youtube/YouTubeButton"))
-const DeviceSpecificationList = lazy(() => import("./specification/DeviceSpecificationList"))
+const DeviceSpecificationList = lazy(
+    () => import("./specification/DeviceSpecificationList")
+)
 
 export default function useMdxComponents() {
     const theme = useTheme()
@@ -87,6 +92,11 @@ export default function useMdxComponents() {
                     <MakeCodeProjects {...props} />
                 </Suspense>
             ),
+            MakeCodeExtensionFooter: props => (
+                <Suspense>
+                    <MakeCodeExtensionFooter {...props} />
+                </Suspense>
+            ),
             YouTubeButton: props => (
                 <Suspense>
                     <YouTubeButton {...props} />
@@ -94,9 +104,9 @@ export default function useMdxComponents() {
             ),
             DeviceSpecificationList: props => (
                 <Suspense>
-                    <DeviceSpecificationList {...props}/>
+                    <DeviceSpecificationList {...props} />
                 </Suspense>
-            )
+            ),
         }),
         []
     )

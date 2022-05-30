@@ -3,8 +3,11 @@ import React from "react"
 import { serviceSpecificationFromName } from "../../../jacdac-ts/src/jdom/spec"
 import PageLinkList from "../ui/PageLinkList"
 
-export default function MakeCodeProjects(props: { serviceName?: string }) {
-    const { serviceName } = props
+export default function MakeCodeProjects(props: {
+    header?: ReactNode
+    serviceName?: string
+}) {
+    const { serviceName, header } = props
     const query = useStaticQuery<{
         allMdx: {
             edges: {
@@ -70,11 +73,12 @@ export default function MakeCodeProjects(props: { serviceName?: string }) {
 
     return (
         <PageLinkList
+            header={header}
             nodes={nodes.map(({ fields, frontmatter, headings }) => ({
                 slug: fields.slug,
                 title: frontmatter.title || headings?.[0]?.value,
                 description: frontmatter.description,
-                services: frontmatter.services
+                services: frontmatter.services,
             }))}
         />
     )
