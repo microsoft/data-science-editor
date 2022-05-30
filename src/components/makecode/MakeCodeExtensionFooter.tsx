@@ -15,11 +15,11 @@ export default function MakeCodeExtensionFooter(props: {
                 serviceName={serviceName}
             />
             <h2 id="devices">Devices</h2>
-            <DeviceSpecificationList serviceName="potentiometer" />
+            <DeviceSpecificationList serviceName={serviceName}/>
             <h2>See Also</h2>
             <ul>
                 <li>
-                    <Link to="/services/button/">Service specification</Link>
+                    <Link to={`/services/`+serviceName}>Service specification</Link>
                 </li>
             </ul>
         </>
