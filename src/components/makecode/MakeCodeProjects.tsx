@@ -1,5 +1,5 @@
 import { graphql, useStaticQuery } from "gatsby"
-import React from "react"
+import ReactNode from "react"
 import { serviceSpecificationFromName } from "../../../jacdac-ts/src/jdom/spec"
 import PageLinkList from "../ui/PageLinkList"
 
