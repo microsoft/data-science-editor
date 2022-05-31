@@ -16,6 +16,7 @@ export default class ReactInlineField<T = unknown>
 {
     protected container: HTMLDivElement
     protected resizeObserver: ResizeObserver
+    protected minWidth = "14rem"
     // React root
     private inlineRoot_: any
 
@@ -27,7 +28,7 @@ export default class ReactInlineField<T = unknown>
     protected createContainer(): HTMLDivElement {
         const c = document.createElement("div")
         c.style.display = "inline-block"
-        c.style.minWidth = "14rem"
+        c.style.minWidth = this.minWidth
         return c
     }
 

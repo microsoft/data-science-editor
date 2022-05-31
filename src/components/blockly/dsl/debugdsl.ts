@@ -2,10 +2,12 @@ import jsep from "jsep"
 import { makeVMBase } from "../../jacscript/JacscriptGenerator"
 import ConsoleField from "../fields/ConsoleField"
 import VariablesField from "../fields/VariablesFields"
+import VideoPlayerField from "../fields/VideoPlayerField"
 import {
     BlockReference,
     CODE_STATEMENT_TYPE,
     InputDefinition,
+    LabelDefinition,
     toolsColour,
 } from "../toolbox"
 import BlockDomainSpecificLanguage, { CompileCommandToVMOptions } from "./dsl"
@@ -14,6 +16,7 @@ const VARIABLES_BLOCK = "jacdac_variables_view"
 const colour = toolsColour
 const LOG_BLOCK = "jacdac_log"
 const CONSOLE_BLOCK = "jacdac_console_display"
+const VIDEO_PLAYER_BLOCK = "jacdac_video_player"
 
 const debugDsl: BlockDomainSpecificLanguage = {
     id: "debug",
@@ -85,6 +88,26 @@ const debugDsl: BlockDomainSpecificLanguage = {
             helpUrl: "",
             template: "meta",
         },
+        {
+            kind: "block",
+            type: VIDEO_PLAYER_BLOCK,
+            message0: `video %1 %2`,
+            args0: [
+                {
+                    type: "input_dummy",
+                },
+                {
+                    type: VideoPlayerField.KEY,
+                    name: "video",
+                    url: "Jqn2YCUkWqk",
+                },
+            ],
+            colour,
+            inputsInline: false,
+            tooltip: `Watch documentation video`,
+            helpUrl: "",
+            template: "meta",
+        },
     ],
     createCategory: () => [
         {
@@ -118,6 +141,15 @@ const debugDsl: BlockDomainSpecificLanguage = {
                 <BlockReference>{
                     kind: "block",
                     type: "text",
+                },
+                <LabelDefinition>{
+                    kind: "label",
+                    text: "Docs",
+                },
+                <BlockReference>{
+                    kind: "block",
+                    type: VIDEO_PLAYER_BLOCK,
+                    url: "asdfasfd",
                 },
             ],
         },

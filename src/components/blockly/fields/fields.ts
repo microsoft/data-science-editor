@@ -45,6 +45,8 @@ import TrainedModelBlockField from "./mb/TrainedModelBlockField"
 import JSONSettingsField from "./JSONSettingsField"
 import IFrameDataChooserField from "./IFrameDataChooserField"
 
+import VideoPlayerField from "./VideoPlayerField"
+
 let reactFieldShadows: BlockDefinition[]
 export function registerFields() {
     if (reactFieldShadows) return
@@ -110,6 +112,7 @@ export function registerFields() {
         JSONSettingsField,
 
         IFrameDataChooserField,
+        VideoPlayerField,
     ]
     fieldTypes.forEach(registerType)
 }
