@@ -3,11 +3,14 @@ import GithubRepositoryList from "../../../components/github/GithubRespositoryLi
 
 export default function Samples() {
     const repos = [
+        // merged extensions
         "1010Technologies/pxt-makerbit-motor/jacdac",
         "1010Technologies/pxt-makerbit-touch/jacdac",
         "1010Technologies/pxt-makerbit-lcd1602/jacdac",
+        "monkmakes/monkmakes-7-segment/jacdac",
+        "mworkfun/pxt-k-bit/jacdac",
 
-        "pelikhan/pxt-kitronik-air-quality/jacdac",
+        // PR in progress
         "pelikhan/pxt-kitronik-stopbit/jacdac",
         "pelikhan/pxt-kitronik-viewtext32/jacdac",
         "pelikhan/pxt-kitronik-lampbit/jacdac",
@@ -17,25 +20,20 @@ export default function Samples() {
         "pelikhan/pxt-kitronik-accessbit/jacdac",
         "pelikhan/pxt-kitronik-servo-lite/jacdac",
         "pelikhan/pxt-kitronik-i2c-16-servo/jacdac",
-        "pelikhan/kitronik-zip-halo-jacdac",
-
         "pelikhan/pxt-gamer-bit/jacdac",
-
-        "monkmakes/monkmakes-7-segment/jacdac",
-
         "pelikhan/pxt-envirobit/jacdac",
         "pelikhan/pxt-weather-bit/jacdac",
-
         "pelikhan/pxt-robotbit/jacdac",
 
+        // needs PR
+        "pelikhan/pxt-kitronik-air-quality/jacdac",
+        "pelikhan/kitronik-zip-halo-jacdac",
         "pelikhan/Tiny-bitLib/jacdac",
         "pelikhan/yahboom-microbit-led-jacdac/",
-
-        "mworkfun/pxt-k-bit/jacdac",
         "pelikhan/keystudio-relay-breakout-jacdac/",
-
         "pelikhan/pxt-dfrobot_maqueenplus_v20/jacdac",
     ]
+
     return (
         <>
             <h1>MakeCode/Jacdac accessory extension samples</h1>
