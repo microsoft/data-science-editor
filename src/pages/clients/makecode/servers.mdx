@@ -5,26 +5,20 @@ order: 100
 
 # MakeCode Servers
 
-It is also possible to turn your micro:bit V2 into a sensor or actuator by running Jacdac servers on it.
-This can be useful to test Jacdac until more modules are available.
+It is possible to expose the features of your micro:bit V2 via Jacdac 
+by running Jacdac servers on it that use commonly defined Jacdac [services](/services). 
 
-**This approach is used extensively to retrofit existing accessories into Jacdac modules using
-[Software Only Jacdac](/ddk/makecode/software-only-accessory/).**
+**This approach is used extensively to retrofit existing accessories into Jacdac services using [Software Only Jacdac](/ddk/makecode/software-only-accessory/).**
 
 ## micro:bit V2 servers
 
--   Open the [micro:bit editor](https://makecode.microbit.org), click on `Import` button (right side)
+-   Open the [micro:bit editor](https://makecode.microbit.org)
+-   Click on `Import` button (right side)
 -   Choose `Import URL' and enter https://github.com/microsoft/pxt-jacdac/devices/microbit
--   Put Jacdac in server mode by calling ``jacdac.startServer()`` at the end of `main.ts`
+-   Start any of the predefined servers based on your needs by adding code at the end of `main.ts`. In general, it's best to enable small number of servers per micro:bit. Make sure to call `jacdac.startServer()` before starting the predefined servers, as shown below.
 
 ```javascript
 jacdac.startServer()
-```
-
--   Start any of the predefined servers based on your needs. In general, it's best to enable small number of servers per micro:bit.
-
-```javascript
-
 servers.buttonA.start()
-servers.buttonB.start()
+servers.screenServer.start()
 ```
