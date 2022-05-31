@@ -4,11 +4,11 @@ import { serviceSpecificationFromName } from "../../../jacdac-ts/src/jdom/spec"
 import DeviceSpecificationList from "../specification/DeviceSpecificationList"
 import PageLinkList from "../ui/PageLinkList"
 
-export default function MakeCodeExtensionFooter(props: {
+export default function MakeCodeProjectFooter(props: {
     serviceNames: string
 }) {
     const { serviceNames = "" } = props
-    const names = serviceNames.split(/,/g)
+    const names = serviceNames.split(/\s*,\s*/gi)
     return (
         <>
             <PageLinkList

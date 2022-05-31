@@ -2,7 +2,7 @@ import { graphql, useStaticQuery } from "gatsby"
 import React from "react"
 import PageLinkList from "../ui/PageLinkList"
 
-export default function MakeCodeProjects() {
+export default function DotNetProjects() {
     const query = useStaticQuery<{
         allMdx: {
             edges: {

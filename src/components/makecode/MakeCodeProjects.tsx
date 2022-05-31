@@ -1,14 +1,23 @@
 import { graphql, useStaticQuery } from "gatsby"
-import React from "react"
+import React, { useMemo } from "react"
 import { ReactNode } from "react"
-import { serviceSpecificationFromName } from "../../../jacdac-ts/src/jdom/spec"
+import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec"
+import { arrayify, unique } from "../../../jacdac-ts/src/jdom/utils"
 import PageLinkList from "../ui/PageLinkList"
 
 export default function MakeCodeProjects(props: {
     header?: ReactNode
+    serviceClass?: number | number[]
     serviceName?: string
 }) {
-    const { serviceName, header } = props
+    const { serviceName, serviceClass, header } = props
+    const serviceNames = unique([
+        ...(serviceName?.split(/\s*,\s*/gi).filter(s => !!s) || []),
+        ...(arrayify(serviceClass)
+            ?.map(sc => serviceSpecificationFromClassIdentifier(sc)?.shortId)
+            .filter(s => !!s) || []),
+    ])
+
     const query = useStaticQuery<{
         allMdx: {
             edges: {
@@ -55,22 +64,27 @@ export default function MakeCodeProjects(props: {
             }
         }
     `)
-    // grab the nodes
-    let nodes = query.allMdx.edges.map(edge => edge.node)
-    // filter out
-    const spec = serviceSpecificationFromName(serviceName)
-    if (spec)
-        nodes = nodes.filter(
-            node => node.frontmatter.services?.indexOf(spec.shortId) > -1
-        )
-    // order nodes
-    nodes = nodes.sort((l, r) => {
-        const lo = Number(l.frontmatter?.order) || 50
-        const ro = Number(r.frontmatter?.order) || 50
-        const c = lo - ro
-        if (c) return c
-        return l.fields.slug.localeCompare(r.fields.slug)
-    })
+
+    const nodes = useMemo(() => {
+        // grab the nodes
+        let nodes = query.allMdx.edges.map(edge => edge.node)
+        // filter out
+        if (serviceNames?.length)
+            nodes = nodes.filter(node =>
+                serviceNames.some(
+                    n => node.frontmatter.services?.indexOf(n) > -1
+                )
+            )
+        // order nodes
+        nodes = nodes.sort((l, r) => {
+            const lo = Number(l.frontmatter?.order) || 50
+            const ro = Number(r.frontmatter?.order) || 50
+            const c = lo - ro
+            if (c) return c
+            return l.fields.slug.localeCompare(r.fields.slug)
+        })
+        return nodes
+    }, [serviceNames.join(",")])
 
     return (
         <PageLinkList

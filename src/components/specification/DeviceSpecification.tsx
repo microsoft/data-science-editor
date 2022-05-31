@@ -1,11 +1,9 @@
 import React, { lazy, useMemo } from "react"
 import IDChip from "../IDChip"
 import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec"
-import ServiceSpecificationCard from "./ServiceSpecificationCard"
 import { AlertTitle, Box, Chip, Grid, NoSsr } from "@mui/material"
 import useGridBreakpoints from "../useGridBreakpoints"
 import Markdown from "../ui/Markdown"
-import DeviceSpecificationSource from "./DeviceSpecificationSource"
 import FirmwareCard from "../firmware/FirmwareCard"
 import useDeviceImage from "../devices/useDeviceImage"
 import DownloadFirmwareButton from "../ui/DownloadFirmwareButton"
@@ -16,13 +14,16 @@ import DeviceSpecificationList from "./DeviceSpecificationList"
 import StructuredData from "../ui/StructuredData"
 import useDeviceSpecifications from "../devices/useDeviceSpecifications"
 import { Link } from "gatsby-theme-material-ui"
-import { arrayify, uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
+import { arrayify, unique } from "../../../jacdac-ts/src/jdom/utils"
 import Alert from "../ui/Alert"
 import GithubRepositoryCard from "../github/GithubRepositoryCard"
 import { deviceCatalog } from "../../../jacdac-ts/src/jdom/catalog"
 import DeviceSpecificationCard from "./DeviceSpecificationCard"
 import useChange from "../../jacdac/useChange"
 import Suspense from "../ui/Suspense"
+import MakeCodeProjects from "../makecode/MakeCodeProjects"
+import PageLinkList from "../ui/PageLinkList"
+import MakeCodeExtensions from "../makecode/MakeCodeExtensions"
 const Enclosure = lazy(() => import("../enclosure/Enclosure"))
 
 function DeviceStructuredData(props: { device: jdspec.DeviceSpec }) {
@@ -58,9 +59,8 @@ function DeviceStructuredData(props: { device: jdspec.DeviceSpec }) {
 
 export default function DeviceSpecification(props: {
     device: jdspec.DeviceSpec
-    showSource?: boolean
 }) {
-    const { device, showSource } = props
+    const { device } = props
     const {
         id,
         name,
@@ -82,11 +82,10 @@ export default function DeviceSpecification(props: {
     } = device
     const makeCodeRepos = arrayify(makeCodeRepo)
     const storeLinks = arrayify(storeLink)
-    const { services } = device
+    const services = unique(device.services)
     const specifications = useDeviceSpecifications()
     const gridBreakpoints = useGridBreakpoints()
     const imageUrl = useDeviceImage(device, "catalog")
-    console.log({ devices })
     const deviceSpecs = useChange(
         deviceCatalog,
         _ =>
@@ -110,6 +109,9 @@ export default function DeviceSpecification(props: {
                 spec.version !== undefined
         )
         ?.sort((l, r) => semverCmp(l.version, r.version))
+    const serviceSpecs = services
+        .map(serviceSpecificationFromClassIdentifier)
+        .filter(sc => !!sc)
 
     return (
         <>
@@ -229,45 +231,15 @@ export default function DeviceSpecification(props: {
                     </Grid>
                 </>
             )}
-            {!!services?.length && (
+            {makeCodeRepos?.length ? (
                 <>
-                    <h3>Services</h3>
-                    <Grid container spacing={2}>
-                        {uniqueMap(
-                            services,
-                            id => id.toString(16),
-                            id => id
-                        )
-                            .map(serviceClass => ({
-                                serviceClass,
-                                spec: serviceSpecificationFromClassIdentifier(
-                                    serviceClass
-                                ),
-                            }))
-                            .map(({ serviceClass, spec }) => (
-                                <Grid
-                                    item
-                                    key={serviceClass}
-                                    {...gridBreakpoints}
-                                >
-                                    <ServiceSpecificationCard
-                                        serviceClass={serviceClass}
-                                        specification={spec}
-                                    />
-                                </Grid>
-                            ))}
-                    </Grid>
-                </>
-            )}
-            {repo && (
-                <>
-                    <h3>Firmware</h3>
-                    <FirmwareCard slug={repo} />
-                </>
-            )}
-            {!!makeCodeRepos?.length && (
-                <>
-                    <h3>MakeCode</h3>
+                    <h3 id="makecodeextensions">
+                        Required MakeCode Extensions
+                    </h3>
+                    <p>
+                        These MakeCode Extensions are needed to use Jacdac with
+                        this device.
+                    </p>
                     {makeCodeRepos.map(repo => (
                         <GithubRepositoryCard
                             key={repo}
@@ -278,10 +250,40 @@ export default function DeviceSpecification(props: {
                         />
                     ))}
                 </>
+            ) : (
+                <MakeCodeExtensions
+                    header={
+                        <h3 id="makecodeextensions">MakeCode Extensions</h3>
+                    }
+                    serviceClass={services}
+                />
+            )}
+            <MakeCodeProjects
+                header={<h3 id="makecodeprojects">MakeCode Projects</h3>}
+                serviceClass={services}
+            />
+            <PageLinkList
+                header={<h3 id="services">Service specifications</h3>}
+                nodes={serviceSpecs.map(({ shortId, name, notes }) => ({
+                    slug: `/services/${shortId}/`,
+                    title: name,
+                    description: notes["short"],
+                }))}
+            />
+            {shape && (
+                <>
+                    <h3 id="pcbformfactor">PCB Form Factor</h3>
+                    Generate a 3D-printable enclosure for this module.
+                    <NoSsr>
+                        <Suspense>
+                            <Enclosure shape={shape} />
+                        </Suspense>
+                    </NoSsr>
+                </>
             )}
             {!!firmwares && (
                 <>
-                    <h3>Firmware</h3>
+                    <h3 id="firmwarebinaries">Firmware binaries</h3>
                     <p>
                         Drag and drop the files below to your device drive. You
                         might have to press the bootloader button once to see
@@ -302,15 +304,10 @@ export default function DeviceSpecification(props: {
                     </ul>
                 </>
             )}
-            {shape && (
+            {repo && (
                 <>
-                    <h3>PCB Form Factor</h3>
-                    Generate a 3D-printable enclosure for this module.
-                    <NoSsr>
-                        <Suspense>
-                            <Enclosure shape={shape} />
-                        </Suspense>
-                    </NoSsr>
+                    <h3 id="firmwarerepository">Firmware repository</h3>
+                    <FirmwareCard slug={repo} />
                 </>
             )}
             {(hardwareDesign || firmwareSource) && (
@@ -336,17 +333,8 @@ export default function DeviceSpecification(props: {
             )}
             {!!others?.length && (
                 <>
-                    <h3>Other revisions</h3>
+                    <h3>Other hardware revisions</h3>
                     <DeviceSpecificationList devices={others} />
-                </>
-            )}
-            {showSource && (
-                <>
-                    <h3>Specification</h3>
-                    <DeviceSpecificationSource
-                        deviceSpecification={device}
-                        showJSON={true}
-                    />
                 </>
             )}
         </>

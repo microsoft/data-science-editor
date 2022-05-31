@@ -16,7 +16,7 @@ function PageLinkListItem(props: PageLinkListItemProps) {
     const specs = useMemo(
         () =>
             services
-                ?.split(/,\s*/g)
+                ?.split(/\s*,\s*/gi)
                 .map(serviceSpecificationFromName)
                 .filter(s => !!s),
         [services]
