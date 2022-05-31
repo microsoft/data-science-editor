@@ -10,12 +10,12 @@ The following event handlers are invoked when the magnetic field transitions
 from low to high (active) or high to low (inactive):
 
 ```blocks
-modules.magneticFieldLevel1.onActive(() => {
+modules.magneticFieldLevel1.onEvent(jacdac.MagneticFieldLevelEvent.Active, () => {
     led.stopAnimation()
     basic.showString("A")
 })
 
-modules.magneticFieldLevel1.onInactive(() => {
+modules.magneticFieldLevel1.onEvent(jacdac.MagneticFieldLevelEvent.Inactive, () => {
     led.stopAnimation()
     basic.showString("I")
 })
