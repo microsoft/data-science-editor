@@ -13,18 +13,18 @@ This can be useful to test Jacdac until more modules are available.
 
 ## micro:bit V2 servers
 
--   Open the micro:bit editor and create a new project
--   Switch to the JavaScript editor
--   Import https://github.com/microsoft/pxt-jacdac/devices/microbit
--   Put Jacdac in server mode by calling ``jacdac.startServer``
+-   Open the [micro:bit editor](https://makecode.microbit.org), click on `Import` button (right side)
+-   Choose `Import URL' and enter https://github.com/microsoft/pxt-jacdac/devices/microbit
+-   Put Jacdac in server mode by calling ``jacdac.startServer()`` at the end of `main.ts`
 
-```javaScript
+```javascript
 jacdac.startServer()
 ```
 
 -   Start any of the predefined servers based on your needs. In general, it's best to enable small number of servers per micro:bit.
 
 ```javascript
+
 servers.buttonA.start()
 servers.buttonB.start()
 ```
