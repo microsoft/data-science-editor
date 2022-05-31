@@ -11,6 +11,7 @@ export default function DevToolsLauncher() {
     }`
     const handleChange = (ev: ChangeEvent<HTMLInputElement>) =>
         setText(ev.target.value)
+    const handleClick = () => (window.location.href = url)
 
     return (
         <Grid container spacing={1}>
@@ -25,7 +26,11 @@ export default function DevToolsLauncher() {
                 />
             </Grid>
             <Grid item>
-                <Button variant="outlined" href={url} startIcon={<SendIcon />}>
+                <Button
+                    variant="outlined"
+                    onClick={handleClick}
+                    startIcon={<SendIcon />}
+                >
                     Open
                 </Button>
             </Grid>
