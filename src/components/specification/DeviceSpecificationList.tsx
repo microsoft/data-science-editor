@@ -51,7 +51,7 @@ export default function DeviceSpecificationList(props: {
             )
         }
         if (!isNaN(serviceClass))
-            r = r.filter(spec => spec.services?.indexOf(serviceClass) - 1)
+            r = r.filter(spec => spec.services?.indexOf(serviceClass) > -1)
         if (serviceName) {
             const si = serviceSpecificationFromName(serviceName)
             if (si)
