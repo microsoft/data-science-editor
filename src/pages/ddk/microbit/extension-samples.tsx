@@ -24,11 +24,11 @@ export default function Samples() {
         "pelikhan/pxt-envirobit/jacdac",
         "pelikhan/pxt-weather-bit/jacdac",
         "pelikhan/pxt-robotbit/jacdac",
+        "pelikhan/Tiny-bitLib/jacdac",
 
         // needs PR
         "pelikhan/pxt-kitronik-air-quality/jacdac",
         "pelikhan/kitronik-zip-halo-jacdac",
-        "pelikhan/Tiny-bitLib/jacdac",
         "pelikhan/yahboom-microbit-led-jacdac/",
         "pelikhan/keystudio-relay-breakout-jacdac/",
         "pelikhan/pxt-dfrobot_maqueenplus_v20/jacdac",
