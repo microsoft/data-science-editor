@@ -5,18 +5,17 @@ order: 99
 
 # MakeCode in Visual Studio Code
 
-This guide is for developers wanting to edit MakeCode programs in their usual text-based code editor,
-in particular Visual Studio Code (Code).
+This guide is for developers wanting to edit MakeCode programs in Visual Studio Code (VS Code).
 
-MakeCode program can be authored in **Static TypeScript**,
+MakeCode program are authored in **Static TypeScript**,
 a subset of TypeScript suitable for micro-controllers.
-Those programs can be authored and compiled with excellent tooling support in Visual Studio Code.
+Those programs can be authored and compiled with excellent tooling support in VS Code.
 
-![Screenshot of a code snippet in Code](./code.png)
+![Screenshot of a code snippet in VS Code](./code.png)
 
 ## Setup
 
--   install [Code](https://code.visualstudio.com/)
+-   install [VS Code](https://code.visualstudio.com/)
 -   install [Node.JS](https://nodejs.org/en/download/)
 -   install [makecode](https://github.com/microsoft/pxt-makecode), the MakeCode command line tool
 
@@ -26,8 +25,8 @@ npm install -g -u makecode
 
 ## New project
 
--   create a new folder and open Code in it
--   open a new terminal in code (Ctrl + ``)
+-   create a new folder and open VS Code in it
+-   open a new terminal in code (Ctrl + `)
 -   use the makecode cli to initialize the project for the microbit + Jacdac
 
 ```
@@ -58,7 +57,7 @@ makecode install
 makecode build --watch
 ```
 
--   open `main.ts` in Code and start editing. makecode will automatically rebuild your changes when a change is detected.
+-   open `main.ts` in VS Code and start editing. makecode will automatically rebuild your changes when a change is detected.
 
 ## Building and serving a simulator
 
