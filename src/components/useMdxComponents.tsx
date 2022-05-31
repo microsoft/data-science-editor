@@ -17,6 +17,9 @@ const MakeCodeProjects = lazy(() => import("./makecode/MakeCodeProjects"))
 const MakeCodeExtensionFooter = lazy(
     () => import("./makecode/MakeCodeExtensionFooter")
 )
+const MakeCodeProjectFooter = lazy(
+    () => import("./makecode/MakeCodeProjectFooter")
+)
 const CodeBlock = lazy(() => import("./CodeBlock"))
 const RandomGenerator = lazy(() => import("./RandomGenerator"))
 const TraceList = lazy(() => import("./trace/TraceList"))
@@ -95,6 +98,11 @@ export default function useMdxComponents() {
             MakeCodeExtensionFooter: props => (
                 <Suspense>
                     <MakeCodeExtensionFooter {...props} />
+                </Suspense>
+            ),
+            MakeCodeProjectFooter: props => (
+                <Suspense>
+                    <MakeCodeProjectFooter {...props} />
                 </Suspense>
             ),
             YouTubeButton: props => (

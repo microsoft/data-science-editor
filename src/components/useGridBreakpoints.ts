@@ -20,7 +20,6 @@ export default function useGridBreakpoints(
         switch (itemCount) {
             case 1:
             case 2:
-                return { xs: 12, sm: 6, md: 6, lg: 6, xl: 6 }
             case 3:
                 return { xs: 12, sm: 6, md: 6, lg: 4, xl: 4 }
         }
