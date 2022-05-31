@@ -1,3 +1,4 @@
+import { AlertTitle } from "@mui/material"
 import React from "react"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import useChange from "../../jacdac/useChange"
@@ -10,7 +11,9 @@ export default function DeviceBootloaderAlert(props: { device: JDDevice }) {
     if (!bootloader) return null
     return (
         <Alert severity="info">
-            Bootloader mode{" "}
+            <AlertTitle>Bootloader mode</AlertTitle>
+            This mode is used to update your device firmware. To go back in
+            Application mode, press the <b>RESET</b> button.
             <DeviceResetButton device={device} showLabel={true} />
         </Alert>
     )
