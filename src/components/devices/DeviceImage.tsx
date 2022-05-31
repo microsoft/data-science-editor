@@ -14,7 +14,7 @@ export default function DeviceImage(props: {
 
     return (
         <img
-            style={{ aspectRatio: "3 / 2", margin: 0 }}
+            style={{ aspectRatio: "4 / 3", margin: 0 }}
             src={url}
             alt={spec.name}
             loading="lazy"
