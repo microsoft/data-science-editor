@@ -16,9 +16,24 @@ export default function Clients() {
         >
             <CenterGrid
                 title="Client Programming"
-                subtitle3="via JavaScript, Python, .NET, MakeCode, ..."
+                subtitle3="via MakeCode, JavaScript, .NET, Python, and more..."
                 // imageColumns={6}
                 // image={<StaticImage src="./dashboard.png" alt="Dashboard" />}
+            />
+
+            <SplitGrid
+                right={false}
+                subtitle="MakeCode"
+                description="Code Jacdac using a micro:bit V2, Arcade or Maker board."
+                buttonText="MakeCode extension"
+                buttonVariant="link"
+                buttonUrl="/clients/makecode"
+                image={
+                    <StaticImage
+                        src="./makecode.png"
+                        alt="Block code to swipe a servo"
+                    />
+                }
             />
 
             <SplitGrid
@@ -34,15 +49,16 @@ export default function Clients() {
 
             <SplitGrid
                 right={false}
-                subtitle="MakeCode"
-                description="Code Jacdac using a micro:bit V2, Arcade or Maker board."
-                buttonText="MakeCode extension"
+                subtitle=".NET"
+                description="Control hardware from your computer or your Raspberry Pi using .NET, TinyCLR."
+                buttonText=".NET packages"
                 buttonVariant="link"
-                buttonUrl="/clients/makecode"
+                buttonUrl="/clients/dotnet"
+                imageColumns={4}
                 image={
                     <StaticImage
-                        src="./makecode.png"
-                        alt="Block code to swipe a servo"
+                        src="https://raw.githubusercontent.com/dotnet/brand/main/logo/dotnet-logo.jpg"
+                        alt=".NET Framework logo"
                     />
                 }
             />
@@ -63,53 +79,13 @@ export default function Clients() {
                 }
             />
 
-            <SplitGrid
-                right={false}
-                subtitle=".NET"
-                description="Control hardware from your computer or your Raspberry Pi using .NET, TinyCLR."
-                buttonText=".NET packages"
-                buttonVariant="link"
-                buttonUrl="/clients/dotnet"
-                imageColumns={4}
-                image={
-                    <StaticImage
-                        src="https://raw.githubusercontent.com/dotnet/brand/main/logo/dotnet-logo.jpg"
-                        alt=".NET Framework logo"
-                    />
-                }
+            <CenterGrid
+                subtitle2="More programming options"
+                subtitle3="p5, Node-Red, React, A-Frame, CLI, ..."
+                buttonText= "Read more"
+                buttonUrl= "/clients/more"
             />
 
-            <SplitGrid
-                right={false}
-                subtitle="p5*js"
-                imageColumns={8}
-                description="Physical Creative Coding."
-                buttonText="p5.jacdac library"
-                buttonVariant="link"
-                buttonUrl="/clients/p5js"
-                image={
-                    <StaticImage
-                        src="./p5js.jpg"
-                        alt="A p5js program that controls color with sliders."
-                    />
-                }
-            />
-
-            <SplitGrid
-                right={true}
-                imageColumns={8}
-                subtitle="Node-RED"
-                description="Add Jacdac to your Node-RED flows."
-                buttonText="Jacdac node"
-                buttonVariant="link"
-                buttonUrl="https://flows.nodered.org/node/node-red-contrib-jacdac"
-                image={
-                    <StaticImage
-                        src="./nodered.png"
-                        alt="Jacdac nodes for Node-RED"
-                    />
-                }
-            />
         </Grid>
     )
 }
