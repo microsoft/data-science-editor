@@ -42,17 +42,6 @@ Most of the devices listed in the [device catalog](/devices) are modules. A few 
 * [JM RGB LED Ring v2.1](/devices/microsoft-research/jmrgbledring37v21)
 * [JM Rotary Control + Button v1.1](/devices/microsoft-research/jmrotarycontrolbuttonv11)
 
-### Micro:bit examples: client and server
-
-As the micro:bit V2 has an integrated set of input and output features, it can act as either a brain (client),  a module (server), or even both together.
-Two programs created for the micro:bit V2 show this dual capability:
-- this [micro:bit-as-server program](https://github.com/microsoft/pxt-jacdac/blob/master/devices/microbit) contains nine Jacdac servers, each of which exposes a feature of the micro:bit via a Jacdac server
-- this [micro:bit-as-client program](https://github.com/microsoft/pxt-jacdac/tree/master/tools/microbit-jukebox) programs the micro:bit V2 to listen for external Jacdac modules joining or leaving the Jacdac bus, and responds in a variety of ways
-
-The following screen snapshot of the [dashboard](/dashboard) shows the digital twins of the services exposed by the micro:bit-as-server.
-
-![micro:bit as server](./microbitAsServers.PNG)
-
 ### Power supplies
 
 The Jacdac bus supports power delivery in addition to communications. Jacdac devices may be designed to consume power from the bus, to provide power to the bus, to be independently powered, or to alternatve between these modes. Typically, Jacdac modules such as basic sensors and actuators will be bus-powered which makes them simple to design and to use. Jacdac brains may also be bus-powered, but in some cases they will be designed to be the power source for the Jacdac bus; a good example of this is the programmable robot base mentioned above. If none of the brains or modules on the bus provide power, or in scenarios where additional power is required, a _Jacdac power supply_ will be required and must be plugged into the bus.
