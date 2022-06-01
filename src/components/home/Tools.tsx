@@ -128,6 +128,13 @@ export default function Tools() {
                 buttonVariant="link"
                 buttonUrl="/clients/javascript/"
             />
+
+            <CenterGrid
+                subtitle2="More web tools"
+                buttonText= "Read more"
+                buttonUrl= "/tools/more"
+            />
+
         </Grid>
     )
 }
