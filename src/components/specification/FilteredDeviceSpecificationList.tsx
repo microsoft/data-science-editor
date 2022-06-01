@@ -1,18 +1,19 @@
 import { Grid, TextField } from "@mui/material"
-import React, { ChangeEvent, startTransition, useMemo, useState } from "react"
+import React, { ChangeEvent, startTransition, useState } from "react"
 import { arrayConcatMany, unique } from "../../../jacdac-ts/src/jdom/utils"
 import useBus from "../../jacdac/useBus"
 import useChange from "../../jacdac/useChange"
-import TransportIcon from "../icons/TransportIcon"
 import FilterChip from "../ui/FilterChip"
 import DeviceSpecificationList from "./DeviceSpecificationList"
 import ServiceSpecificationSelect from "./ServiceSpecificationSelect"
 
 export default function FilteredDeviceSpecificationList(props: {
+    showSearch?: boolean
+    showServiceList?: boolean
     count?: number
     company?: string
 }) {
-    const { ...others } = props
+    const { showSearch, showServiceList, ...others } = props
     const bus = useBus()
     const { deviceCatalog } = bus
 
@@ -22,8 +23,6 @@ export default function FilteredDeviceSpecificationList(props: {
     const [query, setQuery] = useState("")
     const [firmwareSources, setFirmwareSources] = useState(false)
     const [hardwareDesign, setHardwareDesign] = useState(false)
-    const [usb, setUsb] = useState(false)
-    const [serial, setSerial] = useState(false)
     const [buyNow, setBuyNow] = useState(false)
     const [makeCode, setMakeCode] = useState(false)
     const [ec30, setEC30] = useState(false)
@@ -43,8 +42,6 @@ export default function FilteredDeviceSpecificationList(props: {
         startTransition(() => setQuery(e.target.value))
     const handleSetFirmwareSources = () => setFirmwareSources(c => !c)
     const handleSetHardwareDesign = () => setHardwareDesign(c => !c)
-    const handleSetUSB = () => setUsb(c => !c)
-    const handleSetSerial = () => setSerial(c => !c)
     const handleBuyNow = () => setBuyNow(c => !c)
     const handleMakeCode = () => setMakeCode(c => !c)
     const handleEC30 = () => setEC30(c => !c)
@@ -54,37 +51,33 @@ export default function FilteredDeviceSpecificationList(props: {
             if (i < 0) return [...ts, tag]
             else return [...ts.slice(0, i), ...ts.slice(i + 1)]
         })
-
-    const transports = useMemo<jdspec.TransportType[]>(
-        () =>
-            [usb && "usb", serial && "serial"].filter(
-                t => !!t
-            ) as jdspec.TransportType[],
-        [usb, serial]
-    )
     return (
         <>
             <Grid sx={{ mb: 1 }} container spacing={1}>
-                <Grid item xs={12}>
-                    <TextField
-                        tabIndex={0}
-                        type="search"
-                        value={query}
-                        fullWidth={true}
-                        size="small"
-                        label="Search devices"
-                        aria-label="Search devices"
-                        onChange={handleSearchQueryChange}
-                    />
-                </Grid>
-                <Grid item xs>
-                    <ServiceSpecificationSelect
-                        label="Filter by Service"
-                        serviceClass={serviceClass}
-                        setServiceClass={handleServiceChanged}
-                        hasRegisteredDevice={true}
-                    />
-                </Grid>
+                {showSearch && (
+                    <Grid item xs={12}>
+                        <TextField
+                            tabIndex={0}
+                            type="search"
+                            value={query}
+                            fullWidth={true}
+                            size="small"
+                            label="Search devices"
+                            aria-label="Search devices"
+                            onChange={handleSearchQueryChange}
+                        />
+                    </Grid>
+                )}
+                {showServiceList && (
+                    <Grid item xs>
+                        <ServiceSpecificationSelect
+                            label="Filter by Service"
+                            serviceClass={serviceClass}
+                            setServiceClass={handleServiceChanged}
+                            hasRegisteredDevice={true}
+                        />
+                    </Grid>
+                )}
                 <Grid item>
                     <FilterChip
                         label="buy now"
@@ -120,22 +113,6 @@ export default function FilteredDeviceSpecificationList(props: {
                         onClick={handleSetHardwareDesign}
                     />
                 </Grid>
-                <Grid item>
-                    <FilterChip
-                        label="USB"
-                        value={usb}
-                        onClick={handleSetUSB}
-                        icon={<TransportIcon type="usb" />}
-                    />
-                </Grid>
-                <Grid item>
-                    <FilterChip
-                        label="Serial"
-                        value={serial}
-                        onClick={handleSetSerial}
-                        icon={<TransportIcon type="serial" />}
-                    />
-                </Grid>
                 {tags
                     ?.filter(t => t !== "ec30")
                     .map(tag => (
@@ -156,7 +133,6 @@ export default function FilteredDeviceSpecificationList(props: {
                 firmwareSources={firmwareSources}
                 hardwareDesign={hardwareDesign}
                 serviceClass={serviceClass}
-                transports={transports}
                 tags={selectedTags}
                 ec30={ec30}
             />

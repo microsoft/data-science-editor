@@ -8,7 +8,10 @@ import Alert from "../components/ui/Alert"
 export default function Page() {
     return (
         <>
-            <FilteredDeviceSpecificationList />
+            <FilteredDeviceSpecificationList
+                showServiceList={true}
+                showSearch={true}
+            />
             <Box mt={2}>
                 <Alert severity="info">
                     <AlertTitle>Register your device</AlertTitle>
