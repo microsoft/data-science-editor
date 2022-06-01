@@ -4,6 +4,7 @@ import useChange from "../../jacdac/useChange"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import { Role } from "../../../jacdac-ts/src/jdom/clients/rolemanagerclient"
 import { isDeviceId, shortDeviceId } from "../../../jacdac-ts/src/jdom/pretty"
+import { ListItemButton } from "gatsby-theme-material-ui"
 
 export default function RoleListItem(props: {
     role: Role
@@ -16,16 +17,22 @@ export default function RoleListItem(props: {
     const bound = useChange(bus, b => b.device(deviceId, true), [deviceId])
 
     const name = isDeviceId(roleName) ? shortDeviceId(roleName) : roleName
-    return (
-        <ListItem button selected={selected} onClick={onClick}>
-            <ListItemText
-                primary={name}
-                secondary={
-                    bound
-                        ? `bound to ${bound.friendlyName}[${serviceIndex}]`
-                        : `...`
-                }
-            />
-        </ListItem>
+    const content = (
+        <ListItemText
+            primary={name}
+            secondary={
+                bound
+                    ? `bound to ${bound.friendlyName}[${serviceIndex}]`
+                    : `...`
+            }
+        />
+    )
+
+    return onClick ? (
+        <ListItemButton selected={selected} onClick={onClick}>
+            {content}
+        </ListItemButton>
+    ) : (
+        <ListItem selected={selected}>{content}</ListItem>
     )
 }

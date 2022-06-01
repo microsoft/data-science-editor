@@ -8,7 +8,7 @@ import {
     ListItem,
     Divider,
 } from "@mui/material"
-import { IconButton, Link } from "gatsby-theme-material-ui"
+import { IconButton, Link, ListItemButton } from "gatsby-theme-material-ui"
 import {
     MOBILE_BREAKPOINT,
     MOBILE_TOOLS_DRAWER_WIDTH,
@@ -98,22 +98,22 @@ function ToolsListItem(props: {
             onClick={to ? onClose : undefined}
             underline="none"
         >
-            <ListItem button={true}>
+            <ListItemButton>
                 <ListItemIcon>{icon}</ListItemIcon>
                 <ListItemText
                     primaryTypographyProps={{ color: "textPrimary" }}
                     primary={<span>{text}</span>}
                 />
-            </ListItem>
+            </ListItemButton>
         </Link>
     ) : (
-        <ListItem button={true} onClick={onClick} aria-label={text}>
+        <ListItemButton onClick={onClick} aria-label={text}>
             <ListItemIcon>{icon}</ListItemIcon>
             <ListItemText
                 primaryTypographyProps={{ color: "textPrimary" }}
                 primary={text}
             />
-        </ListItem>
+        </ListItemButton>
     )
 }
 

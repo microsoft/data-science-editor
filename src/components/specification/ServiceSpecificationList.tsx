@@ -1,18 +1,9 @@
-import {
-    Chip,
-    Grid,
-    List,
-    ListItem,
-    ListItemText,
-    Typography,
-} from "@mui/material"
+import { Chip, Grid, List, ListItemText, Typography } from "@mui/material"
 import React, { useMemo } from "react"
 import { isInfrastructure } from "../../../jacdac-ts/src/jdom/spec"
-import {
-    ellipseFirstSentence,
-} from "../../../jacdac-ts/src/jdom/utils"
+import { ellipseFirstSentence } from "../../../jacdac-ts/src/jdom/utils"
 import GridHeader from "../ui/GridHeader"
-import { Link } from "gatsby-theme-material-ui"
+import { Link, ListItemButton } from "gatsby-theme-material-ui"
 import MakeCodeIcon from "../icons/MakeCodeIcon"
 import {
     SERVICE_MIXIN_NODE_NAME,
@@ -119,9 +110,9 @@ export default function ServiceSpecificationList(props: {
             <Grid item>
                 <List component="div">
                     {specs.map(node => (
-                        <ListItem button key={node.shortId}>
+                        <ListItemButton key={node.shortId}>
                             <ServiceSpecificatinListItem service={node} />
-                        </ListItem>
+                        </ListItemButton>
                     ))}
                 </List>
             </Grid>
