@@ -1,5 +1,6 @@
 import { Button, styled } from "@mui/material"
 import React, { lazy, useState } from "react"
+import { isDeviceId, shortDeviceId } from "../../../jacdac-ts/src/jdom/pretty"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { ellipse } from "../../../jacdac-ts/src/jdom/utils"
 import useChange from "../../jacdac/useChange"
@@ -31,7 +32,9 @@ export default function ServiceRole(props: { service: JDService }) {
     // hide if no role manager or role not compatible with required roles
     if (!hasRoleForService) return null
 
-    const name = ellipse(role, MAX_NAME_LENGTH)
+    const name = isDeviceId(role)
+        ? shortDeviceId(role)
+        : ellipse(role, MAX_NAME_LENGTH)
     return (
         <>
             <RoleButton
