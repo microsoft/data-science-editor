@@ -3,11 +3,14 @@ import React from "react"
 import FilteredDeviceSpecificationList from "../components/specification/FilteredDeviceSpecificationList"
 
 export default function Page(props: { pageContext: { company: string } }) {
+    const { company } = props.pageContext
     return (
         <>
-            <h1>{props.pageContext.company}</h1>
+            <h1>{company}</h1>
             <FilteredDeviceSpecificationList
-                company={props.pageContext.company}
+                showServiceList={true}
+                showSearch={true}
+                company={company}
             />
             <h2>See Also</h2>
             <ul>
