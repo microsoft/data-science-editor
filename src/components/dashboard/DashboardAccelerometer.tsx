@@ -159,11 +159,7 @@ export default function DashboardAccelerometer(props: DashboardServiceProps) {
             <Grid item>
                 <NoSsr>
                     <Suspense>
-                        <CanvasWidget
-                            showAxes={true}
-                            color={active}
-                            rotator={rotator}
-                        />
+                        <CanvasWidget color={active} rotator={rotator} />
                     </Suspense>
                 </NoSsr>
             </Grid>

@@ -1,44 +1,8 @@
 import React, { useRef } from "react"
 import { Canvas, useFrame } from "@react-three/fiber"
 import { Mesh } from "three"
-import { Line, Plane, OrbitControls } from "@react-three/drei"
+import { Plane, OrbitControls } from "@react-three/drei"
 import { Vector } from "./threeutils"
-
-function Axis() {
-    const lineProps = {
-        lineWidth: 4, // In pixels (default)
-        dashed: false, // Default
-    }
-    const c = 1
-    return (
-        <>
-            <Line
-                points={[
-                    [0, 0, 0],
-                    [c, 0, 0],
-                ]} // Array of points
-                color="blue"
-                {...lineProps}
-            />
-            <Line
-                points={[
-                    [0, 0, 0],
-                    [0, c, 0],
-                ]} // Array of points
-                color="red"
-                {...lineProps}
-            />
-            <Line
-                points={[
-                    [0, 0, 0],
-                    [0, 0, c],
-                ]} // Array of points
-                color="black"
-                {...lineProps}
-            />
-        </>
-    )
-}
 
 function Cube(props: {
     color: string
@@ -69,10 +33,9 @@ function Cube(props: {
 
 export default function CanvasWidget(props: {
     color: string
-    showAxes?: boolean
     rotator: (delta: number, rotation: Vector) => Vector
 }) {
-    const { showAxes, ...others } = props
+    const { ...others } = props
 
     // probably a bot or old browser
     if (typeof ResizeObserver === "undefined") return null
@@ -185,7 +148,6 @@ export default function CanvasWidget(props: {
                 isMesh={undefined}
                 updateMorphTargets={undefined}
             />
-            {showAxes && <Axis />}
             <Cube {...others} />
             <OrbitControls />
         </Canvas>
