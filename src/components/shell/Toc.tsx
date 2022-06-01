@@ -161,6 +161,11 @@ export default function Toc(props: { pagePath: string }) {
                 path: "/faq/",
                 order: 0.85,
             },
+            {
+                name: "BLOG",
+                path: "/blog/",
+                order: 0.88,
+            },
         ]
 
         data.allMdx.edges
