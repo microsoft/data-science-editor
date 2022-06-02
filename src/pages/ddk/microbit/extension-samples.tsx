@@ -1,4 +1,5 @@
 import React from "react"
+import { splitFilter } from "../../../../jacdac-ts/src/jdom/utils"
 import GithubRepositoryList from "../../../components/github/GithubRespositoryList"
 
 export default function Samples() {
@@ -34,6 +35,8 @@ export default function Samples() {
         "pelikhan/pxt-dfrobot_maqueenplus_v20/jacdac",
     ]
 
+    const [official, samples] = splitFilter(repos, r => /^pelikhan\//.test(r))
+
     return (
         <>
             <h1>MakeCode/Jacdac accessory extension samples</h1>
@@ -45,8 +48,17 @@ export default function Samples() {
                 These samples can be tested from MakeCode by importing the
                 repository path into the <code>Add Extension</code> dialog.
             </p>
+            <h2>Extensions</h2>
             <GithubRepositoryList
-                repos={repos}
+                repos={official}
+                showDescription={true}
+                showDependencies={true}
+                showMakeCodeButton={true}
+                showMakeCodeImportButton={true}
+            />
+            <h2>Samples</h2>
+            <GithubRepositoryList
+                repos={samples}
                 showDescription={true}
                 showDependencies={true}
                 showMakeCodeButton={true}
