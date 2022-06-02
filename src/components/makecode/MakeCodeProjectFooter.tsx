@@ -1,12 +1,10 @@
 import { Link } from "gatsby-theme-material-ui"
-import React from "react"
+import React, { Fragment } from "react"
 import { serviceSpecificationFromName } from "../../../jacdac-ts/src/jdom/spec"
 import DeviceSpecificationList from "../specification/DeviceSpecificationList"
 import PageLinkList from "../ui/PageLinkList"
 
-export default function MakeCodeProjectFooter(props: {
-    serviceNames: string
-}) {
+export default function MakeCodeProjectFooter(props: { serviceNames: string }) {
     const { serviceNames = "" } = props
     const names = serviceNames.split(/\s*,\s*/gi)
     return (
@@ -25,9 +23,22 @@ export default function MakeCodeProjectFooter(props: {
                     }))}
             />{" "}
             <h2 id="devices">Devices</h2>
-            {names.map(name => (
-                <DeviceSpecificationList key={name} serviceName={name} />
-            ))}
+            {names.length > 1 ? (
+                names.map(name => (
+                    <Fragment key={name}>
+                        <h3>{serviceSpecificationFromName(name).name}</h3>
+                        <DeviceSpecificationList
+                            key={name}
+                            serviceName={name}
+                        />
+                    </Fragment>
+                ))
+            ) : (
+                <DeviceSpecificationList
+                    key={names[0]}
+                    serviceName={names[0]}
+                />
+            )}
             <h2>See Also</h2>
             <ul>
                 <li>
