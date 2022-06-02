@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react"
 import { Octokit } from "@octokit/core"
-import { createPullRequest } from "octokit-plugin-create-pull-request"
+import { createPullRequest } from "octokit-plugin-create-pull-request/pkg"
 import { Button, Link } from "gatsby-theme-material-ui"
 import {
     Dialog,

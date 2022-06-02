@@ -16001,10 +16001,9 @@ objectFitPolyfill@^2.3.5:
   resolved "https://registry.yarnpkg.com/objectFitPolyfill/-/objectFitPolyfill-2.3.5.tgz#be8c83064aabfa4e88780f776c2013c48ce1f745"
   integrity sha512-8Quz071ZmGi0QWEG4xB3Bv5Lpw6K0Uca87FLoLMKMWjB6qIq9IyBegP3b/VLNxv2WYvIMGoeUQ+c6ibUkNa8TA==
 
-octokit-plugin-create-pull-request@^3.11.0:
-  version "3.11.0"
-  resolved "https://registry.yarnpkg.com/octokit-plugin-create-pull-request/-/octokit-plugin-create-pull-request-3.11.0.tgz#11f496176111eaa04955fb2bb7e4d953501423d0"
-  integrity sha512-ZD025HTrm/KoBMRmPYbcCw3tfGomOdAYFB6/K1xiMW+/NFsOyDOeFrEGBbL82b57dhNsPRibs0eL64lpJ3xyvw==
+octokit-plugin-create-pull-request@pelikhan/octokit-plugin-create-pull-request#forkbinarydist:
+  version "0.0.0-development"
+  resolved "https://codeload.github.com/pelikhan/octokit-plugin-create-pull-request/tar.gz/73a9a0f7a69a3b6298f08a4079ea8a5b5463770f"
   dependencies:
     "@octokit/types" "^6.8.2"
 
