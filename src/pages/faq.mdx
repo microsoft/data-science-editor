@@ -29,3 +29,13 @@ Another issue is that the connector often short while plugging-in and out which 
 ### Why didn't you just use Qwiic connectors/cables and I2C?
 
 The Qwiic cables have to be really short (Jacdac cables can be a few meters) and are not designed for easy plug-in and out thousands of times. Also, I2C devices are not standardized, meaning you need a new driver in your software environment for every single accelerometer. Finally, I2C doesn't let you have multiple instances of the same device because of address collisions.
+
+## Can I make existing hardware work with Jacdac?
+
+Yes! See how Jacdac provides a [software-only](/ddk/microbit/software-only-accessory) solution for existing micro:bit accessories.
+
+## How can I add the Jacdac edge connector to my hardware?
+
+## Can I modify an existing Jacdac device design?
+
+Yes! 

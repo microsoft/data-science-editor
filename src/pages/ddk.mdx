@@ -4,31 +4,31 @@ title: Device Development Kit
 
 # Device Development Kit
 
-The Jacdac Device Development Kit (DDK) is for 3rd party hardware designers, firmware developers and manufacturers who wish to create their own Jacdac [devices](/devices). A Jacdac device has at least the following three features:
+The Jacdac Device Development Kit (DDK) is for 3rd party hardware designers, firmware developers and manufacturers who wish to create their own Jacdac [devices](/devices). A Jacdac device should:
 
--   it has a [Jacdac edge connector](./design/electro-mechanical#pcb-edge-connector) for joining the device to the Jacdac bus
-    using [Jacdac cables](./design/electro-mechanical#cable-connectors-and-assemblies) (note that devices that have a USB connection can support Jacdac over USB in order to communicate with a web browser);
--   it implements the [Jacdac protocol](/reference/protocol/) to communicate over the bus via the connector;
--   it follows the [design guidelines](/ddk/design/) in this DDK.
--   it passes all the checks in the [device tester](/tools/device-tester/).
+-   have a [Jacdac edge connector](./design/electro-mechanical#pcb-edge-connector) for joining the device to the Jacdac bus
+    using [Jacdac cables](./design/electro-mechanical#cable-connectors-and-assemblies)
+-   implement the [Jacdac protocol](/reference/protocol/) to communicate over the bus via the connector
+-   follow the [hardware design guidelines](./design/)
+-   pass all the checks in the [device tester](/tools/device-tester/).
 
-Additionally, Jacdac devices may supply power to the bus and/or consume power from the bus. A common realization of a Jacdac device is a printed circuit board (PCB) that includes a microcontroller unit (MCU) connected to a specific set of components including sensors, actuators, network interfaces and/or power supplies. [Read more](/reference/clientserver) about the different kinds of Jacdac devices (brains, modules, power supplies, adaptors).
+A common realization of a Jacdac device is a printed circuit board (PCB) that includes a microcontroller unit (MCU) connected to a specific set of components including sensors, actuators, network interfaces and/or power supplies. Jacdac devices may supply power to the bus and/or consume power from the bus.  Devices with a USB connection can support Jacdac over USB to communicate with a web browser.
 
-Consult our [FAQ](/ddk/faq) to find answers to frequently asked questions.
+[Read more](/reference/clientserver) about the different kinds of Jacdac devices (brains, modules, power supplies, adaptors).
 
 ## Key elements of the Jacdac DDK
 
 The Jacdac DDK supports 3rd party device development via the following steps:
 
-1. choosing on-board components and incorporating them in a [hardware design](/ddk/design);
+1. choosing on-board components and incorporating them in a [hardware design](./design);
 2. identifying the [services](/services/) to represent the chosen components;
-3. building [firmware](/ddk/firmware/) to establish [device identity](/reference#device-identification) and
+3. building [firmware](./firmware/) to establish [device identity](/reference#device-identification) and
    expose the device's services on the Jacdac bus;
 4. validating the hardware using the [dashboard](/dashboard) and [device tester](/tools/device-tester)
-5. manufacturing the hardware;
-6. [registering](/tools/device-registration) the device in the Jacdac [device catalog](/devices);
+5. [registering](/tools/device-registration) the device in the Jacdac [device catalog](/devices);
 
-Our current Jacdac hardware and firmware designs target the PADAUK 8-bit and STM32x0 32-bit families of MCUs.
+Our current Jacdac hardware and firmware designs target the [PADAUK 8-bit](https://github.com/microsoft/jacdac-padauk) 
+and [STM32x0 32-bit](https://github.com/microsoft/jacdac-stm32x0) families of MCUs.
 STM32x0 support includes a Jacdac bootloader service that allows MCU firmware to be updated over Jacdac.
 We strongly encourage you to take advantage of our hardware and firmware reference implementations to simplify the above steps.
 
@@ -39,3 +39,10 @@ at https://github.com/microsoft/jacdac-ddk.
 ## micro:bit accessories
 
 In the [Jacdac micro:bit integration guide](/ddk/microbit), we document various scenarios that will let you integrate Jacdac support in your accessories.
+
+## Questions and Issues
+
+Consult our [FAQ](/faq) to find answers to frequently asked questions. 
+If you can't find an answer there, feel free to start a discussion at https://github.com/microsoft/jacdac/discussions.
+
+if you have an issue with Jacdac, please file an issue at https://github.com/microsoft/jacdac/issues. 

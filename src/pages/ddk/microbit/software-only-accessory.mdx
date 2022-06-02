@@ -27,7 +27,7 @@ For the purpose of this example, let's assume we have an extension `https://gith
 We are going to create a new _nested_ extension that adds Jacdac and hides the existing blocks.
 
 -   open https://makecode.microbit.org/beta/ **make sure to use the beta until all fixes are released**
--   import your repository url with **/jacdac** appended. This will create a new extension in the same repository (if you repo is https://github.com/company/pxt-thing/, import https://github.com/company/pxt-thing/jacdac)
+-   import your repository url with **/jacdac** appended. This will create a new extension in the same repository (if your repo is https://github.com/company/pxt-thing/, import https://github.com/company/pxt-thing/jacdac)
 
     .
 
@@ -135,6 +135,10 @@ This example spins up a motor server.
     }),
 ```
 
+### Questions?
+
+For issues around your own extension, please file an issue at your extensions's Github repo and notify us at jacdac-tap@microsoft.com.  
+
 ## Device Registration
 
 To improve the user experience, register your accessory at https://microsoft.github.io/jacdac-docs/tools/device-registration/.
@@ -229,7 +233,7 @@ namespace servers {
 
 ### Pin 12: disable single wire serial
 
-If you hardware is already actively using pin 12 (`P12`), you will need 
+If your hardware is already actively using pin 12 (`P12`), you will need 
 to disable the Jacdac single wire serial transport. 
 Add the following code anywhere in your project.
 
