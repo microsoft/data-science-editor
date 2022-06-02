@@ -1,11 +1,10 @@
-import React, { useContext, useMemo } from "react"
+import React, { useMemo, useState } from "react"
 import { styled } from "@mui/material/styles"
 import { List, ListItem, Typography, useTheme } from "@mui/material"
 import { Link } from "gatsby-theme-material-ui"
 // tslint:disable-next-line: no-submodule-imports
 import ListItemText from "@mui/material/ListItemText"
 import { graphql, useStaticQuery } from "gatsby"
-import AppContext, { DrawerType } from "../AppContext"
 
 const PREFIX = "Toc"
 
@@ -68,10 +67,61 @@ function treeifyToc(toc: TocNode[]) {
     return r
 }
 
+function TocListItem(props: {
+    pagePath: string
+    entry: TocNode
+    level: number
+}) {
+    const { pagePath, entry, level } = props
+    const { path, children, name } = entry
+    const [expanded, setExpanded] = useState(false)
+    const selected = pagePath === path
+    const sub = level === 1 || !!children?.length
+    const showSub =
+        expanded && sub && !!children?.length && pagePath.startsWith(path)
+    const handleClick = () => {
+        if (selected) setExpanded(v => !v)
+    }
+    const theme = useTheme()
+
+    return (
+        <>
+            <ListItem
+                component="li"
+                selected={selected}
+                key={"tocitem" + path}
+                sx={{ ml: Math.max(0, level - 1) }}
+            >
+                <Link
+                    style={{ color: theme.palette.text.primary }}
+                    to={path}
+                    underline="none"
+                    onClick={handleClick}
+                >
+                    <ListItemText
+                        primary={
+                            <Typography variant={sub ? "button" : "caption"}>
+                                {name}
+                            </Typography>
+                        }
+                    />
+                </Link>
+            </ListItem>
+            {showSub &&
+                children?.map(child => (
+                    <TocListItem
+                        key={child.path}
+                        entry={child}
+                        level={level + 1}
+                        pagePath={pagePath}
+                    />
+                ))}
+        </>
+    )
+}
+
 export default function Toc(props: { pagePath: string }) {
     const { pagePath } = props
-    const { setDrawerType } = useContext(AppContext)
-    const theme = useTheme()
 
     const data = useStaticQuery(graphql`
         query {
@@ -172,58 +222,16 @@ export default function Toc(props: { pagePath: string }) {
         return tree
     }, [])
 
-    const TocListItem = (props: { entry: TocNode; level: number }) => {
-        const { entry, level } = props
-        const { path, children, name } = entry
-        const selected = pagePath === path
-        const sub = level === 1 || !!children?.length
-        const showSub = sub && !!children?.length && pagePath.startsWith(path)
-        const handleClick = () => {
-            if (selected) setDrawerType(DrawerType.None)
-        }
-
-        return (
-            <>
-                <ListItem
-                    component="li"
-                    selected={selected}
-                    key={"tocitem" + path}
-                    sx={{ ml: Math.max(0, level - 1) }}
-                >
-                    <Link
-                        style={{ color: theme.palette.text.primary }}
-                        to={path}
-                        underline="none"
-                        onClick={handleClick}
-                    >
-                        <ListItemText
-                            primary={
-                                <Typography
-                                    variant={sub ? "button" : "caption"}
-                                >
-                                    {name}
-                                </Typography>
-                            }
-                        />
-                    </Link>
-                </ListItem>
-                {showSub &&
-                    children?.map(child => (
-                        <TocListItem
-                            key={child.path}
-                            entry={child}
-                            level={level + 1}
-                        />
-                    ))}
-            </>
-        )
-    }
-
     return (
         <StyledList dense className={classes.root}>
             {tree.map(entry => (
                 // eslint-disable-next-line react/prop-types
-                <TocListItem key={entry.path} entry={entry} level={1} />
+                <TocListItem
+                    key={entry.path}
+                    entry={entry}
+                    level={1}
+                    pagePath={pagePath}
+                />
             ))}
         </StyledList>
     )
