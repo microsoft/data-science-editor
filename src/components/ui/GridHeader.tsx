@@ -1,6 +1,6 @@
 import { Box, Chip, Grid, Typography } from "@mui/material"
 import { styled } from "@mui/material/styles"
-import React from "react"
+import React, { ReactNode } from "react"
 import clsx from "clsx"
 
 const PREFIX = "GridHeader"
@@ -22,7 +22,7 @@ const StyledGrid = styled(Grid)(({ theme }) => ({
 }))
 
 export default function GridHeader(props: {
-    title?: string
+    title?: ReactNode
     count?: number
     variant?: "subtitle1" | "caption" | "subtitle2"
     action?: JSX.Element

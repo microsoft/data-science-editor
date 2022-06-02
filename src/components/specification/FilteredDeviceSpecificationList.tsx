@@ -23,7 +23,6 @@ export default function FilteredDeviceSpecificationList(props: {
     const [query, setQuery] = useState("")
     const [firmwareSources, setFirmwareSources] = useState(false)
     const [hardwareDesign, setHardwareDesign] = useState(false)
-    const [buyNow, setBuyNow] = useState(false)
     const [makeCode, setMakeCode] = useState(false)
     const [ec30, setEC30] = useState(false)
 
@@ -42,7 +41,6 @@ export default function FilteredDeviceSpecificationList(props: {
         startTransition(() => setQuery(e.target.value))
     const handleSetFirmwareSources = () => setFirmwareSources(c => !c)
     const handleSetHardwareDesign = () => setHardwareDesign(c => !c)
-    const handleBuyNow = () => setBuyNow(c => !c)
     const handleMakeCode = () => setMakeCode(c => !c)
     const handleEC30 = () => setEC30(c => !c)
     const handleSetSelectedTag = (tag: string) => () =>
@@ -78,13 +76,6 @@ export default function FilteredDeviceSpecificationList(props: {
                         />
                     </Grid>
                 )}
-                <Grid item>
-                    <FilterChip
-                        label="buy now"
-                        value={buyNow}
-                        onClick={handleBuyNow}
-                    />
-                </Grid>
                 <Grid item>
                     <FilterChip
                         label="MakeCode"
@@ -128,7 +119,20 @@ export default function FilteredDeviceSpecificationList(props: {
             <DeviceSpecificationList
                 {...others}
                 query={query}
-                buyNow={buyNow}
+                buyNow={true}
+                makeCode={makeCode}
+                firmwareSources={firmwareSources}
+                hardwareDesign={hardwareDesign}
+                serviceClass={serviceClass}
+                tags={selectedTags}
+                ec30={ec30}
+            />
+            <div style={{ marginTop: "1rem" }} />
+            <DeviceSpecificationList
+                {...others}
+                header={"Prototypes (not available for purchase)"}
+                query={query}
+                buyNow={false}
                 makeCode={makeCode}
                 firmwareSources={firmwareSources}
                 hardwareDesign={hardwareDesign}
