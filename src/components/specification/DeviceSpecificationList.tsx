@@ -115,14 +115,7 @@ export default function DeviceSpecificationList(props: {
     const gridBreakpoints = useGridBreakpoints(specs.length)
     const size = specs?.length < 6 ? "catalog" : "preview"
 
-    if (!specs.length)
-        return (
-            <Typography variant="body1">
-                {query
-                    ? `No device matching the search criterias.`
-                    : `No device registered yet.`}
-            </Typography>
-        )
+    if (!specs.length) return null
 
     return (
         <Grid container spacing={2}>
