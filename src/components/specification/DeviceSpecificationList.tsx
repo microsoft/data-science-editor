@@ -1,4 +1,4 @@
-import React, { useMemo } from "react"
+import React, { ReactNode, useMemo } from "react"
 import { Grid, Typography } from "@mui/material"
 import { escapeDeviceIdentifier } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import useDeviceSpecifications from "../devices/useDeviceSpecifications"
@@ -8,8 +8,10 @@ import DeviceSpecificationCard from "./DeviceSpecificationCard"
 import { arrayify } from "../../../jacdac-ts/src/jdom/utils"
 import { isEC30 } from "../enclosure/ec30"
 import { serviceSpecificationFromName } from "../../../jacdac-ts/src/jdom/spec"
+import GridHeader from "../ui/GridHeader"
 
 export default function DeviceSpecificationList(props: {
+    header?: ReactNode
     query?: string
     count?: number
     company?: string
@@ -26,6 +28,7 @@ export default function DeviceSpecificationList(props: {
     ec30?: boolean
 }) {
     const {
+        header,
         query,
         count,
         serviceClass,
@@ -60,7 +63,8 @@ export default function DeviceSpecificationList(props: {
                 )
         }
         if (updates) r = r.filter(spec => spec.repo)
-        if (buyNow) r = r.filter(spec => !!spec.storeLink)
+        if (buyNow !== undefined)
+            r = r.filter(spec => !!spec.storeLink === buyNow)
         if (hardwareDesign) r = r.filter(spec => spec.hardwareDesign)
         if (firmwareSources) r = r.filter(spec => spec.firmwareSource)
         if (ec30)
@@ -122,6 +126,7 @@ export default function DeviceSpecificationList(props: {
 
     return (
         <Grid container spacing={2}>
+            {header && <GridHeader title={header} />}
             {specs.map(specification => (
                 <Grid key={specification.id} item {...gridBreakpoints}>
                     <DeviceSpecificationCard
