@@ -6,8 +6,8 @@ title: Device Development Kit
 
 The Jacdac Device Development Kit (DDK) is for 3rd party hardware designers, firmware developers and manufacturers who wish to create their own Jacdac [devices](/devices). A Jacdac device has at least the following three features:
 
--   it has a [Jacdac edge connector](/ddk/design#pcb-edge-connector) for joining the device to the Jacdac bus
-    using [Jacdac cables](/ddk/design#cable-connectors-and-assemblies) (note that devices that have a USB connection can support Jacdac over USB in order to communicate with a web browser);
+-   it has a [Jacdac edge connector](./design/electro-mechanical#pcb-edge-connector) for joining the device to the Jacdac bus
+    using [Jacdac cables](./design/electro-mechanical#cable-connectors-and-assemblies) (note that devices that have a USB connection can support Jacdac over USB in order to communicate with a web browser);
 -   it implements the [Jacdac protocol](/reference/protocol/) to communicate over the bus via the connector;
 -   it follows the [design guidelines](/ddk/design/) in this DDK.
 -   it passes all the checks in the [device tester](/tools/device-tester/).
@@ -32,8 +32,8 @@ Our current Jacdac hardware and firmware designs target the PADAUK 8-bit and STM
 STM32x0 support includes a Jacdac bootloader service that allows MCU firmware to be updated over Jacdac.
 We strongly encourage you to take advantage of our hardware and firmware reference implementations to simplify the above steps.
 
-We will make hardware and firmware reference implementations of Jacdac brains,
-Jacdac power supplies and Jacdaptors available in due course
+Hardware reference implementations of Jacdac modules, brains,
+power supplies and Jacdaptors will be available in due course
 at https://github.com/microsoft/jacdac-ddk.
 
 ## micro:bit accessories
