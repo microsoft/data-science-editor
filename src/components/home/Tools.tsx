@@ -132,6 +132,7 @@ export default function Tools() {
             <CenterGrid
                 subtitle2="More web tools"
                 buttonText= "Read more"
+                buttonVariant="link"
                 buttonUrl= "/tools/more"
             />
 

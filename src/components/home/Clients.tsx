@@ -25,7 +25,7 @@ export default function Clients() {
                 right={false}
                 subtitle="MakeCode"
                 description="Code Jacdac using a micro:bit V2, Arcade or Maker board."
-                buttonText="MakeCode extension"
+                buttonText="Get started with MakeCode"
                 buttonVariant="link"
                 buttonUrl="/clients/makecode"
                 image={
@@ -40,7 +40,7 @@ export default function Clients() {
                 right={true}
                 subtitle="JavaScript and TypeScript"
                 description="From the browser or Node.JS, use our JavaScript/TypeScript library to interact with physical Jacdac devices. If you can build a web page, you can program Jacdac."
-                buttonText="JavaScript/TypeScript library"
+                buttonText="Get started with JavaScript/TypeScript"
                 buttonVariant="link"
                 buttonUrl="/clients/javascript"
                 imageColumns={4}
@@ -51,7 +51,7 @@ export default function Clients() {
                 right={false}
                 subtitle=".NET"
                 description="Control hardware from your computer or your Raspberry Pi using .NET, TinyCLR."
-                buttonText=".NET packages"
+                buttonText="Get started with .NET"
                 buttonVariant="link"
                 buttonUrl="/clients/dotnet"
                 imageColumns={4}
@@ -67,7 +67,7 @@ export default function Clients() {
                 right={true}
                 subtitle="Python"
                 description="Control hardware from your computer or your Raspberry Pi using Python."
-                buttonText="Python library"
+                buttonText="Get started with Python"
                 buttonVariant="link"
                 buttonUrl="/clients/python"
                 imageColumns={6}
@@ -82,7 +82,8 @@ export default function Clients() {
             <CenterGrid
                 subtitle2="More programming options"
                 subtitle3="p5, Node-Red, React, A-Frame, CLI, ..."
-                buttonText= "Read more"
+                buttonText= "Read more"                
+                buttonVariant="link"
                 buttonUrl= "/clients/more"
             />
 

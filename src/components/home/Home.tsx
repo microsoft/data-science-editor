@@ -27,7 +27,7 @@ export default function Home() {
         >
             <SplitGrid
                 title="Jacdac"
-                subtitle="plug-and-play for microcontrollers"
+                subtitle="Connect and code electronics. Instantly."
                 imageColumns={6}
                 image={
                     <StaticImage
@@ -37,15 +37,11 @@ export default function Home() {
                     />
                 }
             />
-            <CenterGrid
-                subtitle3="A hardware/software stack that bridges the world of low-cost microcontrollers to the web browser and beyond."
-                description="Cheap, flexible and extensible."
-            />
 
             <SplitGrid
                 right={false}
-                subtitle="Devices"
-                description="Jacdac devices communicate over a 3-wire bus."
+                subtitle="Electronics"
+                description="Jacdac devices are connected via 3-wire cables."
                 image={
                     <StaticImage
                         src="./rotarycable.png"
@@ -60,8 +56,25 @@ export default function Home() {
 
             <SplitGrid
                 right={true}
-                subtitle="Connector and Cable"
-                description="Jacdac's PCB edge connector is robust, double-sided, and low cost. Cables make plug-and-play simple and error-free."
+                subtitle="Coding"
+                description="Code applications in JavaScript, MakeCode, .NET, Python, ..."
+                buttonText="Client programming"
+                buttonVariant="link"
+                buttonUrl="/clients/"
+                image={<HTML5Image />}
+            />
+
+            <CenterGrid
+                subtitle="Want to know more? Read on!"
+                // imageColumns={6}
+                // image={<StaticImage src="./dashboard.png" alt="Dashboard" />}
+            />
+
+
+            <SplitGrid
+                right={false}
+                subtitle="Making connections"
+                description="Cables make plug-and-play simple and error-free. Jacdac's PCB edge connector is robust, double-sided, and low cost. "
                 buttonText="Connector and cable"
                 buttonVariant="link"
                 buttonUrl="/overview/connectorcable/"
@@ -71,24 +84,6 @@ export default function Home() {
                         src="./mechanicalclickconnector.png"
                         alt="Cable and connector"
                         imgStyle={imgStyle}
-                    />
-                }
-            />
-
-            <SplitGrid
-                right={false}
-                subtitle="Clients and Servers"
-                description="Most Jacdac devices are either clients (brains) or servers (modules). A device can be both a client and server as well."
-                buttonText="Clients and Servers"
-                buttonVariant="link"
-                buttonUrl="/overview/clientserver/"
-                imageColumns={6}
-                image={
-                    <img
-                        loading="lazy"
-                        alt="jacdac bus"
-                        src={withPrefix("/images/jdbus.drawio.svg")}
-                        style={imgStyle}
                     />
                 }
             />
@@ -111,8 +106,8 @@ export default function Home() {
             <SplitGrid
                 right={false}
                 subtitle="Services"
-                description="Jacdac services provide a fine-grained but abstract view of a device's features."
-                buttonText="Explore services"
+                description="Jacdac services provide an abstract view of a device's features."
+                buttonText="Service Catalog"
                 buttonVariant="link"
                 buttonUrl="/services/"
                 image={
@@ -123,14 +118,23 @@ export default function Home() {
                 }
             />
 
+
             <SplitGrid
                 right={true}
-                subtitle="Client Programming"
-                description="Program with JavaScript, .NET, Python, MakeCode, ..."
-                buttonText="Program Jacdac"
+                subtitle="Clients and Servers"
+                description="Most Jacdac devices are either clients (brains) or servers (modules). A device can be both a client and server as well."
+                buttonText="Clients and Servers"
                 buttonVariant="link"
-                buttonUrl="/clients/"
-                image={<HTML5Image />}
+                buttonUrl="/overview/clientserver/"
+                imageColumns={6}
+                image={
+                    <img
+                        loading="lazy"
+                        alt="jacdac bus"
+                        src={withPrefix("/images/jdbus.drawio.svg")}
+                        style={imgStyle}
+                    />
+                }
             />
 
             <SplitGrid
