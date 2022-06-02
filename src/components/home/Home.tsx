@@ -27,7 +27,7 @@ export default function Home() {
         >
             <SplitGrid
                 title="Jacdac"
-                subtitle="Connect and code electronics. Instantly."
+                subtitle3="Connect and code electronics. Instantly."
                 imageColumns={6}
                 image={
                     <StaticImage
@@ -77,7 +77,7 @@ export default function Home() {
                 description="Cables make plug-and-play simple and error-free. Jacdac's PCB edge connector is robust, double-sided, and low cost. "
                 buttonText="Connector and cable"
                 buttonVariant="link"
-                buttonUrl="/faq/architecture/connectorcable/"
+                buttonUrl="/reference/connectorcable/"
                 imageColumns={6}
                 image={
                     <StaticImage
@@ -94,7 +94,7 @@ export default function Home() {
                 description="Jacdaptors allow Jacdac to integrate with other ecosystems."
                 buttonText="Jacdaptors"
                 buttonVariant="link"
-                buttonUrl="/faq/architecture/jacdaptors"
+                buttonUrl="/reference/jacdaptors"
                 imageColumns={6}
                 image={
                     <Suspense>
@@ -118,25 +118,6 @@ export default function Home() {
                 }
             />
 
-
-            <SplitGrid
-                right={true}
-                subtitle="Clients and Servers"
-                description="Most Jacdac devices are either clients (brains) or servers (modules). A device can be both a client and server as well."
-                buttonText="Clients and Servers"
-                buttonVariant="link"
-                buttonUrl="/faq/architecture/clientserver/"
-                imageColumns={6}
-                image={
-                    <img
-                        loading="lazy"
-                        alt="jacdac bus"
-                        src={withPrefix("/images/jdbus.drawio.svg")}
-                        style={imgStyle}
-                    />
-                }
-            />
-
             <SplitGrid
                 right={false}
                 subtitle="Web Tools"
@@ -147,6 +128,23 @@ export default function Home() {
                 image={<StaticImage src="./devicetree.png" alt="Device tree" />}
             />
 
+            <SplitGrid
+                right={true}
+                subtitle="Clients and Servers"
+                description="Jacdac servers (modules) encapsulate sensors/actuators. Jacdac clients (brains) are programmable."
+                buttonText="Clients and Servers"
+                buttonVariant="link"
+                buttonUrl="/reference/clientserver/"
+                imageColumns={6}
+                image={
+                    <img
+                        loading="lazy"
+                        alt="jacdac bus"
+                        src={withPrefix("/images/jdbus.drawio.svg")}
+                        style={imgStyle}
+                    />
+                }
+            />
             <SplitGrid
                 right={true}
                 subtitle="For Manufacturers"
