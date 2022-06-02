@@ -63,7 +63,8 @@ export default function DeviceSpecificationList(props: {
                 )
         }
         if (updates) r = r.filter(spec => spec.repo)
-        if (buyNow) r = r.filter(spec => !!spec.storeLink === buyNow)
+        if (buyNow !== undefined)
+            r = r.filter(spec => !!spec.storeLink === buyNow)
         if (hardwareDesign) r = r.filter(spec => spec.hardwareDesign)
         if (firmwareSources) r = r.filter(spec => spec.firmwareSource)
         if (ec30)
