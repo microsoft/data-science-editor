@@ -24,6 +24,7 @@ import MainAppBar from "./shell/MainAppBar"
 import { AlertTitle } from "@mui/material"
 import { UIFlags } from "../jacdac/providerbus"
 import YouTubeContext from "./youtube/YouTubeContext"
+import HelpAlert from "./alert/HelpAlert"
 
 const Breadcrumbs = lazy(() => import("./ui/Breadcrumbs"))
 const DevToolsAlert = lazy(() => import("./alert/DevToolsAlert"))
@@ -291,6 +292,7 @@ function LayoutWithContext(props: LayoutProps) {
                     {element}
                 </Typography>
             )}
+            {!hideUnderConstruction && <HelpAlert />}
         </>
     )
 

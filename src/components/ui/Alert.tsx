@@ -7,16 +7,10 @@ import React, { ReactNode, useState } from "react"
 const PREFIX = "Alert"
 
 const classes = {
-    root: `${PREFIX}root`,
     icon: `${PREFIX}icon`,
 }
 
-const StyledCollapse = styled(Collapse)(({ theme }) => ({
-    [`& .${classes.root}`]: {
-        marginTop: theme.spacing(1),
-        marginBottom: theme.spacing(2),
-    },
-
+const StyledCollapse = styled(Collapse)(() => ({
     [`& .${classes.icon}`]: {
         flexDirection: "column",
         justifyContent: "center",
@@ -37,7 +31,7 @@ export default function Alert(
     return (
         <StyledCollapse in={open}>
             <MaterialAlert
-                className={classes.root}
+                sx={{ mt: 1, mb: 2 }}
                 classes={{
                     icon: !title && classes.icon,
                 }}
