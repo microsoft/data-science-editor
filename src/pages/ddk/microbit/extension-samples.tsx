@@ -35,7 +35,7 @@ export default function Samples() {
         "pelikhan/pxt-dfrobot_maqueenplus_v20/jacdac",
     ]
 
-    const [official, samples] = splitFilter(repos, r => /^pelikhan\//.test(r))
+    const [official, samples] = splitFilter(repos, r => !/^pelikhan\//.test(r))
 
     return (
         <>
