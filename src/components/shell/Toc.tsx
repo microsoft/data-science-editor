@@ -117,11 +117,6 @@ export default function Toc(props: { pagePath: string }) {
         // convert pages into tree
         const toc: TocNode[] = [
             {
-                name: "Overview",
-                path: "/overview/",
-                order: 0.01,
-            },
-            {
                 name: "Device Dashboard",
                 path: "/dashboard/",
                 order: 0.1,
@@ -132,13 +127,13 @@ export default function Toc(props: { pagePath: string }) {
                 order: 0.2,
             },
             {
-                name: "Service Catalog",
-                path: "/services/",
-                order: 0.3,
-            },
-            {
                 name: "Client Programming",
                 path: "/clients/",
+                order: 0.4,
+            },
+            {
+                name: "Service Catalog",
+                path: "/services/",
                 order: 0.5,
             },
             {
@@ -193,8 +188,7 @@ export default function Toc(props: { pagePath: string }) {
     const TocListItem = (props: { entry: TocNode; level: number }) => {
         const { entry, level } = props
         const { path, children, name } = entry
-        const selected =
-            pagePath === path || (pagePath === "/" && path === "/overview/")
+        const selected = pagePath === path
         const sub = level === 1 || !!children?.length
         const showSub = sub && !!children?.length && pagePath.startsWith(path)
 

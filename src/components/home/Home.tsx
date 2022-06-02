@@ -77,7 +77,7 @@ export default function Home() {
                 description="Cables make plug-and-play simple and error-free. Jacdac's PCB edge connector is robust, double-sided, and low cost. "
                 buttonText="Connector and cable"
                 buttonVariant="link"
-                buttonUrl="/overview/connectorcable/"
+                buttonUrl="/faq/architecture/connectorcable/"
                 imageColumns={6}
                 image={
                     <StaticImage
@@ -94,7 +94,7 @@ export default function Home() {
                 description="Jacdaptors allow Jacdac to integrate with other ecosystems."
                 buttonText="Jacdaptors"
                 buttonVariant="link"
-                buttonUrl="/overview/jacdaptors"
+                buttonUrl="/faq/architecture/jacdaptors"
                 imageColumns={6}
                 image={
                     <Suspense>
@@ -125,7 +125,7 @@ export default function Home() {
                 description="Most Jacdac devices are either clients (brains) or servers (modules). A device can be both a client and server as well."
                 buttonText="Clients and Servers"
                 buttonVariant="link"
-                buttonUrl="/overview/clientserver/"
+                buttonUrl="/faq/architecture/clientserver/"
                 imageColumns={6}
                 image={
                     <img
