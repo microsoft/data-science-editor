@@ -15,7 +15,7 @@ export default YouTubeContext
 
 // eslint-disable-next-line react/prop-types
 export const YouTubeProvider = ({ children }) => {
-    const [videoId, setVideoId] = useState("youtube_videoid")
+    const [videoId, setVideoId] = useState("")
 
     return (
         <YouTubeContext.Provider value={{ videoId, setVideoId }}>
