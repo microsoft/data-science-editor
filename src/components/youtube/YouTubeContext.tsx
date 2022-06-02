@@ -1,5 +1,4 @@
-import React, { createContext } from "react"
-import useLocalStorage from "../hooks/useLocalStorage"
+import React, { createContext, useState } from "react"
 
 export interface YouTubeProps {
     videoId: string
@@ -16,7 +15,7 @@ export default YouTubeContext
 
 // eslint-disable-next-line react/prop-types
 export const YouTubeProvider = ({ children }) => {
-    const [videoId, setVideoId] = useLocalStorage<string>("youtube_videoid", "")
+    const [videoId, setVideoId] = useState("youtube_videoid")
 
     return (
         <YouTubeContext.Provider value={{ videoId, setVideoId }}>
