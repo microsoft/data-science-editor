@@ -79,9 +79,25 @@ export default function Clients() {
                 }
             />
 
+            <SplitGrid
+                right={false}
+                subtitle="p5*js"
+                imageColumns={8}
+                description="Physical Creative Coding."
+                buttonText="p5.jacdac library"
+                buttonVariant="link"
+                buttonUrl="/clients/p5js"
+                image={
+                    <StaticImage
+                        src="./p5js.jpg"
+                        alt="A p5js program that controls color with sliders."
+                    />
+                }
+            />
+
             <CenterGrid
                 subtitle2="More programming options"
-                subtitle3="p5, Node-Red, React, A-Frame, CLI, ..."
+                subtitle3="Node-Red, React, A-Frame, CLI, ..."
                 buttonText= "Read more"                
                 buttonVariant="link"
                 buttonUrl= "/clients/more"
