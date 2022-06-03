@@ -131,7 +131,7 @@ export default function FilteredDeviceSpecificationList(props: {
             <div style={{ marginTop: "1rem" }} />
             <DeviceSpecificationList
                 {...others}
-                header={"No PCB Edge connector (does not connect with cables`)"}
+                header={"No PCB Edge connector (does not connect with cables)"}
                 query={query}
                 buyNow={true}
                 connector={false}
