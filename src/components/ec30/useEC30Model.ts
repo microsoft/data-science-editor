@@ -139,26 +139,26 @@ export default function useEC30Model(gw: number, gh: number) {
         const halfedgeclose: IModel = {
             paths: {
                 gap_up_to_right: new paths.Arc(
-                    [EDGE_BUTT_RADIUS, eh2 + EDGE_GAP - EDGE_BUTT_RADIUS],
+                    [EDGE_BUTT_RADIUS, eh2 + EDGE_DOUBLE_HALF_GAP - EDGE_BUTT_RADIUS],
                     EDGE_BUTT_RADIUS,
                     90,
                     180
                 ),
                 right_right: new paths.Line(
-                    [EDGE_BUTT_RADIUS, eh2 + EDGE_GAP],
-                    [EDGE_OFFSET + GRID2 - CORNER_RADIUS, eh2 + EDGE_GAP]
+                    [EDGE_BUTT_RADIUS, eh2 + EDGE_DOUBLE_HALF_GAP],
+                    [EDGE_OFFSET + GRID2 - CORNER_RADIUS, eh2 + EDGE_DOUBLE_HALF_GAP]
                 ),
                 right_to_up: new paths.Arc(
                     [
                         EDGE_OFFSET + GRID2 - CORNER_RADIUS,
-                        eh2 + EDGE_GAP + CORNER_RADIUS,
+                        eh2 + EDGE_DOUBLE_HALF_GAP + CORNER_RADIUS,
                     ],
                     CORNER_RADIUS,
                     270,
                     360
                 ),
                 up_again: new paths.Line(
-                    [EDGE_OFFSET + GRID2, eh2 + EDGE_GAP + CORNER_RADIUS],
+                    [EDGE_OFFSET + GRID2, eh2 + EDGE_DOUBLE_HALF_GAP + CORNER_RADIUS],
                     [EDGE_OFFSET + GRID2, (GRID * 3) / 2]
                 ),
             },
