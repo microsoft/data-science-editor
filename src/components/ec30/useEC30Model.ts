@@ -6,6 +6,7 @@ const CORNER_RADIUS = 1
 const NOTCH_RADIUS = 1
 const NOTCH_OFFSET = 1.5
 const NOTCH_CORNER_RADIUS = 0.2
+const NOTCH_RIGHT_OFFSET = 7
 const GRID = 5
 const GRID2 = GRID / 2
 
@@ -69,7 +70,7 @@ export default function useEC30Model(gw: number, gh: number) {
         const upper_ridge: IModel = {
             models: {
                 notch: model.move(model.clone(notch), [
-                    -w2 - GRID2 + 7 - NOTCH_RADIUS,
+                    -w2 - GRID2 + NOTCH_RIGHT_OFFSET - NOTCH_RADIUS,
                     0,
                 ]),
             },
