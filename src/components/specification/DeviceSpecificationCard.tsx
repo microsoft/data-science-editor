@@ -43,7 +43,7 @@ export default function DeviceSpecificationCard(props: {
         )
         ?.join(", ")
     return (
-        <Card>
+        <Card raised>
             <CardActionArea to={`/devices/${identifierToUrlPath(id)}`}>
                 <img
                     src={imageUrl}
