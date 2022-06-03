@@ -14,8 +14,12 @@ export default function MakeCodeExtensionFooter(props: {
                 header={<h2 id="projects">Projects</h2>}
                 serviceName={serviceName}
             />
-            <h2 id="devices">Devices</h2>
-            <DeviceSpecificationList serviceName={serviceName} />
+
+            <DeviceSpecificationList
+                header={<h2 id="devices">Devices</h2>}
+                buyNow={true}
+                serviceName={serviceName}
+            />
             <h2>See Also</h2>
             <ul>
                 <li>

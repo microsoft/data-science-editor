@@ -25,18 +25,20 @@ export default function MakeCodeProjectFooter(props: { serviceNames: string }) {
             <h2 id="devices">Devices</h2>
             {names.length > 1 ? (
                 names.map(name => (
-                    <Fragment key={name}>
-                        <h3>{serviceSpecificationFromName(name).name}</h3>
-                        <DeviceSpecificationList
-                            key={name}
-                            serviceName={name}
-                        />
-                    </Fragment>
+                    <DeviceSpecificationList
+                        key={name}
+                        header={
+                            <h3>{serviceSpecificationFromName(name).name}</h3>
+                        }
+                        serviceName={name}
+                        buyNow={true}
+                    />
                 ))
             ) : (
                 <DeviceSpecificationList
                     key={names[0]}
                     serviceName={names[0]}
+                    buyNow={true}
                 />
             )}
             <h2>See Also</h2>
