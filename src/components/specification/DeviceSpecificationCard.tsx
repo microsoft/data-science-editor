@@ -47,7 +47,7 @@ export default function DeviceSpecificationCard(props: {
             <CardActionArea to={`/devices/${identifierToUrlPath(id)}`}>
                 <img
                     src={imageUrl}
-                    style={{ aspectRatio: "3 / 2", width: "100%" }}
+                    style={{ aspectRatio: "4 / 3", width: "100%" }}
                     alt={`photograph of ${specification.name}`}
                 />
                 <CardContent>
