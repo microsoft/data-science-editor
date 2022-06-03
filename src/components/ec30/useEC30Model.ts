@@ -108,67 +108,7 @@ export default function useEC30Model(gw: number, gh: number) {
                 lower_left: model.move(model.clone(hole), [w2, -h2]),
             },
         }
-        const halfedge: IModel = {
-            paths: {
-                up: new paths.Line(
-                    [EDGE_WIDTH, 0],
-                    [EDGE_WIDTH, eh2 - EDGE_CORNER_RADIUS]
-                ),
-                up_to_top: new paths.Arc(
-                    [EDGE_WIDTH - EDGE_CORNER_RADIUS, eh2 - EDGE_CORNER_RADIUS],
-                    EDGE_CORNER_RADIUS,
-                    0,
-                    90
-                ),
-                top: new paths.Line(
-                    [EDGE_WIDTH - EDGE_CORNER_RADIUS, eh2],
-                    [EDGE_BUTT_RADIUS, eh2]
-                ),
-                top_to_up: new paths.Arc(
-                    [EDGE_BUTT_RADIUS, eh2 + EDGE_BUTT_RADIUS],
-                    EDGE_BUTT_RADIUS,
-                    180,
-                    270
-                ),
-                gap_up: new paths.Line(
-                    [0, eh2 + EDGE_BUTT_RADIUS],
-                    [0, eh2 + EDGE_GAP - EDGE_BUTT_RADIUS]
-                ),
-                gap_up_to_right: new paths.Arc(
-                    [EDGE_BUTT_RADIUS, eh2 + EDGE_GAP - EDGE_BUTT_RADIUS],
-                    EDGE_BUTT_RADIUS,
-                    90,
-                    180
-                ),
-                right_right: new paths.Line(
-                    [EDGE_BUTT_RADIUS, eh2 + EDGE_GAP],
-                    [EDGE_OFFSET + GRID2 - CORNER_RADIUS, eh2 + EDGE_GAP]
-                ),
-                right_to_up: new paths.Arc(
-                    [
-                        EDGE_OFFSET + GRID2 - CORNER_RADIUS,
-                        eh2 + EDGE_GAP + CORNER_RADIUS,
-                    ],
-                    CORNER_RADIUS,
-                    270,
-                    360
-                ),
-                up_again: new paths.Line(
-                    [EDGE_OFFSET + GRID2, eh2 + EDGE_GAP + CORNER_RADIUS],
-                    [EDGE_OFFSET + GRID2, (GRID * 3) / 2]
-                ),
-            },
-        }
-        const edge: IModel = {
-            models: {
-                up: model.clone(halfedge),
-                down: model.move(
-                    model.mirror(model.clone(halfedge), false, true),
-                    [0, 0]
-                ),
-            },
-        }
-        const halfdoubleedge: IModel = {
+        const halfedgegap: IModel = {
             paths: {
                 up: new paths.Line(
                     [EDGE_WIDTH, 0],
@@ -196,11 +136,53 @@ export default function useEC30Model(gw: number, gh: number) {
                 ),
             },
         }
+        const halfedgeclose: IModel = {
+            paths: {
+                gap_up_to_right: new paths.Arc(
+                    [EDGE_BUTT_RADIUS, eh2 + EDGE_GAP - EDGE_BUTT_RADIUS],
+                    EDGE_BUTT_RADIUS,
+                    90,
+                    180
+                ),
+                right_right: new paths.Line(
+                    [EDGE_BUTT_RADIUS, eh2 + EDGE_GAP],
+                    [EDGE_OFFSET + GRID2 - CORNER_RADIUS, eh2 + EDGE_GAP]
+                ),
+                right_to_up: new paths.Arc(
+                    [
+                        EDGE_OFFSET + GRID2 - CORNER_RADIUS,
+                        eh2 + EDGE_GAP + CORNER_RADIUS,
+                    ],
+                    CORNER_RADIUS,
+                    270,
+                    360
+                ),
+                up_again: new paths.Line(
+                    [EDGE_OFFSET + GRID2, eh2 + EDGE_GAP + CORNER_RADIUS],
+                    [EDGE_OFFSET + GRID2, (GRID * 3) / 2]
+                ),
+            },
+        }
+        const halfedge: IModel = {
+            models: {
+                gap: model.clone(halfedgegap),
+                close: model.clone(halfedgeclose),
+            },
+        }
+        const edge: IModel = {
+            models: {
+                up: model.clone(halfedge),
+                down: model.move(
+                    model.mirror(model.clone(halfedge), false, true),
+                    [0, 0]
+                ),
+            },
+        }
         const double_edge: IModel = {
             models: {
-                up: model.clone(halfdoubleedge),
+                up: model.clone(halfedgegap),
                 down: model.move(
-                    model.mirror(model.clone(halfdoubleedge), false, true),
+                    model.mirror(model.clone(halfedgegap), false, true),
                     [0, 0]
                 ),
             },
