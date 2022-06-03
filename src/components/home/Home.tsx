@@ -89,12 +89,6 @@ export default function Home() {
                 image={<StaticImage src="./devicetree.png" alt="Device tree" />}
             />
 
-
-            <CenterGrid
-                    title="Making Connections"
-            />
-
-
             <SplitGrid
                 subtitle="Cable"
                 description="Jacdac's state-of-the-art hook design delivers an impeccably fluid plug/unplug motion. Plugging the cable and experiencing a snap-fit feeling gives confidence that the connection has been made. This is achieved by two metallic hooks that snap into two slots on the board, always ensuring a robust link."
@@ -107,27 +101,6 @@ export default function Home() {
                 }
             />
             
-            <SplitGrid
-                right={true}
-                subtitle="Ergonomic."
-                description=" Regardless being extremely compact (only 9.5x18.5mm), it provides an unprecedented experience in terms of comfort and ergonomic in its everyday use. This makes connecting microcontrollers and peripherals as simple as plugging a USB device into your personal computer."
-                imageColumns={6}
-                image={<StaticImage src="./ucable.png" alt="Short cable" />}
-            />
-            
-            <SplitGrid
-                right={true}
-                subtitle="Minimum effort. Maximum flexibility."
-                description="The cable has been designed to make it extremely easy to plug in to connect modules together. While at the same time it provides a robust and reliable connection that’s difficult to unplug unvoluntarily. Bring your prototypes to the next level."
-                imageColumns={6}
-                image={
-                    <StaticImage
-                        src="./rotary.png"
-                        alt="A Jacdac rotary encoder module plugging into a Jacdac cable"
-                    />
-                }
-            />
-
             <SplitGrid
                 subtitle="Connector"
                 description="Jacdac devices feature 3-pin PCB-based double-sided edge connectors."
@@ -183,10 +156,6 @@ export default function Home() {
                         <JacdaptorImageList />
                     </Suspense>
                 }
-            />
-
-            <CenterGrid
-                title="Getting Technical"
             />
 
             <SplitGrid
