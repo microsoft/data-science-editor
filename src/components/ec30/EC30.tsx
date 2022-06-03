@@ -10,7 +10,7 @@ const NOTCH_CORNER_RADIUS = 0.2
 const GRID = 5
 const GRID2 = GRID / 2
 
-const EDGE_WIDTH = 6 // 6?
+const EDGE_WIDTH = 5.9
 const EDGE_HEIGHT = 6.6
 const EDGE_CORNER_RADIUS = 0.8
 const EDGE_BUTT_RADIUS = CORNER_RADIUS
@@ -31,6 +31,7 @@ export default function EC30(props: { gw: number; gh: number }) {
         const h2 = h / 2
 
         const eh2 = EDGE_HEIGHT / 2
+        const ehf2 = eh2 + EDGE_GAP + CORNER_RADIUS
 
         const corner: IModel = {
             paths: {
@@ -90,6 +91,14 @@ export default function EC30(props: { gw: number; gh: number }) {
         const vridge: IModel = {
             paths: {
                 line: new paths.Line([0, -h2 + GRID2], [0, h2 - GRID2]),
+            },
+        }
+        const v_edge_ridge: IModel = {
+            paths: {
+                line: new paths.Line(
+                    [0, h2 - GRID2],
+                    [0, ehf2]
+                ),
             },
         }
         const hole: IModel = {
@@ -175,11 +184,13 @@ export default function EC30(props: { gw: number; gh: number }) {
                     model.rotate(model.clone(corner), 90),
                     [-w2, h2]
                 ),
-                //left_ridge: model.move(model.clone(vridge), [-w2 - GRID2, 0]),
+
+                left_upper_right: model.move(model.clone(v_edge_ridge), [-w2 - GRID2, 0]),
                 left_edge: model.move(
                     model.mirror(model.clone(edge), true, false),
                     [-w2 + EDGE_OFFSET, 0]
                 ),
+                left_lower_right: model.move(model.mirror(model.clone(v_edge_ridge), false, true), [-w2 - GRID2, 0]),
 
                 lower_left_corner: model.move(
                     model.rotate(model.clone(corner), 180),
@@ -191,13 +202,15 @@ export default function EC30(props: { gw: number; gh: number }) {
                     [w2, -h2]
                 ),
 
-                //right_ridge: model.move(model.clone(vridge), [w2 + GRID2, 0]),
+                right_upper_right: model.move(model.clone(v_edge_ridge), [w2 + GRID2, 0]),
                 right_edge: model.move(model.clone(edge), [
                     w2 - EDGE_OFFSET,
                     0,
                 ]),
+                right_lower_right: model.move(model.mirror(model.clone(v_edge_ridge), false, true), [w2 + GRID2, 0]),
             },
         }
+
         const frame = model.move(pcb, [aw / 2, ah / 2])
         return {
             __html: exporter.toSVG(frame, {
