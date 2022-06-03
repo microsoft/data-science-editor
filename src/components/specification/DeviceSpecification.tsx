@@ -273,6 +273,9 @@ export default function DeviceSpecification(props: {
             {shape && (
                 <>
                     <h3 id="pcbformfactor">PCB Form Factor</h3>
+                    <p>
+                        Use the files below to get started with laser cutting and 3D modelling for this device.
+                    </p>
                     <Suspense>
                         <Enclosure shape={shape} />
                     </Suspense>
