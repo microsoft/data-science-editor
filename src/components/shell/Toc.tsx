@@ -194,7 +194,7 @@ export default function Toc(props: { pagePath: string }) {
                 order: 0.85,
             },
             {
-                name: "BLOG",
+                name: "Blog",
                 path: "/blog/",
                 order: 0.88,
             },
