@@ -23,8 +23,6 @@ export default function FilteredDeviceSpecificationList(props: {
     const [query, setQuery] = useState("")
     const [firmwareSources, setFirmwareSources] = useState(false)
     const [hardwareDesign, setHardwareDesign] = useState(false)
-    const [makeCode, setMakeCode] = useState(false)
-    const [ec30, setEC30] = useState(false)
 
     const tags = useChange(deviceCatalog, _ =>
         unique(
@@ -41,8 +39,6 @@ export default function FilteredDeviceSpecificationList(props: {
         startTransition(() => setQuery(e.target.value))
     const handleSetFirmwareSources = () => setFirmwareSources(c => !c)
     const handleSetHardwareDesign = () => setHardwareDesign(c => !c)
-    const handleMakeCode = () => setMakeCode(c => !c)
-    const handleEC30 = () => setEC30(c => !c)
     const handleSetSelectedTag = (tag: string) => () =>
         setSelectedTags(ts => {
             const i = ts.indexOf(tag)
@@ -78,20 +74,6 @@ export default function FilteredDeviceSpecificationList(props: {
                 )}
                 <Grid item>
                     <FilterChip
-                        label="MakeCode"
-                        value={makeCode}
-                        onClick={handleMakeCode}
-                    />
-                </Grid>
-                <Grid item>
-                    <FilterChip
-                        label="ec30"
-                        value={ec30}
-                        onClick={handleEC30}
-                    />
-                </Grid>
-                <Grid item>
-                    <FilterChip
                         label="firmware code"
                         value={firmwareSources}
                         onClick={handleSetFirmwareSources}
@@ -121,12 +103,10 @@ export default function FilteredDeviceSpecificationList(props: {
                 query={query}
                 buyNow={true}
                 connector={true}
-                makeCode={makeCode}
                 firmwareSources={firmwareSources}
                 hardwareDesign={hardwareDesign}
                 serviceClass={serviceClass}
                 tags={selectedTags}
-                ec30={ec30}
             />
             <div style={{ marginTop: "5rem" }} />
             <DeviceSpecificationList
@@ -135,12 +115,10 @@ export default function FilteredDeviceSpecificationList(props: {
                 query={query}
                 buyNow={true}
                 connector={false}
-                makeCode={makeCode}
                 firmwareSources={firmwareSources}
                 hardwareDesign={hardwareDesign}
                 serviceClass={serviceClass}
                 tags={selectedTags}
-                ec30={ec30}
             />
             <div style={{ marginTop: "5rem" }} />
             <DeviceSpecificationList
@@ -148,12 +126,10 @@ export default function FilteredDeviceSpecificationList(props: {
                 header={"Prototypes (not available for purchase)"}
                 query={query}
                 buyNow={false}
-                makeCode={makeCode}
                 firmwareSources={firmwareSources}
                 hardwareDesign={hardwareDesign}
                 serviceClass={serviceClass}
                 tags={selectedTags}
-                ec30={ec30}
             />
         </>
     )

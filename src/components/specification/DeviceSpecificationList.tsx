@@ -1,5 +1,5 @@
 import React, { ReactNode, useMemo } from "react"
-import { Grid, Typography } from "@mui/material"
+import { Grid } from "@mui/material"
 import { escapeDeviceIdentifier } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import useDeviceSpecifications from "../devices/useDeviceSpecifications"
 import useGridBreakpoints from "../useGridBreakpoints"
@@ -96,11 +96,24 @@ export default function DeviceSpecificationList(props: {
                     ...spec.services.map(srv => renderServiceName(srv)),
                 ].some(s => s?.toLowerCase()?.indexOf(query.toLowerCase()) > -1)
             )
-        r.sort(
-            (a, b) =>
-                (a.connector === "noConnector" ? 1 : 0) -
-                (b.connector === "noConnector" ? 1 : 0)
-        )
+        r = r.sort((a, b) => {
+            let c = -(isEC30(a.shape) ? 1 : 0) + (isEC30(b.shape) ? 1 : 0)
+            if (c) return c
+            c =
+                (a.connector === "noConnector" ||
+                a.connector === "edgePassive" ||
+                a.connector === "edgeIndependent"
+                    ? 1
+                    : 0) -
+                (b.connector === "noConnector" ||
+                b.connector === "edgePassive" ||
+                b.connector === "edgeIndependent"
+                    ? 1
+                    : 0)
+            if (c) return c
+
+            return a.name.localeCompare(b.name)
+        })
         if (count !== undefined) r = r.slice(0, count)
         return r
     }, [
@@ -127,7 +140,7 @@ export default function DeviceSpecificationList(props: {
     if (!specs.length) return null
 
     return (
-        <Grid container spacing={2}>
+        <Grid container spacing={3}>
             {header && <GridHeader title={header} />}
             {specs.map(specification => (
                 <Grid key={specification.id} item {...gridBreakpoints}>
