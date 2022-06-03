@@ -11,7 +11,7 @@ export function useModelSvg(m: IModel) {
                 units: "mm",
                 strokeWidth: "2",
                 stroke: theme.palette.common.black,
-                fill: theme.palette.common.white,
+                fill: theme.palette.background.default,
             }) as string),
         [theme, m]
     )

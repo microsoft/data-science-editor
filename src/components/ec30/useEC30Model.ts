@@ -41,6 +41,18 @@ export default function useEC30Model(gw: number, gh: number) {
             },
         }
 
+        const notch_corner: IModel = {
+            paths: {
+                // upper right corner
+                rightv: new paths.Line(
+                    [GRID2, 0],
+                    [GRID2, -GRID2 + NOTCH_CORNER_RADIUS]
+                ),
+                curve: new paths.Arc([0, 0], GRID2, 0, 90),
+                lefth: new paths.Line([0, GRID2], [-GRID2, GRID2]),
+            },
+        }
+
         const halfnotch: IModel = {
             paths: {
                 halfarc: new paths.Arc(
@@ -51,7 +63,7 @@ export default function useEC30Model(gw: number, gh: number) {
                 ),
                 notch_up: new paths.Line(
                     [NOTCH_RADIUS, -NOTCH_OFFSET + NOTCH_RADIUS],
-                    [NOTCH_RADIUS, 0]
+                    [NOTCH_RADIUS, -NOTCH_CORNER_RADIUS]
                 ),
                 notch_to_right: new paths.Arc(
                     [NOTCH_RADIUS + NOTCH_CORNER_RADIUS, -NOTCH_CORNER_RADIUS],
@@ -139,14 +151,20 @@ export default function useEC30Model(gw: number, gh: number) {
         const halfedgeclose: IModel = {
             paths: {
                 gap_up_to_right: new paths.Arc(
-                    [EDGE_BUTT_RADIUS, eh2 + EDGE_DOUBLE_HALF_GAP - EDGE_BUTT_RADIUS],
+                    [
+                        EDGE_BUTT_RADIUS,
+                        eh2 + EDGE_DOUBLE_HALF_GAP - EDGE_BUTT_RADIUS,
+                    ],
                     EDGE_BUTT_RADIUS,
                     90,
                     180
                 ),
                 right_right: new paths.Line(
                     [EDGE_BUTT_RADIUS, eh2 + EDGE_DOUBLE_HALF_GAP],
-                    [EDGE_OFFSET + GRID2 - CORNER_RADIUS, eh2 + EDGE_DOUBLE_HALF_GAP]
+                    [
+                        EDGE_OFFSET + GRID2 - CORNER_RADIUS,
+                        eh2 + EDGE_DOUBLE_HALF_GAP,
+                    ]
                 ),
                 right_to_up: new paths.Arc(
                     [
@@ -158,7 +176,10 @@ export default function useEC30Model(gw: number, gh: number) {
                     360
                 ),
                 up_again: new paths.Line(
-                    [EDGE_OFFSET + GRID2, eh2 + EDGE_DOUBLE_HALF_GAP + CORNER_RADIUS],
+                    [
+                        EDGE_OFFSET + GRID2,
+                        eh2 + EDGE_DOUBLE_HALF_GAP + CORNER_RADIUS,
+                    ],
                     [EDGE_OFFSET + GRID2, (GRID * 3) / 2]
                 ),
             },
@@ -197,7 +218,7 @@ export default function useEC30Model(gw: number, gh: number) {
                     h2 + GRID2,
                 ]),
                 upper_left_corner: model.move(
-                    model.rotate(model.clone(corner), 90),
+                    model.rotate(model.clone(notch_corner), 90),
                     [-w2, h2]
                 ),
 

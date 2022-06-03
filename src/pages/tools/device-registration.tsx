@@ -808,7 +808,7 @@ export default function DeviceRegistration() {
                     <Suspense>
                         <GithubPullRequestButton
                             label={"start registration"}
-                            title={`Device: ${device.name}`}
+                            title={`Device: ${device.company} ${device.name} ${device.version}`}
                             head={`devices/${device.id}`}
                             description={`This pull request will start the registration of your device in the Jacdac catalog.`}
                             files={files}
