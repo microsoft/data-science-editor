@@ -15,6 +15,7 @@ const EDGE_HEIGHT = 6.6
 const EDGE_CORNER_RADIUS = 0.8
 const EDGE_BUTT_RADIUS = CORNER_RADIUS
 const EDGE_GAP = 2.7
+const EDGE_DOUBLE_HALF_GAP = GRID - EDGE_HEIGHT / 3
 const EDGE_OFFSET = 2
 
 export default function useEC30Model(gw: number, gh: number) {
@@ -167,6 +168,44 @@ export default function useEC30Model(gw: number, gh: number) {
                 ),
             },
         }
+        const halfdoubleedge: IModel = {
+            paths: {
+                up: new paths.Line(
+                    [EDGE_WIDTH, 0],
+                    [EDGE_WIDTH, eh2 - EDGE_CORNER_RADIUS]
+                ),
+                up_to_top: new paths.Arc(
+                    [EDGE_WIDTH - EDGE_CORNER_RADIUS, eh2 - EDGE_CORNER_RADIUS],
+                    EDGE_CORNER_RADIUS,
+                    0,
+                    90
+                ),
+                top: new paths.Line(
+                    [EDGE_WIDTH - EDGE_CORNER_RADIUS, eh2],
+                    [EDGE_BUTT_RADIUS, eh2]
+                ),
+                top_to_up: new paths.Arc(
+                    [EDGE_BUTT_RADIUS, eh2 + EDGE_BUTT_RADIUS],
+                    EDGE_BUTT_RADIUS,
+                    180,
+                    270
+                ),
+                gap_up: new paths.Line(
+                    [0, eh2 + EDGE_BUTT_RADIUS],
+                    [0, eh2 + EDGE_DOUBLE_HALF_GAP - EDGE_BUTT_RADIUS]
+                ),
+            },
+        }
+        const double_edge: IModel = {
+            models: {
+                up: model.clone(halfdoubleedge),
+                down: model.move(
+                    model.mirror(model.clone(halfdoubleedge), false, true),
+                    [0, 0]
+                ),
+            },
+        }
+
         const pcb: IModel = {
             models: {
                 holes: model.clone(holes),
@@ -188,6 +227,16 @@ export default function useEC30Model(gw: number, gh: number) {
                     model.mirror(model.clone(edge), true, false),
                     [-w2 + EDGE_OFFSET, 0]
                 ),
+                /*
+                left_edge: model.move(
+                    model.mirror(model.clone(double_edge), true, false),
+                    [-w2 + EDGE_OFFSET, GRID]
+                ),
+                left_edge_2: model.move(
+                    model.mirror(model.clone(double_edge), true, false),
+                    [-w2 + EDGE_OFFSET, -GRID]
+                ),
+                */
                 left_lower_right: model.move(
                     model.mirror(model.clone(v_edge_ridge), false, true),
                     [-w2 - GRID2, 0]
