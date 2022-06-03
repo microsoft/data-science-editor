@@ -1,6 +1,8 @@
 import React, { useMemo } from "react"
 import { model, paths, exporter, IModel } from "makerjs"
 import { Button, Card, CardActions, CardContent, useTheme } from "@mui/material"
+import useDataUri from "../hooks/useDataUri"
+import ChipList from "../ui/ChipList"
 
 const MOUNTING_HOLE_RADIUS = 3.1 / 2
 const CORNER_RADIUS = 1
@@ -17,10 +19,8 @@ const EDGE_BUTT_RADIUS = CORNER_RADIUS
 const EDGE_GAP = 2.7
 const EDGE_OFFSET = 2
 
-export default function EC30(props: { gw: number; gh: number }) {
-    const { gw, gh } = props
-
-    const { __html, width, height } = useMemo(() => {
+function useEC30Model(gw: number, gh: number) {
+    return useMemo(() => {
         const w = gw * GRID * 2
         const h = gh * GRID * 2
 
@@ -221,30 +221,67 @@ export default function EC30(props: { gw: number; gh: number }) {
         }
 
         const frame = model.move(pcb, [aw / 2, ah / 2])
-        const theme = useTheme()
-        return {
-            __html: exporter.toSVG(frame, {
+        return frame
+    }, [gw, gh])
+}
+
+function useEC30Svg(m: IModel) {
+    const theme = useTheme()
+    return useMemo(
+        () =>
+            m &&
+            (exporter.toSVG(m, {
                 units: "mm",
                 strokeWidth: "2",
                 stroke: theme.palette.common.black,
                 fill: theme.palette.common.white,
-            }) as string,
-            width: aw,
-            height: ah,
-        }
-    }, [gw, gh])
+            }) as string),
+        [theme, m]
+    )
+}
 
-    const svgUri = `data:text/plain;charset=UTF-8,${encodeURIComponent(__html)}`
+function useEC30DXF(m: IModel) {
+    return useMemo(
+        () =>
+            m &&
+            (exporter.toDXF(m, {
+                units: "mm",
+            }) as string),
+        [m]
+    )
+}
+
+export default function EC30(props: { gw: number; gh: number }) {
+    const { gw, gh } = props
+
+    const m = useEC30Model(gw, gh)
+    const svg = useEC30Svg(m)
+    const svgUri = useDataUri(svg)
+    const dxf = useEC30DXF(m)
+    const dxfUri = useDataUri(dxf)
 
     return (
         <Card>
             <CardContent>
-                <div dangerouslySetInnerHTML={{ __html }} />
+                <div dangerouslySetInnerHTML={{ __html: svg }} />
             </CardContent>
             <CardActions>
-                <Button variant="outlined" href={svgUri} download={"ec30.svg"}>
-                    Download SVG
-                </Button>
+                <ChipList>
+                    <Button
+                        variant="outlined"
+                        href={svgUri}
+                        download={"ec30.svg"}
+                    >
+                        Download SVG
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        href={dxfUri}
+                        download={"ec30.dxf"}
+                    >
+                        Download DXF
+                    </Button>
+                </ChipList>
             </CardActions>
         </Card>
     )
