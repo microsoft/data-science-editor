@@ -26,6 +26,10 @@ export function generateEC30EnclosureModel(
     const boxHeight = height + c
     return {
         name: `${width}x${height}`,
+        grid: {
+            width: gridWidth,
+            height: gridHeight,
+        },
         box: {
             width: boxWidth,
             height: boxHeight,

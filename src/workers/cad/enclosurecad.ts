@@ -39,6 +39,10 @@ const notchRadius = 1
 
 export interface EnclosureModel {
     name: string
+    grid: {
+        width: number
+        height: number
+    }
     box: {
         width: number
         height: number

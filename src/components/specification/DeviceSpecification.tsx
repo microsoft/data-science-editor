@@ -273,12 +273,9 @@ export default function DeviceSpecification(props: {
             {shape && (
                 <>
                     <h3 id="pcbformfactor">PCB Form Factor</h3>
-                    Generate a 3D-printable enclosure for this module.
-                    <NoSsr>
-                        <Suspense>
-                            <Enclosure shape={shape} />
-                        </Suspense>
-                    </NoSsr>
+                    <Suspense>
+                        <Enclosure shape={shape} />
+                    </Suspense>
                 </>
             )}
             {!!firmwares && (

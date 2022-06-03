@@ -1,6 +1,6 @@
 import React, { lazy, useEffect, useState } from "react"
 
-import { Button, Grid, NoSsr } from "@mui/material"
+import { Button, Grid } from "@mui/material"
 import Suspense from "../ui/Suspense"
 import { convertToSTL } from "../blockly/dsl/workers/cad.proxy"
 import type {
@@ -13,17 +13,20 @@ import { CircularProgress } from "@mui/material"
 import { Alert } from "@mui/material"
 
 const STLModelCard = lazy(() => import("../models/STLModelCard"))
+const EC30Card = lazy(() => import("../ec30/EC30Card"))
 
 export default function EnclosureGenerator(props: {
     model: EnclosureModel
     options?: EnclosureOptions
     color?: string
+    hideAfterGenerated?: boolean
 }) {
-    const { color = "#888", model, options } = props
+    const { color = "#888", model, options, hideAfterGenerated } = props
     const [working, setWorking] = useState(false)
     const [files, setFiles] = useState<{ name: string; url: string }[]>()
     const gridBreakpoints = useGridBreakpoints(files?.length)
     const [stlError, setStlError] = useState("")
+    const [hideGenerate, setHideGenerate] = useState(false)
     const mounted = useMounted()
 
     const updateUrl = async () => {
@@ -39,6 +42,7 @@ export default function EnclosureGenerator(props: {
             }))
             setFiles(newFiles)
             setStlError(error)
+            if (hideAfterGenerated) setHideGenerate(true)
         } finally {
             if (mounted()) setWorking(false)
         }
@@ -51,37 +55,41 @@ export default function EnclosureGenerator(props: {
     const handleClick = () => updateUrl()
     return (
         <Grid container spacing={1}>
-            <Grid item xs={12}>
-                <Button
-                    onClick={handleClick}
-                    variant="contained"
-                    color="primary"
-                    disabled={working}
-                    startIcon={
-                        working && (
-                            <CircularProgress
-                                size="1rem"
-                                title="generating STL files"
-                                variant="indeterminate"
-                            />
-                        )
-                    }
-                >
-                    Generate STL
-                </Button>
-            </Grid>
+            {!hideGenerate && (
+                <Grid item xs={12}>
+                    <Button
+                        onClick={handleClick}
+                        variant="outlined"
+                        disabled={working}
+                        startIcon={
+                            working && (
+                                <CircularProgress
+                                    size="1rem"
+                                    title="generating STL files"
+                                    variant="indeterminate"
+                                />
+                            )
+                        }
+                    >
+                        Generate Enclosure STL
+                    </Button>
+                </Grid>
+            )}
             {stlError && (
                 <Grid item xs={12}>
                     <Alert severity="error">{stlError}</Alert>
                 </Grid>
             )}
+            <Grid item>
+                <Suspense>
+                    <EC30Card model={model} />
+                </Suspense>
+            </Grid>
             {files?.map(file => (
                 <Grid item key={file.name} {...gridBreakpoints}>
-                    <NoSsr>
-                        <Suspense>
-                            <STLModelCard {...file} color={color} />
-                        </Suspense>
-                    </NoSsr>
+                    <Suspense>
+                        <STLModelCard {...file} color={color} />
+                    </Suspense>
                 </Grid>
             ))}
         </Grid>

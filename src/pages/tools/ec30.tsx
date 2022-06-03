@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Grid } from "@mui/material"
 import React, { lazy, useId, useState } from "react"
+import { generateEC30EnclosureModel } from "../../components/enclosure/ec30"
 import SliderWithLabel from "../../components/ui/SliderWithLabel"
 import Suspense from "../../components/ui/Suspense"
-const EC30 = lazy(() => import("../../components/ec30/EC30"))
+const EC30Card = lazy(() => import("../../components/ec30/EC30Card"))
 
 export default function Page() {
     const [gridWidth, setGridWith] = useState(2)
@@ -22,9 +23,11 @@ export default function Page() {
         value: number | number[]
     ) => setGridHeight(value as number)
 
+    const model = generateEC30EnclosureModel(gridWidth, gridHeight, 1.6)
+
     return (
         <>
-            <h1>EC30 profile</h1>
+            <h1>EC30 shape generator</h1>
             <Grid container spacing={2}>
                 <Grid item>
                     <SliderWithLabel
@@ -48,7 +51,7 @@ export default function Page() {
                 </Grid>
                 <Grid item xs={12}>
                     <Suspense>
-                        <EC30 gw={gridWidth} gh={gridHeight} />
+                        <EC30Card model={model} />
                     </Suspense>
                 </Grid>
             </Grid>
