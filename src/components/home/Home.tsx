@@ -98,7 +98,7 @@ export default function Home() {
             <SplitGrid
                 subtitle="Cable"
                 description="Jacdac's state-of-the-art hook design delivers an impeccably fluid plug/unplug motion. Plugging the cable and experiencing a snap-fit feeling gives confidence that the connection has been made. This is achieved by two metallic hooks that snap into two slots on the board, always ensuring a robust link."
-                imageColumns={8}
+                imageColumns={6}
                 image={
                     <StaticImage
                         src="./fullassembly.png"
@@ -111,6 +111,7 @@ export default function Home() {
                 right={true}
                 subtitle="Ergonomic."
                 description=" Regardless being extremely compact (only 9.5x18.5mm), it provides an unprecedented experience in terms of comfort and ergonomic in its everyday use. This makes connecting microcontrollers and peripherals as simple as plugging a USB device into your personal computer."
+                imageColumns={6}
                 image={<StaticImage src="./ucable.png" alt="Short cable" />}
             />
             
@@ -118,7 +119,7 @@ export default function Home() {
                 right={true}
                 subtitle="Minimum effort. Maximum flexibility."
                 description="The cable has been designed to make it extremely easy to plug in to connect modules together. While at the same time it provides a robust and reliable connection that’s difficult to unplug unvoluntarily. Bring your prototypes to the next level."
-                imageColumns={8}
+                imageColumns={6}
                 image={
                     <StaticImage
                         src="./rotary.png"
@@ -159,7 +160,7 @@ export default function Home() {
                 right={false}
                 subtitle="How does it work?"
                 description="The PCB edge connector is made of 3 gold fingers on both sides of the PCB, with two slots on the outer edges for mechanical hooking. The cable connector is made of 3 electrical contact pins and 2 mechanical hooks."
-                imageColumns={8}
+                imageColumns={6}
                 image={
                     <StaticImage
                         src="./rhtemp.png"
