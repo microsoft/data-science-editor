@@ -51,6 +51,9 @@ export default function DeviceSpecificationCard(props: {
                     alt={`photograph of ${specification.name}`}
                 />
                 <CardContent>
+                    <Typography variant="subtitle2" color="text.secondary">
+                        {company}
+                    </Typography>
                     <Typography
                         gutterBottom
                         variant="subtitle1"
@@ -68,10 +71,7 @@ export default function DeviceSpecificationCard(props: {
                         )}
                     </Typography>
                     <Typography component="div" variant="subtitle2">
-                        {serviceNames || ""}
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                        {company}
+                        {serviceNames || "."}
                     </Typography>
                     <ChipList>
                         {!storeLink && <Chip size="small" label="prototype" />}
