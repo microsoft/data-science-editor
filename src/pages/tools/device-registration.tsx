@@ -682,7 +682,10 @@ export default function DeviceRegistration() {
                                     <MenuItem key={n} value={n}>
                                         EC30 grid, {x}0mm x {y}0mm, Jacdac edge
                                         connector on the{" "}
-                                        {lr.split("").map(side => sides[side]).join(", ")}
+                                        {lr
+                                            .split("")
+                                            .map(side => sides[side])
+                                            .join(", ")}
                                     </MenuItem>
                                 ))}
                         </Select>
@@ -745,7 +748,7 @@ export default function DeviceRegistration() {
                             onImageImported={handleImageImported}
                         />
                         <Typography variant="caption" component="div">
-                            {`Import an image of the device: must be at least ${DEVICE_IMAGE_WIDTH}x${DEVICE_IMAGE_HEIGHT}, device must be fully visible on a wood (preferrably bamboo background).`}
+                            {`Import an image of the device; must be at least ${DEVICE_IMAGE_WIDTH}x${DEVICE_IMAGE_HEIGHT}, device must be fully visible on a white background; 45 degree isometric prespective tilting to the right.`}
                         </Typography>
                         {imageError && (
                             <Alert severity="error">{imageError}</Alert>
