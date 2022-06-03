@@ -120,6 +120,21 @@ export default function FilteredDeviceSpecificationList(props: {
                 {...others}
                 query={query}
                 buyNow={true}
+                connector={true}
+                makeCode={makeCode}
+                firmwareSources={firmwareSources}
+                hardwareDesign={hardwareDesign}
+                serviceClass={serviceClass}
+                tags={selectedTags}
+                ec30={ec30}
+            />
+            <div style={{ marginTop: "1rem" }} />
+            <DeviceSpecificationList
+                {...others}
+                header={"No PCB Edge connector (does not connect with cables`)"}
+                query={query}
+                buyNow={true}
+                connector={false}
                 makeCode={makeCode}
                 firmwareSources={firmwareSources}
                 hardwareDesign={hardwareDesign}

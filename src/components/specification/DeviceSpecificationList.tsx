@@ -26,6 +26,7 @@ export default function DeviceSpecificationList(props: {
     transports?: jdspec.TransportType[]
     tags?: string[]
     ec30?: boolean
+    connector?: boolean
 }) {
     const {
         header,
@@ -43,6 +44,7 @@ export default function DeviceSpecificationList(props: {
         transports,
         tags,
         ec30,
+        connector,
     } = props
     const specifications = useDeviceSpecifications()
     const specs = useMemo(() => {
@@ -66,6 +68,10 @@ export default function DeviceSpecificationList(props: {
         if (buyNow !== undefined)
             r = r.filter(spec => !!spec.storeLink === buyNow)
         if (hardwareDesign) r = r.filter(spec => spec.hardwareDesign)
+        if (connector !== undefined)
+            r = r.filter(
+                spec => (spec.connector === "noConnector") == !connector
+            )
         if (firmwareSources) r = r.filter(spec => spec.firmwareSource)
         if (ec30)
             r = r.filter(
@@ -111,6 +117,7 @@ export default function DeviceSpecificationList(props: {
         transports?.join(","),
         tags?.join(","),
         ec30,
+        connector,
     ])
     const gridBreakpoints = useGridBreakpoints(specs.length)
     const size = specs?.length < 6 ? "catalog" : "preview"
