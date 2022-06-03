@@ -70,7 +70,9 @@ export default function DeviceSpecificationList(props: {
         if (hardwareDesign) r = r.filter(spec => spec.hardwareDesign)
         if (connector !== undefined)
             r = r.filter(
-                spec => (spec.connector === "noConnector") == !connector
+                spec =>
+                    (spec.connector === "noConnector" ||
+                        spec.connector === "edgeIndependent") == !connector
             )
         if (firmwareSources) r = r.filter(spec => spec.firmwareSource)
         if (ec30)
