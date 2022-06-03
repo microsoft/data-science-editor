@@ -49,7 +49,7 @@ export default function Home() {
                         imgStyle={imgStyle}
                     />
                 }
-                buttonText="Device Catalog"
+                buttonText="Device catalog"
                 buttonVariant="link"
                 buttonUrl="/devices/"
             />
@@ -74,10 +74,10 @@ export default function Home() {
             <SplitGrid
                 right={false}
                 subtitle="Making connections"
-                description="Cables make plug-and-play simple and error-free. Jacdac's PCB edge connector is robust, double-sided, and low cost. "
-                buttonText="Connector and cable"
+                description="Jacdac's PCB edge connector is robust, double-sided, and low cost."
+                buttonText="Connector"
                 buttonVariant="link"
-                buttonUrl="/reference/connectorcable/"
+                buttonUrl="/reference/connector/"
                 imageColumns={6}
                 image={
                     <StaticImage
@@ -90,6 +90,23 @@ export default function Home() {
 
             <SplitGrid
                 right={true}
+                subtitle="Robust cables"
+                description="Cables make plug-and-play simple and error-free."
+                buttonText="Cable"
+                buttonVariant="link"
+                buttonUrl="/reference/cable/"
+                imageColumns={6}
+                image={
+                    <StaticImage
+                        src="./mechanicalclickconnector.png"
+                        alt="Cable and connector"
+                        imgStyle={imgStyle}
+                    />
+                }
+            />
+
+            <SplitGrid
+                right={false}
                 subtitle="Plays well with others"
                 description="Jacdaptors allow Jacdac to integrate with other ecosystems."
                 buttonText="Jacdaptors"
@@ -104,10 +121,10 @@ export default function Home() {
             />
 
             <SplitGrid
-                right={false}
+                right={true}
                 subtitle="Services"
                 description="Jacdac services provide an abstract view of a device's features."
-                buttonText="Service Catalog"
+                buttonText="Service catalog"
                 buttonVariant="link"
                 buttonUrl="/services/"
                 image={
@@ -132,7 +149,7 @@ export default function Home() {
                 right={true}
                 subtitle="Clients and Servers"
                 description="Jacdac servers (modules) encapsulate sensors/actuators. Jacdac clients (brains) are programmable."
-                buttonText="Clients and Servers"
+                buttonText="Clients and servers"
                 buttonVariant="link"
                 buttonUrl="/reference/clientserver/"
                 imageColumns={6}

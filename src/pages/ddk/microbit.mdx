@@ -3,7 +3,7 @@ title: micro:bit accessories
 order: 101
 ---
 
-# micro:bit Accessories
+# Micro:bit accessories
 
 Jacdac can be integrated into existing and future micro:bit accessories with different level of investment.
 Jacdac brings **simulators** and **digital twins** of sensors/actuators:
@@ -14,7 +14,7 @@ Jacdac brings **simulators** and **digital twins** of sensors/actuators:
 
 As of today, Jacdac runs on **micro:bit V2** exclusively and uses pin **12**.
 
-## [Software only Jacdac](/ddk/microbit/software-only-accessory/) for Existing accessories
+## [Software only Jacdac](/ddk/microbit/software-only-accessory/) for existing accessories
 
 The accessory sensors and actuators are surfaced as Jacdac servers by wrapping the existing extension into a Jacdac compatibility layer.
 **This solution adds no cost and will work for existing accessories.**
@@ -30,9 +30,9 @@ The accessory sensors and actuators are surfaced as Jacdac servers by wrapping t
     -   no Jacdac connector
     -   micro:bit v2 only (Jacdac is not supported on v1)
 
-**[Get started with Software only Jacdac](/ddk/microbit/software-only-accessory/)**
+**[Get started with software only Jacdac](/ddk/microbit/software-only-accessory/)**
 
-## Low Powered physical connector
+## Low powered physical connector
 
 In this scenario, you integrate one or more [Jacdac PCB edge connectors](/ddk/design/electro-mechanical#pcb-edge-connector) into your design, 
 with the Jacdac line connected to micro:bit pin 12 through the required [signal conditioning](/ddk/design/electrical#signalling) circuit
@@ -53,9 +53,9 @@ and a [low power supply](/ddk/design/electrical#overview-of-jacdac-power-sharing
 Note that if your accessory already has a power regulator, you might already have the required circuitery in place.
 For reference about integrating Jacdac with an edge connector, see the [Jacdaptor board schematics](https://github.com/microsoft/jacdac-ddk/tree/main/electronics/deprecated_form_factor/altium_deprecated/reference-designs/JacdacMicroBitShieldLP%2029-0.6).
 
-## Onboard Jacdac server with MCU
+## Onboard Jacdac server with microcontroller unit
 
-In this scenario, the accessory contains an MCU that implements the Jacdac server protocol.
+In this scenario, the accessory contains a microcontroller unit (MCU) that implements the Jacdac server protocol.
 In this case, you do not need to provide any extension as the user will be able to use the built-in Jacdac client libraries.
 
 -   Pros
