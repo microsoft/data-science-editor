@@ -128,7 +128,7 @@ export default function FilteredDeviceSpecificationList(props: {
                 tags={selectedTags}
                 ec30={ec30}
             />
-            <div style={{ marginTop: "1rem" }} />
+            <div style={{ marginTop: "5rem" }} />
             <DeviceSpecificationList
                 {...others}
                 header={"No PCB Edge connector (does not connect with cables)"}
@@ -142,7 +142,7 @@ export default function FilteredDeviceSpecificationList(props: {
                 tags={selectedTags}
                 ec30={ec30}
             />
-            <div style={{ marginTop: "1rem" }} />
+            <div style={{ marginTop: "5rem" }} />
             <DeviceSpecificationList
                 {...others}
                 header={"Prototypes (not available for purchase)"}
