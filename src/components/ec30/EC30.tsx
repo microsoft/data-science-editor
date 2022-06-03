@@ -1,6 +1,6 @@
 import React, { useMemo } from "react"
 import { model, paths, exporter, IModel } from "makerjs"
-import { Button, Card, CardActions, CardContent } from "@mui/material"
+import { Button, Card, CardActions, CardContent, useTheme } from "@mui/material"
 
 const MOUNTING_HOLE_RADIUS = 3.1 / 2
 const CORNER_RADIUS = 1
@@ -95,10 +95,7 @@ export default function EC30(props: { gw: number; gh: number }) {
         }
         const v_edge_ridge: IModel = {
             paths: {
-                line: new paths.Line(
-                    [0, h2 - GRID2],
-                    [0, ehf2]
-                ),
+                line: new paths.Line([0, h2 - GRID2], [0, ehf2]),
             },
         }
         const hole: IModel = {
@@ -185,12 +182,18 @@ export default function EC30(props: { gw: number; gh: number }) {
                     [-w2, h2]
                 ),
 
-                left_upper_right: model.move(model.clone(v_edge_ridge), [-w2 - GRID2, 0]),
+                left_upper_right: model.move(model.clone(v_edge_ridge), [
+                    -w2 - GRID2,
+                    0,
+                ]),
                 left_edge: model.move(
                     model.mirror(model.clone(edge), true, false),
                     [-w2 + EDGE_OFFSET, 0]
                 ),
-                left_lower_right: model.move(model.mirror(model.clone(v_edge_ridge), false, true), [-w2 - GRID2, 0]),
+                left_lower_right: model.move(
+                    model.mirror(model.clone(v_edge_ridge), false, true),
+                    [-w2 - GRID2, 0]
+                ),
 
                 lower_left_corner: model.move(
                     model.rotate(model.clone(corner), 180),
@@ -202,20 +205,29 @@ export default function EC30(props: { gw: number; gh: number }) {
                     [w2, -h2]
                 ),
 
-                right_upper_right: model.move(model.clone(v_edge_ridge), [w2 + GRID2, 0]),
+                right_upper_right: model.move(model.clone(v_edge_ridge), [
+                    w2 + GRID2,
+                    0,
+                ]),
                 right_edge: model.move(model.clone(edge), [
                     w2 - EDGE_OFFSET,
                     0,
                 ]),
-                right_lower_right: model.move(model.mirror(model.clone(v_edge_ridge), false, true), [w2 + GRID2, 0]),
+                right_lower_right: model.move(
+                    model.mirror(model.clone(v_edge_ridge), false, true),
+                    [w2 + GRID2, 0]
+                ),
             },
         }
 
         const frame = model.move(pcb, [aw / 2, ah / 2])
+        const theme = useTheme()
         return {
             __html: exporter.toSVG(frame, {
                 units: "mm",
                 strokeWidth: "2",
+                stroke: theme.palette.common.black,
+                fill: theme.palette.common.white,
             }) as string,
             width: aw,
             height: ah,
