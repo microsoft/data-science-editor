@@ -74,7 +74,7 @@ function TocListItem(props: {
 }) {
     const { pagePath, entry, level } = props
     const { path, children, name } = entry
-    const [expanded, setExpanded] = useState(false)
+    const [expanded, setExpanded] = useState(true)
     const selected = pagePath === path
     const sub = level === 1 || !!children?.length
     const showSub =
