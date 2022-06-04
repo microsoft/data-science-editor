@@ -8,6 +8,7 @@ export default function ModelViewer(props) {
     // eslint-disable-next-line react/prop-types
     const { children, responsive, style, autoRotate } = props
     const ref = useRef()
+    const controlsRef = useRef()
     const canvasRef = useRef()
     const supportsFullScreen =
         typeof document !== "undefined" && !!document.fullscreenEnabled
@@ -41,7 +42,7 @@ export default function ModelViewer(props) {
                 >
                     {children}
                 </Stage>
-                <OrbitControls ref={ref} autoRotate={!!autoRotate} />
+                <OrbitControls ref={controlsRef} autoRotate={!!autoRotate} />
             </Canvas>
             {supportsFullScreen && (
                 <IconButtonWithTooltip

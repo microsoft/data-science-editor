@@ -8,7 +8,6 @@ import type {
     EnclosureOptions,
 } from "../../workers/cad/dist/node_modules/enclosurecad"
 import useGridBreakpoints from "../useGridBreakpoints"
-import useMounted from "../hooks/useMounted"
 import { CircularProgress } from "@mui/material"
 import { Alert } from "@mui/material"
 
@@ -27,15 +26,12 @@ export default function EnclosureGenerator(props: {
     const gridBreakpoints = useGridBreakpoints(files?.length)
     const [stlError, setStlError] = useState("")
     const [hideGenerate, setHideGenerate] = useState(false)
-    const mounted = useMounted()
 
     const updateUrl = async () => {
         try {
             setStlError(undefined)
             setWorking(true)
             const { stls: files, error } = await convertToSTL(model, options)
-            if (!mounted()) return
-
             const newFiles = files?.map(({ name, blob }) => ({
                 name,
                 url: URL.createObjectURL(blob),
@@ -44,7 +40,7 @@ export default function EnclosureGenerator(props: {
             setStlError(error)
             if (hideAfterGenerated) setHideGenerate(true)
         } finally {
-            if (mounted()) setWorking(false)
+            setWorking(false)
         }
     }
     useEffect(
@@ -52,7 +48,10 @@ export default function EnclosureGenerator(props: {
         [files]
     )
 
-    const handleClick = () => updateUrl()
+    const handleClick = async () => {
+        await updateUrl()
+        await updateUrl()
+    }
     return (
         <Grid container spacing={1}>
             {!hideGenerate && (
