@@ -66,8 +66,11 @@ export default function ServiceMarkdown(props: {
                 <ServiceButtons service={service} makecodeSlug={makecodeSlug} />
             )}
 
-            <h2>Registered Devices</h2>
-            <DeviceSpecificationList serviceClass={classIdentifier} />
+            <DeviceSpecificationList
+                header={<h2>Devices</h2>}
+                buyNow={true}
+                serviceClass={classIdentifier}
+            />
 
             <h2> See Also</h2>
             <ul>
