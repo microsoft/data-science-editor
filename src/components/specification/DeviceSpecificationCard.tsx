@@ -49,6 +49,7 @@ export default function DeviceSpecificationCard(props: {
                     src={imageUrl}
                     style={{ aspectRatio: "4 / 3", width: "100%" }}
                     alt={`photograph of ${specification.name}`}
+                    loading="lazy"
                 />
                 <CardContent>
                     <Typography variant="subtitle2" color="text.secondary">

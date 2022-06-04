@@ -6,14 +6,12 @@ import {
     DialogContent,
     Grid,
     Typography,
-    useTheme,
 } from "@mui/material"
 import React, { useContext, useMemo } from "react"
 import { useId } from "react"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import ConnectButton from "../buttons/ConnectButton"
 import useDeviceImage from "../devices/useDeviceImage"
-import CardMediaWithSkeleton from "../ui/CardMediaWithSkeleton"
 import useDeviceSpecifications from "../devices/useDeviceSpecifications"
 import { Transport } from "../../../jacdac-ts/src/jdom/transport/transport"
 import DialogTitleWithClose from "../ui/DialogTitleWithClose"
@@ -26,13 +24,13 @@ function ConnectDeviceCard(props: { device: jdspec.DeviceSpec }) {
     const { name, firmwares } = device
     const firmware = firmwares?.[0]
     const image = useDeviceImage(device, "preview")
-    const theme = useTheme()
     return (
         <Card>
-            <CardMediaWithSkeleton
-                title={"photograph of the device"}
-                image={image}
-                height={theme.spacing(12)}
+            <img
+                src={image}
+                style={{ aspectRatio: "4 / 3", width: "100%" }}
+                alt={`photograph of ${name}`}
+                loading="lazy"
             />
             <CardHeader subheader={name} />
             {!!firmware && (
