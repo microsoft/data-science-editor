@@ -10,8 +10,8 @@ export function useModelSvg(m: IModel) {
             (exporter.toSVG(m, {
                 units: "mm",
                 strokeWidth: "2",
-                stroke: theme.palette.common.black,
-                fill: theme.palette.background.paper,
+                stroke: theme.palette.text.primary,
+                fill: theme.palette.grey[400],
             }) as string),
         [theme, m]
     )

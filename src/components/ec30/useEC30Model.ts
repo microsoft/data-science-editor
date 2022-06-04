@@ -231,7 +231,6 @@ export default function useEC30Model(gw: number, gh: number, connectors = "") {
 
         const pcb: IModel = {
             models: {
-                holes: model.clone(holes),
                 upper_right_corner: model.move(model.clone(corner), [w2, h2]),
                 upper_ridge: model.move(model.clone(upper_ridge), [
                     0,
@@ -292,7 +291,12 @@ export default function useEC30Model(gw: number, gh: number, connectors = "") {
             },
         }
 
-        const frame = model.move(pcb, [aw / 2, ah / 2])
+        const pcbWithHoles = model.combineSubtraction(
+            model.clone(pcb),
+            model.clone(holes)
+        )
+
+        const frame = model.move(pcbWithHoles, [aw / 2, ah / 2])
         return frame
     }, [gw, gh, connectors])
 }
