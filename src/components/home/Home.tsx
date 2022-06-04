@@ -41,7 +41,7 @@ export default function Home() {
             <SplitGrid
                 right={false}
                 subtitle="Electronics"
-                description="Jacdac devices are connected via 3-wire cables."
+                description="Jacdac devices are connected via 3-wire cables and PCB edge connectors."
                 image={
                     <StaticImage
                         src="./rotarycable.png"
@@ -90,6 +90,7 @@ export default function Home() {
             />
 
             <SplitGrid
+                right={true}
                 subtitle="Cable"
                 description="Jacdac's state-of-the-art hook design delivers an impeccably fluid plug/unplug motion. Plugging the cable and experiencing a snap-fit feeling gives confidence that the connection has been made. This is achieved by two metallic hooks that snap into two slots on the board, always ensuring a robust link."
                 imageColumns={6}
@@ -102,7 +103,6 @@ export default function Home() {
             />
 
             <SplitGrid
-                right={true}
                 subtitle="PCB Connector"
                 description="Jacdac devices feature 3-pin PCB-based double-sided edge connectors."
                 // buttonText="Device Development Kit"
@@ -118,6 +118,7 @@ export default function Home() {
             />
 
             <SplitGrid
+                right={true}
                 subtitle="Plays well with others"
                 description="Jacdaptors allow Jacdac to integrate with other ecosystems."
                 buttonText="Jacdaptors"
