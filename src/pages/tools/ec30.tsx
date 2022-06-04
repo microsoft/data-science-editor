@@ -42,7 +42,6 @@ export default function Page() {
         )
         .join("")
     const model = generateEC30EnclosureModel(gridWidth, gridHeight, c, 1.6)
-    console.log({ c })
     return (
         <>
             <h1>EC30 shape generator</h1>

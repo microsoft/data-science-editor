@@ -454,7 +454,6 @@ show 20`,
             ]
             const args = [penColor, ...gradientColors].map(c => c || 0)
             const encoded = lightEncode(command.join("\n"), args)
-            console.log({ command, args })
             service?.sendCmdAsync(LedStripCmd.Run, encoded)
         }
     }, [service, penColor, gradientColors])

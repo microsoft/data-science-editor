@@ -124,9 +124,20 @@ export default function useEC30Model(gw: number, gh: number, connectors = "") {
                 line: new paths.Line([0, -h2 + GRID2], [0, h2 - GRID2]),
             },
         }
-        const v_edge_ridge: IModel = {
+        const v_left_edge_ridge: IModel = {
             paths: {
-                line: new paths.Line([0, h2 - GRID2], [0, (GRID * 3) / 2]),
+                line: new paths.Line(
+                    [0, h2 - GRID2],
+                    [0, left * GRID + GRID / 2]
+                ),
+            },
+        }
+        const v_right_edge_ridge: IModel = {
+            paths: {
+                line: new paths.Line(
+                    [0, h2 - GRID2],
+                    [0, right * GRID + GRID / 2]
+                ),
             },
         }
         const hole: IModel = {
@@ -229,6 +240,41 @@ export default function useEC30Model(gw: number, gh: number, connectors = "") {
             },
         }
 
+        const generateEdge = (n: number): IModel => {
+            let r: IModel
+            switch (n) {
+                case 0:
+                    r = model.clone(vredge)
+                    break
+                case 1:
+                    r = model.clone(edge)
+                    break
+                default: {
+                    const roff = (n - 1) * GRID
+                    const start = model.move(model.clone(halfedgeclose), [
+                        0,
+                        roff,
+                    ])
+                    const end = model.mirror(model.clone(start), false, true)
+                    r = {
+                        models: {
+                            start,
+                        },
+                    }
+                    for (let i = 0; i < n; ++i) {
+                        r.models[`edge_${i}`] = model.move(
+                            model.clone(double_edge),
+                            [0, i * GRID * 2 - roff]
+                        )
+                    }
+                    r.models["end"] = end
+                }
+            }
+            return r
+        }
+        const right_edge = generateEdge(right)
+        const left_edge = model.mirror(generateEdge(left), true, false)
+
         const pcb: IModel = {
             models: {
                 upper_right_corner: model.move(model.clone(corner), [w2, h2]),
@@ -241,28 +287,16 @@ export default function useEC30Model(gw: number, gh: number, connectors = "") {
                     [-w2, h2]
                 ),
 
-                left_upper_right: model.move(model.clone(v_edge_ridge), [
+                left_upper_right: model.move(model.clone(v_left_edge_ridge), [
                     -w2 - GRID2,
                     0,
                 ]),
-                left_edge: model.move(
-                    left
-                        ? model.mirror(model.clone(edge), true, false)
-                        : model.clone(vledge),
-                    [-w2 + EDGE_OFFSET, 0]
-                ),
-                /*
-                left_edge: model.move(
-                    model.mirror(model.clone(double_edge), true, false),
-                    [-w2 + EDGE_OFFSET, GRID]
-                ),
-                left_edge_2: model.move(
-                    model.mirror(model.clone(double_edge), true, false),
-                    [-w2 + EDGE_OFFSET, -GRID]
-                ),
-                */
+                left_edge: model.move(model.clone(left_edge), [
+                    -w2 + EDGE_OFFSET,
+                    0,
+                ]),
                 left_lower_right: model.move(
-                    model.mirror(model.clone(v_edge_ridge), false, true),
+                    model.mirror(model.clone(v_left_edge_ridge), false, true),
                     [-w2 - GRID2, 0]
                 ),
 
@@ -276,16 +310,16 @@ export default function useEC30Model(gw: number, gh: number, connectors = "") {
                     [w2, -h2]
                 ),
 
-                right_upper_right: model.move(model.clone(v_edge_ridge), [
+                right_upper_right: model.move(model.clone(v_right_edge_ridge), [
                     w2 + GRID2,
                     0,
                 ]),
-                right_edge: model.move(model.clone(right ? edge : vredge), [
+                right_edge: model.move(model.clone(right_edge), [
                     w2 - EDGE_OFFSET,
                     0,
                 ]),
                 right_lower_right: model.move(
-                    model.mirror(model.clone(v_edge_ridge), false, true),
+                    model.mirror(model.clone(v_right_edge_ridge), false, true),
                     [w2 + GRID2, 0]
                 ),
             },
