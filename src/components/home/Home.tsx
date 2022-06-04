@@ -65,21 +65,8 @@ export default function Home() {
             />
 
             <SplitGrid
-                right={true}
-                subtitle="Cable"
-                description="Jacdac's state-of-the-art hook design delivers an impeccably fluid plug/unplug motion. Plugging the cable and experiencing a snap-fit feeling gives confidence that the connection has been made. This is achieved by two metallic hooks that snap into two slots on the board, always ensuring a robust link."
-                imageColumns={6}
-                image={
-                    <StaticImage
-                        src="./fullassembly.png"
-                        alt="Close up on cable"
-                    />
-                }
-            />
-
-            <SplitGrid
-                subtitle="PCB Connector"
-                description="Jacdac devices feature 3-pin PCB-based double-sided edge connectors."
+                subtitle="Cable and PCB Connector"
+                description="The cable hook design delivers an impeccably fluid plug/unplug motion on a 3-pin PCB-based double-sided edge connector."
                 // buttonText="Device Development Kit"
                 // buttonUrl="/ddk/"
                 imageColumns={6}
@@ -93,7 +80,7 @@ export default function Home() {
             />
 
             <SplitGrid
-                right={false}
+                right={true}
                 subtitle="Services"
                 description="Jacdac services provide an abstract view of a device's features."
                 buttonText="Service catalog"
@@ -110,7 +97,7 @@ export default function Home() {
             <SplitGrid
                 right={false}
                 subtitle="Clients and Servers"
-                description="Jacdac servers (modules) encapsulate sensors/actuators. Jacdac clients (brains) are programmable."
+                description="Jacdac Sensors and actuators are servers used by Jacdac clients in programmable brains."
                 buttonText="Clients and servers"
                 buttonVariant="link"
                 buttonUrl="/reference/clientserver/"
@@ -136,7 +123,7 @@ export default function Home() {
             />
 
             <SplitGrid
-                right={true}
+                right={false}
                 subtitle="Plays well with others"
                 description="Jacdaptors allow Jacdac to integrate with other ecosystems."
                 buttonText="Jacdaptors"
