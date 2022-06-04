@@ -106,7 +106,7 @@ export default function useEC30Model(gw: number, gh: number) {
         }
         const v_edge_ridge: IModel = {
             paths: {
-                line: new paths.Line([0, h2 - GRID2], [0, ehf2]),
+                line: new paths.Line([0, h2 - GRID2], [0, (GRID * 3) / 2]),
             },
         }
         const hole: IModel = {

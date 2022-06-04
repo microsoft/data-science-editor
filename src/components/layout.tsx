@@ -13,7 +13,6 @@ import {
 import AppContext, { DrawerType } from "./AppContext"
 import DarkModeProvider from "./ui/DarkModeProvider"
 import DarkModeContext from "./ui/DarkModeContext"
-import Alert from "./ui/Alert"
 import Footer from "./shell/Footer"
 import { Flags } from "../../jacdac-ts/src/jdom/flags"
 import { WindowLocation } from "@reach/router"
@@ -21,7 +20,6 @@ import Suspense from "./ui/Suspense"
 import ThemedMdxLayout from "./ui/ThemedMdxLayout"
 import useMediaQueries from "./hooks/useMediaQueries"
 import MainAppBar from "./shell/MainAppBar"
-import { AlertTitle } from "@mui/material"
 import { UIFlags } from "../jacdac/providerbus"
 import YouTubeContext from "./youtube/YouTubeContext"
 import HelpAlert from "./alert/HelpAlert"
@@ -203,8 +201,6 @@ function LayoutWithMdx(props: LayoutProps) {
     )
 }
 
-const UNDER_CONSTRUCTION_BODY = `Jacdac is currently in preview. If you would like to join as a pre-release test partner, please email jacdac-tap@microsoft.com.`
-
 function LayoutWithContext(props: LayoutProps) {
     const { element, props: pageProps } = props
     const { pageContext, path, location } = pageProps
@@ -266,12 +262,6 @@ function LayoutWithContext(props: LayoutProps) {
             <Suspense>
                 <PassiveAlert />
             </Suspense>
-            {!hideUnderConstruction && (
-                <Alert closeable={true} severity="warning">
-                    <AlertTitle>Partner Preview</AlertTitle>
-                    {UNDER_CONSTRUCTION_BODY}
-                </Alert>
-            )}
             <Suspense>
                 <DevToolsAlert />
             </Suspense>
