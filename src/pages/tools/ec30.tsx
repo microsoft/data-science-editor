@@ -35,7 +35,7 @@ export default function Page() {
                         label={`grid width: ${gridWidth * 10}mm`}
                         value={gridWidth}
                         onChange={handleGridWidth}
-                        min={2}
+                        min={1}
                         max={12}
                     />
                 </Grid>
@@ -45,7 +45,7 @@ export default function Page() {
                         label={`grid height: ${gridHeight * 10}mm`}
                         value={gridHeight}
                         onChange={handleGridHeight}
-                        min={2}
+                        min={1}
                         max={12}
                     />
                 </Grid>
