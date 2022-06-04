@@ -186,9 +186,9 @@ export default function DeviceSpecification(props: {
                     </p>
                     <ul>
                         {storeLinks.map(link => (
-                            <a key={link} href={link}>
+                            <Link key={link} href={link}>
                                 {link}
-                            </a>
+                            </Link>
                         ))}
                     </ul>
                 </>
@@ -274,7 +274,8 @@ export default function DeviceSpecification(props: {
                 <>
                     <h3 id="pcbformfactor">PCB Form Factor</h3>
                     <p>
-                        Use the files below to get started with laser cutting and 3D modelling for this device.
+                        Use the files below to get started with laser cutting
+                        and 3D modelling for this device.
                     </p>
                     <Suspense>
                         <Enclosure shape={shape} />
