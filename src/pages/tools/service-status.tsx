@@ -11,10 +11,11 @@ import { serviceProviderDefinitionFromServiceClass } from "../../../jacdac-ts/sr
 import useDeviceCatalog from "../../components/devices/useDeviceCatalog"
 import useChange from "../../jacdac/useChange"
 import { resolveMakecodeServiceFromClassIdentifier } from "../../components/makecode/services"
-import { graphql, useStaticQuery, withPrefix } from "gatsby"
+import { graphql, useStaticQuery } from "gatsby"
 import CheckIcon from "@mui/icons-material/Check"
 import ClearIcon from "@mui/icons-material/Clear"
 import { Chip } from "@mui/material"
+import { Link } from "gatsby-theme-material-ui"
 
 const statuses: Record<jdspec.StabilityStatus, string> = {
     stable: "Stable",
@@ -54,7 +55,7 @@ function ServiceStatus(props: {
     return (
         <tr>
             <td>
-                <a href={withPrefix(`/services/${shortId}/`)}>{name}</a>
+                <Link to={`/services/${shortId}/`}>{name}</Link>
             </td>
             <td>{available(devices?.length)}</td>
             <td>{available(serviceProvider)}</td>

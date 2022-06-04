@@ -17,6 +17,7 @@ export function isEC30(shape: jdspec.Shape) {
 export function generateEC30EnclosureModel(
     gridWidth: number,
     gridHeight: number,
+    connectors = "",
     depth = 6
 ): EnclosureModel {
     const width = gridWidth * 10
@@ -29,6 +30,7 @@ export function generateEC30EnclosureModel(
         grid: {
             width: gridWidth,
             height: gridHeight,
+            connectors
         },
         box: {
             width: boxWidth,
@@ -110,7 +112,8 @@ export function shapeToEC30(shape: jdspec.Shape, depth: number) {
         if (m) {
             const w = Number(m[1])
             const h = Number(m[2])
-            return generateEC30EnclosureModel(w, h, depth)
+            const c = m[3]
+            return generateEC30EnclosureModel(w, h, c, depth)
         }
     }
     return undefined

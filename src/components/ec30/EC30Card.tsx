@@ -15,9 +15,9 @@ import type { EnclosureModel } from "../../workers/cad/dist/node_modules/enclosu
 export default function EC30(props: { model: EnclosureModel }) {
     const { model: enclosure } = props
     const { grid } = enclosure
-    const { width: gw, height: gh } = grid
+    const { width: gw, height: gh, connectors } = grid
 
-    const m = useEC30Model(gw, gh)
+    const m = useEC30Model(gw, gh, connectors)
     const svg = useModelSvg(m)
     const svgUri = useDataUri(svg)
     const dxf = useModelDXF(m)

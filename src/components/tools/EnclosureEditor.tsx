@@ -51,7 +51,7 @@ function EnclosureDesign(props: {
     }
 
     useEffect(() => {
-        const model = generateEC30EnclosureModel(gridWidth, gridHeight, depth)
+        const model = generateEC30EnclosureModel(gridWidth, gridHeight, "lr", depth)
         const source = JSON.stringify(model, null, 4)
         setSource(source)
     }, [gridWidth, gridHeight, depth])
@@ -115,7 +115,7 @@ function EnclosureDesign(props: {
 export default function EnclosureEditor() {
     const [source, setSource] = useLocalStorage(
         STORAGE_KEY,
-        JSON.stringify(generateEC30EnclosureModel(2, 2), null, 4)
+        JSON.stringify(generateEC30EnclosureModel(2, 2, ""), null, 4)
     )
     const [options, setOptions] = useLocalStorage(
         OPTIONS_STORAGE_KEY,
@@ -138,7 +138,7 @@ export default function EnclosureEditor() {
         }
     }, [options])
     const handleRefreshSource = () =>
-        setSource(JSON.stringify(generateEC30EnclosureModel(2, 2), null, 4))
+        setSource(JSON.stringify(generateEC30EnclosureModel(2, 2, ""), null, 4))
     const handleRefreshOptions = () =>
         setOptions(JSON.stringify(DEFAULT_OPTIONS, null, 4))
     return (

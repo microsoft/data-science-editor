@@ -14,11 +14,10 @@ const EDGE_WIDTH = 5.9
 const EDGE_HEIGHT = 6.6
 const EDGE_CORNER_RADIUS = 0.8
 const EDGE_BUTT_RADIUS = CORNER_RADIUS
-const EDGE_GAP = 2.7
 const EDGE_DOUBLE_HALF_GAP = GRID - EDGE_HEIGHT / 3
 const EDGE_OFFSET = 2
 
-export default function useEC30Model(gw: number, gh: number) {
+export default function useEC30Model(gw: number, gh: number, connectors = "") {
     return useMemo(() => {
         const w = gw * GRID * 2
         const h = gh * GRID * 2
@@ -30,7 +29,12 @@ export default function useEC30Model(gw: number, gh: number) {
         const h2 = h / 2
 
         const eh2 = EDGE_HEIGHT / 2
-        const ehf2 = eh2 + EDGE_GAP + CORNER_RADIUS
+
+        const rightm = /r(\d*)/.exec(connectors)
+        const right = rightm ? parseInt(rightm[1] || "1") : 0
+
+        const leftm = /l(\d*)/.exec(connectors)
+        const left = leftm ? parseInt(leftm[1] || "1") : 0
 
         const corner: IModel = {
             paths: {
@@ -91,6 +95,22 @@ export default function useEC30Model(gw: number, gh: number) {
                 line: new paths.Line(
                     [-w2 + GRID2 + 2 * NOTCH_RADIUS + NOTCH_CORNER_RADIUS, 0],
                     [w2 - GRID2, 0]
+                ),
+            },
+        }
+        const vredge: IModel = {
+            paths: {
+                line: new paths.Line(
+                    [EDGE_OFFSET + GRID2, -3 * GRID2],
+                    [EDGE_OFFSET + GRID2, 3 * GRID2]
+                ),
+            },
+        }
+        const vledge: IModel = {
+            paths: {
+                line: new paths.Line(
+                    [-EDGE_OFFSET - GRID2, -3 * GRID2],
+                    [-EDGE_OFFSET - GRID2, 3 * GRID2]
                 ),
             },
         }
@@ -227,7 +247,9 @@ export default function useEC30Model(gw: number, gh: number) {
                     0,
                 ]),
                 left_edge: model.move(
-                    model.mirror(model.clone(edge), true, false),
+                    left
+                        ? model.mirror(model.clone(edge), true, false)
+                        : model.clone(vledge),
                     [-w2 + EDGE_OFFSET, 0]
                 ),
                 /*
@@ -259,7 +281,7 @@ export default function useEC30Model(gw: number, gh: number) {
                     w2 + GRID2,
                     0,
                 ]),
-                right_edge: model.move(model.clone(edge), [
+                right_edge: model.move(model.clone(right ? edge : vredge), [
                     w2 - EDGE_OFFSET,
                     0,
                 ]),
@@ -272,5 +294,5 @@ export default function useEC30Model(gw: number, gh: number) {
 
         const frame = model.move(pcb, [aw / 2, ah / 2])
         return frame
-    }, [gw, gh])
+    }, [gw, gh, connectors])
 }

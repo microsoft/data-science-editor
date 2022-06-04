@@ -42,6 +42,7 @@ export interface EnclosureModel {
     grid: {
         width: number
         height: number
+        connectors: string
     }
     box: {
         width: number

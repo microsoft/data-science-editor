@@ -23,7 +23,7 @@ export default function Page() {
         value: number | number[]
     ) => setGridHeight(value as number)
 
-    const model = generateEC30EnclosureModel(gridWidth, gridHeight, 1.6)
+    const model = generateEC30EnclosureModel(gridWidth, gridHeight, "", 1.6)
 
     return (
         <>
