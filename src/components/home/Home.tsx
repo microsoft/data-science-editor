@@ -65,31 +65,6 @@ export default function Home() {
             />
 
             <SplitGrid
-                right={false}
-                subtitle="Services"
-                description="Jacdac services provide an abstract view of a device's features."
-                buttonText="Service catalog"
-                buttonVariant="link"
-                buttonUrl="/services/"
-                image={
-                    <StaticImage
-                        src="./dashboard.png"
-                        alt="Dashboard of devices"
-                    />
-                }
-            />
-
-            <SplitGrid
-                right={true}
-                subtitle="Web Tools"
-                description="Visualize, debug, sniff, track, record, replay, update... from your browser"
-                buttonText="Get productive with Jacdac"
-                buttonVariant="link"
-                buttonUrl="/tools/"
-                image={<StaticImage src="./devicetree.png" alt="Device tree" />}
-            />
-
-            <SplitGrid
                 right={true}
                 subtitle="Cable"
                 description="Jacdac's state-of-the-art hook design delivers an impeccably fluid plug/unplug motion. Plugging the cable and experiencing a snap-fit feeling gives confidence that the connection has been made. This is achieved by two metallic hooks that snap into two slots on the board, always ensuring a robust link."
@@ -118,33 +93,16 @@ export default function Home() {
             />
 
             <SplitGrid
-                right={true}
-                subtitle="Plays well with others"
-                description="Jacdaptors allow Jacdac to integrate with other ecosystems."
-                buttonText="Jacdaptors"
+                right={false}
+                subtitle="Services"
+                description="Jacdac services provide an abstract view of a device's features."
+                buttonText="Service catalog"
                 buttonVariant="link"
-                buttonUrl="/reference/jacdaptors"
-                imageColumns={6}
-                image={
-                    <Suspense>
-                        <JacdaptorImageList />
-                    </Suspense>
-                }
-            />
-
-            <SplitGrid
-                right={true}
-                subtitle="For Manufacturers"
-                description="Add Jacdac to your devices. Schematics, footprints, libraries, firmware, hardware designs - all open source."
-                imageColumns={6}
-                centered={true}
-                buttonText="Device Development Kit"
-                buttonUrl="/ddk/"
-                buttonVariant="link"
+                buttonUrl="/services/"
                 image={
                     <StaticImage
-                        src="./pcbfootprint.png"
-                        alt="PCB connector footprint"
+                        src="./dashboard.png"
+                        alt="Dashboard of devices"
                     />
                 }
             />
@@ -163,6 +121,47 @@ export default function Home() {
                         alt="jacdac bus"
                         src={withPrefix("/images/jdbus.drawio.svg")}
                         style={imgStyle}
+                    />
+                }
+            />
+
+            <SplitGrid
+                right={true}
+                subtitle="Web Tools"
+                description="Visualize, debug, sniff, track, record, replay, update... from your browser"
+                buttonText="Get productive with Jacdac"
+                buttonVariant="link"
+                buttonUrl="/tools/"
+                image={<StaticImage src="./devicetree.png" alt="Device tree" />}
+            />
+
+            <SplitGrid
+                right={true}
+                subtitle="Plays well with others"
+                description="Jacdaptors allow Jacdac to integrate with other ecosystems."
+                buttonText="Jacdaptors"
+                buttonVariant="link"
+                buttonUrl="/reference/jacdaptors"
+                imageColumns={6}
+                image={
+                    <Suspense>
+                        <JacdaptorImageList />
+                    </Suspense>
+                }
+            />
+
+            <SplitGrid
+                subtitle="For Manufacturers"
+                description="Add Jacdac to your devices. Schematics, footprints, libraries, firmware, hardware designs - all open source."
+                imageColumns={6}
+                centered={true}
+                buttonText="Device Development Kit"
+                buttonUrl="/ddk/"
+                buttonVariant="link"
+                image={
+                    <StaticImage
+                        src="./pcbfootprint.png"
+                        alt="PCB connector footprint"
                     />
                 }
             />
