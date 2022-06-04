@@ -1,3 +1,4 @@
+import { withPrefix } from "gatsby"
 import { Link } from "gatsby-theme-material-ui"
 import React, { Fragment } from "react"
 import { serviceSpecificationFromName } from "../../../jacdac-ts/src/jdom/spec"
@@ -44,7 +45,9 @@ export default function MakeCodeProjectFooter(props: { serviceNames: string }) {
             <h2>See Also</h2>
             <ul>
                 <li>
-                    <Link to={`/user-guide/`}>User guide</Link>
+                    <Link to={withPrefix(`/clients/makecode/user-guide/`)}>
+                        User guide
+                    </Link>
                 </li>
             </ul>
         </>
