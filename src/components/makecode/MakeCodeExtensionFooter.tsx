@@ -23,7 +23,7 @@ export default function MakeCodeExtensionFooter(props: {
             <h2>See Also</h2>
             <ul>
                 <li>
-                    <Link to={`/user-guide/`}>User guide</Link>
+                    <Link to={`/clients/makecode/user-guide/`}>User guide</Link>
                 </li>
                 <li>
                     <Link to={`/services/${serviceName}`}>
