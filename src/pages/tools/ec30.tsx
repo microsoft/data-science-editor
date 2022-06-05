@@ -26,7 +26,14 @@ export default function Page() {
     const handleGridHeight: any = (
         event: React.ChangeEvent<unknown>,
         value: number | number[]
-    ) => setGridHeight(value as number)
+    ) => {
+        const v = value as number
+        setGridHeight(v)
+        setConnectors({
+            l: Math.min(connectors.l, v - 1),
+            r: Math.min(connectors.r, v - 1),
+        })
+    }
     const handleLeftConnector: any = (
         event: React.ChangeEvent<unknown>,
         value: number | number[]
@@ -69,7 +76,7 @@ export default function Page() {
                 <Grid item>
                     <SliderWithLabel
                         id={lconnectorId}
-                        label={`left connectors`}
+                        label={`left connectors: ${connectors.l || 0}`}
                         value={connectors.l}
                         onChange={handleLeftConnector}
                         min={0}
@@ -79,7 +86,7 @@ export default function Page() {
                 <Grid item>
                     <SliderWithLabel
                         id={rconnectorId}
-                        label={`right connectors`}
+                        label={`right connectors: ${connectors.r || 0}`}
                         value={connectors.r}
                         onChange={handleRightConnector}
                         min={0}

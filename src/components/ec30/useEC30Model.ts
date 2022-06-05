@@ -101,16 +101,8 @@ export default function useEC30Model(gw: number, gh: number, connectors = "") {
         const vredge: IModel = {
             paths: {
                 line: new paths.Line(
-                    [EDGE_OFFSET + GRID2, - GRID2],
+                    [EDGE_OFFSET + GRID2, -GRID2],
                     [EDGE_OFFSET + GRID2, GRID2]
-                ),
-            },
-        }
-        const vledge: IModel = {
-            paths: {
-                line: new paths.Line(
-                    [-EDGE_OFFSET - GRID2, -3 * GRID2],
-                    [-EDGE_OFFSET - GRID2, 3 * GRID2]
                 ),
             },
         }
@@ -173,14 +165,15 @@ export default function useEC30Model(gw: number, gh: number, connectors = "") {
                     180,
                     270
                 ),
-                gap_up: new paths.Line(
-                    [0, eh2 + EDGE_BUTT_RADIUS],
-                    [0, eh2 + EDGE_DOUBLE_HALF_GAP - EDGE_BUTT_RADIUS]
-                ),
+                gap_up: new paths.Line([0, eh2 + EDGE_BUTT_RADIUS], [0, GRID]),
             },
         }
         const halfedgeclose: IModel = {
             paths: {
+                gap_up: new paths.Line(
+                    [0, GRID],
+                    [0, eh2 + EDGE_DOUBLE_HALF_GAP - EDGE_BUTT_RADIUS]
+                ),
                 gap_up_to_right: new paths.Arc(
                     [
                         EDGE_BUTT_RADIUS,
