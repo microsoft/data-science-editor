@@ -101,8 +101,8 @@ export default function useEC30Model(gw: number, gh: number, connectors = "") {
         const vredge: IModel = {
             paths: {
                 line: new paths.Line(
-                    [EDGE_OFFSET + GRID2, -3 * GRID2],
-                    [EDGE_OFFSET + GRID2, 3 * GRID2]
+                    [EDGE_OFFSET + GRID2, - GRID2],
+                    [EDGE_OFFSET + GRID2, GRID2]
                 ),
             },
         }
