@@ -151,7 +151,7 @@ export default function DeviceSpecification(props: {
                             {company}
                         </Link>
                     </Typography>
-                    <Divider light={true} />
+                    <Divider sx={{ mt: 1, mb: 2 }} light={true} />
                     {connector === "noConnector" && (
                         <Alert severity="warning">
                             <AlertTitle>
