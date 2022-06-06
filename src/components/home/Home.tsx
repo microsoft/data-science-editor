@@ -13,6 +13,7 @@ import SubscriptionsIcon from "@mui/icons-material/Subscriptions"
 import HTML5Image from "./HTML5Image"
 import DarkModeContext from "../ui/DarkModeContext"
 import Suspense from "../ui/Suspense"
+import { Link } from "gatsby-theme-material-ui"
 const JacdaptorImageList = lazy(() => import("./JacdaptorImageList"))
 
 export default function Home() {
@@ -30,10 +31,15 @@ export default function Home() {
                 subtitle3="Connect and code electronics. Instantly."
                 imageColumns={6}
                 image={
-                    <StaticImage
-                        src="./kita.jpg"
-                        alt="KittenBot Starter Kit A"
-                    />
+                    <Link
+                        underline="none"
+                        to="/devices/kittenbot/jacdacstarterkitawithjacdaptorformicrobitv2v10/"
+                    >
+                        <StaticImage
+                            src="./kita.jpg"
+                            alt="KittenBot Jacdac Starter Kit A with Jacdaptor for micro:bit V2 v1.0"
+                        />
+                    </Link>
                 }
             />
 
@@ -42,10 +48,15 @@ export default function Home() {
                 subtitle="Electronics"
                 description="Jacdac devices are connected via 3-wire cables and PCB edge connectors."
                 image={
-                    <StaticImage
-                        src="./electronics.jpg"
-                        alt="A KittenBot KeyCap button."
-                    />
+                    <Link
+                        underline="none"
+                        to="/devices/kittenbot/keycapbuttonv10/"
+                    >
+                        <StaticImage
+                            src="./electronics.jpg"
+                            alt="A KittenBot KeyCap button."
+                        />
+                    </Link>
                 }
                 buttonText="Device catalog"
                 buttonVariant="link"
