@@ -31,9 +31,8 @@ export default function Home() {
                 imageColumns={6}
                 image={
                     <StaticImage
-                        src="./manymodules2.png"
-                        alt="Many Modules Together"
-                        imgStyle={imgStyle}
+                        src="./kita.jpg"
+                        alt="KittenBot Starter Kit A"
                     />
                 }
             />
@@ -44,9 +43,8 @@ export default function Home() {
                 description="Jacdac devices are connected via 3-wire cables and PCB edge connectors."
                 image={
                     <StaticImage
-                        src="./rotarycable.png"
-                        alt="A rotary encoder module with a Jacdac cable attached."
-                        imgStyle={imgStyle}
+                        src="./electronics.jpg"
+                        alt="A KittenBot KeyCap button."
                     />
                 }
                 buttonText="Device catalog"
