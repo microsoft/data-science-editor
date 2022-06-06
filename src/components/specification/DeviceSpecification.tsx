@@ -120,10 +120,10 @@ export default function DeviceSpecification(props: {
         <>
             <DeviceStructuredData device={device} />
             <Grid container spacing={2}>
-                <Grid item xs={12} sm={5}>
+                <Grid item xs={12} sm={6}>
                     <img alt={`device ${name}`} src={imageUrl} loading="lazy" />
                 </Grid>
-                <Grid item xs={12} sm={7}>
+                <Grid item xs={12} sm={6}>
                     {!storeLink?.length && (
                         <Alert severity="info">
                             <AlertTitle>Prototype Hardware</AlertTitle>
@@ -139,7 +139,7 @@ export default function DeviceSpecification(props: {
                                 component="span"
                                 variant="subtitle1"
                             >
-                                v${version}
+                                v{version}
                             </Typography>
                         )}
                     </h2>
@@ -266,7 +266,10 @@ export default function DeviceSpecification(props: {
             ) : (
                 <MakeCodeExtensions
                     header={
-                        <h3 id="makecodeextensions">MakeCode Extensions</h3>
+                        <>
+                            <hr />
+                            <h3 id="makecodeextensions">MakeCode Extensions</h3>
+                        </>
                     }
                     serviceClass={services}
                 />
