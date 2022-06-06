@@ -1,7 +1,9 @@
 import { Dialog, DialogContent, Grid, Typography } from "@mui/material"
+import { Link } from "gatsby-theme-material-ui"
 import React, { lazy, useCallback } from "react"
 import { ControlAnnounceFlags } from "../../../jacdac-ts/src/jdom/constants"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
+import { identifierToUrlPath } from "../../../jacdac-ts/src/jdom/spec"
 import useDeviceDescription from "../../jacdac/useDeviceDescription"
 import useDeviceSpecification from "../../jacdac/useDeviceSpecification"
 import DeviceName from "../devices/DeviceName"
@@ -34,25 +36,32 @@ export default function IdentifyDialog(props: {
         <Dialog open={open} onClose={handleCloseIdentify}>
             <DialogTitleWithClose onClose={handleCloseIdentify}>
                 Identifying{" "}
-                <DeviceName
-                    device={device}
-                    linkToSpecification={true}
-                    onLinkClick={handleCloseIdentify}
-                />
+                <DeviceName device={device} onLinkClick={handleCloseIdentify} />
                 ...
             </DialogTitleWithClose>
             <DialogContent>
                 <Grid container alignItems="center" alignContent={"center"}>
-                    {(description || specification) && (
+                    {specification && (
                         <Grid item xs={12}>
-                            <Typography variant="subtitle1">
-                                {[
-                                    description || specification?.name,
-                                    specification?.version,
-                                ]
-                                    .filter(s => !!s)
-                                    .join(", ")}
-                            </Typography>
+                            <Link
+                                color="textPrimary"
+                                to={`/devices/${identifierToUrlPath(
+                                    specification.id
+                                )}/`}
+                                underline="hover"
+                            >
+                                <Typography variant="subtitle1">
+                                    {[
+                                        specification.company,
+                                        description || specification.name,
+                                        specification?.version
+                                            ? `v${specification.version}`
+                                            : undefined,
+                                    ]
+                                        .filter(s => !!s)
+                                        .join(" ")}
+                                </Typography>
+                            </Link>
                         </Grid>
                     )}
                     <Grid item xs={12}>
