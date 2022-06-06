@@ -4,7 +4,7 @@ import {
     identifierToUrlPath,
     serviceSpecificationFromClassIdentifier,
 } from "../../../jacdac-ts/src/jdom/spec"
-import { AlertTitle, Chip, Grid, Typography } from "@mui/material"
+import { AlertTitle, Chip, Divider, Grid, Typography } from "@mui/material"
 import useGridBreakpoints from "../useGridBreakpoints"
 import Markdown from "../ui/Markdown"
 import FirmwareCard from "../firmware/FirmwareCard"
@@ -28,6 +28,8 @@ import MakeCodeProjects from "../makecode/MakeCodeProjects"
 import PageLinkList from "../ui/PageLinkList"
 import MakeCodeExtensions from "../makecode/MakeCodeExtensions"
 const Enclosure = lazy(() => import("../enclosure/Enclosure"))
+
+const HR_GAP = 4
 
 function DeviceStructuredData(props: { device: jdspec.DeviceSpec }) {
     const { device } = props
@@ -149,7 +151,7 @@ export default function DeviceSpecification(props: {
                             {company}
                         </Link>
                     </Typography>
-                    <hr />
+                    <Divider light={true} />
                     {connector === "noConnector" && (
                         <Alert severity="warning">
                             <AlertTitle>
@@ -205,7 +207,7 @@ export default function DeviceSpecification(props: {
 
             {!!deviceSpecs?.length && (
                 <>
-                    <hr />
+                    <Divider sx={{ mt: HR_GAP }} light={true} />
                     <h3>Kit Devices</h3>
                     <Grid container spacing={2}>
                         {deviceSpecs.map(specification => (
@@ -225,7 +227,7 @@ export default function DeviceSpecification(props: {
             )}
             {!!kitSpecs?.length && (
                 <>
-                    <hr />
+                    <Divider sx={{ mt: HR_GAP }} light={true} />
                     <h3>Kits</h3>
                     <Grid container spacing={2}>
                         {kitSpecs.map(specification => (
@@ -243,9 +245,9 @@ export default function DeviceSpecification(props: {
                     </Grid>
                 </>
             )}
-            {makeCodeRepos?.length ? (
+            {makeCodeRepos?.length && (
                 <>
-                    <hr />
+                    <Divider sx={{ mt: HR_GAP }} light={true} />
                     <h3 id="makecodeextensions">
                         Required MakeCode Extensions
                     </h3>
@@ -263,21 +265,24 @@ export default function DeviceSpecification(props: {
                         />
                     ))}
                 </>
-            ) : (
-                <MakeCodeExtensions
-                    header={
-                        <>
-                            <hr />
-                            <h3 id="makecodeextensions">MakeCode Extensions</h3>
-                        </>
-                    }
-                    serviceClass={services}
-                />
             )}
-            <MakeCodeProjects
-                header={<h3 id="makecodeprojects">MakeCode Projects</h3>}
-                serviceClass={services}
-            />
+            {!!services?.length && (
+                <>
+                    <Divider sx={{ mt: HR_GAP }} light={true} />
+                    <h3 id="makecode">MakeCode</h3>
+                    <MakeCodeProjects
+                        header={<h4 id="makecodeprojects">Projects</h4>}
+                        serviceClass={services}
+                    />
+                    <MakeCodeExtensions
+                        header={
+                            <h3 id="makecodeextensions">MakeCode Extensions</h3>
+                        }
+                        serviceClass={services}
+                    />
+                </>
+            )}
+            <Divider sx={{ mt: HR_GAP }} light={true} />
             <h2>Technical Details</h2>
             <ChipList>
                 {designIdentifier && (
