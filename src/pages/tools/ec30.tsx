@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Grid } from "@mui/material"
+import { Link } from "gatsby-theme-material-ui"
 import React, { lazy, useId, useState } from "react"
 import { generateEC30EnclosureModel } from "../../components/enclosure/ec30"
 import SliderWithLabel from "../../components/ui/SliderWithLabel"
@@ -52,6 +53,10 @@ export default function Page() {
     return (
         <>
             <h1>EC30 shape generator</h1>
+            <p>
+                <Link to="/ddk/design/ec30/">EC30</Link> is a PCB form factor
+                system for Jacdac modules.
+            </p>
             <Grid container spacing={2}>
                 <Grid item>
                     <SliderWithLabel
