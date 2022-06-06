@@ -207,7 +207,7 @@ export default function DeviceSpecification(props: {
 
             {!!deviceSpecs?.length && (
                 <>
-                    <Divider sx={{ mt: HR_GAP }} light={true} />
+                    <Divider sx={{ mb: HR_GAP }} light={true} />
                     <h3>Kit Devices</h3>
                     <Grid container spacing={2}>
                         {deviceSpecs.map(specification => (
@@ -227,7 +227,7 @@ export default function DeviceSpecification(props: {
             )}
             {!!kitSpecs?.length && (
                 <>
-                    <Divider sx={{ mt: HR_GAP }} light={true} />
+                    <Divider sx={{ mb: HR_GAP }} light={true} />
                     <h3>Kits</h3>
                     <Grid container spacing={2}>
                         {kitSpecs.map(specification => (
@@ -247,7 +247,7 @@ export default function DeviceSpecification(props: {
             )}
             {makeCodeRepos?.length && (
                 <>
-                    <Divider sx={{ mt: HR_GAP }} light={true} />
+                    <Divider light={true} />
                     <h3 id="makecodeextensions">
                         Required MakeCode Extensions
                     </h3>
@@ -268,7 +268,7 @@ export default function DeviceSpecification(props: {
             )}
             {!!services?.length && (
                 <>
-                    <Divider sx={{ mt: HR_GAP }} light={true} />
+                    <Divider light={true} />
                     <h3 id="makecode">MakeCode</h3>
                     <MakeCodeProjects
                         header={<h4 id="makecodeprojects">Projects</h4>}
@@ -282,7 +282,7 @@ export default function DeviceSpecification(props: {
                     />
                 </>
             )}
-            <Divider sx={{ mt: HR_GAP }} light={true} />
+            <Divider light={true} />
             <h2>Technical Details</h2>
             <ChipList>
                 {designIdentifier && (
