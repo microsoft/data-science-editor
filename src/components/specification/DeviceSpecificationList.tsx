@@ -97,21 +97,28 @@ export default function DeviceSpecificationList(props: {
                 ].some(s => s?.toLowerCase()?.indexOf(query.toLowerCase()) > -1)
             )
         r = r.sort((a, b) => {
+            // use ec30 shape
             let c = -(isEC30(a.shape) ? 1 : 0) + (isEC30(b.shape) ? 1 : 0)
             if (c) return c
+            // kits first
             c =
-                (a.connector === "noConnector" ||
+                -(a.tags?.indexOf("kit") > -1 ? 1 : 0) +
+                (b.tags?.indexOf("kit") > -1 ? 1 : 0)
+            if (c) return c
+            // with connectors first
+            c =
+                -(a.connector === "noConnector" ||
                 a.connector === "edgePassive" ||
                 a.connector === "edgeIndependent"
                     ? 1
-                    : 0) -
+                    : 0) +
                 (b.connector === "noConnector" ||
                 b.connector === "edgePassive" ||
                 b.connector === "edgeIndependent"
                     ? 1
                     : 0)
             if (c) return c
-
+            // by name
             return a.name.localeCompare(b.name)
         })
         if (count !== undefined) r = r.slice(0, count)
