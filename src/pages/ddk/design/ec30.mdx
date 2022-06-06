@@ -38,13 +38,24 @@ The mounting holes are named and connected as follows:
 - **MH3** is at the *bottom-left* corner of the board and is connected to *JD_PWR*
 - **MH4** is at the *bottom-right* corner of the board and is connected to *GND*
 
-Mounting holes have a finished diameter of 3.1mm, with a 4.4mm diameter annular ring, and a solder resist keepout of 5.0mm diameter.  **TODO: Outside layers routing keepout**
+Mounting holes have a finished (plated) diameter of 3.1mm, with a 4.4mm diameter annular copper ring, and a solder resist keepout of 5.0mm diameter.
 
 The mounting holes must be on 10mm pitch. This allows the modules to be mounted on a pre-drilled/perforated plate that has holes every 10mm in each direction.
+
+## Outside layers routing keepout
+
+Because the mounting holes and Jacac edge connectors are electrically connected, it is important to define keepouts for other routing.
+In particular, each mounting hold has a 6.0mm diameter keepout, while each edge connector has a rectangular keepout (**STEVE: I am confused by the numbering of 4.3mm and 0.4mm and what they refer to**). No copper (except for the mounting hole net) can be in the mounting hole keepout areas to prevent shorts when mounting.
+
+## Component placement keepout
+
+The component placement keepout provides clearance for mounting bushes, connector wall, and other mounting features.
+
+## Status LED locations
+
+There should be one status LED on each side that has edge connectors, aligned with the edge connector.
 
 ## Silkscreen marking
 
 The module name should be printed on the top surface of the PCB, to the right of the orientation notch.
-
-## Status LED location
 
