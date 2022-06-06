@@ -81,7 +81,7 @@ export default function DeviceSpecificationCard(props: {
                     )}
                     <ChipList>
                         {!storeLink && <Chip size="small" label="prototype" />}
-                        {!!makeCodeRepos.length && (
+                        {!!makeCodeRepo?.length && (
                             <Chip
                                 size="small"
                                 label="MakeCode"
