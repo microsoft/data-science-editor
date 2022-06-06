@@ -141,7 +141,7 @@ export default function Home() {
                 imageColumns={6}
                 image={
                     <Suspense>
-                        <JacdaptorImageList />
+                        <JacdaptorImageList cols="2" />
                     </Suspense>
                 }
             />

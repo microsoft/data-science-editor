@@ -2,9 +2,9 @@ import React from "react"
 import { ImageList, ImageListItem, ImageListItemBar } from "@mui/material"
 import DeviceImage from "../devices/DeviceImage"
 
-export default function JacdapterImageList() {
+export default function JacdapterImageList(props: { cols: string }) {
     return (
-        <ImageList cols={2} gap={1}>
+        <ImageList cols={parseInt(props.cols)} gap={1}>
             {[
                 {
                     id: "kittenbot-jacdaptorformicrobitv2v10",
