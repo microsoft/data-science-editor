@@ -209,6 +209,7 @@ function LayoutWithContext(props: LayoutProps) {
     const isHosted = UIFlags.hosted
     const tools = /^\/tools\//.test(path)
     const makeCodeTool = /tools\/makecode-/.test(path)
+    const devicesPage = /^\/devices\//.test(path)
     const fullWidthTools =
         /^\/editors\/\w/.test(path) ||
         /^\/tools\/console\/$/.test(path) ||
@@ -222,7 +223,7 @@ function LayoutWithContext(props: LayoutProps) {
     } = frontmatter || {
         hideMainMenu: isHosted || makeCodeTool,
         hideUnderConstruction: isDataEditor || makeCodeTool || fullWidthTools,
-        hideBreadcrumbs: isDataEditor || tools || fullWidthTools,
+        hideBreadcrumbs: isDataEditor || tools || fullWidthTools || devicesPage,
     }
 
     const appBar = hideMainMenu ? undefined : isDataEditor ? (
