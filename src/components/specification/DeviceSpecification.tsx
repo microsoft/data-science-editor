@@ -27,6 +27,7 @@ import Suspense from "../ui/Suspense"
 import MakeCodeProjects from "../makecode/MakeCodeProjects"
 import PageLinkList from "../ui/PageLinkList"
 import MakeCodeExtensions from "../makecode/MakeCodeExtensions"
+import MakeCodeIcon from "../icons/MakeCodeIcon"
 const Enclosure = lazy(() => import("../enclosure/Enclosure"))
 
 const HR_GAP = 4
@@ -122,10 +123,10 @@ export default function DeviceSpecification(props: {
         <>
             <DeviceStructuredData device={device} />
             <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={5}>
                     <img alt={`device ${name}`} src={imageUrl} loading="lazy" />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={7}>
                     {!storeLink?.length && (
                         <Alert severity="info">
                             <AlertTitle>Prototype Hardware</AlertTitle>
@@ -206,7 +207,38 @@ export default function DeviceSpecification(props: {
                     )}
                 </Grid>
             </Grid>
-
+            {makeCodeRepos?.length && (
+                <>
+                    <Divider light={true} />
+                    <h3 id="makecodeextensions">
+                        Required MakeCode Extensions
+                    </h3>
+                    <p>
+                        These MakeCode Extensions are needed to use Jacdac with
+                        this device.
+                    </p>
+                    {makeCodeRepos.map(repo => (
+                        <GithubRepositoryCard
+                            key={repo}
+                            slug={repo}
+                            showDescription={true}
+                            showDependencies={true}
+                            showMakeCodeButton={true}
+                        />
+                    ))}
+                </>
+            )}
+            {!!services?.length && (
+                <>
+                    <Divider light={true} />
+                    <h3 id="makecode">MakeCode Projects</h3>
+                    <MakeCodeProjects serviceClass={services} />
+                    <MakeCodeExtensions
+                        header={<h4 id="makecodeextensions">Extensions</h4>}
+                        serviceClass={services}
+                    />
+                </>
+            )}
             {!!deviceSpecs?.length && (
                 <>
                     <Divider light={true} />
@@ -245,43 +277,6 @@ export default function DeviceSpecification(props: {
                             </Grid>
                         ))}
                     </Grid>
-                </>
-            )}
-            {makeCodeRepos?.length && (
-                <>
-                    <Divider light={true} />
-                    <h3 id="makecodeextensions">
-                        Required MakeCode Extensions
-                    </h3>
-                    <p>
-                        These MakeCode Extensions are needed to use Jacdac with
-                        this device.
-                    </p>
-                    {makeCodeRepos.map(repo => (
-                        <GithubRepositoryCard
-                            key={repo}
-                            slug={repo}
-                            showDescription={true}
-                            showDependencies={true}
-                            showMakeCodeButton={true}
-                        />
-                    ))}
-                </>
-            )}
-            {!!services?.length && (
-                <>
-                    <Divider light={true} />
-                    <h3 id="makecode">MakeCode</h3>
-                    <MakeCodeProjects
-                        header={<h4 id="makecodeprojects">Projects</h4>}
-                        serviceClass={services}
-                    />
-                    <MakeCodeExtensions
-                        header={
-                            <h3 id="makecodeextensions">MakeCode Extensions</h3>
-                        }
-                        serviceClass={services}
-                    />
                 </>
             )}
             <Divider light={true} />

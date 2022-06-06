@@ -209,7 +209,7 @@ function LayoutWithContext(props: LayoutProps) {
     const isHosted = UIFlags.hosted
     const tools = /^\/tools\//.test(path)
     const makeCodeTool = /tools\/makecode-/.test(path)
-    const devicesPage = /^\/devices\//.test(path)
+    const devicesPage = /^\/devices\/$/.test(path)
     const fullWidthTools =
         /^\/editors\/\w/.test(path) ||
         /^\/tools\/console\/$/.test(path) ||

@@ -26,22 +26,26 @@ export default function DeviceSpecificationCard(props: {
         firmwareSource,
         storeLink,
         makeCodeRepo,
+        tags,
     } = specification
     const makeCodeRepos = arrayify(makeCodeRepo)
     const imageUrl = useDeviceImage(specification, size)
-    const serviceNames = uniqueMap(
-        services,
-        srv => srv + "",
-        srv => srv
-    )
-        ?.map(sc =>
+    const names = [
+        tags?.indexOf("kit") > -1 ? "kit" : undefined,
+        ...uniqueMap(
+            services || [],
+            srv => srv + "",
+            srv => srv
+        ).map(sc =>
             humanify(
                 serviceSpecificationFromClassIdentifier(
                     sc
                 )?.shortName.toLowerCase()
             )
-        )
-        ?.join(", ")
+        ),
+    ]
+        .filter(s => !!s)
+        .join(", ")
     return (
         <Card raised>
             <CardActionArea to={`/devices/${identifierToUrlPath(id)}`}>
@@ -71,9 +75,11 @@ export default function DeviceSpecificationCard(props: {
                             </Typography>
                         )}
                     </Typography>
-                    <Typography component="div" variant="subtitle2">
-                        {serviceNames || "."}
-                    </Typography>
+                    {names && (
+                        <Typography component="div" variant="subtitle2">
+                            {names}
+                        </Typography>
+                    )}
                     <ChipList>
                         {!storeLink && <Chip size="small" label="prototype" />}
                         {!!makeCodeRepos?.length && (

@@ -69,6 +69,7 @@ export default function MakeCodeExtensions(props: {
         nodes = nodes.sort((l, r) => l.fields.slug.localeCompare(r.fields.slug))
         return nodes
     }, [serviceNames.join(",")])
+
     return (
         <PageLinkList
             header={header}
