@@ -144,14 +144,16 @@ export default function DeviceSpecification(props: {
                                 v{version}
                             </Typography>
                         )}
+                        <Typography component="div" variant="subtitle1">
+                            by{" "}
+                            <Link
+                                to={`/devices/${identifierToUrlPath(company)}/`}
+                            >
+                                {company}
+                            </Link>
+                        </Typography>
                     </h2>
-                    <Typography component="p" variant="subtitle1">
-                        by{" "}
-                        <Link to={`/devices/${identifierToUrlPath(company)}/`}>
-                            {company}
-                        </Link>
-                    </Typography>
-                    <Divider sx={{ mt: 1, mb: 2 }} light={true} />
+                    <Divider sx={{ mb: 2 }} light={true} />
                     {connector === "noConnector" && (
                         <Alert severity="warning">
                             <AlertTitle>
@@ -207,9 +209,9 @@ export default function DeviceSpecification(props: {
 
             {!!deviceSpecs?.length && (
                 <>
-                    <Divider sx={{ mb: HR_GAP }} light={true} />
+                    <Divider light={true} />
                     <h3>Kit Devices</h3>
-                    <Grid container spacing={2}>
+                    <Grid sx={{ mb: HR_GAP }} container spacing={2}>
                         {deviceSpecs.map(specification => (
                             <Grid
                                 key={specification.id}
@@ -227,9 +229,9 @@ export default function DeviceSpecification(props: {
             )}
             {!!kitSpecs?.length && (
                 <>
-                    <Divider sx={{ mb: HR_GAP }} light={true} />
+                    <Divider light={true} />
                     <h3>Kits</h3>
-                    <Grid container spacing={2}>
+                    <Grid sx={{ mb: HR_GAP }} container spacing={2}>
                         {kitSpecs.map(specification => (
                             <Grid
                                 key={specification.id}
