@@ -1,7 +1,10 @@
 import React, { lazy, useMemo } from "react"
 import IDChip from "../IDChip"
-import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec"
-import { AlertTitle, Box, Chip, Grid, NoSsr } from "@mui/material"
+import {
+    identifierToUrlPath,
+    serviceSpecificationFromClassIdentifier,
+} from "../../../jacdac-ts/src/jdom/spec"
+import { AlertTitle, Chip, Grid, Typography } from "@mui/material"
 import useGridBreakpoints from "../useGridBreakpoints"
 import Markdown from "../ui/Markdown"
 import FirmwareCard from "../firmware/FirmwareCard"
@@ -116,85 +119,93 @@ export default function DeviceSpecification(props: {
     return (
         <>
             <DeviceStructuredData device={device} />
-            {!storeLink?.length && (
-                <Alert severity="info">
-                    <AlertTitle>Prototype Hardware</AlertTitle>
-                    This device is a prototype <b>not</b> available for
-                    purchase.
-                </Alert>
-            )}
-            <h2 key="title">
-                {name}
-                {!!version && ` v${version}`}
-            </h2>
-            {connector === "noConnector" && (
-                <Alert severity="warning">
-                    <AlertTitle>No PCB edge connector available.</AlertTitle>
-                    This device does <b>not</b> have a Jacdac PCB edge
-                    connector. It is programmable as a Jacdac device but it
-                    cannot be connected to other devices with a cable.
-                </Alert>
-            )}
-            {connector === "edgeIndependent" && (
-                <Alert severity="warning">
-                    <AlertTitle>
-                        Independently powered PCB edge connector available.
-                    </AlertTitle>
-                    This device has a Jacdac PCB edge connector without a power
-                    connection. It is programmable as a Jacdac device and it can
-                    be connected to other devices with a cable, but it will not
-                    provide to modules or consume power the Jacdac bus.
-                </Alert>
-            )}
-            <ChipList>
-                <Chip size="small" label={company} />
-                {designIdentifier && (
-                    <Chip
-                        aria-label={`design identifier: ${designIdentifier}`}
-                        icon={<MemoryIcon />}
-                        size="small"
-                        label={designIdentifier}
-                    />
-                )}
-                {productIdentifiers?.map(identifier => (
-                    <IDChip
-                        key={identifier}
-                        id={identifier}
-                        filter={`pid:0x${identifier.toString(16)}`}
-                    />
-                ))}
-            </ChipList>
-            <Box mt={1}>
-                <img alt={`device ${name}`} src={imageUrl} loading="lazy" />
-            </Box>
-            {description && <Markdown source={description} />}
-            {link && (
-                <p>
-                    Learn more about
-                    <Link sx={{ ml: 1 }} href={link}>
+            <Grid container spacing={2}>
+                <Grid item xs={12} sm={5}>
+                    <img alt={`device ${name}`} src={imageUrl} loading="lazy" />
+                </Grid>
+                <Grid item xs={12} sm={7}>
+                    {!storeLink?.length && (
+                        <Alert severity="info">
+                            <AlertTitle>Prototype Hardware</AlertTitle>
+                            This device is a prototype <b>not</b> available for
+                            purchase.
+                        </Alert>
+                    )}
+                    <h2 key="title">
                         {name}
-                    </Link>
-                    .
-                </p>
-            )}
-            {!!storeLinks?.length && (
-                <>
-                    <h3>Buy now</h3>
-                    <p>
-                        Here is a list of resellers where you can buy this
-                        device.
-                    </p>
-                    <ul>
-                        {storeLinks.map(link => (
-                            <Link key={link} href={link}>
-                                {link}
+                        {!!version && (
+                            <Typography
+                                sx={{ ml: 1 }}
+                                component="span"
+                                variant="subtitle1"
+                            >
+                                v${version}
+                            </Typography>
+                        )}
+                    </h2>
+                    <Typography component="p" variant="subtitle1">
+                        by{" "}
+                        <Link to={`/devices/${identifierToUrlPath(company)}/`}>
+                            {company}
+                        </Link>
+                    </Typography>
+                    <hr />
+                    {connector === "noConnector" && (
+                        <Alert severity="warning">
+                            <AlertTitle>
+                                No PCB edge connector available.
+                            </AlertTitle>
+                            This device does <b>not</b> have a Jacdac PCB edge
+                            connector. It is programmable as a Jacdac device but
+                            it cannot be connected to other devices with a
+                            cable.
+                        </Alert>
+                    )}
+                    {connector === "edgeIndependent" && (
+                        <Alert severity="warning">
+                            <AlertTitle>
+                                Independently powered PCB edge connector
+                                available.
+                            </AlertTitle>
+                            This device has a Jacdac PCB edge connector without
+                            a power connection. It is programmable as a Jacdac
+                            device and it can be connected to other devices with
+                            a cable, but it will not provide to modules or
+                            consume power the Jacdac bus.
+                        </Alert>
+                    )}
+                    {description && <Markdown source={description} />}
+                    {link && (
+                        <p>
+                            Learn more about
+                            <Link sx={{ ml: 1 }} href={link}>
+                                {name}
                             </Link>
-                        ))}
-                    </ul>
-                </>
-            )}
+                            .
+                        </p>
+                    )}
+                    {!!storeLinks?.length && (
+                        <>
+                            <h3>Buy now</h3>
+                            <p>
+                                Here is a list of resellers where you can buy
+                                this device.
+                            </p>
+                            <ul>
+                                {storeLinks.map(link => (
+                                    <Link key={link} href={link}>
+                                        {link}
+                                    </Link>
+                                ))}
+                            </ul>
+                        </>
+                    )}
+                </Grid>
+            </Grid>
+
             {!!deviceSpecs?.length && (
                 <>
+                    <hr />
                     <h3>Kit Devices</h3>
                     <Grid container spacing={2}>
                         {deviceSpecs.map(specification => (
@@ -214,6 +225,7 @@ export default function DeviceSpecification(props: {
             )}
             {!!kitSpecs?.length && (
                 <>
+                    <hr />
                     <h3>Kits</h3>
                     <Grid container spacing={2}>
                         {kitSpecs.map(specification => (
@@ -233,6 +245,7 @@ export default function DeviceSpecification(props: {
             )}
             {makeCodeRepos?.length ? (
                 <>
+                    <hr />
                     <h3 id="makecodeextensions">
                         Required MakeCode Extensions
                     </h3>
@@ -262,6 +275,24 @@ export default function DeviceSpecification(props: {
                 header={<h3 id="makecodeprojects">MakeCode Projects</h3>}
                 serviceClass={services}
             />
+            <h2>Technical Details</h2>
+            <ChipList>
+                {designIdentifier && (
+                    <Chip
+                        aria-label={`design identifier: ${designIdentifier}`}
+                        icon={<MemoryIcon />}
+                        size="small"
+                        label={designIdentifier}
+                    />
+                )}
+                {productIdentifiers?.map(identifier => (
+                    <IDChip
+                        key={identifier}
+                        id={identifier}
+                        filter={`pid:0x${identifier.toString(16)}`}
+                    />
+                ))}
+            </ChipList>
             <PageLinkList
                 header={<h3 id="services">Service specifications</h3>}
                 nodes={serviceSpecs.map(({ shortId, name, notes }) => ({
