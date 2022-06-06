@@ -1,0 +1,45 @@
+---
+title: EC30 Module Form Factor
+order: 10
+---
+
+# Enclosure-compatible module form factor (EC30)
+
+To make it easier for users to recognize Jacdac modules and for manufacturers to design Jacdac modules, we
+recommend the use of an **enclosure compatible** module form factor, designed to make it easier to 
+build cheap enclosures  for individual modules, or for groups of modules that constitute a working device. 
+
+The EC30 rectangular form factor has two *Jacdac edge connectors* (EC1 and EC2) on opposite sides of the PCB, four *mounting
+holes*, and an *orientation notch* indicating the upper-left of the board (viewed from the top side of the the PCB). 
+
+In addition to the sections below, make sure to read up on the [electrical](../electrical) and [electro-mechanical](../electro-mechanical) design guidelines.
+
+## Dimensions
+
+The centers of mounting holes in a given direction should be multiple of 20mm apart. The width of the smallest ``square'' ec30 module is 28.0mm (x-axis) by 25.mm  (y-axis).  The difference is due to the fact that the two edge connectors, oriented parallel to the x-axis, protrude 1.5mm from each side of the board. See the [EC30 shape generator](/tools/ec30) which generates EC30 shape profiles as SVG or DXF.
+
+## Edge connectors
+
+Each [Jacdac edge connector](../electro-mechanical#pcb-edge-connector) is 6.6mm wide with clearance on each side (for cable connector) of at least 2.7mm.
+
+More edge connectors may be added, board dimensions permitting. Explore the possibilities with the [EC30 shape generator](/tools/ec30).
+
+## Mounting hole names, electrical connections, and size
+
+The mounting holes are named and connected as follows:
+- **MH1** is at the *upper-left* corner of the board and is connected to *JD_DATA*, with the orientation notch immediately to its right
+- **MH2** is at the *upper-right* corner of the board and is connected to *GND*
+- **MH3** is at the *bottom-left* corner of the board and is connected to *JD_PWR*
+- **MH4** is at the *bottom-right* corner of the board and is connected to *GND*
+
+A mounting hole has a hole of 3.1mm diameter, ringed by a plated copper to 4.4mm diameter,
+further ringed by a solder resist to 5.0mm diameter.  **TODO: Outside layers routing keepout**
+
+The mounting holes must be on 5mm pitch. This allows the modules to be mounted on a pre-drilled/perforated plate that has holes every 5mm in each direction.
+
+## Silkscreen marking
+
+The module name should be printed on the top surface of the PCB, to the right of the orientation notch.
+
+## Status LED location
+

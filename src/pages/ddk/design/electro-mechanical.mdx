@@ -49,22 +49,16 @@ In the simplest configuration, all devices on a Jacdac bus are connected directl
 
 Where Jacdac modules include mounting holes, we recommend that these be plated-through hole (PTH) and electrically connected to the Jacdac bus signals JD_PWR, JD_DATA and GND. This provides additional mechanisms for connecting modules together instead of the PCB edge connector, including the use of metal screws, threaded stand-off pillars, 'banana' style jack plugs and soldering.
 
-If PTHs are used, we recommend the use of four holes, one in each 'corner' of the module. Two of these must be connected to the GND net, and the other two connected to JD_DATA and JD_PWR. We suggest that the latter two are located adjacent to the Jacdac PCB edge connector so that the traces that connect the PTH to the edge connector fingers can be short and therefore share a common ESD diode. If the JD_DATA and JD_PWR PTHs are more than 10-15mm from the PCB edge connector, we recommend additional ESD protection.
+If PTHs are used, we recommend the use of four holes, one in each 'corner' of the module. 
+We recommend the use of 3mm holes, per the [EC30 module form factor](../ec30), 
+although we have also found 2mm holes useful if a small module size is important.
 
-One of the two PTHs connected to GND should be designated as 'mounting hole 1' and have a silkscreen mark on the top layer of the board only to indicate this. See below.
-
-We recommend the use of 3mm holes as per the spec below, although we have also found 2mm holes useful if a small module size is important. Many of our reference designs use 2mm holes.
-
-### Four 3mm plated-through holes
-
-Use holes with a finished diameter of 3.2mm, annular copper ring of 4.5mm diameter & copper/component keepout of 7.0mm. The keepout is necessary to ensure that screw heads and the bodies of standoffs do not interfere with any components on the PCB or short any traces near the hole.
-
-The mounting holes must be on 5mm pitch. This allows the modules to be mounted on a pre-drilled/perforated plate that has holes every 5mm in each direction.
+Two of these must be connected to the GND net, and the other two connected to JD_DATA and JD_PWR. We suggest that the latter two are located adjacent to the Jacdac PCB edge connector so that the traces that connect the PTH to the edge connector fingers can be short and therefore share a common ESD diode. If the JD_DATA and JD_PWR PTHs are more than 10-15mm from the PCB edge connector, we recommend additional ESD protection.  See [EC30 module form factor](../ec30) for more details on the recommended placement and dimensions of the four mounting holes, copper plate ring,
+solder resist, and keepout (necessary to ensure that screw heads and the bodies of standoffs do not interfere with any components on the PCB or short any traces 
+near the hole).
 
 ### Four 2mm plated-through holes
 
 Use holes with a finished diameter of 2.1mm, annular copper ring of 3.0mm diameter & copper/component keepout of 5.0mm. The keepout is necessary to ensure that screw heads and the bodies of standoffs do not interfere with any components on the PCB or short any traces near the hole.
 
 The mounting holes must be on 2.5mm pitch. This allows the modules to be mounted on a pre-drilled/perforated plate that has holes every 2.5mm in each direction.
-
----
