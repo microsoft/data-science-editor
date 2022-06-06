@@ -27,7 +27,7 @@ import Suspense from "../ui/Suspense"
 import MakeCodeProjects from "../makecode/MakeCodeProjects"
 import PageLinkList from "../ui/PageLinkList"
 import MakeCodeExtensions from "../makecode/MakeCodeExtensions"
-import MakeCodeIcon from "../icons/MakeCodeIcon"
+import WebShareButton from "../ui/WebShareButton"
 const Enclosure = lazy(() => import("../enclosure/Enclosure"))
 
 const HR_GAP = 4
@@ -124,7 +124,22 @@ export default function DeviceSpecification(props: {
             <DeviceStructuredData device={device} />
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={5}>
-                    <img alt={`device ${name}`} src={imageUrl} loading="lazy" />
+                    <div style={{ position: "relative" }}>
+                        <img
+                            alt={`device ${name}`}
+                            src={imageUrl}
+                            loading="lazy"
+                        />
+                        <WebShareButton
+                            style={{
+                                top: "1rem",
+                                right: "1rem",
+                                position: "absolute",
+                            }}
+                            title={`Jacdac - ${name}`}
+                            text={description}
+                        />
+                    </div>
                 </Grid>
                 <Grid item xs={12} sm={7}>
                     {!storeLink?.length && (
