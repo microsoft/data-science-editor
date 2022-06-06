@@ -28,7 +28,6 @@ export default function DeviceSpecificationCard(props: {
         makeCodeRepo,
         tags,
     } = specification
-    const makeCodeRepos = arrayify(makeCodeRepo)
     const imageUrl = useDeviceImage(specification, size)
     const names = [
         tags?.indexOf("kit") > -1 ? "kit" : undefined,
@@ -82,7 +81,7 @@ export default function DeviceSpecificationCard(props: {
                     )}
                     <ChipList>
                         {!storeLink && <Chip size="small" label="prototype" />}
-                        {!!makeCodeRepos?.length && (
+                        {!!makeCodeRepos.length && (
                             <Chip
                                 size="small"
                                 label="MakeCode"

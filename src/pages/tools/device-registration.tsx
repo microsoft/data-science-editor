@@ -230,7 +230,8 @@ export default function DeviceRegistration() {
         updateDevice()
     }
     const handleMakeCodeRepoChange = (ev: ChangeEvent<HTMLInputElement>) => {
-        device.makeCodeRepo = ev.target.value?.trim()
+        const r = ev.target.value?.trim()
+        device.makeCodeRepo = r ? [ev.target.value?.trim()] : undefined
         updateDevice()
     }
     const handleLinkChange = (ev: ChangeEvent<HTMLInputElement>) => {
@@ -775,7 +776,7 @@ export default function DeviceRegistration() {
                         helperText="URL to MakeCode extension"
                         label="MakeCode extension"
                         placeholder="https://github.com/..."
-                        value={device?.makeCodeRepo || ""}
+                        value={device?.makeCodeRepo?.[0] || ""}
                         onChange={handleMakeCodeRepoChange}
                         variant={variant}
                     />

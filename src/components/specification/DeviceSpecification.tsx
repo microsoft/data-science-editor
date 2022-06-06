@@ -86,7 +86,6 @@ export default function DeviceSpecification(props: {
         devices,
         shape,
     } = device
-    const makeCodeRepos = arrayify(makeCodeRepo)
     const storeLinks = arrayify(storeLink)
     const services = unique(device.services)
     const specifications = useDeviceSpecifications()
@@ -222,7 +221,7 @@ export default function DeviceSpecification(props: {
                     )}
                 </Grid>
             </Grid>
-            {makeCodeRepos?.length && (
+            {makeCodeRepo?.length && (
                 <>
                     <Divider light={true} />
                     <h3 id="makecodeextensions">
@@ -232,7 +231,7 @@ export default function DeviceSpecification(props: {
                         These MakeCode Extensions are needed to use Jacdac with
                         this device.
                     </p>
-                    {makeCodeRepos.map(repo => (
+                    {makeCodeRepo.map(repo => (
                         <GithubRepositoryCard
                             key={repo}
                             slug={repo}
