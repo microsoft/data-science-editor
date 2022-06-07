@@ -29,6 +29,7 @@ const YouTubeButton = lazy(() => import("./youtube/YouTubeButton"))
 const DeviceSpecificationList = lazy(
     () => import("./specification/DeviceSpecificationList")
 )
+const JacdaptorImageList = lazy(() => import("./home/JacdaptorImageList"))
 
 export default function useMdxComponents() {
     const theme = useTheme()
@@ -113,6 +114,11 @@ export default function useMdxComponents() {
             DeviceSpecificationList: props => (
                 <Suspense>
                     <DeviceSpecificationList {...props} />
+                </Suspense>
+            ),
+            JacdaptorImageList: props => (
+                <Suspense>
+                    <JacdaptorImageList {...props} />
                 </Suspense>
             ),
         }),

@@ -2,7 +2,7 @@ import React from "react"
 import { ImageList, ImageListItem, ImageListItemBar } from "@mui/material"
 import DeviceImage from "../devices/DeviceImage"
 
-export default function JacdapterImageList(props: { cols: number }) {
+export default function JacdaptorImageList(props: { cols: number }) {
     return (
         <ImageList cols={props.cols} gap={1}>
             {[
