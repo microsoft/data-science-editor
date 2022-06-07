@@ -19,7 +19,6 @@ import useDeviceSpecifications from "../devices/useDeviceSpecifications"
 import { Link } from "gatsby-theme-material-ui"
 import { arrayify, unique } from "../../../jacdac-ts/src/jdom/utils"
 import Alert from "../ui/Alert"
-import GithubRepositoryCard from "../github/GithubRepositoryCard"
 import { deviceCatalog } from "../../../jacdac-ts/src/jdom/catalog"
 import DeviceSpecificationCard from "./DeviceSpecificationCard"
 import useChange from "../../jacdac/useChange"
@@ -28,6 +27,7 @@ import MakeCodeProjects from "../makecode/MakeCodeProjects"
 import PageLinkList from "../ui/PageLinkList"
 import MakeCodeExtensions from "../makecode/MakeCodeExtensions"
 import WebShareButton from "../ui/WebShareButton"
+import GithubRepositoryList from "../github/GithubRespositoryList"
 const Enclosure = lazy(() => import("../enclosure/Enclosure"))
 
 const HR_GAP = 4
@@ -141,13 +141,6 @@ export default function DeviceSpecification(props: {
                     </div>
                 </Grid>
                 <Grid item xs={12} sm={7}>
-                    {!storeLink?.length && (
-                        <Alert severity="info">
-                            <AlertTitle>Prototype Hardware</AlertTitle>
-                            This device is a prototype <b>not</b> available for
-                            purchase.
-                        </Alert>
-                    )}
                     <h2 key="title">
                         {name}
                         {!!version && (
@@ -203,6 +196,13 @@ export default function DeviceSpecification(props: {
                             .
                         </p>
                     )}
+                    {!storeLink?.length && (
+                        <Alert severity="info">
+                            <AlertTitle>Prototype Hardware</AlertTitle>
+                            This device is a prototype <b>not</b> available for
+                            purchase.
+                        </Alert>
+                    )}
                     {!!storeLinks?.length && (
                         <>
                             <h3>Buy now</h3>
@@ -231,15 +231,12 @@ export default function DeviceSpecification(props: {
                         These MakeCode Extensions are needed to use Jacdac with
                         this device.
                     </p>
-                    {makeCodeRepo.map(repo => (
-                        <GithubRepositoryCard
-                            key={repo}
-                            slug={repo}
-                            showDescription={true}
-                            showDependencies={true}
-                            showMakeCodeButton={true}
-                        />
-                    ))}
+                    <GithubRepositoryList
+                        repos={makeCodeRepo}
+                        showDescription={true}
+                        showDependencies={true}
+                        showMakeCodeButton={true}
+                    />
                 </>
             )}
             {!!services?.length && (
