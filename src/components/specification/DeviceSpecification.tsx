@@ -1,4 +1,4 @@
-import React, { lazy, useMemo } from "react"
+import React, { lazy, ReactNode, useMemo } from "react"
 import IDChip from "../IDChip"
 import {
     identifierToUrlPath,
@@ -13,7 +13,6 @@ import DownloadFirmwareButton from "../ui/DownloadFirmwareButton"
 import MemoryIcon from "@mui/icons-material/Memory"
 import ChipList from "../ui/ChipList"
 import { semverCmp } from "../semver"
-import DeviceSpecificationList from "./DeviceSpecificationList"
 import StructuredData from "../ui/StructuredData"
 import useDeviceSpecifications from "../devices/useDeviceSpecifications"
 import { Link } from "gatsby-theme-material-ui"
@@ -67,6 +66,33 @@ function DeviceStructuredData(props: { device: jdspec.DeviceSpec }) {
     return <StructuredData payload={payload} />
 }
 
+function DeviceSpecificationList(props: {
+    header: ReactNode
+    devices: jdspec.DeviceSpec[]
+}) {
+    const { header, devices } = props
+    const gridBreakpoints = useGridBreakpoints()
+
+    if (!devices?.length) return null
+
+    return (
+        <>
+            <Divider light={true} />
+            {header}
+            <Grid sx={{ mb: HR_GAP }} container spacing={2}>
+                {devices.map(specification => (
+                    <Grid key={specification.id} item {...gridBreakpoints}>
+                        <DeviceSpecificationCard
+                            specification={specification}
+                            size={"catalog"}
+                        />
+                    </Grid>
+                ))}
+            </Grid>{" "}
+        </>
+    )
+}
+
 export default function DeviceSpecification(props: {
     device: jdspec.DeviceSpec
 }) {
@@ -88,12 +114,12 @@ export default function DeviceSpecification(props: {
         storeLink,
         connector = "edgeConsumer",
         devices,
+        relatedDevices,
         shape,
     } = device
     const storeLinks = arrayify(storeLink)
     const services = unique(device.services)
     const specifications = useDeviceSpecifications()
-    const gridBreakpoints = useGridBreakpoints()
     const imageUrl = useDeviceImage(device, "catalog")
     const deviceSpecs = useChange(
         deviceCatalog,
@@ -102,6 +128,14 @@ export default function DeviceSpecification(props: {
                 ?.map(id => _.specificationFromIdentifier(id))
                 .filter(s => !!s),
         [devices?.join(",")]
+    )
+    const relatedDeviceSpecs = useChange(
+        deviceCatalog,
+        _ =>
+            relatedDevices
+                ?.map(id => _.specificationFromIdentifier(id))
+                .filter(s => !!s),
+        [relatedDevices?.join(",")]
     )
     const kitSpecs = useChange(deviceCatalog, _ =>
         _.specifications().filter(s => s.devices?.indexOf(id) > -1)
@@ -267,46 +301,18 @@ export default function DeviceSpecification(props: {
                     />
                 </>
             )}
-            {!!deviceSpecs?.length && (
-                <>
-                    <Divider light={true} />
-                    <h3>Kit Devices</h3>
-                    <Grid sx={{ mb: HR_GAP }} container spacing={2}>
-                        {deviceSpecs.map(specification => (
-                            <Grid
-                                key={specification.id}
-                                item
-                                {...gridBreakpoints}
-                            >
-                                <DeviceSpecificationCard
-                                    specification={specification}
-                                    size={"catalog"}
-                                />
-                            </Grid>
-                        ))}
-                    </Grid>{" "}
-                </>
-            )}
-            {!!kitSpecs?.length && (
-                <>
-                    <Divider light={true} />
-                    <h3>Kits</h3>
-                    <Grid sx={{ mb: HR_GAP }} container spacing={2}>
-                        {kitSpecs.map(specification => (
-                            <Grid
-                                key={specification.id}
-                                item
-                                {...gridBreakpoints}
-                            >
-                                <DeviceSpecificationCard
-                                    specification={specification}
-                                    size={"catalog"}
-                                />
-                            </Grid>
-                        ))}
-                    </Grid>
-                </>
-            )}
+            <DeviceSpecificationList
+                header={<h3 id="kitdevices">Kit Devices</h3>}
+                devices={deviceSpecs}
+            />
+            <DeviceSpecificationList
+                header={<h3 id="relateddevices">Related Devices and Kits</h3>}
+                devices={relatedDeviceSpecs}
+            />
+            <DeviceSpecificationList
+                header={<h3>Kits</h3>}
+                devices={kitSpecs}
+            />
             <Divider light={true} />
             <h2>Technical Details</h2>
             <ChipList>
@@ -396,12 +402,10 @@ export default function DeviceSpecification(props: {
                     </ul>
                 </>
             )}
-            {!!others?.length && (
-                <>
-                    <h3>Other hardware revisions</h3>
-                    <DeviceSpecificationList devices={others} />
-                </>
-            )}
+            <DeviceSpecificationList
+                header={<h3>Other hardware revisions</h3>}
+                devices={others}
+            />
         </>
     )
 }
