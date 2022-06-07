@@ -20,6 +20,7 @@ import {
     arrayify,
     ellipseFirstSentence,
     unique,
+    uniqueMap,
 } from "../../../jacdac-ts/src/jdom/utils"
 import Alert from "../ui/Alert"
 import { deviceCatalog } from "../../../jacdac-ts/src/jdom/catalog"
@@ -115,7 +116,9 @@ export default function DeviceSpecification(props: {
         connector = "edgeConsumer",
         devices,
         relatedDevices,
+        requiredDevices,
         shape,
+        tags,
     } = device
     const storeLinks = arrayify(storeLink)
     const services = unique(device.services)
@@ -129,16 +132,30 @@ export default function DeviceSpecification(props: {
                 .filter(s => !!s),
         [devices?.join(",")]
     )
+    const requiredDeviceSpecs = useChange(
+        deviceCatalog,
+        _ =>
+            requiredDevices
+                ?.map(id => _.specificationFromIdentifier(id))
+                .filter(s => !!s),
+        [requiredDevices?.join(",")]
+    )
     const relatedDeviceSpecs = useChange(
         deviceCatalog,
         _ =>
-            relatedDevices
-                ?.map(id => _.specificationFromIdentifier(id))
-                .filter(s => !!s),
+            uniqueMap(
+                [
+                    ...(_.specifications().filter(
+                        s => !!s.storeLink && s.devices?.indexOf(id) > -1
+                    ) || []),
+                    ...(relatedDevices
+                        ?.map(id => _.specificationFromIdentifier(id))
+                        .filter(s => !!s) || []),
+                ],
+                s => s.id,
+                s => s
+            ),
         [relatedDevices?.join(",")]
-    )
-    const kitSpecs = useChange(deviceCatalog, _ =>
-        _.specifications().filter(s => s.devices?.indexOf(id) > -1)
     )
 
     const others = specifications
@@ -224,6 +241,19 @@ export default function DeviceSpecification(props: {
                             consume power the Jacdac bus.
                         </Alert>
                     )}
+                    {requiredDeviceSpecs?.map(({ id, name }) => (
+                        <Alert key={id} severity="warning">
+                            <AlertTitle>Extra {name} needed.</AlertTitle>
+                            This {tags?.indexOf("kit") > -1
+                                ? "kit"
+                                : "device"}{" "}
+                            requires a{" "}
+                            <Link to={`/devices/${identifierToUrlPath(id)}`}>
+                                {name}
+                            </Link>{" "}
+                            to operate (sold separately).
+                        </Alert>
+                    ))}
                     {description && <Markdown source={description} />}
                     {link && (
                         <p>
@@ -308,10 +338,6 @@ export default function DeviceSpecification(props: {
             <DeviceSpecificationList
                 header={<h3 id="relateddevices">Related Devices and Kits</h3>}
                 devices={relatedDeviceSpecs}
-            />
-            <DeviceSpecificationList
-                header={<h3>Kits</h3>}
-                devices={kitSpecs}
             />
             <Divider light={true} />
             <h2>Technical Details</h2>
