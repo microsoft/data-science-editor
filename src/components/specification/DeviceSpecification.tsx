@@ -17,7 +17,11 @@ import DeviceSpecificationList from "./DeviceSpecificationList"
 import StructuredData from "../ui/StructuredData"
 import useDeviceSpecifications from "../devices/useDeviceSpecifications"
 import { Link } from "gatsby-theme-material-ui"
-import { arrayify, ellipseFirstSentence, unique } from "../../../jacdac-ts/src/jdom/utils"
+import {
+    arrayify,
+    ellipseFirstSentence,
+    unique,
+} from "../../../jacdac-ts/src/jdom/utils"
 import Alert from "../ui/Alert"
 import { deviceCatalog } from "../../../jacdac-ts/src/jdom/catalog"
 import DeviceSpecificationCard from "./DeviceSpecificationCard"
@@ -241,11 +245,24 @@ export default function DeviceSpecification(props: {
             )}
             {!!services?.length && (
                 <>
-                    <Divider light={true} />
-                    <h3 id="makecode">MakeCode Projects</h3>
-                    <MakeCodeProjects serviceClass={services} />
+                    <MakeCodeProjects
+                        header={
+                            <>
+                                <Divider light={true} />
+                                <h3 id="makecode">MakeCode Projects</h3>
+                            </>
+                        }
+                        serviceClass={services}
+                    />
                     <MakeCodeExtensions
-                        header={<h4 id="makecodeextensions">Extensions</h4>}
+                        header={
+                            <>
+                                <Divider light={true} />
+                                <h3 id="makecodeextensions">
+                                    MakeCode Extensions
+                                </h3>
+                            </>
+                        }
                         serviceClass={services}
                     />
                 </>
