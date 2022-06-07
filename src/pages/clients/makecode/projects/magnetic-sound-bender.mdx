@@ -33,7 +33,7 @@ The magnetic field level sensor can sense the presence of a magnetic field creat
 basic.forever(function () {
     music.playSoundEffect(music.createSoundEffect(
     WaveShape.Sine,
-    50 * modules.magneticFieldLevel1.strength(),
+    200 * modules.magneticFieldLevel1.strength(),
     0,
     255,
     0,
@@ -63,7 +63,7 @@ basic.forever(function () {
     if (modules.magneticFieldLevel1.strength() > 0) {
         music.playSoundEffect(music.createSoundEffect(
         WaveShape.Sine,
-        50 * modules.magneticFieldLevel1.strength(),
+        200 * modules.magneticFieldLevel1.strength(),
         0,
         255,
         0,
@@ -80,7 +80,7 @@ basic.forever(function () {
 It's so sad to lose all these negative magnetic levels, how about using them to create more sounds by changing the end-frequency?
 
 -   click on the (+) button in the play sound to expand the options
--   drag a `(*)` multiply block from Math and set one side as `-200` **don't forget the negative character**
+-   drag a `(*)` multiply block from Math and set one side as `-200` **minus 200!!!**
 -   drag a `magnetic field level 1 magnetic field level (%)` block from the `modules` toolbox
 
 
@@ -89,7 +89,7 @@ basic.forever(function () {
     if (modules.magneticFieldLevel1.strength() > 0) {
         music.playSoundEffect(music.createSoundEffect(
         WaveShape.Sine,
-        50 * modules.magneticFieldLevel1.strength(),
+        200 * modules.magneticFieldLevel1.strength(),
         0,
         255,
         0,
@@ -101,7 +101,7 @@ basic.forever(function () {
         music.playSoundEffect(music.createSoundEffect(
         WaveShape.Sine,
         0,
-        -50 * modules.magneticFieldLevel1.strength(),
+        -200 * modules.magneticFieldLevel1.strength(),
         255,
         0,
         500,
@@ -114,7 +114,7 @@ basic.forever(function () {
 
 ## Download to your micro:bit V2
 
-Connect your micro:bit V2, slot it into the Jacdaptor and connect a Jacdac slider.
+Connect your micro:bit V2, slot it into the Jacdaptor and connect a Jacdac magnetic sensor.
 Press the **Download** button to get your code running on the micro:bit.
 
 <MakeCodeProjectFooter serviceNames="magneticfieldlevel" />
