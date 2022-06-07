@@ -17,7 +17,7 @@ import DeviceSpecificationList from "./DeviceSpecificationList"
 import StructuredData from "../ui/StructuredData"
 import useDeviceSpecifications from "../devices/useDeviceSpecifications"
 import { Link } from "gatsby-theme-material-ui"
-import { arrayify, unique } from "../../../jacdac-ts/src/jdom/utils"
+import { arrayify, ellipseFirstSentence, unique } from "../../../jacdac-ts/src/jdom/utils"
 import Alert from "../ui/Alert"
 import { deviceCatalog } from "../../../jacdac-ts/src/jdom/catalog"
 import DeviceSpecificationCard from "./DeviceSpecificationCard"
@@ -314,7 +314,7 @@ export default function DeviceSpecification(props: {
                 nodes={serviceSpecs.map(({ shortId, name, notes }) => ({
                     slug: `/services/${shortId}/`,
                     title: name,
-                    description: notes["short"],
+                    description: ellipseFirstSentence(notes["short"]),
                 }))}
             />
             {shape && (
