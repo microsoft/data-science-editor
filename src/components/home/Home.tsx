@@ -70,7 +70,12 @@ export default function Home() {
                 buttonText="Client programming"
                 buttonVariant="link"
                 buttonUrl="/clients/"
-                image={<HTML5Image />}
+                image={
+                    <StaticImage
+                        src="./makecode.png"
+                        alt="A screenshot of MakeCode blocks"
+                    />
+                }
             />
 
             <SplitGrid
