@@ -364,14 +364,16 @@ export default function LightWidget(props: {
         numColumnsRegister,
         props
     )
-    const widgetSize = `clamp(1rem, 100vw, 20vh)`
 
     if (numPixels === undefined)
         return <DashboardRegisterValueFallback register={numPixelsRegister} /> // nothing to render
 
     if (!numPixels) return null
 
-    if (lightVariant === LedStripVariant.Matrix) {
+    if (
+        lightVariant === LedStripVariant.Matrix ||
+        lightVariant === LedVariant.Matrix
+    ) {
         const columns = numColumns || Math.floor(Math.sqrt(numPixels))
         const rows = Math.floor(numPixels / columns)
         return (
@@ -386,6 +388,11 @@ export default function LightWidget(props: {
             />
         )
     } else {
+        const widgetSize =
+            lightVariant === LedStripVariant.Strip ||
+            lightVariant === LedVariant.Strip
+                ? `100%`
+                : `clamp(3rem, 100vw, 10rem)`
         return (
             <LightStripWidget
                 widgetSize={widgetSize}
