@@ -51,8 +51,8 @@ export default function DraggableCard(props: {
         title,
         actionItems,
         alert,
-        minimizeWidth = "clamp(12rem, 20vw, 20vh)",
-        fullWidth = "clamp(22rem, 80vh, 80vw)",
+        minimizeWidth = "clamp(22rem, 20vw, 20vh)",
+        fullWidth = "clamp(64rem, 80vh, 80vw)",
     } = props
     const [minimize, setMinimize] = useState(false)
     const nodeRef = useRef<HTMLSpanElement>()

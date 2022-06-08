@@ -9,7 +9,7 @@ import {
     Checkbox,
     Grid,
 } from "@mui/material"
-import React, { useContext, useEffect, useRef, useState } from "react"
+import React, { CSSProperties, useContext, useEffect, useRef, useState } from "react"
 import useLocalStorage from "../hooks/useLocalStorage"
 import useEffectAsync from "../useEffectAsync"
 import IconButtonWithTooltip from "./IconButtonWithTooltip"
@@ -145,6 +145,10 @@ export default function WebCam() {
     // cleanup
     useEffect(() => stop, [])
 
+    const style: CSSProperties = {
+        transform: flip ? "rotate(180deg)" : undefined,
+    }
+
     return (
         <DraggableCard
             onClose={handleClose}
@@ -219,7 +223,7 @@ export default function WebCam() {
                 )
             }
         >
-            <video autoPlay playsInline ref={videoRef} title="webcam" />
+            <video autoPlay playsInline ref={videoRef} muted={true} title="webcam" style={style} />
         </DraggableCard>
     )
 }
