@@ -7,39 +7,49 @@ order: 10
 
 [![EC30 schematics screenshot](./ec30.png)](https://github.com/microsoft/jacdac-ddk/blob/main/ec30/JacdacEc30Template20x20-80-1.0.PDF)
 
-To make it easier for users to recognize Jacdac modules, and for the modules to work with various electro-mechanical 
+To make it easier for users to recognize Jacdac modules, and for the modules to work with various electro-mechanical
 and mechanical accessories, we recommend the use of the [EC30 module form factor](https://github.com/microsoft/jacdac-ddk/blob/main/ec30/JacdacEc30Template20x20-80-1.0.PDF).
-In particular, the form factor was designed to make it easier to 
-build cheap enclosures for individual modules, and to assemble groups of modules together to make a working device. 
+In particular, the form factor was designed to make it easier to
+build cheap enclosures for individual modules, and to assemble groups of modules together to make a working device.
 
-The EC30 rectangular form factor has one or more *Jacdac edge connectors* on opposite sides of the PCB, four *mounting
-holes*, and an *orientation notch* indicating the upper-left of the board (viewed from the top side of the the PCB). There is always at least
+The EC30 rectangular form factor has one or more _Jacdac edge connectors_ on opposite sides of the PCB, four _mounting
+holes_, and an _orientation notch_ indicating the upper-left of the board (viewed from the top side of the the PCB). There is always at least
 one Jacdac edge connector on the left.
+
+<DeviceSpecificationList
+    sx={{ mb: 2 }}
+    count={4}
+    buyNow={true}
+    ec30={true}
+    connector={true}
+    shapes={["ec30_2x2_lr", "ec30_3x2_lr"]}
+/>
 
 In addition to the sections below, make sure to read up on the [electrical](../electrical) and [electro-mechanical](../electro-mechanical) design guidelines.
 
-* **[Download blueprint](https://github.com/microsoft/jacdac-ddk/blob/main/ec30/JacdacEc30Template20x20-80-1.0.PDF)**
-
-<EC30Editor />
+-   **[Download blueprint](https://github.com/microsoft/jacdac-ddk/blob/main/ec30/JacdacEc30Template20x20-80-1.0.PDF)**
 
 ## Dimensions
 
-The centers of mounting holes should be a multiple of 10mm apart in both x and y directions. The outline of the board extends 2.5mm from the holes to give a basic width of 25.0 by 25.0mm, but note that Jacdac edge connector(s) extend by a further 1.5mm. 
+The centers of mounting holes should be a multiple of 10mm apart in both x and y directions. The outline of the board extends 2.5mm from the holes to give a basic width of 25.0 by 25.0mm, but note that Jacdac edge connector(s) extend by a further 1.5mm.
 
-The smallest module is rectangular,  with holes spaced 10.0mm in x and 20.0mm in y, leading to 18.0 by 25.0mm overall. The smallest "square" EC30 module is 28.0mm (x-axis) by 25.0mm (y-axis). 
+The smallest module is rectangular, with holes spaced 10.0mm in x and 20.0mm in y, leading to 18.0 by 25.0mm overall. The smallest "square" EC30 module is 28.0mm (x-axis) by 25.0mm (y-axis).
+
 <!--The difference is due to the fact that the two edge connectors, oriented parallel to the x-axis, protrude 1.5mm from each side of the board.-->
+<EC30Editor />
 
 ## Edge connectors
 
-Each [Jacdac edge connector](../electro-mechanical#pcb-edge-connector) is 6.6mm wide with clearance on each side to accommodate the cable connector and leave space for a "connector wall". If the Jacdac edge connector is not directly next to another, there should be exactly 2.7mm clearance; if more than one connector are adjacent they should be on a 10.0mm spacing, leaving 3.4mm between them, with exactly 2.7mm clearance on either side. 
+Each [Jacdac edge connector](../electro-mechanical#pcb-edge-connector) is 6.6mm wide with clearance on each side to accommodate the cable connector and leave space for a "connector wall". If the Jacdac edge connector is not directly next to another, there should be exactly 2.7mm clearance; if more than one connector are adjacent they should be on a 10.0mm spacing, leaving 3.4mm between them, with exactly 2.7mm clearance on either side.
 
 ## Mounting hole names, electrical connections, and size
 
 The mounting holes are named and connected as follows:
-- **MH1** is at the *upper-left* corner of the board and is connected to *JD_DATA*, with the orientation notch immediately to its right
-- **MH2** is at the *upper-right* corner of the board and is connected to *GND*
-- **MH3** is at the *bottom-left* corner of the board and is connected to *JD_PWR*
-- **MH4** is at the *bottom-right* corner of the board and is connected to *GND*
+
+-   **MH1** is at the _upper-left_ corner of the board and is connected to _JD_DATA_, with the orientation notch immediately to its right
+-   **MH2** is at the _upper-right_ corner of the board and is connected to _GND_
+-   **MH3** is at the _bottom-left_ corner of the board and is connected to _JD_PWR_
+-   **MH4** is at the _bottom-right_ corner of the board and is connected to _GND_
 
 Mounting holes have a finished (plated) diameter of 3.1mm, with a 4.4mm diameter annular copper ring, and a solder resist keepout of 5.0mm diameter.
 
@@ -61,4 +71,3 @@ There should be one status LED on each side that has edge connectors, aligned wi
 ## Silkscreen marking
 
 The module name should be printed on the top surface of the PCB, to the right of the orientation notch.
-

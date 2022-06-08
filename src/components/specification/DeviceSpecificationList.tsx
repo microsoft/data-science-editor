@@ -1,5 +1,5 @@
 import React, { ReactNode, useMemo } from "react"
-import { Grid } from "@mui/material"
+import { Grid, SxProps, Theme } from "@mui/material"
 import { escapeDeviceIdentifier } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import useDeviceSpecifications from "../devices/useDeviceSpecifications"
 import useGridBreakpoints from "../useGridBreakpoints"
@@ -10,6 +10,7 @@ import { serviceSpecificationFromName } from "../../../jacdac-ts/src/jdom/spec"
 import GridHeader from "../ui/GridHeader"
 
 export default function DeviceSpecificationList(props: {
+    sx?: SxProps<Theme>
     header?: ReactNode
     query?: string
     count?: number
@@ -26,8 +27,10 @@ export default function DeviceSpecificationList(props: {
     tags?: string[]
     ec30?: boolean
     connector?: boolean
+    shapes?: jdspec.ShapeWellKnown[]
 }) {
     const {
+        sx,
         header,
         query,
         count,
@@ -44,6 +47,7 @@ export default function DeviceSpecificationList(props: {
         tags,
         ec30,
         connector,
+        shapes,
     } = props
     const specifications = useDeviceSpecifications()
     const specs = useMemo(() => {
@@ -78,6 +82,7 @@ export default function DeviceSpecificationList(props: {
             r = r.filter(
                 spec => isEC30(spec.shape) || spec.tags?.indexOf("ec30") > -1
             )
+        if (shapes) r = r.filter(spec => shapes.indexOf(spec.shape) > -1)
         if (makeCode) r = r.filter(spec => spec.makeCodeRepo?.length)
         if (transports?.length)
             r = r.filter(spec => transports.indexOf(spec.transport?.type) > -1)
@@ -138,6 +143,7 @@ export default function DeviceSpecificationList(props: {
         tags?.join(","),
         ec30,
         connector,
+        shapes?.join(","),
     ])
     const gridBreakpoints = useGridBreakpoints(specs.length)
     const size = specs?.length < 6 ? "catalog" : "preview"
@@ -145,7 +151,7 @@ export default function DeviceSpecificationList(props: {
     if (!specs.length) return null
 
     return (
-        <Grid container spacing={3}>
+        <Grid sx={sx} container spacing={3}>
             {header && <GridHeader title={header} />}
             {specs.map(specification => (
                 <Grid key={specification.id} item {...gridBreakpoints}>
