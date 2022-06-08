@@ -32,6 +32,7 @@ export default function DeviceSpecificationCard(props: {
     const names = [
         tags?.indexOf("kit") > -1 ? "kit" : undefined,
         tags?.indexOf("hub") > -1 ? "hub" : undefined,
+        tags?.indexOf("adapter") > -1 ? "adapter" : undefined,
         ...uniqueMap(
             services || [],
             srv => srv + "",
