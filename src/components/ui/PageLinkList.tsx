@@ -37,12 +37,12 @@ function PageLinkListItem(props: PageLinkListItemProps) {
                 secondary={
                     <ChipList>
                         {description && (
-                            <Typography variant="subtitle1">
+                            <Typography component="span" variant="subtitle1">
                                 {description}
                             </Typography>
                         )}
                         {specs?.map(({ shortId, name }) => (
-                            <Chip key={shortId} label={name} size="small" />
+                            <Chip component="span" key={shortId} label={name} size="small" />
                         ))}
                     </ChipList>
                 }
