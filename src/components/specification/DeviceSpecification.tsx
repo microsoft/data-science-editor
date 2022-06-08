@@ -250,8 +250,7 @@ export default function DeviceSpecification(props: {
                             requires a{" "}
                             <Link to={`/devices/${identifierToUrlPath(id)}`}>
                                 {name}
-                            </Link>{" "}
-                            to operate (sold separately).
+                            </Link>{" "} (sold separately).
                         </Alert>
                     ))}
                     {description && <Markdown source={description} />}
