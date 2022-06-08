@@ -6,6 +6,14 @@ function currentUrl() {
     return typeof window !== undefined && window.location.href
 }
 
+function canShare(data: ShareData) {
+    try {
+        return typeof navigator !== "undefined" && navigator.canShare?.(data)
+    } catch {
+        return false
+    }
+}
+
 export default function WebShareButton(props: {
     title: string
     text?: string
@@ -19,7 +27,7 @@ export default function WebShareButton(props: {
         navigator.share(data)
     }
 
-    if (typeof navigator === undefined || !navigator.canShare(data)) return null
+    if (!canShare(data)) return null
 
     return (
         <IconButtonWithTooltip
