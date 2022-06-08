@@ -225,7 +225,7 @@ export default function DeviceSpecification(props: {
                             This device does <b>not</b> have a Jacdac PCB edge
                             connector. It is programmable as a Jacdac device but
                             it cannot be connected to other devices with a
-                            cable.
+                            cable without an adapter.
                         </Alert>
                     )}
                     {connector === "edgeIndependent" && (
