@@ -95,7 +95,7 @@ export default function Home() {
             <SplitGrid
                 right={true}
                 subtitle="Enclosable"
-                description="PCB shape design system with connected grid-aligned mounting holes to accelerate enclosure fabrication in 3D printing and laser cutting."
+                description="PCB form factor design system with connected grid-aligned mounting holes to accelerate enclosure fabrication in 3D printing and laser cutting."
                 imageColumns={6}
                 image={
                     <StaticImage
