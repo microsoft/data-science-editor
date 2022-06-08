@@ -10,7 +10,6 @@ import DirectionsBusIcon from "@mui/icons-material/DirectionsBus"
 import PlaylistAddCheckIcon from "@mui/icons-material/PlaylistAddCheck"
 import FindReplaceIcon from "@mui/icons-material/FindReplace"
 import SubscriptionsIcon from "@mui/icons-material/Subscriptions"
-import HTML5Image from "./HTML5Image"
 import DarkModeContext from "../ui/DarkModeContext"
 import Suspense from "../ui/Suspense"
 import { Link } from "gatsby-theme-material-ui"
@@ -66,7 +65,7 @@ export default function Home() {
             <SplitGrid
                 right={true}
                 subtitle="Coding"
-                description="Code applications in JavaScript, MakeCode, .NET, Python, ..."
+                description="Code apps in JavaScript, MakeCode, .NET, Python, ..."
                 buttonText="Client programming"
                 buttonVariant="link"
                 buttonUrl="/clients/"
@@ -80,14 +79,14 @@ export default function Home() {
 
             <SplitGrid
                 subtitle="Cable and PCB Connector"
-                description="The cable hook design delivers an impeccably fluid plug/unplug motion on a 3-pin PCB-based double-sided edge connector."
+                description="Cable delivers solid plug/unplug experience with low-cost PCB edge connector."
                 // buttonText="Device Development Kit"
                 // buttonUrl="/ddk/"
                 imageColumns={6}
                 image={
                     <StaticImage
                         src="./mechanicalclickconnector.png"
-                        alt="A split view of the cable going into the PCB"
+                        alt="A split view of the cable connecting to PCB"
                     />
                     //<StaticImage src="./tangled.png" alt="Tangled cable" />
                 }
@@ -111,7 +110,7 @@ export default function Home() {
             <SplitGrid
                 right={false}
                 subtitle="Clients and Servers"
-                description="Jacdac Sensors and actuators are servers used by Jacdac clients in programmable brains."
+                description="Programmable clients (brains) access servers (modules) hosting sensors/actuators."
                 buttonText="Clients and servers"
                 buttonVariant="link"
                 buttonUrl="/reference/clientserver/"
@@ -153,7 +152,7 @@ export default function Home() {
 
             <SplitGrid
                 subtitle="For Manufacturers"
-                description="Add Jacdac to your devices. Schematics, footprints, libraries, firmware, hardware designs - all open source."
+                description="Add Jacdac to your devices. Schematics, footprints, libraries, firmware - all open source."
                 imageColumns={6}
                 centered={true}
                 buttonText="Device Development Kit"
@@ -177,14 +176,14 @@ export default function Home() {
                     <FeatureItem
                         startImage={<DirectionsBusIcon fontSize="large" />}
                         description="Bus topology"
-                        caption="Jacdac packets are sent among devices on the Jacdac bus and may also be sent over WebUSB/WebBLE, providing connectivity to web-based tooling and services."
+                        caption="Jacdac packets are sent among devices on the Jacdac bus and also over WebUSB, providing connectivity to web-based tooling."
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <FeatureItem
                         startImage={<PlaylistAddCheckIcon fontSize="large" />}
                         description="Device discovery and service advertisement"
-                        caption="Any device that hosts a service must also run the control service, which is responsible for advertising any services a device is running every 500 milliseconds."
+                        caption="Devices use the control service to advertize their presence and any services they support."
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -197,8 +196,8 @@ export default function Home() {
                 <Grid item xs={12} sm={6}>
                     <FeatureItem
                         startImage={<SubscriptionsIcon fontSize="large" />}
-                        description="Full stack from 8bit MCU to web development"
-                        caption="The physical protocol layer sends/receives a byte buffer (representing a Jacdac frame): Single Wire Serial connects MCUs to each other using UART."
+                        description="Full stack from 8-bit MCU to web development"
+                        caption="Single Wire Serial connects MCUs to each other using UART; a packet-based protocol sits above this layer."
                     />
                 </Grid>
             </CarouselGrid>
