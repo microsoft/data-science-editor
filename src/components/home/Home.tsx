@@ -78,34 +78,32 @@ export default function Home() {
             />
 
             <SplitGrid
-                subtitle="Cable and PCB Connector"
-                description="Reversible cable delivers seamless plug/unplug experience with low-cost PCB edge connector."
-                imageColumns={6}
-                image={
-                    <StaticImage
-                        src="./mechanicalclickconnector.png"
-                        alt="A split view of the cable connecting to PCB"
-                    />
-                }
-                buttonText="Schematics"
+                right={false}
+                subtitle="Web Tools"
+                description="Visualize, debug, sniff, track, record, replay, update... from your browser"
+                buttonText="Get productive with Jacdac"
                 buttonVariant="link"
-                buttonUrl="/ddk/design/electro-mechanical/"
+                buttonUrl="/tools/"
+                image={<StaticImage src="./devicetree.png" alt="Device tree" />}
             />
 
             <SplitGrid
                 right={true}
-                subtitle="Enclosable"
-                description="PCB form factor design system with connected grid-aligned mounting holes to accelerate enclosure fabrication in 3D printing and laser cutting."
+                subtitle="Plays well with others"
+                description="Jacdaptors allow Jacdac to integrate with other ecosystems."
+                buttonText="Jacdaptors"
+                buttonVariant="link"
+                buttonUrl="/reference/jacdaptors"
                 imageColumns={6}
                 image={
-                    <StaticImage
-                        src="./ec30.png"
-                        alt="A blurry image of the EC30 grid system device"
-                    />
+                    <Suspense>
+                        <JacdaptorImageList cols={2} />
+                    </Suspense>
                 }
-                buttonText="Schematics"
-                buttonVariant="link"
-                buttonUrl="/ddk/design/ec30/"
+            />
+
+            <CenterGrid
+                subtitle="Dive deeper on technical details..."
             />
 
             <SplitGrid
@@ -143,27 +141,34 @@ export default function Home() {
 
             <SplitGrid
                 right={false}
-                subtitle="Web Tools"
-                description="Visualize, debug, sniff, track, record, replay, update... from your browser"
-                buttonText="Get productive with Jacdac"
+                subtitle="Cable and PCB Connector"
+                description="Reversible cable delivers seamless plug/unplug experience with low-cost PCB edge connector."
+                imageColumns={6}
+                image={
+                    <StaticImage
+                        src="./mechanicalclickconnector.png"
+                        alt="A split view of the cable connecting to PCB"
+                    />
+                }
+                buttonText="Schematics"
                 buttonVariant="link"
-                buttonUrl="/tools/"
-                image={<StaticImage src="./devicetree.png" alt="Device tree" />}
+                buttonUrl="/ddk/design/electro-mechanical/"
             />
 
             <SplitGrid
                 right={true}
-                subtitle="Plays well with others"
-                description="Jacdaptors allow Jacdac to integrate with other ecosystems."
-                buttonText="Jacdaptors"
-                buttonVariant="link"
-                buttonUrl="/reference/jacdaptors"
+                subtitle="Enclosable"
+                description="PCB form factor design system with connected grid-aligned mounting holes to accelerate enclosure fabrication in 3D printing and laser cutting."
                 imageColumns={6}
                 image={
-                    <Suspense>
-                        <JacdaptorImageList cols={2} />
-                    </Suspense>
+                    <StaticImage
+                        src="./ec30.png"
+                        alt="A blurry image of the EC30 grid system device"
+                    />
                 }
+                buttonText="Schematics"
+                buttonVariant="link"
+                buttonUrl="/ddk/design/ec30/"
             />
 
             <SplitGrid
