@@ -82,7 +82,8 @@ export default function DeviceSpecificationList(props: {
             r = r.filter(
                 spec => isEC30(spec.shape) || spec.tags?.indexOf("ec30") > -1
             )
-        if (shapes) r = r.filter(spec => shapes.indexOf(spec.shape) > -1)
+        if (shapes)
+            r = r.filter(spec => shapes.some(shape => shape === spec.shape))
         if (makeCode) r = r.filter(spec => spec.makeCodeRepo?.length)
         if (transports?.length)
             r = r.filter(spec => transports.indexOf(spec.transport?.type) > -1)

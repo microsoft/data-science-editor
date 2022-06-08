@@ -6,7 +6,7 @@ import {
 } from "../../../jacdac-ts/src/jdom/spec"
 // tslint:disable-next-line: match-default-export-name no-submodule-imports
 import { CardActionArea } from "gatsby-theme-material-ui"
-import { arrayify, uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
+import { uniqueMap } from "../../../jacdac-ts/src/jdom/utils"
 import useDeviceImage from "../devices/useDeviceImage"
 import { humanify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import ChipList from "../ui/ChipList"
@@ -31,6 +31,7 @@ export default function DeviceSpecificationCard(props: {
     const imageUrl = useDeviceImage(specification, size)
     const names = [
         tags?.indexOf("kit") > -1 ? "kit" : undefined,
+        tags?.indexOf("hub") > -1 ? "hub" : undefined,
         ...uniqueMap(
             services || [],
             srv => srv + "",
