@@ -122,6 +122,10 @@ export default function DeviceSpecificationList(props: {
                     ? 1
                     : 0)
             if (c) return c
+
+            // by order
+            c = (a.order || 50) - (b.order || 50)
+            if (c) return c
             // by name
             return a.name.localeCompare(b.name)
         })
