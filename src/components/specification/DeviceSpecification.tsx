@@ -224,8 +224,8 @@ export default function DeviceSpecification(props: {
                             </AlertTitle>
                             This device does <b>not</b> have a Jacdac PCB edge
                             connector. It is programmable as a Jacdac device but
-                            it cannot be connected to other devices with a
-                            cable without an adapter.
+                            it cannot be connected to other devices with a cable
+                            without an adapter.
                         </Alert>
                     )}
                     {connector === "edgeIndependent" && (
@@ -242,8 +242,8 @@ export default function DeviceSpecification(props: {
                         </Alert>
                     )}
                     {requiredDeviceSpecs?.map(({ id, name }) => (
-                        <Alert key={id} severity="warning">
-                            <AlertTitle>Extra {name} needed.</AlertTitle>
+                        <Alert mb={1} key={id} severity="warning">
+                            <AlertTitle>Requires {name}.</AlertTitle>
                             This {tags?.indexOf("kit") > -1
                                 ? "kit"
                                 : "device"}{" "}

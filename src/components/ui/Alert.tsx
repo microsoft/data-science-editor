@@ -19,19 +19,20 @@ const StyledCollapse = styled(Collapse)(() => ({
 
 export default function Alert(
     props: {
+        mb?: number | string
         closeable?: boolean
         title?: ReactNode
         children: ReactNode
     } & AlertProps
 ) {
-    const { closeable, title, children, ...others } = props
+    const { closeable, title, children, mb = 2, ...others } = props
 
     const [open, setOpen] = useState(true)
     const handleClose = () => setOpen(false)
     return (
         <StyledCollapse in={open}>
             <MaterialAlert
-                sx={{ mt: 1, mb: 2 }}
+                sx={{ mt: 1, mb }}
                 classes={{
                     icon: !title && classes.icon,
                 }}
