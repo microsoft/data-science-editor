@@ -12,6 +12,8 @@ import {
 } from "@mui/material"
 
 import Suspense from "./ui/Suspense"
+import Alert from "./ui/Alert"
+import { AlertTitle } from "@mui/material"
 
 const MakeCodeProjects = lazy(() => import("./makecode/MakeCodeProjects"))
 const MakeCodeExtensionFooter = lazy(
@@ -30,6 +32,7 @@ const DeviceSpecificationList = lazy(
     () => import("./specification/DeviceSpecificationList")
 )
 const JacdaptorImageList = lazy(() => import("./home/JacdaptorImageList"))
+const EC30Editor = lazy(() => import("./ec30/EC30Editor"))
 
 export default function useMdxComponents() {
     const theme = useTheme()
@@ -121,6 +124,13 @@ export default function useMdxComponents() {
                     <JacdaptorImageList {...props} />
                 </Suspense>
             ),
+            EC30Editor: props => (
+                <Suspense>
+                    <EC30Editor {...props} />
+                </Suspense>
+            ),
+            Alert: props => <Alert {...props} />,
+            AlertTitle: props => <AlertTitle {...props} />,
         }),
         []
     )

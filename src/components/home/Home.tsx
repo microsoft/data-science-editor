@@ -79,23 +79,39 @@ export default function Home() {
 
             <SplitGrid
                 subtitle="Cable and PCB Connector"
-                description="Cable delivers solid plug/unplug experience with low-cost PCB edge connector."
-                // buttonText="Device Development Kit"
-                // buttonUrl="/ddk/"
+                description="Reversible cable delivers seamless plug/unplug experience with low-cost PCB edge connector."
                 imageColumns={6}
                 image={
                     <StaticImage
                         src="./mechanicalclickconnector.png"
                         alt="A split view of the cable connecting to PCB"
                     />
-                    //<StaticImage src="./tangled.png" alt="Tangled cable" />
                 }
+                buttonText="Schematics"
+                buttonVariant="link"
+                buttonUrl="/ddk/design/electro-mechanical/"
             />
 
             <SplitGrid
                 right={true}
+                subtitle="Enclosable"
+                description="PCB shape design system with connected grid-aligned mounting holes to accelerate enclosure fabrication in 3D printing and laser cutting."
+                imageColumns={6}
+                image={
+                    <StaticImage
+                        src="./ec30.png"
+                        alt="A blurry image of the EC30 grid system device"
+                    />
+                }
+                buttonText="Schematics"
+                buttonVariant="link"
+                buttonUrl="/ddk/design/ec30/"
+            />
+
+            <SplitGrid
+                right={false}
                 subtitle="Services"
-                description="Jacdac services provide an abstract view of a device's features."
+                description="Jacdac services provide an abstract view of a device's features, allowing a consistent coding experience and simulation."
                 buttonText="Service catalog"
                 buttonVariant="link"
                 buttonUrl="/services/"
@@ -108,7 +124,7 @@ export default function Home() {
             />
 
             <SplitGrid
-                right={false}
+                right={true}
                 subtitle="Clients and Servers"
                 description="Programmable clients (brains) access servers (modules) hosting sensors/actuators."
                 buttonText="Clients and servers"
@@ -126,7 +142,7 @@ export default function Home() {
             />
 
             <SplitGrid
-                right={true}
+                right={false}
                 subtitle="Web Tools"
                 description="Visualize, debug, sniff, track, record, replay, update... from your browser"
                 buttonText="Get productive with Jacdac"
@@ -136,7 +152,7 @@ export default function Home() {
             />
 
             <SplitGrid
-                right={false}
+                right={true}
                 subtitle="Plays well with others"
                 description="Jacdaptors allow Jacdac to integrate with other ecosystems."
                 buttonText="Jacdaptors"
@@ -154,7 +170,7 @@ export default function Home() {
                 subtitle="For Manufacturers"
                 description="Add Jacdac to your devices. Schematics, footprints, libraries, firmware - all open source."
                 imageColumns={6}
-                centered={true}
+                centered={false}
                 buttonText="Device Development Kit"
                 buttonUrl="/ddk/"
                 buttonVariant="link"
