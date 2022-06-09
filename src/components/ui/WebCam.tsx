@@ -9,7 +9,13 @@ import {
     Checkbox,
     Grid,
 } from "@mui/material"
-import React, { CSSProperties, useContext, useEffect, useRef, useState } from "react"
+import React, {
+    CSSProperties,
+    useContext,
+    useEffect,
+    useRef,
+    useState,
+} from "react"
 import useLocalStorage from "../hooks/useLocalStorage"
 import useEffectAsync from "../useEffectAsync"
 import IconButtonWithTooltip from "./IconButtonWithTooltip"
@@ -19,6 +25,10 @@ import { Alert } from "@mui/material"
 import FullscreenIcon from "@mui/icons-material/Fullscreen"
 import DraggableCard from "./DraggableCard"
 import VideoSettingsIcon from "@mui/icons-material/VideoSettings"
+import {
+    MediaRecorderButton,
+    supportsMediaRecorder,
+} from "./MediaRecorderButton"
 
 export default function WebCam() {
     const { setShowWebCam } = useContext(AppContext)
@@ -193,10 +203,15 @@ export default function WebCam() {
             }
             actionItems={
                 <>
+                    {supportsMediaRecorder() && (
+                        <Grid item>
+                            <MediaRecorderButton stream={streamRef.current} />
+                        </Grid>
+                    )}
                     {supportsFullScreen && (
                         <Grid item>
                             <IconButtonWithTooltip
-                                size="small"
+                                size="large"
                                 onClick={handleFullScreen}
                                 title="full screen"
                                 disabled={working}
@@ -207,6 +222,7 @@ export default function WebCam() {
                     )}
                     <Grid item>
                         <IconButtonWithTooltip
+                            size="large"
                             onClick={handleSettings}
                             title="Settings"
                         >
@@ -223,7 +239,14 @@ export default function WebCam() {
                 )
             }
         >
-            <video autoPlay playsInline ref={videoRef} muted={true} title="webcam" style={style} />
+            <video
+                autoPlay
+                playsInline
+                ref={videoRef}
+                muted={true}
+                title="webcam"
+                style={style}
+            />
         </DraggableCard>
     )
 }
