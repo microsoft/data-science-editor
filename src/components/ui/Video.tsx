@@ -14,6 +14,7 @@ export default function Video(props: {
     style?: CSSProperties
     description?: string
     label?: string
+    preload?: "metadata" | "none" | "auto"
 }) {
     const {
         label,
@@ -25,6 +26,7 @@ export default function Video(props: {
         controls = false,
         autoPlay = true,
         style,
+        preload = "auto",
     } = props
     const { ref, inView } = useInView()
     const videoRef = useRef<HTMLVideoElement>()
@@ -53,7 +55,7 @@ export default function Video(props: {
                 ref={videoRef}
                 playsInline
                 controls={controls}
-                preload="auto"
+                preload={preload}
                 autoPlay={autoPlay && inView}
                 muted={muted}
                 loop={loop}
