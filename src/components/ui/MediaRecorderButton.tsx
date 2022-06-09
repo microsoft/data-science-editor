@@ -1,14 +1,9 @@
 /* eslint-disable jsx-a11y/media-has-caption */
-import React, {
-    useEffect,
-    useRef,
-    useState,
-} from "react"
+import React, { useEffect, useRef, useState } from "react"
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord"
 import StopIcon from "@mui/icons-material/Stop"
 import { downloadUrl } from "../../../jacdac-ts/src/embed/filestorage"
 import IconButtonWithProgress from "./IconButtonWithProgress"
-import { delay } from "../../../jacdac-ts/src/jdom/utils"
 
 export function supportsMediaRecorder() {
     return typeof MediaRecorder !== "undefined"
@@ -17,8 +12,7 @@ export function supportsMediaRecorder() {
 async function downloadBlob(blob: Blob, name: string) {
     const url = URL.createObjectURL(blob)
     console.debug(`webcam: download ${url}`)
-    downloadUrl(url, name)
-    await delay(5000)
+    await downloadUrl(url, name)
     window.URL.revokeObjectURL(url)
 }
 
