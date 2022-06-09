@@ -25,6 +25,7 @@ import useBus from "../../jacdac/useBus"
 import { semverCmp } from "../semver"
 import useSnackbar from "../hooks/useSnackbar"
 import { PROGRESS } from "../../../jacdac-ts/src/jdom/constants"
+import useDeviceFirmwareInfo from "./useDeviceFirmwareInfo"
 
 function DragAndDropUpdateButton(props: {
     firmwareVersion: string
@@ -141,7 +142,7 @@ export function FlashDeviceButton(props: {
     const firmwares = specification?.firmwares
     const bootloader = useChange(device, _ => _?.bootloader)
     const firmwareUpdater = useChange(device, _ => _?.firmwareUpdater)
-    const firmwareInfo = useChange(device, _ => _?.firmwareInfo)
+    const firmwareInfo = useDeviceFirmwareInfo(device)
     const update =
         ignoreFirmwareCheck ||
         (blob?.version &&
@@ -223,6 +224,14 @@ export function FlashDeviceButton(props: {
         )
 
     // tslint:disable-next-line: react-this-binding-issue
+    console.debug(`update`, {
+        unsupported,
+        missing,
+        firmwareInfo,
+        update,
+        upToDate,
+        ignoreFirmwareCheck,
+    })
     return unsupported ? (
         <Alert severity="info">No registered firmware</Alert>
     ) : missing ? (
