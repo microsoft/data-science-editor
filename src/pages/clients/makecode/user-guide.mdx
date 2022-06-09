@@ -70,7 +70,11 @@ However, if you want to create a program with multiple buttons, you will need to
 
 Once reloaded, you should be able to select your roles in the block drop downs.
 
-![An animation that shows how to create new roles](./multiroles.gif)
+<Video
+    label="An animation that shows how to create new roles"
+    webm="/videos/user-guide-multiroles.webm"
+    preload="metadata"
+/>
 
 ### JavaScript editor
 
@@ -93,15 +97,13 @@ Instead of using `on start`, you can use `on connected` and `on disconnected`
 to start or stop using a role.
 
 ```blocks
-modules.button1.onDisconnected(function () {
-    basic.showIcon(IconNames.No)
+modules.button1.onConnectionChanged(jacdac.ClientConnectionState.Connected, function () {
+    basic.showIcon(IconNames.Happy)
 })
-modules.button1.onConnected(function () {
-    basic.showIcon(IconNames.Heart)
+modules.button1.onConnectionChanged(jacdac.ClientConnectionState.Disconnected, function () {
+    basic.showIcon(IconNames.Sad)
 })
 ```
-
-![An animation that shows how to create new roles](./multiroles.gif)
 
 ## Updating Jacdac Extensions
 
@@ -111,8 +113,6 @@ Sometimes, you may have to update the Jacdac extension used in your project. Thi
 -   expand the **Explorer** tree view
 -   click on the update icon next to the jacdac extension entry
 -   That's it!
-
-![Updating references](./update.gif)
 
 ## What's next?
 
