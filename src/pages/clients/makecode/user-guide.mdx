@@ -12,20 +12,23 @@ can create programs that use the micro:bit and Jacdac simulators without any har
 
 You can use a mix of Jacdac simulators or actual Jacdac modules when programming
 the micro:bit. The micro:bit simulator can access physical Jacdac modules connected
-to the micro:bit V2 (via a [Jacdaptor](/devices/microbit-educational-foundation/microbitv2/)) 
-provided you also have connected MakeCode 
-to the micro:bit [using WebUSB](https://makecode.microbit.org/device/usb/webusb). 
+to the micro:bit V2 (via a [Jacdaptor](/devices/microbit-educational-foundation/microbitv2/))
+provided you also have connected MakeCode
+to the micro:bit [using WebUSB](https://makecode.microbit.org/device/usb/webusb).
 
-In the example below, we remove the button simulator and 
+In the example below, we remove the button simulator and
 connect a physical keycap module which implements the button service.
 The Micro:bit simulator connects to the physical button and uses it in the code.
 
-![Hardware button show large and small heart when pressed](./hardwareheartbeat.gif)
+<Video
+    label="Hardware button show large and small heart when pressed"
+    webm="/videos/hardwareheartbeat.webm"
+/>
 
 ## Dongle mode: "Only one brain"
 
 To avoid having the micro:bit simulator **and** the physical micro:bit running code **at the same time**,
-Jacdac automatically puts one of the two micro:bits in a **dongle mode** when restarting the simulator or 
+Jacdac automatically puts one of the two micro:bits in a **dongle mode** when restarting the simulator or
 resetting the physical device,
 or downloading code into the physical device (which ends with a a reset of the device).
 The micro:bit in dongle mode does not execute the user's program.
@@ -34,11 +37,16 @@ The micro:bit in dongle mode does not execute the user's program.
 -   to exit dongle mode, **press any button or reset** - either the simulator or the physical device
 
 A simulator restart or device reset changes dongle mode as follows:
+
 -   when a physical micro:bit resets, the simulator micro:bit enters dongle mode.
 -   when the simulator micro:bit restarts, the physical micro:bit enters dongle mode.
 -   in dongle mode, the physical micro:bit still transmits the Jacdac packets, so you can see physical services, but does not execute MakeCode code.
 
-![Switching dongle mode between simulator and hardware micro:bit](./onebrain.gif)
+<Video
+    label="Switching dongle mode between simulator and hardware micro:bit"
+    webm="/videos/onebrain.webm"
+    preload="metadata"
+/>
 
 ## Multiple Roles
 
@@ -67,6 +75,7 @@ Once reloaded, you should be able to select your roles in the block drop downs.
 ### JavaScript editor
 
 Unfortunately, the role editor is not yet available in the JavaScript view. So you are left with two choices
+
 1. go to blocks, add roles, go back to JavaScript
 2. add the roles manually by instantiating clients, as shown below
 
