@@ -99,8 +99,8 @@ export default function DeviceSpecificationList(props: {
                     spec.description,
                     spec.company,
                     ...(spec.productIdentifiers || []).map(p => p.toString(16)),
-                    ...spec.services.map(p => p.toString(16)),
-                    ...spec.services.map(srv => renderServiceName(srv)),
+                    ...(spec.services || []).map(p => p.toString(16)),
+                    ...(spec.services || []).map(srv => renderServiceName(srv)),
                 ].some(s => s?.toLowerCase()?.indexOf(query.toLowerCase()) > -1)
             )
         r = r.sort((a, b) => {
