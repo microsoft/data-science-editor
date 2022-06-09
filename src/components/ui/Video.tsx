@@ -1,7 +1,8 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 import { withPrefix } from "gatsby"
-import React, { CSSProperties, useEffect, useRef } from "react"
+import React, { CSSProperties, useRef } from "react"
 import { useInView } from "react-intersection-observer"
+import useEffectAsync from "../useEffectAsync"
 
 export default function Video(props: {
     mp4?: string
@@ -31,16 +32,16 @@ export default function Video(props: {
     const { ref, inView } = useInView()
     const videoRef = useRef<HTMLVideoElement>()
 
-    useEffect(() => {
+    useEffectAsync(async () => {
         if (!inView) {
             try {
-                videoRef.current?.pause()
+                await videoRef.current?.pause()
             } catch (e) {
                 console.debug(e)
             }
         } else {
             try {
-                if (autoPlay) videoRef.current?.play()
+                if (autoPlay) await videoRef.current?.play()
             } catch (e) {
                 console.debug(e)
             }
