@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/media-has-caption */
+import { SxProps, Theme } from "@mui/material"
 import { withPrefix } from "gatsby"
-import React, { useEffect, useRef } from "react"
+import React, { CSSProperties, useEffect, useRef } from "react"
 import { useInView } from "react-intersection-observer"
 
 export default function Video(props: {
@@ -9,22 +10,38 @@ export default function Video(props: {
     poster?: string
     muted?: boolean
     loop?: boolean
+    controls?: boolean
+    style?: CSSProperties
 }) {
-    const { mp4, webp, poster, muted = true, loop = true } = props
+    const {
+        mp4,
+        webp,
+        poster,
+        muted = true,
+        loop = true,
+        controls = true,
+        style,
+    } = props
     const { ref, inView } = useInView()
     const videoRef = useRef<HTMLVideoElement>()
 
     useEffect(() => {
-        if (!inView) videoRef.current?.pause()
+        if (!inView) {
+            try {
+                videoRef.current?.pause()
+            } catch (e) {
+                console.debug(e)
+            }
+        }
     }, [inView])
 
     return (
         <div ref={ref}>
             <video
-                style={{ width: "100%" }}
+                style={{ width: "100%", ...(style || {}) }}
                 ref={videoRef}
                 playsInline
-                controls
+                controls={controls}
                 preload="auto"
                 autoPlay={inView}
                 muted={muted}
