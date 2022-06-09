@@ -15,6 +15,7 @@ import Suspense from "./ui/Suspense"
 import Alert from "./ui/Alert"
 import { AlertTitle } from "@mui/material"
 
+const Video = lazy(() => import("./ui/Video"))
 const MakeCodeProjects = lazy(() => import("./makecode/MakeCodeProjects"))
 const MakeCodeExtensionFooter = lazy(
     () => import("./makecode/MakeCodeExtensionFooter")
@@ -131,6 +132,11 @@ export default function useMdxComponents() {
             ),
             Alert: props => <Alert {...props} />,
             AlertTitle: props => <AlertTitle {...props} />,
+            Video: props => (
+                <Suspense>
+                    <Video {...props} />
+                </Suspense>
+            ),
         }),
         []
     )

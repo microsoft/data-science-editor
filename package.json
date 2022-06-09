@@ -101,6 +101,7 @@
     "react-dom": "^18.1.0",
     "react-draggable": "^4.4.5",
     "react-helmet": "^6.1.0",
+    "react-intersection-observer": "^9.2.2",
     "react-markdown": "^8.0.3",
     "react-minisearch": "^4.0.1",
     "react-piano": "^3.1.3",
