@@ -62,6 +62,13 @@ export default function Home() {
                 buttonUrl="/devices/"
             />
 
+            <CenterGrid
+                subtitle2="No hardware? No problem!" 
+                buttonText="Get started now"
+                buttonVariant="link"
+                buttonUrl="/start/"
+            />
+
             <SplitGrid
                 right={true}
                 subtitle="Coding"
@@ -103,7 +110,7 @@ export default function Home() {
             />
 
             <CenterGrid
-                subtitle="Dive deeper on technical details..."
+                subtitle2="Dive deeper on details..."
             />
 
             <SplitGrid
