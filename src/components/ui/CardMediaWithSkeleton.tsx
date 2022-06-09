@@ -1,23 +1,20 @@
-import { CardMedia, CardMediaProps, Skeleton, useTheme } from "@mui/material"
+import { CardMedia, CardMediaProps, Skeleton } from "@mui/material"
 import React from "react"
 
 export default function CardMediaWithSkeleton(
-    props: { height?: string | number; title: string } & CardMediaProps
+    props: { aspectRatio?: string | number; title: string } & CardMediaProps
 ) {
-    const { image, src, height, title } = props
-    const theme = useTheme()
-    const h = height || theme.spacing(21)
-
+    const { image, src, aspectRatio = "4 / 3", title } = props
     const hasImage = !!image || !!src
-    if (!hasImage) return <Skeleton height={h} width="100%" />
+    if (!hasImage) return <Skeleton sx={{ aspectRatio }} width="100%" />
 
     return (
         <CardMedia
             component="img"
-            height={h}
             image={image}
             src={src}
             alt={title}
+            sx={{ aspectRatio }}
         />
     )
 }
