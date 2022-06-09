@@ -11,7 +11,7 @@ export function supportsMediaRecorder() {
 
 async function downloadBlob(blob: Blob, name: string) {
     const url = URL.createObjectURL(blob)
-    console.debug(`webcam: download ${url}`)
+    console.debug(`webcam: download video`, { blob, url })
     await downloadUrl(url, name)
     window.URL.revokeObjectURL(url)
 }
@@ -53,10 +53,11 @@ export function MediaRecorderButton(props: { stream: MediaStream }) {
     }
 
     const stopRecording = () => {
-        console.debug(`webcam: stop recording`)
         try {
-            if (recorderRef.current?.state === "recording")
+            if (recorderRef.current?.state === "recording") {
+                console.debug(`webcam: stop recording`)
                 recorderRef.current?.stop()
+            }
         } catch (e) {
             console.debug(e)
         }
