@@ -12,8 +12,11 @@ export default function Video(props: {
     controls?: boolean
     autoPlay?: boolean
     style?: CSSProperties
+    description?: string
+    label?: string
 }) {
     const {
+        label,
         mp4,
         webm,
         poster,
@@ -45,6 +48,7 @@ export default function Video(props: {
     return (
         <div ref={ref}>
             <video
+                aria-label={label}
                 style={{ maxWidth: "100%", ...(style || {}) }}
                 ref={videoRef}
                 playsInline
