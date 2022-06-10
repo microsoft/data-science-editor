@@ -3,7 +3,8 @@ import CodeSandboxButton from "./CodeSandboxButton"
 import packageJson from "../../../jacdac-ts/package.json"
 import reactPackageJson from "../../../react-jacdac/package.json"
 
-const AppTsx = `import { JacdacProvider } from "react-jacdac";
+const AppTsx = `import React from "react";
+import { JacdacProvider } from "react-jacdac";
 import { bus } from "./bus";
 import Connect from "./Connect";
 import Demo from "./Demo";
