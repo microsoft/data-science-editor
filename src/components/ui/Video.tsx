@@ -5,8 +5,7 @@ import { useInView } from "react-intersection-observer"
 import useEffectAsync from "../useEffectAsync"
 
 export default function Video(props: {
-    mp4?: string
-    webm?: string
+    src?: string
     poster?: string
     muted?: boolean
     loop?: boolean
@@ -19,8 +18,7 @@ export default function Video(props: {
 }) {
     const {
         label,
-        mp4,
-        webm,
+        src,
         poster,
         muted = true,
         loop = true,
@@ -62,8 +60,14 @@ export default function Video(props: {
                 loop={loop}
                 poster={poster}
             >
-                {mp4 && <source src={withPrefix(mp4)} type="video/mp4" />}
-                {webm && <source src={withPrefix(webm)} type="video/webm" />}
+                <source
+                    src={withPrefix(`/videos/${src}.mp4`)}
+                    type="video/mp4"
+                />
+                <source
+                    src={withPrefix(`/videos/${src}.webm`)}
+                    type="video/webm"
+                />
                 Sorry, your browser does not support embedded videos.
             </video>
         </div>
