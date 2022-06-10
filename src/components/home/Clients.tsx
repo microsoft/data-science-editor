@@ -86,7 +86,7 @@ export default function Clients() {
                 description="Physical Creative Coding."
                 buttonText="p5.jacdac library"
                 buttonVariant="link"
-                buttonUrl="/clients/p5js"
+                buttonUrl="/clients/javascript/p5js"
                 image={
                     <StaticImage
                         src="./p5js.jpg"

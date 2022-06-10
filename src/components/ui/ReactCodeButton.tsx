@@ -41,13 +41,14 @@ export default function Connect() {
   );
 }
 `
-const indexTsx = `import { render } from "react-dom";
+const indexTsx = `import { createRoot } from "react-dom/client";
 import "milligram";
 
 import App from "./App";
 
-const rootElement = document.getElementById("root");
-render(<App />, rootElement);
+const container = document.getElementById("root");
+const root = createRoot(container!);
+root.render(<App />);
 `
 const busTs = `import { createWebBus } from "jacdac-ts";
 
@@ -110,16 +111,16 @@ export default function ReactCodeButton(props: {
                     main: "src/index.tsx",
                     dependencies: {
                         milligram: "1.4.1",
-                        react: "17.0.2",
-                        "react-dom": "17.0.2",
-                        "react-scripts": "4.0.3",
+                        react: "18.1.0",
+                        "react-dom": "18.1.0",
+                        "react-scripts": "5.0.1",
                         "jacdac-ts": `^${packageJson.version}`,
                         "react-jacdac": `^${reactPackageJson.version}`,
                     },
                     devDependencies: {
-                        "@types/react": "17.0.20",
-                        "@types/react-dom": "17.0.9",
-                        typescript: "4.4.2",
+                        "@types/react": "^18.0.12",
+                        "@types/react-dom": "^18.0.5",
+                        typescript: "^4.7.3",
                     },
                     scripts: {
                         start: "react-scripts start",
