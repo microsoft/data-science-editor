@@ -167,7 +167,7 @@ export default function Home() {
                 imageColumns={6}
                 image={
                     <StaticImage
-                        src="./breadboard.png"
+                        src="./breadboard.jpg"
                         alt="A blurry image of the EC30 grid system device"
                     />
                 }
