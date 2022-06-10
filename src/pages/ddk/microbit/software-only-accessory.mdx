@@ -16,9 +16,14 @@ This solution adds no cost and will work for existing accessories.
     -   no Jacdac connector
     -   micro:bit v2 only (Jacdac is not supported on v1)
 
-Here is a list of [Software Only Extension samples](/ddk/microbit/extension-samples/).
+<Video
+    label="Simulating a traffic light using Software Only package"
+    src="traffic-light"
+/>
 
 ## Getting started
+
+**Here is a list of [Software Only Extension samples](/ddk/microbit/extension-samples/).**
 
 For the purpose of this example, let's assume we have an extension `https://github.com/company/pxt-thing/` with blocks in the `thing` namespace.
 
@@ -117,7 +122,6 @@ namespace modules {
 Many actuators implement a `value` and `intensity` register. These servers
 can be implemented using `jacdac.createActuatorServer`.
 
-
 This example spins up a motor server.
 
 ```typescript
@@ -137,7 +141,7 @@ This example spins up a motor server.
 
 ### Questions?
 
-For issues around your own extension, please file an issue at your extensions's Github repo and notify us at jacdac-tap@microsoft.com.  
+For issues around your own extension, please file an issue at your extensions's Github repo and notify us at jacdac-tap@microsoft.com.
 
 ## Device Registration
 
@@ -174,7 +178,10 @@ namespace servers {
 -   download your extension to a micro:bit
 -   open https://microsoft.github.io/jacdac-docs/tools/device-registration/
 -   connect to the micro:bit
--   import the device information
+-   import the device informatio
+
+    n
+
 -   finish the registration
 
 ## Advanced topics
@@ -188,7 +195,7 @@ https://github.com/microsoft/jacdac/discussions.
 
 ### Hardware Initialization
 
-Many accesories have to be initialized with a separate function call. 
+Many accesories have to be initialized with a separate function call.
 In such case, you should start the server in `initializing` state,
 run the hardware initization in the background and set the server to `ready` when done.
 Jacdac will not try to run the state of the sensor until it is ready.
@@ -233,12 +240,14 @@ namespace servers {
 
 ### Pin 12: disable single wire serial
 
-If your hardware is already actively using pin 12 (`P12`), you will need 
-to disable the Jacdac single wire serial transport. 
+If your hardware is already actively using pin 12 (`P12`), you will need
+to disable the Jacdac single wire serial transport.
 Add the following code anywhere in your project.
 
 ```typescript
-namespace userconfig { export const PIN_JACK_TX = 0xdead }
+namespace userconfig {
+    export const PIN_JACK_TX = 0xdead
+}
 ```
 
 ### Multiple same services
@@ -252,20 +261,20 @@ where the second light sensor is read using `thing.lightLevel2()`.
 We start by add a second light level sensor in the `start` function.
 
 ```typescript
-    function start() {
-        jacdac.startSelfServers(() => [
-            jacdac.createSimpleSensorServer(
-                jacdac.SRV_LIGHT_LEVEL,
-                jacdac.LightLevelRegPack.LightLevel,
-                () => thing.lightLevel() / 1023
-            ),
-            jacdac.createSimpleSensorServer(
-                jacdac.SRV_LIGHT_LEVEL,
-                jacdac.LightLevelRegPack.LightLevel,
-                () => thing.lightLevel2() / 1023
-            ),
-        ])
-    }
+function start() {
+    jacdac.startSelfServers(() => [
+        jacdac.createSimpleSensorServer(
+            jacdac.SRV_LIGHT_LEVEL,
+            jacdac.LightLevelRegPack.LightLevel,
+            () => thing.lightLevel() / 1023
+        ),
+        jacdac.createSimpleSensorServer(
+            jacdac.SRV_LIGHT_LEVEL,
+            jacdac.LightLevelRegPack.LightLevel,
+            () => thing.lightLevel2() / 1023
+        ),
+    ])
+}
 ```
 
 Then we add a second light level client in the `modules` section
