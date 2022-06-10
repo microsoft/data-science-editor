@@ -106,7 +106,7 @@ const Position = (props: { service: JDService }) => {
   return <input type="range" min="0" max="100" value={position * 100} />;
 };
 -----
-import React from "react";
+import * as React from "react";
 import { SRV_POTENTIOMETER, JDService, PotentiometerReg } from "jacdac-ts";
 import { useServices, useRegister, useRegisterValue } from "react-jacdac";
 

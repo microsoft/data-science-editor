@@ -3,7 +3,7 @@ import CodeSandboxButton from "./CodeSandboxButton"
 import packageJson from "../../../jacdac-ts/package.json"
 import reactPackageJson from "../../../react-jacdac/package.json"
 
-const AppTsx = `import React from "react";
+const AppTsx = `import * as React from "react";
 import { JacdacProvider } from "react-jacdac";
 import { bus } from "./bus";
 import Connect from "./Connect";
@@ -19,7 +19,7 @@ export default function App() {
   );
 }
 `
-const ConnectTsx = `import React from "react";
+const ConnectTsx = `import * as React from "react";
 import { useBus, useChange } from "react-jacdac";
 
 /**
@@ -42,7 +42,8 @@ export default function Connect() {
   );
 }
 `
-const indexTsx = `import { createRoot } from "react-dom/client";
+const indexTsx = `import * as React from "react";
+import { createRoot } from "react-dom/client";
 import "milligram";
 
 import App from "./App";
