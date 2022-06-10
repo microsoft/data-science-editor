@@ -4,19 +4,17 @@ description: Jacdac goes live with the MakeCode for micro:bit June 2022 update!
 date: 2022-06-03T22:10:31.474Z
 ---
 
+![Kittenbot's Jacdac Starter Kit A](./JacdacBlogHeaderJune2022.jpg)
 # Jacdac for MakeCode and the micro:bit
 
-We are delighted to announce the public debut of Microsoft's [Jacdac](https://aka.ms/jacdac) platform 
-for plug-and-play creation and programming of physical computing systems. 
-Jacdac brings three exciting enhancements to [MakeCode for the micro:bit](/clients/makecode):
+We are delighted to announce the public debut of Microsoft's [Jacdac](https://aka.ms/jacdac) platform  for plug-and-play creation and programming of physical computing systems.  Jacdac brings three exciting enhancements to [MakeCode for the micro:bit](/clients/makecode):
 
-1.	[modular accessories](#modular-accesories) with plug-and-play cables – Jacdac kit available from Kittenbot;
+1.	[modular accessories](#modular-accesories) with plug-and-play cables – Jacdac kit available from Kittenbot, as shown above;
 2.	[unified block coding](#unified-block-coding-for-accessories) for all accessories; 
 3.	[hardware simulators and device twins](#hardware-simulation-and-device-twins) for all accessories.
 
 Jacdac is [backward compatible with existing micro:bit accessories](#backward-compatible-with-existing-accessories), 
-providing unified block coding and simulators. A micro:bit V2 is required for deployment to hardware, 
-as Jacdac needs more resources than available on the original micro:bit. 
+providing unified block coding and simulators. A micro:bit V2 is required for deployment to hardware, as Jacdac needs more resources than available on the original micro:bit. 
 
 **MakeCode users**, [read more](#makecode-users-call-to-action) to learn about how to use Jacdac with MakeCode for the micro:bit!
 
@@ -26,35 +24,28 @@ as Jacdac needs more resources than available on the original micro:bit.
 
 Jacdac is a hardware+software platform for the plug-and-play creation and programming of physical computing systems. A “brain”, in this case a micro:bit V2, executes the user’s program, while a set of modular accessories—or modules—provide additional capabilities. Jacdac software and hardware designs are [open source on GitHub](/github/); Jacdac has been integrated with [MakeCode for the micro:bit](/clients/makecode).
 
-[Kittenbot](https:/www.kittenbot.cc) is making Jacdac Starter Kit A (Preview), shown at the beginning of the blog, available for purchase this summer in limited quantity. This first commercially-available kit features seven Jacdac modules: an RGB ring, a rotary button, two keycap buttons, a slider, a light sensor, and a magnet sensor. It also includes five Jacdac cables and a Jacdac hub. 
+[Kittenbot](https:/www.kittenbot.cc) is making [Jacdac Starter Kit A with Jacdaptor for micro:bit V2](/devices/kittenbot/jacdacstarterkitawithjacdaptorformicrobitv2v10/), shown at the beginning of the blog, available for purchase this summer in limited quantity. This first commercially-available kit features seven Jacdac modules: an RGB ring, a rotary button, two keycap buttons, a slider, a light sensor, and a magnet sensor. It also includes five Jacdac cables and a Jacdac hub.  Kittenbot’s Jacdaptor for the micro:bit V2 has six Jacdac edge connectors that can be used to connect to Jacdac modules via the Jacdac cables. The micro:bit plugs into the top of the Jacdaptor, while Jacdac cables are connected to the bottom.  The switch in the middle of the Jacdaptor controls the flow of power.
 
-Kittenbot’s Jacdaptor for the micro:bit V2 has six Jacdac edge connectors that can be used to connect to Jacdac modules via the Jacdac cables. The micro:bit plugs into the top of the Jacdaptor, while Jacdac cables are connected to the bottom.  The switch in the middle of the Jacdaptor controls the flow of power.
+The video below shows a small system connecting the micro:bit V2 a keycap button and slider module via a Jacdaptor and two short Jacdac cables (cables come in three lengths).
 
-Below is a small system connecting the micro:bit with RGB ring and keycap button modules via a Jacdaptor and two short Jacdac cables (cables come in three lengths).  The keycap button has two Jacdac edge connectors, which allows it to be daisy-chained, as shown in the second picture.
-
-![Small Jacdac system](./rgbRingAndButton.png)
+<Video
+    label="Starting simulators in the device dashboard"
+    src="dashboard-simulators"
+/>
 
 Note that Jacdac users will need to supply their own micro:bit V2. The Kittenbot products do not include a micro:bit; Jacdac hardware and software do not work with micro:bit V1.
 
 ## Unified block coding for accessories
 
-Jacdac provides a large set of [services](/services) to describe the high-level functionality of hardware, both existing micro:bit accessories and new Jacdac modules.  The [button service](/services/button), which represents any push button, is one of the simplest Jacdac services. The [LED service](/services/led) represents a small display of individually controlled RGB LEDs.
+Jacdac provides a large set of [services](/services) to describe the high-level functionality of hardware, both existing micro:bit accessories and new Jacdac modules.  The [button service](/services/button), which represents any push button, is one of the simplest Jacdac services. The [LED service](/services/led) represents a small display of individually controlled RGB LEDs. Services enable programming against any Jacdac module, or other hardware, that supports the services, regardless of the manufacturer, with standardized programming blocks. This provides MakeCode users with consistent programming experience across a wide range of hardware accessories. 
 
-Services enable programming against any Jacdac module, or other hardware, that supports the services, regardless of the manufacturer, with standardized programming blocks. This provides MakeCode users with consistent programming experience across a wide range of hardware accessories. 
-
-![Jacdac programming blocks](./JacdacBlocks.png)
-
-The snapshot above shows blocks associated with the button and LED services, as well as a simple program that sets all the LEDs blue when a button down event is received, and turns the LEDs off when a button up event is received.  The video below shows the above code deployed to a micro:bit V2. Note that the program continues to function when the keycap button is replaced by a rotary button, as both modules support the button service.  
-
-** [TODO: animated GIF] **
+The video below shows blocks associated with the button and LED services, as well as a simple program that sets all the LEDs blue when a button down event is received, and turns the LEDs off when a button up event is received. Note that the program continues to function when the keycap button is replaced by a rotary button, as both modules support the button service.  
 
 ## Hardware simulation and device twins
 
 From the beginning, a web-based micro:bit simulator has been an essential part of the discovery process for the BBC micro:bit. With MakeCode for the micro:bit, you can create micro:bit programs and test them against the micro:bit simulator in the web browser before deploying programs to hardware; unfortunately, simulation is not available for most micro:bit accessories. 
 
-For almost every service, Jacdac provides a simulator that integrates seamlessly into MakeCode, as well as a “device twin” that displays the status of a connected accessory.  The simulators let you program against Jacdac services without needing the hardware. The snapshot below shows the device twins associated with a button and RGB ring. The button is purple, reflecting that a button down event has been received.
-
-![Jacdac simulators in MakeCode](./JacdacSimulators.png)
+For almost every service, Jacdac provides a simulator that integrates seamlessly into MakeCode, as well as a “device twin” that displays the status of a connected accessory.  The simulators let you program against Jacdac services without needing the hardware.
 
 The next section shows the use of simulators for hardware-free programming against Jacdac services.
 
@@ -79,7 +70,7 @@ Such a scenario simply wasn’t possible in MakeCode before Jacdac; as with the 
 To get started with Jacdac for MakeCode and the micro:bit, users have several options:
 -	**Jacdac kits available**: see the [device catalog](/devices)!
 -	**Software for existing accessories**. Try out a micro:bit accessory with a [Jacdac MakeCode extension](/ddk/microbit/extension-samples).
--	**Jacdac hardware simulators**. Try out [Jacdac in MakeCode](/clients/makecode) right away, using Jacdac simulators.
+-	**Jacdac hardware simulators**. Try out [Jacdac Projects for MakeCode](/clients/makecode/projects) right away, using Jacdac simulators.
 If you have questions, please see the [Jacdac FAQ](/faq) and/or visit the [MakeCode forum](https://forum.makecode.com/c/jacdac/59).
 
 ## Manufacturers: call to action!
