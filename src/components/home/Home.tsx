@@ -63,7 +63,7 @@ export default function Home() {
             />
 
             <CenterGrid
-                subtitle2="No hardware? No problem!" 
+                subtitle2="No hardware? No problem!"
                 buttonText="Get started now"
                 buttonVariant="link"
                 buttonUrl="/start/"
@@ -109,9 +109,7 @@ export default function Home() {
                 }
             />
 
-            <CenterGrid
-                subtitle2="Dive deeper on details..."
-            />
+            <CenterGrid subtitle2="Dive deeper on details..." />
 
             <SplitGrid
                 right={false}
@@ -164,12 +162,12 @@ export default function Home() {
 
             <SplitGrid
                 right={true}
-                subtitle="Enclosable"
+                subtitle="Enclosable and mountable"
                 description="PCB form factor design system with connected grid-aligned mounting holes to accelerate enclosure fabrication in 3D printing and laser cutting."
                 imageColumns={6}
                 image={
                     <StaticImage
-                        src="./ec30.png"
+                        src="./breadboard.png"
                         alt="A blurry image of the EC30 grid system device"
                     />
                 }
