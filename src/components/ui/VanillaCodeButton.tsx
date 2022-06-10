@@ -17,7 +17,7 @@ export default function VanillaCodeButton(props: {
 
         const indexTs = `
 import "milligram";
-import { createWebBus, CONNECTION_STATE } from "jacdac-ts";
+import { createWebBus, CONNECTION_STATE, CHANGE } from "jacdac-ts";
 ${imports}
 
 const connectEl = document.getElementById("connectbtn") as HTMLButtonElement;
