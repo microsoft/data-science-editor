@@ -27,7 +27,7 @@ which allows you to visualize the **device twins** for each connected modules.
 
 Each connected module will automatically appear in the device dashboard as a **device twin**,
 mirroring the state of the device. Each Jacdac service describes a basic electronic feature, such as a
-[button](/services/button) or [temperature sensor](/services/temperature).
+[button](/services/button) or [potentiometer](/services/potentiometer).
 
 <Video
     label="Connecting a button to the dashboard"
@@ -36,8 +36,7 @@ mirroring the state of the device. Each Jacdac service describes a basic electro
 
 ## Simulators
 
-Start a button simulator and temperature (thermometer)
-simulator, by clicking on the button (1) and thermometer icons (2) in the simulator pane,
+Start a button simulator and slider simulator, by clicking on the button icon and then searching for the slider simulator
 as shown below:
 
 <Video
@@ -61,7 +60,7 @@ device tree view on the left and note how they update when you
 interact with the simulators.  Each simulator is represented by a
 virtual Jacdac device running two Jacdac services:
 a control service (generic to all Jacdac
-devices) and the specific service (button and temperature, in the above example)
+devices) and the specific service (button and potentiometer, in the above example)
 that exposes its basic functionality.
 
 ## Programming with simulators
@@ -71,8 +70,8 @@ with simulators using a variety of [client programming languages](/clients)
 supported by Jacdac. **These very same programs will work against Jacdac devices**, 
 no software change required, when connected to the computer (brain) running 
 the client code; a brain could be a low-powered Jacdac device or a laptop/desktop computer.
-The Jacdac object model and supporting runtime is available in TypeScript, .NET, and
-Python, as well as MakeCode. 
+The Jacdac object model and supporting runtime is available in [JavaScript/TypeScript](/clients/javascript), 
+[.NET](/clients/dotnet), and [Python](/clients/python), as well as [MakeCode](/clients/makecode). 
 
 ### MakeCode
 
@@ -81,12 +80,10 @@ From here, you can open MakeCode directly with the push of a button,
 loading the needed Jacdac libraries. MakeCode has in-browser programming and 
 integrates the Jacdac simulators into the debugging experience. 
 
-[Read more](/clients/makecode) about the integration of Jacdac with MakeCode.
-
 ### .NET
 
 [Get started with .NET](/clients/dotnet/getting-started/)
-to program with Jacdac (no hardware requred) in [C#](https://dotnet.microsoft.com/en-us/languages/csharp) 
+to program with Jacdac (no hardware required) in [C#](https://dotnet.microsoft.com/en-us/languages/csharp) 
 or [F#](https://dotnet.microsoft.com/en-us/languages/fsharp). After this, you can 
 try out some of the [.NET Jacdac Projects](/clients/dotnet/projects/). 
 
@@ -97,8 +94,7 @@ execute Jacdac applications.  [Read more](/clients/javascript) about the Jacdac 
 the [Jacdac object model](/clients/javascript/jdom). You can use the [Jacdac Command Line Interface](/clients/cli), 
 a Node.js program, to start a local websocket server that acts as a bridge between the Jacdac dashboard and a 
 your code.  This allows you to run your code using the latest version of the web 
-developer tools.  When building web-hosted Jacdac Javascript programs,
-Jacdac's [JavaScript debugging tools](/clients/javascript/debugging) are a must.
+developer tools.
 
 [Read more](/clients/more#web-integration) about other Jacdac web integration points,
 including React and hosting Jacdac in an IFrame.
