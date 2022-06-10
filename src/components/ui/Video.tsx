@@ -22,7 +22,7 @@ export default function Video(props: {
         poster,
         muted = true,
         loop = true,
-        controls = false,
+        controls = true,
         autoPlay = true,
         style,
         preload = "auto",
