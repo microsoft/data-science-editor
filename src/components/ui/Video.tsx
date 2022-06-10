@@ -23,7 +23,7 @@ export default function Video(props: {
         controls = true,
         autoPlay = true,
         style,
-        preload = "auto",
+        preload = "metadata",
     } = props
     const { ref, inView } = useInView()
     const videoRef = useRef<HTMLVideoElement>()

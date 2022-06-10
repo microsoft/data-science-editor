@@ -5,7 +5,7 @@ title: Getting Started
 # Getting Started with Jacdac
 
 Jacdac is a platform for quick and easy prototyping of new
-electronic experiences. You can get started with Jacdac on this 
+electronic experiences. You can get started with Jacdac on this
 web site without needing to acquire any hardware, as described
 below. You can also visit the [device catalog](/devices) to see
 what Jacdac devices available and follow the guides available for
@@ -18,21 +18,15 @@ which allows you to visualize the **device twins** for each connected modules.
 
 **If you micro:bit does not connect**, try downloading the [micro:bit Jukebox](/clients/makecode/microbit-jukebox/)!
 
-<Video
-    label="Connecting to the device dashboard"
-    src="dashboard-connect"
-/>
+<Video label="Connecting to the device dashboard" src="dashboard-connect" />
 
-## Device twins 
+## Device twins
 
 Each connected module will automatically appear in the device dashboard as a **device twin**,
 mirroring the state of the device. Each Jacdac service describes a basic electronic feature, such as a
 [button](/services/button) or [potentiometer](/services/potentiometer).
 
-<Video
-    label="Connecting a button to the dashboard"
-    src="dashboard-button"
-/>
+<Video label="Connecting a button to the dashboard" src="dashboard-button" />
 
 ## Simulators
 
@@ -44,64 +38,44 @@ as shown below:
     src="dashboard-simulators"
 />
 
-Clicking on tool (wrench) on the upper left will open the device
-tree view showing the properties of the services associated with the two 
-simulators:
-
-<Video
-    label="Exploring the device tree in the tools section"
-    src="dashboard-jdom"
-/>
-
-## Device tree
-
-Explore the various properties by expanding the elements in the
-device tree view on the left and note how they update when you 
-interact with the simulators.  Each simulator is represented by a
-virtual Jacdac device running two Jacdac services:
-a control service (generic to all Jacdac
-devices) and the specific service (button and potentiometer, in the above example)
-that exposes its basic functionality.
-
 ## Programming with simulators
 
-Once you are familiar with the simulators, you can dive into programming 
+Once you are familiar with the simulators, you can dive into programming
 with simulators using a variety of [client programming languages](/clients)
-supported by Jacdac. **These very same programs will work against Jacdac devices**, 
-no software change required, when connected to the computer (brain) running 
+supported by Jacdac. **These very same programs will work against Jacdac devices**,
+no software change required, when connected to the computer (brain) running
 the client code; a brain could be a low-powered Jacdac device or a laptop/desktop computer.
-The Jacdac object model and supporting runtime is available in [JavaScript/TypeScript](/clients/javascript), 
-[.NET](/clients/dotnet), and [Python](/clients/python), as well as [MakeCode](/clients/makecode). 
+The Jacdac object model and supporting runtime is available in [JavaScript/TypeScript](/clients/javascript),
+[.NET](/clients/dotnet), and [Python](/clients/python), as well as [MakeCode](/clients/makecode).
 
 ### MakeCode
 
-To get started programming with MakeCode, browse the [MakeCode Jacdac projects](/clients/makecode/projects). 
+To get started programming with MakeCode, browse the [MakeCode Jacdac projects](/clients/makecode/projects).
 From here, you can open MakeCode directly with the push of a button,
-loading the needed Jacdac libraries. MakeCode has in-browser programming and 
-integrates the Jacdac simulators into the debugging experience. 
+loading the needed Jacdac libraries. MakeCode has in-browser programming and
+integrates the Jacdac simulators into the debugging experience.
 
 ### .NET
 
 [Get started with .NET](/clients/dotnet/getting-started/)
-to program with Jacdac (no hardware required) in [C#](https://dotnet.microsoft.com/en-us/languages/csharp) 
-or [F#](https://dotnet.microsoft.com/en-us/languages/fsharp). After this, you can 
-try out some of the [.NET Jacdac Projects](/clients/dotnet/projects/). 
+to program with Jacdac (no hardware required) in [C#](https://dotnet.microsoft.com/en-us/languages/csharp)
+or [F#](https://dotnet.microsoft.com/en-us/languages/fsharp). After this, you can
+try out some of the [.NET Jacdac Projects](/clients/dotnet/projects/).
 
 ### JavaScript/TypeScript
 
-If you program in JavaScript/TypeScript, you can use [Node.js](https://nodejs.org/en/) to 
-execute Jacdac applications.  [Read more](/clients/javascript) about the Jacdac TypeScript APIs and 
-the [Jacdac object model](/clients/javascript/jdom). You can use the [Jacdac Command Line Interface](/clients/cli), 
-a Node.js program, to start a local websocket server that acts as a bridge between the Jacdac dashboard and a 
-your code.  This allows you to run your code using the latest version of the web 
+If you program in JavaScript/TypeScript, you can use create a web page or a Node.JS script to execute Jacdac applications. Read more about the [Jacdac TypeScript APIs](/clients/javascript) and
+the [Jacdac object model](/clients/javascript/jdom).
+
+You can also use the [Jacdac Command Line Interface](/clients/cli),
+a Node.js program, to start a local websocket server that acts as a bridge between the Jacdac dashboard and a
+your code. This allows you to run your code using the latest version of the web
 developer tools.
 
-[Read more](/clients/more#web-integration) about other Jacdac web integration points,
+Read more about other [Jacdac web integration points](/clients/more#web-integration),
 including React and hosting Jacdac in an IFrame.
 
 ### Python
 
 [Get started with Python](/clients/python/), which also supports connecting to the web-hosted device dashboard.
 More projects coming soon.
-
-
