@@ -50,3 +50,16 @@ The micro:bit Jukebox experience is a MakeCode program that you can download or 
 
 -   When a LED strip and a potentiometer (slider) are connected, the potentiometer will control the LED brightness
 -   When a LED strip and a rotary encoder are connected, the rotary encoder will rotate the LEDs on the strip
+
+## How does it work?
+
+Whenever Jacdac detects a new device, it mounts clients for each known services with a predefined set of behaviors. It is [programmed in MakeCode](https://github.com/microsoft/pxt-jacdac/tree/master/tools/microbit-jukebox).
+
+```javascript
+machine.addClientFactory(jacdac.SRV_LIGHT_LEVEL, devid => {
+    const client = new modules.LightLevelClient(devid)
+    client.onLightLevelChangedBy(20, () => {
+        machine.plot(client.lightLevel(), 100)
+    })
+})
+```
