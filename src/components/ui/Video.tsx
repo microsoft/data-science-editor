@@ -6,7 +6,6 @@ import useEffectAsync from "../useEffectAsync"
 
 export default function Video(props: {
     src?: string
-    poster?: string
     muted?: boolean
     loop?: boolean
     controls?: boolean
@@ -19,7 +18,6 @@ export default function Video(props: {
     const {
         label,
         src,
-        poster,
         muted = true,
         loop = true,
         controls = true,
@@ -58,15 +56,15 @@ export default function Video(props: {
                 autoPlay={autoPlay && inView}
                 muted={muted}
                 loop={loop}
-                poster={poster}
+                poster={withPrefix(`/videos/${src}.jpg`)}
             >
-                <source
-                    src={withPrefix(`/videos/${src}.mp4`)}
-                    type="video/mp4"
-                />
                 <source
                     src={withPrefix(`/videos/${src}.webm`)}
                     type="video/webm"
+                />
+                <source
+                    src={withPrefix(`/videos/${src}.mp4`)}
+                    type="video/mp4"
                 />
                 Sorry, your browser does not support embedded videos.
             </video>
