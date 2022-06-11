@@ -5,21 +5,19 @@ title: Getting Started
 # Getting started with Jacdac
 
 Jacdac is a platform for quick and easy prototyping of new
-electronic experiences. You can get started with Jacdac on this
-web site without any special hardware, as described
-below. But Jacdac is better with Jacdac modules! Visit the [device catalog](/devices) to see
-what Jacdac devices are available and follow the guides available for
-working with them.
+electronic experiences. This page reviews how to get started if you 
+have hardware, as well as how get started programming using Jacdac device simulators, which doesn't require hardware. 
+Visit the [device catalog](/devices) to see what Jacdac devices are available.
 
-## The device dashboard
+We focus here on the [micro:bit V2](/devices/microbit-educational-foundation/microbitv2/) as the programmable "brain" and Kittenbot's [Jacdac Starter Kit A with Jacdaptor for micro:bit V2](/devices/kittenbot/jacdacstarterkitawithjacdaptorformicrobitv2v10/); other Jacdac [brains, modules, and jacdaptors](/reference/clientserver) will available soon. 
+
+## Working with hardware and the device dashboard
 
 Visit the Jacdac [device dashboard](/dashboard) and connect your device
 which allows you to visualize the **device twins** for each connected modules.
-
 Each connected module will automatically appear in the device dashboard as a **device twin**,
 mirroring the state of the device. Each Jacdac service describes a basic electronic feature, such as a
 [button](/services/button) or [potentiometer](/services/potentiometer).
-
 
 **If you micro:bit does not connect**, try downloading the [micro:bit Jukebox](/clients/makecode/microbit-jukebox/)!
 
@@ -37,13 +35,12 @@ as shown below:
 
 ## Programming with simulators
 
-Once you are familiar with the simulators, you can dive into programming
-with simulators using a variety of [client programming languages](/clients)
-supported by Jacdac. **These very same programs will work against Jacdac devices**,
-no software change required, when connected to the computer (brain) running
-the client code; a brain could be a low-powered Jacdac device or a laptop/desktop computer.
-The Jacdac object model and supporting runtime is available in [JavaScript/TypeScript](/clients/javascript),
-[.NET](/clients/dotnet), and [Python](/clients/python), as well as [MakeCode](/clients/makecode).
+You can dive into programming with simulators using a variety of [client programming languages](/clients) supported by Jacdac. **These very same programs will work against Jacdac devices**, no software change required, when connected to the computer (brain) running the client code. You can also program freely against a mix of simulators and Jacdac devices.
+A brain can be a battery-powered Jacdac device, like a micro:bit V2, or a laptop/desktop computer.The Jacdac object model and supporting runtime is available for:
+* [MakeCode](/clients/makecode)
+* [JavaScript/TypeScript](/clients/javascript)
+* [.NET](/clients/dotnet) 
+* [Python](/clients/python)
 
 ### MakeCode
 
@@ -59,16 +56,7 @@ to program with Jacdac (no hardware required) in [C#](https://dotnet.microsoft.c
 
 ### JavaScript/TypeScript
 
-If you program in JavaScript/TypeScript, you can use create a web page or a Node.JS script to execute Jacdac applications. Read more about the [Jacdac TypeScript APIs](/clients/javascript) and
-the [Jacdac object model](/clients/javascript/jdom).
-
-You can also use the [Jacdac Command Line Interface](/clients/cli),
-a Node.js program, to start a local websocket server that acts as a bridge between the Jacdac dashboard and a
-your code. This allows you to run your code using the latest version of the web
-developer tools.
-
-Read more about other [Jacdac web integration points](/clients/more#web-integration),
-including React and hosting Jacdac in an IFrame.
+If you program in JavaScript/TypeScript, you can use create a web page or a Node.JS script to execute Jacdac applications. Read more about [getting started with JavaScript/TypeScript](/clients/javascript).
 
 ### Python
 
