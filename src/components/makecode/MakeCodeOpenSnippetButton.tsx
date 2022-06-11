@@ -14,6 +14,7 @@ export default function MakeCodeOpenSnippetButton(props: {
     options?: { package?: string }
     slug?: string
     branch?: string
+    full?: boolean
 }) {
     const { setError } = useSnackbar()
     const { mobile } = useMediaQueries()
@@ -25,6 +26,7 @@ export default function MakeCodeOpenSnippetButton(props: {
         name = "Jacdac demo",
         slug,
         branch = "master",
+        full
     } = props
     const pxt = usePxtJson(slug, branch)
     const disabled = importing || (slug && !pxt)
@@ -85,7 +87,7 @@ export default function MakeCodeOpenSnippetButton(props: {
         }
     }
 
-    return mobile ? (
+    return !full && mobile ? (
         <IconButtonWithTooltip
             sx={sx}
             onClick={handleClick}
