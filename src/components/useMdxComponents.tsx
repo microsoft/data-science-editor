@@ -34,6 +34,8 @@ const DeviceSpecificationList = lazy(
 )
 const JacdaptorImageList = lazy(() => import("./home/JacdaptorImageList"))
 const EC30Editor = lazy(() => import("./ec30/EC30Editor"))
+const GithubRepositoryCard = lazy(() => import("./github/GithubRepositoryCard"))
+const MakeCodeOpenSnippetButton = lazy(() => import("./makecode/MakeCodeOpenSnippetButton"))
 
 export default function useMdxComponents() {
     const theme = useTheme()
@@ -135,6 +137,16 @@ export default function useMdxComponents() {
             Video: props => (
                 <Suspense>
                     <Video {...props} />
+                </Suspense>
+            ),
+            GithubRepositoryCard: props => (
+                <Suspense>
+                    <GithubRepositoryCard {...props} />
+                </Suspense>
+            ),
+            MakeCodeOpenSnippetButton: props => (
+                <Suspense>
+                    <MakeCodeOpenSnippetButton {...props} />
                 </Suspense>
             ),
         }),

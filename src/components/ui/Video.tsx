@@ -54,6 +54,7 @@ export default function Video(props: {
                 controls={controls}
                 preload={preload}
                 autoPlay={autoPlay && inView}
+                disablePictureInPicture={true}
                 muted={muted}
                 loop={loop}
                 poster={withPrefix(`/videos/${src}.jpg`)}
