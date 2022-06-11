@@ -10,11 +10,11 @@ do
     # regenerate mp4
     mp4="${file%.webm}.mp4";
     if [ ! -f "../../static/videos/$mp4" ]; then
-        ffmpeg -y -i "$file" -an -pix_fmt yuv420p -movflags faststart "../../static/videos/$mp4";
+        ffmpeg -y -i "$file" -pix_fmt yuv420p -movflags faststart "../../static/videos/$mp4";
     fi
     # regenerate min.webm
     webm="${file%.webm}.webm";
     if [ ! -f "../../static/videos/$webm" ]; then
-        ffmpeg -y -i "$file" -an -pix_fmt yuv420p -movflags faststart "../../static/videos/$webm";
+        ffmpeg -y -i "$file" -pix_fmt yuv420p -movflags faststart "../../static/videos/$webm";
     fi
 done
