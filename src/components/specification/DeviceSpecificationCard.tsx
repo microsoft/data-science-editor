@@ -14,8 +14,11 @@ import ChipList from "../ui/ChipList"
 export default function DeviceSpecificationCard(props: {
     specification: jdspec.DeviceSpec
     size: "list" | "preview" | "catalog"
+    onClick?: () => void
+    hideChips?: boolean
+    hideServices?: boolean
 }) {
-    const { specification, size } = props
+    const { specification, size, onClick, hideChips, hideServices } = props
     const {
         id,
         name,
@@ -47,9 +50,11 @@ export default function DeviceSpecificationCard(props: {
     ]
         .filter(s => !!s)
         .join(", ")
+    const to = onClick ? undefined : `/devices/${identifierToUrlPath(id)}`
+
     return (
         <Card raised>
-            <CardActionArea to={`/devices/${identifierToUrlPath(id)}`}>
+            <CardActionArea to={to} onClick={onClick}>
                 <img
                     src={imageUrl}
                     style={{ aspectRatio: "4 / 3", width: "100%" }}
@@ -76,35 +81,39 @@ export default function DeviceSpecificationCard(props: {
                             </Typography>
                         )}
                     </Typography>
-                    {names && (
+                    {!hideServices && names && (
                         <Typography component="div" variant="subtitle2">
                             {names}
                         </Typography>
                     )}
-                    <ChipList>
-                        {!storeLink && <Chip size="small" label="prototype" />}
-                        {!!makeCodeRepo?.length && (
-                            <Chip
-                                size="small"
-                                label="MakeCode"
-                                title="MakeCode extension available."
-                            />
-                        )}
-                        {firmwareSource && (
-                            <Chip
-                                size="small"
-                                label="firmware code"
-                                title="Firmware source is avaiable."
-                            />
-                        )}
-                        {hardwareDesign && (
-                            <Chip
-                                size="small"
-                                label="hardware design"
-                                title="Hardware design files available."
-                            />
-                        )}
-                    </ChipList>
+                    {!hideChips && (
+                        <ChipList>
+                            {!storeLink && (
+                                <Chip size="small" label="prototype" />
+                            )}
+                            {!!makeCodeRepo?.length && (
+                                <Chip
+                                    size="small"
+                                    label="MakeCode"
+                                    title="MakeCode extension available."
+                                />
+                            )}
+                            {firmwareSource && (
+                                <Chip
+                                    size="small"
+                                    label="firmware code"
+                                    title="Firmware source is avaiable."
+                                />
+                            )}
+                            {hardwareDesign && (
+                                <Chip
+                                    size="small"
+                                    label="hardware design"
+                                    title="Hardware design files available."
+                                />
+                            )}
+                        </ChipList>
+                    )}
                 </CardContent>
             </CardActionArea>
         </Card>

@@ -1,10 +1,21 @@
-import { useContext } from "react"
+import React, {
+    createContext,
+    ReactNode,
+    useContext,
+    useEffect,
+    useState,
+} from "react"
+import { camelize } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import { JDClient } from "../../../jacdac-ts/src/jdom/client"
 import { CHANGE, CONNECT } from "../../../jacdac-ts/src/jdom/constants"
 import { inIFrame } from "../../../jacdac-ts/src/jdom/iframeclient"
-import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
+import { JSONTryParse } from "../../../jacdac-ts/src/jdom/utils"
+import useBus from "../../jacdac/useBus"
+import useChange from "../../jacdac/useChange"
+import { useDeviceSpecificationFromIdentifier } from "../../jacdac/useDeviceSpecification"
 import useClient from "../hooks/useClient"
 import useEffectAsync from "../useEffectAsync"
+import { resolveMakecodeServiceFromClassIdentifier } from "./services"
 
 export const READ = "read"
 export const MESSAGE_PACKET = "messagepacket"
@@ -28,7 +39,7 @@ export class MakeCodeEditorExtensionClient extends JDClient {
     private readonly extensionId: string = inIFrame()
         ? window.location.hash.substr(1)
         : undefined
-    private _target: { id: string } // full apptarget
+    private _target: { id: string } = { id: "microbit" } // full apptarget
     private _connected = false
     private _visible = false
 
@@ -233,9 +244,135 @@ export class MakeCodeEditorExtensionClient extends JDClient {
     }
 }
 
-export default function useMakeCodeEditorExtensionClient() {
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
+export interface ClientRole {
+    name: string
+    service: number
+}
+
+export interface Configuration {
+    roles: ClientRole[]
+    device?: string
+}
+
+export interface MakeCodeEditorExtensionContextProps {
+    target: { id: string }
+    connected: boolean
+    configuration: Configuration
+    setConfiguration: (config: Configuration) => void
+    device?: jdspec.DeviceSpec
+}
+
+export const MakeCodeEditorExtensionContext =
+    createContext<MakeCodeEditorExtensionContextProps>({
+        target: { id: "microbit" },
+        connected: false,
+        configuration: undefined,
+        setConfiguration: () => {},
+        device: undefined,
+    })
+MakeCodeEditorExtensionContext.displayName = "makecode"
+
+function toTypescript(config: Configuration) {
+    const ns = "myModules"
+    return `// auto-generated, do not edit.
+namespace ${ns} {
+${config.roles
+    .map(
+        role => `
+    //% fixedInstance whenUsed block="${role.name}"
+    export const ${camelize(role.name)} = new ${
+            resolveMakecodeServiceFromClassIdentifier(role.service).client.qName
+        }("${camelize(role.name)}");
+`
+    )
+    .join("")}
+
+    // start after main
+    control.runInParallel(function() {
+        ${config.roles
+            .map(
+                role => `    ${ns}.${camelize(role.name)}.start();
+        `
+            )
+            .join("")}
+    })
+}
+    `
+}
+
+function toDependencies(
+    target: string,
+    config: Configuration,
+    device: jdspec.DeviceSpec
+) {
+    const r: Record<string, string> = {}
+    config?.roles.forEach(role => {
+        const mk = resolveMakecodeServiceFromClassIdentifier(role.service)
+        r[mk.client.name] = `github:${mk.client.repo}`
+    })
+    console.log({ target, config, device })
+    device?.makeCodeRepo
+        ?.filter(r => r.target === target)
+        .forEach(repo => {
+            r[repo.name] = `github:${repo.slug}`
+        })
+    return r
+}
+
+function toJSON(config: Configuration) {
+    return config && JSON.stringify(config, null, 4)
+}
+
+export function MakeCodeEditorExtensionProvider(props: {
+    children: ReactNode
+}) {
+    const { children } = props
+    const bus = useBus()
     useEffectAsync(() => bus.stop(), [])
     const client = useClient(() => new MakeCodeEditorExtensionClient(), [])
-    return client
+    const target = useChange(client, _ => _?.target)
+    const connected = useChange(client, c => c?.connected)
+    const [configuration, setConfiguration] = useState<Configuration>({
+        roles: [],
+    } as Configuration)
+    const device = useDeviceSpecificationFromIdentifier(configuration.device)
+    useEffect(
+        () =>
+            client?.subscribe(READ, (resp: ReadResponse) => {
+                console.log(`mkcd: read received`)
+                const cfg = JSONTryParse<Configuration>(resp.json)
+                console.log({ resp, cfg })
+                if (cfg) setConfiguration(cfg)
+            }),
+        [client]
+    )
+
+    useEffectAsync(async () => {
+        const ts = toTypescript(configuration)
+        const json = toJSON(configuration)
+        const deps = toDependencies(target?.id, configuration, device)
+        console.log(`mkcd: saving...`, { configuration, ts, json, deps })
+        await client.write(ts, json, undefined, deps)
+    }, [client, target, configuration, device])
+
+    return (
+        <MakeCodeEditorExtensionContext.Provider
+            value={{
+                target,
+                connected,
+                configuration,
+                setConfiguration,
+                device,
+            }}
+        >
+            {children}
+        </MakeCodeEditorExtensionContext.Provider>
+    )
+}
+
+export default function useMakeCodeEditorExtension() {
+    const props = useContext<MakeCodeEditorExtensionContextProps>(
+        MakeCodeEditorExtensionContext
+    )
+    return props
 }

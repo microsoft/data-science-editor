@@ -15,8 +15,9 @@ export default function STLModelCard(props: {
     name: string
     url: string
     color: string
+    autoRotate?: boolean
 }) {
-    const { name, url, color } = props
+    const { name, url, color, autoRotate } = props
     const fn = `${name}.stl`
     return (
         <NoSsr>
@@ -30,6 +31,7 @@ export default function STLModelCard(props: {
                             height: "20rem",
                             width: "100%",
                         }}
+                        autoRotate={autoRotate}
                     >
                         <STLModel url={url} color={color} />
                     </ModelViewer>

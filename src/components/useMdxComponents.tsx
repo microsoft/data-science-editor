@@ -35,7 +35,9 @@ const DeviceSpecificationList = lazy(
 const JacdaptorImageList = lazy(() => import("./home/JacdaptorImageList"))
 const EC30Editor = lazy(() => import("./ec30/EC30Editor"))
 const GithubRepositoryCard = lazy(() => import("./github/GithubRepositoryCard"))
-const MakeCodeOpenSnippetButton = lazy(() => import("./makecode/MakeCodeOpenSnippetButton"))
+const MakeCodeOpenSnippetButton = lazy(
+    () => import("./makecode/MakeCodeOpenSnippetButton")
+)
 
 export default function useMdxComponents() {
     const theme = useTheme()

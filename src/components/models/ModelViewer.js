@@ -32,7 +32,13 @@ export default function ModelViewer(props) {
                       }
             }
         >
-            <Canvas shadows dpr={[1, 2]} camera={{ fov: 50 }}>
+            <Canvas
+                orthographic={true}
+                shadows
+                dpr={[1, 2]}
+                camera={{ zoom: 4 }}
+                resize={{ scroll: false }}
+            >
                 <Stage
                     controls={ref}
                     intensity={0.5}

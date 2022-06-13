@@ -1,11 +1,6 @@
 import { Grid, TextField, Typography } from "@mui/material"
-import React, { ChangeEvent, useEffect, useMemo, useState } from "react"
-import {
-    clone,
-    JSONTryParse,
-    uniqueName,
-} from "../../../jacdac-ts/src/jdom/utils"
-import useChange from "../../jacdac/useChange"
+import React, { ChangeEvent, useMemo } from "react"
+import { clone, uniqueName } from "../../../jacdac-ts/src/jdom/utils"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import DeleteIcon from "@mui/icons-material/Delete"
 import { serviceSpecifications } from "../../../jacdac-ts/src/jdom/spec"
@@ -13,68 +8,11 @@ import AddServiceIconButton from "../AddServiceIconButton"
 import ServiceSpecificationSelect from "../specification/ServiceSpecificationSelect"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import useMakeCodeEditorExtensionClient, {
-    READ,
-    ReadResponse,
-} from "./MakeCodeEditorExtensionClient"
-import CmdButton from "../CmdButton"
-// tslint:disable-next-line: no-submodule-imports match-default-export-name
-import SaveIcon from "@mui/icons-material/Save"
-import { camelize } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
+    ClientRole,
+    Configuration,
+} from "./MakeCodeEditorExtensionContext"
 import { useId } from "react"
-import {
-    resolveMakecodeService,
-    resolveMakecodeServiceFromClassIdentifier,
-} from "./services"
-
-interface ClientRole {
-    name: string
-    service: number
-}
-
-interface Configuration {
-    roles: ClientRole[]
-}
-
-function toTypescript(config: Configuration) {
-    const ns = "myModules"
-    return `// auto-generated, do not edit.
-namespace ${ns} {
-${config.roles
-    .map(
-        role => `
-    //% fixedInstance whenUsed block="${role.name}"
-    export const ${camelize(role.name)} = new ${
-            resolveMakecodeServiceFromClassIdentifier(role.service).client.qName
-        }("${camelize(role.name)}");
-`
-    )
-    .join("")}
-
-    // start after main
-    control.runInParallel(function() {
-        ${config.roles
-            .map(
-                role => `    ${ns}.${camelize(role.name)}.start();
-        `
-            )
-            .join("")}
-    })
-}
-    `
-}
-
-function toDependencies(config: Configuration) {
-    const r: Record<string, string> = {}
-    config?.roles.forEach(role => {
-        const mk = resolveMakecodeServiceFromClassIdentifier(role.service)
-        r[mk.client.name] = `github:${mk.client.repo}`
-    })
-    return r
-}
-
-function toJSON(config: Configuration) {
-    return config && JSON.stringify(config, null, 4)
-}
+import { resolveMakecodeService } from "./services"
 
 function escapeName(name: string) {
     // TODO: makecode component escape name
@@ -154,23 +92,10 @@ function validateClientRole(config: Configuration, role: ClientRole) {
 /**
  * To test locally, add ?localeditorextensions=1&debugextensions=1
  */
-export default function MakeCodeEditorExtension() {
-    const client = useMakeCodeEditorExtensionClient()
-    const target = useChange(client, _ => _?.target)
-    const connected = useChange(client, c => c?.connected)
-    const [configuration, setConfiguration] = useState<Configuration>({
-        roles: [],
-    } as Configuration)
-    useEffect(
-        () =>
-            client?.subscribe(READ, (resp: ReadResponse) => {
-                console.log(`mkcd: read received`)
-                const cfg = JSONTryParse<Configuration>(resp.json)
-                console.log({ resp, cfg })
-                if (cfg) setConfiguration(cfg)
-            }),
-        [client]
-    )
+export default function MakeRoleCodeEditorExtension() {
+    const { target, configuration, setConfiguration } =
+        useMakeCodeEditorExtensionClient()
+
     const hasMakeCodeService = (srv: jdspec.ServiceSpec) => {
         const mkc = resolveMakecodeService(srv)
         return (
@@ -193,13 +118,6 @@ export default function MakeCodeEditorExtension() {
             service: service.classIdentifier,
         })
         update()
-    }
-    const handleSave = async () => {
-        const ts = toTypescript(configuration)
-        const json = toJSON(configuration)
-        const deps = toDependencies(configuration)
-        console.log(`mkcd: saving...`)
-        await client.write(ts, json, undefined, deps)
     }
 
     return (
@@ -228,17 +146,6 @@ export default function MakeCodeEditorExtension() {
                     serviceFilter={hasMakeCodeService}
                     onAdd={handleAddService}
                 />
-            </Grid>
-            <Grid item xs={12}>
-                <CmdButton
-                    trackName="makecode.save"
-                    variant="contained"
-                    disabled={!connected}
-                    icon={<SaveIcon />}
-                    onClick={handleSave}
-                >
-                    save
-                </CmdButton>
             </Grid>
         </Grid>
     )

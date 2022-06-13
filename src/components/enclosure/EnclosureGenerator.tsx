@@ -87,7 +87,11 @@ export default function EnclosureGenerator(props: {
             {files?.map(file => (
                 <Grid item key={file.name} {...gridBreakpoints}>
                     <Suspense>
-                        <STLModelCard {...file} color={color} />
+                        <STLModelCard
+                            {...file}
+                            autoRotate={true}
+                            color={color}
+                        />
                     </Suspense>
                 </Grid>
             ))}
