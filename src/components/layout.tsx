@@ -236,6 +236,7 @@ function LayoutWithContext(props: LayoutProps) {
     const title = isDataEditor
         ? "Data Science Editor (Experimental)"
         : pageContext?.title || frontmatter?.title || undefined
+    const description: string = frontmatter?.description
 
     const { darkMode } = useContext(DarkModeContext)
     const { drawerType, toolsMenu, showWebCam } = useContext(AppContext)
@@ -307,7 +308,7 @@ function LayoutWithContext(props: LayoutProps) {
         <Root>
             <div className={clsx(darkMode, classes.root)}>
                 <header>
-                    <SEO lang="en" title={title} />
+                    <SEO lang="en" title={title} description={description} />
                 </header>
                 {!hideMainMenu && (
                     <nav>

@@ -42,7 +42,12 @@ function PageLinkListItem(props: PageLinkListItemProps) {
                             </Typography>
                         )}
                         {specs?.map(({ shortId, name }) => (
-                            <Chip component="span" key={shortId} label={name} size="small" />
+                            <Chip
+                                component="span"
+                                key={shortId}
+                                label={name}
+                                size="small"
+                            />
                         ))}
                     </ChipList>
                 }

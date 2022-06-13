@@ -25,7 +25,10 @@ export default function BlogEntries(props: { header?: ReactNode }) {
         }
     }>(graphql`
         {
-            allMdx(filter: { fields: { slug: { glob: "/blog/*" } } }) {
+            allMdx(
+                filter: { fields: { slug: { glob: "/blog/*" } } }
+                sort: { fields: [frontmatter___date], order: DESC }
+            ) {
                 edges {
                     node {
                         id

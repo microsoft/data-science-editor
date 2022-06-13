@@ -13,8 +13,15 @@ export default function SEO(props: {
     lang?: string
     meta?: { name: string; content: string }[]
     title?: string
+    image?: string
 }) {
-    const { lang = "en", meta = [], description = "", title = "" } = props || {}
+    const {
+        lang = "en",
+        meta = [],
+        description = "",
+        title = "",
+        image,
+    } = props || {}
     const { site } = useStaticQuery(
         graphql`
             query {
@@ -40,6 +47,10 @@ export default function SEO(props: {
                 {
                     name: `description`,
                     content: metaDescription,
+                },
+                {
+                    name: "og:image",
+                    content: image,
                 },
                 {
                     property: `og:title`,
