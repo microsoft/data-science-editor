@@ -1,7 +1,6 @@
 import React from "react"
 import useMakeCodeEditorExtension from "./MakeCodeEditorExtensionContext"
 import DeviceSpecificationList from "../specification/DeviceSpecificationList"
-import { Button } from "@mui/material"
 
 export default function MakeCodeAddExtensionBox() {
     const { configuration, setConfiguration, device, target } =
@@ -10,14 +9,9 @@ export default function MakeCodeAddExtensionBox() {
     const handleClick = (dev: jdspec.DeviceSpec) => {
         setConfiguration({
             ...configuration,
-            device: dev.id === configuration.device ? undefined : dev?.id,
+            device: dev?.id,
         })
     }
-    const handleClear = () =>
-        setConfiguration({
-            ...configuration,
-            device: undefined,
-        })
 
     return (
         <>
@@ -29,11 +23,6 @@ export default function MakeCodeAddExtensionBox() {
                 hideServices={true}
                 devices={device ? [device] : undefined}
             />
-            {device && (
-                <Button sx={{ mt: 2 }} onClick={handleClear} variant="outlined">
-                    clear
-                </Button>
-            )}
         </>
     )
 }
