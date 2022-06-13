@@ -21,7 +21,7 @@ export default function DeviceSpecificationList(props: {
     ids?: string[]
     updates?: boolean
     buyNow?: boolean
-    makeCode?: boolean
+    makeCode?: boolean | string
     firmwareSources?: boolean
     hardwareDesign?: boolean
     transports?: jdspec.TransportType[]
@@ -29,6 +29,9 @@ export default function DeviceSpecificationList(props: {
     ec30?: boolean
     connector?: boolean
     shapes?: jdspec.ShapeWellKnown[]
+    onDeviceClick?: (device: jdspec.DeviceSpec) => void
+    hideChips?: boolean
+    hideServices?: boolean
 }) {
     const {
         sx,
@@ -50,6 +53,9 @@ export default function DeviceSpecificationList(props: {
         connector,
         shapes,
         ids,
+        onDeviceClick,
+        hideChips,
+        hideServices,
     } = props
     const specifications = useDeviceSpecifications()
     const specs = useMemo(() => {
@@ -87,7 +93,12 @@ export default function DeviceSpecificationList(props: {
             )
         if (shapes)
             r = r.filter(spec => shapes.some(shape => shape === spec.shape))
-        if (makeCode) r = r.filter(spec => spec.makeCodeRepo?.length)
+        if (typeof makeCode === "string")
+            r = r.filter(spec =>
+                spec.makeCodeRepo?.some(r => r.target === makeCode)
+            )
+        else if (makeCode !== undefined)
+            r = r.filter(spec => !!spec.makeCodeRepo?.length === makeCode)
         if (transports?.length)
             r = r.filter(spec => transports.indexOf(spec.transport?.type) > -1)
         if (tags?.length)
@@ -167,6 +178,13 @@ export default function DeviceSpecificationList(props: {
                     <DeviceSpecificationCard
                         specification={specification}
                         size={size}
+                        onClick={
+                            onDeviceClick
+                                ? () => onDeviceClick(specification)
+                                : undefined
+                        }
+                        hideChips={hideChips}
+                        hideServices={hideServices}
                     />
                 </Grid>
             ))}

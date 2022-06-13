@@ -136,7 +136,6 @@ export default function DeviceRegistration() {
     const nameId = id + "-name"
     const firmwareMenuId = id + "-firmwaremenu"
     const repoId = id + "-repo"
-    const makeCodeRepoId = id + "-makecoderepo"
     const identifierId = id + "-identifier"
     const urlId = id + "-url"
     const descriptionId = id + "-description"
@@ -227,11 +226,6 @@ export default function DeviceRegistration() {
     }
     const handleRepoChange = (ev: unknown, newValue: string) => {
         device.repo = newValue
-        updateDevice()
-    }
-    const handleMakeCodeRepoChange = (ev: ChangeEvent<HTMLInputElement>) => {
-        const r = ev.target.value?.trim()
-        device.makeCodeRepo = r ? [ev.target.value?.trim()] : undefined
         updateDevice()
     }
     const handleLinkChange = (ev: ChangeEvent<HTMLInputElement>) => {
@@ -767,18 +761,6 @@ export default function DeviceRegistration() {
                         onInputChange={handleRepoChange}
                         options={companyRepos}
                         renderInput={renderRepoInput}
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        id={makeCodeRepoId}
-                        fullWidth={true}
-                        helperText="URL to MakeCode extension"
-                        label="MakeCode extension"
-                        placeholder="https://github.com/..."
-                        value={device?.makeCodeRepo?.[0] || ""}
-                        onChange={handleMakeCodeRepoChange}
-                        variant={variant}
                     />
                 </Grid>
                 <Grid item xs={12}>

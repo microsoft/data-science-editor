@@ -2,9 +2,11 @@ import React, { useContext, useEffect } from "react"
 import { styled } from "@mui/material/styles"
 import { createTheme, responsiveFontSizes } from "@mui/material"
 import ThemedLayout from "../../components/ui/ThemedLayout"
-import MakeCodeEditorExtension from "../../components/makecode/MakeCodeEditorExtension"
+import MakeRoleCodeEditorExtension from "../../components/makecode/MakeCodeRoleEditorExtension"
 import PaperBox from "../../components/ui/PaperBox"
 import DarkModeContext from "../../components/ui/DarkModeContext"
+import { MakeCodeEditorExtensionProvider } from "../../components/makecode/MakeCodeEditorExtensionContext"
+import MakeCodeAddExtensionBox from "../../components/makecode/MakeCodeAddExtensionBox"
 
 const PREFIX = "makecode-editor-extension"
 
@@ -52,11 +54,16 @@ export default function MakeCodeEditorExtensionPage() {
     return (
         <Root>
             <ThemedLayout theme={theme}>
-                <div className={classes.content}>
-                    <PaperBox>
-                        <MakeCodeEditorExtension />
-                    </PaperBox>
-                </div>
+                <MakeCodeEditorExtensionProvider>
+                    <div className={classes.content}>
+                        <PaperBox>
+                            <MakeRoleCodeEditorExtension />
+                        </PaperBox>
+                        <PaperBox>
+                            <MakeCodeAddExtensionBox />
+                        </PaperBox>
+                    </div>
+                </MakeCodeEditorExtensionProvider>
             </ThemedLayout>
         </Root>
     )

@@ -70,8 +70,9 @@ function DeviceStructuredData(props: { device: jdspec.DeviceSpec }) {
 function DeviceSpecificationList(props: {
     header: ReactNode
     devices: jdspec.DeviceSpec[]
+    hideChips?: boolean
 }) {
-    const { header, devices } = props
+    const { header, devices, hideChips } = props
     const gridBreakpoints = useGridBreakpoints()
 
     if (!devices?.length) return null
@@ -86,6 +87,7 @@ function DeviceSpecificationList(props: {
                         <DeviceSpecificationCard
                             specification={specification}
                             size={"catalog"}
+                            hideChips={hideChips}
                         />
                     </Grid>
                 ))}
@@ -299,7 +301,7 @@ export default function DeviceSpecification(props: {
                         this device.
                     </p>
                     <GithubRepositoryList
-                        repos={makeCodeRepo}
+                        repos={makeCodeRepo.map(r => r.slug)}
                         showDescription={true}
                         showDependencies={true}
                         showMakeCodeButton={true}
