@@ -10,7 +10,7 @@ do
     # regenerate mp4
     mp4="${file%.webm}.mp4";
     if [ ! -f "../../static/videos/$mp4" ]; then
-        ffmpeg -y -i "$file" -pix_fmt yuv420p -movflags faststart "../../static/videos/$mp4";
+        ffmpeg -y -i "$file" -pix_fmt yuv420p -movflags -vf "scale=640:trunc(ih/iw*640/2)*2" faststart "../../static/videos/$mp4";
     fi
     # regenerate min.webm
     webm="${file%.webm}.webm";
