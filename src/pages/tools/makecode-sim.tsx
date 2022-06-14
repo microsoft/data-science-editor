@@ -10,6 +10,7 @@ import DarkModeContext from "../../components/ui/DarkModeContext"
 import IFrameBridgeClient from "../../components/makecode/iframebridgeclient"
 import useBus from "../../jacdac/useBus"
 import MakeCodeAddBlocksButton from "../../components/makecode/MakeCodeAddBlocksButton"
+import { usePersistentSimulators } from "../../jacdac/usePersistentSimulators"
 
 /**
  * To debug locally:
@@ -59,6 +60,8 @@ function Carousel() {
         bus.streaming = true
         bus.broadcastDisconnectRequest()
     }, [])
+
+    usePersistentSimulators()
 
     return (
         <>
