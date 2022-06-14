@@ -7,6 +7,7 @@ import PaperBox from "../../components/ui/PaperBox"
 import DarkModeContext from "../../components/ui/DarkModeContext"
 import { MakeCodeEditorExtensionProvider } from "../../components/makecode/MakeCodeEditorExtensionContext"
 import MakeCodeAddExtensionBox from "../../components/makecode/MakeCodeAddExtensionBox"
+import { Flags } from "../../../jacdac-ts/src/jdom/flags"
 
 const PREFIX = "makecode-editor-extension"
 
@@ -59,9 +60,11 @@ export default function MakeCodeEditorExtensionPage() {
                         <PaperBox>
                             <MakeRoleCodeEditorExtension />
                         </PaperBox>
-                        <PaperBox>
-                            <MakeCodeAddExtensionBox />
-                        </PaperBox>
+                        {Flags.diagnostics && (
+                            <PaperBox>
+                                <MakeCodeAddExtensionBox />
+                            </PaperBox>
+                        )}
                     </div>
                 </MakeCodeEditorExtensionProvider>
             </ThemedLayout>
