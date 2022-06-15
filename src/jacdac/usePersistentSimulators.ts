@@ -11,8 +11,10 @@ import useLocalStorage from "../components/hooks/useLocalStorage"
 import useBus from "./useBus"
 
 const STORAGE_KEY = "active_simulators"
+const STORAGE_EXPIRATION = 3600_000
 
 interface Simulators {
+    update?: number
     templates: string[]
 }
 
@@ -30,22 +32,28 @@ export function usePersistentSimulators() {
 
     const snapshot = () => {
         const templates = resolveTemplates()
-        setSimulators({ templates })
+        setSimulators({
+            update: Date.now(),
+            templates,
+        })
     }
 
     useEffect(() => {
-        const serviceProviders = serviceProviderDefinitions()
-        const templates = resolveTemplates()
-        simulators?.templates?.forEach(template => {
-            const i = templates.indexOf(template)
-            if (i > -1) {
-                templates.splice(i, 1)
-            } else {
-                const def = serviceProviders.find(sp => sp.name === template)
-                if (def) addServiceProvider(bus, def)
-            }
-        })
-
+        if ((simulators?.update || 0) - Date.now() < STORAGE_EXPIRATION) {
+            const serviceProviders = serviceProviderDefinitions()
+            const templates = resolveTemplates()
+            simulators?.templates?.forEach(template => {
+                const i = templates.indexOf(template)
+                if (i > -1) {
+                    templates.splice(i, 1)
+                } else {
+                    const def = serviceProviders.find(
+                        sp => sp.name === template
+                    )
+                    if (def) addServiceProvider(bus, def)
+                }
+            })
+        }
         snapshot()
     }, [])
 
