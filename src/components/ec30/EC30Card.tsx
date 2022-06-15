@@ -25,7 +25,6 @@ export default function EC30(props: { model: EnclosureModel }) {
 
     return (
         <Card>
-            <CardHeader title="box.svg" />
             <CardContent>
                 <div dangerouslySetInnerHTML={{ __html: svg }} />
             </CardContent>
@@ -34,7 +33,7 @@ export default function EC30(props: { model: EnclosureModel }) {
                     <Button
                         variant="outlined"
                         href={svgUri}
-                        download={"box.svg"}
+                        download={"device.svg"}
                     >
                         Download SVG
                     </Button>
