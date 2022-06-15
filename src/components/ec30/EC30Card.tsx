@@ -1,11 +1,5 @@
 import React from "react"
-import {
-    Button,
-    Card,
-    CardActions,
-    CardContent,
-    CardHeader,
-} from "@mui/material"
+import { Button, Card, CardActions, CardContent } from "@mui/material"
 import useDataUri from "../hooks/useDataUri"
 import ChipList from "../ui/ChipList"
 import useEC30Model from "./useEC30Model"
