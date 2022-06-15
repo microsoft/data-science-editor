@@ -29,7 +29,7 @@ These options are depicted below:
 ![Three approaches to supporting Jacdac](/design/three-approaches-to-supporting-jacdac.png)
 
 
-## Software-only Jacdac for existing accessories
+## 1. Software-only Jacdac for existing accessories
 
 In this approach, sensors and actuators built into an accessory are surfaced as Jacdac servers by wrapping the existing extension into a Jacdac compatibility layer.
 **This solution adds no cost and will work for existing accessories.**
@@ -45,7 +45,7 @@ In this approach, sensors and actuators built into an accessory are surfaced as 
 
 For more details see our page on [implementing software-only Jacdac for micro:bit accessories](/ddk/microbit/software-only-accessory/).
 
-## Adding a Jacdac connector for a power-consuming accessory
+## 2. Adding a Jacdac connector for a power-consuming accessory
 
 In this scenario, one or more [Jacdac PCB edge connectors](/ddk/design/electro-mechanical#pcb-edge-connector) must be integrated into the accessory design.
 
@@ -64,7 +64,7 @@ In order to [consume power](/ddk/design/electrical/#power-consumers) from the Ja
     -   a hardware revision of the accessory that incorporates the Jacdac signal conditioning circuit is needed; and
     -   extension required.
 
-## Adding a Jacdac connector for a power-providing accessory
+## 3. Adding a Jacdac connector for a power-providing accessory
 
 In this scenario, as above, one or more [Jacdac PCB edge connectors](/ddk/design/electro-mechanical#pcb-edge-connector) must be integrated into the accessory design. The same [signal conditioning circuit](/ddk/design/electrical#signalling)  is required, as described above.In addition, a few extra components are needed to implement [power provision](/ddk/design/electrical/#power-provider-current-limiting). In particular, a current limiting circuit is mandatory. 
 
@@ -77,10 +77,11 @@ In this scenario, as above, one or more [Jacdac PCB edge connectors](/ddk/design
     -   a hardware revision of the accessory that incorporates Jacdac signal conditioning and power provison circuits is needed; and
     -   extension required.
 
+## Designing a Jacdaptor for micro:bit V2
 
-For reference about integrating Jacdac with an edge connector, see the [Jacdaptor board schematics](https://github.com/microsoft/jacdac-ddk/tree/main/electronics/deprecated_form_factor/altium_deprecated/reference-designs/JacdacMicroBitShieldLP%2029-0.6).
+One approach to designing a Jacdaptor for micro:bit V2 is to use a micro:bit edge connector socket that the micro:bit plugs into in order to take power from the micro:bit and connect to pin 12. The micro:bit V2 is limited in the current it can supply to accessories (such as a Jacdaptor), so it's not possible to build a high current [power provider](/ddk/design/electrical/#overview-of-jacdac-power-sharing). As a low current power provider, the [power protocol](/services/power/) does not need to be implemented, so the Jacdaptor does not need its own MCU. It does need a current limiter with auto-retry, and it also needs a DC-DC boost converter to increase the micro:bit's output voltage to reach the [Jacdac bus voltage](/ddk/design/electrical/#bus-voltage-range).
 
-The Jacdac team provides firmware for extreme low cast MCUs like the [PADAUK](https://github.com/microsoft/jacdac-padauk) to reduce the cost impact. Follow the [hardware design guidance](/ddk/design/) for this option.
+A reference design showing how to implement a micro:bit Jacdaptor as described above is in the Jacdac electronics design repo [here](https://github.com/microsoft/jacdac-ddk/tree/main/electronics/deprecated_form_factor/altium_deprecated/jacdaptor-reference-designs/JacdacMicroBitShieldLP%2029-0.6). Note that the form factor of this design—the board shape and mounting hole details—are deprecated. 
 
 <!--- 
 ## Independent power
