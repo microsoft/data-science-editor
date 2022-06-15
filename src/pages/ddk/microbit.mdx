@@ -7,87 +7,83 @@ order: 101
 
 ## The benefits of using Jacdac with micro:bit
 
-Jacdac brings two key features to all sensors and actuators that might be used with micro:bit, namely **simulators** and **digital twins**:
+In addition to the instant 'connect and code' nature of Jacdac, it brings three additional key features to all sensors and actuators that might be used with micro:bit:
 
 -   **simulators** allows users to easily test sensors and actuators, even if they don't have the hardware to-hand;
 -   **digital twins** provide a live view of the physical sensor/actuator state directly in the micro:bit code editor; and
 -   **standardized blocks** provided by Jacdac reduce confusion for users and reduce the overhead for creators of new sensors and actuators.
 
-As of today, Jacdac runs on **micro:bit V2** exclusively.
+As of today, Jacdac on micro:bit requires a **micro:bit V2**.
 
 ## Three different approaches to supporting Jacdac
 
-There are three main approaches to integrating Jacdac with accessories for the micro:bit V2:
-1. **Software-only** support requires no changes to accessory hardware—so it can work with accessories already in the market; and is also the easiest to implement.
-2. Adding the Jacdac connector and a minimal amount of interface circuitry to allow the accessory to act as a Jacdac **power consumer** that can communicate on and be powered from the Jacdac bus.
-3. Adding the Jacdac connector and a little more circuitry that allows the accessory to be a **power provider** that can power other Jacdac devices. 
+There are three main approaches to integrating Jacdac with exsiting and furuter accessories for the micro:bit V2:
+1. **Software-only** support requires no changes to accessory hardware—so Jacdac can work with accessories already in the market. This approach is also the easiest to implement.
+2. Adding a Jacdac connector and a minimal amount of interface circuitry to an accessory allow it to communicate with other Jacdac devices over the Jacdac bus. A Jacdac **power consumer** can also be powered from the Jacdac bus.
+3. Adding a Jacdac connector (as in 2, above) and a little additional circuitry  allows the accessory to be a **power provider** that can power other Jacdac devices. This provides the best user experience.
 
 There is technically a fourth option, independent power, but for most scenarios this gives the least good user experience so we do not recommend it for micro:bit scenarios.
 
+Each approach offers different benefits and requires different levels of investment.
 These options are depicted below:
 ![Three approaches to supporting Jacdac](/design/three-approaches-to-supporting-jacdac.png)
 
 
-## [Software only Jacdac](/ddk/microbit/software-only-accessory/) for existing accessories
+## Software-only Jacdac for existing accessories
 
-The accessory sensors and actuators are surfaced as Jacdac servers by wrapping the existing extension into a Jacdac compatibility layer.
+In this approach, sensors and actuators built into an accessory are surfaced as Jacdac servers by wrapping the existing extension into a Jacdac compatibility layer.
 **This solution adds no cost and will work for existing accessories.**
 
--   Pros
-    -   **retrofit existing accessories**
-    -   simulation
-    -   digital twin
-    -   no modification to existing extension code
-    -   same github repository for code
--   Cons
-    -   extension required
-    -   no Jacdac connector
-    -   micro:bit v2 only (Jacdac is not supported on v1)
+-   Pros:
+    -   **works with existing accessories**;
+    -   sensor and actuator simulation, digital twins and standardized blocks;
+    -   no modification to existing extension code; and
+    -   same github repository for code.
+-   Cons:
+    -   extension still required; and
+    -   no Jacdac connector is available to users.
 
-**[Get started with software only Jacdac](/ddk/microbit/software-only-accessory/)**
+For more details see our page on [implementing software-only Jacdac for micro:bit accessories](/ddk/microbit/software-only-accessory/).
 
-## Low powered physical connector
+## Adding a Jacdac connector for a power-consuming accessory
 
- and uses pin **12**. Until now, this pin has largely been reserved for accessibility applications, so many existing accessories do not use it. We believe that Jacdac provides a route to more accessible peripherals that work with micro:bit, in addition to supporting many more scenarios.
+In this scenario, one or more [Jacdac PCB edge connectors](/ddk/design/electro-mechanical#pcb-edge-connector) must be integrated into the accessory design.
 
-Existing and future micro:bit accessories can be integrated with Jacdac in several different ways. Each approach offers different benefits and requires different levels of investment.
+The Jacdac data signal (JD_DATA) must be connected to micro:bit pin 12 through a  [signal conditioning circuit](/ddk/design/electrical#signalling) that protects the micro:bit from spurious signals and provides electro-magnectic compatibility (EMC). 
+Jacdac was designed to minimize the complexity and cost of this circuity.
 
+Note that Jacdac on micro:bit always uses pin **12**. Until now, this pin has largely been reserved for accessibility applications, so many existing accessories do not use it. We believe that Jacdac provides a route to more accessible peripherals that work with micro:bit, in addition to supporting many more scenarios.
 
-In this scenario, you integrate one or more [Jacdac PCB edge connectors](/ddk/design/electro-mechanical#pcb-edge-connector) into your design, 
-with the Jacdac line connected to micro:bit pin 12 through the required [signal conditioning](/ddk/design/electrical#signalling) circuit
-and a [low power supply](/ddk/design/electrical#overview-of-jacdac-power-sharing) circuit.
+In order to [consume power](/ddk/design/electrical/#power-consumers) from the Jacdac bus power line (JD_PWR), most power-consuming accessories will need a voltage regulator; we recommend a low-dropout linear regulator (LDO)—which might already be included in an accessory design. If the accessory also has one or more alternative power sources, protection will be needed to prevent back-powering; we recommend a Schottky diode. 
 
 -   Pros
-    -   simulator
-    -   digital twin
-    -   no modification to existing extension code
-    -   same github repository for code
-    -   Powered connector means module will just work when connected
+    -   sensor and actuator simulation, digital twins and standardized blocks;
+    -   no modifications to existing extension code are required; and
+    -   same github repository for code.
 -   Cons
-    -   new hardware design needed
-    -   extension required
-    -   additional cost for power regulator
-    -   micro:bit v2 only (Jacdac is not supported on v1)
+    -   a hardware revision of the accessory that incorporates the Jacdac signal conditioning circuit is needed; and
+    -   extension required.
 
-Note that if your accessory already has a power regulator, you might already have the required circuitery in place.
+## Adding a Jacdac connector for a power-providing accessory
+
+In this scenario, as above, one or more [Jacdac PCB edge connectors](/ddk/design/electro-mechanical#pcb-edge-connector) must be integrated into the accessory design. The same [signal conditioning circuit](/ddk/design/electrical#signalling)  is required, as described above.In addition, a few extra components are needed to implement [power provision](/ddk/design/electrical/#power-provider-current-limiting). In particular, a current limiting circuit is mandatory. 
+
+-   Pros
+    -   sensor and actuator simulation, digital twins and standardized blocks;
+    -   no modifications to existing extension code are required; 
+    -   same github repository for code; and
+    -   the powered connector provides the best user experience—modules will always just work when connected to the bus.
+-   Cons
+    -   a hardware revision of the accessory that incorporates Jacdac signal conditioning and power provison circuits is needed; and
+    -   extension required.
+
+
 For reference about integrating Jacdac with an edge connector, see the [Jacdaptor board schematics](https://github.com/microsoft/jacdac-ddk/tree/main/electronics/deprecated_form_factor/altium_deprecated/reference-designs/JacdacMicroBitShieldLP%2029-0.6).
-
-## Onboard Jacdac server with microcontroller unit
-
-In this scenario, the accessory contains a microcontroller unit (MCU) that implements the Jacdac server protocol.
-In this case, you do not need to provide any extension as the user will be able to use the built-in Jacdac client libraries.
-
--   Pros
-    -   simulator
-    -   digital twin
-    -   no extension required
-    -   compatible with any Jacdac hardware, including Raspberry Pi
--   Cons
-    -   additional cost for power regulator and MCU
 
 The Jacdac team provides firmware for extreme low cast MCUs like the [PADAUK](https://github.com/microsoft/jacdac-padauk) to reduce the cost impact. Follow the [hardware design guidance](/ddk/design/) for this option.
 
-## Unpowered physical connector
+<!--- 
+## Independent power
 
 In this scenario, you integrate one or more [Jacdac PCB edge connectors](/ddk/design/electro-mechanical#pcb-edge-connector) into your design, 
 with the `JD_DATA` line connected to micro:bit **pin 12** through the required [signal conditioning](/ddk/design/electrical#signalling) circuit. The power line is **not** connected.
@@ -110,3 +106,4 @@ is on the Jacdac line.
     -   new hardware design needed
     -   extension required
     -   micro:bit v2 only (Jacdac is not supported on v1)
+    --->

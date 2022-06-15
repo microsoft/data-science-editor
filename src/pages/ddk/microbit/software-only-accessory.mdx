@@ -1,20 +1,13 @@
 ---
-title: Software Only
+title: Implementing Software-only Jacdac
 ---
 
-# micro:bit accessories with Software-Only Jacdac
+# Implementing Software-only Jacdac for micro:bit Accessories
 
-The accessory sensors and actuators are surfaced as Jacdac servers by wrapping the existing extension into a Jacdac compatibility layer.
+With software-only support for Jacdac, sensors and actuators built into accessories are surfaced as Jacdac servers by wrapping the existing accessory extension with a  Jacdac compatibility layer.
 This solution adds no cost and will work for existing accessories.
 
--   Pros
-    -   works with existing accessories
-    -   simulation
-    -   digital twin
-    -   no modification to existing extensions
--   Cons
-    -   no Jacdac connector
-    -   micro:bit v2 only (Jacdac is not supported on v1)
+See the discussion of [Jacdac/micro:bit V2 interoperability](/design/microbit) for a description of the pros and cons of software-only Jacdac support.
 
 <Video
     label="Simulating a traffic light using Software Only package"
@@ -23,7 +16,7 @@ This solution adds no cost and will work for existing accessories.
 
 ## Getting started
 
-**Here is a list of [Software Only Extension samples](/ddk/microbit/extension-samples/).**
+**Here is a list of [Software-only extension samples](/ddk/microbit/extension-samples/).**
 
 For the purpose of this example, let's assume we have an extension `https://github.com/company/pxt-thing/` with blocks in the `thing` namespace.
 
@@ -32,9 +25,7 @@ For the purpose of this example, let's assume we have an extension `https://gith
 We are going to create a new _nested_ extension that adds Jacdac and hides the existing blocks.
 
 -   open https://makecode.microbit.org/beta/ **make sure to use the beta until all fixes are released**
--   import your repository url with **/jacdac** appended. This will create a new extension in the same repository (if your repo is https://github.com/company/pxt-thing/, import https://github.com/company/pxt-thing/jacdac)
-
-    .
+-   import your repository url with **/jacdac** appended. This will create a new extension in the same repository (if your repo is https://github.com/company/pxt-thing/, import https://github.com/company/pxt-thing/jacdac).
 
 -   rename the project to `thing-jacdac` where `thing` is the name of your package (remove `pxt-`)
 -   switch to **JavaScript**
@@ -186,7 +177,7 @@ namespace servers {
 
 ## Advanced topics
 
-These customization are less common.
+These customization options are less common.
 
 ### Implement a custom server
 
