@@ -114,7 +114,12 @@ export default function MakeRoleCodeEditorExtension() {
             .concat(serviceSpecifications().map(spec => spec.camelName))
             .filter(n => !!n)
         configuration.roles.push({
-            name: uniqueName(names, service.camelName || service.shortId),
+            name: uniqueName(
+                names,
+                service.camelName || service.shortId,
+                "",
+                3
+            ),
             service: service.classIdentifier,
         })
         update()
@@ -128,9 +133,9 @@ export default function MakeRoleCodeEditorExtension() {
                     The roles define which Jacdac services (sensor or actuators)
                     are needed in your program. Use this dialog to define
                     multiple roles using the same type of service, like multiple
-                    button roles. For each services, there is always a default
-                    role (for example <code>button1</code>) that is already
-                    defined.
+                    button roles. For each services, there is always one or two
+                    default roles (for example <code>button1</code> and{" "}
+                    <code>button2</code>) that is already defined.
                 </Typography>
             </Grid>
             {configuration.roles?.map((c, i) => (
