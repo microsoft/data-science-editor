@@ -3,16 +3,30 @@ title: micro:bit accessories
 order: 101
 ---
 
-# Micro:bit accessories
+# Jacdac/micro:bit V2 Interoperability
 
-Jacdac can be integrated into existing and future micro:bit accessories with different level of investment.
-Jacdac brings **simulators** and **digital twins** of sensors/actuators:
+## The benefits of using Jacdac with micro:bit
 
--   **simulators** allows the user to easily test sensor/actuator without having to use the hardware
--   **digital twins** provides a live view on the physical sensor/actuator state in the editor
--   **standardized blocks** provided by the Jacdac project, means you have to maintain less extensions for your hardware
+Jacdac brings two key features to all sensors and actuators that might be used with micro:bit, namely **simulators** and **digital twins**:
 
-As of today, Jacdac runs on **micro:bit V2** exclusively and uses pin **12**.
+-   **simulators** allows users to easily test sensors and actuators, even if they don't have the hardware to-hand;
+-   **digital twins** provide a live view of the physical sensor/actuator state directly in the micro:bit code editor; and
+-   **standardized blocks** provided by Jacdac reduce confusion for users and reduce the overhead for creators of new sensors and actuators.
+
+As of today, Jacdac runs on **micro:bit V2** exclusively.
+
+## Three different approaches to supporting Jacdac
+
+There are three main approaches to integrating Jacdac with accessories for the micro:bit V2:
+1. **Software-only** support requires no changes to accessory hardware—so it can work with accessories already in the market; and is also the easiest to implement.
+2. Adding the Jacdac connector and a minimal amount of interface circuitry to allow the accessory to act as a Jacdac **power consumer** that can communicate on and be powered from the Jacdac bus.
+3. Adding the Jacdac connector and a little more circuitry that allows the accessory to be a **power provider** that can power other Jacdac devices. 
+
+There is technically a fourth option, independent power, but for most scenarios this gives the least good user experience so we do not recommend it for micro:bit scenarios.
+
+These options are depicted below:
+![Three approaches to supporting Jacdac](/design/three-approaches-to-supporting-jacdac.png)
+
 
 ## [Software only Jacdac](/ddk/microbit/software-only-accessory/) for existing accessories
 
@@ -33,6 +47,11 @@ The accessory sensors and actuators are surfaced as Jacdac servers by wrapping t
 **[Get started with software only Jacdac](/ddk/microbit/software-only-accessory/)**
 
 ## Low powered physical connector
+
+ and uses pin **12**. Until now, this pin has largely been reserved for accessibility applications, so many existing accessories do not use it. We believe that Jacdac provides a route to more accessible peripherals that work with micro:bit, in addition to supporting many more scenarios.
+
+Existing and future micro:bit accessories can be integrated with Jacdac in several different ways. Each approach offers different benefits and requires different levels of investment.
+
 
 In this scenario, you integrate one or more [Jacdac PCB edge connectors](/ddk/design/electro-mechanical#pcb-edge-connector) into your design, 
 with the Jacdac line connected to micro:bit pin 12 through the required [signal conditioning](/ddk/design/electrical#signalling) circuit
