@@ -97,7 +97,7 @@ export default function Home() {
             <SplitGrid
                 right={true}
                 subtitle="Plays well with others"
-                description="Jacdaptors allow Jacdac to integrate with other ecosystems."
+                description="Jacdaptors allow Jacdac to integrate with micro:bit, Raspberry Pi other ecosystems."
                 buttonText="Jacdaptors"
                 buttonVariant="link"
                 buttonUrl="/start/jacdaptors"
