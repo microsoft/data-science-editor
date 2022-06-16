@@ -1,0 +1,54 @@
+---
+title: Electrical Specification
+order: 4
+---
+
+## Electrical Specification
+
+### All devices
+
+All Jacdac devices should observe the following signalling voltages:
+
+| | min | typ | max | unit |
+| :-- | :-- | :-- | :-- | :-- |
+| V<Sub>IH</sub> on JD_DATA | 3.0 | 3.3 | 3.5 | V |
+| V<sub>IL</sub> on JD_DATA | 0.0 | 0.0 | 0.3 | V |
+| V<Sub>OH</sub> on JD_DATA | 3.0 | 3.3 | 3.5 | V |
+| V<sub>OL</sub> on JD_DATA | 0.0 | 0.0 | 0.3 | V |
+
+
+### Power consumers
+
+Power consuming devices should be designed so that when consuming power from the Jacdac bus they reliably operate under and observe the following conditions:
+
+| | min | typ | max | unit |
+| :-- | :-- | :-- | :-- | :-- |
+| V<sub>in</sub> on JD_PWR | 3.5 | - | 5.5 | V | 
+| I<sub>in</sub> | - | - | 900 | mA |
+
+### Power providers
+
+Power providing devices should be designed so that when providing power to the Jacdac bus they reliably operate under and observe the following conditions:
+
+| | min | max | unit |
+| :-- | :-- | :-- | :-- |
+| V<sub>out</sub> on JD_PWR for a given I<sub>max</sub> | 3.6 + (0.9 x I<sub>max</sub>) | 5.5 | V | 
+| V<sub>out</sub> on JD_PWR for I<sub>max</sub> = 110mA | 3.7 | 5.5 | V | 
+|  V<sub>out</sub> on JD_PWR for I<sub>max</sub> = 1A | 4.5 | 5.5 | V | 
+| I<sub>out</sub> (low current provider) | - | 150 | mA |
+| I<sub>out</sub>  (high current provider) | - | 1000 | mA |
+
+### Cables
+| | min | max | unit |
+| :-- | :-- | :-- | :-- |
+| Conductor resistance | - | 160 | mΩ/m |
+| Contact resistance | - | 30 | mΩ |
+| Cable assembly resistance for a given C<sub>length</sub> | - | (150 x C<sub>length</sub>) + 60 | mΩ |
+| Cable assembly resistance, C<sub>length</sub> = 100mm| - | 76 | mΩ |
+| Cable assembly resistance, C<sub>length</sub> = 250mm| - | 116 | mΩ |
+| Cable assembly resistance, C<sub>length</sub> = 1000mm| - | 220 | mΩ |
+| Combined cable assembly resistance for reliable operation under all conditions | - | 350 | mΩ |
+
+Remember to double the cable assembly resistance figures above when considering 'round-trip resistance' because the return current path will introduce a similar voltage drop as the out-going current path.
+
+

@@ -106,13 +106,13 @@ It is possible to use a single MCU to run the power negotiation protocol for sev
 
 ### Cable and connector losses
 
-Jacdac requires cabling of at least 26AWG, resulting in a resistance of 150mΩ/m. In addition, the contact resistance in a Jacdac connector may be up to 30mΩ. Therefore cables have a total end-to-end resistance of (150L+60) mΩ where L is the cable length in m. For example, a 350mm single-hop cable will have up to 113mΩ resistance including contact resistance at both ends.
+Jacdac requires cabling of at least 26AWG, resulting in a resistance of 160mΩ/m. In addition, the contact resistance in a Jacdac connector may be up to 30mΩ. Therefore cables have a total end-to-end resistance of (160L+60) mΩ where L is the cable length in m. For example, a 350mm single-hop cable will have up to 116mΩ resistance including contact resistance at both ends.
 
 ### Bus voltage range
 
 The nominal 5V bus voltage and maximum 1A bus current limit allow commonly available USB power delivery parts to be used for Jacdac. In particular, 5V power adapters, 5V power packs, 5V current limiting ICs and 5V DC-DC converters are all commodity items. Note that high current providers do not have to provide 1A, it may for example be cheaper to implement a 500mA power provider.
 
-Note that any current flowing through the Jacdac bus will result in a voltage drop between the points of power provision and consumption, and any ground return current will cause a similar voltage drop. At 1A and with a 350mm,113mΩ cable, this results in a 113mV drop on JD_PWR between power provider and power consumer, and another 113mV 'rise' on the GND return path; the power consuming device sees 226mV less than is being provided at the source. Additional hubs and cables will further reduce the margin.
+Note that any current flowing through the Jacdac bus will result in a voltage drop between the points of power provision and consumption, and any ground return current will cause a similar voltage drop. At 1A and with a 350mm,116mΩ cable, this results in a 116mV drop on JD_PWR between power provider and power consumer, and another 116mV 'rise' on the GND return path; the power consuming device sees 232mV less than is being provided at the source. Additional hubs and cables will further reduce the margin.
 
 ### Power consumers
 
