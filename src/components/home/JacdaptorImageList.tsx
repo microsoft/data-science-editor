@@ -1,29 +1,15 @@
 import React from "react"
-import { ImageList, ImageListItem, ImageListItemBar } from "@mui/material"
-import DeviceImage from "../devices/DeviceImage"
+import useDeviceCatalog from "../devices/useDeviceCatalog"
+import useChange from "../../jacdac/useChange"
+import DeviceImageList from "../devices/DeviceImageList"
 
-export default function JacdaptorImageList(props: { cols: number }) {
-    return (
-        <ImageList cols={props.cols} gap={1}>
-            {[
-                {
-                    id: "kittenbot-jacdaptorformicrobitv2v10",
-                    title: "micro:bit V2",
-                },
-                {
-                    id: "microsoft-research-jmspibridgev37v37",
-                    title: "Raspberry Pi",
-                },
-                {
-                    id: "microsoft-research-jmbrainrp204059v01",
-                    title: "USB",
-                },
-            ].map(({ id, title }) => (
-                <ImageListItem key={id}>
-                    <DeviceImage id={id} size="preview" />
-                    <ImageListItemBar title={title} />
-                </ImageListItem>
-            ))}
-        </ImageList>
+export default function JacdaptorImageList(props: { cols?: number }) {
+    const { cols } = props
+    const catalog = useDeviceCatalog()
+    const ids = useChange(catalog, _ =>
+        _?.specifications()
+            .filter(spec => spec.tags?.includes("adapter"))
+            .map(spec => spec.id)
     )
+    return <DeviceImageList cols={cols} ids={ids} />
 }
