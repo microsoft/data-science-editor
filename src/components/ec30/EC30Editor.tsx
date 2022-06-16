@@ -77,7 +77,7 @@ export default function EC30Editor() {
                     label={`left connectors: ${connectors.l || 0}`}
                     value={connectors.l}
                     onChange={handleLeftConnector}
-                    min={0}
+                    min={1}
                     max={gridHeight - 1}
                 />
             </Grid>
