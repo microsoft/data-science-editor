@@ -34,11 +34,11 @@ In addition to providing data communications, Jacdac supports the sharing of pow
 
 ### Power supply sharing options
 
-From a power perspective, Jacdac devices fall into one of four catgeories:
+From a power perspective, Jacdac devices fall into one of four catgeories.
 
 -   **Independently powered:** A device that communicates on the Jacdac bus without providing power 
-or consuming power. It must have a bus independent power source of some kind – e.g. a battery or a 
-USB-micro socket for external power – from which it operates.  
+or consuming power. It must have a bus independent power source of some kind—e.g. a battery or a 
+USB-micro socket for external power—from which it operates.  
 -   **Pure power provider:** A pure power provider is a device that is capable of supplying power to 
 the Jacdac bus. The current available to the bus must be limited by circuitry in the power provider, 
 and power providers capable of supplying more than 100mA must contain an MCU that implements the 
@@ -86,26 +86,40 @@ most likely it will move into power independent operation but it could instead b
 As mentioned above, power providers **must** incorporate current limiting. We recommend the use of one of the 
 many readily-available low-cost single-chip current limiters that operate at up to 5.5V.
 
-Current limiters specify a tolerance on their output current - please ensure that the **maximum** output current does not exceed 100mA or 1A (for low current and high current providers respectively). This often means setting the typical current to a value like 75mA or 900mA, which might result in as little as 50mA or 800mA in some cases. But it is important that the **maximum** current specification is not exceeded.
+Current limiters specify a tolerance on their output current - please ensure that the **maximum** output current does not exceed 150mA or 1A (for low current and high current providers respectively). This often means setting the typical current to a value like 100mA or 900mA, which might result in as little as 75mA or 800mA in some cases. But it is important that the **maximum** current specification is not exceeded.
 
-It is possible for a high current provider to have a maximum current of any value between 100mA and 1A. For example, a battery pack that is only able to supply 500mA could be used with a 500mA maximum Jacdac power provider.
+It is possible for a high current provider to have a maximum current of any value between 150mA and 1A. For example, a battery pack that is only able to supply 500mA could be used with a 500mA maximum Jacdac power provider.
 
 **Resettable polyfuses are not suitable** for current limiting because they have a relatively large 'on' resistance, a larger threshold current tolerance and do not switch on or off cleanly. This is very confusing for the user. Jacdac devices must use a silicon current limiter.
 
+### Example power delivery circuit
+
+![Example 100mA power delivery circuit](./jacdac-100mA-power-delivery.png)
+
+Please refer to our list of [Jacdac suggested components](https://github.com/microsoft/jacdac-ddk/tree/main/electronics/generic/suggested-components) for suggested current limiter ICs.
+
 ### Delivering more than 1A
 
-It is not possible to have more than 1A on any one part of the Jacdac bus because **Jacdac cables are only rated up to 1A**. However, it is possible for power providers such as dedicated Jacdac power supplies to have multiple Jacdac connectors each of which separately provides up to 1A.  
+We cannot allow more than 1A on any one part of the Jacdac bus because **Jacdac cables are only rated up to 1A**. However, it is possible for power providers such as dedicated Jacdac power supplies to have multiple Jacdac connectors each of which separately provides up to 1A. These multiple-output high-current power supplies must run the [power negotiation protocol](/services/power/) independently for each connector. In this way, if a user connects multiple outputs together via a Jacdac hub, this will be detected and power delivery will automatically be reduced to at most 1A for that section of the Jacdac bus. 
+
+It is possible to use a single MCU to run the power negotiation protocol for several independently-powered connectors, but it may be more convenient to use one cheap PADAUK MCU per connector. 
+
+### Cable and connector losses
+
+Jacdac requires cabling of at least 26AWG, resulting in a resistance of 150mΩ/m. In addition, the contact resistance in a Jacdac connector may be up to 30mΩ. Therefore cables have a total end-to-end resistance of (150L+60) mΩ where L is the cable length in m. For example, a 350mm single-hop cable will have up to 113mΩ resistance including contact resistance at both ends.
 
 ### Bus voltage range
 
-The nominal 5V bus voltage and maximum 1A bus current limit allow commonly available USB power delivery parts to be used for Jacdac. In particular, 5V power adapters, 5V power packs, 5V current limiting ICs and 5V DC-DC converters are all commodity items. Note that high current providers do not have to provie 1A, it may for example be cheaper to implement a 500mA power provider.
+The nominal 5V bus voltage and maximum 1A bus current limit allow commonly available USB power delivery parts to be used for Jacdac. In particular, 5V power adapters, 5V power packs, 5V current limiting ICs and 5V DC-DC converters are all commodity items. Note that high current providers do not have to provide 1A, it may for example be cheaper to implement a 500mA power provider.
 
-Note that any current flowing through the Jacdac bus will result in a voltage drop between the points of power provision and consumption, and any ground return current will cause a similar voltage drop. For example, a 300mm single-hop cable will have up to 100mΩ resistance (including contact resistance at both ends), which at 1A results in a 100mV drop on JD_PWR between power provider and power consumer, and a 100mV 'rise' on the GND return path, i.e. the power consuming device sees 200mV less than is being provided at the source. Additional hubs and cables will further reduce the margin.
+Note that any current flowing through the Jacdac bus will result in a voltage drop between the points of power provision and consumption, and any ground return current will cause a similar voltage drop. At 1A and with a 350mm,113mΩ cable, this results in a 113mV drop on JD_PWR between power provider and power consumer, and another 113mV 'rise' on the GND return path; the power consuming device sees 226mV less than is being provided at the source. Additional hubs and cables will further reduce the margin.
 
 ### Power consumers
 
-A power consumer may draw an absolute maximum of 1A from the Jacdac bus, however we recommend a maximum consumption of 900mA given that 5W power providers may not consistently provide the full 1A.
+A power consumer may draw an absolute maximum of 1A from the Jacdac bus, however we recommend a maximum consumption of 900mA given that 1A may not be available due to component tolerances.
 
-To accomodate voltage drops, Jacdac devices must be capable of operating when the potential between JD_PWR and GND falls to 3.7V. Since we expect the logic of a Jacdac device to operate at 3.3V (or lower), a low dropout linear regulator is the cheapest and simplest way to regulate JD_PWR to power a device from the bus. Alternatively a DC-DC converter can be used for improved efficiency.
+To accommodate voltage drops, Jacdac devices must be capable of operating when the potential between JD_PWR and GND falls to 3.6V. Since we expect the logic of a Jacdac device to operate at 3.3V (or lower), a low dropout linear regulator is the cheapest and simplest way to regulate JD_PWR to power a device from the bus. Alternatively a DC-DC converter can be used for improved efficiency.
+
+Although some kind of voltage regulation is necessary to ensure that JD_DATA signalling runs at 3.3V, devices may also use unregulated JD_PWR if desired. For example, it will typically be more efficient to power a servo motor or a strip of RGB LEDs directly from JD_PWR. This reduces the amount of current passing through the on-device voltage regulation circuit, which in turn reduces losses and may reduce cost. 
 
 ---
