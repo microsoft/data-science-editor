@@ -125,11 +125,6 @@ export default function useMdxComponents() {
                     <DeviceSpecificationList sx={{ mb: 2 }} {...props} />
                 </Suspense>
             ),
-            ModuleImageList: props => (
-                <Suspense>
-                    <ModuleImageList {...props} />
-                </Suspense>
-            ),
             DeviceImageList: props => (
                 <Suspense>
                     <DeviceImageList {...props} />
