@@ -1,12 +1,16 @@
 ---
-title: Device Development Kit
+title: Device Development 
 ---
 
-# Device Development Kit
+# Device Development 
 
-## Overview of the DDK
+## Overview
 
-The Jacdac Device Development Kit (DDK) is for hardware designers, firmware developers and manufacturers who wish to create their own Jacdac [devices](/devices). A Jacdac device should:
+The documentation in these pages form the basis for the Jacdac Device Development Kit (DDK). The DDK is for hardware designers, firmware developers and manufacturers who wish to create their own Jacdac [devices](/devices). Important additional materials that are part of the DDK are hosted on separate Github repos for [DDK reference materials](https://github.com/microsoft/jacdac-ddk) and our various [firmware implementations](https://microsoft.github.io/jacdac-docs/ddk/firmware/).
+
+## What is a Jacdac device?
+
+A Jacdac device should:
 
 -   have a [Jacdac edge connector](./design/electro-mechanical#pcb-edge-connector) for joining the device to the Jacdac bus
     using [Jacdac cables](./design/electro-mechanical#cable-connectors-and-assemblies);
@@ -14,7 +18,7 @@ The Jacdac Device Development Kit (DDK) is for hardware designers, firmware deve
 -   follow the [hardware design guidelines](./design/); and
 -   pass all the checks in the [device tester](/tools/device-tester/).
 
-There are four main types of Jacdac device: brains, modules, power supplies and adaptors (or Jacdaptors). More information about these is desscribed along with Jacdac's [client/server architecture](/reference/clientserver).
+There are four main types of Jacdac device: **brains**, **modules**, **power supplies** and adaptors, known as  **Jacdaptors**. More information about these is described in the documentation about Jacdac's [client/server architecture](/reference/clientserver).
 
 ## Key steps for creating a new Jacdac device 
 
@@ -34,7 +38,8 @@ and [STM32x0 32-bit](https://github.com/microsoft/jacdac-stm32x0) families of MC
 STM32x0 support includes a Jacdac [bootloader service](/services/bootloader/) that allows MCU firmware to be updated over Jacdac.
 We strongly encourage you to take advantage of our proven hardware and firmware reference implementations to simplify the above steps.
 
-Hardware reference implementations of Jacdac devices created with popular electronics CAD tools including Altium Designer, Eagle and KiCad are available at https://github.com/microsoft/jacdac-ddk.
+Hardware reference implementations of Jacdac devices created with popular electronics CAD tools including Altium Designer, Eagle and KiCad are available as part of our
+[DDK reference materials](https://github.com/microsoft/jacdac-ddk).
 
 When the hardware and firmware for a new device has been created, we provide web-based tools that ease verification of the device design. These tools may also be useful for manufacturing validation tests (look for 'factory mode'). We also provide web interface for module creators to [register](/tools/device-registration) their designs in our [device catalog](/devices).
 
