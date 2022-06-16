@@ -31,7 +31,6 @@ import {
 } from "../../jacdac-ts/src/jdom/transport/transport"
 import { JDDevice } from "../../jacdac-ts/src/jdom/device"
 import { isInfrastructure } from "../../jacdac-ts/src/jdom/spec"
-import { inIFrame } from "../../jacdac-ts/src/jdom/iframeclient"
 import createAzureIotHubServiceDefinition from "../components/jacscript/azureiotconnector"
 import { addServiceProviderDefinition } from "../../jacdac-ts/src/servers/servers"
 
@@ -90,6 +89,8 @@ function sniffQueryArguments() {
         webcam: isMediaDevicesSupported(),
         consoleinsights: params.get("consoleinsights") === "1",
         devTools: params.get("devtools"),
+        connect: params.get("connect") !== "0",
+        transient: params.get("transient") === "1",
     }
 }
 
@@ -108,23 +109,28 @@ export class UIFlags {
     static hosted = args.hosted
     static gamepad = args.gamepad
     static webcam = args.webcam
+    static connect = args.connect
     static consoleinsights = args.consoleinsights
     static devTools = args.devTools
+    static transient = args.transient
 }
 
 // defeat react fast-refresh
 function createBus(): JDBus {
     const worker =
         typeof window !== "undefined" &&
+        Flags.webUSB &&
+        UIFlags.connect &&
         new Worker(withPrefix(`/jacdac-worker-${jacdacTsPackage.version}.js`))
     const b = new JDBus(
         [
-            Flags.webUSB && worker && createUSBWorkerTransport(worker),
-            Flags.webSerial && createWebSerialTransport(),
-            Flags.webBluetooth && createBluetoothTransport(),
+            worker && createUSBWorkerTransport(worker),
+            Flags.webSerial && UIFlags.connect && createWebSerialTransport(),
+            Flags.webBluetooth && UIFlags.connect && createBluetoothTransport(),
             args.webSocket && createWebSocketTransport(args.webSocket),
         ],
         {
+            serviceProviderIdSalt: args.frameId,
             parentOrigin: args.parentOrigin,
             client: false,
             dashboard: true,
@@ -139,9 +145,8 @@ function createBus(): JDBus {
     // tslint:disable-next-line: no-unused-expression
     // always start bridge
     if (typeof window !== "undefined") {
-        if (inIFrame())
-            new IFrameBridgeClient(b, args.frameId)
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        new IFrameBridgeClient(b, args.frameId)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ;(<any>window).__jacdacBus = b
     }
 
