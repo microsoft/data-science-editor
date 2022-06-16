@@ -1,7 +1,9 @@
+import { UIFlags } from "../../jacdac/providerbus"
 import useStorage from "./useStorage"
 
 const storage = (() => {
     try {
+        if (UIFlags.transient) return undefined
         return typeof window !== "undefined" && window.sessionStorage
     } catch {
         return undefined

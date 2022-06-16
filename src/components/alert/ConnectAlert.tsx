@@ -8,6 +8,7 @@ import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import { NoSsr } from "@mui/material"
 import ConnectButtons from "../buttons/ConnectButtons"
 import useDevices from "../hooks/useDevices"
+import { UIFlags } from "../../jacdac/providerbus"
 
 function NoSsrConnectAlert(props: {
     serviceClass?: number
@@ -20,7 +21,7 @@ function NoSsrConnectAlert(props: {
     const spec = serviceSpecificationFromClassIdentifier(serviceClass)
 
     // don't show if no transport, some devices
-    if (!transports.length || devices?.length) return null
+    if ((!UIFlags.connect && !transports.length) || devices?.length) return null
 
     return (
         <Box displayPrint="none">

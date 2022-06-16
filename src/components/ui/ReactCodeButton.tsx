@@ -20,6 +20,7 @@ export default function App() {
 }
 `
 const ConnectTsx = `import * as React from "react";
+import { injectDevTools } from "jacdac-ts";
 import { useBus, useChange } from "react-jacdac";
 
 /**
@@ -32,12 +33,15 @@ export default function Connect() {
   const connected = useChange(bus, (_) => _.connected);
   // connect or disconnect in a handler
   const handleConnect = () => (connected ? bus.disconnect() : bus.connect());
+  // inject dev tools window
+  const handleDevTools = () => injectDevTools(bus)
 
   return (
     <div>
         <button onClick={handleConnect}>
-        jacdac {connected ? "disconnect" : "connect"}
+            jacdac {connected ? "disconnect" : "connect"}
         </button>
+        <button onClick={handleDevTools} className="button-clear">dev tools</button>
     </div>
   );
 }
