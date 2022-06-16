@@ -3,14 +3,14 @@ title: EC30 Module Form Factor
 order: 4
 ---
 
-# EC30 Module Form Factor
+# EC30 Device Form Factor
 
 [![EC30 schematics screenshot](./ec30.png)](https://github.com/microsoft/jacdac-ddk/blob/main/ec30/JacdacEc30Template20x20-80-1.0.PDF)
 
-To make it easier for users to recognize Jacdac modules, and for the modules to work with various electro-mechanical
+To make it easier for users to recognize Jacdac devices, and for the devices to work with various electro-mechanical
 and mechanical accessories, we recommend the use of the [EC30 module form factor](https://github.com/microsoft/jacdac-ddk/blob/main/ec30/JacdacEc30Template20x20-80-1.0.PDF).
 In particular, the form factor was designed to make it easier to
-build cheap enclosures for individual modules, and to assemble groups of modules together to make a working device.
+build cheap enclosures for individual devices, and to assemble groups of devices together to make an integrated product.
 
 The EC30 rectangular form factor has one or more _Jacdac edge connectors_ on opposite sides of the PCB, four _mounting
 holes_, and an _orientation notch_ indicating the upper-left of the board (viewed from the top side of the the PCB). There is always at least
@@ -43,6 +43,13 @@ The smallest module is rectangular, with holes spaced 10.0mm in x and 20.0mm in 
 
 Each [Jacdac edge connector](../electro-mechanical#pcb-edge-connector) is 6.6mm wide with clearance on each side to accommodate the cable connector and leave space for a "connector wall". If the Jacdac edge connector is not directly next to another, there should be exactly 2.7mm clearance; if more than one connector are adjacent they should be on a 10.0mm spacing, leaving 3.4mm between them, with exactly 2.7mm clearance on either side.
 
+## User feedback: status LEDs
+
+EC30 Jacdac devices should have at least one status LED indicating [module and bus status](/reference/led-status/). 
+This can be a single color **orange** LED or a three-color RGB LED. The status LED may be disabled by the user to reduce current consumption. RGB LEDs may also put into a mode where the color is controlled by the user.
+
+There should be at least one status LED **on each side of the device** that has edge connectors. The position of the LEDs is in the [Jacdac EC30 specification](https://aka.ms/jacdac-ec30).
+
 ## Mounting hole names, electrical connections, and size
 
 The mounting holes are named and connected as follows:
@@ -64,7 +71,7 @@ The [base prototype board](/devices/microsoft-research/jmbase86v41/) allows to m
 
 ## Outside layers routing keepout
 
-Because the mounting holes and Jacac edge connectors are electrically connected, it is important to define keepouts for other routing.
+Because the mounting holes and Jacdac edge connectors are electrically connected, it is important to define keepouts for other routing.
 In particular, each mounting hold has a 6.0mm diameter keepout, while each edge connector has a rectangular keepout. No copper (except 
 for the mounting hole net) can be in the mounting hole keepout areas to prevent shorts when mounting.
 
@@ -72,10 +79,12 @@ for the mounting hole net) can be in the mounting hole keepout areas to prevent 
 
 The component placement keepout provides clearance for mounting bushes, connector wall, and other mounting features.
 
-## Status LED locations
-
-There should be one status LED on each side that has edge connectors, aligned with the edge connector.
-
 ## Silkscreen marking
 
 The module name should be printed on the top surface of the PCB, to the right of the orientation notch.
+
+## Component layout considerations
+
+We recommend that the ESD diodes that protect JD_DATA and JD_PWR are placed between the Jacdac edge connector and the two mounting holes that carry those signals so they are close to both and provide protection before those nets move further on to the PCB. 
+
+If there are multiple Jacdac edge connectors, especially at opposite ends of the device, we recommend the use of multiple pairs of ESD diodes.
