@@ -88,7 +88,13 @@ many readily-available low-cost single-chip current limiters that operate at up 
 
 Current limiters specify a tolerance on their output current - please ensure that the **maximum** output current does not exceed 100mA or 1A (for low current and high current providers respectively). This often means setting the typical current to a value like 75mA or 900mA, which might result in as little as 50mA or 800mA in some cases. But it is important that the **maximum** current specification is not exceeded.
 
-**Resettable polyfuses are not suitable** for current limiting because they have a relatively large 'on' resistance, a larger threshold current tolerance and do not switch on or off cleanly. This is very confusing for the user. You must use a silicon current limiter.
+It is possible for a high current provider to have a maximum current of any value between 100mA and 1A. For example, a battery pack that is only able to supply 500mA could be used with a 500mA maximum Jacdac power provider.
+
+**Resettable polyfuses are not suitable** for current limiting because they have a relatively large 'on' resistance, a larger threshold current tolerance and do not switch on or off cleanly. This is very confusing for the user. Jacdac devices must use a silicon current limiter.
+
+### Delivering more than 1A
+
+It is not possible to have more than 1A on any one part of the Jacdac bus because **Jacdac cables are only rated up to 1A**. However, it is possible for power providers such as dedicated Jacdac power supplies to have multiple Jacdac connectors each of which separately provides up to 1A.  
 
 ### Bus voltage range
 
