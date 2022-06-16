@@ -5,19 +5,13 @@ order: 1
 
 # Electrical
 
-## User feedback: status LED
-
-All Jacdac modules should have a status LED indicating [module and bus status](/reference/led-status/). 
-This can be a single color orange LED or a three-color RGB LED. The status LED may be disabled by the user to reduce 
-current consumption.  RGB LEDs may also put into a mode where the color is controlled by the user.
-
 ## Signalling
 
-Data transmission occurs on a single wire (JD_DATA) using a half duplex asynchronous serial protocol called 
+Jacdac data transmission occurs on a single wire (JD_DATA) using a half duplex asynchronous serial protocol called 
 [single wire serial](/reference/single-wire-serial/) (SWS).  Data bytes are 10 bits long and are composed 
 of 1 start bit, 8 data bits, and 1 stop bit. Jacdac devices must only communicate at 1 Mbaud 
 and when no data is being transmitted, the bus must read as a logical one. Many MCU UARTs support 
-single-wire half duplex communications,  but if necessesary the UART transmit and receive pins can be 
+single-wire half duplex communications,  but if necessary the UART transmit and receive pins can be 
 connected together externally. The native Jacdac SWS signal uses 3.3V logic where a logical one 
 is nominally 3.3V and a logical zero is nominally 0V.
 
@@ -50,13 +44,15 @@ the Jacdac bus. The current available to the bus must be limited by circuitry in
 and power providers capable of supplying more than 100mA must contain an MCU that implements the 
 Jacdac [power provider service](/services/power/).
 -   **Pure power consumer:** A power consumer always draws power from the Jacdac bus; the bus is 
-its only power source. An absolute maximum current of 1A may be drawn from the bus, but due to power 
+its only power source. Due to power 
 provision tolerance, a single module should draw no more than 900mA. If a device sometimes or always 
 requires more than this it must be implemented as a power independent device or as a power provider.
 -   **Dynamically powered device:** Some Jacdac devices may be able to operate as either a power consumer, 
 power independent device and/or power provider. For example, a device with a bus independent power source 
 may use that power source when it’s available but switch to using the Jacdac bus as a power source otherwise. 
 We refer to these as dynamically powered Jacdac devices.
+
+![Jacdac power provision schemes](./jacdac-power-provision-schemes.png)
 
 ### Overview of Jacdac power sharing
 
