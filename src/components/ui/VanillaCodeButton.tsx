@@ -17,10 +17,11 @@ export default function VanillaCodeButton(props: {
 
         const indexTs = `
 import "milligram";
-import { createWebBus, CONNECTION_STATE, CHANGE } from "jacdac-ts";
+import { createWebBus, injectDevTools, CONNECTION_STATE, CHANGE } from "jacdac-ts";
 ${imports}
 
 const connectEl = document.getElementById("connectbtn") as HTMLButtonElement;
+const devtoolsEl = document.getElementById("devtoolsbtn") as HTMLButtonElement;
 const logEl = document.getElementById("log") as HTMLPreElement;
 const log = (msg: any) => {
   console.log(msg);
@@ -39,6 +40,8 @@ bus.on(CONNECTION_STATE, () => {
 // connect must be triggered by a user interaction
 connectEl.onclick = async () =>
   bus.connected ? bus.disconnect() : bus.connect();
+// inject dev tools window
+devtoolsEl.onclick = () => injectDevTools(bus);
 // we're ready
 log("click connect to start")
 
@@ -50,6 +53,7 @@ ${code}
         <h1>Jacdac ${title || "demo"}</h1>
         <div>
         <button id="connectbtn">connect</button>
+        <button id="devtoolsbtn" class="button-clear">dev tools</button>
         </div>    
 
 ${html}

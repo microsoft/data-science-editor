@@ -138,19 +138,27 @@ export class IFrameBridgeClient extends JDClient {
     }
 
     private registerEvents() {
-        console.debug(`jdiframe: listening for packets`)
-        this.mount(this.bus.subscribe(PACKET_PROCESS, this.postPacket))
-        this.mount(this.bus.subscribe(PACKET_SEND, this.postPacket))
-        this.mount(this.bus.subscribe(DEVICE_ANNOUNCE, this.handleResize))
-        // force compute add blocks button
-        this.mount(this.bus.subscribe(DEVICE_ANNOUNCE, () => this.emit(CHANGE)))
-        this.mount(this.bus.subscribe(REPORT_UPDATE, this.handleReportUpdate))
+        console.debug(
+            `jdiframe: listening for packets ${
+                this.hosted ? "hosted" : "parent"
+            }`
+        )
         window.addEventListener("message", this.handleMessage, false)
         this.mount(() =>
             window.removeEventListener("message", this.handleMessage, false)
         )
 
         if (this.hosted) {
+            this.mount(this.bus.subscribe(PACKET_PROCESS, this.postPacket))
+            this.mount(this.bus.subscribe(PACKET_SEND, this.postPacket))
+            this.mount(this.bus.subscribe(DEVICE_ANNOUNCE, this.handleResize))
+            this.mount(
+                this.bus.subscribe(DEVICE_ANNOUNCE, () => this.emit(CHANGE))
+            )
+            this.mount(
+                this.bus.subscribe(REPORT_UPDATE, this.handleReportUpdate)
+            )
+
             // periodically resize iframe to account for dashboard size changes
             // don't use bus.schedulere here
             const id = setInterval(this.handleResize, 1000)
@@ -159,14 +167,11 @@ export class IFrameBridgeClient extends JDClient {
             const serialid = setInterval(this.handleSerialMessagesUpload, 200)
             this.mount(() => clearInterval(serialid))
 
-            // handle received frame id
-            const frameid = window.location.hash.slice(1)
-            console.debug({ frameid })
             // notify makecode we are ready
             window.parent.postMessage(
                 {
                     type: "ready",
-                    frameid,
+                    frameid: this.frameId,
                 },
                 "*"
             )

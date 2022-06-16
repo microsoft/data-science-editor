@@ -13,11 +13,12 @@
     "settings": {},
     // Add the IDs of extensions you want installed when the container is created.
     "extensions": [
-        "dbaeumer.vscode-eslint",
-        "esbenp.prettier-vscode",
-        "wix.vscode-import-cost",
-        "hediet.vscode-drawio"
-    ],
+		"dbaeumer.vscode-eslint",
+		"esbenp.prettier-vscode",
+		"wix.vscode-import-cost",
+		"hediet.vscode-drawio",
+		"streetsidesoftware.code-spell-checker"
+	],
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
     "forwardPorts": [8080, 8000],
     // Specifies a command that should be run after the container has been created.

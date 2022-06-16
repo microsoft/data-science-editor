@@ -19,7 +19,7 @@ export default function Page() {
             <Dashboard
                 showAvatar={true}
                 showHeader={true}
-                showConnect={true}
+                showConnect={UIFlags.connect}
                 showStartSimulators={true}
                 showStartRoleSimulators={true}
                 showDeviceProxyAlert={true}

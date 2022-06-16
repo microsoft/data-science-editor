@@ -89,7 +89,7 @@ export default function DeviceSpecificationList(props: {
         if (firmwareSources) r = r.filter(spec => spec.firmwareSource)
         if (ec30)
             r = r.filter(
-                spec => isEC30(spec.shape) || spec.tags?.indexOf("ec30") > -1
+                spec => isEC30(spec.shape) || spec.tags?.includes("ec30")
             )
         if (shapes)
             r = r.filter(spec => shapes.some(shape => shape === spec.shape))
@@ -102,7 +102,7 @@ export default function DeviceSpecificationList(props: {
         if (transports?.length)
             r = r.filter(spec => transports.indexOf(spec.transport?.type) > -1)
         if (tags?.length)
-            r = r.filter(spec => spec.tags?.find(tag => tags.includes(tag)))
+            r = r.filter(spec => tags.every(tag => spec.tags?.includes(tag)))
         if (query)
             r = r.filter(spec =>
                 [
