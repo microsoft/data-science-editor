@@ -121,7 +121,7 @@ export default function useMdxComponents() {
             ),
             DeviceSpecificationList: props => (
                 <Suspense>
-                    <DeviceSpecificationList {...props} />
+                    <DeviceSpecificationList sx={{ mb: 2 }} {...props} />
                 </Suspense>
             ),
             JacdaptorImageList: props => (

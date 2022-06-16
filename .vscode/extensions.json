@@ -4,7 +4,7 @@
         "esbenp.prettier-vscode",
         "silvenon.mdx",
         "wix.vscode-import-cost",
-        "gruntfuggly.todo-tree",
-        "hediet.vscode-drawio"
+        "hediet.vscode-drawio",
+        "streetsidesoftware.code-spell-checker"
     ]
 }
