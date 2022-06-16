@@ -32,6 +32,8 @@ const YouTubeButton = lazy(() => import("./youtube/YouTubeButton"))
 const DeviceSpecificationList = lazy(
     () => import("./specification/DeviceSpecificationList")
 )
+const ModuleImageList = lazy(() => import("./home/ModuleImageList"))
+const BrainImageList = lazy(() => import("./home/BrainImageList"))
 const JacdaptorImageList = lazy(() => import("./home/JacdaptorImageList"))
 const EC30Editor = lazy(() => import("./ec30/EC30Editor"))
 const GithubRepositoryCard = lazy(() => import("./github/GithubRepositoryCard"))
@@ -122,6 +124,16 @@ export default function useMdxComponents() {
             DeviceSpecificationList: props => (
                 <Suspense>
                     <DeviceSpecificationList sx={{ mb: 2 }} {...props} />
+                </Suspense>
+            ),
+            ModuleImageList: props => (
+                <Suspense>
+                    <ModuleImageList {...props} />
+                </Suspense>
+            ),
+            BrainImageList: props => (
+                <Suspense>
+                    <BrainImageList {...props} />
                 </Suspense>
             ),
             JacdaptorImageList: props => (

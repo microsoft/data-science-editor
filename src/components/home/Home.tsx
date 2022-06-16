@@ -63,7 +63,7 @@ export default function Home() {
             />
 
             <CenterGrid
-                subtitle2="No hardware? No problem!"
+                subtitle2="Hardware, with or without!"
                 buttonText="Get started now"
                 buttonVariant="link"
                 buttonUrl="/start/"
@@ -100,7 +100,7 @@ export default function Home() {
                 description="Jacdaptors allow Jacdac to integrate with other ecosystems."
                 buttonText="Jacdaptors"
                 buttonVariant="link"
-                buttonUrl="/reference/jacdaptors"
+                buttonUrl="/start/jacdaptors"
                 imageColumns={6}
                 image={
                     <Suspense>
