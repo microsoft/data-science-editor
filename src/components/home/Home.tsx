@@ -239,6 +239,14 @@ export default function Home() {
                     />
                 </Grid>
             </CarouselGrid>
+
+            <CenterGrid
+                subtitle2="Stay informed"
+                buttonText="Read the blog"
+                buttonVariant="link"
+                buttonUrl="/blog/"
+            />
+
         </Grid>
     )
 }
