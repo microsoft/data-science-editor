@@ -4,7 +4,7 @@ import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import useMediaQueries from "../hooks/useMediaQueries"
 import useChange from "../../jacdac/useChange"
 import Button from "../ui/Button"
-import JacdacIcon from "../icons/JacdacIcon"
+import InputIcon from "@mui/icons-material/Input"
 import Suspense from "../ui/Suspense"
 import useBus from "../../jacdac/useBus"
 const ConnectTransportDialog = lazy(
@@ -34,7 +34,7 @@ function DisconnectedButton(props: {
                         onClick={handleConnect}
                         disabled={working}
                     >
-                        <JacdacIcon />
+                        <InputIcon />
                     </IconButtonWithTooltip>
                 </span>
             ) : (
