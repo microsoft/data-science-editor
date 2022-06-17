@@ -40,6 +40,7 @@ module.exports = {
             options: {
                 name: `images`,
                 path: `${__dirname}/jacdac-ts/jacdac-spec/devices`,
+                ignore: [`**/*.json`], 
             },
         },
         {
