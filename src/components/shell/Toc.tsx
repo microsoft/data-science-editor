@@ -89,7 +89,6 @@ function TocListItem(props: {
         if (selected) setExpanded(true)
     }, [selected])
 
-    console.log({ path })
     return (
         <>
             <ListItemButton
