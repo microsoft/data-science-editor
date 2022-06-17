@@ -1,11 +1,12 @@
-import React, { useMemo, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { styled } from "@mui/material/styles"
-import { List, ListItem, Typography, useTheme } from "@mui/material"
-import { Link } from "gatsby-theme-material-ui"
+import { List, ListItem, Typography, useTheme, Collapse } from "@mui/material"
+import { Link, ListItemButton } from "gatsby-theme-material-ui"
 // tslint:disable-next-line: no-submodule-imports
 import ListItemText from "@mui/material/ListItemText"
 import { graphql, useStaticQuery } from "gatsby"
-
+import ExpandMore from "@mui/icons-material/ExpandMore"
+import ChevronRightIcon from "@mui/icons-material/ChevronRight"
 const PREFIX = "Toc"
 
 const classes = {
@@ -74,48 +75,47 @@ function TocListItem(props: {
 }) {
     const { pagePath, entry, level } = props
     const { path, children, name } = entry
-    const [expanded, setExpanded] = useState(true)
     const selected = pagePath === path
-    const sub = level === 1 || !!children?.length
-    const showSub =
-        expanded && sub && !!children?.length && pagePath.startsWith(path)
+    const [expanded, setExpanded] = useState(pagePath.startsWith(path))
+    const hasChildren = !!children?.length
+    const sub = level === 1 || hasChildren
+    const showSub = expanded && sub && hasChildren && pagePath.startsWith(path)
+
     const handleClick = () => {
         if (selected) setExpanded(v => !v)
     }
-    const theme = useTheme()
+
+    useEffect(() => {
+        if (selected) setExpanded(true)
+    }, [selected])
 
     return (
         <>
-            <ListItem
-                component="li"
+            <ListItemButton
+                to={path}
+                onClick={handleClick}
                 selected={selected}
-                key={"tocitem" + path}
-                sx={{ ml: Math.max(0, level - 1) }}
+                sx={{ width: "100%", pl: Math.max(1, level) }}
             >
-                <Link
-                    style={{ color: theme.palette.text.primary }}
-                    to={path}
-                    underline="none"
-                    onClick={handleClick}
-                >
-                    <ListItemText
-                        primary={
-                            <Typography variant={sub ? "button" : "caption"}>
-                                {name}
-                            </Typography>
-                        }
-                    />
-                </Link>
-            </ListItem>
-            {showSub &&
-                children?.map(child => (
-                    <TocListItem
-                        key={child.path}
-                        entry={child}
-                        level={level + 1}
-                        pagePath={pagePath}
-                    />
-                ))}
+                <ListItemText
+                    primary={selected ? <b>{name}</b> : name}
+                    color={selected ? "primary" : undefined}
+                />
+                {hasChildren &&
+                    (showSub ? <ExpandMore /> : <ChevronRightIcon />)}
+            </ListItemButton>
+            <Collapse in={showSub} timeout="auto" unmountOnExit>
+                <List dense className={classes.root}>
+                    {children?.map(child => (
+                        <TocListItem
+                            key={child.path}
+                            entry={child}
+                            level={level + 1}
+                            pagePath={pagePath}
+                        />
+                    ))}
+                </List>
+            </Collapse>
         </>
     )
 }
