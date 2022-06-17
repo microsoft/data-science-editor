@@ -47,13 +47,10 @@ export default function Home() {
                 subtitle="Electronics"
                 description="Jacdac devices are connected via 3-wire cables and PCB edge connectors."
                 image={
-                    <Link
-                        underline="none"
-                        to="/devices/kittenbot/keycapbuttonv10/"
-                    >
+                    <Link underline="none" to="/devices/">
                         <StaticImage
-                            src="./electronics.jpg"
-                            alt="A KittenBot KeyCap button."
+                            src="./connected.jpg"
+                            alt="A micro:bit V2 connected to various modules from KittenBot."
                         />
                     </Link>
                 }
@@ -246,7 +243,6 @@ export default function Home() {
                 buttonVariant="link"
                 buttonUrl="/blog/"
             />
-
         </Grid>
     )
 }
