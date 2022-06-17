@@ -7,7 +7,7 @@ order: 2
 
 ## PCB edge connector
 
-[![Jacdac PCB edge connector technical drawing](./JACDAC_PCB_Edge_Connector_Drawing_JD-PEC-02_rev_05.png)](https://github.com/microsoft/jacdac-ddk/blob/main/connector/JACDAC_PCB_Edge_Connector_Drawing_JD-PEC-02_rev_05.pdf)
+[![Jacdac PCB edge connector technical drawing](./pcbfootprint.png)](https://aka.ms/jacdac-edge-connector)
 
 A PCB edge connector was chosen for Jacdac primarily because it is cheap and easy to implement. The PCB must be 1.6mm ±10% thick from conductor to conductor at the point of the edge connector. It must use gold plated electrical contacts with at least 0.05μm (2μ") gold plating to ensure the contact resistance and mate/unmate cycle lifetime can be met. Electroless nickel immersion gold (ENIG) is acceptable. Thicker gold (e.g. 3μ") will increase the lifetime of the PCB edge connector.
 
@@ -15,7 +15,7 @@ The three electrical contacts are on 1.27mm (0.05”) pitch. The JD_DATA contact
 
 The mechanical mating and umating process relies on two small, unplated slots in the Jacdac PCB edge connector. These should be 0.7mm wide (±0.1mm), i.e. milled with a 0.7mm diameter router. In addition, three plated through-holes are required as part of the Jacdac PCB edge connector to support future extensions of the Jacdac specification. These must be 0.71mm diameter (+0.15/-0.05mm) after plating, with an annular ring of diameter 1.11mm (±0.1mm).
 
-Please refer to the [technical drawing of the Jacdac PCB edge connector](https://github.com/microsoft/jacdac-ddk/blob/main/connector/JACDAC_PCB_Edge_Connector_Drawing_JD-PEC-02_rev_05.pdf) for full details. Note how the Jacdac electrical contacts are shorter on the bottom side of the PCB because they must not connect electrically to the adjacent plated through-holes.
+Please refer to the [technical drawing of the Jacdac PCB edge connector](https://aka.ms/jacdac-edge-connector) for full details. Note how the Jacdac electrical contacts are shorter on the bottom side of the PCB because they must not connect electrically to the adjacent plated through-holes.
 
 There are two optional improvements which provide a better connection. Electroplated 'hard gold' may be used instead of ENIG for the Jacdac contact, and this provides better durability. Also, the end of the Jacdac PCB edge connector can have a bevelled or chamfered edge of between 30° and 60°. This reduces the initial mating force required to attach the mating connector. The PCB manufacturers may require that this is specified manually as an annotation in the gerber files or as a note in a README file. Note that both of these features (hard gold and bevelled edges) are optional.
 
@@ -31,9 +31,9 @@ Jacdac cable assemblies contain three conductors and are terminated at both ends
 
 The first manufacturer of Jacdac cable connectors and cable assemblies is [Dongguan Yuliang Electronics](http://dgyuliang.net/) who are also known by their [Cylconn](http://www.cylconn.com/) brand.
 
-[![Jacdac cable aseembly technical drawing](./JACDAC-Connector-by-Yuliang-2020-11-28-page2.png)](https://github.com/microsoft/jacdac-ddk/blob/main/connector/JACDAC-Connector-by-Yuliang-2020-11-28.pdf)
+[![Jacdac cable assembly technical drawing](./JACDAC-Connector-by-Yuliang-2020-11-28-page2.png)](https://github.com/microsoft/jacdac-ddk/blob/main/connector/JACDAC-Connector-by-Yuliang-2020-11-28.pdf)
 
-[![Jacdac cable aseembly technical drawing](./JACDAC-Connector-by-Yuliang-2020-11-28-page1.png)](https://github.com/microsoft/jacdac-ddk/blob/main/connector/JACDAC-Connector-by-Yuliang-2020-11-28.pdf)
+[![Jacdac cable assembly technical drawing](./JACDAC-Connector-by-Yuliang-2020-11-28-page1.png)](https://github.com/microsoft/jacdac-ddk/blob/main/connector/JACDAC-Connector-by-Yuliang-2020-11-28.pdf)
 
 ## Multiple connectors
 
