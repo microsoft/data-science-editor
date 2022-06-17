@@ -21,7 +21,7 @@ export default function ErrorList() {
     }>(graphql`
         {
             allMdx(
-                filter: { slug: { glob: "reference/errors/**" } }
+                filter: { slug: { glob: "faq/errors/**" } }
                 sort: { fields: slug }
             ) {
                 nodes {
