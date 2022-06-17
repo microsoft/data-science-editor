@@ -60,7 +60,7 @@ export default function Home() {
             />
 
             <CenterGrid
-                subtitle2="Hardware, with or without!"
+                subtitle2="With or without hardware!"
                 buttonText="Get started now"
                 buttonVariant="link"
                 buttonUrl="/start/"
