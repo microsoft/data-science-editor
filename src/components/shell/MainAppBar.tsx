@@ -1,7 +1,7 @@
 import React, { lazy, useContext } from "react"
 import { styled } from "@mui/material/styles"
 import clsx from "clsx"
-import { Hidden, Box } from "@mui/material"
+import { Box } from "@mui/material"
 import AppBar from "@mui/material/AppBar"
 import Toolbar from "@mui/material/Toolbar"
 import Typography from "@mui/material/Typography"
@@ -117,19 +117,17 @@ function MainToolbar() {
                     )}
                 />
             )}
-            <Hidden implementation="css" smDown={true}>
-                <Typography component="h1" variant="h6">
-                    <Link
-                        style={{
-                            color: UIFlags.widget ? "black" : "white",
-                        }}
-                        to="/"
-                        underline="hover"
-                    >
-                        Jacdac
-                    </Link>
-                </Typography>
-            </Hidden>
+            <Typography component="h1" variant="h6">
+                <Link
+                    style={{
+                        color: UIFlags.widget ? "black" : "white",
+                    }}
+                    to="/"
+                    underline="hover"
+                >
+                    Jacdac
+                </Link>
+            </Typography>
             <div className={classes.grow} />
             {Flags.diagnostics && <PacketStats />}
             <Suspense>
