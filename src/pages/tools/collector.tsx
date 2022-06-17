@@ -58,6 +58,11 @@ import useSnackbar from "../../components/hooks/useSnackbar"
 import SimulatorDialogsContext from "../../components/SimulatorsDialogContext"
 import useBus from "../../jacdac/useBus"
 
+export const frontmatter = {
+    title: "Data Collector",
+    description: "Record data from one or many services into files.",
+}
+
 const LIVE_HORIZON = 24
 function createDataSet(
     bus: JDBus,

@@ -104,6 +104,11 @@ function CompanySelect(props: {
     )
 }
 
+export const frontmatter = {
+    title: "Device Registration",
+    description: "Form to submit a new device for the catalog.",
+}
+
 export default function DeviceRegistration() {
     const [device, setDevice] = useLocalStorage<jdspec.DeviceSpec>(
         "jacdac:devicedesigner;2",

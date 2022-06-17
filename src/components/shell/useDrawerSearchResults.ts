@@ -9,6 +9,8 @@ export interface SearchResult {
 
 export function useDrawerSearchResults(_searchQuery: string): SearchResult[] {
     const index = useSearchIndex()
+    const normalizeUrl = (url: string) =>
+        url ? `/${url.replace(/^\//, "").replace(/(\.tsx)?\/?$/, "")}` : url
 
     const [searchQuery] = useDebounce(_searchQuery, 500)
     // debounce duplicate search
@@ -32,7 +34,7 @@ export function useDrawerSearchResults(_searchQuery: string): SearchResult[] {
             id =>
                 <SearchResult>{
                     title: id.title,
-                    url: id.url,
+                    url: normalizeUrl(id.url),
                 }
         )
     }

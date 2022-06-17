@@ -1,6 +1,11 @@
 import React from "react"
 import Flash from "../../components/tools/Flash"
 
+export const frontmatter = {
+    title: "Firmware Updater",
+    description: "Upgrade devices to the latest firmware version.",
+}
+
 export default function Page() {
     return (
         <>

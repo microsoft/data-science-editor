@@ -56,6 +56,11 @@ function DeviceItem(props: {
     )
 }
 
+export const frontmatter = {
+    title: "Device Tester",
+    description: "Validating services in devices. Designed for manual or factory floor testing.",
+}
+
 export default function Page() {
     const [tab, setTab] = useState(0)
     const [proxy, setProxy] = useState(false)

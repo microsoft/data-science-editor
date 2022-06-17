@@ -72,6 +72,7 @@
     "gatsby-source-filesystem": "^4.16.0",
     "gatsby-theme-material-ui": "^5.2.0",
     "gatsby-transformer-csv": "^4.16.0",
+    "gatsby-transformer-javascript-frontmatter": "^4.16.0",
     "gatsby-transformer-json": "^4.16.0",
     "gatsby-transformer-plaintext": "^2.0.0",
     "gatsby-transformer-remark": "^5.16.0",

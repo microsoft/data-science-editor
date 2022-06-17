@@ -40,7 +40,7 @@ module.exports = {
             options: {
                 name: `images`,
                 path: `${__dirname}/jacdac-ts/jacdac-spec/devices`,
-                ignore: [`**/*.json`], 
+                ignore: [`**/*.json`],
             },
         },
         {
@@ -85,6 +85,7 @@ module.exports = {
                 path: `${__dirname}/jacdac-ts/jacdac-spec/traces`,
             },
         },
+        `gatsby-transformer-javascript-frontmatter`,
         `gatsby-theme-material-ui`,
         `gatsby-plugin-react-helmet`,
         `gatsby-plugin-image`,
@@ -171,6 +172,12 @@ module.exports = {
                         body: node => node.rawBody,
                         tags: node => node.frontmatter.tags || "",
                         url: node => node.frontmatter.path || node.fields.slug,
+                    },
+                    JavascriptFrontmatter: {
+                        title: node => node.frontmatter?.title,
+                        description: node => node.frontmatter?.description,
+                        tags: node => node.frontmatter?.tags || "",
+                        url: node => node.frontmatter?.path || node.fields?.slug || node.node?.relativePath,
                     },
                     ServicesJson: {
                         title: node => node.name,

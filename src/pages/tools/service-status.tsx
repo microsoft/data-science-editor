@@ -106,6 +106,11 @@ function ServiceStatusSection(props: {
     )
 }
 
+export const frontmatter = {
+    title: "Service Status",
+    description: "Implementation status of services in clients, tests, firmware.",
+}
+
 export default function Page() {
     const query = useStaticQuery<{
         allMdx: {

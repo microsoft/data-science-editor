@@ -10866,6 +10866,16 @@ gatsby-transformer-csv@^4.16.0:
     "@babel/runtime" "^7.15.4"
     csvtojson "^2.0.10"
 
+gatsby-transformer-javascript-frontmatter@^4.16.0:
+  version "4.16.0"
+  resolved "https://registry.yarnpkg.com/gatsby-transformer-javascript-frontmatter/-/gatsby-transformer-javascript-frontmatter-4.16.0.tgz#0d0b26dc0aaf5ab11a294b2ef0525a3895ff0f4a"
+  integrity sha512-AAx47RmlWkmw6JmDe6x+3RDXSZpNRJGPHoOlW1ZH13ourFW++Vy2XhE7ED9D6YjjmLtwe3Fhjhvun9iJrd1MrQ==
+  dependencies:
+    "@babel/parser" "^7.15.5"
+    "@babel/runtime" "^7.15.4"
+    "@babel/traverse" "^7.15.4"
+    bluebird "^3.7.2"
+
 gatsby-transformer-json@^4.16.0:
   version "4.16.0"
   resolved "https://registry.yarnpkg.com/gatsby-transformer-json/-/gatsby-transformer-json-4.16.0.tgz#9d905367d009683897887b0319d51473869c12f8"

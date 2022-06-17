@@ -4,6 +4,11 @@ import Suspense from "../../components/ui/Suspense"
 import SwitchWithLabel from "../../components/ui/SwitchWithLabel"
 const SilkQRCode = lazy(() => import("../../components/widgets/SilkQrCode"))
 
+export const frontmatter = {
+    title: "Device QR Code Generator",
+    description: "Generating QR codes for various PCB design software.",
+}
+
 export default function DeviceQRCodeGenerator() {
     const [url, setURL] = useState(``)
     const [mirror, setMirror] = useState(false)

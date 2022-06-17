@@ -11,6 +11,11 @@ import {
     useLocationSearchParamString,
 } from "../../components/hooks/useLocationSearchParam"
 
+export const frontmatter = {
+    title: "Device Settings",
+    description: "List and update settings on devices.",
+}
+
 export default function Page() {
     // spin up provider on demand
     useServiceProviderFromServiceClass(SRV_SETTINGS)
@@ -21,7 +26,7 @@ export default function Page() {
 
     return (
         <>
-            <h1>Devices Settings</h1>
+            <h1>Device Settings</h1>
             <p>
                 Configure <Link to="/services/settings/">settings</Link>{" "}
                 services.
