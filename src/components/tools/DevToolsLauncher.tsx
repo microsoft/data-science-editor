@@ -16,7 +16,6 @@ export default function DevToolsLauncher() {
     const handleChange = (ev: ChangeEvent<HTMLInputElement>) =>
         setText(ev.target.value)
     const handleClick = () => window.open(url, "_blank")
-
     const handleEmbed = () =>
         injectDevTools(bus, {
             dashboardUrl: withPrefix("/dashboard/"),
