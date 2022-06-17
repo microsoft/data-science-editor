@@ -81,7 +81,7 @@ In this scenario, as above, one or more [Jacdac PCB edge connectors](/ddk/design
 
 One approach to designing a Jacdaptor for micro:bit V2 is to use a micro:bit edge connector socket that the micro:bit plugs into in order to take power from the micro:bit and connect to pin 12. The micro:bit V2 is limited in the current it can supply to accessories (such as a Jacdaptor), so it's not possible to build a high current [power provider](/ddk/design/electrical/#overview-of-jacdac-power-sharing). As a low current power provider, the [power protocol](/services/power/) does not need to be implemented, so the Jacdaptor does not need its own MCU. It does need a current limiter with auto-retry, and it also needs a DC-DC boost converter to increase the micro:bit's output voltage to reach the [Jacdac bus voltage](/ddk/design/electrical/#bus-voltage-range).
 
-A reference design showing how to implement a micro:bit Jacdaptor as described above is in the Jacdac electronics design repo [here](https://github.com/microsoft/jacdac-ddk/tree/main/electronics/deprecated_form_factor/altium_deprecated/jacdaptor-reference-designs/JacdacMicroBitShieldLP%2029-0.6). Note that the form factor of this design—the board shape and mounting hole details—are deprecated. 
+A reference design showing how to implement a micro:bit Jacdaptor as described above is in the [Jacdac electronics design repository](https://github.com/microsoft/jacdac-ddk/tree/main/electronics/deprecated_form_factor/altium_deprecated/jacdaptor-reference-designs/JacdacMicroBitShieldLP%2029-0.6). Note that the form factor of this design (the board shape and mounting hole details) are deprecated. 
 
 <!--- 
 ## Independent power

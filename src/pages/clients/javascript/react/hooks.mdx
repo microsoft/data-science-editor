@@ -101,7 +101,7 @@ const Position = (props: { service: JDService }) => {
   // the position register returns a 0..1 value
   const positionRegister = useRegister(service, PotentiometerReg.Position);
   // read and decode the value
-  const [position] = useRegisterValue(positionRegister);
+  const [position = 0] = useRegisterValue(positionRegister);
   // display a range
   return <input type="range" min="0" max="100" value={position * 100} />;
 };
@@ -117,7 +117,7 @@ const Position = (props: { service: JDService }) => {
   // the position register returns a 0..1 value
   const positionRegister = useRegister(service, PotentiometerReg.Position);
   // read and decode the value
-  const [position] = useRegisterValue(positionRegister);
+  const [position = 0] = useRegisterValue(positionRegister);
   // display a range
   return <input type="range" min="0" max="100" value={position * 100} />;
 };
