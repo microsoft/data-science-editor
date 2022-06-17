@@ -13,7 +13,7 @@ import SubscriptionsIcon from "@mui/icons-material/Subscriptions"
 import DarkModeContext from "../ui/DarkModeContext"
 import Suspense from "../ui/Suspense"
 import { Link } from "gatsby-theme-material-ui"
-const JacdaptorImageList = lazy(() => import("./JacdaptorImageList"))
+const DeviceImageList = lazy(() => import("../devices/DeviceImageList"))
 
 export default function Home() {
     const { imgStyle } = useContext(DarkModeContext)
@@ -104,7 +104,15 @@ export default function Home() {
                 imageColumns={6}
                 image={
                     <Suspense>
-                        <JacdaptorImageList cols={2} />
+                        <DeviceImageList
+                            ids={[
+                                "kittenbot-jacdaptorformicrobitv2v10",
+                                "microsoft-research-jmspibridgev37v37",
+                                "microsoft-research-jmbrainrp204059v01",
+                            ]}
+                            cols={2}
+                            showName={true}
+                        />
                     </Suspense>
                 }
             />
