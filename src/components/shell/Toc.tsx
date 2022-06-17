@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react"
 import { styled } from "@mui/material/styles"
-import { List, ListItem, Typography, useTheme, Collapse } from "@mui/material"
-import { Link, ListItemButton } from "gatsby-theme-material-ui"
+import { List, Collapse } from "@mui/material"
+import { ListItemButton } from "gatsby-theme-material-ui"
 // tslint:disable-next-line: no-submodule-imports
 import ListItemText from "@mui/material/ListItemText"
 import { graphql, useStaticQuery } from "gatsby"
@@ -89,6 +89,7 @@ function TocListItem(props: {
         if (selected) setExpanded(true)
     }, [selected])
 
+    console.log({ path })
     return (
         <>
             <ListItemButton
