@@ -174,10 +174,12 @@ export default function Home() {
                 description="PCB form factor design system with connected grid-aligned mounting holes to accelerate enclosure fabrication in 3D printing and laser cutting."
                 imageColumns={6}
                 image={
-                    <StaticImage
-                        src="./breadboard.jpg"
-                        alt="A blurry image of the EC30 grid system device"
-                    />
+                    <Link underline="none" to="/ddk/design/ec30/">
+                        <StaticImage
+                            src="./breadboard.jpg"
+                            alt="A blurry image of the EC30 grid system device"
+                        />
+                    </Link>
                 }
                 buttonText="Schematics"
                 buttonVariant="link"
@@ -193,10 +195,12 @@ export default function Home() {
                 buttonUrl="/ddk/"
                 buttonVariant="link"
                 image={
-                    <StaticImage
-                        src="./pcbfootprint.png"
-                        alt="PCB connector footprint"
-                    />
+                    <Link underline="none" to="/ddk/">
+                        <StaticImage
+                            src="./pcbfootprint.png"
+                            alt="PCB connector footprint"
+                        />
+                    </Link>
                 }
             />
 
