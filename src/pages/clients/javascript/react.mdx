@@ -42,7 +42,7 @@ and it also makes sure that the bus keeps refreshing the value of that register.
 
 ```tsx
 // read and decode the value
-const [position] = useRegisterValue<[number]>(positionRegister)
+const [position = 0] = useRegisterValue<[number]>(positionRegister)
 ```
 
 Once you have the value, we generate a HSL color and stuff it into the style of a div...
@@ -65,10 +65,7 @@ const Demo = () => {
   // the position register returns a 0..1 value
   const positionRegister = useRegister(service, PotentiometerReg.Position);
   // read and decode the value
-  const [position] = useRegisterValue<[number]>(positionRegister);
-  // position is undefined if data is unavailable
-  if (position === undefined) return null;
-  // we have a position reading! (between 0 and 1)
+  const [position = 0] = useRegisterValue<[number]>(positionRegister);
   // draw a colored rectangle
   return (
     <div
@@ -92,10 +89,7 @@ const Demo = () => {
   // the position register returns a 0..1 value
   const positionRegister = useRegister(service, PotentiometerReg.Position);
   // read and decode the value
-  const [position] = useRegisterValue<[number]>(positionRegister);
-  // position is undefined if data is unavailable
-  if (position === undefined) return null;
-  // we have a position reading! (between 0 and 1)
+  const [position = 0] = useRegisterValue<[number]>(positionRegister);
   // draw a colored rectangle
   return (
     <div
