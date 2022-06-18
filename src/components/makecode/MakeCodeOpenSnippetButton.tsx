@@ -34,7 +34,7 @@ export default function MakeCodeOpenSnippetButton(props: {
     const handleClick = async () => {
         const md = "\n"
         const target = "microbit"
-        const editor = "https://makecode.microbit.org/beta/"
+        const editor = "https://makecode.microbit.org/"
         const deps = options?.package?.split(",").map(dep => dep.split("=", 2))
         const dependencies =
             toMap(

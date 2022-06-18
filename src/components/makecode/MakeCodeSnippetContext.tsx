@@ -3,7 +3,7 @@ import useLocalStorage from "../hooks/useLocalStorage"
 
 const editors = {
     arcade: "https://arcade.makecode.com/",
-    microbit: "https://makecode.microbit.org/beta/",
+    microbit: "https://makecode.microbit.org/",
     maker: "https://maker.makecode.com/",
 }
 export interface MakeCodeSnippetContextProps {

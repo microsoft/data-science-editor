@@ -5,7 +5,7 @@ import { Link } from "gatsby-theme-material-ui"
 
 export default function MakeCodeGithubImportLink(props: { slug: string }) {
     const { slug } = props
-    const importUrl = `https://makecode.microbit.org/beta#pub:github:${slug}`
+    const importUrl = `https://makecode.microbit.org/#pub:github:${slug}`
 
     return (
         <Link href={importUrl} target="blank" underline="hover" title={"open extension in MakeCode"}>
