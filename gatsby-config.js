@@ -141,7 +141,7 @@ module.exports = {
                               resolve: "gatsby-remark-makecode",
                               options: {
                                   editorUrl:
-                                      "https://makecode.microbit.org/beta",
+                                      "https://makecode.microbit.org/",
                               },
                           },
                     "gatsby-remark-autolink-headers",
