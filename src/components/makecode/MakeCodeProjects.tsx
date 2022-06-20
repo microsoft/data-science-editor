@@ -96,7 +96,7 @@ export default function MakeCodeProjects(props: {
         nodes.map(({ slug, title, description }) => ({
             name: title,
             description,
-            url: withPrefix(slug),
+            url: `https://microsoft.github.io${withPrefix(slug)}`,
             imageUrl: `/static/jacdac/${slug
                 .replace("/clients/makecode/projects/", "")
                 .replace(/\/$/, "")}.jpg`,
