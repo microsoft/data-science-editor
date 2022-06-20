@@ -9,8 +9,9 @@ const EnclosureGenerator = lazy(() => import("../enclosure/EnclosureGenerator"))
 export default function Enclosure(props: {
     shape: jdspec.Shape
     depth?: number
+    showSave?: boolean
 }) {
-    const { shape, depth } = props
+    const { shape, depth, showSave } = props
     const options = DEFAULT_OPTIONS
     const model = useMemo(() => shapeToEC30(shape, depth), [shape, depth])
     if (!model)
@@ -22,6 +23,7 @@ export default function Enclosure(props: {
                 model={model}
                 options={options}
                 hideAfterGenerated={true}
+                showSave={showSave}
             />
         </Suspense>
     )

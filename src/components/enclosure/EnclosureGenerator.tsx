@@ -19,8 +19,15 @@ export default function EnclosureGenerator(props: {
     options?: EnclosureOptions
     color?: string
     hideAfterGenerated?: boolean
+    showSave?: boolean
 }) {
-    const { color = "#888", model, options, hideAfterGenerated } = props
+    const {
+        color = "#888",
+        model,
+        options,
+        hideAfterGenerated,
+        showSave,
+    } = props
     const [working, setWorking] = useState(false)
     const [files, setFiles] = useState<{ name: string; url: string }[]>()
     const gridBreakpoints = useGridBreakpoints(files?.length)
@@ -79,11 +86,13 @@ export default function EnclosureGenerator(props: {
                     <Alert severity="error">{stlError}</Alert>
                 </Grid>
             )}
-            <Grid item>
-                <Suspense>
-                    <EC30Card model={model} showSave={true} />
-                </Suspense>
-            </Grid>
+            {model && (
+                <Grid item>
+                    <Suspense>
+                        <EC30Card model={model} showSave={showSave} />
+                    </Suspense>
+                </Grid>
+            )}
             {files?.map(file => (
                 <Grid item key={file.name} {...gridBreakpoints}>
                     <Suspense>

@@ -54,9 +54,11 @@ import GridHeader from "../../components/ui/GridHeader"
 import { JD_SERVICE_INDEX_CTRL } from "../../../jacdac-ts/src/jdom/constants"
 import ClearIcon from "@mui/icons-material/Clear"
 import { Link } from "gatsby-theme-material-ui"
+import { shapeToEC30 } from "../../components/enclosure/ec30"
 const GithubPullRequestButton = lazy(
     () => import("../../components/buttons/GithubPullRequestButton")
 )
+const EC30Card = lazy(() => import("../../components/ec30/EC30Card"))
 
 const sides = {
     l: "left",
@@ -121,6 +123,7 @@ export default function DeviceRegistration() {
             version: "",
         } as jdspec.DeviceSpec
     )
+    const { id, shape, version, company, repo } = device || {}
     const gridBreakpoints = useGridBreakpoints()
     const devices = useDevices({
         announced: true,
@@ -137,20 +140,20 @@ export default function DeviceRegistration() {
         React.useState<null | HTMLElement>(null)
     const [imageDataURI, setImageDataURI] = useState<string>(undefined)
     const deviceCatalog = useDeviceCatalog()
-    const id = useId()
-    const nameId = id + "-name"
-    const firmwareMenuId = id + "-firmwaremenu"
-    const repoId = id + "-repo"
-    const identifierId = id + "-identifier"
-    const urlId = id + "-url"
-    const descriptionId = id + "-description"
-    const homepageId = id + "-homepage"
-    const hardwareVersionId = id + "-hwversion"
-    const hardwareDesignId = id + "-hwdesign"
-    const firmwareSourceId = id + "-hwsource"
-    const storeLinkId = id + "-store"
-    const connectorId = id + "-connector"
-    const shapeId = id + "-shape"
+    const elid = useId()
+    const nameId = elid + "-name"
+    const firmwareMenuId = elid + "-firmwaremenu"
+    const repoId = elid + "-repo"
+    const identifierId = elid + "-identifier"
+    const urlId = elid + "-url"
+    const descriptionId = elid + "-description"
+    const homepageId = elid + "-homepage"
+    const hardwareVersionId = elid + "-hwversion"
+    const hardwareDesignId = elid + "-hwdesign"
+    const firmwareSourceId = elid + "-hwsource"
+    const storeLinkId = elid + "-store"
+    const connectorId = elid + "-connector"
+    const shapeId = elid + "-shape"
     const specifications = useDeviceSpecifications({
         includeDeprecated: true,
         includeExperimental: true,
@@ -174,16 +177,16 @@ export default function DeviceRegistration() {
         () =>
             unique(
                 specifications
-                    .filter(d => d.company === device.company)
+                    .filter(d => d.company === company)
                     .map(d => d.repo)
                     .filter(repo => !!repo)
             ),
         [device?.company, specifications]
     )
-    const { firmwareBlobs } = useFirmwareBlob(device.repo)
+    const { firmwareBlobs } = useFirmwareBlob(repo)
     const variant = "outlined"
     const companyError =
-        device.company?.length > 64
+        company?.length > 64
             ? "Company is too long (max 64 characters)"
             : undefined
     const nameError =
@@ -204,13 +207,12 @@ export default function DeviceRegistration() {
     const idError =
         !device.id || !device.name
             ? "missing identifier"
-            : specifications.find(dev => dev.id == device.id)
+            : specifications.find(dev => dev.id == id)
             ? "identifer already used"
             : ""
     const imageError = !imageDataURI ? "missing image" : ""
     const versionError =
-        device?.version &&
-        !/^(v\d+\.\d+(\.\d+(\.\d+)?)?\w?)?$/.test(device?.version)
+        version && !/^(v\d+\.\d+(\.\d+(\.\d+)?)?\w?)?$/.test(version)
             ? "Preferred format is vN.N"
             : ""
     const ok =
@@ -221,9 +223,10 @@ export default function DeviceRegistration() {
         !companyError &&
         !versionError
 
-    const route = identifierToUrlPath(device.id)
+    const route = identifierToUrlPath(id)
     const modulePath = ok && `devices/${route}.json`
     const imagePath = ok && `devices/${route}.jpg`
+    const model = useMemo(() => shapeToEC30(shape), [shape])
 
     const handleNameChange = (ev: ChangeEvent<HTMLInputElement>) => {
         device.name = ev.target.value
@@ -694,6 +697,11 @@ export default function DeviceRegistration() {
                         <Typography variant="caption" component="div">
                             Choose the form factor of the PCB if applicable.
                         </Typography>
+                        {model && (
+                            <Suspense>
+                                <EC30Card model={model} />
+                            </Suspense>
+                        )}
                     </PaperBox>
                 </Grid>
                 <GridHeader title="Catalog" />

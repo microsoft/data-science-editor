@@ -106,7 +106,7 @@ export function generateEC30EnclosureModel(
     }
 }
 
-export function shapeToEC30(shape: jdspec.Shape, depth: number) {
+export function shapeToEC30(shape: jdspec.Shape, depth = 7) {
     if (typeof shape === "string") {
         const m = /^ec30_(\d+)x(\d+)_([lrup\d]+)$/.exec(shape)
         if (m) {
