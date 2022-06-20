@@ -81,7 +81,7 @@ export default function EnclosureGenerator(props: {
             )}
             <Grid item>
                 <Suspense>
-                    <EC30Card model={model} />
+                    <EC30Card model={model} showSave={true} />
                 </Suspense>
             </Grid>
             {files?.map(file => (

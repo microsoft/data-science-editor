@@ -6,8 +6,11 @@ import useEC30Model from "./useEC30Model"
 import { useModelDXF, useModelSvg } from "./useModelExports"
 import type { EnclosureModel } from "../../workers/cad/dist/node_modules/enclosurecad"
 
-export default function EC30(props: { model: EnclosureModel }) {
-    const { model: enclosure } = props
+export default function EC30Card(props: {
+    model: EnclosureModel
+    showSave?: boolean
+}) {
+    const { model: enclosure, showSave } = props
     const { grid } = enclosure
     const { width: gw, height: gh, connectors } = grid
 
@@ -22,24 +25,26 @@ export default function EC30(props: { model: EnclosureModel }) {
             <CardContent>
                 <div dangerouslySetInnerHTML={{ __html: svg }} />
             </CardContent>
-            <CardActions>
-                <ChipList>
-                    <Button
-                        variant="outlined"
-                        href={svgUri}
-                        download={"device.svg"}
-                    >
-                        Download SVG
-                    </Button>
-                    <Button
-                        variant="outlined"
-                        href={dxfUri}
-                        download={"box.dxf"}
-                    >
-                        Download DXF
-                    </Button>
-                </ChipList>
-            </CardActions>
+            {showSave && (
+                <CardActions>
+                    <ChipList>
+                        <Button
+                            variant="outlined"
+                            href={svgUri}
+                            download={"device.svg"}
+                        >
+                            Download SVG
+                        </Button>
+                        <Button
+                            variant="outlined"
+                            href={dxfUri}
+                            download={"box.dxf"}
+                        >
+                            Download DXF
+                        </Button>
+                    </ChipList>
+                </CardActions>
+            )}
         </Card>
     )
 }

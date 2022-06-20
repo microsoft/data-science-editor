@@ -594,6 +594,7 @@ export default function DeviceRegistration() {
                         <AddServiceIconButton onAdd={handleServiceAdd} />
                     </PaperBox>
                 </Grid>
+                <GridHeader title="PCB" />
                 <Grid item xs={12}>
                     <PaperBox elevation={1}>
                         <Typography color="inherit">
@@ -661,6 +662,7 @@ export default function DeviceRegistration() {
                         >
                             <MenuItem value="">Unknown shape</MenuItem>
                             {[
+                                "ec30_1x2_l",
                                 "ec30_2x2_l",
                                 "ec30_2x2_lr",
                                 "ec30_3x2_l",

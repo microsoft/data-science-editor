@@ -93,7 +93,7 @@ export default function EC30Editor() {
             </Grid>
             <Grid item xs={12}>
                 <Suspense>
-                    <EC30Card model={model} />
+                    <EC30Card model={model} showSave={true} />
                 </Suspense>
             </Grid>
         </Grid>
