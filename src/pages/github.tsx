@@ -20,7 +20,13 @@ export default function Page() {
                 .
             </p>
             <h2>Videos on Youtube</h2>
-            <p>The [Jacdac channel](https://www.youtube.com/channel/UCDDeOurixeITal31eI4Ga2g) hosts various videos on using Jacdac.</p>
+            <p>
+                The{" "}
+                <a href="https://www.youtube.com/channel/UCDDeOurixeITal31eI4Ga2g">
+                    Jacdac channel
+                </a>{" "}
+                hosts various videos on using Jacdac.
+            </p>
             <h2>Specification and Schematics</h2>
             <GithubRepositoryList
                 repos={["microsoft/jacdac", "microsoft/jacdac-ddk"]}
