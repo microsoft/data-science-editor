@@ -70,11 +70,11 @@ easy to detect, understand and debug.
 
 There are two types of power providers:
 
--   **Low current power providers** may supply up to 100mA at 5V, i.e. 0.5W. This may either be on a single PCB edge connector 
+-   **Low current power providers** may supply up to [I<sub>out(lc)</sub>](/reference/electrical-spec/#power-providers). This may either be on a single PCB edge connector 
 or shared across several PCB edge connectors.
--   **High current power providers** may supply up to 1A at 5V, i.e. 5W. High current hub providers may supply up to 1A per 
+-   **High current power providers** may supply up to [I<sub>out(hc)</sub>](/reference/electrical-spec/#power-providers). High current hub providers may supply up to [I<sub>out(hc)</sub>](/reference/electrical-spec/#power-providers) per 
 Jacdac PCB edge connector. High current Jacdac power providers must contain an MCU that implements the Jacdac [power provider service](/services/power) 
-which ensures that only one such provider is active at any one time. This limits the current available on any one part of the Jacdac bus to 1A.
+which ensures that only one such provider is active at any one time. This limits the current available on any one part of the Jacdac bus to [I<sub>out(hc)</sub>](/reference/electrical-spec/#power-providers).
 
 By default, Jacdac power providers are active (i.e. actively providing power) when they are first connected. 
 This ensures that power is successfully delivered to pure power consumers. The Jacdac [power provider service](/services/power) 
@@ -86,9 +86,9 @@ most likely it will move into power independent operation but it could instead b
 As mentioned above, power providers **must** incorporate current limiting. We recommend the use of one of the 
 many readily-available low-cost single-chip current limiters that operate at up to 5.5V.
 
-Current limiters specify a tolerance on their output current - please ensure that the **maximum** output current does not exceed 150mA or 1A (for low current and high current providers respectively). This often means setting the typical current to a value like 100mA or 900mA, which might result in as little as 75mA or 800mA in some cases. But it is important that the **maximum** current specification is not exceeded.
+Current limiters specify a tolerance on their output current - please ensure that the **maximum** output current does not exceed [I<sub>out(lc)</sub>](/reference/electrical-spec/#power-providers) or [I<sub>out(hc)</sub>](/reference/electrical-spec/#power-providers) (for low current and high current providers respectively). This often means setting the typical current to a value like 100mA or 900mA, which might result in as little as 75mA or 800mA in some cases. But it is important that the **maximum** current specification is not exceeded.
 
-It is possible for a high current provider to have a maximum current of any value between 150mA and 1A. For example, a battery pack that is only able to supply 500mA could be used with a 500mA maximum Jacdac power provider.
+It is possible for a high current provider to have a maximum current of any value between [I<sub>out(lc)</sub>](/reference/electrical-spec/#power-providers) and [I<sub>out(hc)</sub>](/reference/electrical-spec/#power-providers). For example, a battery pack that is only able to supply 500mA could be used with a 500mA maximum Jacdac power provider.
 
 **Resettable polyfuses are not suitable** for current limiting because they have a relatively large 'on' resistance, a larger threshold current tolerance and do not switch on or off cleanly. This is very confusing for the user. Jacdac devices must use a silicon current limiter.
 
@@ -110,16 +110,20 @@ Jacdac requires cabling of at least 26AWG, resulting in a resistance of 160mΩ/m
 
 ### Bus voltage range
 
-The nominal 5V bus voltage and maximum 1A bus current limit allow commonly available USB power delivery parts to be used for Jacdac. In particular, 5V power adapters, 5V power packs, 5V current limiting ICs and 5V DC-DC converters are all commodity items. Note that high current providers do not have to provide 1A, it may for example be cheaper to implement a 500mA power provider.
+The nominal 5V bus voltage and maximum 1A bus current limit allow commonly available USB power delivery parts to be used for Jacdac. In particular, 5V power adapters, 5V power packs, 5V current limiting ICs and 5V DC-DC converters are all commodity items. Note that high current providers do not have to provide [I<sub>out(hc)</sub>](/reference/electrical-spec/#power-providers), it may for example be cheaper to implement a 500mA power provider.
 
-Note that any current flowing through the Jacdac bus will result in a voltage drop between the points of power provision and consumption, and any ground return current will cause a similar voltage drop. At 1A and with a 350mm,116mΩ cable, this results in a 116mV drop on JD_PWR between power provider and power consumer, and another 116mV 'rise' on the GND return path; the power consuming device sees 232mV less than is being provided at the source. Additional hubs and cables will further reduce the margin.
+Note that any current flowing through the Jacdac bus will result in a voltage drop between the points of power provision and consumption, and any ground return current will cause a similar voltage drop. At 1A and with a 350mm, 116mΩ cable, this results in a 116mV drop on JD_PWR between power provider and power consumer, and another 116mV 'rise' on the GND return path; the power consuming device sees 232mV less than is being provided at the source. Additional hubs and cables will further reduce the margin.
 
 ### Power consumers
 
-A power consumer may draw an absolute maximum of 1A from the Jacdac bus, however we recommend a maximum consumption of 900mA given that 1A may not be available due to component tolerances.
+A power consumer may draw a maximum of [I<sub>in(max)</sub>](/reference/electrical-spec/#power-consumers) given that [I<sub>out(hc)</sub>](/reference/electrical-spec/#power-providers) may not be available due to component tolerances.
 
-To accommodate voltage drops, Jacdac devices must be capable of operating when the potential between JD_PWR and GND falls to 3.6V. Since we expect the logic of a Jacdac device to operate at 3.3V (or lower), a low dropout linear regulator is the cheapest and simplest way to regulate JD_PWR to power a device from the bus. Alternatively a DC-DC converter can be used for improved efficiency.
+To accommodate voltage drops, Jacdac devices must be capable of operating when the potential between JD_PWR and GND falls to [V<sub>in(min)</sub>](/reference/electrical-spec/#power-consumers). Since we expect the logic of a Jacdac device to operate at 3.3V (or lower), a low dropout linear regulator is the cheapest and simplest way to regulate JD_PWR to power a device from the bus. Alternatively a DC-DC converter can be used for improved efficiency.
 
 Although some kind of voltage regulation is necessary to ensure that JD_DATA signalling runs at 3.3V, devices may also use unregulated JD_PWR if desired. For example, it will typically be more efficient to power a servo motor or a strip of RGB LEDs directly from JD_PWR. This reduces the amount of current passing through the on-device voltage regulation circuit, which in turn reduces losses and may reduce cost. 
+
+### Jacdac bus brown-outs
+
+Sometimes the Jacdac bus voltage JD_PWR will inevitably brown-out below [V<sub>in(min)</sub>](/reference/electrical-spec/#power-consumers). For example, if the bus is overloaded the power provider's current limiter will either reduce the bus voltage, or will switch it off completely before re-trying. This means that all power consumers must be designed to behave gracefully if they are not supplied with a high enough voltage to operate reliably. MCUs should have brown-out protection and peripherals should fail gracefully in the face of a brownout. 
 
 ---
