@@ -1,4 +1,4 @@
-import { graphql, useStaticQuery } from "gatsby"
+import { graphql, useStaticQuery, withPrefix } from "gatsby"
 import React, { useMemo } from "react"
 import { ReactNode } from "react"
 import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/jdom/spec"
@@ -83,18 +83,25 @@ export default function MakeCodeProjects(props: {
             if (c) return c
             return l.fields.slug.localeCompare(r.fields.slug)
         })
-        return nodes
+        return nodes.map(({ fields, frontmatter, headings }) => ({
+            slug: fields.slug,
+            title: frontmatter.title || headings?.[0]?.value,
+            description: frontmatter.description,
+            services: frontmatter.services,
+        }))
     }, [serviceNames.join(",")])
 
-    return (
-        <PageLinkList
-            header={header}
-            nodes={nodes.map(({ fields, frontmatter, headings }) => ({
-                slug: fields.slug,
-                title: frontmatter.title || headings?.[0]?.value,
-                description: frontmatter.description,
-                services: frontmatter.services,
-            }))}
-        />
+    console.log(
+        `makecode gallery`,
+        nodes.map(({ slug, title, description }) => ({
+            name: title,
+            description,
+            url: withPrefix(slug),
+            imageUrl: `/static/jacdac/${slug
+                .replace("/clients/makecode/projects/", "")
+                .replace(/\/$/, "")}.jpg`,
+        }))
     )
+
+    return <PageLinkList header={header} nodes={nodes} />
 }
