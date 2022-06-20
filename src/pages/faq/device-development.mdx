@@ -1,0 +1,33 @@
+---
+title: Device Development
+order: 200
+---
+
+## Can I make existing hardware work with Jacdac?
+
+Yes! Jacdac is designed to be interoperable with a wide range of existing platforms via [Jacdaptors](/reference/jacdaptors/). 
+
+In some cases it's possible to use Jacdac without any new hardware at all! See how Jacdac provides a [software-only](/ddk/microbit/software-only-accessory) solution for existing micro:bit accessories.
+
+## How can I add the Jacdac edge connector to my hardware?
+
+We've tried to make it easy to add Jacdac. 
+
+Firstly, you need to add the [PCB edge connector](https://aka.ms/jacdac-edge-connector). Your PCB **must be 1.6mm thick** and use gold plating to use Jacdac; if this is not possible then consider mounting a small Jacdac PCB onto your main PCB. There are more details [here](/ddk/design/electro-mechanical/#pcb-edge-connector).
+
+Next, you need to add the Jacdac interface circuitry. At the very least there are a few passive components/diodes, see [here](/ddk/design/electrical/#signalling). The filtered Jacdac bus data line, JD_POWER_MCU, must be connected to a microcontroller (MCU) that's running the Jacdac protocol. If your hardware already has an MCU, this may be sufficient; but it's also possible to add an MCU. Either way, we have [reference firmware implementations](/ddk/firmware/) of the Jacdac protocol. 
+
+You need to decide on the best [power supply scheme](/ddk/design/electrical/#power-supply-sharing), depending on the user experience you want to deliver. Jacdac modules that don't draw a lot of current are probably best implemented as pure power consumers, requiring only a cheap voltage regulator. Jacdac brains, that users are likely to plug other Jacdac modules into, are probably best as power providers—which means they need to have a simple current limiter circuit. 
+
+## Can I modify an existing Jacdac device design?
+
+Yes! We provide a number of Jacdac device hardware and firmware reference designs with an open license for the community to use as-is and modify. If you do this, we'd love it if you share the things you build so that others may benefit in turn—but don't feel obligated to do this.
+
+## Is Jacdac limited to 1A of current?
+
+No. 
+
+Any single cable, and as a result, any single section of the Jacdac bus, **is** limited to 1A. This means that individual devices can only consume up to 1A from the Jacdac bus—and in fact we further restrict this to 900mA do accommodate component tolerances. 
+
+However, there are two ways of providing more than 1A to Jacdac devices. Firstly, devices may have an [independent power source](/ddk/design/electrical/#power-supply-sharing-options) that is not limited by the capabilities of the Jacdac bus. But this may not be as convenient as using Jacdac bus power, so the second approach we support is using a Jacdac power supply that provides up to 1A **per connector**. In this case, there is still a 900mA limit for any one Jacdac device that's powered from the bus, but it's possible to have many devices like this in the same Jacdac solution—just plug each one into a separate connector on the power supply. 
+

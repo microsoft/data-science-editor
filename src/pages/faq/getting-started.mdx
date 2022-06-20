@@ -1,0 +1,17 @@
+---
+title: Getting Started
+order: 1
+---
+
+## Where can I get Jacdac devices?
+
+Please visit the Jacdac [device catalog](/devices) to find what devices are available and where to purchase them.
+
+## Can I use Jacdac without hardware?
+
+Yes! Jacdac provides web-based simulators for most of its [services](/services),
+and has been integrated with web-based programming environments like [MakeCode](/clients/makecode).
+
+## What happens if I short-circuit the Jacdac pins?
+
+We require that all Jacdac power supplies have current limiting built into them. This means that any short-circuits on the Jacdac bus are automatically detected and cause power delivery to be suspended. Within less than a second of the short-circuit being removed, power will automatically resume. This interruption of power will, of course, cause Jacdac devices that are powered from the bus to switch off for a short time; they will then reset when power resumes.
