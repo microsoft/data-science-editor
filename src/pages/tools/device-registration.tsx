@@ -486,7 +486,7 @@ export default function DeviceRegistration() {
                         fullWidth={true}
                         label="Device Catalog URL"
                         variant={variant}
-                        value={`https://microsoft.github.io/jacdac-docs/${identifierToUrlPath(
+                        value={`https://microsoft.github.io/jacdac-docs/devices/${identifierToUrlPath(
                             device.id
                         )}/`}
                     />
