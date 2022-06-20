@@ -221,7 +221,7 @@ export default function DeviceRegistration() {
         !companyError &&
         !versionError
 
-    const route = device.id?.split("-").join("/")
+    const route = identifierToUrlPath(device.id)
     const modulePath = ok && `devices/${route}.json`
     const imagePath = ok && `devices/${route}.jpg`
 
