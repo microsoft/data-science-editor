@@ -31,3 +31,15 @@ Any single cable, and as a result, any single section of the Jacdac bus, **is** 
 
 However, there are two ways of providing more than 1A to Jacdac devices. Firstly, devices may have an [independent power source](/ddk/design/electrical/#power-supply-sharing-options) that is not limited by the capabilities of the Jacdac bus. But this may not be as convenient as using Jacdac bus power, so the second approach we support is using a Jacdac power supply that provides up to 1A **per connector**. In this case, there is still a 900mA limit for any one Jacdac device that's powered from the bus, but it's possible to have many devices like this in the same Jacdac solution—just plug each one into a separate connector on the power supply. 
 
+## Why is the current limited to ~50mA on some micro:bit Jacdaptors?
+
+There are two reasons why the current is limited to a relatively low value on the micro:bit Jacdaptor:
+
+### Firstly, for safety.
+ We don’t ever want more than 1A flowing through the bus due to the rating on the cable, and if we had simply had 1A available on power supplies then users could easily exceed this by connecting more than one together. We have two solutions to this:
+1. We limit power supplies to a smaller current. Users can still exceed 1A, but they’d need to connect a lot of supplies together so we think it’s unlikely in practice. The maximum value of this smaller current is I<sub>out-lc</sub>, see [here](/reference/electrical-spec/#power-providers). Low-cost current limiting chips often have a large tolerance, and one of the parts that's used on Jacdaptors is 75mA ±25mA, so in some cases current might be limited to 50mA.
+2.	We do allow power supplies to supply 1A each (I<sub>out-hc</sub>), but in that case we put intelligence into them so they can detect if more than one is plugged in, in which case all but one of them stop supplying power. This requires firmware running the [power service](https://microsoft.github.io/jacdac-docs/services/power/) in the power supply. In the case of the micro:bit Jacdaptor this would add cost because an MCU would need to be added.
+
+### Secondly, to meet the micro:bit accessory specification
+
+The [micro:bit accessory specification limits how much power](https://tech.microbit.org/hardware/powersupply/) is taken from its edge connector. Supplying more than 100mA onto the Jacdac bus at ~4V would take too much power at 3.3V from a micro:bit V2 edge connector, hence the reason to limit power to 100mA.
