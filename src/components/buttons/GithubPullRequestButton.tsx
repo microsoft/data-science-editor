@@ -199,10 +199,10 @@ export default function GithubPullRequestButton(
                             https://github.com/settings/tokens/new
                         </Link>{" "}
                         and generate a new personal access token with{" "}
-                        <b>
-                            <code>repo</code>
-                        </b>
-                        scope.
+                        <code>repo</code>
+                        scope. If your organization requires single-sign-on
+                        (SSO), you need authorize your token for Microsoft (
+                        <code>Configure SSO</code> button).
                     </ApiKeyAccordion>
                 </DialogContent>
                 <DialogActions>
