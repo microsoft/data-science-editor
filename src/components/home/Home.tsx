@@ -104,7 +104,7 @@ export default function Home() {
                         <DeviceImageList
                             ids={[
                                 "kittenbot-jacdaptorformicrobitv2v10",
-                                "microsoft-research-jmspibridgev37v37",
+                                "microsoft-research-jmspibridgev37",
                                 "microsoft-research-jmbrainrp204059v01",
                             ]}
                             cols={2}
