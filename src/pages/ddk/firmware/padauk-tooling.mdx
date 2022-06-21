@@ -1,0 +1,52 @@
+---
+title: PADAUK MCU Tooling
+order: 9
+---
+
+# PADAUK MCU Tooling
+
+This page describes one way of setting up and using the [PADAUK MCU programmer PDK5S-P-003](http://www.padauk.com.tw//upload/WRITERmanual/PDK5S-P-003-UM_EN_V006_20181030.pdf) for use with [Jacdac](https://aka.ms/jacdac) modules. This unit may be [available from LCSC](https://lcsc.com/product-detail/Emulator-Programmer_PADAUK-Tech-5S-P-003_C263009.html); if it doesn't show as being in stock it may be worthwhile contacting LCSC about availability.
+
+## Setting up the programmer
+
+Under the cover on the bottom of the Padauk PDK5S-P-003 programmer make sure that no jumpers are fitted **apart from JP2**. All eight positions of JP2 should have jumpers fitted. This means that the programmer is configured such that a standard 16 pin MCU package would be fitted at the top of the ZIF socket. 
+
+## Set up the programming environment
+
+Install [the IDE](http://www.padauk.com.tw/en/technical/index.aspx?kind=26) (not the 'writer'). You have to give permission to proceed with the installation. Ignore any request to send information to an FAE.
+
+Connect the programmer to your PC over USB and make sure it's powered and switched on.
+
+## Load a Padauk project into the IDE
+
+Get one of the [example PADAUK projects](https://github.com/microsoft/jacdac-padauk) for [Jacdac](https://aka.ms/jacdac). Then follow these steps:
+
+- Start the PADAUK application, "FPPA IDE". Ignore any request to send information to an FAE.
+- File -> Open Project... and open the relevant `.PDK` file. (Do not use File -> Open...)
+- Make any necessary edits to the code; in particular if building a Jacdac project then make sure RELEASE is defined to be 1 if you want automatic serial number generation (see below). 
+- Execute -> Build (or F7). In the case of Jacdac projects, you may get errors reporting "The code is overlapped" and "The calculation of Stack maybe error"—but you can ignore these.
+- Execute -> Writer (The programmer must be connected and powered on. The IDE may automatically update its firmware.)
+- Load File... and select the same `.PDK` file that you opened and compiled before. (If the programmer is not connected/powered on then 'Load File...' will do nothing. The IDE may automatically update its firmware. If there is **any red text** in the dialog then it probably didn't work properly.)
+- Convert... (Click it again if it doesn't work first time.)
+- To Package... and open the same `.PDK` file. The correct part for your project should be showing in the 'IC' field; for Jacdac modules this may well be PFS122. If not then enter the correct part number.
+- Select [x] On-board Program. This should change the pin mapping on the right so that only pins 1, 3, 4, 13 & 16 are 'red'.
+- Make sure Package is set to S16A.
+- Select [OK] and save the new `.PDK` file (which will have the same filename as before but with _S16A appended).
+
+This has set the programmer up so it's ready for programming. 
+
+## Program the MCU
+
+Connect the correct pins of the programmer to the programming header/test points on the Jacdac module—the display on the programmer says if it's connected. 
+
+Then press the button on the programmer to program, and watch the programmer display to monitor programming progress. When it's done you can disconnect, and  the programmer will update the status to 'remove'. To program another module just connect it and press the button agaon; there is no need to do anything in the IDE from this point.  
+
+## Generate a rolling unique ID for Jacdac modules
+
+Jacdac devices must all have a unique ID programmed into them. Since the low-end PADAUK processors do not have unique IDs programmed into them a manufacturing time, and are not able to generate one and self-program it on first boot, they must have a unique ID programmed in at the same time as the firmware is loaded. 
+
+Jacdac projects use a PC executable called `genid.exe` (in the `genid/dist/` folder) to generate a rolling ID. In order to work, `genid.exe` may need to be copied into the same folder as the `.PRJ` file. As long as the project **contains the following line** 
+```
+#define RELEASE 1
+```
+(not commented out) Padauk's program writer application will automatically use `genid.exe` every time a new module is programmed and store the IDs that have been generated and used in the current programming session in a file called `rolling.txt` in that same folder.

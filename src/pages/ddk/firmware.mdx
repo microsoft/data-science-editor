@@ -7,7 +7,7 @@ order: 10
 
 ## Getting started: module firmware
 
-To date, modules are created for the following MCU families:
+To date, we have firmware support for modules created using the following MCU families:
 
 * **STM32**: [start here](https://github.com/microsoft/jacdac-stm32x0/blob/main/README.md) to build firmware for the STM 32-bit series of MCUs
 * **PADUAK (8-bit)**: [start here](https://github.com/microsoft/jacdac-padauk) to build firmware for the PADUAK 8-bit series of MCUs
@@ -16,41 +16,8 @@ See the bottom of this page if you have questions or need to file an issue.
 
 ## Github repository list
 
-The Jacdac stack is layered, top-down, into Github repos as follows:
+The Jacdac stack is layered, top-down, into [several Github repos](./github-repos).
 
-### Service and device catalogs
+## Flashing firmware onto hardware
 
--   [Jacdac spec](https://github.com/microsoft/jacdac) repository has pre-generated
-    [C header files](https://github.com/microsoft/jacdac/tree/main/dist/c)
-    (JSON, TypeScript, and Python are also available there)
-
-### Platform-independent firmware
-
--   [Jacdac-C](https://github.com/microsoft/jacdac-c) contains a platform-agnostic C99 implementation
-    of the Jacdac protocol and a number of [I2C drivers](https://github.com/microsoft/jacdac-c/tree/main/drivers)
-    and [servers](https://github.com/microsoft/jacdac-c/tree/main/services);
-    this repo includes the Jacdac spec repo as submodule
-
-### Platform-specific firmware
--   [Jacdac for STM32x0](https://github.com/microsoft/jacdac-stm32x0) contains a platform-specific implementation of
-    the Single Wire Serial protocol, as well as I2C, SPI, pins, etc. that are used by Jacdac-C;
-    this works with STM32G0xx and STM32F0xx series of MCUs
-
--   [Jacdac for PADAUK](https://github.com/microsoft/jacdac-padauk) contains
-    an implementation of [a few servers](https://github.com/microsoft/jacdac-padauk/tree/main/services)
-    for a low-cost PADAUK family of 8-bit MCUs (they are $0.03-$0.08 depending on capabilities in normal circumstances)
-
--   [Jacdac for ESP32](https://github.com/microsoft/jacdac-esp32) contains an implementation of WiFi and TCP (with TLS) servers,
-    but is a bit outdated; we're working on supporting ESP32 as a brain
-
-### Module template
--   [Jacdac module template](https://github.com/microsoft/jacdac-module-template) is a simplified repo to get started with a new module based on STM3260
- 
-### MSR prototypes
-
--   [Jacdac MSR Modules](https://github.com/microsoft/jacdac-msr-modules) ties all of the above together
-    to provide firmware for a number of prototype modules that we have made;
-    you would normally [use that repo as a template](https://github.com/microsoft/jacdac-stm32x0/blob/main/README.md)
-    for your own firmware
-
-
+We often use a simple [JacConnect programming header](./jac-connect) footprint for attaching a programmer to a Jacdac device. We have also documented how to use JacConnect with [ARM MCU tooling](./arm-tooling) and with [PADAUK MCU tooling](./padauk-tooling).
