@@ -1,15 +1,15 @@
-import React, { useMemo, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { Octokit } from "@octokit/core"
 import { createPullRequest } from "octokit-plugin-create-pull-request/pkg"
 import { Button, Link } from "gatsby-theme-material-ui"
 import {
+    AlertTitle,
     Dialog,
     DialogActions,
     DialogContent,
     DialogContentText,
     Grid,
     TextField,
-    Typography,
 } from "@mui/material"
 import GitHubIcon from "@mui/icons-material/GitHub"
 import ApiKeyAccordion from "../ApiKeyAccordion"
@@ -20,6 +20,7 @@ import { anyRandomUint32 } from "../../../jacdac-ts/src/jdom/random"
 import useSnackbar from "../hooks/useSnackbar"
 import useAnalytics from "../hooks/useAnalytics"
 import useSessionStorage from "../hooks/useSessionStorage"
+import Alert from "../ui/Alert"
 
 export type GithubPullRequestFiles = Record<
     string,
@@ -44,7 +45,10 @@ export default function GithubPullRequestButton(
         description,
         head,
     } = props
-    const [, setResponse] = useState(undefined)
+    const [response, setResponse] = useState<{
+        number: number
+        html_url: string
+    }>(undefined)
     const [busy, setBusy] = useState(false)
     const { trackEvent } = useAnalytics()
     const [githubToken, setGithubToken] = useSessionStorage("githubtoken")
@@ -52,10 +56,16 @@ export default function GithubPullRequestButton(
     const [confirmDialog, setConfirmDialog] = useState(false)
     const bodyId = useId()
     const [body, setBody] = useState(description)
-    const headSuffix = useMemo(() => toHex(anyRandomUint32(2)), [])
 
+    const prUrl = response?.html_url
+    const prId = response?.number
     const disabled =
         busy || !body || !title || !head || !files || !Object.keys(files).length
+
+    // clear PR id if files change
+    useEffect(() => {
+        setResponse(undefined)
+    }, [JSON.stringify(files)])
 
     const handleOpenConfirm = () => setConfirmDialog(true)
     const handleCloseConfirm = () => setConfirmDialog(false)
@@ -63,9 +73,11 @@ export default function GithubPullRequestButton(
         setBody(ev.target.value)
 
     const handleCreatePullRequest = async () => {
+        const headSuffix = toHex(anyRandomUint32(2))
         enqueueSnackbar("creating pull request...")
         setBusy(true)
         setConfirmDialog(false)
+        setResponse(undefined)
         try {
             trackEvent("github.pullrequest.start")
             const MyOctokit = Octokit.plugin(createPullRequest)
@@ -92,22 +104,6 @@ export default function GithubPullRequestButton(
             trackEvent("github.pullrequest.status", { status: result.status })
             if (result.status === 201) {
                 setResponse(result.data)
-                const url = result.data.html_url
-                const id = result.data.number
-                enqueueSnackbar(
-                    <Typography component="span">
-                        Pull Request{" "}
-                        <Link
-                            target="_blank"
-                            rel="no-referrer no-follower"
-                            href={url}
-                        >
-                            #{id}
-                        </Link>{" "}
-                        created...
-                    </Typography>,
-                    "success"
-                )
             } else {
                 setResponse(undefined)
             }
@@ -146,6 +142,34 @@ export default function GithubPullRequestButton(
                         {label}
                     </Button>
                 </Grid>
+                {prId !== undefined && (
+                    <Grid item xs={12}>
+                        <Alert severity="success">
+                            <AlertTitle>
+                                Pull Request{" "}
+                                <Link
+                                    target="_blank"
+                                    rel="no-referrer no-follower"
+                                    href={prUrl}
+                                >
+                                    #{prId}
+                                </Link>{" "}
+                                created
+                            </AlertTitle>
+                            The Jacdac team will review your submission and
+                            contact you for further details. If you need to edit
+                            or add comments, open the{" "}
+                            <Link
+                                target="_blank"
+                                rel="no-referrer no-follower"
+                                href={prUrl}
+                            >
+                                pull request on GitHub
+                            </Link>{" "}
+                            and post them there.
+                        </Alert>
+                    </Grid>
+                )}
             </Grid>
             <Dialog open={confirmDialog} onClose={handleCloseConfirm}>
                 <DialogContent>
