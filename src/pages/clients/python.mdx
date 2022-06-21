@@ -90,14 +90,14 @@ Finally, we create a loop with a couple `sleep` command to
 toggle between blue and red.
 
 ```python
-speed = 64
-brightness = 128
+led.brightness = 0.5
+# fade between colors
 while True:
     # blue
-    led.animate(0, 0, brightness, speed)
+    led.set_all(0xff0000)
     sleep(1)
-    # red
-    led.animate(brightness, 0, 0, speed)
+    # off
+    led.set_all(0x000000)
     sleep(1)
 ```
 
@@ -110,78 +110,13 @@ from time import sleep
 
 bus = Bus()
 led = LedClient(bus, "led")
-
-speed = 64
-brightness = 128
+led.brightness = 0.5
+# fade between colors
 while True:
     # blue
-    led.animate(0, 0, brightness, speed)
+    led.set_all(0x0000ff)
     sleep(1)
     # off
-    led.animate(0, 0, 0, speed)
+    led.set_all(0x000000)
     sleep(1)
-```
-
-### Slidy Blinky
-
-Let's add a [slider](/services/potentiometer) to control the brightness of the LED.
-The potentiometer can come in various physical shapes but we can handle it all
-through the `PotentiometerClient` client.
-
-```python
-from jacdac.potentiometer import PotentiometerClient
-
-slider = PotentiometerClient(bus, "slider")
-```
-
-In the `while`, we will read the `position` of the slider into a variable.
-
-```python
-    while True:
-        position = slider.position
-        # position is a float in [0..100] or None
-```
-
-We need to be a bit careful about the `position` value, as it may be `None` if no sensor
-is connected to the Jacdac bus. To handle this case, we add `or 0.` to default to the 0 value.
-
-```python
-    while True:
-        position = slider.position or 0.
-        # position is a float in [0..100]!
-```
-
-From here, we can remap the `position` float in `[0, 100]` to a `int` in `[0, 255]` for the color brightness:
-
-```python
-    while True:
-        position = slider.position or 0.
-        brightness = int(position / 100 * 255)
-```
-
-All together the slidy blinky sample looks like
-
-```python
-from jacdac import Bus
-from jacdac.led import LedClient
-from jacdac.potentiometer import PotentiometerClient
-from time import sleep
-
-def main():
-    bus = Bus()
-    led = LedClient(bus, "led")
-    slider = PotentiometerClient(bus, "slider")
-    speed = 16
-    # fade between colors
-    while True:
-        position = slider.position or 0.
-        brightness = int(position / 100. * 255.)
-        # blue
-        led.animate(0, 0, brightness, speed)
-        sleep(1)
-        # off
-        led.animate(brightness, 0, 0, speed)
-        sleep(1)
-
-main()
 ```
