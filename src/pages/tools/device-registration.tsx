@@ -65,6 +65,12 @@ const sides = {
     r: "right",
 }
 
+function useCompanies() {
+    const specifications = useDeviceSpecifications()
+    const companies = unique(specifications.map(dev => dev.company)).sort()
+    return companies
+}
+
 function CompanySelect(props: {
     error?: string
     onValueChange?: (name: string) => void
@@ -72,11 +78,7 @@ function CompanySelect(props: {
     setCompany: (c: string) => void
 }) {
     const { company, setCompany, error } = props
-    const specifications = useDeviceSpecifications()
-    const companies = useMemo(
-        () => unique(specifications.map(dev => dev.company)).sort(),
-        [specifications]
-    )
+    const companies = useCompanies()
     const id = useId()
     const companyId = id + "-company"
 
@@ -131,6 +133,7 @@ export default function DeviceRegistration() {
         ignoreInfrastructure: true,
         productIdentifier: true,
     })
+    const companies = useCompanies()
     const updateDevice = () => {
         const dev = clone(device)
         dev.id = generateDeviceSpecificationId(dev)
@@ -332,6 +335,7 @@ export default function DeviceRegistration() {
             services: [],
             productIdentifiers: [],
             repo: "",
+            description: "",
         }
 
         const controlService = dev.service(JD_SERVICE_INDEX_CTRL)
@@ -345,14 +349,28 @@ export default function DeviceRegistration() {
             .services()
             .filter(srv => !isInfrastructure(srv.specification))
             .map(srv => srv.serviceClass)
-        const description = (descrReg.stringValue || "").split(/\s+/g)
-        d.company = description.shift() || ""
-        d.name = description.join(" ")
-        d.description = ""
-        d.name?.replace(/\wv\d+.\d+\w/, m => {
-            device.version = m
-            return ""
-        })
+        const description = descrReg.stringValue || ""
+        const m = /^(.+)\s+(\d+)\s+(v[.\w]+)$/.exec(description)
+        if (m) {
+            d.designIdentifier = m[2]
+            d.version = m[3]
+            const company = companies.find(c => m[1].startsWith(c))
+            if (company) {
+                d.company = company
+                d.name = m[1].slice(company.length + 1).trim()
+            } else {
+                d.company = m[1].split(/\s+/gi)[0]
+                d.name = m[1].split(/\s+/gi)[0].slice(1)
+            }
+        } else {
+            const ds = description.split(/\s+/g)
+            d.company = ds.shift() || ""
+            d.name = ds.join(" ")
+            d.name?.replace(/\wv\d+.\d+\w/, m => {
+                device.version = m
+                return ""
+            })
+        }
 
         setDevice(d)
     }
