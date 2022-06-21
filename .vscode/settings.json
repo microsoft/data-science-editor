@@ -27,16 +27,18 @@
         "editor.defaultFormatter": "jock.svg"
     },
     "cSpell.words": [
+        "Blinky",
         "Jacdac",
-        "jdom",
         "Jacdaptor",
         "Jacdaptors",
+        "jdom",
         "keepout",
         "keepouts",
         "microbit",
         "microcontroller",
         "microcontrollers",
         "Schottky",
+        "Slidy",
         "UART"
     ]
 }
