@@ -8,7 +8,6 @@ order: 3
 **Beta: the python layer is still in pre-release mode and beta quality.**
 
 Jacdac provides a Python (3.7+) client package to run programs on Raspberry Pi.
-Python projects can also be developed on desktop Python using the developer tools.
 
 ## PyPi Package
 
@@ -18,26 +17,21 @@ Add [jacdac-python](https://pypi.org/project/jacdac-python/) to your project usi
 python -m pip install --upgrade --user jacdac-python
 ```
 
-## Connecting to hardware
-
-The transport used to connect to the Jacdac device typically varies a lot depending on the platform and the usage scenario.
-
-### JacHAT
+## Connecting to Raspberry Pi
 
 A JacHAT is a Jacdac adapter for the Raspberry Pi that provides an SPI bridge to the Jacdac bus.
 
 <DeviceSpecificationList tags={["adapter", "pi"]} />
+
+## Developing on Linux/Windows/MacOs
+
+Python projects can be developed on desktop Python using the [developer tools](/clients/python/devtools/).
+However, connecting to hardware from desktop Python is not supported yet (USB, BLE, Serial possible in the future).
 
 ## What's next?
 
 -   [Getting started](/clients/python/getting-started/)
 -   [Projects](/clients/python/projects/)
 -   [Developer Tools](/clients/python/devtools/)
--   [GitHub project](https://github.com/microsoft/jacdac-python)
 -   [API Reference](https://jacdac-python.readthedocs.io/)
-
-## Where can I get a device?
-
-Browse the [device catalog](/devices) or check out some of the modules below.
-
-<DeviceSpecificationList buyNow={true} company="KittenBot" />
+-   [GitHub project](https://github.com/microsoft/jacdac-python)
