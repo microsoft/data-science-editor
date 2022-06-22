@@ -8,42 +8,7 @@ description: A blinking blue light, yay!
 
 # Blinky
 
-Let's build a blinking LED light project, assuming you have a [LED](/services/led) module.
-
-The first step is to start a Jacdac `Bus` instance. The bus instance will automatically try to connect to the [developer tools](/clients/python/devtools);
-but there are many other configuration options (see also how to use configuration files).
-
-```python
-from jacdac import Bus
-
-bus = Bus()
-```
-
-Next we create an LED service client (and assign it the `led` role).
-The client will allow us to change the color on the LED module.
-
-```python
-from jacdac.led import LedClient
-
-led = LedClient(bus, "led")
-```
-
-Finally, we create a loop with a couple `sleep` command to
-toggle between blue and red.
-
-```python
-led.brightness = 0.5
-# fade between colors
-while True:
-    # blue
-    led.set_all((0,0,255))
-    sleep(1)
-    # off
-    led.set_all((0,0,0))
-    sleep(1)
-```
-
-All together, we get:
+A blinking blue light
 
 ```python filename=blinky.py copy
 from jacdac import Bus

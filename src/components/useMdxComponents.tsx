@@ -40,6 +40,8 @@ const GithubRepositoryCard = lazy(() => import("./github/GithubRepositoryCard"))
 const MakeCodeOpenSnippetButton = lazy(
     () => import("./makecode/MakeCodeOpenSnippetButton")
 )
+const FaqPageList = lazy(() => import("./faq/FaqPageList"))
+const ErrorList = lazy(() => import("./faq/ErrorList"))
 
 export default function useMdxComponents() {
     const theme = useTheme()
@@ -161,6 +163,16 @@ export default function useMdxComponents() {
             MakeCodeOpenSnippetButton: props => (
                 <Suspense>
                     <MakeCodeOpenSnippetButton {...props} />
+                </Suspense>
+            ),
+            FaqPageList: props => (
+                <Suspense>
+                    <FaqPageList {...props} />
+                </Suspense>
+            ),
+            ErrorList: props => (
+                <Suspense>
+                    <ErrorList {...props} />
                 </Suspense>
             ),
         }),

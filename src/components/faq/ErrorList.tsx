@@ -1,7 +1,7 @@
 import React from "react"
 import { graphql, useStaticQuery } from "gatsby"
-import { groupBy } from "../../jacdac-ts/src/jdom/utils"
-import PageLinkList from "./ui/PageLinkList"
+import { groupBy } from "../../../jacdac-ts/src/jdom/utils"
+import PageLinkList from "../ui/PageLinkList"
 
 export default function ErrorList() {
     const data = useStaticQuery<{
@@ -12,6 +12,7 @@ export default function ErrorList() {
                 }
                 frontmatter: {
                     title?: string
+                    order?: number
                 }
                 headings: {
                     value: string
@@ -30,6 +31,7 @@ export default function ErrorList() {
                     }
                     frontmatter {
                         title
+                        order
                     }
                     headings {
                         value
@@ -50,6 +52,7 @@ export default function ErrorList() {
         .map(node => ({
             slug: node.fields?.slug,
             title: node.frontmatter.title || node.headings?.[0].value,
+            order: node.frontmatter.order,
         }))
 
     const groups = groupBy(nodes, node => node.slug.split("/", 3)[2] || "")

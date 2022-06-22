@@ -1,13 +1,11 @@
-import { graphql, useStaticQuery } from "gatsby"
 import React from "react"
-import { ReactNode } from "react"
+import { graphql, useStaticQuery } from "gatsby"
 import PageLinkList, { PageQuery, pageQueryToNodes } from "../ui/PageLinkList"
 
-export default function BlogEntries(props: { header?: ReactNode }) {
-    const { header } = props
+export default function FaqPageList() {
     const query = useStaticQuery<PageQuery>(graphql`
         {
-            allMdx(filter: { fields: { slug: { glob: "/blog/*" } } }) {
+            allMdx(filter: { slug: { glob: "faq/*" } }) {
                 nodes {
                     excerpt
                     fields {
@@ -15,9 +13,8 @@ export default function BlogEntries(props: { header?: ReactNode }) {
                     }
                     frontmatter {
                         title
-                        order
                         description
-                        date
+                        order
                     }
                     headings {
                         value
@@ -27,5 +24,5 @@ export default function BlogEntries(props: { header?: ReactNode }) {
         }
     `)
 
-    return <PageLinkList header={header} nodes={pageQueryToNodes(query)} />
+    return <PageLinkList nodes={pageQueryToNodes(query)} />
 }

@@ -26,6 +26,7 @@ export default function MakeCodeExtensions(props: {
                     frontmatter: {
                         title?: string
                         description?: string
+                        order?: number
                     }
                     headings: {
                         value: string
@@ -49,6 +50,7 @@ export default function MakeCodeExtensions(props: {
                         frontmatter {
                             title
                             description
+                            order
                         }
                         headings {
                             value
@@ -66,7 +68,6 @@ export default function MakeCodeExtensions(props: {
             nodes = nodes.filter(node =>
                 serviceNames.some(n => node.fields.slug.indexOf(n) > -1)
             )
-        nodes = nodes.sort((l, r) => l.fields.slug.localeCompare(r.fields.slug))
         return nodes
     }, [serviceNames.join(",")])
 
@@ -76,6 +77,7 @@ export default function MakeCodeExtensions(props: {
             nodes={nodes.map(({ fields, frontmatter, headings }) => ({
                 slug: fields.slug,
                 title: frontmatter.title || headings?.[0]?.value,
+                order: frontmatter.order,
             }))}
         />
     )
