@@ -55,10 +55,10 @@ python -m jacdac.devtools
 
 Once the devtools server is running, you should be able to navigate to the local web server and see a dashboard.
 
-- open [http://localhost:8082/](http://localhost:8082/)
+-   open [http://localhost:8082/](http://localhost:8082/)
 
 If you wish to access the dashboard from another computer,
-use the ``--internet`` and the web server will bind to **all** network interface.
+use the `--internet` and the web server will bind to **all** network interface.
 
 ```
 python -m jacdac.devtools --internet
@@ -103,7 +103,7 @@ while True:
 
 All together, we get:
 
-```python
+```python filename=blinky.py
 from jacdac import Bus
 from jacdac.led import LedClient
 from time import sleep

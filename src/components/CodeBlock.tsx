@@ -137,8 +137,9 @@ export default function CodeBlock(props: {
     downloadText?: string
     actions?: ReactNode
     url?: string
+    filename?: string
 }) {
-    const { children, className, ...rest } = props
+    const { children, filename, className, ...rest } = props
     const language = className?.replace(/language-/, "") || ""
     switch (language) {
         case "trace":
@@ -183,6 +184,15 @@ export default function CodeBlock(props: {
                 >
                     {source}
                 </HighlightedCode>
+            )
+        }
+        case "python": {
+            return (
+                <HighlightedCode
+                    {...props}
+                    downloadName={filename}
+                    downloadText={!!filename && children}
+                />
             )
         }
         default:
