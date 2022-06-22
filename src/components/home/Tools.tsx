@@ -64,7 +64,10 @@ export default function Tools() {
                         {dashboards.map(device => (
                             <Grid item key={device.id} xs={12} sm={6}>
                                 <Suspense>
-                                    <DashboardDevice device={device} />
+                                    <DashboardDevice
+                                        variant="icon"
+                                        device={device}
+                                    />
                                 </Suspense>
                             </Grid>
                         ))}
@@ -131,11 +134,10 @@ export default function Tools() {
 
             <CenterGrid
                 subtitle2="More web tools"
-                buttonText= "Read more"
+                buttonText="Read more"
                 buttonVariant="link"
-                buttonUrl= "/tools/more"
+                buttonUrl="/tools/more"
             />
-
         </Grid>
     )
 }
