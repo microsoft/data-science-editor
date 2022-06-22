@@ -31,92 +31,13 @@ A JacHAT is a Jacdac adapter for the Raspberry Pi that provides an SPI bridge to
 
 <DeviceSpecificationList tags={["adapter", "pi"]} />
 
-### USB/Serial
+## What's next?
 
-Connection to USB or serial device is not yet supported.
+-   [Developer Tools](/clients/python/devtools)
+-   [Projects](/clients/python/projects)
 
-## Getting started
+## Where can I get a device?
 
-Let's learn about Jacdac by creating a couple small projects.
+Browse the [device catalog](/devices) or check out some of the modules below.
 
-### Developer tools
-
-The first step of a Jacdac project is to create a bus which will handle all the communication and
-the management of the service client.
-Since the bus communicates with hardware, configuring it may vary **a lot** whether you are on a Raspberry Pi or a desktop computer.
-
-To provide a consistent experience, we recommend using the Jacdac developer tools.
-The developer tools rely on the browser WebUSB/WebSerial/WebBluetooth to connect to the hardware devices and uses a local web socket server
-to pipe the packets to the Python SDK. This also allows to debug your Python code in a virtual machine with no hardware access, like GitHub codespaces.
-
-```
-python -m jacdac.devtools
-```
-
-Once the devtools server is running, you should be able to navigate to the local web server and see a dashboard.
-
--   open [http://localhost:8082/](http://localhost:8082/)
-
-If you wish to access the dashboard from another computer,
-use the `--internet` and the web server will bind to **all** network interface.
-
-```
-python -m jacdac.devtools --internet
-```
-
-### Blinky
-
-Let's build a blinking LED light project, assuming you have a [LED](/services/led) module.
-
-The first step is to start a Jacdac `Bus` instance. The bus instance will automatically try to connect to the devtools;
-but there are many other configuration options (see also how to use configuration files).
-
-```python
-from jacdac import Bus
-
-bus = Bus()
-```
-
-Next we create an LED service client (and assign it the `led` role).
-The client will allow us to change the color on the LED module.
-
-```python
-from jacdac.led import LedClient
-
-led = LedClient(bus, "led")
-```
-
-Finally, we create a loop with a couple `sleep` command to
-toggle between blue and red.
-
-```python
-led.brightness = 0.5
-# fade between colors
-while True:
-    # blue
-    led.set_all(0xff0000)
-    sleep(1)
-    # off
-    led.set_all(0x000000)
-    sleep(1)
-```
-
-All together, we get:
-
-```python filename=blinky.py
-from jacdac import Bus
-from jacdac.led import LedClient
-from time import sleep
-
-bus = Bus()
-led = LedClient(bus, "led")
-led.brightness = 0.5
-# fade between colors
-while True:
-    # blue
-    led.set_all(0x0000ff)
-    sleep(1)
-    # off
-    led.set_all(0x000000)
-    sleep(1)
-```
+<DeviceSpecificationList buyNow={true} company="KittenBot" />

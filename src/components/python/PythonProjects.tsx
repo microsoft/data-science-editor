@@ -5,7 +5,7 @@ import { serviceSpecificationFromClassIdentifier } from "../../../jacdac-ts/src/
 import { arrayify, unique } from "../../../jacdac-ts/src/jdom/utils"
 import PageLinkList from "../ui/PageLinkList"
 
-export default function MakeCodeProjects(props: {
+export default function PythonProjects(props: {
     header?: ReactNode
     serviceClass?: number | number[]
     serviceName?: string
@@ -41,7 +41,7 @@ export default function MakeCodeProjects(props: {
         {
             allMdx(
                 filter: {
-                    fields: { slug: { glob: "/clients/makecode/projects/*" } }
+                    fields: { slug: { glob: "/clients/python/projects/*" } }
                 }
             ) {
                 edges {

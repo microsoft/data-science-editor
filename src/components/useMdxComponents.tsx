@@ -16,6 +16,7 @@ import Alert from "./ui/Alert"
 import { AlertTitle } from "@mui/material"
 
 const Video = lazy(() => import("./ui/Video"))
+const PythonProjects = lazy(() => import("./python/PythonProjects"))
 const MakeCodeProjects = lazy(() => import("./makecode/MakeCodeProjects"))
 const MakeCodeExtensionFooter = lazy(
     () => import("./makecode/MakeCodeExtensionFooter")
@@ -98,6 +99,11 @@ export default function useMdxComponents() {
             DeviceImage: props => (
                 <Suspense>
                     <DeviceImage {...props} />
+                </Suspense>
+            ),
+            PythonProjects: props => (
+                <Suspense>
+                    <PythonProjects {...props} />
                 </Suspense>
             ),
             MakeCodeProjects: props => (
