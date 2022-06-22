@@ -110,8 +110,7 @@ module.exports = {
                         : {
                               resolve: "gatsby-remark-makecode",
                               options: {
-                                  editorUrl:
-                                      "https://makecode.microbit.org/",
+                                  editorUrl: "https://makecode.microbit.org/",
                               },
                           },
                     "gatsby-remark-autolink-headers",
@@ -140,8 +139,7 @@ module.exports = {
                         : {
                               resolve: "gatsby-remark-makecode",
                               options: {
-                                  editorUrl:
-                                      "https://makecode.microbit.org/",
+                                  editorUrl: "https://makecode.microbit.org/",
                               },
                           },
                     "gatsby-remark-autolink-headers",
@@ -168,7 +166,8 @@ module.exports = {
                 resolvers: {
                     Mdx: {
                         title: node => node.frontmatter.title,
-                        description: node => node.frontmatter.description,
+                        description: node =>
+                            node.frontmatter.description || node.excerpt,
                         body: node => node.rawBody,
                         tags: node => node.frontmatter.tags || "",
                         url: node => node.frontmatter.path || node.fields.slug,
@@ -177,7 +176,10 @@ module.exports = {
                         title: node => node.frontmatter?.title,
                         description: node => node.frontmatter?.description,
                         tags: node => node.frontmatter?.tags || "",
-                        url: node => node.frontmatter?.path || node.fields?.slug || node.node?.relativePath,
+                        url: node =>
+                            node.frontmatter?.path ||
+                            node.fields?.slug ||
+                            node.node?.relativePath,
                     },
                     ServicesJson: {
                         title: node => node.name,
