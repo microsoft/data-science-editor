@@ -26,6 +26,7 @@ const TraceSnippet = lazy(() => import("./trace/TraceSnippet"))
 const VanillaCodeButton = lazy(() => import("./ui/VanillaCodeButton"))
 const ReactCodeButton = lazy(() => import("./ui/ReactCodeButton"))
 const P5JSCodeButton = lazy(() => import("./ui/P5JSCodeButton"))
+const CopyButton = lazy(() => import("./ui/CopyButton"))
 
 function HighlightedCode(props: {
     children: string
@@ -35,6 +36,7 @@ function HighlightedCode(props: {
     downloadText?: string
     actions?: ReactNode
     url?: string
+    copy?: boolean
 }) {
     const {
         children,
@@ -44,6 +46,7 @@ function HighlightedCode(props: {
         downloadText,
         actions,
         url,
+        copy,
     } = props
     const { darkMode } = useContext(DarkModeContext)
     const language = className?.replace(/language-/, "") || ""
@@ -88,6 +91,13 @@ function HighlightedCode(props: {
                                 </IconButton>
                             </Tooltip>
                         </Link>
+                    )}
+                    {copy && (
+                        <div style={{ float: "right" }}>
+                            <Suspense>
+                                <CopyButton onCopy={async () => children} />
+                            </Suspense>
+                        </div>
                     )}
                     {codeSandbox?.tsx && (
                         <div style={{ float: "right" }}>
@@ -138,6 +148,7 @@ export default function CodeBlock(props: {
     actions?: ReactNode
     url?: string
     filename?: string
+    copy?: boolean
 }) {
     const { children, filename, className, ...rest } = props
     const language = className?.replace(/language-/, "") || ""

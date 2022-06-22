@@ -48,7 +48,7 @@ export default function CopyButton(props: {
             console.debug(e)
             if (mounted()) setCopied(false)
         } finally {
-            await delay(1000)
+            await delay(2000)
             if (mounted()) setCopied(undefined)
         }
     }
@@ -76,7 +76,7 @@ export default function CopyButton(props: {
             onClick={disabled ? undefined : handleClick}
         >
             {copied === true ? (
-                <DoneIcon />
+                <DoneIcon color="success" />
             ) : copied === false ? (
                 <ReportProblemIcon />
             ) : (
