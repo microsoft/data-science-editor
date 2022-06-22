@@ -1,8 +1,8 @@
-import { graphql, useStaticQuery } from "gatsby"
 import React from "react"
+import { graphql, useStaticQuery } from "gatsby"
 import PageLinkList, { pageQueryToNodes } from "../ui/PageLinkList"
 
-export default function DotNetProjects() {
+export default function FaqPageList() {
     const query = useStaticQuery<{
         allMdx: {
             nodes: {
@@ -11,6 +11,7 @@ export default function DotNetProjects() {
                 }
                 frontmatter: {
                     title?: string
+                    description?: string
                     order?: number
                 }
                 headings: {
@@ -21,9 +22,7 @@ export default function DotNetProjects() {
     }>(graphql`
         {
             allMdx(
-                filter: {
-                    fields: { slug: { glob: "/clients/dotnet/projects/*" } }
-                }
+                filter: { slug: { glob: "faq/*" } }
             ) {
                 nodes {
                     fields {
@@ -31,6 +30,7 @@ export default function DotNetProjects() {
                     }
                     frontmatter {
                         title
+                        description
                         order
                     }
                     headings {
@@ -40,5 +40,6 @@ export default function DotNetProjects() {
             }
         }
     `)
+
     return <PageLinkList nodes={pageQueryToNodes(query)} />
 }

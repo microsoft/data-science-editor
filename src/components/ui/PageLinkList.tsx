@@ -9,6 +9,8 @@ export interface PageLinkListItemProps {
     title: string
     description?: string
     services?: string
+    order?: number
+    date?: string
 }
 
 function PageLinkListItem(props: PageLinkListItemProps) {
@@ -56,17 +58,59 @@ function PageLinkListItem(props: PageLinkListItemProps) {
     )
 }
 
+export function pageQueryToNodes(data: {
+    allMdx: {
+        nodes: {
+            fields: {
+                slug: string
+            }
+            frontmatter: {
+                title?: string
+                description?: string
+                order?: number
+                date?: string
+            }
+            headings?: {
+                value: string
+            }[]
+        }[]
+    }
+}) {
+    const nodes = data?.allMdx?.nodes.map(
+        ({ frontmatter, fields, headings }) => ({
+            slug: fields?.slug,
+            title: frontmatter.title || headings?.[0].value,
+            description: frontmatter.description,
+            order: frontmatter.order,
+            date: frontmatter.date,
+        })
+    )
+    return nodes
+}
+
 export default function PageLinkList(props: {
     header?: ReactNode
     nodes: PageLinkListItemProps[]
 }) {
     const { header, nodes } = props
+    const sorted = nodes?.sort((l, r) => {
+        const ld = Date.parse(l?.date) || 0
+        const rd = Date.parse(r?.date) || 0
+        const dc = ld - rd
+        if (dc) return dc
+
+        const lo = Number(l?.order) || 50
+        const ro = Number(r?.order) || 50
+        const c = lo - ro
+        if (c) return c
+        return l.slug.localeCompare(r.slug)
+    })
     return (
-        !!nodes?.length && (
+        !!sorted?.length && (
             <>
                 {header}
                 <List>
-                    {nodes?.map(node => (
+                    {sorted?.map(node => (
                         <PageLinkListItem key={node.slug} {...node} />
                     ))}
                 </List>

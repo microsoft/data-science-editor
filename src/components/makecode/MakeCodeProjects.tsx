@@ -75,19 +75,12 @@ export default function MakeCodeProjects(props: {
                     n => node.frontmatter.services?.indexOf(n) > -1
                 )
             )
-        // order nodes
-        nodes = nodes.sort((l, r) => {
-            const lo = Number(l.frontmatter?.order) || 50
-            const ro = Number(r.frontmatter?.order) || 50
-            const c = lo - ro
-            if (c) return c
-            return l.fields.slug.localeCompare(r.fields.slug)
-        })
         return nodes.map(({ fields, frontmatter, headings }) => ({
             slug: fields.slug,
             title: frontmatter.title || headings?.[0]?.value,
             description: frontmatter.description,
             services: frontmatter.services,
+            order: frontmatter.order,
         }))
     }, [serviceNames.join(",")])
 
