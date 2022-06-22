@@ -23,6 +23,7 @@ import useProxy from "../../jacdac/useProxy"
 import useBusWithMode from "../../jacdac/useBusWithMode"
 import useLocalStorage from "../../components/hooks/useLocalStorage"
 import DeviceTestExporter from "../../components/testdom/DeviceTestExporter"
+import { Flags } from "../../../jacdac-ts/src/jdom/flags"
 
 const FACTORY_MODE_STORAGE_KEY = "jacdac_device_tester_factory"
 
@@ -38,7 +39,6 @@ function DeviceItem(props: {
         _ =>
             _ &&
             !_.firmwareUpdater &&
-            productIdentifier &&
             ({
                 productIdentifier,
                 factory,
@@ -58,7 +58,8 @@ function DeviceItem(props: {
 
 export const frontmatter = {
     title: "Device Tester",
-    description: "Validating services in devices. Designed for manual or factory floor testing.",
+    description:
+        "Validating services in devices. Designed for manual or factory floor testing.",
 }
 
 export default function Page() {
@@ -78,7 +79,7 @@ export default function Page() {
     const handleSetFactory = (checked: boolean) => setFactory(checked)
     const handleSetProxy = (checked: boolean) => setProxy(checked)
     const devices = useDevices({
-        physical: true,
+        physical: !Flags.diagnostics,
         announced: true,
         ignoreInfrastructure: true,
     })
