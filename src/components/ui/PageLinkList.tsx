@@ -58,9 +58,10 @@ function PageLinkListItem(props: PageLinkListItemProps) {
     )
 }
 
-export function pageQueryToNodes(data: {
+export type PageQuery = {
     allMdx: {
         nodes: {
+            excerpt?: string
             fields: {
                 slug: string
             }
@@ -75,12 +76,21 @@ export function pageQueryToNodes(data: {
             }[]
         }[]
     }
-}) {
+}
+
+function trimPrefix(s: string, p: string) {
+    if (p && s?.startsWith(p)) return s.substring(p.length)
+    return s
+}
+
+export function pageQueryToNodes(data: PageQuery) {
     const nodes = data?.allMdx?.nodes.map(
-        ({ frontmatter, fields, headings }) => ({
+        ({ excerpt, frontmatter, fields, headings }) => ({
             slug: fields?.slug,
             title: frontmatter.title || headings?.[0].value,
-            description: frontmatter.description,
+            description:
+                frontmatter.description ||
+                trimPrefix(excerpt, headings?.[0].value),
             order: frontmatter.order,
             date: frontmatter.date,
         })

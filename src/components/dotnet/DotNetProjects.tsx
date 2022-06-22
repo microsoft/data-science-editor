@@ -1,24 +1,9 @@
 import { graphql, useStaticQuery } from "gatsby"
 import React from "react"
-import PageLinkList, { pageQueryToNodes } from "../ui/PageLinkList"
+import PageLinkList, { PageQuery, pageQueryToNodes } from "../ui/PageLinkList"
 
 export default function DotNetProjects() {
-    const query = useStaticQuery<{
-        allMdx: {
-            nodes: {
-                fields: {
-                    slug: string
-                }
-                frontmatter: {
-                    title?: string
-                    order?: number
-                }
-                headings: {
-                    value: string
-                }[]
-            }[]
-        }
-    }>(graphql`
+    const query = useStaticQuery<PageQuery>(graphql`
         {
             allMdx(
                 filter: {
@@ -26,6 +11,7 @@ export default function DotNetProjects() {
                 }
             ) {
                 nodes {
+                    excerpt
                     fields {
                         slug
                     }
