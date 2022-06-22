@@ -9,7 +9,7 @@ order: 4
 
 All Jacdac devices should observe the following signalling voltages:
 
-| | min | typ | max | unit |
+| parameter | min | typ | max | unit |
 | :-- | :-- | :-- | :-- | :-- |
 | V<sub>IH</sub> on JD_DATA | 3.0 | 3.3 | 3.5 | V |
 | V<sub>IL</sub> on JD_DATA | 0.0 | 0.0 | 0.3 | V |
@@ -21,34 +21,41 @@ All Jacdac devices should observe the following signalling voltages:
 
 Power consuming devices should be designed so that when consuming power from the Jacdac bus they reliably operate under and observe the following conditions:
 
-| | min | typ | max | unit |
-| :-- | :-- | :-- | :-- | :-- |
-| V<sub>in</sub> on JD_PWR | 3.5 | - | 5.5 | V | 
-| I<sub>in</sub> | - | - | 900 | mA |
+| parameter | name  | min | typ | max | unit |
+| :-- | :-- | :-- | :-- | :-- | :-- |
+| Voltage range on JD_PWR over which a power consumer must reliably operate | V<sub>in_pc</sub> | 3.5 | - | 5.5 | V | 
+| Current a power consumer can draw from JD_PWR |I<sub>in_pc</sub> | - | - | 900 | mA |
 
 ### Power providers
 
 Power providing devices should be designed so that when providing power to the Jacdac bus they reliably operate under and observe the following conditions:
 
-| | min | nominal | max | unit |
-| :-- | :-- | :-- | :-- | :-- |
-| V<sub>out</sub> on JD_PWR for a given I<sub>max</sub> | 3.6 + (0.9 x I<sub>max</sub>) | 5.0 | 5.5 | V | 
-| V<sub>out</sub> on JD_PWR for I<sub>max</sub> = 110mA | 3.7 | 5.0 | 5.5 | V | 
-|  V<sub>out</sub> on JD_PWR for I<sub>max</sub> = 1A | 4.5 | 5.0 | 5.5 | V | 
-| I<sub>out(lc)</sub> (low current provider) | - | 100 | 120 | mA |
-| I<sub>out(hc)</sub>  (high current provider) | - | 900 |1000 | mA |
+| parameter | name | min | nominal | max | unit |
+| :-- | :-- | :-- | :-- | :-- | :-- |
+| The voltage a power provider must output on JD_PWR for a given I<sub>out(max)</sub> | V<sub>out_pp</sub> |  V<sub>in_pc(min)</sub> + V<sub>margin</sub> + (R<sub>cable(max)</sub> x 2 x I<sub>out(max)</sub>) | 5.0 | 5.5 | V | 
+| V<sub>out</sub> on JD_PWR for I<sub>out(max)</sub> = 120mA | V<sub>out_pp_120mA</sub> | 3.7 | 5.0 | 5.5 | V | 
+|  V<sub>out</sub> on JD_PWR for I<sub>out(max)</sub> = 1A |  V<sub>out_pp_1A</sub> | 4.3 | 5.0 | 5.5 | V | 
+| Current from low current provider | I<sub>out_lc</sub> | - | 100 | 120 | mA |
+| Current from high current provider |  I<sub>out_hc</sub>| - | 900 |1000 | mA |
 
 ### Cables
-| | min | max | unit |
-| :-- | :-- | :-- | :-- |
-| Conductor resistance | - | 160 | mΩ/m |
-| Contact resistance | - | 30 | mΩ |
-| Cable assembly resistance for a given cable length, L<sub>cable</sub> | - | (150 x L<sub>cable</sub>) + 60 | mΩ |
-| Cable assembly resistance, L<sub>cable</sub> = 100mm| - | 76 | mΩ |
-| Cable assembly resistance, L<sub>cable</sub> = 250mm| - | 116 | mΩ |
-| Cable assembly resistance, L<sub>cable</sub> = 1000mm| - | 220 | mΩ |
-| Combined cable assembly resistance for reliable operation under all conditions | - | 350 | mΩ |
+| parameter | name | min | max | unit |
+| :-- | :-- | :-- | :-- | :-- |
+| Conductor resistance | R<sub>cond</sub> | - | 160 | mΩ/m |
+| Contact resistance | R<sub>cont</sub> | - | 30 | mΩ |
+| Cable assembly resistance for a given cable length, L<sub>cable</sub> | R<sub>cable</sub>| - | (R<sub>cond(max)</sub> x L<sub>cable</sub>) + (2 x R<sub>cont(max)</sub>) | mΩ |
+| Cable assembly resistance for L<sub>cable</sub> = 100mm</sub> | R<sub>cable_100mm | - | 76 | mΩ |
+| Cable assembly resistance for L<sub>cable</sub> = 250mm | R<sub>cable_250mm</sub> | - | 100 | mΩ |
+| Cable assembly resistance for L<sub>cable</sub> = 1000mm | R<sub>cable_1m</sub> | - | 220 | mΩ |
+| Combined cable assembly resistance for reliable operation under all conditions\* | R<sub>cable(max)</sub> | - | 350 | mΩ |
 
-Remember to double the cable assembly resistance figures above when considering 'round-trip resistance' because the return current path will introduce a similar voltage drop as the out-going current path.
+\* Remember to double the cable assembly resistance figures above when considering 'round-trip resistance' because the return current path will introduce a similar voltage drop as the out-going current path.
+
+
+### System-wide characteristics
+
+| parameter | name | value | unit |
+| :-- | :-- | :-- | :-- |
+| Voltage margin  | V<sub>margin</sub> | 100 | mV |
 
 
