@@ -25,3 +25,4 @@ and SDKs have various retry policies.
 So any glitch on the line (think hot-plugging!) or collision is no big deal (unlike in say I2C where a glitch can lock the bus until power off).
 Collisions can happen when two devices start transmitting (initial low pulse) at "the same time", that is within a few clock
 cycles of each other; typical collision rate on a highly utilized bus is around 0.1%.
+The 220Ω series resistors prevent the colliding devices from driving the bus too hard in opposite directions.
