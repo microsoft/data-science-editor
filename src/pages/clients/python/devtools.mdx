@@ -13,7 +13,7 @@ To provide a consistent experience, we recommend using the Jacdac developer tool
 The developer tools rely on the browser WebUSB/WebSerial/WebBluetooth to connect to the hardware devices and uses a local web socket server
 to pipe the packets to the Python SDK. This also allows to debug your Python code in a virtual machine with no hardware access, like [GitHub Codespaces](https://github.com/features/codespaces).
 
-```
+```bash copy
 python -m jacdac.devtools
 ```
 
@@ -24,6 +24,6 @@ Once the devtools server is running, you should be able to navigate to the local
 If you wish to access the dashboard from another computer,
 use the `--internet` and the web server will bind to **all** network interface.
 
-```
+```bash copy
 python -m jacdac.devtools --internet
 ```
