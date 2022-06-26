@@ -68,7 +68,7 @@ export function DeviceTreeItem(
         services
             .filter(srv => !isInfrastructure(srv.specification))
             .map(service => service.name),
-        18
+        26
     )
 
     const alert = lost
