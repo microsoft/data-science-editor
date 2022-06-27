@@ -32,18 +32,12 @@ features of your sensor.
 * **New top-level service**. On the other hand, perhaps you have a need for a completely
 new top-level service. 
 
-In either of the above cases, you will find it useful to start with an existing service,
-copying and modify the service markdown using the [service editor](/tools/service-editor/),
-and generate a pull request to the [service catalog repo](https://github.com/microsoft/jacdac/tree/main/services).
-Sensor services follow a particular pattern that has dedicated support in the service
-specification and implementation. The [service language specification](/reference/service-specification/) 
-contains more details about the syntax and semantics of services. 
-
-## Compiling a service specification
-
-The [jacdac repo](https://github.com/microsoft/jacdac/) contains a tool for processing
-service specifications, finding errors in them, and compiling them into a variety of artifacts,
-including C header files.  **[TODO: when does the user need to run this script???]**
+In either of the above cases, you should:
+- copy and edit an existing service specification in the [service editor](/tools/service-editor/) 
+- submit a pull request (PR), using the service editor
+- after PR is merged, [implement the service firmware](#implementing-service-firmware)
+See the [service language specification](/reference/service-specification/) 
+for more details about the syntax and semantics of services. 
 
 ## Implementing service firmware
 
