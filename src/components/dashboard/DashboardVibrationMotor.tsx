@@ -16,6 +16,9 @@ import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import CmdButton from "../CmdButton"
 import SliderWithLabel from "../ui/SliderWithLabel"
 
+const T_DIT = 50
+const T_REST = 120
+
 const patterns: Record<
     string,
     {
@@ -83,12 +86,11 @@ function PatternInput(props: {
             .map(c => patterns[c])
             .filter(p => !!p)
         if (navigator.vibrate)
-            navigator.vibrate(seq.flatMap(p => [p.duration, tdit >> 3]))
+            navigator.vibrate(seq.flatMap(p => [p.duration, T_DIT >> 3]))
 
-        const tdit = 120
         const pattern: [number, number][] = seq.flatMap(p => [
-            [(p.duration * tdit) >> 3, p.speed * speedScale],
-            [tdit >> 3, 0],
+            [(p.duration * T_DIT) >> 3, p.speed * speedScale],
+            [T_REST >> 3, 0],
         ])
         const data = jdpack<[[number, number][]]>("r: u8 u0.8", [pattern])
         await service.sendCmdAsync(VibrationMotorCmd.Vibrate, data)
@@ -130,7 +132,7 @@ export default function DashboardVibrationMotor(props: DashboardServiceProps) {
     const { service } = props
     const server = useServiceServer<VibrationMotorServer>(service)
     const { playTone } = useContext(WebAudioContext)
-    const [speed, setSpeed] = useState(20)
+    const [intensity, setIntensity] = useState(20)
 
     // listen for playTone commands from the buzzer
     useEffect(
@@ -146,24 +148,24 @@ export default function DashboardVibrationMotor(props: DashboardServiceProps) {
     )
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleSpeed: any = (
+    const handleIntensity: any = (
         event: React.ChangeEvent<unknown>,
         value: number | number[]
-    ) => setSpeed(value as number)
+    ) => setIntensity(value as number)
     const percentValueFormat = (newValue: number) => `${newValue | 0}%`
-
+// 50, 180
     return (
         <>
             <Grid item xs={12}>
-                <PatternInput service={service} speedScale={speed / 100} />
+                <PatternInput service={service} speedScale={intensity / 100} />
             </Grid>
             <Grid item xs={12}>
                 <SliderWithLabel
-                    label="speed"
+                    label="intensity"
                     min={0}
                     max={100}
-                    value={speed}
-                    onChange={handleSpeed}
+                    value={intensity}
+                    onChange={handleIntensity}
                     valueLabelDisplay="auto"
                     valueLabelFormat={percentValueFormat}
                 />
