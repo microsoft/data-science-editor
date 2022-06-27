@@ -4,25 +4,17 @@ order: 2
 ---
 # Hardware Design
 
-## Overview
+## Overview 
 
-The hardware design requirements for all Jacdac devices are organized into three sections:
+The hardware design guidelines break down into the following sections:
 - [Electrical](./electrical)
 - [Electro-mechanical](./electro-mechanical)
 - [Mechanical](./mechanical)
+- [EC30 form factor](./ec30): if you are considering creating a Jacdac module, brain or power supply, we strongly recommend it conforms to the EC30 form factor. Hubs and Jacdaptors can also benefit from using this form factor.
+- [Component selection](./components) provides information about part selection for many Jacdac devices. We also have a list of [suggested components](https://github.com/microsoft/jacdac-ddk/tree/main/electronics/generic/suggested-components) that may be substituted in case of sourcing / supply chain difficulties. 
+- [Support for device manufacturing](./manufacturing). Throughout the design of Jacdac we considered aspects of device manufacturability, to ease the process of manufacturing and testing device hardware and thereby minimize cost. 
 
-Please ensure any devices with a physical Jacdac connector conform to these design requirements. 
-
-## EC30 form factor
-
-In addition to the above requirements for any device that supports the Jacdac electrical interface, there are further benefits for users and for manufacturers if devices follow the [EC30 form factor](./ec30). These additional design guidelines support the use of Jacdac breadboards, enclosures and a suite of design tools that are under construction. 
-If you are considering creating a Jacdac module, brain or power supply, we strongly recommend it conforms to the EC30 form factor. Hubs and Jacdaptors can also benefit from using this form factor.
-
-## Component selection
-
-We have information about part selection for some of the key [components](./components) of many Jacdac devices. We also have a list of [suggested components](https://github.com/microsoft/jacdac-ddk/tree/main/electronics/generic/suggested-components) that may be substituted in case of sourcing / supply chain difficulties. 
-
-## Jacdac reference designs
+## Reference designs
 
 The Jacdac team and the community have provided hardware and firmware reference designs for a variety of EC30 Jacdac devices, based on very low cost components including [PADAUK](https://github.com/microsoft/jacdac-padauk) MCUs. We have designs in common electronics CAD tools:
 
@@ -31,7 +23,3 @@ The Jacdac team and the community have provided hardware and firmware reference 
 - [KiCad](https://github.com/hardwaremonkey/jacdac).
 
 In many cases the above repos also contain design files in PDF, Gerber, STEP and Parasolid form.
-
-## Support for device manufacturing
-
-Throughout the design of Jacdac we considered aspects of device manufacturability, to ease the process of manufacturing and testing device hardware and thereby minimize cost. Please refer to the page on [manufacturing](./manufacturing).

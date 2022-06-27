@@ -1,0 +1,65 @@
+---
+title: Services
+order: 5
+---
+
+# Services
+
+Jacdac modules must run an instance of the [control service](/services/control) in order to
+advertise themselves, as well as the services they support, on the Jacdac bus. A platform-independent
+[control service implementation](https://github.com/microsoft/jacdac-c/blob/main/source/jd_control.c) 
+is part of the [jacdac-c firmware repo](https://github.com/microsoft/jacdac-c). The basic flow of service 
+creation and implementation breaks into four steps, detailed below.
+
+## Finding a service specification
+
+When designing a new device, please first check the [service catalog](/services) to see if there is
+a service that already meets your needs.  If you've found one, then check the
+[services directory](https://github.com/microsoft/jacdac-c/tree/main/services) of the jacdac-c repo to see
+if there is already an implementation available for that service. 
+
+## Creating a service specification
+
+If you haven't found a service that exactly meets your needs, there are two basic 
+paths forward: 
+
+* **New mixin service**. Maybe you have a new type of temperature sensor, but you find that
+the [temperature service](/services/temperature/) doesn't have all the features
+that you would like to expose to your end users. In this case, the preferred path forward is 
+to use the temperature service *and* provide an additional *mixin* service for the extra
+features of your sensor.
+
+* **New top-level service**. On the other hand, perhaps you have a need for a completely
+new top-level service. 
+
+In either of the above cases, you will find it useful to start with an existing service,
+copying and modify the service markdown using the [service editor](/tools/service-editor/),
+and generate a pull request to the [service catalog repo](https://github.com/microsoft/jacdac/tree/main/services).
+Sensor services follow a particular pattern that has dedicated support in the service
+specification and implementation. The [service language specification](/reference/service-specification/) 
+contains more details about the syntax and semantics of services. 
+
+## Compiling a service specification
+
+The [jacdac repo](https://github.com/microsoft/jacdac/) contains a tool for processing
+service specifications, finding errors in them, and compiling them into a variety of artifacts,
+including C header files.  **[TODO: when does the user need to run this script???]**
+
+## Implementing service firmware
+
+If you need to implement a new service, we again recommend that you start with an existing service
+implementation, as found in the [services directory](https://github.com/microsoft/jacdac-c/tree/main/services)
+of the jacdac-c repo:
+* [services/servo.c](https://github.com/microsoft/jacdac-c/tree/main/services/servo.c) has a simple example of registers
+* [services/buzzer.c](https://github.com/microsoft/jacdac-c/tree/main/services/buzzer.c) has a simple example of how a command is handled (in `buzzer_handle_packet()`)
+* [services/thermometer.c](https://github.com/microsoft/jacdac-c/tree/main/services/thermometer.c) is a very simple sensor
+* [services/power.c](https://github.com/microsoft/jacdac-c/tree/main/services/power.c) is a more involved sensor (with custom registers)
+
+Once you add a service, make sure to add its `*_init()` function to 
+[services/jd_services.h](https://github.com/microsoft/jacdac-c/tree/main/services/jd_services.h).
+
+The Jacdac runtime contains a set of helper functions for working with the
+components of a Jacdac service: registers, commands, and events.
+
+
+
