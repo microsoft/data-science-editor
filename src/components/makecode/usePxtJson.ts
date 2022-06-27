@@ -9,6 +9,8 @@ export interface PxtJson {
 }
 
 export default function usePxtJson(slug: string, branch?: string) {
+    if (!slug)
+        return undefined
     const url = rawUrl(slug, branch, "pxt.json")
     const { response: pxtJson } = useFetch<PxtJson>(url)
     return pxtJson

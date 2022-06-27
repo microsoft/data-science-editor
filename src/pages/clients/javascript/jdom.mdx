@@ -44,8 +44,9 @@ Since JDOM is using the [node-usb](https://www.npmjs.com/package/usb) npm packag
 
 ```typescript
 import { createUSBBus, createNodeUSBOptions, ... } from "jacdac-ts"
+import { WebUSB } from "usb";
 
-const options = createNodeUSBOptions()
+const options = createNodeUSBOptions(WebUSB)
 const bus = createUSBBus(options);
 ...
 ```

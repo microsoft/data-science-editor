@@ -41,6 +41,7 @@ export default function Page() {
                     "microsoft/jacdac-c",
                     "microsoft/jacdac-stm32x0",
                     "microsoft/jacdac-msr-modules",
+                    "microsoft/jacdac-module-template",
                     "microsoft/jacdac-esp32",
                     "microsoft/jacdac-padauk",
                     "microsoft/jacdac-posix",
