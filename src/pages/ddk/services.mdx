@@ -15,8 +15,9 @@ creation and implementation breaks into four steps, detailed below.
 
 When designing a new device, please first check the [service catalog](/services) to see if there is
 a service that already meets your needs.  If you've found one, then check the
-[services directory](https://github.com/microsoft/jacdac-c/tree/main/services) of the jacdac-c repo to see
-if there is already an implementation available for that service. 
+[services folder](https://github.com/microsoft/jacdac-c/tree/main/services) of the jacdac-c repo
+(or in [jacdac-padauk](https://github.com/microsoft/jacdac-padauk/tree/main/services) when using that MCU)
+to see if there is already an implementation available for that service. 
 
 ## Creating a service specification
 
@@ -33,7 +34,8 @@ features of your sensor.
 new top-level service. 
 
 In either of the above cases, you should:
-- copy and edit an existing service specification in the [service editor](/tools/service-editor/) 
+- copy and edit an [existing](https://github.com/microsoft/jacdac/tree/main/services)
+  service specification in the [service editor](/tools/service-editor/)
 - submit a pull request (PR), using the service editor
 - after PR is merged, [implement the service firmware](#implementing-service-firmware)
 See the [service language specification](/reference/service-specification/) 
@@ -54,6 +56,3 @@ Once you add a service, make sure to add its `*_init()` function to
 
 The Jacdac runtime contains a set of helper functions for working with the
 components of a Jacdac service: registers, commands, and events.
-
-
-
