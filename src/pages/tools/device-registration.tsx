@@ -141,6 +141,7 @@ export default function DeviceRegistration() {
     const [firmwaresAnchorEl, setFirmwaresAnchorEl] =
         React.useState<null | HTMLElement>(null)
     const [imageDataURI, setImageDataURI] = useState<string>(undefined)
+    const [comment, setComment] = useState("")
     const deviceCatalog = useDeviceCatalog()
     const elid = useId()
     const nameId = elid + "-name"
@@ -156,6 +157,7 @@ export default function DeviceRegistration() {
     const storeLinkId = elid + "-store"
     const connectorId = elid + "-connector"
     const shapeId = elid + "-shape"
+    const commentId = elid + "-comment"
     const specifications = useDeviceSpecifications({
         includeDeprecated: true,
         includeExperimental: true,
@@ -169,6 +171,7 @@ export default function DeviceRegistration() {
             repo: "",
         } as jdspec.DeviceSpec)
         setImageDataURI(undefined)
+        setComment("")
     }
     const handleServiceAdd = (srv: jdspec.ServiceSpec) => {
         console.log(`add`, srv.classIdentifier)
@@ -312,6 +315,9 @@ export default function DeviceRegistration() {
         device.connector = ev.target.value as jdspec.JacdacConnectorType
         if (device.connector === "edgeConsumer") delete device.connector
         updateDevice()
+    }
+    const handleCommentChanged = (ev: ChangeEvent<HTMLInputElement>) => {
+        setComment(ev.target.value || "")
     }
     const renderRepoInput = params => (
         <TextField
@@ -825,13 +831,28 @@ export default function DeviceRegistration() {
                         variant={variant}
                     />
                 </Grid>
+                <GridHeader title="Submission" />
+                <Grid item xs={12}>
+                    <TextField
+                        id={commentId}
+                        fullWidth={true}
+                        helperText="Additional comments about the device that will be added to the registration pull request."
+                        label="Registration Comment"
+                        value={comment}
+                        onChange={handleCommentChanged}
+                        variant={variant}
+                        multiline={true}
+                        minRows={2}
+                    />
+                </Grid>
                 <Grid item xs={12}>
                     <Suspense>
                         <GithubPullRequestButton
                             label={"start registration"}
                             title={`Device: ${device.company} ${device.name} ${device.version}`}
                             head={`devices/${device.id}`}
-                            description={`This pull request will start the registration of your device in the Jacdac catalog.`}
+                            description={`This pull request will start the registration of your device in the Jacdac catalog.                            
+                            ${comment}`}
                             files={files}
                         />
                     </Suspense>
