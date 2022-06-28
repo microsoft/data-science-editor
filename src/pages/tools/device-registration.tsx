@@ -21,10 +21,7 @@ import {
     serviceSpecificationFromClassIdentifier,
 } from "../../../jacdac-ts/src/jdom/spec"
 import PaperBox from "../../components/ui/PaperBox"
-// tslint:disable-next-line: match-default-export-name no-submodule-imports
 import AddIcon from "@mui/icons-material/Add"
-// tslint:disable-next-line: match-default-export-name no-submodule-imports
-import CreateIcon from "@mui/icons-material/Create"
 import IconButtonWithTooltip from "../../components/ui/IconButtonWithTooltip"
 import { parseRepoUrl } from "../../components/github"
 import {
@@ -55,6 +52,8 @@ import { JD_SERVICE_INDEX_CTRL } from "../../../jacdac-ts/src/jdom/constants"
 import ClearIcon from "@mui/icons-material/Clear"
 import { Link } from "gatsby-theme-material-ui"
 import { shapeToEC30 } from "../../components/enclosure/ec30"
+import CopyButton from "../../components/ui/CopyButton"
+
 const GithubPullRequestButton = lazy(
     () => import("../../components/buttons/GithubPullRequestButton")
 )
@@ -546,6 +545,12 @@ export default function DeviceRegistration() {
                                                   } (0x${id.toString(16)})`
                                                 : `0x${id.toString(16)}`
                                         }
+                                        icon={
+                                            <CopyButton
+                                                size="small"
+                                                text={`0x${id.toString(16)}`}
+                                            />
+                                        }
                                         onDelete={handleDeleteFirmware(i)}
                                     />
                                 </Box>
@@ -555,7 +560,7 @@ export default function DeviceRegistration() {
                             title="Add random product identifier"
                             onClick={handleProductIdentifierAddRandomClick}
                         >
-                            <CreateIcon />
+                            <AddIcon />
                         </IconButtonWithTooltip>
                         {firmwareBlobs && (
                             <IconButtonWithTooltip

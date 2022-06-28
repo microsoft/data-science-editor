@@ -10,7 +10,8 @@ import { delay } from "../../../jacdac-ts/src/jdom/utils"
 export default function CopyButton(props: {
     label?: string
     title?: string
-    onCopy: () => Promise<string | HTMLCanvasElement>
+    onCopy?: () => Promise<string | HTMLCanvasElement>
+    text?: string
     className?: string
     size?: "small"
     variant?: "outlined" | "contained"
@@ -18,6 +19,7 @@ export default function CopyButton(props: {
 }) {
     const {
         label,
+        text,
         title = "copy data to clipboard",
         disabled,
         onCopy,
@@ -31,10 +33,10 @@ export default function CopyButton(props: {
 
         try {
             setCopied(null)
-            const copied = await onCopy()
+            const copied = text || await onCopy?.()
             if (typeof copied === "string") {
-                const text = copied as string
-                await navigator.clipboard.writeText(text)
+                const c = copied as string
+                await navigator.clipboard.writeText(c)
             } else {
                 const canvas = copied as HTMLCanvasElement
                 const blob = await new Promise<Blob>(resolve =>
@@ -53,7 +55,7 @@ export default function CopyButton(props: {
         }
     }
     const hasCopied = copied !== undefined
-    const text =
+    const buttonText =
         copied === true
             ? "Copied!"
             : copied === false
@@ -66,12 +68,12 @@ export default function CopyButton(props: {
             {...rest}
             onClick={hasCopied ? undefined : handleClick}
         >
-            {text}
+            {buttonText}
         </Button>
     ) : (
         <IconButtonWithTooltip
             trackName="ui.copy"
-            title={text}
+            title={buttonText}
             {...rest}
             onClick={disabled ? undefined : handleClick}
         >
