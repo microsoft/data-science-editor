@@ -6,6 +6,7 @@ import RandomGenerator from "../RandomGenerator"
 import useLocalStorage from "../hooks/useLocalStorage"
 import HighlightTextField from "../ui/HighlightTextField"
 import ServiceSpecification from "../specification/ServiceSpecification"
+import ServiceSpecificationSource from "../specification/ServiceSpecificationSource"
 
 const SERVICE_SPECIFICATION_STORAGE_KEY =
     "jacdac:servicespecificationeditorsource"
@@ -27,7 +28,7 @@ export default function ServiceSpecificationEditor() {
             `0x${json.classIdentifier.toString(16)}`
         ).toLowerCase()}`
     return (
-        <Grid spacing={1} container>
+        <Grid spacing={2} container>
             <Grid item xs={12}>
                 <HighlightTextField
                     code={source}
@@ -39,10 +40,17 @@ export default function ServiceSpecificationEditor() {
                     pullRequestDescription={`This pull request defines a new service.`}
                 />
             </Grid>
-            <Grid item>
+            <Grid item xs={12}>
                 <RandomGenerator device={false} />
-                {json && <ServiceSpecification service={json} />}
             </Grid>
+            {json && (
+                <Grid item xs={12}>
+                    <ServiceSpecificationSource
+                        serviceSpecification={json}
+                        showSpecification={true}
+                    />
+                </Grid>
+            )}
         </Grid>
     )
 }

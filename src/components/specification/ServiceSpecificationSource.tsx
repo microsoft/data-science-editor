@@ -6,8 +6,6 @@ import TabPanel from "../ui/TabPanel"
 import Snippet from "../ui/Snippet"
 import { converters } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import ServiceSpecification from "./ServiceSpecification"
-import { serviceSpecificationToServiceTwinSpecification } from "../../../jacdac-ts/src/azure-iot/devicetwin"
-import { withPrefix } from "gatsby"
 
 export default function ServiceSpecificationSource(props: {
     classIdentifier?: number
@@ -20,7 +18,6 @@ export default function ServiceSpecificationSource(props: {
         serviceSpecification ||
         serviceSpecificationFromClassIdentifier(classIdentifier)
     const convs = converters()
-    const showDeviceTwin = spec && spec?.camelName !== "sytem"
 
     const handleTabChange = (
         event: React.ChangeEvent<unknown>,
@@ -39,11 +36,9 @@ export default function ServiceSpecificationSource(props: {
             >
                 {[
                     showSpecification && "Specification",
-                    "MakeCode",
                     "TypeScript",
                     "C",
                     "JSON",
-                    showDeviceTwin && "Twin",
                 ]
                     .filter(n => !!n)
                     .map(n => (
@@ -55,30 +50,16 @@ export default function ServiceSpecificationSource(props: {
                     <ServiceSpecification service={spec} />
                 </TabPanel>
             )}
-            {["sts", "ts", "c", "json"].map(lang => (
+            {["ts", "c", "json"].map(lang => (
                 <TabPanel key={`conv${lang}`} value={tab} index={index++}>
-                    <Snippet value={() => convs[lang](spec)} mode={lang} />
-                </TabPanel>
-            ))}
-            {showDeviceTwin && (
-                <TabPanel key="devicetwin" value={tab} index={index++}>
                     <Snippet
-                        mode="json"
-                        url={withPrefix(
-                            `/services/twin/x${spec.classIdentifier.toString(
-                                16
-                            )}.json`
-                        )}
-                        value={JSON.stringify(
-                            serviceSpecificationToServiceTwinSpecification(
-                                spec
-                            ),
-                            null,
-                            2
-                        )}
+                        copy={true}
+                        value={() => convs[lang](spec)}
+                        mode={lang}
+                        download={`service.${lang}`}
                     />
                 </TabPanel>
-            )}
+            ))}
         </Paper>
     )
 }

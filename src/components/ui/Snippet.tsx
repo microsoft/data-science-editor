@@ -9,8 +9,9 @@ export default function Snippet(props: {
     actions?: ReactNode
     url?: string
     caption?: string | JSX.Element | JSX.Element[]
+    copy?: boolean
 }) {
-    const { value, mode, download, url, caption, actions } = props
+    const { value, mode, download, url, caption, actions, copy } = props
     const v: string = typeof value === "function" ? value() : value
     const className = mode && `language-${mode === "sts" ? "ts" : mode}`
     return (
@@ -21,6 +22,7 @@ export default function Snippet(props: {
                 downloadText={download && v}
                 actions={actions}
                 url={url}
+                copy={copy}
             >
                 {v}
             </CodeBlock>
