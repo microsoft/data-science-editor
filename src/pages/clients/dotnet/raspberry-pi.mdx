@@ -29,13 +29,13 @@ This mode will shorten your development cycle, until you are ready to test thing
 
 -   install `libgpiod-dev` to support fast SPI operations. For sanity sake, reboot the pi after doing the update.
 
-```
+```bash copy
 sudo apt install -y libgpiod-dev
 ```
 
 -   launch the `devtools` in internet+spi mode on the Raspberry Pi. Pro tip: from `ssh`, use `tmux` to launch the server.
 
-```
+```bash copy
 jacdac.devtools --internet --spi
 ```
 
@@ -65,7 +65,7 @@ more friction in the development flow.
 
 -   launch the `devtools` in internet mode on the Raspberry Pi. Do **not** use `--spi` or it will lock the JacHAT
 
-```
+```bash copy
 jacdac.devtools --internet
 ```
 
