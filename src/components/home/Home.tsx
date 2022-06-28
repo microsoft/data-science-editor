@@ -94,7 +94,7 @@ export default function Home() {
             <SplitGrid
                 right={true}
                 subtitle="Plays well with others"
-                description="Jacdaptors allow Jacdac to integrate with micro:bit, Raspberry Pi other ecosystems."
+                description="Jacdaptors allow Jacdac to integrate with micro:bit, Raspberry Pi, and other ecosystems."
                 buttonText="Jacdaptors"
                 buttonVariant="link"
                 buttonUrl="/start/jacdaptors"
@@ -108,7 +108,6 @@ export default function Home() {
                                 "microsoft-research-jmbrainrp204059v01",
                             ]}
                             cols={2}
-                            showName={true}
                         />
                     </Suspense>
                 }
