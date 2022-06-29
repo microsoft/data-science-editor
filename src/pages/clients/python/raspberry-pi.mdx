@@ -19,13 +19,13 @@ JacHAT uses low level features like pin IO and SPI that need to be enabled in Ra
 -   install the `python3-libioctl`
 
 ```bash copy
-sudo apt install --upgrade python3-libgpiod
+sudo apt install --upgrade -y python3-libgpiod
 ```
 
--   install the `spidev` python package
+-   install the `spidev` and `jacdac-python` Python packages
 
 ```bash copy
-sudo python -m pip install --upgrade spidev
+pip install --upgrade spidev jacdac-python
 ```
 
--   reboot the raspberry pi
+-   your pi is ready!
