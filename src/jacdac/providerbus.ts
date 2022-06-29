@@ -109,9 +109,9 @@ export class UIFlags {
     static hosted = args.hosted
     static gamepad = args.gamepad
     static webcam = args.webcam
-    static connect = args.connect
     static consoleinsights = args.consoleinsights
     static devTools = args.devTools
+    static connect = args.connect && !args.devTools
     static transient = args.transient
 }
 
