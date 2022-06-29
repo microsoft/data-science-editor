@@ -39,7 +39,7 @@ sudo apt install -y libgpiod-dev
 jacdac.devtools --internet --spi
 ```
 
--   navigate to `http://[raspberrypi ip]:8081/` on your local network and you should load a dashboard connected to your Pi
+-   navigate to `http://[raspberrypi ip]:8082/` on your local network and you should load a dashboard connected to your Pi
 -   use the `WebSocketTransport` in your code (from the [Jacdac.NET.Transports.WebSockets](https://www.nuget.org/packages/Jacdac.NET.Transports.WebSockets/) nuget package).
 
 ```cs
@@ -69,7 +69,7 @@ more friction in the development flow.
 jacdac.devtools --internet
 ```
 
--   navigate to `http://[raspberrypi ip]:8081/` on your local network and you should load a dashboard. You will notice that it is not connected to the Jacdac modules.
+-   navigate to `http://[raspberrypi ip]:8082/` on your local network and you should load a dashboard. You will notice that it is not connected to the Jacdac modules.
 -   add the `SpiTransport` transport from the [Jacdac.NET.Transports.Spi](https://www.nuget.org/packages/Jacdac.NET.Transports.Spi/) nuget package.
 
 ```cs
