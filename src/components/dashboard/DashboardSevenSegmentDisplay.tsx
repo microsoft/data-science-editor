@@ -47,7 +47,8 @@ export default function DashboardSevenSegmentDisplay(
 
     const server = useServiceServer(service)
     const color = server ? "secondary" : "primary"
-    const { active, background, controlBackground } = useWidgetTheme(color)
+    const { background, controlBackground } = useWidgetTheme(color)
+    const active = "#ff0000"
 
     if (digitCount === undefined)
         return <DashboardRegisterValueFallback register={digitCountRegister} />
