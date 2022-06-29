@@ -1,0 +1,29 @@
+---
+title: Raspberry Pi
+order: 15
+---
+
+# Jacdac-Python on Raspberry Pi
+
+A JacHAT is a Jacdac adapter for the Raspberry Pi that provides an SPI bridge to the Jacdac bus.
+
+<DeviceSpecificationList tags={["adapter", "pi"]} />
+
+## Raspbian Configuration
+
+JacHAT uses low level features like pin IO and SPI that need to be enabled in Raspbian.
+
+-   open the **Raspberry Pi configuration** dialog under **Preferences**
+-   select the **Interfaces** tab
+-   enable the **SPI** interface
+-   install the `python3-libioctl`
+
+```bash copy
+sudo apt install --upgrade python3-libgpiod
+```
+
+-   install the `spidev` python package
+
+```bash copy
+sudo python -m pip install --upgrade spidev
+```
