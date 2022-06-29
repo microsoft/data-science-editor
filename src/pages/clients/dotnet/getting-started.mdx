@@ -12,7 +12,7 @@ application that controls an LED with a button.
 
 ### Launch the [developer tools](/clients/dotnet/devtools/)
 
-Start a devtools server and open the dashboard at http://localhost:8081/.
+Start a devtools server and open the dashboard at [http://localhost:8081/](http://localhost:8081/).
 We'll be able to create simulated buttons in the dashboard.
 
 ```
@@ -42,6 +42,7 @@ dotnet add package jacdac.net.transports.websockets
 ```
 
 Launch Visual Studio Code with the C# extension or Visual Studio to build your project.
+
 ```
 code .
 ```
@@ -59,13 +60,13 @@ var bus = new JDBus(WebSocketTransport.Create());
 Thread.Sleep(Timeout.Infinite);
 ```
 
-Launch your app and go back to the dashboard. You should see a new device, 
+Launch your app and go back to the dashboard. You should see a new device,
 mostly empty.
 
 ### Let there be a button
 
 We instantiate a `ButtonClient` class by passing the `bus`
-and the **role** name. The role name will be also displayed in the 
+and the **role** name. The role name will be also displayed in the
 web dashboard.
 
 ```cs
@@ -74,7 +75,7 @@ using Jacdac.Clients;
 var button = new ButtonClient(bus, "btn");
 ```
 
-For tinkering purposes, we add event handler to the `Down` event 
+For tinkering purposes, we add event handler to the `Down` event
 and display something on the console.
 
 ```cs
@@ -82,9 +83,9 @@ button.Down += (s,e) => Console.WritLine("down");
 ```
 
 The `button` client will automatically be bound to a [button service](/services/button/)
-once the role manager finds one on the bus. 
+once the role manager finds one on the bus.
 
-Launch your application, go to the dashboard. 
+Launch your application, go to the dashboard.
 Start a button simulator, as Jacdac binds the `button` role to that simulated service, you will
 see the `btn` name show up in the user interface.
 You should see the `down` message show up on your console application.
@@ -108,7 +109,7 @@ button.Down += (s,e) => led.SetColor(red);
 button.Up += (s,e) => led.SetColor(off);
 ```
 
-Launch your application and go back to the dashboard. 
+Launch your application and go back to the dashboard.
 Start an LED simulator and see that it gets bound. Test that when you press the button,
 the LED goes red and back when the button is released.
 
@@ -146,4 +147,3 @@ button.Hold += (s,e) => led.SetColor(counter++ % 2 == 0 ? blue : red);
 // keep the app alive
 Thread.Sleep(Timeout.Infinite);
 ```
-
