@@ -2,7 +2,6 @@ import React, { useContext } from "react"
 import {
     SRV_BUTTON,
     SRV_BUZZER,
-    SRV_CHARACTER_SCREEN,
     SRV_HUMIDITY,
     SRV_GAMEPAD,
     SRV_LED,
@@ -17,6 +16,15 @@ import AddIcon from "@mui/icons-material/Add"
 import Alert from "../ui/Alert"
 import SimulatorDialogsContext from "../SimulatorsDialogContext"
 import useBus from "../../jacdac/useBus"
+import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked"
+import WaterIcon from "@mui/icons-material/Water"
+import DeviceThermostatIcon from "@mui/icons-material/DeviceThermostat"
+import GrassIcon from "@mui/icons-material/Grass"
+import MusicNoteIcon from "@mui/icons-material/MusicNote"
+import LinearScaleIcon from "@mui/icons-material/LinearScale"
+import VideogameAssetIcon from "@mui/icons-material/VideogameAsset"
+import TungstenIcon from "@mui/icons-material/Tungsten"
+import TrafficIcon from "@mui/icons-material/Traffic"
 
 export function SimulateDeviceHint() {
     const bus = useBus()
@@ -33,9 +41,7 @@ export function SimulateDeviceHint() {
                 title="button"
                 aria-label="start button simulator"
             >
-                <span aria-label="button emoji" role="img">
-                    🔘
-                </span>
+                <RadioButtonCheckedIcon />
             </IconButtonWithTooltip>
             <IconButtonWithTooltip
                 trackName="simulator.hint.humidity"
@@ -43,9 +49,7 @@ export function SimulateDeviceHint() {
                 title="humidity"
                 aria-label="start humidity sensor"
             >
-                <span aria-label="umbrella emoji" role="img">
-                    ☂️
-                </span>
+                <WaterIcon />
             </IconButtonWithTooltip>
             <IconButtonWithTooltip
                 trackName="simulator.hint.thermometer"
@@ -53,9 +57,7 @@ export function SimulateDeviceHint() {
                 title="thermometer"
                 aria-label="start thermometer"
             >
-                <span aria-label="thermometer emoji" role="img">
-                    🌡️
-                </span>
+                <DeviceThermostatIcon />
             </IconButtonWithTooltip>
             <IconButtonWithTooltip
                 trackName="simulator.hint.soilmoisture"
@@ -63,9 +65,7 @@ export function SimulateDeviceHint() {
                 title="soil moisture"
                 aria-label="start soil moisture simulator"
             >
-                <span aria-label="sprout emoji" role="img">
-                    🌱
-                </span>
+                <GrassIcon />
             </IconButtonWithTooltip>
             <IconButtonWithTooltip
                 trackName="simulator.hint.buzzer"
@@ -73,9 +73,7 @@ export function SimulateDeviceHint() {
                 title="buzzer"
                 aria-label="start buzzer simulator"
             >
-                <span aria-label="piano emoji" role="img">
-                    🎹
-                </span>
+                <MusicNoteIcon />
             </IconButtonWithTooltip>
             <IconButtonWithTooltip
                 trackName="simulator.hint.potentiometer"
@@ -83,9 +81,7 @@ export function SimulateDeviceHint() {
                 title="slider"
                 aria-label="start slider simulator"
             >
-                <span aria-label="slider emoji" role="img">
-                    🎚️
-                </span>
+                <LinearScaleIcon />
             </IconButtonWithTooltip>
             <IconButtonWithTooltip
                 trackName="simulator.hint.joystick"
@@ -93,19 +89,7 @@ export function SimulateDeviceHint() {
                 title="joystick"
                 aria-label="start joystick simulator"
             >
-                <span aria-label="joystick emoji" role="img">
-                    🕹️
-                </span>
-            </IconButtonWithTooltip>
-            <IconButtonWithTooltip
-                trackName="simulator.hint.characterscreen"
-                onClick={handleStartSimulator(SRV_CHARACTER_SCREEN)}
-                title="character screen"
-                aria-label="start character screen simulator"
-            >
-                <span aria-label="pager emoji" role="img">
-                    📟
-                </span>
+                <VideogameAssetIcon />
             </IconButtonWithTooltip>
             <IconButtonWithTooltip
                 trackName="simulator.hint.led"
@@ -113,9 +97,7 @@ export function SimulateDeviceHint() {
                 title="LED"
                 aria-label="start LED simulator"
             >
-                <span aria-label="lightbulb emoji" role="img">
-                    💡
-                </span>
+                <TungstenIcon />
             </IconButtonWithTooltip>
             <IconButtonWithTooltip
                 trackName="simulator.hint.traffic"
@@ -123,9 +105,7 @@ export function SimulateDeviceHint() {
                 title="traffic light"
                 aria-label="start traffic light simulator"
             >
-                <span aria-label="traffic light emoji" role="img">
-                    🚦
-                </span>
+                <TrafficIcon />
             </IconButtonWithTooltip>
             or click &nbsp;
             <IconButtonWithTooltip
