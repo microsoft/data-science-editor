@@ -55,12 +55,11 @@ toggle between blue and red.
 
 ```python
 led.brightness = 0.5
-# fade between colors
 while True:
-    # blue
+    print("blue")
     led.set_all((0,0,255))
     sleep(1)
-    # off
+    print("off")
     led.set_all((0,0,0))
     sleep(1)
 ```
@@ -75,12 +74,11 @@ from time import sleep
 bus = Bus()
 led = LedClient(bus, "led")
 led.brightness = 0.5
-# fade between colors
 while True:
-    # blue
+    print("blue")
     led.set_all((0,0,255))
     sleep(1)
-    # off
+    print("off")
     led.set_all((0,0,0))
     sleep(1)
 ```
