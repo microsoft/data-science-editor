@@ -286,16 +286,6 @@ ${config.roles
 `
     )
     .join("")}
-
-    // start after main
-    control.runInParallel(function() {
-        ${config.roles
-            .map(
-                role => `    ${ns}.${camelize(role.name)}.start();
-        `
-            )
-            .join("")}
-    })
 }
     `
 }
