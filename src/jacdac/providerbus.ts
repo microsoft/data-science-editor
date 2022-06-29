@@ -111,7 +111,7 @@ export class UIFlags {
     static webcam = args.webcam
     static consoleinsights = args.consoleinsights
     static devTools = args.devTools
-    static connect = args.connect && !args.devTools
+    static connect = args.connect
     static transient = args.transient
 }
 
