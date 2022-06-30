@@ -18,6 +18,7 @@ import DialogTitleWithClose from "../ui/DialogTitleWithClose"
 import GridHeader from "../ui/GridHeader"
 import { Flags } from "../../../jacdac-ts/src/jdom/flags"
 import { Link } from "gatsby-theme-material-ui"
+import useGridBreakpoints from "../useGridBreakpoints"
 
 function ConnectDeviceCard(props: { device: jdspec.DeviceSpec }) {
     const { device } = props
@@ -54,20 +55,14 @@ function ConnectTransport(props: {
     onClose: () => void
 }) {
     const { transport, onClose } = props
-    const specifications = useDeviceSpecifications()
-    const devices = useMemo(
-        () =>
-            specifications.filter(
-                device => device.transport?.type === transport.type
-            ),
-        [specifications]
-    )
+    const devices = useDeviceSpecifications({ transport: transport.type })
+    const breakpoints = useGridBreakpoints(devices?.length)
     if (!devices?.length && !Flags.diagnostics) return null
     return (
         <>
             <GridHeader title={transport.type.toUpperCase()} />
             {devices.map(device => (
-                <Grid item xs={12} sm={4} lg={3} key={device.id}>
+                <Grid item {...breakpoints} key={device.id}>
                     <ConnectDeviceCard device={device} />
                 </Grid>
             ))}
