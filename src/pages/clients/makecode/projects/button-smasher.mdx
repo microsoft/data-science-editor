@@ -31,7 +31,7 @@ basic.forever(function () {
 We'll add an event block to listen for when the button is `down` so that we can increment the counter.
 
 -   drag a `on button 1 down` block from the `modules` toolbox
--   if you cannot find this block, start a _button_ simulator in Jacdac and click **ADD BLOCKS** button
+-   if you cannot find this block, start a **button simulator** in Jacdac and click **ADD BLOCKS** button
 
 ```blocks
 let counter = 0
@@ -68,11 +68,11 @@ Button smash the virtual button and you should see number increment on the micro
 
 ## Add a countdown
 
-To end the game, let's add a `||logic:if then else||` block that only allows incrementing
+To end the game, let's add a `if then else` block that only allows incrementing
 the counter for the first 10 seconds of the micro:bit running.
 
--   drag a `||logic:if then else||` block in the down event and move the current blocks under the `then` section
--   add code that checks that `||input:running time (ms)||` is less (<) than `10000` (ms).
+-   drag a `if then else` block in the down event and move the current blocks under the `then` section
+-   add code that checks that `running time (ms)` is less (<) than `10000` (ms).
 
 ```blocks
 let counter = 0
