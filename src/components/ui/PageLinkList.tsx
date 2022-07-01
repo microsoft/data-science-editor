@@ -1,11 +1,19 @@
-import { Chip, List, ListItem, ListItemText, Typography } from "@mui/material"
+import {
+    Chip,
+    List,
+    ListItem,
+    ListItemText,
+    ListProps,
+    Typography,
+} from "@mui/material"
 import { Link } from "gatsby-theme-material-ui"
 import React, { ReactNode, useMemo } from "react"
 import { serviceSpecificationFromName } from "../../../jacdac-ts/src/jdom/spec"
 import ChipList from "./ChipList"
 
 export interface PageLinkListItemProps {
-    slug: string
+    slug?: string
+    href?: string
     title: string
     description?: string
     services?: string
@@ -14,7 +22,7 @@ export interface PageLinkListItemProps {
 }
 
 function PageLinkListItem(props: PageLinkListItemProps) {
-    const { slug, title, description, services } = props
+    const { slug, href, title, description, services } = props
     const specs = useMemo(
         () =>
             services
@@ -32,6 +40,7 @@ function PageLinkListItem(props: PageLinkListItemProps) {
                         color="textPrimary"
                         rel="noopener noreferrer"
                         to={slug}
+                        href={href}
                     >
                         {title}
                     </Link>
@@ -98,11 +107,13 @@ export function pageQueryToNodes(data: PageQuery) {
     return nodes
 }
 
-export default function PageLinkList(props: {
-    header?: ReactNode
-    nodes: PageLinkListItemProps[]
-}) {
-    const { header, nodes } = props
+export default function PageLinkList(
+    props: {
+        header?: ReactNode
+        nodes: PageLinkListItemProps[]
+    } & ListProps
+) {
+    const { header, nodes, ...rest } = props
     const sorted = nodes?.sort((l, r) => {
         const ld = Date.parse(l?.date) || 0
         const rd = Date.parse(r?.date) || 0
@@ -113,15 +124,18 @@ export default function PageLinkList(props: {
         const ro = Number(r?.order) || 50
         const c = lo - ro
         if (c) return c
-        return l.slug.localeCompare(r.slug)
+        return (l.slug || l.href).localeCompare(r.slug || r.href)
     })
     return (
         !!sorted?.length && (
             <>
                 {header}
-                <List>
+                <List {...rest}>
                     {sorted?.map(node => (
-                        <PageLinkListItem key={node.slug} {...node} />
+                        <PageLinkListItem
+                            key={node.slug || node.href}
+                            {...node}
+                        />
                     ))}
                 </List>
             </>

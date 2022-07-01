@@ -1,6 +1,6 @@
 import { Link } from "gatsby-theme-material-ui"
 import React from "react"
-import GithubRepositoryList from "../components/github/GithubRespositoryList"
+import PageLinkList from "../components/ui/PageLinkList"
 
 export default function Page() {
     return (
@@ -28,76 +28,123 @@ export default function Page() {
                 hosts various videos on using Jacdac.
             </p>
             <h2>Specification and Schematics</h2>
-            <GithubRepositoryList
-                repos={["microsoft/jacdac", "microsoft/jacdac-ddk"]}
-                showDescription={true}
+            <PageLinkList
+                dense
+                nodes={[
+                    {
+                        title: "microsoft/jacdac",
+                        description:
+                            "Service specifications and device catalog",
+                        href: "https://github.com/microsoft/jacdac",
+                    },
+                    {
+                        title: "microsoft/jacdac-ddk",
+                        description: "Device Development Kit",
+                        href: "https://github.com/microsoft/jacdac-ddk",
+                    },
+                ]}
             />
             <h2>Module Development</h2>
 
             <h3>Server SDKs</h3>
-
-            <GithubRepositoryList
-                repos={[
-                    "microsoft/jacdac-c",
-                    "microsoft/jacdac-stm32x0",
-                    "microsoft/jacdac-msr-modules",
-                    "microsoft/jacdac-module-template",
-                    "microsoft/jacdac-esp32",
-                    "microsoft/jacdac-padauk",
-                    "microsoft/jacdac-posix",
+            <PageLinkList
+                dense
+                nodes={[
+                    {
+                        title: "microsoft/jacdac-c",
+                        description: "C Firmware library",
+                        href: "https://github.com/microsoft/jacdac-c",
+                    },
+                    {
+                        title: "microsoft/jacdac-stm32x0",
+                        description: "Firmware library for STM32F0 and similar",
+                        href: "https://github.com/microsoft/jacdac-stm32x0",
+                    },
+                    {
+                        title: "microsoft/jacdac-msr-modules",
+                        description:
+                            "Firmware for prototype Jacdac modules made by Microsoft Research",
+                        href: "https://github.com/microsoft/jacdac-msr-modules",
+                    },
+                    {
+                        title: "microsoft/jacdac-module-template",
+                        description:
+                            "Template repository for firmware for a STM32G0-based Jacdac module",
+                        href: "https://github.com/microsoft/jacdac-module-template",
+                    },
+                    {
+                        title: "microsoft/jacdac-esp32",
+                        description: "Firmware library for ESP32 IDF",
+                        href: "https://github.com/microsoft/jacdac-esp32",
+                    },
+                    {
+                        title: "microsoft/jacdac-padauk",
+                        description: "Firmware library for PADAUK",
+                        href: "https://github.com/microsoft/jacdac-padauk",
+                    },
+                    {
+                        title: "microsoft/jacdac-posix",
+                        description:
+                            "Firmware library for native Jacdac on desktop",
+                        href: "https://github.com/microsoft/jacdac-posix",
+                    },
                 ]}
-                showDescription={true}
             />
 
             <h2>Client SDKs</h2>
 
-            <GithubRepositoryList
-                repos={[
-                    "microsoft/jacdac-ts",
-                    "microsoft/jacdac-dotnet",
-                    "microsoft/jacdac-python",
-                    "microsoft/pxt-jacdac",
+            <PageLinkList
+                dense
+                nodes={[
+                    {
+                        title: "microsoft/jacdac-ts",
+                        description: "TypeScript/JavaScript library",
+                        href: "https://github.com/microsoft/jacdac-ts",
+                    },
+                    {
+                        title: "microsoft/jacdac-dotnet",
+                        description: ".NET (desktop, nano, tiny) library",
+                        href: "https://github.com/microsoft/jacdac-dotnet",
+                    },
+                    {
+                        title: "microsoft/jacdac-python",
+                        description: "Python (desktop) library",
+                        href: "https://github.com/microsoft/jacdac-python",
+                    },
+                    {
+                        title: "microsoft/pxt-jacdac",
+                        description: "MakeCode library",
+                        href: "https://github.com/microsoft/pxt-jacdac",
+                    },
                 ]}
-                showDescription={true}
             />
 
             <h2>Integrations</h2>
 
-            <GithubRepositoryList
-                repos={[
-                    "microsoft/node-red-contrib-jacdac",
-                    "microsoft/react-jacdac",
-                    "microsoft/jacdac-cli",
+            <PageLinkList
+                dense
+                nodes={[
+                    {
+                        title: "microsoft/jacdac-docs",
+                        description: "Documentation, web tools and dashboard",
+                        href: "https://github.com/microsoft/jacdac-docs",
+                    },
+                    {
+                        title: "microsoft/jacdac-cli",
+                        description: "Command line interface",
+                        href: "https://github.com/microsoft/jacdac-cli",
+                    },
+                    {
+                        title: "microsoft/react-jacdac",
+                        description: "React library",
+                        href: "https://github.com/microsoft/react-jacdac",
+                    },
+                    {
+                        title: "microsoft/node-red-contrib-jacdac",
+                        description: "node-red-contrib-jacdac",
+                        href: "https://github.com/microsoft/node-red-contrib-jacdac",
+                    },
                 ]}
-                showDescription={true}
-            />
-
-            <h2>Embedded Tools</h2>
-
-            <GithubRepositoryList
-                repos={[
-                    "microsoft/pxt-jacdac/tools/multitool",
-                    "microsoft/pxt-jacdac/devices/microbit",
-                    "microsoft/pxt-jacdac/tools/microbit-jukebox",
-                ]}
-                showDescription={false}
-            />
-
-            <h2> Documentation</h2>
-
-            <GithubRepositoryList
-                repos={["microsoft/jacdac-docs"]}
-                showDescription={true}
-            />
-
-            <h2>Experimental</h2>
-
-            <GithubRepositoryList
-                repos={[
-                    "microsoft/jacdac-circuitpython",
-                    "microsoft/jupyter-jacdac",
-                ]}
-                showDescription={true}
             />
 
             <h2> Microsoft Open Source Code of Conduct</h2>
