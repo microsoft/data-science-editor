@@ -116,6 +116,10 @@ async function createRedirects(actions) {
             fromPath: `/tools/module-tester`,
             toPath: `/tools/device-tester`,
         },
+        {
+            fromPath: `/clients/p5js`,
+            toPath: `/clients/javascript/p5js`,
+        },
     ]
     rs.forEach(r => createRedirect(r))
 }
