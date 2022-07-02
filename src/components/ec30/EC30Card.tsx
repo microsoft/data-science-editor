@@ -38,7 +38,7 @@ export default function EC30Card(props: {
                         <Button
                             variant="outlined"
                             href={dxfUri}
-                            download={"box.dxf"}
+                            download={"device.dxf"}
                         >
                             Download DXF
                         </Button>
