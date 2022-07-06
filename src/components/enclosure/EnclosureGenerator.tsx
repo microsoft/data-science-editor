@@ -77,7 +77,7 @@ export default function EnclosureGenerator(props: {
                             )
                         }
                     >
-                        Generate Enclosure STL
+                        Generate Enclosure
                     </Button>
                 </Grid>
             )}

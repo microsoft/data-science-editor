@@ -375,7 +375,7 @@ export default function DeviceSpecification(props: {
                         and 3D modelling for this device.
                     </p>
                     <Suspense>
-                        <Enclosure shape={shape} />
+                        <Enclosure shape={shape} showSave={true} />
                     </Suspense>
                 </>
             )}
