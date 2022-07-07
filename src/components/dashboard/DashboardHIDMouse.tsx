@@ -108,7 +108,7 @@ export default function DashboardHIDMouse(props: DashboardServiceProps) {
             case "w":
                 sendWheel(-10)
                 break
-            case "s":
+            case "d":
                 sendWheel(10)
                 break
         }
