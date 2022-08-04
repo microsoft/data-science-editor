@@ -175,10 +175,10 @@ function LightStripWidget(props: {
         const ringradius = (1.5 * neoperimeter) / (2 * Math.PI)
         width = 2 * (margin + ringradius)
         height = width
-        const wm = width - 2 * margin
-        d = `M ${margin},${
-            height >> 1
-        } a ${ringradius},${ringradius} 0 0,1 ${wm},0 a ${ringradius},${ringradius} 0 0,1 -${wm}, 0`
+        const hm = height - 2 * margin
+        d = `M ${width >> 1},${
+            margin
+        } a ${ringradius},${ringradius} 0 0,1 0,${hm} a ${ringradius},${ringradius} 0 0,1 0, -${hm}`
     }
 
     // tune opacity to account for global opacity
