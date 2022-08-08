@@ -46,6 +46,7 @@ import {
     SRV_JACSCRIPT_MANAGER,
     SRV_HID_JOYSTICK,
     SRV_JACSCRIPT_CLOUD,
+    SRV_SAT_NAV,
 } from "../../../jacdac-ts/src/jdom/constants"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { CircularProgress } from "@mui/material"
@@ -83,6 +84,7 @@ const DashboardSpeechSynthesis = lazy(
 )
 const DashboardSoilMoisture = lazy(() => import("./DashboardSoilMoisture"))
 const DashboardRealTimeClock = lazy(() => import("./DashboardRealTimeClock"))
+const DashboardSatNav = lazy(() => import("./DashboardSatNav"))
 const DashboardSevenSegmentDisplay = lazy(
     () => import("./DashboardSevenSegmentDisplay")
 )
@@ -224,6 +226,9 @@ const serviceViews: {
     [SRV_REAL_TIME_CLOCK]: {
         component: DashboardRealTimeClock,
         expandable: true,
+    },
+    [SRV_SAT_NAV]: {
+        component: DashboardSatNav,
     },
     [SRV_LED_SINGLE]: {
         component: DashboardLEDSingle,

@@ -11,8 +11,8 @@ import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import { useId } from "react"
 import useSvgButtonProps from "../hooks/useSvgButtonProps"
 import { roundWithPrecision } from "../../../jacdac-ts/src/jdom/utils"
-import LoadingProgress from "../ui/LoadingProgress"
 import useRegister from "../hooks/useRegister"
+import DashboardRegisterValueFallback from "./DashboardRegisterValueFallback"
 
 const TILT = 15
 
@@ -59,7 +59,10 @@ export default function DashbaordRainGauge(props: DashboardServiceProps) {
     const ty = h - 4
     const fs = 8
 
-    if (tiltAngle === undefined) return <LoadingProgress />
+    if (tiltAngle === undefined)
+        return (
+            <DashboardRegisterValueFallback register={precipitationRegister} />
+        )
 
     return (
         <SvgWidget width={w} height={h}>
