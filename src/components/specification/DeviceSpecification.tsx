@@ -96,6 +96,24 @@ function DeviceSpecificationList(props: {
     )
 }
 
+function storeInfo(url: string) {
+    const u = new URL(url)
+    const host = u.hostname.replace(/^www\./i, "")
+    const infos: Record<string, { name: string }> = {
+        "kittenbot.cc": { name: "KittenBot" },
+        "aliexpress.com": { name: "AliExpress" },
+        "pakronics.com.au": { name: "Pakronics" },
+        "kitronik.co.uk": { name: "Kitronik" },
+        "keyestudio.com": { name: "KeyStudio" },
+        "sparkfun.com": { name: "SparkFun" },
+        "makerbit.com": { name: "MakerBit" },
+        "category.yahboom.com": { name: "YahBoom" },
+        "microbit.org": { name: "MicroBit Educational Foundation" },
+    }
+
+    return infos[host] || { name: host }
+}
+
 export default function DeviceSpecification(props: {
     device: jdspec.DeviceSpec
 }) {
@@ -252,7 +270,8 @@ export default function DeviceSpecification(props: {
                             requires a{" "}
                             <Link to={`/devices/${identifierToUrlPath(id)}`}>
                                 {name}
-                            </Link>{" "} (sold separately).
+                            </Link>{" "}
+                            (sold separately).
                         </Alert>
                     ))}
                     {description && <Markdown source={description} />}
@@ -280,11 +299,20 @@ export default function DeviceSpecification(props: {
                                 this device.
                             </p>
                             <ul>
-                                {storeLinks.map(link => (
-                                    <Link key={link} href={link}>
-                                        {link}
-                                    </Link>
-                                ))}
+                                {storeLinks
+                                    .map(link => ({ link, ...storeInfo(link) }))
+                                    .map(({ link, name }) => (
+                                        <li key={link}>
+                                            <Link
+                                                key={link}
+                                                href={link}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                {name}
+                                            </Link>
+                                        </li>
+                                    ))}
                             </ul>
                         </>
                     )}
