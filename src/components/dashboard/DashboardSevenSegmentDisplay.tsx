@@ -1,17 +1,58 @@
-import React from "react"
+import React, { ChangeEvent, useEffect, useId, useState } from "react"
 import { SevenSegmentDisplayReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import {
     useRegisterBoolValue,
     useRegisterUnpackedValue,
 } from "../../jacdac/useRegisterValue"
+import { sevenSegmentDigitEncode } from "../../../jacdac-ts/src/jdom/sevensegment"
 import SvgWidget from "../widgets/SvgWidget"
 import useWidgetTheme from "../widgets/useWidgetTheme"
-import { Grid } from "@mui/material"
+import { Grid, TextField } from "@mui/material"
 import RegisterInput from "../RegisterInput"
 import useServiceServer from "../hooks/useServiceServer"
 import useRegister from "../hooks/useRegister"
 import DashboardRegisterValueFallback from "./DashboardRegisterValueFallback"
+
+function DigitsInput(props: DashboardServiceProps) {
+    const { service } = props
+    const digitsRegister = useRegister(service, SevenSegmentDisplayReg.Digits)
+    const digitCountRegister = useRegister(
+        service,
+        SevenSegmentDisplayReg.DigitCount
+    )
+    const [digitCount] = useRegisterUnpackedValue<[number]>(
+        digitCountRegister,
+        props
+    )
+    const [value, setValue] = useState("")
+    const handleValueChange = (ev: ChangeEvent<{ value: string }>) => {
+        setValue(ev.target.value)
+    }
+    const eid = useId()
+
+    useEffect(() => {
+        // encode numbers into digits
+        const v = parseFloat(value)
+        if (digitsRegister) {
+            const digits = isNaN(v)
+                ? new Uint8Array(0)
+                : sevenSegmentDigitEncode(v, digitCount)
+            digitsRegister.sendSetAsync(digits, true)
+        }
+    }, [value, digitsRegister, digitCount])
+
+    return (
+        <TextField
+            id={eid}
+            type="number"
+            value={value}
+            size="small"
+            label="digits"
+            onChange={handleValueChange}
+        />
+    )
+}
 
 export default function DashboardSevenSegmentDisplay(
     props: DashboardServiceProps
@@ -47,8 +88,9 @@ export default function DashboardSevenSegmentDisplay(
 
     const server = useServiceServer(service)
     const color = server ? "secondary" : "primary"
-    const { background, controlBackground } = useWidgetTheme(color)
-    const active = "#ff0000"
+    const { textPrimary, controlBackground } = useWidgetTheme(color)
+    const active = textPrimary
+    const background = controlBackground
 
     if (digitCount === undefined)
         return <DashboardRegisterValueFallback register={digitCountRegister} />
@@ -229,7 +271,7 @@ export default function DashboardSevenSegmentDisplay(
     return (
         <Grid container direction="column">
             <Grid item xs={12}>
-                <SvgWidget width={w} height={h} background={controlBackground}>
+                <SvgWidget width={w} height={h}>
                     {Array(digitCount)
                         .fill(0)
                         .map((_, i) => (
@@ -242,12 +284,21 @@ export default function DashboardSevenSegmentDisplay(
                         ))}
                 </SvgWidget>
             </Grid>
-            {expanded && brightness !== undefined && (
+            {expanded && (
                 <Grid item>
-                    <RegisterInput
-                        register={brightnessRegister}
-                        visible={visible}
-                    />
+                    <Grid container direction="column">
+                        <Grid item>
+                            <DigitsInput {...props} />
+                        </Grid>
+                        {brightness !== undefined && (
+                            <Grid item>
+                                <RegisterInput
+                                    register={brightnessRegister}
+                                    visible={visible}
+                                />
+                            </Grid>
+                        )}
+                    </Grid>
                 </Grid>
             )}
         </Grid>
