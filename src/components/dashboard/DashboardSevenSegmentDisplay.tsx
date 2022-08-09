@@ -49,6 +49,7 @@ function DigitsInput(props: DashboardServiceProps) {
             value={value}
             size="small"
             label="digits"
+            fullWidth={true}
             onChange={handleValueChange}
         />
     )
@@ -269,7 +270,7 @@ export default function DashboardSevenSegmentDisplay(
     }
 
     return (
-        <Grid container direction="column">
+        <Grid container spacing={1} direction="column">
             <Grid item xs={12}>
                 <SvgWidget width={w} height={h}>
                     {Array(digitCount)
@@ -285,20 +286,17 @@ export default function DashboardSevenSegmentDisplay(
                 </SvgWidget>
             </Grid>
             {expanded && (
+                <Grid item xs={12}>
+                    <DigitsInput {...props} />
+                </Grid>
+            )}
+            {expanded && brightness !== undefined && (
                 <Grid item>
-                    <Grid container direction="column">
-                        <Grid item>
-                            <DigitsInput {...props} />
-                        </Grid>
-                        {brightness !== undefined && (
-                            <Grid item>
-                                <RegisterInput
-                                    register={brightnessRegister}
-                                    visible={visible}
-                                />
-                            </Grid>
-                        )}
-                    </Grid>
+                    <RegisterInput
+                        register={brightnessRegister}
+                        visible={visible}
+                        showRegisterName={true}
+                    />
                 </Grid>
             )}
         </Grid>
