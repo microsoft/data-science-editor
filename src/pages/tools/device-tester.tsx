@@ -1,5 +1,5 @@
 import { Grid, Tab, Tabs } from "@mui/material"
-import React, { useState } from "react"
+import React, { useMemo, useState } from "react"
 import useDevices from "../../components/hooks/useDevices"
 import useDeviceProductIdentifier from "../../jacdac/useDeviceProductIdentifier"
 import FirmwareLoader from "../../components/firmware/FirmwareLoader"
@@ -10,7 +10,10 @@ import {
     filterTestService,
 } from "../../components/testdom/filters"
 import DeviceTestItem from "../../components/testdom/DeviceTestItem"
-import { DeviceTestSpec } from "../../../jacdac-ts/src/testdom/spec"
+import {
+    DeviceTestSpec,
+    OracleTestSpec,
+} from "../../../jacdac-ts/src/testdom/spec"
 import useDeviceTest from "../../components/testdom/useDeviceTest"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import SafeBootAlert from "../../components/firmware/SafeBootAlert"
@@ -24,11 +27,21 @@ import useBusWithMode from "../../jacdac/useBusWithMode"
 import useLocalStorage from "../../components/hooks/useLocalStorage"
 import DeviceTestExporter from "../../components/testdom/DeviceTestExporter"
 import { Flags } from "../../../jacdac-ts/src/jdom/flags"
+import DashboardDeviceItem from "../../components/dashboard/DashboardDeviceItem"
+import SwitchWithLabel from "../../components/ui/SwitchWithLabel"
+import { arrayConcatMany, splitFilter } from "../../../jacdac-ts/src/jdom/utils"
+import { resolveReadingTolerage } from "../../../jacdac-ts/src/testdom/testrules"
+import GridHeader from "../../components/ui/GridHeader"
 
-const FACTORY_MODE_STORAGE_KEY = "jacdac_device_tester_factory"
+const FACTORY_MODE_STORAGE_KEY = "device_tester_factory"
+const ORACLE_DEVICES_STORAGE_KEY = "device_tester_oracles"
 
-function DeviceItem(props: { device: JDDevice; factory?: boolean }) {
-    const { device, factory } = props
+function DeviceItem(props: {
+    device: JDDevice
+    factory?: boolean
+    oracles?: OracleTestSpec[]
+}) {
+    const { device, factory, oracles } = props
     const productIdentifier = useDeviceProductIdentifier(device)
     const testSpec = useChange(
         device,
@@ -45,7 +58,7 @@ function DeviceItem(props: { device: JDDevice; factory?: boolean }) {
         [productIdentifier, factory],
         (a, b) => JSON.stringify(a) === JSON.stringify(b)
     )
-    const test = useDeviceTest(device, testSpec)
+    const test = useDeviceTest(device, testSpec, oracles)
     if (!device) return null
     return <DeviceTestItem test={test} device={device} />
 }
@@ -62,6 +75,10 @@ export default function Page() {
     const [factory, setFactory] = useLocalStorage(
         FACTORY_MODE_STORAGE_KEY,
         false
+    )
+    const [oracleDeviceIds, setOracleDeviceIds] = useLocalStorage<string[]>(
+        ORACLE_DEVICES_STORAGE_KEY,
+        []
     )
 
     // don't let a brain interfere
@@ -83,11 +100,44 @@ export default function Page() {
         )
         .filter(filterTestDevice)
         .sort((l, r) => -(l.created - r.created))
+
+    const [deviceOracles, devicesNoOracles] = splitFilter(devices, d =>
+        oracleDeviceIds.includes(d.deviceId)
+    )
+    const oracles = useMemo(
+        () =>
+            arrayConcatMany(
+                devices
+                    ?.filter(d => oracleDeviceIds.includes(d.deviceId))
+                    .map(d =>
+                        d
+                            .services({ sensor: true })
+                            .map<OracleTestSpec>(
+                                ({ device, serviceClass, serviceIndex }) => ({
+                                    deviceId: device.deviceId,
+                                    serviceClass,
+                                    serviceIndex,
+                                    tolerance:
+                                        resolveReadingTolerage(serviceClass),
+                                })
+                            )
+                    )
+            ),
+        [devices, oracleDeviceIds]
+    )
+
     const handleTabChange = (
         event: React.ChangeEvent<unknown>,
         newValue: number
     ) => {
         setTab(newValue)
+    }
+    const handleCheckOracle = (device: JDDevice) => () => {
+        const newOracles = oracleDeviceIds.slice(0)
+        const i = newOracles.indexOf(device.deviceId)
+        if (i > -1) newOracles.splice(i, 1)
+        else newOracles.push(device.deviceId)
+        setOracleDeviceIds(newOracles)
     }
 
     return (
@@ -101,14 +151,19 @@ export default function Page() {
             >
                 <Tab label={`Devices`} />
                 <Tab label={`Firmwares`} />
+                <Tab label={`Oracles`} />
             </Tabs>
             <TabPanel value={tab} index={0}>
                 <PowerSupplySection />
-                {devices?.length ? (
+                {devicesNoOracles?.length ? (
                     <Grid container spacing={1}>
-                        {devices?.map(device => (
+                        {devicesNoOracles?.map(device => (
                             <Grid key={device.id} item xs={12}>
-                                <DeviceItem device={device} factory={factory} />
+                                <DeviceItem
+                                    device={device}
+                                    factory={factory}
+                                    oracles={oracles}
+                                />
                             </Grid>
                         ))}
                     </Grid>
@@ -117,6 +172,20 @@ export default function Page() {
                         Connect your device and follow the instructions to run a
                         compliance test.
                     </p>
+                )}
+                {!!deviceOracles?.length && (
+                    <Grid container spacing={1}>
+                        <GridHeader title="Oracles" />
+                        {deviceOracles.map(d => (
+                            <DashboardDeviceItem
+                                device={d}
+                                key={d.id}
+                                showAvatar={true}
+                                showHeader={true}
+                                showReset={true}
+                            />
+                        ))}
+                    </Grid>
                 )}
                 <AlertSwitch
                     severity="success"
@@ -142,6 +211,36 @@ export default function Page() {
                 <FirmwareCardGrid />
                 <SafeBootAlert />
                 <ManualFirmwareAlert />
+            </TabPanel>
+            <TabPanel value={tab} index={2}>
+                <Grid container spacing={1}>
+                    <Grid item xs={12}>
+                        Use known device readings as oracles for the device
+                        under tests.
+                    </Grid>
+                    {devices?.map(device => (
+                        <Grid key={device.id} item xs={12}>
+                            <Grid container spacing={1}>
+                                <DashboardDeviceItem
+                                    key={device.id}
+                                    device={device}
+                                    showAvatar={true}
+                                    showHeader={true}
+                                    showReset={true}
+                                />
+                                <Grid item xs>
+                                    <SwitchWithLabel
+                                        label={"reading oracle"}
+                                        checked={oracleDeviceIds.includes(
+                                            device.deviceId
+                                        )}
+                                        onChange={handleCheckOracle(device)}
+                                    />
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    ))}
+                </Grid>
             </TabPanel>
         </>
     )

@@ -215,15 +215,6 @@ export function FlashDeviceButton(props: {
             </Grid>
         )
 
-    // tslint:disable-next-line: react-this-binding-issue
-    console.debug(`update`, {
-        unsupported,
-        missing,
-        firmwareInfo,
-        update,
-        upToDate,
-        ignoreFirmwareCheck,
-    })
     return unsupported ? (
         <Alert severity="info">No registered firmware</Alert>
     ) : missing ? (
