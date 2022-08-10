@@ -15,9 +15,8 @@ import TestUploadStateMessage from "./TestUploadStateMessage"
 export default function DeviceTestItem(props: {
     test: TestNode
     device: JDDevice
-    autoUpdate?: boolean
 }) {
-    const { device, test, autoUpdate } = props
+    const { device, test } = props
     const blob = useDeviceFirmwareBlob(device)
     const uploadState = useChange(test, _ => _?.uploadState)
 
@@ -40,7 +39,6 @@ export default function DeviceTestItem(props: {
                                 device={device}
                                 blob={blob}
                                 hideUpToDate={true}
-                                autoStart={autoUpdate}
                             />
                         </Grid>
                     )}

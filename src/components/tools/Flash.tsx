@@ -25,7 +25,6 @@ import useChange from "../../jacdac/useChange"
 import Alert from "../ui/Alert"
 import { AlertTitle } from "@mui/material"
 import FirmwareLoader from "../firmware/FirmwareLoader"
-import AlertSwitch from "../ui/AlertSwitch"
 
 function FlashDiagnostics() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
@@ -59,7 +58,6 @@ function FlashDiagnostics() {
 export default function Flash() {
     const { bus } = useContext<JacdacContextProps>(JacdacContext)
     const [tab, setTab] = useState(0)
-    const [autoStart, setAutoStart] = useState(false)
     const { throttled } = useFirmwareBlobs()
     const devices = useChange(bus, _ => _.devices({ physical: true }))
 
@@ -96,19 +94,11 @@ export default function Flash() {
                 <Tab label={`Firmwares`} />
             </Tabs>
             <TabPanel value={tab} index={0}>
-                <UpdateDeviceList autoStart={autoStart} />
+                <UpdateDeviceList />
             </TabPanel>
             <TabPanel value={tab} index={1}>
                 <FirmwareCardGrid />
             </TabPanel>
-            <AlertSwitch
-                severity="info"
-                checked={autoStart}
-                onChecked={setAutoStart}
-                title="auto update"
-            >
-                Automatically start firmware updates.
-            </AlertSwitch>
             <SafeBootAlert />
             <ManualFirmwareAlert />
             {Flags.diagnostics && <FlashDiagnostics />}

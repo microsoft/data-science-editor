@@ -131,9 +131,8 @@ export function FlashDeviceButton(props: {
     blob: FirmwareBlob
     ignoreFirmwareCheck?: boolean
     hideUpToDate?: boolean
-    autoStart?: boolean
 }) {
-    const { device, blob, ignoreFirmwareCheck, hideUpToDate, autoStart } = props
+    const { device, blob, ignoreFirmwareCheck, hideUpToDate } = props
     const bus = useBus()
     const { setError } = useSnackbar()
     const { trackEvent, trackError } = useAnalytics()
@@ -193,17 +192,10 @@ export function FlashDeviceButton(props: {
     }
 
     useEffect(() => {
-        if (
-            device &&
-            autoStart &&
-            firmwareInfo &&
-            !bootloader &&
-            update &&
-            !upToDate
-        ) {
+        if (device && firmwareInfo && !bootloader && update && !upToDate) {
             handleFlashing()
         }
-    }, [device, autoStart, firmwareInfo, bootloader, update, upToDate])
+    }, [device, firmwareInfo, bootloader, update, upToDate])
 
     if (hideUpToDate && upToDate) return null
 

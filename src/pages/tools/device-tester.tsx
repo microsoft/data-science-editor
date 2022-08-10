@@ -27,12 +27,8 @@ import { Flags } from "../../../jacdac-ts/src/jdom/flags"
 
 const FACTORY_MODE_STORAGE_KEY = "jacdac_device_tester_factory"
 
-function DeviceItem(props: {
-    device: JDDevice
-    factory?: boolean
-    autoUpdate?: boolean
-}) {
-    const { device, factory, autoUpdate } = props
+function DeviceItem(props: { device: JDDevice; factory?: boolean }) {
+    const { device, factory } = props
     const productIdentifier = useDeviceProductIdentifier(device)
     const testSpec = useChange(
         device,
@@ -51,9 +47,7 @@ function DeviceItem(props: {
     )
     const test = useDeviceTest(device, testSpec)
     if (!device) return null
-    return (
-        <DeviceTestItem test={test} device={device} autoUpdate={autoUpdate} />
-    )
+    return <DeviceTestItem test={test} device={device} />
 }
 
 export const frontmatter = {
@@ -65,7 +59,6 @@ export const frontmatter = {
 export default function Page() {
     const [tab, setTab] = useState(0)
     const [proxy, setProxy] = useState(false)
-    const [autoUpdate, setAutoUpdate] = useState(false)
     const [factory, setFactory] = useLocalStorage(
         FACTORY_MODE_STORAGE_KEY,
         false
@@ -96,7 +89,6 @@ export default function Page() {
     ) => {
         setTab(newValue)
     }
-    const handleAutoUpdateChange = checked => setAutoUpdate(checked)
 
     return (
         <>
@@ -116,11 +108,7 @@ export default function Page() {
                     <Grid container spacing={1}>
                         {devices?.map(device => (
                             <Grid key={device.id} item xs={12}>
-                                <DeviceItem
-                                    device={device}
-                                    factory={factory}
-                                    autoUpdate={autoUpdate}
-                                />
+                                <DeviceItem device={device} factory={factory} />
                             </Grid>
                         ))}
                     </Grid>
@@ -148,14 +136,6 @@ export default function Page() {
                 >
                     Force brains to enter dongle mode, to avoid application
                     interfere with testing.
-                </AlertSwitch>
-                <AlertSwitch
-                    severity="warning"
-                    checked={autoUpdate}
-                    onChecked={handleAutoUpdateChange}
-                    title="auto firmware update"
-                >
-                    Start firmware updates automatically when available.
                 </AlertSwitch>
             </TabPanel>
             <TabPanel value={tab} index={1}>
