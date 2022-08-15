@@ -16,8 +16,6 @@ import {
 } from "../../../jacdac-ts/src/testdom/spec"
 import useDeviceTest from "../../components/testdom/useDeviceTest"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
-import SafeBootAlert from "../../components/firmware/SafeBootAlert"
-import ManualFirmwareAlert from "../../components/firmware/ManualFirmwareAlert"
 import { isDualDeviceId } from "../../../jacdac-ts/src/jdom/spec"
 import PowerSupplySection from "../../components/testdom/PowerSupplySection"
 import TabPanel from "../../components/ui/TabPanel"
@@ -142,7 +140,6 @@ export default function Page() {
 
     return (
         <>
-            <FirmwareLoader />
             <h1>Device Tester</h1>
             <Tabs
                 value={tab}
@@ -150,7 +147,6 @@ export default function Page() {
                 aria-label="Testing services in devices"
             >
                 <Tab label={`Devices`} />
-                <Tab label={`Firmwares`} />
                 <Tab label={`Oracles`} />
             </Tabs>
             <TabPanel value={tab} index={0}>
@@ -208,15 +204,10 @@ export default function Page() {
                 </AlertSwitch>
             </TabPanel>
             <TabPanel value={tab} index={1}>
-                <FirmwareCardGrid />
-                <SafeBootAlert />
-                <ManualFirmwareAlert />
-            </TabPanel>
-            <TabPanel value={tab} index={2}>
                 <Grid container spacing={1}>
                     <Grid item xs={12}>
                         Use known device readings as oracles for the device
-                        under tests.
+                        under tests (within tolerance).
                     </Grid>
                     {devices?.map(device => (
                         <Grid key={device.id} item xs={12}>
