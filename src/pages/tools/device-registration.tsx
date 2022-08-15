@@ -266,7 +266,7 @@ export default function DeviceRegistration() {
         updateDevice()
     }
     const handleShapeChange = (
-        ev: SelectChangeEvent<jdspec.JacdacConnectorType>
+        ev: SelectChangeEvent<jdspec.ShapeWellKnown>
     ) => {
         device.shape = ev.target.value?.trim() as jdspec.ShapeWellKnown
         updateDevice()
