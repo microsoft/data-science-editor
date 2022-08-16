@@ -18,6 +18,7 @@ import { BlockJSON, WorkspaceFile, WorkspaceJSON } from "./workspacejson"
 
 export interface CreateBlocksOptions {
     theme: Theme
+    clientSpecs?: jdspec.ServiceSpec[]
 }
 
 export interface CreateCategoryOptions {

@@ -56,7 +56,7 @@ import {
     toMemberExpression,
 } from "../../../../jacdac-ts/src/vm/compile"
 import { makeVMBase } from "../../jacscript/JacscriptGenerator"
-import { toMap } from "../../../../jacdac-ts/src/jdom/utils"
+import { arrayConcatMany, toMap } from "../../../../jacdac-ts/src/jdom/utils"
 
 const INSPECT_BLOCK = "jacdac_tools_inspect"
 const commandColor = "#8c6a1d"
@@ -71,7 +71,7 @@ export class ServicesBlockDomainSpecificLanguage
     private _roleBlocks: BlockDefinition[]
 
     createBlocks(options: CreateBlocksOptions) {
-        const { theme } = options
+        const { theme, clientSpecs } = options
         this.serviceColor = createServiceColor(theme)
 
         // pure service information here
@@ -86,6 +86,8 @@ export class ServicesBlockDomainSpecificLanguage
             registerSimpleEnumTypes,
             registerCompositeEnumTypes,
         } = getServiceInfo()
+
+        console.log({ clientSpecs })
 
         const resolveService = (cls: number): jdspec.ServiceSpec[] =>
             allServices.filter(srv => srv.classIdentifier === cls)
@@ -418,7 +420,19 @@ export class ServicesBlockDomainSpecificLanguage
             this.makeRegisterNumericsGetBlocks(registerComposites)
         const registerSetClientBlocks = this.makeRegisterSetBlocks(registers)
 
-        const commandClientBlocks = commands.map<CommandBlockDefinition>(
+        const clientCommands = arrayConcatMany(
+            clientSpecs?.map(spec =>
+                spec.packets
+                    .filter(pkt => pkt.kind === "command")
+                    .map(command => ({
+                        service: resolveService(spec.classIdentifier)[0],
+                        command,
+                    }))
+            )
+        )
+        const allCommands = [...commands, ...(clientCommands || [])]
+
+        const commandClientBlocks = allCommands.map<CommandBlockDefinition>(
             ({ service, command }) => ({
                 kind: "block",
                 type: `jacdac_command_${service.shortId}_${command.name}`,

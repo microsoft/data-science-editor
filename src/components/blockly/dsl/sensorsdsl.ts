@@ -41,7 +41,7 @@ export class SensorsBlockDomainSpecificLanguage
 {
     id = "jacdacSensors"
 
-    createBlocks(options: CreateBlocksOptions): BlockDefinition[] {
+    createBlocks(): BlockDefinition[] {
         return [
             {
                 kind: "block",

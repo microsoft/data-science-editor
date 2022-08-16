@@ -19,6 +19,7 @@ import { addDataPreviewField } from "./fields/DataPreviewField"
 import { WorkspaceJSON } from "./dsl/workspacejson"
 import useAsyncMemo from "../hooks/useAsyncMemo"
 import { dependencyId } from "../../../jacdac-ts/src/jdom/eventsource"
+import useJacscript from "../jacscript/JacscriptContext"
 
 // overrides blockly emboss filter for svg elements
 Blockly.BlockSvg.prototype.setHighlighted = function (highlighted) {
@@ -38,11 +39,12 @@ type CachedBlockDefinitions = {
 
 async function loadBlocks(
     dsls: BlockDomainSpecificLanguage[],
-    theme: Theme
+    theme: Theme,
+    clientSpecs?: jdspec.ServiceSpec[]
 ): Promise<CachedBlockDefinitions> {
     const blocks: BlockDefinition[] = []
     for (const dsl of dsls) {
-        const dslBlocks = await dsl?.createBlocks?.({ theme })
+        const dslBlocks = await dsl?.createBlocks?.({ theme, clientSpecs })
         if (dslBlocks)
             for (const b of dslBlocks) {
                 addDataPreviewField(b)
@@ -105,13 +107,14 @@ export default function useToolbox(
     source: WorkspaceJSON
 ): ToolboxConfiguration {
     const liveServices = useServices({ specification: true })
+    const { clientSpecs } = useJacscript()
     const theme = useTheme()
 
     const blocks = useAsyncMemo(async () => {
-        const r = await loadBlocks(dsls, theme)
+        const r = await loadBlocks(dsls, theme, clientSpecs)
         if (Flags.diagnostics) console.debug(`blocks`, r)
         return r
-    }, [theme, dsls])
+    }, [theme, clientSpecs, dsls])
     const toolboxConfiguration = useMemo(() => {
         if (!blocks) return undefined
 
