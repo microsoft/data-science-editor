@@ -46,7 +46,7 @@ export default function DashboardPower(props: DashboardServiceProps) {
     const r = (w - 4) >> 1
     const ro = r - 4
     const ri = ro - 8
-    const off = powerStatus === PowerPowerStatus.Disallowed
+    const off = !allowed
     const label = off
         ? "off"
         : humanify(PowerPowerStatus[powerStatus]?.toLowerCase())
