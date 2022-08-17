@@ -7,7 +7,7 @@ const pathPrefix = "/jacdac-docs"
 const wsl = !!process.env.WSL_DISTRO_NAME || !!process.env.CODESPACE_NAME
 const offline = !!process.env.JACDAC_OFFLINE
 
-const SITE_TITLE = `Jacdac - plug-n-play for microcontrollers`
+const SITE_TITLE = `Jacdac - Connect and code electronics. Instantly.`
 const SITE_DESCRIPTION = `Jacdac is a plug-and-play hardware and software stack for microcontrollers and their peripherals such as sensors and actuators. Jacdac is primarily designed for “modular electronics” scenarios that support rapid prototyping, creative exploration, making and learning through physical computing. Jacdac is designed to be cheap, flexible and extensible.`
 
 module.exports = {
@@ -90,19 +90,13 @@ module.exports = {
         `gatsby-plugin-react-helmet`,
         `gatsby-plugin-image`,
         `gatsby-plugin-sharp`,
-        {
-            resolve: `gatsby-remark-images`,
-            options: {
-                linkImagesToOriginal: false,
-            },
-        },
         `gatsby-transformer-sharp`,
         {
             resolve: `gatsby-plugin-mdx`,
             options: {
-                defaultLayouts: {
-                    extensions: [`.mdx`, `.md`],
-                    default: require.resolve("./src/components/Page.tsx"),
+                extensions: [`.mdx`, `.md`],
+                mdxOptions: {
+                    remarkPlugins: [require(`remark-gfm`)],
                 },
                 gatsbyRemarkPlugins: [
                     wsl || offline
@@ -126,37 +120,6 @@ module.exports = {
                         },
                     },
                     "gatsby-remark-static-images",
-                    "gatsby-remark-embed-snippet",
-                    "gatsby-remark-copy-linked-files",
-                ].filter(plugin => !!plugin),
-            },
-        },
-        {
-            resolve: `gatsby-transformer-remark`,
-            options: {
-                plugins: [
-                    wsl || offline
-                        ? undefined
-                        : {
-                              resolve: "gatsby-remark-makecode",
-                              options: {
-                                  editorUrl: "https://makecode.microbit.org/",
-                              },
-                          },
-                    "gatsby-remark-autolink-headers",
-                    "gatsby-remark-external-links",
-                    {
-                        resolve: `gatsby-remark-images`,
-                        options: {
-                            // It's important to specify the maxWidth (in pixels) of
-                            // the content container as this plugin uses this as the
-                            // base for generating different widths of each image.
-                            maxWidth: maxImageWidth,
-                            linkImagesToOriginal: false,
-                        },
-                    },
-                    "gatsby-remark-static-images",
-                    "gatsby-remark-embed-snippet",
                     "gatsby-remark-copy-linked-files",
                 ].filter(plugin => !!plugin),
             },
@@ -170,7 +133,7 @@ module.exports = {
                         title: node => node.frontmatter.title,
                         description: node =>
                             node.frontmatter.description || node.excerpt,
-                        body: node => node.rawBody,
+                        body: node => node.rawBody || node.body,
                         tags: node => node.frontmatter.tags || "",
                         url: node => node.frontmatter.path || node.fields.slug,
                     },
@@ -201,64 +164,6 @@ module.exports = {
                 }, // filter: (node, getNode) => node.frontmatter.tags !== "exempt",
             },
         },
-        /*    
-    {
-      resolve: 'gatsby-plugin-flexsearch',
-      options: {
-        // L
-        languages: ['en'],
-        type: 'Mdx', // Filter the node types you want to index
-        // Fields to index.
-        fields: [
-          {
-            name: 'title',
-            indexed: true, // If indexed === true, the field will be indexed.
-            resolver: 'frontmatter.title',
-            // Attributes for indexing logic. Check https://github.com/nextapps-de/flexsearch#presets for details.
-            attributes: {
-              encode: "extra",
-              tokenize: "full",
-              threshold: 1,
-              resolution: 3
-            },
-            store: true, // In case you want to make the field available in the search results.
-          },
-          {
-            name: 'description',
-            indexed: true,
-            resolver: 'frontmatter.description',
-            attributes: {
-              encode: 'balance',
-              tokenize: 'strict',
-              threshold: 6,
-              depth: 3,
-            },
-            store: false,
-          },
-          {
-            name: 'body',
-            indexed: true, // If indexed === true, the field will be indexed.
-            resolver: 'rawBody',
-            // Attributes for indexing logic. Check https://github.com/nextapps-de/flexsearch#presets for details.
-            attributes: {
-              encode: "casei",
-              tokenize: "forward",
-              threshold: 2,
-              resolution: 4,
-              depth: 3
-            },
-            store: false, // In case you want to make the field available in the search results.
-          },
-          {
-            name: 'url',
-            indexed: false,
-            resolver: 'fields.slug',
-            store: true,
-          },
-        ],
-      },
-    },
-    */
         "gatsby-plugin-sitemap",
         {
             resolve: `gatsby-plugin-manifest`,

@@ -160,11 +160,6 @@ export default function ToolsDrawer() {
             to: "/tools/collector/",
             icon: <FiberManualRecordIcon />,
         },
-        UIFlags.peers && {
-            text: "Peers",
-            to: "/tools/peers/",
-            icon: <WifiIcon />,
-        },
         {},
         {
             text: "Firmware Update",

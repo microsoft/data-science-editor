@@ -260,38 +260,6 @@ export class ServicesBlockDomainSpecificLanguage
                         template: "custom",
                     }
             ),
-            ...resolveService(SRV_LED).map(
-                service =>
-                    <CustomBlockDefinition>{
-                        kind: "block",
-                        type: `fade`,
-                        message0: `set %1 to %2`,
-                        args0: [
-                            roleVariable(service),
-                            {
-                                type: "input_value",
-                                name: "color",
-                                check: "Number",
-                            },
-                        ],
-                        values: {
-                            color: {
-                                kind: "block",
-                                type: LEDColorField.SHADOW.type,
-                            },
-                        },
-                        colour: this.serviceColor(service),
-                        inputsInline: true,
-                        previousStatement: CODE_STATEMENT_TYPE,
-                        nextStatement: CODE_STATEMENT_TYPE,
-                        tooltip: `Set LED color`,
-                        helpUrl: serviceHelp(service),
-                        service,
-                        expression: `$role.animate(($color >> 16) & 0xff, ($color >> 8) & 0xff, ($color >> 0) & 0xff, 0)`,
-                        template: "custom",
-                        group: "",
-                    }
-            ),
             ...resolveService(SRV_SEVEN_SEGMENT_DISPLAY).map(
                 service =>
                     <CustomBlockDefinition>{

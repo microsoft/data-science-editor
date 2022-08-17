@@ -14,16 +14,12 @@ export default function ErrorList() {
                     title?: string
                     order?: number
                 }
-                headings: {
-                    value: string
-                }[]
             }[]
         }
     }>(graphql`
         {
             allMdx(
-                filter: { slug: { glob: "faq/errors/**" } }
-                sort: { fields: slug }
+                filter: { fields: { slug: { glob: "faq/errors/**" } } }
             ) {
                 nodes {
                     fields {
@@ -32,9 +28,6 @@ export default function ErrorList() {
                     frontmatter {
                         title
                         order
-                    }
-                    headings {
-                        value
                     }
                 }
             }
@@ -51,7 +44,7 @@ export default function ErrorList() {
         )
         .map(node => ({
             slug: node.fields?.slug,
-            title: node.frontmatter.title || node.headings?.[0].value,
+            title: node.frontmatter.title,
             order: node.frontmatter.order,
         }))
 

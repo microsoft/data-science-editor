@@ -128,9 +128,6 @@ export default function Toc(props: { pagePath: string }) {
             allMdx {
                 edges {
                     node {
-                        headings {
-                            value
-                        }
                         frontmatter {
                             title
                             order
@@ -213,7 +210,7 @@ export default function Toc(props: { pagePath: string }) {
             .filter(node => !node.frontmatter || !node.frontmatter?.hideToc)
             .map(node => {
                 const r = {
-                    name: node.frontmatter?.title || node.headings[0].value,
+                    name: node.frontmatter?.title,
                     path: node.fields.slug,
                     order:
                         node.frontmatter?.order !== undefined

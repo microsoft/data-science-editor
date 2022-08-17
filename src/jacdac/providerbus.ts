@@ -75,7 +75,6 @@ function sniffQueryArguments() {
             params.get(`ws`) === "1"
                 ? "ws://127.0.0.1:8080/"
                 : params.get("ws"),
-        peers: params.get(`peers`) === "1",
         parentOrigin: params.get("parentOrigin"),
         frameId: window.location.hash?.slice(1),
         widget: params.get("widget") === "1",
@@ -103,7 +102,6 @@ Flags.trace = args.trace
 
 export class UIFlags {
     static widget = args.widget
-    static peers = args.peers
     static localhost = args.localhost
     static storage = args.storage
     static hosted = args.hosted

@@ -63,23 +63,6 @@ at 1Mbaud in half-duplex mode, implemented in hardware or in software via bit-ba
 implemented in hardware or in software by spin waiting.
 * The ability to keep time (whether through instruction counting or a hardware timer).
 
-<!--
-We enumerate a few of the options we have explored below.
-
-### 32-bit ARM processors
-
-Many ARM processors come with DMA-able (Direct Memory Access) UART peripherals. This means that no CPU intervention is required to send or receive UART data. Many of these processors also support half-duplex mode and internally tie RX to TX together when this mode is selected. For microcontrollers that do not support internal ties, these pins can usually be connected to each other externally for the same effect. Internal pull ups and timers often also come built into this class of microcontroller.
-
-Jacdac has been implemented on the following 32-bit ARM processors:
-
-* Atmel SAMD21, SAMD51
-* Nordic NRF52832, NRF52833, NRF52840
-* STM 32F0, 32F1, 32F4
-
-### 8-bit processors
-
-8-bit processors are typically not as capable as 32-bit ARM processors, but they are often cheaper. Throughout the design of Jacdac we have considered this class of processor and have implemented Jacdac on 8-bit processors with and without UART support. Through a software UART implementation via the PADAUK PMS150C, Jacdac can be added to any sensor at the cost of 2.5 US cents.-->
-
 ### Protocol details
 
 ### Transmission sequence

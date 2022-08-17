@@ -80,26 +80,16 @@ export type PageQuery = {
                 order?: number
                 date?: string
             }
-            headings?: {
-                value: string
-            }[]
         }[]
     }
 }
 
-function trimPrefix(s: string, p: string) {
-    if (p && s?.startsWith(p)) return s.substring(p.length)
-    return s
-}
-
 export function pageQueryToNodes(data: PageQuery) {
     const nodes = data?.allMdx?.nodes.map(
-        ({ excerpt, frontmatter, fields, headings }) => ({
+        ({ excerpt, frontmatter, fields }) => ({
             slug: fields?.slug,
-            title: frontmatter.title || headings?.[0].value,
-            description:
-                frontmatter.description ||
-                trimPrefix(excerpt, headings?.[0].value),
+            title: frontmatter?.title,
+            description: frontmatter?.description || excerpt,
             order: frontmatter.order,
             date: frontmatter.date,
         })

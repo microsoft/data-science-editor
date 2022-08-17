@@ -31,9 +31,6 @@ export default function PythonProjects(props: {
                         services?: string
                         description?: string
                     }
-                    headings: {
-                        value: string
-                    }[]
                 }
             }[]
         }
@@ -55,9 +52,6 @@ export default function PythonProjects(props: {
                             order
                             services
                             description
-                        }
-                        headings {
-                            value
                         }
                     }
                 }
@@ -83,9 +77,9 @@ export default function PythonProjects(props: {
             if (c) return c
             return l.fields.slug.localeCompare(r.fields.slug)
         })
-        return nodes.map(({ fields, frontmatter, headings }) => ({
+        return nodes.map(({ fields, frontmatter }) => ({
             slug: fields.slug,
-            title: frontmatter.title || headings?.[0]?.value,
+            title: frontmatter.title,
             description: frontmatter.description,
             services: frontmatter.services,
         }))

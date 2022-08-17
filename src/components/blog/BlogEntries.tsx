@@ -19,9 +19,6 @@ export default function BlogEntries(props: { header?: ReactNode }) {
                         description
                         date
                     }
-                    headings {
-                        value
-                    }
                 }
             }
         }

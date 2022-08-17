@@ -205,7 +205,7 @@ export default function StyledTreeItem(
             style={{
                 "--tree-view-color": color,
                 "--tree-view-bg-color": bgColor,
-            }}
+            } as any}
             classes={{
                 root: classes.root,
                 content: classes.content,

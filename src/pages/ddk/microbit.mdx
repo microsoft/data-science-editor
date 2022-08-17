@@ -83,28 +83,3 @@ One approach to designing a Jacdaptor for micro:bit V2 is to use a micro:bit edg
 
 A reference design showing how to implement a micro:bit Jacdaptor as described above is in the [Jacdac electronics design repository](https://github.com/microsoft/jacdac-ddk/tree/main/electronics/deprecated_form_factor/altium_deprecated/jacdaptor-reference-designs/JacdacMicroBitShieldLP%2029-0.6). Note that the form factor of this design (the board shape and mounting hole details) are deprecated. 
 
-<!--- 
-## Independent power
-
-In this scenario, you integrate one or more [Jacdac PCB edge connectors](/ddk/design/electro-mechanical#pcb-edge-connector) into your design, 
-with the `JD_DATA` line connected to micro:bit **pin 12** through the required [signal conditioning](/ddk/design/electrical#signalling) circuit. The power line is **not** connected.
-
-On the software side, the same approach applies in Software-Only Jacdac.
-
-However, this approach is not recommended as it will lead
-to a confusing experience for users where modules won't be powered unless another power module
-is on the Jacdac line.
-
--   Pros
-    -   retrofit existing accessories
-    -   simulator
-    -   digital twin
-    -   no modification to existing extension code
-    -   same github repository for code
-    -   Jacdac connector at minimal cost
--   Cons
-    -   Confusing user experience
-    -   new hardware design needed
-    -   extension required
-    -   micro:bit v2 only (Jacdac is not supported on v1)
-    --->

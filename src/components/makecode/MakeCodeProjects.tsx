@@ -31,9 +31,6 @@ export default function MakeCodeProjects(props: {
                         services?: string
                         description?: string
                     }
-                    headings: {
-                        value: string
-                    }[]
                 }
             }[]
         }
@@ -56,9 +53,6 @@ export default function MakeCodeProjects(props: {
                             services
                             description
                         }
-                        headings {
-                            value
-                        }
                     }
                 }
             }
@@ -75,9 +69,9 @@ export default function MakeCodeProjects(props: {
                     n => node.frontmatter.services?.indexOf(n) > -1
                 )
             )
-        return nodes.map(({ fields, frontmatter, headings }) => ({
+        return nodes.map(({ fields, frontmatter }) => ({
             slug: fields.slug,
-            title: frontmatter.title || headings?.[0]?.value,
+            title: frontmatter.title,
             description: frontmatter.description,
             services: frontmatter.services,
             order: frontmatter.order,

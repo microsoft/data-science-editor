@@ -151,6 +151,9 @@ export default function CodeBlock(props: {
     copy?: boolean
 }) {
     const { children, filename, className, ...rest } = props
+
+    if (className === undefined) return <code>{children}</code>
+
     const language = className?.replace(/language-/, "") || ""
     switch (language) {
         case "trace":

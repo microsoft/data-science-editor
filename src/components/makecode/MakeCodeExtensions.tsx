@@ -28,9 +28,6 @@ export default function MakeCodeExtensions(props: {
                         description?: string
                         order?: number
                     }
-                    headings: {
-                        value: string
-                    }[]
                 }
             }[]
         }
@@ -52,9 +49,6 @@ export default function MakeCodeExtensions(props: {
                             description
                             order
                         }
-                        headings {
-                            value
-                        }
                     }
                 }
             }
@@ -74,9 +68,9 @@ export default function MakeCodeExtensions(props: {
     return (
         <PageLinkList
             header={header}
-            nodes={nodes.map(({ fields, frontmatter, headings }) => ({
+            nodes={nodes.map(({ fields, frontmatter }) => ({
                 slug: fields.slug,
-                title: frontmatter.title || headings?.[0]?.value,
+                title: frontmatter.title,
                 order: frontmatter.order,
             }))}
         />

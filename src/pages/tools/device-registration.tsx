@@ -206,7 +206,8 @@ export default function DeviceRegistration() {
             ? ""
             : "Must be https://..."
     const storeLinkError =
-        !device.storeLink || /^https:\/\//i.test(device.storeLink as string)
+        !device.storeLink ||
+        /^https:\/\//i.test(device.storeLink?.[0] as string)
             ? ""
             : "Must be https://..."
     const idError =
@@ -262,7 +263,8 @@ export default function DeviceRegistration() {
         updateDevice()
     }
     const handleStoreLinkChange = (ev: ChangeEvent<HTMLInputElement>) => {
-        device.storeLink = ev.target.value?.trim()
+        const v = ev.target.value?.trim()
+        device.storeLink = v ? [v] : undefined
         updateDevice()
     }
     const handleShapeChange = (
@@ -772,7 +774,7 @@ export default function DeviceRegistration() {
                         }
                         fullWidth={true}
                         placeholder="https://..."
-                        value={device.storeLink || ""}
+                        value={device.storeLink?.[0] || ""}
                         onChange={handleStoreLinkChange}
                         variant={variant}
                         type="url"

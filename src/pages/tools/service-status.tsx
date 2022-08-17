@@ -122,9 +122,6 @@ export default function Page() {
                     frontmatter: {
                         title?: string
                     }
-                    headings: {
-                        value: string
-                    }[]
                 }
             }[]
         }
@@ -143,9 +140,6 @@ export default function Page() {
                         }
                         frontmatter {
                             title
-                        }
-                        headings {
-                            value
                         }
                     }
                 }

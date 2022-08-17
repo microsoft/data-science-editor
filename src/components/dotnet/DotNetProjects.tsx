@@ -19,9 +19,6 @@ export default function DotNetProjects() {
                         title
                         order
                     }
-                    headings {
-                        value
-                    }
                 }
             }
         }
