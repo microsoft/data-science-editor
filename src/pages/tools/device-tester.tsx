@@ -32,6 +32,7 @@ import { resolveReadingTolerage } from "../../../jacdac-ts/src/testdom/testrules
 import GridHeader from "../../components/ui/GridHeader"
 
 const FACTORY_MODE_STORAGE_KEY = "device_tester_factory"
+const EXPORT_MODE_STORAGE_KEY = "device_tester_export"
 const ORACLE_DEVICES_STORAGE_KEY = "device_tester_oracles"
 
 function DeviceItem(props: {
@@ -74,6 +75,10 @@ export default function Page() {
         FACTORY_MODE_STORAGE_KEY,
         false
     )
+    const [exporter, setExporter] = useLocalStorage(
+        EXPORT_MODE_STORAGE_KEY,
+        false
+    )
     const [oracleDeviceIds, setOracleDeviceIds] = useLocalStorage<string[]>(
         ORACLE_DEVICES_STORAGE_KEY,
         []
@@ -85,6 +90,7 @@ export default function Page() {
     useBusWithMode({ autoConnect: true })
 
     const handleSetFactory = (checked: boolean) => setFactory(checked)
+    const handleSetExporter = (checked: boolean) => setExporter(checked)
     const handleSetProxy = (checked: boolean) => setProxy(checked)
     const devices = useDevices({
         physical: !Flags.diagnostics,
@@ -191,7 +197,15 @@ export default function Page() {
                 >
                     Tests should be fast and automated in factory mode. Manual
                     tests are <b>disabled</b>.
-                    {factory && <DeviceTestExporter />}
+                </AlertSwitch>
+                <AlertSwitch
+                    severity="info"
+                    title="upload test results"
+                    checked={exporter}
+                    onChecked={handleSetExporter}
+                >
+                    Automatically upload test results to a web service.
+                    {exporter && <DeviceTestExporter />}
                 </AlertSwitch>
                 <AlertSwitch
                     severity="info"
