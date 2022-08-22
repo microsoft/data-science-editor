@@ -24,43 +24,43 @@ const patterns: Record<
     {
         name: string
         duration: number
-        speed: number
+        volume: number
     }
 > = {
     ".": {
         name: "dit",
         duration: 1,
-        speed: 0.6,
+        volume: 0.6,
     },
     "-": {
         name: "dat",
         duration: 3,
-        speed: 0.6,
+        volume: 0.6,
     },
     " ": {
         name: "space",
         duration: 1,
-        speed: 0,
+        volume: 0,
     },
     _: {
         name: "low dat",
         duration: 3,
-        speed: 0.2,
+        volume: 0.2,
     },
     "=": {
         name: "hight dat",
         duration: 3,
-        speed: 1,
+        volume: 1,
     },
     "'": {
         name: "high dit",
         duration: 1,
-        speed: 1,
+        volume: 1,
     },
     ",": {
         name: "low dit",
         duration: 1,
-        speed: 0.2,
+        volume: 0.2,
     },
 }
 
@@ -89,7 +89,7 @@ function PatternInput(props: {
             navigator.vibrate(seq.flatMap(p => [p.duration, T_DIT >> 3]))
 
         const pattern: [number, number][] = seq.flatMap(p => [
-            [(p.duration * T_DIT) >> 3, p.speed * speedScale],
+            [(p.duration * T_DIT) >> 3, p.volume * speedScale],
             [T_REST >> 3, 0],
         ])
         const data = jdpack<[[number, number][]]>("r: u8 u0.8", [pattern])
