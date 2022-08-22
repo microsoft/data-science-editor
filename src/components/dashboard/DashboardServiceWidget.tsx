@@ -216,6 +216,7 @@ const serviceViews: {
     },
     [SRV_POWER]: {
         component: DashboardPower,
+        expandable: true
     },
     [SRV_SPEECH_SYNTHESIS]: {
         component: DashboardSpeechSynthesis,

@@ -16,13 +16,23 @@ import useWidgetTheme from "../widgets/useWidgetTheme"
 import useRegister from "../hooks/useRegister"
 import { humanify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import DashboardRegisterValueFallback from "./DashboardRegisterValueFallback"
+import { Grid } from "@mui/material"
+import RegisterInput from "../RegisterInput"
 
 export default function DashboardPower(props: DashboardServiceProps) {
-    const { service } = props
+    const { service, expanded, visible } = props
 
     const allowedRegister = useRegister(service, PowerReg.Allowed)
     const powerStatusRegister = useRegister(service, PowerReg.PowerStatus)
     const batteryChargeRegister = useRegister(service, PowerReg.BatteryCharge)
+    const keepOnPulseDurationRegister = useRegister(
+        service,
+        PowerReg.KeepOnPulseDuration
+    )
+    const keepOnPulsePeriodRegister = useRegister(
+        service,
+        PowerReg.KeepOnPulsePeriod
+    )
 
     const allowed = useRegisterBoolValue(allowedRegister, props)
     const [powerStatus] = useRegisterUnpackedValue<[PowerPowerStatus]>(
@@ -60,60 +70,83 @@ export default function DashboardPower(props: DashboardServiceProps) {
     const widgetSize = `clamp(4rem, 10vw, 10vh)`
 
     return (
-        <SvgWidget width={w} height={h} size={widgetSize}>
-            <g>
-                <PowerButton
-                    cx={w / 2}
-                    cy={w / 2}
-                    r={ro}
-                    ri={ri}
-                    off={off}
-                    color={color}
-                    label={label}
-                    borderStroke={
-                        (powerStatus === PowerPowerStatus.Overload ||
-                            powerStatus === PowerPowerStatus.Overprovision) &&
-                        "red"
-                    }
-                    onClick={toggleEnabled}
-                />
-                {batteryCharge !== undefined && (
+        <Grid container spacing={1} alignItems="center">
+            <Grid item xs={12}>
+                <SvgWidget width={w} height={h} size={widgetSize}>
                     <g>
-                        <title>{`battery charge ${Math.floor(
-                            batteryCharge * 100
-                        )}%`}</title>
-                        <rect
-                            x={w - bw - mw}
-                            y={mw}
-                            width={bw * batteryCharge}
-                            height={hw}
-                            rx={rw}
-                            ry={rw}
-                            fill={active}
+                        <PowerButton
+                            cx={w / 2}
+                            cy={w / 2}
+                            r={ro}
+                            ri={ri}
+                            off={off}
+                            color={color}
+                            label={label}
+                            borderStroke={
+                                (powerStatus === PowerPowerStatus.Overload ||
+                                    powerStatus ===
+                                        PowerPowerStatus.Overprovision) &&
+                                "red"
+                            }
+                            onClick={toggleEnabled}
                         />
-                        <rect
-                            x={w - bw - mw}
-                            y={mw}
-                            width={bw}
-                            height={hw}
-                            rx={rw}
-                            ry={rw}
-                            fill={"none"}
-                            stroke={background}
-                            strokeWidth={1}
-                        />
-                        <text
-                            x={w - 2 * mw}
-                            y={mw + hw / 2}
-                            {...textProps}
-                            textAnchor="end"
-                            fontSize={hw * 0.6}
-                        >
-                            {Math.floor(batteryCharge * 100)}%
-                        </text>
+                        {batteryCharge !== undefined && (
+                            <g>
+                                <title>{`battery charge ${Math.floor(
+                                    batteryCharge * 100
+                                )}%`}</title>
+                                <rect
+                                    x={w - bw - mw}
+                                    y={mw}
+                                    width={bw * batteryCharge}
+                                    height={hw}
+                                    rx={rw}
+                                    ry={rw}
+                                    fill={active}
+                                />
+                                <rect
+                                    x={w - bw - mw}
+                                    y={mw}
+                                    width={bw}
+                                    height={hw}
+                                    rx={rw}
+                                    ry={rw}
+                                    fill={"none"}
+                                    stroke={background}
+                                    strokeWidth={1}
+                                />
+                                <text
+                                    x={w - 2 * mw}
+                                    y={mw + hw / 2}
+                                    {...textProps}
+                                    textAnchor="end"
+                                    fontSize={hw * 0.6}
+                                >
+                                    {Math.floor(batteryCharge * 100)}%
+                                </text>
+                            </g>
+                        )}
                     </g>
-                )}
-            </g>
-        </SvgWidget>
+                </SvgWidget>
+            </Grid>
+            {expanded && (
+                <Grid item xs={12}>
+                    <RegisterInput
+                        register={keepOnPulseDurationRegister}
+                        showRegisterName={true}
+                        visible={visible}
+                    />
+                </Grid>
+            )}
+            {expanded && (
+                <Grid item xs={12}>
+                    <RegisterInput
+                        register={keepOnPulsePeriodRegister}
+                        showRegisterName={true}
+                        visible={visible}
+                    />
+                </Grid>
+            )}
+        </Grid>
     )
 }
