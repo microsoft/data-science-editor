@@ -142,7 +142,11 @@ export default function DashboardAccelerometer(props: DashboardServiceProps) {
             const forces = register.unpackedValue
             if (!forces) return undefined
             const [x, y, z] = forces
-            const roll = Math.atan2(-y, z)
+            let roll = Math.atan2(-y, z)
+            if (y >= 0)
+                roll += Math.PI
+            else
+                roll -= Math.PI
             const pitch = Math.atan(x / (y * y + z * z))
 
             return {
