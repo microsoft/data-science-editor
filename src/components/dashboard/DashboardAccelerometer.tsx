@@ -81,7 +81,7 @@ function Sliders(props: {
                 <SliderWithLabel
                     id={xId}
                     label="X"
-                    valueLabelDisplay="auto"
+                    valueLabelDisplay="on"
                     valueLabelFormat={valueDisplay}
                     aria-label="x"
                     min={min}
@@ -96,7 +96,7 @@ function Sliders(props: {
                 <SliderWithLabel
                     id={yId}
                     label="Y"
-                    valueLabelDisplay="auto"
+                    valueLabelDisplay="on"
                     valueLabelFormat={valueDisplay}
                     aria-label="y"
                     min={min}
@@ -111,7 +111,7 @@ function Sliders(props: {
                 <SliderWithLabel
                     id={zId}
                     label="Z"
-                    valueLabelDisplay="auto"
+                    valueLabelDisplay="on"
                     valueLabelFormat={valueDisplay}
                     aria-label="z"
                     min={min}
