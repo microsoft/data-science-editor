@@ -6,21 +6,30 @@ import { Vector } from "./threeutils"
 
 function Cube(props: {
     color: string
-    rotator: (delta: number, rotation: Vector) => Vector
+    positioner?: (delta: number, position: Vector) => Vector
+    rotator?: (delta: number, rotation: Vector) => Vector
 }) {
-    const { color, rotator } = props
+    const { color, rotator, positioner } = props
     const meshRef = useRef<Mesh>()
 
     // updates outside of react
     useFrame((state, delta) => {
         const { current: mesh } = meshRef
         if (!mesh) return
-        const rot = rotator(delta, mesh.rotation)
-        if (!rot) return
-        const { x, y, z } = rot
-        mesh.rotation.x = x
-        mesh.rotation.y = y
-        mesh.rotation.z = z
+        const rot = rotator?.(delta, mesh.rotation)
+        if (rot) {
+            const { x, y, z } = rot
+            mesh.rotation.x = x
+            mesh.rotation.y = y
+            mesh.rotation.z = z
+        }
+        const pos = positioner?.(delta, mesh.position)
+        if (pos) {
+            const { x, y, z } = pos
+            mesh.position.x = x
+            mesh.position.y = y
+            mesh.position.z = z
+        }
     })
 
     return (
@@ -33,7 +42,8 @@ function Cube(props: {
 
 export default function CanvasWidget(props: {
     color: string
-    rotator: (delta: number, rotation: Vector) => Vector
+    positioner?: (delta: number, position: Vector) => Vector
+    rotator?: (delta: number, rotation: Vector) => Vector
 }) {
     const { ...others } = props
 
