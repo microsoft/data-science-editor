@@ -27,14 +27,14 @@ The example below displays device that get announced on the bus.
 import { createWebBus, DEVICE_ANNOUNCE } from "jacdac-ts"
 
 const bus = createWebBus();
-bus.on(DEVICE_ANNOUNCE, device => log(device))
+bus.on(DEVICE_ANNOUNCE, device => log(device.describe()))
 // call connect from a user interaction
 bus.connect();
 -----
 import { DEVICE_ANNOUNCE } from "jacdac-ts"
 
 // listen for new device
-bus.on(DEVICE_ANNOUNCE, device => log(device))
+bus.on(DEVICE_ANNOUNCE, device => log(device.describe()))
 ```
 
 ## Node.JS CommonJS/ES6

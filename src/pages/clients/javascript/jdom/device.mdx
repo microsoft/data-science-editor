@@ -23,7 +23,7 @@ bus.on(DEVICE_ANNOUNCE, () => {
     // print to console
     log("")
     for(const device of devices)
-        log(device)
+        log(device.describe())
 })
 ```
 

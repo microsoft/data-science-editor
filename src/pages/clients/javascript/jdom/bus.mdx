@@ -93,7 +93,7 @@ bus.on(DEVICE_ANNOUNCE, () => {
     // print to console
     log("")
     for(const device of devices)
-        log(device)
+        log(device.describe())
 })
 ```
 
@@ -174,7 +174,7 @@ bus.on(CHANGE, () => {
     // print to console
     log(`connected: ${bus.connected}`)
     for(const device of devices)
-        log(device)
+        log(device.describe())
 })
 ```
 
