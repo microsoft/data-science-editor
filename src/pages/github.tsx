@@ -88,6 +88,11 @@ export default function Page() {
                             "Firmware library for native Jacdac on desktop",
                         href: "https://github.com/microsoft/jacdac-posix",
                     },
+                    {
+                        title: "microsoft/codal-jacdac",
+                        description: "Jacdac-C SDK integration for CODAL",
+                        href: "https://github.com/microsoft/codal-jacdac",
+                    },
                 ]}
             />
 
