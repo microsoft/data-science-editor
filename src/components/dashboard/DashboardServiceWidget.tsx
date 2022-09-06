@@ -47,6 +47,7 @@ import {
     SRV_HID_JOYSTICK,
     SRV_JACSCRIPT_CLOUD,
     SRV_SAT_NAV,
+    SRV_PLANAR_POSITION,
 } from "../../../jacdac-ts/src/jdom/constants"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { CircularProgress } from "@mui/material"
@@ -119,6 +120,7 @@ const DashboardJacscriptManager = lazy(
     () => import("./DashboardJacscriptManager")
 )
 const DashboardJacscriptCloud = lazy(() => import("./DashboardJacscriptCloud"))
+const DashboardPlanarPosition = lazy(() => import("./DashboardPlanarPosition"))
 
 export interface DashboardServiceProps {
     service: JDService
@@ -216,7 +218,7 @@ const serviceViews: {
     },
     [SRV_POWER]: {
         component: DashboardPower,
-        expandable: true
+        expandable: true,
     },
     [SRV_SPEECH_SYNTHESIS]: {
         component: DashboardSpeechSynthesis,
@@ -323,6 +325,10 @@ const serviceViews: {
     },
     [SRV_LIGHT_BULB]: {
         component: DashboardLightBulb,
+    },
+    [SRV_PLANAR_POSITION]: {
+        component: DashboardPlanarPosition,
+        weight: () => 2,
     },
     [SRV_JACSCRIPT_MANAGER]: {
         component: DashboardJacscriptManager,
