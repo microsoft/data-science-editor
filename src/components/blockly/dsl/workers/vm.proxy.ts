@@ -10,6 +10,7 @@ import { JDBridge } from "../../../../../jacdac-ts/src/jdom/bridge"
 import bus from "../../../../jacdac/providerbus"
 
 class JacscriptBridge extends JDBridge {
+    refs = 0
     state: VMState = "stopped"
     variables: Record<string, number>
     sendCount = 0
@@ -55,18 +56,27 @@ class JacscriptBridge extends JDBridge {
 }
 
 let bridge: JacscriptBridge
-export function mountJacscriptBridge() {
-    if (bridge) throw new Error("unmounted bridge")
-
-    const worker = workerProxy("vm")
-    const b = (bridge = new JacscriptBridge(worker))
-    bridge.bus = bus
+export function startJacscriptVM(): () => void {
+    let b = bridge
+    if (!bridge) {
+        const worker = workerProxy("vm")
+        b = bridge = new JacscriptBridge(worker)
+        b.bus = bus
+    }
+    b.refs++
     return () => {
-        bridge = undefined
-        b.unmount()
+        b.refs--
+        if (bridge === b && b.refs <= 0) {
+            bridge = undefined
+            b.unmount()
+        }
     }
 }
 
+/**
+ * Gets the current jacscript bridge; make sure it is started, do not keep a reference
+ * @returns
+ */
 export function jacscriptBridge() {
     return bridge
 }

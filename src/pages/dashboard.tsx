@@ -4,16 +4,25 @@ import { useLocationSearchParamBoolean } from "../components/hooks/useLocationSe
 import Suspense from "../components/ui/Suspense"
 import { UIFlags } from "../jacdac/providerbus"
 const DataStreamer = lazy(() => import("../components/tools/DataStreamer"))
+const JacscriptVMLoader = lazy(
+    () => import("../components/jacscript/JacscriptVMLoader")
+)
 
 export default function Page() {
     const dataStreamer =
         useLocationSearchParamBoolean("datastreamer", false) && UIFlags.hosted
+    const jacscript = useLocationSearchParamBoolean("jacscript", false)
 
     return (
         <>
             {dataStreamer && (
                 <Suspense>
                     <DataStreamer />
+                </Suspense>
+            )}
+            {jacscript && (
+                <Suspense>
+                    <JacscriptVMLoader />
                 </Suspense>
             )}
             <Dashboard

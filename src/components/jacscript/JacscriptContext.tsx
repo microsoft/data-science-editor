@@ -9,7 +9,7 @@ import { JacscriptProgram } from "../../../jacdac-ts/src/vm/ir2jacscript"
 import useEffectAsync from "../useEffectAsync"
 import { jacscriptCompile } from "../blockly/dsl/workers/jacscript.proxy"
 import type { JacscriptCompileResponse } from "../../workers/jacscript/jacscript-worker"
-import { mountJacscriptBridge } from "../blockly/dsl/workers/vm.proxy"
+import { startJacscriptVM } from "../blockly/dsl/workers/vm.proxy"
 import { DISCONNECT } from "../../../jacdac-ts/src/jdom/constants"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 
@@ -40,7 +40,7 @@ export function JacscriptProvider(props: { children: ReactNode }) {
     const [manager, setManager] = useState<JDService>(undefined)
 
     // launch worker
-    useEffect(() => mountJacscriptBridge(), [])
+    useEffect(() => startJacscriptVM(), [])
     // unbind manager service if disconnected
     useEffect(
         () =>
