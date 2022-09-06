@@ -2,6 +2,7 @@ import { useMediaQuery } from "@mui/material"
 import React, {
     CSSProperties,
     ReactNode,
+    useCallback,
     useEffect,
     useMemo,
     useState,
@@ -35,14 +36,17 @@ export default function DarkModeProvider(props: {
             window.localStorage.setItem(KEY, mode)
         setDarkMode(mode)
     }
-    const toggleDarkMode = (mode?: PaletteType) => {
-        mode = mode || (darkMode === "light" ? "dark" : "light")
-        if (mode === "dark") {
-            setMode("dark")
-        } else {
-            setMode("light")
-        }
-    }
+    const toggleDarkMode = useCallback(
+        (mode?: PaletteType) => {
+            mode = mode || (darkMode === "light" ? "dark" : "light")
+            if (mode === "dark") {
+                setMode("dark")
+            } else {
+                setMode("light")
+            }
+        },
+        [darkMode]
+    )
     const imgStyle = useMemo<CSSProperties>(
         () =>
             darkMode == "dark"

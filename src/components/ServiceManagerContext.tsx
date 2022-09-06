@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useRef } from "react"
+import React, { createContext, useCallback, useContext, useEffect, useRef } from "react"
 import { JSONTryParse, SMap } from "../../jacdac-ts/src/jdom/utils"
 import {
     BrowserFileStorage,
@@ -70,7 +70,7 @@ export const ServiceManagerProvider = ({ children }) => {
     const propsRef = useRef<ServiceManagerContextProps>(createProps())
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleMessage = (ev: MessageEvent<any>) => {
+    const handleMessage = useCallback((ev: MessageEvent<any>) => {
         const msg = ev.data
         if (msg?.source !== "jacdac") return
         switch (msg.type) {
@@ -80,7 +80,7 @@ export const ServiceManagerProvider = ({ children }) => {
                 break
             }
         }
-    }
+    }, [toggleDarkMode])
 
     useWindowEvent("message", handleMessage)
     return (
