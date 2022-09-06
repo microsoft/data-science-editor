@@ -83,7 +83,9 @@
                 const frames = [left, right]
                 const selectLeft = document.getElementById("selectleft")
                 const urlinput = document.getElementById("urlinput")
-                const localhost = /localhost=1/.test(window.location.href)
+                const href = window.location.href
+                const localhost = /localhost=1/.test(href)
+                const jacscript = /jacscript=1/.test(href)
                 urlinput.value = localStorage["jacdac/devtools/url"] || ""
 
                 if (localhost) {
@@ -93,6 +95,10 @@
                         opt.innerText = "Jacdac (localhost:8000)"
                         sel.appendChild(opt)
                     })
+                }
+                if (jacscript) {
+                    for (const child of selectLeft.querySelectorAll("option"))
+                        child.value += `?jacscript=1`
                 }
                 const divider = document.getElementById("divider")
                 let ratio = 0.5
