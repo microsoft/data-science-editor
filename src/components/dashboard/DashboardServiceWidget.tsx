@@ -328,7 +328,7 @@ const serviceViews: {
     },
     [SRV_PLANAR_POSITION]: {
         component: DashboardPlanarPosition,
-        weight: () => 2,
+        weight: () => 1,
     },
     [SRV_JACSCRIPT_MANAGER]: {
         component: DashboardJacscriptManager,

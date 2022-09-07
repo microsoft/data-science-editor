@@ -1,7 +1,6 @@
-import { Grid, Typography } from "@mui/material"
-import React, { useEffect, useState } from "react"
+import React, { PointerEvent, useEffect, useRef, useState } from "react"
 import { PlanarPositionReg } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
-import { SensorServer } from "../../../jacdac-ts/src/servers/sensorserver"
+import { PlanarPositionServer } from "../../../jacdac-ts/src/servers/planarpositionserver"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import useRegister from "../hooks/useRegister"
 import useServiceServer from "../hooks/useServiceServer"
@@ -10,20 +9,20 @@ import useWidgetTheme from "../widgets/useWidgetTheme"
 import DashboardRegisterValueFallback from "./DashboardRegisterValueFallback"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 
-const HORIZON = 10
+const HORIZON = 16
 
 export default function DashboardButton(props: DashboardServiceProps) {
     const { service } = props
-
+    const svgRef = useRef<SVGSVGElement>(undefined)
     const positionRegister = useRegister(service, PlanarPositionReg.Position)
     const [x, y] = useRegisterUnpackedValue<[number, number]>(
         positionRegister,
         props
     )
     const [points, setPoints] = useState<number[][]>([])
-    const server = useServiceServer<SensorServer<[number, number]>>(service)
+    const server = useServiceServer<PlanarPositionServer>(service)
     const color = server ? "secondary" : "primary"
-    const { controlBackground, active } = useWidgetTheme(color)
+    const { controlBackground, active, textProps } = useWidgetTheme(color)
 
     useEffect(() => setPoints([]), [positionRegister]) // clear points on new register
     useEffect(
@@ -34,11 +33,7 @@ export default function DashboardButton(props: DashboardServiceProps) {
         [x, y]
     ) // append new points
 
-    if (x === undefined || y === undefined)
-        return <DashboardRegisterValueFallback register={positionRegister} />
-
     const n = points.length
-    const [x0, y0] = points[0] || [0, 0]
     const [xn, yn] = points[n - 1] || [0, 0]
     const min = points.reduce(
         (prev, curr) => [
@@ -54,35 +49,54 @@ export default function DashboardButton(props: DashboardServiceProps) {
         ],
         [0, 0]
     )
-    const width = max[0] - min[0]
+    const width = Math.max(64, max[0] - min[0])
+
+    const handlePointerMove = (ev: PointerEvent<SVGRectElement>) => {
+        const svg = svgRef.current
+        const pt = svg.createSVGPoint()
+        pt.x = ev.clientX
+        pt.y = ev.clientY
+        const svgP = pt.matrixTransform(svg.getScreenCTM().inverse())
+        const [cx, cy] = server.reading.values()
+        server.move(svgP.x - cx + (width >> 1), svgP.y - cy + (width >> 1))
+    }
+
+    if (x === undefined || y === undefined)
+        return <DashboardRegisterValueFallback register={positionRegister} />
+
+    const tvalue = `${Math.round(x)}mm, ${Math.round(y)}mm`
     return (
-        <Grid container spacing={1}>
-            <Grid item xs={12}>
-                <SvgWidget width={width} size="10rem">
-                    <g transform={`translate(${-x0}, -${y0})`}>
-                        <rect
-                            fill={controlBackground}
-                            rx={2}
-                            x={min[0]}
-                            width={width}
-                        />
-                        <path
-                            d={`${points
-                                .map(p => `l ${p[0]} ${p[1]}`)
-                                .join(" ")}`}
-                            stroke={active}
-                            strokeWidth="2"
-                            fill="none"
-                        />
-                        <circle cx={xn} cy={yn} r="4" fill={active} />
-                    </g>
-                </SvgWidget>
-            </Grid>
-            <Grid item xs={12}>
-                <Typography variant="subtitle1">
-                    {x}mm, {y}mm
-                </Typography>
-            </Grid>
-        </Grid>
+        <SvgWidget svgRef={svgRef} width={width} height={width} size="12rem">
+            <rect
+                fill={controlBackground}
+                rx={2}
+                x={0}
+                y={0}
+                width={width}
+                height={width}
+                onPointerMove={server ? handlePointerMove : undefined}
+                style={{ cursor: server ? "pointer" : undefined }}
+            />
+            <g transform={`translate(${-width >> 1}, ${-width >> 1})`}>
+                <path
+                    d={`${points
+                        .map((p, i) => `${i ? `L` : `M`} ${p[0]} ${p[1]}`)
+                        .join(" ")}`}
+                    stroke={active}
+                    strokeWidth="2"
+                    fill="none"
+                />
+                <circle cx={xn} cy={yn} r="4" fill={active} />
+            </g>
+            <text
+                x={width >> 1}
+                y={width >> 1}
+                {...textProps}
+                aria-label={tvalue}
+                fontSize="0.4rem"
+            >
+                {tvalue}
+            </text>
+        </SvgWidget>
     )
 }
