@@ -87,7 +87,6 @@ module.exports = {
         },
         `gatsby-transformer-javascript-frontmatter`,
         `gatsby-theme-material-ui`,
-        `gatsby-plugin-react-helmet`,
         `gatsby-plugin-image`,
         `gatsby-plugin-sharp`,
         `gatsby-transformer-sharp`,

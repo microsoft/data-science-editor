@@ -4,7 +4,6 @@ import clsx from "clsx"
 import { Container } from "@mui/material"
 import Typography from "@mui/material/Typography"
 import "./layout.css"
-import SEO from "./shell/SEO"
 import {
     createTheme,
     responsiveFontSizes,
@@ -307,9 +306,6 @@ function LayoutWithContext(props: LayoutProps) {
     return (
         <Root>
             <div className={clsx(darkMode, classes.root)}>
-                <header>
-                    <SEO lang="en" title={title} description={description} />
-                </header>
                 {!hideMainMenu && (
                     <nav>
                         {appBar}

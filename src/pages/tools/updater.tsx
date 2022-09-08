@@ -5,6 +5,8 @@ export const frontmatter = {
     title: "Firmware Updater",
     description: "Upgrade devices to the latest firmware version.",
 }
+import CoreHead from "../../components/shell/Head"
+export const Head = (props) => <CoreHead {...props} {...frontmatter} />
 
 export default function Page() {
     return (

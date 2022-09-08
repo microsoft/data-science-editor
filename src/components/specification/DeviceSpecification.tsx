@@ -13,7 +13,6 @@ import DownloadFirmwareButton from "../ui/DownloadFirmwareButton"
 import MemoryIcon from "@mui/icons-material/Memory"
 import ChipList from "../ui/ChipList"
 import { semverCmp } from "../semver"
-import StructuredData from "../ui/StructuredData"
 import useDeviceSpecifications from "../devices/useDeviceSpecifications"
 import { Link } from "gatsby-theme-material-ui"
 import {
@@ -35,37 +34,6 @@ import GithubRepositoryList from "../github/GithubRespositoryList"
 const Enclosure = lazy(() => import("../enclosure/Enclosure"))
 
 const HR_GAP = 4
-
-function DeviceStructuredData(props: { device: jdspec.DeviceSpec }) {
-    const { device } = props
-    const payload = useMemo(() => {
-        const { name, description, company, status } = device
-        const availability = {
-            deprecated: "Discontinued",
-            experimental: "LimitedAvailability",
-        }[status]
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const r: any = {
-            "@context": "https://schema.org/",
-            "@type": "Product",
-            name,
-            image: [
-                useDeviceImage(device, "preview"),
-                useDeviceImage(device, "catalog"),
-                useDeviceImage(device, "full"),
-            ],
-            description,
-            sku: device.id,
-            brand: {
-                "@type": "Brand",
-                name: company,
-            },
-        }
-        if (availability) r.availability = availability
-        return r
-    }, [device])
-    return <StructuredData payload={payload} />
-}
 
 function DeviceSpecificationList(props: {
     header: ReactNode
@@ -195,7 +163,6 @@ export default function DeviceSpecification(props: {
 
     return (
         <>
-            <DeviceStructuredData device={device} />
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={5}>
                     <div style={{ position: "relative" }}>

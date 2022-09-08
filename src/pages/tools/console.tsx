@@ -7,6 +7,8 @@ export const frontmatter = {
     title: "Console view",
     description: "Console message viewer.",
 }
+import CoreHead from "../../components/shell/Head"
+export const Head = (props) => <CoreHead {...props} {...frontmatter} />
 
 export default function Page() {
     return (

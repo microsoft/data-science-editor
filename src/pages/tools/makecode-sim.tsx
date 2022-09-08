@@ -4,7 +4,6 @@ import ThemedLayout from "../../components/ui/ThemedLayout"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import { isReading, isValueOrIntensity } from "../../../jacdac-ts/src/jdom/spec"
 import { strcmp } from "../../../jacdac-ts/src/jdom/utils"
-import Helmet from "react-helmet"
 import Dashboard from "../../components/dashboard/Dashboard"
 import DarkModeContext from "../../components/ui/DarkModeContext"
 import IFrameBridgeClient from "../../components/makecode/iframebridgeclient"
@@ -107,7 +106,6 @@ export default function Page() {
 
     return (
         <ThemedLayout theme={theme}>
-            <Helmet defer={false}>
                 <style>
                     {`
 html {
@@ -119,7 +117,6 @@ html, body {
 }
 `}
                 </style>
-            </Helmet>
             <Carousel />
         </ThemedLayout>
     )

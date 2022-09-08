@@ -15,6 +15,8 @@ export const frontmatter = {
     title: "Device Settings",
     description: "List and update settings on devices.",
 }
+import CoreHead from "../../components/shell/Head"
+export const Head = (props) => <CoreHead {...props} {...frontmatter} />
 
 export default function Page() {
     // spin up provider on demand

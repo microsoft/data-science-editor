@@ -2,27 +2,6 @@ import React, { useMemo } from "react"
 import { WindowLocation } from "@reach/router"
 import { Breadcrumbs as MaterialBreadcrumbs } from "@mui/material"
 import { Link } from "gatsby-theme-material-ui"
-import { withPrefix } from "gatsby-link"
-import StructuredData from "./StructuredData"
-
-function BreadcrumbsStructuredData(props: { parts: string[] }) {
-    const { parts } = props
-    const payload = useMemo(
-        () => ({
-            "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            itemListElement: parts.map((part, i) => ({
-                "@type": "ListItem",
-                position: i + 1,
-                name: part,
-                item: withPrefix("/" + parts.slice(0, i + 1).join("/")),
-            })),
-        }),
-        [parts]
-    )
-
-    return <StructuredData payload={payload} />
-}
 
 export default function Breadcrumbs(props: { location: WindowLocation }) {
     const { location } = props
@@ -36,7 +15,6 @@ export default function Breadcrumbs(props: { location: WindowLocation }) {
     if (!parts.length) return null
     return (
         <>
-            <BreadcrumbsStructuredData parts={parts} />
             <MaterialBreadcrumbs aria-label="breadcrumb">
                 <Link to="/" underline="hover">
                     Home

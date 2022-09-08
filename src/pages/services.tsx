@@ -23,6 +23,9 @@ import { isMixinService } from "../../jacdac-ts/jacdac-spec/spectool/jdutils"
 import useDeviceCatalog from "../components/devices/useDeviceCatalog"
 import FilterChip from "../components/ui/FilterChip"
 
+import CoreHead from "../components/shell/Head"
+export const Head = (props) => <CoreHead {...props} title="Services" />
+
 interface ServiceFilter {
     query: string
     tag?: string

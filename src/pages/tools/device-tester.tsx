@@ -67,6 +67,8 @@ export const frontmatter = {
     description:
         "Validating services in devices. Designed for manual or factory floor testing.",
 }
+import CoreHead from "../../components/shell/Head"
+export const Head = (props) => <CoreHead {...props} {...frontmatter} />
 
 export default function Page() {
     const [tab, setTab] = useState(0)

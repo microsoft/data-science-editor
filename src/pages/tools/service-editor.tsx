@@ -6,6 +6,8 @@ export const frontmatter = {
     title: "Service Specification Editor",
     description: "Edit a service markdown specification and preview the output. Start a pull request with the service content.",
 }
+import CoreHead from "../../components/shell/Head"
+export const Head = (props) => <CoreHead {...props} {...frontmatter} />
 
 export default function Page() {
     return (

@@ -8,6 +8,8 @@ export const frontmatter = {
     title: "Device QR Code Generator",
     description: "Generating QR codes for various PCB design software.",
 }
+import CoreHead from "../../components/shell/Head"
+export const Head = (props) => <CoreHead {...props} {...frontmatter} />
 
 export default function DeviceQRCodeGenerator() {
     const [url, setURL] = useState(``)

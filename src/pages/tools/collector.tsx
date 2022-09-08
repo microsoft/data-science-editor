@@ -62,6 +62,8 @@ export const frontmatter = {
     title: "Data Collector",
     description: "Record data from one or many services into files.",
 }
+import CoreHead from "../../components/shell/Head"
+export const Head = (props) => <CoreHead {...props} {...frontmatter} />
 
 const LIVE_HORIZON = 24
 function createDataSet(

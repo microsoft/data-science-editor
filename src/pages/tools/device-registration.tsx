@@ -111,6 +111,8 @@ export const frontmatter = {
     title: "Device Registration",
     description: "Form to submit a new device for the catalog.",
 }
+import CoreHead from "../../components/shell/Head"
+export const Head = (props) => <CoreHead {...props} {...frontmatter} />
 
 export default function DeviceRegistration() {
     const [device, setDevice] = useLocalStorage<jdspec.DeviceSpec>(

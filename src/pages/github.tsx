@@ -2,6 +2,12 @@ import { Link } from "gatsby-theme-material-ui"
 import React from "react"
 import PageLinkList from "../components/ui/PageLinkList"
 
+export const frontmatter = {
+    title: "GitHub repositories"
+}
+import CoreHead from "../components/shell/Head"
+export const Head = (props) => <CoreHead {...props} {...frontmatter} />
+
 export default function Page() {
     return (
         <>

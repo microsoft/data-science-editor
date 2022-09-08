@@ -15,6 +15,11 @@ import Suspense from "../ui/Suspense"
 import { Link } from "gatsby-theme-material-ui"
 const DeviceImageList = lazy(() => import("../devices/DeviceImageList"))
 
+export const frontmatter = {
+    title: "Jacdac",
+    path: "/",
+}
+
 export default function Home() {
     const { imgStyle } = useContext(DarkModeContext)
     return (

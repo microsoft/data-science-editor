@@ -110,6 +110,8 @@ export const frontmatter = {
     title: "Service Status",
     description: "Implementation status of services in clients, tests, firmware.",
 }
+import CoreHead from "../../components/shell/Head"
+export const Head = (props) => <CoreHead {...props} {...frontmatter} />
 
 export default function Page() {
     const query = useStaticQuery<{
