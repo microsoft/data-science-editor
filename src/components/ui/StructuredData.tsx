@@ -7,7 +7,7 @@ export default function StructuredData(props: { payload: StructuredData }) {
     const { payload } = props
     const rendered = useMemo(() => JSON.stringify(payload), [payload])
     return (
-        <Helmet>
+        <Helmet defer={false}>
             <script type="application/ld+json">{rendered}</script>
         </Helmet>
     )

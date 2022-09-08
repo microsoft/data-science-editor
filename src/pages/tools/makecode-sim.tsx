@@ -107,7 +107,7 @@ export default function Page() {
 
     return (
         <ThemedLayout theme={theme}>
-            <Helmet>
+            <Helmet defer={false}>
                 <style>
                     {`
 html {

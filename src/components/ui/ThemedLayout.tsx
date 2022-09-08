@@ -54,7 +54,11 @@ export default function ThemedLayout(props: {
                                                                     <ConsoleProvider>
                                                                         <MakeCodeSnippetProvider>
                                                                             <CssBaseline />
-                                                                            <Helmet>
+                                                                            <Helmet
+                                                                                defer={
+                                                                                    false
+                                                                                }
+                                                                            >
                                                                                 <link
                                                                                     rel="preconnect"
                                                                                     href="https://fonts.googleapis.com"
