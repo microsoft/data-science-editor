@@ -39,6 +39,7 @@ export default function SEO(props: {
     const metaDescription = description || site.siteMetadata.description
     return (
         <Helmet
+            defer={false}
             htmlAttributes={{
                 lang,
             }}
