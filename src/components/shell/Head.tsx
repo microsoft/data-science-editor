@@ -45,14 +45,14 @@ export default function Head(
         `
     )
     let metaTitle = title || pageContext?.title || site?.siteMetadata?.title
-    if (!/^Jacdac - /i.test(metaTitle)) metaTitle = `Jacdac - ${metaTitle}`
+    if (!/^Jacdac/i.test(metaTitle)) metaTitle = `Jacdac - ${metaTitle}`
     const metaDescription =
         description ||
         data?.page?.description ||
         site?.siteMetadata?.description
     return (
         <>
-            <title>{metaTitle}</title>
+            <title key="title">{metaTitle}</title>
             {[
                 {
                     name: `description`,
@@ -97,16 +97,19 @@ export default function Head(
                     <meta key={name} name={name} content={content} />
                 ))}
             <link
+                key="fontsgoogle"
                 rel="preconnect"
                 href="https://fonts.googleapis.com"
                 crossOrigin="anonymous"
             />
             <link
+                key="gitusercontent"
                 rel="preconnect"
                 href="https://raw.githubusercontent.com"
                 crossOrigin="anonymous"
             />
             <meta
+                key="viewport"
                 name="viewport"
                 content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
             />
