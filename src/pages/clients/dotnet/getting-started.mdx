@@ -15,13 +15,13 @@ application that controls an LED with a button.
 Start a devtools server and open the dashboard at [http://localhost:8082/](http://localhost:8082/).
 We'll be able to create simulated buttons in the dashboard.
 
-```
-> jacdac.devtools
+```bash copy
+jacdac.devtools
 ```
 
 To install this tool, run
 
-```
+```bash copy
 dotnet tool install -g jacdac.devtools
 ```
 
@@ -29,13 +29,13 @@ dotnet tool install -g jacdac.devtools
 
 If you are using the .NET cli, create a new console application
 
-```
+```bash copy
 dotnet new console
 ```
 
 and add Jacdac nuget packages.
 
-```
+```bash copy
 dotnet add package jacdac.net
 dotnet add package jacdac.net.clients
 dotnet add package jacdac.net.transports.websockets
@@ -43,7 +43,7 @@ dotnet add package jacdac.net.transports.websockets
 
 Launch Visual Studio Code with the C# extension or Visual Studio to build your project.
 
-```
+```bash copy
 code .
 ```
 

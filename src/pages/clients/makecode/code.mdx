@@ -19,7 +19,7 @@ Those programs can be authored and compiled with excellent tooling support in VS
 -   install [Node.JS](https://nodejs.org/en/download/)
 -   install [makecode](https://github.com/microsoft/pxt-makecode), the MakeCode command line tool
 
-```
+```bash copy
 npm install -g -u makecode
 ```
 
@@ -29,7 +29,7 @@ npm install -g -u makecode
 -   open a new terminal in code (Ctrl + `)
 -   use the makecode cli to initialize the project for the microbit + Jacdac
 
-```
+```bash copy
 makecode init microbit jacdac
 ```
 
@@ -37,7 +37,7 @@ makecode init microbit jacdac
 
 Based on which service you plan to use, add the corresponding MakeCode extensions using `makecode add`.
 
-```
+```bash copy
 makecode add jacdac-button jacdac-led
 ```
 
@@ -45,7 +45,7 @@ makecode add jacdac-button jacdac-led
 
 Download and save MakeCode extensions to the file system so that the TypeScript autocompletion, typechecking can use them.
 
-```
+```bash copy
 makecode install
 ```
 
@@ -53,7 +53,7 @@ makecode install
 
 -   launch makecode in watch mode
 
-```
+```bash copy
 makecode build --watch
 ```
 
@@ -63,7 +63,7 @@ makecode build --watch
 
 The ``serve`` command will launch a JavaScript build in watch mode and host the simulator in a web page. The page auto-reloads on changes.
 
-```
+```bash copy
 makecode serve
 ```
 
@@ -73,6 +73,6 @@ You can load the local simulator into the [Jacdac Web devtools](/clients/javascr
 
 -   launch makecode in watch mode (`-w`) and auto-deploy (`-d`)
 
-```
+```bash copy
 makecode build --watch --deploy
 ```
