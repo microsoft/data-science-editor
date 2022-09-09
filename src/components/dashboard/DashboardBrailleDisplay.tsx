@@ -15,80 +15,34 @@ import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew"
 import DashboardRegisterValueFallback from "./DashboardRegisterValueFallback"
 
 // https://en.wikipedia.org/wiki/Braille_ASCII
-const BRAILE_CHARACTERS = {
-    " ": "⠀", // space bar to dot-0
-    "-": "⠤",
-    ",": "⠠",
-    ";": "⠰",
-    ":": "⠱",
-    "!": "⠮",
-    "?": "⠹",
-    ".": "⠨",
-    "(": "⠷",
-    "[": "⠪",
-    "@": "⠈",
-    "*": "⠡",
-    "/": "⠌",
-    "'": "⠄",
-    '"': "⠐",
-    "\\": "⠳",
-    "&": "⠯",
-    "%": "⠩",
-    "^": "⠘",
-    "+": "⠬",
-    "<": "⠣",
-    ">": "⠜",
-    $: "⠫",
-    "0": "⠴",
-    "1": "⠂",
-    "2": "⠆",
-    "3": "⠒",
-    "4": "⠲",
-    "5": "⠢",
-    "6": "⠖",
-    "7": "⠶",
-    "8": "⠦",
-    "9": "⠔",
-    A: "⠁",
-    B: "⠃",
-    C: "⠉",
-    D: "⠙",
-    E: "⠑",
-    F: "⠋",
-    G: "⠛",
-    H: "⠓",
-    I: "⠊",
-    J: "⠚",
-    K: "⠅",
-    L: "⠇",
-    M: "⠍",
-    N: "⠝",
-    O: "⠕",
-    P: "⠏",
-    Q: "⠟",
-    R: "⠗",
-    S: "⠎",
-    T: "⠞",
-    U: "⠥",
-    V: "⠧",
-    W: "⠺",
-    X: "⠭",
-    Z: "⠵",
-    "]": "⠻",
-    "#": "⠼",
-    Y: "⠽",
-    ")": "⠾",
-    "=": "⠿",
-    _: "⠸",
+/** 
+const ascii = " A1B'K2L@CIF/MSP\"E3H9O6R^DJG>NTQ,*5<-U8V.%[$+X!&;:4\\0Z7(_?W]#Y)="
+const unicode = "⠀⠁⠂⠃⠄⠅⠆⠇⠈⠉⠊⠋⠌⠍⠎⠏⠐⠑⠒⠓⠔⠕⠖⠗⠘⠙⠚⠛⠜⠝⠞⠟⠠⠡⠢⠣⠤⠥⠦⠧⠨⠩⠪⠫⠬⠭⠮⠯⠰⠱⠲⠳⠴⠵⠶⠷⠸⠹⠺⠻⠼⠽⠾⠿"
+const a0 = " ".charCodeAt(0)
+let r = ''
+for (let i = 0; i < 64; ++i) {
+    const c = String.fromCharCode(a0 + i)
+    const j = ascii.indexOf(c)
+    const u = unicode.charAt(j)
+    r += u
 }
+console.log(r)
+ */
 function brailify(s: string) {
     if (!s) return s
+    // space char -> unicode character
+    const braille_ascii = "⠀⠮⠐⠼⠫⠩⠯⠄⠷⠾⠡⠬⠠⠤⠨⠌⠴⠂⠆⠒⠲⠢⠖⠶⠦⠔⠱⠰⠣⠿⠜⠹⠈⠁⠃⠉⠙⠑⠋⠛⠓⠊⠚⠅⠇⠍⠝⠕⠏⠟⠗⠎⠞⠥⠧⠺⠭⠽⠵⠪⠳⠻⠘⠸"
+    const a0 = " ".charCodeAt(0)
+    const an = braille_ascii.length
+
     let r = ""
     const su = s.toLocaleUpperCase()
     for (let i = 0; i < su.length; ++i) {
         const c = su.charCodeAt(i)
+        const ai = c - a0
         if (c >= 0x2800 && c <= 0x28ff) r += String.fromCharCode(c)
-        else r += BRAILE_CHARACTERS[su.charAt(i)] || ""
+        else if (ai < an) r += braille_ascii.charAt(ai)
+        else r += ""
     }
     return r
 }
