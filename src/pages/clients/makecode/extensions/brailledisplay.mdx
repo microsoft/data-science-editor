@@ -15,12 +15,8 @@ let count = 0
 input.onButtonPressed(Button.A, function() {
     count +=1
     // update display
-    modules.brailleDisplay1.setNumber(count)
+    modules.brailleDisplay1.showNumber(count)
     basic.showNumber(count)
-})
-// refresh display when the display is connected
-modules.brailleDisplay1.onConnectionChanged(jacdac.ClientConnectionState.Connected, function () {
-    modules.brailleDisplay1.setNumber(count)	
 })
 ```
 
