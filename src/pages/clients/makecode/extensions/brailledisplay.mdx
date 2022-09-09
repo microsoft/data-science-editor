@@ -12,10 +12,11 @@ This program implements a counter using button A and display the counter on the 
 
 ```blocks
 let count = 0
-input.onButtonPressed(Buttons.A, function() {
+input.onButtonPressed(Button.A, function() {
     count +=1
     // update display
     modules.brailleDisplay1.setNumber(count)
+    basic.showNumber(count)
 })
 // refresh display when the display is connected
 modules.brailleDisplay1.onConnectionChanged(jacdac.ClientConnectionState.Connected, function () {
