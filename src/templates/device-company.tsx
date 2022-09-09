@@ -3,7 +3,7 @@ import React from "react"
 import FilteredDeviceSpecificationList from "../components/specification/FilteredDeviceSpecificationList"
 
 import CoreHead from "../components/shell/Head"
-export const Head = (props) => <CoreHead {...props} />
+export const Head = props => <CoreHead {...props} />
 
 export default function Page(props: { pageContext: { company: string } }) {
     const { company } = props.pageContext

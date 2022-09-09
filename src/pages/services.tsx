@@ -24,7 +24,7 @@ import useDeviceCatalog from "../components/devices/useDeviceCatalog"
 import FilterChip from "../components/ui/FilterChip"
 
 import CoreHead from "../components/shell/Head"
-export const Head = (props) => <CoreHead {...props} title="Services" />
+export const Head = props => <CoreHead {...props} title="Services" />
 
 interface ServiceFilter {
     query: string

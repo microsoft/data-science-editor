@@ -5,7 +5,7 @@ export const frontmatter = {
     title: "Devices",
 }
 import CoreHead from "../components/shell/Head"
-export const Head = (props) => <CoreHead {...props} {...frontmatter} />
+export const Head = props => <CoreHead {...props} {...frontmatter} />
 
 export default function Page() {
     return (

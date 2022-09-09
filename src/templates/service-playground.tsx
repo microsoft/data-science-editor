@@ -3,7 +3,7 @@ import { serviceSpecificationFromClassIdentifier } from "../../jacdac-ts/src/jdo
 import ServiceSpecification from "../components/specification/ServiceSpecification"
 
 import CoreHead from "../components/shell/Head"
-export const Head = (props) => <CoreHead {...props} />
+export const Head = props => <CoreHead {...props} />
 
 export default function Page(props: {
     pageContext: { node: { classIdentifier: number } }

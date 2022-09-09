@@ -1,0 +1,26 @@
+---
+title: Braille Display
+services: brailledisplay
+tags: makecode
+---
+
+# Braille Display
+
+A Braille display module "visualizes" braille characters for 
+
+This program implements a counter using button A and display the counter on the Braille display.
+
+```blocks
+let count = 0
+input.onButtonPressed(Buttons.A, function() {
+    count +=1
+    // update display
+    modules.brailleDisplay1.setNumber(count)
+})
+// refresh display when the display is connected
+modules.brailleDisplay1.onConnectionChanged(jacdac.ClientConnectionState.Connected, function () {
+    modules.brailleDisplay1.setNumber(count)	
+})
+```
+
+<MakeCodeExtensionFooter serviceName="brailledisplay" />
