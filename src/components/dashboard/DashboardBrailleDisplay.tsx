@@ -9,8 +9,6 @@ import { Grid, TextField } from "@mui/material"
 import useRegister from "../hooks/useRegister"
 import CmdButton from "../CmdButton"
 import ClearIcon from "@mui/icons-material/Clear"
-import EditIcon from "@mui/icons-material/Edit"
-import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import CharacterScreenWidget from "../widgets/CharacterScreenWidget"
 import { useId } from "react"
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew"
@@ -115,7 +113,7 @@ export default function DashboardBrailleDisplay(props: DashboardServiceProps) {
     ) => {
         const text = ev.target.value
         const brailled = brailify(text)
-        setFieldMessage(brailled)
+        setFieldMessage(text)
         await patternsRegister.sendSetStringAsync(brailled, true)
     }
     const handleClear = async () => {
