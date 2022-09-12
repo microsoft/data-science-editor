@@ -75,7 +75,7 @@ export default function DashboardBrailleDisplay(props: DashboardServiceProps) {
         await patternsRegister.sendSetStringAsync("", true)
     }
     const handleEnabled = async () =>
-        enabledRegister.sendSetBoolAsync(!enabled, true)
+        await enabledRegister.sendSetBoolAsync(!enabled, true)
     // set first value of message
     useEffect(() => {
         if (!fieldMessage && patterns) setFieldMessage(patterns)

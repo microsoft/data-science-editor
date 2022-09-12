@@ -286,6 +286,7 @@ const serviceViews: {
     [SRV_BIT_RADIO]: {
         component: DashboardBitRadio,
         weight: () => 4,
+        expandable: true
     },
     [SRV_HID_KEYBOARD]: {
         component: DashboardHIDKeyboard,
