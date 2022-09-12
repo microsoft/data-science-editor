@@ -96,8 +96,14 @@ export function hostedSimulatorDefinitions(): HostedSimulatorDefinition[] {
     if (inIFrame()) return []
     return [
         {
-            name: "micro:bit V2 Jacdac Demo",
+            name: "micro:bit V2 Jukebox",
             url: "https://microsoft.github.io/pxt-jacdac/?tool=microbit-jukebox",
+            width: "20rem",
+            height: "17.5rem",
+        },
+        {
+            name: "micro:bit V2 MicroCode servers",
+            url: "https://microsoft.github.io/pxt-jacdac/?tool=microbit-microcode-servers",
             width: "20rem",
             height: "17.5rem",
         },
