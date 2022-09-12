@@ -15,6 +15,8 @@ import useMicrophoneVolume from "../hooks/useMicrophoneVolume"
 import TrendWidget from "../widgets/TrendWidget"
 import useRegister from "../hooks/useRegister"
 import MicrophoneSettingsButton from "../ui/MicrophoneSettingsButton"
+import Suspense from "../ui/Suspense"
+import GaugeWidget from "../widgets/GaugeWidget"
 
 function HostMicrophoneButton(props: {
     service: JDService
@@ -62,20 +64,41 @@ function HostMicrophoneButton(props: {
 }
 
 export default function DashboardSoundLevel(props: DashboardServiceProps) {
-    const { visible, service } = props
+    const { visible, expanded, service } = props
     const soundLevelRegister = useRegister(service, SoundLevelReg.SoundLevel)
     const server = useServiceServer<AnalogSensorServer>(service)
+    const [soundLevel] = useRegisterUnpackedValue<[number]>(
+        soundLevelRegister,
+        props
+    )
+    const color = server ? "secondary" : "primary"
+    const size = `clamp(6rem, 12vw, 12vh)`
 
     return (
         <Grid container direction="column">
-            <Grid item>
-                <TrendWidget
-                    register={soundLevelRegister}
-                    min={0}
-                    max={1}
-                    horizon={32}
-                />
-            </Grid>
+            {expanded && (
+                <Grid item>
+                    <TrendWidget
+                        register={soundLevelRegister}
+                        min={0}
+                        max={1}
+                        horizon={32}
+                    />
+                </Grid>
+            )}
+            {!expanded && soundLevel !== undefined && (
+                <Grid item>
+                    <Suspense>
+                        <GaugeWidget
+                            value={Math.ceil(soundLevel * 100)}
+                            min={0}
+                            max={100}
+                            size={size}
+                            color={color}
+                        />
+                    </Suspense>
+                </Grid>
+            )}
             <Grid item>
                 <Grid container spacing={1}>
                     <Grid item>

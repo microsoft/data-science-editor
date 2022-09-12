@@ -263,7 +263,7 @@ const serviceViews: {
     },
     [SRV_SOUND_LEVEL]: {
         component: DashboardSoundLevel,
-        weight: () => 2,
+        expandable: true,
     },
     [SRV_RNG]: {
         component: DashboardRandomNumberGenerator,
@@ -334,6 +334,7 @@ const serviceViews: {
     },
     [SRV_JACSCRIPT_MANAGER]: {
         component: DashboardJacscriptManager,
+        expandable: true
     },
     [SRV_JACSCRIPT_CLOUD]: {
         component: DashboardJacscriptCloud,

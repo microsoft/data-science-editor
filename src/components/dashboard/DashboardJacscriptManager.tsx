@@ -21,9 +21,9 @@ import {
 } from "../../jacdac/useRegisterValue"
 
 function JacscriptManagerToolbar(
-    props: { service: JDService } & RegisterOptions
+    props: { service: JDService; expanded?: boolean } & RegisterOptions
 ) {
-    const { service, ...rest } = props
+    const { service, expanded, ...rest } = props
 
     const runningRegister = useRegister(service, JacscriptManagerReg.Running)
     const autoStartRegister = useRegister(
@@ -55,7 +55,7 @@ function JacscriptManagerToolbar(
 
     return (
         <Grid container spacing={1}>
-            <Grid item>
+            <Grid item xs={12}>
                 <CmdButton
                     disabled={disabled}
                     variant="outlined"
@@ -66,22 +66,26 @@ function JacscriptManagerToolbar(
                     {running ? "stop" : "start"}
                 </CmdButton>
             </Grid>
-            <Grid item>
-                <SwitchWithLabel
-                    label="auto start"
-                    checked={autoStart || false}
-                    disabled={autoStart === undefined}
-                    onChange={handleAutoStartChange}
-                />
-            </Grid>
-            <Grid item>
-                <SwitchWithLabel
-                    label="logging"
-                    checked={logging || false}
-                    disabled={logging === undefined}
-                    onChange={handleLoggingChange}
-                />
-            </Grid>
+            {expanded && (
+                <Grid item xs>
+                    <SwitchWithLabel
+                        label="auto start"
+                        checked={autoStart || false}
+                        disabled={autoStart === undefined}
+                        onChange={handleAutoStartChange}
+                    />
+                </Grid>
+            )}
+            {expanded && (
+                <Grid item xs>
+                    <SwitchWithLabel
+                        label="logging"
+                        checked={logging || false}
+                        disabled={logging === undefined}
+                        onChange={handleLoggingChange}
+                    />
+                </Grid>
+            )}
         </Grid>
     )
 }
@@ -89,6 +93,12 @@ function JacscriptManagerToolbar(
 export default function DashboardJacscriptManager(
     props: DashboardServiceProps
 ) {
-    const { service, ...rest } = props
-    return <JacscriptManagerToolbar service={service} {...rest} />
+    const { service, expanded, ...rest } = props
+    return (
+        <JacscriptManagerToolbar
+            service={service}
+            expanded={expanded}
+            {...rest}
+        />
+    )
 }
