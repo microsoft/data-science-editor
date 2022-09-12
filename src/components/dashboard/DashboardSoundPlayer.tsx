@@ -6,7 +6,7 @@ import {
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import useServiceServer from "../hooks/useServiceServer"
-import { Button, Grid, Slider } from "@mui/material"
+import { Button, Grid } from "@mui/material"
 import { useChangeAsync } from "../../jacdac/useChange"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
@@ -14,6 +14,7 @@ import { SoundPlayerServer } from "../../../jacdac-ts/src/servers/soundplayerser
 import { Howl } from "howler"
 import LoadingProgress from "../ui/LoadingProgress"
 import useRegister from "../hooks/useRegister"
+import VolumeWidget from "../widgets/VolumeWidget"
 
 function SoundButton(props: {
     service: JDService
@@ -36,11 +37,10 @@ function SoundButton(props: {
 }
 
 export default function DashboardSoundPlayer(props: DashboardServiceProps) {
-    const { service } = props
+    const { service, expanded } = props
     const volumeRegister = useRegister(service, SoundPlayerReg.Volume)
     const [volume] = useRegisterUnpackedValue<[number]>(volumeRegister, props)
     const server = useServiceServer<SoundPlayerServer>(service)
-    const color = server ? "secondary" : "primary"
     const sounds = useChangeAsync(
         service,
         async () => {
@@ -56,12 +56,6 @@ export default function DashboardSoundPlayer(props: DashboardServiceProps) {
         },
         [service]
     )
-    const handleVolumeChange = async (
-        ev: unknown,
-        newValue: number | number[]
-    ) => {
-        volumeRegister.sendSetPackedAsync([newValue], true)
-    }
     useEffect(() => {
         if (server && volume)
             server.onPlay = (name: string) => {
@@ -89,18 +83,10 @@ export default function DashboardSoundPlayer(props: DashboardServiceProps) {
                     />
                 </Grid>
             ))}
-            {volume !== undefined && (
+
+            {expanded && (
                 <Grid item xs={12}>
-                    <Slider
-                        valueLabelDisplay="off"
-                        min={0}
-                        max={1}
-                        step={0.05}
-                        aria-label="volume"
-                        value={volume}
-                        color={color}
-                        onChange={handleVolumeChange}
-                    />
+                    <VolumeWidget register={volumeRegister} {...props} />
                 </Grid>
             )}
         </Grid>

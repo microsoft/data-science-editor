@@ -1,26 +1,23 @@
-import { Grid, Slider } from "@mui/material"
+import { Grid } from "@mui/material"
 import React, { lazy, useContext, useEffect } from "react"
 import { BuzzerCmd, BuzzerReg } from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
-import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import useServiceServer from "../hooks/useServiceServer"
 import { BuzzerServer } from "../../../jacdac-ts/src/servers/buzzerserver"
-import VolumeDownIcon from "@mui/icons-material/VolumeDown"
 import Suspense from "../ui/Suspense"
 import useRegister from "../hooks/useRegister"
 import { Alert } from "@mui/material"
 import { IconButton } from "gatsby-theme-material-ui"
 import VolumeUpIcon from "@mui/icons-material/VolumeUp"
 import WebAudioContext from "../ui/WebAudioContext"
+import VolumeWidget from "../widgets/VolumeWidget"
 const PianoWidget = lazy(() => import("../widgets/PianoWidget"))
 
 export default function DashboardBuzzer(props: DashboardServiceProps) {
-    const { service } = props
+    const { service, expanded } = props
     const server = useServiceServer<BuzzerServer>(service)
-    const color = server ? "secondary" : "primary"
     const volumeRegister = useRegister(service, BuzzerReg.Volume)
-    const [volume] = useRegisterUnpackedValue<[number]>(volumeRegister, props)
     const { playTone, onClickActivateAudioContext, activated } =
         useContext(WebAudioContext)
 
@@ -50,9 +47,6 @@ export default function DashboardBuzzer(props: DashboardServiceProps) {
         ])
         await service.sendCmdAsync(BuzzerCmd.PlayTone, data)
     }
-    const handleChange = async (ev: unknown, newValue: number | number[]) => {
-        volumeRegister.sendSetPackedAsync([newValue], true)
-    }
     const handleUnlock = () => sendPlayTone(400)
 
     return (
@@ -76,28 +70,9 @@ export default function DashboardBuzzer(props: DashboardServiceProps) {
                     <PianoWidget playTone={sendPlayTone} />
                 </Suspense>
             </Grid>
-            {volume !== undefined && (
+            {expanded && (
                 <Grid item xs={12}>
-                    <Grid container spacing={2}>
-                        <Grid item>
-                            <VolumeDownIcon color="disabled" />
-                        </Grid>
-                        <Grid item xs>
-                            <Slider
-                                valueLabelDisplay="off"
-                                min={0}
-                                max={1}
-                                step={0.1}
-                                aria-label="volume"
-                                value={volume}
-                                color={color}
-                                onChange={handleChange}
-                            />
-                        </Grid>
-                        <Grid item>
-                            <VolumeUpIcon color="disabled" />
-                        </Grid>
-                    </Grid>
+                    <VolumeWidget register={volumeRegister} {...props} />
                 </Grid>
             )}
         </>

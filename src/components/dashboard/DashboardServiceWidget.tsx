@@ -153,6 +153,7 @@ const serviceViews: {
     [SRV_BUZZER]: {
         component: DashboardBuzzer,
         weight: () => 4,
+        expandable: true,
     },
     [SRV_LED_STRIP]: {
         component: DashboardLEDStrip,
@@ -258,6 +259,7 @@ const serviceViews: {
     [SRV_SOUND_PLAYER]: {
         component: DashboardSoundPlayer,
         weight: () => 2,
+        expandable: true,
     },
     [SRV_SOUND_LEVEL]: {
         component: DashboardSoundLevel,
