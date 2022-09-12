@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import {
     SoundPlayerCmd,
     SoundPlayerReg,
@@ -6,7 +6,7 @@ import {
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import useServiceServer from "../hooks/useServiceServer"
-import { Button, Grid } from "@mui/material"
+import { Button, Grid, MenuItem, SelectChangeEvent } from "@mui/material"
 import { useChangeAsync } from "../../jacdac/useChange"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
@@ -15,30 +15,17 @@ import { Howl } from "howler"
 import LoadingProgress from "../ui/LoadingProgress"
 import useRegister from "../hooks/useRegister"
 import VolumeWidget from "../widgets/VolumeWidget"
-
-function SoundButton(props: {
-    service: JDService
-    name: string
-    duration: number
-}) {
-    const { name, service } = props
-    const handleClick = async () => {
-        await service.sendCmdAsync(
-            SoundPlayerCmd.Play,
-            jdpack("s", [name]),
-            false
-        )
-    }
-    return (
-        <Button variant="outlined" onClick={handleClick}>
-            {name}
-        </Button>
-    )
-}
+import SelectWithLabel from "../ui/SelectWithLabel"
+import { roundWithPrecision } from "../../../jacdac-ts/src/jacdac"
+import { IconButton } from "gatsby-theme-material-ui"
+import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
+import PlayArrowIcon from "@mui/icons-material/PlayArrow"
+import CmdButton from "../CmdButton"
 
 export default function DashboardSoundPlayer(props: DashboardServiceProps) {
     const { service, expanded } = props
     const volumeRegister = useRegister(service, SoundPlayerReg.Volume)
+    const [sound, setSound] = useState("")
     const [volume] = useRegisterUnpackedValue<[number]>(volumeRegister, props)
     const server = useServiceServer<SoundPlayerServer>(service)
     const sounds = useChangeAsync(
@@ -69,21 +56,46 @@ export default function DashboardSoundPlayer(props: DashboardServiceProps) {
             if (server) server.onPlay = undefined
         }
     }, [volume, server])
+    useEffect(() => setSound(sounds?.[0]?.[1] || ""), [sounds])
+
+    const handlePlaySound = async () => {
+        await service.sendCmdAsync(
+            SoundPlayerCmd.Play,
+            jdpack("s", [sound]),
+            false
+        )
+    }
+    const handleSelectSound = (ev: SelectChangeEvent<string>) => {
+        const newSound = ev.target.value
+        setSound(newSound)
+    }
 
     if (!sounds) return <LoadingProgress />
 
     return (
         <Grid container spacing={1}>
-            {sounds?.map(sound => (
-                <Grid item xs key={sound[1]}>
-                    <SoundButton
-                        service={service}
-                        duration={sound[0]}
-                        name={sound[1]}
-                    />
-                </Grid>
-            ))}
-
+            <Grid item xs={12}>
+                <SelectWithLabel
+                    label="sound"
+                    fullWidth={true}
+                    disabled={!sound}
+                    value={sound}
+                    onChange={handleSelectSound}
+                >
+                    {sounds.map(([, name]) => (
+                        <MenuItem key={name} value={name}>
+                            {name}
+                        </MenuItem>
+                    ))}
+                </SelectWithLabel>
+            </Grid>
+            <Grid item>
+                <CmdButton
+                    title="play"
+                    icon={<PlayArrowIcon />}
+                    onClick={handlePlaySound}
+                />
+            </Grid>
             {expanded && (
                 <Grid item xs={12}>
                     <VolumeWidget register={volumeRegister} {...props} />

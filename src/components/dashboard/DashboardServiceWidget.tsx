@@ -258,7 +258,7 @@ const serviceViews: {
     },
     [SRV_SOUND_PLAYER]: {
         component: DashboardSoundPlayer,
-        weight: () => 2,
+        weight: () => 1,
         expandable: true,
     },
     [SRV_SOUND_LEVEL]: {

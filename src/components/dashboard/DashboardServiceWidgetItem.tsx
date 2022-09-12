@@ -30,11 +30,7 @@ export default function DashboardServiceWidgetItem(
                 expanded={expanded}
                 toggleExpanded={toggleExpanded}
             />
-            {statusCodeAlert && (
-                <Grid item xs={12}>
-                    {statusCodeAlert}
-                </Grid>
-            )}
+            {statusCodeAlert}
             <DashboardServiceWidget {...props} expanded={expanded} />
         </Grid>
     )
