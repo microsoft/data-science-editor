@@ -50,7 +50,7 @@ import {
     SRV_PLANAR_POSITION,
 } from "../../../jacdac-ts/src/jdom/constants"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
-import { CircularProgress } from "@mui/material"
+import { CircularProgress, SvgIconProps } from "@mui/material"
 
 // bundled
 import DashboardButton from "./DashboardButton"
@@ -122,6 +122,10 @@ const DashboardJacscriptManager = lazy(
 const DashboardJacscriptCloud = lazy(() => import("./DashboardJacscriptCloud"))
 const DashboardPlanarPosition = lazy(() => import("./DashboardPlanarPosition"))
 
+const PowerSettingsNewIcon = lazy(
+    () => import("@mui/icons-material/PowerSettingsNew")
+)
+
 export interface DashboardServiceProps {
     service: JDService
     expanded?: boolean
@@ -134,8 +138,10 @@ export interface DashboardServiceProps {
     controlled?: boolean
     // show a button to toggle an advanced interaction mode
     expandable?: boolean
+    icon?: DashboardIcon
 }
 export type DashboardServiceComponent = FunctionComponent<DashboardServiceProps>
+export type DashboardIcon = FunctionComponent<SvgIconProps>
 
 const serviceViews: {
     [serviceClass: number]: {
@@ -144,6 +150,7 @@ const serviceViews: {
         weight?: (service: JDService) => number
         // show a button to toggle an advanced interaction mode
         expandable?: boolean
+        icon?: DashboardIcon
     }
 } = {
     [SRV_ROLE_MANAGER]: {
@@ -220,6 +227,7 @@ const serviceViews: {
     [SRV_POWER]: {
         component: DashboardPower,
         expandable: true,
+        icon: PowerSettingsNewIcon,
     },
     [SRV_SPEECH_SYNTHESIS]: {
         component: DashboardSpeechSynthesis,
@@ -286,7 +294,7 @@ const serviceViews: {
     [SRV_BIT_RADIO]: {
         component: DashboardBitRadio,
         weight: () => 4,
-        expandable: true
+        expandable: true,
     },
     [SRV_HID_KEYBOARD]: {
         component: DashboardHIDKeyboard,
@@ -335,7 +343,7 @@ const serviceViews: {
     },
     [SRV_JACSCRIPT_MANAGER]: {
         component: DashboardJacscriptManager,
-        expandable: true
+        expandable: true,
     },
     [SRV_JACSCRIPT_CLOUD]: {
         component: DashboardJacscriptCloud,
@@ -373,7 +381,7 @@ export default function DashboardServiceWidget(
         <Suspense
             fallback={
                 <CircularProgress
-                    aria-label={`loading widget...`}
+                    aria-label={`loading...`}
                     color={color}
                     disableShrink={true}
                     variant={"indeterminate"}
@@ -389,4 +397,8 @@ export default function DashboardServiceWidget(
 export function dashboardServiceWeight(service: JDService) {
     const view = serviceViews[service.serviceClass]
     return view?.weight?.(service)
+}
+
+export function dashboardServiceIcon(serviceClass: number) {
+    return serviceViews[serviceClass]?.icon
 }

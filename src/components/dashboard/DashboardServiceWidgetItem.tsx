@@ -18,7 +18,6 @@ export default function DashboardServiceWidgetItem(
     )
     const statusCodeAlert = <StatusCodeAlert service={service} {...rest} />
     const toggleExpanded = () => setExpanded(e => !e)
-
     useEffect(() => {
         setExpanded(!controlled && expandable ? false : undefined)
     }, [controlled, expandable])
