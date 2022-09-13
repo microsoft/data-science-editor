@@ -1,9 +1,8 @@
 import {
     SRV_HID_KEYBOARD,
-    SRV_LED,
     SRV_DOT_MATRIX,
     SRV_SEVEN_SEGMENT_DISPLAY,
-    SRV_JACSCRIPT_CLOUD,
+    SRV_CLOUD_ADAPTER,
 } from "../../../../jacdac-ts/src/jdom/constants"
 
 import KeyboardKeyField from "../fields/KeyboardKeyField"
@@ -93,7 +92,7 @@ export class ServicesBlockDomainSpecificLanguage
             allServices.filter(srv => srv.classIdentifier === cls)
 
         const customClientBlockDefinitions: CustomBlockDefinition[] = [
-            ...resolveService(SRV_JACSCRIPT_CLOUD).map(
+            ...resolveService(SRV_CLOUD_ADAPTER).map(
                 service =>
                     <CustomBlockDefinition>{
                         kind: "block",
@@ -173,7 +172,7 @@ export class ServicesBlockDomainSpecificLanguage
                         },
                     }
             ),
-            ...resolveService(SRV_JACSCRIPT_CLOUD).map(
+            ...resolveService(SRV_CLOUD_ADAPTER).map(
                 service =>
                     <CustomBlockDefinition>{
                         kind: "block",

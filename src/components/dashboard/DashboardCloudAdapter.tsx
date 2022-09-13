@@ -5,15 +5,15 @@ import { Grid, TextField, Typography } from "@mui/material"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import useServiceServer from "../hooks/useServiceServer"
 import {
-    JacscriptCloudServer,
-    JacscriptCloudUploadRequest,
+    CloudAdapterServer,
+    CloudAdapterUploadRequest,
     UPLOAD,
-} from "../../../jacdac-ts/src/servers/jacscriptcloudserver"
+} from "../../../jacdac-ts/src/servers/cloudadapterserver"
 import {
     EVENT,
-    JacscriptCloudCmd,
-    JacscriptCloudEvent,
-    JacscriptCloudReg,
+    CloudAdapterCmd,
+    CloudAdapterEvent,
+    CloudAdapterReg,
 } from "../../../jacdac-ts/src/jdom/constants"
 import useRegister from "../hooks/useRegister"
 import {
@@ -29,7 +29,7 @@ import { JDService } from "../../../jacdac-ts/src/jdom/service"
 
 function Controller(props: {
     service: JDService
-    server: JacscriptCloudServer
+    server: CloudAdapterServer
     connected: boolean
 }) {
     const { service, server, connected } = props
@@ -52,7 +52,7 @@ function Controller(props: {
     const handleArgsChange = (ev: ChangeEvent<HTMLInputElement>) =>
         setArgs(ev.target.value)
     const handleUpload = async () => {
-        await service.sendCmdPackedAsync(JacscriptCloudCmd.Upload, [
+        await service.sendCmdPackedAsync(CloudAdapterCmd.Upload, [
             label,
             argsNum.map(n => [n]),
         ])
@@ -117,27 +117,23 @@ function Controller(props: {
     )
 }
 
-export default function DashboardJacscriptCloud(props: DashboardServiceProps) {
+export default function DashboardCloudAdapter(props: DashboardServiceProps) {
     const { service, expanded } = props
-    const bus = useBus()
 
-    const connectedRegister = useRegister(service, JacscriptCloudReg.Connected)
+    const connectedRegister = useRegister(service, CloudAdapterReg.Connected)
     const connectionNameRegister = useRegister(
         service,
-        JacscriptCloudReg.ConnectionName
+        CloudAdapterReg.ConnectionName
     )
-    const cloudCommandEvent = useEvent(
-        service,
-        JacscriptCloudEvent.CloudCommand
-    )
+    const cloudCommandEvent = useEvent(service, CloudAdapterEvent.CloudCommand)
     const connected = useRegisterBoolValue(connectedRegister, props)
     const [connectionName] = useRegisterUnpackedValue<[string]>(
         connectionNameRegister,
         props
     )
-    const server = useServiceServer<JacscriptCloudServer>(
+    const server = useServiceServer<CloudAdapterServer>(
         service,
-        () => new JacscriptCloudServer()
+        () => new CloudAdapterServer()
     )
     const color = server ? "secondary" : "primary"
 
@@ -162,7 +158,7 @@ export default function DashboardJacscriptCloud(props: DashboardServiceProps) {
     useEffect(() => setMsgs([]), [connectedRegister])
     useEffect(
         () =>
-            server?.subscribe(UPLOAD, (req: JacscriptCloudUploadRequest) => {
+            server?.subscribe(UPLOAD, (req: CloudAdapterUploadRequest) => {
                 setMsgs(prev =>
                     [
                         ...prev,

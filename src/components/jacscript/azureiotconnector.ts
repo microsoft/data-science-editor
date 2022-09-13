@@ -13,7 +13,7 @@ import { JDEventSource } from "../../../jacdac-ts/src/jdom/eventsource"
 import {
     AzureIotHubHealthConnectionStatus,
     SRV_AZURE_IOT_HUB_HEALTH,
-    SRV_JACSCRIPT_CLOUD,
+    SRV_CLOUD_ADAPTER,
 } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import {
     CONNECT,
@@ -23,12 +23,12 @@ import {
 import { AzureIoTHubHealthServer } from "../../../jacdac-ts/src/servers/azureiothubhealthserver"
 import { ServiceProviderDefinition } from "../../../jacdac-ts/src/servers/servers"
 import {
-    JacscriptCloudServer,
-    JacscriptCloudUploadBinRequest,
-    JacscriptCloudUploadRequest,
+    CloudAdapterServer,
+    CloudAdapterUploadBinRequest,
+    CloudAdapterUploadRequest,
     UPLOAD,
     UPLOAD_BIN,
-} from "../../../jacdac-ts/src/servers/jacscriptcloudserver"
+} from "../../../jacdac-ts/src/servers/cloudadapterserver"
 
 async function generateSasToken(
     resourceUri: string,
@@ -372,21 +372,21 @@ class AzureIoTHubConnector extends JDEventSource {
 
 export default function createAzureIotHubServiceDefinition(): ServiceProviderDefinition {
     return <ServiceProviderDefinition>{
-        name: "Jacscript Cloud (Azure IoT Hub)",
-        serviceClasses: [SRV_AZURE_IOT_HUB_HEALTH, SRV_JACSCRIPT_CLOUD],
+        name: "Cloud adapter (Azure IoT Hub)",
+        serviceClasses: [SRV_AZURE_IOT_HUB_HEALTH, SRV_CLOUD_ADAPTER],
         services: () => {
             const health = new AzureIoTHubHealthServer()
             health.isReal = true
             const connector = new AzureIoTHubConnector(health)
-            const cloud = new JacscriptCloudServer({
+            const cloud = new CloudAdapterServer({
                 connectionName: "Azure IoT Hub",
                 controlled: true,
             })
-            cloud.on(UPLOAD, (req: JacscriptCloudUploadRequest) => {
+            cloud.on(UPLOAD, (req: CloudAdapterUploadRequest) => {
                 const { label, args } = req
                 connector.upload(label, args)
             })
-            cloud.on(UPLOAD_BIN, (req: JacscriptCloudUploadBinRequest) => {
+            cloud.on(UPLOAD_BIN, (req: CloudAdapterUploadBinRequest) => {
                 const { data } = req
                 connector.uploadBin(data)
             })

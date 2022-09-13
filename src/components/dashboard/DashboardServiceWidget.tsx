@@ -45,7 +45,7 @@ import {
     SRV_BRAILLE_DISPLAY,
     SRV_JACSCRIPT_MANAGER,
     SRV_HID_JOYSTICK,
-    SRV_JACSCRIPT_CLOUD,
+    SRV_CLOUD_ADAPTER,
     SRV_SAT_NAV,
     SRV_PLANAR_POSITION,
 } from "../../../jacdac-ts/src/jdom/constants"
@@ -119,7 +119,7 @@ const DashboardLightBulb = lazy(() => import("./DashboardLightBulb"))
 const DashboardJacscriptManager = lazy(
     () => import("./DashboardJacscriptManager")
 )
-const DashboardJacscriptCloud = lazy(() => import("./DashboardJacscriptCloud"))
+const DashboardCloudAdapter = lazy(() => import("./DashboardCloudAdapter"))
 const DashboardPlanarPosition = lazy(() => import("./DashboardPlanarPosition"))
 
 const PowerSettingsNewIcon = lazy(
@@ -345,8 +345,8 @@ const serviceViews: {
         component: DashboardJacscriptManager,
         expandable: true,
     },
-    [SRV_JACSCRIPT_CLOUD]: {
-        component: DashboardJacscriptCloud,
+    [SRV_CLOUD_ADAPTER]: {
+        component: DashboardCloudAdapter,
         expandable: true,
         weight: () => 3,
     },
