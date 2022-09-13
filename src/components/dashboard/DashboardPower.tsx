@@ -8,16 +8,15 @@ import {
     useRegisterBoolValue,
     useRegisterUnpackedValue,
 } from "../../jacdac/useRegisterValue"
-import SvgWidget from "../widgets/SvgWidget"
 import useServiceServer from "../hooks/useServiceServer"
 import { ReflectedLightServer } from "../../../jacdac-ts/src/servers/reflectedlightserver"
-import PowerButton from "../widgets/PowerButton"
-import useWidgetTheme from "../widgets/useWidgetTheme"
 import useRegister from "../hooks/useRegister"
 import { humanify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import DashboardRegisterValueFallback from "./DashboardRegisterValueFallback"
 import { Grid } from "@mui/material"
 import RegisterInput from "../RegisterInput"
+import SliderWithLabel from "../ui/SliderWithLabel"
+import SwitchWithLabel from "../ui/SwitchWithLabel"
 
 export default function DashboardPower(props: DashboardServiceProps) {
     const { service, expanded, visible } = props
@@ -46,89 +45,42 @@ export default function DashboardPower(props: DashboardServiceProps) {
 
     const server = useServiceServer<ReflectedLightServer>(service)
     const color = server ? "secondary" : "primary"
-    const { background, active, textProps } = useWidgetTheme(color)
 
     if (powerStatus === undefined)
         return <DashboardRegisterValueFallback register={powerStatusRegister} />
 
-    const w = 64
-    const h = w + 16
-    const r = (w - 4) >> 1
-    const ro = r - 4
-    const ri = ro - 8
     const off = !allowed
     const label = off
         ? "off"
         : humanify(PowerPowerStatus[powerStatus]?.toLowerCase())
 
-    const mw = 2
-    const bw = 12
-    const hw = 4
-    const rw = mw / 2
-
     const toggleEnabled = () => allowedRegister.sendSetBoolAsync(!allowed, true)
-    const widgetSize = `clamp(4rem, 10vw, 10vh)`
 
     return (
         <Grid container spacing={1} alignItems="center">
             <Grid item xs={12}>
-                <SvgWidget width={w} height={h} size={widgetSize}>
-                    <g>
-                        <PowerButton
-                            cx={w / 2}
-                            cy={w / 2}
-                            r={ro}
-                            ri={ri}
-                            off={off}
-                            color={color}
-                            label={label}
-                            borderStroke={
-                                (powerStatus === PowerPowerStatus.Overload ||
-                                    powerStatus ===
-                                        PowerPowerStatus.Overprovision) &&
-                                "red"
-                            }
-                            onClick={toggleEnabled}
-                        />
-                        {batteryCharge !== undefined && (
-                            <g>
-                                <title>{`battery charge ${Math.floor(
-                                    batteryCharge * 100
-                                )}%`}</title>
-                                <rect
-                                    x={w - bw - mw}
-                                    y={mw}
-                                    width={bw * batteryCharge}
-                                    height={hw}
-                                    rx={rw}
-                                    ry={rw}
-                                    fill={active}
-                                />
-                                <rect
-                                    x={w - bw - mw}
-                                    y={mw}
-                                    width={bw}
-                                    height={hw}
-                                    rx={rw}
-                                    ry={rw}
-                                    fill={"none"}
-                                    stroke={background}
-                                    strokeWidth={1}
-                                />
-                                <text
-                                    x={w - 2 * mw}
-                                    y={mw + hw / 2}
-                                    {...textProps}
-                                    textAnchor="end"
-                                    fontSize={hw * 0.6}
-                                >
-                                    {Math.floor(batteryCharge * 100)}%
-                                </text>
-                            </g>
-                        )}
-                    </g>
-                </SvgWidget>
+                <SwitchWithLabel
+                    color={
+                        powerStatus === PowerPowerStatus.Overload ||
+                        powerStatus === PowerPowerStatus.Overprovision
+                            ? "error"
+                            : color
+                    }
+                    label={label}
+                    checked={!off}
+                    onChange={toggleEnabled}
+                />
             </Grid>
+            {batteryCharge !== undefined && (
+                <Grid item>
+                    <SliderWithLabel
+                        label="battery"
+                        value={Math.floor(batteryCharge * 100)}
+                        min={0}
+                        max={100}
+                    />
+                </Grid>
+            )}
             {expanded && (
                 <Grid item xs={12}>
                     <RegisterInput
