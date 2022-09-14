@@ -8,10 +8,10 @@ tags: makecode
 
 Allows to upload data to an IoT cloud provider or receive commands from the cloud.
 
-## Upload data
+## Device to cloud
 
 The upload number block allows to upload a label and up to 5 numbers (you can have more in TypeScript).
-The data will be cached with a timestamp if the adapter is offline.
+The data will be cached with a timestamp if the adapter is offline. The format on the cloud side is determined by the vendor specific implementation of the adapter.
 
 Note that the adapter does not filter or compress the data so one needs to make sure to not overflow the cloud service with data.
 
@@ -26,7 +26,18 @@ basic.forever(function () {
     )
     basic.pause(5000)
 })
+```
 
+## Cloud to device
+
+One can register handlers for `cloud commands`, identified by a label and receive an array of numbers.
+ The format on the cloud side is determined by the vendor specific implementation of the adapter.
+
+This program shows a number received from the command `show number`.
+```blocks
+modules.cloudAdapter1.onCloudCommand("show number", function (value, values) {
+    basic.showNumber(value)
+})
 ```
 
 <MakeCodeExtensionFooter serviceName="cloudadapter" />
