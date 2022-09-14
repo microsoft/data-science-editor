@@ -1,0 +1,25 @@
+---
+title: Cloud Adapter
+services: cloudadapter
+tags: makecode
+---
+
+# Cloud Adapter
+
+Allows to upload data to an IoT cloud provider or receive commands from the cloud.
+
+## Upload data
+
+The upload number block allows to upload a label and up to 5 numbers (you can have more in TypeScript).
+The data will be cached with a timestamp if the adapter is offline.
+
+Note that the adapter does not filter or compress the data so one needs to make sure to not overflow the cloud service with data.
+
+```blocks
+forever(() => {
+    modules.cloudAdapter1.uploadNumber("temp", input.temperature())
+    pause(5000)
+})
+```
+
+<MakeCodeExtensionFooter serviceName="cloudadapter" />
