@@ -57,7 +57,8 @@ function Controller(props: {
             argsNum.map(n => [n]),
         ])
     }
-    const handleCloudMethod = async () => {
+    const handleCloudCommand = async () => {
+        console.log({ label, argsNum })
         await server.sendCloudCommand(label, argsNum)
     }
 
@@ -104,10 +105,10 @@ function Controller(props: {
                         {server && !twin && (
                             <CmdButton
                                 variant="outlined"
-                                onClick={handleCloudMethod}
+                                onClick={handleCloudCommand}
                                 disabled={!connected || !label || argsHasError}
                             >
-                                cloud event
+                                cloud command
                             </CmdButton>
                         )}
                     </Grid>
@@ -196,9 +197,9 @@ export default function DashboardCloudAdapter(props: DashboardServiceProps) {
             </Grid>
             {!!msgs?.length && (
                 <Grid item xs={12}>
-                    <Typography variant="caption">
-                        <pre>{msgs.join("\n")}</pre>
-                    </Typography>
+                    <pre style={{ whiteSpace: "pre-wrap", fontSize: "70%" }}>
+                        {msgs.join("\n")}
+                    </pre>
                 </Grid>
             )}
             {expanded && (

@@ -16,10 +16,17 @@ The data will be cached with a timestamp if the adapter is offline.
 Note that the adapter does not filter or compress the data so one needs to make sure to not overflow the cloud service with data.
 
 ```blocks
-forever(() => {
-    modules.cloudAdapter1.uploadNumber("temp", input.temperature())
-    pause(5000)
+basic.forever(function () {
+    modules.cloudAdapter1.uploadNumber(
+    "temp",
+    input.temperature(),
+    0,
+    0,
+    0
+    )
+    basic.pause(5000)
 })
+
 ```
 
 <MakeCodeExtensionFooter serviceName="cloudadapter" />
