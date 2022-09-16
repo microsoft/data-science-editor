@@ -30,7 +30,7 @@ function RadioGroupSettings(props: { service: JDService; visible: boolean }) {
     const { service, visible } = props
     const register = useRegister(service, BitRadioReg.Group)
     return (
-        <Grid item xs>
+        <Grid item xs={12}>
             <RegisterInput register={register} visible={visible} />
         </Grid>
     )
@@ -43,8 +43,12 @@ function RadioTransmisionPowerSettings(props: {
     const { service, visible } = props
     const register = useRegister(service, BitRadioReg.TransmissionPower)
     return (
-        <Grid item xs>
-            <RegisterInput register={register} visible={visible} />
+        <Grid item xs={12}>
+            <RegisterInput
+                register={register}
+                visible={visible}
+                showRegisterName={true}
+            />
         </Grid>
     )
 }
