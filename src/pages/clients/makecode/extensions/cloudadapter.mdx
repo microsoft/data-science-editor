@@ -47,7 +47,7 @@ Jacdac providers a simulator for a [Azure IoT Hub Cloud Adapter](https://docs.mi
 * Open the `start simulator` dialog
 * Select `Azure IoT Hub Cloud Adapter`
 * Configure the cloud adapter simulator with the device connection key from Azure IoT Hub (primary or secondary).
-* Use the [Azure Iot Hub Explorer](https://github.com/Azure/azure-iot-explorer/releases) to check that message playloads received from the cloud adapter.
+* Using the [Azure Iot Hub Explorer](https://github.com/Azure/azure-iot-explorer/releases), you can check that message playloads received from the cloud adapter.
 
 For example, the program below that uploads temperature every 5 seconds
 
@@ -71,6 +71,15 @@ will generate the following events in the Azure IoT Hub.
   },
   "enqueuedTime": "..."
 }
+```
+
+* Using the [Azure portal](https://portal.azure.com), you can send `Direct Method` calls to the device. The payload should be empty or an array of numbers.
+
+```blocks
+let desired = 20
+modules.cloudAdapter1.onCloudCommand("set-temperature", function (value) {
+    desired = value
+})
 ```
 
 <MakeCodeExtensionFooter serviceName="cloudadapter" />
