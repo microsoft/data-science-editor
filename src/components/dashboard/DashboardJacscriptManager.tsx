@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from "react"
-import { Alert, Grid } from "@mui/material"
+import { Alert, Grid, Typography } from "@mui/material"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import PlayArrowIcon from "@mui/icons-material/PlayArrow"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
@@ -8,20 +8,18 @@ import CmdButton from "../CmdButton"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { SystemStatusCodes } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import SwitchWithLabel from "../ui/SwitchWithLabel"
-import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import useRegister from "../hooks/useRegister"
 import {
     JacscriptManagerReg,
     SystemReg,
 } from "../../../jacdac-ts/src/jdom/constants"
 import {
-    RegisterOptions,
     useRegisterBoolValue,
     useRegisterUnpackedValue,
 } from "../../jacdac/useRegisterValue"
 
-function JacscriptManagerToolbar(
-    props: { service: JDService; expanded?: boolean } & RegisterOptions
+export default function DashboardJacscriptManager(
+    props: DashboardServiceProps
 ) {
     const { service, expanded, ...rest } = props
 
@@ -32,11 +30,27 @@ function JacscriptManagerToolbar(
     )
     const loggingRegister = useRegister(service, JacscriptManagerReg.Logging)
     const statusCodeRegister = useRegister(service, SystemReg.StatusCode)
+    const programSizeRegister = useRegister(
+        service,
+        JacscriptManagerReg.ProgramSize
+    )
+    const programHashRegister = useRegister(
+        service,
+        JacscriptManagerReg.ProgramHash
+    )
 
     const running = useRegisterBoolValue(runningRegister, rest)
     const autoStart = useRegisterBoolValue(autoStartRegister, rest)
     const logging = useRegisterBoolValue(loggingRegister, rest)
     const [statusCode] = useRegisterUnpackedValue(statusCodeRegister, rest)
+    const [programSize] = useRegisterUnpackedValue<[number]>(
+        programSizeRegister,
+        rest
+    )
+    const [programHash] = useRegisterUnpackedValue<[number]>(
+        programSizeRegister,
+        rest
+    )
 
     const disabled =
         statusCode === undefined ||
@@ -66,6 +80,14 @@ function JacscriptManagerToolbar(
                     {running ? "stop" : "start"}
                 </CmdButton>
             </Grid>
+            {expanded && programSize > 0 && (
+                <Grid item xs={12}>
+                    <Typography variant="caption">
+                        program size: {programSize}b, hash:{" "}
+                        {programHash.toString(16)}
+                    </Typography>
+                </Grid>
+            )}
             {expanded && (
                 <Grid item xs>
                     <SwitchWithLabel
@@ -87,18 +109,5 @@ function JacscriptManagerToolbar(
                 </Grid>
             )}
         </Grid>
-    )
-}
-
-export default function DashboardJacscriptManager(
-    props: DashboardServiceProps
-) {
-    const { service, expanded, ...rest } = props
-    return (
-        <JacscriptManagerToolbar
-            service={service}
-            expanded={expanded}
-            {...rest}
-        />
     )
 }

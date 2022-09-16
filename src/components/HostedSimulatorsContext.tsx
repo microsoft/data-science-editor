@@ -92,8 +92,6 @@ export default function useHostedSimulators() {
 }
 
 export function hostedSimulatorDefinitions(): HostedSimulatorDefinition[] {
-    // TODO: support in iframe as well
-    if (inIFrame()) return []
     return [
         {
             name: "micro:bit V2 Jukebox",
