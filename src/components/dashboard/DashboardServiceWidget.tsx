@@ -122,9 +122,15 @@ const DashboardJacscriptManager = lazy(
 const DashboardCloudAdapter = lazy(() => import("./DashboardCloudAdapter"))
 const DashboardPlanarPosition = lazy(() => import("./DashboardPlanarPosition"))
 
+// icons
 const PowerSettingsNewIcon = lazy(
     () => import("@mui/icons-material/PowerSettingsNew")
 )
+const MusicNoteIcon = lazy(() => import("@mui/icons-material/MusicNote"))
+const AppsIcon = lazy(() => import("@mui/icons-material/Apps"))
+const SensorsIcon = lazy(() => import("@mui/icons-material/Sensors"))
+const MemoryIcon = lazy(() => import("@mui/icons-material/Memory"))
+const CloudQueueIcon = lazy(() => import("@mui/icons-material/CloudQueue"))
 
 export interface DashboardServiceProps {
     service: JDService
@@ -161,6 +167,7 @@ const serviceViews: {
         component: DashboardBuzzer,
         weight: () => 4,
         expandable: true,
+        icon: MusicNoteIcon,
     },
     [SRV_LED_STRIP]: {
         component: DashboardLEDStrip,
@@ -214,6 +221,7 @@ const serviceViews: {
         component: DashboardDotMatrix,
         weight: () => 3,
         expandable: true,
+        icon: AppsIcon,
     },
     [SRV_WIND_DIRECTION]: {
         component: DashboardWindDirection,
@@ -268,6 +276,7 @@ const serviceViews: {
         component: DashboardSoundPlayer,
         weight: () => 1,
         expandable: true,
+        icon: MusicNoteIcon,
     },
     [SRV_SOUND_LEVEL]: {
         component: DashboardSoundLevel,
@@ -295,6 +304,7 @@ const serviceViews: {
         component: DashboardBitRadio,
         weight: () => 4,
         expandable: true,
+        icon: SensorsIcon,
     },
     [SRV_HID_KEYBOARD]: {
         component: DashboardHIDKeyboard,
@@ -344,11 +354,13 @@ const serviceViews: {
     [SRV_JACSCRIPT_MANAGER]: {
         component: DashboardJacscriptManager,
         expandable: true,
+        icon: MemoryIcon,
     },
     [SRV_CLOUD_ADAPTER]: {
         component: DashboardCloudAdapter,
-        expandable: true,
         weight: () => 3,
+        expandable: true,
+        icon: CloudQueueIcon,
     },
 }
 

@@ -22,6 +22,7 @@ export default function DashboardServiceWidgetItemHeader(
     const icon = dashboardServiceIcon(serviceClass)
     const iconProps: SvgIconProps = {
         titleAccess: serviceName(serviceClass),
+        color: "disabled",
     }
     return (
         <Grid container spacing={1} alignItems="center">
