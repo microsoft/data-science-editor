@@ -31,13 +31,46 @@ basic.forever(function () {
 ## Cloud to device
 
 One can register handlers for `cloud commands`, identified by a label and receive an array of numbers.
- The format on the cloud side is determined by the vendor specific implementation of the adapter.
+The format on the cloud side is determined by the vendor specific implementation of the adapter.
 
 This program shows a number received from the command `show number`.
 ```blocks
 modules.cloudAdapter1.onCloudCommand("show number", function (value, values) {
     basic.showNumber(value)
 })
+```
+
+## Azure IoT Hub
+
+Jacdac providers a simulator for a [Azure IoT Hub Cloud Adapter](https://docs.microsoft.com/en-us/azure/iot-hub/) in the dashboard. 
+
+* Open the `start simulator` dialog
+* Select `Azure IoT Hub Cloud Adapter`
+* Configure the cloud adapter simulator with the device connection key from Azure IoT Hub (primary or secondary).
+* Use the [Azure Iot Hub Explorer](https://github.com/Azure/azure-iot-explorer/releases) to check that message playloads received from the cloud adapter.
+
+For example, the program below that uploads temperature every 5 seconds
+
+```blocks
+basic.forever(function () {
+    modules.cloudAdapter1.uploadNumber("temp", input.temperature())
+    basic.pause(5000)
+})
+```
+
+will generate the following events in the Azure IoT Hub.
+
+```json
+{
+  "body": {
+    "device": "...",
+    "label": "temp",
+    "values": [
+      21
+    ]
+  },
+  "enqueuedTime": "..."
+}
 ```
 
 <MakeCodeExtensionFooter serviceName="cloudadapter" />
