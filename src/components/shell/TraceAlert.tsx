@@ -22,7 +22,7 @@ export default function TraceAlert() {
             </IconButtonWithTooltip>
             {!recording && replayTrace && (
                 <Typography variant="caption">
-                    {replayTrace.packets.length} packets, clear to resume live
+                    {replayTrace.frames.length} packets, clear to resume live
                     data.
                 </Typography>
             )}

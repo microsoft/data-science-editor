@@ -20,8 +20,8 @@ export default function TraceAnalyzer() {
     useWindowPaste(importTrace)
     const traceText = useChange(
         bus,
-        _ => {
-            if (_) replayTrace?.resolveDevices(_)
+        bus => {
+            if (bus) replayTrace?.resolveDevices(bus)
             return replayTrace?.serializeToText()
         },
         [replayTrace]

@@ -4,9 +4,6 @@ import {
     parseTrace,
 } from "../../../jacdac-ts/src/jdom/logparser"
 import PacketsContext from "../PacketsContext"
-import { Packet } from "../../../jacdac-ts/src/jdom/packet"
-import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
-import AppContext from "../AppContext"
 import { Trace } from "../../../jacdac-ts/src/jdom/trace/trace"
 
 import Suspense from "../ui/Suspense"
@@ -41,12 +38,7 @@ export default function TraceImportButton(props: {
                 if (!trace) {
                     try {
                         const frames = parseLogicLog(txt) // ensure format is ok
-                        const packets = arrayConcatMany(
-                            frames.map(frame =>
-                                Packet.fromFrame(frame.data, frame.timestamp)
-                            )
-                        )
-                        if (packets?.length) trace = new Trace(packets)
+                        if (frames?.length) trace = new Trace(frames)
                     } catch (e) {
                         console.log(`logic parse error`, e)
                     }
@@ -54,7 +46,7 @@ export default function TraceImportButton(props: {
 
                 // found anything?
                 if (trace) {
-                    console.log(`importing ${trace.packets.length} packets`)
+                    console.log(`importing ${trace.frames.length} frames`)
                     setReplayTrace(trace)
                 } else setError("could not parse file")
             } finally {

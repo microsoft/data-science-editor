@@ -1,11 +1,10 @@
 import { List } from "@mui/material"
 import React from "react"
-import { Trace } from "../../../jacdac-ts/src/jdom/trace/trace"
+import { Packet } from "../../../jacdac-ts/src/jdom/packet"
 import PacketListItem from "../PacketListItem"
 
-export default function TraceView(props: { trace: Trace }) {
-    const { trace } = props
-    const { packets } = trace
+export default function TraceView(props: { packets: Packet[] }) {
+    const { packets } = props
     return (
         <List>
             {packets.map(packet => (

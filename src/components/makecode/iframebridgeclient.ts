@@ -1,4 +1,5 @@
 import {
+    FRAME_PROCESS,
     REPORT_UPDATE,
     SRV_CONTROL,
     SRV_INFRASTRUCTURE,
@@ -16,12 +17,10 @@ import {
     CHANGE,
     DEVICE_ANNOUNCE,
     EMBED_MIN_ASPECT_RATIO,
-    PACKET_PROCESS,
-    PACKET_SEND,
 } from "../../../jacdac-ts/src/jdom/constants"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import { resolveMakecodeServiceFromClassIdentifier } from "./services"
-import { Packet } from "../../../jacdac-ts/src/jdom/packet"
+import { JDFrameBuffer, Packet } from "../../../jacdac-ts/src/jdom/packet"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import {
     arrayConcatMany,
@@ -149,8 +148,7 @@ export class IFrameBridgeClient extends JDClient {
         )
 
         if (this.hosted) {
-            this.mount(this.bus.subscribe(PACKET_PROCESS, this.postPacket))
-            this.mount(this.bus.subscribe(PACKET_SEND, this.postPacket))
+            this.mount(this.bus.subscribe(FRAME_PROCESS, this.postPacket))
             this.mount(this.bus.subscribe(DEVICE_ANNOUNCE, this.handleResize))
             this.mount(
                 this.bus.subscribe(DEVICE_ANNOUNCE, () => this.emit(CHANGE))
@@ -287,32 +285,24 @@ export class IFrameBridgeClient extends JDClient {
         if (msg.sender === this.bridgeId)
             // returning packet
             return
-        const pkts = decodePacketMessage(this.bus, msg)
-        // bail out if unknown packet
-        if (!pkts) return
 
-        this.packetProcessed += pkts.length
-        for (const pkt of pkts) {
-            // we're adding a little trace to avoid resending our own packets
-            pkt.sender = this.bridgeId
-            // send to native bus
-            this.bus.sendPacketAsync(pkt)
-            // send to javascript bus
-            this.bus.processPacket(pkt)
-        }
+        const frame = msg.data.slice() as JDFrameBuffer
+        frame._jacdac_sender = this.bridgeId
+        this.bus.sendFrameAsync(frame)
+        this.packetProcessed++
     }
 
-    private postPacket(pkt: Packet) {
+    private postPacket(pkt: JDFrameBuffer) {
         // check if this packet was already sent from another spot
-        if (/^bridge/.test(pkt.sender) || !this.hosted) return
+        if (/^bridge/.test(pkt._jacdac_sender) || !this.hosted) return
 
         this.packetSent++
-        pkt.sender = this.bridgeId
+        pkt._jacdac_sender = this.bridgeId
         const msg: PacketMessage = {
             type: "messagepacket",
             channel: "jacdac",
             broadcast: true,
-            data: pkt.toBuffer(),
+            data: pkt,
             sender: this.bridgeId,
         }
         window.parent.postMessage(msg, this.origin)

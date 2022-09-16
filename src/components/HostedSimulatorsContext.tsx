@@ -9,9 +9,9 @@ import React, {
     useRef,
     useState,
 } from "react"
-import { PACKET_PROCESS, PACKET_SEND } from "../../jacdac-ts/src/jdom/constants"
+import { FRAME_PROCESS } from "../../jacdac-ts/src/jdom/constants"
 import { inIFrame } from "../../jacdac-ts/src/jdom/iframeclient"
-import { Packet } from "../../jacdac-ts/src/jdom/packet"
+import { JDFrameBuffer } from "../../jacdac-ts/src/jdom/packet"
 import { randomDeviceId } from "../../jacdac-ts/src/jdom/random"
 import JacdacContext, { JacdacContextProps } from "../jacdac/Context"
 import useWindowEvent from "./hooks/useWindowEvent"
@@ -147,15 +147,14 @@ function HostedSimulatorCard(props: { sim: HostedSimulator }) {
 
     useEffect(
         () =>
-            bus.subscribe([PACKET_SEND, PACKET_PROCESS], (pkt: Packet) => {
-                const { sender } = pkt
-                if (id === sender) return
+            bus.subscribe(FRAME_PROCESS, (pkt: JDFrameBuffer) => {
+                if (id === pkt._jacdac_sender) return
                 const msg: PacketMessage = {
                     type: "messagepacket",
                     channel: "jacdac",
                     broadcast: false,
-                    data: pkt.toBuffer(),
-                    sender: pkt.sender,
+                    data: pkt,
+                    sender: pkt._jacdac_sender,
                 }
                 iframeRef.current?.contentWindow?.postMessage(msg, origin)
             }),
@@ -226,6 +225,9 @@ export const HostedSimulatorsProvider = ({ children }) => {
         if (channel !== "jacdac" || type !== "messagepacket") return
         const sim = simulators.find(sim => sim.id === sender)
         if (!sim) return
+
+        bus.sendFrameAsync(msg.data)
+
         const pkts = decodePacketMessage(bus, msg)
         if (!pkts) return
 
@@ -238,10 +240,6 @@ export const HostedSimulatorsProvider = ({ children }) => {
                     )
                 sim.devideId = pkt.deviceIdentifier
             }
-            // send to native bus
-            bus.sendPacketAsync(pkt)
-            // send to javascript bus
-            bus.processPacket(pkt)
         }
     }
 

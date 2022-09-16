@@ -14,7 +14,7 @@ export default function PacketRecorder() {
         <>
             {!recording && replayTrace && (
                 <Typography variant="caption">
-                    {replayTrace.packets.length} packets
+                    {replayTrace.frames.length} packets
                 </Typography>
             )}
             <TraceImportButton icon={true} disabled={tracing || recording} />
