@@ -24,6 +24,7 @@ import IconButtonWithTooltip from "./ui/IconButtonWithTooltip"
 import Suspense from "./ui/Suspense"
 import { UIFlags } from "../jacdac/providerbus"
 import { Flags } from "../../jacdac-ts/src/jdom/flags"
+import { useLocationSearchParamString } from "./hooks/useLocationSearchParam"
 
 const PREFIX = "HostedSimulatorsContext"
 
@@ -56,10 +57,12 @@ const Root = styled("div")(() => ({
 const Draggable = lazy(() => import("react-draggable"))
 
 export interface HostedSimulatorDefinition {
+    id: string
     name: string
     url: string
     width: string
     height: string
+    requiresJacscript?: boolean
 }
 
 interface HostedSimulator {
@@ -94,36 +97,43 @@ export default function useHostedSimulators() {
 export function hostedSimulatorDefinitions(): HostedSimulatorDefinition[] {
     return [
         {
+            id: "microbitjukebox",
             name: "micro:bit V2 Jukebox",
             url: "https://microsoft.github.io/pxt-jacdac/?tool=microbit-jukebox",
             width: "20rem",
             height: "17.5rem",
         },
         {
+            id: "microbitmicrocode",
             name: "micro:bit V2 MicroCode servers",
             url: "https://microsoft.github.io/pxt-jacdac/?tool=microbit-microcode-servers",
             width: "20rem",
             height: "17.5rem",
+            requiresJacscript: true,
         },
         {
+            id: "azureiotuploader",
             name: "Azure IoT Uploader",
             url: "https://microsoft.github.io/pxt-jacdac/",
             width: "20rem",
             height: "12rem",
         },
         Flags.diagnostics && {
+            id: "arcademultitool",
             name: "MakeCode Arcade multitool",
             url: "https://microsoft.github.io/pxt-jacdac/?tool=multitool",
             width: "25vw",
             height: "28.75vw",
         },
         UIFlags.localhost && {
+            id: "azureiotuploaderlocal",
             name: "Azure IoT Uploader (localhost)",
             url: "http://localhost:3232/index.html",
             width: "20rem",
             height: "12rem",
         },
         UIFlags.localhost && {
+            id: "makecodeserve",
             name: "makecode serve (localhost)",
             url: "http://localhost:7000/",
             width: "20rem",
@@ -247,6 +257,21 @@ export const HostedSimulatorsProvider = ({ children }) => {
     useWindowEvent("message", !!simulators.length && handleMessage, false, [
         simulators,
     ])
+
+    // spin up default simulators as needed
+    const querySimulators = useLocationSearchParamString("simulators")
+    useEffect(() => {
+        const defs = hostedSimulatorDefinitions()
+        console.log(querySimulators)
+        querySimulators
+            ?.split(",")
+            .filter(
+                defid => !simulators.find(sim => sim.definition.id === defid)
+            )
+            .map(defid => defs.find(def => def.id === defid))
+            .filter(def => !!def)
+            .forEach(addHostedSimulator)
+    }, [querySimulators])
 
     return (
         <Root>

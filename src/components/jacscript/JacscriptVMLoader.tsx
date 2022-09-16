@@ -34,7 +34,6 @@ export default function JacscriptVMLoader() {
             ev: MessageEvent<{ source?: "jacscript"; data?: Uint8Array }>
         ) => {
             const data = ev.data
-            console.log({ data })
             if (data?.source === "jacscript") {
                 console.debug(`jacscript: deploying bytecode`)
                 const bytecode = data.data
