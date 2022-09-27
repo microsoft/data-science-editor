@@ -1,7 +1,7 @@
 import { useSnackbar as NoistackUseSnackbar } from "notistack"
 import { ReactNode } from "react"
 import { errorCode } from "../../../jacdac-ts/src/jdom/error"
-import { isCancelError } from "../../../jacdac-ts/src/jdom/utils"
+import { isCancelError } from "../../../jacdac-ts/src/jdom/error"
 import useAnalytics from "./useAnalytics"
 
 export default function useSnackbar() {

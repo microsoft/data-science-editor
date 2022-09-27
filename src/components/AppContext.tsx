@@ -7,7 +7,7 @@ import React, {
 } from "react"
 import { ERROR } from "../../jacdac-ts/src/jdom/constants"
 import { Packet } from "../../jacdac-ts/src/jdom/packet"
-import { isCancelError } from "../../jacdac-ts/src/jdom/utils"
+import { isCancelError } from "../../jacdac-ts/src/jdom/error"
 import useBus from "../jacdac/useBus"
 import useSnackbar from "./hooks/useSnackbar"
 import PacketsContext from "./PacketsContext"
