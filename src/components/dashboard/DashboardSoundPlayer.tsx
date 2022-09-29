@@ -6,9 +6,8 @@ import {
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import useServiceServer from "../hooks/useServiceServer"
-import { Button, Grid, MenuItem, SelectChangeEvent } from "@mui/material"
+import { Grid, MenuItem, SelectChangeEvent } from "@mui/material"
 import { useChangeAsync } from "../../jacdac/useChange"
-import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
 import { SoundPlayerServer } from "../../../jacdac-ts/src/servers/soundplayerserver"
 import { Howl } from "howler"
@@ -16,11 +15,9 @@ import LoadingProgress from "../ui/LoadingProgress"
 import useRegister from "../hooks/useRegister"
 import VolumeWidget from "../widgets/VolumeWidget"
 import SelectWithLabel from "../ui/SelectWithLabel"
-import { roundWithPrecision } from "../../../jacdac-ts/src/jacdac"
-import { IconButton } from "gatsby-theme-material-ui"
-import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import PlayArrowIcon from "@mui/icons-material/PlayArrow"
 import CmdButton from "../CmdButton"
+import { withPrefix } from "gatsby"
 
 export default function DashboardSoundPlayer(props: DashboardServiceProps) {
     const { service, expanded } = props
@@ -47,7 +44,7 @@ export default function DashboardSoundPlayer(props: DashboardServiceProps) {
         if (server && volume)
             server.onPlay = (name: string) => {
                 const sound = new Howl({
-                    src: [`/jacdac-docs/sounds/${name}.wav`],
+                    src: [withPrefix(`/sounds/${name}.wav`)],
                     volume: volume,
                 })
                 sound.play()

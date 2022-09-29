@@ -112,7 +112,8 @@ export const frontmatter = {
     description: "Form to submit a new device for the catalog.",
 }
 import CoreHead from "../../components/shell/Head"
-export const Head = (props) => <CoreHead {...props} {...frontmatter} />
+import { withPrefix } from "gatsby"
+export const Head = props => <CoreHead {...props} {...frontmatter} />
 
 export default function DeviceRegistration() {
     const [device, setDevice] = useLocalStorage<jdspec.DeviceSpec>(
@@ -791,7 +792,14 @@ export default function DeviceRegistration() {
                             onImageImported={handleImageImported}
                         />
                         <Typography variant="caption" component="div">
-                            {`Import an image of the device; must be at least ${DEVICE_IMAGE_WIDTH}x${DEVICE_IMAGE_HEIGHT}, device must be fully visible on a white background; 45 degree isometric prespective tilting to the right.`}
+                            {`Import an image of the device; must be at least ${DEVICE_IMAGE_WIDTH}x${DEVICE_IMAGE_HEIGHT}, device must be fully visible on a white background; 45 degree isometric perspective tilting to the right.`}
+                            <a
+                                href={withPrefix(
+                                    "/templates/jacdac-device-photo-template.pdf"
+                                )}
+                            >
+                                Download photo template.
+                            </a>
                         </Typography>
                         {imageError && (
                             <Alert severity="error">{imageError}</Alert>
