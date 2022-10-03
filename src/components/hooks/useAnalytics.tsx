@@ -1,8 +1,11 @@
 import React, { Component, ErrorInfo, ReactNode } from "react"
+/*
 import {
     ApplicationInsights,
     SeverityLevel,
 } from "@microsoft/applicationinsights-web"
+*/
+
 export type EventProperties = Record<string, string | number | boolean>
 const sha = process.env.GATSBY_GITHUB_SHA
 
@@ -22,12 +25,23 @@ function splitProperties(props: EventProperties) {
     return { measurements, properties }
 }
 
+interface AppInsightsApp {
+    loadAppInsights(): void;   
+    addTelemetryInitializer(handler: any): void;
+    trackPageView(msg: any): void;
+    trackEvent(msg: any): void;
+    trackException(msg: any): void;
+    trackTrace(msg: any, props: any): void;
+}
+
 const INSTRUMENTATION_KEY = "693860c3-5e90-4a8f-b161-407e7fc7d98d"
-const appInsights: any =
+const appInsights: AppInsightsApp =
     typeof window !== "undefined" &&
     INSTRUMENTATION_KEY &&
     // ignore dev environment
     !/http:\/\/localhost/.test(window.location.href) &&
+    undefined
+    /*
     new ApplicationInsights({
         config: {
             instrumentationKey: INSTRUMENTATION_KEY,
@@ -38,7 +52,7 @@ const appInsights: any =
             enableSessionStorageBuffer: false,
             autoTrackPageVisitTime: true,
         },
-    })
+    })*/
 if (appInsights) {
     appInsights.loadAppInsights()
     appInsights.addTelemetryInitializer(envelope => {
@@ -70,11 +84,13 @@ const trackError: (exception: Error, properties?: EventProperties) => void =
         : () => {}
 
 const severities = {
+    /*
     debug: SeverityLevel.Verbose,
     warn: SeverityLevel.Warning,
     error: SeverityLevel.Error,
     info: SeverityLevel.Information,
     log: SeverityLevel.Information,
+    */
 }
 const trackTrace: (
     message: string,
