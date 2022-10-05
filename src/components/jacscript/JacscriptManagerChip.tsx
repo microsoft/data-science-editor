@@ -23,6 +23,7 @@ export default function JacscriptManagerChip(props: {
     const { service, selected, setSelected } = props
     const { compiled: jscCompiled } = useJacscript()
     const [deploying, setDeploying] = useState(false)
+    const [deployError, setDeployError] = useState<Error>(undefined)
 
     const statusCodeChangedEvent = useEvent(
         service,
@@ -78,11 +79,14 @@ export default function JacscriptManagerChip(props: {
         if (!service || !selected) return
         try {
             setDeploying(true)
+            setDeployError(undefined)
             await OutPipe.sendBytes(
                 service,
                 JacscriptManagerCmd.DeployBytecode,
                 binary || new Uint8Array(0)
             )
+        } catch (e) {
+            setDeployError(e)
         } finally {
             setDeploying(false)
         }
@@ -98,7 +102,7 @@ export default function JacscriptManagerChip(props: {
         <Chip
             label={label}
             title={title}
-            color={selected ? "secondary" : undefined}
+            color={deployError ? "error" : selected ? "secondary" : undefined}
             variant={selected ? "filled" : undefined}
             avatar={<DeviceAvatar device={service.device} />}
             onClick={handleClick}
