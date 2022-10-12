@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from "react"
+import React, { useContext, useEffect, useRef, useMemo } from "react"
 import { styled } from "@mui/material/styles"
 import { useBlocklyWorkspace } from "react-blockly"
 import { WorkspaceSvg } from "blockly"
@@ -61,49 +61,54 @@ function SuspendedBlockEditor(props: { className?: string }) {
     const { setError } = useSnackbar()
     const theme = darkMode === "dark" ? DarkTheme : Theme
 
-    // ReactBlockly
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const blocklyRef = useRef(null)
-    const { workspace, xml } = useBlocklyWorkspace({
-        ref: blocklyRef,
-        toolboxConfiguration,
-        workspaceConfiguration: {
-            collapse: false,
-            disable: false,
-            comments: true,
-            css: true,
-            trashcan: false,
-            sounds: false,
-            renderer: "thrasos",
-            theme,
-            oneBasedIndex: false,
-            grid: {
-                spacing: 32,
-                length: 3,
-                color: darkMode === "dark" ? "#444" : "#ccc",
-                snap: true,
+    const configuration = useMemo(
+        () => ({
+            ref: blocklyRef,
+            toolboxConfiguration,
+            workspaceConfiguration: {
+                collapse: false,
+                disable: false,
+                comments: true,
+                css: true,
+                trashcan: false,
+                sounds: false,
+                renderer: "thrasos",
+                theme,
+                oneBasedIndex: false,
+                grid: {
+                    spacing: 32,
+                    length: 3,
+                    color: darkMode === "dark" ? "#444" : "#ccc",
+                    snap: true,
+                },
+                move: {
+                    scrollbars: true,
+                },
+                media: withPrefix("blockly/media/"),
+                zoom: {
+                    controls: true,
+                    wheel: false,
+                    startScale: 1.0,
+                    maxScale: 4,
+                    minScale: 0.04,
+                    scaleSpeed: 1.1,
+                    pinch: true,
+                },
             },
-            move: {
-                scrollbars: true,
+            initialXml: workspaceXml,
+            onImportXmlError: () => {
+                console.error(`error loading blocks`)
+                setError("Error loading blocks...")
             },
-            media: withPrefix("blockly/media/"),
-            zoom: {
-                controls: true,
-                wheel: false,
-                startScale: 1.0,
-                maxScale: 4,
-                minScale: 0.04,
-                scaleSpeed: 1.1,
-                pinch: true,
-            },
-        },
-        initialXml: workspaceXml,
-        onImportXmlError: () => {
-            console.error(`error loading blocks`)
-            setError("Error loading blocks...")
-        },
-        // TODO: fix typing
-    } as any) as { workspace: WorkspaceSvg; xml: string }
+            // TODO: fix typing
+        }),
+        []
+    )
+    const { workspace, xml } = useBlocklyWorkspace(configuration as any) as {
+        workspace: WorkspaceSvg
+        xml: string
+    }
 
     // store ref
     useEffect(() => setWorkspace(workspace), [workspace])
