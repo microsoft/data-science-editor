@@ -137,7 +137,7 @@ const shadowDsl: BlockDomainSpecificLanguage = {
                     name: "value",
                     min: 0,
                     max: 1,
-                    precision: 0.1,
+                    precision: 0.01,
                 },
             ],
             style: "math_blocks",
