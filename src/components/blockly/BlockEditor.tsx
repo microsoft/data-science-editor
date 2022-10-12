@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useMemo } from "react"
-import { styled } from "@mui/material/styles"
+import { styled, useTheme } from "@mui/material/styles"
 import { useBlocklyWorkspace } from "react-blockly"
 import { WorkspaceSvg } from "blockly"
 import Theme from "@blockly/theme-modern"
@@ -59,6 +59,7 @@ function SuspendedBlockEditor(props: { className?: string }) {
 
     const { darkMode } = useContext(DarkModeContext)
     const { setError } = useSnackbar()
+    const { palette } = useTheme()
     const theme = darkMode === "dark" ? DarkTheme : Theme
 
     const blocklyRef = useRef(null)
@@ -79,7 +80,7 @@ function SuspendedBlockEditor(props: { className?: string }) {
                 grid: {
                     spacing: 24,
                     length: 3,
-                    color: darkMode === "dark" ? "#444" : "#ccc",
+                    color: palette.background.default,
                     snap: true,
                 },
                 move: {
