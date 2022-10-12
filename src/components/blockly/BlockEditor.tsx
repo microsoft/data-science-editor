@@ -74,9 +74,15 @@ function SuspendedBlockEditor(props: { className?: string }) {
             css: true,
             trashcan: false,
             sounds: false,
-            renderer: "zelos",
+            renderer: "thrasos",
             theme,
             oneBasedIndex: false,
+            grid: {
+                spacing: 32,
+                length: 3,
+                color: darkMode === "dark" ? "#444" : "#ccc",
+                snap: true,
+            },
             move: {
                 scrollbars: true,
             },
@@ -85,8 +91,8 @@ function SuspendedBlockEditor(props: { className?: string }) {
                 controls: true,
                 wheel: false,
                 startScale: 1.0,
-                maxScale: 3,
-                minScale: 0.08,
+                maxScale: 4,
+                minScale: 0.04,
                 scaleSpeed: 1.1,
                 pinch: true,
             },
@@ -101,7 +107,9 @@ function SuspendedBlockEditor(props: { className?: string }) {
 
     // store ref
     useEffect(() => setWorkspace(workspace), [workspace])
-    useEffect(() => setWorkspaceXml(xml), [xml])
+    useEffect(() => {
+        setWorkspaceXml(xml)
+    }, [xml])
 
     // resize blockly
     useEffect(() => {
