@@ -84,7 +84,6 @@ import { JDService } from "../../../../jacdac-ts/src/jdom/service"
 import { groupBy } from "../../../../jacdac-ts/src/jdom/utils"
 import { prettyUnit } from "../../../../jacdac-ts/src/jdom/pretty"
 
-export const SET_STATUS_LIGHT_BLOCK = "jacdac_set_status_light"
 export const ROLE_BOUND_EVENT_BLOCK = "jacdac_role_bound_event"
 export const ROLE_BOUND_BLOCK = "jacdac_role_bound"
 
@@ -997,41 +996,6 @@ export class ServicesBaseDSL {
                         ),
                     }),
                     errors: exprsErrors.flatMap(p => p.errors),
-                }
-            }
-            case "server": {
-                return {
-                    cmd: makeVMBase(block, {
-                        type: "CallExpression",
-                        arguments: [],
-                        callee: toIdentifier("nop"),
-                    }),
-                    errors: [],
-                }
-            }
-            default: {
-                const { type } = block
-                switch (type) {
-                    case SET_STATUS_LIGHT_BLOCK: {
-                        const { expr, errors } = blockToExpression(
-                            undefined,
-                            inputs[0].child
-                        )
-                        return {
-                            cmd: makeVMBase(block, {
-                                type: "CallExpression",
-                                arguments: [expr],
-                                callee: <jsep.Literal>{
-                                    type: "Literal",
-                                    raw: "control.setStatusLight",
-                                },
-                            }),
-                            errors,
-                        }
-                    }
-                    default:
-                        console.log(type)
-                        break
                 }
             }
         }

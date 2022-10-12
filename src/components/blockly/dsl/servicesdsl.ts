@@ -46,7 +46,6 @@ import {
     toRoleType,
     ROLE_BOUND_EVENT_BLOCK,
     ROLE_BOUND_BLOCK,
-    SET_STATUS_LIGHT_BLOCK,
 } from "./servicesbase"
 import { humanify } from "../../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import jsep from "jsep"
@@ -495,30 +494,6 @@ export class ServicesBlockDomainSpecificLanguage
                 helpUrl: "",
                 template: "role_bound",
             },
-            {
-                kind: "block",
-                type: SET_STATUS_LIGHT_BLOCK,
-                message0: "set status light to %1",
-                args0: [
-                    <ValueInputDefinition>{
-                        type: "input_value",
-                        name: "color",
-                        check: "Number",
-                    },
-                ],
-                values: {
-                    color: {
-                        kind: "block",
-                        type: LEDColorField.SHADOW.type,
-                    },
-                },
-                inputsInline: true,
-                previousStatement: CODE_STATEMENT_TYPE,
-                nextStatement: CODE_STATEMENT_TYPE,
-                colour: commandColor,
-                tooltip: "Sets the color on the status light",
-                helpUrl: "",
-            },
         ]
 
         const toolsBlocks: BlockDefinition[] = [
@@ -612,16 +587,6 @@ export class ServicesBlockDomainSpecificLanguage
                 <BlockReference>{
                     kind: "block",
                     type: ROLE_BOUND_BLOCK,
-                },
-                <BlockReference>{
-                    kind: "block",
-                    type: SET_STATUS_LIGHT_BLOCK,
-                    values: {
-                        color: {
-                            kind: "block",
-                            type: LEDColorField.SHADOW.type,
-                        },
-                    },
                 },
                 <LabelDefinition>{
                     kind: "label",
