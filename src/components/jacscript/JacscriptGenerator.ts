@@ -54,13 +54,10 @@ export default function workspaceJSONToJacscriptProgram(
 
     if (!workspace) return undefined
 
-    const [roles, serverRoles]: [VMRole[], VMRole[]] = splitFilter(
-        workspace.variables
-            .filter(v => BUILTIN_TYPES.indexOf(v.type) < 0)
-            .map(parseRoleType)
-            .filter(r => !isNaN(r.serviceClass)),
-        r => r.client
-    )
+    const roles: VMRole[] = workspace.variables
+        .filter(v => BUILTIN_TYPES.indexOf(v.type) < 0)
+        .map(parseRoleType)
+        .filter(r => !isNaN(r.serviceClass))
 
     class EmptyExpression extends Error {}
 
@@ -360,7 +357,6 @@ export default function workspaceJSONToJacscriptProgram(
 
     return {
         roles,
-        serverRoles,
         handlers,
     }
 }

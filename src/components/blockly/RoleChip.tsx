@@ -57,15 +57,10 @@ export default function RoleChip(props: {
                 ) as BlockSvg
             if (!twinBlock) {
                 twinBlock = workspace.newBlock(TWIN_BLOCK) as BlockSvg
-                let variable = workspace.getVariable(
+                const variable = workspace.getVariable(
                     role,
-                    toRoleType(specification, true)
+                    toRoleType(specification)
                 )
-                if (!variable)
-                    variable = workspace.getVariable(
-                        role,
-                        toRoleType(specification, false)
-                    )
                 console.debug(`new twin`, { twinBlock, variable })
                 const field = twinBlock.inputList[0].fieldRow.find(
                     f => f.name === "role"

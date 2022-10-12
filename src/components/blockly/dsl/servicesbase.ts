@@ -170,8 +170,8 @@ const fieldToShadow = (
               max: field.typicalMax || field.absoluteMax,
           }
 
-const variableName = (srv: jdspec.ServiceSpec, client: boolean) =>
-    `${humanify(srv.camelName).toLowerCase()}${client ? "" : " server"} 1`
+const variableName = (srv: jdspec.ServiceSpec) =>
+    `${humanify(srv.camelName).toLowerCase()} 1`
 
 const isEnabledRegister = (info: jdspec.PacketInfo) =>
     info.fields.length === 1 &&
@@ -238,8 +238,8 @@ export function toServiceType(service: JDService) {
     return isSensor(service.specification) ? "sensor" : "service"
 }
 
-export function toRoleType(service: jdspec.ServiceSpec, client = true) {
-    return `${service.classIdentifier}:${client ? "client" : "server"}`
+export function toRoleType(service: jdspec.ServiceSpec) {
+    return `${service.classIdentifier}:client`
 }
 
 export function parseRoleType(v: VariableJSON) {
@@ -247,7 +247,6 @@ export function parseRoleType(v: VariableJSON) {
     return {
         role: v.name,
         serviceClass: parseInt(split[0]),
-        client: split.length === 2 ? split[1] === "client" : true,
     }
 }
 
@@ -295,15 +294,14 @@ export const createServiceColor = (theme: Theme) => {
 }
 
 export const roleVariable = (
-    service: jdspec.ServiceSpec,
-    client = true
+    service: jdspec.ServiceSpec
 ): VariableInputDefinition => {
     return {
         type: "field_variable",
         name: "role",
-        variable: variableName(service, client),
-        variableTypes: [toRoleType(service, client)],
-        defaultType: toRoleType(service, client),
+        variable: variableName(service),
+        variableTypes: [toRoleType(service)],
+        defaultType: toRoleType(service),
     }
 }
 
@@ -406,22 +404,17 @@ export class ServicesBaseDSL {
             : "Configuration"
     }
 
-    protected makeRegisterSimpleGetBlocks(
-        registers: ServiceRegister[],
-        client = true
-    ) {
+    protected makeRegisterSimpleGetBlocks(registers: ServiceRegister[]) {
         return registers.map<RegisterBlockDefinition>(
             ({ service, register }) => ({
                 kind: "block",
-                type: `jacdac_get_simple_${service.shortId}_${register.name}${
-                    client ? "" : "_server"
-                }`,
+                type: `jacdac_get_simple_${service.shortId}_${register.name}`,
                 message0:
                     customMessage(service, register, register.fields[0])?.get ||
                     `%1 ${humanify(register.name)}${prettySimpleUint(
                         register
                     )}`,
-                args0: [roleVariable(service, client)],
+                args0: [roleVariable(service)],
                 inputsInline: true,
                 output: toBlocklyType(register.fields[0]),
                 colour: this.serviceColor(service),
@@ -436,18 +429,15 @@ export class ServicesBaseDSL {
         )
     }
 
-    protected makeRegisterSetBlocks(
-        registers: ServiceRegister[],
-        client = true
-    ) {
+    protected makeRegisterSetBlocks(registers: ServiceRegister[]) {
         return registers
-            .filter(({ register }) => !client || register.kind === "rw")
-            .filter(({ register }) => fieldsSupported(register))
+            .filter(
+                ({ register }) =>
+                    register.kind === "rw" && fieldsSupported(register)
+            )
             .map<RegisterBlockDefinition>(({ service, register }) => ({
                 kind: "block",
-                type: `jacdac_set_${service.shortId}_${register.name}${
-                    client ? "" : "_server"
-                }`,
+                type: `jacdac_set_${service.shortId}_${register.name}`,
                 message0: isEnabledRegister(register)
                     ? `set %1 %2${prettySimpleUint(register)}`
                     : `set %1 ${humanify(register.name)} to ${
@@ -456,7 +446,7 @@ export class ServicesBaseDSL {
                               : fieldsToMessage(register)
                       }${prettySimpleUint(register)}`,
                 args0: [
-                    roleVariable(service, client),
+                    roleVariable(service),
                     ...fieldsToFieldInputs(register),
                 ],
                 values: fieldsToValues(service, register),
@@ -473,10 +463,7 @@ export class ServicesBaseDSL {
             }))
     }
 
-    protected makeRegisterChangeByEventBlocks(
-        registers: ServiceRegister[],
-        client = true
-    ) {
+    protected makeRegisterChangeByEventBlocks(registers: ServiceRegister[]) {
         return registers
             .filter(({ service }) => !service.packets.some(isHighLevelEvent))
             .filter(
@@ -487,14 +474,12 @@ export class ServicesBaseDSL {
             )
             .map<RegisterBlockDefinition>(({ service, register }) => ({
                 kind: "block",
-                type: `jacdac_change_by_events_${service.shortId}_${
-                    register.name
-                }${client ? "" : "_server"}`,
+                type: `jacdac_change_by_events_${service.shortId}_${register.name}`,
                 message0: `on %1 ${humanify(
                     register.name
                 )} change by %2${prettySimpleUint(register)}`,
                 args0: [
-                    roleVariable(service, client),
+                    roleVariable(service),
                     ...fieldsToFieldInputs(register),
                 ].filter(v => !!v),
                 values: fieldsToValues(service, register),
@@ -510,22 +495,17 @@ export class ServicesBaseDSL {
             }))
     }
 
-    protected makeRegisterNumericsGetBlocks(
-        registers: ServiceRegister[],
-        client = true
-    ) {
+    protected makeRegisterNumericsGetBlocks(registers: ServiceRegister[]) {
         return registers
             .filter(re => re.register.fields.some(isNumericType))
             .map<RegisterBlockDefinition>(({ service, register }) => ({
                 kind: "block",
-                type: `jacdac_get_numerics_${service.shortId}_${register.name}${
-                    client ? "" : "_server"
-                }`,
+                type: `jacdac_get_numerics_${service.shortId}_${register.name}`,
                 message0: `%1 ${humanify(register.name)}${
                     register.fields.length > 1 ? ` %2` : ""
                 }`,
                 args0: [
-                    roleVariable(service, client),
+                    roleVariable(service),
                     register.fields.length > 1
                         ? <OptionsInputDefinition>{
                               type: "field_dropdown",
@@ -551,23 +531,18 @@ export class ServicesBaseDSL {
             }))
     }
 
-    protected makeRegisterEnumGetBlocks(
-        registers: ServiceRegisterField[],
-        client = true
-    ) {
+    protected makeRegisterEnumGetBlocks(registers: ServiceRegisterField[]) {
         return registers.map<RegisterBlockDefinition>(
             ({ service, register, field, einfo }) => ({
                 kind: "block",
-                type: `jacdac_get_enum_${service.shortId}_${register.name}_${
-                    field.name
-                }${client ? "" : "_server"}`,
+                type: `jacdac_get_enum_${service.shortId}_${register.name}_${field.name}`,
                 message0:
                     customMessage(service, register, field)?.get ||
                     `%1 ${humanify(register.name)}${
                         field.name === "_" ? "" : ` ${field.name}`
                     } %2`,
                 args0: [
-                    roleVariable(service, client),
+                    roleVariable(service),
                     <OptionsInputDefinition>{
                         type: "field_dropdown",
                         name: field.name,
@@ -725,7 +700,6 @@ export class ServicesBaseDSL {
 
         const makeCategory = (
             service: jdspec.ServiceSpec,
-            isClient: boolean,
             serviceBlocks: ServiceBlockDefinition[],
             eventFieldBLocks: EventFieldDefinition[]
         ) => {
@@ -736,23 +710,20 @@ export class ServicesBaseDSL {
             )
             return {
                 kind: "category",
-                name: service.name + (isClient ? "" : " Server"),
+                name: service.name,
                 colour: this.serviceColor(service),
                 contents: [
                     <ButtonDefinition>{
                         kind: "button",
-                        text: `Add ${service.name} ${
-                            isClient ? "role" : "server"
-                        }`,
+                        text: `Add ${service.name} role`,
                         callbackKey: `jacdac_add_role_callback_${toRoleType(
-                            service,
-                            isClient
+                            service
                         )}`,
                         callback: workspace =>
                             Variables.createVariableButtonHandler(
                                 workspace,
                                 null,
-                                toRoleType(service, isClient)
+                                toRoleType(service)
                             ),
                     },
                     ...arrayConcatMany(
@@ -772,8 +743,7 @@ export class ServicesBaseDSL {
 
         return (
             serviceBlocks: ServiceBlockDefinition[],
-            eventFieldBlocks: EventFieldDefinition[],
-            client = true
+            eventFieldBlocks: EventFieldDefinition[]
         ) =>
             toolboxServices
                 .map(serviceClient => ({
@@ -786,7 +756,6 @@ export class ServicesBaseDSL {
                     sc =>
                         makeCategory(
                             sc.serviceClient,
-                            client,
                             sc.serviceBlocks,
                             eventFieldBlocks
                         ) as CategoryDefinition

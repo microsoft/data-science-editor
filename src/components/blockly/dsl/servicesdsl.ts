@@ -534,9 +534,6 @@ export class ServicesBlockDomainSpecificLanguage
                         variableTypes: [
                             "client",
                             ...supportedServices.map(srv => toRoleType(srv)),
-                            ...supportedServices.map(srv =>
-                                toRoleType(srv, false)
-                            ),
                         ],
                         defaultType: "client",
                     },
