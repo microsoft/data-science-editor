@@ -75,6 +75,7 @@ function BlockMiniMap(props: {
     onSizeUpdate: (width: number, height: number) => void
 }) {
     const { workspace, onSizeUpdate } = props
+    const { palette } = useTheme()
     const svgRef = useRef<SVGSVGElement>()
     const [metrics, setMetrics] = useState<{
         scroll: MetricsManager.ContainerRegion
@@ -167,6 +168,13 @@ function BlockMiniMap(props: {
             width={cwidth}
             height={cheight}
         >
+            <rect
+                x={0}
+                y={0}
+                width={cwidth}
+                height={cheight}
+                fill={palette.background.paper}
+            />
             <g transform={`translate(${-cleft},${-ctop})`}>
                 {blocks?.map(({ blockId, rect, color }) => (
                     <MiniBlock
