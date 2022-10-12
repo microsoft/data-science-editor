@@ -77,7 +77,7 @@ function SuspendedBlockEditor(props: { className?: string }) {
                 theme,
                 oneBasedIndex: false,
                 grid: {
-                    spacing: 32,
+                    spacing: 24,
                     length: 3,
                     color: darkMode === "dark" ? "#444" : "#ccc",
                     snap: true,
