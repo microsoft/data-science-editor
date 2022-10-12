@@ -271,6 +271,7 @@ export default function workspaceJSONToJacscriptProgram(
                     errors?.forEach(e => handler.errors.push(e))
                 } catch (e) {
                     if (e instanceof EmptyExpression) {
+                        console.debug(`empty expression`, { child })
                         handler.commands.push({
                             sourceId: child.id,
                             type: "cmd",

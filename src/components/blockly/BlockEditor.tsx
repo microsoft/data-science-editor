@@ -103,7 +103,7 @@ function SuspendedBlockEditor(props: { className?: string }) {
             },
             // TODO: fix typing
         }),
-        []
+        [toolboxConfiguration]
     )
     const { workspace, xml } = useBlocklyWorkspace(configuration as any) as {
         workspace: WorkspaceSvg

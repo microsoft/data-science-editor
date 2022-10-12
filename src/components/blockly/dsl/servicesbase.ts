@@ -154,11 +154,6 @@ const fieldToShadow = (
         ? { kind: "block", type: "jacdac_time_picker_ms" }
         : field.unit === "s"
         ? { kind: "block", type: "jacdac_time_picker" }
-        : field.unit === "°"
-        ? {
-              kind: "block",
-              type: "jacdac_angle",
-          }
         : field.unit === "/"
         ? { kind: "block", type: "jacdac_ratio" }
         : /^%/.test(field.unit)
@@ -989,9 +984,9 @@ export class ServicesBaseDSL {
             case "register_set": {
                 // TODO: need to handle the case of writing a register with fields
                 const { register } = definition as RegisterBlockDefinition
-                const exprsErrors = inputs.map(a =>
-                    blockToExpression(event, a.child)
-                )
+                const exprsErrors = inputs
+                    .filter(i => !!i.name)
+                    .map(a => blockToExpression(event, a.child))
                 const { value: role } = inputs[0].fields.role
                 return {
                     cmd: makeVMBase(block, {
@@ -1018,9 +1013,11 @@ export class ServicesBaseDSL {
                 const exprsErrors =
                     template === "raiseNo"
                         ? []
-                        : inputs.map(a => {
-                              return blockToExpression(event, a.child)
-                          })
+                        : inputs
+                              .filter(i => !!i.name)
+                              .map(a => {
+                                  return blockToExpression(event, a.child)
+                              })
                 return {
                     cmd: makeVMBase(block, {
                         type: "CallExpression",

@@ -2,7 +2,6 @@ import Blockly from "blockly"
 import NoteField from "./NoteField"
 import KeyboardKeyField from "./KeyboardKeyField"
 import LEDMatrixField from "./LEDMatrixField"
-import ServoAngleField from "./ServoAngleField"
 import { BlockDefinition } from "../toolbox"
 import { assert } from "../../../../jacdac-ts/src/jdom/utils"
 import LEDColorField from "./LEDColorField"
@@ -68,7 +67,6 @@ export function registerFields() {
         KeyboardKeyField,
         NoteField,
         LEDMatrixField,
-        ServoAngleField,
         LEDColorField,
 
         TwinField,

@@ -49,7 +49,7 @@ export interface OptionsInputDefinition extends InputDefinition {
 }
 
 export interface NumberInputDefinition extends InputDefinition {
-    type: "field_number" | "field_angle" | "field_slider"
+    type: "field_number" | "field_slider"
     min?: number
     max?: number
     precision?: number

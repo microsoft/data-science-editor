@@ -11,7 +11,6 @@ const builtins: SMap<(block: Block) => string | number | boolean> = {
     jacdac_on_off: block => block.getFieldValue("value") === "on",
     jacdac_yes_no: block => block.getFieldValue("value") === "on",
     jacdac_time_picker: block => Number(block.getFieldValue("value") || "0"),
-    jacdac_angle: block => Number(block.getFieldValue("value") || "0"),
     jacdac_percent: block => Number(block.getFieldValue("value") || "0"),
     jacdac_ratio: block => Number(block.getFieldValue("value") || "0"),
 }
@@ -91,22 +90,6 @@ const shadowDsl: BlockDomainSpecificLanguage = {
                         ["15s", "15000"],
                         ["30s", "30000"],
                     ],
-                },
-            ],
-            style: "math_blocks",
-            output: "Number",
-        },
-        {
-            kind: "block",
-            type: `jacdac_angle`,
-            message0: `%1`,
-            args0: [
-                <NumberInputDefinition>{
-                    type: "field_angle",
-                    name: "value",
-                    min: 0,
-                    max: 360,
-                    precision: 10,
                 },
             ],
             style: "math_blocks",
