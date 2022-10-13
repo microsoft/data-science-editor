@@ -315,14 +315,11 @@ export class ServicesBlockDomainSpecificLanguage
                             const { inputs } = block
                             const {
                                 leds = "0",
-                                rows,
-                                columns,
                             }: {
                                 leds: string
                                 rows: number
                                 columns: number
                             } = inputs[0].fields["dots"].value
-                            console.log({ leds, rows, columns })
                             const { value: role } = inputs[0].fields["role"]
                             const exprsErrors = inputs
                                 .filter(i => i.child)
