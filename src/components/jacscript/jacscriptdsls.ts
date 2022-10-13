@@ -10,12 +10,12 @@ import analyzeDsl from "../blockly/dsl/analyzedsl"
 
 const jacscriptDsls = [
     servicesDsl,
-    analyzeDsl,
     loopsDsl,
     logicDsl,
     mathDsl,
-    debugDsl,
     variablesDsl,
+    debugDsl,
+    analyzeDsl,
     shadowDsl,
     fieldsDsl,
 ]

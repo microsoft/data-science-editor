@@ -226,9 +226,9 @@ const analyzeDsl: BlockDomainSpecificLanguage = {
         ]
     },
 
-    createCategory: (): CategoryDefinition[] => {
+    createCategory: () => {
         return [
-            {
+            <CategoryDefinition>{
                 kind: "category",
                 name: "Analyze",
                 colour: analyzeColour,
