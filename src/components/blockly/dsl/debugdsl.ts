@@ -5,9 +5,11 @@ import VariablesField from "../fields/VariablesFields"
 import VideoPlayerField from "../fields/VideoPlayerField"
 import {
     BlockReference,
+    CategoryDefinition,
     CODE_STATEMENT_TYPE,
     InputDefinition,
     LabelDefinition,
+    SeparatorDefinition,
     toolsColour,
 } from "../toolbox"
 import BlockDomainSpecificLanguage, { CompileCommandToVMOptions } from "./dsl"
@@ -110,7 +112,10 @@ const debugDsl: BlockDomainSpecificLanguage = {
         },
     ],
     createCategory: () => [
-        {
+        <SeparatorDefinition>{
+            kind: "sep",
+        },
+        <CategoryDefinition>{
             kind: "category",
             name: "Debug",
             colour,
