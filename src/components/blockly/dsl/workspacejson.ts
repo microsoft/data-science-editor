@@ -12,7 +12,7 @@ export interface VariableJSON {
 
 export type FieldJSON = {
     id?: string
-    value?: number | string | boolean
+    value?: number | string | boolean | any
     // Boolean, Number, String, or service short id
     variabletype?: string
     // and extra fields, subclass

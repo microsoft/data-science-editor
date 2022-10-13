@@ -310,6 +310,42 @@ export class ServicesBlockDomainSpecificLanguage
                         service,
                         // encode digits
                         template: "custom",
+                        compileCommand: options => {
+                            const { block, blockToExpression } = options
+                            const { inputs } = block
+                            const {
+                                leds = "0",
+                                rows,
+                                columns,
+                            }: {
+                                leds: string
+                                rows: number
+                                columns: number
+                            } = inputs[0].fields["dots"].value
+                            console.log({ leds, rows, columns })
+                            const { value: role } = inputs[0].fields["role"]
+                            const exprsErrors = inputs
+                                .filter(i => i.child)
+                                .map(a => blockToExpression(undefined, a.child))
+                            return {
+                                cmd: makeVMBase(block, {
+                                    type: "CallExpression",
+                                    arguments: [
+                                        <jsep.Literal>{
+                                            type: "Literal",
+                                            value: leds,
+                                            raw: `hex\`${leds}\``,
+                                        },
+                                        ...exprsErrors.map(e => e.expr),
+                                    ],
+                                    callee: toMemberExpression(
+                                        role.toString(),
+                                        "dots.write"
+                                    ),
+                                }),
+                                errors: exprsErrors.flatMap(e => e.errors),
+                            }
+                        },
                     }
             ),
         ].map(def => {
