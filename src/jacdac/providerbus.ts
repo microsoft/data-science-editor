@@ -90,6 +90,7 @@ function sniffQueryArguments() {
         devTools: params.get("devtools"),
         connect: params.get("connect") !== "0",
         transient: params.get("transient") === "1",
+        persistent: params.get("persistent") === "1",
     }
 }
 
@@ -111,6 +112,7 @@ export class UIFlags {
     static devTools = args.devTools
     static connect = args.connect
     static transient = args.transient
+    static persistent = args.persistent
 }
 
 // defeat react fast-refresh
