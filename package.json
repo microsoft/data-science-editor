@@ -21,6 +21,7 @@
     "@mui/icons-material": "^5.10.6",
     "@mui/lab": "^5.0.0-alpha.102",
     "@mui/material": "^5.10.8",
+    "@mui/x-data-grid": "^5.17.7",
     "@octokit/core": "^4.0.5",
     "@parcel/transformer-typescript-types": "^2.7.0",
     "@react-three/drei": "^9.32.7",

@@ -2,7 +2,7 @@ import React, { ChangeEvent, lazy, useEffect, useMemo, useState } from "react"
 import { Grid, TextField, Typography } from "@mui/material"
 import useLocalStorage from "../hooks/useLocalStorage"
 import HighlightTextField from "../ui/HighlightTextField"
-import RefreshIcon from "@mui/icons-material/Refresh"
+import RestartAltIcon from "@mui/icons-material/RestartAlt"
 import type {
     EnclosureModel,
     EnclosureOptions,
@@ -51,7 +51,12 @@ function EnclosureDesign(props: {
     }
 
     useEffect(() => {
-        const model = generateEC30EnclosureModel(gridWidth, gridHeight, "lr", depth)
+        const model = generateEC30EnclosureModel(
+            gridWidth,
+            gridHeight,
+            "lr",
+            depth
+        )
         const source = JSON.stringify(model, null, 4)
         setSource(source)
     }, [gridWidth, gridHeight, depth])
@@ -162,7 +167,7 @@ export default function EnclosureEditor() {
                         size="small"
                         onClick={handleRefreshSource}
                     >
-                        <RefreshIcon />
+                        <RestartAltIcon />
                     </IconButtonWithTooltip>
                     <HighlightTextField
                         code={source}
@@ -181,7 +186,7 @@ export default function EnclosureEditor() {
                         size="small"
                         onClick={handleRefreshOptions}
                     >
-                        <RefreshIcon />
+                        <RestartAltIcon />
                     </IconButtonWithTooltip>
                     <HighlightTextField
                         minHeight="8rem"

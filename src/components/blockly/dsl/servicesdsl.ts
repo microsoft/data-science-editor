@@ -85,8 +85,6 @@ export class ServicesBlockDomainSpecificLanguage
             registerCompositeEnumTypes,
         } = getServiceInfo()
 
-        console.log({ clientSpecs })
-
         const resolveService = (cls: number): jdspec.ServiceSpec[] =>
             allServices.filter(srv => srv.classIdentifier === cls)
 

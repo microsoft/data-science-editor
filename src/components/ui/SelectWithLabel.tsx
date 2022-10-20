@@ -5,11 +5,14 @@ import {
     MenuItem,
     Select,
     SelectChangeEvent,
+    SxProps,
+    Theme,
 } from "@mui/material"
 import React, { ChangeEvent, ReactNode } from "react"
 import { useId } from "react"
 
 export default function SelectWithLabel(props: {
+    sx?: SxProps<Theme>
     required?: boolean
     label?: string
     disabled?: boolean
@@ -23,8 +26,10 @@ export default function SelectWithLabel(props: {
     helperText?: string
     children?: ReactNode
     none?: ReactNode
+    size?: "small" | "medium"
 }) {
     const {
+        sx,
         label,
         fullWidth,
         required,
@@ -38,6 +43,7 @@ export default function SelectWithLabel(props: {
         helperText,
         type,
         none,
+        size,
     } = props
     const id = useId()
     const labelId = id + "-label"
@@ -51,6 +57,7 @@ export default function SelectWithLabel(props: {
             </InputLabel>
             <Select
                 id={id}
+                sx={sx}
                 disabled={disabled}
                 label={label}
                 value={value}
@@ -62,6 +69,7 @@ export default function SelectWithLabel(props: {
                 aria-describedby={hasDescr ? descrId : undefined}
                 onChange={onChange}
                 onClose={onClose}
+                size={size}
             >
                 {none !== undefined && (
                     <MenuItem key={"none"} value={""}>

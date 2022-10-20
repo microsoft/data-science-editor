@@ -20,6 +20,7 @@ import { ConsoleProvider } from "../console/ConsoleContext"
 import { SimulatorDialogsProvider } from "../SimulatorsDialogContext"
 import { CommandPaletteProvider } from "../commands/CommandPaletteContext"
 import { YouTubeProvider } from "../youtube/YouTubeContext"
+import { BrainManagerProvider } from "../brains/BrainManagerContext"
 
 /*
 declare module "@mui/styles/defaultTheme" {
@@ -52,11 +53,13 @@ export default function ThemedLayout(props: {
                                                                 <SimulatorDialogsProvider>
                                                                     <ConsoleProvider>
                                                                         <MakeCodeSnippetProvider>
-                                                                            <CssBaseline />
+                                                                            <BrainManagerProvider>
+                                                                                <CssBaseline />
 
-                                                                            {
-                                                                                children
-                                                                            }
+                                                                                {
+                                                                                    children
+                                                                                }
+                                                                            </BrainManagerProvider>
                                                                         </MakeCodeSnippetProvider>
                                                                     </ConsoleProvider>
                                                                 </SimulatorDialogsProvider>

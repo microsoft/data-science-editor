@@ -1,24 +1,100 @@
-import { Grid } from "@mui/material"
-import React from "react"
+import { Grid, TextField } from "@mui/material"
+import React, { useContext, useState } from "react"
 import BlockRolesToolbar from "../blockly/BlockRolesToolbar"
-import { WORKSPACE_FILENAME } from "../blockly/toolbox"
-import FileTabs from "../fs/FileTabs"
-import useFileSystem from "../FileSystemContext"
-import { JACSCRIPT_NEW_FILE_CONTENT } from "./JacscriptEditor"
 import JacscriptManagerChipItems from "./JacscriptManagerChipItems"
+import CloudUploadIcon from "@mui/icons-material/CloudUpload"
+import BlockContext from "../blockly/BlockContext"
+import BrainManagerContext from "../brains/BrainManagerContext"
+import useChange from "../../jacdac/useChange"
+import { BrainScript } from "../brains/braindom"
+import CmdButton from "../CmdButton"
+import useEffectAsync from "../useEffectAsync"
+import { useDebounce } from "use-debounce"
+import { WorkspaceFile } from "../blockly/dsl/workspacejson"
+import { JSONTryParse } from "../../../jacdac-ts/src/jacdac"
+
+function SaveScriptButton(props: { script: BrainScript }) {
+    const { script } = props
+    const { workspaceSaved } = useContext(BlockContext)
+    const handleUpload = async () => {
+        await script.uploadBody({
+            blocks: JSON.stringify(workspaceSaved),
+            text: "",
+            compiled: "",
+        })
+    }
+    return (
+        <CmdButton
+            icon={<CloudUploadIcon />}
+            onClick={handleUpload}
+            variant="outlined"
+        >
+            Save
+        </CmdButton>
+    )
+}
+
+function BrainManagerToolbar(props: { script: BrainScript }) {
+    const { script } = props
+    const { name } = script
+    const [_name, _setName] = useState(name)
+    const [debouncedName] = useDebounce(_name, 1000)
+
+    const handleChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
+        _setName(ev.target.value)
+    }
+
+    useEffectAsync(() => script?.updateName(debouncedName), [debouncedName])
+
+    return (
+        <Grid sx={{ mt: 0.5, mb: 0.5 }} container direction="row" spacing={1}>
+            <Grid item xs>
+                <TextField
+                    fullWidth
+                    label={`Script Name${name !== _name ? "*" : ""}`}
+                    value={_name}
+                    spellCheck={false}
+                    onChange={handleChange}
+                    size="small"
+                />
+            </Grid>
+            <Grid item>
+                <SaveScriptButton script={script} />
+            </Grid>
+        </Grid>
+    )
+}
+
+function useBrainScriptInBlocks(script: BrainScript) {
+    const { loadWorkspaceFile, workspace } = useContext(BlockContext)
+
+    useEffectAsync(async () => {
+        if (!script || !workspace) return
+
+        // fetch latest body
+        const body = await script.refreshBody()
+
+        // update context
+        if (!body) return
+
+        // update blocks
+        console.debug("current brain script", { body })
+        const file = JSONTryParse<WorkspaceFile>(body.blocks)
+        loadWorkspaceFile(file)
+    }, [script?.id, workspace])
+}
 
 export default function JacscriptEditorToolbar() {
-    const { fileSystem } = useFileSystem()
+    const { brainManager, scriptId } = useContext(BrainManagerContext)
+    const script = useChange(brainManager, _ => _?.script(scriptId))
+
+    useBrainScriptInBlocks(script)
 
     return (
         <>
-            {!!fileSystem && (
+            {script && (
                 <Grid item xs={12}>
-                    <FileTabs
-                        newFileName={WORKSPACE_FILENAME}
-                        newFileContent={JACSCRIPT_NEW_FILE_CONTENT}
-                        hideFiles={true}
-                    />
+                    <BrainManagerToolbar script={script} />
                 </Grid>
             )}
             <Grid item xs={12}>

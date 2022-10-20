@@ -1,5 +1,5 @@
 import { MenuItem, SelectChangeEvent } from "@mui/material"
-import React, { ChangeEvent, useContext } from "react"
+import React, { useContext } from "react"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import SelectWithLabel from "../ui/SelectWithLabel"

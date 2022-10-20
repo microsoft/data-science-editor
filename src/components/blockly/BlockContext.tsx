@@ -53,12 +53,14 @@ export interface BlockProps {
     workspace: WorkspaceSvg
     workspaceXml: string
     workspaceJSON: WorkspaceJSON
+    workspaceSaved: WorkspaceFile
     toolboxConfiguration: ToolboxConfiguration
     roleManager: RoleManager
     dragging: boolean
     setWorkspace: (ws: WorkspaceSvg) => void
     setWorkspaceXml: (value: string) => void
     setWarnings: (category: string, warnings: BlockWarning[]) => void
+    loadWorkspaceFile: (file: WorkspaceFile) => void
 }
 
 const BlockContext = createContext<BlockProps>({
@@ -67,12 +69,14 @@ const BlockContext = createContext<BlockProps>({
     workspace: undefined,
     workspaceXml: undefined,
     workspaceJSON: undefined,
+    workspaceSaved: undefined,
     toolboxConfiguration: undefined,
     roleManager: undefined,
     dragging: false,
     setWarnings: () => {},
     setWorkspace: () => {},
     setWorkspaceXml: () => {},
+    loadWorkspaceFile: file => {},
 })
 BlockContext.displayName = "Block"
 
@@ -104,6 +108,8 @@ export function BlockProvider(props: {
     const [workspace, setWorkspace] = useState<WorkspaceSvg>(undefined)
     const [workspaceXml, _setWorkspaceXml] = useState<string>(storedXml)
     const [workspaceJSON, setWorkspaceJSON] = useState<WorkspaceJSON>(undefined)
+    const [workspaceSaved, setWorkspaceSaved] =
+        useState<WorkspaceFile>(undefined)
     const [warnings, _setWarnings] = useState<
         {
             category: string
@@ -129,8 +135,11 @@ export function BlockProvider(props: {
         ])
     }
     const loadWorkspaceFile = (file: WorkspaceFile) => {
-        const { editor, xml } = file || {}
-        if (editor !== editorId)
+        const { editor, xml } = file || {
+            editor: editorId,
+            xml: NEW_PROJET_XML,
+        }
+        if (editor && editor !== editorId)
             throw new Error(`wrong block editor (${editor} != ${editorId}`)
         // try loading xml into a dummy blockly workspace
         const dom = Xml.textToDom(xml || DEFAULT_XML)
@@ -263,6 +272,7 @@ export function BlockProvider(props: {
             const fileContent = JSON.stringify(file)
             workspaceFile?.write(fileContent)
         }
+        setWorkspaceSaved(file)
     }, [editorId, workspaceFile, workspaceXml, workspaceJSON])
     useEffect(() => {
         const services = resolveWorkspaceServices(workspace)
@@ -362,12 +372,14 @@ export function BlockProvider(props: {
                 workspace,
                 workspaceXml,
                 workspaceJSON,
+                workspaceSaved,
                 toolboxConfiguration,
                 roleManager,
                 dragging,
                 setWarnings,
                 setWorkspace,
                 setWorkspaceXml,
+                loadWorkspaceFile,
             }}
         >
             {children}

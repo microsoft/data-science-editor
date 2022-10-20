@@ -97,9 +97,7 @@ function JacscriptEditorWithContext() {
 }
 
 export default function JacscriptEditor() {
-    const dsls = useMemo(() => {
-        return jacscriptDsls
-    }, [])
+    const dsls = useMemo(() => jacscriptDsls, [])
     const handleOnBeforeSaveWorkspaceFile = useCallback(
         (file: WorkspaceFile) => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any

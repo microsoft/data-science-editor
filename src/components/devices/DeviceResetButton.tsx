@@ -1,8 +1,7 @@
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import React from "react"
 import CmdButton from "../CmdButton"
-// tslint:disable-next-line: no-submodule-imports match-default-export-name
-import RefreshIcon from "@mui/icons-material/Refresh"
+import RestartAltIcon from "@mui/icons-material/RestartAlt"
 
 export default function DeviceResetButton(props: {
     device: JDDevice
@@ -17,7 +16,7 @@ export default function DeviceResetButton(props: {
             size="small"
             title="reset"
             onClick={handleReset}
-            icon={<RefreshIcon />}
+            icon={<RestartAltIcon />}
         >
             {showLabel ? "Reset" : null}
         </CmdButton>

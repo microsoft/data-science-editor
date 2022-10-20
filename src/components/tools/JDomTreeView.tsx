@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { lazy, useContext, useState } from "react"
 import { styled } from "@mui/material/styles"
 import clsx from "clsx"
 // tslint:disable-next-line: no-submodule-imports
@@ -12,6 +12,12 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight"
 import useDevices from "../hooks/useDevices"
 import { DeviceTreeItem, JDomTreeViewProps } from "./JDomTreeViewItems"
 import { Flags } from "../../../jacdac-ts/src/jdom/flags"
+import Suspense from "../ui/Suspense"
+import BrainManagerContext from "../brains/BrainManagerContext"
+
+const BrainManagerTreeItem = lazy(
+    () => import("../brains/BrainManagerTreeViewItem")
+)
 
 const PREFIX = "JDomTreeView"
 const classes = {
@@ -35,6 +41,7 @@ export default function JDomTreeView(props: JDomTreeViewProps) {
     const [expanded, setExpanded] = useState<string[]>(defaultExpanded || [])
     const [selected, setSelected] = useState<string[]>(defaultSelected || [])
     const devices = useDevices({ ignoreInfrastructure: !Flags.diagnostics })
+    const { token: brainToken } = useContext(BrainManagerContext)
 
     const handleToggle = (
         event: React.ChangeEvent<unknown>,
@@ -70,6 +77,16 @@ export default function JDomTreeView(props: JDomTreeViewProps) {
                     {...other}
                 />
             ))}
+            {brainToken && (
+                <Suspense>
+                    <BrainManagerTreeItem
+                        key={"brain-manager"}
+                        expanded={expanded}
+                        selected={selected}
+                        {...other}
+                    />
+                </Suspense>
+            )}
         </StyledTreeView>
     )
 }
