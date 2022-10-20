@@ -325,7 +325,11 @@ class AzureIoTHubConnector extends JDEventSource {
             AzureIotHubHealthConnectionStatus.Connecting
         )
 
-        const url = `wss://${iotHubHostName}/$iothub/websocket?iothub-no-client-cert=true`
+        const urlPath = `$iothub/websocket?iothub-no-client-cert=true`
+        const url = /localhost:\d/.test(iotHubHostName)
+            ? `ws://${iotHubHostName}/${urlPath}`
+            : `wss://${iotHubHostName}/${urlPath}`
+
         this.log(`connecting to ${url}`)
 
         const client = new MQTT.Client(url, deviceId)
