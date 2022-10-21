@@ -103,7 +103,6 @@ function BrainScriptTreeItem(
     const version = useChange(script, _ => _.version)
     const nodeId = `brain-manager-programs-${id}`
     const current = id === scriptId
-    const description = id
     const info = `v${version || ""}`
 
     const handleClick = () => {
@@ -118,7 +117,6 @@ function BrainScriptTreeItem(
             <StyledTreeItem
                 nodeId={nodeId}
                 labelText={name}
-                labelCaption={description}
                 labelInfo={info}
                 sx={{ fontWeight: current ? "bold" : undefined }}
                 onClick={handleClick}
