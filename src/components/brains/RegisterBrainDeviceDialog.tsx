@@ -20,7 +20,6 @@ import BrainManagerContext from "./BrainManagerContext"
 import {
     JDDevice,
     SRV_AZURE_IOT_HUB_HEALTH,
-    SRV_JACSCRIPT_MANAGER,
 } from "../../../jacdac-ts/src/jacdac"
 import SelectDevice from "../select/SelectDevice"
 import useBus from "../../jacdac/useBus"
@@ -35,7 +34,7 @@ export default function RegisterBrainDeviceDialog(props: {
     const devices = useDevices({
         announced: true,
         serviceClass: SRV_AZURE_IOT_HUB_HEALTH,
-    }).filter(dev => dev.hasService(SRV_JACSCRIPT_MANAGER))
+    })
     const [deviceId, setDeviceId] = useState(devices[0]?.id || "")
     const bus = useBus()
     const device = bus.node(deviceId) as JDDevice
@@ -68,7 +67,8 @@ export default function RegisterBrainDeviceDialog(props: {
             </DialogTitleWithClose>
             <DialogContent>
                 <DialogContentText>
-                    Register your IoT brains to use with the cloud brain manager.
+                    Register your IoT brains to use with the cloud brain
+                    manager.
                 </DialogContentText>
                 <Grid container spacing={1}>
                     <Grid item>
