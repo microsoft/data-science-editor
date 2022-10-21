@@ -30,7 +30,7 @@ export default function ApiKeyAccordion(props: {
         props
     const apiKeyId = useId()
     const [key, setKey] = useState("")
-    const [expanded, setExpanded] = useState(!apiKey || defaultExpanded)
+    const [expanded, setExpanded] = useState(!!(!apiKey || defaultExpanded))
     const [validated, setValidated] = useState(false)
     const { enqueueSnackbar } = useSnackbar()
 
