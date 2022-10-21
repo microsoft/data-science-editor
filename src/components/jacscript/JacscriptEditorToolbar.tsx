@@ -11,16 +11,18 @@ import CmdButton from "../CmdButton"
 import useEffectAsync from "../useEffectAsync"
 import { useDebounce } from "use-debounce"
 import { WorkspaceFile } from "../blockly/dsl/workspacejson"
-import { JSONTryParse } from "../../../jacdac-ts/src/jacdac"
+import { JSONTryParse, toHex } from "../../../jacdac-ts/src/jacdac"
+import useJacscript from "./JacscriptContext"
 
 function SaveScriptButton(props: { script: BrainScript }) {
     const { script } = props
     const { workspaceSaved } = useContext(BlockContext)
+    const { program, compiled } = useJacscript()
     const handleUpload = async () => {
         await script.uploadBody({
             blocks: JSON.stringify(workspaceSaved),
-            text: "",
-            compiled: "",
+            text: program?.program.join("\n"),
+            compiled: compiled?.binary ? toHex(compiled.binary) : undefined,
         })
     }
     return (
