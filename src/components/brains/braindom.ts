@@ -168,14 +168,16 @@ export class BrainManager extends JDNode {
     ) {
         if (!this.token) return undefined
 
+        const { body } = opts || {}
         const options: RequestInit = {
             method: opts?.method || "GET",
             headers: {
-                "Content-Type": "application/json",
                 Authorization: `Basic ${btoa(this.token)}`,
             },
-            body: opts?.body ? JSON.stringify(opts.body) : undefined,
+            body: body ? JSON.stringify(body) : undefined,
         }
+        if (body)
+            options.headers["Content-Type"] = "application/json; charset=utf-8"
         const resp = await self.fetch(
             `https://${this.apiRoot}/api/${path}`,
             options
