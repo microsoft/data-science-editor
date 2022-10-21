@@ -395,8 +395,26 @@ export default function createAzureIotHubServiceDefinition(): ServiceProviderDef
                 connector.uploadBin(data)
             })
             connector.on(METHOD, (msg: MethodInvocation) => {
-                const { method } = msg
-                cloud.sendCloudCommand(method, [])
+                const { method, seqNo, payload } = msg
+                let values = []
+                if (Array.isArray(payload)) values = payload
+                else if (typeof payload == "number") values = [payload]
+                cloud.sendCloudCommand(method, values, 30000).then(
+                    resp => {
+                        connector.finishMethod(
+                            seqNo,
+                            { values: resp.args },
+                            resp.status
+                        )
+                    },
+                    err => {
+                        connector.finishMethod(
+                            seqNo,
+                            { error: err.message || err + "" },
+                            500
+                        )
+                    }
+                )
             })
             health.connectionStatus.on(CHANGE, () => {
                 const connectionStatus = health.connectionStatus.values()[0]
