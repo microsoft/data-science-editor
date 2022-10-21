@@ -50,13 +50,15 @@ function sniffQueryArguments() {
             !!navigator.mediaDevices.getUserMedia
         )
     }
-    const params = new URLSearchParams(window.location.search)
+    const location = window.location
+    const href = location.href
+    const params = new URLSearchParams(location.search)
     const toolsMakecode =
-        /\/tools\/makecode-/.test(window.location.href) ||
-        params.get(`nestededitorsim`) === "1"
+        /\/tools\/makecode-/.test(href) || params.get(`nestededitorsim`) === "1"
     const toolsMakeEditorExtension = /\/tools\/makecode-editor-extension/.test(
-        window.location.href
+        href
     )
+    const isLocalhost = /localhost/.test(href)
     return {
         diagnostics: params.get(`dbg`) === "1",
         webUSB:
@@ -76,7 +78,7 @@ function sniffQueryArguments() {
                 ? "ws://127.0.0.1:8080/"
                 : params.get("ws"),
         parentOrigin: params.get("parentOrigin"),
-        frameId: window.location.hash?.slice(1),
+        frameId: location.hash?.slice(1),
         widget: params.get("widget") === "1",
         trace: params.get("trace") === "1",
         localhost: params.get("localhost") === "1",
@@ -90,7 +92,7 @@ function sniffQueryArguments() {
         devTools: params.get("devtools"),
         connect: params.get("connect") !== "0",
         transient: params.get("transient") === "1",
-        persistent: params.get("persistent") === "1",
+        persistent: params.get("persistent") === "1" || isLocalhost,
     }
 }
 

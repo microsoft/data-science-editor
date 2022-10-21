@@ -3,7 +3,6 @@ import { JDomTreeViewProps } from "../tools/JDomTreeViewItems"
 import StyledTreeItem, { StyledTreeViewItemProps } from "../ui/StyledTreeItem"
 import CloudQueueIcon from "@mui/icons-material/CloudQueue"
 import CodeIcon from "@mui/icons-material/Code"
-import { prettySize } from "../../../jacdac-ts/src/jdom/pretty"
 import { DEVICE_NODE_NAME } from "../../../jacdac-ts/src/jdom/constants"
 import BrainManagerContext from "./BrainManagerContext"
 import RefreshIcon from "@mui/icons-material/Refresh"
@@ -14,9 +13,11 @@ import AddIcon from "@mui/icons-material/Add"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import RegisterBrainDeviceDialog from "./RegisterBrainDeviceDialog"
 import DeleteIcon from "@mui/icons-material/Delete"
-import WifiIcon from "@mui/icons-material/Wifi"
-import WifiOffIcon from "@mui/icons-material/WifiOff"
 import { navigate } from "gatsby"
+import ConnectedIcon from "../icons/ConnectedIcon"
+import Suspense from "../ui/Suspense"
+import ConfirmDialog from "../shell/ConfirmDialog"
+import { Button } from "gatsby-theme-material-ui"
 
 export default function BrainManagerTreeItem(
     props: StyledTreeViewItemProps & JDomTreeViewProps
@@ -97,6 +98,7 @@ function BrainScriptTreeItem(
     const { script } = props
     const { scriptId, setScriptId } = useContext(BrainManagerContext)
     const { id } = script
+    const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false)
     const name = useChange(script, _ => _.name)
     const version = useChange(script, _ => _.version)
     const nodeId = `brain-manager-programs-${id}`
@@ -108,6 +110,7 @@ function BrainScriptTreeItem(
         setScriptId(id)
         navigate("/editors/jacscript")
     }
+    const handleOpen = () => setConfirmDeleteOpen(true)
     const handleDelete = async () => await script.delete()
 
     return (
@@ -121,11 +124,22 @@ function BrainScriptTreeItem(
             actions={
                 <CmdButton
                     title="delete"
-                    icon={<DeleteIcon />}
-                    onClick={handleDelete}
+                    icon={<DeleteIcon color="action" />}
+                    onClick={handleOpen}
                 />
             }
-        ></StyledTreeItem>
+        >
+            <Suspense>
+                <ConfirmDialog
+                    title="Delete Device?"
+                    message="Are you sure you want to remove this device? There is no undo."
+                    onConfirm={handleDelete}
+                    open={confirmDeleteOpen}
+                    setOpen={setConfirmDeleteOpen}
+                    variant="delete"
+                />
+            </Suspense>
+        </StyledTreeItem>
     )
 }
 
@@ -176,6 +190,7 @@ function BrainDeviceTreeItem(
     const { device } = props
     const { id } = device
     const { deviceId, setDeviceId } = useContext(BrainManagerContext)
+    const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false)
     const nodeId = `brain-manager-devices-${id}`
     const devId = useChange(device, _ => _.deviceId)
     const name = useChange(device, _ => _.name)
@@ -185,7 +200,7 @@ function BrainDeviceTreeItem(
     const handleClick = () => {
         setDeviceId(id)
     }
-
+    const handleOpen = () => setConfirmDeleteOpen(true)
     const handleDelete = async () => {
         await device.delete()
     }
@@ -197,20 +212,25 @@ function BrainDeviceTreeItem(
             labelCaption={devId}
             sx={{ fontWeight: current ? "bold" : undefined }}
             onClick={handleClick}
-            icon={
-                connected ? (
-                    <WifiIcon color="success" />
-                ) : (
-                    <WifiOffIcon color="warning" />
-                )
-            }
+            icon={<ConnectedIcon connected={connected} tooltip={true} />}
             actions={
-                <CmdButton
+                <Button
                     title="delete"
-                    icon={<DeleteIcon />}
-                    onClick={handleDelete}
+                    startIcon={<DeleteIcon color="action" />}
+                    onClick={handleOpen}
                 />
             }
-        ></StyledTreeItem>
+        >
+            <Suspense>
+                <ConfirmDialog
+                    title="Delete Device?"
+                    message="Are you sure you want to remove this device? There is no undo."
+                    onConfirm={handleDelete}
+                    open={confirmDeleteOpen}
+                    setOpen={setConfirmDeleteOpen}
+                    variant="delete"
+                />
+            </Suspense>
+        </StyledTreeItem>
     )
 }

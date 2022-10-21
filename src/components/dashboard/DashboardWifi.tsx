@@ -38,12 +38,12 @@ import { Alert, AlertTitle } from "@mui/material"
 import { EVENT } from "../../../jacdac-ts/src/jdom/constants"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import WifiIcon from "@mui/icons-material/Wifi"
-import WifiOffIcon from "@mui/icons-material/WifiOff"
 import DialogTitleWithClose from "../ui/DialogTitleWithClose"
 import DeleteIcon from "@mui/icons-material/Delete"
 import AddIcon from "@mui/icons-material/Add"
 import SignalWifiStatusbarNullIcon from "@mui/icons-material/SignalWifiStatusbarNull"
 import SignalWifiBadIcon from "@mui/icons-material/SignalWifiBad"
+import ConnectedIcon from "../icons/ConnectedIcon"
 
 // flags, rssi, channel, bssid, ssid
 type ScanResult = [WifiAPFlags, number, number, Uint8Array, string]
@@ -391,9 +391,7 @@ export default function DashboardWifi(props: DashboardServiceProps) {
                                         ? "disconnect WiFi"
                                         : "connect WiFi"
                                 }
-                                icon={
-                                    connected ? <WifiIcon /> : <WifiOffIcon />
-                                }
+                                icon={<ConnectedIcon connected={connected} />}
                             />
                         </Grid>
                         <Grid item>

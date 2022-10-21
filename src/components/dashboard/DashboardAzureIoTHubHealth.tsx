@@ -25,11 +25,10 @@ import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import CmdButton from "../CmdButton"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
 import ChipList from "../ui/ChipList"
-import WifiIcon from "@mui/icons-material/Wifi"
-import WifiOffIcon from "@mui/icons-material/WifiOff"
 import useEvent from "../hooks/useEvent"
 import useEventCount from "../../jacdac/useEventCount"
 import DialogTitleWithClose from "../ui/DialogTitleWithClose"
+import ConnectedIcon from "../icons/ConnectedIcon"
 
 function ConnectionStringDialog(props: {
     open: boolean
@@ -168,7 +167,7 @@ export default function DashboardAzureIoTHubHealth(
                                 connectionStatus
                             ] || "Waiting..."
                         }
-                        icon={connected ? <WifiIcon /> : <WifiOffIcon />}
+                        icon={<ConnectedIcon connected={connected} />}
                     />
                 </Grid>
                 <Grid item>
