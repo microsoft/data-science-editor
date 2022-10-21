@@ -114,21 +114,22 @@ function BrainScriptTreeItem(
     const handleDelete = async () => await script.delete()
 
     return (
-        <StyledTreeItem
-            nodeId={nodeId}
-            labelText={name}
-            labelCaption={description}
-            labelInfo={info}
-            sx={{ fontWeight: current ? "bold" : undefined }}
-            onClick={handleClick}
-            actions={
-                <CmdButton
-                    title="delete"
-                    icon={<DeleteIcon color="action" />}
-                    onClick={handleOpen}
-                />
-            }
-        >
+        <>
+            <StyledTreeItem
+                nodeId={nodeId}
+                labelText={name}
+                labelCaption={description}
+                labelInfo={info}
+                sx={{ fontWeight: current ? "bold" : undefined }}
+                onClick={handleClick}
+                actions={
+                    <Button
+                        title="delete"
+                        startIcon={<DeleteIcon color="action" />}
+                        onClick={handleOpen}
+                    />
+                }
+            ></StyledTreeItem>
             <Suspense>
                 <ConfirmDialog
                     title="Delete Device?"
@@ -139,7 +140,7 @@ function BrainScriptTreeItem(
                     variant="delete"
                 />
             </Suspense>
-        </StyledTreeItem>
+        </>
     )
 }
 
@@ -206,21 +207,22 @@ function BrainDeviceTreeItem(
     }
 
     return (
-        <StyledTreeItem
-            nodeId={nodeId}
-            labelText={name}
-            labelCaption={devId}
-            sx={{ fontWeight: current ? "bold" : undefined }}
-            onClick={handleClick}
-            icon={<ConnectedIcon connected={connected} tooltip={true} />}
-            actions={
-                <Button
-                    title="delete"
-                    startIcon={<DeleteIcon color="action" />}
-                    onClick={handleOpen}
-                />
-            }
-        >
+        <>
+            <StyledTreeItem
+                nodeId={nodeId}
+                labelText={name}
+                labelCaption={devId}
+                sx={{ fontWeight: current ? "bold" : undefined }}
+                onClick={handleClick}
+                icon={<ConnectedIcon connected={connected} tooltip={true} />}
+                actions={
+                    <Button
+                        title="delete"
+                        startIcon={<DeleteIcon color="action" />}
+                        onClick={handleOpen}
+                    />
+                }
+            ></StyledTreeItem>{" "}
             <Suspense>
                 <ConfirmDialog
                     title="Delete Device?"
@@ -231,6 +233,6 @@ function BrainDeviceTreeItem(
                     variant="delete"
                 />
             </Suspense>
-        </StyledTreeItem>
+        </>
     )
 }
