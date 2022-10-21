@@ -177,7 +177,7 @@ export class BrainManager extends JDNode {
             body: opts?.body ? JSON.stringify(opts.body) : undefined,
         }
         const resp = await self.fetch(
-            `https://${this.apiRoot}/${path}`,
+            `https://${this.apiRoot}/api/${path}`,
             options
         )
         if (!resp.ok) {

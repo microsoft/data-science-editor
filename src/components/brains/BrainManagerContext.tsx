@@ -3,9 +3,9 @@ import useSessionStorage from "../hooks/useSessionStorage"
 import useEffectAsync from "../useEffectAsync"
 import { BrainManager } from "./braindom"
 
-const BRAIN_API_ROOT = "jacdac-cloud-0.azurewebsites.net/api"
-
 export interface BrainManagerProps {
+    domain?: string
+    setDomain: (domain: string) => void
     token?: string
     setToken: (token: string) => void
     brainManager: BrainManager
@@ -16,6 +16,7 @@ export interface BrainManagerProps {
 }
 
 const defaultContextProps: BrainManagerProps = Object.freeze({
+    setDomain: () => {},
     setToken: () => {},
     setScriptId: () => {},
     setDeviceId: () => {},
@@ -29,14 +30,22 @@ export default BrainManagerContext
 
 // eslint-disable-next-line react/prop-types
 export const BrainManagerProvider = ({ children }) => {
+    const [domain, _setDomain] = useSessionStorage(
+        "brain-manager-domain",
+        "jacdac-portal2.azurewebsites.net"
+    )
     const [token, setToken] = useSessionStorage("brain-manager-token")
-    const api = BRAIN_API_ROOT
     const brainManager = useMemo(
-        () => (token ? new BrainManager(api, token) : undefined),
-        [api, token]
+        () => (token && domain ? new BrainManager(domain, token) : undefined),
+        [domain, token]
     )
     const [scriptId, setScriptId] = useState("")
     const [deviceId, setDeviceId] = useState("")
+
+    const setDomain = (domain: string) => {
+        _setDomain(domain?.replace(/^https:\/\//i, "")?.replace(/\/$/, ""))
+        setToken("")
+    }
 
     // reset selected devices/script when reloading manager
     useEffect(() => {
@@ -49,6 +58,8 @@ export const BrainManagerProvider = ({ children }) => {
     return (
         <BrainManagerContext.Provider
             value={{
+                domain,
+                setDomain,
                 token,
                 setToken,
                 brainManager,

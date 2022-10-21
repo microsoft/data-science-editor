@@ -86,7 +86,9 @@ export default function ApiKeyAccordion(props: {
             </AccordionSummary>
             <AccordionDetails style={{ display: "block" }}>
                 {validated ? (
-                    <Alert severity={"success"}>API key ready!</Alert>
+                    <Alert severity={"success"}>
+                        {title || "API key"} ready!
+                    </Alert>
                 ) : (
                     <>
                         <Typography component="span" variant="caption">

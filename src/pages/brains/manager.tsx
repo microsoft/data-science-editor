@@ -11,11 +11,30 @@ import CoreHead from "../../components/shell/Head"
 export const Head = props => <CoreHead {...props} {...frontmatter} />
 
 export default function Page() {
-    const { token, setToken } = useContext(BrainManagerContext)
+    const { domain, setDomain, token, setToken } =
+        useContext(BrainManagerContext)
     return (
         <>
             <h1>Brain Manager</h1>
-            <ApiKeyAccordion apiKey={token} setApiKey={setToken}>
+            {domain && (
+                <ul>
+                    <li>{domain}</li>
+                    <li>
+                        swagger console:
+                        <a href={`https://${domain}/swagger/`}>
+                            https://{domain}/swagger/
+                        </a>
+                    </li>
+                </ul>
+            )}
+            <ApiKeyAccordion
+                title="Domain"
+                apiKey={domain}
+                setApiKey={setDomain}
+            >
+                Enter your Web api domain.
+            </ApiKeyAccordion>
+            <ApiKeyAccordion title="Token" apiKey={token} setApiKey={setToken}>
                 Enter your brain management API key.
             </ApiKeyAccordion>
         </>
