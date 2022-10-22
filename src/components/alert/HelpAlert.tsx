@@ -7,11 +7,7 @@ export default function HelpAlert() {
     return (
         <Alert sx={{ mt: 2 }} severity="info">
             <AlertTitle>Need help?</AlertTitle>
-            Post on the{" "}
-            <Link target="_blank" href="https://forum.makecode.com/c/jacdac/">
-                MakeCode forum
-            </Link>
-            , start a{" "}
+            Start a{" "}
             <Link
                 target="_blank"
                 href="https://github.com/microsoft/jacdac/discussions"
