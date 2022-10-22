@@ -6,6 +6,7 @@ import HistoryIcon from "@mui/icons-material/History"
 import AccountTreeIcon from "@mui/icons-material/AccountTree"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import FormatAlignLeftIcon from "@mui/icons-material/FormatAlignLeft"
+import JacdacIcon from "../icons/JacdacIcon"
 
 export default function DrawerToolsButtonGroup(props: { className?: string }) {
     const { className } = props
@@ -17,6 +18,11 @@ export default function DrawerToolsButtonGroup(props: { className?: string }) {
             drawer: DrawerType.Dom,
             label: "open device tree",
             icon: <AccountTreeIcon />,
+        },
+        {
+            drawer: DrawerType.Dashboard,
+            label: "open dashboard",
+            icon: <JacdacIcon />,
         },
         {
             drawer: DrawerType.Console,

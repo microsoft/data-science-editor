@@ -17,6 +17,7 @@ const JDomTreeView = lazy(() => import("../tools/JDomTreeView"))
 const DrawerSearchResults = lazy(() => import("./DrawerSearchResults"))
 const DrawerSearchInput = lazy(() => import("./DrawerSearchInput"))
 const Console = lazy(() => import("../console/Console"))
+const Dashboard = lazy(() => import("../dashboard/Dashboard"))
 
 const PREFIX = "AppDrawer"
 
@@ -148,6 +149,20 @@ export default function AppDrawer(props: { pagePath: string }) {
                     <ConnectAlert closeable={true} />
                     <Suspense>
                         <JDomTreeView />
+                    </Suspense>
+                </>
+            )}
+            {!showSearchResults && drawerType === DrawerType.Dashboard && (
+                <>
+                    <Suspense>
+                        <Dashboard
+                            showAvatar={true}
+                            showHeader={true}
+                            showConnect={false}
+                            showStartSimulators={true}
+                            showStartRoleSimulators={true}
+                            showDeviceProxyAlert={true}
+                        />
                     </Suspense>
                 </>
             )}
