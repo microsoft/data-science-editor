@@ -18,9 +18,7 @@ export default function Page() {
             <h1>Brain Manager</h1>
             {domain && (
                 <ul>
-                    <li>{domain}</li>
                     <li>
-                        swagger console:
                         <a href={`https://${domain}/swagger/`}>
                             https://{domain}/swagger/
                         </a>
