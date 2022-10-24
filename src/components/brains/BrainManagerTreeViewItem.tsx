@@ -14,11 +14,12 @@ import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import RegisterBrainDeviceDialog from "./RegisterBrainDeviceDialog"
 import DeleteIcon from "@mui/icons-material/Delete"
 import { navigate } from "gatsby"
-import ConnectedIcon from "../icons/ConnectedIcon"
 import Suspense from "../ui/Suspense"
 import ConfirmDialog from "../shell/ConfirmDialog"
 import { Button } from "gatsby-theme-material-ui"
 import useEffectAsync from "../useEffectAsync"
+import DeviceIconFromProductIdentifier from "../devices/DeviceIconFromProductIdentifier"
+import ServiceConnectedIconButton from "../buttons/ServiceConnectedIconButton"
 
 export default function BrainManagerTreeItem(
     props: StyledTreeViewItemProps & JDomTreeViewProps
@@ -49,13 +50,13 @@ export default function BrainManagerTreeItem(
                 />
             }
         >
-            <BrainProgramsTreeItem {...props} />
+            <BrainScriptsTreeItem {...props} />
             <BrainDevicesTreeItem {...props} />
         </StyledTreeItem>
     )
 }
 
-function BrainProgramsTreeItem(
+function BrainScriptsTreeItem(
     props: StyledTreeViewItemProps & JDomTreeViewProps
 ) {
     const { brainManager, setScriptId } = useContext(BrainManagerContext)
@@ -80,7 +81,7 @@ function BrainProgramsTreeItem(
                 <CmdButton
                     title="New script"
                     onClick={handleNewScript}
-                    icon={<AddIcon />}
+                    icon={<AddIcon fontSize="small" />}
                 />
             }
         >
@@ -170,7 +171,7 @@ function BrainDevicesTreeItem(
                     title="Register device"
                     onClick={handleDialogOpenToggle}
                 >
-                    <AddIcon />
+                    <AddIcon fontSize="small" />
                 </IconButtonWithTooltip>
             }
         >
@@ -195,6 +196,7 @@ function BrainDeviceTreeItem(
     const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false)
     const nodeId = `brain-manager-devices-${id}`
     const devId = useChange(device, _ => _.data.id)
+    const productIdentifier = useChange(device, _ => _?.data.meta?.productId)
     const name = useChange(device, _ => _.name)
     const connected = useChange(device, _ => _.connected)
     const current = devId === deviceId
@@ -202,9 +204,13 @@ function BrainDeviceTreeItem(
     const handleClick = () => {
         setDeviceId(id)
     }
-    const handleOpen = () => setConfirmDeleteOpen(true)
+    const handleOpenConfirmDelete = () => setConfirmDeleteOpen(true)
     const handleDelete = async () => {
         await device.delete()
+    }
+    const handleConnectionClick = ev => {
+        ev.stopPropagation()
+        ev.preventDefault()
     }
 
     return (
@@ -215,13 +221,25 @@ function BrainDeviceTreeItem(
                 labelCaption={devId}
                 sx={{ fontWeight: current ? "bold" : undefined }}
                 onClick={handleClick}
-                icon={<ConnectedIcon connected={connected} tooltip={true} />}
-                actions={
-                    <Button
-                        title="delete"
-                        startIcon={<DeleteIcon color="action" />}
-                        onClick={handleOpen}
+                icon={
+                    <DeviceIconFromProductIdentifier
+                        size="small"
+                        productIdentifier={productIdentifier}
                     />
+                }
+                actions={
+                    <>
+                        <ServiceConnectedIconButton
+                            connected={connected}
+                            onClick={handleConnectionClick}
+                        />
+                        <IconButtonWithTooltip
+                            title="delete"
+                            onClick={handleOpenConfirmDelete}
+                        >
+                            <DeleteIcon color="action" />
+                        </IconButtonWithTooltip>
+                    </>
                 }
             ></StyledTreeItem>{" "}
             <Suspense>

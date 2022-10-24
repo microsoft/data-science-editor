@@ -276,7 +276,7 @@ export abstract class BrainNode<TData extends BrainData> extends JDNode {
 }
 
 export type BrainDeviceMeta = {
-    productId?: string
+    productId?: number
 } & Record<string, string | number | boolean>
 
 export interface BrainDeviceData extends BrainData {

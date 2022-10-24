@@ -147,7 +147,11 @@ export default function StyledTreeItem(
             label={
                 <Root className={classes.labelRoot}>
                     {kind && !icon && (
-                        <KindIcon kind={kind} className={classes.labelIcon} />
+                        <KindIcon
+                            kind={kind}
+                            className={classes.labelIcon}
+                            fontSize="small"
+                        />
                     )}
                     {icon && <span className={classes.labelIcon}>{icon}</span>}
                     {warning && (
@@ -202,10 +206,12 @@ export default function StyledTreeItem(
                     </Typography>
                 </Root>
             }
-            style={{
-                "--tree-view-color": color,
-                "--tree-view-bg-color": bgColor,
-            } as any}
+            style={
+                {
+                    "--tree-view-color": color,
+                    "--tree-view-bg-color": bgColor,
+                } as any
+            }
             classes={{
                 root: classes.root,
                 content: classes.content,
