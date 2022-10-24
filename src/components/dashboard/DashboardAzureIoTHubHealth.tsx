@@ -203,35 +203,11 @@ export default function DashboardAzureIoTHubHealth(
     const handleConfigure = () => setOpen(true)
     return (
         <>
-            <Grid
-                container
-                spacing={1}
-                style={{ color: textPrimary, minWidth: "16rem" }}
-            >
-                <Grid item xs={12}>
-                    <Typography component="span" variant="subtitle2">
-                        Azure IoT Hub
-                    </Typography>
-                    <ChipList>
-                        {hubName && (
-                            <Chip
-                                color={connected ? "primary" : "default"}
-                                label={hubName}
-                            />
-                        )}
-                        {hubDeviceId && (
-                            <Chip label={`device: ${hubDeviceId}`} />
-                        )}
-                        {messageSent !== undefined && (
-                            <Chip label={`messages: ${messageSent}`} />
-                        )}
-                    </ChipList>
-                </Grid>
-                <Grid item>
-                    <CmdButton
-                        trackName="dashboard.azureiothealth.connect"
-                        variant="outlined"
-                        color="primary"
+            <ChipList>
+                {hubName && (
+                    <Chip
+                        color={connected ? "primary" : "default"}
+                        label={hubName}
                         onClick={handleConnect}
                         disabled={connectionStatus === undefined}
                         title={
@@ -239,18 +215,19 @@ export default function DashboardAzureIoTHubHealth(
                                 connectionStatus
                             ] || "Waiting..."
                         }
-                        icon={<ConnectedIcon connected={connected} />}
                     />
-                </Grid>
-                <Grid item>
-                    <IconButtonWithTooltip
-                        title="Configure"
-                        onClick={handleConfigure}
-                    >
-                        <SettingsIcon />
-                    </IconButtonWithTooltip>
-                </Grid>
-            </Grid>
+                )}
+                {hubDeviceId && <Chip label={`device: ${hubDeviceId}`} />}
+                {messageSent !== undefined && (
+                    <Chip label={`messages: ${messageSent}`} />
+                )}
+                <IconButtonWithTooltip
+                    title="Configure"
+                    onClick={handleConfigure}
+                >
+                    <SettingsIcon />
+                </IconButtonWithTooltip>
+            </ChipList>
             {client && brainManager && (
                 <BrainManagerConnectionStringDialog
                     brainManager={brainManager}
