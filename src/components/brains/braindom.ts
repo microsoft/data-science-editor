@@ -53,7 +53,9 @@ export class BrainManager extends JDNode {
 
     deviceByDeviceId(deviceId: string): BrainDevice {
         const i = `${shortDeviceId(deviceId)}_${deviceId}`
-        return this._devices?.find(d => d.data.id === i)
+        return this._devices?.find(
+            d => d.data.id === i || d.data.id === deviceId
+        )
     }
 
     script(id: string): BrainScript {
