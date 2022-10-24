@@ -1,11 +1,16 @@
-import React, { ChangeEvent, useCallback, useState } from "react"
+import React, {
+    ChangeEvent,
+    useCallback,
+    useContext,
+    useEffect,
+    useState,
+} from "react"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import {
     Chip,
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
     Grid,
     TextField,
     Typography,
@@ -29,6 +34,10 @@ import useEvent from "../hooks/useEvent"
 import useEventCount from "../../jacdac/useEventCount"
 import DialogTitleWithClose from "../ui/DialogTitleWithClose"
 import ConnectedIcon from "../icons/ConnectedIcon"
+import BrainManagerContext from "../brains/BrainManagerContext"
+import { BrainManager } from "../brains/braindom"
+import useChange from "../../jacdac/useChange"
+import useEffectAsync from "../useEffectAsync"
 
 function ConnectionStringDialog(props: {
     open: boolean
@@ -52,19 +61,18 @@ function ConnectionStringDialog(props: {
         setOpen(false)
     }
     return (
-        <Dialog open={open} fullWidth={true} maxWidth={"lg"}>
+        <Dialog open={open} fullWidth={true} maxWidth={"md"}>
             <DialogTitleWithClose onClose={handleCancel}>
                 Enter device connection string
             </DialogTitleWithClose>
             <DialogContent>
-                <DialogContentText>
-                    <Typography component="p" variant="caption">
-                        Open your IoT Hub in the Azure portal, select IoT
-                        Devices, select or create a device, copy the primary or
-                        secondary connection string.
-                    </Typography>
-                </DialogContentText>
+                <Typography component="p" variant="caption">
+                    Open your IoT Hub in the Azure portal, select IoT Devices,
+                    select or create a device, copy the primary or secondary
+                    connection string.
+                </Typography>
                 <TextField
+                    sx={{ mt: 2 }}
                     id={connectionStringId}
                     value={value}
                     label="Value"
@@ -89,10 +97,74 @@ function ConnectionStringDialog(props: {
     )
 }
 
+function BrainManagerConnectionStringDialog(props: {
+    open: boolean
+    setOpen: (v: boolean) => void
+    brainManager: BrainManager
+    client: AzureIoTHubHealthClient
+}) {
+    const { client, open, setOpen, brainManager } = props
+    const { device } = client.service
+    const { deviceId, shortId } = device
+    const brain = useChange(brainManager, _ => _.deviceByDeviceId(deviceId), [
+        deviceId,
+    ])
+    const brainName = useChange(brain, _ => _?.name)
+    const [value, setValue] = useState(brainName || shortId)
+    const connectionStringId = useId()
+    const handleValueChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setValue(event.target.value)
+    }
+    const handleCancel = () => {
+        setOpen(false)
+    }
+    const handleOk = async mounted => {
+        await brainManager.registerDevice(device, value)
+        if (!mounted()) return
+        setOpen(false)
+    }
+    useEffectAsync(() => brainManager?.refreshDevices(), [brainManager])
+    useEffect(() => setValue(brainName), [brainName])
+
+    return (
+        <Dialog open={open} fullWidth={true} maxWidth={"md"}>
+            <DialogTitleWithClose onClose={handleCancel}>
+                Brain Registration
+            </DialogTitleWithClose>
+            <DialogContent>
+                <Typography component="p" variant="caption">
+                    Register or update your IoT Hub in the brain manager.
+                </Typography>
+                <TextField
+                    sx={{ mt: 2 }}
+                    id={connectionStringId}
+                    value={value}
+                    label={`Device Name${brainName !== value ? "*" : ""}`}
+                    fullWidth={true}
+                    size="small"
+                    placeholder="Enter a friendly name"
+                    onChange={handleValueChange}
+                />
+            </DialogContent>
+            <DialogActions>
+                <CmdButton
+                    variant="contained"
+                    color="primary"
+                    disabled={!client || !value}
+                    onClick={handleOk}
+                >
+                    {brain ? "Update" : "Register"}
+                </CmdButton>
+            </DialogActions>
+        </Dialog>
+    )
+}
+
 export default function DashboardAzureIoTHubHealth(
     props: DashboardServiceProps
 ) {
     const { service } = props
+    const { brainManager } = useContext(BrainManagerContext)
     const [open, setOpen] = useState(false)
 
     const hubNameRegister = service.register(AzureIotHubHealthReg.HubName)
@@ -179,11 +251,21 @@ export default function DashboardAzureIoTHubHealth(
                     </IconButtonWithTooltip>
                 </Grid>
             </Grid>
-            <ConnectionStringDialog
-                client={client}
-                open={open}
-                setOpen={setOpen}
-            />
+            {client && brainManager && (
+                <BrainManagerConnectionStringDialog
+                    brainManager={brainManager}
+                    client={client}
+                    open={open}
+                    setOpen={setOpen}
+                />
+            )}
+            {client && !brainManager && (
+                <ConnectionStringDialog
+                    client={client}
+                    open={open}
+                    setOpen={setOpen}
+                />
+            )}
         </>
     )
 }

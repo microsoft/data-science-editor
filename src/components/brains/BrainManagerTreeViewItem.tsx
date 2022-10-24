@@ -56,7 +56,7 @@ function BrainProgramsTreeItem(
     props: StyledTreeViewItemProps & JDomTreeViewProps
 ) {
     const { brainManager, setScriptId } = useContext(BrainManagerContext)
-    const scripts = useChange(brainManager, _ => _?.scripts)
+    const scripts = useChange(brainManager, _ => _?.scripts())
     const nodeId = "brain-manager-programs"
     const name = "programs"
 
@@ -147,7 +147,7 @@ function BrainDevicesTreeItem(
 ) {
     const { brainManager } = useContext(BrainManagerContext)
     const [open, setOpen] = useState(false)
-    const devices = useChange(brainManager, _ => _?.devices)
+    const devices = useChange(brainManager, _ => _?.devices())
     const nodeId = "brain-manager-devices"
     const name = "devices"
 
@@ -191,7 +191,7 @@ function BrainDeviceTreeItem(
     const { deviceId, setDeviceId } = useContext(BrainManagerContext)
     const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false)
     const nodeId = `brain-manager-devices-${id}`
-    const devId = useChange(device, _ => _.deviceId)
+    const devId = useChange(device, _ => _.data.id)
     const name = useChange(device, _ => _.name)
     const connected = useChange(device, _ => _.connected)
     const current = devId === deviceId

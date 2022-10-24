@@ -46,7 +46,10 @@ function BrainManagerToolbar(props: { script: BrainScript }) {
         _setName(ev.target.value)
     }
 
-    useEffectAsync(() => script?.updateName(debouncedName), [debouncedName])
+    useEffectAsync(
+        () => script?.updateName(debouncedName),
+        [script, debouncedName]
+    )
 
     return (
         <Grid sx={{ mt: 0.5, mb: 0.5 }} container direction="row" spacing={1}>

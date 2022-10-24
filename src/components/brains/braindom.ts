@@ -1,5 +1,5 @@
 import { PostAdd } from "@mui/icons-material"
-import { JDDevice, jdpack } from "../../../jacdac-ts/src/jacdac"
+import { JDDevice, jdpack, shortDeviceId } from "../../../jacdac-ts/src/jacdac"
 import {
     AzureIotHubHealthCmd,
     CHANGE,
@@ -35,11 +35,11 @@ export class BrainManager extends JDNode {
     get parent(): JDNode {
         return undefined
     }
-    get scripts(): BrainScript[] {
+    scripts(): BrainScript[] {
         return this._scripts?.slice(0) || []
     }
 
-    get devices(): BrainDevice[] {
+    devices(): BrainDevice[] {
         return this._devices?.slice(0) || []
     }
 
@@ -49,6 +49,11 @@ export class BrainManager extends JDNode {
 
     device(id: string): BrainDevice {
         return this._devices?.find(d => d.id === id)
+    }
+
+    deviceByDeviceId(deviceId: string): BrainDevice {
+        const i = `${shortDeviceId(deviceId)}_${deviceId}`
+        return this._devices?.find(d => d.data.id === i)
     }
 
     script(id: string): BrainScript {
@@ -276,9 +281,6 @@ export class BrainDevice extends BrainNode<BrainDeviceData> {
     constructor(manager: BrainManager, data: BrainDeviceData) {
         super(manager, "devices", data)
         console.assert(!Array.isArray(data))
-    }
-    get deviceId(): string {
-        return this.data.id
     }
     get nodeKind(): string {
         return BRAIN_DEVICE_NODE
