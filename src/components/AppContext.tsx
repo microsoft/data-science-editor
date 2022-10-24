@@ -18,7 +18,7 @@ export enum DrawerType {
     Packets,
     Dom,
     Console,
-    Dashboard
+    Dashboard,
 }
 
 export interface AppProps {

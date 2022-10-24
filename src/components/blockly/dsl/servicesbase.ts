@@ -304,14 +304,19 @@ export const roleVariable = (
     }
 }
 
+export function isSupportedInBlocks(spec: jdspec.ServiceSpec) {
+    return (
+        !!spec &&
+        !/^_/.test(spec.shortId) &&
+        spec.status !== "deprecated" &&
+        ignoredServices.indexOf(spec.classIdentifier) < 0 &&
+        spec.tags.indexOf("management") < 0
+    )
+}
+
 export const getServiceInfo = () => {
     const allServices = serviceSpecifications()
-    const supportedServices = allServices
-        .filter(
-            service =>
-                !/^_/.test(service.shortId) && service.status !== "deprecated"
-        )
-        .filter(service => ignoredServices.indexOf(service.classIdentifier) < 0)
+    const supportedServices = allServices.filter(isSupportedInBlocks)
     const registers = arrayConcatMany(
         supportedServices.map(service =>
             service.packets.filter(isHighLevelRegister).map(register => ({

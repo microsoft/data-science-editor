@@ -6,7 +6,6 @@ import {
 } from "../../../../jacdac-ts/src/jdom/constants"
 
 import KeyboardKeyField from "../fields/KeyboardKeyField"
-import LEDColorField from "../fields/LEDColorField"
 import LEDMatrixField from "../fields/LEDMatrixField"
 import {
     BlockDefinition,

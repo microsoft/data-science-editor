@@ -20,6 +20,7 @@ import { WorkspaceJSON } from "./dsl/workspacejson"
 import useAsyncMemo from "../hooks/useAsyncMemo"
 import { dependencyId } from "../../../jacdac-ts/src/jdom/eventsource"
 import useJacscript from "../jacscript/JacscriptContext"
+import { isSupportedInBlocks } from "./dsl/servicesbase"
 
 // overrides blockly emboss filter for svg elements
 Blockly.BlockSvg.prototype.setHighlighted = function (highlighted) {
@@ -106,7 +107,9 @@ export default function useToolbox(
     dsls: BlockDomainSpecificLanguage[],
     source: WorkspaceJSON
 ): ToolboxConfiguration {
-    const liveServices = useServices({ specification: true })
+    const liveServices = useServices({ specification: true }).filter(srv =>
+        isSupportedInBlocks(srv.specification)
+    )
     const { clientSpecs } = useJacscript()
     const theme = useTheme()
 
