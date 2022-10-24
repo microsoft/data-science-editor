@@ -1,4 +1,3 @@
-import { PostAdd } from "@mui/icons-material"
 import { JDDevice, jdpack, shortDeviceId } from "../../../jacdac-ts/src/jacdac"
 import {
     AzureIotHubHealthCmd,
@@ -52,10 +51,7 @@ export class BrainManager extends JDNode {
     }
 
     deviceByDeviceId(deviceId: string): BrainDevice {
-        const i = `${shortDeviceId(deviceId)}_${deviceId}`
-        return this._devices?.find(
-            d => d.data.id === i || d.data.id === deviceId
-        )
+        return this._devices?.find(d => d.data.id === deviceId)
     }
 
     script(id: string): BrainScript {
