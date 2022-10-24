@@ -11,7 +11,7 @@ import AppContext, { DrawerType } from "../AppContext"
 export default function DashboardDeviceItem(
     props: {
         device: JDDevice
-        alwaysVisbile?: boolean
+        alwaysVisible?: boolean
     } & DashboardDeviceProps
 ) {
     const { device, ...other } = props
