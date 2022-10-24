@@ -18,6 +18,7 @@ import ConnectedIcon from "../icons/ConnectedIcon"
 import Suspense from "../ui/Suspense"
 import ConfirmDialog from "../shell/ConfirmDialog"
 import { Button } from "gatsby-theme-material-ui"
+import useEffectAsync from "../useEffectAsync"
 
 export default function BrainManagerTreeItem(
     props: StyledTreeViewItemProps & JDomTreeViewProps
@@ -30,6 +31,8 @@ export default function BrainManagerTreeItem(
     const handleRefresh = async () => {
         await brainManager?.refresh()
     }
+
+    useEffectAsync(handleRefresh, [brainManager])
 
     return (
         <StyledTreeItem

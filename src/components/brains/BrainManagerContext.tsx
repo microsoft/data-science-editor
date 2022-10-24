@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useMemo, useState } from "react"
-import useSessionStorage from "../hooks/useSessionStorage"
+import useLocalStorage from "../hooks/useLocalStorage"
 import useEffectAsync from "../useEffectAsync"
 import { BrainManager } from "./braindom"
 
@@ -30,11 +30,11 @@ export default BrainManagerContext
 
 // eslint-disable-next-line react/prop-types
 export const BrainManagerProvider = ({ children }) => {
-    const [domain, _setDomain] = useSessionStorage(
+    const [domain, _setDomain] = useLocalStorage(
         "brain-manager-domain",
         "jacdac-portal2.azurewebsites.net"
     )
-    const [token, setToken] = useSessionStorage("brain-manager-token")
+    const [token, setToken] = useLocalStorage("brain-manager-token")
     const brainManager = useMemo(
         () => (token && domain ? new BrainManager(domain, token) : undefined),
         [domain, token]

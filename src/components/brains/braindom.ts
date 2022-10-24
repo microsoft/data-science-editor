@@ -79,7 +79,9 @@ export class BrainManager extends JDNode {
     }
 
     async registerDevice(device: JDDevice, name: string) {
-        const { productIdentifier, deviceId } = device
+        await device.resolveProductIdentifier()
+        await device.resolveFirmwareVersion()
+        const { productIdentifier, firmwareVersion, deviceId } = device
 
         // create new device
         console.debug(`create new device`)
@@ -96,6 +98,7 @@ export class BrainManager extends JDNode {
         // patch name
         const meta = {
             productId: productIdentifier,
+            firmwareVersion,
         }
         console.debug(`patch name`)
         await this.fetchJSON(`devices/${deviceId}`, {
@@ -270,11 +273,16 @@ export abstract class BrainNode<TData extends BrainData> extends JDNode {
     }
 }
 
+export type BrainDeviceMeta = {
+    productId?: string
+} & Record<string, string | number | boolean>
+
 export interface BrainDeviceData extends BrainData {
     displayName: string
     name: string
     conn: boolean
     lastAct: string
+    meta?: BrainDeviceMeta
 }
 
 export class BrainDevice extends BrainNode<BrainDeviceData> {
@@ -299,6 +307,10 @@ export class BrainDevice extends BrainNode<BrainDeviceData> {
     }
     get qualifiedName(): string {
         return this.name
+    }
+    get meta(): BrainDeviceMeta {
+        const { data } = this
+        return data.meta || {}
     }
 }
 
