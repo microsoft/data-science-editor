@@ -102,14 +102,14 @@ export const BrainManagerProvider = ({ children }) => {
 
         cleanupBridge()
 
-        const { url, protocols } = (await dev?.createConnection()) || {}
+        const { url, protocol } = (await dev?.createConnection()) || {}
         if (!url) {
             setLiveDeviceId(did)
             return
         }
 
         console.debug(`connect websocket ${url}`)
-        const bridge = new WebSocketBridge(url, protocols)
+        const bridge = new WebSocketBridge(url, protocol)
         bridge.bus = bus
         bridgeRef.current = {
             deviceId: liveDeviceId,

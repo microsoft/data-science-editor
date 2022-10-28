@@ -301,7 +301,7 @@ export interface BrainDeviceData extends BrainData {
 
 export interface BrainDeviceConnectionInfo {
     url: string
-    protocols: string
+    protocol: string
     expires: number
 }
 
