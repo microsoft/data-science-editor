@@ -19,9 +19,7 @@ export default function Page() {
             {domain && (
                 <ul>
                     <li>
-                        <a href={`https://${domain}/swagger/`}>
-                            https://{domain}/swagger/
-                        </a>
+                        <a href={`${domain}/swagger/`}>{domain}/swagger/</a>
                     </li>
                 </ul>
             )}

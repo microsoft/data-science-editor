@@ -197,7 +197,7 @@ export class BrainManager extends JDNode {
         if (body)
             options.headers["Content-Type"] = "application/json; charset=utf-8"
         const resp = await self.fetch(
-            `https://${this.apiRoot}/api/${path}`,
+            `${this.apiRoot}/api/${path}`,
             options
         )
         if (!resp.ok) {

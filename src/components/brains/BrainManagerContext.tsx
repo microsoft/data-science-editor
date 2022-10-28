@@ -52,7 +52,7 @@ export const BrainManagerProvider = ({ children }) => {
     const bus = useBus()
     const [domain, _setDomain] = useLocalStorage(
         DOMAIN_KEY,
-        "jacdac-portal2.azurewebsites.net"
+        "https://jacdac-portal2.azurewebsites.net"
     )
     const [token, setToken] = useLocalStorage(TOKEN_KEY)
     const brainManager = useMemo(
@@ -69,7 +69,7 @@ export const BrainManagerProvider = ({ children }) => {
     }>()
 
     const setDomain = (domain: string) => {
-        _setDomain(domain?.replace(/^https:\/\//i, "")?.replace(/\/$/, ""))
+        _setDomain(domain?.replace(/\/$/, ""))
         setToken("")
     }
 
