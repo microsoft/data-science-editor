@@ -38,7 +38,8 @@ export default class WebSocketBridge extends JDBridge {
                     this.close()
                     reject()
                 }
-                ws.onclose = () => {
+                ws.onclose = ev => {
+                    console.debug(`web bridge onclose`, { ev })
                     this.close()
                 }
                 ws.onmessage = (ev: MessageEvent<ArrayBuffer>) => {
