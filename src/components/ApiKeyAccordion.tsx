@@ -24,10 +24,18 @@ export default function ApiKeyAccordion(props: {
     defaultExpanded?: boolean
     children: ReactNode
     apiKey: string
+    inputType?: "text" | "password"
     setApiKey: (value: string) => void
 }) {
-    const { validateKey, title, children, defaultExpanded, apiKey, setApiKey } =
-        props
+    const {
+        validateKey,
+        title,
+        children,
+        defaultExpanded,
+        apiKey,
+        setApiKey,
+        inputType,
+    } = props
     const apiKeyId = useId()
     const [key, setKey] = useState("")
     const [expanded, setExpanded] = useState(!!(!apiKey || defaultExpanded))
@@ -99,7 +107,7 @@ export default function ApiKeyAccordion(props: {
                             label="API key"
                             fullWidth
                             value={key}
-                            type="password"
+                            type={inputType}
                             onChange={handleApiChange}
                         />
                     </>

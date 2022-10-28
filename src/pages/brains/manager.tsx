@@ -29,6 +29,7 @@ export default function Page() {
                 title="Domain"
                 apiKey={domain}
                 setApiKey={setDomain}
+                inputType="text"
             >
                 Enter your Web api domain.
             </ApiKeyAccordion>
