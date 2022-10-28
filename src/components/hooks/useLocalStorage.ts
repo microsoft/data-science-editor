@@ -1,5 +1,5 @@
 import { UIFlags } from "../../jacdac/providerbus"
-import useStorage from "./useStorage"
+import useStorage, { getStorageItem } from "./useStorage"
 
 const storage = (() => {
     try {
@@ -9,6 +9,11 @@ const storage = (() => {
         return undefined
     }
 })()
+
+export function getLocalStorageItem<T = string>(key: string) {
+    return getStorageItem<T>(storage, key)
+}
+
 export default function useLocalStorage<T = string>(
     key: string,
     initialValue?: T

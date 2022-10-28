@@ -12,6 +12,7 @@ import PacketRecorder from "../PacketRecorder"
 import DrawerToolsButtonGroup from "./DrawerToolsButtonGroup"
 import ConnectAlert from "../alert/ConnectAlert"
 import Toc from "./Toc"
+import BrainManagerContext from "../brains/BrainManagerContext"
 const PacketView = lazy(() => import("../tools/PacketView"))
 const JDomTreeView = lazy(() => import("../tools/JDomTreeView"))
 const DrawerSearchResults = lazy(() => import("./DrawerSearchResults"))
@@ -84,6 +85,7 @@ export default function AppDrawer(props: { pagePath: string }) {
 
     const [searchQuery, setSearchQuery] = useState("")
     const { drawerType, setDrawerType } = useContext(AppContext)
+    const { brainManager } = useContext(BrainManagerContext)
     const open = drawerType !== DrawerType.None
     const showSearchResults = drawerType === DrawerType.Toc && !!searchQuery
 
@@ -146,7 +148,7 @@ export default function AppDrawer(props: { pagePath: string }) {
             )}
             {!showSearchResults && drawerType === DrawerType.Dom && (
                 <>
-                    <ConnectAlert closeable={true} />
+                    {!brainManager && <ConnectAlert closeable={true} />}
                     <Suspense>
                         <JDomTreeView />
                     </Suspense>

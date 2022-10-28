@@ -29,6 +29,7 @@ import { Flags } from "../../../jacdac-ts/src/jdom/flags"
 import DrawerToolsButton from "./DrawerToolsButton"
 import ConnectButtons from "../buttons/ConnectButtons"
 import Suspense from "../ui/Suspense"
+import BrainManagerContext from "../brains/BrainManagerContext"
 
 const InstallPWAButton = lazy(() => import("../ui/InstallPWAButton"))
 
@@ -104,6 +105,7 @@ const Root = styled("div")(({ theme }) => ({
 
 function MainToolbar() {
     const { drawerType, toolsMenu, setToolsMenu } = useContext(AppContext)
+    const { brainManager } = useContext(BrainManagerContext)
     const drawerOpen = drawerType !== DrawerType.None
     const toggleToolsMenu = () => setToolsMenu(!toolsMenu)
 
@@ -122,20 +124,22 @@ function MainToolbar() {
                     style={{
                         color: UIFlags.widget ? "black" : "white",
                     }}
-                    to="/"
+                    to={brainManager ? "/brains" : "/"}
                     underline="hover"
                 >
-                    Jacdac
+                    {brainManager ? `Low Code Things` : `Jacdac`}
                 </Link>
             </Typography>
             <div className={classes.grow} />
             {Flags.diagnostics && <PacketStats />}
-            <Suspense>
-                <InstallPWAButton
-                    color="inherit"
-                    className={clsx(classes.menuButton)}
-                />
-            </Suspense>
+            {!brainManager && (
+                <Suspense>
+                    <InstallPWAButton
+                        color="inherit"
+                        className={clsx(classes.menuButton)}
+                    />
+                </Suspense>
+            )}
             <BridgeButtons className={clsx(classes.menuButton)} />
             <ConnectButtons
                 className={clsx(classes.menuButton)}
@@ -143,26 +147,21 @@ function MainToolbar() {
                 full={"disconnected"}
             />
             <OpenDashboardButton className={clsx(classes.menuButton)} />
-            <GitHubButton
-                className={clsx(
-                    classes.menuButton,
-                    drawerOpen && classes.hideMobile
-                )}
-                repo={"/github"}
-            />
-            <IconButtonWithTooltip
-                className={clsx(
-                    classes.menuButton,
-                    drawerOpen && classes.hideMobile
-                )}
-                aria-label="More tools"
-                title="More"
-                edge="start"
-                color="inherit"
-                onClick={toggleToolsMenu}
-            >
-                <MoreIcon />
-            </IconButtonWithTooltip>
+            {!brainManager && (
+                <IconButtonWithTooltip
+                    className={clsx(
+                        classes.menuButton,
+                        drawerOpen && classes.hideMobile
+                    )}
+                    aria-label="More tools"
+                    title="More"
+                    edge="start"
+                    color="inherit"
+                    onClick={toggleToolsMenu}
+                >
+                    <MoreIcon />
+                </IconButtonWithTooltip>
+            )}
         </Toolbar>
     )
 }

@@ -38,6 +38,7 @@ import BrainManagerContext from "../brains/BrainManagerContext"
 import { BrainManager } from "../brains/braindom"
 import useChange from "../../jacdac/useChange"
 import useEffectAsync from "../useEffectAsync"
+import useBrainDevice from "../brains/useBrainDevice"
 
 function ConnectionStringDialog(props: {
     open: boolean
@@ -105,10 +106,8 @@ function BrainManagerConnectionStringDialog(props: {
 }) {
     const { client, open, setOpen, brainManager } = props
     const { device } = client.service
-    const { deviceId, shortId } = device
-    const brain = useChange(brainManager, _ => _.deviceByDeviceId(deviceId), [
-        deviceId,
-    ])
+    const { shortId } = device
+    const brain = useBrainDevice(device)
     const brainName = useChange(brain, _ => _?.name)
     const [value, setValue] = useState(brainName || shortId)
     const connectionStringId = useId()

@@ -1,21 +1,37 @@
-import { JDDevice, jdpack, shortDeviceId } from "../../../jacdac-ts/src/jacdac"
+import { JDBus } from "../../../jacdac-ts/src/jdom/bus"
 import {
     AzureIotHubHealthCmd,
     CHANGE,
     ERROR,
     SRV_AZURE_IOT_HUB_HEALTH,
 } from "../../../jacdac-ts/src/jdom/constants"
+import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import { JDNode } from "../../../jacdac-ts/src/jdom/node"
+import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
 
 export const BRAIN_NODE = "brain"
 export const BRAIN_DEVICE_NODE = "brainDevice"
 export const BRAIN_SCRIPT_NODE = "brainScript"
 
+/*function timeKey(t?: number) {
+    if (!t) t = Date.now()
+    return (1e10 - Math.round(t / 1000)).toString()
+}*/
+
+function dateFromTimeKey(t: string) {
+    if (t === undefined) return undefined
+    return new Date((1e10 - parseInt(t.slice(0, 10))) * 1000)
+}
+
 export class BrainManager extends JDNode {
     private _devices: BrainDevice[]
     private _scripts: BrainScript[]
 
-    constructor(readonly apiRoot: string, readonly token: string) {
+    constructor(
+        public readonly bus: JDBus,
+        public readonly apiRoot: string,
+        readonly token: string
+    ) {
         super()
     }
 
@@ -46,16 +62,12 @@ export class BrainManager extends JDNode {
         return [...(this._devices || []), ...(this._scripts || [])] as JDNode[]
     }
 
-    device(id: string): BrainDevice {
-        return this._devices?.find(d => d.id === id)
+    device(deviceId: string): BrainDevice {
+        return this._devices?.find(d => d.deviceId === deviceId)
     }
 
-    deviceByDeviceId(deviceId: string): BrainDevice {
-        return this._devices?.find(d => d.data.id === deviceId)
-    }
-
-    script(id: string): BrainScript {
-        return this._scripts?.find(d => d.id === id)
+    script(scriptId: string): BrainScript {
+        return this._scripts?.find(d => d.data.id === scriptId)
     }
 
     async createScript(name: string) {
@@ -273,6 +285,7 @@ export abstract class BrainNode<TData extends BrainData> extends JDNode {
 
 export type BrainDeviceMeta = {
     productId?: number
+    fwVersion?: string
 } & Record<string, string | number | boolean>
 
 export interface BrainDeviceData extends BrainData {
@@ -280,13 +293,24 @@ export interface BrainDeviceData extends BrainData {
     name: string
     conn: boolean
     lastAct: string
+    scriptId?: string
+    scriptRev?: string
+    scriptVersion?: number
     meta?: BrainDeviceMeta
+}
+
+export interface BrainDeviceConnectionInfo {
+    url: string
+    protocols: string
+    expires: number
 }
 
 export class BrainDevice extends BrainNode<BrainDeviceData> {
     constructor(manager: BrainManager, data: BrainDeviceData) {
         super(manager, "devices", data)
-        console.assert(!Array.isArray(data))
+
+        this.on(CHANGE, this.refreshMeta.bind(this))
+        this.refreshMeta()
     }
     get nodeKind(): string {
         return BRAIN_DEVICE_NODE
@@ -309,6 +333,66 @@ export class BrainDevice extends BrainNode<BrainDeviceData> {
     get meta(): BrainDeviceMeta {
         const { data } = this
         return data.meta || {}
+    }
+    get deviceId() {
+        return this.data.id
+    }
+
+    get scriptId() {
+        return this.data.scriptId
+    }
+
+    get scriptRev() {
+        return this.data.scriptRev
+    }
+
+    get scriptVersion() {
+        return this.data.scriptVersion
+    }
+
+    resolveDevice(): JDDevice {
+        return this.manager.bus.device(this.deviceId)
+    }
+
+    async updateScript(scriptId: string, scriptRev?: number) {
+        await this.manager.fetchJSON(this.apiPath, {
+            method: "PATCH",
+            body: { scriptId, scriptRev },
+        })
+        // async refresh
+        this.refresh()
+    }
+
+    async refreshMeta() {
+        const device = this.resolveDevice()
+        if (!device) return
+
+        const { meta } = this.data
+        let changed = false
+        const newMeta = JSON.parse(JSON.stringify(meta || {}))
+        const productId = await device.resolveProductIdentifier()
+        const fwVersion = await device.resolveFirmwareVersion()
+        if (productId && meta.productId !== productId) {
+            newMeta.productId = productId
+            changed = true
+        }
+        if (fwVersion && meta.fwVersion !== fwVersion) {
+            newMeta.fwVersion = fwVersion
+            changed = true
+        }
+        if (changed) {
+            console.debug(`sync meta`)
+            await this.manager.fetchJSON(this.apiPath, {
+                method: "PATCH",
+                body: { newMeta },
+            })
+        }
+    }
+
+    async createConnection(): Promise<BrainDeviceConnectionInfo> {
+        return await this.manager.fetchJSON(`devices/${this.data.id}/fwd`, {
+            method: "GET",
+        })
     }
 }
 
@@ -343,7 +427,13 @@ export class BrainScript extends BrainNode<BrainScriptData> {
         const { data } = this
         return data.name || data.id
     }
-
+    get scriptId() {
+        return this.data.id
+    }
+    get creationTime(): Date | undefined {
+        const { head } = this.data
+        return dateFromTimeKey(head)
+    }
     async updateName(name: string) {
         if (!name || name === this.data.name) return
 
@@ -357,17 +447,32 @@ export class BrainScript extends BrainNode<BrainScriptData> {
     get displayName(): string {
         return `${this.name} ${this.data.version || ""}`
     }
+
     get body(): BrainScriptBody {
         return this._body
     }
 
-    async refreshBody() {
-        return (this._body = await this.manager.fetchJSON(
+    get sourceBlocks(): string {
+        return this.body?.blocks
+    }
+
+    get sourceText(): string {
+        return this.body?.text
+    }
+
+    async refreshBody(): Promise<void> {
+        console.debug(`refresh body`)
+        const newBody = (await this.manager.fetchJSON(
             `${this.apiPath}/body`
-        ))
+        )) as BrainScriptBody
+        if (JSON.stringify(this._body) !== JSON.stringify(newBody)) {
+            this._body = newBody
+            this.emit(CHANGE)
+        }
     }
 
     async uploadBody(body: BrainScriptBody) {
+        console.debug(`upload body`)
         const resp: BrainScriptData = await this.manager.fetchJSON(
             `${this.apiPath}/body`,
             {

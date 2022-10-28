@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react"
 import { JDomTreeViewProps } from "../tools/JDomTreeViewItems"
 import StyledTreeItem, { StyledTreeViewItemProps } from "../ui/StyledTreeItem"
 import CloudQueueIcon from "@mui/icons-material/CloudQueue"
-import CodeIcon from "@mui/icons-material/Code"
 import { DEVICE_NODE_NAME } from "../../../jacdac-ts/src/jdom/constants"
 import BrainManagerContext from "./BrainManagerContext"
 import RefreshIcon from "@mui/icons-material/Refresh"
@@ -12,21 +11,19 @@ import { BrainDevice, BrainScript } from "./braindom"
 import AddIcon from "@mui/icons-material/Add"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import RegisterBrainDeviceDialog from "./RegisterBrainDeviceDialog"
-import DeleteIcon from "@mui/icons-material/Delete"
 import { navigate } from "gatsby"
-import Suspense from "../ui/Suspense"
-import ConfirmDialog from "../shell/ConfirmDialog"
-import { Button } from "gatsby-theme-material-ui"
 import useEffectAsync from "../useEffectAsync"
 import DeviceIconFromProductIdentifier from "../devices/DeviceIconFromProductIdentifier"
-import ServiceConnectedIconButton from "../buttons/ServiceConnectedIconButton"
+import SourceIcon from "@mui/icons-material/Source"
+import ArticleIcon from "@mui/icons-material/Article"
+import BrainConnectedButton from "./BrainConnectedButton"
+import { shortDeviceId } from "../../../jacdac-ts/src/jdom/pretty"
 
 export default function BrainManagerTreeItem(
     props: StyledTreeViewItemProps & JDomTreeViewProps
 ) {
     const nodeId = "brain-manager"
     const name = "brains"
-    const description = "Manage remote brains and programs"
     const { brainManager } = useContext(BrainManagerContext)
 
     const handleRefresh = async () => {
@@ -39,8 +36,7 @@ export default function BrainManagerTreeItem(
         <StyledTreeItem
             nodeId={nodeId}
             labelText={name}
-            labelCaption={description}
-            icon={<CloudQueueIcon fontSize="small" />}
+            icon={<CloudQueueIcon />}
             actions={
                 <CmdButton
                     title="refresh"
@@ -76,7 +72,7 @@ function BrainScriptsTreeItem(
         <StyledTreeItem
             nodeId={nodeId}
             labelText={name}
-            icon={<CodeIcon fontSize="small" />}
+            icon={<SourceIcon fontSize="small" />}
             actions={
                 <CmdButton
                     title="New script"
@@ -102,47 +98,28 @@ function BrainScriptTreeItem(
     const { script } = props
     const { scriptId, setScriptId } = useContext(BrainManagerContext)
     const { id } = script
-    const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false)
     const name = useChange(script, _ => _.name)
     const version = useChange(script, _ => _.version)
     const nodeId = `brain-manager-programs-${id}`
     const current = id === scriptId
-    const info = `v${version || ""}`
+    const caption = `v${version || ""}`
+    const info = useChange(script, _ => _.creationTime?.toLocaleString())
 
     const handleClick = () => {
-        setScriptId(id)
+        setScriptId(script.scriptId)
         navigate("/editors/jacscript")
     }
-    const handleOpen = () => setConfirmDeleteOpen(true)
-    const handleDelete = async () => await script.delete()
 
     return (
-        <>
-            <StyledTreeItem
-                nodeId={nodeId}
-                labelText={name}
-                labelInfo={info}
-                sx={{ fontWeight: current ? "bold" : undefined }}
-                onClick={handleClick}
-                actions={
-                    <Button
-                        title="delete"
-                        startIcon={<DeleteIcon color="action" />}
-                        onClick={handleOpen}
-                    />
-                }
-            ></StyledTreeItem>
-            <Suspense>
-                <ConfirmDialog
-                    title="Delete Device?"
-                    message="Are you sure you want to remove this device? There is no undo."
-                    onConfirm={handleDelete}
-                    open={confirmDeleteOpen}
-                    setOpen={setConfirmDeleteOpen}
-                    variant="delete"
-                />
-            </Suspense>
-        </>
+        <StyledTreeItem
+            nodeId={nodeId}
+            labelText={name}
+            labelCaption={caption}
+            labelInfo={info}
+            sx={{ fontWeight: current ? "bold" : undefined }}
+            onClick={handleClick}
+            icon={<ArticleIcon fontSize="small" />}
+        ></StyledTreeItem>
     )
 }
 
@@ -178,7 +155,7 @@ function BrainDevicesTreeItem(
             {devices?.map(device => (
                 <BrainDeviceTreeItem
                     key={device.id}
-                    device={device}
+                    brain={device}
                     {...props}
                 />
             ))}
@@ -188,70 +165,47 @@ function BrainDevicesTreeItem(
 }
 
 function BrainDeviceTreeItem(
-    props: { device: BrainDevice } & StyledTreeViewItemProps & JDomTreeViewProps
+    props: { brain: BrainDevice } & StyledTreeViewItemProps & JDomTreeViewProps
 ) {
-    const { device } = props
-    const { id } = device
-    const { deviceId, setDeviceId } = useContext(BrainManagerContext)
-    const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false)
+    const { brain } = props
+    const { id } = brain
+    const { brainManager, deviceId, setDeviceId } =
+        useContext(BrainManagerContext)
     const nodeId = `brain-manager-devices-${id}`
-    const devId = useChange(device, _ => _.data.id)
-    const productIdentifier = useChange(device, _ => _?.data.meta?.productId)
-    const name = useChange(device, _ => _.name)
-    const connected = useChange(device, _ => _.connected)
+    const devId = brain.deviceId
+    const productIdentifier = useChange(brain, _ => _?.data.meta?.productId)
+    const data = useChange(brain, _ => _.data)
+    const { name, lastAct, scriptId, scriptVersion } = data
+    const script = brainManager.script(scriptId)
     const current = devId === deviceId
+    const caption = scriptId
+        ? `${script?.name || scriptId} v${scriptVersion || ""}`
+        : `no script`
 
     const handleClick = () => {
         setDeviceId(id)
     }
-    const handleOpenConfirmDelete = () => setConfirmDeleteOpen(true)
-    const handleDelete = async () => {
-        await device.delete()
-    }
-    const handleConnectionClick = ev => {
-        ev.stopPropagation()
-        ev.preventDefault()
-    }
 
     return (
-        <>
-            <StyledTreeItem
-                nodeId={nodeId}
-                labelText={name}
-                labelCaption={devId}
-                sx={{ fontWeight: current ? "bold" : undefined }}
-                onClick={handleClick}
-                icon={
-                    <DeviceIconFromProductIdentifier
-                        size="small"
-                        productIdentifier={productIdentifier}
-                    />
-                }
-                actions={
-                    <>
-                        <ServiceConnectedIconButton
-                            connected={connected}
-                            onClick={handleConnectionClick}
-                        />
-                        <IconButtonWithTooltip
-                            title="delete"
-                            onClick={handleOpenConfirmDelete}
-                        >
-                            <DeleteIcon color="action" />
-                        </IconButtonWithTooltip>
-                    </>
-                }
-            ></StyledTreeItem>{" "}
-            <Suspense>
-                <ConfirmDialog
-                    title="Delete Device?"
-                    message="Are you sure you want to remove this device? There is no undo."
-                    onConfirm={handleDelete}
-                    open={confirmDeleteOpen}
-                    setOpen={setConfirmDeleteOpen}
-                    variant="delete"
+        <StyledTreeItem
+            nodeId={nodeId}
+            labelText={`${shortDeviceId(devId)}, ${name}`}
+            labelCaption={caption}
+            sx={{ fontWeight: current ? "bold" : undefined }}
+            onClick={handleClick}
+            icon={
+                <DeviceIconFromProductIdentifier
+                    size="small"
+                    productIdentifier={productIdentifier}
                 />
-            </Suspense>
-        </>
+            }
+            actions={<BrainConnectedButton brain={brain} />}
+        >
+            <StyledTreeItem
+                nodeId={`${nodeId}-info`}
+                labelText={devId}
+                labelInfo={lastAct ? new Date(lastAct).toLocaleString() : ""}
+            />
+        </StyledTreeItem>
     )
 }

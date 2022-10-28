@@ -17,12 +17,10 @@ import {
 import DialogTitleWithClose from "../ui/DialogTitleWithClose"
 import useDevices from "../hooks/useDevices"
 import BrainManagerContext from "./BrainManagerContext"
-import {
-    JDDevice,
-    SRV_AZURE_IOT_HUB_HEALTH,
-} from "../../../jacdac-ts/src/jacdac"
 import SelectDevice from "../select/SelectDevice"
 import useBus from "../../jacdac/useBus"
+import { SRV_AZURE_IOT_HUB_HEALTH } from "../../../jacdac-ts/src/jdom/constants"
+import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 
 export default function RegisterBrainDeviceDialog(props: {
     open: boolean

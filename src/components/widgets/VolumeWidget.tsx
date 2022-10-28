@@ -8,8 +8,8 @@ import useServiceServer from "../hooks/useServiceServer"
 import { BuzzerServer } from "../../../jacdac-ts/src/servers/buzzerserver"
 import VolumeDownIcon from "@mui/icons-material/VolumeDown"
 import VolumeUpIcon from "@mui/icons-material/VolumeUp"
-import { JDRegister } from "../../../jacdac-ts/src/jacdac"
 import { IconButton } from "gatsby-theme-material-ui"
+import { JDRegister } from "../../../jacdac-ts/src/jdom/register"
 
 export default function VolumeWidget(
     props: { register: JDRegister } & RegisterOptions
