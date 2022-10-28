@@ -150,7 +150,7 @@ export default function DashboardCloudAdapter(props: DashboardServiceProps) {
                 setMsgs(prev =>
                     [
                         ...prev,
-                        `command: ${status}, ${args.map(r => r[0]).join(", ")}`,
+                        `cmd: ${status}, ${args.map(r => r[0]).join(", ")}`,
                     ].slice(-10)
                 )
             }),
@@ -161,10 +161,7 @@ export default function DashboardCloudAdapter(props: DashboardServiceProps) {
         () =>
             server?.subscribe(UPLOAD, (req: CloudAdapterUploadRequest) => {
                 setMsgs(prev =>
-                    [
-                        ...prev,
-                        `upload: ${req.label} -> ${req.args.join(", ")}`,
-                    ].slice(-10)
+                    [...prev, `${req.label}: ${req.args.join(", ")}`].slice(-10)
                 )
             }),
         [server]
