@@ -18,7 +18,7 @@ import SourceIcon from "@mui/icons-material/Source"
 import ArticleIcon from "@mui/icons-material/Article"
 import BrainConnectedButton from "./BrainConnectedButton"
 import { shortDeviceId } from "../../../jacdac-ts/src/jdom/pretty"
-
+import FolderOpenIcon from "@mui/icons-material/FolderOpen"
 export default function BrainManagerTreeItem(
     props: StyledTreeViewItemProps & JDomTreeViewProps
 ) {
@@ -29,7 +29,11 @@ export default function BrainManagerTreeItem(
     const handleRefresh = async () => {
         await brainManager?.refresh()
     }
-
+    const handleOpenBrains = ev => {
+        ev.stopPropagation()
+        ev.preventDefault()
+        navigate("/brains")
+    }
     useEffectAsync(handleRefresh, [brainManager])
 
     return (
@@ -38,12 +42,20 @@ export default function BrainManagerTreeItem(
             labelText={name}
             icon={<CloudQueueIcon />}
             actions={
-                <CmdButton
-                    title="refresh"
-                    size="small"
-                    icon={<RefreshIcon />}
-                    onClick={handleRefresh}
-                />
+                <>
+                    <IconButtonWithTooltip
+                        title="go to brains manager"
+                        onClick={handleOpenBrains}
+                    >
+                        <FolderOpenIcon fontSize="small" />
+                    </IconButtonWithTooltip>
+                    <CmdButton
+                        title="refresh"
+                        size="small"
+                        icon={<RefreshIcon />}
+                        onClick={handleRefresh}
+                    />
+                </>
             }
         >
             <BrainScriptsTreeItem {...props} />
