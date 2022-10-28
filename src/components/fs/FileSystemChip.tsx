@@ -7,7 +7,7 @@ import useChange from "../../jacdac/useChange"
 export default function FileSystemChip() {
     const { fileSystem, showDirectoryPicker } = useFileSystem()
     const root = useChange(fileSystem, _ => _?.root)
-    const handleOpenDirectory = showDirectoryPicker
+    const handleOpenDirectory = () => showDirectoryPicker({ mode: "readwrite" })
     const handleCloseDirectory = () => (fileSystem.root = undefined)
 
     if (!fileSystem) return null
