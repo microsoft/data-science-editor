@@ -11,6 +11,7 @@ export default class WebSocketBridge extends JDBridge {
     }
 
     private close() {
+        console.debug(`web bridge closed`, { url: this.url })
         try {
             this._ws?.close()
             this._ws = undefined
@@ -28,7 +29,6 @@ export default class WebSocketBridge extends JDBridge {
                 ws.binaryType = "arraybuffer"
                 ws.onopen = () => {
                     console.debug(`web bridge opened`, { url: this.url })
-                    this.close()
                     resolve()
                 }
                 ws.onerror = e => {
@@ -37,7 +37,6 @@ export default class WebSocketBridge extends JDBridge {
                     reject()
                 }
                 ws.onclose = () => {
-                    console.debug(`web bridge closed`, { url: this.url })
                     this.close()
                 }
                 ws.onmessage = (ev: MessageEvent<ArrayBuffer>) => {
