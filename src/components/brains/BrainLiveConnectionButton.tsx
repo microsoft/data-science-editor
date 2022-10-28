@@ -14,10 +14,11 @@ export default function BrainLiveConnectionButton(props: {
     const { liveDeviceId, connectLiveDevice } = useContext(BrainManagerContext)
     const { deviceId } = brain
     const bus = useBus()
-    const device = useChange(bus, _ => _?.device(deviceId), [deviceId])
+    const device = useChange(bus, _ => _?.device(deviceId, true), [deviceId])
     const connected = useChange(brain, _ => _.connected)
     const selected = liveDeviceId === deviceId
-    const disabled = !connected && !device && !selected
+    const disabled = (!connected || !!device) && !selected
+    console.log({ disabled, connected, device, selected })
 
     const handleClick = () => connectLiveDevice(selected ? "" : deviceId)
 

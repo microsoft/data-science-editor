@@ -1,3 +1,4 @@
+import { CLOSE } from "../../../jacdac-ts/src/jacdac"
 import { JDBridge } from "../../../jacdac-ts/src/jdom/bridge"
 
 export default class WebSocketBridge extends JDBridge {
@@ -12,6 +13,7 @@ export default class WebSocketBridge extends JDBridge {
 
     private close() {
         console.debug(`web bridge closed`, { url: this.url })
+        const opened = !!this._ws
         try {
             this._ws?.close()
             this._ws = undefined
@@ -19,6 +21,7 @@ export default class WebSocketBridge extends JDBridge {
         } catch (e) {
             console.warn(e)
         }
+        if (opened) this.emit(CLOSE)
     }
 
     async connect() {

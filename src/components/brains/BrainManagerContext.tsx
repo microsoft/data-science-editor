@@ -5,6 +5,7 @@ import React, {
     useState,
     useRef,
 } from "react"
+import { CLOSE } from "../../../jacdac-ts/src/jdom/constants"
 import useBus from "../../jacdac/useBus"
 import useChange from "../../jacdac/useChange"
 import useLocalStorage, { getLocalStorageItem } from "../hooks/useLocalStorage"
@@ -79,7 +80,10 @@ export const BrainManagerProvider = ({ children }) => {
         (_: BrainManager) => {
             if (scriptId && !_?.script(scriptId)) setScriptId("")
             if (deviceId && !_?.device(deviceId)) setDeviceId("")
-            if (liveDeviceId && !_?.device(liveDeviceId)) setLiveDeviceId("")
+            if (liveDeviceId) {
+                const ld = _?.device(liveDeviceId)
+                if (!ld?.connected) setLiveDeviceId("")
+            }
         },
         [scriptId, deviceId, liveDeviceId]
     )
@@ -104,12 +108,13 @@ export const BrainManagerProvider = ({ children }) => {
 
         const { url, protocol } = (await dev?.createConnection()) || {}
         if (!url) {
-            setLiveDeviceId(did)
+            setLiveDeviceId("")
             return
         }
 
         console.debug(`connect websocket ${url}`)
         const bridge = new WebSocketBridge(url, protocol)
+        bridge.on(CLOSE, () => brainManager.refreshDevices())
         bridge.bus = bus
         bridgeRef.current = {
             deviceId: liveDeviceId,
@@ -119,7 +124,9 @@ export const BrainManagerProvider = ({ children }) => {
         setLiveDeviceId(did)
     }
 
-    // final cleanup cleanup
+    useEffect(() => {
+        if (!liveDeviceId) cleanupBridge()
+    }, [liveDeviceId])
     useEffect(() => cleanupBridge, [])
 
     return (
