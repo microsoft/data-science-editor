@@ -28,6 +28,8 @@ export default class WebSocketBridge extends JDBridge {
                 const ws = new WebSocket(this.url, this.protocols)
                 ws.binaryType = "arraybuffer"
                 ws.onopen = () => {
+                    this._ws = ws
+                    this._startPromise = undefined
                     console.debug(`web bridge opened`, { url: this.url })
                     resolve()
                 }
