@@ -294,7 +294,6 @@ export interface BrainDeviceData extends BrainData {
     conn: boolean
     lastAct: string
     scriptId?: string
-    scriptRev?: string
     scriptVersion?: number
     meta?: BrainDeviceMeta
 }
@@ -342,10 +341,6 @@ export class BrainDevice extends BrainNode<BrainDeviceData> {
         return this.data.scriptId
     }
 
-    get scriptRev() {
-        return this.data.scriptRev
-    }
-
     get scriptVersion() {
         return this.data.scriptVersion
     }
@@ -354,10 +349,10 @@ export class BrainDevice extends BrainNode<BrainDeviceData> {
         return this.manager.bus.device(this.deviceId)
     }
 
-    async updateScript(scriptId: string, scriptRev?: number) {
+    async updateScript(scriptId: string, scriptVersion?: number) {
         await this.manager.fetchJSON(this.apiPath, {
             method: "PATCH",
-            body: { scriptId, scriptRev },
+            body: { scriptId, scriptVersion },
         })
         // async refresh
         this.refresh()
@@ -401,7 +396,6 @@ export interface BrainScriptData extends BrainData {
     meta?: Record<string, string | number | boolean>
     id: string
     version?: number
-    head?: string
 }
 
 export interface BrainScriptBody {
@@ -431,8 +425,7 @@ export class BrainScript extends BrainNode<BrainScriptData> {
         return this.data.id
     }
     get creationTime(): Date | undefined {
-        const { head } = this.data
-        return dateFromTimeKey(head)
+        return dateFromTimeKey(this.data.id)
     }
     async updateName(name: string) {
         if (!name || name === this.data.name) return
