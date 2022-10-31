@@ -196,10 +196,7 @@ export class BrainManager extends JDNode {
         }
         if (body)
             options.headers["Content-Type"] = "application/json; charset=utf-8"
-        const resp = await self.fetch(
-            `${this.apiRoot}/api/${path}`,
-            options
-        )
+        const resp = await self.fetch(`${this.apiRoot}/api/${path}`, options)
         if (!resp.ok) {
             this.emit(ERROR, resp.statusText)
             return undefined
@@ -396,6 +393,7 @@ export interface BrainScriptData extends BrainData {
     meta?: Record<string, string | number | boolean>
     id: string
     version?: number
+    updated?: number
 }
 
 export interface BrainScriptBody {
@@ -416,6 +414,10 @@ export class BrainScript extends BrainNode<BrainScriptData> {
     get version(): number {
         const { data } = this
         return data.version
+    }
+    get updateTime(): Date | undefined {
+        if (!this.data.updated) return undefined
+        return new Date(this.data.updated)
     }
     get name(): string {
         const { data } = this
