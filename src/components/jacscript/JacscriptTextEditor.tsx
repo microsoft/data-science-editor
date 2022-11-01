@@ -21,9 +21,6 @@ import {
     RoleBinding,
 } from "../../../jacdac-ts/src/jdom/rolemanager"
 import useBus from "../../jacdac/useBus"
-import Suspense from "../ui/Suspense"
-
-const Dashboard = lazy(() => import("../dashboard/Dashboard"))
 
 const STORAGE_KEY = "jacdac:jacscripttexteditorsource"
 const JACSCRIPT_FILENAME = "fw.js"
@@ -136,15 +133,6 @@ function JacscriptTextEditorWithContext() {
                     onChange={setSource}
                     annotations={annotations}
                 />
-            </Grid>
-            <Grid item xs={12} lg={6}>
-                <Suspense>
-                    <Dashboard
-                        showHeader={true}
-                        showAvatar={true}
-                        alwaysVisible={true}
-                    />
-                </Suspense>
             </Grid>
         </Grid>
     )
