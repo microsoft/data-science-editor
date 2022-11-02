@@ -178,11 +178,11 @@ export default function DashboardCloudAdapter(props: DashboardServiceProps) {
 
     return (
         <Grid container spacing={1}>
-            <Grid item xs={12}>
-                <Typography variant="caption">
-                    {connectionName || "no connection"}
-                </Typography>
-            </Grid>
+            {connectionName && (
+                <Grid item xs={12}>
+                    <Typography variant="caption">{connectionName}</Typography>
+                </Grid>
+            )}
             <Grid item xs={12}>
                 <SwitchWithLabel
                     checked={connected}
