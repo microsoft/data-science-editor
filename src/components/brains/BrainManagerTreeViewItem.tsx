@@ -20,6 +20,7 @@ import BrainConnectedButton from "./BrainConnectedButton"
 import { shortDeviceId } from "../../../jacdac-ts/src/jdom/pretty"
 import FolderOpenIcon from "@mui/icons-material/FolderOpen"
 import BrainLiveConnectionButton from "./BrainLiveConnectionButton"
+import useBrainScript from "./useBrainScript"
 export default function BrainManagerTreeItem(
     props: StyledTreeViewItemProps & JDomTreeViewProps
 ) {
@@ -182,21 +183,18 @@ function BrainDeviceTreeItem(
 ) {
     const { brain } = props
     const { id } = brain
-    const { brainManager, deviceId, setDeviceId } =
-        useContext(BrainManagerContext)
+    const { deviceId, setDeviceId } = useContext(BrainManagerContext)
     const nodeId = `brain-manager-devices-${id}`
     const devId = brain.deviceId
 
     const connected = useChange(brain, _ => _.connected)
     const data = useChange(brain, _ => _.data)
 
-    const { name, scriptId, scriptVersion, meta = {} } = data
+    const { name, scriptId, meta = {} } = data
     const { productId } = meta
-    const script = brainManager.script(scriptId)
+    const script = useBrainScript(scriptId)
     const current = devId === deviceId
-    const caption = scriptId
-        ? `${script?.name || scriptId} v${scriptVersion || ""}`
-        : `no script`
+    const caption = script?.toString() || scriptId || `no script`
 
     const handleClick = () => {
         setDeviceId(id)

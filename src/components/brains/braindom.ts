@@ -457,6 +457,10 @@ export class BrainScript extends BrainNode<BrainScriptData> {
         return this._versions?.slice(0) || []
     }
 
+    toString(): string {
+        return `${this.name} v${this.version}`
+    }
+
     async refreshVersions(): Promise<void> {
         const { headers: versions } =
             (await this.manager.fetchJSON<{ headers: BrainScriptData[] }>(

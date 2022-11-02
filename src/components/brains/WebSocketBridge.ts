@@ -57,7 +57,6 @@ export default class WebSocketBridge extends JDBridge {
 
     protected sendPacket(data: Uint8Array, sender: string): void {
         this.connect()
-        console.log(`web send`, { ws: this._ws, data, sender })
         this._ws?.send(data)
     }
 }
