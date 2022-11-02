@@ -2,7 +2,7 @@ import React from "react"
 import JacscriptEditor from "../../components/jacscript/JacscriptEditor"
 
 export const frontmatter = {
-    title: "Jacscript Editor",
+    title: "Jacscript Block Editor",
     description: "Edit Jacscript programs using blocks.",
 }
 import CoreHead from "../../components/shell/Head"

@@ -23,14 +23,11 @@ import SettingsBrightnessIcon from "@mui/icons-material/SettingsBrightness"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import SystemUpdateAltIcon from "@mui/icons-material/SystemUpdateAlt"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
-import WifiIcon from "@mui/icons-material/Wifi"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord"
 import BugReportIcon from "@mui/icons-material/BugReport"
 import VideoCallIcon from "@mui/icons-material/VideoCall"
-import MakeCodeIcon from "../icons/MakeCodeIcon"
 import TextSnippetIcon from "@mui/icons-material/TextSnippet"
-import ExtensionIcon from "@mui/icons-material/Extension"
 import QrCodeIcon from "@mui/icons-material/QrCode"
 
 import DarkModeContext from "../ui/DarkModeContext"
@@ -171,26 +168,6 @@ export default function ToolsDrawer() {
             to: "/tools/player/",
             icon: <TextSnippetIcon />,
         },
-        {
-            // separator
-        },
-        {
-            text: "MakeCode",
-            to: "/clients/makecode/",
-            icon: <MakeCodeIcon />,
-        },
-        {
-            text: "Jacscript Editor",
-            to: "/editors/jacscript/",
-            icon: <ExtensionIcon />,
-        },
-        /*
-        {
-            text: "Jupyter Lab",
-            to: "/tools/jupyterlab",
-            icon: <JupyterIcon />,
-        },
-        */
         {
             // separator
         },
