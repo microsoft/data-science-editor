@@ -50,6 +50,7 @@ export class BrainManager extends JDNode {
     get parent(): JDNode {
         return undefined
     }
+
     scripts(): BrainScript[] {
         return this._scripts?.slice(0) || []
     }
@@ -404,6 +405,7 @@ export interface BrainScriptBody {
 
 export class BrainScript extends BrainNode<BrainScriptData> {
     private _body: BrainScriptBody
+    private _versions: BrainScript[]
 
     constructor(manager: BrainManager, data: BrainScriptData) {
         super(manager, "scripts", data)
@@ -455,11 +457,30 @@ export class BrainScript extends BrainNode<BrainScriptData> {
         return this.body?.text
     }
 
+    versions(): BrainScript[] {
+        return this._versions?.slice(0) || []
+    }
+
+    async refreshVersions(): Promise<void> {
+        const { headers: versions } =
+            (await this.manager.fetchJSON<{ headers: BrainScriptData[] }>(
+                `${this.apiPath}/versions`
+            )) || {}
+        console.debug({ versions })
+        if (
+            JSON.stringify(this._versions?.map(v => v.data)) !==
+            JSON.stringify(versions)
+        ) {
+            this._versions = versions?.map(
+                v => new BrainScript(this.manager, v)
+            )
+            this.emit(CHANGE)
+        }
+    }
     async refreshBody(): Promise<void> {
-        console.debug(`refresh body`)
-        const newBody = (await this.manager.fetchJSON(
+        const newBody = await this.manager.fetchJSON<BrainScriptBody>(
             `${this.apiPath}/body`
-        )) as BrainScriptBody
+        )
         if (JSON.stringify(this._body) !== JSON.stringify(newBody)) {
             this._body = newBody
             this.emit(CHANGE)
@@ -467,7 +488,6 @@ export class BrainScript extends BrainNode<BrainScriptData> {
     }
 
     async uploadBody(body: BrainScriptBody) {
-        console.debug(`upload body`)
         const resp: BrainScriptData = await this.manager.fetchJSON(
             `${this.apiPath}/body`,
             {

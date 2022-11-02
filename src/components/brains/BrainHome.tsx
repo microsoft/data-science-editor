@@ -37,6 +37,7 @@ import SelectWithLabel from "../ui/SelectWithLabel"
 import { Button } from "gatsby-theme-material-ui"
 import AddIcon from "@mui/icons-material/Add"
 import { useDebounce } from "use-debounce"
+import useEffectAsync from "../useEffectAsync"
 
 const ConfirmDialog = lazy(() => import("../shell/ConfirmDialog"))
 
@@ -113,25 +114,52 @@ function BrainDeviceScriptSelect(props: { brain: BrainDevice }) {
     const { brain } = props
     const { brainManager } = useContext(BrainManagerContext)
     const scriptId = useChange(brain, _ => _?.scriptId) || ""
+    const scriptVersion = useChange(brain, _ => _?.scriptVersion) || undefined
     const scripts = useChange(brainManager, _ => _?.scripts())
+
     const [currentScriptId, setCurrentScriptId] = useState(scriptId)
+    const [currentVersion, setCurrentVersion] = useState<number>(undefined)
+    const currentScript = useChange(
+        brainManager,
+        _ => _.script(currentScriptId),
+        [currentScriptId]
+    )
+    const currentVersions = useChange(currentScript, _ => _?.versions())
 
     const handleScriptChange = (ev: SelectChangeEvent<string>) => {
         const newId = ev.target.value
         setCurrentScriptId(newId)
+        const newVersion =
+            newId === scriptId
+                ? scriptVersion
+                : brainManager.script(newId)?.version
+        setCurrentVersion(newVersion)
+    }
+    const handleVersionChange = (ev: SelectChangeEvent<string>) => {
+        const newVersion = ev.target.value
+        setCurrentVersion(parseInt(newVersion) || undefined)
     }
     const handleDeploy = async () => {
-        await brain.updateScript(currentScriptId)
+        await brain.updateScript(currentScriptId, currentVersion)
     }
 
     // refresh from cloud
-    useEffect(() => setCurrentScriptId(scriptId), [scriptId])
+    useEffect(() => {
+        setCurrentScriptId(scriptId)
+        setCurrentVersion(scriptVersion)
+    }, [scriptId, scriptVersion])
+
+    // refresh from cloud
+    useEffectAsync(() => currentScript?.refreshVersions(), [currentScript])
+
+    const scriptChanged = currentScriptId !== scriptId
+    const versionChanged = currentVersion !== scriptVersion
 
     return (
         <Grid container spacing={1}>
             <Grid item xs>
                 <SelectWithLabel
-                    label={`Script${currentScriptId !== scriptId ? "*" : ""}`}
+                    label={`Script${scriptChanged ? "*" : ""}`}
                     value={currentScriptId}
                     fullWidth={true}
                     size="small"
@@ -145,7 +173,30 @@ function BrainDeviceScriptSelect(props: { brain: BrainDevice }) {
                 </SelectWithLabel>
             </Grid>
             <Grid item>
-                <CmdButton variant="outlined" onClick={handleDeploy}>
+                <SelectWithLabel
+                    label={`Version${versionChanged ? "*" : " "}`}
+                    sx={{ minWidth: "5em" }}
+                    value={currentVersion?.toString() || ""}
+                    fullWidth={true}
+                    size="small"
+                    onChange={handleVersionChange}
+                >
+                    {currentVersions?.map(v => (
+                        <MenuItem key={v.id} value={v.version}>
+                            v{v.version}
+                        </MenuItem>
+                    ))}
+                </SelectWithLabel>
+            </Grid>
+            <Grid item>
+                <CmdButton
+                    variant={
+                        scriptChanged || versionChanged
+                            ? "contained"
+                            : "outlined"
+                    }
+                    onClick={handleDeploy}
+                >
                     Deploy
                 </CmdButton>
             </Grid>
