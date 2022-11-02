@@ -18,7 +18,6 @@ export default function BrainLiveConnectionButton(props: {
     const connected = useChange(brain, _ => _.connected)
     const selected = liveDeviceId === deviceId
     const disabled = (!connected || !!device) && !selected
-    console.log({ disabled, connected, device, selected })
 
     const handleClick = () => connectLiveDevice(selected ? "" : deviceId)
 
