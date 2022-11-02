@@ -95,7 +95,6 @@ export class BrainManager extends JDNode {
         const { productIdentifier, firmwareVersion, deviceId } = device
 
         // create new device
-        console.debug(`create new device`)
         const resp: { deviceId: string; connectionString: string } =
             await this.fetchJSON("devices", {
                 method: "POST",
@@ -111,7 +110,6 @@ export class BrainManager extends JDNode {
             productId: productIdentifier,
             firmwareVersion,
         }
-        console.debug(`patch name`)
         await this.fetchJSON(`devices/${deviceId}`, {
             method: "PATCH",
             body: { name, meta },
@@ -123,7 +121,6 @@ export class BrainManager extends JDNode {
             serviceClass: SRV_AZURE_IOT_HUB_HEALTH,
         })[0]
         const data = jdpack<[string]>("s", [connectionString])
-        console.debug(`update connection string`, { service, connectionString })
         await service.sendCmdAsync(
             AzureIotHubHealthCmd.SetConnectionString,
             data,
@@ -374,7 +371,6 @@ export class BrainDevice extends BrainNode<BrainDeviceData> {
             changed = true
         }
         if (changed) {
-            console.debug(`sync meta`)
             await this.manager.fetchJSON(this.apiPath, {
                 method: "PATCH",
                 body: { newMeta },
@@ -466,7 +462,6 @@ export class BrainScript extends BrainNode<BrainScriptData> {
             (await this.manager.fetchJSON<{ headers: BrainScriptData[] }>(
                 `${this.apiPath}/versions`
             )) || {}
-        console.debug({ versions })
         if (
             JSON.stringify(this._versions?.map(v => v.data)) !==
             JSON.stringify(versions)
