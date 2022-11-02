@@ -19,6 +19,7 @@ import ArticleIcon from "@mui/icons-material/Article"
 import BrainConnectedButton from "./BrainConnectedButton"
 import { shortDeviceId } from "../../../jacdac-ts/src/jdom/pretty"
 import FolderOpenIcon from "@mui/icons-material/FolderOpen"
+import BrainLiveConnectionButton from "./BrainLiveConnectionButton"
 export default function BrainManagerTreeItem(
     props: StyledTreeViewItemProps & JDomTreeViewProps
 ) {
@@ -185,9 +186,12 @@ function BrainDeviceTreeItem(
         useContext(BrainManagerContext)
     const nodeId = `brain-manager-devices-${id}`
     const devId = brain.deviceId
-    const productIdentifier = useChange(brain, _ => _?.data.meta?.productId)
+
+    const connected = useChange(brain, _ => _.connected)
     const data = useChange(brain, _ => _.data)
-    const { name, lastAct, scriptId, scriptVersion } = data
+
+    const { name, scriptId, scriptVersion, meta = {} } = data
+    const { productId } = meta
     const script = brainManager.script(scriptId)
     const current = devId === deviceId
     const caption = scriptId
@@ -208,16 +212,15 @@ function BrainDeviceTreeItem(
             icon={
                 <DeviceIconFromProductIdentifier
                     size="small"
-                    productIdentifier={productIdentifier}
+                    productIdentifier={productId}
                 />
             }
-            actions={<BrainConnectedButton brain={brain} />}
-        >
-            <StyledTreeItem
-                nodeId={`${nodeId}-info`}
-                labelText={devId}
-                labelInfo={lastAct ? new Date(lastAct).toLocaleString() : ""}
-            />
-        </StyledTreeItem>
+            actions={
+                <>
+                    {connected && <BrainLiveConnectionButton brain={brain} />}
+                    <BrainConnectedButton brain={brain} />
+                </>
+            }
+        />
     )
 }

@@ -26,7 +26,13 @@ export default function BrainLiveConnectionButton(props: {
             title={selected ? "disconnect live" : "connect live"}
             onClick={handleClick}
             disabled={disabled}
-            icon={selected ? <StopScreenShareIcon /> : <ScreenShareIcon />}
+            icon={
+                selected ? (
+                    <StopScreenShareIcon color="success" />
+                ) : (
+                    <ScreenShareIcon />
+                )
+            }
         />
     )
 }
