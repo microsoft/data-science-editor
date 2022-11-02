@@ -62,7 +62,7 @@ function BrainScriptCard(props: { script: BrainScript }) {
     }
     const handleOpen = () => {
         setScriptId(scriptId)
-        navigate("/editors/jacscript")
+        navigate("/editors/jacscript-text/")
     }
 
     return (
@@ -268,11 +268,11 @@ function BrainScriptGridItems() {
 
     const handleRefresh = () => brainManager?.refreshScripts()
     const handleNewScript = async () => {
-        const scriptId = await brainManager.createScript("new script")
-        if (scriptId) {
-            setScriptId(scriptId)
-            navigate("/editors/jacscript")
-        }
+        const script = await brainManager.createScript("new script")
+        if (!script) return
+
+        setScriptId(script.id)
+        navigate("/editors/jacscript-text/")
     }
 
     return (

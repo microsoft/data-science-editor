@@ -71,12 +71,11 @@ export class BrainManager extends JDNode {
         return this._scripts?.find(d => d.data.id === scriptId)
     }
 
-    async createScript(name: string) {
+    async createScript(name: string): Promise<BrainScript> {
         const body = {
             name,
             meta: {},
             body: {
-                blocks: "",
                 text: "",
                 compiled: "",
             },
@@ -85,8 +84,12 @@ export class BrainManager extends JDNode {
             method: "POST",
             body,
         })
-        if (resp) await this.refreshScripts()
-        return resp?.id
+        if (!resp) return undefined
+
+        const script = new BrainScript(this, resp)
+        this._scripts.push(script)
+        this.emit(CHANGE)
+        return script
     }
 
     async registerDevice(device: JDDevice, name: string) {
@@ -208,6 +211,8 @@ export interface BrainData {
     id: string
 }
 
+export const BRAIN_DATA_CHANGE = "brain-data-change"
+
 export abstract class BrainNode<TData extends BrainData> extends JDNode {
     private _lastFetch = Date.now()
 
@@ -240,6 +245,7 @@ export abstract class BrainNode<TData extends BrainData> extends JDNode {
         this._lastFetch = Date.now()
         if (!!data && JSON.stringify(data) !== JSON.stringify(this._data)) {
             this._data = data
+            this.emit(BRAIN_DATA_CHANGE)
             this.emit(CHANGE)
         }
     }
@@ -405,6 +411,10 @@ export class BrainScript extends BrainNode<BrainScriptData> {
 
     constructor(manager: BrainManager, data: BrainScriptData) {
         super(manager, "scripts", data)
+
+        this.on(BRAIN_DATA_CHANGE, () => {
+            this._body = undefined
+        })
     }
     get nodeKind(): string {
         return BRAIN_SCRIPT_NODE
@@ -478,7 +488,7 @@ export class BrainScript extends BrainNode<BrainScriptData> {
     }
     async refreshBody(): Promise<void> {
         const newBody = await this.manager.fetchJSON<BrainScriptBody>(
-            `${this.apiPath}/body`
+            `${this.apiPath}/versions/${this.version}/body`
         )
         if (JSON.stringify(this._body) !== JSON.stringify(newBody)) {
             this._body = newBody
@@ -494,9 +504,6 @@ export class BrainScript extends BrainNode<BrainScriptData> {
                 body,
             }
         )
-        if (resp) {
-            this._body = body
-            this.data = resp
-        }
+        if (resp) this.data = resp
     }
 }

@@ -75,11 +75,11 @@ function BrainScriptsTreeItem(
     const name = "programs"
 
     const handleNewScript = async () => {
-        const scriptId = await brainManager.createScript("new script")
-        if (scriptId) {
-            setScriptId(scriptId)
-            navigate("/editors/jacscript")
-        }
+        const script = await brainManager.createScript("new script")
+        if (!script) return
+
+        setScriptId(script.id)
+        navigate("/editors/jacscript-text/")
     }
 
     return (
@@ -121,7 +121,7 @@ function BrainScriptTreeItem(
 
     const handleClick = () => {
         setScriptId(script.scriptId)
-        navigate("/editors/jacscript")
+        navigate("/editors/jacscript-text/")
     }
 
     return (
