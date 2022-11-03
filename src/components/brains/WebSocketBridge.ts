@@ -13,7 +13,7 @@ export default class WebSocketBridge extends JDBridge {
 
     private close() {
         console.debug(`web bridge closed`, { url: this.url })
-        const opened = !!this._ws
+        const opened = !!this._ws || !!this._startPromise
         try {
             this._ws?.close()
             this._ws = undefined
