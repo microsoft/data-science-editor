@@ -13,6 +13,7 @@ import DrawerToolsButtonGroup from "./DrawerToolsButtonGroup"
 import ConnectAlert from "../alert/ConnectAlert"
 import Toc from "./Toc"
 import BrainManagerContext from "../brains/BrainManagerContext"
+import { Box } from "@mui/material"
 const PacketView = lazy(() => import("../tools/PacketView"))
 const JDomTreeView = lazy(() => import("../tools/JDomTreeView"))
 const DrawerSearchResults = lazy(() => import("./DrawerSearchResults"))
@@ -155,7 +156,7 @@ export default function AppDrawer(props: { pagePath: string }) {
                 </>
             )}
             {!showSearchResults && drawerType === DrawerType.Dashboard && (
-                <>
+                <Box sx={{ ml: 0.5, mr: 0.5, mb: 0.5 }}>
                     <Suspense>
                         <Dashboard
                             showAvatar={true}
@@ -166,7 +167,7 @@ export default function AppDrawer(props: { pagePath: string }) {
                             showDeviceProxyAlert={true}
                         />
                     </Suspense>
-                </>
+                </Box>
             )}
             {!showSearchResults && drawerType === DrawerType.Console && (
                 <Suspense>

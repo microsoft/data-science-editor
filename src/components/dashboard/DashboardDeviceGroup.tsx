@@ -1,15 +1,10 @@
 import { Grid } from "@mui/material"
-import { styled } from "@mui/material/styles"
 import React from "react"
 import { useId } from "react"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import GridHeader from "../ui/GridHeader"
 import { DashboardDeviceProps } from "./Dashboard"
 import DashboardDeviceItem from "./DashboardDeviceItem"
-
-const StyledSection = styled("section")(({ theme }) => ({
-    marginBottom: theme.spacing(1),
-}))
 
 export default function DeviceGroup(
     props: {
@@ -25,8 +20,8 @@ export default function DeviceGroup(
     if (!action && !devices?.length) return null
 
     return (
-        <StyledSection id={sectionId}>
-            <Grid container spacing={1}>
+        <section id={sectionId}>
+            <Grid sx={{ mb: 1 }} container spacing={1}>
                 <GridHeader title={title} action={action} />
                 {children}
                 {devices?.map(device => (
@@ -37,6 +32,6 @@ export default function DeviceGroup(
                     />
                 ))}
             </Grid>
-        </StyledSection>
+        </section>
     )
 }
