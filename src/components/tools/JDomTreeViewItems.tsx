@@ -72,9 +72,9 @@ export function DeviceTreeItem(
     )
 
     const alert = lost
-        ? `lost device...`
+        ? `lost device`
         : restarts > 1
-        ? `malfunction...`
+        ? `${restarts} restarts`
         : dropped > 2
         ? `${roundWithPrecision(dropped, 1)} pkt lost`
         : undefined
