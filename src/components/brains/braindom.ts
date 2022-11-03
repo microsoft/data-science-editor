@@ -347,7 +347,7 @@ export class BrainDevice extends BrainNode<BrainDeviceData> {
     }
 
     resolveDevice(): JDDevice {
-        return this.manager.bus.device(this.deviceId)
+        return this.manager.bus.device(this.deviceId, true)
     }
 
     async updateScript(scriptId: string, scriptVersion?: number) {
