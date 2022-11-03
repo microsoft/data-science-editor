@@ -296,6 +296,7 @@ export interface BrainDeviceData extends BrainData {
     lastAct: string
     scriptId?: string
     scriptVersion?: number
+    deployedHash?: string
     meta?: BrainDeviceMeta
 }
 
@@ -344,6 +345,9 @@ export class BrainDevice extends BrainNode<BrainDeviceData> {
 
     get scriptVersion() {
         return this.data.scriptVersion
+    }
+    get deployedHash() {
+        return this.data.deployedHash
     }
 
     resolveDevice(): JDDevice {
