@@ -1,6 +1,5 @@
-import React, { useContext, useEffect } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { Grid, NoSsr } from "@mui/material"
-import useLocalStorage from "../hooks/useLocalStorage"
 import HighlightTextField from "../ui/HighlightTextField"
 import useJacscript, { JacscriptProvider } from "./JacscriptContext"
 import { useDebounce } from "use-debounce"
@@ -19,8 +18,7 @@ import useBus from "../../jacdac/useBus"
 import BrainManagerToolbar from "../brains/BrainManagerToolbar"
 import BrainManagerContext from "../brains/BrainManagerContext"
 import useBrainScript from "../brains/useBrainScript"
-
-const STORAGE_KEY = "jacdac:jacscripttexteditorsource"
+import useEffectAsync from "../useEffectAsync"
 
 function JacscriptTextEditorWithContext() {
     const { setProgram, compiled } = useJacscript()
@@ -28,8 +26,27 @@ function JacscriptTextEditorWithContext() {
     const roleManager = useRoleManager()
     const { scriptId } = useContext(BrainManagerContext)
     const script = useBrainScript(scriptId)
-    const [source, setSource] = useLocalStorage(STORAGE_KEY, "")
+    const [source, setSource] = useState("")
+    const [loading, setLoading] = useState(false)
     const [debouncedSource] = useDebounce(source, 1000)
+
+    // load script
+    useEffectAsync(async () => {
+        if (!script) {
+            setSource("")
+            return
+        }
+
+        // fetch latest body
+        setLoading(true)
+        try {
+            await script.refreshBody()
+            const { text } = script.body || {}
+            setSource(text || "")
+        } finally {
+            setLoading(false)
+        }
+    }, [script?.id])
 
     // debounced text buffer UI
     useEffect(() => {
@@ -92,6 +109,7 @@ function JacscriptTextEditorWithContext() {
                     language={"javascript"}
                     onChange={setSource}
                     annotations={annotations}
+                    disabled={loading}
                 />
             </Grid>
         </Grid>

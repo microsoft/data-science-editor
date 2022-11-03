@@ -41,6 +41,7 @@ export default function HighlightTextField(props: {
     pullRequestTitle?: string
     pullRequestPath?: string
     pullRequestDescription?: string
+    disabled?: boolean
 }) {
     const {
         code,
@@ -51,13 +52,14 @@ export default function HighlightTextField(props: {
         pullRequestPath,
         pullRequestDescription,
         minHeight,
+        disabled,
     } = props
     const { darkMode } = useContext(DarkModeContext)
     const theme = (darkMode === "dark" ? DARK_THEME : LIGHT_THEME) as PrismTheme
     const editorRef = useRef(null)
 
     useEditable(editorRef, onChange, {
-        disabled: false,
+        disabled: !!disabled,
         indentation: 4,
     })
     return (

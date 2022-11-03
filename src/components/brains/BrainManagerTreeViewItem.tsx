@@ -75,7 +75,7 @@ function BrainScriptsTreeItem(
     const name = "programs"
 
     const handleNewScript = async () => {
-        const script = await brainManager.createScript("new script")
+        const script = await brainManager.createScript("my device.js")
         if (!script) return
 
         setScriptId(script.id)
