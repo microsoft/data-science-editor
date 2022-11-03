@@ -1,15 +1,10 @@
-import React, { lazy, useEffect } from "react"
+import React, { useContext, useEffect } from "react"
 import { Grid, NoSsr } from "@mui/material"
 import useLocalStorage from "../hooks/useLocalStorage"
 import HighlightTextField from "../ui/HighlightTextField"
 import useJacscript, { JacscriptProvider } from "./JacscriptContext"
 import { useDebounce } from "use-debounce"
 import JacscriptManagerChipItems from "./JacscriptManagerChipItems"
-import useChange from "../../jacdac/useChange"
-import useFileSystem from "../FileSystemContext"
-import useEffectAsync from "../useEffectAsync"
-import useSnackbar from "../hooks/useSnackbar"
-import FileTabs from "../fs/FileTabs"
 import useRoleManager from "../hooks/useRoleManager"
 import {
     addServiceProvider,
@@ -21,6 +16,9 @@ import {
     RoleBinding,
 } from "../../../jacdac-ts/src/jdom/rolemanager"
 import useBus from "../../jacdac/useBus"
+import BrainManagerToolbar from "../brains/BrainManagerToolbar"
+import BrainManagerContext from "../brains/BrainManagerContext"
+import useBrainScript from "../brains/useBrainScript"
 
 const STORAGE_KEY = "jacdac:jacscripttexteditorsource"
 
@@ -28,6 +26,8 @@ function JacscriptTextEditorWithContext() {
     const { setProgram, compiled } = useJacscript()
     const bus = useBus()
     const roleManager = useRoleManager()
+    const { scriptId } = useContext(BrainManagerContext)
+    const script = useBrainScript(scriptId)
     const [source, setSource] = useLocalStorage(STORAGE_KEY, "")
     const [debouncedSource] = useDebounce(source, 1000)
 
@@ -73,6 +73,11 @@ function JacscriptTextEditorWithContext() {
 
     return (
         <Grid spacing={1} container>
+            {script && (
+                <Grid item xs={12}>
+                    <BrainManagerToolbar script={script} />
+                </Grid>
+            )}
             <Grid item xs={12}>
                 <RolesToolbar
                     roleManager={roleManager}
