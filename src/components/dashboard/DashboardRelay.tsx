@@ -1,4 +1,3 @@
-import { CircularProgress, Grid, Typography } from "@mui/material"
 import React, { CSSProperties } from "react"
 import { RelayReg } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import { useRegisterBoolValue } from "../../jacdac/useRegisterValue"
@@ -27,20 +26,11 @@ export default function DashboardRelay(props: DashboardServiceProps) {
         color: textPrimary,
     }
     return (
-        <Grid container spacing={1} direction="row" alignItems="center">
-            <Grid item>
-                <Typography variant="subtitle1" style={labelStyle}>
-                    inactive
-                </Typography>
-            </Grid>
-            <Grid item>
-                <SwitchWithLabel
-                    label="active"
-                    checked={active}
-                    onChange={handleClose}
-                    labelStyle={labelStyle}
-                />
-            </Grid>
-        </Grid>
+        <SwitchWithLabel
+            label={active ? "active" : "inactive"}
+            checked={active}
+            onChange={handleClose}
+            labelStyle={labelStyle}
+        />
     )
 }

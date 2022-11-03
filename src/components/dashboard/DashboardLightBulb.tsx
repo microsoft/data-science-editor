@@ -11,7 +11,6 @@ import { LightBulbReg } from "../../../jacdac-ts/src/jdom/constants"
 import useRegister from "../hooks/useRegister"
 import { Grid, Slider } from "@mui/material"
 import SvgWidget from "../widgets/SvgWidget"
-import useThrottledValue from "../hooks/useThrottledValue"
 import PowerButton from "../widgets/PowerButton"
 import DashboardRegisterValueFallback from "./DashboardRegisterValueFallback"
 
@@ -25,11 +24,7 @@ export default function DashboardLightBulb(props: DashboardServiceProps) {
         brightnessRegister,
         props
     )
-    const brightnessPercent = useThrottledValue(
-        Math.round(brightness * 100),
-        400,
-        5
-    )
+    const brightnessPercent = Math.round(brightness * 100)
     const dimmeableRegister = useRegister(service, LightBulbReg.Dimmable)
     const dimmeable = useRegisterBoolValue(dimmeableRegister, props)
 
