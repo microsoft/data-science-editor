@@ -33,7 +33,7 @@ export default function CopyButton(props: {
 
         try {
             setCopied(null)
-            const copied = text || await onCopy?.()
+            const copied = text || (await onCopy?.())
             if (typeof copied === "string") {
                 const c = copied as string
                 await navigator.clipboard.writeText(c)
@@ -60,7 +60,7 @@ export default function CopyButton(props: {
             ? "Copied!"
             : copied === false
             ? "Copy failed"
-            : label || "copy to clipboard"
+            : label || title || "copy to clipboard"
     return label ? (
         <Button
             title={title}
