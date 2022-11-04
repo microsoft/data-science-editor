@@ -7,6 +7,7 @@ import BrainManagerContext from "./BrainManagerContext"
 import RefreshIcon from "@mui/icons-material/Refresh"
 import CmdButton from "../CmdButton"
 import useChange from "../../jacdac/useChange"
+import EditIcon from "@mui/icons-material/Edit"
 import { BrainDevice, BrainScript } from "./braindom"
 import AddIcon from "@mui/icons-material/Add"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
@@ -69,17 +70,15 @@ export default function BrainManagerTreeItem(
 function BrainScriptsTreeItem(
     props: StyledTreeViewItemProps & JDomTreeViewProps
 ) {
-    const { brainManager, setScriptId } = useContext(BrainManagerContext)
+    const { brainManager, createScript, openScript } =
+        useContext(BrainManagerContext)
     const scripts = useChange(brainManager, _ => _?.scripts())
     const nodeId = "brain-manager-programs"
     const name = "programs"
 
     const handleNewScript = async () => {
-        const script = await brainManager.createScript("my device.js")
-        if (!script) return
-
-        setScriptId(script.id)
-        navigate("/editors/jacscript-text/")
+        const script = await createScript()
+        await openScript(script?.scriptId)
     }
 
     return (
@@ -110,7 +109,7 @@ function BrainScriptTreeItem(
     props: { script: BrainScript } & StyledTreeViewItemProps & JDomTreeViewProps
 ) {
     const { script } = props
-    const { scriptId, setScriptId } = useContext(BrainManagerContext)
+    const { scriptId, openScript } = useContext(BrainManagerContext)
     const { id } = script
     const name = useChange(script, _ => _.name)
     const version = useChange(script, _ => _.version)
@@ -119,10 +118,7 @@ function BrainScriptTreeItem(
     const caption = `v${version || ""}`
     const info = useChange(script, _ => _.creationTime?.toLocaleString())
 
-    const handleClick = () => {
-        setScriptId(script.scriptId)
-        navigate("/editors/jacscript-text/")
-    }
+    const handleOpen = async () => await openScript(script.scriptId)
 
     return (
         <StyledTreeItem
@@ -131,7 +127,13 @@ function BrainScriptTreeItem(
             labelCaption={caption}
             labelInfo={info}
             sx={{ fontWeight: current ? "bold" : undefined }}
-            onClick={handleClick}
+            actions={
+                <CmdButton
+                    title="edit"
+                    icon={<EditIcon />}
+                    onClick={handleOpen}
+                />
+            }
             icon={<ArticleIcon fontSize="small" />}
         ></StyledTreeItem>
     )

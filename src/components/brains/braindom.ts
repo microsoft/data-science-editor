@@ -71,11 +71,15 @@ export class BrainManager extends JDNode {
         return this._scripts?.find(d => d.data.id === scriptId)
     }
 
-    async createScript(name: string): Promise<BrainScript> {
+    async createScript(
+        name: string,
+        editor?: "js" | "blocks"
+    ): Promise<BrainScript> {
         const body = {
             name,
             meta: {},
             body: {
+                blocks: editor === "blocks" ? "" : undefined,
                 text: "",
                 compiled: "",
             },
@@ -86,7 +90,7 @@ export class BrainManager extends JDNode {
         })
         if (!resp) return undefined
 
-        const script = new BrainScript(this, resp)
+        const script = new BrainScript(this, resp, body.body)
         this._scripts.push(script)
         this.emit(CHANGE)
         return script
@@ -404,7 +408,7 @@ export interface BrainScriptData extends BrainData {
 }
 
 export interface BrainScriptBody {
-    blocks: string
+    blocks?: string
     text: string
     compiled: string
 }
@@ -413,9 +417,9 @@ export class BrainScript extends BrainNode<BrainScriptData> {
     private _body: BrainScriptBody
     private _versions: BrainScript[]
 
-    constructor(manager: BrainManager, data: BrainScriptData) {
+    constructor(manager: BrainManager, data: BrainScriptData, body?: BrainScriptBody) {
         super(manager, "scripts", data)
-
+        this._body = body
         this.on(BRAIN_DATA_CHANGE, () => {
             this._body = undefined
         })
@@ -490,7 +494,7 @@ export class BrainScript extends BrainNode<BrainScriptData> {
             this.emit(CHANGE)
         }
     }
-    async refreshBody(): Promise<void> {
+    async refreshBody(): Promise<BrainScriptBody> {
         const newBody = await this.manager.fetchJSON<BrainScriptBody>(
             `${this.apiPath}/versions/${this.version}/body`
         )
@@ -498,6 +502,7 @@ export class BrainScript extends BrainNode<BrainScriptData> {
             this._body = newBody
             this.emit(CHANGE)
         }
+        return this._body
     }
 
     async uploadBody(body: BrainScriptBody) {

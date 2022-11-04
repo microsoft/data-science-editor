@@ -10,8 +10,6 @@ import { Grid, TextField } from "@mui/material"
 import useRegister from "../hooks/useRegister"
 import CmdButton from "../CmdButton"
 import ClearIcon from "@mui/icons-material/Clear"
-import EditIcon from "@mui/icons-material/Edit"
-import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import CharacterScreenWidget from "../widgets/CharacterScreenWidget"
 import DashboardRegisterValueFallback from "./DashboardRegisterValueFallback"
 

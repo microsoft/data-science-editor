@@ -1,3 +1,4 @@
+import { navigate } from "gatsby"
 import React, {
     createContext,
     useEffect,
@@ -10,7 +11,7 @@ import useBus from "../../jacdac/useBus"
 import useChange from "../../jacdac/useChange"
 import useLocalStorage, { getLocalStorageItem } from "../hooks/useLocalStorage"
 import useEffectAsync from "../useEffectAsync"
-import { BrainManager } from "./braindom"
+import { BrainManager, BrainScript } from "./braindom"
 import WebSocketBridge from "./WebSocketBridge"
 
 export interface BrainManagerProps {
@@ -21,6 +22,8 @@ export interface BrainManagerProps {
     brainManager: BrainManager
     scriptId?: string
     setScriptId: (id: string) => void
+    createScript: (editor?: "js" | "blocks") => Promise<BrainScript>
+    openScript: (id: string) => Promise<void>
     deviceId?: string
     setDeviceId: (id: string) => void
     liveDeviceId?: string
@@ -33,6 +36,8 @@ const defaultContextProps: BrainManagerProps = Object.freeze({
     setScriptId: () => {},
     setDeviceId: () => {},
     connectLiveDevice: async () => {},
+    createScript: async () => undefined,
+    openScript: async () => {},
     brainManager: undefined,
 })
 const BrainManagerContext =
@@ -72,6 +77,26 @@ export const BrainManagerProvider = ({ children }) => {
     const setDomain = (domain: string) => {
         _setDomain(domain?.replace(/\/$/, ""))
         setToken("")
+    }
+
+    const openScript = async (sid: string) => {
+        const script = brainManager?.script(sid)
+        if (!script) return
+        const body = await script.refreshBody()
+        if (!body) return
+
+        // commit script and open
+        setScriptId(script.scriptId)
+        if (body.blocks !== undefined) navigate("/editors/jacscript-blocks/")
+        else navigate("/editors/jacscript-text/")
+    }
+
+    const createScript = async (editor?: "js" | "blocks") => {
+        const script = await brainManager?.createScript(
+            `my device.${editor || "js"}`,
+            editor
+        )
+        return script
     }
 
     // refresh selected device, scripts
@@ -143,6 +168,8 @@ export const BrainManagerProvider = ({ children }) => {
                 setDeviceId,
                 liveDeviceId,
                 connectLiveDevice,
+                openScript,
+                createScript,
             }}
         >
             {children}
