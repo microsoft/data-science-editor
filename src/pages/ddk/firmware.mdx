@@ -5,14 +5,17 @@ order: 10
 
 # Firmware
 
-## Getting started: module firmware
+To date, we have firmware support for modules created using the following MCU families: STM32 and PADUAK.
 
-To date, we have firmware support for modules created using the following MCU families:
+## STM32F0xx and STM32G0xx
 
-* **STM32**: [start here](https://github.com/microsoft/jacdac-stm32x0/blob/main/README.md) to build firmware for the STM 32-bit series of MCUs
-* **PADUAK (8-bit)**: [start here](https://github.com/microsoft/jacdac-padauk) to build firmware for the PADUAK 8-bit series of MCUs
+The [microsoft/jacdac-stm32x0](https://github.com/microsoft/jacdac-stm32x0/blob/main/README.md) repository contains both the firmware for implementing servers (eg., accelerometer server) on a Jacdac module, and a bootloader which allows for updating the firmware using the Jacdac protocol.
 
-See the bottom of this page if you have questions or need to file an issue.
+The best way to get started is to [clone the module template](https://github.com/microsoft/jacdac-module-template/generate) and follow the instruction to build your first Jacdac module firmware.
+
+## PADUAK (8-bit)
+
+The [microsoft/jacdac-padauk](https://github.com/microsoft/jacdac-padauk) repository is the starting point to build firmware for the PADUAK 8-bit series of MCUs
 
 ## Github repository list
 
