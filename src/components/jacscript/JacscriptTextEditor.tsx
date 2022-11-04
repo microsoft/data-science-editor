@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, { useContext, useEffect, useState, lazy } from "react"
 import { Grid, NoSsr } from "@mui/material"
 import HighlightTextField from "../ui/HighlightTextField"
 import useJacscript, { JacscriptProvider } from "./JacscriptContext"
@@ -19,6 +19,8 @@ import BrainManagerToolbar from "../brains/BrainManagerToolbar"
 import BrainManagerContext from "../brains/BrainManagerContext"
 import useBrainScript from "../brains/useBrainScript"
 import useEffectAsync from "../useEffectAsync"
+import Suspense from "../ui/Suspense"
+const Dashboard = lazy(() => import("../dashboard/Dashboard"))
 
 function JacscriptTextEditorWithContext() {
     const { setProgram, compiled } = useJacscript()
@@ -111,6 +113,18 @@ function JacscriptTextEditorWithContext() {
                     annotations={annotations}
                     disabled={loading}
                 />
+            </Grid>
+            <Grid item xs={12}>
+                <Suspense>
+                    <Dashboard
+                        showAvatar={true}
+                        showHeader={true}
+                        showConnect={false}
+                        showStartSimulators={true}
+                        showStartRoleSimulators={true}
+                        showDeviceProxyAlert={true}
+                    />
+                </Suspense>
             </Grid>
         </Grid>
     )
