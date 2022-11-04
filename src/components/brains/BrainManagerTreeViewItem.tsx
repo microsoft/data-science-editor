@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useState, MouseEvent } from "react"
 import { JDomTreeViewProps } from "../tools/JDomTreeViewItems"
 import StyledTreeItem, { StyledTreeViewItemProps } from "../ui/StyledTreeItem"
 import CloudQueueIcon from "@mui/icons-material/CloudQueue"
@@ -7,6 +7,7 @@ import BrainManagerContext from "./BrainManagerContext"
 import RefreshIcon from "@mui/icons-material/Refresh"
 import CmdButton from "../CmdButton"
 import useChange from "../../jacdac/useChange"
+import EditIcon from "@mui/icons-material/Edit"
 import { BrainDevice, BrainScript } from "./braindom"
 import AddIcon from "@mui/icons-material/Add"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
@@ -21,6 +22,7 @@ import { shortDeviceId } from "../../../jacdac-ts/src/jdom/pretty"
 import FolderOpenIcon from "@mui/icons-material/FolderOpen"
 import BrainLiveConnectionButton from "./BrainLiveConnectionButton"
 import useBrainScript from "./useBrainScript"
+import { Button } from "gatsby-theme-material-ui"
 export default function BrainManagerTreeItem(
     props: StyledTreeViewItemProps & JDomTreeViewProps
 ) {
@@ -69,17 +71,16 @@ export default function BrainManagerTreeItem(
 function BrainScriptsTreeItem(
     props: StyledTreeViewItemProps & JDomTreeViewProps
 ) {
-    const { brainManager, setScriptId } = useContext(BrainManagerContext)
+    const { brainManager, showNewScriptDialog } =
+        useContext(BrainManagerContext)
     const scripts = useChange(brainManager, _ => _?.scripts())
     const nodeId = "brain-manager-programs"
     const name = "programs"
 
-    const handleNewScript = async () => {
-        const script = await brainManager.createScript("my device.js")
-        if (!script) return
-
-        setScriptId(script.id)
-        navigate("/editors/jacscript-text/")
+    const handleNewScript = (ev: MouseEvent<HTMLButtonElement>) => {
+        ev.stopPropagation()
+        ev.preventDefault()
+        showNewScriptDialog()
     }
 
     return (
@@ -88,11 +89,12 @@ function BrainScriptsTreeItem(
             labelText={name}
             icon={<SourceIcon fontSize="small" />}
             actions={
-                <CmdButton
+                <IconButtonWithTooltip
                     title="New script"
                     onClick={handleNewScript}
-                    icon={<AddIcon fontSize="small" />}
-                />
+                >
+                    <AddIcon fontSize="small" />
+                </IconButtonWithTooltip>
             }
         >
             {scripts?.map(script => (
@@ -110,7 +112,7 @@ function BrainScriptTreeItem(
     props: { script: BrainScript } & StyledTreeViewItemProps & JDomTreeViewProps
 ) {
     const { script } = props
-    const { scriptId, setScriptId } = useContext(BrainManagerContext)
+    const { scriptId, openScript } = useContext(BrainManagerContext)
     const { id } = script
     const name = useChange(script, _ => _.name)
     const version = useChange(script, _ => _.version)
@@ -119,10 +121,7 @@ function BrainScriptTreeItem(
     const caption = `v${version || ""}`
     const info = useChange(script, _ => _.creationTime?.toLocaleString())
 
-    const handleClick = () => {
-        setScriptId(script.scriptId)
-        navigate("/editors/jacscript-text/")
-    }
+    const handleOpen = async () => await openScript(script.scriptId)
 
     return (
         <StyledTreeItem
@@ -131,7 +130,13 @@ function BrainScriptTreeItem(
             labelCaption={caption}
             labelInfo={info}
             sx={{ fontWeight: current ? "bold" : undefined }}
-            onClick={handleClick}
+            actions={
+                <CmdButton
+                    title="edit"
+                    icon={<EditIcon />}
+                    onClick={handleOpen}
+                />
+            }
             icon={<ArticleIcon fontSize="small" />}
         ></StyledTreeItem>
     )

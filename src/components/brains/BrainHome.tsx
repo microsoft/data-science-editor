@@ -32,7 +32,6 @@ import ArticleIcon from "@mui/icons-material/Article"
 import Suspense from "../ui/Suspense"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import DeleteIcon from "@mui/icons-material/Delete"
-import { navigate } from "gatsby"
 import SelectWithLabel from "../ui/SelectWithLabel"
 import { Button } from "gatsby-theme-material-ui"
 import AddIcon from "@mui/icons-material/Add"
@@ -44,7 +43,7 @@ const ConfirmDialog = lazy(() => import("../shell/ConfirmDialog"))
 function BrainScriptCard(props: { script: BrainScript }) {
     const { script } = props
     const { scriptId } = script
-    const { setScriptId } = useContext(BrainManagerContext)
+    const { openScript } = useContext(BrainManagerContext)
     const name = useChange(script, _ => _.name)
     const version = useChange(script, _ => _.version)
     const creationTime = useChange(
@@ -60,11 +59,7 @@ function BrainScriptCard(props: { script: BrainScript }) {
         ev.preventDefault()
         setConfirmDeleteOpen(true)
     }
-    const handleOpen = () => {
-        setScriptId(scriptId)
-        navigate("/editors/jacscript-text/")
-    }
-
+    const handleOpen = () => openScript(scriptId)
     return (
         <Card>
             <CardHeader
@@ -263,16 +258,15 @@ function BrainDeviceCard(props: { brain: BrainDevice }) {
 }
 
 function BrainScriptGridItems() {
-    const { brainManager, setScriptId } = useContext(BrainManagerContext)
+    const { brainManager, showNewScriptDialog } =
+        useContext(BrainManagerContext)
     const scripts = useChange(brainManager, _ => _?.scripts())
 
     const handleRefresh = () => brainManager?.refreshScripts()
-    const handleNewScript = async () => {
-        const script = await brainManager.createScript("my device.js")
-        if (!script) return
-
-        setScriptId(script.id)
-        navigate("/editors/jacscript-text/")
+    const handleNewScript = (ev: MouseEvent<HTMLButtonElement>) => {
+        ev.stopPropagation()
+        ev.preventDefault()
+        showNewScriptDialog()
     }
 
     return (
@@ -281,10 +275,10 @@ function BrainScriptGridItems() {
                 title="Scripts"
                 action={
                     <>
-                        <CmdButton
+                        <Button
                             title="new script"
                             onClick={handleNewScript}
-                            icon={<AddIcon />}
+                            startIcon={<AddIcon />}
                             disabled={!brainManager}
                         />
                         <CmdButton
