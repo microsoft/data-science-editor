@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { ReactNode, useState } from "react"
 import FileCopyIcon from "@mui/icons-material/FileCopy"
 import DoneIcon from "@mui/icons-material/Done"
 import ReportProblemIcon from "@mui/icons-material/ReportProblem"
@@ -16,6 +16,8 @@ export default function CopyButton(props: {
     size?: "small"
     variant?: "outlined" | "contained"
     disabled?: boolean
+    copyIcon?: ReactNode
+    color?: "success" | "error"
 }) {
     const {
         label,
@@ -23,6 +25,7 @@ export default function CopyButton(props: {
         title = "copy data to clipboard",
         disabled,
         onCopy,
+        copyIcon,
         ...rest
     } = props
     const [copied, setCopied] = useState<boolean>(undefined)
@@ -82,7 +85,7 @@ export default function CopyButton(props: {
             ) : copied === false ? (
                 <ReportProblemIcon />
             ) : (
-                <FileCopyIcon />
+                copyIcon || <FileCopyIcon />
             )}
         </IconButtonWithTooltip>
     )

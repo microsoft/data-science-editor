@@ -6,16 +6,20 @@ import JacscriptManagerChip from "./JacscriptManagerChip"
 import useJacscript from "./JacscriptContext"
 import { toHex } from "../../../jacdac-ts/src/jdom/utils"
 import CopyButton from "../ui/CopyButton"
+import CheckIcon from "@mui/icons-material/Check"
+import CloseIcon from "@mui/icons-material/Close"
 
 function CopyCompiledJacscriptButton() {
     const { compiled } = useJacscript()
-    const success = !!compiled?.success
-    const handleCopy = async () => toHex(compiled?.binary)
+    const { success, binary } = compiled || {}
+    const handleCopy = async () => toHex(binary)
     return (
         <CopyButton
             title="copy bytecode"
-            disabled={!success}
+            disabled={!binary}
             onCopy={handleCopy}
+            copyIcon={success ? <CheckIcon /> : <CloseIcon />}
+            color={success ? "success" : "error"}
         />
     )
 }
