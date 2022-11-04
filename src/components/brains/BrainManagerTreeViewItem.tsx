@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useState, MouseEvent } from "react"
 import { JDomTreeViewProps } from "../tools/JDomTreeViewItems"
 import StyledTreeItem, { StyledTreeViewItemProps } from "../ui/StyledTreeItem"
 import CloudQueueIcon from "@mui/icons-material/CloudQueue"
@@ -22,6 +22,7 @@ import { shortDeviceId } from "../../../jacdac-ts/src/jdom/pretty"
 import FolderOpenIcon from "@mui/icons-material/FolderOpen"
 import BrainLiveConnectionButton from "./BrainLiveConnectionButton"
 import useBrainScript from "./useBrainScript"
+import { Button } from "gatsby-theme-material-ui"
 export default function BrainManagerTreeItem(
     props: StyledTreeViewItemProps & JDomTreeViewProps
 ) {
@@ -70,15 +71,16 @@ export default function BrainManagerTreeItem(
 function BrainScriptsTreeItem(
     props: StyledTreeViewItemProps & JDomTreeViewProps
 ) {
-    const { brainManager, createScript, openScript } =
+    const { brainManager, showNewScriptDialog } =
         useContext(BrainManagerContext)
     const scripts = useChange(brainManager, _ => _?.scripts())
     const nodeId = "brain-manager-programs"
     const name = "programs"
 
-    const handleNewScript = async () => {
-        const script = await createScript()
-        await openScript(script?.scriptId)
+    const handleNewScript = (ev: MouseEvent<HTMLButtonElement>) => {
+        ev.stopPropagation()
+        ev.preventDefault()
+        showNewScriptDialog()
     }
 
     return (
@@ -87,11 +89,12 @@ function BrainScriptsTreeItem(
             labelText={name}
             icon={<SourceIcon fontSize="small" />}
             actions={
-                <CmdButton
+                <IconButtonWithTooltip
                     title="New script"
                     onClick={handleNewScript}
-                    icon={<AddIcon fontSize="small" />}
-                />
+                >
+                    <AddIcon fontSize="small" />
+                </IconButtonWithTooltip>
             }
         >
             {scripts?.map(script => (

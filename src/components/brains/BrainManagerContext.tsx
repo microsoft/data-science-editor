@@ -5,14 +5,17 @@ import React, {
     useMemo,
     useState,
     useRef,
+    lazy,
 } from "react"
 import { CLOSE } from "../../../jacdac-ts/src/jdom/constants"
 import useBus from "../../jacdac/useBus"
 import useChange from "../../jacdac/useChange"
 import useLocalStorage, { getLocalStorageItem } from "../hooks/useLocalStorage"
+import Suspense from "../ui/Suspense"
 import useEffectAsync from "../useEffectAsync"
 import { BrainManager, BrainScript } from "./braindom"
 import WebSocketBridge from "./WebSocketBridge"
+const CreateBrainScriptDialog = lazy(() => import("./CreateBrainScriptDialog"))
 
 export interface BrainManagerProps {
     domain?: string
@@ -22,8 +25,12 @@ export interface BrainManagerProps {
     brainManager: BrainManager
     scriptId?: string
     setScriptId: (id: string) => void
-    createScript: (editor?: "js" | "blocks") => Promise<BrainScript>
+    createScript: (
+        name: string,
+        editor?: "js" | "blocks"
+    ) => Promise<BrainScript>
     openScript: (id: string) => Promise<void>
+    showNewScriptDialog: () => void
     deviceId?: string
     setDeviceId: (id: string) => void
     liveDeviceId?: string
@@ -37,6 +44,7 @@ const defaultContextProps: BrainManagerProps = Object.freeze({
     setDeviceId: () => {},
     connectLiveDevice: async () => {},
     createScript: async () => undefined,
+    showNewScriptDialog: () => {},
     openScript: async () => {},
     brainManager: undefined,
 })
@@ -56,6 +64,7 @@ export function isBrainManagerEnabled() {
 // eslint-disable-next-line react/prop-types
 export const BrainManagerProvider = ({ children }) => {
     const bus = useBus()
+    const [createScriptOpen, setCreateScriptOpen] = useState(false)
     const [domain, _setDomain] = useLocalStorage(
         DOMAIN_KEY,
         "https://jacdac-portal2.azurewebsites.net"
@@ -74,6 +83,9 @@ export const BrainManagerProvider = ({ children }) => {
         bridge: WebSocketBridge
     }>()
 
+    const handleCloseCreateScriptDialog = () => setCreateScriptOpen(false)
+    const showNewScriptDialog = () => setCreateScriptOpen(true)
+
     const setDomain = (domain: string) => {
         _setDomain(domain?.replace(/\/$/, ""))
         setToken("")
@@ -91,9 +103,9 @@ export const BrainManagerProvider = ({ children }) => {
         else navigate("/editors/jacscript-text/")
     }
 
-    const createScript = async (editor?: "js" | "blocks") => {
+    const createScript = async (name: string, editor?: "js" | "blocks") => {
         const script = await brainManager?.createScript(
-            `my device.${editor || "js"}`,
+            name || `my device.${editor || "js"}`,
             editor
         )
         return script
@@ -170,9 +182,17 @@ export const BrainManagerProvider = ({ children }) => {
                 connectLiveDevice,
                 openScript,
                 createScript,
+                showNewScriptDialog,
             }}
         >
             {children}
+            {createScriptOpen && (
+                <Suspense>
+                    <CreateBrainScriptDialog
+                        onClose={handleCloseCreateScriptDialog}
+                    />
+                </Suspense>
+            )}
         </BrainManagerContext.Provider>
     )
 }

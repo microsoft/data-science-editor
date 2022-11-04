@@ -258,14 +258,15 @@ function BrainDeviceCard(props: { brain: BrainDevice }) {
 }
 
 function BrainScriptGridItems() {
-    const { brainManager, createScript, openScript } =
+    const { brainManager, showNewScriptDialog } =
         useContext(BrainManagerContext)
     const scripts = useChange(brainManager, _ => _?.scripts())
 
     const handleRefresh = () => brainManager?.refreshScripts()
-    const handleNewScript = async () => {
-        const script = await createScript()
-        await openScript(script?.scriptId)
+    const handleNewScript = (ev: MouseEvent<HTMLButtonElement>) => {
+        ev.stopPropagation()
+        ev.preventDefault()
+        showNewScriptDialog()
     }
 
     return (
@@ -274,10 +275,10 @@ function BrainScriptGridItems() {
                 title="Scripts"
                 action={
                     <>
-                        <CmdButton
+                        <Button
                             title="new script"
                             onClick={handleNewScript}
-                            icon={<AddIcon />}
+                            startIcon={<AddIcon />}
                             disabled={!brainManager}
                         />
                         <CmdButton
