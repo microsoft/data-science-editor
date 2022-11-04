@@ -6,7 +6,10 @@ import React, {
     useMemo,
     useState,
 } from "react"
-import { VibrationMotorCmd } from "../../../jacdac-ts/src/jdom/constants"
+import {
+    VibrationMotorCmd,
+    VibrationMotorReg,
+} from "../../../jacdac-ts/src/jdom/constants"
 import { DashboardServiceProps } from "./DashboardServiceWidget"
 import { jdpack } from "../../../jacdac-ts/src/jdom/pack"
 import useServiceServer from "../hooks/useServiceServer"
@@ -15,6 +18,8 @@ import { VibrationMotorServer } from "../../../jacdac-ts/src/servers/vibrationmo
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import CmdButton from "../CmdButton"
 import SliderWithLabel from "../ui/SliderWithLabel"
+import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
+import useRegister from "../hooks/useRegister"
 
 const T_DIT = 50
 const T_REST = 120
@@ -68,10 +73,15 @@ function PatternInput(props: {
     disabled?: boolean
     service: JDService
     speedScale: number
+    maxLength: number
 }) {
-    const { speedScale, disabled, service } = props
+    const { speedScale, disabled, service, maxLength } = props
     const { onClickActivateAudioContext } = useContext(WebAudioContext)
-    const [text, setText] = useState("...---...")
+    const [text, setText] = useState(".-.")
+    const errorText =
+        text.length > maxLength
+            ? `Pattern too long (max ${maxLength})`
+            : undefined
     const helperText = useMemo(
         () =>
             `Pattern of vibrations: ${Object.entries(patterns)
@@ -109,8 +119,11 @@ function PatternInput(props: {
             <Grid item xs>
                 <TextField
                     title="vibration pattern"
-                    helperText={helperText}
+                    helperText={errorText || helperText}
                     value={text}
+                    fullWidth={true}
+                    error={!!errorText}
+                    size="small"
                     onChange={handleChange}
                 />
             </Grid>
@@ -133,6 +146,11 @@ export default function DashboardVibrationMotor(props: DashboardServiceProps) {
     const server = useServiceServer<VibrationMotorServer>(service)
     const { playTone } = useContext(WebAudioContext)
     const [intensity, setIntensity] = useState(20)
+    const maxVibrationsRegister = useRegister(
+        service,
+        VibrationMotorReg.MaxVibrations
+    )
+    const [maxVibrations = 3] = useRegisterUnpackedValue(maxVibrationsRegister)
 
     // listen for playTone commands from the buzzer
     useEffect(
@@ -153,11 +171,15 @@ export default function DashboardVibrationMotor(props: DashboardServiceProps) {
         value: number | number[]
     ) => setIntensity(value as number)
     const percentValueFormat = (newValue: number) => `${newValue | 0}%`
-// 50, 180
+    // 50, 180
     return (
         <>
             <Grid item xs={12}>
-                <PatternInput service={service} speedScale={intensity / 100} />
+                <PatternInput
+                    service={service}
+                    speedScale={intensity / 100}
+                    maxLength={maxVibrations}
+                />
             </Grid>
             <Grid item xs={12}>
                 <SliderWithLabel
