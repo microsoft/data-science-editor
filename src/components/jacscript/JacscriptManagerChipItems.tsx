@@ -1,25 +1,29 @@
-import { Grid } from "@mui/material"
+import { Chip, Grid } from "@mui/material"
 import React from "react"
 import { SRV_JACSCRIPT_MANAGER } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import useServices from "../hooks/useServices"
 import JacscriptManagerChip from "./JacscriptManagerChip"
 import useJacscript from "./JacscriptContext"
 import { toHex } from "../../../jacdac-ts/src/jdom/utils"
-import CopyButton from "../ui/CopyButton"
 import CheckIcon from "@mui/icons-material/Check"
 import CloseIcon from "@mui/icons-material/Close"
+import { prettySize } from "../../../jacdac-ts/src/jdom/pretty"
 
 function CopyCompiledJacscriptButton() {
     const { compiled } = useJacscript()
     const { success, binary } = compiled || {}
-    const handleCopy = async () => toHex(binary)
+    const handleCopy = async () => {
+        if (!binary) return
+        const c = toHex(binary)
+        await navigator.clipboard.writeText(c)
+    }
+    const label = success ? prettySize(binary.length) : "errors"
     return (
-        <CopyButton
-            title="copy bytecode"
-            disabled={!binary}
-            onCopy={handleCopy}
-            copyIcon={success ? <CheckIcon /> : <CloseIcon />}
-            color={success ? "success" : "error"}
+        <Chip
+            icon={success ? <CheckIcon /> : <CloseIcon />}
+            onClick={handleCopy}
+            label={label}
+            title="copy bytecode to clipboard"
         />
     )
 }
