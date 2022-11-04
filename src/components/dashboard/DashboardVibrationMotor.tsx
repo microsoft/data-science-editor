@@ -71,7 +71,7 @@ function PatternInput(props: {
 }) {
     const { speedScale, disabled, service } = props
     const { onClickActivateAudioContext } = useContext(WebAudioContext)
-    const [text, setText] = useState("...---...")
+    const [text, setText] = useState(".-.")
     const helperText = useMemo(
         () =>
             `Pattern of vibrations: ${Object.entries(patterns)
@@ -153,7 +153,7 @@ export default function DashboardVibrationMotor(props: DashboardServiceProps) {
         value: number | number[]
     ) => setIntensity(value as number)
     const percentValueFormat = (newValue: number) => `${newValue | 0}%`
-// 50, 180
+    // 50, 180
     return (
         <>
             <Grid item xs={12}>
