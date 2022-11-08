@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material"
-import React from "react"
+import React, { lazy } from "react"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import { splitFilter } from "../../../jacdac-ts/src/jdom/utils"
 import useDevices from "../hooks/useDevices"
@@ -18,6 +18,9 @@ import { defaultDeviceFilter, defaultDeviceSort } from "./filters"
 import useHostedSimulators from "../HostedSimulatorsContext"
 import StartMissingSimulatorsButton from "../buttons/StartMissingSimulatorsButton"
 import useBusWithMode from "../../jacdac/useBusWithMode"
+import useJacscript from "../jacscript/JacscriptContext"
+import Suspense from "../ui/Suspense"
+const JacscriptToolbar = lazy(() => import("../jacscript/JacscriptToolbar"))
 
 export interface DashboardDeviceProps {
     showHeader?: boolean
@@ -58,6 +61,7 @@ export default function Dashboard(props: DashboardProps) {
         deviceFilter = defaultDeviceFilter,
         ...other
     } = props
+    const { source: jacscriptSource } = useJacscript()
     const bus = useBusWithMode({ autoConnect: true })
     const { isHostedSimulator, clearHostedSimulators } = useHostedSimulators()
     const devices = useDevices({
@@ -79,6 +83,11 @@ export default function Dashboard(props: DashboardProps) {
 
     return (
         <>
+            {jacscriptSource !== undefined && (
+                <Suspense>
+                    <JacscriptToolbar />
+                </Suspense>
+            )}
             {!hideSimulators && (
                 <DashboardDeviceGroup
                     title="Simulators"

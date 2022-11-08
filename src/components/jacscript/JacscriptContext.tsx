@@ -3,17 +3,18 @@ import React, {
     ReactNode,
     useContext,
     useEffect,
-    useRef,
     useState,
 } from "react"
 import useEffectAsync from "../useEffectAsync"
 import { jacscriptCompile } from "../blockly/dsl/workers/jacscript.proxy"
 import type { JacscriptCompileResponse } from "../../workers/jacscript/jacscript-worker"
-import { startJacscriptVM } from "../blockly/dsl/workers/vm.proxy"
 import { DISCONNECT } from "../../../jacdac-ts/src/jdom/constants"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import useWindowEvent from "../hooks/useWindowEvent"
 import { JSONTryParse } from "../../../jacdac-ts/src/jdom/utils"
+import JacscriptVMLoader from "./JacscriptVMLoader"
+import Suspense from "../ui/Suspense"
+import { useLocationSearchParamBoolean } from "../hooks/useLocationSearchParam"
 
 export interface JacscriptProps {
     source?: string
@@ -43,23 +44,13 @@ export function JacscriptProvider(props: { children: ReactNode }) {
     const [clientSpecs, setClientSpecs] = useState<jdspec.ServiceSpec[]>()
     const [manager, setManager] = useState<JDService>(undefined)
     const [vmUsed, setVmUsed] = useState(0)
-    const vmCleanup = useRef<() => void>(undefined)
+    const jacscript = useLocationSearchParamBoolean("jacscript", false)
 
     const acquireVm = () => {
         setVmUsed(x => x + 1)
         return () => setVmUsed(x => x - 1)
     }
 
-    // launch worker
-    useEffect(() => {
-        if (vmUsed > 0 && !vmCleanup.current)
-            vmCleanup.current = startJacscriptVM()
-        else if (vmUsed <= 0 && vmCleanup.current) {
-            const cleanup = vmCleanup.current
-            vmCleanup.current = undefined
-            cleanup()
-        }
-    }, [vmUsed])
     // unbind manager service if disconnected
     useEffect(
         () =>
@@ -118,6 +109,11 @@ export function JacscriptProvider(props: { children: ReactNode }) {
             }}
         >
             {children}
+            {(jacscript || vmUsed) && (
+                <Suspense>
+                    <JacscriptVMLoader />
+                </Suspense>
+            )}
         </JacscriptContext.Provider>
     )
 }

@@ -12,14 +12,10 @@ import AppContext, { DrawerType } from "../components/AppContext"
 export const Head = props => <CoreHead {...props} {...frontmatter} />
 
 const DataStreamer = lazy(() => import("../components/tools/DataStreamer"))
-const JacscriptVMLoader = lazy(
-    () => import("../components/jacscript/JacscriptVMLoader")
-)
 
 export default function Page() {
     const dataStreamer =
         useLocationSearchParamBoolean("datastreamer", false) && UIFlags.hosted
-    const jacscript = useLocationSearchParamBoolean("jacscript", false)
     const { drawerType, setDrawerType } = useContext(AppContext)
     useEffect(() => {
         if (drawerType === DrawerType.Dashboard) setDrawerType(DrawerType.None)
@@ -30,11 +26,6 @@ export default function Page() {
             {dataStreamer && (
                 <Suspense>
                     <DataStreamer />
-                </Suspense>
-            )}
-            {jacscript && (
-                <Suspense>
-                    <JacscriptVMLoader />
                 </Suspense>
             )}
             <Dashboard
