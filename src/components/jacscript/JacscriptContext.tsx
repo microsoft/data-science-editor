@@ -14,7 +14,6 @@ import { DISCONNECT } from "../../../jacdac-ts/src/jdom/constants"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import useWindowEvent from "../hooks/useWindowEvent"
 import { JSONTryParse } from "../../../jacdac-ts/src/jdom/utils"
-import { UIFlags } from "../../jacdac/providerbus"
 
 export interface JacscriptProps {
     source?: string
@@ -71,7 +70,9 @@ export function JacscriptProvider(props: { children: ReactNode }) {
     useEffectAsync(
         async mounted => {
             const res = source && (await jacscriptCompile(source))
-            if (mounted()) setCompiled(res)
+            if (mounted()) {
+                setCompiled(res)
+            }
         },
         [source]
     )

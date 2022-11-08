@@ -17,6 +17,7 @@ import {
     useRegisterBoolValue,
     useRegisterUnpackedValue,
 } from "../../jacdac/useRegisterValue"
+import { prettySize } from "../../../jacdac-ts/src/jacdac"
 
 export default function DashboardJacscriptManager(
     props: DashboardServiceProps
@@ -48,7 +49,7 @@ export default function DashboardJacscriptManager(
         rest
     )
     const [programHash] = useRegisterUnpackedValue<[number]>(
-        programSizeRegister,
+        programHashRegister,
         rest
     )
 
@@ -69,6 +70,14 @@ export default function DashboardJacscriptManager(
 
     return (
         <Grid container spacing={1}>
+            {programSize > 0 && (
+                <Grid item xs={12}>
+                    <Typography variant="caption">
+                        {programHash?.toString(16) || "?"} (
+                        {prettySize(programSize)})
+                    </Typography>
+                </Grid>
+            )}
             <Grid item xs={12}>
                 <CmdButton
                     disabled={disabled}
@@ -80,14 +89,6 @@ export default function DashboardJacscriptManager(
                     {running ? "stop" : "start"}
                 </CmdButton>
             </Grid>
-            {expanded && programSize > 0 && (
-                <Grid item xs={12}>
-                    <Typography variant="caption">
-                        program size: {programSize}b, hash:{" "}
-                        {programHash.toString(16)}
-                    </Typography>
-                </Grid>
-            )}
             {expanded && (
                 <Grid item xs>
                     <SwitchWithLabel
