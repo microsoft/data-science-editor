@@ -20,6 +20,8 @@ import BrainManagerContext from "../brains/BrainManagerContext"
 import useBrainScript from "../brains/useBrainScript"
 import useEffectAsync from "../useEffectAsync"
 import Suspense from "../ui/Suspense"
+import useWindowEvent from "../hooks/useWindowEvent"
+import { JSONTryParse } from "../../../jacdac-ts/src/jacdac"
 const Dashboard = lazy(() => import("../dashboard/Dashboard"))
 
 function JacscriptTextEditorWithContext() {
@@ -31,6 +33,23 @@ function JacscriptTextEditorWithContext() {
     const [source, setSource] = useState("")
     const [loading, setLoading] = useState(false)
     const [debouncedSource] = useDebounce(source, 1000)
+
+    useWindowEvent("message", (msg: MessageEvent) => {
+        const data = msg.data
+        if (data && typeof data === "string") {
+            const mdata = JSONTryParse(data) as any
+            console.log(mdata)
+            if (
+                mdata &&
+                mdata.channel === "jacscript" &&
+                mdata.type === "source"
+            ) {
+                const source = mdata.source
+                console.log(source)
+                setSource(source)
+            }
+        }
+    })
 
     // load script
     useEffectAsync(async () => {
