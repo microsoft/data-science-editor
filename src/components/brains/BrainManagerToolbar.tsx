@@ -11,7 +11,7 @@ import { toHex } from "../../../jacdac-ts/src/jdom/utils"
 function SaveScriptButton(props: { script: BrainScript; name: string }) {
     const { script, name } = props
     const { workspaceSaved } = useContext(BlockContext)
-    const { program, compiled } = useJacscript()
+    const { source, compiled } = useJacscript()
 
     const sourceBlocks = useChange(script, _ => _.sourceBlocks)
     const ws = JSON.stringify(workspaceSaved)
@@ -21,7 +21,7 @@ function SaveScriptButton(props: { script: BrainScript; name: string }) {
         if (name && name !== script.name) await script.updateName(name)
         await script.uploadBody({
             blocks: workspaceSaved ? JSON.stringify(workspaceSaved) : undefined,
-            text: program?.program.join("\n"),
+            text: source,
             compiled: compiled?.binary ? toHex(compiled.binary) : undefined,
         })
     }

@@ -3,7 +3,7 @@ import CodeBlock from "../CodeBlock"
 import useJacscript from "./JacscriptContext"
 
 export default function JacscriptDiagnostics() {
-    const { program, compiled } = useJacscript()
+    const { source, compiled } = useJacscript()
     const { logs, errors } = compiled || {}
     return (
         <>
@@ -11,9 +11,9 @@ export default function JacscriptDiagnostics() {
             <CodeBlock
                 className="javascript"
                 downloadName={"test.jcs.json"}
-                downloadText={program && JSON.stringify(program, null, 2)}
+                downloadText={source}
             >
-                {program?.program.join("\n") || "--"}
+                {source || ""}
             </CodeBlock>
             {!!logs && (
                 <>

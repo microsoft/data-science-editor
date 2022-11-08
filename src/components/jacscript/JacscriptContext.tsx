@@ -3,44 +3,64 @@ import React, {
     ReactNode,
     useContext,
     useEffect,
+    useRef,
     useState,
 } from "react"
-import { JacscriptProgram } from "../../../jacdac-ts/src/vm/ir2jacscript"
 import useEffectAsync from "../useEffectAsync"
 import { jacscriptCompile } from "../blockly/dsl/workers/jacscript.proxy"
 import type { JacscriptCompileResponse } from "../../workers/jacscript/jacscript-worker"
 import { startJacscriptVM } from "../blockly/dsl/workers/vm.proxy"
 import { DISCONNECT } from "../../../jacdac-ts/src/jdom/constants"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
+import useWindowEvent from "../hooks/useWindowEvent"
+import { JSONTryParse } from "../../../jacdac-ts/src/jdom/utils"
+import { UIFlags } from "../../jacdac/providerbus"
 
 export interface JacscriptProps {
-    program?: JacscriptProgram
-    setProgram: (program: JacscriptProgram) => void
+    source?: string
+    setSource: (program: string) => void
     compiled?: JacscriptCompileResponse
     clientSpecs?: jdspec.ServiceSpec[]
     manager?: JDService
     setManager: (manager: JDService) => void
+    acquireVm: () => () => void
 }
 
 export const JacscriptContext = createContext<JacscriptProps>({
-    program: undefined,
-    setProgram: () => {},
+    source: undefined,
+    setSource: () => {},
     compiled: undefined,
     clientSpecs: undefined,
     manager: undefined,
     setManager: () => {},
+    acquireVm: () => () => {},
 })
 JacscriptContext.displayName = "Jacscript"
 
 export function JacscriptProvider(props: { children: ReactNode }) {
     const { children } = props
-    const [program, setProgram_] = useState<JacscriptProgram>()
+    const [source, setSource_] = useState<string>(undefined)
     const [compiled, setCompiled] = useState<JacscriptCompileResponse>()
     const [clientSpecs, setClientSpecs] = useState<jdspec.ServiceSpec[]>()
     const [manager, setManager] = useState<JDService>(undefined)
+    const [vmUsed, setVmUsed] = useState(0)
+    const vmCleanup = useRef<() => void>(undefined)
+
+    const acquireVm = () => {
+        setVmUsed(x => x + 1)
+        return () => setVmUsed(x => x - 1)
+    }
 
     // launch worker
-    useEffect(() => startJacscriptVM(), [])
+    useEffect(() => {
+        if (vmUsed > 0 && !vmCleanup.current)
+            vmCleanup.current = startJacscriptVM()
+        else if (vmUsed <= 0 && vmCleanup.current) {
+            const cleanup = vmCleanup.current
+            vmCleanup.current = undefined
+            cleanup()
+        }
+    }, [vmUsed])
     // unbind manager service if disconnected
     useEffect(
         () =>
@@ -50,11 +70,10 @@ export function JacscriptProvider(props: { children: ReactNode }) {
     // if program changes, recompile
     useEffectAsync(
         async mounted => {
-            const src = program?.program.join("\n")
-            const res = src && (await jacscriptCompile(src))
+            const res = source && (await jacscriptCompile(source))
             if (mounted()) setCompiled(res)
         },
-        [program]
+        [source]
     )
     // if compiled changes, recompile
     useEffect(() => {
@@ -65,20 +84,36 @@ export function JacscriptProvider(props: { children: ReactNode }) {
             setClientSpecs(compiled?.clientSpecs)
     }, [compiled])
 
-    const setProgram = (newProgram: JacscriptProgram) => {
-        if (JSON.stringify(program) !== JSON.stringify(newProgram))
-            setProgram_(newProgram)
+    const setSource = (newSource: string) => {
+        if (source !== newSource) setSource_(newSource)
     }
+
+    useWindowEvent("message", (msg: MessageEvent) => {
+        const data = msg.data
+        if (data && typeof data === "string") {
+            const mdata = JSONTryParse(data) as any
+            if (
+                mdata &&
+                mdata.channel === "jacscript" &&
+                mdata.type === "source"
+            ) {
+                const source = mdata.source
+                setSource(source)
+                if (!vmUsed) acquireVm()
+            }
+        }
+    })
 
     return (
         <JacscriptContext.Provider
             value={{
-                program,
-                setProgram,
+                source,
+                setSource,
                 compiled,
                 clientSpecs,
                 manager,
                 setManager,
+                acquireVm,
             }}
         >
             {children}
@@ -90,8 +125,9 @@ export default function useJacscript(): JacscriptProps {
     const res = useContext<JacscriptProps>(JacscriptContext)
     return (
         res || {
-            setProgram: () => {},
+            setSource: () => {},
             setManager: () => {},
+            acquireVm: () => () => {},
         }
     )
 }

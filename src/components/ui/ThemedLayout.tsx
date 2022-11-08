@@ -21,6 +21,7 @@ import { SimulatorDialogsProvider } from "../SimulatorsDialogContext"
 import { CommandPaletteProvider } from "../commands/CommandPaletteContext"
 import { YouTubeProvider } from "../youtube/YouTubeContext"
 import { BrainManagerProvider } from "../brains/BrainManagerContext"
+import { JacscriptProvider } from "../jacscript/JacscriptContext"
 
 /*
 declare module "@mui/styles/defaultTheme" {
@@ -48,23 +49,25 @@ export default function ThemedLayout(props: {
                                             <ServiceManagerProvider>
                                                 <PacketsProvider>
                                                     <AppProvider>
-                                                        <YouTubeProvider>
-                                                            <CommandPaletteProvider>
-                                                                <SimulatorDialogsProvider>
-                                                                    <ConsoleProvider>
-                                                                        <MakeCodeSnippetProvider>
-                                                                            <BrainManagerProvider>
-                                                                                <CssBaseline />
+                                                        <JacscriptProvider>
+                                                            <YouTubeProvider>
+                                                                <CommandPaletteProvider>
+                                                                    <SimulatorDialogsProvider>
+                                                                        <ConsoleProvider>
+                                                                            <MakeCodeSnippetProvider>
+                                                                                <BrainManagerProvider>
+                                                                                    <CssBaseline />
 
-                                                                                {
-                                                                                    children
-                                                                                }
-                                                                            </BrainManagerProvider>
-                                                                        </MakeCodeSnippetProvider>
-                                                                    </ConsoleProvider>
-                                                                </SimulatorDialogsProvider>
-                                                            </CommandPaletteProvider>
-                                                        </YouTubeProvider>
+                                                                                    {
+                                                                                        children
+                                                                                    }
+                                                                                </BrainManagerProvider>
+                                                                            </MakeCodeSnippetProvider>
+                                                                        </ConsoleProvider>
+                                                                    </SimulatorDialogsProvider>
+                                                                </CommandPaletteProvider>
+                                                            </YouTubeProvider>
+                                                        </JacscriptProvider>
                                                     </AppProvider>
                                                 </PacketsProvider>
                                             </ServiceManagerProvider>

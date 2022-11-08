@@ -20,12 +20,11 @@ import BrainManagerContext from "../brains/BrainManagerContext"
 import useBrainScript from "../brains/useBrainScript"
 import useEffectAsync from "../useEffectAsync"
 import Suspense from "../ui/Suspense"
-import useWindowEvent from "../hooks/useWindowEvent"
-import { JSONTryParse } from "../../../jacdac-ts/src/jacdac"
+import useJacscriptVm from "./useJacscriptVm"
 const Dashboard = lazy(() => import("../dashboard/Dashboard"))
 
 function JacscriptTextEditorWithContext() {
-    const { setProgram, compiled } = useJacscript()
+    const { setSource: setJscSource, compiled } = useJacscript()
     const bus = useBus()
     const roleManager = useRoleManager()
     const { scriptId } = useContext(BrainManagerContext)
@@ -34,22 +33,7 @@ function JacscriptTextEditorWithContext() {
     const [loading, setLoading] = useState(false)
     const [debouncedSource] = useDebounce(source, 1000)
 
-    useWindowEvent("message", (msg: MessageEvent) => {
-        const data = msg.data
-        if (data && typeof data === "string") {
-            const mdata = JSONTryParse(data) as any
-            console.log(mdata)
-            if (
-                mdata &&
-                mdata.channel === "jacscript" &&
-                mdata.type === "source"
-            ) {
-                const source = mdata.source
-                console.log(source)
-                setSource(source)
-            }
-        }
-    })
+    useJacscriptVm()
 
     // load script
     useEffectAsync(async () => {
@@ -71,10 +55,7 @@ function JacscriptTextEditorWithContext() {
 
     // debounced text buffer UI
     useEffect(() => {
-        setProgram({
-            program: debouncedSource?.split(/\n/g),
-            debug: [],
-        })
+        setJscSource(debouncedSource)
     }, [debouncedSource])
     // update roles
     useEffect(() => {
@@ -152,9 +133,7 @@ function JacscriptTextEditorWithContext() {
 export default function JacscriptTextEditor() {
     return (
         <NoSsr>
-            <JacscriptProvider>
-                <JacscriptTextEditorWithContext />
-            </JacscriptProvider>
+            <JacscriptTextEditorWithContext />
         </NoSsr>
     )
 }

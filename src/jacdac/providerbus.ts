@@ -93,6 +93,7 @@ function sniffQueryArguments() {
         connect: params.get("connect") !== "0",
         transient: params.get("transient") === "1",
         persistent: params.get("persistent") === "1" || isLocalhost,
+        jacscriptvm: params.get("jacscriptvm") === "1",
     }
 }
 
@@ -115,6 +116,7 @@ export class UIFlags {
     static connect = args.connect
     static transient = args.transient
     static persistent = args.persistent
+    static jacscriptvm = args.jacscriptvm
 }
 
 // defeat react fast-refresh

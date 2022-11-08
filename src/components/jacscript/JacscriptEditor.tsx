@@ -18,9 +18,10 @@ import jacscriptDsls from "./jacscriptdsls"
 import { VMProgram } from "../../../jacdac-ts/src/vm/ir"
 import { toJacscript } from "../../../jacdac-ts/src/vm/ir2jacscript"
 import JacscriptEditorToolbar from "./JacscriptEditorToolbar"
-import useJacscript, { JacscriptProvider } from "./JacscriptContext"
+import useJacscript from "./JacscriptContext"
 
 import Suspense from "../ui/Suspense"
+import useJacscriptVm from "./useJacscriptVm"
 const JacscriptDiagnostics = lazy(() => import("./JacscriptDiagnostics"))
 const VMDiagnostics = lazy(() => import("./VMDiagnostics"))
 const BlockDiagnostics = lazy(() => import("../blockly/BlockDiagnostics"))
@@ -36,7 +37,7 @@ function JacscriptEditorWithContext() {
     const { dsls, workspaceJSON, roleManager, setWarnings } =
         useContext(BlockContext)
     const [program, setProgram] = useState<VMProgram>()
-    const { setProgram: setJscProgram } = useJacscript()
+    const { setSource: setJscSource } = useJacscript()
 
     useEffect(() => {
         try {
@@ -47,12 +48,12 @@ function JacscriptEditorWithContext() {
             if (JSON.stringify(newProgram) !== JSON.stringify(program)) {
                 setProgram(newProgram)
                 const jsc = toJacscript(newProgram)
-                setJscProgram(jsc)
+                setJscSource(jsc?.program.join("\n"))
             }
         } catch (e) {
             console.error(e)
             setProgram(undefined)
-            setJscProgram(undefined)
+            setJscSource(undefined)
         }
     }, [dsls, workspaceJSON])
     useEffect(() => {
@@ -106,23 +107,22 @@ export default function JacscriptEditor() {
         },
         []
     )
+    useJacscriptVm()
 
     return (
         <NoSsr>
-            <JacscriptProvider>
-                <BlockProvider
-                    editorId={JACSCRIPT_EDITOR_ID}
-                    storageKey={JACSCRIPT_SOURCE_STORAGE_KEY}
-                    dsls={dsls}
-                    onBeforeSaveWorkspaceFile={
-                        Flags.diagnostics
-                            ? handleOnBeforeSaveWorkspaceFile
-                            : undefined
-                    }
-                >
-                    <JacscriptEditorWithContext />
-                </BlockProvider>
-            </JacscriptProvider>
+            <BlockProvider
+                editorId={JACSCRIPT_EDITOR_ID}
+                storageKey={JACSCRIPT_SOURCE_STORAGE_KEY}
+                dsls={dsls}
+                onBeforeSaveWorkspaceFile={
+                    Flags.diagnostics
+                        ? handleOnBeforeSaveWorkspaceFile
+                        : undefined
+                }
+            >
+                <JacscriptEditorWithContext />
+            </BlockProvider>
         </NoSsr>
     )
 }
