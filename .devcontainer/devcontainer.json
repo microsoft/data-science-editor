@@ -42,12 +42,6 @@
                         "pull_requests": "write"
                     }
                 },
-                "microsoft/jupyter-jacdac": {
-                    "permissions": {
-                        "contents": "write",
-                        "pull_requests": "write"
-                    }
-                },
                 "microsoft/node-red-contrib-jacdac": {
                     "permissions": {
                         "contents": "write",
