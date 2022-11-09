@@ -91,7 +91,7 @@ export default function DeviceActions(props: {
                 <CmdButton
                     trackName="device.proxy"
                     size="small"
-                    title="dongle"
+                    title="enter dongle mode"
                     onClick={handleProxy}
                     icon={<CableIcon />}
                 />
