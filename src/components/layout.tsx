@@ -10,8 +10,7 @@ import {
     DeprecatedThemeOptions,
 } from "@mui/material/styles"
 import AppContext, { DrawerType } from "./AppContext"
-import DarkModeProvider from "./ui/DarkModeProvider"
-import DarkModeContext from "./ui/DarkModeContext"
+import DarkModeContext, { DarkModeProvider } from "./ui/DarkModeContext"
 import Footer from "./shell/Footer"
 import { Flags } from "../../jacdac-ts/src/jdom/flags"
 import { WindowLocation } from "@reach/router"

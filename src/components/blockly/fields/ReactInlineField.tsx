@@ -2,13 +2,13 @@ import React, { ReactNode } from "react"
 import { createRoot } from "react-dom/client"
 import ReactField from "./ReactField"
 import { child } from "../../widgets/svg"
-import DarkModeProvider from "../../ui/DarkModeProvider"
 import JacdacProvider from "../../../jacdac/Provider"
 import AppTheme from "../../ui/AppTheme"
 import Blockly, { Events } from "blockly"
 import { FieldWithServices, WorkspaceProvider } from "../WorkspaceContext"
 import { WebAudioProvider } from "../../ui/WebAudioContext"
 import { SnackbarProvider } from "notistack"
+import { DarkModeProvider } from "../../ui/DarkModeContext"
 
 export default class ReactInlineField<T = unknown>
     extends ReactField<T>

@@ -4,7 +4,6 @@ import { createRoot } from "react-dom/client"
 import Blockly from "blockly"
 import JacdacProvider from "../../../jacdac/Provider"
 import { ReactNode } from "react"
-import DarkModeProvider from "../../ui/DarkModeProvider"
 import AppTheme from "../../ui/AppTheme"
 import { Box } from "@mui/material"
 import { BlockDefinition } from "../toolbox"
@@ -21,6 +20,7 @@ import {
 import { WebAudioProvider } from "../../ui/WebAudioContext"
 import { ReactFieldBase } from "./ReactFieldBase"
 import { SnackbarProvider } from "notistack"
+import { DarkModeProvider } from "../../ui/DarkModeContext"
 
 declare module "blockly" {
     interface Block {
