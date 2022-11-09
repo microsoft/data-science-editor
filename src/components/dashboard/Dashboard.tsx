@@ -41,6 +41,7 @@ export interface DashboardProps extends DashboardDeviceProps {
     showStartSimulators?: boolean
     showStartRoleSimulators?: boolean
     showConnect?: boolean
+    showJacscript?: boolean
     deviceFilter?: (d: JDDevice) => boolean
     deviceSort?: (l: JDDevice, r: JDDevice) => number
 }
@@ -57,6 +58,7 @@ export default function Dashboard(props: DashboardProps) {
         showSimulatorAvatar,
         showDeviceHeader,
         showDeviceAvatar,
+        showJacscript,
         deviceSort = defaultDeviceSort,
         deviceFilter = defaultDeviceFilter,
         ...other
@@ -83,7 +85,7 @@ export default function Dashboard(props: DashboardProps) {
 
     return (
         <>
-            {jacscriptSource !== undefined && (
+            {showJacscript && jacscriptSource !== undefined && (
                 <Suspense>
                     <JacscriptToolbar />
                 </Suspense>

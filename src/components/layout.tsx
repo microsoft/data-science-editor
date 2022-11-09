@@ -234,10 +234,6 @@ function LayoutWithContext(props: LayoutProps) {
     ) : (
         <MainAppBar />
     )
-    const title = isDataEditor
-        ? "Data Science Editor (Experimental)"
-        : pageContext?.title || frontmatter?.title || undefined
-    const description: string = frontmatter?.description
 
     const { darkMode } = useContext(DarkModeContext)
     const { drawerType, toolsMenu, showWebCam } = useContext(AppContext)

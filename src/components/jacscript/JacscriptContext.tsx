@@ -15,6 +15,7 @@ import { JSONTryParse } from "../../../jacdac-ts/src/jdom/utils"
 import JacscriptVMLoader from "./JacscriptVMLoader"
 import Suspense from "../ui/Suspense"
 import { useLocationSearchParamBoolean } from "../hooks/useLocationSearchParam"
+import useSnackbar from "../hooks/useSnackbar"
 
 export interface JacscriptProps {
     source?: string
@@ -39,6 +40,7 @@ JacscriptContext.displayName = "Jacscript"
 
 export function JacscriptProvider(props: { children: ReactNode }) {
     const { children } = props
+    const { enqueueSnackbar } = useSnackbar()
     const [source, setSource_] = useState<string>(undefined)
     const [compiled, setCompiled] = useState<JacscriptCompileResponse>()
     const [clientSpecs, setClientSpecs] = useState<jdspec.ServiceSpec[]>()
@@ -80,21 +82,27 @@ export function JacscriptProvider(props: { children: ReactNode }) {
         if (source !== newSource) setSource_(newSource)
     }
 
-    useWindowEvent("message", (msg: MessageEvent) => {
-        const data = msg.data
-        if (data && typeof data === "string") {
-            const mdata = JSONTryParse(data) as any
-            if (
-                mdata &&
-                mdata.channel === "jacscript" &&
-                mdata.type === "source"
-            ) {
-                const source = mdata.source
-                setSource(source)
-                if (!vmUsed) acquireVm()
+    useWindowEvent(
+        "message",
+        (msg: MessageEvent) => {
+            const data = msg.data
+            if (data && typeof data === "string") {
+                const mdata = JSONTryParse(data) as any
+                if (
+                    mdata &&
+                    mdata.channel === "jacscript" &&
+                    mdata.type === "source"
+                ) {
+                    const source = mdata.source
+                    enqueueSnackbar("jacscript source updated...", "info")
+                    setSource(source)
+                    if (!vmUsed) acquireVm()
+                }
             }
-        }
-    })
+        },
+        false,
+        [vmUsed]
+    )
 
     return (
         <JacscriptContext.Provider
