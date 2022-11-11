@@ -97,7 +97,7 @@ function sniffQueryArguments() {
         resetIn: params.get("resetin") === "1",
         serialVendorIds: (params.get("serialvendorids") || "")
             .split(/,/g)
-            .map(v => parseInt(v))
+            .map(v => parseInt(v, 16))
             .filter(v => !isNaN(v)),
     }
 }
