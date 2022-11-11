@@ -1,13 +1,14 @@
 import {
     Card,
     CardActions,
+    CardContent,
     CardHeader,
     Dialog,
     DialogContent,
     Grid,
     Typography,
 } from "@mui/material"
-import React, { useContext, useMemo } from "react"
+import React, { useContext } from "react"
 import { useId } from "react"
 import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
 import ConnectButton from "../buttons/ConnectButton"
@@ -19,12 +20,17 @@ import GridHeader from "../ui/GridHeader"
 import { Flags } from "../../../jacdac-ts/src/jdom/flags"
 import { Link } from "gatsby-theme-material-ui"
 import useGridBreakpoints from "../useGridBreakpoints"
+import { useDeviceSpecificationFromProductIdentifier } from "../../jacdac/useDeviceSpecification"
 
 function ConnectDeviceCard(props: { device: jdspec.DeviceSpec }) {
     const { device } = props
-    const { name, firmwares } = device
+    const { name, firmwares, productIdentifiers } = device
     const firmware = firmwares?.[0]
     const image = useDeviceImage(device, "preview")
+    const deviceSpec = useDeviceSpecificationFromProductIdentifier(
+        productIdentifiers?.[0]
+    )
+    const requestDescription = deviceSpec?.transport?.requestDescription
     return (
         <Card>
             <img
@@ -33,7 +39,7 @@ function ConnectDeviceCard(props: { device: jdspec.DeviceSpec }) {
                 alt={`photograph of ${name}`}
                 loading="lazy"
             />
-            <CardHeader subheader={name} />
+            <CardHeader title={name} subheader={requestDescription} />
             {!!firmware && (
                 <CardActions>
                     <Link
@@ -55,7 +61,8 @@ function ConnectTransport(props: {
     onClose: () => void
 }) {
     const { transport, onClose } = props
-    const devices = useDeviceSpecifications({ transport: transport.type })
+    const { type: transportType } = transport
+    const devices = useDeviceSpecifications({ transport: transportType })
     const breakpoints = useGridBreakpoints(devices?.length)
     if (!devices?.length && !Flags.diagnostics) return null
     return (
