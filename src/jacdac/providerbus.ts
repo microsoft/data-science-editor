@@ -94,6 +94,10 @@ function sniffQueryArguments() {
         transient: params.get("transient") === "1",
         persistent: params.get("persistent") === "1" || isLocalhost,
         jacscriptvm: params.get("jacscriptvm") === "1",
+        serialVendorIds: (params.get("serialvendorids") || "")
+            .split(/,/g)
+            .map(v => parseInt(v))
+            .filter(v => !isNaN(v)),
     }
 }
 
@@ -138,6 +142,7 @@ function createBus(): JDBus {
             parentOrigin: args.parentOrigin,
             client: false,
             dashboard: true,
+            serialVendorIds: args.serialVendorIds,
         }
     )
     b.passive = args.passive
