@@ -94,6 +94,7 @@ function sniffQueryArguments() {
         transient: params.get("transient") === "1",
         persistent: params.get("persistent") === "1" || isLocalhost,
         jacscriptvm: params.get("jacscriptvm") === "1",
+        resetIn: params.get("resetin") === "1",
         serialVendorIds: (params.get("serialvendorids") || "")
             .split(/,/g)
             .map(v => parseInt(v))
@@ -121,6 +122,7 @@ export class UIFlags {
     static transient = args.transient
     static persistent = args.persistent
     static jacscriptvm = args.jacscriptvm
+    static resetIn = args.resetIn
 }
 
 // defeat react fast-refresh
@@ -142,6 +144,7 @@ function createBus(): JDBus {
             parentOrigin: args.parentOrigin,
             client: false,
             dashboard: true,
+            resetIn: args.resetIn,
             serialVendorIds: args.serialVendorIds,
         }
     )
