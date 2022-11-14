@@ -37,12 +37,14 @@ import {
     SERVICE_NODE_NAME,
     VIRTUAL_DEVICE_NODE_NAME,
 } from "../../../jacdac-ts/src/jdom/constants"
-import { UIFlags } from "../../jacdac/providerbus"
+import bus, { UIFlags } from "../../jacdac/providerbus"
 import { resolveUnit } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import useBus from "../../jacdac/useBus"
 import useChange from "../../jacdac/useChange"
 import useSnackbar from "../hooks/useSnackbar"
 import SimulatorDialogsContext from "../SimulatorsDialogContext"
+import useInteractionMode from "./useInteractionMode"
+import { BusInteractionMode } from "../../../jacdac-ts/src/jacdac"
 
 const PREFIX = "ToolsDrawer"
 
@@ -118,8 +120,8 @@ export default function ToolsDrawer() {
     const { toolsMenu, setToolsMenu, showWebCam, setShowWebCam } =
         useContext(AppContext)
     const { toggleShowDeviceHostsDialog } = useContext(SimulatorDialogsContext)
-    const bus = useBus()
-    const passive = useChange(bus, _ => _.passive)
+    const { interactionTitle, interactionMode, interactionDescription } =
+        useInteractionMode()
     const { enqueueSnackbar } = useSnackbar()
     const { toggleDarkMode, darkMode } = useContext(DarkModeContext)
     const { converters, setConverter } = useUnitConverters()
@@ -145,7 +147,11 @@ export default function ToolsDrawer() {
         setToolsMenu(false)
         toggleDarkMode()
     }
-    const handleTogglePassive = () => (bus.passive = !bus.passive)
+    const handleToggleInteractionMode = () => {
+        if (interactionMode === BusInteractionMode.Active)
+            bus.interactionMode = BusInteractionMode.Observer
+        else bus.interactionMode = BusInteractionMode.Active
+    }
     const links = [
         {
             text: "Start simulator",
@@ -195,9 +201,9 @@ export default function ToolsDrawer() {
             // separator
         },
         {
-            text: passive ? "Passive mode" : "Active mode",
-            title: "In passive mode, the browser does not send any Jacdac packets.",
-            action: handleTogglePassive,
+            text: interactionTitle,
+            title: interactionDescription,
+            action: handleToggleInteractionMode,
         },
         ...converters.map(({ unit, name, names }) => ({
             text: `${name} (change to ${names

@@ -3,18 +3,32 @@ import Alert from "../ui/Alert"
 import { AlertTitle } from "@mui/material"
 import { Button } from "gatsby-theme-material-ui"
 import useBus from "../../jacdac/useBus"
-import useChange from "../../jacdac/useChange"
+import { BusInteractionMode } from "../../../jacdac-ts/src/jacdac"
+import useInteractionMode from "./useInteractionMode"
 
 export default function PassiveAlert() {
     const bus = useBus()
-    const passive = useChange(bus, _ => _.passive)
-    const handleActive = () => bus.passive = false
-    if (!passive) return null
+    const { interactionMode, interactionTitle, interactionDescription } =
+        useInteractionMode()
+    const handleActive = () => (bus.interactionMode = BusInteractionMode.Active)
+    const handlePassive = () =>
+        (bus.interactionMode = BusInteractionMode.Passive)
+    if (interactionMode === BusInteractionMode.Active) return null
 
     return (
         <Alert severity="warning" closeable={true}>
-            <AlertTitle>Passive mode</AlertTitle>
-            The web browser is not sending any packet to devices.
+            <AlertTitle>{interactionTitle}</AlertTitle>
+            {interactionDescription}
+            {interactionMode !== BusInteractionMode.Passive && (
+                <Button
+                    sx={{ ml: 1 }}
+                    color="inherit"
+                    variant="outlined"
+                    onClick={handlePassive}
+                >
+                    Switch to Passive Mode
+                </Button>
+            )}
             <Button
                 sx={{ ml: 1 }}
                 color="inherit"
