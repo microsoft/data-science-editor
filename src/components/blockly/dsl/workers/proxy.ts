@@ -5,7 +5,6 @@ import { JDEventSource } from "../../../../../jacdac-ts/src/jdom/eventsource"
 import { assert, SMap } from "../../../../../jacdac-ts/src/jdom/utils"
 import createCsvWorker from "../../../../workers/csv/workerloader"
 import createDataWorker from "../../../../workers/data/workerloader"
-import createTFWorker from "../../../../workers/tf/workerloader"
 import createVMWorker from "../../../../workers/vm/workerloader"
 import createJacscriptWorker from "../../../../workers/jacscript/workerloader"
 import createCadWorker from "../../../../workers/cad/workerloader"
@@ -75,7 +74,6 @@ const _workers: SMap<WorkerProxy> = {}
 const loaders = {
     data: createDataWorker,
     csv: createCsvWorker,
-    tf: createTFWorker,
     vm: createVMWorker,
     cad: createCadWorker,
     jacscript: createJacscriptWorker,

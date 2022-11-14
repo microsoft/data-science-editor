@@ -26,20 +26,6 @@ import VegaChartField from "./chart/VegaChartField"
 
 import FileSaveField from "./FileSaveField"
 import FileOpenField from "./FileOpenField"
-import UseModelField from "./UseModelField"
-
-import ExpandModelBlockField from "./mb/ExpandModelBlockField"
-import DataSetBlockField from "./mb/DataSetBlockField"
-import DataSetBlockButton from "./mb/DataSetBlockButton"
-import RecordingBlockField from "./mb/RecordingBlockField"
-import NeuralNetworkBlockField from "./mb/NeuralNetworkBlockField"
-import NeuralNetworkBlockButton from "./mb/NeuralNetworkBlockButtons"
-import ConvLayerBlockField from "./mb/ConvLayerBlockField"
-import PoolingLayerBlockField from "./mb/PoolingLayerBlockField"
-import DropoutLayerBlockField from "./mb/DropoutLayerBlockField"
-import FlattenLayerBlockField from "./mb/FlattenLayerBlockField"
-import DenseLayerBlockField from "./mb/DenseLayerBlockField"
-import TrainedModelBlockField from "./mb/TrainedModelBlockField"
 
 import JSONSettingsField from "./JSONSettingsField"
 import IFrameDataChooserField from "./IFrameDataChooserField"
@@ -90,22 +76,8 @@ export function registerFields() {
         HeatMapPlotField,
         VegaChartField,
 
-        ExpandModelBlockField,
-        DataSetBlockField,
-        DataSetBlockButton,
-        RecordingBlockField,
-        NeuralNetworkBlockField,
-        NeuralNetworkBlockButton,
-        ConvLayerBlockField,
-        PoolingLayerBlockField,
-        DropoutLayerBlockField,
-        FlattenLayerBlockField,
-        DenseLayerBlockField,
-        TrainedModelBlockField,
-
         FileSaveField,
         FileOpenField,
-        UseModelField,
 
         JSONSettingsField,
 
