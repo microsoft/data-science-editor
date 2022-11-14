@@ -120,8 +120,7 @@ export default function ToolsDrawer() {
     const { toolsMenu, setToolsMenu, showWebCam, setShowWebCam } =
         useContext(AppContext)
     const { toggleShowDeviceHostsDialog } = useContext(SimulatorDialogsContext)
-    const { interactionTitle, interactionMode, interactionDescription } =
-        useInteractionMode()
+    const { interactionMode } = useInteractionMode()
     const { enqueueSnackbar } = useSnackbar()
     const { toggleDarkMode, darkMode } = useContext(DarkModeContext)
     const { converters, setConverter } = useUnitConverters()
