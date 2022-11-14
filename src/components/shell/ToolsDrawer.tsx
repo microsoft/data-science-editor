@@ -201,8 +201,11 @@ export default function ToolsDrawer() {
             // separator
         },
         {
-            text: interactionTitle,
-            title: interactionDescription,
+            text:
+                interactionMode === BusInteractionMode.Active
+                    ? "Use Observer or Passive mode"
+                    : "Use Active mode",
+            title: "Change how the browser interacts with sensors and devices on the bus",
             action: handleToggleInteractionMode,
         },
         ...converters.map(({ unit, name, names }) => ({
