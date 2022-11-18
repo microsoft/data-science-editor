@@ -60,6 +60,7 @@ export default function useUnitConverter(unit: jdspec.Unit | string): {
 
     const [settings] = useLocalStorage("jacdac:unitconverters", {
         "/": "%",
+        A: "mA",
     })
 
     const adapter = adapters[unit]
