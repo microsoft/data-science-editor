@@ -39,6 +39,10 @@ export default function DashboardJacscriptManager(
         service,
         JacscriptManagerReg.ProgramHash
     )
+    const programSha256Register = useRegister(
+        service,
+        JacscriptManagerReg.ProgramSha256
+    )
 
     const running = useRegisterBoolValue(runningRegister, rest)
     const autoStart = useRegisterBoolValue(autoStartRegister, rest)
@@ -50,6 +54,10 @@ export default function DashboardJacscriptManager(
     )
     const [programHash] = useRegisterUnpackedValue<[number]>(
         programHashRegister,
+        rest
+    )
+    const [programSha256] = useRegisterUnpackedValue<[number]>(
+        programSha256Register,
         rest
     )
 
@@ -73,7 +81,8 @@ export default function DashboardJacscriptManager(
             {programSize > 0 && (
                 <Grid item xs={12}>
                     <Typography variant="caption">
-                        {programHash?.toString(16) || "?"} (
+                        {programHash?.toString(16) || "?"}/
+                        {programSha256?.toString(16) || "?"} (
                         {prettySize(programSize)})
                     </Typography>
                 </Grid>

@@ -1,4 +1,4 @@
-import vmMod from "jacscript-vm"
+importScripts("https://microsoft.github.io/jacscript/vm/jacscript-vm.js")
 
 export interface VMMessage {
     worker: "vm"
@@ -25,17 +25,20 @@ export interface VMPacketRequest extends VMMessage {
     data: Uint8Array
 }
 
+declare let Module: any;
 
-const init = vmMod().then(Module => {
-    Module.sendPacket = data => {
+console.log(Module)
+
+const init = Module().then(m => {
+    m.sendPacket = data => {
         self.postMessage(<VMPacketRequest>{
             worker: "vm",
             type: "packet",
             data,
         })
     }
-    Module.jacsStart()
-    return Module
+    m.jacsStart()
+    return m
 })
 
 const handlers: { [index: string]: (props: any) => object | Promise<object> } =
