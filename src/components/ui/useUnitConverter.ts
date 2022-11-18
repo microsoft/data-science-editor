@@ -12,6 +12,10 @@ const adapters: Record<string, Record<string, (v: number) => number>> = {
         "/": v => v,
         "%": v => v * 100,
     },
+    A: {
+        A: v => v,
+        mA: v => 1000 * v,
+    },
 }
 const inverters: Record<string, Record<string, (v: number) => number>> = {
     "°F": {
@@ -19,6 +23,9 @@ const inverters: Record<string, Record<string, (v: number) => number>> = {
     },
     "%": {
         "/": v => v / 100,
+    },
+    mA: {
+        A: v => v / 1000,
     },
 }
 
