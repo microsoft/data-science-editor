@@ -17,7 +17,8 @@ import {
     useRegisterBoolValue,
     useRegisterUnpackedValue,
 } from "../../jacdac/useRegisterValue"
-import { prettySize } from "../../../jacdac-ts/src/jacdac"
+import { prettySize, toHex } from "../../../jacdac-ts/src/jacdac"
+import Tooltip from "../ui/Tooltip"
 
 export default function DashboardJacscriptManager(
     props: DashboardServiceProps
@@ -56,7 +57,7 @@ export default function DashboardJacscriptManager(
         programHashRegister,
         rest
     )
-    const [programSha256] = useRegisterUnpackedValue<[number]>(
+    const [programSha256] = useRegisterUnpackedValue<[Uint8Array]>(
         programSha256Register,
         rest
     )
@@ -80,11 +81,12 @@ export default function DashboardJacscriptManager(
         <Grid container spacing={1}>
             {programSize > 0 && (
                 <Grid item xs={12}>
-                    <Typography variant="caption">
-                        {programHash?.toString(16) || "?"}/
-                        {programSha256?.toString(16) || "?"} (
-                        {prettySize(programSize)})
-                    </Typography>
+                    <Tooltip title={toHex(programSha256) || "no sha"}>
+                        <Typography variant="caption">
+                            {programHash?.toString(16) || "?"} (
+                            {prettySize(programSize)})
+                        </Typography>
+                    </Tooltip>
                 </Grid>
             )}
             <Grid item xs={12}>
