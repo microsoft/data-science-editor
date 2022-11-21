@@ -59,7 +59,7 @@ function JacscriptTextEditorWithContext() {
     }, [debouncedSource])
     // update roles
     useEffect(() => {
-        compiled &&
+        compiled?.dbg?.roles &&
             roleManager?.updateRoles([
                 ...compiled.dbg.roles.map(r => ({
                     role: r.name,
