@@ -1,4 +1,4 @@
-importScripts("https://microsoft.github.io/jacscript/vm/jacscript-vm.js")
+importScripts("https://microsoft.github.io/jacscript/dist/jacscript-vm.js")
 
 export interface VMMessage {
     worker: "vm"
