@@ -117,7 +117,7 @@ export function JacscriptProvider(props: { children: ReactNode }) {
             }}
         >
             {children}
-            {(jacscript || vmUsed) && (
+            {!!(jacscript || vmUsed) && (
                 <Suspense>
                     <JacscriptVMLoader />
                 </Suspense>
