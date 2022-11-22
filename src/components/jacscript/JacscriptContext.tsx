@@ -3,6 +3,7 @@ import React, {
     ReactNode,
     useContext,
     useEffect,
+    useRef,
     useState,
 } from "react"
 import useEffectAsync from "../useEffectAsync"
@@ -47,6 +48,10 @@ export function JacscriptProvider(props: { children: ReactNode }) {
     const [manager, setManager] = useState<JDService>(undefined)
     const [vmUsed, setVmUsed] = useState(0)
     const jacscript = !!UIFlags.jacscriptvm
+
+    // keep track of source without re-render
+    const lastSource = useRef(source)
+    lastSource.current = source
 
     const acquireVm = () => {
         setVmUsed(x => x + 1)
@@ -93,10 +98,12 @@ export function JacscriptProvider(props: { children: ReactNode }) {
                     mdata.channel === "jacscript" &&
                     mdata.type === "source"
                 ) {
-                    const source = mdata.source
-                    enqueueSnackbar("jacscript source updated...", "info")
-                    setSource(source)
-                    if (!vmUsed) acquireVm()
+                    const msgSource = mdata.source
+                    if (lastSource.current !== msgSource) {
+                        enqueueSnackbar("jacscript source updated...", "info")
+                        setSource(msgSource)
+                        if (!vmUsed) acquireVm()
+                    }
                 }
             }
         },
