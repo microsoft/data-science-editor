@@ -14,8 +14,8 @@ import useWindowEvent from "../hooks/useWindowEvent"
 import { JSONTryParse } from "../../../jacdac-ts/src/jdom/utils"
 import JacscriptVMLoader from "./JacscriptVMLoader"
 import Suspense from "../ui/Suspense"
-import { useLocationSearchParamBoolean } from "../hooks/useLocationSearchParam"
 import useSnackbar from "../hooks/useSnackbar"
+import { UIFlags } from "../../jacdac/providerbus"
 
 export interface JacscriptProps {
     source?: string
@@ -46,7 +46,7 @@ export function JacscriptProvider(props: { children: ReactNode }) {
     const [clientSpecs, setClientSpecs] = useState<jdspec.ServiceSpec[]>()
     const [manager, setManager] = useState<JDService>(undefined)
     const [vmUsed, setVmUsed] = useState(0)
-    const jacscript = useLocationSearchParamBoolean("jacscript", false)
+    const jacscript = !!UIFlags.jacscriptvm
 
     const acquireVm = () => {
         setVmUsed(x => x + 1)
