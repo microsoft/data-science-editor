@@ -7,9 +7,6 @@
 [submodule "node-red-contrib-jacdac"]
 	path = node-red-contrib-jacdac
 	url = https://github.com/microsoft/node-red-contrib-jacdac
-[submodule "ml4f"]
-	path = ml4f
-	url = https://github.com/microsoft/ml4f
 [submodule "gatsby-remark-makecode"]
 	path = gatsby-remark-makecode
 	url = https://github.com/microsoft/gatsby-remark-makecode
@@ -28,6 +25,3 @@
 [submodule "jacdac-dotnet"]
 	path = jacdac-dotnet
 	url = https://github.com/microsoft/jacdac-dotnet
-[submodule "jacscript"]
-	path = jacscript
-	url = https://github.com/microsoft/jacscript

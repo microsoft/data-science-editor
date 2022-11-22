@@ -131,13 +131,11 @@
     "node": ">=14.17.0"
   },
   "workspaces": [
-    "jacdac-ts",
-    "jacscript/vm",
-    "jacscript/compiler"
+    "jacdac-ts"
   ],
   "scripts": {
     "setup": "git submodule update --init --recursive && git pull && yarn install --frozen-lockfile",
-    "postinstall": "(cd jacdac-ts && yarn dist) && (cd jacscript/compiler && yarn build) && yarn buildml4f && yarn buildworkers",
+    "postinstall": "(cd jacdac-ts && yarn dist) && yarn buildworkers",
     "pullsubmodules": "git submodule update --init --recursive",
     "lint": "node node_modules/eslint/bin/eslint.js src/**/*.ts src/**/*.tsx",
     "clean": "node node_modules/gatsby/cli.js clean",
@@ -152,7 +150,6 @@
     "docsserve": "node node_modules/gatsby/cli.js serve",
     "dockerdocs": "node node_modules/gatsby/cli.js develop --host:0.0.0.0",
     "buildspecs": "cd jacdac-ts && yarn buildspecs && yarn prettier && cd .. && cp -r jacdac-ts/jacdac-spec/services/generated/makecode/* pxt-jacdac && cp -r jacdac-ts/jacdac-spec/services/generated/python/* jacdac-python/jacdac && rm jacdac-dotnet/Jacdac/Constants/*.cs && cp -r jacdac-ts/jacdac-spec/services/generated/cs/* jacdac-dotnet/Jacdac && yarn prettier && cd pxt-jacdac && sh update-clients.sh",
-    "buildml4f": "cd ml4f && yarn",
     "buildpxt": "cd pxt-jacdac && sh mk.sh",
     "buildmodels": "cd static/models && sh mk.sh",
     "builddocsts": "node node_modules/typescript/bin/tsc -b src",
@@ -169,9 +166,7 @@
     "watchworkerjacscript": "cd src/workers/jacscript && node ../../../node_modules/esbuild/bin/esbuild --bundle jacscript-worker.ts --outdir=dist/node_modules --sourcemap --watch",
     "watchworkercad": "cd src/workers/cad && node ../../../node_modules/microbundle/dist/cli.js watch -f modern --no-compress --types --ts-config tsconfig.json",
     "watchts": "cd jacdac-ts && yarn watch",
-    "watchjacscript": "cd jacscript/compiler && yarn watch",
-    "buildcssamples": "cd jacdac-dotnet && snippets.bat",
-    "buildjacscript": "make -C jacscript/ && yarn buildworkervm && yarn buildworkerjacscript"
+    "buildcssamples": "cd jacdac-dotnet && snippets.bat"
   },
   "repository": {
     "type": "git",

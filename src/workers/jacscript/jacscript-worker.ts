@@ -1,9 +1,12 @@
-import { compile, JacError, Host } from "jacscript-compiler"
-import type { DebugInfo } from "jacscript-compiler"
+importScripts(
+    "https://microsoft.github.io/jacscript/dist/jacscript-compiler.js"
+)
 
-export type JacscriptError = JacError
+const { compile } = (self as any).jacscript
 
-export type JacscriptDebugInfo = DebugInfo
+export type JacscriptDebugInfo = any
+export type JacscriptError = any
+export type JacError = any
 
 export interface JacscriptMessage {
     worker: "jacscript"
@@ -34,7 +37,7 @@ export interface JacscriptCompileResponse extends JacscriptMessage {
     errors: JacscriptError[]
 }
 
-class WorkerHost implements Host {
+class WorkerHost {
     files: Record<string, Uint8Array | string>
     logs: string
     errors: JacError[]
@@ -46,7 +49,9 @@ class WorkerHost implements Host {
 
         this.error = this.error.bind(this)
     }
-
+    mainFileName() {
+        return ""
+    }
     write(filename: string, contents: Uint8Array | string) {
         this.files[filename] = contents
     }
@@ -59,7 +64,7 @@ class WorkerHost implements Host {
     getSpecs(): jdspec.ServiceSpec[] {
         return this.specs
     }
-    verifyBytecode(buf: Uint8Array, dbg?: DebugInfo): void {}
+    verifyBytecode(buf: Uint8Array, dbg?: JacscriptDebugInfo): void {}
 }
 
 let serviceSpecs: jdspec.ServiceSpec[]
@@ -70,7 +75,7 @@ const handlers: { [index: string]: (props: any) => object | Promise<object> } =
             const { source } = props
             if (!serviceSpecs) throw new Error("specs missing")
             const host = new WorkerHost(serviceSpecs)
-            const res = compile(host, source)
+            const res = compile(source, { host })
 
             return <Partial<JacscriptCompileResponse>>{
                 ...res,
