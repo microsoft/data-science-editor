@@ -99,7 +99,8 @@ export function JacscriptProvider(props: { children: ReactNode }) {
                     mdata.type === "source"
                 ) {
                     const msgSource = mdata.source
-                    if (lastSource.current !== msgSource) {
+                    const force = mdata.force
+                    if (force || lastSource.current !== msgSource) {
                         enqueueSnackbar("jacscript source updated...", "info")
                         setSource(msgSource)
                         if (!vmUsed) acquireVm()
