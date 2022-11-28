@@ -10,7 +10,7 @@ import CloseIcon from "@mui/icons-material/Close"
 import { prettySize } from "../../../jacdac-ts/src/jdom/pretty"
 
 function CopyCompiledJacscriptButton() {
-    const { compiled } = useJacscript()
+    const { compiled, compilePending } = useJacscript()
     const { success, binary } = compiled || {}
     const handleCopy = async () => {
         if (!binary) return
@@ -23,6 +23,7 @@ function CopyCompiledJacscriptButton() {
             icon={success ? <CheckIcon /> : <CloseIcon />}
             onClick={handleCopy}
             label={label}
+            disabled={compilePending}
             title="copy bytecode to clipboard"
         />
     )

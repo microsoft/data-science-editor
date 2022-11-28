@@ -17,10 +17,12 @@ import JacscriptVMLoader from "./JacscriptVMLoader"
 import Suspense from "../ui/Suspense"
 import useSnackbar from "../hooks/useSnackbar"
 import { UIFlags } from "../../jacdac/providerbus"
+import { useDebounce } from "use-debounce"
 
 export interface JacscriptProps {
     source?: string
     setSource: (program: string) => void
+    compilePending?: boolean
     compiled?: JacscriptCompileResponse
     clientSpecs?: jdspec.ServiceSpec[]
     manager?: JDService
@@ -43,11 +45,13 @@ export function JacscriptProvider(props: { children: ReactNode }) {
     const { children } = props
     const { enqueueSnackbar } = useSnackbar()
     const [source, setSource_] = useState<string>(undefined)
+    const [compilePending, setCompilePending] = useState(false)
     const [compiled, setCompiled] = useState<JacscriptCompileResponse>()
     const [clientSpecs, setClientSpecs] = useState<jdspec.ServiceSpec[]>()
     const [manager, setManager] = useState<JDService>(undefined)
     const [vmUsed, setVmUsed] = useState(0)
     const jacscript = !!UIFlags.jacscriptvm
+    const [debouncedSource] = useDebounce(source, 1000)
 
     // keep track of source without re-render
     const lastSource = useRef(source)
@@ -65,15 +69,11 @@ export function JacscriptProvider(props: { children: ReactNode }) {
         [manager]
     )
     // if program changes, recompile
-    useEffectAsync(
-        async mounted => {
-            const res = source && (await jacscriptCompile(source))
-            if (mounted()) {
-                setCompiled(res)
-            }
-        },
-        [source]
-    )
+    useEffectAsync(async () => {
+        const res = debouncedSource && (await jacscriptCompile(debouncedSource))
+        setCompiled(res)
+        setCompilePending(false)
+    }, [debouncedSource])
     // if compiled changes, recompile
     useEffect(() => {
         if (
@@ -84,7 +84,10 @@ export function JacscriptProvider(props: { children: ReactNode }) {
     }, [compiled])
 
     const setSource = (newSource: string) => {
-        if (source !== newSource) setSource_(newSource)
+        if (source !== newSource) {
+            setSource_(newSource)
+            setCompilePending(true)
+        }
     }
 
     useWindowEvent(
@@ -117,6 +120,7 @@ export function JacscriptProvider(props: { children: ReactNode }) {
             value={{
                 source,
                 setSource,
+                compilePending,
                 compiled,
                 clientSpecs,
                 manager,

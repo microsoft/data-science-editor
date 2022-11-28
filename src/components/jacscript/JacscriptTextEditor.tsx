@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState, lazy } from "react"
 import { Grid, NoSsr } from "@mui/material"
 import HighlightTextField from "../ui/HighlightTextField"
 import useJacscript from "./JacscriptContext"
-import { useDebounce } from "use-debounce"
 import BrainManagerToolbar from "../brains/BrainManagerToolbar"
 import BrainManagerContext from "../brains/BrainManagerContext"
 import useBrainScript from "../brains/useBrainScript"
@@ -13,12 +12,10 @@ import JacscriptToolbar from "./JacscriptToolbar"
 const Dashboard = lazy(() => import("../dashboard/Dashboard"))
 
 function JacscriptTextEditorWithContext() {
-    const { setSource: setJscSource, compiled } = useJacscript()
+    const { source, setSource, compiled } = useJacscript()
     const { scriptId } = useContext(BrainManagerContext)
     const script = useBrainScript(scriptId)
-    const [source, setSource] = useState("")
     const [loading, setLoading] = useState(false)
-    const [debouncedSource] = useDebounce(source, 1000)
 
     useJacscriptVm()
 
@@ -39,11 +36,6 @@ function JacscriptTextEditorWithContext() {
             setLoading(false)
         }
     }, [script?.id])
-
-    // debounced text buffer UI
-    useEffect(() => {
-        setJscSource(debouncedSource)
-    }, [debouncedSource])
 
     const annotations = compiled?.errors?.map(
         error =>
@@ -66,7 +58,7 @@ function JacscriptTextEditorWithContext() {
             </Grid>
             <Grid item xs={12}>
                 <HighlightTextField
-                    code={source}
+                    code={source || ""}
                     language={"javascript"}
                     onChange={setSource}
                     annotations={annotations}
