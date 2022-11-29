@@ -59,7 +59,8 @@ class WorkerHost {
         this.logs += msg + "\n"
     }
     error(err: JacError) {
-        this.errors.push(err)
+        const { file, ...rest } = err
+        this.errors.push(rest)
     }
     getSpecs(): jdspec.ServiceSpec[] {
         return this.specs
