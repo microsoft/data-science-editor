@@ -117,7 +117,7 @@ export default function useToolbox(
         const r = await loadBlocks(dsls, theme, clientSpecs)
         if (Flags.diagnostics) console.debug(`blocks`, r)
         return r
-    }, [theme, clientSpecs, dsls])
+    }, [theme, JSON.stringify(clientSpecs), dsls])
     const toolboxConfiguration = useMemo(() => {
         if (!blocks) return undefined
 

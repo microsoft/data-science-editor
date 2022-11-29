@@ -8,7 +8,7 @@ import { toHex } from "../../../jacdac-ts/src/jdom/utils"
 import CheckIcon from "@mui/icons-material/Check"
 import CloseIcon from "@mui/icons-material/Close"
 import { prettySize } from "../../../jacdac-ts/src/jdom/pretty"
-
+import PendingIcon from "@mui/icons-material/Pending"
 function CopyCompiledJacscriptButton() {
     const { compiled, compilePending } = useJacscript()
     const { success, binary } = compiled || {}
@@ -17,10 +17,22 @@ function CopyCompiledJacscriptButton() {
         const c = toHex(binary)
         await navigator.clipboard.writeText(c)
     }
-    const label = success ? prettySize(binary.length) : "errors"
+    const label = compilePending
+        ? "......"
+        : success
+        ? prettySize(binary.length)
+        : "errors"
     return (
         <Chip
-            icon={success ? <CheckIcon /> : <CloseIcon />}
+            icon={
+                compilePending ? (
+                    <PendingIcon />
+                ) : success ? (
+                    <CheckIcon />
+                ) : (
+                    <CloseIcon />
+                )
+            }
             onClick={handleCopy}
             label={label}
             disabled={compilePending}

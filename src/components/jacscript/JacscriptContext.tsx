@@ -9,9 +9,7 @@ import React, {
 import useEffectAsync from "../useEffectAsync"
 import { jacscriptCompile } from "../blockly/dsl/workers/jacscript.proxy"
 import type { JacscriptCompileResponse } from "../../workers/jacscript/jacscript-worker"
-import {
-    DISCONNECT,
-} from "../../../jacdac-ts/src/jdom/constants"
+import { DISCONNECT } from "../../../jacdac-ts/src/jdom/constants"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import useWindowEvent from "../hooks/useWindowEvent"
 import { JSONTryParse } from "../../../jacdac-ts/src/jdom/utils"
@@ -49,7 +47,6 @@ export function JacscriptProvider(props: { children: ReactNode }) {
     const [source, setSource_] = useState<string>(undefined)
     const [compilePending, setCompilePending] = useState(false)
     const [compiled, setCompiled] = useState<JacscriptCompileResponse>()
-    const [clientSpecs, setClientSpecs] = useState<jdspec.ServiceSpec[]>()
     const [manager, setManager] = useState<JDService>(undefined)
     const [vmUsed, setVmUsed] = useState(0)
     const jacscript = !!UIFlags.jacscriptvm
@@ -72,22 +69,17 @@ export function JacscriptProvider(props: { children: ReactNode }) {
     )
     // if program changes, recompile
     useEffectAsync(async () => {
-        const res = debouncedSource && (await jacscriptCompile(debouncedSource))
+        const res = debouncedSource?.trim()
+            ? await jacscriptCompile(debouncedSource)
+            : undefined
         setCompiled(res)
         setCompilePending(false)
     }, [debouncedSource])
-    // if compiled changes, recompile
-    useEffect(() => {
-        if (
-            JSON.stringify(clientSpecs) !==
-            JSON.stringify(compiled?.clientSpecs)
-        )
-            setClientSpecs(compiled?.clientSpecs)
-    }, [compiled])
 
     const setSource = (newSource: string) => {
         if (source !== newSource) {
             setSource_(newSource)
+            setCompiled(undefined)
             setCompilePending(true)
         }
     }
@@ -106,7 +98,6 @@ export function JacscriptProvider(props: { children: ReactNode }) {
                     const msgSource = mdata.source
                     const force = mdata.force
                     if (force || lastSource.current !== msgSource) {
-                        enqueueSnackbar("jacscript source updated...", "info")
                         setSource(msgSource)
                         if (!vmUsed) acquireVm()
                     }
@@ -116,6 +107,7 @@ export function JacscriptProvider(props: { children: ReactNode }) {
         false,
         [vmUsed]
     )
+
     return (
         <JacscriptContext.Provider
             value={{
@@ -123,7 +115,6 @@ export function JacscriptProvider(props: { children: ReactNode }) {
                 setSource,
                 compilePending,
                 compiled,
-                clientSpecs,
                 manager,
                 setManager,
                 acquireVm,
