@@ -342,7 +342,6 @@ const serviceViews: {
     },
     [SRV_RELAY]: {
         component: DashboardRelay,
-        weight: () => 2,
     },
     [SRV_LIGHT_BULB]: {
         component: DashboardLightBulb,
