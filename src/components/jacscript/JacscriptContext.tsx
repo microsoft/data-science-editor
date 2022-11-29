@@ -9,7 +9,9 @@ import React, {
 import useEffectAsync from "../useEffectAsync"
 import { jacscriptCompile } from "../blockly/dsl/workers/jacscript.proxy"
 import type { JacscriptCompileResponse } from "../../workers/jacscript/jacscript-worker"
-import { DISCONNECT } from "../../../jacdac-ts/src/jdom/constants"
+import {
+    DISCONNECT,
+} from "../../../jacdac-ts/src/jdom/constants"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import useWindowEvent from "../hooks/useWindowEvent"
 import { JSONTryParse } from "../../../jacdac-ts/src/jdom/utils"
@@ -114,7 +116,6 @@ export function JacscriptProvider(props: { children: ReactNode }) {
         false,
         [vmUsed]
     )
-
     return (
         <JacscriptContext.Provider
             value={{

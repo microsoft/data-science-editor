@@ -1,40 +1,23 @@
 import JacscriptManagerChipItems from "./JacscriptManagerChipItems"
 import RolesToolbar from "../roles/RolesToolbar"
-import React, { useEffect } from "react"
-import useJacscript from "./JacscriptContext"
-import useRoleManager from "../hooks/useRoleManager"
+import React from "react"
 import {
     addServiceProvider,
     serviceProviderDefinitionFromServiceClass,
 } from "../../../jacdac-ts/src/servers/servers"
-import {
-    LiveRoleBinding,
-    RoleBinding,
-} from "../../../jacdac-ts/src/jdom/rolemanager"
 import useBus from "../../jacdac/useBus"
+import { resolveRoleService, Role } from "../../../jacdac-ts/src/jacdac"
 
 export default function JacscriptToolbar() {
     const bus = useBus()
-    const { compiled } = useJacscript()
-    const roleManager = useRoleManager()
-
-    // update roles
-    useEffect(() => {
-        compiled?.dbg?.roles &&
-            roleManager?.updateRoles([
-                ...compiled.dbg.roles.map(r => ({
-                    role: r.name,
-                    serviceClass: r.serviceClass,
-                })),
-            ])
-    }, [roleManager, compiled])
 
     // start role on demand
-    const handleRoleClick = (role: RoleBinding) => {
-        const { service, preferredDeviceId, serviceClass } =
-            role as LiveRoleBinding
+    const handleRoleClick = (role: Role) => {
+        const service = resolveRoleService(bus, role)
         // spin off simulator
-        if (!service && !preferredDeviceId) {
+        // TODO: preferred device id
+        if (!service) {
+            const { serviceClass } = role
             addServiceProvider(
                 bus,
                 serviceProviderDefinitionFromServiceClass(serviceClass)
@@ -43,7 +26,7 @@ export default function JacscriptToolbar() {
     }
 
     return (
-        <RolesToolbar roleManager={roleManager} onRoleClick={handleRoleClick}>
+        <RolesToolbar onRoleClick={handleRoleClick}>
             <JacscriptManagerChipItems />
         </RolesToolbar>
     )

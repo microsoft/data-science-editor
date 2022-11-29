@@ -11,7 +11,6 @@ export default function RoleChip(props: {
     role: string
     serviceClass: number
     service: JDService
-    preferredDeviceId: string
     onClick: () => void
 }) {
     const bus = useBus()
