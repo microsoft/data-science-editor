@@ -93,6 +93,7 @@ function sniffQueryArguments() {
         connect: params.get("connect") !== "0",
         transient: params.get("transient") === "1",
         persistent: params.get("persistent") === "1" || isLocalhost,
+        footer: params.get("footer") !== "0",
         jacscriptvm:
             params.get("jacscriptvm") === "1" ||
             params.get("jacscript") === "1",
@@ -125,6 +126,7 @@ export class UIFlags {
     static persistent = args.persistent
     static jacscriptvm = args.jacscriptvm
     static resetIn = args.resetIn
+    static footer = args.footer
 }
 
 // defeat react fast-refresh

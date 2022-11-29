@@ -207,6 +207,7 @@ function LayoutWithContext(props: LayoutProps) {
     const { frontmatter } = pageContext || {}
 
     const isHosted = UIFlags.hosted
+    const footer = UIFlags.footer
     const tools = /^\/tools\//.test(path)
     const makeCodeTool = /tools\/makecode-/.test(path)
     const devicesPage = /^\/devices\/$/.test(path)
@@ -296,7 +297,7 @@ function LayoutWithContext(props: LayoutProps) {
                     <InnerMainSection />
                 )}
             </main>
-            <Footer />
+            {footer && <Footer />}
         </>
     )
 
