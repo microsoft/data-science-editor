@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, lazy } from "react"
+import React, { useContext, useState, lazy } from "react"
 import { Grid, NoSsr } from "@mui/material"
 import HighlightTextField from "../ui/HighlightTextField"
 import useJacscript from "./JacscriptContext"
@@ -9,6 +9,8 @@ import useEffectAsync from "../useEffectAsync"
 import Suspense from "../ui/Suspense"
 import useJacscriptVm from "./useJacscriptVm"
 import JacscriptToolbar from "./JacscriptToolbar"
+import GridHeader from "../ui/GridHeader"
+const Console = lazy(() => import("../console/Console"))
 const Dashboard = lazy(() => import("../dashboard/Dashboard"))
 
 function JacscriptTextEditorWithContext() {
@@ -76,6 +78,21 @@ function JacscriptTextEditorWithContext() {
                         showStartSimulators={false}
                         showStartRoleSimulators={true}
                         showDeviceProxyAlert={true}
+                    />
+                </Suspense>
+            </Grid>
+            <Grid item xs={12}>
+                <GridHeader title="Console" />
+            </Grid>
+            <Grid item xs={12}>
+                <Suspense>
+                    <Console
+                        showToolbar={true}
+                        showFiles={false}
+                        showLevel={true}
+                        showPopout={false}
+                        showSerial={true}
+                        height="10rem"
                     />
                 </Suspense>
             </Grid>
