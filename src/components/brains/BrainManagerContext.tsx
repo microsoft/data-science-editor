@@ -100,7 +100,7 @@ export const BrainManagerProvider = ({ children }) => {
         // commit script and open
         setScriptId(script.scriptId)
         if (body.blocks !== undefined) navigate("/editors/jacscript-blocks/")
-        else navigate("/editors/jacscript-text/")
+        else navigate("/editors/jacscript/")
     }
 
     const createScript = async (name: string, editor?: "js" | "blocks") => {
