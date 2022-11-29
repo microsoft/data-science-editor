@@ -36,6 +36,7 @@ export default function HighlightTextField(props: {
     language: string
     code: string
     minHeight?: string
+    maxHeight?: string
     onChange: (newValue: string) => void
     annotations?: jdspec.Diagnostic[]
     pullRequestTitle?: string
@@ -51,7 +52,8 @@ export default function HighlightTextField(props: {
         pullRequestTitle,
         pullRequestPath,
         pullRequestDescription,
-        minHeight,
+        minHeight = "12rem",
+        maxHeight,
         disabled,
     } = props
     const { darkMode } = useContext(DarkModeContext)
@@ -78,11 +80,11 @@ export default function HighlightTextField(props: {
                             spellCheck={false}
                             style={{
                                 ...style,
-                                ...{
-                                    minHeight: minHeight || "12rem",
-                                    whiteSpace: "pre-wrap",
-                                    overflowWrap: "break-word",
-                                },
+                                padding: "0.5rem",
+                                minHeight,
+                                maxHeight,
+                                whiteSpace: "pre-wrap",
+                                overflowWrap: "break-word",
                             }}
                         >
                             {tokens.map((line, i) => {
@@ -131,13 +133,20 @@ export default function HighlightTextField(props: {
             {!!annotations?.length && (
                 <Grid item xs={12}>
                     <Alert severity="error">
-                        <ul>
-                            {annotations.map((a, i) => (
-                                <li key={i}>
-                                    line {a.line}: {a.message}
-                                </li>
-                            ))}
-                        </ul>
+                        {annotations.length === 1 ? (
+                            <>
+                                line {annotations[0].line}:{" "}
+                                {annotations[0].message}
+                            </>
+                        ) : (
+                            <ul>
+                                {annotations.map((a, i) => (
+                                    <li key={i}>
+                                        line {a.line}: {a.message}
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                     </Alert>
                 </Grid>
             )}

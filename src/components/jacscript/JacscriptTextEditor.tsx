@@ -37,7 +37,7 @@ function JacscriptTextEditorWithContext() {
         }
     }, [script?.id])
 
-    const annotations = compiled?.errors?.map(
+    const annotations = compiled?.errors?.slice(0, 1)?.map(
         error =>
             ({
                 file: error.filename,
@@ -63,6 +63,8 @@ function JacscriptTextEditorWithContext() {
                     onChange={setSource}
                     annotations={annotations}
                     disabled={loading}
+                    minHeight="4rem"
+                    maxHeight="12rem"
                 />
             </Grid>
             <Grid item xs={12}>
