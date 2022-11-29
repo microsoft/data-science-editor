@@ -13,6 +13,7 @@ import {
     DEVICE_ANNOUNCE,
     DISCONNECT,
     SRV_JACSCRIPT_MANAGER,
+    SRV_ROLE_MANAGER,
 } from "../../../jacdac-ts/src/jdom/constants"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import useWindowEvent from "../hooks/useWindowEvent"
@@ -65,6 +66,13 @@ export function JacscriptProvider(props: { children: ReactNode }) {
         setVmUsed(x => x + 1)
         return () => setVmUsed(x => x - 1)
     }
+
+    useEffect(() => {
+        const roleManager = manager?.device?.services({
+            serviceClass: SRV_ROLE_MANAGER,
+        })?.[0]
+        bus.setRoleManagerService(roleManager)
+    }, [bus, manager])
 
     // automatically bind to first jacscript manager when a device comes online
     useEffect(
