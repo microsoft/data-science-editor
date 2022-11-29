@@ -15,7 +15,6 @@ import useWindowEvent from "../hooks/useWindowEvent"
 import { JSONTryParse } from "../../../jacdac-ts/src/jdom/utils"
 import JacscriptVMLoader from "./JacscriptVMLoader"
 import Suspense from "../ui/Suspense"
-import useSnackbar from "../hooks/useSnackbar"
 import { UIFlags } from "../../jacdac/providerbus"
 import { useDebounce } from "use-debounce"
 
@@ -43,7 +42,6 @@ JacscriptContext.displayName = "Jacscript"
 
 export function JacscriptProvider(props: { children: ReactNode }) {
     const { children } = props
-    const { enqueueSnackbar } = useSnackbar()
     const [source, setSource_] = useState<string>(undefined)
     const [compilePending, setCompilePending] = useState(false)
     const [compiled, setCompiled] = useState<JacscriptCompileResponse>()
