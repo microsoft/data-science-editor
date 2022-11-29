@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from "react"
-import { Alert, Grid, Typography } from "@mui/material"
+import { Grid } from "@mui/material"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import PlayArrowIcon from "@mui/icons-material/PlayArrow"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
@@ -17,8 +17,6 @@ import {
     useRegisterBoolValue,
     useRegisterUnpackedValue,
 } from "../../jacdac/useRegisterValue"
-import { prettySize, toHex } from "../../../jacdac-ts/src/jacdac"
-import Tooltip from "../ui/Tooltip"
 
 export default function DashboardJacscriptManager(
     props: DashboardServiceProps
@@ -32,36 +30,10 @@ export default function DashboardJacscriptManager(
     )
     const loggingRegister = useRegister(service, JacscriptManagerReg.Logging)
     const statusCodeRegister = useRegister(service, SystemReg.StatusCode)
-    const programSizeRegister = useRegister(
-        service,
-        JacscriptManagerReg.ProgramSize
-    )
-    const programHashRegister = useRegister(
-        service,
-        JacscriptManagerReg.ProgramHash
-    )
-    const programSha256Register = useRegister(
-        service,
-        JacscriptManagerReg.ProgramSha256
-    )
-
     const running = useRegisterBoolValue(runningRegister, rest)
     const autoStart = useRegisterBoolValue(autoStartRegister, rest)
     const logging = useRegisterBoolValue(loggingRegister, rest)
     const [statusCode] = useRegisterUnpackedValue(statusCodeRegister, rest)
-    const [programSize] = useRegisterUnpackedValue<[number]>(
-        programSizeRegister,
-        rest
-    )
-    const [programHash] = useRegisterUnpackedValue<[number]>(
-        programHashRegister,
-        rest
-    )
-    const [programSha256] = useRegisterUnpackedValue<[Uint8Array]>(
-        programSha256Register,
-        rest
-    )
-
     const disabled =
         statusCode === undefined ||
         statusCode === SystemStatusCodes.WaitingForInput
@@ -79,16 +51,6 @@ export default function DashboardJacscriptManager(
 
     return (
         <Grid container spacing={1}>
-            {programSize > 0 && (
-                <Grid item xs={12}>
-                    <Tooltip title={toHex(programSha256) || "no sha"}>
-                        <Typography variant="caption">
-                            {programHash?.toString(16) || "?"} (
-                            {prettySize(programSize)})
-                        </Typography>
-                    </Tooltip>
-                </Grid>
-            )}
             <Grid item xs={12}>
                 <CmdButton
                     disabled={disabled}
