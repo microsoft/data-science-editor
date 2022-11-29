@@ -1,5 +1,5 @@
 // bug fix: https://github.com/brianmcallister/react-auto-scroll/issues/37
-import React, { ReactNode, useEffect, useRef, useState } from "react"
+import React, { CSSProperties, ReactNode, useEffect, useRef } from "react"
 
 export default function AutoScroll(props: {
     className?: string
@@ -7,10 +7,13 @@ export default function AutoScroll(props: {
     height: string
     autoScroll?: boolean
     setAutoScroll?: (newValue: boolean) => void
+    style?: CSSProperties
 }) {
-    const { children, height, className, autoScroll, setAutoScroll } = props
+    const { children, height, className, autoScroll, setAutoScroll, style } =
+        props
     const containerElement = useRef<HTMLDivElement>(null)
-    const style = {
+    const css = {
+        ...(style || {}),
         height,
         overflow: "auto",
         scrollBehavior: "auto",
@@ -40,7 +43,7 @@ export default function AutoScroll(props: {
             className={className}
             onWheel={onWheel}
             ref={containerElement}
-            style={style}
+            style={css}
         >
             {children}
         </div>

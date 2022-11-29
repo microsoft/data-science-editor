@@ -1,23 +1,8 @@
-import React, { useEffect, useContext } from "react"
-import { styled } from "@mui/material/styles"
+import React, { useEffect, useContext, CSSProperties } from "react"
 import { Console, Hook, Unhook } from "console-feed"
 import ConsoleContext from "./ConsoleContext"
 import AutoScroll from "../ui/AutoScroll"
-
-const PREFIX = "ConsoleLog"
-
-const classes = {
-    root: `${PREFIX}root`,
-}
-
-const StyledAutoScroll = styled(AutoScroll)(() => ({
-    [`&.${classes.root}`]: {
-        backgroundColor: "#1d1d1d",
-        height: "calc(100vh - 11.05rem)",
-        fontWeight: "600",
-        minWidth: "22rem",
-    },
-}))
+import DarkModeContext from "../ui/DarkModeContext"
 
 export default function ConsoleLog(props: { hook?: boolean; height?: string }) {
     const { hook, height } = props
@@ -29,6 +14,7 @@ export default function ConsoleLog(props: { hook?: boolean; height?: string }) {
         autoScroll,
         setAutoScroll,
     } = useContext(ConsoleContext)
+    const { darkMode } = useContext(DarkModeContext)
 
     useEffect(() => {
         const hooked =
@@ -42,9 +28,18 @@ export default function ConsoleLog(props: { hook?: boolean; height?: string }) {
         }
     }, [hook])
 
+    if (!darkMode) return null
+
+    console.log({ darkMode })
+    const style: CSSProperties = {
+        backgroundColor: darkMode === "dark" ? "#1d1d1d" : "#fff",
+        height: "calc(100vh - 11.05rem)",
+        fontWeight: "600",
+        minWidth: "22rem",
+    }
     return (
-        <StyledAutoScroll
-            className={classes.root}
+        <AutoScroll
+            style={style}
             height={height || "calc(100vh - 11.05rem)"}
             autoScroll={autoScroll}
             setAutoScroll={setAutoScroll}
@@ -52,7 +47,7 @@ export default function ConsoleLog(props: { hook?: boolean; height?: string }) {
             <Console
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 logs={logs as any[]}
-                variant="dark"
+                variant={darkMode}
                 logGrouping={true}
                 filter={filter}
                 styles={{
@@ -68,6 +63,6 @@ export default function ConsoleLog(props: { hook?: boolean; height?: string }) {
                 }}
                 searchKeywords={searchKeywords}
             />
-        </StyledAutoScroll>
+        </AutoScroll>
     )
 }
