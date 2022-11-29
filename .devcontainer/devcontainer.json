@@ -49,12 +49,6 @@
                         "pull_requests": "write"
                     }
                 },
-                "microsoft/ml4f": {
-                    "permissions": {
-                        "contents": "write",
-                        "pull_requests": "write"
-                    }
-                },
                 "microsoft/gatsby-remark-makecode": {
                     "permissions": {
                         "contents": "write",
@@ -86,12 +80,6 @@
                     }
                 },
                 "microsoft/jacdac-dotnet": {
-                    "permissions": {
-                        "contents": "write",
-                        "pull_requests": "write"
-                    }
-                },
-                "microsoft/jacscript": {
                     "permissions": {
                         "contents": "write",
                         "pull_requests": "write"
