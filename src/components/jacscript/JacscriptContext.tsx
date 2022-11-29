@@ -9,7 +9,11 @@ import React, {
 import useEffectAsync from "../useEffectAsync"
 import { jacscriptCompile } from "../blockly/dsl/workers/jacscript.proxy"
 import type { JacscriptCompileResponse } from "../../workers/jacscript/jacscript-worker"
-import { DISCONNECT } from "../../../jacdac-ts/src/jdom/constants"
+import {
+    DEVICE_ANNOUNCE,
+    DISCONNECT,
+    SRV_JACSCRIPT_MANAGER,
+} from "../../../jacdac-ts/src/jdom/constants"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import useWindowEvent from "../hooks/useWindowEvent"
 import { JSONTryParse } from "../../../jacdac-ts/src/jdom/utils"
@@ -17,6 +21,8 @@ import JacscriptVMLoader from "./JacscriptVMLoader"
 import Suspense from "../ui/Suspense"
 import { UIFlags } from "../../jacdac/providerbus"
 import { useDebounce } from "use-debounce"
+import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
+import useBus from "../../jacdac/useBus"
 
 export interface JacscriptProps {
     source?: string
@@ -42,6 +48,7 @@ JacscriptContext.displayName = "Jacscript"
 
 export function JacscriptProvider(props: { children: ReactNode }) {
     const { children } = props
+    const bus = useBus()
     const [source, setSource_] = useState<string>(undefined)
     const [compilePending, setCompilePending] = useState(false)
     const [compiled, setCompiled] = useState<JacscriptCompileResponse>()
@@ -59,12 +66,27 @@ export function JacscriptProvider(props: { children: ReactNode }) {
         return () => setVmUsed(x => x - 1)
     }
 
+    // automatically bind to first jacscript manager when a device comes online
+    useEffect(
+        () =>
+            bus?.subscribe(DEVICE_ANNOUNCE, (device: JDDevice) => {
+                if (!manager) {
+                    const service = device.services({
+                        serviceClass: SRV_JACSCRIPT_MANAGER,
+                    })?.[0]
+                    setManager(service)
+                }
+            }),
+        [bus, manager]
+    )
+
     // unbind manager service if disconnected
     useEffect(
         () =>
             manager?.device?.subscribe(DISCONNECT, () => setManager(undefined)),
         [manager]
     )
+
     // if program changes, recompile
     useEffectAsync(async () => {
         const res = debouncedSource?.trim()
