@@ -59,8 +59,13 @@ class WorkerHost {
         this.logs += msg + "\n"
     }
     error(err: JacError) {
-        const { file, ...rest } = err
-        this.errors.push(rest)
+        console.log(err)
+        const { file, category, messageText, start, length } = err
+        this.errors.push({
+            filename: file.filename,
+            message: messageText,
+            line: 1,
+        })
     }
     getSpecs(): jdspec.ServiceSpec[] {
         return this.specs
