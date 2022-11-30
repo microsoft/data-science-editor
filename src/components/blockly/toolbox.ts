@@ -6,7 +6,7 @@ import {
     CompileEventToVMOptions,
     CompileEventToVMResult,
 } from "./dsl/dsl"
-import { CmdWithErrors } from "../jacscript/JacscriptGenerator"
+import { CmdWithErrors } from "../devicescript/JacscriptGenerator"
 import { JSONSchema4 } from "json-schema"
 
 export const NEW_PROJET_XML = '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>'

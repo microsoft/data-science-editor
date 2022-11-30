@@ -1,7 +1,7 @@
 import { styled } from "@mui/material/styles"
 import React from "react"
 import useChange from "../../../jacdac/useChange"
-import { jacscriptBridge } from "../dsl/workers/vm.proxy"
+import { deviceScriptBridge } from "../dsl/workers/vm.proxy"
 import { ReactFieldJSON } from "./ReactField"
 import ReactInlineField from "./ReactInlineField"
 
@@ -26,7 +26,7 @@ const Root = styled("div")(({ theme }) => ({
 }))
 
 function VariablesWidget() {
-    const bridge = jacscriptBridge()
+    const bridge = deviceScriptBridge()
     const variables = useChange(bridge, _ => _?.variables)
 
     if (!variables) return null

@@ -1,46 +1,45 @@
 importScripts(
-    "https://microsoft.github.io/jacscript/dist/jacscript-compiler.js"
+    "https://microsoft.github.io/devicescript/dist/devicescript-compiler.js"
 )
 
-const { compile } = (self as any).jacscript
+const { compile } = (self as any).deviceScript
 
-export type JacscriptDebugInfo = any
-export type JacscriptError = any
-export type JacError = any
+export type DeviceScriptDebugInfo = any
+export type DeviceScriptError = any
 
-export interface JacscriptMessage {
-    worker: "jacscript"
+export interface DeviceScriptMessage {
+    worker: "devicescript"
     id?: string
 }
 
-export interface JacscriptRequest extends JacscriptMessage {
+export interface DeviceScriptRequest extends DeviceScriptMessage {
     type: string
 }
 
-export interface JacscriptCompileRequest extends JacscriptRequest {
+export interface DeviceScriptCompileRequest extends DeviceScriptRequest {
     type: "compile"
     source: string
 }
 
-export interface JacscriptSpecsRequest extends JacscriptRequest {
+export interface DeviceScriptSpecsRequest extends DeviceScriptRequest {
     type: "specs"
     serviceSpecs: jdspec.ServiceSpec[]
 }
 
-export interface JacscriptCompileResponse extends JacscriptMessage {
+export interface DeviceScriptCompileResponse extends DeviceScriptMessage {
     success: boolean
     binary: Uint8Array
-    dbg: JacscriptDebugInfo
+    dbg: DeviceScriptDebugInfo
     clientSpecs: jdspec.ServiceSpec[]
     files: Record<string, Uint8Array | string>
     logs: string
-    errors: JacscriptError[]
+    errors: DeviceScriptError[]
 }
 
 class WorkerHost {
     files: Record<string, Uint8Array | string>
     logs: string
-    errors: JacError[]
+    errors: { filename: string; message: string; line: number }[]
 
     constructor(private specs: jdspec.ServiceSpec[]) {
         this.files = {}
@@ -58,7 +57,7 @@ class WorkerHost {
     log(msg: string): void {
         this.logs += msg + "\n"
     }
-    error(err: JacError) {
+    error(err: DeviceScriptError) {
         console.log(err)
         const { file, category, messageText, start, length } = err
         this.errors.push({
@@ -70,33 +69,33 @@ class WorkerHost {
     getSpecs(): jdspec.ServiceSpec[] {
         return this.specs
     }
-    verifyBytecode(buf: Uint8Array, dbg?: JacscriptDebugInfo): void {}
+    verifyBytecode(buf: Uint8Array, dbg?: DeviceScriptDebugInfo): void {}
 }
 
 let serviceSpecs: jdspec.ServiceSpec[]
 
 const handlers: { [index: string]: (props: any) => object | Promise<object> } =
     {
-        compile: async (props: JacscriptCompileRequest) => {
+        compile: async (props: DeviceScriptCompileRequest) => {
             const { source } = props
             if (!serviceSpecs) throw new Error("specs missing")
             const host = new WorkerHost(serviceSpecs)
             const res = compile(source, { host })
 
-            return <Partial<JacscriptCompileResponse>>{
+            return <Partial<DeviceScriptCompileResponse>>{
                 ...res,
                 files: host.files,
                 logs: host.logs,
                 errors: host.errors,
             }
         },
-        specs: async (props: JacscriptSpecsRequest) => {
+        specs: async (props: DeviceScriptSpecsRequest) => {
             serviceSpecs = props.serviceSpecs
             return {}
         },
     }
 
-function processMessage(message: JacscriptRequest): any {
+function processMessage(message: DeviceScriptRequest): any {
     try {
         const handler = handlers[message.type]
         return handler?.(message)
@@ -107,10 +106,10 @@ function processMessage(message: JacscriptRequest): any {
 }
 
 async function handleMessage(event: MessageEvent) {
-    const message: JacscriptRequest = event.data
+    const message: DeviceScriptRequest = event.data
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, worker, type, ...rest } = message
-    if (worker !== "jacscript") return
+    if (worker !== "devicescript") return
 
     try {
         const result = await processMessage(message)
@@ -119,7 +118,7 @@ async function handleMessage(event: MessageEvent) {
             self.postMessage(resp)
         }
     } catch (e) {
-        console.debug(`jacscript: error ${e + ""}`, e)
+        console.debug(`devicescript: error ${e + ""}`, e)
         self.postMessage({
             id,
             type,
@@ -130,4 +129,4 @@ async function handleMessage(event: MessageEvent) {
 }
 
 self.addEventListener("message", handleMessage)
-console.debug(`jacscript: worker registered`)
+console.debug(`devicescript: worker registered`)

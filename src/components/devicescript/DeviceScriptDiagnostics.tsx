@@ -1,16 +1,16 @@
 import React from "react"
 import CodeBlock from "../CodeBlock"
-import useJacscript from "./JacscriptContext"
+import useDeviceScript from "./DeviceScriptContext"
 
-export default function JacscriptDiagnostics() {
-    const { source, compiled } = useJacscript()
+export default function DeviceScriptDiagnostics() {
+    const { source, compiled } = useDeviceScript()
     const { logs, errors } = compiled || {}
     return (
         <>
             <h3>Jacscript</h3>
             <CodeBlock
                 className="javascript"
-                downloadName={"test.jcs.json"}
+                downloadName={"test.devs.json"}
                 downloadText={source}
             >
                 {source || ""}

@@ -19,7 +19,7 @@ import { addDataPreviewField } from "./fields/DataPreviewField"
 import { WorkspaceJSON } from "./dsl/workspacejson"
 import useAsyncMemo from "../hooks/useAsyncMemo"
 import { dependencyId } from "../../../jacdac-ts/src/jdom/eventsource"
-import useJacscript from "../jacscript/JacscriptContext"
+import useDeviceScript from "../devicescript/DeviceScriptContext"
 import { isSupportedInBlocks } from "./dsl/servicesbase"
 
 // overrides blockly emboss filter for svg elements
@@ -110,7 +110,7 @@ export default function useToolbox(
     const liveServices = useServices({ specification: true }).filter(srv =>
         isSupportedInBlocks(srv.specification)
     )
-    const { clientSpecs } = useJacscript()
+    const { clientSpecs } = useDeviceScript()
     const theme = useTheme()
 
     const blocks = useAsyncMemo(async () => {

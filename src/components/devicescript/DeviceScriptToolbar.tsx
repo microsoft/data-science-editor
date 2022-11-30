@@ -1,4 +1,4 @@
-import JacscriptManagerChipItems from "./JacscriptManagerChipItems"
+import DeviceScriptManagerChipItems from "./DeviceScriptManagerChipItems"
 import RolesToolbar from "../roles/RolesToolbar"
 import React from "react"
 import {
@@ -8,7 +8,7 @@ import {
 import useBus from "../../jacdac/useBus"
 import { resolveRoleService, Role } from "../../../jacdac-ts/src/jacdac"
 
-export default function JacscriptToolbar() {
+export default function DeviceScriptToolbar() {
     const bus = useBus()
 
     // start role on demand
@@ -27,7 +27,7 @@ export default function JacscriptToolbar() {
 
     return (
         <RolesToolbar onRoleClick={handleRoleClick}>
-            <JacscriptManagerChipItems />
+            <DeviceScriptManagerChipItems />
         </RolesToolbar>
     )
 }

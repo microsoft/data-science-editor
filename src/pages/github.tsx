@@ -113,6 +113,11 @@ export default function Page() {
                         href: "https://github.com/microsoft/jacdac-ts",
                     },
                     {
+                        title: "microsoft/devicescript",
+                        description: "DeviceScript compiler and runtime",
+                        href: "https://github.com/microsoft/devicescript",
+                    },
+                    {
                         title: "microsoft/jacdac-dotnet",
                         description: ".NET (desktop, nano, tiny) library",
                         href: "https://github.com/microsoft/jacdac-dotnet",

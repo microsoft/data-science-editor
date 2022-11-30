@@ -13,7 +13,7 @@ import {
 import {
     CmdWithErrors,
     ExpressionWithErrors,
-} from "../../jacscript/JacscriptGenerator"
+} from "../../devicescript/JacscriptGenerator"
 import { BlockJSON, WorkspaceFile, WorkspaceJSON } from "./workspacejson"
 
 export interface CreateBlocksOptions {

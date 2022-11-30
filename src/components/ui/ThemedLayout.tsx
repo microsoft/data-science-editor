@@ -21,7 +21,7 @@ import { SimulatorDialogsProvider } from "../SimulatorsDialogContext"
 import { CommandPaletteProvider } from "../commands/CommandPaletteContext"
 import { YouTubeProvider } from "../youtube/YouTubeContext"
 import { BrainManagerProvider } from "../brains/BrainManagerContext"
-import { JacscriptProvider } from "../jacscript/JacscriptContext"
+import { DeviceScriptProvider } from "../devicescript/DeviceScriptContext"
 
 /*
 declare module "@mui/styles/defaultTheme" {
@@ -49,7 +49,7 @@ export default function ThemedLayout(props: {
                                             <ServiceManagerProvider>
                                                 <PacketsProvider>
                                                     <AppProvider>
-                                                        <JacscriptProvider>
+                                                        <DeviceScriptProvider>
                                                             <YouTubeProvider>
                                                                 <CommandPaletteProvider>
                                                                     <SimulatorDialogsProvider>
@@ -67,7 +67,7 @@ export default function ThemedLayout(props: {
                                                                     </SimulatorDialogsProvider>
                                                                 </CommandPaletteProvider>
                                                             </YouTubeProvider>
-                                                        </JacscriptProvider>
+                                                        </DeviceScriptProvider>
                                                     </AppProvider>
                                                 </PacketsProvider>
                                             </ServiceManagerProvider>

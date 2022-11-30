@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useRef } from "react"
 import {
-    JacscriptManagerCmd,
-    SRV_JACSCRIPT_MANAGER,
+    DeviceScriptManagerCmd,
+    SRV_DEVICE_SCRIPT_MANAGER,
 } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import { OutPipe } from "../../../jacdac-ts/src/jdom/pipes"
-import { startJacscriptVM } from "../blockly/dsl/workers/vm.proxy"
+import { startDeviceScriptVM } from "../blockly/dsl/workers/vm.proxy"
 import useServices from "../hooks/useServices"
 import useWindowEvent from "../hooks/useWindowEvent"
 
@@ -12,15 +12,15 @@ import useWindowEvent from "../hooks/useWindowEvent"
  * Ensures that at least one jacscript VM is running
  * @returns
  */
-export default function JacscriptVMLoader() {
-    const managers = useServices({ serviceClass: SRV_JACSCRIPT_MANAGER })
+export default function DeviceScriptVMLoader() {
+    const managers = useServices({ serviceClass: SRV_DEVICE_SCRIPT_MANAGER })
     const manager = managers[0]
     const vmCleanup = useRef<() => void>()
 
     // ensure a single vm is running
     useEffect(() => {
         if (managers.length === 0 && !vmCleanup.current) {
-            vmCleanup.current = startJacscriptVM()
+            vmCleanup.current = startDeviceScriptVM()
         } else if (managers.length > 1) {
             vmCleanup.current?.()
             vmCleanup.current = undefined
@@ -39,7 +39,7 @@ export default function JacscriptVMLoader() {
                 const bytecode = data.data
                 await OutPipe.sendBytes(
                     manager,
-                    JacscriptManagerCmd.DeployBytecode,
+                    DeviceScriptManagerCmd.DeployBytecode,
                     bytecode
                 )
             }

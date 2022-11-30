@@ -1,0 +1,9 @@
+{
+  "name": "devicescript-worker",
+  "type": "module",
+  "source": "devicescript-worker.ts",
+  "main": "./dist/node_modules/devicescript-worker.umd.js",
+  "module": "./dist/node_modules/devicescript-worker.cjs.js",
+  "exports": "./dist/node_modules/devicescript-worker.js",
+  "license": "MIT"
+}

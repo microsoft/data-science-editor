@@ -8,7 +8,7 @@ import {
     SeparatorDefinition,
     ValueInputDefinition,
 } from "../toolbox"
-import { makeVMBase, processErrors } from "../../jacscript/JacscriptGenerator"
+import { makeVMBase, processErrors } from "../../devicescript/JacscriptGenerator"
 import BlockDomainSpecificLanguage from "./dsl"
 import { paletteColorByIndex } from "./palette"
 

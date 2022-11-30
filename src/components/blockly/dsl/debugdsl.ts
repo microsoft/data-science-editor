@@ -1,5 +1,5 @@
 import jsep from "jsep"
-import { makeVMBase } from "../../jacscript/JacscriptGenerator"
+import { makeVMBase } from "../../devicescript/JacscriptGenerator"
 import ConsoleField from "../fields/ConsoleField"
 import VariablesField from "../fields/VariablesFields"
 import VideoPlayerField from "../fields/VideoPlayerField"

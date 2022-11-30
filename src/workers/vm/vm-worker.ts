@@ -1,4 +1,6 @@
-importScripts("https://microsoft.github.io/jacscript/dist/jacscript-vm.js")
+importScripts(
+    "https://microsoft.github.io/devicescript/dist/devicescript-vm.js"
+)
 
 export interface VMMessage {
     worker: "vm"
@@ -25,7 +27,7 @@ export interface VMPacketRequest extends VMMessage {
     data: Uint8Array
 }
 
-declare let Module: any;
+declare let Module: any
 
 console.log(Module)
 
@@ -85,7 +87,7 @@ async function handleMessage(event: MessageEvent) {
             self.postMessage(resp)
         }
     } catch (e) {
-        console.debug(`jdvm worker: error ${e + ""}`, e)
+        console.debug(`devicescript vm: error ${e + ""}`, e)
         self.postMessage({
             id,
             type,
@@ -96,4 +98,4 @@ async function handleMessage(event: MessageEvent) {
 }
 
 self.addEventListener("message", handleMessage)
-console.debug(`jacdac vm: worker registered`)
+console.debug(`devicescript vm: worker registered`)

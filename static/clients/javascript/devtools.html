@@ -86,7 +86,7 @@
                 const href = window.location.href
                 const search = new URL(window.location.href).searchParams
                 const localhost = !!search.get("localhost")
-                const jacscript = !!search.get("jacscript")
+                const devicescript = !!search.get("devicescript")
                 const simulators = search.get("simulators")
                 urlinput.value = localStorage["jacdac/devtools/url"] || ""
 
@@ -98,9 +98,9 @@
                         sel.appendChild(opt)
                     })
                 }
-                if (jacscript) {
+                if (devicescript) {
                     for (const child of selectLeft.querySelectorAll("option"))
-                        child.value += `${/\?/.test(child.value) ? "&" : "?"}jacscript=1`
+                        child.value += `${/\?/.test(child.value) ? "&" : "?"}devicescript=1`
                 }
                 if (simulators) {
                     for (const child of selectLeft.querySelectorAll("option"))

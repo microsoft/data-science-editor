@@ -1,9 +1,9 @@
 import { serviceSpecifications } from "../../../../../jacdac-ts/src/jdom/spec"
 import type {
-    JacscriptCompileRequest,
-    JacscriptCompileResponse,
-    JacscriptSpecsRequest,
-} from "../../../../workers/jacscript/jacscript-worker"
+    DeviceScriptCompileRequest,
+    DeviceScriptCompileResponse,
+    DeviceScriptSpecsRequest,
+} from "../../../../workers/devicescript/devicescript-worker"
 import workerProxy from "./proxy"
 
 let specsSent = false
@@ -13,24 +13,24 @@ let specsSent = false
  * @param source
  * @returns
  */
-export async function jacscriptCompile(
+export async function deviceScriptCompile(
     source: string
     // eslint-disable-next-line @typescript-eslint/ban-types
-): Promise<JacscriptCompileResponse> {
-    const worker = workerProxy("jacscript")
+): Promise<DeviceScriptCompileResponse> {
+    const worker = workerProxy("devicescript")
     if (!specsSent) {
-        await worker.postMessage<JacscriptSpecsRequest, {}>({
-            worker: "jacscript",
+        await worker.postMessage<DeviceScriptSpecsRequest, {}>({
+            worker: "devicescript",
             type: "specs",
             serviceSpecs: serviceSpecifications(),
         })
         specsSent = true
     }
     const res = await worker.postMessage<
-        JacscriptCompileRequest,
-        JacscriptCompileResponse
+        DeviceScriptCompileRequest,
+        DeviceScriptCompileResponse
     >({
-        worker: "jacscript",
+        worker: "devicescript",
         type: "compile",
         source,
     })

@@ -31,7 +31,7 @@ export default function Page() {
             <Dashboard
                 showAvatar={true}
                 showHeader={true}
-                showJacscript={true}
+                showDeviceScript={true}
                 showConnect={UIFlags.connect}
                 showStartSimulators={true}
                 showStartRoleSimulators={true}

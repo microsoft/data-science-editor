@@ -1,5 +1,5 @@
 import jsep from "jsep"
-import { ExpressionWithErrors } from "../../jacscript/JacscriptGenerator"
+import { ExpressionWithErrors } from "../../devicescript/JacscriptGenerator"
 import BlockDomainSpecificLanguage from "./dsl"
 
 const ops = {

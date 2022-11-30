@@ -18,9 +18,9 @@ import { defaultDeviceFilter, defaultDeviceSort } from "./filters"
 import useHostedSimulators from "../HostedSimulatorsContext"
 import StartMissingSimulatorsButton from "../buttons/StartMissingSimulatorsButton"
 import useBusWithMode from "../../jacdac/useBusWithMode"
-import useJacscript from "../jacscript/JacscriptContext"
+import useDeviceScript from "../devicescript/DeviceScriptContext"
 import Suspense from "../ui/Suspense"
-const JacscriptToolbar = lazy(() => import("../jacscript/JacscriptToolbar"))
+const DeviceScriptToolbar = lazy(() => import("../devicescript/DeviceScriptToolbar"))
 
 export interface DashboardDeviceProps {
     showHeader?: boolean
@@ -41,7 +41,7 @@ export interface DashboardProps extends DashboardDeviceProps {
     showStartSimulators?: boolean
     showStartRoleSimulators?: boolean
     showConnect?: boolean
-    showJacscript?: boolean
+    showDeviceScript?: boolean
     deviceFilter?: (d: JDDevice) => boolean
     deviceSort?: (l: JDDevice, r: JDDevice) => number
 }
@@ -58,12 +58,12 @@ export default function Dashboard(props: DashboardProps) {
         showSimulatorAvatar,
         showDeviceHeader,
         showDeviceAvatar,
-        showJacscript,
+        showDeviceScript,
         deviceSort = defaultDeviceSort,
         deviceFilter = defaultDeviceFilter,
         ...other
     } = props
-    const { source: jacscriptSource } = useJacscript()
+    const { source: jacscriptSource } = useDeviceScript()
     const bus = useBusWithMode({ autoConnect: true })
     const { isHostedSimulator, clearHostedSimulators } = useHostedSimulators()
     const devices = useDevices({
@@ -85,9 +85,9 @@ export default function Dashboard(props: DashboardProps) {
 
     return (
         <>
-            {showJacscript && jacscriptSource !== undefined && (
+            {showDeviceScript && jacscriptSource !== undefined && (
                 <Suspense>
-                    <JacscriptToolbar />
+                    <DeviceScriptToolbar />
                 </Suspense>
             )}
             {!hideSimulators && (

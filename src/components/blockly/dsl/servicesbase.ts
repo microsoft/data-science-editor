@@ -13,8 +13,8 @@ import {
     SRV_DASHBOARD,
     SRV_GAMEPAD,
     SRV_INFRASTRUCTURE,
-    SRV_JACSCRIPT_CONDITION,
-    SRV_JACSCRIPT_MANAGER,
+    SRV_DEVICE_SCRIPT_CONDITION,
+    SRV_DEVICE_SCRIPT_MANAGER,
     SRV_LOGGER,
     SRV_PROTO_TEST,
     SRV_PROXY,
@@ -69,7 +69,7 @@ import {
 import {
     ExpressionWithErrors,
     makeVMBase,
-} from "../../jacscript/JacscriptGenerator"
+} from "../../devicescript/JacscriptGenerator"
 import {
     CompileCommandToVMOptions,
     CompileEventToVMOptions,
@@ -121,8 +121,8 @@ const ignoredServices = [
     SRV_DASHBOARD,
     SRV_PROXY,
     SRV_UNIQUE_BRAIN,
-    SRV_JACSCRIPT_CONDITION,
-    SRV_JACSCRIPT_MANAGER,
+    SRV_DEVICE_SCRIPT_CONDITION,
+    SRV_DEVICE_SCRIPT_MANAGER,
 ]
 
 const customMessages = [

@@ -5,13 +5,13 @@ import BlockContext from "../blockly/BlockContext"
 import useChange from "../../jacdac/useChange"
 import { BrainScript } from "./braindom"
 import CmdButton from "../CmdButton"
-import useJacscript from "../jacscript/JacscriptContext"
+import useDeviceScript from "../devicescript/DeviceScriptContext"
 import { toHex } from "../../../jacdac-ts/src/jdom/utils"
 
 function SaveScriptButton(props: { script: BrainScript; name: string }) {
     const { script, name } = props
     const { workspaceSaved } = useContext(BlockContext)
-    const { source, compiled } = useJacscript()
+    const { source, compiled } = useDeviceScript()
 
     const sourceBlocks = useChange(script, _ => _.sourceBlocks)
     const ws = JSON.stringify(workspaceSaved)

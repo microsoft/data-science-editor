@@ -9,7 +9,7 @@ import { CHANGE, MESSAGE } from "../../../../../jacdac-ts/src/jdom/constants"
 import { JDBridge } from "../../../../../jacdac-ts/src/jdom/bridge"
 import bus from "../../../../jacdac/providerbus"
 
-class JacscriptBridge extends JDBridge {
+class DeviceScriptBridge extends JDBridge {
     refs = 0
     state: VMState = "stopped"
     variables: Record<string, number>
@@ -55,12 +55,12 @@ class JacscriptBridge extends JDBridge {
     }
 }
 
-let bridge: JacscriptBridge
-export function startJacscriptVM(): () => void {
+let bridge: DeviceScriptBridge
+export function startDeviceScriptVM(): () => void {
     let b = bridge
     if (!bridge) {
         const worker = workerProxy("vm")
-        b = bridge = new JacscriptBridge(worker)
+        b = bridge = new DeviceScriptBridge(worker)
         b.bus = bus
     }
     b.refs++
@@ -74,9 +74,9 @@ export function startJacscriptVM(): () => void {
 }
 
 /**
- * Gets the current jacscript bridge; make sure it is started, do not keep a reference
+ * Gets the current DeviceScript bridge; make sure it is started, do not keep a reference
  * @returns
  */
-export function jacscriptBridge() {
+export function deviceScriptBridge() {
     return bridge
 }

@@ -6,10 +6,10 @@ import { assert, SMap } from "../../../../../jacdac-ts/src/jdom/utils"
 import createCsvWorker from "../../../../workers/csv/workerloader"
 import createDataWorker from "../../../../workers/data/workerloader"
 import createVMWorker from "../../../../workers/vm/workerloader"
-import createJacscriptWorker from "../../../../workers/jacscript/workerloader"
+import createDeviceScriptWorker from "../../../../workers/devicescript/workerloader"
 import createCadWorker from "../../../../workers/cad/workerloader"
 
-export type VMType = "data" | "csv" | "tf" | "vm" | "cad" | "jacscript"
+export type VMType = "data" | "csv" | "tf" | "vm" | "cad" | "devicescript"
 
 export interface WorkerMessage {
     worker: VMType
@@ -76,7 +76,7 @@ const loaders = {
     csv: createCsvWorker,
     vm: createVMWorker,
     cad: createCadWorker,
-    jacscript: createJacscriptWorker,
+    devicescript: createDeviceScriptWorker,
 }
 export default function workerProxy(workerid: VMType) {
     const worker =

@@ -9,8 +9,8 @@ import {
     LoggerCmd,
     LoggerPriority,
     SRV_LOGGER,
-    SRV_JACSCRIPT_MANAGER,
-    JacscriptManagerCmd,
+    SRV_DEVICE_SCRIPT_MANAGER,
+    DeviceScriptManagerCmd,
 } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import { PACKET_REPORT } from "../../../jacdac-ts/src/jdom/constants"
 import { Packet } from "../../../jacdac-ts/src/jdom/packet"
@@ -123,9 +123,9 @@ function useJacscriptManagerLogger(appendLog: (log: Message) => void) {
         () =>
             bus.subscribe(PACKET_REPORT, (pkt: Packet) => {
                 if (
-                    pkt.serviceClass === SRV_JACSCRIPT_MANAGER &&
+                    pkt.serviceClass === SRV_DEVICE_SCRIPT_MANAGER &&
                     pkt.isReport &&
-                    pkt.serviceCommand === JacscriptManagerCmd.LogMessage
+                    pkt.serviceCommand === DeviceScriptManagerCmd.LogMessage
                 ) {
                     const { device } = pkt
                     const { shortId } = device

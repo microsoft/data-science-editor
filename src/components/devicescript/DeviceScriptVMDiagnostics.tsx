@@ -3,7 +3,7 @@ import React from "react"
 import { VMProgram } from "../../../jacdac-ts/src/vm/ir"
 import CodeBlock from "../CodeBlock"
 
-export default function VMDiagnostics(props: { program: VMProgram }) {
+export default function DeviceScriptVMDiagnostics(props: { program: VMProgram }) {
     const { program } = props
     return (
         <Grid item xs={12}>

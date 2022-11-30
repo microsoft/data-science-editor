@@ -43,7 +43,7 @@ import {
     SRV_RELAY,
     SRV_LIGHT_BULB,
     SRV_BRAILLE_DISPLAY,
-    SRV_JACSCRIPT_MANAGER,
+    SRV_DEVICE_SCRIPT_MANAGER,
     SRV_HID_JOYSTICK,
     SRV_CLOUD_ADAPTER,
     SRV_SAT_NAV,
@@ -116,8 +116,8 @@ const DashboardCODALMessageBus = lazy(
 )
 const DashboardRelay = lazy(() => import("./DashboardRelay"))
 const DashboardLightBulb = lazy(() => import("./DashboardLightBulb"))
-const DashboardJacscriptManager = lazy(
-    () => import("./DashboardJacscriptManager")
+const DashboardDeviceScriptManager = lazy(
+    () => import("./DashboardDeviceScriptManager")
 )
 const DashboardCloudAdapter = lazy(() => import("./DashboardCloudAdapter"))
 const DashboardPlanarPosition = lazy(() => import("./DashboardPlanarPosition"))
@@ -350,8 +350,8 @@ const serviceViews: {
         component: DashboardPlanarPosition,
         weight: () => 1,
     },
-    [SRV_JACSCRIPT_MANAGER]: {
-        component: DashboardJacscriptManager,
+    [SRV_DEVICE_SCRIPT_MANAGER]: {
+        component: DashboardDeviceScriptManager,
         expandable: true,
         icon: MemoryIcon,
     },

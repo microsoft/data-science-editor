@@ -10,7 +10,7 @@ import { SystemStatusCodes } from "../../../jacdac-ts/jacdac-spec/dist/specconst
 import SwitchWithLabel from "../ui/SwitchWithLabel"
 import useRegister from "../hooks/useRegister"
 import {
-    JacscriptManagerReg,
+    DeviceScriptManagerReg,
     SystemReg,
 } from "../../../jacdac-ts/src/jdom/constants"
 import {
@@ -18,17 +18,17 @@ import {
     useRegisterUnpackedValue,
 } from "../../jacdac/useRegisterValue"
 
-export default function DashboardJacscriptManager(
+export default function DashboardDeviceScriptManager(
     props: DashboardServiceProps
 ) {
     const { service, expanded, ...rest } = props
 
-    const runningRegister = useRegister(service, JacscriptManagerReg.Running)
+    const runningRegister = useRegister(service, DeviceScriptManagerReg.Running)
     const autoStartRegister = useRegister(
         service,
-        JacscriptManagerReg.Autostart
+        DeviceScriptManagerReg.Autostart
     )
-    const loggingRegister = useRegister(service, JacscriptManagerReg.Logging)
+    const loggingRegister = useRegister(service, DeviceScriptManagerReg.Logging)
     const statusCodeRegister = useRegister(service, SystemReg.StatusCode)
     const running = useRegisterBoolValue(runningRegister, rest)
     const autoStart = useRegisterBoolValue(autoStartRegister, rest)

@@ -1,25 +1,25 @@
 import React, { useContext, useState, lazy } from "react"
 import { Grid, NoSsr } from "@mui/material"
 import HighlightTextField from "../ui/HighlightTextField"
-import useJacscript from "./JacscriptContext"
+import useDeviceScript from "./DeviceScriptContext"
 import BrainManagerToolbar from "../brains/BrainManagerToolbar"
 import BrainManagerContext from "../brains/BrainManagerContext"
 import useBrainScript from "../brains/useBrainScript"
 import useEffectAsync from "../useEffectAsync"
 import Suspense from "../ui/Suspense"
-import useJacscriptVm from "./useJacscriptVm"
-import JacscriptToolbar from "./JacscriptToolbar"
+import useDeviceScriptVm from "./useDeviceScriptVm"
+import DeviceScriptToolbar from "./DeviceScriptToolbar"
 import GridHeader from "../ui/GridHeader"
 const Console = lazy(() => import("../console/Console"))
 const Dashboard = lazy(() => import("../dashboard/Dashboard"))
 
-function JacscriptTextEditorWithContext() {
-    const { source, setSource, compiled } = useJacscript()
+function DeviceScriptTextEditorWithContext() {
+    const { source, setSource, compiled } = useDeviceScript()
     const { scriptId } = useContext(BrainManagerContext)
     const script = useBrainScript(scriptId)
     const [loading, setLoading] = useState(false)
 
-    useJacscriptVm()
+    useDeviceScriptVm()
 
     // load script
     useEffectAsync(async () => {
@@ -56,7 +56,7 @@ function JacscriptTextEditorWithContext() {
                 </Grid>
             )}
             <Grid item xs={12}>
-                <JacscriptToolbar />
+                <DeviceScriptToolbar />
             </Grid>
             <Grid item xs={12}>
                 <HighlightTextField
@@ -100,10 +100,10 @@ function JacscriptTextEditorWithContext() {
     )
 }
 
-export default function JacscriptTextEditor() {
+export default function DeviceScriptTextEditor() {
     return (
         <NoSsr>
-            <JacscriptTextEditorWithContext />
+            <DeviceScriptTextEditorWithContext />
         </NoSsr>
     )
 }

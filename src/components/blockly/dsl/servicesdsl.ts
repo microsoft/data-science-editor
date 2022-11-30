@@ -52,7 +52,7 @@ import {
     toIdentifier,
     toMemberExpression,
 } from "../../../../jacdac-ts/src/vm/compile"
-import { makeVMBase } from "../../jacscript/JacscriptGenerator"
+import { makeVMBase } from "../../devicescript/JacscriptGenerator"
 import { arrayConcatMany, toMap } from "../../../../jacdac-ts/src/jdom/utils"
 
 const INSPECT_BLOCK = "jacdac_tools_inspect"

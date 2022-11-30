@@ -7,36 +7,36 @@ import React, {
     useState,
 } from "react"
 import useEffectAsync from "../useEffectAsync"
-import { jacscriptCompile } from "../blockly/dsl/workers/jacscript.proxy"
-import type { JacscriptCompileResponse } from "../../workers/jacscript/jacscript-worker"
+import { deviceScriptCompile } from "../blockly/dsl/workers/devicescript.proxy"
+import type { DeviceScriptCompileResponse } from "../../workers/devicescript/devicescript-worker"
 import {
     DEVICE_ANNOUNCE,
     DISCONNECT,
-    SRV_JACSCRIPT_MANAGER,
+    SRV_DEVICE_SCRIPT_MANAGER,
     SRV_ROLE_MANAGER,
 } from "../../../jacdac-ts/src/jdom/constants"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import useWindowEvent from "../hooks/useWindowEvent"
 import { JSONTryParse } from "../../../jacdac-ts/src/jdom/utils"
-import JacscriptVMLoader from "./JacscriptVMLoader"
+import DeviceScriptVMLoader from "./DeviceScriptVMLoader"
 import Suspense from "../ui/Suspense"
 import { UIFlags } from "../../jacdac/providerbus"
 import { useDebounce } from "use-debounce"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import useBus from "../../jacdac/useBus"
 
-export interface JacscriptProps {
+export interface DeviceScriptProps {
     source?: string
     setSource: (program: string) => void
     compilePending?: boolean
-    compiled?: JacscriptCompileResponse
+    compiled?: DeviceScriptCompileResponse
     clientSpecs?: jdspec.ServiceSpec[]
     manager?: JDService
     setManager: (manager: JDService) => void
     acquireVm: () => () => void
 }
 
-export const JacscriptContext = createContext<JacscriptProps>({
+export const DeviceScriptContext = createContext<DeviceScriptProps>({
     source: undefined,
     setSource: () => {},
     compiled: undefined,
@@ -45,17 +45,17 @@ export const JacscriptContext = createContext<JacscriptProps>({
     setManager: () => {},
     acquireVm: () => () => {},
 })
-JacscriptContext.displayName = "Jacscript"
+DeviceScriptContext.displayName = "DeviceScript"
 
-export function JacscriptProvider(props: { children: ReactNode }) {
+export function DeviceScriptProvider(props: { children: ReactNode }) {
     const { children } = props
     const bus = useBus()
     const [source, setSource_] = useState<string>(undefined)
     const [compilePending, setCompilePending] = useState(false)
-    const [compiled, setCompiled] = useState<JacscriptCompileResponse>()
+    const [compiled, setCompiled] = useState<DeviceScriptCompileResponse>()
     const [manager, setManager] = useState<JDService>(undefined)
     const [vmUsed, setVmUsed] = useState(0)
-    const jacscript = !!UIFlags.jacscriptvm
+    const devicescriptvm = !!UIFlags.devicescriptvm
     const [debouncedSource] = useDebounce(source, 1000)
 
     // keep track of source without re-render
@@ -80,7 +80,7 @@ export function JacscriptProvider(props: { children: ReactNode }) {
             bus?.subscribe(DEVICE_ANNOUNCE, (device: JDDevice) => {
                 if (!manager) {
                     const service = device.services({
-                        serviceClass: SRV_JACSCRIPT_MANAGER,
+                        serviceClass: SRV_DEVICE_SCRIPT_MANAGER,
                     })?.[0]
                     setManager(service)
                 }
@@ -98,7 +98,7 @@ export function JacscriptProvider(props: { children: ReactNode }) {
     // if program changes, recompile
     useEffectAsync(async () => {
         const res = debouncedSource?.trim()
-            ? await jacscriptCompile(debouncedSource)
+            ? await deviceScriptCompile(debouncedSource)
             : undefined
         setCompiled(res)
         setCompilePending(false)
@@ -120,7 +120,7 @@ export function JacscriptProvider(props: { children: ReactNode }) {
                 const mdata = JSONTryParse(data) as any
                 if (
                     mdata &&
-                    mdata.channel === "jacscript" &&
+                    mdata.channel === "devicescript" &&
                     mdata.type === "source"
                 ) {
                     const msgSource = mdata.source
@@ -137,7 +137,7 @@ export function JacscriptProvider(props: { children: ReactNode }) {
     )
 
     return (
-        <JacscriptContext.Provider
+        <DeviceScriptContext.Provider
             value={{
                 source,
                 setSource,
@@ -149,17 +149,17 @@ export function JacscriptProvider(props: { children: ReactNode }) {
             }}
         >
             {children}
-            {!!(jacscript || vmUsed) && (
+            {!!(devicescriptvm || vmUsed) && (
                 <Suspense>
-                    <JacscriptVMLoader />
+                    <DeviceScriptVMLoader />
                 </Suspense>
             )}
-        </JacscriptContext.Provider>
+        </DeviceScriptContext.Provider>
     )
 }
 
-export default function useJacscript(): JacscriptProps {
-    const res = useContext<JacscriptProps>(JacscriptContext)
+export default function useDeviceScript(): DeviceScriptProps {
+    const res = useContext<DeviceScriptProps>(DeviceScriptContext)
     return (
         res || {
             setSource: () => {},

@@ -1,5 +1,5 @@
 import jsep from "jsep"
-import { ExpressionWithErrors } from "../../jacscript/JacscriptGenerator"
+import { ExpressionWithErrors } from "../../devicescript/JacscriptGenerator"
 import {
     BlockReference,
     CategoryDefinition,

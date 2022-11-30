@@ -62,7 +62,7 @@ export interface HostedSimulatorDefinition {
     url: string
     width: string
     height: string
-    requiresJacscript?: boolean
+    requiresDeviceScript?: boolean
 }
 
 interface HostedSimulator {
@@ -109,7 +109,7 @@ export function hostedSimulatorDefinitions(): HostedSimulatorDefinition[] {
             url: "https://microsoft.github.io/pxt-jacdac/?tool=microbit-microcode-servers",
             width: "20rem",
             height: "17.5rem",
-            requiresJacscript: true,
+            requiresDeviceScript: true,
         },
         {
             id: "azureiotuploader",
