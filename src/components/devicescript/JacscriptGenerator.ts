@@ -6,8 +6,8 @@ import {
     VMRole,
     VMIfThenElse,
     VMError,
-} from "../../../jacdac-ts/src/vm/ir"
-import { RoleEvent, toIdentifier } from "../../../jacdac-ts/src/vm/compile"
+} from "./vm/ir"
+import { RoleEvent, toIdentifier } from "./vm/compile"
 import {
     BUILTIN_TYPES,
     resolveBlockDefinition,
@@ -17,7 +17,6 @@ import Blockly from "blockly"
 import BlockDomainSpecificLanguage, { resolveDsl } from "../blockly/dsl/dsl"
 import { parseRoleType } from "../blockly/dsl/servicesbase"
 import { BlockJSON, WorkspaceJSON } from "../blockly/dsl/workspacejson"
-import { splitFilter } from "../../../jacdac-ts/src/jdom/utils"
 
 export interface ExpressionWithErrors {
     expr: jsep.Expression

@@ -2,8 +2,8 @@ import jsep from "jsep"
 import { Theme } from "@mui/material"
 import Blockly, { Block, Workspace, WorkspaceSvg } from "blockly"
 import { JDService } from "../../../../jacdac-ts/src/jdom/service"
-import { RoleEvent } from "../../../../jacdac-ts/src/vm/compile"
-import { VMError } from "../../../../jacdac-ts/src/vm/ir"
+import { RoleEvent } from "../../devicescript/vm/compile"
+import { VMError } from "../../devicescript/vm/ir"
 import {
     BlockDefinition,
     ContentDefinition,

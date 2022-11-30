@@ -3,7 +3,7 @@ import BlockDomainSpecificLanguage from "./dsl"
 import {
     toIdentifier,
     toMemberExpression,
-} from "../../../../jacdac-ts/src/vm/compile"
+} from "../../devicescript/vm/compile"
 import { makeVMBase } from "../../devicescript/JacscriptGenerator"
 
 const variablesDsl: BlockDomainSpecificLanguage = {

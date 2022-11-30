@@ -1,5 +1,5 @@
-import { toIdentifier } from "../../../../jacdac-ts/src/vm/compile"
-import { VMCommand } from "../../../../jacdac-ts/src/vm/ir"
+import { toIdentifier } from "../../devicescript/vm/compile"
+import { VMCommand } from "../../devicescript/vm/ir"
 import {
     BlockReference,
     CategoryDefinition,
@@ -8,7 +8,10 @@ import {
     SeparatorDefinition,
     ValueInputDefinition,
 } from "../toolbox"
-import { makeVMBase, processErrors } from "../../devicescript/JacscriptGenerator"
+import {
+    makeVMBase,
+    processErrors,
+} from "../../devicescript/JacscriptGenerator"
 import BlockDomainSpecificLanguage from "./dsl"
 import { paletteColorByIndex } from "./palette"
 

@@ -1,5 +1,5 @@
-import { VMProgram } from "../../../../jacdac-ts/src/vm/ir"
-import { JacscriptProgram } from "../../../../jacdac-ts/src/vm/ir2jacscript"
+import { VMProgram } from "../../devicescript/vm/ir"
+import { JacscriptProgram } from "../../devicescript/vm/ir2jacscript"
 import { tidyHeaders } from "../fields/tidy"
 import { BlockDataSet } from "../toolbox"
 

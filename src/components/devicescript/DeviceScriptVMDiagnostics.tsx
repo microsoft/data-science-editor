@@ -1,6 +1,6 @@
 import { Grid } from "@mui/material"
 import React from "react"
-import { VMProgram } from "../../../jacdac-ts/src/vm/ir"
+import { VMProgram } from "../devicescript/vm/ir"
 import CodeBlock from "../CodeBlock"
 
 export default function DeviceScriptVMDiagnostics(props: { program: VMProgram }) {

@@ -41,8 +41,8 @@ import {
 import {
     toIdentifier,
     toMemberExpression,
-} from "../../../../jacdac-ts/src/vm/compile"
-import { VMError } from "../../../../jacdac-ts/src/vm/ir"
+} from "../../devicescript/vm/compile"
+import { VMError } from "../../devicescript/vm/ir"
 import NoteField from "../fields/NoteField"
 import {
     BlockDefinition,
