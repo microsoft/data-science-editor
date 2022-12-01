@@ -17,7 +17,7 @@ import {
 } from "../../../jacdac-ts/src/jdom/constants"
 import { JDService } from "../../../jacdac-ts/src/jdom/service"
 import useWindowEvent from "../hooks/useWindowEvent"
-import { JSONTryParse } from "../../../jacdac-ts/src/jdom/utils"
+import { fromHex, JSONTryParse } from "../../../jacdac-ts/src/jdom/utils"
 import DeviceScriptVMLoader from "./DeviceScriptVMLoader"
 import Suspense from "../ui/Suspense"
 import { UIFlags } from "../../jacdac/providerbus"
@@ -28,6 +28,7 @@ import useBus from "../../jacdac/useBus"
 export interface DeviceScriptProps {
     source?: string
     setSource: (program: string) => void
+    bytecode?: Uint8Array
     compilePending?: boolean
     compiled?: DeviceScriptCompileResponse
     clientSpecs?: jdspec.ServiceSpec[]
@@ -52,6 +53,7 @@ export function DeviceScriptProvider(props: { children: ReactNode }) {
     const bus = useBus()
     const [source, setSource_] = useState<string>(undefined)
     const [compilePending, setCompilePending] = useState(false)
+    const [bytecode, setBytecode] = useState<Uint8Array>(undefined)
     const [compiled, setCompiled] = useState<DeviceScriptCompileResponse>()
     const [manager, setManager] = useState<JDService>(undefined)
     const [vmUsed, setVmUsed] = useState(0)
@@ -97,10 +99,13 @@ export function DeviceScriptProvider(props: { children: ReactNode }) {
 
     // if program changes, recompile
     useEffectAsync(async () => {
-        const res = debouncedSource?.trim()
-            ? await deviceScriptCompile(debouncedSource)
-            : undefined
-        setCompiled(res)
+        if (debouncedSource !== undefined) {
+            const res = debouncedSource?.trim()
+                ? await deviceScriptCompile(debouncedSource)
+                : undefined
+            setCompiled(res)
+            setBytecode(res?.binary)
+        }
         setCompilePending(false)
     }, [debouncedSource])
 
@@ -108,6 +113,7 @@ export function DeviceScriptProvider(props: { children: ReactNode }) {
         if (source !== newSource) {
             setSource_(newSource)
             setCompiled(undefined)
+            setBytecode(undefined)
             setCompilePending(true)
         }
     }
@@ -123,9 +129,20 @@ export function DeviceScriptProvider(props: { children: ReactNode }) {
                     mdata.channel === "devicescript" &&
                     mdata.type === "source"
                 ) {
-                    const msgSource = mdata.source
+                    const msgSource: string = mdata.source
+                    const msgBytecode: string = mdata.bytecode
                     const force = mdata.force
-                    if (force || lastSource.current !== msgSource) {
+                    if (msgBytecode !== undefined) {
+                        const bc = fromHex(msgBytecode)
+                        setSource_(undefined)
+                        setCompiled(undefined)
+                        setBytecode(bc)
+                        setCompilePending(false)
+                        if (!vmUsed) acquireVm()
+                    } else if (
+                        msgSource !== undefined &&
+                        (force || lastSource.current !== msgSource)
+                    ) {
                         setSource(msgSource)
                         if (!vmUsed) acquireVm()
                     }
@@ -141,6 +158,7 @@ export function DeviceScriptProvider(props: { children: ReactNode }) {
             value={{
                 source,
                 setSource,
+                bytecode,
                 compilePending,
                 compiled,
                 manager,

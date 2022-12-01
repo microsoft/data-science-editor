@@ -11,24 +11,23 @@ import { prettySize } from "../../../jacdac-ts/src/jdom/pretty"
 import PendingIcon from "@mui/icons-material/Pending"
 
 function CopyBytecodeButton() {
-    const { compiled, compilePending } = useDeviceScript()
-    const { success, binary } = compiled || {}
+    const { bytecode, compilePending } = useDeviceScript()
     const handleCopy = async () => {
-        if (!binary) return
-        const c = toHex(binary)
+        if (!bytecode) return
+        const c = toHex(bytecode)
         await navigator.clipboard.writeText(c)
     }
     const label = compilePending
         ? "......"
-        : success
-        ? prettySize(binary.length)
+        : bytecode
+        ? prettySize(bytecode.length)
         : "errors"
     return (
         <Chip
             icon={
                 compilePending ? (
                     <PendingIcon />
-                ) : success ? (
+                ) : bytecode ? (
                     <CheckIcon />
                 ) : (
                     <CloseIcon />
