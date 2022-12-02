@@ -30,7 +30,6 @@ export default function ConsoleLog(props: { hook?: boolean; height?: string }) {
 
     if (!darkMode) return null
 
-    console.log({ darkMode })
     const style: CSSProperties = {
         backgroundColor: darkMode === "dark" ? "#1d1d1d" : "#fff",
         height: "calc(100vh - 11.05rem)",
