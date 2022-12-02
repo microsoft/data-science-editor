@@ -124,8 +124,8 @@ function BrainDeviceScriptSelect(props: { brain: BrainDevice }) {
     const handleScriptChange = (ev: SelectChangeEvent<string>) => {
         const newId = ev.target.value
         setCurrentScriptId(newId)
-        const newVersion =
-            newId === scriptId
+        const newVersion = !newId ? undefined 
+            : newId === scriptId
                 ? scriptVersion
                 : brainManager.script(newId)?.version
         setCurrentVersion(newVersion)
@@ -160,6 +160,9 @@ function BrainDeviceScriptSelect(props: { brain: BrainDevice }) {
                     size="small"
                     onChange={handleScriptChange}
                 >
+                    <MenuItem value="">
+                        None (no more deployment)
+                    </MenuItem>
                     {scripts.map(script => (
                         <MenuItem key={script.id} value={script.scriptId}>
                             {script.name}
