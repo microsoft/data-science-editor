@@ -262,7 +262,6 @@ export const HostedSimulatorsProvider = ({ children }) => {
     const querySimulators = useLocationSearchParamString("simulators")
     useEffect(() => {
         const defs = hostedSimulatorDefinitions()
-        console.log(querySimulators)
         querySimulators
             ?.split(",")
             .filter(
