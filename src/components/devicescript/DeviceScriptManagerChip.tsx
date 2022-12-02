@@ -1,5 +1,5 @@
 import { Chip } from "@mui/material"
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import useRegister from "../hooks/useRegister"
 import {
     DeviceScriptManagerCmd,
@@ -14,6 +14,8 @@ import useEvent from "../hooks/useEvent"
 import { EVENT } from "../../../jacdac-ts/src/jdom/constants"
 import { OutPipe } from "../../../jacdac-ts/src/jdom/pipes"
 import useDeviceScript from "./DeviceScriptContext"
+import useBrainDevice from "../brains/useBrainDevice"
+import useSnackbar from "../hooks/useSnackbar"
 
 export default function DeviceScriptManagerChip(props: {
     service: JDService
@@ -21,9 +23,12 @@ export default function DeviceScriptManagerChip(props: {
     setSelected: () => void
 }) {
     const { service, selected, setSelected } = props
+    const { device } = service
     const { bytecode } = useDeviceScript()
     const [deploying, setDeploying] = useState(false)
     const [deployError, setDeployError] = useState<Error>(undefined)
+    const brainDevice = useBrainDevice(device)
+    const { enqueueSnackbar } = useSnackbar()
 
     const statusCodeChangedEvent = useEvent(
         service,
@@ -79,6 +84,13 @@ export default function DeviceScriptManagerChip(props: {
         try {
             setDeploying(true)
             setDeployError(undefined)
+            if (brainDevice?.scriptId) {
+                enqueueSnackbar(
+                    "Disabling device automatic script deployment in brain manager.",
+                    "warning"
+                )
+                await brainDevice.updateScript("")
+            }
             await OutPipe.sendBytes(
                 service,
                 DeviceScriptManagerCmd.DeployBytecode,
@@ -89,7 +101,7 @@ export default function DeviceScriptManagerChip(props: {
         } finally {
             setDeploying(false)
         }
-    }, [service, selected, bytecode])
+    }, [service, selected, bytecode, brainDevice])
 
     // stop after deselected
     useEffectAsync(
