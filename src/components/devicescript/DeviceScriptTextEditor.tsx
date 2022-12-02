@@ -1,52 +1,24 @@
-import React, { useContext, useState, lazy } from "react"
+import React, { useContext, lazy } from "react"
 import { Grid, NoSsr } from "@mui/material"
-import HighlightTextField from "../ui/HighlightTextField"
-import useDeviceScript from "./DeviceScriptContext"
 import BrainManagerToolbar from "../brains/BrainManagerToolbar"
 import BrainManagerContext from "../brains/BrainManagerContext"
 import useBrainScript from "../brains/useBrainScript"
-import useEffectAsync from "../useEffectAsync"
 import Suspense from "../ui/Suspense"
 import useDeviceScriptVm from "./useDeviceScriptVm"
 import DeviceScriptToolbar from "./DeviceScriptToolbar"
 import GridHeader from "../ui/GridHeader"
+import { useLocationSearchParamBoolean } from "../hooks/useLocationSearchParam"
+
+const DeviceScriptTextField = lazy(() => import("./DeviceScriptTextField"))
 const Console = lazy(() => import("../console/Console"))
 const Dashboard = lazy(() => import("../dashboard/Dashboard"))
 
 function DeviceScriptTextEditorWithContext() {
-    const { source, setSource, compiled } = useDeviceScript()
     const { scriptId } = useContext(BrainManagerContext)
     const script = useBrainScript(scriptId)
-    const [loading, setLoading] = useState(false)
+    const showTextField = useLocationSearchParamBoolean("text", true)
 
     useDeviceScriptVm()
-
-    // load script
-    useEffectAsync(async () => {
-        if (!script) {
-            setSource("")
-            return
-        }
-
-        // fetch latest body
-        setLoading(true)
-        try {
-            await script.refreshBody()
-            const { text } = script.body || {}
-            setSource(text || "")
-        } finally {
-            setLoading(false)
-        }
-    }, [script?.id])
-
-    const annotations = compiled?.errors?.slice(0, 1)?.map(
-        error =>
-            ({
-                file: error.filename,
-                line: error.line,
-                message: error.message,
-            } as jdspec.Diagnostic)
-    )
 
     return (
         <Grid spacing={1} container>
@@ -61,17 +33,13 @@ function DeviceScriptTextEditorWithContext() {
             <Grid item xs={12}>
                 <DeviceScriptToolbar />
             </Grid>
-            <Grid item xs={12}>
-                <HighlightTextField
-                    code={source || ""}
-                    language={"javascript"}
-                    onChange={setSource}
-                    annotations={annotations}
-                    disabled={loading}
-                    minHeight="4rem"
-                    maxHeight="12rem"
-                />
-            </Grid>
+            {showTextField && (
+                <Grid item xs={12}>
+                    <Suspense>
+                        <DeviceScriptTextField />
+                    </Suspense>
+                </Grid>
+            )}
             <Grid item xs={12}>
                 <Suspense>
                     <Dashboard
