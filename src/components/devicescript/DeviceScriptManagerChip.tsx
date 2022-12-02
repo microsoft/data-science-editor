@@ -21,7 +21,7 @@ export default function DeviceScriptManagerChip(props: {
     setSelected: () => void
 }) {
     const { service, selected, setSelected } = props
-    const { compiled: jscCompiled } = useDeviceScript()
+    const { bytecode } = useDeviceScript()
     const [deploying, setDeploying] = useState(false)
     const [deployError, setDeployError] = useState<Error>(undefined)
 
@@ -75,7 +75,6 @@ export default function DeviceScriptManagerChip(props: {
 
     // auto-deploy selected service
     useEffectAsync(async () => {
-        const { binary } = jscCompiled || {}
         if (!service || !selected) return
         try {
             setDeploying(true)
@@ -83,14 +82,14 @@ export default function DeviceScriptManagerChip(props: {
             await OutPipe.sendBytes(
                 service,
                 DeviceScriptManagerCmd.DeployBytecode,
-                binary || new Uint8Array(0)
+                bytecode || new Uint8Array(0)
             )
         } catch (e) {
             setDeployError(e)
         } finally {
             setDeploying(false)
         }
-    }, [service, selected, jscCompiled])
+    }, [service, selected, bytecode])
 
     // stop after deselected
     useEffectAsync(

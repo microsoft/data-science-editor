@@ -122,30 +122,27 @@ export function DeviceScriptProvider(props: { children: ReactNode }) {
         "message",
         (msg: MessageEvent) => {
             const data = msg.data
-            if (data && typeof data === "string") {
-                const mdata = JSONTryParse(data) as any
+            const mdata = typeof data === "string" ? JSONTryParse(data) : data
+            if (mdata?.channel !== "devicescript") return
+            if (mdata.type === "source") {
+                const msgSource: string = mdata.source
+                const force = mdata.force
                 if (
-                    mdata &&
-                    mdata.channel === "devicescript" &&
-                    mdata.type === "source"
+                    msgSource !== undefined &&
+                    (force || lastSource.current !== msgSource)
                 ) {
-                    const msgSource: string = mdata.source
-                    const msgBytecode: string = mdata.bytecode
-                    const force = mdata.force
-                    if (msgBytecode !== undefined) {
-                        const bc = fromHex(msgBytecode)
-                        setSource_(undefined)
-                        setCompiled(undefined)
-                        setBytecode(bc)
-                        setCompilePending(false)
-                        if (!vmUsed) acquireVm()
-                    } else if (
-                        msgSource !== undefined &&
-                        (force || lastSource.current !== msgSource)
-                    ) {
-                        setSource(msgSource)
-                        if (!vmUsed) acquireVm()
-                    }
+                    setSource(msgSource)
+                    if (!vmUsed) acquireVm()
+                }
+            } else if (mdata.type === "bytecode") {
+                const msgBytecode: string = mdata.bytecode
+                if (msgBytecode !== undefined) {
+                    const bc = fromHex(msgBytecode)
+                    setSource_(undefined)
+                    setCompiled(undefined)
+                    setBytecode(bc)
+                    setCompilePending(false)
+                    if (!vmUsed) acquireVm()
                 }
             }
         },
