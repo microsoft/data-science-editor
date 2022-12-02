@@ -56,6 +56,9 @@ function DeviceScriptTextEditorWithContext() {
                 </Grid>
             )}
             <Grid item xs={12}>
+                <GridHeader title="DeviceScript" />
+            </Grid>
+            <Grid item xs={12}>
                 <DeviceScriptToolbar />
             </Grid>
             <Grid item xs={12}>
