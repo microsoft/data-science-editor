@@ -37,6 +37,7 @@ import { Button } from "gatsby-theme-material-ui"
 import AddIcon from "@mui/icons-material/Add"
 import { useDebounce } from "use-debounce"
 import useEffectAsync from "../useEffectAsync"
+import UploadIcon from "@mui/icons-material/Upload"
 
 const ConfirmDialog = lazy(() => import("../shell/ConfirmDialog"))
 
@@ -188,15 +189,12 @@ function BrainDeviceScriptSelect(props: { brain: BrainDevice }) {
             </Grid>
             <Grid item>
                 <CmdButton
-                    variant={
-                        scriptChanged || versionChanged
-                            ? "contained"
-                            : "outlined"
+                    color={
+                        scriptChanged || versionChanged ? "primary" : undefined
                     }
                     onClick={handleDeploy}
-                >
-                    Deploy
-                </CmdButton>
+                    icon={<UploadIcon />}
+                />
             </Grid>
         </Grid>
     )
