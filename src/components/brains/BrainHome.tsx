@@ -124,10 +124,11 @@ function BrainDeviceScriptSelect(props: { brain: BrainDevice }) {
     const handleScriptChange = (ev: SelectChangeEvent<string>) => {
         const newId = ev.target.value
         setCurrentScriptId(newId)
-        const newVersion = !newId ? undefined 
+        const newVersion = !newId
+            ? undefined
             : newId === scriptId
-                ? scriptVersion
-                : brainManager.script(newId)?.version
+            ? scriptVersion
+            : brainManager.script(newId)?.version
         setCurrentVersion(newVersion)
     }
     const handleVersionChange = (ev: SelectChangeEvent<string>) => {
@@ -154,15 +155,13 @@ function BrainDeviceScriptSelect(props: { brain: BrainDevice }) {
         <Grid container spacing={1}>
             <Grid item xs>
                 <SelectWithLabel
-                    label={`Script${scriptChanged ? "*" : ""}`}
+                    helperText={`Script${scriptChanged ? "*" : ""}`}
                     value={currentScriptId}
                     fullWidth={true}
                     size="small"
                     onChange={handleScriptChange}
                 >
-                    <MenuItem value="">
-                        None (no more deployment)
-                    </MenuItem>
+                    <MenuItem value="">None</MenuItem>
                     {scripts.map(script => (
                         <MenuItem key={script.id} value={script.scriptId}>
                             {script.name}
@@ -172,13 +171,14 @@ function BrainDeviceScriptSelect(props: { brain: BrainDevice }) {
             </Grid>
             <Grid item>
                 <SelectWithLabel
-                    label={`Version${versionChanged ? "*" : " "}`}
+                    helperText={`Version${versionChanged ? "*" : " "}`}
                     sx={{ minWidth: "5em" }}
                     value={currentVersion?.toString() || ""}
                     fullWidth={true}
                     size="small"
                     onChange={handleVersionChange}
                 >
+                    <MenuItem value="">None</MenuItem>
                     {currentVersions?.map(v => (
                         <MenuItem key={v.id} value={v.version}>
                             v{v.version}
