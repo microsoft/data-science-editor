@@ -127,7 +127,7 @@ function MainToolbar() {
                     to={brainManager ? "/brains" : "/"}
                     underline="hover"
                 >
-                    {brainManager ? `Low Code Things` : `Jacdac`}
+                    {brainManager ? `DeviceScript` : `Jacdac`}
                 </Link>
             </Typography>
             <div className={classes.grow} />
