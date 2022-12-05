@@ -210,11 +210,12 @@ function LayoutWithContext(props: LayoutProps) {
     const footer = UIFlags.footer
     const tools = /^\/tools\//.test(path)
     const makeCodeTool = /tools\/makecode-/.test(path)
+    const deviceScriptTool = /tools\/devicescript-/.test(path)
     const devicesPage = /^\/devices\/$/.test(path)
     const fullWidthTools =
         /^\/editors\/\w/.test(path) ||
         /^\/tools\/console\/$/.test(path) ||
-        /^\/(tools\/(makecode-|player)|dashboard)/.test(path) ||
+        /^\/(tools\/(makecode-|player|devicescript-)|dashboard)/.test(path) ||
         !!frontmatter?.fullWidth
     const isDataEditor = /^\/editors\/data/.test(path)
     const {
@@ -222,8 +223,9 @@ function LayoutWithContext(props: LayoutProps) {
         hideUnderConstruction = false,
         hideBreadcrumbs = false,
     } = frontmatter || {
-        hideMainMenu: isHosted || makeCodeTool,
-        hideUnderConstruction: isDataEditor || makeCodeTool || fullWidthTools,
+        hideMainMenu: isHosted || makeCodeTool || deviceScriptTool,
+        hideUnderConstruction:
+            isDataEditor || makeCodeTool || deviceScriptTool || fullWidthTools,
         hideBreadcrumbs: isDataEditor || tools || fullWidthTools || devicesPage,
     }
 
@@ -281,7 +283,7 @@ function LayoutWithContext(props: LayoutProps) {
                     {element}
                 </Typography>
             )}
-            {!hideUnderConstruction && <HelpAlert />}
+            {!hideUnderConstruction && !UIFlags.hosted && <HelpAlert />}
         </>
     )
 
