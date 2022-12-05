@@ -30,14 +30,16 @@ function DeviceScriptDevToolsWithContext() {
                 <DeviceScriptToolbar />
             </Grid>
             <Grid item xs={12}>
-                <Dashboard
-                    showAvatar={true}
-                    showHeader={true}
-                    showConnect={false}
-                    showStartSimulators={false}
-                    showStartRoleSimulators={true}
-                    showDeviceProxyAlert={true}
-                />
+                <Suspense>
+                    <Dashboard
+                        showAvatar={true}
+                        showHeader={true}
+                        showConnect={false}
+                        showStartSimulators={false}
+                        showStartRoleSimulators={true}
+                        showDeviceProxyAlert={true}
+                    />
+                </Suspense>
             </Grid>
             <Grid item xs={12}>
                 <GridHeader title="Console" />
