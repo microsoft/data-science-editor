@@ -24,7 +24,6 @@ import HelpAlert from "./alert/HelpAlert"
 import { isBrainManagerEnabled } from "./brains/BrainManagerContext"
 
 const Breadcrumbs = lazy(() => import("./ui/Breadcrumbs"))
-const DevToolsAlert = lazy(() => import("./alert/DevToolsAlert"))
 const AppDrawer = lazy(() => import("./shell/AppDrawer"))
 const ToolsDrawer = lazy(() => import("./shell/ToolsDrawer"))
 const SimulatorCommands = lazy(() => import("./commands/SimulatorCommands"))
@@ -262,9 +261,6 @@ function LayoutWithContext(props: LayoutProps) {
             </Suspense>
             <Suspense>
                 <PassiveAlert />
-            </Suspense>
-            <Suspense>
-                <DevToolsAlert />
             </Suspense>
             {Flags.diagnostics && (
                 <Suspense>
