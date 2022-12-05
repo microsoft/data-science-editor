@@ -59,11 +59,11 @@ class WorkerHost {
     }
     error(err: DeviceScriptError) {
         console.log(err)
-        const { file, category, messageText, start, length } = err
+        const { filename, line, messageText } = err
         this.errors.push({
-            filename: file.filename,
+            filename,
             message: messageText,
-            line: 1,
+            line,
         })
     }
     getSpecs(): jdspec.ServiceSpec[] {
