@@ -55,6 +55,7 @@ function sniffQueryArguments() {
     const params = new URLSearchParams(location.search)
     const toolsMakecode =
         /\/tools\/makecode-/.test(href) || params.get(`nestededitorsim`) === "1"
+    const toolsDeviceScript = /\/tools\/devicescript-/.test(href)
     const toolsMakeEditorExtension = /\/tools\/makecode-editor-extension/.test(
         href
     )
@@ -84,7 +85,10 @@ function sniffQueryArguments() {
         localhost: params.get("localhost") === "1",
         passive: params.get("passive") === "1" || toolsMakeEditorExtension,
         gamepad: params.get("gamepad") === "1",
-        hosted: params.get("hosted") === "1" || params.get("embed") === "1",
+        hosted:
+            toolsDeviceScript ||
+            params.get("hosted") === "1" ||
+            params.get("embed") === "1",
         storage: params.get("storage") === "0" ? false : true,
         bus: params.get("bus") === "0" ? false : true,
         webcam: isMediaDevicesSupported(),
