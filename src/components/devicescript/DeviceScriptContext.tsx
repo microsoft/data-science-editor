@@ -138,6 +138,7 @@ export function DeviceScriptProvider(props: { children: ReactNode }) {
                 const msgBytecode: string = mdata.bytecode
                 if (msgBytecode !== undefined) {
                     const bc = fromHex(msgBytecode)
+                    console.log({ bytecode: msgBytecode })
                     setSource_(undefined)
                     setCompiled(undefined)
                     setBytecode(bc)
