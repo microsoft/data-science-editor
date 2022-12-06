@@ -7,6 +7,7 @@ import Suspense from "../ui/Suspense"
 import useDeviceScriptVm from "./useDeviceScriptVm"
 import DeviceScriptToolbar from "./DeviceScriptToolbar"
 import GridHeader from "../ui/GridHeader"
+import DeviceScriptStats from "./DeviceScriptStats"
 const Console = lazy(() => import("../console/Console"))
 const Dashboard = lazy(() => import("../dashboard/Dashboard"))
 
@@ -28,6 +29,9 @@ function DeviceScriptDevToolsWithContext() {
             </Grid>
             <Grid item xs={12}>
                 <DeviceScriptToolbar />
+            </Grid>
+            <Grid item xs={12}>
+                <DeviceScriptStats />
             </Grid>
             <Grid item xs={12}>
                 <Suspense>

@@ -8,6 +8,7 @@ import useDeviceScriptVm from "./useDeviceScriptVm"
 import DeviceScriptToolbar from "./DeviceScriptToolbar"
 import GridHeader from "../ui/GridHeader"
 import { useLocationSearchParamBoolean } from "../hooks/useLocationSearchParam"
+import DeviceScriptStats from "./DeviceScriptStats"
 
 const DeviceScriptTextField = lazy(() => import("./DeviceScriptTextField"))
 const Console = lazy(() => import("../console/Console"))
@@ -40,6 +41,9 @@ function DeviceScriptTextEditorWithContext() {
                     </Suspense>
                 </Grid>
             )}
+            <Grid item xs={12}>
+                <DeviceScriptStats />
+            </Grid>
             <Grid item xs={12}>
                 <Suspense>
                     <Dashboard

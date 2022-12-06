@@ -25,10 +25,52 @@ import { useDebounce } from "use-debounce"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import useBus from "../../jacdac/useBus"
 
+export interface SrcLocation {
+    file: string
+    line: number
+    col: number
+    len: number
+    pos: number
+}
+
+export interface FunctionDebugInfo {
+    name: string
+    size: number
+    users: SrcLocation[]
+    // format is (line-number, start, len)
+    // start is offset in bytes from the start of the function
+    // len is in bytes
+    srcmap: number[]
+    locals: CellDebugInfo[]
+}
+
+export interface CellDebugInfo {
+    name: string
+}
+
+export interface RoleDebugInfo extends CellDebugInfo {
+    serviceClass: number
+}
+
+export interface DeviceScriptDebugInfo {
+    sizes: Record<string, number> & {
+        header: number
+        floats: number
+        strings: number
+        roles: number
+        align: number
+    }
+    functions: FunctionDebugInfo[]
+    roles: RoleDebugInfo[]
+    globals: CellDebugInfo[]
+    source: string
+}
+
 export interface DeviceScriptProps {
     source?: string
     setSource: (program: string) => void
     bytecode?: Uint8Array
+    dbg?: DeviceScriptDebugInfo
     compilePending?: boolean
     compiled?: DeviceScriptCompileResponse
     clientSpecs?: jdspec.ServiceSpec[]
@@ -54,6 +96,7 @@ export function DeviceScriptProvider(props: { children: ReactNode }) {
     const [source, setSource_] = useState<string>(undefined)
     const [compilePending, setCompilePending] = useState(false)
     const [bytecode, setBytecode] = useState<Uint8Array>(undefined)
+    const [dbg, setDbg] = useState<DeviceScriptDebugInfo>(undefined)
     const [compiled, setCompiled] = useState<DeviceScriptCompileResponse>()
     const [manager, setManager] = useState<JDService>(undefined)
     const [vmUsed, setVmUsed] = useState(0)
@@ -105,6 +148,7 @@ export function DeviceScriptProvider(props: { children: ReactNode }) {
                 : undefined
             setCompiled(res)
             setBytecode(res?.binary)
+            setDbg(res?.dbg)
         }
         setCompilePending(false)
     }, [debouncedSource])
@@ -114,6 +158,7 @@ export function DeviceScriptProvider(props: { children: ReactNode }) {
             setSource_(newSource)
             setCompiled(undefined)
             setBytecode(undefined)
+            setDbg(undefined)
             setCompilePending(true)
         }
     }
@@ -136,12 +181,14 @@ export function DeviceScriptProvider(props: { children: ReactNode }) {
                 }
             } else if (mdata.type === "bytecode") {
                 const msgBytecode: string = mdata.bytecode
+                const msgDbg: DeviceScriptDebugInfo = mdata.dbg
                 if (msgBytecode !== undefined) {
                     const bc = fromHex(msgBytecode)
                     console.log({ bytecode: msgBytecode })
                     setSource_(undefined)
                     setCompiled(undefined)
                     setBytecode(bc)
+                    setDbg(msgDbg)
                     setCompilePending(false)
                     if (!vmUsed) acquireVm()
                 }
@@ -157,6 +204,7 @@ export function DeviceScriptProvider(props: { children: ReactNode }) {
                 source,
                 setSource,
                 bytecode,
+                dbg,
                 compilePending,
                 compiled,
                 manager,
