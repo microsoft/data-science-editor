@@ -84,6 +84,11 @@ export default function Page() {
                         href: "https://github.com/microsoft/jacdac-esp32",
                     },
                     {
+                        title: "microsoft/jacdac-pico",
+                        description: "Firmware library for Raspberry Pi Pico",
+                        href: "https://github.com/microsoft/jacdac-pico",
+                    },
+                    {
                         title: "microsoft/jacdac-padauk",
                         description: "Firmware library for PADAUK",
                         href: "https://github.com/microsoft/jacdac-padauk",
