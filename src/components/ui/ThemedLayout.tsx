@@ -49,11 +49,11 @@ export default function ThemedLayout(props: {
                                             <ServiceManagerProvider>
                                                 <PacketsProvider>
                                                     <AppProvider>
-                                                        <DeviceScriptProvider>
-                                                            <YouTubeProvider>
-                                                                <CommandPaletteProvider>
-                                                                    <SimulatorDialogsProvider>
-                                                                        <ConsoleProvider>
+                                                        <YouTubeProvider>
+                                                            <CommandPaletteProvider>
+                                                                <SimulatorDialogsProvider>
+                                                                    <ConsoleProvider>
+                                                                        <DeviceScriptProvider>
                                                                             <MakeCodeSnippetProvider>
                                                                                 <BrainManagerProvider>
                                                                                     <CssBaseline />
@@ -63,11 +63,11 @@ export default function ThemedLayout(props: {
                                                                                     }
                                                                                 </BrainManagerProvider>
                                                                             </MakeCodeSnippetProvider>
-                                                                        </ConsoleProvider>
-                                                                    </SimulatorDialogsProvider>
-                                                                </CommandPaletteProvider>
-                                                            </YouTubeProvider>
-                                                        </DeviceScriptProvider>
+                                                                        </DeviceScriptProvider>
+                                                                    </ConsoleProvider>
+                                                                </SimulatorDialogsProvider>
+                                                            </CommandPaletteProvider>
+                                                        </YouTubeProvider>
                                                     </AppProvider>
                                                 </PacketsProvider>
                                             </ServiceManagerProvider>

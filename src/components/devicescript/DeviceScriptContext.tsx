@@ -24,6 +24,7 @@ import { UIFlags } from "../../jacdac/providerbus"
 import { useDebounce } from "use-debounce"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import useBus from "../../jacdac/useBus"
+import ConsoleContext from "../console/ConsoleContext"
 
 export interface SrcLocation {
     file: string
@@ -102,6 +103,7 @@ export function DeviceScriptProvider(props: { children: ReactNode }) {
     const [vmUsed, setVmUsed] = useState(0)
     const devicescriptvm = !!UIFlags.devicescriptvm
     const [debouncedSource] = useDebounce(source, 1000)
+    const { clear: clearConsole } = useContext(ConsoleContext)
 
     // keep track of source without re-render
     const lastSource = useRef(source)
@@ -160,6 +162,7 @@ export function DeviceScriptProvider(props: { children: ReactNode }) {
             setBytecode(undefined)
             setDbg(undefined)
             setCompilePending(true)
+            clearConsole()
         }
     }
 
@@ -190,6 +193,7 @@ export function DeviceScriptProvider(props: { children: ReactNode }) {
                     setBytecode(bc)
                     setDbg(msgDbg)
                     setCompilePending(false)
+                    clearConsole()
                     if (!vmUsed) acquireVm()
                 }
             }

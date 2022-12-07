@@ -48,9 +48,6 @@ export default function DeviceScriptManagerChipItems() {
 
     return (
         <>
-            <Grid item>
-                <CopyBytecodeButton />
-            </Grid>
             {services.map(service => (
                 <Grid item key={service.id}>
                     <DeviceScriptManagerChip

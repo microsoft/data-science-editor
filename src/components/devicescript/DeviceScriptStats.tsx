@@ -6,7 +6,7 @@ import { DeviceScriptContext } from "./DeviceScriptContext"
 export default function DeviceScriptStats() {
     const { bytecode, dbg } = useContext(DeviceScriptContext)
 
-    if (!dbg) return null
+    if (!dbg) return <Typography variant="caption">compiling...</Typography>
 
     const { sizes } = dbg
     return (
