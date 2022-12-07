@@ -35,6 +35,18 @@ function DeviceScriptDevToolsWithContext() {
             </Grid>
             <Grid item xs={12}>
                 <Suspense>
+                    <Console
+                        showToolbar={true}
+                        showFiles={false}
+                        showLevel={true}
+                        showPopout={false}
+                        showSerial={true}
+                        height="10rem"
+                    />
+                </Suspense>
+            </Grid>
+            <Grid item xs={12}>
+                <Suspense>
                     <Dashboard
                         showAvatar={true}
                         showHeader={true}
@@ -47,18 +59,6 @@ function DeviceScriptDevToolsWithContext() {
             </Grid>
             <Grid item xs={12}>
                 <GridHeader title="Console" />
-            </Grid>
-            <Grid item xs={12}>
-                <Suspense>
-                    <Console
-                        showToolbar={true}
-                        showFiles={false}
-                        showLevel={true}
-                        showPopout={false}
-                        showSerial={true}
-                        height="10rem"
-                    />
-                </Suspense>
             </Grid>
         </Grid>
     )
