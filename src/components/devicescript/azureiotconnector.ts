@@ -379,9 +379,9 @@ export default function createAzureIotHubServiceDefinition(): ServiceProviderDef
         name: "Cloud adapter (Azure IoT Hub)",
         serviceClasses: [SRV_CLOUD_CONFIGURATION, SRV_CLOUD_ADAPTER],
         services: () => {
-            const cloudConfiguration = new AzureIoTHubConfigurationServer()
-            cloudConfiguration.isReal = true
-            const connector = new AzureIoTHubConnector(cloudConfiguration)
+            const config = new AzureIoTHubConfigurationServer()
+            config.isReal = true
+            const connector = new AzureIoTHubConnector(config)
             const cloud = new CloudAdapterServer({
                 connectionName: "Azure IoT Hub",
                 controlled: true,
@@ -416,9 +416,9 @@ export default function createAzureIotHubServiceDefinition(): ServiceProviderDef
                     }
                 )
             })
-            cloudConfiguration.connectionStatus.on(CHANGE, () => {
+            config.connectionStatus.on(CHANGE, () => {
                 const connectionStatus =
-                    cloudConfiguration.connectionStatus.values()[0]
+                    config.connectionStatus.values()[0]
                 const connected =
                     connectionStatus ===
                     CloudConfigurationConnectionStatus.Connected
@@ -429,7 +429,7 @@ export default function createAzureIotHubServiceDefinition(): ServiceProviderDef
                 )
                 cloud.connected = connected
             })
-            return [cloudConfiguration, cloud]
+            return [config, cloud]
         },
     }
 }
