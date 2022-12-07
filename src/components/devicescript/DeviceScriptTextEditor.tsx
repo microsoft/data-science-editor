@@ -9,6 +9,7 @@ import DeviceScriptToolbar from "./DeviceScriptToolbar"
 import GridHeader from "../ui/GridHeader"
 import { useLocationSearchParamBoolean } from "../hooks/useLocationSearchParam"
 import DeviceScriptStats from "./DeviceScriptStats"
+import ConnectButtons from "../buttons/ConnectButtons"
 
 const DeviceScriptTextField = lazy(() => import("./DeviceScriptTextField"))
 const Console = lazy(() => import("../console/Console"))
@@ -29,7 +30,7 @@ function DeviceScriptTextEditorWithContext() {
                 </Grid>
             )}
             <Grid item xs={12}>
-                <GridHeader title="DeviceScript" />
+                <GridHeader title="DeviceScript" action={<ConnectButtons />} />
             </Grid>
             <Grid item xs={12}>
                 <DeviceScriptToolbar />
@@ -45,18 +46,6 @@ function DeviceScriptTextEditorWithContext() {
                 <DeviceScriptStats />
             </Grid>
             <Grid item xs={12}>
-                <Suspense>
-                    <Dashboard
-                        showAvatar={true}
-                        showHeader={true}
-                        showConnect={false}
-                        showStartSimulators={false}
-                        showStartRoleSimulators={true}
-                        showDeviceProxyAlert={true}
-                    />
-                </Suspense>
-            </Grid>
-            <Grid item xs={12}>
                 <GridHeader title="Console" />
             </Grid>
             <Grid item xs={12}>
@@ -68,6 +57,18 @@ function DeviceScriptTextEditorWithContext() {
                         showPopout={false}
                         showSerial={true}
                         height="10rem"
+                    />
+                </Suspense>
+            </Grid>
+            <Grid item xs={12}>
+                <Suspense>
+                    <Dashboard
+                        showAvatar={true}
+                        showHeader={true}
+                        showConnect={false}
+                        showStartSimulators={false}
+                        showStartRoleSimulators={true}
+                        showDeviceProxyAlert={true}
                     />
                 </Suspense>
             </Grid>
