@@ -20,7 +20,7 @@ import {
     DISCONNECT,
     CHANGE,
 } from "../../../jacdac-ts/src/jdom/constants"
-import { AzureIoTHubConfigurationServer } from "../../../jacdac-ts/src/servers/azureiothubconfiguration"
+import { AzureIoTHubConfigurationServer } from "../../../jacdac-ts/src/servers/azureiothubconfigurationserver"
 import { ServiceProviderDefinition } from "../../../jacdac-ts/src/servers/servers"
 import {
     CloudAdapterServer,
