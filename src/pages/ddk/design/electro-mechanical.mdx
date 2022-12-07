@@ -19,21 +19,13 @@ Please refer to the [technical drawing of the Jacdac PCB edge connector](https:/
 
 There are two optional improvements which provide a better connection. Electroplated 'hard gold' may be used instead of ENIG for the Jacdac contact, and this provides better durability. Also, the end of the Jacdac PCB edge connector can have a bevelled or chamfered edge of between 30° and 60°. This reduces the initial mating force required to attach the mating connector. The PCB manufacturers may require that this is specified manually as an annotation in the gerber files or as a note in a README file. Note that both of these features (hard gold and bevelled edges) are optional.
 
-##  Cable connectors and assemblies
+## Cable connectors and assemblies
 
 ![Jacdac cable being unplugged and replugged animated image](./reversibleconnectoranimation.gif)
 
 A purpose-built cable connector is used to interface with the Jacdac PCB edge connector desribed above. The cable connector is reversible (i.e. it is 180° rotationally symmetric) but internally it only needs to have contacts on one side due to the double-sided design of the Jacdac PCB edge connector.
 
-Together with the Jacdac PCB edge connector, the mating half must give a mating and unmating force of 5-15N and each of the three electrical connections it provides should have a contact resistance of 30 mΩ or less and a current capacity of 1A DC. These characteristics should be consistent for a lifetime of at least 1500 mate/unmate cycles.
-
-Jacdac cable assemblies contain three conductors and are terminated at both ends with a Jacdac cable connector. The wiring is 'straight through' . i.e. it connects JD_DATA at one end to JD_DATA at the other, JD_PWR to JD_PWR and GND to GND. The conductors used for JD_PWR and GND must have a resistance of at most 135mΩ/m and be capable of carrying a continuous DC current of 1A. This translate to 26AWG (e.g. 30/0.08) or thicker. We suggest an ultra-flexible insulator such as silicone or another thermpostic elastomer (TPE).
-
-The first manufacturer of Jacdac cable connectors and cable assemblies is [Dongguan Yuliang Electronics](http://dgyuliang.net/) who are also known by their [Cylconn](http://www.cylconn.com/) brand.
-
-[![Jacdac cable assembly technical drawing](./JACDAC-Connector-by-Yuliang-2020-11-28-page2.png)](https://github.com/microsoft/jacdac-ddk/blob/main/connector/JACDAC-Connector-by-Yuliang-2020-11-28.pdf)
-
-[![Jacdac cable assembly technical drawing](./JACDAC-Connector-by-Yuliang-2020-11-28-page1.png)](https://github.com/microsoft/jacdac-ddk/blob/main/connector/JACDAC-Connector-by-Yuliang-2020-11-28.pdf)
+-   [Technical details and availability](./cables.mdx)
 
 ## Multiple connectors
 
@@ -49,12 +41,12 @@ In the simplest configuration, all devices on a Jacdac bus are connected directl
 
 Where Jacdac modules include mounting holes, we recommend that these be plated-through hole (PTH) and electrically connected to the Jacdac bus signals JD_PWR, JD_DATA and GND. This provides additional mechanisms for connecting modules together instead of the PCB edge connector, including the use of metal screws, threaded stand-off pillars, 'banana' style jack plugs and soldering.
 
-If PTHs are used, we recommend the use of four holes, one in each 'corner' of the module. 
-We recommend the use of 3mm holes, per the [EC30 module form factor](../ec30), 
+If PTHs are used, we recommend the use of four holes, one in each 'corner' of the module.
+We recommend the use of 3mm holes, per the [EC30 module form factor](../ec30),
 although we have also found 2mm holes useful if a small module size is important.
 
-Two of these must be connected to the GND net, and the other two connected to JD_DATA and JD_PWR. We suggest that the latter two are located adjacent to the Jacdac PCB edge connector so that the traces that connect the PTH to the edge connector fingers can be short and therefore share a common ESD diode. If the JD_DATA and JD_PWR PTHs are more than 10-15mm from the PCB edge connector, we recommend additional ESD protection.  See [EC30 module form factor](../ec30) for more details on the recommended placement and dimensions of the four mounting holes, copper plate ring,
-solder resist, and keepout (necessary to ensure that screw heads and the bodies of standoffs do not interfere with any components on the PCB or short any traces 
+Two of these must be connected to the GND net, and the other two connected to JD_DATA and JD_PWR. We suggest that the latter two are located adjacent to the Jacdac PCB edge connector so that the traces that connect the PTH to the edge connector fingers can be short and therefore share a common ESD diode. If the JD_DATA and JD_PWR PTHs are more than 10-15mm from the PCB edge connector, we recommend additional ESD protection. See [EC30 module form factor](../ec30) for more details on the recommended placement and dimensions of the four mounting holes, copper plate ring,
+solder resist, and keepout (necessary to ensure that screw heads and the bodies of standoffs do not interfere with any components on the PCB or short any traces
 near the hole).
 
 ### Four 2mm plated-through holes (deprecated)
