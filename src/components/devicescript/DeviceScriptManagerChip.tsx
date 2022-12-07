@@ -24,6 +24,7 @@ export default function DeviceScriptManagerChip(props: {
 }) {
     const { service, selected, setSelected } = props
     const { device } = service
+    const { shortId } = device
     const { bytecode } = useDeviceScript()
     const [deploying, setDeploying] = useState(false)
     const [deployError, setDeployError] = useState<Error>(undefined)
@@ -65,7 +66,7 @@ export default function DeviceScriptManagerChip(props: {
             : handleStop
         : handleSelect
 
-    const label = running ? "stop " : "start"
+    const label = `${shortId} ${running ? "stop " : "start"}`
     const title = disabled
         ? "uploading..."
         : running
