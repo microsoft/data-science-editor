@@ -56,7 +56,7 @@ function DeviceScriptTextEditorWithContext() {
                         showLevel={true}
                         showPopout={false}
                         showSerial={true}
-                        height="10rem"
+                        height="8rem"
                     />
                 </Suspense>
             </Grid>
