@@ -11,10 +11,6 @@ const {
     DeviceCatalog,
     isInfrastructure,
 } = require(`./jacdac-ts/dist/jacdac.cjs`)
-const {
-    serviceSpecificationsWithServiceTwinSpecification,
-    serviceSpecificationToServiceTwinSpecification,
-} = require(`./jacdac-ts/dist/jacdac-azure-iot.cjs`)
 const { IgnorePlugin } = require("webpack")
 const AVATAR_SIZE = 64
 const LAZY_SIZE = 96
@@ -315,18 +311,6 @@ async function generateServicesJSON() {
             else pkt.fields = pkt.fields.map(f => f.name)
         }
         await fs.outputFile(f, JSON.stringify(clone, null, 2))
-    }
-
-    // DeviceTwins
-    for (const srv of serviceSpecificationsWithServiceTwinSpecification()) {
-        const f = path.join(
-            dir,
-            "services",
-            "twin",
-            `x${srv.classIdentifier.toString(16)}.json`
-        )
-        const devicetwin = serviceSpecificationToServiceTwinSpecification(srv)
-        await fs.outputFile(f, JSON.stringify(devicetwin, null, 2))
     }
 }
 

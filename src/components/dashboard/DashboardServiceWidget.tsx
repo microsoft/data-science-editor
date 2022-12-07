@@ -105,7 +105,6 @@ const DashboardBitRadio = lazy(() => import("./DashboardBitRadio"))
 const DashboardHIDKeyboard = lazy(() => import("./DashboardHIDKeyboard"))
 const DashboardHIDMouse = lazy(() => import("./DashboardHIDMouse"))
 const DashboardHIDJoystick = lazy(() => import("./DashboardHIDJoystick"))
-//const DashboardAzureIoTHub = lazy(() => import("./DashboardAzureIoTHub"))
 const DashboardCloudConfiguration = lazy(
     () => import("./DashboardCloudConfiguration")
 )
