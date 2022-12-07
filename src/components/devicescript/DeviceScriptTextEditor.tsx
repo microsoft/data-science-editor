@@ -30,7 +30,7 @@ function DeviceScriptTextEditorWithContext() {
                 </Grid>
             )}
             <Grid item xs={12}>
-                <GridHeader title="DeviceScript" action={<ConnectButtons />} />
+                <GridHeader title="DeviceScript" action={<ConnectButtons transparent={true} />} />
             </Grid>
             <Grid item xs={12}>
                 <DeviceScriptToolbar />
