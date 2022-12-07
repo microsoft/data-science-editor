@@ -375,7 +375,7 @@ class AzureIoTHubConnector extends JDEventSource {
 }
 
 export default function createAzureIotHubServiceDefinition(): ServiceProviderDefinition {
-    return <ServiceProviderDefinition>{
+    return {
         name: "Cloud adapter (Azure IoT Hub)",
         serviceClasses: [SRV_CLOUD_CONFIGURATION, SRV_CLOUD_ADAPTER],
         services: () => {
