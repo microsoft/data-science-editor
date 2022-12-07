@@ -1,9 +1,9 @@
 import { JDBus } from "../../../jacdac-ts/src/jdom/bus"
 import {
-    AzureIotHubHealthCmd,
+    CloudConfigurationCmd,
     CHANGE,
     ERROR,
-    SRV_AZURE_IOT_HUB_HEALTH,
+    SRV_CLOUD_CONFIGURATION,
 } from "../../../jacdac-ts/src/jdom/constants"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 import { JDNode } from "../../../jacdac-ts/src/jdom/node"
@@ -122,14 +122,14 @@ export class BrainManager extends JDNode {
             body: { name, meta },
         })
 
-        // patch azure iot service
+        // patch cloud configuration service
         const { connectionString } = resp
         const service = device.services({
-            serviceClass: SRV_AZURE_IOT_HUB_HEALTH,
+            serviceClass: SRV_CLOUD_CONFIGURATION,
         })[0]
         const data = jdpack<[string]>("s", [connectionString])
         await service.sendCmdAsync(
-            AzureIotHubHealthCmd.SetConnectionString,
+            CloudConfigurationCmd.SetConnectionString,
             data,
             true
         )
@@ -417,7 +417,11 @@ export class BrainScript extends BrainNode<BrainScriptData> {
     private _body: BrainScriptBody
     private _versions: BrainScript[]
 
-    constructor(manager: BrainManager, data: BrainScriptData, body?: BrainScriptBody) {
+    constructor(
+        manager: BrainManager,
+        data: BrainScriptData,
+        body?: BrainScriptBody
+    ) {
         super(manager, "scripts", data)
         this._body = body
         this.on(BRAIN_DATA_CHANGE, () => {

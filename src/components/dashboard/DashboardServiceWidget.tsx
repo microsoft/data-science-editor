@@ -36,7 +36,7 @@ import {
     SRV_BIT_RADIO,
     SRV_HID_KEYBOARD,
     SRV_HID_MOUSE,
-    SRV_AZURE_IOT_HUB_HEALTH,
+    SRV_CLOUD_CONFIGURATION,
     SRV_WIFI,
     SRV_VIBRATION_MOTOR,
     SRV_CODAL_MESSAGE_BUS,
@@ -106,8 +106,8 @@ const DashboardHIDKeyboard = lazy(() => import("./DashboardHIDKeyboard"))
 const DashboardHIDMouse = lazy(() => import("./DashboardHIDMouse"))
 const DashboardHIDJoystick = lazy(() => import("./DashboardHIDJoystick"))
 //const DashboardAzureIoTHub = lazy(() => import("./DashboardAzureIoTHub"))
-const DashboardAzureIoTHubHealth = lazy(
-    () => import("./DashboardAzureIoTHubHealth")
+const DashboardCloudConfiguration = lazy(
+    () => import("./DashboardCloudConfiguration")
 )
 const DashboardWifi = lazy(() => import("./DashboardWifi"))
 const DashboardVibrationMotor = lazy(() => import("./DashboardVibrationMotor"))
@@ -318,14 +318,8 @@ const serviceViews: {
         component: DashboardHIDJoystick,
         weight: () => 2,
     },
-    /*
-    [SRV_AZURE_IOT_HUB]: {
-        component: DashboardAzureIoTHub,
-        weight: () => 3,
-    },
-    */
-    [SRV_AZURE_IOT_HUB_HEALTH]: {
-        component: DashboardAzureIoTHubHealth,
+    [SRV_CLOUD_CONFIGURATION]: {
+        component: DashboardCloudConfiguration,
         weight: () => 2,
     },
     [SRV_WIFI]: {

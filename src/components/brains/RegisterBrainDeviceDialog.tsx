@@ -19,7 +19,7 @@ import useDevices from "../hooks/useDevices"
 import BrainManagerContext from "./BrainManagerContext"
 import SelectDevice from "../select/SelectDevice"
 import useBus from "../../jacdac/useBus"
-import { SRV_AZURE_IOT_HUB_HEALTH } from "../../../jacdac-ts/src/jdom/constants"
+import { SRV_CLOUD_CONFIGURATION } from "../../../jacdac-ts/src/jdom/constants"
 import { JDDevice } from "../../../jacdac-ts/src/jdom/device"
 
 export default function RegisterBrainDeviceDialog(props: {
@@ -31,7 +31,7 @@ export default function RegisterBrainDeviceDialog(props: {
     // devices with azure iot health + jacsript manager
     const devices = useDevices({
         announced: true,
-        serviceClass: SRV_AZURE_IOT_HUB_HEALTH,
+        serviceClass: SRV_CLOUD_CONFIGURATION,
     })
     const [deviceId, setDeviceId] = useState(devices[0]?.id || "")
     const bus = useBus()

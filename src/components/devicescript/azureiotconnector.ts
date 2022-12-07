@@ -11,8 +11,8 @@ import {
 } from "../../../jacdac-ts/src/jdom/utils"
 import { JDEventSource } from "../../../jacdac-ts/src/jdom/eventsource"
 import {
-    AzureIotHubHealthConnectionStatus,
-    SRV_AZURE_IOT_HUB_HEALTH,
+    CloudConfigurationConnectionStatus,
+    SRV_CLOUD_CONFIGURATION,
     SRV_CLOUD_ADAPTER,
 } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import {
@@ -20,7 +20,7 @@ import {
     DISCONNECT,
     CHANGE,
 } from "../../../jacdac-ts/src/jdom/constants"
-import { AzureIoTHubHealthServer } from "../../../jacdac-ts/src/servers/azureiothubhealthserver"
+import { AzureIoTHubConfigurationServer } from "../../../jacdac-ts/src/servers/azureiothubconfiguration"
 import { ServiceProviderDefinition } from "../../../jacdac-ts/src/servers/servers"
 import {
     CloudAdapterServer,
@@ -118,7 +118,7 @@ class AzureIoTHubConnector extends JDEventSource {
         (status: number, body: unknown) => void
     > = {}
 
-    constructor(private healthServer: AzureIoTHubHealthServer) {
+    constructor(private healthServer: AzureIoTHubConfigurationServer) {
         super()
         this.healthServer.isReal = true
         this.healthServer.on(CONNECT, () => this.connect())
@@ -151,7 +151,7 @@ class AzureIoTHubConnector extends JDEventSource {
     private emitDisconnect() {
         this.emit(DISCONNECT)
         this.healthServer.setConnectionStatus(
-            AzureIotHubHealthConnectionStatus.Disconnected
+            CloudConfigurationConnectionStatus.Disconnected
         )
     }
 
@@ -283,7 +283,7 @@ class AzureIoTHubConnector extends JDEventSource {
         this.log(`connected`)
         this.emit(CONNECT)
         this.healthServer.setConnectionStatus(
-            AzureIotHubHealthConnectionStatus.Connected
+            CloudConfigurationConnectionStatus.Connected
         )
 
         this.client.subscribe(methodPrefix + "#")
@@ -322,7 +322,7 @@ class AzureIoTHubConnector extends JDEventSource {
 
         this.clientId = deviceId
         this.healthServer.setConnectionStatus(
-            AzureIotHubHealthConnectionStatus.Connecting
+            CloudConfigurationConnectionStatus.Connecting
         )
 
         const urlPath = `$iothub/websocket?iothub-no-client-cert=true`
@@ -377,11 +377,11 @@ class AzureIoTHubConnector extends JDEventSource {
 export default function createAzureIotHubServiceDefinition(): ServiceProviderDefinition {
     return <ServiceProviderDefinition>{
         name: "Cloud adapter (Azure IoT Hub)",
-        serviceClasses: [SRV_AZURE_IOT_HUB_HEALTH, SRV_CLOUD_ADAPTER],
+        serviceClasses: [SRV_CLOUD_CONFIGURATION, SRV_CLOUD_ADAPTER],
         services: () => {
-            const health = new AzureIoTHubHealthServer()
-            health.isReal = true
-            const connector = new AzureIoTHubConnector(health)
+            const cloudConfiguration = new AzureIoTHubConfigurationServer()
+            cloudConfiguration.isReal = true
+            const connector = new AzureIoTHubConnector(cloudConfiguration)
             const cloud = new CloudAdapterServer({
                 connectionName: "Azure IoT Hub",
                 controlled: true,
@@ -416,11 +416,12 @@ export default function createAzureIotHubServiceDefinition(): ServiceProviderDef
                     }
                 )
             })
-            health.connectionStatus.on(CHANGE, () => {
-                const connectionStatus = health.connectionStatus.values()[0]
+            cloudConfiguration.connectionStatus.on(CHANGE, () => {
+                const connectionStatus =
+                    cloudConfiguration.connectionStatus.values()[0]
                 const connected =
                     connectionStatus ===
-                    AzureIotHubHealthConnectionStatus.Connected
+                    CloudConfigurationConnectionStatus.Connected
                 console.log(
                     `cloud: ${connectionStatus}, ${
                         connected ? "connected" : "not connected"
@@ -428,7 +429,7 @@ export default function createAzureIotHubServiceDefinition(): ServiceProviderDef
                 )
                 cloud.connected = connected
             })
-            return [health, cloud]
+            return [cloudConfiguration, cloud]
         },
     }
 }

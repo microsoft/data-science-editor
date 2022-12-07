@@ -11,18 +11,17 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    Grid,
     TextField,
     Typography,
 } from "@mui/material"
 import useServiceClient from "../../jacdac/useServiceClient"
-import { AzureIoTHubHealthClient } from "../../../jacdac-ts/src/clients/azureiothubhealthclient"
+import { CloudConfigurationClient } from "../../../jacdac-ts/src/clients/cloudconfigurationclient"
 import useWidgetTheme from "../widgets/useWidgetTheme"
 import {
-    AzureIotHubHealthCmd,
-    AzureIotHubHealthConnectionStatus,
-    AzureIotHubHealthEvent,
-    AzureIotHubHealthReg,
+    CloudConfigurationCmd,
+    CloudConfigurationConnectionStatus,
+    CloudConfigurationEvent,
+    CloudConfigurationReg,
 } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
 import { useId } from "react"
 import SettingsIcon from "@mui/icons-material/Settings"
@@ -33,17 +32,17 @@ import ChipList from "../ui/ChipList"
 import useEvent from "../hooks/useEvent"
 import useEventCount from "../../jacdac/useEventCount"
 import DialogTitleWithClose from "../ui/DialogTitleWithClose"
-import ConnectedIcon from "../icons/ConnectedIcon"
 import BrainManagerContext from "../brains/BrainManagerContext"
 import { BrainManager } from "../brains/braindom"
 import useChange from "../../jacdac/useChange"
 import useEffectAsync from "../useEffectAsync"
 import useBrainDevice from "../brains/useBrainDevice"
+import useRegister from "../hooks/useRegister"
 
 function ConnectionStringDialog(props: {
     open: boolean
     setOpen: (v: boolean) => void
-    client: AzureIoTHubHealthClient
+    client: CloudConfigurationClient
 }) {
     const { client, open, setOpen } = props
     const [value, setValue] = useState("")
@@ -102,7 +101,7 @@ function BrainManagerConnectionStringDialog(props: {
     open: boolean
     setOpen: (v: boolean) => void
     brainManager: BrainManager
-    client: AzureIoTHubHealthClient
+    client: CloudConfigurationClient
 }) {
     const { client, open, setOpen, brainManager } = props
     const { device } = client.service
@@ -159,64 +158,84 @@ function BrainManagerConnectionStringDialog(props: {
     )
 }
 
-export default function DashboardAzureIoTHubHealth(
+export default function DashboardCloudConfiguration(
     props: DashboardServiceProps
 ) {
     const { service } = props
     const { brainManager } = useContext(BrainManagerContext)
     const [open, setOpen] = useState(false)
 
-    const hubNameRegister = service.register(AzureIotHubHealthReg.HubName)
-    const [hubName] = useRegisterUnpackedValue<[string]>(hubNameRegister, props)
-    const hubDeviceIdRegister = service.register(
-        AzureIotHubHealthReg.HubDeviceId
+    const serverNameRegister = useRegister(
+        service,
+        CloudConfigurationReg.ServerName
     )
-    const [hubDeviceId] = useRegisterUnpackedValue<[string]>(
-        hubDeviceIdRegister,
+    const cloudDeviceIdRegister = useRegister(
+        service,
+        CloudConfigurationReg.CloudDeviceId
+    )
+    const cloudTypeRegister = useRegister(
+        service,
+        CloudConfigurationReg.CloudType
+    )
+    const [serverName] = useRegisterUnpackedValue<[string]>(
+        serverNameRegister,
+        props
+    )
+    const [cloudDeviceId] = useRegisterUnpackedValue<[string]>(
+        cloudDeviceIdRegister,
+        props
+    )
+    const [cloudType] = useRegisterUnpackedValue<[string]>(
+        cloudTypeRegister,
         props
     )
     const connectionStatusRegister = service.register(
-        AzureIotHubHealthReg.ConnectionStatus
+        CloudConfigurationReg.ConnectionStatus
     )
     const [connectionStatus] = useRegisterUnpackedValue<
-        [AzureIotHubHealthConnectionStatus]
+        [CloudConfigurationConnectionStatus]
     >(connectionStatusRegister, props)
     const messageSentEvent = useEvent(
         service,
-        AzureIotHubHealthEvent.MessageSent
+        CloudConfigurationEvent.MessageSent
     )
     const messageSent = useEventCount(messageSentEvent)
-    const factory = useCallback(srv => new AzureIoTHubHealthClient(srv), [])
+    const factory = useCallback(srv => new CloudConfigurationClient(srv), [])
     const client = useServiceClient(service, factory)
     const color = "primary"
     const { textPrimary } = useWidgetTheme(color)
     const connected =
-        connectionStatus === AzureIotHubHealthConnectionStatus.Connected
+        connectionStatus === CloudConfigurationConnectionStatus.Connected
 
     const handleConnect = async () => {
         const cmd = connected
-            ? AzureIotHubHealthCmd.Disconnect
-            : AzureIotHubHealthCmd.Connect
+            ? CloudConfigurationCmd.Disconnect
+            : CloudConfigurationCmd.Connect
         await service.sendCmdAsync(cmd)
     }
     const handleConfigure = () => setOpen(true)
     return (
         <>
+            {cloudType && (
+                <Typography component="span" variant="subtitle2">
+                    {cloudType}
+                </Typography>
+            )}
             <ChipList>
-                {hubName && (
+                {serverName && (
                     <Chip
                         color={connected ? "primary" : "default"}
-                        label={hubName}
+                        label={serverName}
                         onClick={handleConnect}
                         disabled={connectionStatus === undefined}
                         title={
-                            AzureIotHubHealthConnectionStatus[
+                            CloudConfigurationConnectionStatus[
                                 connectionStatus
                             ] || "Waiting..."
                         }
                     />
                 )}
-                {hubDeviceId && <Chip label={`device: ${hubDeviceId}`} />}
+                {cloudDeviceId && <Chip label={`device: ${cloudDeviceId}`} />}
                 {messageSent !== undefined && (
                     <Chip label={`messages: ${messageSent}`} />
                 )}
