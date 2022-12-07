@@ -12,7 +12,7 @@ import DeviceScriptStats from "./DeviceScriptStats"
 import ConnectButtons from "../buttons/ConnectButtons"
 
 const DeviceScriptTextField = lazy(() => import("./DeviceScriptTextField"))
-const Console = lazy(() => import("../console/Console"))
+const ConsoleLog = lazy(() => import("../console/ConsoleLog"))
 const Dashboard = lazy(() => import("../dashboard/Dashboard"))
 
 function DeviceScriptTextEditorWithContext() {
@@ -30,7 +30,10 @@ function DeviceScriptTextEditorWithContext() {
                 </Grid>
             )}
             <Grid item xs={12}>
-                <GridHeader title="DeviceScript" action={<ConnectButtons transparent={true} />} />
+                <GridHeader
+                    title="DeviceScript"
+                    action={<ConnectButtons transparent={true} />}
+                />
             </Grid>
             <Grid item xs={12}>
                 <DeviceScriptToolbar />
@@ -50,14 +53,7 @@ function DeviceScriptTextEditorWithContext() {
             </Grid>
             <Grid item xs={12}>
                 <Suspense>
-                    <Console
-                        showToolbar={true}
-                        showFiles={false}
-                        showLevel={true}
-                        showPopout={false}
-                        showSerial={true}
-                        height="8rem"
-                    />
+                    <ConsoleLog height="8rem" />
                 </Suspense>
             </Grid>
             <Grid item xs={12}>

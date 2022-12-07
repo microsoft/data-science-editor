@@ -3,34 +3,14 @@ import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import ConsoleContext, { serializeLogs } from "./ConsoleContext"
 import ConsoleImportSourceMapButton from "./ConsoleImportSourceMapButton"
 import ConsoleSerialButton from "./ConsoleSerialButton"
-import ClearIcon from "@mui/icons-material/Clear"
 import SaveAltIcon from "@mui/icons-material/SaveAlt"
-import {
-    FormControl,
-    Grid,
-    MenuItem,
-    Select,
-    SelectChangeEvent,
-    TextField,
-    Typography,
-} from "@mui/material"
-import JacdacContext, { JacdacContextProps } from "../../jacdac/Context"
-import useChange from "../../jacdac/useChange"
-import { LoggerPriority } from "../../../jacdac-ts/jacdac-spec/dist/specconstants"
-import { useId } from "react"
+import { Grid, TextField } from "@mui/material"
 import ServiceManagerContext from "../ServiceManagerContext"
 import OpenInNewIcon from "@mui/icons-material/OpenInNew"
 import AppContext, { DrawerType } from "../AppContext"
 import { navigate } from "gatsby"
-
-function ClearButton() {
-    const { clear } = useContext(ConsoleContext)
-    return (
-        <IconButtonWithTooltip title="clear" onClick={clear}>
-            <ClearIcon />
-        </IconButtonWithTooltip>
-    )
-}
+import ConsoleLevelSelect from "./ConsoleLevelSelect"
+import ConsoleClearButton from "./ConsoleClearButton"
 
 function SaveButton() {
     const { logs } = useContext(ConsoleContext)
@@ -55,49 +35,6 @@ function PopOutButton() {
         <IconButtonWithTooltip title="pop out" onClick={handlePopOut}>
             <OpenInNewIcon />
         </IconButtonWithTooltip>
-    )
-}
-
-function MinLoggerPrioritySelect() {
-    const { bus } = useContext<JacdacContextProps>(JacdacContext)
-    const selectId = useId()
-    const value = useChange(bus, _ => _.minLoggerPriority)
-    const levels = [
-        LoggerPriority.Debug,
-        LoggerPriority.Log,
-        LoggerPriority.Warning,
-        LoggerPriority.Error,
-        LoggerPriority.Silent,
-    ]
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleChange = (event: SelectChangeEvent<LoggerPriority>) => {
-        bus.minLoggerPriority = event.target.value as LoggerPriority
-        console.debug(
-            `bus min logger priority: ${LoggerPriority[bus.minLoggerPriority]}`
-        )
-    }
-
-    return (
-        <FormControl
-            style={{ marginTop: "0.25rem" }}
-            variant="outlined"
-            size="small"
-        >
-            <Select
-                id={selectId}
-                title="log level"
-                value={value}
-                onChange={handleChange}
-            >
-                {levels.map(level => (
-                    <MenuItem key={level} value={level}>
-                        <Typography variant="caption">
-                            {LoggerPriority[level]}
-                        </Typography>
-                    </MenuItem>
-                ))}
-            </Select>
-        </FormControl>
     )
 }
 
@@ -143,7 +80,7 @@ export default function ConsoleToolbar(props: ConsoleToolbarOptions) {
                 </Grid>
             )}
             <Grid item>
-                <ClearButton />
+                <ConsoleClearButton />
             </Grid>
             {showFiles && (
                 <Grid item>
@@ -160,7 +97,7 @@ export default function ConsoleToolbar(props: ConsoleToolbarOptions) {
             </Grid>
             {showLevel && (
                 <Grid item>
-                    <MinLoggerPrioritySelect />
+                    <ConsoleLevelSelect />
                 </Grid>
             )}
             {showPopout && (
