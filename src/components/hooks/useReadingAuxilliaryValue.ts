@@ -1,6 +1,7 @@
 import { SystemReg } from "../../../jacdac-ts/src/jdom/constants"
 import { JDRegister } from "../../../jacdac-ts/src/jdom/register"
 import { useRegisterUnpackedValue } from "../../jacdac/useRegisterValue"
+import useRegister from "./useRegister"
 
 export default function useReadingAuxilliaryValue(
     register: JDRegister,
@@ -17,7 +18,6 @@ export default function useReadingAuxilliaryValue(
     const { service, code } = register || {}
     const { visible } = options || { visible: true }
     const reading = code === SystemReg.Reading || code === SystemReg.Value
-    const auxilliaryRegister =
-        reading && identifier ? service.register(identifier) : undefined
+    const auxilliaryRegister = useRegister(reading ? service : undefined, identifier)
     return useRegisterUnpackedValue<[number]>(auxilliaryRegister, { visible })
 }
