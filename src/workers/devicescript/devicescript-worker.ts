@@ -74,14 +74,18 @@ class WorkerHost {
 
 let serviceSpecs: jdspec.ServiceSpec[]
 
+const DEVICESCRIPT_PREFIX = 'import * as ds from "@devicescript/core"'
 const handlers: { [index: string]: (props: any) => object | Promise<object> } =
     {
         compile: async (props: DeviceScriptCompileRequest) => {
-            const { source } = props
+            let { source = "" } = props
             if (!serviceSpecs) throw new Error("specs missing")
+
+            if (source.indexOf(DEVICESCRIPT_PREFIX) < 0) {
+                source = DEVICESCRIPT_PREFIX + "\n\n" + source
+            }
             const host = new WorkerHost(serviceSpecs)
             const res = compile(source, { host })
-
             return <Partial<DeviceScriptCompileResponse>>{
                 ...res,
                 files: host.files,
