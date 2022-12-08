@@ -3,6 +3,7 @@ import {
     CardActions,
     CardContent,
     CardHeader,
+    CardMedia,
     Dialog,
     DialogContent,
     Grid,
@@ -33,13 +34,27 @@ function ConnectDeviceCard(props: { device: jdspec.DeviceSpec }) {
     const requestDescription = deviceSpec?.transport?.requestDescription
     return (
         <Card>
-            <img
-                src={image}
-                style={{ aspectRatio: "4 / 3", width: "100%" }}
-                alt={`photograph of ${name}`}
-                loading="lazy"
+            <CardHeader
+                disableTypography={true}
+                title={<Typography variant="subtitle2">{name}</Typography>}
+                subheader={
+                    <Typography variant="caption">
+                        {requestDescription}
+                    </Typography>
+                }
             />
-            <CardHeader title={name} subheader={requestDescription} />
+            <CardMedia>
+                <img
+                    src={image}
+                    style={{
+                        aspectRatio: "4 / 3",
+                        width: "100%",
+                        marginBottom: 0,
+                    }}
+                    alt={`photograph of ${name}`}
+                    loading="lazy"
+                />
+            </CardMedia>
             {!!firmware && (
                 <CardActions>
                     <Link
@@ -67,21 +82,22 @@ function ConnectTransport(props: {
     if (!devices?.length && !Flags.diagnostics) return null
     return (
         <>
-            <GridHeader title={transport.type.toUpperCase()} />
+            <GridHeader
+                action={
+                    <ConnectButton
+                        key={transport.type}
+                        transport={transport}
+                        onClick={onClose}
+                        full={true}
+                        typeInTitle={true}
+                    />
+                }
+            />
             {devices.map(device => (
                 <Grid item {...breakpoints} key={device.id}>
                     <ConnectDeviceCard device={device} />
                 </Grid>
             ))}
-            <Grid item xs={12} textAlign="right">
-                <ConnectButton
-                    key={transport.type}
-                    transport={transport}
-                    onClick={onClose}
-                    full={true}
-                    typeInTitle={true}
-                />
-            </Grid>
         </>
     )
 }
@@ -107,9 +123,6 @@ export default function ConnectTransportDialog(props: {
                 Connect to a device
             </DialogTitleWithClose>
             <DialogContent>
-                <Typography variant="caption">
-                    Find your device connection type and connect.
-                </Typography>
                 <Grid container spacing={2}>
                     {transports.map(transport => (
                         <ConnectTransport
