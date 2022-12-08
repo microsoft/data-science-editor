@@ -39,7 +39,7 @@ const init = Module().then(m => {
             data,
         })
     }
-    m.jacsStart()
+    m.devsStart()
     return m
 })
 
@@ -55,7 +55,7 @@ const handlers: { [index: string]: (props: any) => object | Promise<object> } =
         deploy: async (props: VMDeployRequest) => {
             const { binary, debugInfo, restart } = props
             const Module = await init
-            const verificationError = Module.jacsDeploy(binary)
+            const verificationError = Module.devsDeploy(binary)
             if (verificationError != 0) {
                 console.log("verification error: " + verificationError)
                 return { verificationError }
