@@ -9,7 +9,7 @@ import createVMWorker from "../../../../workers/vm/workerloader"
 import createDeviceScriptWorker from "../../../../workers/devicescript/workerloader"
 import createCadWorker from "../../../../workers/cad/workerloader"
 
-export type VMType = "data" | "csv" | "tf" | "vm" | "cad" | "devicescript"
+export type VMType = "data" | "csv" | "vm" | "cad" | "devicescript"
 
 export interface WorkerMessage {
     worker: VMType
