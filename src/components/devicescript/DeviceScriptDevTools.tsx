@@ -44,7 +44,7 @@ function DeviceScriptDevToolsWithContext() {
                         showFiles={false}
                         showLevel={true}
                         showPopout={false}
-                        showSerial={true}
+                        showSerial={false}
                         height="8rem"
                     />
                 </Suspense>
