@@ -9,6 +9,8 @@ import DeviceScriptToolbar from "./DeviceScriptToolbar"
 import GridHeader from "../ui/GridHeader"
 import DeviceScriptStats from "./DeviceScriptStats"
 import ConnectButtons from "../buttons/ConnectButtons"
+import useRoleManagerClient from "../services/useRoleManagerClient"
+import useChange from "../../jacdac/useChange"
 const Console = lazy(() => import("../console/Console"))
 const Dashboard = lazy(() => import("../dashboard/Dashboard"))
 
@@ -17,6 +19,8 @@ function DeviceScriptDevToolsWithContext() {
     const script = useBrainScript(scriptId)
 
     useDeviceScriptVm()
+    const roleManager = useRoleManagerClient()
+    useChange(roleManager, _ => _?.startSimulators())
 
     return (
         <Grid spacing={1} container>

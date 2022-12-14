@@ -10,6 +10,8 @@ import GridHeader from "../ui/GridHeader"
 import { useLocationSearchParamBoolean } from "../hooks/useLocationSearchParam"
 import DeviceScriptStats from "./DeviceScriptStats"
 import ConnectButtons from "../buttons/ConnectButtons"
+import useRoleManagerClient from "../services/useRoleManagerClient"
+import useChange from "../../jacdac/useChange"
 
 const DeviceScriptTextField = lazy(() => import("./DeviceScriptTextField"))
 const ConsoleLog = lazy(() => import("../console/ConsoleLog"))
@@ -21,6 +23,8 @@ function DeviceScriptTextEditorWithContext() {
     const showTextField = useLocationSearchParamBoolean("text", true)
 
     useDeviceScriptVm()
+    const roleManager = useRoleManagerClient()
+    useChange(roleManager, _ => _?.startSimulators())
 
     return (
         <Grid spacing={1} container>
