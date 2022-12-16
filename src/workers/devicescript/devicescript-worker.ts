@@ -81,8 +81,10 @@ const handlers: { [index: string]: (props: any) => object | Promise<object> } =
             let { source = "" } = props
             if (!serviceSpecs) throw new Error("specs missing")
 
+            let lineOffset = 0
             if (source.indexOf(DEVICESCRIPT_PREFIX) < 0) {
                 source = DEVICESCRIPT_PREFIX + "\n\n" + source
+                lineOffset = 2
             }
             const host = new WorkerHost(serviceSpecs)
             const res = compile(source, { host })
@@ -90,7 +92,10 @@ const handlers: { [index: string]: (props: any) => object | Promise<object> } =
                 ...res,
                 files: host.files,
                 logs: host.logs,
-                errors: host.errors,
+                errors: host.errors.map(({ line, ...rest }) => ({
+                    ...rest,
+                    line: line - lineOffset,
+                })),
             }
         },
         specs: async (props: DeviceScriptSpecsRequest) => {
