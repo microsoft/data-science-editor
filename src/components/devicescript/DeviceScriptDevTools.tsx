@@ -1,4 +1,4 @@
-import React, { useContext, lazy } from "react"
+import React, { useContext, lazy, useMemo } from "react"
 import { Grid, NoSsr } from "@mui/material"
 import BrainManagerToolbar from "../brains/BrainManagerToolbar"
 import BrainManagerContext from "../brains/BrainManagerContext"
@@ -11,16 +11,27 @@ import DeviceScriptStats from "./DeviceScriptStats"
 import ConnectButtons from "../buttons/ConnectButtons"
 import useRoleManagerClient from "../services/useRoleManagerClient"
 import useChange from "../../jacdac/useChange"
+import { debounce } from "../../../jacdac-ts/src/jdom/utils"
+import useBus from "../../jacdac/useBus"
 const Console = lazy(() => import("../console/Console"))
 const Dashboard = lazy(() => import("../dashboard/Dashboard"))
+
+function useAutoStartSimulators(delay = 2000) {
+    const bus = useBus()
+    const roleManager = useRoleManagerClient()
+    const debouncedStartSimulators = useMemo(
+        () => debounce(() => bus.roleManager?.startSimulators(), delay),
+        [roleManager]
+    )
+    useChange(roleManager, debouncedStartSimulators)
+}
 
 function DeviceScriptDevToolsWithContext() {
     const { scriptId } = useContext(BrainManagerContext)
     const script = useBrainScript(scriptId)
 
     useDeviceScriptVm()
-    const roleManager = useRoleManagerClient()
-    useChange(roleManager, _ => _?.startSimulators())
+    useAutoStartSimulators()
 
     return (
         <Grid spacing={1} container>
