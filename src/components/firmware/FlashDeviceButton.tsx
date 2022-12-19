@@ -36,7 +36,8 @@ function DragAndDropUpdateButton(props: {
     const bus = useBus()
     const { firmwareVersion, specification, info, productIdentifier } = props
     const { bootloader } = specification || {}
-    const { driveName, sequence, ledAnimation } = bootloader || {}
+    const { driveName, sequence, ledAnimation, firmwareUploader } =
+        bootloader || {}
     const { name, url } = info
     const [open, setOpen] = useState(false)
     const { trackEvent } = useAnalytics()
@@ -105,20 +106,44 @@ function DragAndDropUpdateButton(props: {
                                 <b>Bootloader (BOOT)</b> button
                             </li>
                         )}
-                        {ledAnimation === "blue-glow" && (
+                        {sequence === "boot-power" && (
+                            <li>
+                                Unplug the device, press the
+                                <b>Bootloader (BOOT)</b> button, plug the device
+                            </li>
+                        )}
+                        {ledAnimation === "blue-glow" && driveName && (
                             <li>
                                 You should see the status LED glow in Blue and
                                 the <b>{driveName}</b> drive should appear.
                             </li>
                         )}
-                        <li>
-                            Drag and drop the file into the&nbsp;
-                            <b>{driveName}</b> drive.
-                        </li>
-                        <li>
-                            Once the file is copied, the device will
-                            automatically restart with the new firmware.
-                        </li>
+                        {driveName && (
+                            <>
+                                <li>
+                                    Drag and drop the file into the&nbsp;
+                                    <b>{driveName}</b> drive.
+                                </li>
+                                <li>
+                                    Once the file is copied, the device will
+                                    automatically restart with the new firmware.
+                                </li>
+                            </>
+                        )}
+                        {firmwareUploader && (
+                            <li>
+                                Open{" "}
+                                <a
+                                    href={firmwareUploader}
+                                    rel="noreferrer"
+                                    target="_blank"
+                                >
+                                    Firmware Uploader
+                                </a>
+                                and follow the instruction to upload the
+                                firmware.
+                            </li>
+                        )}
                     </ol>
                 </DialogContent>
             </Dialog>
