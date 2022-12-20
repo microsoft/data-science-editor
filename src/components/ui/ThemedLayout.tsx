@@ -6,22 +6,10 @@ import {
 } from "@mui/material"
 import { SnackbarProvider } from "notistack"
 import React, { ReactNode } from "react"
-import JacdacProvider from "../../jacdac/Provider"
 import { AppProvider } from "../AppContext"
-import { DbProvider } from "../DbContext"
-import { PacketsProvider } from "../PacketsContext"
 import { ServiceManagerProvider } from "../ServiceManagerContext"
-import { MakeCodeSnippetProvider } from "../makecode/MakeCodeSnippetContext"
-import { WebAudioProvider } from "./WebAudioContext"
 import { FileSystemProvider } from "../FileSystemContext"
 import { AppInsightsErrorBoundary } from "../hooks/useAnalytics"
-import { HostedSimulatorsProvider } from "../HostedSimulatorsContext"
-import { ConsoleProvider } from "../console/ConsoleContext"
-import { SimulatorDialogsProvider } from "../SimulatorsDialogContext"
-import { CommandPaletteProvider } from "../commands/CommandPaletteContext"
-import { YouTubeProvider } from "../youtube/YouTubeContext"
-import { BrainManagerProvider } from "../brains/BrainManagerContext"
-import { DeviceScriptProvider } from "../devicescript/DeviceScriptContext"
 
 /*
 declare module "@mui/styles/defaultTheme" {
@@ -41,41 +29,11 @@ export default function ThemedLayout(props: {
             <ThemeProvider theme={theme}>
                 <AppInsightsErrorBoundary>
                     <SnackbarProvider maxSnack={maxSnack || 1} dense={true}>
-                        <DbProvider>
-                            <FileSystemProvider>
-                                <WebAudioProvider>
-                                    <JacdacProvider>
-                                        <HostedSimulatorsProvider>
-                                            <ServiceManagerProvider>
-                                                <PacketsProvider>
-                                                    <AppProvider>
-                                                        <YouTubeProvider>
-                                                            <CommandPaletteProvider>
-                                                                <SimulatorDialogsProvider>
-                                                                    <ConsoleProvider>
-                                                                        <DeviceScriptProvider>
-                                                                            <MakeCodeSnippetProvider>
-                                                                                <BrainManagerProvider>
-                                                                                    <CssBaseline />
+                        <FileSystemProvider>
+                            <CssBaseline />
 
-                                                                                    {
-                                                                                        children
-                                                                                    }
-                                                                                </BrainManagerProvider>
-                                                                            </MakeCodeSnippetProvider>
-                                                                        </DeviceScriptProvider>
-                                                                    </ConsoleProvider>
-                                                                </SimulatorDialogsProvider>
-                                                            </CommandPaletteProvider>
-                                                        </YouTubeProvider>
-                                                    </AppProvider>
-                                                </PacketsProvider>
-                                            </ServiceManagerProvider>
-                                        </HostedSimulatorsProvider>
-                                    </JacdacProvider>
-                                </WebAudioProvider>
-                            </FileSystemProvider>
-                        </DbProvider>
+                            {children}
+                        </FileSystemProvider>
                     </SnackbarProvider>
                 </AppInsightsErrorBoundary>
             </ThemeProvider>

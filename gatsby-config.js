@@ -1,14 +1,9 @@
-const { identifierToUrlPath } = require(`./jacdac-ts/dist/jacdac.cjs`)
-
 const maxImageWidth = 800
 const siteUrl = "https://microsoft.github.io"
-const pathPrefix = "/jacdac-docs"
+const pathPrefix = "/data-science-editor"
 
-const wsl = !!process.env.WSL_DISTRO_NAME || !!process.env.CODESPACE_NAME
-const offline = !!process.env.JACDAC_OFFLINE
-
-const SITE_TITLE = `Jacdac - Connect and code electronics. Instantly.`
-const SITE_DESCRIPTION = `Jacdac is a plug-and-play hardware and software stack for microcontrollers and their peripherals such as sensors and actuators. Jacdac is primarily designed for “modular electronics” scenarios that support rapid prototyping, creative exploration, making and learning through physical computing. Jacdac is designed to be cheap, flexible and extensible.`
+const SITE_TITLE = `Data Science Editor.`
+const SITE_DESCRIPTION = `Data Science Editor.`
 
 module.exports = {
     trailingSlash: "always",
@@ -38,51 +33,8 @@ module.exports = {
         {
             resolve: `gatsby-source-filesystem`,
             options: {
-                name: `images`,
-                path: `${__dirname}/jacdac-ts/jacdac-spec/devices`,
-                ignore: [`**/*.json`],
-            },
-        },
-        {
-            resolve: `gatsby-source-filesystem`,
-            options: {
                 name: `pages`,
                 path: `${__dirname}/src/pages`,
-            },
-        },
-        {
-            resolve: `gatsby-source-filesystem`,
-            options: {
-                name: `services`,
-                path: `${__dirname}/jacdac-ts/jacdac-spec/dist/services.json`,
-            },
-        },
-        {
-            resolve: `gatsby-source-filesystem`,
-            options: {
-                name: `serviceSources`,
-                path: `${__dirname}/jacdac-ts/jacdac-spec/dist/services-sources.json`,
-            },
-        },
-        {
-            resolve: `gatsby-source-filesystem`,
-            options: {
-                name: `devices`,
-                path: `${__dirname}/jacdac-ts/jacdac-spec/dist/devices.json`,
-            },
-        },
-        {
-            resolve: `gatsby-source-filesystem`,
-            options: {
-                name: `akalinks`,
-                path: `${__dirname}/jacdac-ts/jacdac-spec/devices/microsoft-research/qr-url-device-map.csv`,
-            },
-        },
-        {
-            resolve: `gatsby-source-filesystem`,
-            options: {
-                name: `traces`,
-                path: `${__dirname}/jacdac-ts/jacdac-spec/traces`,
             },
         },
         `gatsby-transformer-javascript-frontmatter`,
@@ -98,14 +50,6 @@ module.exports = {
                     remarkPlugins: [require(`remark-gfm`)],
                 },
                 gatsbyRemarkPlugins: [
-                    wsl || offline
-                        ? undefined
-                        : {
-                              resolve: "gatsby-remark-makecode",
-                              options: {
-                                  editorUrl: "https://makecode.microbit.org/",
-                              },
-                          },
                     "gatsby-remark-autolink-headers",
                     "gatsby-remark-external-links",
                     {
@@ -121,46 +65,6 @@ module.exports = {
                     "gatsby-remark-static-images",
                     "gatsby-remark-copy-linked-files",
                 ].filter(plugin => !!plugin),
-            },
-        },
-        {
-            resolve: `@gatsby-contrib/gatsby-plugin-elasticlunr-search`,
-            options: {
-                fields: [`title`, `description`, `body`, `tags`],
-                resolvers: {
-                    Mdx: {
-                        title: node => node.frontmatter.title,
-                        description: node =>
-                            node.frontmatter.description || node.excerpt,
-                        body: node => node.rawBody || node.body,
-                        tags: node => node.frontmatter.tags || "",
-                        url: node => node.frontmatter.path || node.fields.slug,
-                    },
-                    JavascriptFrontmatter: {
-                        title: node => node.frontmatter?.title,
-                        description: node => node.frontmatter?.description,
-                        tags: node => node.frontmatter?.tags || "",
-                        url: node =>
-                            node.frontmatter?.path ||
-                            node.fields?.slug ||
-                            node.node?.relativePath,
-                    },
-                    ServicesJson: {
-                        title: node => node.name,
-                        description: node => node.notes["short"],
-                        body: node => node.source,
-                        tags: node => node.tags,
-                        url: node => `/services/${node.shortId}/`,
-                    },
-                    DevicesJson: {
-                        title: node => node.name,
-                        description: node => node.description,
-                        body: node => node.company,
-                        tags: node => node.tags,
-                        url: node =>
-                            `/devices/${identifierToUrlPath(node.jsonId)}/`,
-                    },
-                }, // filter: (node, getNode) => node.frontmatter.tags !== "exempt",
             },
         },
         "gatsby-plugin-sitemap",
@@ -184,10 +88,6 @@ module.exports = {
             options: {
                 precachePages: [
                     `/*`,
-                    `/reference/**`,
-                    `/services/**`,
-                    `/devices/**`,
-                    `/tools/**`,
                 ],
             },
         },

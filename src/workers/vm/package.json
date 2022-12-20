@@ -1,9 +1,0 @@
-{
-  "name": "vm-worker",
-  "type": "module",
-  "source": "vm-worker.ts",
-  "main": "./dist/node_modules/vm-worker.umd.js",
-  "module": "./dist/node_modules/vm-worker.cjs.js",
-  "exports": "./dist/node_modules/vm-worker.js",
-  "license": "MIT"
-}

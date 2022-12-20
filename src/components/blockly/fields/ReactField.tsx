@@ -2,7 +2,6 @@
 import React from "react"
 import { createRoot } from "react-dom/client"
 import Blockly from "blockly"
-import JacdacProvider from "../../../jacdac/Provider"
 import { ReactNode } from "react"
 import AppTheme from "../../ui/AppTheme"
 import { Box } from "@mui/material"
@@ -17,7 +16,6 @@ import {
     FieldWithServices,
     WorkspaceProvider,
 } from "../WorkspaceContext"
-import { WebAudioProvider } from "../../ui/WebAudioContext"
 import { ReactFieldBase } from "./ReactFieldBase"
 import { SnackbarProvider } from "notistack"
 import { DarkModeProvider } from "../../ui/DarkModeContext"
@@ -155,24 +153,20 @@ export default class ReactField<T> extends ReactFieldBase<T> {
             <WorkspaceProvider field={this}>
                 <SnackbarProvider maxSnack={1} dense={true}>
                     <DarkModeProvider fixedDarkMode={this.darkMode}>
-                        <WebAudioProvider>
-                            <JacdacProvider>
-                                <AppTheme>
-                                    <ValueProvider
-                                        value={this.value}
-                                        onValueChange={onValueChange}
-                                    >
-                                        <Box
-                                            m={0.5}
-                                            borderRadius="0.25rempx"
-                                            bgcolor="background.paper"
-                                        >
-                                            {this.renderField()}
-                                        </Box>
-                                    </ValueProvider>
-                                </AppTheme>
-                            </JacdacProvider>
-                        </WebAudioProvider>
+                        <AppTheme>
+                            <ValueProvider
+                                value={this.value}
+                                onValueChange={onValueChange}
+                            >
+                                <Box
+                                    m={0.5}
+                                    borderRadius="0.25rempx"
+                                    bgcolor="background.paper"
+                                >
+                                    {this.renderField()}
+                                </Box>
+                            </ValueProvider>
+                        </AppTheme>
                     </DarkModeProvider>
                 </SnackbarProvider>
             </WorkspaceProvider>

@@ -17,9 +17,9 @@ function tryUpdate(force) {
             window.navigator.onLine &&
             !/http:\/\/localhost/.test(window.location.href)
         ) {
-            console.debug(`jacdac: check for updates`)
+            console.debug(`check for updates`)
             try {
-                const req = await fetch("/jacdac-docs/version.json")
+                const req = await fetch("/data-science-editor/version.json")
                 if (!req.ok) {
                     console.debug(`fetch version.json failed, probably offline`)
                     return

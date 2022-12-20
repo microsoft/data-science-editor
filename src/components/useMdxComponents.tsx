@@ -15,33 +15,7 @@ import Suspense from "./ui/Suspense"
 import Alert from "./ui/Alert"
 import { AlertTitle } from "@mui/material"
 
-const Video = lazy(() => import("./ui/Video"))
-const PythonProjects = lazy(() => import("./python/PythonProjects"))
-const MakeCodeProjects = lazy(() => import("./makecode/MakeCodeProjects"))
-const MakeCodeExtensionFooter = lazy(
-    () => import("./makecode/MakeCodeExtensionFooter")
-)
-const MakeCodeProjectFooter = lazy(
-    () => import("./makecode/MakeCodeProjectFooter")
-)
 const CodeBlock = lazy(() => import("./CodeBlock"))
-const RandomGenerator = lazy(() => import("./RandomGenerator"))
-const TraceList = lazy(() => import("./trace/TraceList"))
-const SpecificationUnitList = lazy(() => import("./SpecificationUnitList"))
-const DeviceImage = lazy(() => import("./devices/DeviceImage"))
-const YouTubeButton = lazy(() => import("./youtube/YouTubeButton"))
-const DeviceSpecificationList = lazy(
-    () => import("./specification/DeviceSpecificationList")
-)
-const DeviceImageList = lazy(() => import("./devices/DeviceImageList"))
-const JacdaptorImageList = lazy(() => import("./home/JacdaptorImageList"))
-const EC30Editor = lazy(() => import("./ec30/EC30Editor"))
-const GithubRepositoryCard = lazy(() => import("./github/GithubRepositoryCard"))
-const MakeCodeOpenSnippetButton = lazy(
-    () => import("./makecode/MakeCodeOpenSnippetButton")
-)
-const FaqPageList = lazy(() => import("./faq/FaqPageList"))
-const ErrorList = lazy(() => import("./faq/ErrorList"))
 
 export default function useMdxComponents() {
     const theme = useTheme()
@@ -81,100 +55,8 @@ export default function useMdxComponents() {
                     <CodeBlock {...props} />
                 </Suspense>
             ),
-            RandomGenerator: props => (
-                <Suspense>
-                    <Box displayPrint="none">
-                        <RandomGenerator {...props} />
-                    </Box>
-                </Suspense>
-            ),
-            TraceList: props => (
-                <Suspense>
-                    <TraceList {...props} />
-                </Suspense>
-            ),
-            SpecificationUnitList: props => (
-                <Suspense>
-                    <SpecificationUnitList {...props} />
-                </Suspense>
-            ),
-            DeviceImage: props => (
-                <Suspense>
-                    <DeviceImage {...props} />
-                </Suspense>
-            ),
-            PythonProjects: props => (
-                <Suspense>
-                    <PythonProjects {...props} />
-                </Suspense>
-            ),
-            MakeCodeProjects: props => (
-                <Suspense>
-                    <MakeCodeProjects {...props} />
-                </Suspense>
-            ),
-            MakeCodeExtensionFooter: props => (
-                <Suspense>
-                    <MakeCodeExtensionFooter {...props} />
-                </Suspense>
-            ),
-            MakeCodeProjectFooter: props => (
-                <Suspense>
-                    <MakeCodeProjectFooter {...props} />
-                </Suspense>
-            ),
-            YouTubeButton: props => (
-                <Suspense>
-                    <YouTubeButton {...props} />
-                </Suspense>
-            ),
-            DeviceSpecificationList: props => (
-                <Suspense>
-                    <DeviceSpecificationList sx={{ mb: 2 }} {...props} />
-                </Suspense>
-            ),
-            DeviceImageList: props => (
-                <Suspense>
-                    <DeviceImageList {...props} />
-                </Suspense>
-            ),
-            JacdaptorImageList: props => (
-                <Suspense>
-                    <JacdaptorImageList {...props} />
-                </Suspense>
-            ),
-            EC30Editor: props => (
-                <Suspense>
-                    <EC30Editor {...props} />
-                </Suspense>
-            ),
             Alert: props => <Alert {...props} />,
             AlertTitle: props => <AlertTitle {...props} />,
-            Video: props => (
-                <Suspense>
-                    <Video {...props} />
-                </Suspense>
-            ),
-            GithubRepositoryCard: props => (
-                <Suspense>
-                    <GithubRepositoryCard {...props} />
-                </Suspense>
-            ),
-            MakeCodeOpenSnippetButton: props => (
-                <Suspense>
-                    <MakeCodeOpenSnippetButton {...props} />
-                </Suspense>
-            ),
-            FaqPageList: props => (
-                <Suspense>
-                    <FaqPageList {...props} />
-                </Suspense>
-            ),
-            ErrorList: props => (
-                <Suspense>
-                    <ErrorList {...props} />
-                </Suspense>
-            ),
         }),
         []
     )

@@ -12,27 +12,13 @@ import {
 import AppContext, { DrawerType } from "./AppContext"
 import DarkModeContext, { DarkModeProvider } from "./ui/DarkModeContext"
 import Footer from "./shell/Footer"
-import { Flags } from "../../jacdac-ts/src/jdom/flags"
 import { WindowLocation } from "@reach/router"
 import Suspense from "./ui/Suspense"
 import ThemedMdxLayout from "./ui/ThemedMdxLayout"
 import useMediaQueries from "./hooks/useMediaQueries"
-import MainAppBar from "./shell/MainAppBar"
-import { UIFlags } from "../jacdac/providerbus"
-import YouTubeContext from "./youtube/YouTubeContext"
-import HelpAlert from "./alert/HelpAlert"
-import { isBrainManagerEnabled } from "./brains/BrainManagerContext"
+import DataEditorAppBar from "./shell/DataEditorAppBar"
 
 const Breadcrumbs = lazy(() => import("./ui/Breadcrumbs"))
-const AppDrawer = lazy(() => import("./shell/AppDrawer"))
-const ToolsDrawer = lazy(() => import("./shell/ToolsDrawer"))
-const SimulatorCommands = lazy(() => import("./commands/SimulatorCommands"))
-const TraceAlert = lazy(() => import("./shell/TraceAlert"))
-const WebDiagnostics = lazy(() => import("./shell/WebDiagnostics"))
-const WebCam = lazy(() => import("./ui/WebCam"))
-const PassiveAlert = lazy(() => import("./shell/PassiveAlert"))
-const DataEditorAppBar = lazy(() => import("./shell/DataEditorAppBar"))
-const YouTubePlayer = lazy(() => import("./youtube/YouTubePlayer"))
 
 const PREFIX = "Layout"
 
@@ -177,11 +163,10 @@ function LayoutWithDarkMode(props: LayoutProps) {
 function LayoutWithMdx(props: LayoutProps) {
     const { darkMode } = useContext(DarkModeContext)
     const isDark = darkMode === "dark"
-    const isBrain = isBrainManagerEnabled()
     const themeDef: DeprecatedThemeOptions = {
         palette: {
             primary: {
-                main: isBrain ? "#0074cF" : isDark ? "#56d364" : "#2e7d32",
+                main: isDark ? "#56d364" : "#2e7d32",
             },
             secondary: {
                 main: "#ffc400",
@@ -205,8 +190,8 @@ function LayoutWithContext(props: LayoutProps) {
     const { pageContext, path, location } = pageProps
     const { frontmatter } = pageContext || {}
 
-    const isHosted = UIFlags.hosted
-    const footer = UIFlags.footer
+    const isHosted = false
+    const footer = true
     const tools = /^\/tools\//.test(path)
     const makeCodeTool = /tools\/makecode-/.test(path)
     const deviceScriptTool = /tools\/devicescript-/.test(path)
@@ -228,17 +213,10 @@ function LayoutWithContext(props: LayoutProps) {
         hideBreadcrumbs: isDataEditor || tools || fullWidthTools || devicesPage,
     }
 
-    const appBar = hideMainMenu ? undefined : isDataEditor ? (
-        <Suspense>
-            <DataEditorAppBar />
-        </Suspense>
-    ) : (
-        <MainAppBar />
-    )
+    const appBar = <DataEditorAppBar />
 
     const { darkMode } = useContext(DarkModeContext)
-    const { drawerType, toolsMenu, showWebCam } = useContext(AppContext)
-    const { videoId } = useContext(YouTubeContext)
+    const { drawerType, toolsMenu } = useContext(AppContext)
     const drawerOpen = drawerType !== DrawerType.None
     const { medium } = useMediaQueries()
     const container = !medium && !fullWidthTools
@@ -253,20 +231,6 @@ function LayoutWithContext(props: LayoutProps) {
 
     const InnerMainSection = () => (
         <>
-            <Suspense>
-                <SimulatorCommands />
-            </Suspense>
-            <Suspense>
-                <TraceAlert />
-            </Suspense>
-            <Suspense>
-                <PassiveAlert />
-            </Suspense>
-            {Flags.diagnostics && (
-                <Suspense>
-                    <WebDiagnostics />
-                </Suspense>
-            )}
             {!hideBreadcrumbs && location && (
                 <Suspense>
                     <Breadcrumbs location={location} />
@@ -279,7 +243,6 @@ function LayoutWithContext(props: LayoutProps) {
                     {element}
                 </Typography>
             )}
-            {!hideUnderConstruction && !UIFlags.hosted && <HelpAlert />}
         </>
     )
 
@@ -305,16 +268,6 @@ function LayoutWithContext(props: LayoutProps) {
                 {!hideMainMenu && (
                     <nav>
                         {appBar}
-                        {drawerType !== DrawerType.None && (
-                            <Suspense>
-                                <AppDrawer pagePath={path} />
-                            </Suspense>
-                        )}
-                        {toolsMenu && (
-                            <Suspense>
-                                <ToolsDrawer />
-                            </Suspense>
-                        )}
                     </nav>
                 )}
                 {container ? (
@@ -329,16 +282,6 @@ function LayoutWithContext(props: LayoutProps) {
                     <div className={mainClasses}>
                         <MainSection />
                     </div>
-                )}
-                {showWebCam && (
-                    <Suspense>
-                        <WebCam />
-                    </Suspense>
-                )}
-                {!!videoId && (
-                    <Suspense>
-                        <YouTubePlayer />
-                    </Suspense>
                 )}
             </div>
         </Root>
