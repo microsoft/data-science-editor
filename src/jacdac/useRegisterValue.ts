@@ -1,7 +1,9 @@
 import { humanify } from "../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import {
     BaseReg,
+    DeviceScriptManagerReg,
     REPORT_UPDATE,
+    SRV_DEVICE_SCRIPT_MANAGER,
     SystemStatusCodes,
 } from "../../jacdac-ts/src/jdom/constants"
 import { PackedValues } from "../../jacdac-ts/src/jdom/pack"
@@ -37,19 +39,34 @@ export interface HumanRegisterOptions extends RegisterOptions {
     maxLength?: number
 }
 
-const renderers = {
-    [BaseReg.StatusCode]: (reg: JDRegister) => {
-        const values = reg?.unpackedValue || []
-        const [code, vendorCode] = values as [number, number]
-        if (code === undefined) return "?"
-        let r = `${humanify(
-            SystemStatusCodes[code] || "?"
-        )?.toLowerCase()} (0x${code.toString(16)})`
-        if (vendorCode) {
-            r += `, vendor: 0x${code.toString(16)}`
+function resolveRenderer(srv: number, reg: number) {
+    if (reg === BaseReg.StatusCode)
+        return (reg: JDRegister) => {
+            const values = reg?.unpackedValue || []
+            const [code, vendorCode] = values as [number, number]
+            if (code === undefined) return "?"
+            let r = `${humanify(
+                SystemStatusCodes[code] || "?"
+            )?.toLowerCase()} (0x${code.toString(16)})`
+            if (vendorCode) {
+                r += `, vendor: 0x${code.toString(16)}`
+            }
+            return r
         }
-        return r
-    },
+
+    if (
+        srv === SRV_DEVICE_SCRIPT_MANAGER &&
+        reg === DeviceScriptManagerReg.RuntimeVersion
+    ) {
+        return (reg: JDRegister) => {
+            const values = reg?.unpackedValue || []
+            const [patch, minor, major] = values as [number, number, number]
+            if (patch === undefined) return "?"
+            return `${major}.${minor}.${patch}`
+        }
+    }
+
+    return undefined
 }
 
 export function useRegisterHumanValue(
@@ -58,7 +75,9 @@ export function useRegisterHumanValue(
 ): string {
     const { visible, maxLength } = options || { visible: true }
     const { trackError } = useAnalytics()
-    const renderer = register && renderers[register.code]
+    const renderer = register
+        ? resolveRenderer(register.service.serviceClass, register.code)
+        : undefined
 
     return useEventRaised(
         REPORT_UPDATE,
