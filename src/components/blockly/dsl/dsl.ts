@@ -1,57 +1,19 @@
-import jsep from "jsep"
 import { Theme } from "@mui/material"
 import Blockly, { Block, Workspace, WorkspaceSvg } from "blockly"
-import { JDService } from "../../../../jacdac-ts/src/jdom/service"
-import { RoleEvent } from "../../devicescript/vm/compile"
-import { VMError } from "../../devicescript/vm/ir"
 import {
     BlockDefinition,
     ContentDefinition,
     resolveBlockDefinition,
-    ServiceBlockDefinition,
 } from "../toolbox"
-import {
-    CmdWithErrors,
-    ExpressionWithErrors,
-} from "../../devicescript/JacscriptGenerator"
-import { BlockJSON, WorkspaceFile, WorkspaceJSON } from "./workspacejson"
+import { WorkspaceFile, WorkspaceJSON } from "./workspacejson"
 
 export interface CreateBlocksOptions {
     theme: Theme
-    clientSpecs?: jdspec.ServiceSpec[]
 }
 
 export interface CreateCategoryOptions {
     theme: Theme
     source: WorkspaceJSON
-    liveServices: JDService[]
-}
-
-export interface CompileEventToVMOptions {
-    block: BlockJSON
-    definition: ServiceBlockDefinition
-    blockToExpression: (ev: RoleEvent, block: BlockJSON) => ExpressionWithErrors
-}
-
-export interface CompileEventToVMResult {
-    event?: RoleEvent
-    expression?: jsep.Expression
-    errors?: VMError[]
-    meta?: boolean
-}
-
-export interface CompileExpressionToVMOptions {
-    event: RoleEvent
-    block: BlockJSON
-    definition: ServiceBlockDefinition
-    blockToExpressionInner: (ev: RoleEvent, block: BlockJSON) => jsep.Expression
-}
-
-export interface CompileCommandToVMOptions {
-    event: RoleEvent
-    block: BlockJSON
-    definition: ServiceBlockDefinition
-    blockToExpression: (ev: RoleEvent, block: BlockJSON) => ExpressionWithErrors
 }
 
 export default interface BlockDomainSpecificLanguage {
@@ -102,17 +64,6 @@ export default interface BlockDomainSpecificLanguage {
         workspace: Workspace,
         workspaceJSON: WorkspaceJSON
     ) => void
-
-    // VM support
-    compileEventToVM?: (
-        options: CompileEventToVMOptions
-    ) => CompileEventToVMResult
-
-    compileCommandToVM?: (options: CompileCommandToVMOptions) => CmdWithErrors
-
-    compileExpressionToVM?: (
-        options: CompileExpressionToVMOptions
-    ) => ExpressionWithErrors
 
     onWorkspaceJSONChange?: (workspaceJSON: WorkspaceJSON) => void
 

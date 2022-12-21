@@ -1,6 +1,5 @@
 import { Grid, NoSsr } from "@mui/material"
-import React, { useContext, useMemo } from "react"
-import { Flags } from "../../../jacdac-ts/src/jdom/flags"
+import React, { useMemo } from "react"
 import { BlockProvider } from "./BlockContext"
 import BlockDiagnostics from "./BlockDiagnostics"
 import BlockEditor from "./BlockEditor"
@@ -15,7 +14,6 @@ import { createIFrameDSL } from "./dsl/iframedsl"
 import { useLocationSearchParamBoolean } from "../hooks/useLocationSearchParam"
 import dataSetDsl from "./dsl/datasetdsl"
 import dataVarDsl from "./dsl/datavardsl"
-import sensorsDsl from "./dsl/sensorsdsl"
 
 const DS_EDITOR_ID = "ds"
 const DS_SOURCE_STORAGE_KEY = "tools:dseditor"
@@ -55,7 +53,6 @@ export default function DSBlockEditor() {
     const dsls = useMemo(() => {
         return [
             dataSet && dataSetDsl,
-            sensors && sensorsDsl,
             dataDsl,
             dataVar && dataVarDsl,
             chart && chartDsl,

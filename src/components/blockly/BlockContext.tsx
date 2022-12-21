@@ -6,9 +6,6 @@ import {
     DEVICE_DISCONNECT,
 } from "../../../jacdac-ts/src/jdom/constants"
 import { arrayConcatMany, toMap } from "../../../jacdac-ts/src/jdom/utils"
-import { RoleManager } from "../../../jacdac-ts/src/jdom/rolemanager"
-import bus from "../../jacdac/providerbus"
-import useRoleManager from "../hooks/useRoleManager"
 import useLocalStorage from "../hooks/useLocalStorage"
 import { BlockWarning, collectWarnings } from "./blockwarning"
 import { registerDataSolver } from "./dsl/datasolver"
@@ -104,7 +101,6 @@ export function BlockProvider(props: {
         storageKey,
         NEW_PROJET_XML
     )
-    const roleManager = useRoleManager()
     const [workspace, setWorkspace] = useState<WorkspaceSvg>(undefined)
     const [workspaceXml, _setWorkspaceXml] = useState<string>(storedXml)
     const [workspaceJSON, setWorkspaceJSON] = useState<WorkspaceJSON>(undefined)

@@ -1,12 +1,5 @@
-import { SMap } from "../../../jacdac-ts/src/jdom/utils"
 import Blockly, { Block, Workspace } from "blockly"
 import { BlockWithServices } from "./WorkspaceContext"
-import {
-    CompileCommandToVMOptions,
-    CompileEventToVMOptions,
-    CompileEventToVMResult,
-} from "./dsl/dsl"
-import { CmdWithErrors } from "../devicescript/JacscriptGenerator"
 import { JSONSchema4 } from "json-schema"
 
 export const NEW_PROJET_XML = '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>'
@@ -133,53 +126,6 @@ export interface BlockDefinition extends BlockReference {
 export const identityTransformData = async (block: Block, data: object[]) =>
     data
 
-export interface ServiceBlockDefinition extends BlockDefinition {
-    template: BlockTemplate
-    service: jdspec.ServiceSpec
-    group?: string
-}
-
-export interface ServiceBlockDefinitionFactory<T extends BlockDefinition> {
-    jacdacDefinition: T
-    init: () => void
-}
-
-export function resolveBlockDefinition<T extends BlockDefinition>(
-    type: string
-) {
-    const b = Blockly.Blocks[type] as ServiceBlockDefinitionFactory<T>
-    return b?.jacdacDefinition
-}
-
-export interface EventBlockDefinition extends ServiceBlockDefinition {
-    template: EventTemplate
-    events: jdspec.PacketInfo[]
-}
-
-export interface EventFieldDefinition extends ServiceBlockDefinition {
-    template: EventFieldTemplate
-    event: jdspec.PacketInfo
-}
-
-export interface RegisterBlockDefinition extends ServiceBlockDefinition {
-    template: RegisterTemplate
-    register: jdspec.PacketInfo
-    field?: jdspec.PacketMember
-}
-
-export interface CommandBlockDefinition extends ServiceBlockDefinition {
-    kind: "block"
-    template: CommandTemplate
-    command: jdspec.PacketInfo
-}
-
-export interface CustomBlockDefinition extends ServiceBlockDefinition {
-    kind: "block"
-    template: "custom"
-    expression?: string
-    compileEvent?: (options: CompileEventToVMOptions) => CompileEventToVMResult
-    compileCommand?: (options: CompileCommandToVMOptions) => CmdWithErrors
-}
 
 export const JSON_TYPE = "JSON"
 export const STRING_TYPE = "String"
@@ -192,14 +138,6 @@ export const BUILTIN_TYPES = ["", ...PRIMITIVE_TYPES]
 
 export const CODE_STATEMENT_TYPE = "Code"
 export const DATA_SCIENCE_STATEMENT_TYPE = "DataScienceStatement"
-
-export const MODEL_BLOCK_CLASS_STATEMENT_TYPE = "ModelBlockClassStatement"
-export const MODEL_BLOCK_PREPROCESS_STATEMENT_TYPE =
-    "ModelBlockPreprocessStatement"
-export const MODEL_BLOCK_LAYER_STATEMENT_TYPE = "ModelBlockLayerStatement"
-
-export const TWIN_BLOCK = "jacdac_tools_twin"
-export const SENSOR_BLOCK = "jacdac_sensors_sensor"
 
 export const toolsColour = "#303030"
 export const analyzeColour = "#404040"
@@ -322,7 +260,7 @@ export interface ContentDefinition {
 export interface BlockReference extends ContentDefinition {
     kind: "block"
     type: string
-    values?: SMap<BlockReference>
+    values?: Record<string, BlockReference>
     blockxml?: string
 
     value?: number
