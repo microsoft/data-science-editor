@@ -1,18 +1,10 @@
-# Jacdac Documentation
+# Data Science Editor
 
-**Jacdac** is a plug-and-play hardware and software stack for microcontrollers and their peripherals such as sensors and actuators. Jacdac is primarily designed for “modular electronics” scenarios that support rapid prototyping, creative exploration, making and learning through physical computing. Jacdac is designed to be cheap, flexible and extensible.
 
-This repository contains sources of [Jacdac](https://aka.ms/jacdac).
-
--   [User Documentation](https://aka.ms/jacdac/)
--   Discussions at https://github.com/microsoft/jacdac/discussions
--   Issues are tracked on https://github.com/microsoft/jacdac/issues
-
-The rest of this page is for developers of the jacdac-ts library.
 
 ## Developer setup
 
--   Open this repository online at https://github.dev/microsoft/jacdac-docs
+-   Open this repository online at https://github.dev/microsoft/data-science-editor
 
 All command line instructions assume a bash-like terminal.
 
@@ -22,7 +14,7 @@ On Windows, you may need to run these commands within Git Bash or Windows Subsys
 
 Edit this project directly from your browser using GitHub Codespaces. If you have access to them,
 
--   open project in a new codespace (https://github.dev/microsoft/jacdac-docs)
+-   open project in a new codespace (https://github.dev/microsoft/data-science-editor)
 -   launch the docs server
 
 ```

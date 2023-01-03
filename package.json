@@ -1,7 +1,7 @@
 {
-  "name": "jacdac-docs",
+  "name": "data-science-editor",
   "private": true,
-  "description": "Jacdac Documentation",
+  "description": "Block-based Data Science Editor",
   "version": "0.1.0",
   "author": "Microsoft",
   "dependencies": {
@@ -159,10 +159,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/microsoft/jacdac-docs"
+    "url": "https://github.com/microsoft/data-science-editor/"
   },
   "bugs": {
-    "url": "https://github.com/microsoft/jacdac-docs/issues"
+    "url": "https://github.com/microsoft/data-science-editor/issues"
   },
   "browserslist": [
     "supports es6-module",
