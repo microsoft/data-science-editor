@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Block, FieldDropdown } from "blockly"
-import { CHANGE } from "../../../../jacdac-ts/src/jdom/constants"
+import { CHANGE } from "jacdac-ts"
 import { parseCSV } from "../dsl/workers/csv.proxy"
 import {
     resolveBlockServices,

@@ -8,7 +8,6 @@ import BlocklyModalDialogs from "./BlocklyModalDialogs"
 import DarkModeContext from "../ui/DarkModeContext"
 import clsx from "clsx"
 import { withPrefix } from "gatsby"
-import { Flags } from "../../../jacdac-ts/src/jdom/flags"
 import BlockContext from "./BlockContext"
 import { useBlockMinimap } from "./BlockMinimap"
 import BrowserCompatibilityAlert from "../ui/BrowserCompatibilityAlert"
@@ -24,7 +23,7 @@ const classes = {
 const Root = styled("div")(({ theme }) => ({
     [`& .${classes.editor}`]: {
         height: `calc(100vh - ${
-            UIFlags.hosted ? 3.5 : Flags.diagnostics ? 15 : 10
+            UIFlags.hosted ? 3.5 : UIFlags.diagnostics ? 15 : 10
         }rem)`,
         "& .blocklyTreeLabel": {
             fontFamily: theme.typography.fontFamily,
