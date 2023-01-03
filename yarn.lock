@@ -10841,6 +10841,11 @@ its-fine@^1.0.4:
   dependencies:
     "@types/react-reconciler" "^0.28.0"
 
+jacdac-ts@^1.29.5:
+  version "1.29.5"
+  resolved "https://registry.yarnpkg.com/jacdac-ts/-/jacdac-ts-1.29.5.tgz#d3aa6dcf3e643a7eb5580ea28b11678c9ff98b46"
+  integrity sha512-SZbexzZF7S9FUChkzJ20Lw9P4muMhptvbsp0CoaljG7p5TmclpApAjIzY1lhcEOhAaEIp69JZAobZTX4ra6h+g==
+
 jake@^10.6.1:
   version "10.8.2"
   resolved "https://registry.yarnpkg.com/jake/-/jake-10.8.2.tgz#ebc9de8558160a66d82d0eadc6a2e58fbc500a7b"
