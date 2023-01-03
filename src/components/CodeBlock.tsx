@@ -15,17 +15,12 @@ import GetAppIcon from "@mui/icons-material/GetApp"
 // tslint:disable-next-line: no-submodule-imports match-default-export-name
 import LaunchIcon from "@mui/icons-material/Launch"
 import Tooltip from "./ui/Tooltip"
-import MakeCodeSnippet from "./makecode/MakeCodeSnippet"
 import Suspense from "./ui/Suspense"
 
 import Prism from "prism-react-renderer/prism"
 ;(typeof global !== "undefined" ? global : window).Prism = Prism
 require("prismjs/components/prism-csharp")
 
-const TraceSnippet = lazy(() => import("./trace/TraceSnippet"))
-const VanillaCodeButton = lazy(() => import("./ui/VanillaCodeButton"))
-const ReactCodeButton = lazy(() => import("./ui/ReactCodeButton"))
-const P5JSCodeButton = lazy(() => import("./ui/P5JSCodeButton"))
 const CopyButton = lazy(() => import("./ui/CopyButton"))
 
 function HighlightedCode(props: {
@@ -99,27 +94,6 @@ function HighlightedCode(props: {
                             </Suspense>
                         </div>
                     )}
-                    {codeSandbox?.tsx && (
-                        <div style={{ float: "right" }}>
-                            <Suspense>
-                                <ReactCodeButton source={codeSandbox} />
-                            </Suspense>
-                        </div>
-                    )}
-                    {codeSandbox?.js && (
-                        <div style={{ float: "right" }}>
-                            <Suspense>
-                                <VanillaCodeButton source={codeSandbox} />
-                            </Suspense>
-                        </div>
-                    )}
-                    {codeSandbox?.p5js && (
-                        <div style={{ float: "right" }}>
-                            <Suspense>
-                                <P5JSCodeButton sketch={codeSandbox?.p5js} />
-                            </Suspense>
-                        </div>
-                    )}
                     {actions && <div style={{ float: "right" }}>{actions}</div>}
                     {tokens?.map((line, index) => {
                         const lineProps = getLineProps({ line, key: index })
@@ -156,14 +130,6 @@ export default function CodeBlock(props: {
 
     const language = className?.replace(/language-/, "") || ""
     switch (language) {
-        case "trace":
-            return (
-                <Suspense>
-                    <TraceSnippet source={children} />
-                </Suspense>
-            )
-        case "blocks":
-            return <MakeCodeSnippet renderedSource={children} />
         case "tsx": {
             const [source, tsx] = children.split(/\n-{5,}\n/gi)
             return (

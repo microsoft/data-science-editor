@@ -1,4 +1,4 @@
-import React, { lazy, useContext } from "react"
+import React, { useContext } from "react"
 import { styled } from "@mui/material/styles"
 import clsx from "clsx"
 import { Container } from "@mui/material"
@@ -9,16 +9,12 @@ import {
     responsiveFontSizes,
     DeprecatedThemeOptions,
 } from "@mui/material/styles"
-import AppContext, { DrawerType } from "./AppContext"
 import DarkModeContext, { DarkModeProvider } from "./ui/DarkModeContext"
 import Footer from "./shell/Footer"
 import { WindowLocation } from "@reach/router"
-import Suspense from "./ui/Suspense"
 import ThemedMdxLayout from "./ui/ThemedMdxLayout"
 import useMediaQueries from "./hooks/useMediaQueries"
 import DataEditorAppBar from "./shell/DataEditorAppBar"
-
-const Breadcrumbs = lazy(() => import("./ui/Breadcrumbs"))
 
 const PREFIX = "Layout"
 
@@ -30,9 +26,6 @@ const classes = {
     contentPadding: `${PREFIX}ContentPadding`,
     container: `${PREFIX}Container`,
     mainContent: `${PREFIX}MainContent`,
-    appBarShift: `${PREFIX}AppBarShift`,
-    tocBarShift: `${PREFIX}TocBarShift`,
-    toolBarShift: `${PREFIX}ToolBarShift`,
 }
 
 const Root = styled("div")(({ theme }) => ({
@@ -79,42 +72,6 @@ const Root = styled("div")(({ theme }) => ({
 
     [`& .${classes.mainContent}`]: {
         flexGrow: 1,
-    },
-
-    [`& .${classes.appBarShift}`]: {
-        width: `calc(100% - ${DRAWER_WIDTH}rem)`,
-        marginLeft: `${DRAWER_WIDTH}rem`,
-        [theme.breakpoints.down(MOBILE_BREAKPOINT)]: {
-            width: `calc(100% - ${MOBILE_DRAWER_WIDTH}rem)`,
-            marginLeft: `${MOBILE_DRAWER_WIDTH}rem`,
-        },
-        transition: theme.transitions.create(["margin", "width"], {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    },
-
-    [`& .${classes.tocBarShift}`]: {
-        width: `calc(100% - ${TOC_DRAWER_WIDTH}rem)`,
-        marginLeft: `${TOC_DRAWER_WIDTH}rem`,
-        transition: theme.transitions.create(["margin", "width"], {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    },
-
-    [`& .${classes.toolBarShift}`]: {
-        width: `calc(100% - ${TOOLS_DRAWER_WIDTH}rem)`,
-        marginRight: `${TOOLS_DRAWER_WIDTH}rem`,
-        marginLeft: `-${TOOLS_DRAWER_WIDTH}rem`,
-        [theme.breakpoints.down(MOBILE_BREAKPOINT)]: {
-            width: `calc(100% - ${MOBILE_TOOLS_DRAWER_WIDTH}rem)`,
-            marginRight: `${MOBILE_TOOLS_DRAWER_WIDTH}rem`,
-        },
-        transition: theme.transitions.create(["margin", "width"], {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
     },
 }))
 
@@ -187,69 +144,22 @@ function LayoutWithMdx(props: LayoutProps) {
 
 function LayoutWithContext(props: LayoutProps) {
     const { element, props: pageProps } = props
-    const { pageContext, path, location } = pageProps
-    const { frontmatter } = pageContext || {}
-
-    const isHosted = false
-    const footer = true
-    const tools = /^\/tools\//.test(path)
-    const makeCodeTool = /tools\/makecode-/.test(path)
-    const deviceScriptTool = /tools\/devicescript-/.test(path)
-    const devicesPage = /^\/devices\/$/.test(path)
-    const fullWidthTools =
-        /^\/editors\/\w/.test(path) ||
-        /^\/tools\/console\/$/.test(path) ||
-        /^\/(tools\/(makecode-|player|devicescript-)|dashboard)/.test(path) ||
-        !!frontmatter?.fullWidth
-    const isDataEditor = /^\/editors\/data/.test(path)
-    const {
-        hideMainMenu = false,
-        hideUnderConstruction = false,
-        hideBreadcrumbs = false,
-    } = frontmatter || {
-        hideMainMenu: isHosted || makeCodeTool || deviceScriptTool,
-        hideUnderConstruction:
-            isDataEditor || makeCodeTool || deviceScriptTool || fullWidthTools,
-        hideBreadcrumbs: isDataEditor || tools || fullWidthTools || devicesPage,
-    }
 
     const appBar = <DataEditorAppBar />
 
     const { darkMode } = useContext(DarkModeContext)
-    const { drawerType, toolsMenu } = useContext(AppContext)
-    const drawerOpen = drawerType !== DrawerType.None
-    const { medium } = useMediaQueries()
-    const container = !medium && !fullWidthTools
+    const container = false
     // && path !== "/"
     const mainClasses = clsx(classes.content, {
         [classes.container]: container,
-        [classes.contentPadding]: !fullWidthTools,
-        [classes.tocBarShift]: drawerType === DrawerType.Toc,
-        [classes.appBarShift]: drawerOpen && drawerType !== DrawerType.Toc,
-        [classes.toolBarShift]: toolsMenu,
+        [classes.contentPadding]: false,
     })
 
-    const InnerMainSection = () => (
-        <>
-            {!hideBreadcrumbs && location && (
-                <Suspense>
-                    <Breadcrumbs location={location} />
-                </Suspense>
-            )}
-            {fullWidthTools ? (
-                element
-            ) : (
-                <Typography className={"markdown"} component="span">
-                    {element}
-                </Typography>
-            )}
-        </>
-    )
-
+    const InnerMainSection = () => element
     const MainSection = () => (
         <>
             <main className={classes.mainContent}>
-                {!hideMainMenu && <div className={classes.drawerHeader} />}
+                <div className={classes.drawerHeader} />
                 {container ? (
                     <Container>
                         <InnerMainSection />
@@ -258,18 +168,14 @@ function LayoutWithContext(props: LayoutProps) {
                     <InnerMainSection />
                 )}
             </main>
-            {footer && <Footer />}
+            <Footer />
         </>
     )
 
     return (
         <Root>
             <div className={clsx(darkMode, classes.root)}>
-                {!hideMainMenu && (
-                    <nav>
-                        {appBar}
-                    </nav>
-                )}
+                <nav>{appBar}</nav>
                 {container ? (
                     <Container
                         maxWidth={"xl"}
