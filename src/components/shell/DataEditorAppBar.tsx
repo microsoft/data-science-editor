@@ -55,7 +55,7 @@ export default function DataEditorAppBar() {
                                     }}
                                     to="/editors/data/"
                                 >
-                                    Data Science Editor (Experimental)
+                                    Data Science Editor
                                 </Link>
                             </Typography>
                         </Hidden>

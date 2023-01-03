@@ -38,18 +38,6 @@ export default function Footer() {
 
     return (
         <Root role="contentinfo" className={classes.footer}>
-            <div className="note">
-                This web site collects anonymous usage analytics.{" "}
-                <Link to="/privacy/">Learn more...</Link>
-            </div>
-            <a
-                href="https://github.com/microsoft/jacdac/discussions"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                Contact Us
-            </a>
-            |
             <a
                 href="https://go.microsoft.com/fwlink/?LinkId=521839"
                 target="_blank"
