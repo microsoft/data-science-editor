@@ -5,7 +5,11 @@ export const FILE_SYSTEM_NODE = "fs"
 export const FILE_SYSTEM_DIRECTORY_NODE = "directory"
 export const FILE_SYSTEM_FILE_NODE = "file"
 
-export abstract class FileSystemNode extends JDNode {}
+export abstract class FileSystemNode extends JDNode {
+    constructor() {
+        super()
+    }
+}
 
 export class FileSystem extends FileSystemNode {
     private _root: FileSystemDirectory
