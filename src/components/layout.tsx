@@ -13,7 +13,6 @@ import DarkModeContext, { DarkModeProvider } from "./ui/DarkModeContext"
 import Footer from "./shell/Footer"
 import { WindowLocation } from "@reach/router"
 import ThemedMdxLayout from "./ui/ThemedMdxLayout"
-import useMediaQueries from "./hooks/useMediaQueries"
 import DataEditorAppBar from "./shell/DataEditorAppBar"
 
 const PREFIX = "Layout"

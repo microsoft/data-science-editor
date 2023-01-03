@@ -1,6 +1,5 @@
 import { Grid } from "@mui/material"
 import React, { useRef } from "react"
-import useKeyboardNavigationProps from "../hooks/useKeyboardNavigationProps"
 import useFileSystem from "../FileSystemContext"
 import useChange from "../../jacdac/useChange"
 import FileSystemChip from "./FileSystemChip"
@@ -38,7 +37,6 @@ export default function FileTabs(props: {
         _?.files?.filter(d => !fileFilter || fileFilter(d.name))
     )
     const gridRef = useRef()
-    const keyboardProps = useKeyboardNavigationProps(gridRef.current)
     const handleDirectorySelected = handle => () =>
         (fileSystem.workingDirectory = handle)
     const handleFileSelected = handle => () => (fileSystem.workingFile = handle)
@@ -46,7 +44,7 @@ export default function FileTabs(props: {
     if (!fileSystem) return null
 
     return (
-        <Grid ref={gridRef} container spacing={1} {...keyboardProps}>
+        <Grid ref={gridRef} container spacing={1}>
             <Grid item>
                 <FileSystemChip />
             </Grid>
