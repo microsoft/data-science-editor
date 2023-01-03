@@ -166,8 +166,8 @@
   },
   "browserslist": [
     "supports es6-module",
-    "Edge > 80",
-    "Chrome > 80",
+    "Edge > 100",
+    "Chrome > 100",
     "Firefox > 80"
   ]
 }
