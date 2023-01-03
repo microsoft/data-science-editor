@@ -4,12 +4,12 @@ import { Grid, NoSsr } from "@mui/material"
 import type { View, VisualizationSpec } from "react-vega"
 import SaveAltIcon from "@mui/icons-material/SaveAlt"
 import useEffectAsync from "../useEffectAsync"
-import { humanify } from "../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import { tidySlice } from "../blockly/fields/tidy"
 import { UIFlags } from "../../jacdac/providerbus"
 import CopyButton from "../ui/CopyButton"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import type { DataSliceOptions } from "../../workers/data/dist/node_modules/data.worker"
+import { humanify } from "jacdac-ts"
 
 const CHART_WIDTH = 468
 const CHART_HEIGHT = 240

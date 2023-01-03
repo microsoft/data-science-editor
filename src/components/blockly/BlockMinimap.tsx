@@ -10,9 +10,9 @@ import {
     Scrollbar,
     ComponentManager,
 } from "blockly"
+import { arrayConcatMany } from "jacdac-ts"
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import { createRoot } from "react-dom/client"
-import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
 import { svgPointerPoint } from "../widgets/svgutils"
 import useWorkspaceEvent from "./useWorkspaceEvent"
 
