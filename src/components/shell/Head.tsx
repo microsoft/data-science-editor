@@ -45,7 +45,7 @@ export default function Head(
         `
     )
     let metaTitle = title || pageContext?.title || site?.siteMetadata?.title
-    if (!/^Jacdac/i.test(metaTitle)) metaTitle = `Jacdac - ${metaTitle}`
+    if (!/^Data Science Editor/i.test(metaTitle)) metaTitle = `Data Science Editor - ${metaTitle}`
     const metaDescription =
         description ||
         data?.page?.description ||

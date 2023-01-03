@@ -7,7 +7,7 @@ import {
     DialogActions,
     Button,
 } from "@mui/material"
-import React, { ChangeEvent, useContext, useState } from "react"
+import React, { ChangeEvent, useState } from "react"
 import AddIcon from "@mui/icons-material/Add"
 import { useId } from "react"
 import useFileSystem from "../FileSystemContext"
