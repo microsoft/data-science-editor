@@ -6,10 +6,7 @@ import { ReactNode } from "react"
 import AppTheme from "../../ui/AppTheme"
 import { Box } from "@mui/material"
 import { BlockDefinition } from "../toolbox"
-import { assert } from "../../../../jacdac-ts/src/jdom/utils"
 import { ValueProvider } from "./ValueContext"
-import { JDEventSource } from "../../../../jacdac-ts/src/jdom/eventsource"
-import { CHANGE } from "../../../../jacdac-ts/src/jdom/constants"
 import {
     BlockServices,
     BlockWithServices,
@@ -19,6 +16,7 @@ import {
 import { ReactFieldBase } from "./ReactFieldBase"
 import { SnackbarProvider } from "notistack"
 import { DarkModeProvider } from "../../ui/DarkModeContext"
+import { CHANGE, JDEventSource } from "jacdac-ts"
 
 declare module "blockly" {
     interface Block {
@@ -187,7 +185,6 @@ export default class ReactField<T> extends ReactFieldBase<T> {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function toShadowDefinition(fieldType: any): BlockDefinition {
-    assert(!!fieldType.KEY)
     const type = fieldType.KEY + "_shadow"
     return {
         kind: "block",

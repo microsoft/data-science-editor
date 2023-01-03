@@ -333,3 +333,15 @@ export function visitToolbox(
     }
     visitContents(node?.contents)
 }
+
+export interface ServiceBlockDefinitionFactory<T extends BlockDefinition> {
+    jacdacDefinition: T
+    init: () => void
+}
+
+export function resolveBlockDefinition<T extends BlockDefinition>(
+    type: string
+) {
+    const b = Blockly.Blocks[type] as ServiceBlockDefinitionFactory<T>
+    return b?.jacdacDefinition
+}

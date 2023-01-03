@@ -5,8 +5,7 @@ import ReactField, { ReactFieldJSON, UNMOUNT } from "./ReactField"
 import type { JSONSchema4 } from "json-schema"
 import Suspense from "../../ui/Suspense"
 import { InputDefinition } from "../toolbox"
-import { assert } from "../../../../jacdac-ts/src/jdom/utils"
-import { JDEventSource } from "../../../../jacdac-ts/src/jdom/eventsource"
+import { JDEventSource } from "jacdac-ts"
 const JSONSchemaForm = lazy(() => import("../../ui/JSONSchemaForm"))
 
 export interface JSONSettingsOptions extends ReactFieldJSON {
@@ -66,7 +65,6 @@ export default class JSONSettingsField extends ReactField<ReactFieldJSON> {
         super(value, validator, options)
         this.schema = options?.schema || {}
         this.darkMode = "light"
-        assert(!!this.schema, "schema missing")
     }
 
     protected initCustomView(): SVGElement {

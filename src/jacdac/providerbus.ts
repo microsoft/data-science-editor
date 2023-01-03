@@ -1,5 +1,7 @@
 export class UIFlags {
-    storage: true
-    transient: false
-    diagnostics: false
+    static storage: true
+    static transient: false
+    static diagnostics: false
+    static persistent: true
+    static hosted: false
 }

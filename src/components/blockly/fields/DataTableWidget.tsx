@@ -7,9 +7,8 @@ import { TABLE_HEIGHT, TABLE_WIDTH } from "../toolbox"
 import { PointerBoundary } from "./PointerBoundary"
 import CopyButton from "../../ui/CopyButton"
 import { unparseCSV } from "../dsl/workers/csv.proxy"
-import { roundWithPrecision, toMap } from "../../../../jacdac-ts/src/jdom/utils"
 import { tidyHeaders, tidyResolveHeader } from "./tidy"
-import { humanify } from "../../../../jacdac-ts/jacdac-spec/spectool/jdspec"
+import { humanify, roundWithPrecision, toMap } from "jacdac-ts"
 
 const PREFIX = "DataTableWidget"
 

@@ -1,15 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
-import { MESSAGE } from "../../../../../jacdac-ts/src/jdom/constants"
-import { JDEventSource } from "../../../../../jacdac-ts/src/jdom/eventsource"
-import { assert, SMap } from "../../../../../jacdac-ts/src/jdom/utils"
+import { assert, JDEventSource, MESSAGE } from "jacdac-ts"
 import createCsvWorker from "../../../../workers/csv/workerloader"
 import createDataWorker from "../../../../workers/data/workerloader"
-import createVMWorker from "../../../../workers/vm/workerloader"
-import createDeviceScriptWorker from "../../../../workers/devicescript/workerloader"
-import createCadWorker from "../../../../workers/cad/workerloader"
 
-export type VMType = "data" | "csv" | "vm" | "cad" | "devicescript"
+export type VMType = "data" | "csv"
 
 export interface WorkerMessage {
     worker: VMType
@@ -70,13 +65,10 @@ export class WorkerProxy extends JDEventSource {
     }
 }
 
-const _workers: SMap<WorkerProxy> = {}
+const _workers: Record<string, WorkerProxy> = {}
 const loaders = {
     data: createDataWorker,
     csv: createCsvWorker,
-    vm: createVMWorker,
-    cad: createCadWorker,
-    devicescript: createDeviceScriptWorker,
 }
 export default function workerProxy(workerid: VMType) {
     const worker =

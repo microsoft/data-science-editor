@@ -1,4 +1,4 @@
-import { CHANGE } from "../../../../jacdac-ts/src/jdom/constants"
+import { CHANGE } from "jacdac-ts"
 import { identityTransformData, resolveBlockDefinition } from "../toolbox"
 import { BlockWithServices, resolveBlockServices } from "../WorkspaceContext"
 //import nprogress from "accessible-nprogress"

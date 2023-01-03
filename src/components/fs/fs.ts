@@ -1,5 +1,4 @@
-import { inIFrame } from "../../../jacdac-ts/src/jdom/iframeclient"
-import { SMap } from "../../../jacdac-ts/src/jdom/utils"
+import { inIFrame } from "jacdac-ts"
 import { UIFlags } from "../../jacdac/providerbus"
 
 export function fileSystemHandleSupported() {
@@ -65,7 +64,7 @@ export async function listFiles(
 
 export async function fileOpen(
     options: {
-        mimeTypes?: SMap<string[]>
+        mimeTypes?: Record<string, string[]>
         extensions?: string
         description?: string
         multiple?: boolean

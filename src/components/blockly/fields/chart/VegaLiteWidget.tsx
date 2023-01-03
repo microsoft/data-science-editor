@@ -10,12 +10,11 @@ import type { View, VisualizationSpec } from "react-vega"
 import type { DataSliceOptions } from "../../../../workers/data/dist/node_modules/data.worker"
 import useEffectAsync from "../../../useEffectAsync"
 import { tidyResolveHeader, tidySlice } from "./../tidy"
-import { JSONTryParse } from "../../../../../jacdac-ts/src/jdom/utils"
-import { humanify } from "../../../../../jacdac-ts/jacdac-spec/spectool/jdspec"
 import CopyButton from "../../../ui/CopyButton"
 import IconButtonWithTooltip from "../../../ui/IconButtonWithTooltip"
 import { UIFlags } from "../../../../jacdac/providerbus"
 import SaveAltIcon from "@mui/icons-material/SaveAlt"
+import { humanify, JSONTryParse } from "jacdac-ts"
 const PREFIX = "VegaLiteWidget"
 
 const classes = {

@@ -1,6 +1,4 @@
 import Blockly, { Block } from "blockly"
-import { Flags } from "../../../jacdac-ts/src/jdom/flags"
-import { SMap, toMap } from "../../../jacdac-ts/src/jdom/utils"
 import BlockDomainSpecificLanguage, { resolveDsl } from "./dsl/dsl"
 import { ReactFieldBase } from "./fields/ReactFieldBase"
 import {
@@ -9,6 +7,8 @@ import {
     BlockJSON,
     InputJSON,
 } from "./dsl/workspacejson"
+import { toMap } from "jacdac-ts"
+import { UIFlags } from "../../jacdac/providerbus"
 
 export function workspaceToJSON(
     workspace: Blockly.Workspace,
@@ -20,7 +20,7 @@ export function workspaceToJSON(
         Object.keys(o)
             .filter(k => o[k] === undefined || o[k] === null)
             .forEach(k => delete o[k])
-    const builtins: SMap<(block: Blockly.Block) => string | number | boolean> =
+    const builtins: Record<string, (block: Blockly.Block) => string | number | boolean> =
         {
             logic_null: () => null,
             text: block => block.getFieldValue("TEXT"),
@@ -48,7 +48,7 @@ export function workspaceToJSON(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const xmlToJSON = (xml: Element): any => {
         const j = {}
-        if (Flags.diagnostics) j["xml"] = xml.outerHTML
+        if (UIFlags.diagnostics) j["xml"] = xml.outerHTML
         // dump attributes
         for (const name of xml
             .getAttributeNames()

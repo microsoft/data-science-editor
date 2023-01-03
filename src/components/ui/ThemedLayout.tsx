@@ -6,8 +6,6 @@ import {
 } from "@mui/material"
 import { SnackbarProvider } from "notistack"
 import React, { ReactNode } from "react"
-import { AppProvider } from "../AppContext"
-import { ServiceManagerProvider } from "../ServiceManagerContext"
 import { FileSystemProvider } from "../FileSystemContext"
 import { AppInsightsErrorBoundary } from "../hooks/useAnalytics"
 

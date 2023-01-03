@@ -1,11 +1,5 @@
 import { Events, WorkspaceSvg, Xml } from "blockly"
 import React, { createContext, ReactNode, useEffect, useState } from "react"
-import {
-    CHANGE,
-    DEVICE_ANNOUNCE,
-    DEVICE_DISCONNECT,
-} from "../../../jacdac-ts/src/jdom/constants"
-import { arrayConcatMany, toMap } from "../../../jacdac-ts/src/jdom/utils"
 import useLocalStorage from "../hooks/useLocalStorage"
 import { BlockWarning, collectWarnings } from "./blockwarning"
 import { registerDataSolver } from "./dsl/datasolver"
@@ -39,9 +33,9 @@ import {
     DslWorkspaceFileMessage,
 } from "./dsl/iframedsl"
 import { AllOptions } from "./fields/IFrameDataChooserField"
-import { toServiceName, toServiceType } from "./dsl/servicesbase"
 import useSnackbar from "../hooks/useSnackbar"
 import useFileSystem from "../FileSystemContext"
+import { arrayConcatMany, CHANGE, toMap } from "jacdac-ts"
 
 export interface BlockProps {
     editorId: string
@@ -52,7 +46,6 @@ export interface BlockProps {
     workspaceJSON: WorkspaceJSON
     workspaceSaved: WorkspaceFile
     toolboxConfiguration: ToolboxConfiguration
-    roleManager: RoleManager
     dragging: boolean
     setWorkspace: (ws: WorkspaceSvg) => void
     setWorkspaceXml: (value: string) => void
@@ -68,7 +61,6 @@ const BlockContext = createContext<BlockProps>({
     workspaceJSON: undefined,
     workspaceSaved: undefined,
     toolboxConfiguration: undefined,
-    roleManager: undefined,
     dragging: false,
     setWarnings: () => {},
     setWorkspace: () => {},
@@ -214,17 +206,11 @@ export function BlockProvider(props: {
     useBlocklyEvents(workspace)
     useToolboxButtons(workspace, toolboxConfiguration)
 
-    // role manager
-    useEffect(() => {
-        const services = resolveWorkspaceServices(workspace)
-        if (services) services.roleManager = roleManager
-    }, [workspace, roleManager])
     useEffect(() => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const wws = workspace as unknown as WorkspaceWithServices
         if (wws && !wws.jacdacServices) {
             wws.jacdacServices = new WorkspaceServices()
-            wws.jacdacServices.roleManager = roleManager
         }
     }, [workspace])
     useEffect(() => {
@@ -307,26 +293,6 @@ export function BlockProvider(props: {
                 workspace?.removeChangeListener(handler)
             )
     }, [workspace, dsls])
-    // don't refresh registers while dragging
-    useEffect(() => {
-        bus.backgroundRefreshRegisters = !dragging
-    }, [dragging])
-
-    // handle services
-    useEffect(
-        () =>
-            bus.subscribe([DEVICE_ANNOUNCE, DEVICE_DISCONNECT], () => {
-                if (!workspace) return
-                const services = bus.services({ ignoreInfrastructure: true })
-                services.forEach(service => {
-                    const name = toServiceName(service)
-                    const type = toServiceType(service)
-                    workspace.createVariable(name, type, service.id)
-                    // TODO: remove unused variables?
-                })
-            }),
-        [bus, workspace]
-    )
 
     // load message from parent
     useWindowEvent(
@@ -370,7 +336,6 @@ export function BlockProvider(props: {
                 workspaceJSON,
                 workspaceSaved,
                 toolboxConfiguration,
-                roleManager,
                 dragging,
                 setWarnings,
                 setWorkspace,

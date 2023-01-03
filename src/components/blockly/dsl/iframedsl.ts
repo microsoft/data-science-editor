@@ -1,5 +1,5 @@
 import { Block, Workspace } from "blockly"
-import { inIFrame } from "jacdac-ts"
+import { CHANGE, inIFrame } from "jacdac-ts"
 import type { DataSliceOptions } from "../../../workers/data/dist/node_modules/data.worker"
 import { workspaceToJSON } from "../jsongenerator"
 import {
@@ -70,7 +70,7 @@ export interface DslOptionsMessage extends DslMessage {
 }
 
 class IFrameDomainSpecificLanguage implements BlockDomainSpecificLanguage {
-    private dslid = Math.random() + ""s
+    private dslid = Math.random() + ""
     private blocks: BlockDefinition[] = []
     private category: ContentDefinition[] = []
     private pendings: Record<string, (data: DslMessage) => void> = {}

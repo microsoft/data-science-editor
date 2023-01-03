@@ -1,8 +1,5 @@
 import Blockly from "blockly"
 import { useEffect, useMemo } from "react"
-import { arrayConcatMany } from "../../../jacdac-ts/src/jdom/utils"
-import useServices from "../hooks/useServices"
-import { Flags } from "../../../jacdac-ts/src/jdom/flags"
 import { Theme, useTheme } from "@mui/material"
 import { registerFields } from "./fields/fields"
 import {
@@ -10,7 +7,6 @@ import {
     BlockReference,
     ButtonDefinition,
     CategoryDefinition,
-    ServiceBlockDefinitionFactory,
     ToolboxConfiguration,
     visitToolbox,
 } from "./toolbox"
@@ -18,9 +14,8 @@ import BlockDomainSpecificLanguage from "./dsl/dsl"
 import { addDataPreviewField } from "./fields/DataPreviewField"
 import { WorkspaceJSON } from "./dsl/workspacejson"
 import useAsyncMemo from "../hooks/useAsyncMemo"
-import { dependencyId } from "../../../jacdac-ts/src/jdom/eventsource"
-import useDeviceScript from "../devicescript/DeviceScriptContext"
-import { isSupportedInBlocks } from "./dsl/servicesbase"
+import { UIFlags } from "../../jacdac/providerbus"
+import { arrayConcatMany } from "jacdac-ts"
 
 // overrides blockly emboss filter for svg elements
 Blockly.BlockSvg.prototype.setHighlighted = function (highlighted) {
@@ -40,12 +35,11 @@ type CachedBlockDefinitions = {
 
 async function loadBlocks(
     dsls: BlockDomainSpecificLanguage[],
-    theme: Theme,
-    clientSpecs?: jdspec.ServiceSpec[]
+    theme: Theme
 ): Promise<CachedBlockDefinitions> {
     const blocks: BlockDefinition[] = []
     for (const dsl of dsls) {
-        const dslBlocks = await dsl?.createBlocks?.({ theme, clientSpecs })
+        const dslBlocks = await dsl?.createBlocks?.({ theme })
         if (dslBlocks)
             for (const b of dslBlocks) {
                 addDataPreviewField(b)
@@ -58,9 +52,7 @@ async function loadBlocks(
     // re-register blocks with blocklys
     blocks.forEach(
         block =>
-            (Blockly.Blocks[block.type] = <
-                ServiceBlockDefinitionFactory<BlockDefinition>
-            >{
+            (Blockly.Blocks[block.type] = {
                 jacdacDefinition: block,
                 init: function () {
                     this.jsonInit(block)
@@ -79,7 +71,7 @@ function patchCategoryJSONtoXML(cat: CategoryDefinition): CategoryDefinition {
         .map(node => <BlockReference>node)
         .filter(block => {
             const exists = Blockly.Blocks[block.type]
-            if (!exists && Flags.diagnostics)
+            if (!exists && UIFlags.diagnostics)
                 console.warn(
                     `block type '${block.type}' not found, consider refreshing page...`
                 )
@@ -107,17 +99,13 @@ export default function useToolbox(
     dsls: BlockDomainSpecificLanguage[],
     source: WorkspaceJSON
 ): ToolboxConfiguration {
-    const liveServices = useServices({ specification: true }).filter(srv =>
-        isSupportedInBlocks(srv.specification)
-    )
-    const { clientSpecs } = useDeviceScript()
     const theme = useTheme()
 
     const blocks = useAsyncMemo(async () => {
-        const r = await loadBlocks(dsls, theme, clientSpecs)
-        if (Flags.diagnostics) console.debug(`blocks`, r)
+        const r = await loadBlocks(dsls, theme)
+        if (UIFlags.diagnostics) console.debug(`blocks`, r)
         return r
-    }, [theme, JSON.stringify(clientSpecs), dsls])
+    }, [theme, dsls])
     const toolboxConfiguration = useMemo(() => {
         if (!blocks) return undefined
 
@@ -126,7 +114,6 @@ export default function useToolbox(
                 dsl?.createCategory?.({
                     theme,
                     source,
-                    liveServices,
                 })
             )
         )
@@ -145,7 +132,7 @@ export default function useToolbox(
             kind: "categoryToolbox",
             contents,
         }
-    }, [blocks, theme, dsls, source, dependencyId(liveServices)])
+    }, [blocks, theme, dsls, source])
 
     return toolboxConfiguration
 }

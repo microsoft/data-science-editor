@@ -6,7 +6,7 @@ import useBlockData from "../../useBlockData"
 import VegaLiteWidget from "./VegaLiteWidget"
 import { tidyResolveHeader } from "../tidy"
 import { SCATTER_MAX_ITEMS } from "../../toolbox"
-import { humanify } from "../../../../../jacdac-ts/jacdac-spec/spectool/jdspec"
+import { humanify } from "jacdac-ts"
 
 function ScatterPlotWidget(props: { linearRegression?: boolean }) {
     const { linearRegression } = props

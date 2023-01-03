@@ -1,5 +1,3 @@
-import { VMProgram } from "../../devicescript/vm/ir"
-import { JacscriptProgram } from "../../devicescript/vm/ir2jacscript"
 import { tidyHeaders } from "../fields/tidy"
 import { BlockDataSet } from "../toolbox"
 
@@ -90,6 +88,4 @@ export interface WorkspaceFile {
     editor: string
     xml: string
     json: WorkspaceJSON
-    vm?: VMProgram
-    jsc?: JacscriptProgram
 }
