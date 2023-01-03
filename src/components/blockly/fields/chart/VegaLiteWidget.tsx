@@ -14,7 +14,7 @@ import CopyButton from "../../../ui/CopyButton"
 import IconButtonWithTooltip from "../../../ui/IconButtonWithTooltip"
 import { UIFlags } from "../../../../jacdac/providerbus"
 import SaveAltIcon from "@mui/icons-material/SaveAlt"
-import { humanify, JSONTryParse } from "jacdac-ts"
+import { humanify, JSONTryParse } from "../../../../jacdac/utils"
 const PREFIX = "VegaLiteWidget"
 
 const classes = {

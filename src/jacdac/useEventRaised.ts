@@ -1,6 +1,7 @@
-import { assert, IEventSource } from "jacdac-ts"
+import assert from "assert"
 import { useMemo, DependencyList } from "react"
 import { useSyncExternalStoreWithSelector } from "use-sync-external-store/with-selector"
+import { IEventSource } from "./eventsource"
 
 /**
  * A hook to track event and update a state snapshot

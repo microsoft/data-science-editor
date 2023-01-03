@@ -7,8 +7,8 @@ import {
     BlockJSON,
     InputJSON,
 } from "./dsl/workspacejson"
-import { toMap } from "jacdac-ts"
 import { UIFlags } from "../../jacdac/providerbus"
+import { toMap } from "../../jacdac/utils"
 
 export function workspaceToJSON(
     workspace: Blockly.Workspace,

@@ -1,5 +1,6 @@
 import { Block, Workspace } from "blockly"
-import { CHANGE, inIFrame } from "jacdac-ts"
+import { CHANGE } from "../../../jacdac/constants"
+import { inIFrame } from "../../../jacdac/utils"
 import type { DataSliceOptions } from "../../../workers/data/dist/node_modules/data.worker"
 import { workspaceToJSON } from "../jsongenerator"
 import {

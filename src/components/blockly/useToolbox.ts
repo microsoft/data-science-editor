@@ -15,7 +15,7 @@ import { addDataPreviewField } from "./fields/DataPreviewField"
 import { WorkspaceJSON } from "./dsl/workspacejson"
 import useAsyncMemo from "../hooks/useAsyncMemo"
 import { UIFlags } from "../../jacdac/providerbus"
-import { arrayConcatMany } from "jacdac-ts"
+import { arrayConcatMany } from "../../jacdac/utils"
 
 // overrides blockly emboss filter for svg elements
 Blockly.BlockSvg.prototype.setHighlighted = function (highlighted) {

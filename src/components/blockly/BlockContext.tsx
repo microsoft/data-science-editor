@@ -35,7 +35,8 @@ import {
 import { AllOptions } from "./fields/IFrameDataChooserField"
 import useSnackbar from "../hooks/useSnackbar"
 import useFileSystem from "../FileSystemContext"
-import { arrayConcatMany, CHANGE, toMap } from "jacdac-ts"
+import { CHANGE } from "../../jacdac/constants"
+import { arrayConcatMany, toMap } from "../../jacdac/utils"
 
 export interface BlockProps {
     editorId: string

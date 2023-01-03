@@ -1,6 +1,8 @@
-import { CHANGE, delay, ERROR, IEventSource, JDEventSource } from "jacdac-ts"
 import React, { createContext, useState } from "react"
+import { CHANGE, ERROR } from "../jacdac/constants"
+import { IEventSource, JDEventSource } from "../jacdac/eventsource"
 import { UIFlags } from "../jacdac/providerbus"
+import { delay } from "../jacdac/utils"
 import useEffectAsync from "./useEffectAsync"
 
 export const DB_VALUE_CHANGE = "dbValueChange"

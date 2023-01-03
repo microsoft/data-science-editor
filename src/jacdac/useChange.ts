@@ -1,6 +1,7 @@
-import { CHANGE, IEventSource } from "jacdac-ts"
 import { useState, useEffect } from "react"
 import useEffectAsync from "../components/useEffectAsync"
+import { CHANGE } from "./constants"
+import { IEventSource } from "./eventsource"
 import useEventRaised from "./useEventRaised"
 
 export default function useChange<TNode extends IEventSource, TValue>(

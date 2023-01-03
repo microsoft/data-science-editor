@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { Block, Events, FieldVariable, Workspace, WorkspaceSvg } from "blockly"
+import { Block, Events, Workspace, WorkspaceSvg } from "blockly"
 import React, {
     createContext,
     ReactNode,
     useCallback,
-    useEffect,
     useState,
 } from "react"
 import { WorkspaceJSON } from "./dsl/workspacejson"
 import { FileSystemDirectory } from "../fs/fsdom"
 import ReactField from "./fields/ReactField"
 import useWorkspaceEvent from "./useWorkspaceEvent"
-import { CHANGE, JDEventSource } from "jacdac-ts"
+import { JDEventSource } from "../../jacdac/eventsource"
+import { CHANGE } from "../../jacdac/constants"
 
 export class WorkspaceServices extends JDEventSource {
     static readonly WORKSPACE_CHANGE = "workspaceChange"

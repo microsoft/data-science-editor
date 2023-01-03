@@ -1,7 +1,6 @@
-import { CHANGE } from "jacdac-ts"
+import { CHANGE } from "../../../jacdac/constants"
 import { identityTransformData, resolveBlockDefinition } from "../toolbox"
 import { BlockWithServices, resolveBlockServices } from "../WorkspaceContext"
-//import nprogress from "accessible-nprogress"
 
 const PROGRESS_DELAY = 200
 

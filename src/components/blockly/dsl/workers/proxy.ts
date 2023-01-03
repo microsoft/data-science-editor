@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
-import { assert, JDEventSource, MESSAGE } from "jacdac-ts"
+import assert from "assert"
+import { MESSAGE } from "../../../../jacdac/constants"
+import { JDEventSource } from "../../../../jacdac/eventsource"
 import createCsvWorker from "../../../../workers/csv/workerloader"
 import createDataWorker from "../../../../workers/data/workerloader"
 

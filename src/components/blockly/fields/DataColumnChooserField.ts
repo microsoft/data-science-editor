@@ -2,7 +2,7 @@ import { resolveBlockServices } from "../WorkspaceContext"
 import { ReactFieldJSON } from "./ReactField"
 import { tidyHeaders } from "./tidy"
 import { FieldDropdown } from "blockly"
-import { humanify } from "jacdac-ts"
+import { humanify } from "../../../jacdac/utils"
 
 export interface DataColumnChooseOptions extends ReactFieldJSON {
     dataType?: "number" | "string"

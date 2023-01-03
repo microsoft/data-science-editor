@@ -8,7 +8,7 @@ import { PointerBoundary } from "./PointerBoundary"
 import CopyButton from "../../ui/CopyButton"
 import { unparseCSV } from "../dsl/workers/csv.proxy"
 import { tidyHeaders, tidyResolveHeader } from "./tidy"
-import { humanify, roundWithPrecision, toMap } from "jacdac-ts"
+import { roundWithPrecision, toMap } from "../../../jacdac/utils"
 
 const PREFIX = "DataTableWidget"
 

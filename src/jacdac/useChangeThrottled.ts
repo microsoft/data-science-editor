@@ -1,6 +1,7 @@
-import { CHANGE, IEventSource } from "jacdac-ts"
 import { useState, useEffect } from "react"
 import { useThrottledCallback } from "use-debounce"
+import { CHANGE } from "./constants"
+import { IEventSource } from "./eventsource"
 
 const DEFAULT_THROTTLE = 200
 export default function useChangeThrottled<TNode extends IEventSource, TValue>(

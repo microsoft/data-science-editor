@@ -9,7 +9,7 @@ import { UIFlags } from "../../jacdac/providerbus"
 import CopyButton from "../ui/CopyButton"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import type { DataSliceOptions } from "../../workers/data/dist/node_modules/data.worker"
-import { humanify } from "jacdac-ts"
+import { humanify } from "../../jacdac/utils"
 
 const CHART_WIDTH = 468
 const CHART_HEIGHT = 240
