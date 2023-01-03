@@ -1,5 +1,4 @@
 import { Block } from "blockly"
-import { SMap } from "../../../../jacdac-ts/src/jdom/utils"
 import {
     ColorInputDefinition,
     NumberInputDefinition,
@@ -7,7 +6,7 @@ import {
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
 
-const builtins: SMap<(block: Block) => string | number | boolean> = {
+const builtins: Record<string, (block: Block) => string | number | boolean> = {
     jacdac_on_off: block => block.getFieldValue("value") === "on",
     jacdac_yes_no: block => block.getFieldValue("value") === "on",
     jacdac_time_picker: block => Number(block.getFieldValue("value") || "0"),

@@ -2,7 +2,6 @@ import { Typography } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import { Link } from "gatsby-theme-material-ui"
 import React from "react"
-import TraceSaveButton from "../trace/TraceSaveButton"
 
 const PREFIX = "Footer"
 
@@ -86,7 +85,6 @@ export default function Footer() {
                     </a>
                 </>
             )}
-            | <TraceSaveButton variant="link" />
             &nbsp;
             <Typography component="span" variant="inherit">
                 © {new Date().getFullYear()} Microsoft Corporation

@@ -8,28 +8,15 @@ import React, {
     useState,
 } from "react"
 import { WorkspaceJSON } from "./dsl/workspacejson"
-import {
-    CHANGE,
-    DEVICE_ANNOUNCE,
-    DEVICE_DISCONNECT,
-} from "../../../jacdac-ts/src/jdom/constants"
-import { JDEventSource } from "../../../jacdac-ts/src/jdom/eventsource"
-import { JDService } from "../../../jacdac-ts/src/jdom/service"
-import { RoleManager } from "../../../jacdac-ts/src/jdom/rolemanager"
-import useChange from "../../jacdac/useChange"
 import { FileSystemDirectory } from "../fs/fsdom"
 import ReactField from "./fields/ReactField"
 import useWorkspaceEvent from "./useWorkspaceEvent"
-import bus from "../../jacdac/providerbus"
+import { CHANGE, JDEventSource } from "jacdac-ts"
 
 export class WorkspaceServices extends JDEventSource {
     static readonly WORKSPACE_CHANGE = "workspaceChange"
-
     private _directory: FileSystemDirectory
-
     private _workspaceJSON: WorkspaceJSON
-
-    private _roleManager: RoleManager
 
     constructor() {
         super()
@@ -43,17 +30,6 @@ export class WorkspaceServices extends JDEventSource {
         if (value !== this._workspaceJSON) {
             this._workspaceJSON = value
             this.emit(WorkspaceServices.WORKSPACE_CHANGE)
-        }
-    }
-
-    get roleManager() {
-        return this._roleManager
-    }
-
-    set roleManager(value: RoleManager) {
-        if (this._roleManager !== value) {
-            this._roleManager = value
-            this.emit(CHANGE)
         }
     }
 
@@ -176,9 +152,6 @@ export interface WorkspaceContextProps {
     sourceId?: string
     services: WorkspaceServices
     flyout?: boolean
-    role?: string
-    roleServiceClass?: number
-    twinService?: JDService
 }
 
 export const WorkspaceContext = createContext<WorkspaceContextProps>({
@@ -188,9 +161,6 @@ export const WorkspaceContext = createContext<WorkspaceContextProps>({
     flyout: false,
     sourceId: undefined,
     services: undefined,
-    role: undefined,
-    roleServiceClass: undefined,
-    twinService: undefined,
 })
 WorkspaceContext.displayName = "Workspace"
 
@@ -208,84 +178,8 @@ export function WorkspaceProvider(props: {
     const sourceId = sourceBlock?.id
     const workspace = sourceBlock?.workspace as WorkspaceSvg
     const services = resolveWorkspaceServices(workspace)
-    const roleManager = useChange(services, _ => _?.roleManager)
     const [dragging, setDragging] = useState(!!workspace?.isDragging())
-
-    const resolveRole = () => {
-        const newSourceBlock = field.getSourceBlock()
-        const roleInput = newSourceBlock?.inputList[0]
-        const roleField = roleInput?.fieldRow.find(
-            f => f.name === "role" && f instanceof FieldVariable
-        ) as FieldVariable
-        if (roleField) {
-            const xml = document.createElement("xml")
-            roleField?.toXml(xml)
-            const newRole = roleField?.getVariable()?.name
-            return newRole
-        }
-        return undefined
-    }
-    const resolveServiceId = () => {
-        const newSourceBlock = field.getSourceBlock()
-        const roleInput = newSourceBlock?.inputList[0]
-        const roleField = roleInput?.fieldRow.find(
-            f => f.name === "service" && f instanceof FieldVariable
-        ) as FieldVariable
-        if (roleField) {
-            const xml = document.createElement("xml")
-            roleField?.toXml(xml)
-            const newSensor = roleField?.getVariable()?.getId()
-            return newSensor
-        }
-        return undefined
-    }
-    const resolveTwinService = () => {
-        const newRoleService = role && roleManager?.service(role)
-        if (newRoleService) return newRoleService
-        const newSensorService = serviceId && (bus.node(serviceId) as JDService)
-        return newSensorService
-    }
-
-    const [role, setRole] = useState<string>(resolveRole())
-    const [serviceId, setServiceId] = useState<string>(resolveServiceId())
-    const [twinService, setTwinService] = useState<JDService>(
-        resolveTwinService()
-    )
-    const roleServiceClass = useChange(
-        roleManager,
-        _ => _?.roles().find(r => r.role === role)?.serviceClass,
-        [role]
-    )
     const [flyout, setFlyout] = useState(!!sourceBlock?.isInFlyout)
-
-    const updateRole = () => {
-        const newRole = resolveRole()
-        const newSourceBlock = field?.getSourceBlock()
-        setSourceBlock(newSourceBlock)
-        setRole(newRole)
-        setServiceId(resolveServiceId())
-        setFlyout(!!newSourceBlock?.isInFlyout)
-    }
-
-    // resolve role
-    useEffect(
-        () => field?.events.subscribe(CHANGE, updateRole),
-        [field, workspace]
-    )
-
-    // resolve current role service
-    useEffect(() => {
-        setTwinService(resolveTwinService())
-        const unsubs = [
-            roleManager?.subscribe(CHANGE, () =>
-                setTwinService(resolveTwinService())
-            ),
-            bus.subscribe([DEVICE_ANNOUNCE, DEVICE_DISCONNECT], () =>
-                setTwinService(resolveTwinService())
-            ),
-        ]
-        return () => unsubs.forEach(unsub => unsub?.())
-    }, [role, serviceId, roleManager])
 
     const handleWorkspaceEvent = useCallback(
         (event: Events.Abstract & { type: string }) => {
@@ -309,9 +203,6 @@ export function WorkspaceProvider(props: {
                 dragging,
                 sourceId,
                 services,
-                role,
-                roleServiceClass,
-                twinService,
                 flyout,
             }}
         >

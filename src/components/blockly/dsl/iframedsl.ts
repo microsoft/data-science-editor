@@ -1,7 +1,5 @@
 import { Block, Workspace } from "blockly"
-import { CHANGE } from "../../../../jacdac-ts/src/jdom/constants"
-import { inIFrame } from "../../../../jacdac-ts/src/jdom/iframeclient"
-import { randomDeviceId } from "../../../../jacdac-ts/src/jdom/random"
+import { inIFrame } from "jacdac-ts"
 import type { DataSliceOptions } from "../../../workers/data/dist/node_modules/data.worker"
 import { workspaceToJSON } from "../jsongenerator"
 import {
@@ -72,7 +70,7 @@ export interface DslOptionsMessage extends DslMessage {
 }
 
 class IFrameDomainSpecificLanguage implements BlockDomainSpecificLanguage {
-    private dslid = randomDeviceId()
+    private dslid = Math.random() + ""s
     private blocks: BlockDefinition[] = []
     private category: ContentDefinition[] = []
     private pendings: Record<string, (data: DslMessage) => void> = {}

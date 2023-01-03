@@ -14,6 +14,7 @@ import { createIFrameDSL } from "./dsl/iframedsl"
 import { useLocationSearchParamBoolean } from "../hooks/useLocationSearchParam"
 import dataSetDsl from "./dsl/datasetdsl"
 import dataVarDsl from "./dsl/datavardsl"
+import { UIFlags } from "../../jacdac/providerbus"
 
 const DS_EDITOR_ID = "ds"
 const DS_SOURCE_STORAGE_KEY = "tools:dseditor"
@@ -39,13 +40,12 @@ function DSEditorWithContext() {
             <Grid item xs={12}>
                 <BlockEditor />
             </Grid>
-            {Flags.diagnostics && <BlockDiagnostics />}
+            {UIFlags.diagnostics && <BlockDiagnostics />}
         </Grid>
     )
 }
 
 export default function DSBlockEditor() {
-    const sensors = useLocationSearchParamBoolean("sensors", false)
     const dataSet = useLocationSearchParamBoolean("dataset", true)
     const dataVar = useLocationSearchParamBoolean("datavar", true)
     const chart = useLocationSearchParamBoolean("chart", true)
