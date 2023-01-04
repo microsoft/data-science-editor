@@ -25,7 +25,7 @@ export default function Home() {
                         loading="lazy"
                     />
                 }
-                subtitle2="Block programming meets data analysis."
+                subtitle2="Block Programming meets Data Analysis."
             />
 
             <SplitGrid
@@ -35,7 +35,7 @@ export default function Home() {
                 description="Follow the blocks to see how the data is analyzed."
                 image={
                     <StaticImage
-                        src="./excel/story.png"
+                        src="./story.png"
                         alt="A sequence of blocks that charts sorted data."
                     />
                 }
@@ -48,7 +48,7 @@ export default function Home() {
                 description="Drag a chart block to visualize your data."
                 image={
                     <StaticImage
-                        src="./excel/chart.png"
+                        src="./chart.png"
                         alt="A scatter plot of penguins"
                     />
                 }
@@ -61,7 +61,7 @@ export default function Home() {
                 imageColumns={8}
                 image={
                     <StaticImage
-                        src="./excel/preview.png"
+                        src="./preview.png"
                         alt="A preview of the data before and after a block"
                     />
                 }
@@ -74,7 +74,7 @@ export default function Home() {
                 imageColumns={8}
                 image={
                     <StaticImage
-                        src="./excel/discover.png"
+                        src="./discover.png"
                         alt="A drawer of statistics blocks"
                     />
                 }
