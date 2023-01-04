@@ -14,6 +14,7 @@ import Footer from "./shell/Footer"
 import { WindowLocation } from "@reach/router"
 import ThemedMdxLayout from "./ui/ThemedMdxLayout"
 import DataEditorAppBar from "./shell/DataEditorAppBar"
+import { dark } from "@mui/material/styles/createPalette"
 
 const PREFIX = "Layout"
 
@@ -119,8 +120,8 @@ function LayoutWithDarkMode(props: LayoutProps) {
 function LayoutWithMdx(props: LayoutProps) {
     const { darkMode } = useContext(DarkModeContext)
     const isDark = darkMode === "dark"
-    const themeDef: DeprecatedThemeOptions = useMemo(
-        () => ({
+    const theme = useMemo(() => {
+        const themeDef: DeprecatedThemeOptions = {
             palette: {
                 primary: {
                     main: isDark ? "#56d364" : "#2e7d32",
@@ -131,11 +132,10 @@ function LayoutWithMdx(props: LayoutProps) {
                 contrastThreshold: isDark ? 5.1 : 3.1,
                 mode: darkMode,
             },
-        }),
-        [darkMode]
-    )
-    const rawTheme = createTheme(themeDef)
-    const theme = responsiveFontSizes(rawTheme)
+        }
+        const rawTheme = createTheme(themeDef)
+        return responsiveFontSizes(rawTheme)
+    }, [darkMode])
 
     return (
         <ThemedMdxLayout theme={theme}>
