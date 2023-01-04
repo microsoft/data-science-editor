@@ -1,0 +1,52 @@
+---
+title: About the Data Science Editor
+---
+
+# Data Science Editor
+
+The Data Science editor hosted at https://aka.ms/ds is an experimental structured editor to create data analysis programs.
+
+![A data analysis program](./story.png)
+
+## Getting started
+
+The editor works in the browser and you don't need to install any additional software.
+It comes with a few built-in datasets but it is also possible to import your own CSV data.
+
+### "Data flows through blocks"
+
+Each data blocks holds a dataset and acts as a transformation pipeline to the next block. The pipeline looks as follows:
+
+-   a data block receives an updated dataset from its predecessor
+-   (optionally) the data block transforms the dataset. For example, it can sort the data according to a column.
+-   (optionally) update charts or tables
+-   the data block pushes the data to its successors
+
+### 👀 Data preview
+
+The data blocks have a data preview button 👀 that allows to quickly glance at the dataset attached to the block. If a block also transforms the dataset, a before/after view is provided.
+
+![Previewing data in a block](./preview.png)
+
+### Loading and Saving projects
+
+It is possible to load and save projects from files.
+
+> Supported in Google Chrome and Microsoft Edge 90+ only!
+
+The data editor will save projects as an entire folder, which allows to save the block code and additional data files. Copy those folders to share them with others.
+
+### Importing CSV datasets
+
+Aside from the builtin datasets, it is possible to import CSV files into the editor.
+Imported datasets are stored as files in the project folder. This allows to share a project and all of its additional data.
+
+If you modify the files outside the data editor, refresh the page to reload your changes.
+
+#### Size limitations
+
+The data science editor is meant for reasonably sized datasets (< 10 Mb). Various visualizations and charts will start dropping data in order to keep the editor responsive.
+
+## GitHub
+
+The editor is open source at https://github.com/microsoft/data-science-editor .
