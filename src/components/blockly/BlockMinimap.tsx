@@ -1,4 +1,4 @@
-import { useTheme } from "@mui/material"
+import { Palette, useTheme } from "@mui/material"
 import {
     BlockSvg,
     Events,
@@ -47,10 +47,10 @@ function MiniBlock(props: {
 function MiniViewport(props: {
     scroll: MetricsManager.ContainerRegion
     view: MetricsManager.ContainerRegion
+    palette: Palette
 }) {
-    const { view } = props
+    const { view, palette } = props
     const { top, left, width, height } = view
-    const { palette } = useTheme()
     const vx = left
     const vy = top
 
@@ -73,9 +73,9 @@ function MiniViewport(props: {
 function BlockMiniMap(props: {
     workspace: WorkspaceSvg
     onSizeUpdate: (width: number, height: number) => void
+    palette: Palette
 }) {
-    const { workspace, onSizeUpdate } = props
-    const { palette } = useTheme()
+    const { workspace, onSizeUpdate, palette } = props
     const svgRef = useRef<SVGSVGElement>()
     const [metrics, setMetrics] = useState<{
         scroll: MetricsManager.ContainerRegion
@@ -186,7 +186,13 @@ function BlockMiniMap(props: {
                         color={color}
                     />
                 ))}
-                {view && <MiniViewport scroll={scroll} view={view} />}
+                {view && (
+                    <MiniViewport
+                        scroll={scroll}
+                        view={view}
+                        palette={palette}
+                    />
+                )}
             </g>
             <rect
                 x={0}
@@ -212,7 +218,7 @@ class MinimapPlugin implements IPositionable {
     private scale_ = MIN_SCALE
     private svgGroup_: SVGGElement
 
-    constructor(readonly workspace_: WorkspaceSvg) {
+    constructor(readonly workspace_: WorkspaceSvg, readonly palette: Palette) {
         this.init()
     }
 
@@ -241,6 +247,7 @@ class MinimapPlugin implements IPositionable {
             <BlockMiniMap
                 workspace={this.workspace_}
                 onSizeUpdate={this.handleSizeUpdate.bind(this)}
+                palette={this.palette}
             />
         )
     }
@@ -308,10 +315,10 @@ class MinimapPlugin implements IPositionable {
     }
 }
 
-export function useBlockMinimap(workspace: WorkspaceSvg) {
+export function useBlockMinimap(workspace: WorkspaceSvg, palette: Palette) {
     useEffect(() => {
         if (workspace) {
-            new MinimapPlugin(workspace)
+            new MinimapPlugin(workspace, palette)
         }
-    }, [workspace])
+    }, [workspace, palette])
 }

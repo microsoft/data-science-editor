@@ -125,8 +125,7 @@ function SuspendedBlockEditor(props: { className?: string }) {
         }
     }, [workspace, blocklyRef.current])
 
-    useBlockMinimap(workspace)
-
+    useBlockMinimap(workspace, palette)
     return (
         <Root>
             <BrowserCompatibilityAlert

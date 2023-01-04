@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React, { useContext, useMemo } from "react"
 import { styled } from "@mui/material/styles"
 import clsx from "clsx"
 import { Container } from "@mui/material"
@@ -119,18 +119,21 @@ function LayoutWithDarkMode(props: LayoutProps) {
 function LayoutWithMdx(props: LayoutProps) {
     const { darkMode } = useContext(DarkModeContext)
     const isDark = darkMode === "dark"
-    const themeDef: DeprecatedThemeOptions = {
-        palette: {
-            primary: {
-                main: isDark ? "#56d364" : "#2e7d32",
+    const themeDef: DeprecatedThemeOptions = useMemo(
+        () => ({
+            palette: {
+                primary: {
+                    main: isDark ? "#56d364" : "#2e7d32",
+                },
+                secondary: {
+                    main: "#ffc400",
+                },
+                contrastThreshold: isDark ? 5.1 : 3.1,
+                mode: darkMode,
             },
-            secondary: {
-                main: "#ffc400",
-            },
-            contrastThreshold: isDark ? 5.1 : 3.1,
-            mode: darkMode,
-        },
-    }
+        }),
+        [darkMode]
+    )
     const rawTheme = createTheme(themeDef)
     const theme = responsiveFontSizes(rawTheme)
 
