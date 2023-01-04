@@ -37,7 +37,6 @@ export default function Page() {
             args0: [],
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             dataPreviewField: true,
-            template: "meta",
         },
         {
             kind: "block",
@@ -61,7 +60,6 @@ export default function Page() {
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             dataPreviewField: true,
-            template: "meta",
         },
     ]
     const category: ContentDefinition[] = [
