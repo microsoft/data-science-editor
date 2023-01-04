@@ -6,8 +6,6 @@ import CenterGrid from "../components/home/CenterGrid"
 import SplitGrid from "../components/home/SplitGrid"
 
 export default function Home() {
-    const DATASET_URL =
-        "https://green-rock-09efbc210.azurestaticapps.net/hosted_files/dataset.xlsx"
     return (
         <Grid
             container
@@ -86,14 +84,6 @@ export default function Home() {
                 buttonVariant="link"
                 buttonText="Open Editor"
                 buttonUrl="/"
-            />
-
-            <CenterGrid
-                subtitle="Can I use this in Excel Web?"
-                description="Yes! Download the worksheet and follow the instructions to get started in Excel Web."
-                buttonVariant="link"
-                buttonText="Download Worksheet"
-                buttonUrl={DATASET_URL}
             />
         </Grid>
     )
