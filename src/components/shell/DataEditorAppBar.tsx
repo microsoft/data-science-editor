@@ -52,7 +52,7 @@ export default function DataEditorAppBar() {
                                 style={{
                                     color: "white",
                                 }}
-                                to="/about/"
+                                to="/"
                             >
                                 Data Science Editor
                             </Link>

@@ -1,7 +1,6 @@
 import { Grid, NoSsr } from "@mui/material"
 import React, { useMemo } from "react"
 import { BlockProvider } from "./BlockContext"
-import BlockDiagnostics from "./BlockDiagnostics"
 import BlockEditor from "./BlockEditor"
 import FileTabs from "../fs/FileTabs"
 import { WorkspaceFile } from "./dsl/workspacejson"
@@ -42,7 +41,6 @@ function DSEditorWithContext() {
             <Grid item xs={12}>
                 <BlockEditor />
             </Grid>
-            {UIFlags.diagnostics && <BlockDiagnostics />}
         </Grid>
     )
 }

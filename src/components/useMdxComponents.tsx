@@ -10,12 +10,8 @@ import {
     TableRow,
     useTheme,
 } from "@mui/material"
-
-import Suspense from "./ui/Suspense"
 import Alert from "./ui/Alert"
 import { AlertTitle } from "@mui/material"
-
-const CodeBlock = lazy(() => import("./CodeBlock"))
 
 export default function useMdxComponents() {
     const theme = useTheme()
@@ -49,12 +45,6 @@ export default function useMdxComponents() {
             thead: props => <TableHead {...props} />,
             tbody: props => <TableBody {...props} />,
             tr: props => <TableRow {...props} />,
-
-            code: props => (
-                <Suspense>
-                    <CodeBlock {...props} />
-                </Suspense>
-            ),
             Alert: props => <Alert {...props} />,
             AlertTitle: props => <AlertTitle {...props} />,
         }),
