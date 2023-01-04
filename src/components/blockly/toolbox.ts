@@ -82,7 +82,6 @@ export interface BlockDefinition extends BlockReference {
     style?: string
     output?: string
     extensions?: string[]
-    template?: BlockTemplate
     dsl?: string
 
     // data transformation
@@ -98,7 +97,6 @@ export interface BlockDefinition extends BlockReference {
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const identityTransformData = async (block: Block, data: object[]) =>
     data
-
 
 export const JSON_TYPE = "JSON"
 export const STRING_TYPE = "String"
