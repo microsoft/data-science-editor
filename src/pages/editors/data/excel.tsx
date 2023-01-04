@@ -52,7 +52,7 @@ export default function Home() {
                 image={
                     <StaticImage
                         src="./chart.png"
-                        alt="A scatter plot of pinguins"
+                        alt="A scatter plot of penguins"
                     />
                 }
             />

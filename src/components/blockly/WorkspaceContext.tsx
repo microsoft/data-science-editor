@@ -10,8 +10,8 @@ import { WorkspaceJSON } from "./dsl/workspacejson"
 import { FileSystemDirectory } from "../fs/fsdom"
 import ReactField from "./fields/ReactField"
 import useWorkspaceEvent from "./useWorkspaceEvent"
-import { JDEventSource } from "../../jacdac/eventsource"
-import { CHANGE } from "../../jacdac/constants"
+import { JDEventSource } from "../dom/eventsource"
+import { CHANGE } from "../dom/constants"
 
 export class WorkspaceServices extends JDEventSource {
     static readonly WORKSPACE_CHANGE = "workspaceChange"

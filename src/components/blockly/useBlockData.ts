@@ -1,7 +1,7 @@
 import { BlockServices, BlockWithServices } from "./WorkspaceContext"
 import { Block } from "blockly"
 import { useCallback, useEffect } from "react"
-import useChangeThrottled from "../../jacdac/useChangeThrottled"
+import useChangeThrottled from "../dom/useChangeThrottled"
 import useDragDebounce from "./useDragDebounce"
 
 // eslint-disable-next-line @typescript-eslint/ban-types

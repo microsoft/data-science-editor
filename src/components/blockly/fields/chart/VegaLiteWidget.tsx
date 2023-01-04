@@ -12,9 +12,9 @@ import useEffectAsync from "../../../useEffectAsync"
 import { tidyResolveHeader, tidySlice } from "./../tidy"
 import CopyButton from "../../../ui/CopyButton"
 import IconButtonWithTooltip from "../../../ui/IconButtonWithTooltip"
-import { UIFlags } from "../../../../jacdac/providerbus"
+import { UIFlags } from "../../../dom/providerbus"
 import SaveAltIcon from "@mui/icons-material/SaveAlt"
-import { humanify, JSONTryParse } from "../../../../jacdac/utils"
+import { humanify, JSONTryParse } from "../../../dom/utils"
 const PREFIX = "VegaLiteWidget"
 
 const classes = {

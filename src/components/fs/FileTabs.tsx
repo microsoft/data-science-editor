@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material"
 import React, { useRef } from "react"
 import useFileSystem from "../FileSystemContext"
-import useChange from "../../jacdac/useChange"
+import useChange from "../dom/useChange"
 import FileSystemChip from "./FileSystemChip"
 import FileNewFileChip from "./FileNewFileChip"
 import FileSystemNodeChip from "./FileSystemNodeChip"

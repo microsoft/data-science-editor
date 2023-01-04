@@ -24,7 +24,7 @@ import {
 } from "./WorkspaceContext"
 import { WorkspaceFile, WorkspaceJSON } from "./dsl/workspacejson"
 import useEffectAsync from "../useEffectAsync"
-import useChange from "../../jacdac/useChange"
+import useChange from "../dom/useChange"
 import { resolveBlockWarnings } from "./WorkspaceContext"
 import useWindowEvent from "../hooks/useWindowEvent"
 import {
@@ -35,8 +35,8 @@ import {
 import { AllOptions } from "./fields/IFrameDataChooserField"
 import useSnackbar from "../hooks/useSnackbar"
 import useFileSystem from "../FileSystemContext"
-import { CHANGE } from "../../jacdac/constants"
-import { arrayConcatMany, toMap } from "../../jacdac/utils"
+import { CHANGE } from "../dom/constants"
+import { arrayConcatMany, toMap } from "../dom/utils"
 
 export interface BlockProps {
     editorId: string

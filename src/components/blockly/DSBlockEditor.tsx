@@ -14,7 +14,7 @@ import { createIFrameDSL } from "./dsl/iframedsl"
 import { useLocationSearchParamBoolean } from "../hooks/useLocationSearchParam"
 import dataSetDsl from "./dsl/datasetdsl"
 import dataVarDsl from "./dsl/datavardsl"
-import { UIFlags } from "../../jacdac/providerbus"
+import { UIFlags } from "../dom/providerbus"
 
 const DS_EDITOR_ID = "ds"
 const DS_SOURCE_STORAGE_KEY = "tools:dseditor"

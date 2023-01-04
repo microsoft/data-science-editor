@@ -2,7 +2,7 @@ import { Chip } from "@mui/material"
 import React from "react"
 import OpenInBrowserIcon from "@mui/icons-material/OpenInBrowser"
 import useFileSystem from "../FileSystemContext"
-import useChange from "../../jacdac/useChange"
+import useChange from "../dom/useChange"
 
 export default function FileSystemChip() {
     const { fileSystem, showDirectoryPicker } = useFileSystem()

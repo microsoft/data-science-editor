@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react"
-import { UIFlags } from "../../jacdac/providerbus"
+import { UIFlags } from "../dom/providerbus"
 
 // enabled when storage=0
 const memStorage: Record<string, unknown> = {}

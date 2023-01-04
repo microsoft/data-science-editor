@@ -16,8 +16,8 @@ import {
 import { ReactFieldBase } from "./ReactFieldBase"
 import { SnackbarProvider } from "notistack"
 import { DarkModeProvider } from "../../ui/DarkModeContext"
-import { JDEventSource } from "../../../jacdac/eventsource"
-import { CHANGE } from "../../../jacdac/constants"
+import { JDEventSource } from "../../dom/eventsource"
+import { CHANGE } from "../../dom/constants"
 
 declare module "blockly" {
     interface Block {

@@ -11,7 +11,7 @@ import { withPrefix } from "gatsby"
 import BlockContext from "./BlockContext"
 import { useBlockMinimap } from "./BlockMinimap"
 import BrowserCompatibilityAlert from "../ui/BrowserCompatibilityAlert"
-import { UIFlags } from "../../jacdac/providerbus"
+import { UIFlags } from "../dom/providerbus"
 import useSnackbar from "../hooks/useSnackbar"
 
 const PREFIX = "BlockEditor"

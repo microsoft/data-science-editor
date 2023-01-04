@@ -1,4 +1,4 @@
-import { UIFlags } from "../../jacdac/providerbus"
+import { UIFlags } from "../dom/providerbus"
 import useStorage, { getStorageItem } from "./useStorage"
 
 const storage = (() => {

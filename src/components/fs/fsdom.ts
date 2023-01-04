@@ -1,5 +1,5 @@
-import { CHANGE } from "../../jacdac/constants"
-import { JDNode } from "../../jacdac/node"
+import { CHANGE } from "../dom/constants"
+import { JDNode } from "../dom/node"
 import { readFileText, writeFileText } from "./fs"
 
 export const FILE_SYSTEM_NODE = "fs"

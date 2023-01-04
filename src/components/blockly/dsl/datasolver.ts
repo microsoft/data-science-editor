@@ -1,4 +1,4 @@
-import { CHANGE } from "../../../jacdac/constants"
+import { CHANGE } from "../../dom/constants"
 import { identityTransformData, resolveBlockDefinition } from "../toolbox"
 import { BlockWithServices, resolveBlockServices } from "../WorkspaceContext"
 

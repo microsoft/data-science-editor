@@ -12,7 +12,7 @@ import {
 } from "blockly"
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import { createRoot } from "react-dom/client"
-import { arrayConcatMany } from "../../jacdac/utils"
+import { arrayConcatMany } from "../dom/utils"
 import { svgPointerPoint } from "../widgets/svgutils"
 import useWorkspaceEvent from "./useWorkspaceEvent"
 

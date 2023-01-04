@@ -1,5 +1,5 @@
 import { useContext, useMemo, useState } from "react"
-import { useChangeAsync } from "../../jacdac/useChange"
+import { useChangeAsync } from "../dom/useChange"
 import DbContext from "../DbContext"
 import { fileSystemHandleSupported } from "../fs/fs"
 

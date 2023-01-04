@@ -5,7 +5,7 @@ import ReportProblemIcon from "@mui/icons-material/ReportProblem"
 import IconButtonWithTooltip from "./IconButtonWithTooltip"
 import { Button } from "@mui/material"
 import useMounted from "../hooks/useMounted"
-import { delay } from "../../jacdac/utils"
+import { delay } from "../dom/utils"
 
 export default function CopyButton(props: {
     label?: string

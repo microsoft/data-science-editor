@@ -1,5 +1,5 @@
-import { UIFlags } from "../../jacdac/providerbus"
-import { inIFrame } from "../../jacdac/utils"
+import { UIFlags } from "../dom/providerbus"
+import { inIFrame } from "../dom/utils"
 
 export function fileSystemHandleSupported() {
     return (

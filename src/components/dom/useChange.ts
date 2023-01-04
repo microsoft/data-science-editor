@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import useEffectAsync from "../components/useEffectAsync"
+import useEffectAsync from "../useEffectAsync"
 import { CHANGE } from "./constants"
 import { IEventSource } from "./eventsource"
 import useEventRaised from "./useEventRaised"
