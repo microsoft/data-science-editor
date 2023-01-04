@@ -199,6 +199,5 @@ export function toShadowDefinition(fieldType: any): BlockDefinition {
         ],
         style: "math_blocks",
         output: "Number",
-        template: "shadow",
     }
 }

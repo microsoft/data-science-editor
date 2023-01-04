@@ -37,6 +37,10 @@ export default class BuiltinDataSetField
         const url = builtins[this.getValue()]
         if (!url) return
 
+        this.updateDataFromUrl(url)
+    }
+
+    private async updateDataFromUrl(url: string) {
         // load dataset as needed
         const sourceBlock = this.getSourceBlock() as BlockWithServices
         const marker = !!sourceBlock?.isInsertionMarker()

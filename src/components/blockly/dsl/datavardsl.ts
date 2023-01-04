@@ -36,7 +36,6 @@ const dataVarDsl: BlockDomainSpecificLanguage = {
             inputsInline: false,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             colour: dataVariablesColour,
-            template: "meta",
             dataPreviewField: "after",
             transformData: (b: Block) => {
                 const services = resolveBlockServices(b)
@@ -61,7 +60,6 @@ const dataVarDsl: BlockDomainSpecificLanguage = {
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             colour: dataVariablesColour,
-            template: "meta",
             dataPreviewField: "after",
             transformData: (b: Block, data: object[]) => {
                 // grab the variable from the block

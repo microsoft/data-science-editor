@@ -96,7 +96,6 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     data,
                 })
             },
-            template: "meta",
         },
         {
             kind: "block",
@@ -133,7 +132,6 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     data,
                 })
             },
-            template: "meta",
         },
         {
             kind: "block",
@@ -174,7 +172,6 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     data,
                 })
             },
-            template: "meta",
         },
         {
             kind: "block",
@@ -221,7 +218,6 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     data,
                 })
             },
-            template: "meta",
         },
         {
             kind: "block",
@@ -268,7 +264,6 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     data,
                 })
             },
-            template: "meta",
         },
         {
             kind: "block",
@@ -330,7 +325,6 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     data,
                 })
             },
-            template: "meta",
         },
         {
             kind: "block",
@@ -390,7 +384,6 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     data,
                 })
             },
-            template: "meta",
         },
         {
             kind: "block",
@@ -428,7 +421,6 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     data,
                 })
             },
-            template: "meta",
         },
         {
             kind: "block",
@@ -467,7 +459,6 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     data,
                 })
             },
-            template: "meta",
         },
         {
             kind: "block",
@@ -505,7 +496,6 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     sliceSample: operator === "sample" ? count : undefined,
                 })
             },
-            template: "meta",
         },
         {
             kind: "block",
@@ -531,7 +521,6 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     data,
                 })
             },
-            template: "meta",
         },
         <BlockDefinition>{
             kind: "block",
@@ -548,7 +537,6 @@ const dataDsl: BlockDomainSpecificLanguage = {
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             colour: computeColour,
-            template: "meta",
             dataPreviewField: true,
             transformData: async (b: Block, data: object[]) => {
                 const column = tidyResolveFieldColumn(data, b, "column", {
@@ -596,7 +584,6 @@ const dataDsl: BlockDomainSpecificLanguage = {
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             colour: statisticsColour,
-            template: "meta",
             dataPreviewField: false,
             passthroughData: true,
             transformData: async (b: Block, data: object[]) => {
@@ -648,7 +635,6 @@ const dataDsl: BlockDomainSpecificLanguage = {
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             colour: statisticsColour,
-            template: "meta",
             dataPreviewField: false,
             passthroughData: true,
             transformData: async (b: Block, data: object[]) => {
@@ -689,7 +675,6 @@ const dataDsl: BlockDomainSpecificLanguage = {
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             colour: operatorsColour,
-            template: "meta",
             inputsInline: false,
             dataPreviewField: false,
             transformData: identityTransformData,

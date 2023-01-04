@@ -8,17 +8,19 @@ import {
     CategoryDefinition,
     DATA_SCIENCE_STATEMENT_TYPE,
     identityTransformData,
+    TextInputDefinition,
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
 import { resolveWorkspaceServices } from "../WorkspaceContext"
 import FileSaveField from "../fields/FileSaveField"
-import { saveCSV } from "./workers/csv.proxy"
+import { downloadCSV, saveCSV } from "./workers/csv.proxy"
 import FileOpenField from "../fields/FileOpenField"
 import palette from "./palette"
 import { importCSVFilesIntoWorkspace } from "../../fs/fs"
 
 const DATA_DATASET_BUILTIN_BLOCK = "data_dataset_builtin"
 const DATA_ADD_DATASET_CALLBACK = "data_add_dataset_variable"
+const DATA_LOAD_URL_BLOCK = "data_load_url"
 const DATA_LOAD_FILE_BLOCK = "data_load_file"
 const DATA_SAVE_FILE_BLOCK = "data_save_file"
 
@@ -40,9 +42,32 @@ const dataSetDsl: BlockDomainSpecificLanguage = {
             inputsInline: false,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             colour: datasetColour,
-            template: "meta",
             dataPreviewField: true,
             transformData: identityTransformData,
+        },
+        {
+            kind: "block",
+            type: DATA_LOAD_URL_BLOCK,
+            message0: "load dataset from url %1",
+            args0: [
+                <TextInputDefinition>{
+                    type: "field_input",
+                    name: "url",
+                    spellcheck: false,
+                },
+            ],
+            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            colour: datasetColour,
+            inputsInline: false,
+            dataPreviewField: true,
+            transformData: async block => {
+                const url = block.getFieldValue("url") as string
+                if (!url) return []
+
+                const { data, errors } = await downloadCSV(url)
+                console.log({ data, errors })
+                return data
+            },
         },
         {
             kind: "block",
@@ -56,7 +81,6 @@ const dataSetDsl: BlockDomainSpecificLanguage = {
             ],
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             colour: datasetColour,
-            template: "meta",
             inputsInline: false,
             dataPreviewField: true,
             transformData: identityTransformData,
@@ -74,7 +98,6 @@ const dataSetDsl: BlockDomainSpecificLanguage = {
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             colour: datasetColour,
-            template: "meta",
             inputsInline: false,
             dataPreviewField: "after",
             transformData: async (block, data) => {
@@ -94,6 +117,10 @@ const dataSetDsl: BlockDomainSpecificLanguage = {
                 <BlockReference>{
                     kind: "block",
                     type: DATA_DATASET_BUILTIN_BLOCK,
+                },
+                <BlockReference>{
+                    kind: "block",
+                    type: DATA_LOAD_URL_BLOCK,
                 },
                 <BlockReference>{
                     kind: "block",
