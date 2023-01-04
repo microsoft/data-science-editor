@@ -2,8 +2,8 @@ import { Grid } from "@mui/material"
 import { withPrefix } from "gatsby-link"
 import { StaticImage } from "gatsby-plugin-image"
 import React from "react"
-import CenterGrid from "../../../components/home/CenterGrid"
-import SplitGrid from "../../../components/home/SplitGrid"
+import CenterGrid from "../components/home/CenterGrid"
+import SplitGrid from "../components/home/SplitGrid"
 
 export default function Home() {
     const DATASET_URL =
@@ -18,18 +18,15 @@ export default function Home() {
         >
             <CenterGrid
                 title="Data Science Editor"
-                subtitle="for Excel Web"
                 image={
                     <img
-                        src={withPrefix("/images/hero.gif")}
+                        src={withPrefix("/images/excel.gif")}
                         alt="Building a chart from various modules"
                         loading="lazy"
                     />
                 }
-                buttonText="Download Worksheet"
-                buttonUrl={DATASET_URL}
+                subtitle2="Block programming meets data analysis."
             />
-            <CenterGrid subtitle3="Block programming meets data analysis within Excel Web." />
 
             <SplitGrid
                 right={true}
@@ -38,7 +35,7 @@ export default function Home() {
                 description="Follow the blocks to see how the data is analyzed."
                 image={
                     <StaticImage
-                        src="./story.png"
+                        src="./excel/story.png"
                         alt="A sequence of blocks that charts sorted data."
                     />
                 }
@@ -51,7 +48,7 @@ export default function Home() {
                 description="Drag a chart block to visualize your data."
                 image={
                     <StaticImage
-                        src="./chart.png"
+                        src="./excel/chart.png"
                         alt="A scatter plot of penguins"
                     />
                 }
@@ -64,7 +61,7 @@ export default function Home() {
                 imageColumns={8}
                 image={
                     <StaticImage
-                        src="./preview.png"
+                        src="./excel/preview.png"
                         alt="A preview of the data before and after a block"
                     />
                 }
@@ -77,15 +74,23 @@ export default function Home() {
                 imageColumns={8}
                 image={
                     <StaticImage
-                        src="./discover.png"
+                        src="./excel/discover.png"
                         alt="A drawer of statistics blocks"
                     />
                 }
             />
 
             <CenterGrid
-                subtitle="Where can I try this editor?"
-                description="Yes! Download the worksheet and follow the instructions to get started."
+                subtitle="Can I use this now?"
+                description="Yes! The editor is browser based."
+                buttonVariant="link"
+                buttonText="Open Editor"
+                buttonUrl="/"
+            />
+
+            <CenterGrid
+                subtitle="Can I use this in Excel Web?"
+                description="Yes! Download the worksheet and follow the instructions to get started in Excel Web."
                 buttonVariant="link"
                 buttonText="Download Worksheet"
                 buttonUrl={DATASET_URL}

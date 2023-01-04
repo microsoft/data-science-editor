@@ -24,7 +24,7 @@ const Root = styled("footer")(({ theme }) => ({
             textDecoration: "underline",
         },
         "& a:visited": {
-            color: theme.palette.grey[400],
+            color: theme.palette.text.primary,
         },
         "& a": {
             marginRight: theme.spacing(0.5),

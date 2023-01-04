@@ -3,8 +3,8 @@ import {
     BlockJSON,
     getFieldValue,
     resolveFieldColumn,
-} from "../../components/blockly/dsl/workspacejson"
-import DataColumnChooserField from "../../components/blockly/fields/DataColumnChooserField"
+} from "../components/blockly/dsl/workspacejson"
+import DataColumnChooserField from "../components/blockly/fields/DataColumnChooserField"
 import {
     BlockDataSet,
     BlockDefinition,
@@ -13,15 +13,15 @@ import {
     ContentDefinition,
     DATA_SCIENCE_STATEMENT_TYPE,
     OptionsInputDefinition,
-} from "../../components/blockly/toolbox"
-import useWindowEvent from "../../components/hooks/useWindowEvent"
+} from "../components/blockly/toolbox"
+import useWindowEvent from "../components/hooks/useWindowEvent"
 import { tidy, arrange, desc } from "@tidyjs/tidy"
 import {
     DslBlocksResponse,
     DslChartExportMessage,
     DslMessage,
     DslTransformMessage,
-} from "../../components/blockly/dsl/iframedsl"
+} from "../components/blockly/dsl/iframedsl"
 import { Button } from "gatsby-material-ui-components"
 
 export default function Page() {
@@ -187,7 +187,7 @@ export default function Page() {
             <iframe
                 ref={frame}
                 title="data editor"
-                src="./data?embed=1"
+                src="/?embed=1"
                 style={{
                     border: "none",
                     left: 0,

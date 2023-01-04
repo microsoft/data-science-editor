@@ -51,7 +51,7 @@ export default function DataEditorAppBar() {
                                 style={{
                                     color: "white",
                                 }}
-                                to="/editors/data/"
+                                to="/about/"
                             >
                                 Data Science Editor
                             </Link>
@@ -63,7 +63,7 @@ export default function DataEditorAppBar() {
                         aria-label="Learn about the data editor"
                         title="Learn about the data editor"
                         color="inherit"
-                        to="/editors/data/about"
+                        to="/about/"
                     >
                         About
                     </Link>

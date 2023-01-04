@@ -143,11 +143,12 @@ function LayoutWithMdx(props: LayoutProps) {
 
 function LayoutWithContext(props: LayoutProps) {
     const { element, props: pageProps } = props
+    const { path } = pageProps
 
     const appBar = <DataEditorAppBar />
 
     const { darkMode } = useContext(DarkModeContext)
-    const container = false
+    const container = path !== "/"
     // && path !== "/"
     const mainClasses = clsx(classes.content, {
         [classes.container]: container,
