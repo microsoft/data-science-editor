@@ -194,11 +194,11 @@ export class FileSystemDirectory extends FileSystemNode {
     }
 
     get directories() {
-        return this._directories.slice(0) || []
+        return this._directories
     }
 
     get files() {
-        return this._files.slice(0) || []
+        return this._files
     }
 
     directory(

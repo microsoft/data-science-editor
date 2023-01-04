@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material"
-import React, { useRef } from "react"
+import React from "react"
 import useFileSystem from "../FileSystemContext"
 import useChange from "../dom/useChange"
 import FileSystemChip from "./FileSystemChip"
@@ -17,16 +17,15 @@ export default function FileTabs(props: {
     const { newFileName, newFileContent, newFileLabel, newFileExtension } =
         props
     const { fileSystem } = useFileSystem()
-    const gridRef = useRef()
     const root = useChange(fileSystem, _ => _?.root)
     const workingDirectory = useChange(fileSystem, _ => _?.workingDirectory)
     const directories = useChange(root, _ => _?.directories)
-    const handleDirectorySelected = handle => () =>
-        (fileSystem.workingDirectory = handle)
+    const handleDirectorySelected = handle => () => {
+        fileSystem.workingDirectory = handle
+    }
     if (!fileSystem) return null
-
     return (
-        <Grid ref={gridRef} container spacing={1}>
+        <Grid container spacing={1}>
             <Grid item>
                 <FileSystemChip />
             </Grid>
