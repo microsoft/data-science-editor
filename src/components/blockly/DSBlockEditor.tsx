@@ -11,7 +11,10 @@ import fieldsDsl from "./dsl/fieldsdsl"
 import { WORKSPACE_FILENAME } from "./toolbox"
 import useFileSystem from "../FileSystemContext"
 import { createIFrameDSL } from "./dsl/iframedsl"
-import { useLocationSearchParamBoolean } from "../hooks/useLocationSearchParam"
+import {
+    useLocationSearchParamBoolean,
+    useLocationSearchParamString,
+} from "../hooks/useLocationSearchParam"
 import dataSetDsl from "./dsl/datasetdsl"
 import dataVarDsl from "./dsl/datavardsl"
 import { UIFlags } from "../dom/providerbus"
@@ -33,7 +36,6 @@ function DSEditorWithContext() {
                     <FileTabs
                         newFileName={WORKSPACE_FILENAME}
                         newFileContent={DS_NEW_FILE_CONTENT}
-                        hideFiles={true}
                     />
                 </Grid>
             )}
@@ -49,6 +51,7 @@ export default function DSBlockEditor() {
     const dataSet = useLocationSearchParamBoolean("dataset", true)
     const dataVar = useLocationSearchParamBoolean("datavar", true)
     const chart = useLocationSearchParamBoolean("chart", true)
+    const host = useLocationSearchParamString("host")
 
     const dsls = useMemo(() => {
         return [
@@ -57,7 +60,7 @@ export default function DSBlockEditor() {
             dataVar && dataVarDsl,
             chart && chartDsl,
             fieldsDsl,
-            createIFrameDSL("host", "*"),
+            host && createIFrameDSL("host", host),
         ].filter(dsl => !!dsl)
     }, [])
 

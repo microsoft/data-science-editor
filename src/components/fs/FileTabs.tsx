@@ -11,36 +11,18 @@ export default function FileTabs(props: {
     newFileExtension?: string
     newFileContent?: string
     newFileLabel?: string
-    hideDirectories?: boolean
-    hideFiles?: boolean
     directoryFilter?: (directory: string) => boolean
     fileFilter?: (file: string) => boolean
 }) {
-    const {
-        newFileName,
-        newFileContent,
-        hideDirectories,
-        hideFiles,
-        directoryFilter,
-        fileFilter,
-        newFileLabel,
-        newFileExtension,
-    } = props
+    const { newFileName, newFileContent, newFileLabel, newFileExtension } =
+        props
     const { fileSystem } = useFileSystem()
+    const gridRef = useRef()
     const root = useChange(fileSystem, _ => _?.root)
     const workingDirectory = useChange(fileSystem, _ => _?.workingDirectory)
-    const workingFile = useChange(fileSystem, _ => _?.workingFile)
-    const directories = useChange(root, _ =>
-        _?.directories?.filter(d => !directoryFilter || directoryFilter(d.name))
-    )
-    const files = useChange(root, _ =>
-        _?.files?.filter(d => !fileFilter || fileFilter(d.name))
-    )
-    const gridRef = useRef()
+    const directories = useChange(root, _ => _?.directories)
     const handleDirectorySelected = handle => () =>
         (fileSystem.workingDirectory = handle)
-    const handleFileSelected = handle => () => (fileSystem.workingFile = handle)
-
     if (!fileSystem) return null
 
     return (
@@ -58,26 +40,15 @@ export default function FileTabs(props: {
                     />
                 </Grid>
             )}
-            {!hideDirectories &&
-                directories?.map(node => (
-                    <Grid item key={node.name}>
-                        <FileSystemNodeChip
-                            node={node}
-                            selected={node === workingDirectory}
-                            onClick={handleDirectorySelected(node)}
-                        />
-                    </Grid>
-                ))}
-            {!hideFiles &&
-                files?.map(node => (
-                    <Grid item key={node.name}>
-                        <FileSystemNodeChip
-                            node={node}
-                            selected={node === workingFile}
-                            onClick={handleFileSelected(node)}
-                        />
-                    </Grid>
-                ))}
+            {directories?.map(node => (
+                <Grid item key={node.name}>
+                    <FileSystemNodeChip
+                        node={node}
+                        selected={node === workingDirectory}
+                        onClick={handleDirectorySelected(node)}
+                    />
+                </Grid>
+            ))}
         </Grid>
     )
 }
