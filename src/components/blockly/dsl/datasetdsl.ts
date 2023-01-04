@@ -105,7 +105,7 @@ const dataSetDsl: BlockDomainSpecificLanguage = {
                 },
                 <ButtonDefinition>{
                     kind: "button",
-                    text: "Import dataset",
+                    text: "Import dataset to file",
                     callbackKey: DATA_ADD_DATASET_CALLBACK,
                     callback: async (workspace: Workspace) => {
                         const services = resolveWorkspaceServices(workspace)

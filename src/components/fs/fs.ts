@@ -124,13 +124,3 @@ export async function importCSVFilesIntoWorkspace(
     await importFiles(directory, files)
     return files.length
 }
-
-export async function importModelJSONIntoWorkspace(
-    directory: FileSystemDirectoryHandle
-) {
-    const files = await fileOpen({
-        multiple: true,
-        mimeTypes: { ["text/json"]: [".json"] },
-    })
-    await importFiles(directory, files)
-}
