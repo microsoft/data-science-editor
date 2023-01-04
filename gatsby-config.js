@@ -20,9 +20,6 @@ module.exports = {
         FAST_DEV: true,
     },
     plugins: [
-        `gatsby-transformer-json`,
-        `gatsby-transformer-csv`,
-        `gatsby-transformer-plaintext`,
         {
             resolve: `gatsby-source-filesystem`,
             options: {
@@ -37,7 +34,6 @@ module.exports = {
                 path: `${__dirname}/src/pages`,
             },
         },
-        `gatsby-transformer-javascript-frontmatter`,
         `gatsby-theme-material-ui`,
         `gatsby-plugin-image`,
         `gatsby-plugin-sharp`,
