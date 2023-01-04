@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography"
 // tslint:disable-next-line: no-submodule-imports
 import DarkModeContext from "../ui/DarkModeContext"
 import { Link } from "gatsby-theme-material-ui"
+import DarkModeButton from "./DarkModeButton"
 
 const PREFIX = "DataEditorApp"
 
@@ -67,6 +68,7 @@ export default function DataEditorAppBar() {
                     >
                         About
                     </Link>
+                    <DarkModeButton />
                 </Toolbar>
             </AppBar>
         </StyledBox>
