@@ -107,7 +107,7 @@ const dataSetDsl: BlockDomainSpecificLanguage = {
                     kind: "button",
                     text: "Import dataset",
                     callbackKey: DATA_ADD_DATASET_CALLBACK,
-                    callback: (workspace: Workspace) => {
+                    callback: async (workspace: Workspace) => {
                         const services = resolveWorkspaceServices(workspace)
                         const directory = services?.workingDirectory
                         if (!directory)
@@ -115,9 +115,13 @@ const dataSetDsl: BlockDomainSpecificLanguage = {
                                 "You need to open a directory to import a dataset."
                             )
                         else {
-                            importCSVFilesIntoWorkspace(directory.handle)
-                                .then(() => directory.sync())
-                                .then(() => alert("Datasets imported!"))
+                            const imported = await importCSVFilesIntoWorkspace(
+                                directory.handle
+                            )
+                            if (imported > 0) {
+                                await directory.sync()
+                                alert("Datasets imported!")
+                            }
                         }
                     },
                 },

@@ -78,18 +78,24 @@ export async function fileOpen(
     } else {
         accept["*/*"] = options.extensions || []
     }
-    const files = await window.showOpenFilePicker({
-        types: [
-            {
-                description: options.description || "",
-                accept: accept,
-            },
-        ],
-        multiple: options.multiple || false,
-        excludeAcceptAllOption: true,
-    })
-    console.debug(`open file picker`, { files })
-    return files
+
+    try {
+        const files = await window.showOpenFilePicker({
+            types: [
+                {
+                    description: options.description || "",
+                    accept: accept,
+                },
+            ],
+            multiple: options.multiple || false,
+            excludeAcceptAllOption: true,
+        })
+        console.debug(`open file picker`, { files })
+        return files
+    } catch (e) {
+        if (e.name !== "AbortError") throw e
+        return []
+    }
 }
 
 export async function importFiles(
@@ -116,6 +122,7 @@ export async function importCSVFilesIntoWorkspace(
         mimeTypes: { ["text/csv"]: [".csv"] },
     })
     await importFiles(directory, files)
+    return files.length
 }
 
 export async function importModelJSONIntoWorkspace(
