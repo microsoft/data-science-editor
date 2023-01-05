@@ -1,11 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { Block, Events, Workspace, WorkspaceSvg } from "blockly"
-import React, {
-    createContext,
-    ReactNode,
-    useCallback,
-    useState,
-} from "react"
+import { Block, BlockSvg, Events, Workspace, WorkspaceSvg } from "blockly"
+import React, { createContext, ReactNode, useCallback, useState } from "react"
 import { WorkspaceJSON } from "./dsl/workspacejson"
 import { FileSystemDirectory } from "../fs/fsdom"
 import ReactField from "./fields/ReactField"
@@ -127,6 +122,10 @@ export function resolveBlockServices(block: Block) {
     return services
 }
 
+export function resolveBlockSvg(block: Block) {
+    return block as BlockSvg
+}
+
 export function setBlockWarning(block: Block, key: string, value: string) {
     const services = resolveBlockServices(block)
     services?.setWarning(key, value)
@@ -151,14 +150,12 @@ export interface WorkspaceContextProps {
     sourceBlock?: Block
     sourceId?: string
     services: WorkspaceServices
-    flyout?: boolean
 }
 
 export const WorkspaceContext = createContext<WorkspaceContextProps>({
     workspace: undefined,
     dragging: false,
     sourceBlock: undefined,
-    flyout: false,
     sourceId: undefined,
     services: undefined,
 })
@@ -179,7 +176,6 @@ export function WorkspaceProvider(props: {
     const workspace = sourceBlock?.workspace as WorkspaceSvg
     const services = resolveWorkspaceServices(workspace)
     const [dragging, setDragging] = useState(!!workspace?.isDragging())
-    const [flyout, setFlyout] = useState(!!sourceBlock?.isInFlyout)
 
     const handleWorkspaceEvent = useCallback(
         (event: Events.Abstract & { type: string }) => {
@@ -203,7 +199,6 @@ export function WorkspaceProvider(props: {
                 dragging,
                 sourceId,
                 services,
-                flyout,
             }}
         >
             {children}

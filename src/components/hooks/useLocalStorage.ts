@@ -1,9 +1,7 @@
-import { UIFlags } from "../dom/providerbus"
 import useStorage, { getStorageItem } from "./useStorage"
 
 const storage = (() => {
     try {
-        if (UIFlags.transient) return undefined
         return typeof window !== "undefined" && window.localStorage
     } catch {
         return undefined

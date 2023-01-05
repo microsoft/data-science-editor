@@ -1,8 +1,24 @@
 import { CHANGE } from "../../dom/constants"
+import { delay } from "../../dom/utils"
 import { identityTransformData, resolveBlockDefinition } from "../toolbox"
-import { BlockWithServices, resolveBlockServices } from "../WorkspaceContext"
+import {
+    BlockWithServices,
+    resolveBlockServices,
+    resolveBlockSvg,
+} from "../WorkspaceContext"
 
-const PROGRESS_DELAY = 200
+function startShowTransform(block: BlockWithServices) {
+    let blockSvg = resolveBlockSvg(block)
+    blockSvg.addSelect()
+    blockSvg.setEditable(false)
+    return () => {
+        blockSvg?.removeSelect()
+        blockSvg?.setEditable(true)
+        blockSvg = undefined
+    }
+}
+
+const TRANSFORM_DELAY = 20
 
 export function registerDataSolver(block: BlockWithServices) {
     const { jacdacServices: services } = block
@@ -13,6 +29,7 @@ export function registerDataSolver(block: BlockWithServices) {
     const applyTransform = async () => {
         if (!block.isEnabled() || block.isInFlyout) return
 
+        const unshow = startShowTransform(block)
         // transfer data to the next block
         const nextServices = resolveBlockServices(
             block.nextConnection?.targetBlock()
@@ -23,34 +40,18 @@ export function registerDataSolver(block: BlockWithServices) {
             let newData: object[]
             if (transformData === identityTransformData) newData = services.data
             else {
-                let progressid = setTimeout(() => {
-                    progressid = undefined
-                    // nprogress.start()
-                }, PROGRESS_DELAY)
-                try {
-                    //const start = performance.now()
-                    newData = await transformData(
-                        block,
-                        services.data,
-                        nextServices?.data
-                    )
-                    //const end = performance.now()
-                    //console.debug(
-                    //    `data ${block.type}: ${roundWithPrecision(
-                    //        (end - start) / 1000,
-                    //        3
-                    //    )}s`
-                    //)
-                } finally {
-                    if (progressid) clearTimeout(progressid)
-                    else {
-                        //nprogress.done()
-                    }
-                }
+                await delay(TRANSFORM_DELAY)
+                //const start = performance.now()
+                newData = await transformData(
+                    block,
+                    services.data,
+                    nextServices?.data
+                )
             }
 
             // propagate
             services.transformedData = newData
+            unshow()
 
             // check if pass through
             const def = resolveBlockDefinition(block.type)
@@ -59,6 +60,8 @@ export function registerDataSolver(block: BlockWithServices) {
             if (nextServices) nextServices.data = newData
         } catch (e) {
             console.debug(e)
+        } finally {
+            unshow()
         }
     }
     // apply transform, then register for change
