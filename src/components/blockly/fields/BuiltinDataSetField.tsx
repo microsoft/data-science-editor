@@ -6,6 +6,9 @@ import { downloadCSV } from "../dsl/workers/csv.proxy"
 function googleSheetUrl(id: string, sheet = "Sheet1") {
     return `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv&sheet=${sheet}`
 }
+function googleDriveUrl(id: string) {
+    return `https://drive.google.com/uc?id=${id}`
+}
 
 export const builtinDatasets = {
     Cereals: withPrefix("/datasets/cereal.csv"),
@@ -14,7 +17,11 @@ export const builtinDatasets = {
         "1L7hf0llI8dl8okVuat2fa1K4lqD5O301IFPi81vG7fc"
     ),
     "World Cities' Proximity to the Ocean (Bootstrap)": googleSheetUrl(
-        "166F2V0uPtAIiU4BkITu8pDmU2hnPIWJaM3yDoOHyon0", "Data"
+        "166F2V0uPtAIiU4BkITu8pDmU2hnPIWJaM3yDoOHyon0",
+        "Data"
+    ),
+    "Carbon Dioxide Concentrations (Code.org)": googleDriveUrl(
+        "16KTzQse_jVlaw0Z-uOCm1UVbbfSURlT3"
     ),
 }
 

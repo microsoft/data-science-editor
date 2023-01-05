@@ -50,7 +50,6 @@ export default function useStorage<T = string>(
     // ... persists the new value to localStorage.
     const setValue = useCallback(
         (value: T) => {
-            console.log({ key, value })
             // keep in-memory cahed
             memStorage[key] = value
             // Allow value to be a function so we have same API as useState
