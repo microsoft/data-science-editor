@@ -85,17 +85,23 @@ export default function VegaLiteWidget(props: {
         ) {
             s.mark.clip = true
         }
-        if (group && s?.encoding) {
-            s.encoding.color = {
-                field: group,
-                title: humanify(group),
-                type: "nominal",
-            }
-            s.encoding.strokeDash = {
-                field: group,
-                title: humanify(group),
-                type: "nominal",
-            }
+
+        if (group) {
+            const specs = s.layer || [s]
+            specs
+                .filter(s => s.encoding)
+                .forEach(s => {
+                    s.encoding.color = {
+                        field: group,
+                        title: humanify(group),
+                        type: "nominal",
+                    }
+                    s.encoding.strokeDash = {
+                        field: group,
+                        title: humanify(group),
+                        type: "nominal",
+                    }
+                })
         }
         return s
     }, [spec, group, settings])
@@ -137,6 +143,7 @@ export default function VegaLiteWidget(props: {
         : undefined
     const showToolbar = !!handleCopy || !!handleExport
 
+    console.log({ fullSpec, data })
     return (
         <NoSsr>
             <PointerBoundary>
