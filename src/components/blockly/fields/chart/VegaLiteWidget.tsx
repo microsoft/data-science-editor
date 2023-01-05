@@ -85,7 +85,7 @@ export default function VegaLiteWidget(props: {
         ) {
             s.mark.clip = true
         }
-        if (group) {
+        if (group && s?.encoding) {
             s.encoding.color = {
                 field: group,
                 title: humanify(group),
