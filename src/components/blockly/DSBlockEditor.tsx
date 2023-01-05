@@ -16,10 +16,9 @@ import {
 } from "../hooks/useLocationSearchParam"
 import dataSetDsl from "./dsl/datasetdsl"
 import dataVarDsl from "./dsl/datavardsl"
-import { UIFlags } from "../dom/providerbus"
 
 const DS_EDITOR_ID = "ds"
-const DS_SOURCE_STORAGE_KEY = "tools:dseditor"
+const DS_SOURCE_STORAGE_KEY = "editor"
 const DS_NEW_FILE_CONTENT = JSON.stringify({
     editor: DS_EDITOR_ID,
     xml: "",

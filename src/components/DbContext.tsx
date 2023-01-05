@@ -1,7 +1,6 @@
 import React, { createContext, useState } from "react"
 import { CHANGE, ERROR } from "./dom/constants"
 import { IEventSource, JDEventSource } from "./dom/eventsource"
-import { UIFlags } from "./dom/providerbus"
 import { delay } from "./dom/utils"
 import useEffectAsync from "./useEffectAsync"
 
@@ -281,17 +280,12 @@ export const DbProvider = ({ children }) => {
     const [db, setDb] = useState<IDb>(undefined)
     const [error, setError] = useState(undefined)
     useEffectAsync(async () => {
-        if (UIFlags.storage) {
-            console.debug(`db: indexeddb`)
-            try {
-                const r = await IDBDb.create()
-                setDb(r)
-            } catch (e) {
-                setError(e)
-            }
-        } else {
-            console.debug(`db: in memory`)
-            setDb(new MemoryDb())
+        console.debug(`db: indexeddb`)
+        try {
+            const r = await IDBDb.create()
+            setDb(r)
+        } catch (e) {
+            setError(e)
         }
     }, [])
     return (
