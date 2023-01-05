@@ -3,9 +3,19 @@ import { Block, FieldDropdown } from "blockly"
 import { withPrefix } from "gatsby"
 import { downloadCSV } from "../dsl/workers/csv.proxy"
 
-const builtins = {
-    cereal: withPrefix("/datasets/cereal.csv"),
-    penguins: withPrefix("/datasets/penguins.csv"),
+function googleSheetUrl(id: string, sheet = "Sheet1") {
+    return `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv&sheet=${sheet}`
+}
+
+export const builtinDatasets = {
+    Cereals: withPrefix("/datasets/cereal.csv"),
+    Penguins: withPrefix("/datasets/penguins.csv"),
+    "Gerrymangering (Bootstrap)": googleSheetUrl(
+        "1L7hf0llI8dl8okVuat2fa1K4lqD5O301IFPi81vG7fc"
+    ),
+    "World Cities' Proximity to the Ocean (Bootstrap)": googleSheetUrl(
+        "166F2V0uPtAIiU4BkITu8pDmU2hnPIWJaM3yDoOHyon0", "Data"
+    ),
 }
 
 export default class BuiltinDataSetField
@@ -22,7 +32,11 @@ export default class BuiltinDataSetField
 
     // eslint-disable-next-line @typescript-eslint/ban-types
     constructor(options: object) {
-        super(() => Object.keys(builtins).map(k => [k, k]), undefined, options)
+        super(
+            () => Object.keys(builtinDatasets).map(k => [k, k]),
+            undefined,
+            options
+        )
     }
 
     init() {
@@ -34,7 +48,7 @@ export default class BuiltinDataSetField
     private async updateData() {
         if (!this.initialized) return
 
-        const url = builtins[this.getValue()]
+        const url = builtinDatasets[this.getValue()]
         if (!url) return
 
         this.updateDataFromUrl(url)
