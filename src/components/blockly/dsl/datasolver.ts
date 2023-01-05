@@ -18,7 +18,7 @@ function startShowTransform(block: BlockWithServices) {
     }
 }
 
-const TRANSFORM_DELAY = 20
+const TRANSFORM_DELAY = 40
 
 export function registerDataSolver(block: BlockWithServices) {
     const { jacdacServices: services } = block
@@ -36,11 +36,11 @@ export function registerDataSolver(block: BlockWithServices) {
         )
         try {
             services.setDataWarning(undefined)
+            await delay(TRANSFORM_DELAY)
             // eslint-disable-next-line @typescript-eslint/ban-types
             let newData: object[]
             if (transformData === identityTransformData) newData = services.data
             else {
-                await delay(TRANSFORM_DELAY)
                 //const start = performance.now()
                 newData = await transformData(
                     block,
