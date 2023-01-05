@@ -170,6 +170,7 @@ export default function DataTableWidget(props: {
                                     size="small"
                                     className={classes.button}
                                     onCopy={handleCopy}
+                                    title="Copy data to clipboard"
                                 />
                             </Grid>
                             {raw.length > 1 && (

@@ -8,8 +8,7 @@ import useMounted from "../hooks/useMounted"
 import { delay } from "../dom/utils"
 
 export default function CopyButton(props: {
-    label?: string
-    title?: string
+    title: string
     onCopy?: () => Promise<string | HTMLCanvasElement>
     text?: string
     className?: string
@@ -19,15 +18,7 @@ export default function CopyButton(props: {
     copyIcon?: ReactNode
     color?: "success" | "error"
 }) {
-    const {
-        label,
-        text,
-        title = "copy data to clipboard",
-        disabled,
-        onCopy,
-        copyIcon,
-        ...rest
-    } = props
+    const { text, title, disabled, onCopy, copyIcon, ...rest } = props
     const [copied, setCopied] = useState<boolean>(undefined)
     const mounted = useMounted()
     const handleClick = async (ev: React.MouseEvent<HTMLButtonElement>) => {
@@ -57,23 +48,13 @@ export default function CopyButton(props: {
             if (mounted()) setCopied(undefined)
         }
     }
-    const hasCopied = copied !== undefined
     const buttonText =
         copied === true
             ? "Copied!"
             : copied === false
             ? "Copy failed"
-            : label || title || "copy to clipboard"
-    return label ? (
-        <Button
-            title={title}
-            disabled={disabled || hasCopied}
-            {...rest}
-            onClick={hasCopied ? undefined : handleClick}
-        >
-            {buttonText}
-        </Button>
-    ) : (
+            : title || "copy to clipboard"
+    return (
         <IconButtonWithTooltip
             trackName="ui.copy"
             title={buttonText}

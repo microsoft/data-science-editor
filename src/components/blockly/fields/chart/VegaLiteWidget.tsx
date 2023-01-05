@@ -164,6 +164,7 @@ export default function VegaLiteWidget(props: {
                                                 size="small"
                                                 className={classes.button}
                                                 onCopy={handleCopy}
+                                                title="Copy image to clipboard"
                                             />
                                         </Grid>
                                     )}
