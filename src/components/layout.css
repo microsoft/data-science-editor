@@ -276,6 +276,9 @@ h1 {
     font-size: 2.25rem;
     line-height: 1.1;
 }
+h1 > a {
+    text-decoration: none !important;
+}
 h2 {
     margin-left: 0;
     margin-right: 0;
