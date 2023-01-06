@@ -387,7 +387,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: VEGA_ENCODING_BLOCK,
-            message0: "encoding %1 as %2 type %3",
+            message0: "encoding %1 as %2 type %3 aggregate %4",
             args0: [
                 <OptionsInputDefinition>{
                     type: "field_dropdown",
@@ -431,6 +431,22 @@ const chartDsl: BlockDomainSpecificLanguage = {
                         "temporal",
                     ].map(s => [s, s]),
                     name: "type",
+                },
+                <OptionsInputDefinition>{
+                    type: "field_dropdown",
+                    options: [
+                        "none",
+                        "count",
+                        "distinct",
+                        "sum",
+                        "mean",
+                        "median",
+                        "variance",
+                        "stdev",
+                        "min",
+                        "max",
+                    ].map(s => [s, s]),
+                    name: "aggregate",
                 },
             ],
             previousStatement: VEGA_STATEMENT_TYPE,
@@ -499,17 +515,22 @@ export function blockToVisualizationSpec(
                 const channel: string = child.getFieldValue("channel")
                 const field = tidyResolveFieldColumn(data, child, "field")
                 const type: string = child.getFieldValue("type")
+                const aggregate: string = child.getFieldValue("aggregate")
                 if (channel && field) {
                     const fieldType = types[headers.indexOf(field)]
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    spec.encoding[channel] = {
+                    const encoding: Record<string, string> = (spec.encoding[
+                        channel
+                    ] = {
                         field,
                         type:
                             type ||
                             (fieldType === "number"
                                 ? "quantitative"
                                 : "nominal"),
-                    }
+                    })
+                    if (aggregate !== "none" && aggregate)
+                        encoding.aggregate = aggregate
                 }
                 break
             }
