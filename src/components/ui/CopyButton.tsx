@@ -3,8 +3,6 @@ import FileCopyIcon from "@mui/icons-material/FileCopy"
 import DoneIcon from "@mui/icons-material/Done"
 import ReportProblemIcon from "@mui/icons-material/ReportProblem"
 import IconButtonWithTooltip from "./IconButtonWithTooltip"
-import { Button } from "@mui/material"
-import useMounted from "../hooks/useMounted"
 import { delay } from "../dom/utils"
 
 export default function CopyButton(props: {
@@ -20,7 +18,6 @@ export default function CopyButton(props: {
 }) {
     const { text, title, disabled, onCopy, copyIcon, ...rest } = props
     const [copied, setCopied] = useState<boolean>(undefined)
-    const mounted = useMounted()
     const handleClick = async (ev: React.MouseEvent<HTMLButtonElement>) => {
         ev.stopPropagation()
         ev.preventDefault()
@@ -39,10 +36,10 @@ export default function CopyButton(props: {
                 const item = new ClipboardItem({ "image/png": blob })
                 navigator.clipboard.write([item])
             }
-            if (mounted()) setCopied(true)
+            setCopied(true)
         } catch (e) {
             console.debug(e)
-            if (mounted()) setCopied(false)
+            setCopied(false)
         } finally {
             await delay(2000)
             if (mounted()) setCopied(undefined)
