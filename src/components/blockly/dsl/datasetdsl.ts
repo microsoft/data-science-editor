@@ -11,7 +11,10 @@ import {
     TextInputDefinition,
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
-import { resolveWorkspaceServices } from "../WorkspaceContext"
+import {
+    resolveWorkspaceServices,
+    setBlockDataWarning,
+} from "../WorkspaceContext"
 import FileSaveField from "../fields/FileSaveField"
 import { downloadCSV, saveCSV } from "./workers/csv.proxy"
 import FileOpenField from "../fields/FileOpenField"
@@ -23,6 +26,13 @@ const DATA_ADD_DATASET_CALLBACK = "data_add_dataset_variable"
 const DATA_LOAD_URL_BLOCK = "data_load_url"
 const DATA_LOAD_FILE_BLOCK = "data_load_file"
 const DATA_SAVE_FILE_BLOCK = "data_save_file"
+
+function googleSheetUrl(id: string, sheet = "Sheet1") {
+    return `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv&sheet=${sheet}`
+}
+function patchCsvUrl(url: string) {
+    return url
+}
 
 const [datasetColour] = palette()
 const dataSetDsl: BlockDomainSpecificLanguage = {
@@ -64,8 +74,16 @@ const dataSetDsl: BlockDomainSpecificLanguage = {
                 const url = block.getFieldValue("url") as string
                 if (!url) return []
 
-                const { data, errors } = await downloadCSV(url)
-                console.log({ data, errors })
+                const patched = patchCsvUrl(url)
+                const { data, errors } = await downloadCSV(patched)
+                if (errors?.length) {
+                    setBlockDataWarning(block, errors[0].message)
+                    console.debug(`csv download error`, {
+                        errors,
+                        url,
+                        patched,
+                    })
+                }
                 return data
             },
         },

@@ -47,8 +47,15 @@ export function tidyResolveFieldColumn(
     const { type, required } = options || {}
     const column = tidyResolveHeader(data, name, type)
     if (!column) {
-        if (required && !name) setBlockDataWarning(b, `missing columns`)
-        else if (name) setBlockDataWarning(b, `${name} not found`)
+        if (required && !name) setBlockDataWarning(b, `missing column name`)
+        else if (name) setBlockDataWarning(b, `'${name}' not found`)
+        console.debug("data column not found", {
+            fieldName,
+            name,
+            type,
+            required,
+            data,
+        })
     }
     return column
 }

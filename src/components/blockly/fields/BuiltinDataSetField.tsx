@@ -1,11 +1,11 @@
-import { BlockWithServices, FieldWithServices } from "../WorkspaceContext"
+import {
+    BlockWithServices,
+    FieldWithServices,
+    setBlockDataWarning,
+} from "../WorkspaceContext"
 import { Block, FieldDropdown } from "blockly"
 import { withPrefix } from "gatsby"
 import { downloadCSV } from "../dsl/workers/csv.proxy"
-
-function googleSheetUrl(id: string, sheet = "Sheet1") {
-    return `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv&sheet=${sheet}`
-}
 
 export const builtinDatasets = {
     Cereals: withPrefix("/datasets/cereal.csv"),
@@ -68,7 +68,8 @@ export default class BuiltinDataSetField
         services.cache[BuiltinDataSetField.KEY] = url
 
         const { data, errors } = await downloadCSV(url)
-        if (errors?.length)
+        if (errors?.length) {
+            setBlockDataWarning(sourceBlock, errors[0].message)
             console.debug(`csv parse errors`, {
                 id: sourceBlock.id,
                 marker,
@@ -77,6 +78,7 @@ export default class BuiltinDataSetField
                 services,
                 url,
             })
+        }
         services.data = data
     }
 
