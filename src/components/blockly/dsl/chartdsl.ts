@@ -50,6 +50,7 @@ const VEGA_ENCODING_STATEMENT_TYPE = "vegaEncodingStatementType"
 const VEGA_ENCODING_AGGREGATE_BLOCK = "vega_encoding_aggregate"
 const VEGA_ENCODING_TIME_UNIT_BLOCK = "vega_encoding_time_unit"
 const VEGA_ENCODING_BIN_BLOCK = "vega_encoding_bin"
+const VEGA_ENCODING_SORT_BLOCK = "vega_encoding_sort"
 
 const vegaChannels = [
     "x",
@@ -532,6 +533,24 @@ const chartDsl: BlockDomainSpecificLanguage = {
             dataPreviewField: false,
             transformData: identityTransformData,
         },
+        {
+            kind: "block",
+            type: VEGA_ENCODING_SORT_BLOCK,
+            message0: "sort %1",
+            args0: [
+                <OptionsInputDefinition>{
+                    type: "field_dropdown",
+                    options: ["ascending", "descending"].map(s => [s, s]),
+                    name: "direction",
+                },
+            ],
+            previousStatement: VEGA_ENCODING_STATEMENT_TYPE,
+            nextStatement: VEGA_ENCODING_STATEMENT_TYPE,
+            colour,
+            inputsInline: false,
+            dataPreviewField: false,
+            transformData: identityTransformData,
+        },
     ],
 
     createCategory: () => [
@@ -560,6 +579,10 @@ const chartDsl: BlockDomainSpecificLanguage = {
                 <BlockReference>{
                     kind: "block",
                     type: VEGA_ENCODING_BLOCK,
+                },
+                <BlockReference>{
+                    kind: "block",
+                    type: VEGA_ENCODING_SORT_BLOCK,
                 },
                 <BlockReference>{
                     kind: "block",
@@ -658,6 +681,10 @@ export function blockToVisualizationSpec(
                     ) as boolean
                     encoding.bin = !!enabled
                     break
+                }
+                case VEGA_ENCODING_SORT_BLOCK: {
+                    const direction: string = child.getFieldValue("direction")
+                    if (direction) encoding.sort = direction
                 }
             }
             child = child.getNextBlock()
