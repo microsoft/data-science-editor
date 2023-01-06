@@ -169,9 +169,7 @@ export function WorkspaceProvider(props: {
     children: ReactNode
 }) {
     const { field, children } = props
-    const [sourceBlock, setSourceBlock] = useState<Block>(
-        field?.getSourceBlock()
-    )
+    const sourceBlock = field?.getSourceBlock()
     const sourceId = sourceBlock?.id
     const workspace = sourceBlock?.workspace as WorkspaceSvg
     const services = resolveWorkspaceServices(workspace)

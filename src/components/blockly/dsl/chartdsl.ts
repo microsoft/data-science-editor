@@ -47,10 +47,12 @@ const VEGA_LAYER_BLOCK = "vega_layer"
 const VEGA_ENCODING_BLOCK = "vega_encoding"
 const VEGA_STATEMENT_TYPE = "vegaStatementType"
 const VEGA_ENCODING_STATEMENT_TYPE = "vegaEncodingStatementType"
+const VEGA_ENCODING_TYPE_BLOCK = "vega_encoding_type"
 const VEGA_ENCODING_AGGREGATE_BLOCK = "vega_encoding_aggregate"
 const VEGA_ENCODING_TIME_UNIT_BLOCK = "vega_encoding_time_unit"
 const VEGA_ENCODING_BIN_BLOCK = "vega_encoding_bin"
 const VEGA_ENCODING_SORT_BLOCK = "vega_encoding_sort"
+const VEGA_ENCODING_SORT_FIELD_BLOCK = "vega_encoding_sort_field"
 
 const vegaChannels = [
     "x",
@@ -75,6 +77,17 @@ const vegaChannels = [
     "strokeDash",
     "strokeWidth",
     "text",
+].map(s => [s, s])
+const vegaAggregates = [
+    "mean",
+    "median",
+    "variance",
+    "stdev",
+    "min",
+    "max",
+    "count",
+    "distinct",
+    "sum",
 ].map(s => [s, s])
 
 const colour = paletteColorByIndex(4)
@@ -419,7 +432,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: VEGA_ENCODING_BLOCK,
-            message0: "encoding %1 field %2 type %3 %4 %5",
+            message0: "encoding %1 field %2 %3 %4",
             args0: [
                 <OptionsInputDefinition>{
                     type: "field_dropdown",
@@ -430,16 +443,6 @@ const chartDsl: BlockDomainSpecificLanguage = {
                     type: DataColumnChooserField.KEY,
                     name: "field",
                     parentData: true,
-                },
-                <OptionsInputDefinition>{
-                    type: "field_dropdown",
-                    options: [
-                        "quantitative",
-                        "ordinal",
-                        "nominal",
-                        "temporal",
-                    ].map(s => [s, s]),
-                    name: "type",
                 },
                 <DummyInputDefinition>{
                     type: "input_dummy",
@@ -459,22 +462,35 @@ const chartDsl: BlockDomainSpecificLanguage = {
         },
         {
             kind: "block",
+            type: VEGA_ENCODING_TYPE_BLOCK,
+            message0: "type %1",
+            args0: [
+                <OptionsInputDefinition>{
+                    type: "field_dropdown",
+                    options: [
+                        "quantitative",
+                        "ordinal",
+                        "nominal",
+                        "temporal",
+                    ].map(s => [s, s]),
+                    name: "type",
+                },
+            ],
+            previousStatement: VEGA_ENCODING_STATEMENT_TYPE,
+            nextStatement: VEGA_ENCODING_STATEMENT_TYPE,
+            colour,
+            inputsInline: false,
+            dataPreviewField: false,
+            transformData: identityTransformData,
+        },
+        {
+            kind: "block",
             type: VEGA_ENCODING_AGGREGATE_BLOCK,
             message0: "aggregate %1",
             args0: [
                 <OptionsInputDefinition>{
                     type: "field_dropdown",
-                    options: [
-                        "mean",
-                        "median",
-                        "variance",
-                        "stdev",
-                        "min",
-                        "max",
-                        "count",
-                        "distinct",
-                        "sum",
-                    ].map(s => [s, s]),
+                    options: vegaAggregates,
                     name: "aggregate",
                 },
             ],
@@ -541,7 +557,35 @@ const chartDsl: BlockDomainSpecificLanguage = {
                 <OptionsInputDefinition>{
                     type: "field_dropdown",
                     options: ["ascending", "descending"].map(s => [s, s]),
-                    name: "direction",
+                    name: "order",
+                },
+            ],
+            previousStatement: VEGA_ENCODING_STATEMENT_TYPE,
+            nextStatement: VEGA_ENCODING_STATEMENT_TYPE,
+            colour,
+            inputsInline: false,
+            dataPreviewField: false,
+            transformData: identityTransformData,
+        },
+        {
+            kind: "block",
+            type: VEGA_ENCODING_SORT_FIELD_BLOCK,
+            message0: "sort by %1 of %2 %3",
+            args0: [
+                <OptionsInputDefinition>{
+                    type: "field_dropdown",
+                    options: vegaAggregates,
+                    name: "aggregate",
+                },
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "field",
+                    parentData: 2,
+                },
+                <OptionsInputDefinition>{
+                    type: "field_dropdown",
+                    options: ["", "ascending", "descending"].map(s => [s, s]),
+                    name: "order",
                 },
             ],
             previousStatement: VEGA_ENCODING_STATEMENT_TYPE,
@@ -582,7 +626,15 @@ const chartDsl: BlockDomainSpecificLanguage = {
                 },
                 <BlockReference>{
                     kind: "block",
+                    type: VEGA_ENCODING_TYPE_BLOCK,
+                },
+                <BlockReference>{
+                    kind: "block",
                     type: VEGA_ENCODING_SORT_BLOCK,
+                },
+                <BlockReference>{
+                    kind: "block",
+                    type: VEGA_ENCODING_SORT_FIELD_BLOCK,
                 },
                 <BlockReference>{
                     kind: "block",
@@ -632,19 +684,12 @@ export function blockToVisualizationSpec(
                 case VEGA_ENCODING_BLOCK: {
                     const channel: string = child.getFieldValue("channel")
                     const field = tidyResolveFieldColumn(data, child, "field")
-                    const type: string = child.getFieldValue("type")
                     if (channel) {
                         const encoding =
                             spec.encoding[channel] ||
                             (spec.encoding[channel] = {})
                         if (field) {
-                            const fieldType = types[headers.indexOf(field)]
                             encoding.field = field
-                            encoding.type =
-                                type ||
-                                (fieldType === "number"
-                                    ? "quantitative"
-                                    : "nominal")
                         }
                         encodingFieldsToSpec(child, encoding)
                     }
@@ -662,6 +707,11 @@ export function blockToVisualizationSpec(
             const blockServices = resolveBlockServices(child)
             blockServices?.setDataWarning(undefined)
             switch (child.type) {
+                case VEGA_ENCODING_TYPE_BLOCK: {
+                    const type: string = child.getFieldValue("type")
+                    if (type) encoding.type = type
+                    break
+                }
                 case VEGA_ENCODING_AGGREGATE_BLOCK: {
                     const aggregate: string = child.getFieldValue("aggregate")
                     if (aggregate) encoding.aggregate = aggregate
@@ -683,8 +733,19 @@ export function blockToVisualizationSpec(
                     break
                 }
                 case VEGA_ENCODING_SORT_BLOCK: {
-                    const direction: string = child.getFieldValue("direction")
-                    if (direction) encoding.sort = direction
+                    const order: string = child.getFieldValue("order")
+                    encoding.sort = order
+                    break
+                }
+                case VEGA_ENCODING_SORT_FIELD_BLOCK: {
+                    const op: string = child.getFieldValue("aggregate")
+                    const field = tidyResolveFieldColumn(data, child, "field")
+                    const order: string = child.getFieldValue("order")
+                    const sort: any = (encoding.sort = {})
+                    if (op) sort.op = op
+                    if (field) sort.field = field
+                    if (order) sort.order = order
+                    break
                 }
             }
             child = child.getNextBlock()

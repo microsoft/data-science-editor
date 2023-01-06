@@ -6,14 +6,14 @@ import { humanify } from "../../dom/utils"
 
 export interface DataColumnChooseOptions extends ReactFieldJSON {
     dataType?: "number" | "string"
-    parentData?: boolean
+    parentData?: boolean | number
 }
 
 export default class DataColumnChooserField extends FieldDropdown {
     static KEY = "ds_field_data_column_chooser"
     SERIALIZABLE = true
     dataType: string
-    parentData: boolean
+    parentData: boolean | number
 
     static fromJson(options: ReactFieldJSON) {
         return new DataColumnChooserField(options)
@@ -34,7 +34,11 @@ export default class DataColumnChooserField extends FieldDropdown {
     getOptions(): string[][] {
         const sourceBlock = this.getSourceBlock()
         const services = resolveBlockServices(
-            this.parentData ? sourceBlock?.getSurroundParent() : sourceBlock
+            this.parentData == 2
+                ? sourceBlock?.getSurroundParent()?.getSurroundParent()
+                : this.parentData
+                ? sourceBlock?.getSurroundParent()
+                : sourceBlock
         )
         const data = services?.data
         const { headers, types } = tidyHeaders(data)
