@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography"
 import DarkModeContext from "./DarkModeContext"
 import { Link } from "gatsby-theme-material-ui"
 import DarkModeButton from "./DarkModeButton"
+import FileSystemButton from "../fs/FileSystemButton"
 
 const PREFIX = "DataEditorApp"
 
@@ -68,6 +69,7 @@ export default function DataEditorAppBar() {
                     >
                         About
                     </Link>
+                    <FileSystemButton />
                     <DarkModeButton />
                 </Toolbar>
             </AppBar>

@@ -16,6 +16,7 @@ import {
 } from "../hooks/useLocationSearchParam"
 import dataSetDsl from "./dsl/datasetdsl"
 import dataVarDsl from "./dsl/datavardsl"
+import useChange from "../dom/useChange"
 
 const DS_EDITOR_ID = "ds"
 const DS_SOURCE_STORAGE_KEY = "editor"
@@ -26,10 +27,11 @@ const DS_NEW_FILE_CONTENT = JSON.stringify({
 
 function DSEditorWithContext() {
     const { fileSystem } = useFileSystem()
+    const root = useChange(fileSystem, _ => _?.root)
 
     return (
         <Grid container direction="column" spacing={1}>
-            {!!fileSystem && (
+            {!!root && (
                 <Grid item xs={12}>
                     <FileTabs
                         newFileName={WORKSPACE_FILENAME}
@@ -38,7 +40,7 @@ function DSEditorWithContext() {
                 </Grid>
             )}
             <Grid item xs={12}>
-                <BlockEditor />
+                <BlockEditor className={root ? "fs" : ""} />
             </Grid>
         </Grid>
     )

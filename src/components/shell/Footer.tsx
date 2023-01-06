@@ -1,6 +1,5 @@
 import { Typography } from "@mui/material"
 import { styled } from "@mui/material/styles"
-import { Link } from "gatsby-theme-material-ui"
 import React from "react"
 
 const PREFIX = "Footer"
@@ -12,6 +11,10 @@ const classes = {
 const Root = styled("footer")(({ theme }) => ({
     [`&.${classes.footer}`]: {
         textAlign: "center",
+        position: "absolute",
+        bottom: "2rem",
+        left: "calc(50% - 15em)",
+        "z-index": 1000,
         "& *": {
             fontSize: `${theme.typography.fontSize * 0.8}px`,
             textDecoration: "none",
