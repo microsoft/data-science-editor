@@ -32,6 +32,7 @@ import JSONSettingsField, {
     JSONSettingsInputDefinition,
 } from "../fields/JSONSettingsField"
 import HeatMapPlotField from "../fields/chart/HeatMapField"
+import { resolveBlockServices } from "../WorkspaceContext"
 
 const SCATTERPLOT_BLOCK = "chart_scatterplot"
 const LINEPLOT_BLOCK = "chart_lineplot"
@@ -508,35 +509,39 @@ export function blockToVisualizationSpec(
         data: { name: "values" },
     }
 
-    let child = sourceBlock.getInputTargetBlock("fields")
-    while (child) {
-        switch (child.type) {
-            case VEGA_ENCODING_BLOCK: {
-                const channel: string = child.getFieldValue("channel")
-                const field = tidyResolveFieldColumn(data, child, "field")
-                const type: string = child.getFieldValue("type")
-                const aggregate: string = child.getFieldValue("aggregate")
-                if (channel && field) {
-                    const fieldType = types[headers.indexOf(field)]
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    const encoding: Record<string, string> = (spec.encoding[
-                        channel
-                    ] = {
-                        field,
-                        type:
-                            type ||
-                            (fieldType === "number"
-                                ? "quantitative"
-                                : "nominal"),
-                    })
-                    if (aggregate !== "none" && aggregate)
-                        encoding.aggregate = aggregate
+    if (data) {
+        let child = sourceBlock.getInputTargetBlock("fields")
+        while (child) {
+            switch (child.type) {
+                case VEGA_ENCODING_BLOCK: {
+                    const blockServices = resolveBlockServices(child)
+                    blockServices?.setDataWarning(undefined)
+                    const channel: string = child.getFieldValue("channel")
+                    const field = tidyResolveFieldColumn(data, child, "field")
+                    const type: string = child.getFieldValue("type")
+                    const aggregate: string = child.getFieldValue("aggregate")
+                    if (channel && field) {
+                        const fieldType = types[headers.indexOf(field)]
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        const encoding: Record<string, string> = (spec.encoding[
+                            channel
+                        ] = {
+                            field,
+                            type:
+                                type ||
+                                (fieldType === "number"
+                                    ? "quantitative"
+                                    : "nominal"),
+                        })
+                        if (aggregate !== "none" && aggregate)
+                            encoding.aggregate = aggregate
+                    }
+                    break
                 }
-                break
             }
-        }
 
-        child = child.getNextBlock()
+            child = child.getNextBlock()
+        }
     }
 
     return spec
