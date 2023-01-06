@@ -2,9 +2,9 @@
 import React from "react"
 import type { JSONSchema4 } from "json-schema"
 import { Grid, TextField } from "@mui/material"
-import SwitchWithLabel from "./SwitchWithLabel"
+import SwitchWithLabel from "../../ui/SwitchWithLabel"
 import { useId } from "react"
-import GridHeader from "./GridHeader"
+import GridHeader from "../../ui/GridHeader"
 
 function SchemaForm(props: {
     schema: JSONSchema4

@@ -23,7 +23,7 @@ import {
     WorkspaceWithServices,
 } from "./WorkspaceContext"
 import { WorkspaceFile, WorkspaceJSON } from "./dsl/workspacejson"
-import useEffectAsync from "../useEffectAsync"
+import useEffectAsync from "../hooks/useEffectAsync"
 import useChange from "../dom/useChange"
 import { resolveBlockWarnings } from "./WorkspaceContext"
 import useWindowEvent from "../hooks/useWindowEvent"
@@ -34,7 +34,7 @@ import {
 } from "./dsl/iframedsl"
 import { AllOptions } from "./fields/IFrameDataChooserField"
 import useSnackbar from "../hooks/useSnackbar"
-import useFileSystem from "../FileSystemContext"
+import useFileSystem from "../fs/FileSystemContext"
 import { CHANGE } from "../dom/constants"
 import { arrayConcatMany, toMap } from "../dom/utils"
 

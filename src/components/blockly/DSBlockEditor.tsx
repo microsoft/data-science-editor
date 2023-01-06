@@ -8,7 +8,7 @@ import dataDsl from "./dsl/datadsl"
 import chartDsl from "./dsl/chartdsl"
 import fieldsDsl from "./dsl/fieldsdsl"
 import { WORKSPACE_FILENAME } from "./toolbox"
-import useFileSystem from "../FileSystemContext"
+import useFileSystem from "../fs/FileSystemContext"
 import { createIFrameDSL } from "./dsl/iframedsl"
 import {
     useLocationSearchParamBoolean,

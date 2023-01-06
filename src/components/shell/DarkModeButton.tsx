@@ -1,5 +1,5 @@
 import React, { useContext } from "react"
-import DarkModeContext from "../ui/DarkModeContext"
+import DarkModeContext from "./DarkModeContext"
 import IconButtonWithTooltip from "../ui/IconButtonWithTooltip"
 import LightModeIcon from "@mui/icons-material/LightMode"
 import DarkModeIcon from "@mui/icons-material/DarkMode"

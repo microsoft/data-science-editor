@@ -2,7 +2,7 @@ import React, { createContext, useState } from "react"
 import { CHANGE, ERROR } from "./dom/constants"
 import { IEventSource, JDEventSource } from "./dom/eventsource"
 import { delay } from "./dom/utils"
-import useEffectAsync from "./useEffectAsync"
+import useEffectAsync from "./hooks/useEffectAsync"
 
 export const DB_VALUE_CHANGE = "dbValueChange"
 

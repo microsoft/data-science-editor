@@ -42,7 +42,7 @@ export default function CopyButton(props: {
             setCopied(false)
         } finally {
             await delay(2000)
-            if (mounted()) setCopied(undefined)
+            setCopied(undefined)
         }
     }
     const buttonText =

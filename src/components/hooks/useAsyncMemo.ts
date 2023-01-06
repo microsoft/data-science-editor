@@ -1,5 +1,5 @@
 import { DependencyList, useState } from "react"
-import useEffectAsync from "../useEffectAsync"
+import useEffectAsync from "./useEffectAsync"
 
 export default function useAsyncMemo<T>(
     factory: () => T | Promise<T>,

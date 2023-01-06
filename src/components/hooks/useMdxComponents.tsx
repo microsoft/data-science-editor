@@ -10,7 +10,7 @@ import {
     TableRow,
     useTheme,
 } from "@mui/material"
-import Alert from "./ui/Alert"
+import Alert from "../ui/Alert"
 import { AlertTitle } from "@mui/material"
 
 export default function useMdxComponents() {

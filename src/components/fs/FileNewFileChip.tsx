@@ -10,7 +10,7 @@ import {
 import React, { ChangeEvent, useState } from "react"
 import AddIcon from "@mui/icons-material/Add"
 import { useId } from "react"
-import useFileSystem from "../FileSystemContext"
+import useFileSystem from "./FileSystemContext"
 
 export default function FileNewFileChip(props: {
     name?: string

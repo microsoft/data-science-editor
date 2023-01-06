@@ -2,19 +2,17 @@ import React, { useContext, useMemo } from "react"
 import { styled } from "@mui/material/styles"
 import clsx from "clsx"
 import { Container } from "@mui/material"
-import Typography from "@mui/material/Typography"
 import "./layout.css"
 import {
     createTheme,
     responsiveFontSizes,
     DeprecatedThemeOptions,
 } from "@mui/material/styles"
-import DarkModeContext, { DarkModeProvider } from "./ui/DarkModeContext"
+import DarkModeContext, { DarkModeProvider } from "./shell/DarkModeContext"
 import Footer from "./shell/Footer"
 import { WindowLocation } from "@reach/router"
-import ThemedMdxLayout from "./ui/ThemedMdxLayout"
+import ThemedMdxLayout from "./shell/ThemedMdxLayout"
 import DataEditorAppBar from "./shell/DataEditorAppBar"
-import { dark } from "@mui/material/styles/createPalette"
 
 const PREFIX = "Layout"
 

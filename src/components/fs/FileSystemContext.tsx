@@ -1,6 +1,6 @@
 import React, { createContext, ReactNode, useContext, useMemo } from "react"
-import { fileSystemHandleSupported } from "./fs/fs"
-import { FileSystem, FileSystemDirectory } from "./fs/fsdom"
+import { fileSystemHandleSupported } from "./fs"
+import { FileSystem, FileSystemDirectory } from "./fsdom"
 
 export interface FileSystemProps {
     fileSystem: FileSystem

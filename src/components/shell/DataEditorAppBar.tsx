@@ -5,7 +5,7 @@ import AppBar from "@mui/material/AppBar"
 import Toolbar from "@mui/material/Toolbar"
 import Typography from "@mui/material/Typography"
 // tslint:disable-next-line: no-submodule-imports
-import DarkModeContext from "../ui/DarkModeContext"
+import DarkModeContext from "./DarkModeContext"
 import { Link } from "gatsby-theme-material-ui"
 import DarkModeButton from "./DarkModeButton"
 

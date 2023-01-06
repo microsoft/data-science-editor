@@ -8,7 +8,7 @@ import { Grid, NoSsr } from "@mui/material"
 import { CHART_HEIGHT, CHART_SVG_MAX_ITEMS, CHART_WIDTH } from "../../toolbox"
 import type { View, VisualizationSpec } from "react-vega"
 import type { DataSliceOptions } from "../../../../workers/data/dist/node_modules/data.worker"
-import useEffectAsync from "../../../useEffectAsync"
+import useEffectAsync from "../../../hooks/useEffectAsync"
 import { tidyResolveHeader, tidySlice } from "./../tidy"
 import CopyButton from "../../../ui/CopyButton"
 import IconButtonWithTooltip from "../../../ui/IconButtonWithTooltip"
@@ -27,7 +27,7 @@ const Root = styled("div")(() => ({
     },
 }))
 
-const VegaLite = lazy(() => import("../../../charts/VegaLite"))
+const VegaLite = lazy(() => import("./VegaLite"))
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function clone(v: any) {

@@ -1,7 +1,7 @@
 import { Theme } from "@mui/material"
 import { MDXProvider } from "@mdx-js/react"
 import React, { ReactNode } from "react"
-import useMdxComponents from "../useMdxComponents"
+import useMdxComponents from "../hooks/useMdxComponents"
 import ThemedLayout from "./ThemedLayout"
 
 export default function ThemedMdxLayout(props: {

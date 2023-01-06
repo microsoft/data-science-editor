@@ -1,5 +1,5 @@
 import { useRef } from "react"
-import useEffectAsync from "../useEffectAsync"
+import useEffectAsync from "../hooks/useEffectAsync"
 
 export default function useProgress() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -7,7 +7,7 @@ import {
 import { SnackbarProvider } from "notistack"
 import React, { ReactNode } from "react"
 import { DbProvider } from "../DbContext"
-import { FileSystemProvider } from "../FileSystemContext"
+import { FileSystemProvider } from "../fs/FileSystemContext"
 import { AppInsightsErrorBoundary } from "../hooks/useAnalytics"
 
 /*
