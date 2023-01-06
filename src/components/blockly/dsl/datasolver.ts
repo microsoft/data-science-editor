@@ -21,7 +21,7 @@ function startShowTransform(block: BlockWithServices) {
 const TRANSFORM_DELAY = 40
 
 export function registerDataSolver(block: BlockWithServices) {
-    const { jacdacServices: services } = block
+    const { blockServices: services } = block
     // register data transforms
     const { transformData } = resolveBlockDefinition(block.type) || {}
     if (!transformData) return

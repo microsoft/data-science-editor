@@ -3,7 +3,6 @@ import { styled } from "@mui/material/styles"
 import WorkspaceContext from "../../WorkspaceContext"
 import useBlockData from "../../useBlockData"
 import { PointerBoundary } from "../PointerBoundary"
-import Suspense from "../../../ui/Suspense"
 import { Grid, NoSsr } from "@mui/material"
 import { CHART_HEIGHT, CHART_SVG_MAX_ITEMS, CHART_WIDTH } from "../../toolbox"
 import type { View, VisualizationSpec } from "react-vega"
@@ -15,8 +14,8 @@ import IconButtonWithTooltip from "../../../ui/IconButtonWithTooltip"
 import { UIFlags } from "../../../dom/providerbus"
 import SaveAltIcon from "@mui/icons-material/SaveAlt"
 import { humanify, JSONTryParse } from "../../../dom/utils"
+import { VegaLite } from "react-vega"
 const PREFIX = "VegaLiteWidget"
-
 const classes = {
     button: `${PREFIX}button`,
 }
@@ -27,7 +26,6 @@ const Root = styled("div")(() => ({
     },
 }))
 
-const VegaLite = lazy(() => import("./VegaLite"))
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function clone(v: any) {
@@ -183,18 +181,16 @@ export default function VegaLiteWidget(props: {
                             </Grid>
                         )}
                         <Grid item xs={12}>
-                            <Suspense>
-                                <VegaLite
-                                    actions={false}
-                                    width={CHART_WIDTH}
-                                    height={CHART_HEIGHT}
-                                    spec={fullSpec}
-                                    data={vegaData}
-                                    renderer={renderer}
-                                    tooltip={true}
-                                    onNewView={handleNewView}
-                                />
-                            </Suspense>
+                            <VegaLite
+                                actions={false}
+                                width={CHART_WIDTH}
+                                height={CHART_HEIGHT}
+                                spec={fullSpec}
+                                data={vegaData}
+                                renderer={renderer}
+                                tooltip={true}
+                                onNewView={handleNewView}
+                            />
                         </Grid>
                     </Grid>
                 </Root>

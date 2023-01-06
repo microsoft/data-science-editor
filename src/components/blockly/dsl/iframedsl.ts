@@ -127,8 +127,8 @@ class IFrameDomainSpecificLanguage implements BlockDomainSpecificLanguage {
                         )
                         .forEach((b: Block) => {
                             //console.log(`change ${b.id}`)
-                            const { jacdacServices } = b as BlockWithServices
-                            jacdacServices.emit(CHANGE)
+                            const { blockServices } = b as BlockWithServices
+                            blockServices.emit(CHANGE)
                         })
                     break
                 }

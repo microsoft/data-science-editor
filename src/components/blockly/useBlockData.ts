@@ -10,7 +10,7 @@ export default function useBlockData<T extends object>(
     initialValue?: T[],
     throttleTime?: number
 ) {
-    const services = (block as unknown as BlockWithServices)?.jacdacServices
+    const services = (block as unknown as BlockWithServices)?.blockServices
     // data on the current node
     const { data, transformedData } = useChangeThrottled<
         BlockServices,

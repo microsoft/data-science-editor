@@ -139,10 +139,10 @@ export function BlockProvider(props: {
 
     const toolboxConfiguration = useToolbox(dsls, workspaceJSON)
     const initializeBlockServices = (block: BlockWithServices) => {
-        if (!block || block?.jacdacServices?.initialized) return
+        if (!block || block?.blockServices?.initialized) return
 
-        let services = block.jacdacServices
-        if (!services) services = block.jacdacServices = new BlockServices()
+        let services = block.blockServices
+        if (!services) services = block.blockServices = new BlockServices()
         block.inputList?.forEach(i =>
             i.fieldRow?.forEach(f => {
                 const fs = f as unknown as FieldWithServices
@@ -155,7 +155,7 @@ export function BlockProvider(props: {
 
     const handleBlockChange = (blockId: string) => {
         const block = workspace.getBlockById(blockId) as BlockWithServices
-        const services = block?.jacdacServices
+        const services = block?.blockServices
         if (block && !block.isEnabled()) {
             services?.clearData()
         } else services?.emit(CHANGE)
@@ -210,8 +210,8 @@ export function BlockProvider(props: {
     useEffect(() => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const wws = workspace as unknown as WorkspaceWithServices
-        if (wws && !wws.jacdacServices) {
-            wws.jacdacServices = new WorkspaceServices()
+        if (wws && !wws.workspaceServices) {
+            wws.workspaceServices = new WorkspaceServices()
         }
     }, [workspace])
     useEffect(() => {

@@ -62,7 +62,7 @@ export default class BuiltinDataSetField
         const marker = !!sourceBlock?.isInsertionMarker()
         if (!sourceBlock || marker) return
 
-        const services = sourceBlock.jacdacServices
+        const services = sourceBlock.blockServices
         if (!services || services.cache[BuiltinDataSetField.KEY] === url) return // already downloaded
         // avoid races
         services.cache[BuiltinDataSetField.KEY] = url

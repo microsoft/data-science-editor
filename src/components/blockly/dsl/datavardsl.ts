@@ -72,7 +72,7 @@ const dataVarDsl: BlockDomainSpecificLanguage = {
                 const readServices = readBlocks
                     .filter(b => b.isEnabled())
                     .filter(b => b.getFieldValue("data") === variable)
-                    .map(b => (b as BlockWithServices).jacdacServices)
+                    .map(b => (b as BlockWithServices).blockServices)
                     .filter(services => !!services)
                 readServices.forEach(services => (services.data = data))
                 return Promise.resolve(data)

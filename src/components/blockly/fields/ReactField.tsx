@@ -77,8 +77,8 @@ export default class ReactField<T> extends ReactFieldBase<T> {
         super.setSourceBlock(block)
         if (changed && !block?.isInsertionMarker()) {
             const bs = block as unknown as BlockWithServices
-            if (!bs.jacdacServices) {
-                bs.jacdacServices = new BlockServices()
+            if (!bs.blockServices) {
+                bs.blockServices = new BlockServices()
                 bs.inputList?.forEach(i =>
                     i.fieldRow?.forEach(f =>
                         (

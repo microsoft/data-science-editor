@@ -40,12 +40,12 @@ export class WorkspaceServices extends JDEventSource {
 }
 
 export interface WorkspaceWithServices extends Workspace {
-    jacdacServices: WorkspaceServices
+    workspaceServices: WorkspaceServices
 }
 
 export function resolveWorkspaceServices(workspace: Workspace) {
     const workspaceWithServices = workspace as WorkspaceWithServices
-    const services = workspaceWithServices?.jacdacServices
+    const services = workspaceWithServices?.workspaceServices
     return services
 }
 
@@ -113,12 +113,12 @@ export class BlockServices extends JDEventSource {
     initialized = false
 }
 export interface BlockWithServices extends Block {
-    jacdacServices: BlockServices
+    blockServices: BlockServices
 }
 
 export function resolveBlockServices(block: Block) {
     const blockWithServices = block as BlockWithServices
-    const services = blockWithServices?.jacdacServices
+    const services = blockWithServices?.blockServices
     return services
 }
 
