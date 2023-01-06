@@ -45,6 +45,7 @@ const CHART_SHOW_TABLE_BLOCK = "chart_show_table"
 const VEGA_LAYER_BLOCK = "vega_layer"
 const VEGA_ENCODING_BLOCK = "vega_encoding"
 const VEGA_AGGREGATE_BLOCK = "vega_aggregate"
+const VEGA_TIME_UNIT_BLOCK = "vega_time_unit"
 const VEGA_STATEMENT_TYPE = "vegaStatementType"
 
 const vegaChannels = [
@@ -447,7 +448,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: VEGA_AGGREGATE_BLOCK,
-            message0: "aggregate %1 with %2",
+            message0: "set aggregate of %1 to %2",
             args0: [
                 <OptionsInputDefinition>{
                     type: "field_dropdown",
@@ -468,6 +469,41 @@ const chartDsl: BlockDomainSpecificLanguage = {
                         "sum",
                     ].map(s => [s, s]),
                     name: "aggregate",
+                },
+            ],
+            previousStatement: VEGA_STATEMENT_TYPE,
+            nextStatement: VEGA_STATEMENT_TYPE,
+            colour,
+            inputsInline: false,
+            dataPreviewField: false,
+            transformData: identityTransformData,
+        },
+        {
+            kind: "block",
+            type: VEGA_TIME_UNIT_BLOCK,
+            message0: "set time unit of %1 to %2",
+            args0: [
+                <OptionsInputDefinition>{
+                    type: "field_dropdown",
+                    options: vegaChannels,
+                    name: "channel",
+                },
+                <OptionsInputDefinition>{
+                    type: "field_dropdown",
+                    options: [
+                        "year",
+                        "quarter",
+                        "month",
+                        "date",
+                        "week",
+                        "day",
+                        "dayofyear",
+                        "hours",
+                        "minutes",
+                        "seconds",
+                        "milliseconds",
+                    ].map(s => [s, s]),
+                    name: "timeunit",
                 },
             ],
             previousStatement: VEGA_STATEMENT_TYPE,
@@ -509,6 +545,10 @@ const chartDsl: BlockDomainSpecificLanguage = {
                 <BlockReference>{
                     kind: "block",
                     type: VEGA_AGGREGATE_BLOCK,
+                },
+                <BlockReference>{
+                    kind: "block",
+                    type: VEGA_TIME_UNIT_BLOCK,
                 },
             ],
             colour,
@@ -557,6 +597,7 @@ export function blockToVisualizationSpec(
                     }
                     break
                 }
+                case VEGA_TIME_UNIT_BLOCK:
                 case VEGA_AGGREGATE_BLOCK: {
                     const channel: string = child.getFieldValue("channel")
                     if (channel) {
@@ -569,7 +610,13 @@ export function blockToVisualizationSpec(
                         } else {
                             const aggregate: string =
                                 child.getFieldValue("aggregate")
-                            encoding.aggregate = aggregate
+                            if (aggregate) encoding.aggregate = aggregate
+                            const timeUnit: string =
+                                child.getFieldValue("timeunit")
+                            if (timeUnit) {
+                                encoding.timeUnit = timeUnit
+                                encoding.type = "temporal"
+                            }
                         }
                     }
                     break
