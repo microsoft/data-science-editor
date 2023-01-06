@@ -32,7 +32,7 @@ import JSONSettingsField, {
     JSONSettingsInputDefinition,
 } from "../fields/JSONSettingsField"
 import HeatMapPlotField from "../fields/chart/HeatMapField"
-import { resolveBlockServices } from "../WorkspaceContext"
+import { resolveBlockServices, setBlockDataWarning } from "../WorkspaceContext"
 
 const SCATTERPLOT_BLOCK = "chart_scatterplot"
 const LINEPLOT_BLOCK = "chart_lineplot"
@@ -44,7 +44,33 @@ const CHART_SHOW_TABLE_BLOCK = "chart_show_table"
 
 const VEGA_LAYER_BLOCK = "vega_layer"
 const VEGA_ENCODING_BLOCK = "vega_encoding"
+const VEGA_AGGREGATE_BLOCK = "vega_aggregate"
 const VEGA_STATEMENT_TYPE = "vegaStatementType"
+
+const vegaChannels = [
+    "x",
+    "y",
+    "x2",
+    "y2",
+    "xError",
+    "yError",
+    "xError2",
+    "yError2",
+    "theta",
+    "theta2",
+    "radius",
+    "radius2",
+    "color",
+    "angle",
+    "opacity",
+    "fillOpacity",
+    "strokeOpacity",
+    "shape",
+    "size",
+    "strokeDash",
+    "strokeWidth",
+    "text",
+].map(s => [s, s])
 
 const colour = paletteColorByIndex(4)
 const chartDsl: BlockDomainSpecificLanguage = {
@@ -388,34 +414,11 @@ const chartDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: VEGA_ENCODING_BLOCK,
-            message0: "encoding %1 as %2 type %3 aggregate %4",
+            message0: "encoding %1 as %2 type %3",
             args0: [
                 <OptionsInputDefinition>{
                     type: "field_dropdown",
-                    options: [
-                        "x",
-                        "y",
-                        "x2",
-                        "y2",
-                        "xError",
-                        "yError",
-                        "xError2",
-                        "yError2",
-                        "theta",
-                        "theta2",
-                        "radius",
-                        "radius2",
-                        "color",
-                        "angle",
-                        "opacity",
-                        "fillOpacity",
-                        "strokeOpacity",
-                        "shape",
-                        "size",
-                        "strokeDash",
-                        "strokeWidth",
-                        "text",
-                    ].map(s => [s, s]),
+                    options: vegaChannels,
                     name: "channel",
                 },
                 <DataColumnInputDefinition>{
@@ -433,19 +436,36 @@ const chartDsl: BlockDomainSpecificLanguage = {
                     ].map(s => [s, s]),
                     name: "type",
                 },
+            ],
+            previousStatement: VEGA_STATEMENT_TYPE,
+            nextStatement: VEGA_STATEMENT_TYPE,
+            colour,
+            inputsInline: false,
+            dataPreviewField: false,
+            transformData: identityTransformData,
+        },
+        {
+            kind: "block",
+            type: VEGA_AGGREGATE_BLOCK,
+            message0: "aggregate %1 with %2",
+            args0: [
+                <OptionsInputDefinition>{
+                    type: "field_dropdown",
+                    options: vegaChannels,
+                    name: "channel",
+                },
                 <OptionsInputDefinition>{
                     type: "field_dropdown",
                     options: [
-                        "none",
-                        "count",
-                        "distinct",
-                        "sum",
                         "mean",
                         "median",
                         "variance",
                         "stdev",
                         "min",
                         "max",
+                        "count",
+                        "distinct",
+                        "sum",
                     ].map(s => [s, s]),
                     name: "aggregate",
                 },
@@ -486,6 +506,10 @@ const chartDsl: BlockDomainSpecificLanguage = {
                     kind: "block",
                     type: VEGA_ENCODING_BLOCK,
                 },
+                <BlockReference>{
+                    kind: "block",
+                    type: VEGA_AGGREGATE_BLOCK,
+                },
             ],
             colour,
         },
@@ -512,29 +536,41 @@ export function blockToVisualizationSpec(
     if (data) {
         let child = sourceBlock.getInputTargetBlock("fields")
         while (child) {
+            const blockServices = resolveBlockServices(child)
+            blockServices?.setDataWarning(undefined)
             switch (child.type) {
                 case VEGA_ENCODING_BLOCK: {
-                    const blockServices = resolveBlockServices(child)
-                    blockServices?.setDataWarning(undefined)
                     const channel: string = child.getFieldValue("channel")
                     const field = tidyResolveFieldColumn(data, child, "field")
                     const type: string = child.getFieldValue("type")
-                    const aggregate: string = child.getFieldValue("aggregate")
                     if (channel && field) {
                         const fieldType = types[headers.indexOf(field)]
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        const encoding: Record<string, string> = (spec.encoding[
-                            channel
-                        ] = {
+                        spec.encoding[channel] = {
                             field,
                             type:
                                 type ||
                                 (fieldType === "number"
                                     ? "quantitative"
                                     : "nominal"),
-                        })
-                        if (aggregate !== "none" && aggregate)
+                        }
+                    }
+                    break
+                }
+                case VEGA_AGGREGATE_BLOCK: {
+                    const channel: string = child.getFieldValue("channel")
+                    if (channel) {
+                        const encoding = spec.encoding[channel]
+                        if (!encoding) {
+                            setBlockDataWarning(
+                                child,
+                                `encoding '${channel}' not defined yet`
+                            )
+                        } else {
+                            const aggregate: string =
+                                child.getFieldValue("aggregate")
                             encoding.aggregate = aggregate
+                        }
                     }
                     break
                 }
