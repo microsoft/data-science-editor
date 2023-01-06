@@ -22,9 +22,7 @@ const classes = {
 
 const Root = styled("div")(({ theme }) => ({
     [`& .${classes.editor}`]: {
-        height: `calc(100vh - ${
-            UIFlags.hosted ? 3.5 : UIFlags.diagnostics ? 15 : 10
-        }rem)`,
+        height: `calc(100vh - ${UIFlags.hosted ? 3.5 : 9}rem)`,
         "& .blocklyTreeLabel": {
             fontFamily: theme.typography.fontFamily,
         },
