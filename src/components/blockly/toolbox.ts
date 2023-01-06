@@ -36,6 +36,11 @@ export interface TextInputDefinition extends InputDefinition {
     spellcheck?: boolean
 }
 
+export interface BooleanInputDefinition extends InputDefinition {
+    type: "field_checkbox"
+    checked: boolean
+}
+
 export interface OptionsInputDefinition extends InputDefinition {
     type: "field_dropdown"
     options?: [string, string][]

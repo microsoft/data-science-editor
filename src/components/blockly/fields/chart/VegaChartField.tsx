@@ -26,7 +26,6 @@ function VegaChartWidget() {
     )
 
     const spec = blockToVisualizationSpec(sourceBlock, data)
-
     return <VegaLiteWidget spec={spec} />
 }
 

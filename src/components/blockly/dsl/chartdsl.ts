@@ -2,6 +2,7 @@ import ScatterPlotField from "../fields/chart/ScatterPlotField"
 import {
     BlockDefinition,
     BlockReference,
+    BooleanInputDefinition,
     CategoryDefinition,
     char2DSettingsSchema,
     charMapSettingsSchema,
@@ -44,9 +45,11 @@ const CHART_SHOW_TABLE_BLOCK = "chart_show_table"
 
 const VEGA_LAYER_BLOCK = "vega_layer"
 const VEGA_ENCODING_BLOCK = "vega_encoding"
-const VEGA_AGGREGATE_BLOCK = "vega_aggregate"
-const VEGA_TIME_UNIT_BLOCK = "vega_time_unit"
 const VEGA_STATEMENT_TYPE = "vegaStatementType"
+const VEGA_ENCODING_STATEMENT_TYPE = "vegaEncodingStatementType"
+const VEGA_ENCODING_AGGREGATE_BLOCK = "vega_encoding_aggregate"
+const VEGA_ENCODING_TIME_UNIT_BLOCK = "vega_encoding_time_unit"
+const VEGA_ENCODING_BIN_BLOCK = "vega_encoding_bin"
 
 const vegaChannels = [
     "x",
@@ -415,7 +418,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: VEGA_ENCODING_BLOCK,
-            message0: "encoding %1 as %2 type %3",
+            message0: "encoding %1 field %2 type %3 %4 %5",
             args0: [
                 <OptionsInputDefinition>{
                     type: "field_dropdown",
@@ -437,6 +440,14 @@ const chartDsl: BlockDomainSpecificLanguage = {
                     ].map(s => [s, s]),
                     name: "type",
                 },
+                <DummyInputDefinition>{
+                    type: "input_dummy",
+                },
+                <StatementInputDefinition>{
+                    type: "input_statement",
+                    name: "fields",
+                    check: VEGA_ENCODING_STATEMENT_TYPE,
+                },
             ],
             previousStatement: VEGA_STATEMENT_TYPE,
             nextStatement: VEGA_STATEMENT_TYPE,
@@ -447,14 +458,9 @@ const chartDsl: BlockDomainSpecificLanguage = {
         },
         {
             kind: "block",
-            type: VEGA_AGGREGATE_BLOCK,
-            message0: "set aggregate of %1 to %2",
+            type: VEGA_ENCODING_AGGREGATE_BLOCK,
+            message0: "aggregate %1",
             args0: [
-                <OptionsInputDefinition>{
-                    type: "field_dropdown",
-                    options: vegaChannels,
-                    name: "channel",
-                },
                 <OptionsInputDefinition>{
                     type: "field_dropdown",
                     options: [
@@ -471,8 +477,8 @@ const chartDsl: BlockDomainSpecificLanguage = {
                     name: "aggregate",
                 },
             ],
-            previousStatement: VEGA_STATEMENT_TYPE,
-            nextStatement: VEGA_STATEMENT_TYPE,
+            previousStatement: VEGA_ENCODING_STATEMENT_TYPE,
+            nextStatement: VEGA_ENCODING_STATEMENT_TYPE,
             colour,
             inputsInline: false,
             dataPreviewField: false,
@@ -480,14 +486,9 @@ const chartDsl: BlockDomainSpecificLanguage = {
         },
         {
             kind: "block",
-            type: VEGA_TIME_UNIT_BLOCK,
-            message0: "set time unit of %1 to %2",
+            type: VEGA_ENCODING_TIME_UNIT_BLOCK,
+            message0: "time unit %1",
             args0: [
-                <OptionsInputDefinition>{
-                    type: "field_dropdown",
-                    options: vegaChannels,
-                    name: "channel",
-                },
                 <OptionsInputDefinition>{
                     type: "field_dropdown",
                     options: [
@@ -506,8 +507,26 @@ const chartDsl: BlockDomainSpecificLanguage = {
                     name: "timeunit",
                 },
             ],
-            previousStatement: VEGA_STATEMENT_TYPE,
-            nextStatement: VEGA_STATEMENT_TYPE,
+            previousStatement: VEGA_ENCODING_STATEMENT_TYPE,
+            nextStatement: VEGA_ENCODING_STATEMENT_TYPE,
+            colour,
+            inputsInline: false,
+            dataPreviewField: false,
+            transformData: identityTransformData,
+        },
+        {
+            kind: "block",
+            type: VEGA_ENCODING_BIN_BLOCK,
+            message0: "bin %1",
+            args0: [
+                <BooleanInputDefinition>{
+                    type: "field_checkbox",
+                    checked: true,
+                    name: "enabled",
+                },
+            ],
+            previousStatement: VEGA_ENCODING_STATEMENT_TYPE,
+            nextStatement: VEGA_ENCODING_STATEMENT_TYPE,
             colour,
             inputsInline: false,
             dataPreviewField: false,
@@ -544,11 +563,15 @@ const chartDsl: BlockDomainSpecificLanguage = {
                 },
                 <BlockReference>{
                     kind: "block",
-                    type: VEGA_AGGREGATE_BLOCK,
+                    type: VEGA_ENCODING_AGGREGATE_BLOCK,
                 },
                 <BlockReference>{
                     kind: "block",
-                    type: VEGA_TIME_UNIT_BLOCK,
+                    type: VEGA_ENCODING_TIME_UNIT_BLOCK,
+                },
+                <BlockReference>{
+                    kind: "block",
+                    type: VEGA_ENCODING_BIN_BLOCK,
                 },
             ],
             colour,
@@ -566,14 +589,18 @@ export function blockToVisualizationSpec(
     const { headers, types } = tidyHeaders(data)
     const mark: Mark = sourceBlock.getFieldValue("mark")
     const title: string = sourceBlock.getFieldValue("title")
-    const spec: VisualizationSpec = {
+    const spec = {
         title,
         mark: { type: mark, tooltip: true },
         encoding: {},
         data: { name: "values" },
     }
 
-    if (data) {
+    if (data) encodingToSpec()
+
+    return spec
+
+    function encodingToSpec() {
         let child = sourceBlock.getInputTargetBlock("fields")
         while (child) {
             const blockServices = resolveBlockServices(child)
@@ -586,38 +613,15 @@ export function blockToVisualizationSpec(
                     if (channel && field) {
                         const fieldType = types[headers.indexOf(field)]
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        spec.encoding[channel] = {
+                        const encoding = (spec.encoding[channel] = {
                             field,
                             type:
                                 type ||
                                 (fieldType === "number"
                                     ? "quantitative"
                                     : "nominal"),
-                        }
-                    }
-                    break
-                }
-                case VEGA_TIME_UNIT_BLOCK:
-                case VEGA_AGGREGATE_BLOCK: {
-                    const channel: string = child.getFieldValue("channel")
-                    if (channel) {
-                        const encoding = spec.encoding[channel]
-                        if (!encoding) {
-                            setBlockDataWarning(
-                                child,
-                                `encoding '${channel}' not defined yet`
-                            )
-                        } else {
-                            const aggregate: string =
-                                child.getFieldValue("aggregate")
-                            if (aggregate) encoding.aggregate = aggregate
-                            const timeUnit: string =
-                                child.getFieldValue("timeunit")
-                            if (timeUnit) {
-                                encoding.timeUnit = timeUnit
-                                encoding.type = "temporal"
-                            }
-                        }
+                        })
+                        encodingFieldsToSpec(child, encoding)
                     }
                     break
                 }
@@ -627,5 +631,34 @@ export function blockToVisualizationSpec(
         }
     }
 
-    return spec
+    function encodingFieldsToSpec(encodingBlock: Block, encoding: any) {
+        let child = encodingBlock.getInputTargetBlock("fields")
+        while (child) {
+            const blockServices = resolveBlockServices(child)
+            blockServices?.setDataWarning(undefined)
+            switch (child.type) {
+                case VEGA_ENCODING_AGGREGATE_BLOCK: {
+                    const aggregate: string = child.getFieldValue("aggregate")
+                    if (aggregate) encoding.aggregate = aggregate
+                    break
+                }
+                case VEGA_ENCODING_TIME_UNIT_BLOCK: {
+                    const timeUnit: string = child.getFieldValue("timeunit")
+                    if (timeUnit) {
+                        encoding.timeUnit = timeUnit
+                        encoding.type = "temporal"
+                    }
+                    break
+                }
+                case VEGA_ENCODING_BIN_BLOCK: {
+                    const enabled: boolean = child.getFieldValue(
+                        "enabled"
+                    ) as boolean
+                    encoding.bin = !!enabled
+                    break
+                }
+            }
+            child = child.getNextBlock()
+        }
+    }
 }
