@@ -6,7 +6,6 @@ import {
 } from "@mui/material"
 import { SnackbarProvider } from "notistack"
 import React, { ReactNode } from "react"
-import { DbProvider } from "../DbContext"
 import { FileSystemProvider } from "../fs/FileSystemContext"
 import { AppInsightsErrorBoundary } from "../hooks/useAnalytics"
 
@@ -28,13 +27,11 @@ export default function ThemedLayout(props: {
             <ThemeProvider theme={theme}>
                 <AppInsightsErrorBoundary>
                     <SnackbarProvider maxSnack={maxSnack || 1} dense={true}>
-                        <DbProvider>
-                            <FileSystemProvider>
-                                <CssBaseline />
+                        <FileSystemProvider>
+                            <CssBaseline />
 
-                                {children}
-                            </FileSystemProvider>
-                        </DbProvider>
+                            {children}
+                        </FileSystemProvider>
                     </SnackbarProvider>
                 </AppInsightsErrorBoundary>
             </ThemeProvider>
