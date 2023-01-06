@@ -143,7 +143,6 @@ export default function VegaLiteWidget(props: {
         : undefined
     const showToolbar = !!handleCopy || !!handleExport
 
-    console.log({ fullSpec, data })
     return (
         <NoSsr>
             <PointerBoundary>
