@@ -10,7 +10,7 @@ export interface DataColumnChooseOptions extends ReactFieldJSON {
 }
 
 export default class DataColumnChooserField extends FieldDropdown {
-    static KEY = "jacdac_field_data_column_chooser"
+    static KEY = "ds_field_data_column_chooser"
     SERIALIZABLE = true
     dataType: string
     parentData: boolean

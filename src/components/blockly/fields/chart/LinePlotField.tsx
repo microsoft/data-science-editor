@@ -47,7 +47,7 @@ function LinePlotWidget() {
 }
 
 export default class LinePlotField extends ReactInlineField {
-    static KEY = "jacdac_field_line_plot"
+    static KEY = "ds_field_line_plot"
     EDITABLE = false
 
     static fromJson(options: ReactFieldJSON) {

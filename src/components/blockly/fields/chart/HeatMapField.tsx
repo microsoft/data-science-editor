@@ -40,7 +40,7 @@ function HeatMapWidget() {
 }
 
 export default class HeatMapPlotField extends ReactInlineField {
-    static KEY = "jacdac_field_heat_map"
+    static KEY = "ds_field_heat_map"
     EDITABLE = false
 
     static fromJson(options: ReactFieldJSON) {

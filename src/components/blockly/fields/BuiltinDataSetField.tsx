@@ -24,7 +24,7 @@ export default class BuiltinDataSetField
     extends FieldDropdown
     implements FieldWithServices
 {
-    static KEY = "jacdac_field_data_builtin_dataset"
+    static KEY = "ds_field_data_builtin_dataset"
     private initialized = false
 
     // eslint-disable-next-line @typescript-eslint/ban-types

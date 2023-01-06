@@ -28,7 +28,7 @@ function HistogramWidget() {
 }
 
 export default class HistogramField extends ReactInlineField {
-    static KEY = "jacdac_field_histogram"
+    static KEY = "ds_field_histogram"
     EDITABLE = false
 
     static fromJson(options: ReactFieldJSON) {

@@ -31,7 +31,7 @@ function VegaChartWidget() {
 }
 
 export default class VegaChartField extends ReactInlineField {
-    static KEY = "jacdac_field_vega_chart"
+    static KEY = "ds_field_vega_chart"
     EDITABLE = false
 
     static fromJson(options: ReactFieldJSON) {

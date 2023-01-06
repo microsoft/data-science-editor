@@ -140,4 +140,4 @@ async function handleMessage(event: MessageEvent) {
 }
 
 self.addEventListener("message", handleMessage)
-console.debug(`jacdac csv: worker registered`)
+console.debug(`csv: worker registered`)

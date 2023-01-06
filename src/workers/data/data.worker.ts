@@ -475,9 +475,7 @@ async function handleMessage(event: MessageEvent) {
     if (worker !== "data") return
 
     try {
-        //console.debug("Jacdac data in:", { message })
         const newData = await transformData(message)
-        //console.debug("Jacdac data out:", { message })
         const resp = { id, worker, ...rest, data: newData }
         self.postMessage(resp)
     } catch (e) {
@@ -490,4 +488,4 @@ async function handleMessage(event: MessageEvent) {
 }
 
 self.addEventListener("message", handleMessage)
-console.debug(`jacdac data: worker registered`)
+console.debug(`data: worker registered`)

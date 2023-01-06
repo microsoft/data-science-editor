@@ -11,9 +11,6 @@ const builtins: Record<string, (block: Block) => string | number | boolean> = {
     jacdac_yes_no: block => block.getFieldValue("value") === "on",
     jacdac_time_picker: block => Number(block.getFieldValue("value") || "0"),
     jacdac_time_picker_ms: block => Number(block.getFieldValue("value") || "0"),
-    jacdac_percent: block => Number(block.getFieldValue("value") || "0"),
-    jacdac_ratio: block => Number(block.getFieldValue("value") || "0"),
-    jacdac_byte: block => Number(block.getFieldValue("value") || "0"),
 }
 
 const shadowDsl: BlockDomainSpecificLanguage = {
@@ -91,54 +88,6 @@ const shadowDsl: BlockDomainSpecificLanguage = {
                         ["15s", "15000"],
                         ["30s", "30000"],
                     ],
-                },
-            ],
-            style: "math_blocks",
-            output: "Number",
-        },
-        {
-            kind: "block",
-            type: `jacdac_percent`,
-            message0: `%1`,
-            args0: [
-                <NumberInputDefinition>{
-                    type: "field_slider",
-                    name: "value",
-                    min: 0,
-                    max: 100,
-                    precision: 5,
-                },
-            ],
-            style: "math_blocks",
-            output: "Number",
-        },
-        {
-            kind: "block",
-            type: `jacdac_byte`,
-            message0: `%1`,
-            args0: [
-                <NumberInputDefinition>{
-                    type: "field_slider",
-                    name: "value",
-                    min: 0,
-                    max: 255,
-                    precision: 5,
-                },
-            ],
-            style: "math_blocks",
-            output: "Number",
-        },
-        {
-            kind: "block",
-            type: `jacdac_ratio`,
-            message0: `%1`,
-            args0: [
-                <NumberInputDefinition>{
-                    type: "field_slider",
-                    name: "value",
-                    min: 0,
-                    max: 1,
-                    precision: 0.01,
                 },
             ],
             style: "math_blocks",

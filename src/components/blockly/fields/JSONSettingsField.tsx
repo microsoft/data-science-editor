@@ -13,7 +13,7 @@ export interface JSONSettingsOptions extends ReactFieldJSON {
 }
 
 export interface JSONSettingsInputDefinition extends InputDefinition {
-    type: "jacdac_field_json_settings"
+    type: "ds_field_json_settings"
     schema: JSONSchema4
 }
 
@@ -52,7 +52,7 @@ function JSONSettingsWidget(props: {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default class JSONSettingsField extends ReactField<ReactFieldJSON> {
-    static KEY = "jacdac_field_json_settings"
+    static KEY = "ds_field_json_settings"
     SERIALIZABLE = true
     schema: JSONSchema4
 

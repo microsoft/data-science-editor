@@ -8,7 +8,7 @@ export interface IFrameDataChooserOptions extends ReactFieldJSON {
 export const AllOptions: Record<string, [string, string][]> = {}
 
 export default class IFrameDataChooserField extends FieldDropdown {
-    static KEY = "jacdac_field_iframe_data_chooser"
+    static KEY = "ds_field_iframe_data_chooser"
     SERIALIZABLE = true
     dataId: string
 

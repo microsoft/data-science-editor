@@ -20,7 +20,7 @@ function normalizeEventNames(eventNames: string | string[]): string[] {
 }
 
 /**
- * Base interface for evented nodes in Jacdac
+ * Base interface for evented nodes
  * @category JDOM
  */
 export interface IEventSource {
@@ -53,7 +53,7 @@ export function dependencyId(nodes: IEventSource | IEventSource[]) {
 let nextNodeId = 0
 
 /**
- * Base class for evented nodes in Jacdac
+ * Base class for evented nodes
  * @category JDOM
  */
 export class JDEventSource implements IEventSource {

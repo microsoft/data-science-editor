@@ -14,7 +14,7 @@ export interface DataPreviewOptions extends ReactFieldJSON {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default class DataPreviewField extends ReactField<ReactFieldJSON> {
-    static KEY = "jacdac_field_data_preview"
+    static KEY = "ds_field_data_preview"
     compare: boolean
 
     static fromJson(options: DataPreviewOptions) {

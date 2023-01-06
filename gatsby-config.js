@@ -68,7 +68,7 @@ module.exports = {
             resolve: `gatsby-plugin-manifest`,
             options: {
                 name: SITE_TITLE,
-                short_name: `Jacdac`,
+                short_name: `Data Science Editor`,
                 description: SITE_DESCRIPTION,
                 start_url: `/`,
                 background_color: `#ffc400`,
@@ -82,9 +82,7 @@ module.exports = {
         {
             resolve: `gatsby-plugin-offline`,
             options: {
-                precachePages: [
-                    `/*`,
-                ],
+                precachePages: [`/*`],
             },
         },
         "gatsby-plugin-robots-txt",

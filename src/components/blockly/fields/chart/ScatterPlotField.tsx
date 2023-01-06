@@ -94,7 +94,7 @@ export interface ScatterPlotFieldProps {
 }
 
 export default class ScatterPlotField extends ReactInlineField {
-    static KEY = "jacdac_field_scatter_plot"
+    static KEY = "ds_field_scatter_plot"
     EDITABLE = false
     linearRegression: boolean
 

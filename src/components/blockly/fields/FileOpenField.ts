@@ -9,7 +9,7 @@ import {
 import { ReactFieldJSON } from "./ReactField"
 
 export default class FileOpenField extends FieldDropdown {
-    static KEY = "jacdac_field_file_open"
+    static KEY = "ds_field_file_open"
     SERIALIZABLE = true
     // eslint-disable-next-line @typescript-eslint/ban-types
     private _data: object[]

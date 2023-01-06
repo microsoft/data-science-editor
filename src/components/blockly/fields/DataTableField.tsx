@@ -12,7 +12,7 @@ export interface DataPreviewOptions extends ReactFieldJSON {
 
 const MAX_ITEMS = 256
 export default class DataTableField extends ReactInlineField {
-    static KEY = "jacdac_field_data_table"
+    static KEY = "ds_field_data_table"
     EDITABLE = false
     transformed: boolean
     small: boolean

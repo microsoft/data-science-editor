@@ -34,7 +34,7 @@ function BarWidget() {
 }
 
 export default class BarField extends ReactInlineField {
-    static KEY = "jacdac_field_bar_plot"
+    static KEY = "ds_field_bar_plot"
     EDITABLE = false
 
     static fromJson(options: ReactFieldJSON) {
