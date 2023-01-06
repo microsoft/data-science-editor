@@ -41,7 +41,6 @@ export class DbStore<T> extends JDEventSource {
 
 export interface IDb extends IEventSource {
     readonly blobs: DbStore<Blob>
-    readonly directories: DbStore<FileSystemDirectoryHandle>
 }
 
 class IDBDb extends JDEventSource implements IDbStorage, IDb {
@@ -49,15 +48,10 @@ class IDBDb extends JDEventSource implements IDbStorage, IDb {
 
     private _db: IDBDatabase
     readonly blobs: DbStore<Blob>
-    readonly directories: DbStore<FileSystemDirectoryHandle>
 
     constructor() {
         super()
         this.blobs = new DbStore<Blob>(this, IDBDb.STORE_BLOBS)
-        this.directories = new DbStore<FileSystemDirectoryHandle>(
-            this,
-            IDBDb.STORE_DIRECTORIES
-        )
     }
 
     private get db() {
@@ -75,7 +69,6 @@ class IDBDb extends JDEventSource implements IDbStorage, IDb {
     static DB_VERSION = 19
     static DB_NAME = "DATA_SCIENCE_EDITOR"
     static STORE_BLOBS = "BLOBS"
-    static STORE_DIRECTORIES = "FILE_SYSTEM_ACCESS_DIRECTORIES"
 
     public static create(): Promise<IDBDb> {
         return new Promise(resolve => {
@@ -94,8 +87,6 @@ class IDBDb extends JDEventSource implements IDbStorage, IDb {
                     const stores = db.objectStoreNames
                     if (!stores.contains(IDBDb.STORE_BLOBS))
                         db.createObjectStore(IDBDb.STORE_BLOBS)
-                    if (!stores.contains(IDBDb.STORE_DIRECTORIES))
-                        db.createObjectStore(IDBDb.STORE_DIRECTORIES)
                     db.onerror = function (event) {
                         console.log("idb error", event)
                     }
@@ -221,43 +212,6 @@ class IDBDb extends JDEventSource implements IDbStorage, IDb {
                     }
                 })
         )
-    }
-}
-
-class MemoryDb extends JDEventSource implements IDb, IDbStorage {
-    private readonly tables = {
-        [IDBDb.STORE_BLOBS]: {},
-        [IDBDb.STORE_DIRECTORIES]: {},
-    }
-    readonly blobs: DbStore<Blob>
-    readonly values: DbStore<string>
-    readonly directories: DbStore<FileSystemDirectoryHandle>
-
-    constructor() {
-        super()
-        this.blobs = new DbStore<Blob>(this, IDBDb.STORE_BLOBS)
-        this.directories = new DbStore<FileSystemDirectoryHandle>(
-            this,
-            IDBDb.STORE_DIRECTORIES
-        )
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async get(table: string, key: string): Promise<any> {
-        return this.tables[table]?.[key]
-    }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async set(table: string, key: string, value: any): Promise<void> {
-        const t = this.tables[table]
-        if (t) t[key] = value
-    }
-    async list(table: string): Promise<string[]> {
-        const keys = Object.keys(this.tables[table] || {})
-        return keys
-    }
-    async clear(table: string): Promise<void> {
-        const t = this.tables[table]
-        if (t) this.tables[table] = {}
     }
 }
 
