@@ -369,14 +369,13 @@ const chartDsl: BlockDomainSpecificLanguage = {
                 <OptionsInputDefinition>{
                     type: "field_dropdown",
                     options: [
-                        "arc",
-                        "area",
                         "bar",
+                        "line",
+                        "area",
                         "boxplot",
                         "circle",
                         "errorband",
                         "errorbar",
-                        "line",
                         "point",
                         "rect",
                         "rule",
@@ -384,6 +383,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
                         "text",
                         "tick",
                         "trail",
+                        "arc",
                     ].map(s => [s, s]),
                     name: "mark",
                 },
@@ -610,17 +610,19 @@ export function blockToVisualizationSpec(
                     const channel: string = child.getFieldValue("channel")
                     const field = tidyResolveFieldColumn(data, child, "field")
                     const type: string = child.getFieldValue("type")
-                    if (channel && field) {
-                        const fieldType = types[headers.indexOf(field)]
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        const encoding = (spec.encoding[channel] = {
-                            field,
-                            type:
+                    if (channel) {
+                        const encoding =
+                            spec.encoding[channel] ||
+                            (spec.encoding[channel] = {})
+                        if (field) {
+                            const fieldType = types[headers.indexOf(field)]
+                            encoding.field = field
+                            encoding.type =
                                 type ||
                                 (fieldType === "number"
                                     ? "quantitative"
-                                    : "nominal"),
-                        })
+                                    : "nominal")
+                        }
                         encodingFieldsToSpec(child, encoding)
                     }
                     break
