@@ -4,8 +4,10 @@ import "@blockly/block-dynamic-connection"
 import { useEffect } from "react"
 import { DisableTopBlocks } from "@blockly/disable-top-blocks"
 
+/**
+ * Configures various blockly plugins
+ */
 // do not use block context
-
 export default function useBlocklyPlugins(workspace: Blockly.WorkspaceSvg) {
     //plugins
     useEffect(() => {

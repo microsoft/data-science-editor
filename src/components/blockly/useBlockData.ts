@@ -4,6 +4,9 @@ import { useCallback, useEffect } from "react"
 import useChangeThrottled from "../dom/useChangeThrottled"
 import useDragDebounce from "./useDragDebounce"
 
+/**
+ * Hook that retreives data associated to a block; triggers re-render when data is updated.
+ */
 // eslint-disable-next-line @typescript-eslint/ban-types
 export default function useBlockData<T extends object>(
     block: Block,

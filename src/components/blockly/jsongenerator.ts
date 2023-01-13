@@ -10,6 +10,9 @@ import {
 import { UIFlags } from "../dom/providerbus"
 import { toMap } from "../dom/utils"
 
+/**
+ * Converts Blockly DOM into JSON DOM (serializable)
+ */
 export function workspaceToJSON(
     workspace: Blockly.Workspace,
     dsls: BlockDomainSpecificLanguage[],
@@ -20,14 +23,16 @@ export function workspaceToJSON(
         Object.keys(o)
             .filter(k => o[k] === undefined || o[k] === null)
             .forEach(k => delete o[k])
-    const builtins: Record<string, (block: Blockly.Block) => string | number | boolean> =
-        {
-            logic_null: () => null,
-            text: block => block.getFieldValue("TEXT"),
-            text_input: block => block.getFieldValue("TEXT"),
-            math_number: block => Number(block.getFieldValue("NUM") || "0"),
-            logic_boolean: block => block.getFieldValue("BOOL") === "TRUE",
-        }
+    const builtins: Record<
+        string,
+        (block: Blockly.Block) => string | number | boolean
+    > = {
+        logic_null: () => null,
+        text: block => block.getFieldValue("TEXT"),
+        text_input: block => block.getFieldValue("TEXT"),
+        math_number: block => Number(block.getFieldValue("NUM") || "0"),
+        logic_boolean: block => block.getFieldValue("BOOL") === "TRUE",
+    }
 
     const variableToJSON = (variable: Blockly.VariableModel): VariableJSON => ({
         name: variable.name,

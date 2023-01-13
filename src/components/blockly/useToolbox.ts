@@ -95,6 +95,12 @@ function patchCategoryJSONtoXML(cat: CategoryDefinition): CategoryDefinition {
     return cat
 }
 
+/**
+ * A hook that populates a blockly configuration objects by querying various dsls
+ * @param dsls
+ * @param source
+ * @returns
+ */
 export default function useToolbox(
     dsls: BlockDomainSpecificLanguage[],
     source: WorkspaceJSON

@@ -10,6 +10,9 @@ import { Button } from "gatsby-theme-material-ui"
 import React, { ChangeEvent, useEffect, useRef, useState } from "react"
 import { useId } from "react"
 
+/**
+ * Component that injects dialogs in blockly
+ */
 export default function BlocklyModalDialogs() {
     const [dialogType, setDialogType] = useState<
         "alert" | "confirm" | "prompt"

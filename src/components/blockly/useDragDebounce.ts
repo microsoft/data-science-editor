@@ -1,6 +1,9 @@
 import { useContext, useEffect, useState } from "react"
 import WorkspaceContext from "./WorkspaceContext"
 
+/**
+ * Tracks block dragging behavior in blockly to avoid interference
+ */
 export default function useDragDebounce<T>(value: T): T {
     const { dragging } = useContext(WorkspaceContext)
     const [valueAtDragging, setValueAtDragging] = useState(value)

@@ -46,7 +46,11 @@ function DSEditorWithContext() {
     )
 }
 
+/**
+ * Data science block editor component
+ */
 export default function DSBlockEditor() {
+    // read url search flags
     const dataSet = useLocationSearchParamBoolean("dataset", true)
     const dataVar = useLocationSearchParamBoolean("datavar", true)
     const chart = useLocationSearchParamBoolean("chart", true)
@@ -59,6 +63,7 @@ export default function DSBlockEditor() {
             dataVar && dataVarDsl,
             chart && chartDsl,
             fieldsDsl,
+            // host is used to comms with excel
             host && createIFrameDSL("host", host),
         ].filter(dsl => !!dsl)
     }, [])

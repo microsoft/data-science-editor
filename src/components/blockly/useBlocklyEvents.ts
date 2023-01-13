@@ -3,8 +3,11 @@ import { useCallback } from "react"
 import ReactField from "./fields/ReactField"
 import useWorkspaceEvent from "./useWorkspaceEvent"
 
+/**
+ * The glue between blockly change events and the React contexts.
+ * @param workspace 
+ */
 // do not use block context
-
 export default function useBlocklyEvents(workspace: Blockly.WorkspaceSvg) {
     const handleChange = useCallback(
         (event: Blockly.Events.Abstract & { type: string }) => {

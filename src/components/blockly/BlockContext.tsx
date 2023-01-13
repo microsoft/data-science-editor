@@ -74,6 +74,11 @@ const DEFAULT_XML = '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>'
 
 export default BlockContext
 
+/**
+ * A context to host a blockly editor
+ * @param props 
+ * @returns 
+ */
 // eslint-disable-next-line react/prop-types
 export function BlockProvider(props: {
     editorId: string

@@ -315,6 +315,9 @@ class MinimapPlugin implements IPositionable {
     }
 }
 
+/**
+ * Inject minimap in blockly svg
+ */
 export function useBlockMinimap(workspace: WorkspaceSvg, palette: Palette) {
     useEffect(() => {
         if (workspace) {

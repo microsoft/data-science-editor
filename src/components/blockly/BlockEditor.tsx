@@ -140,6 +140,9 @@ function SuspendedBlockEditor(props: { className?: string }) {
     )
 }
 
+/**
+ * A delay loaded block editor
+ */
 export default function BlockEditor(props: { className?: string }) {
     const { toolboxConfiguration } = useContext(BlockContext)
 

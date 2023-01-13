@@ -163,6 +163,11 @@ WorkspaceContext.displayName = "Workspace"
 
 export default WorkspaceContext
 
+/**
+ * A blockly context for each field
+ * @param props 
+ * @returns 
+ */
 export function WorkspaceProvider(props: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     field: ReactField<any>
