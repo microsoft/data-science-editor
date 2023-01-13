@@ -15,9 +15,6 @@ module.exports = {
     },
     pathPrefix: pathPrefix,
     flags: {
-        PRESERVE_FILE_DOWNLOAD_CACHE: true,
-        DEV_WEBPACK_CACHE: true,
-        FAST_DEV: true,
     },
     plugins: [
         {
