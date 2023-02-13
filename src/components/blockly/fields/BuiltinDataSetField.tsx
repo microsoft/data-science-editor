@@ -10,14 +10,6 @@ import { downloadCSV } from "../dsl/workers/csv.proxy"
 export const builtinDatasets = {
     Cereals: withPrefix("/datasets/cereal.csv"),
     Penguins: withPrefix("/datasets/penguins.csv"),
-    /*
-    "Gerrymangering (Bootstrap)": googleSheetUrl(
-        "1L7hf0llI8dl8okVuat2fa1K4lqD5O301IFPi81vG7fc"
-    ),
-    "World Cities' Proximity to the Ocean (Bootstrap)": googleSheetUrl(
-        "166F2V0uPtAIiU4BkITu8pDmU2hnPIWJaM3yDoOHyon0",
-        "Data"
-    ),*/
 }
 
 export default class BuiltinDataSetField
