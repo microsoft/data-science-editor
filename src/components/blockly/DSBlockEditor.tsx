@@ -17,6 +17,7 @@ import {
 import dataSetDsl from "./dsl/datasetdsl"
 import dataVarDsl from "./dsl/datavardsl"
 import useChange from "../dom/useChange"
+import { UIFlags } from "../dom/providerbus"
 
 const DS_EDITOR_ID = "ds"
 const DS_SOURCE_STORAGE_KEY = "editor"
@@ -54,7 +55,8 @@ export default function DSBlockEditor() {
     const dataSet = useLocationSearchParamBoolean("dataset", true)
     const dataVar = useLocationSearchParamBoolean("datavar", true)
     const chart = useLocationSearchParamBoolean("chart", true)
-    const host = useLocationSearchParamString("host")
+    const host = UIFlags.hosted
+    const targetOrigin = useLocationSearchParamString("targetorigin") || "*"
 
     const dsls = useMemo(() => {
         return [
@@ -64,7 +66,7 @@ export default function DSBlockEditor() {
             chart && chartDsl,
             fieldsDsl,
             // host is used to comms with excel
-            host && createIFrameDSL("host", host),
+            host && createIFrameDSL("host", targetOrigin),
         ].filter(dsl => !!dsl)
     }, [])
 

@@ -13,6 +13,7 @@ import Footer from "./shell/Footer"
 import { WindowLocation } from "@reach/router"
 import ThemedMdxLayout from "./shell/ThemedMdxLayout"
 import DataEditorAppBar from "./shell/DataEditorAppBar"
+import { UIFlags } from "./dom/providerbus"
 
 const PREFIX = "Layout"
 
@@ -104,10 +105,7 @@ function LayoutWithDarkMode(props: LayoutProps) {
     const { element, props: pageProps } = props
     const { pageContext, path } = pageProps
     const { frontmatter } = pageContext || {}
-    const makeCodeTool = /tools\/makecode-/.test(path)
-    const { fullScreen } = frontmatter || {
-        fullScreen: makeCodeTool,
-    }
+    const { fullScreen } = frontmatter || {}
     const { darkModeMounted } = useContext(DarkModeContext)
 
     if (!darkModeMounted) return <div />
@@ -146,7 +144,9 @@ function LayoutWithContext(props: LayoutProps) {
     const { element, props: pageProps } = props
     const { path } = pageProps
 
-    const appBar = <DataEditorAppBar />
+    const isHosted = UIFlags.hosted
+    const hideMainMenu = isHosted
+    const appBar = !hideMainMenu ? <DataEditorAppBar /> : undefined
 
     const { darkMode } = useContext(DarkModeContext)
     const container = path !== "/"
@@ -160,7 +160,7 @@ function LayoutWithContext(props: LayoutProps) {
     const MainSection = () => (
         <>
             <main className={classes.mainContent}>
-                <div className={classes.drawerHeader} />
+                {!hideMainMenu && <div className={classes.drawerHeader} />}
                 {container ? (
                     <Container>
                         <InnerMainSection />
@@ -176,7 +176,7 @@ function LayoutWithContext(props: LayoutProps) {
     return (
         <Root>
             <div className={clsx(darkMode, classes.root)}>
-                <nav>{appBar}</nav>
+                {!hideMainMenu && <nav>{appBar}</nav>}{" "}
                 {container ? (
                     <Container
                         maxWidth={"xl"}
