@@ -26,7 +26,6 @@ const Root = styled("div")(() => ({
     },
 }))
 
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function clone(v: any) {
     return v ? JSON.parse(JSON.stringify(v)) : v
@@ -127,19 +126,7 @@ export default function VegaLiteWidget(props: {
               const canvas = await view?.toCanvas(2)
               return canvas
           }
-    const handleExport = UIFlags.hosted
-        ? async () => {
-              window.parent?.postMessage({
-                  type: "dsl",
-                  action: "chartexport",
-                  vega: fullSpec,
-                  slice,
-                  dataset: data,
-                  vegaDataset: vegaData,
-              })
-          }
-        : undefined
-    const showToolbar = !!handleCopy || !!handleExport
+    const showToolbar = !!handleCopy
 
     return (
         <NoSsr>
@@ -163,18 +150,6 @@ export default function VegaLiteWidget(props: {
                                                 onCopy={handleCopy}
                                                 title="Copy image to clipboard"
                                             />
-                                        </Grid>
-                                    )}
-                                    {!!handleExport && (
-                                        <Grid item>
-                                            <IconButtonWithTooltip
-                                                title="save"
-                                                size="small"
-                                                className={classes.button}
-                                                onClick={handleExport}
-                                            >
-                                                <SaveAltIcon />
-                                            </IconButtonWithTooltip>
                                         </Grid>
                                     )}
                                 </Grid>
