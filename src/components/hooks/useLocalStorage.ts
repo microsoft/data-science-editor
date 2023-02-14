@@ -3,7 +3,9 @@ import useStorage, { getStorageItem } from "./useStorage"
 
 const _storage = (() => {
     try {
-        return typeof window !== "undefined" && UIFlags.storage && window.localStorage
+        return typeof window !== "undefined" && UIFlags.storage
+            ? window.localStorage
+            : undefined
     } catch {
         return undefined
     }
