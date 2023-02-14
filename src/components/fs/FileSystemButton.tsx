@@ -14,6 +14,7 @@ export default function FileSystemButton() {
     return (
         <IconButtonWithTooltip
             title={root?.name || "open directory"}
+            color="inherit"
             onClick={handleOpenDirectory}
         >
             <OpenInBrowserIcon />
