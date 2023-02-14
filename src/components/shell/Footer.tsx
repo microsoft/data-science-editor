@@ -1,6 +1,7 @@
 import { Typography } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import React from "react"
+import { UIFlags } from "../dom/providerbus"
 
 const PREFIX = "Footer"
 
@@ -12,8 +13,8 @@ const Root = styled("footer")(({ theme }) => ({
     [`&.${classes.footer}`]: {
         textAlign: "center",
         position: "absolute",
-        bottom: "2rem",
-        left: "calc(50% - 15em)",
+        bottom: UIFlags.hosted ? "0.8rem" : "2rem",
+        left: "9.5rem",
         "z-index": 1000,
         "& *": {
             fontSize: `${theme.typography.fontSize * 0.8}px`,
