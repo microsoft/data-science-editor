@@ -169,7 +169,7 @@ function LayoutWithContext(props: LayoutProps) {
                     <InnerMainSection />
                 )}
             </main>
-            <Footer />
+            <Footer container={container} />
         </>
     )
 
