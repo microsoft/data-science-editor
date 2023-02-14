@@ -5,7 +5,7 @@ import {
 } from "../WorkspaceContext"
 import { Block, FieldDropdown } from "blockly"
 import { withPrefix } from "gatsby"
-import { downloadCSV } from "../dsl/workers/csv.proxy"
+import { downloadCSV } from "../dsl/workers/csvproxy"
 
 export const builtinDatasets = {
     Cereals: withPrefix("/datasets/cereal.csv"),

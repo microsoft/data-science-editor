@@ -16,7 +16,7 @@ import {
     setBlockDataWarning,
 } from "../WorkspaceContext"
 import FileSaveField from "../fields/FileSaveField"
-import { downloadCSV, saveCSV } from "./workers/csv.proxy"
+import { downloadCSV, saveCSV } from "./workers/csvproxy"
 import FileOpenField from "../fields/FileOpenField"
 import palette from "./palette"
 import { importCSVFilesIntoWorkspace } from "../../fs/fs"

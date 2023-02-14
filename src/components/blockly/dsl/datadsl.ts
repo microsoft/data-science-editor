@@ -15,7 +15,7 @@ import {
     calcOptions,
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
-import postTransformData from "./workers/data.proxy"
+import { postTransformData } from "./workers/dataproxy"
 import type {
     DataSelectRequest,
     DataDropRequest,
@@ -30,7 +30,7 @@ import type {
     DataBinRequest,
     DataCorrelationRequest,
     DataLinearRegressionRequest,
-} from "../../../workers/data/dist/node_modules/data.worker"
+} from "../../../workers/data/dist/node_modules/data-worker"
 import palette from "./palette"
 import {
     tidyResolveFieldColumn,

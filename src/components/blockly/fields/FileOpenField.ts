@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Block, FieldDropdown } from "blockly"
 import { CHANGE } from "../../dom/constants"
-import { parseCSV } from "../dsl/workers/csv.proxy"
+import { parseCSV } from "../dsl/workers/csvproxy"
 import {
     resolveBlockServices,
     resolveWorkspaceServices,

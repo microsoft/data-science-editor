@@ -6,7 +6,7 @@ import { Grid, Typography } from "@mui/material"
 import { TABLE_HEIGHT, TABLE_WIDTH } from "../toolbox"
 import { PointerBoundary } from "./PointerBoundary"
 import CopyButton from "../../ui/CopyButton"
-import { unparseCSV } from "../dsl/workers/csv.proxy"
+import { unparseCSV } from "../dsl/workers/csvproxy"
 import { tidyHeaders, tidyResolveHeader } from "./tidy"
 import { humanify, roundWithPrecision, toMap } from "../../dom/utils"
 

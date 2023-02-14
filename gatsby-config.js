@@ -6,6 +6,7 @@ const SITE_TITLE = `Data Science Editor.`
 const SITE_DESCRIPTION = `Data Science Editor.`
 
 module.exports = {
+    graphqlTypegen: false,
     trailingSlash: "always",
     siteMetadata: {
         title: SITE_TITLE,

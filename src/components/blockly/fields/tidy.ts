@@ -1,9 +1,8 @@
 import { Block } from "blockly"
 import type {
     DataSliceOptions,
-    DataSliceRequest,
-} from "../../../workers/data/dist/node_modules/data.worker"
-import postTransformData from "../dsl/workers/data.proxy"
+} from "../../../workers/data/dist/node_modules/data-worker"
+import { postTransformData } from "../dsl/workers/dataproxy"
 import { setBlockDataWarning } from "../WorkspaceContext"
 
 /* eslint-disable @typescript-eslint/ban-types */
@@ -102,9 +101,9 @@ export function tidySlice(
 
     // crunch in webworker
     //console.debug(`slice data`, { data, options })
-    return postTransformData(<DataSliceRequest>{
+    return postTransformData({
         type: "slice",
         data,
         ...options,
-    })
+    } as any)
 }

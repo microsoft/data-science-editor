@@ -1,7 +1,7 @@
 {
   "name": "csv-worker",
   "type": "module",
-  "source": "csv.worker.ts",
+  "source": "csv-worker.ts",
   "main": "./dist/node_modules/csv-worker.umd.js",
   "module": "./dist/node_modules/csv-worker.cjs.js",
   "exports": "./dist/node_modules/csv-worker.js",
