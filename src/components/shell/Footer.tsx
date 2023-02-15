@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import React from "react"
-import { UIFlags } from "../dom/providerbus"
+import { UIFlags } from "../uiflags"
 import clsx from "clsx"
 
 const PREFIX = "Footer"

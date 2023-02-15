@@ -1,4 +1,4 @@
-import { UIFlags } from "../dom/providerbus"
+import { UIFlags } from "../uiflags"
 import useStorage, { getStorageItem } from "./useStorage"
 
 const _storage = (() => {

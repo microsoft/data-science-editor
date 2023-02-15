@@ -1,4 +1,4 @@
-import { UIFlags } from "../dom/providerbus"
+import { UIFlags } from "../uiflags"
 import { inIFrame } from "../dom/utils"
 
 export function fileSystemHandleSupported() {
