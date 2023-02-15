@@ -23,6 +23,7 @@ import {
     DslTransformMessage,
 } from "../components/blockly/dsl/iframedsl"
 import { Button } from "gatsby-material-ui-components"
+import { withPrefix } from "gatsby"
 
 export default function Page() {
     const frame = useRef<HTMLIFrameElement>()
@@ -169,7 +170,7 @@ export default function Page() {
 
     return (
         <>
-            <h1>Data Editor + hosted blocks</h1>
+            <h1>Data Science Editor + hosted blocks</h1>
             <p>
                 The data editor below is an example of hosted editor with
                 additional blocks injected by host (Custom category).
@@ -185,7 +186,7 @@ export default function Page() {
             <iframe
                 ref={frame}
                 title="data editor"
-                src="/?embed=1"
+                src={withPrefix("/?embed=1")}
                 style={{
                     border: "none",
                     left: 0,
