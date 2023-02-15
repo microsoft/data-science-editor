@@ -29,7 +29,6 @@ const DATA_SAVE_FILE_BLOCK = "data_save_file"
 
 // https://support.code.org/hc/en-us/articles/5257673491469-Submit-Datasets-for-Data-Science-
 // spec: https://www.datascience4everyone.org/_files/ugd/d2c47c_db9901e7a3b04350b561457bea71b48e.pdf
-// bootstrap https://bootstrapworld.org/materials/fall2021/en-us/courses/data-science/lessons/choosing-your-dataset/index.shtml#Datasets
 
 function googleSheetUrl(id: string, sheet = "Sheet1") {
     let url = `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv`
@@ -38,7 +37,7 @@ function googleSheetUrl(id: string, sheet = "Sheet1") {
 }
 function patchCsvUrl(url: string) {
     const good =
-        /https:\/\/docs.google.com\/spreadsheets\/d\/(?<id>[a-z0-9]+)\//i.exec(
+        /https:\/\/docs.google.com\/spreadsheets\/d\/(?<id>[^/]+)\//i.exec(
             url
         )
     if (good) return googleSheetUrl(good.groups.id)
