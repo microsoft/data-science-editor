@@ -65,6 +65,7 @@ const Root = styled("div")((props: StylesProps) => ({
         },
         [`& td.${classes.chart}`]: {
             width: "8rem",
+            verticalAlign: "top",
         },
         "& td": {
             borderColor: "#ccc",

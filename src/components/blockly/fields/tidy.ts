@@ -1,3 +1,16 @@
+import {
+    arrange,
+    count,
+    desc,
+    first,
+    groupBy,
+    n,
+    sliceHead,
+    sliceMax,
+    summarize,
+    SummarizeSpec,
+    tidy,
+} from "@tidyjs/tidy"
 import { Block } from "blockly"
 import type {
     DataSliceOptions,
@@ -14,8 +27,24 @@ export function tidyHeaders(
     const row = data?.[0] || {}
     let headers = Object.keys(row)
     if (type) headers = headers.filter(header => type === typeof row[header])
-    const types = headers.map(header => typeof row[header])
+    const types: ("string" | "number" | "boolean")[] = headers.map(
+        header => typeof row[header]
+    ) as any
     return { headers, types }
+}
+
+export function summarizeCounts(data: object[], column: string) {
+    const items: SummarizeSpec<Object> = {}
+    items["name"] = first(column as any)
+    items["count"] = n()
+    const res = tidy(
+        data,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        groupBy(column as any, [summarize(items)]),
+        arrange([desc("count")]),
+        sliceHead(5)
+    )
+    return res
 }
 
 export function tidyFindLastValue(data: object[], column: string) {
@@ -32,6 +61,17 @@ export function tidyResolveHeader(
 
     const { headers } = tidyHeaders(data, type)
     return headers.indexOf(name) > -1 ? name : undefined
+}
+
+export function tidyResolveHeaderType(
+    data: object[],
+    name: string,
+    type?: "string" | "number" | "boolean"
+) {
+    if (!data || !name) return undefined
+
+    const { headers, types } = tidyHeaders(data, type)
+    return types[headers.indexOf(name)]
 }
 
 export function tidyResolveFieldColumn(

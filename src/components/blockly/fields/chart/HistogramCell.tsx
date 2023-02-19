@@ -3,7 +3,11 @@ import WorkspaceContext from "../../WorkspaceContext"
 import useBlockData from "../../useBlockData"
 import type { VisualizationSpec } from "react-vega"
 import VegaLiteWidget from "./VegaLiteWidget"
-import { tidyResolveHeader } from "../tidy"
+import {
+    summarizeCounts,
+    tidyResolveHeader,
+    tidyResolveHeaderType,
+} from "../tidy"
 import { BAR_CORNER_RADIUS } from "../../toolbox"
 
 export default function HistogramCell(props: {
@@ -14,9 +18,37 @@ export default function HistogramCell(props: {
     const { sourceBlock } = useContext(WorkspaceContext)
     const { data, transformedData } = useBlockData(sourceBlock)
     const raw = transformed ? transformedData : data
-    const index = tidyResolveHeader(raw, column, "number")
+    const field = tidyResolveHeader(raw, column)
+    const type = tidyResolveHeaderType(raw, column)
 
-    if (!index) return null
+    if (!field) return null
+
+    if (type !== "number") {
+        const n = raw.length
+        const counts = summarizeCounts(raw, column)
+        return (
+            <table
+                style={{ width: "120px", fontSize: "0.7em", border: "none" }}
+            >
+                {counts.map((props: any, i) => (
+                    <tr style={{ border: "none" }} key={i}>
+                        <td style={{ padding: 0, border: "none" }}>
+                            {props.name} &nbsp; ({props.count})
+                        </td>
+                        <td
+                            style={{
+                                padding: 0,
+                                border: "none",
+                                textAlign: "right",
+                            }}
+                        >
+                            {Math.ceil((props.count / n) * 100) + "%"}
+                        </td>
+                    </tr>
+                ))}
+            </table>
+        )
+    }
 
     const spec: VisualizationSpec = {
         view: null,
@@ -29,7 +61,7 @@ export default function HistogramCell(props: {
         encoding: {
             x: {
                 bin: { maxbins: 20 },
-                field: index,
+                field,
                 axis: {
                     domain: false,
                     ticks: false,

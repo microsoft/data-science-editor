@@ -152,8 +152,6 @@ export default function VegaLiteWidget(props: {
         />
     )
 
-    console.log({ fullSpec })
-
     return (
         <NoSsr>
             <PointerBoundary>
