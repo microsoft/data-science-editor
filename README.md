@@ -1,6 +1,6 @@
 # Data Science Editor
 
-https://microsot.github.io/data-science-editor/videos/cereal-calories-sort.mp4
+https://microsoft.github.io/data-science-editor/videos/cereal-calories-sort.mp4
 
 ## Developer setup
 
