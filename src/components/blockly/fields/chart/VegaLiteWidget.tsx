@@ -58,7 +58,9 @@ export default function VegaLiteWidget(props: {
     const group = tidyResolveHeader(data, sourceBlock?.getFieldValue("group"))
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const settings = JSONTryParse<any>(sourceBlock?.getFieldValue("settings"))
-    const handleNewView = (view: View) => (viewRef.current = view)
+    const handleNewView = (view: View) => {
+        viewRef.current = view
+    }
 
     const fullSpec: VegaLiteChart = useMemo(() => {
         if (!settings) return spec
@@ -98,8 +100,9 @@ export default function VegaLiteWidget(props: {
                     }
                 })
         }
+        s.data = vegaData
         return s
-    }, [spec, group, settings])
+    }, [spec, group, settings, vegaData])
 
     useEffectAsync(
         async mounted => {
@@ -159,7 +162,6 @@ export default function VegaLiteWidget(props: {
                                 width={CHART_WIDTH}
                                 height={CHART_HEIGHT}
                                 spec={fullSpec}
-                                data={vegaData}
                                 renderer={renderer}
                                 tooltip={true}
                                 onNewView={handleNewView}
