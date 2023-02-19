@@ -18,6 +18,7 @@ import dataSetDsl from "./dsl/datasetdsl"
 import dataVarDsl from "./dsl/datavardsl"
 import useChange from "../dom/useChange"
 import { UIFlags } from "../uiflags"
+import SplashDialog from "../ui/SplashDialog"
 
 const DS_EDITOR_ID = "ds"
 const DS_SOURCE_STORAGE_KEY = "editor"
@@ -78,6 +79,7 @@ export default function DSBlockEditor() {
                 dsls={dsls}
             >
                 <DSEditorWithContext />
+                <SplashDialog />
             </BlockProvider>
         </NoSsr>
     )
