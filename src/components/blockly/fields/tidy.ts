@@ -33,7 +33,7 @@ export function tidyHeaders(
     return { headers, types }
 }
 
-export function summarizeCounts(data: object[], column: string) {
+export function summarizeCounts(data: object[], column: string, slice: number) {
     const items: SummarizeSpec<Object> = {}
     items["name"] = first(column as any)
     items["count"] = n()
@@ -42,7 +42,7 @@ export function summarizeCounts(data: object[], column: string) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         groupBy(column as any, [summarize(items)]),
         arrange([desc("count")]),
-        sliceHead(5)
+        sliceHead(slice)
     )
     return res
 }

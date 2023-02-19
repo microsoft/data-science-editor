@@ -10,6 +10,8 @@ import {
 } from "../tidy"
 import { BAR_CORNER_RADIUS } from "../../toolbox"
 
+const SUMMARY_SLICE = 5
+
 export default function HistogramCell(props: {
     column: string
     transformed: boolean
@@ -25,7 +27,8 @@ export default function HistogramCell(props: {
 
     if (type !== "number") {
         const n = raw.length
-        const counts = summarizeCounts(raw, column)
+        const slice = SUMMARY_SLICE
+        const counts = summarizeCounts(raw, column, slice)
         return (
             <table
                 style={{ width: "120px", fontSize: "0.7em", border: "none" }}
@@ -33,7 +36,11 @@ export default function HistogramCell(props: {
                 {counts.map((props: any, i) => (
                     <tr style={{ border: "none" }} key={i}>
                         <td style={{ padding: 0, border: "none" }}>
-                            {props.name} &nbsp; ({props.count})
+                            {i + 1 === slice
+                                ? "..."
+                                : `${props.name} ${
+                                      props.count > 1 ? `(${props.count})` : ""
+                                  }`}
                         </td>
                         <td
                             style={{
@@ -42,7 +49,9 @@ export default function HistogramCell(props: {
                                 textAlign: "right",
                             }}
                         >
-                            {Math.ceil((props.count / n) * 100) + "%"}
+                            {i + 1 === slice
+                                ? "..."
+                                : Math.ceil((props.count / n) * 100) + "%"}
                         </td>
                     </tr>
                 ))}
