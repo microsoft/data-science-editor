@@ -9,6 +9,7 @@ import CopyButton from "../../ui/CopyButton"
 import { unparseCSV } from "../dsl/workers/csv.proxy"
 import { tidyHeaders, tidyResolveHeader } from "./tidy"
 import { humanify, roundWithPrecision, toMap } from "../../dom/utils"
+import HistogramCell from "./chart/HistogramCell"
 
 const PREFIX = "DataTableWidget"
 
@@ -17,6 +18,7 @@ const classes = {
     button: `${PREFIX}Button`,
     root: `${PREFIX}Root`,
     table: `${PREFIX}Table`,
+    chart: `${PREFIX}Chart`,
 }
 
 // TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
@@ -60,6 +62,9 @@ const Root = styled("div")((props: StylesProps) => ({
             position: "sticky",
             top: 0,
             background: "#fff",
+        },
+        [`& td.${classes.chart}`]: {
+            width: "8rem",
         },
         "& td": {
             borderColor: "#ccc",
@@ -147,7 +152,10 @@ export default function DataTableWidget(props: {
     }
 
     return (
-        <Root tableHeight={tableHeight} sx={{ height: `${tableHeight}px - 0.25rem)` }}>
+        <Root
+            tableHeight={tableHeight}
+            sx={{ height: `${tableHeight}px - 0.25rem)` }}
+        >
             <PointerBoundary className={classes.root}>
                 <Grid container direction="column" spacing={1}>
                     <Grid item xs={12}>
@@ -193,6 +201,16 @@ export default function DataTableWidget(props: {
                                 </tr>
                             </thead>
                             <tbody>
+                                <tr key="charts">
+                                    {columns.map(c => (
+                                        <td key={c} className={classes.chart}>
+                                            <HistogramCell
+                                                transformed={transformed}
+                                                column={c}
+                                            />
+                                        </td>
+                                    ))}
+                                </tr>
                                 {table.map((r, i) => (
                                     <tr key={r.id || i}>
                                         {columns.map(c => (

@@ -699,7 +699,7 @@ footer {
     stroke: #fff;
 }
 .clickeable.pixel:hover {
-    stroke-width: 2
+    stroke-width: 2;
 }
 .no-pointer-events {
     pointer-events: none;
@@ -721,4 +721,8 @@ img.pixelated {
     image-rendering: pixelated;
     image-rendering: -moz-crisp-edges;
     image-rendering: crisp-edges;
+}
+
+form.vega-bindings {
+    display: none !important;
 }

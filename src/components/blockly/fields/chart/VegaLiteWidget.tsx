@@ -46,16 +46,28 @@ type VegaLiteChart = unknown
 export default function VegaLiteWidget(props: {
     spec: VisualizationSpec
     slice?: DataSliceOptions
+    transformed?: boolean
+    hideChrome?: boolean
+    chartWidth?: number
+    charHeight?: number
 }) {
-    const { spec, slice } = props
+    const {
+        spec,
+        transformed,
+        slice,
+        hideChrome,
+        chartWidth = CHART_WIDTH,
+        charHeight = CHART_HEIGHT,
+    } = props
     const { sourceBlock } = useContext(WorkspaceContext)
-    const { data } = useBlockData(sourceBlock)
+    const { data, transformedData } = useBlockData(sourceBlock)
+    const raw = transformed ? transformedData : data
 
     // eslint-disable-next-line @typescript-eslint/ban-types
     const [vegaData, setVegaData] = useState<{ values: object[] }>(undefined)
     const viewRef = useRef<View>()
 
-    const group = tidyResolveHeader(data, sourceBlock?.getFieldValue("group"))
+    const group = tidyResolveHeader(raw, sourceBlock?.getFieldValue("group"))
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const settings = JSONTryParse<any>(sourceBlock?.getFieldValue("settings"))
     const handleNewView = (view: View) => {
@@ -63,7 +75,6 @@ export default function VegaLiteWidget(props: {
     }
 
     const fullSpec: VegaLiteChart = useMemo(() => {
-        if (!settings) return spec
         const s = clone(spec)
         if (s.encoding)
             Object.values(s.encoding)
@@ -107,13 +118,13 @@ export default function VegaLiteWidget(props: {
     useEffectAsync(
         async mounted => {
             if (!slice) {
-                setVegaData({ values: data })
+                setVegaData({ values: raw })
             } else {
-                const sliced = await tidySlice(data, slice)
+                const sliced = await tidySlice(raw, slice)
                 if (mounted()) setVegaData({ values: sliced })
             }
         },
-        [data]
+        [raw]
     )
 
     if (!vegaData?.values?.length || !spec) return null
@@ -129,46 +140,58 @@ export default function VegaLiteWidget(props: {
           }
     const showToolbar = !!handleCopy
 
+    const vegaChart = (
+        <VegaLite
+            actions={false}
+            width={chartWidth}
+            height={charHeight}
+            spec={fullSpec}
+            renderer={renderer}
+            tooltip={true}
+            onNewView={handleNewView}
+        />
+    )
+
+    console.log({ fullSpec })
+
     return (
         <NoSsr>
             <PointerBoundary>
-                <Root style={{ background: "#fff", borderRadius: "0.25rem" }}>
-                    <Grid container direction="column" spacing={1}>
-                        {showToolbar && (
-                            <Grid item xs={12}>
-                                <Grid
-                                    container
-                                    direction="row"
-                                    justifyContent="flex-start"
-                                    alignItems="center"
-                                    spacing={1}
-                                >
-                                    {!!handleCopy && (
-                                        <Grid item>
-                                            <CopyButton
-                                                size="small"
-                                                className={classes.button}
-                                                onCopy={handleCopy}
-                                                title="Copy image to clipboard"
-                                            />
-                                        </Grid>
-                                    )}
+                {hideChrome ? (
+                    vegaChart
+                ) : (
+                    <Root
+                        style={{ background: "#fff", borderRadius: "0.25rem" }}
+                    >
+                        <Grid container direction="column" spacing={1}>
+                            {showToolbar && (
+                                <Grid item xs={12}>
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        justifyContent="flex-start"
+                                        alignItems="center"
+                                        spacing={1}
+                                    >
+                                        {!!handleCopy && (
+                                            <Grid item>
+                                                <CopyButton
+                                                    size="small"
+                                                    className={classes.button}
+                                                    onCopy={handleCopy}
+                                                    title="Copy image to clipboard"
+                                                />
+                                            </Grid>
+                                        )}
+                                    </Grid>
                                 </Grid>
+                            )}
+                            <Grid item xs={12}>
+                                {vegaChart}
                             </Grid>
-                        )}
-                        <Grid item xs={12}>
-                            <VegaLite
-                                actions={false}
-                                width={CHART_WIDTH}
-                                height={CHART_HEIGHT}
-                                spec={fullSpec}
-                                renderer={renderer}
-                                tooltip={true}
-                                onNewView={handleNewView}
-                            />
                         </Grid>
-                    </Grid>
-                </Root>
+                    </Root>
+                )}
             </PointerBoundary>
         </NoSsr>
     )
