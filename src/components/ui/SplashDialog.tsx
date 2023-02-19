@@ -7,10 +7,14 @@ import {
 } from "@mui/material"
 import React, { useState } from "react"
 
+let _firstShow = true
 export default function SplashDialog() {
-    const [open, setOpen] = useState(true)
+    const [open, setOpen] = useState(_firstShow)
 
-    const handleClose = () => setOpen(false)
+    const handleClose = () => {
+        _firstShow = false
+        setOpen(false)
+    }
     return (
         <Dialog open={open} onAbort={handleClose}>
             <DialogTitle>Data Science Editor</DialogTitle>
