@@ -1,19 +1,19 @@
 import { Typography } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import React from "react"
+import { UIFlags } from "../uiflags"
+import clsx from "clsx"
 
 const PREFIX = "Footer"
 
 const classes = {
     footer: `${PREFIX}footer`,
+    absolute: `${PREFIX}absolute`,
 }
 
 const Root = styled("footer")(({ theme }) => ({
     [`&.${classes.footer}`]: {
         textAlign: "center",
-        position: "absolute",
-        bottom: "2rem",
-        left: "calc(50% - 15em)",
         "z-index": 1000,
         "& *": {
             fontSize: `${theme.typography.fontSize * 0.8}px`,
@@ -33,14 +33,23 @@ const Root = styled("footer")(({ theme }) => ({
             marginRight: theme.spacing(0.5),
         },
     },
+    [`&.${classes.absolute}`]: {
+        position: "absolute",
+        bottom: UIFlags.hosted ? "0.8rem" : "2rem",
+        left: "9.5rem",
+    },
 }))
 
-export default function Footer() {
+export default function Footer(props: { container?: boolean }) {
+    const { container } = props
     const repo = process.env.GATSBY_GITHUB_REPOSITORY
     const sha = process.env.GATSBY_GITHUB_SHA
 
     return (
-        <Root role="contentinfo" className={classes.footer}>
+        <Root
+            role="contentinfo"
+            className={clsx(classes.footer, !container && classes.absolute)}
+        >
             <a
                 href="https://go.microsoft.com/fwlink/?LinkId=521839"
                 target="_blank"

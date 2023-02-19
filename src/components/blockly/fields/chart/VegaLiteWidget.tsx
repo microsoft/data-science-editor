@@ -1,4 +1,4 @@
-import React, { lazy, useContext, useMemo, useRef, useState } from "react"
+import React, { useContext, useMemo, useRef, useState } from "react"
 import { styled } from "@mui/material/styles"
 import WorkspaceContext from "../../WorkspaceContext"
 import useBlockData from "../../useBlockData"
@@ -10,9 +10,7 @@ import type { DataSliceOptions } from "../../../../workers/data/dist/node_module
 import useEffectAsync from "../../../hooks/useEffectAsync"
 import { tidyResolveHeader, tidySlice } from "./../tidy"
 import CopyButton from "../../../ui/CopyButton"
-import IconButtonWithTooltip from "../../../ui/IconButtonWithTooltip"
-import { UIFlags } from "../../../dom/providerbus"
-import SaveAltIcon from "@mui/icons-material/SaveAlt"
+import { UIFlags } from "../../../uiflags"
 import { humanify, JSONTryParse } from "../../../dom/utils"
 import { VegaLite } from "react-vega"
 const PREFIX = "VegaLiteWidget"
@@ -25,7 +23,6 @@ const Root = styled("div")(() => ({
         color: "grey",
     },
 }))
-
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function clone(v: any) {
@@ -61,7 +58,9 @@ export default function VegaLiteWidget(props: {
     const group = tidyResolveHeader(data, sourceBlock?.getFieldValue("group"))
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const settings = JSONTryParse<any>(sourceBlock?.getFieldValue("settings"))
-    const handleNewView = (view: View) => (viewRef.current = view)
+    const handleNewView = (view: View) => {
+        viewRef.current = view
+    }
 
     const fullSpec: VegaLiteChart = useMemo(() => {
         if (!settings) return spec
@@ -101,8 +100,9 @@ export default function VegaLiteWidget(props: {
                     }
                 })
         }
+        s.data = vegaData
         return s
-    }, [spec, group, settings])
+    }, [spec, group, settings, vegaData])
 
     useEffectAsync(
         async mounted => {
@@ -127,19 +127,7 @@ export default function VegaLiteWidget(props: {
               const canvas = await view?.toCanvas(2)
               return canvas
           }
-    const handleExport = UIFlags.hosted
-        ? async () => {
-              window.parent?.postMessage({
-                  type: "dsl",
-                  action: "chartexport",
-                  vega: fullSpec,
-                  slice,
-                  dataset: data,
-                  vegaDataset: vegaData,
-              })
-          }
-        : undefined
-    const showToolbar = !!handleCopy || !!handleExport
+    const showToolbar = !!handleCopy
 
     return (
         <NoSsr>
@@ -165,18 +153,6 @@ export default function VegaLiteWidget(props: {
                                             />
                                         </Grid>
                                     )}
-                                    {!!handleExport && (
-                                        <Grid item>
-                                            <IconButtonWithTooltip
-                                                title="save"
-                                                size="small"
-                                                className={classes.button}
-                                                onClick={handleExport}
-                                            >
-                                                <SaveAltIcon />
-                                            </IconButtonWithTooltip>
-                                        </Grid>
-                                    )}
                                 </Grid>
                             </Grid>
                         )}
@@ -186,7 +162,6 @@ export default function VegaLiteWidget(props: {
                                 width={CHART_WIDTH}
                                 height={CHART_HEIGHT}
                                 spec={fullSpec}
-                                data={vegaData}
                                 renderer={renderer}
                                 tooltip={true}
                                 onNewView={handleNewView}

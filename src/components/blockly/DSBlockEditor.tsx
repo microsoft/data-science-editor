@@ -17,7 +17,7 @@ import {
 import dataSetDsl from "./dsl/datasetdsl"
 import dataVarDsl from "./dsl/datavardsl"
 import useChange from "../dom/useChange"
-import { UIFlags } from "../dom/providerbus"
+import { UIFlags } from "../uiflags"
 
 const DS_EDITOR_ID = "ds"
 const DS_SOURCE_STORAGE_KEY = "editor"

@@ -7,7 +7,7 @@ import {
     BlockJSON,
     InputJSON,
 } from "./dsl/workspacejson"
-import { UIFlags } from "../dom/providerbus"
+import { UIFlags } from "../uiflags"
 import { toMap } from "../dom/utils"
 
 /**

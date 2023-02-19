@@ -31,7 +31,6 @@ export interface DslMessage {
         | "load"
         | "save"
         | "options"
-        | "chartexport"
 }
 
 export interface DslBlocksResponse extends DslMessage {
@@ -45,15 +44,6 @@ export interface DslTransformMessage extends DslMessage {
     blockId?: string
     workspace?: WorkspaceJSON
     dataset?: BlockDataSet
-}
-
-export interface DslChartExportMessage extends DslMessage {
-    action: "transform"
-    blockId?: string
-    spec: unknown
-    slice: DataSliceOptions
-    dataset: BlockDataSet
-    vegaDataset: BlockDataSet
 }
 
 export interface DslTransformResponse extends DslTransformMessage {

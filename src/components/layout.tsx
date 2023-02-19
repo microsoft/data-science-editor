@@ -13,7 +13,7 @@ import Footer from "./shell/Footer"
 import { WindowLocation } from "@reach/router"
 import ThemedMdxLayout from "./shell/ThemedMdxLayout"
 import DataEditorAppBar from "./shell/DataEditorAppBar"
-import { UIFlags } from "./dom/providerbus"
+import { UIFlags } from "./uiflags"
 
 const PREFIX = "Layout"
 
@@ -169,7 +169,7 @@ function LayoutWithContext(props: LayoutProps) {
                     <InnerMainSection />
                 )}
             </main>
-            <Footer />
+            {UIFlags.footer && <Footer container={container} />}
         </>
     )
 

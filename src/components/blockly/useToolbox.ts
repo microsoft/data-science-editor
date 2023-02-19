@@ -14,7 +14,7 @@ import BlockDomainSpecificLanguage from "./dsl/dsl"
 import { addDataPreviewField } from "./fields/DataPreviewField"
 import { WorkspaceJSON } from "./dsl/workspacejson"
 import useAsyncMemo from "../hooks/useAsyncMemo"
-import { UIFlags } from "../dom/providerbus"
+import { UIFlags } from "../uiflags"
 import { arrayConcatMany } from "../dom/utils"
 
 // overrides blockly emboss filter for svg elements

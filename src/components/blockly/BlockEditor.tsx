@@ -11,7 +11,7 @@ import { withPrefix } from "gatsby"
 import BlockContext from "./BlockContext"
 import { useBlockMinimap } from "./BlockMinimap"
 import BrowserCompatibilityAlert from "../ui/BrowserCompatibilityAlert"
-import { UIFlags } from "../dom/providerbus"
+import { UIFlags } from "../uiflags"
 import useSnackbar from "../hooks/useSnackbar"
 
 const PREFIX = "BlockEditor"
@@ -22,7 +22,7 @@ const classes = {
 
 const Root = styled("div")(({ theme }) => ({
     [`& .${classes.editor}`]: {
-        height: `calc(100vh - ${UIFlags.hosted ? 3.5 : 4.5}rem)`,
+        height: `calc(100vh - ${UIFlags.hosted ? 0 : 4.5}rem)`,
         "& .blocklyTreeLabel": {
             fontFamily: theme.typography.fontFamily,
         },
