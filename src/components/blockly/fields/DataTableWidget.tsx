@@ -44,7 +44,7 @@ const Root = styled("div")((props: StylesProps) => ({
         background: "#fff",
         color: "#000",
         borderRadius: "0.25rem",
-        width: `calc(${TABLE_WIDTH}px - 0.25rem)`,
+        width: `calc(${props.tableWidth}px - 0.25rem)`,
         height: `calc(${props.tableHeight}px - 0.25rem)`,
         overflow: "auto",
     },
@@ -77,12 +77,14 @@ const Root = styled("div")((props: StylesProps) => ({
 
 interface StylesProps {
     tableHeight: number
+    tableWidth: number
 }
 
 export default function DataTableWidget(props: {
     label?: string
     transformed?: boolean
     tableHeight?: number
+    tableWidth?: number
     empty?: ReactNode
     maxItems?: number
     selectColumns?: boolean
@@ -91,6 +93,7 @@ export default function DataTableWidget(props: {
         label,
         transformed,
         tableHeight = TABLE_HEIGHT,
+        tableWidth = TABLE_WIDTH,
         empty,
         maxItems,
         selectColumns,
@@ -155,6 +158,7 @@ export default function DataTableWidget(props: {
     return (
         <Root
             tableHeight={tableHeight}
+            tableWidth={tableWidth}
             sx={{ height: `${tableHeight}px - 0.25rem)` }}
         >
             <PointerBoundary className={classes.root}>

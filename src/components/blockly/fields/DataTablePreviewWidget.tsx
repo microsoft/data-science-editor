@@ -1,6 +1,6 @@
 import React, { useContext } from "react"
 import DataTableWidget from "./DataTableWidget"
-import { TABLE_PREVIEW_MAX_ITEMS } from "../toolbox"
+import { TABLE_PREVIEW_MAX_ITEMS, TABLE_WIDTH } from "../toolbox"
 import { Grid } from "@mui/material"
 import useBlockData from "../useBlockData"
 import WorkspaceContext from "../WorkspaceContext"
@@ -16,6 +16,7 @@ export default function DataTablePreviewWidget(props: { compare?: boolean }) {
                 tableHeight={295}
                 empty={"no data"}
                 transformed={false}
+                tableWidth={TABLE_WIDTH * 2}
                 maxItems={TABLE_PREVIEW_MAX_ITEMS}
             />
         )
@@ -24,6 +25,7 @@ export default function DataTablePreviewWidget(props: { compare?: boolean }) {
             <DataTableWidget
                 label="after"
                 tableHeight={295}
+                tableWidth={TABLE_WIDTH * 2}
                 empty={"no data"}
                 transformed={true}
                 maxItems={TABLE_PREVIEW_MAX_ITEMS}
@@ -36,6 +38,7 @@ export default function DataTablePreviewWidget(props: { compare?: boolean }) {
                     <DataTableWidget
                         label="before"
                         tableHeight={295}
+                        tableWidth={TABLE_WIDTH}
                         empty={"no data"}
                         transformed={false}
                         maxItems={TABLE_PREVIEW_MAX_ITEMS}
