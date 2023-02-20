@@ -409,7 +409,7 @@ const handlers: { [index: string]: (props: any) => object[] } = {
 
         const x = data.map(obj => obj[column1])
         const y = data.map(obj => obj[column2])
-        return [{ correlation: sampleCorrelation(x, y).toFixed(3) }]
+        return [{ correlation: sampleCorrelation(x, y) }]
     },
     correlation_matrix: (props: DataCorrelationMatrixRequest) => {
         const { data, columns } = props
