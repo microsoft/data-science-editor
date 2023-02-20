@@ -381,7 +381,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: PAIRSCHART_BLOCK,
             tooltip: "Renders pairwize scatter plots",
-            message0: "scatter matrix group %1 %2 %3",
+            message0: "scatterplot matrix group %1 %2 %3",
             args0: [
                 <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
