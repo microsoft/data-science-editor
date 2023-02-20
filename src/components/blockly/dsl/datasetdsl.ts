@@ -37,9 +37,7 @@ function googleSheetUrl(id: string, sheet = "Sheet1") {
 }
 function patchCsvUrl(url: string) {
     const good =
-        /https:\/\/docs.google.com\/spreadsheets\/d\/(?<id>[^/]+)\//i.exec(
-            url
-        )
+        /https:\/\/docs.google.com\/spreadsheets\/d\/(?<id>[^/]+)\//i.exec(url)
     if (good) return googleSheetUrl(good.groups.id)
 
     return url
@@ -70,6 +68,8 @@ const dataSetDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_LOAD_URL_BLOCK,
             message0: "load dataset from url %1",
+            tooltip:
+                "Loads a CSV data from an external internal URL. If the URL is a Google Sheet, it will automatically be converted to CSV.",
             args0: [
                 <TextInputDefinition>{
                     type: "field_input",
@@ -102,6 +102,8 @@ const dataSetDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_LOAD_FILE_BLOCK,
             message0: "load dataset from file %1",
+            tooltip:
+                "Loads a local CSV file (enabled after opening local directory)",
             args0: [
                 {
                     type: FileOpenField.KEY,
@@ -118,6 +120,8 @@ const dataSetDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_SAVE_FILE_BLOCK,
             message0: "save dataset to file %1",
+            tooltip:
+                "Saves the current data to a local CSV file (enabled after opening local directory)",
             args0: [
                 {
                     type: FileSaveField.KEY,

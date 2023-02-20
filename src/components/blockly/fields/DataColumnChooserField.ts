@@ -1,12 +1,52 @@
 import { resolveBlockServices } from "../WorkspaceContext"
 import { ReactFieldJSON } from "./ReactField"
-import { tidyHeaders } from "./tidy"
-import { FieldDropdown } from "blockly"
-import { humanify } from "../../dom/utils"
+import { tidyHeaders, tidyResolveFieldColumn } from "./tidy"
+import { Block, FieldDropdown } from "blockly"
+import { humanify, unique } from "../../dom/utils"
 
 export interface DataColumnChooseOptions extends ReactFieldJSON {
     dataType?: "number" | "string"
     parentData?: boolean | number
+}
+
+export interface DataColumnChooseDeclareOptions {
+    prefix?: string
+    start?: number
+    dataType?: "string" | "boolean" | "number"
+}
+
+export function declareColumns(
+    count: number,
+    options?: DataColumnChooseDeclareOptions
+) {
+    const { prefix = "column", start = 1, dataType } = options || {}
+    return Array(count)
+        .fill(0)
+        .map((_, i) => ({
+            type: DataColumnChooserField.KEY,
+            name: `${prefix}${i + start}`,
+            dataType,
+        }))
+}
+
+export function resolveColumns(
+    data: object[],
+    b: Block,
+    count: number,
+    options?: DataColumnChooseDeclareOptions
+) {
+    const { prefix = "column", start = 1, dataType } = options || {}
+    const columns = unique(
+        Array(count)
+            .fill(0)
+            .map((_, column) =>
+                tidyResolveFieldColumn(data, b, `${prefix}${column + start}`, {
+                    type: dataType,
+                })
+            )
+            .filter(c => !!c)
+    )
+    return columns
 }
 
 export default class DataColumnChooserField extends FieldDropdown {

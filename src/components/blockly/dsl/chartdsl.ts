@@ -18,7 +18,7 @@ import {
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
 import DataColumnChooserField, {
-    DataColumnChooseOptions,
+    declareColumns,
 } from "../fields/DataColumnChooserField"
 import LinePlotField from "../fields/chart/LinePlotField"
 import BarChartField from "../fields/chart/BarField"
@@ -104,22 +104,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
             tooltip: "Displays the block data as a table",
             message0: "show table %1 %2 %3 %4 %5 %6",
             args0: [
-                {
-                    type: DataColumnChooserField.KEY,
-                    name: "column0",
-                },
-                {
-                    type: DataColumnChooserField.KEY,
-                    name: "column1",
-                },
-                {
-                    type: DataColumnChooserField.KEY,
-                    name: "column2",
-                },
-                {
-                    type: DataColumnChooserField.KEY,
-                    name: "column3",
-                },
+                ...declareColumns(4, { start: 0 }),
                 <DummyInputDefinition>{
                     type: "input_dummy",
                 },
@@ -385,26 +370,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
             tooltip: "Renders pairwize scatter plots",
             message0: "scatterplot matrix %1 %2 %3 %4 group %5 %6 %7",
             args0: [
-                <DataColumnChooseOptions>{
-                    type: DataColumnChooserField.KEY,
-                    name: "column0",
-                    dataType: "number",
-                },
-                <DataColumnChooseOptions>{
-                    type: DataColumnChooserField.KEY,
-                    name: "column1",
-                    dataType: "number",
-                },
-                <DataColumnChooseOptions>{
-                    type: DataColumnChooserField.KEY,
-                    name: "column2",
-                    dataType: "number",
-                },
-                <DataColumnChooseOptions>{
-                    type: DataColumnChooserField.KEY,
-                    name: "column3",
-                    dataType: "number",
-                },
+                ...declareColumns(4, { dataType: "number" }),
                 <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
                     name: "index",
@@ -712,7 +678,6 @@ export function blockToVisualizationSpec(
     // eslint-disable-next-line @typescript-eslint/ban-types
     data: object[]
 ): VisualizationSpec {
-    const { headers, types } = tidyHeaders(data)
     const mark: Mark = sourceBlock.getFieldValue("mark")
     const title: string = sourceBlock.getFieldValue("title")
     const spec = {

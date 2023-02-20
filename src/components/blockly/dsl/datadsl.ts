@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { Block } from "blockly"
-import DataColumnChooserField from "../fields/DataColumnChooserField"
+import DataColumnChooserField, {
+    declareColumns,
+    resolveColumns,
+} from "../fields/DataColumnChooserField"
 import {
     BlockDefinition,
     BlockReference,
     CategoryDefinition,
     DATA_SCIENCE_STATEMENT_TYPE,
-    identityTransformData,
     NumberInputDefinition,
     OptionsInputDefinition,
     TextInputDefinition,
@@ -55,7 +57,6 @@ const DATA_COUNT_BLOCK = "data_count"
 const DATA_BIN_BLOCK = "data_bin"
 const DATA_CORRELATION_BLOCK = "data_correlation"
 const DATA_LINEAR_REGRESSION_BLOCK = "data_linear_regression"
-const DATA_COMMENT_BLOCK = "data_comment_block"
 
 const [, operatorsColour, computeColour, statisticsColour] = palette()
 const dataDsl: BlockDomainSpecificLanguage = {
@@ -65,6 +66,8 @@ const dataDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_ARRANGE_BLOCK,
             message0: "sort %1 %2",
+            tooltip:
+                "Sorts the dataset based on the selected column and order.",
             colour: operatorsColour,
             args0: [
                 {
@@ -100,31 +103,15 @@ const dataDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: DATA_DROP_BLOCK,
-            message0: "drop %1 %2 %3",
+            message0: "drop %1 %2 %3 %4",
+            tooltip: "Removes the selected columns from the dataset",
             colour: operatorsColour,
-            args0: [
-                {
-                    type: DataColumnChooserField.KEY,
-                    name: "column1",
-                },
-                {
-                    type: DataColumnChooserField.KEY,
-                    name: "column2",
-                },
-                {
-                    type: DataColumnChooserField.KEY,
-                    name: "column3",
-                },
-            ],
+            args0: [...declareColumns(4, { start: 1 })],
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             dataPreviewField: true,
             transformData: (b: Block, data: object[]) => {
-                const columns = [1, 2, 3]
-                    .map(column =>
-                        tidyResolveFieldColumn(data, b, `column${column}`)
-                    )
-                    .filter(c => !!c)
+                const columns = resolveColumns(data, b, 4, { start: 1 })
                 if (!columns?.length) return Promise.resolve(data)
                 return postTransformData(<DataDropRequest>{
                     type: "drop",
@@ -137,34 +124,14 @@ const dataDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_SELECT_BLOCK,
             message0: "select %1 %2 %3 %4",
+            tooltip: "Keeps the selected columns and drops the others",
             colour: operatorsColour,
-            args0: [
-                {
-                    type: DataColumnChooserField.KEY,
-                    name: "column1",
-                },
-                {
-                    type: DataColumnChooserField.KEY,
-                    name: "column2",
-                },
-                {
-                    type: DataColumnChooserField.KEY,
-                    name: "column3",
-                },
-                {
-                    type: DataColumnChooserField.KEY,
-                    name: "column4",
-                },
-            ],
+            args0: [...declareColumns(4, { start: 1 })],
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             dataPreviewField: true,
             transformData: (b: Block, data: object[]) => {
-                const columns = [1, 2, 3, 4]
-                    .map(column =>
-                        tidyResolveFieldColumn(data, b, `column${column}`)
-                    )
-                    .filter(c => !!c)
+                const columns = resolveColumns(data, b, 4, { start: 1 })
                 if (!columns?.length) return Promise.resolve(data)
                 return postTransformData(<DataSelectRequest>{
                     type: "select",
@@ -177,6 +144,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_FILTER_COLUMNS_BLOCK,
             message0: "filter %1 %2 %3",
+            tooltip: "Selects the rows for which the condition evaluates true",
             colour: operatorsColour,
             args0: [
                 {
@@ -204,11 +172,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             dataPreviewField: true,
             transformData: (b: Block, data: object[]) => {
-                const columns = [1, 2]
-                    .map(column =>
-                        tidyResolveFieldColumn(data, b, `column${column}`)
-                    )
-                    .filter(c => !!c)
+                const columns = resolveColumns(data, b, 2, { start: 1 })
                 const logic = b.getFieldValue("logic")
                 if (columns.length !== 2) return Promise.resolve(data)
                 return postTransformData(<DataFilterColumnsRequest>{
@@ -223,6 +187,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_FILTER_STRING_BLOCK,
             message0: "filter %1 %2 %3",
+            tooltip: "Selects the rows for which the condition evaluates true",
             colour: operatorsColour,
             args0: [
                 {
@@ -269,6 +234,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_MUTATE_COLUMNS_BLOCK,
             message0: "compute column %1 as %2 %3 %4",
+            tooltip: "Adds a new column with the result of the computation.",
             colour: computeColour,
             args0: [
                 <TextInputDefinition>{
@@ -330,6 +296,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_MUTATE_NUMBER_BLOCK,
             message0: "compute column %1 as %2 %3 %4",
+            tooltip: "Adds a new column with the result of the computation.",
             colour: computeColour,
             args0: [
                 <TextInputDefinition>{
@@ -464,6 +431,8 @@ const dataDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_SLICE_BLOCK,
             message0: "take %1 rows from %2",
+            tooltip:
+                "Select N rows from the sample, from the head, tail or a random sample.",
             colour: operatorsColour,
             args0: [
                 <NumberInputDefinition>{
@@ -653,32 +622,6 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 })
             },
         },
-        {
-            kind: "block",
-            type: DATA_COMMENT_BLOCK,
-            message0: "comment %1 %2 %3",
-            args0: [
-                {
-                    type: DataPreviewField.KEY,
-                    name: "preview",
-                },
-                <DummyInputDefinition>{
-                    type: "input_dummy",
-                },
-                {
-                    type: "field_multilinetext",
-                    name: "text",
-                    text: "And then...",
-                    spellcheck: true,
-                },
-            ],
-            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            colour: operatorsColour,
-            inputsInline: false,
-            dataPreviewField: false,
-            transformData: identityTransformData,
-        },
     ],
     createCategory: () => [
         <CategoryDefinition>{
@@ -686,10 +629,6 @@ const dataDsl: BlockDomainSpecificLanguage = {
             name: "Organize",
             colour: operatorsColour,
             contents: [
-                /*<BlockReference>{
-                    kind: "block",
-                    type: DATA_COMMENT_BLOCK,
-                },*/
                 <BlockReference>{
                     kind: "block",
                     type: DATA_ARRANGE_BLOCK,
