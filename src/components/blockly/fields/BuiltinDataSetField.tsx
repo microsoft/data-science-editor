@@ -10,6 +10,7 @@ import { downloadCSV } from "../dsl/workers/csv.proxy"
 export const builtinDatasets = {
     Cereals: withPrefix("/datasets/cereal.csv"),
     Penguins: withPrefix("/datasets/penguins.csv"),
+    Iris: withPrefix("/datasets/iris.csv"),
 }
 
 export default class BuiltinDataSetField
