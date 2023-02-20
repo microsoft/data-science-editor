@@ -108,6 +108,7 @@ export default function DataTableWidget(props: {
     if (!raw?.length)
         return empty ? <span className={classes.empty}>{empty}</span> : null
 
+    const histogram = raw.length > 3
     const selectedColumns = selectColumns
         ? resolveColumns(data, sourceBlock, 4, { start: 0 })
         : []
@@ -194,16 +195,21 @@ export default function DataTableWidget(props: {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr key="charts">
-                                    {columns.map(c => (
-                                        <td key={c} className={classes.chart}>
-                                            <HistogramCell
-                                                transformed={transformed}
-                                                column={c}
-                                            />
-                                        </td>
-                                    ))}
-                                </tr>
+                                {histogram && (
+                                    <tr key="charts">
+                                        {columns.map(c => (
+                                            <td
+                                                key={c}
+                                                className={classes.chart}
+                                            >
+                                                <HistogramCell
+                                                    transformed={transformed}
+                                                    column={c}
+                                                />
+                                            </td>
+                                        ))}
+                                    </tr>
+                                )}
                                 {table.map((r, i) => (
                                     <tr key={r.id || i}>
                                         {columns.map(c => (
