@@ -8,6 +8,8 @@ import {
     CategoryDefinition,
     DATA_SCIENCE_STATEMENT_TYPE,
     identityTransformData,
+    LabelDefinition,
+    SeparatorDefinition,
     TextInputDefinition,
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
@@ -154,6 +156,13 @@ const dataSetDsl: BlockDomainSpecificLanguage = {
                 <BlockReference>{
                     kind: "block",
                     type: DATA_LOAD_URL_BLOCK,
+                },
+                <SeparatorDefinition>{
+                    kind: "sep",
+                },
+                <LabelDefinition>{
+                    kind: "label",
+                    text: "Files",
                 },
                 <BlockReference>{
                     kind: "block",
