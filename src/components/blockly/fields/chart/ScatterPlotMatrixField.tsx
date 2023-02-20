@@ -8,7 +8,7 @@ import VegaLiteWidget from "./VegaLiteWidget"
 import { tidyResolveHeader } from "../tidy"
 import { resolveColumns } from "../DataColumnChooserField"
 
-function PairsWidget() {
+function ScatterPlotMatrixWidget() {
     const { sourceBlock } = useContext(WorkspaceContext)
     const { data } = useBlockData(sourceBlock)
     const index = tidyResolveHeader(data, sourceBlock?.getFieldValue("index"))
@@ -47,12 +47,12 @@ function PairsWidget() {
     return <VegaLiteWidget spec={spec} renderer="canvas" />
 }
 
-export default class PairsField extends ReactInlineField {
-    static KEY = "ds_field_pairs_plot"
+export default class ScatterPlotMatrixField extends ReactInlineField {
+    static KEY = "ds_field_scatterplot_matrix_plot"
     EDITABLE = false
 
     static fromJson(options: ReactFieldJSON) {
-        return new PairsField(options)
+        return new ScatterPlotMatrixField(options)
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -61,6 +61,6 @@ export default class PairsField extends ReactInlineField {
     }
 
     renderInlineField() {
-        return <PairsWidget />
+        return <ScatterPlotMatrixWidget />
     }
 }
