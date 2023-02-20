@@ -7,9 +7,10 @@ import { TABLE_HEIGHT, TABLE_WIDTH } from "../toolbox"
 import { PointerBoundary } from "./PointerBoundary"
 import CopyButton from "../../ui/CopyButton"
 import { unparseCSV } from "../dsl/workers/csv.proxy"
-import { tidyHeaders, tidyResolveHeader } from "./tidy"
+import { tidyHeaders } from "./tidy"
 import { humanify, roundWithPrecision, toMap } from "../../dom/utils"
 import HistogramCell from "./chart/HistogramCell"
+import { resolveColumns } from "./DataColumnChooserField"
 
 const PREFIX = "DataTableWidget"
 
@@ -108,10 +109,7 @@ export default function DataTableWidget(props: {
         return empty ? <span className={classes.empty}>{empty}</span> : null
 
     const selectedColumns = selectColumns
-        ? [0, 1, 2, 3]
-              .map(i => `column${i}`)
-              .map(n => tidyResolveHeader(raw, sourceBlock?.getFieldValue(n)))
-              .filter(c => !!c)
+        ? resolveColumns(data, sourceBlock, 4, { start: 0 })
         : []
     const columns = selectedColumns.length
         ? selectedColumns
@@ -127,16 +125,6 @@ export default function DataTableWidget(props: {
                   ),
               ]
             : raw
-
-    // console.log({
-    //     raw,
-    //     transformed,
-    //     transformedData,
-    //     data,
-    //     table,
-    //     selectedColumns,
-    //     columns,
-    // })
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const renderCell = (v: any) =>

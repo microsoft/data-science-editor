@@ -10,8 +10,6 @@ import {
 } from "../tidy"
 import { BAR_CORNER_RADIUS } from "../../toolbox"
 
-const SUMMARY_SLICE = 5
-
 export default function HistogramCell(props: {
     column: string
     transformed: boolean
@@ -27,20 +25,21 @@ export default function HistogramCell(props: {
 
     if (type !== "number") {
         const n = raw.length
-        const slice = SUMMARY_SLICE
-        const counts = summarizeCounts(raw, column, slice)
+        const counts = summarizeCounts(raw, column, 3)
+        const vis = counts.slice(0, 2)
+        const nvis = vis.reduce((prev, curr) => prev + curr.count, 0)
+        const nvisp = vis.reduce(
+            (prev, curr) => prev + Math.ceil((curr.count / n) * 100),
+            0
+        )
         return (
             <table
                 style={{ width: "120px", fontSize: "0.7em", border: "none" }}
             >
-                {counts.map((props: any, i) => (
+                {vis.map((props: any, i) => (
                     <tr style={{ border: "none" }} key={i}>
                         <td style={{ padding: 0, border: "none" }}>
-                            {i + 1 === slice
-                                ? "..."
-                                : `${props.name} ${
-                                      props.count > 1 ? `(${props.count})` : ""
-                                  }`}
+                            {props.name}
                         </td>
                         <td
                             style={{
@@ -49,12 +48,26 @@ export default function HistogramCell(props: {
                                 textAlign: "right",
                             }}
                         >
-                            {i + 1 === slice
-                                ? "..."
-                                : Math.ceil((props.count / n) * 100) + "%"}
+                            {Math.ceil((props.count / n) * 100) + "%"}
                         </td>
                     </tr>
                 ))}
+                {nvis < n && (
+                    <tr>
+                        <td style={{ padding: 0, border: "none" }}>
+                            Others ({n - nvis})
+                        </td>
+                        <td
+                            style={{
+                                padding: 0,
+                                border: "none",
+                                textAlign: "right",
+                            }}
+                        >
+                            {Math.floor(100 - nvisp) + "%"}
+                        </td>
+                    </tr>
+                )}
             </table>
         )
     }

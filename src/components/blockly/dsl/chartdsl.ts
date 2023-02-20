@@ -17,7 +17,9 @@ import {
     StatementInputDefinition,
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
-import DataColumnChooserField from "../fields/DataColumnChooserField"
+import DataColumnChooserField, {
+    declareColumns,
+} from "../fields/DataColumnChooserField"
 import LinePlotField from "../fields/chart/LinePlotField"
 import BarChartField from "../fields/chart/BarField"
 import HistogramField from "../fields/chart/HistogramField"
@@ -33,12 +35,14 @@ import JSONSettingsField, {
     JSONSettingsInputDefinition,
 } from "../fields/JSONSettingsField"
 import HeatMapPlotField from "../fields/chart/HeatMapField"
-import { resolveBlockServices, setBlockDataWarning } from "../WorkspaceContext"
+import { resolveBlockServices } from "../WorkspaceContext"
+import ScatterPlotMatrixField from "../fields/chart/ScatterPlotMatrixField"
 
 const SCATTERPLOT_BLOCK = "chart_scatterplot"
 const LINEPLOT_BLOCK = "chart_lineplot"
 const HEATMAP_BLOCK = "chart_heatmap"
 const BARCHART_BLOCK = "chart_bar"
+const SCATTERPLOTMATRIX_BLOCK = "chart_scatterplot_matrix"
 const HISTOGRAM_BLOCK = "chart_histogram"
 const BOX_PLOT_BLOCK = "chart_box_plot"
 const CHART_SHOW_TABLE_BLOCK = "chart_show_table"
@@ -100,22 +104,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
             tooltip: "Displays the block data as a table",
             message0: "show table %1 %2 %3 %4 %5 %6",
             args0: [
-                {
-                    type: DataColumnChooserField.KEY,
-                    name: "column0",
-                },
-                {
-                    type: DataColumnChooserField.KEY,
-                    name: "column1",
-                },
-                {
-                    type: DataColumnChooserField.KEY,
-                    name: "column2",
-                },
-                {
-                    type: DataColumnChooserField.KEY,
-                    name: "column3",
-                },
+                ...declareColumns(4, { start: 0 }),
                 <DummyInputDefinition>{
                     type: "input_dummy",
                 },
@@ -375,6 +364,33 @@ const chartDsl: BlockDomainSpecificLanguage = {
             dataPreviewField: false,
             transformData: identityTransformData,
         },
+        <BlockDefinition>{
+            kind: "block",
+            type: SCATTERPLOTMATRIX_BLOCK,
+            tooltip: "Renders pairwize scatter plots",
+            message0: "scatterplot matrix %1 %2 %3 %4 group %5 %6 %7",
+            args0: [
+                ...declareColumns(4, { dataType: "number" }),
+                <DataColumnInputDefinition>{
+                    type: DataColumnChooserField.KEY,
+                    name: "index",
+                    dataType: "string",
+                },
+                <DummyInputDefinition>{
+                    type: "input_dummy",
+                },
+                {
+                    type: ScatterPlotMatrixField.KEY,
+                    name: "plot",
+                },
+            ],
+            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            colour,
+            inputsInline: false,
+            dataPreviewField: false,
+            transformData: identityTransformData,
+        },
         {
             kind: "block",
             type: VEGA_LAYER_BLOCK,
@@ -608,6 +624,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
                 <BlockReference>{ kind: "block", type: HISTOGRAM_BLOCK },
                 <BlockReference>{ kind: "block", type: BOX_PLOT_BLOCK },
                 <BlockReference>{ kind: "block", type: HEATMAP_BLOCK },
+                <BlockReference>{ kind: "block", type: SCATTERPLOTMATRIX_BLOCK },
                 <BlockReference>{ kind: "block", type: CHART_SHOW_TABLE_BLOCK },
                 <SeparatorDefinition>{
                     kind: "sep",
@@ -661,7 +678,6 @@ export function blockToVisualizationSpec(
     // eslint-disable-next-line @typescript-eslint/ban-types
     data: object[]
 ): VisualizationSpec {
-    const { headers, types } = tidyHeaders(data)
     const mark: Mark = sourceBlock.getFieldValue("mark")
     const title: string = sourceBlock.getFieldValue("title")
     const spec = {
