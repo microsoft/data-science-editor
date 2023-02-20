@@ -19,6 +19,8 @@ import dataVarDsl from "./dsl/datavardsl"
 import useChange from "../dom/useChange"
 import { UIFlags } from "../uiflags"
 import SplashDialog from "../ui/SplashDialog"
+import { Panel, PanelGroup } from "react-resizable-panels"
+import ResizeHandle from "../ui/ResizeHandle"
 
 const DS_EDITOR_ID = "ds"
 const DS_SOURCE_STORAGE_KEY = "editor"
@@ -78,7 +80,21 @@ export default function DSBlockEditor() {
                 storageKey={DS_SOURCE_STORAGE_KEY}
                 dsls={dsls}
             >
-                <DSEditorWithContext />
+                <div style={{ height: "100vh" }}>
+                    <PanelGroup
+                        direction="horizontal"
+                        disablePointerEventsDuringResize={true}
+                        onLayout={handleLayout}
+                    >
+                        <Panel>
+                            <div style={{ overflow: "auto", height: "100%" }}>
+                                <DSEditorWithContext />
+                            </div>
+                        </Panel>
+                        <ResizeHandle />
+                        <Panel collapsible={true}>hello</Panel>
+                    </PanelGroup>
+                </div>
                 <SplashDialog />
             </BlockProvider>
         </NoSsr>
