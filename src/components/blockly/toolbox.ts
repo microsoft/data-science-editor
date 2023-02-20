@@ -126,9 +126,11 @@ export const SCATTER_MAX_ITEMS = 1 << 13
 export const LINE_MAX_ITEMS = 1 << 10
 export const BAR_CORNER_RADIUS = 2
 
-export const TABLE_WIDTH = CHART_WIDTH
-export const TABLE_HEIGHT = 480
-export const SMALL_TABLE_HEIGHT = 136
+export const TABLE_WIDTH = `${CHART_WIDTH}px`
+export const FULL_TABLE_WIDTH = `${CHART_WIDTH * 2}px`
+export const TABLE_HEIGHT = `480px`
+export const PREVIEW_TABLE_HEIGHT = `295px`
+export const SMALL_TABLE_HEIGHT = `136px`
 export const TABLE_PREVIEW_MAX_ITEMS = 48
 
 export const JSON_WARNINGS_CATEGORY = "json"

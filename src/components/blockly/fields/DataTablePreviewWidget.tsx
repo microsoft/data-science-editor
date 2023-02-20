@@ -1,9 +1,15 @@
 import React, { useContext } from "react"
 import DataTableWidget from "./DataTableWidget"
-import { TABLE_PREVIEW_MAX_ITEMS, TABLE_WIDTH } from "../toolbox"
-import { Grid } from "@mui/material"
+import {
+    FULL_TABLE_WIDTH,
+    PREVIEW_TABLE_HEIGHT,
+    TABLE_PREVIEW_MAX_ITEMS,
+    TABLE_WIDTH,
+} from "../toolbox"
 import useBlockData from "../useBlockData"
 import WorkspaceContext from "../WorkspaceContext"
+import { Panel, PanelGroup } from "react-resizable-panels"
+import ResizeHandle from "../../ui/ResizeHandle"
 
 export default function DataTablePreviewWidget(props: { compare?: boolean }) {
     const { compare } = props
@@ -13,10 +19,10 @@ export default function DataTablePreviewWidget(props: { compare?: boolean }) {
     if (!compare)
         return (
             <DataTableWidget
-                tableHeight={295}
+                tableHeight={PREVIEW_TABLE_HEIGHT}
                 empty={"no data"}
                 transformed={false}
-                tableWidth={TABLE_WIDTH * 2}
+                tableWidth={FULL_TABLE_WIDTH}
                 maxItems={TABLE_PREVIEW_MAX_ITEMS}
             />
         )
@@ -24,8 +30,8 @@ export default function DataTablePreviewWidget(props: { compare?: boolean }) {
         return (
             <DataTableWidget
                 label="after"
-                tableHeight={295}
-                tableWidth={TABLE_WIDTH * 2}
+                tableHeight={PREVIEW_TABLE_HEIGHT}
+                tableWidth={FULL_TABLE_WIDTH}
                 empty={"no data"}
                 transformed={true}
                 maxItems={TABLE_PREVIEW_MAX_ITEMS}
@@ -33,26 +39,28 @@ export default function DataTablePreviewWidget(props: { compare?: boolean }) {
         )
     else
         return (
-            <Grid container spacing={1} style={{ background: "#fff" }}>
-                <Grid item xs={6}>
-                    <DataTableWidget
-                        label="before"
-                        tableHeight={295}
-                        tableWidth={TABLE_WIDTH}
-                        empty={"no data"}
-                        transformed={false}
-                        maxItems={TABLE_PREVIEW_MAX_ITEMS}
-                    />
-                </Grid>
-                <Grid item xs={6}>
-                    <DataTableWidget
-                        label="after"
-                        tableHeight={295}
-                        empty={"no data"}
-                        transformed={true}
-                        maxItems={TABLE_PREVIEW_MAX_ITEMS}
-                    />
-                </Grid>
-            </Grid>
+            <div style={{ background: "#fff" }}>
+                <PanelGroup direction="horizontal">
+                    <Panel>
+                        <DataTableWidget
+                            label="before"
+                            tableHeight={PREVIEW_TABLE_HEIGHT}
+                            empty={"no data"}
+                            transformed={false}
+                            maxItems={TABLE_PREVIEW_MAX_ITEMS}
+                        />
+                    </Panel>
+                    <ResizeHandle />
+                    <Panel>
+                        <DataTableWidget
+                            label="after"
+                            tableHeight={PREVIEW_TABLE_HEIGHT}
+                            empty={"no data"}
+                            transformed={true}
+                            maxItems={TABLE_PREVIEW_MAX_ITEMS}
+                        />
+                    </Panel>
+                </PanelGroup>
+            </div>
         )
 }
