@@ -25,9 +25,9 @@ function ScatterPlotMatrixWidget() {
             column: columns.reverse().slice(0),
         },
         spec: {
-            width: 72,
-            height: 72,
-            mark: "point",
+            width: 76,
+            height: 76,
+            mark: { type: "point", filled: true },
             encoding: {
                 x: {
                     field: { repeat: "column" },
