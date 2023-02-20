@@ -42,7 +42,7 @@ function PairsWidget() {
         },
     }
 
-    return <VegaLiteWidget spec={spec} />
+    return <VegaLiteWidget spec={spec} renderer="canvas" />
 }
 
 export default class PairsField extends ReactInlineField {
