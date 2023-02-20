@@ -129,6 +129,11 @@ export interface DataCorrelationRequest extends DataRequest {
     column2: string
 }
 
+export interface DataCorrelationMatrixRequest extends DataRequest {
+    type: "correlation_matrix"
+    columns: string[]
+}
+
 export interface DataLinearRegressionRequest extends DataRequest {
     type: "linear_regression"
     column1: string
@@ -405,6 +410,20 @@ const handlers: { [index: string]: (props: any) => object[] } = {
         const x = data.map(obj => obj[column1])
         const y = data.map(obj => obj[column2])
         return [{ correlation: sampleCorrelation(x, y).toFixed(3) }]
+    },
+    correlation_matrix: (props: DataCorrelationMatrixRequest) => {
+        const { data, columns } = props
+        if (columns?.length < 2) return data
+
+        const correlation: number[][] = columns.map(row =>
+            columns.map(column => {
+                const x = data.map(obj => obj[row])
+                const y = data.map(obj => obj[column])
+                return sampleCorrelation(x, y)
+            })
+        )
+
+        return [{ correlation }]
     },
     linear_regression: (props: DataCorrelationRequest) => {
         const { data, column1, column2 } = props
