@@ -81,3 +81,7 @@ export function JSONTryParse<T = unknown>(
         return defaultValue
     }
 }
+
+export function unique(values: string[]) {
+    return [...new Set(values)]
+}

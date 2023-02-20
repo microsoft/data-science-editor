@@ -50,6 +50,7 @@ export default function VegaLiteWidget(props: {
     hideChrome?: boolean
     chartWidth?: number
     charHeight?: number
+    renderer?: "svg" | "canvas"
 }) {
     const {
         spec,
@@ -58,6 +59,7 @@ export default function VegaLiteWidget(props: {
         hideChrome,
         chartWidth = CHART_WIDTH,
         charHeight = CHART_HEIGHT,
+        renderer
     } = props
     const { sourceBlock } = useContext(WorkspaceContext)
     const { data, transformedData } = useBlockData(sourceBlock)
@@ -129,8 +131,8 @@ export default function VegaLiteWidget(props: {
 
     if (!vegaData?.values?.length || !spec) return null
 
-    const renderer =
-        vegaData.values.length < CHART_SVG_MAX_ITEMS ? "svg" : "canvas"
+    const _renderer =
+        renderer || (vegaData.values.length < CHART_SVG_MAX_ITEMS ? "svg" : "canvas")
     const handleCopy = UIFlags.hosted
         ? undefined
         : async () => {
@@ -146,7 +148,7 @@ export default function VegaLiteWidget(props: {
             width={chartWidth}
             height={charHeight}
             spec={fullSpec}
-            renderer={renderer}
+            renderer={_renderer}
             tooltip={true}
             onNewView={handleNewView}
         />
