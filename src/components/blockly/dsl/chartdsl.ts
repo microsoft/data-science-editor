@@ -17,7 +17,9 @@ import {
     StatementInputDefinition,
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
-import DataColumnChooserField from "../fields/DataColumnChooserField"
+import DataColumnChooserField, {
+    DataColumnChooseOptions,
+} from "../fields/DataColumnChooserField"
 import LinePlotField from "../fields/chart/LinePlotField"
 import BarChartField from "../fields/chart/BarField"
 import HistogramField from "../fields/chart/HistogramField"
@@ -381,8 +383,28 @@ const chartDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: PAIRSCHART_BLOCK,
             tooltip: "Renders pairwize scatter plots",
-            message0: "scatterplot matrix group %1 %2 %3",
+            message0: "scatterplot matrix %1 %2 %3 %4 group %5 %6 %7",
             args0: [
+                <DataColumnChooseOptions>{
+                    type: DataColumnChooserField.KEY,
+                    name: "column0",
+                    dataType: "number",
+                },
+                <DataColumnChooseOptions>{
+                    type: DataColumnChooserField.KEY,
+                    name: "column1",
+                    dataType: "number",
+                },
+                <DataColumnChooseOptions>{
+                    type: DataColumnChooserField.KEY,
+                    name: "column2",
+                    dataType: "number",
+                },
+                <DataColumnChooseOptions>{
+                    type: DataColumnChooserField.KEY,
+                    name: "column3",
+                    dataType: "number",
+                },
                 <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
                     name: "index",

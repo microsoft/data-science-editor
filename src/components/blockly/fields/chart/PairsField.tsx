@@ -5,15 +5,22 @@ import ReactInlineField from "../ReactInlineField"
 import useBlockData from "../../useBlockData"
 import type { VisualizationSpec } from "react-vega"
 import VegaLiteWidget from "./VegaLiteWidget"
-import { tidyHeaders, tidyResolveHeader } from "../tidy"
+import { tidyResolveFieldColumn, tidyResolveHeader } from "../tidy"
 
 function PairsWidget() {
     const { sourceBlock } = useContext(WorkspaceContext)
     const { data } = useBlockData(sourceBlock)
     const index = tidyResolveHeader(data, sourceBlock?.getFieldValue("index"))
 
-    const { headers, types } = tidyHeaders(data)
-    const columns = headers.filter((h, i) => types[i] === "number")
+    const columns = [0, 1, 2, 3]
+        .map(column =>
+            tidyResolveFieldColumn(data, sourceBlock, `column${column}`, {
+                type: "number",
+            })
+        )
+        .filter(c => !!c)
+
+    if (columns.length < 3) return null
 
     const spec: VisualizationSpec = {
         width: 480,
