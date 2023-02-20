@@ -1,0 +1,82 @@
+import React, { useContext } from "react"
+import WorkspaceContext from "../../WorkspaceContext"
+import { ReactFieldJSON } from "../ReactField"
+import ReactInlineField from "../ReactInlineField"
+import useBlockData from "../../useBlockData"
+import type { VisualizationSpec } from "react-vega"
+import VegaLiteWidget from "./VegaLiteWidget"
+import { tidyHeaders, tidyResolveHeader } from "../tidy"
+
+function PairsWidget() {
+    const { sourceBlock } = useContext(WorkspaceContext)
+    const { data } = useBlockData(sourceBlock)
+    const index = tidyResolveHeader(data, sourceBlock?.getFieldValue("index"))
+
+    const { headers, types } = tidyHeaders(data)
+    const columns = headers.filter((h, i) => types[i] === "number")
+
+    const spec: VisualizationSpec = {
+        data: { name: "values" },
+        repeat: {
+            row: columns.slice(0),
+            column: columns.reverse().slice(0),
+        },
+        spec: {
+            mark: "point",
+            params: [
+                {
+                    name: "brush",
+                    select: {
+                        type: "interval",
+                        resolve: "union",
+                    },
+                },
+                {
+                    name: "grid",
+                    select: {
+                        type: "interval",
+                        resolve: "global",
+                    },
+                    bind: "scales",
+                },
+            ],
+            encoding: {
+                x: { field: { repeat: "column" }, type: "quantitative" },
+                y: {
+                    field: { repeat: "row" },
+                    type: "quantitative",
+                },
+                color: index
+                    ? {
+                          condition: {
+                              param: "brush",
+                              field: index,
+                              type: "nominal",
+                          },
+                          value: "grey",
+                      }
+                    : undefined,
+            },
+        },
+    }
+
+    return <VegaLiteWidget spec={spec} />
+}
+
+export default class PairsField extends ReactInlineField {
+    static KEY = "ds_field_pairs_plot"
+    EDITABLE = false
+
+    static fromJson(options: ReactFieldJSON) {
+        return new PairsField(options)
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    constructor(options?: any) {
+        super(options)
+    }
+
+    renderInlineField() {
+        return <PairsWidget />
+    }
+}

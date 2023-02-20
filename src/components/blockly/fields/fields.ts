@@ -12,6 +12,7 @@ import HistogramField from "./chart/HistogramField"
 import BoxPlotField from "./chart/BoxPlotField"
 import HeatMapPlotField from "./chart/HeatMapField"
 import VegaChartField from "./chart/VegaChartField"
+import PairsField from "./chart/PairsField"
 
 import FileSaveField from "./FileSaveField"
 import FileOpenField from "./FileOpenField"
@@ -48,6 +49,7 @@ export function registerFields() {
         HistogramField,
         BoxPlotField,
         HeatMapPlotField,
+        PairsField,
         VegaChartField,
 
         FileSaveField,

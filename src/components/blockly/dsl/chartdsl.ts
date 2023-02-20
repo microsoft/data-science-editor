@@ -33,12 +33,14 @@ import JSONSettingsField, {
     JSONSettingsInputDefinition,
 } from "../fields/JSONSettingsField"
 import HeatMapPlotField from "../fields/chart/HeatMapField"
-import { resolveBlockServices, setBlockDataWarning } from "../WorkspaceContext"
+import { resolveBlockServices } from "../WorkspaceContext"
+import PairsField from "../fields/chart/PairsField"
 
 const SCATTERPLOT_BLOCK = "chart_scatterplot"
 const LINEPLOT_BLOCK = "chart_lineplot"
 const HEATMAP_BLOCK = "chart_heatmap"
 const BARCHART_BLOCK = "chart_bar"
+const PAIRSCHART_BLOCK = "chart_pairs"
 const HISTOGRAM_BLOCK = "chart_histogram"
 const BOX_PLOT_BLOCK = "chart_box_plot"
 const CHART_SHOW_TABLE_BLOCK = "chart_show_table"
@@ -375,6 +377,32 @@ const chartDsl: BlockDomainSpecificLanguage = {
             dataPreviewField: false,
             transformData: identityTransformData,
         },
+        <BlockDefinition>{
+            kind: "block",
+            type: PAIRSCHART_BLOCK,
+            tooltip: "Renders pairwize scatter plots",
+            message0: "scatter pairs color by %1 %2 %3",
+            args0: [
+                <DataColumnInputDefinition>{
+                    type: DataColumnChooserField.KEY,
+                    name: "index",
+                    dataType: "string",
+                },
+                <DummyInputDefinition>{
+                    type: "input_dummy",
+                },
+                {
+                    type: PairsField.KEY,
+                    name: "plot",
+                },
+            ],
+            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            colour,
+            inputsInline: false,
+            dataPreviewField: false,
+            transformData: identityTransformData,
+        },
         {
             kind: "block",
             type: VEGA_LAYER_BLOCK,
@@ -608,6 +636,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
                 <BlockReference>{ kind: "block", type: HISTOGRAM_BLOCK },
                 <BlockReference>{ kind: "block", type: BOX_PLOT_BLOCK },
                 <BlockReference>{ kind: "block", type: HEATMAP_BLOCK },
+                <BlockReference>{ kind: "block", type: PAIRSCHART_BLOCK },
                 <BlockReference>{ kind: "block", type: CHART_SHOW_TABLE_BLOCK },
                 <SeparatorDefinition>{
                     kind: "sep",
