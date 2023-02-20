@@ -16,46 +16,28 @@ function PairsWidget() {
     const columns = headers.filter((h, i) => types[i] === "number")
 
     const spec: VisualizationSpec = {
+        width: 480,
         data: { name: "values" },
         repeat: {
             row: columns.slice(0),
             column: columns.reverse().slice(0),
         },
         spec: {
+            width: 72,
+            height: 72,
             mark: "point",
-            params: [
-                {
-                    name: "brush",
-                    select: {
-                        type: "interval",
-                        resolve: "union",
-                    },
-                },
-                {
-                    name: "grid",
-                    select: {
-                        type: "interval",
-                        resolve: "global",
-                    },
-                    bind: "scales",
-                },
-            ],
             encoding: {
-                x: { field: { repeat: "column" }, type: "quantitative" },
+                x: {
+                    field: { repeat: "column" },
+                    type: "quantitative",
+                    scale: { zero: false },
+                },
                 y: {
                     field: { repeat: "row" },
                     type: "quantitative",
+                    scale: { zero: false },
                 },
-                color: index
-                    ? {
-                          condition: {
-                              param: "brush",
-                              field: index,
-                              type: "nominal",
-                          },
-                          value: "grey",
-                      }
-                    : undefined,
+                color: index ? { field: index, type: "nominal" } : undefined,
             },
         },
     }
