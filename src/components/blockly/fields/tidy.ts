@@ -63,14 +63,10 @@ export function tidyResolveHeader(
     return headers.indexOf(name) > -1 ? name : undefined
 }
 
-export function tidyResolveHeaderType(
-    data: object[],
-    name: string,
-    type?: "string" | "number" | "boolean"
-) {
+export function tidyResolveHeaderType(data: object[], name: string) {
     if (!data || !name) return undefined
 
-    const { headers, types } = tidyHeaders(data, type)
+    const { headers, types } = tidyHeaders(data)
     return types[headers.indexOf(name)]
 }
 
