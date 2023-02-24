@@ -33,7 +33,8 @@ function tryUpdate(force) {
                     version &&
                     version.sha &&
                     window.analytics &&
-                    version.sha !== window.analytics.sha
+                    version.sha !== window.analytics.sha &&
+                    window.self === window.top // don't auto-refresh hosted
                 ) {
                     console.warn(
                         `web app updated ${version.sha} !== ${window.analytics.sha}`
