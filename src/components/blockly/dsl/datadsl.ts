@@ -186,6 +186,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     type === "number" ? nv : type === "boolean" ? bv : rhs
                 return postTransformData(<DataReplaceNullyRequest>{
                     type: "replace_nully",
+                    data,
                     replacements: {
                         [column]: v,
                     },
