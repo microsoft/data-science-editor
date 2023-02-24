@@ -32,11 +32,13 @@ import type {
     DataBinRequest,
     DataCorrelationRequest,
     DataLinearRegressionRequest,
+    DataReplaceNullyRequest,
 } from "../../../workers/data/dist/node_modules/data.worker"
 import palette from "./palette"
 import {
     tidyResolveFieldColumn,
     tidyResolveFieldColumns,
+    tidyResolveHeaderType,
     tidySlice,
 } from "../fields/tidy"
 import DataTableField from "../fields/DataTableField"
@@ -50,6 +52,7 @@ const DATA_FILTER_COLUMNS_BLOCK = "data_filter_columns"
 const DATA_FILTER_STRING_BLOCK = "data_filter_string"
 const DATA_MUTATE_COLUMNS_BLOCK = "data_mutate_columns"
 const DATA_MUTATE_NUMBER_BLOCK = "data_mutate_number"
+const DATA_REPLACE_NULLY_BLOCK = "data_replace_nully"
 const DATA_SLICE_BLOCK = "data_slice"
 const DATA_SUMMARIZE_BLOCK = "data_summarize"
 const DATA_SUMMARIZE_BY_GROUP_BLOCK = "data_summarize_by_group"
@@ -137,6 +140,55 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     type: "select",
                     columns,
                     data,
+                })
+            },
+        },
+        {
+            kind: "block",
+            type: DATA_REPLACE_NULLY_BLOCK,
+            message0: "replace missing %1 with %2 of type %3",
+            tooltip: "Fills missing data cells with the given value.",
+            colour: operatorsColour,
+            args0: [
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "column",
+                },
+                <TextInputDefinition>{
+                    type: "field_input",
+                    name: "rhs",
+                    spellcheck: false,
+                    text: "0",
+                },
+                <OptionsInputDefinition>{
+                    type: "field_dropdown",
+                    name: "type",
+                    options: [
+                        ["number", "number"],
+                        ["boolean (yes/no, true/fales, 1/0)", "boolean"],
+                        ["string", "string"],
+                    ],
+                },
+            ],
+            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            dataPreviewField: true,
+            transformData: (b: Block, data: object[]) => {
+                const column = tidyResolveFieldColumn(data, b, "column")
+                const rhs = b.getFieldValue("rhs")
+                if (!column) return Promise.resolve(data)
+                const type = b.getFieldValue("type") || tidyResolveHeaderType(data, rhs)
+                const iv = parseInt(rhs)
+                const fv = parseFloat(rhs)
+                const nv = isNaN(iv) ? fv : iv
+                const bv = rhs === "true" || rhs === "yes" || !!rhs
+                const v =
+                    type === "number" ? nv : type === "boolean" ? bv : rhs
+                return postTransformData(<DataReplaceNullyRequest>{
+                    type: "replace_nully",
+                    replacements: {
+                        [column]: v,
+                    },
                 })
             },
         },
@@ -652,6 +704,10 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 <BlockReference>{
                     kind: "block",
                     type: DATA_SLICE_BLOCK,
+                },
+                <BlockReference>{
+                    kind: "block",
+                    type: DATA_REPLACE_NULLY_BLOCK,
                 },
             ],
         },

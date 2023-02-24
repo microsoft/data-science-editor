@@ -1,7 +1,6 @@
 import { Block, Workspace } from "blockly"
 import { CHANGE } from "../../dom/constants"
 import { inIFrame } from "../../dom/utils"
-import type { DataSliceOptions } from "../../../workers/data/dist/node_modules/data.worker"
 import { workspaceToJSON } from "../jsongenerator"
 import {
     BlockDataSet,

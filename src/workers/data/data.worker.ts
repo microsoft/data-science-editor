@@ -24,6 +24,7 @@ import {
     mutateWithSummary,
     mean,
     roll,
+    replaceNully,
 } from "@tidyjs/tidy"
 import { bin } from "d3-array"
 import { sampleCorrelation, linearRegression } from "simple-statistics"
@@ -134,7 +135,10 @@ export interface DataLinearRegressionRequest extends DataRequest {
     column1: string
     column2: string
 }
-
+export interface DataReplaceNullyRequest extends DataRequest {
+    type: "replace_nully"
+    replacements: Record<string, string | number | boolean>
+}
 export interface DataSliceOptions {
     sliceHead?: number
     sliceTail?: number
@@ -416,6 +420,11 @@ const handlers: { [index: string]: (props: any) => object[] } = {
         return [
             { slope: linregmb.m.toFixed(3), intercept: linregmb.b.toFixed(3) },
         ]
+    },
+    replace_nully: (props: DataReplaceNullyRequest) => {
+        const { data, replacements } = props
+        const res = tidy(data, replaceNully(replacements))
+        return res
     },
     slice: (props: DataSliceRequest) => {
         const { data } = props
