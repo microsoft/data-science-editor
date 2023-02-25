@@ -61,7 +61,7 @@ const DATA_BIN_BLOCK = "data_bin"
 const DATA_CORRELATION_BLOCK = "data_correlation"
 const DATA_LINEAR_REGRESSION_BLOCK = "data_linear_regression"
 
-const [, operatorsColour, computeColour, statisticsColour, cleaningColour] =
+const [, operatorsColour, computeColour, statisticsColour, , cleaningColour] =
     palette()
 const dataDsl: BlockDomainSpecificLanguage = {
     id: "dataScience",
