@@ -33,6 +33,7 @@ import type {
     DataCorrelationRequest,
     DataLinearRegressionRequest,
     DataReplaceNullyRequest,
+    DataRenameRequest,
 } from "../../../workers/data/dist/node_modules/data.worker"
 import palette from "./palette"
 import {
@@ -48,6 +49,7 @@ import ScatterPlotField from "../fields/chart/ScatterPlotField"
 const DATA_ARRANGE_BLOCK = "data_arrange"
 const DATA_SELECT_BLOCK = "data_select"
 const DATA_DROP_BLOCK = "data_drop"
+const DATA_RENAME_COLUMN_BLOCK = "data_rename_column_block"
 const DATA_FILTER_COLUMNS_BLOCK = "data_filter_columns"
 const DATA_FILTER_STRING_BLOCK = "data_filter_string"
 const DATA_MUTATE_COLUMNS_BLOCK = "data_mutate_columns"
@@ -109,7 +111,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             type: DATA_DROP_BLOCK,
             message0: "drop %1 %2 %3 %4",
             tooltip: "Removes the selected columns from the dataset",
-            colour: operatorsColour,
+            colour: cleaningColour,
             args0: [...declareColumns(4, { start: 1 })],
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
@@ -120,6 +122,36 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 return postTransformData(<DataDropRequest>{
                     type: "drop",
                     columns,
+                    data,
+                })
+            },
+        },
+        {
+            kind: "block",
+            type: DATA_RENAME_COLUMN_BLOCK,
+            message0: "rename %1 to %2",
+            tooltip: "Rename a columne",
+            colour: cleaningColour,
+            args0: [
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "column",
+                },
+                <TextInputDefinition>{
+                    type: "field_input",
+                    name: "name",
+                },
+            ],
+            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            dataPreviewField: true,
+            transformData: (b: Block, data: object[]) => {
+                const column = tidyResolveFieldColumn(data, b, "column")
+                const name = b.getFieldValue("name")
+                if (!column || !name) return Promise.resolve(data)
+                return postTransformData(<DataRenameRequest>{
+                    type: "rename",
+                    names: { [column]: name },
                     data,
                 })
             },
@@ -693,10 +725,6 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 },
                 <BlockReference>{
                     kind: "block",
-                    type: DATA_DROP_BLOCK,
-                },
-                <BlockReference>{
-                    kind: "block",
                     type: DATA_FILTER_COLUMNS_BLOCK,
                 },
                 <BlockReference>{
@@ -706,10 +734,6 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 <BlockReference>{
                     kind: "block",
                     type: DATA_SLICE_BLOCK,
-                },
-                <BlockReference>{
-                    kind: "block",
-                    type: DATA_REPLACE_NULLY_BLOCK,
                 },
             ],
         },
@@ -767,6 +791,14 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 <BlockReference>{
                     kind: "block",
                     type: DATA_REPLACE_NULLY_BLOCK,
+                },
+                <BlockReference>{
+                    kind: "block",
+                    type: DATA_DROP_BLOCK,
+                },
+                <BlockReference>{
+                    kind: "block",
+                    type: DATA_RENAME_COLUMN_BLOCK,
                 },
             ],
         },

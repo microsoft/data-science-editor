@@ -25,6 +25,7 @@ import {
     mean,
     roll,
     replaceNully,
+    rename,
 } from "@tidyjs/tidy"
 import { bin } from "d3-array"
 import { sampleCorrelation, linearRegression } from "simple-statistics"
@@ -76,6 +77,11 @@ export interface DataFilterStringRequest extends DataRequest {
     column: string
     logic: string
     rhs: string
+}
+
+export interface DataRenameRequest extends DataRequest {
+    type: "rename"
+    names: Record<string, string>
 }
 
 export interface DataMutateColumnsRequest extends DataRequest {
@@ -424,6 +430,11 @@ const handlers: { [index: string]: (props: any) => object[] } = {
     replace_nully: (props: DataReplaceNullyRequest) => {
         const { data, replacements } = props
         const res = tidy(data, replaceNully(replacements))
+        return res
+    },
+    rename: (props: DataRenameRequest) => {
+        const { data, names } = props
+        const res = tidy(data, rename(names))
         return res
     },
     slice: (props: DataSliceRequest) => {
