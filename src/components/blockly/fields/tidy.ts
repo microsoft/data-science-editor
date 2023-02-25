@@ -1,12 +1,10 @@
 import {
     arrange,
-    count,
     desc,
     first,
     groupBy,
     n,
     sliceHead,
-    sliceMax,
     summarize,
     SummarizeSpec,
     tidy,

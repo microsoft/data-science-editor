@@ -59,7 +59,7 @@ export default function VegaLiteWidget(props: {
         hideChrome,
         chartWidth = CHART_WIDTH,
         charHeight = CHART_HEIGHT,
-        renderer
+        renderer,
     } = props
     const { sourceBlock } = useContext(WorkspaceContext)
     const { data, transformedData } = useBlockData(sourceBlock)
@@ -78,26 +78,28 @@ export default function VegaLiteWidget(props: {
 
     const fullSpec: VegaLiteChart = useMemo(() => {
         const s = clone(spec)
-        if (s.encoding)
-            Object.values(s.encoding)
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                .filter((e: any) => !e.title)
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                .forEach((e: any) => (e.title = humanify(e.field)))
-        jsonMergeFrom(s, settings)
-        if (
-            Object.values(s.encoding || {}).some(
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (encoding: any) =>
-                    encoding?.scale?.domainMin !== undefined ||
-                    encoding?.scale?.domainMax !== undefined
-            )
-        ) {
-            s.mark.clip = true
-        }
+        const specs = [...(s.layer || []), s.spec, s].filter(sp => !!sp)
+        specs.forEach(s => {
+            if (s.encoding)
+                Object.values(s.encoding)
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    .filter((e: any) => !e.title && typeof e.field === "string")
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    .forEach((e: any) => (e.title = humanify(e.field)))
+            jsonMergeFrom(s, settings)
+            if (
+                Object.values(s.encoding || {}).some(
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    (encoding: any) =>
+                        encoding?.scale?.domainMin !== undefined ||
+                        encoding?.scale?.domainMax !== undefined
+                )
+            ) {
+                s.mark.clip = true
+            }
+        })
 
         if (group) {
-            const specs = s.layer || [s]
             specs
                 .filter(s => s.encoding)
                 .forEach(s => {
@@ -132,7 +134,8 @@ export default function VegaLiteWidget(props: {
     if (!vegaData?.values?.length || !spec) return null
 
     const _renderer =
-        renderer || (vegaData.values.length < CHART_SVG_MAX_ITEMS ? "svg" : "canvas")
+        renderer ||
+        (vegaData.values.length < CHART_SVG_MAX_ITEMS ? "svg" : "canvas")
     const handleCopy = UIFlags.hosted
         ? undefined
         : async () => {

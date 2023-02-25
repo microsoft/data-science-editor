@@ -11,6 +11,7 @@ import {
     DATA_SCIENCE_STATEMENT_TYPE,
     DummyInputDefinition,
     identityTransformData,
+    InputDefinition,
     LabelDefinition,
     OptionsInputDefinition,
     SeparatorDefinition,
@@ -125,18 +126,15 @@ const chartDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: SCATTERPLOT_BLOCK,
             tooltip: "Renders the block data in a scatter plot",
-            message0: "scatterplot of x %1 y %2 size %3 group %4 %5 %6 %7",
-            args0: [
+            message0:
+                "scatterplot of x %1 y %2 %3 %4 size %5 group %6 %7 %8 %9",
+            args0: <InputDefinition[]>[
                 <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
                     name: "x",
                     dataType: "number",
                 },
-                <DataColumnInputDefinition>{
-                    type: DataColumnChooserField.KEY,
-                    name: "y",
-                    dataType: "number",
-                },
+                ...declareColumns(3, { prefix: "y", dataType: "number" }),
                 <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
                     name: "size",
@@ -157,6 +155,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
                 {
                     type: ScatterPlotField.KEY,
                     name: "plot",
+                    ysLength: 3,
                 },
             ],
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
@@ -624,7 +623,10 @@ const chartDsl: BlockDomainSpecificLanguage = {
                 <BlockReference>{ kind: "block", type: HISTOGRAM_BLOCK },
                 <BlockReference>{ kind: "block", type: BOX_PLOT_BLOCK },
                 <BlockReference>{ kind: "block", type: HEATMAP_BLOCK },
-                <BlockReference>{ kind: "block", type: SCATTERPLOTMATRIX_BLOCK },
+                <BlockReference>{
+                    kind: "block",
+                    type: SCATTERPLOTMATRIX_BLOCK,
+                },
                 <BlockReference>{ kind: "block", type: CHART_SHOW_TABLE_BLOCK },
                 <SeparatorDefinition>{
                     kind: "sep",
