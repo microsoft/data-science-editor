@@ -61,7 +61,8 @@ const DATA_BIN_BLOCK = "data_bin"
 const DATA_CORRELATION_BLOCK = "data_correlation"
 const DATA_LINEAR_REGRESSION_BLOCK = "data_linear_regression"
 
-const [, operatorsColour, computeColour, statisticsColour] = palette()
+const [, operatorsColour, computeColour, statisticsColour, cleaningColour] =
+    palette()
 const dataDsl: BlockDomainSpecificLanguage = {
     id: "dataScience",
     createBlocks: () => [
@@ -148,7 +149,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             type: DATA_REPLACE_NULLY_BLOCK,
             message0: "replace missing %1 with %2 of type %3",
             tooltip: "Fills missing data cells with the given value.",
-            colour: operatorsColour,
+            colour: cleaningColour,
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
@@ -177,13 +178,13 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 const column = tidyResolveFieldColumn(data, b, "column")
                 const rhs = b.getFieldValue("rhs")
                 if (!column) return Promise.resolve(data)
-                const type = b.getFieldValue("type") || tidyResolveHeaderType(data, rhs)
+                const type =
+                    b.getFieldValue("type") || tidyResolveHeaderType(data, rhs)
                 const iv = parseInt(rhs)
                 const fv = parseFloat(rhs)
                 const nv = isNaN(iv) ? fv : iv
                 const bv = rhs === "true" || rhs === "yes" || !!rhs
-                const v =
-                    type === "number" ? nv : type === "boolean" ? bv : rhs
+                const v = type === "number" ? nv : type === "boolean" ? bv : rhs
                 return postTransformData(<DataReplaceNullyRequest>{
                     type: "replace_nully",
                     data,
@@ -755,6 +756,17 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 <BlockReference>{
                     kind: "block",
                     type: DATA_LINEAR_REGRESSION_BLOCK,
+                },
+            ],
+        },
+        <CategoryDefinition>{
+            kind: "category",
+            name: "Cleanup",
+            colour: cleaningColour,
+            contents: [
+                <BlockReference>{
+                    kind: "block",
+                    type: DATA_REPLACE_NULLY_BLOCK,
                 },
             ],
         },
