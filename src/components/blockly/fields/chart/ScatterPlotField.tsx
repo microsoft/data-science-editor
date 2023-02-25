@@ -103,9 +103,13 @@ function ScatterPlotWidget(props: {
     }
     spec.data = { name: "values" }
 
-    console.log({ spec, ysLength })
-
-    return <VegaLiteWidget spec={spec} slice={sliceOptions} />
+    return (
+        <VegaLiteWidget
+            renderer={ys.length > 1 ? "canvas" : undefined}
+            spec={spec}
+            slice={sliceOptions}
+        />
+    )
 }
 
 export interface ScatterPlotFieldProps {

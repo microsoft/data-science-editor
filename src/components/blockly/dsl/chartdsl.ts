@@ -618,8 +618,8 @@ const chartDsl: BlockDomainSpecificLanguage = {
             name: "Charts",
             contents: [
                 <BlockReference>{ kind: "block", type: SCATTERPLOT_BLOCK },
-                <BlockReference>{ kind: "block", type: LINEPLOT_BLOCK },
                 <BlockReference>{ kind: "block", type: BARCHART_BLOCK },
+                <BlockReference>{ kind: "block", type: LINEPLOT_BLOCK },
                 <BlockReference>{ kind: "block", type: HISTOGRAM_BLOCK },
                 <BlockReference>{ kind: "block", type: BOX_PLOT_BLOCK },
                 <BlockReference>{ kind: "block", type: HEATMAP_BLOCK },
