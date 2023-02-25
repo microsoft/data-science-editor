@@ -7,24 +7,35 @@ import VegaLiteWidget from "./VegaLiteWidget"
 import { tidyResolveHeader } from "../tidy"
 import { SCATTER_MAX_ITEMS } from "../../toolbox"
 import { humanify } from "../../../dom/utils"
+import { resolveColumns } from "../DataColumnChooserField"
 
-function ScatterPlotWidget(props: { linearRegression?: boolean }) {
-    const { linearRegression } = props
+function ScatterPlotWidget(props: {
+    linearRegression?: boolean
+    ysLength?: number
+}) {
+    const { linearRegression, ysLength = 1 } = props
     const { sourceBlock } = useContext(WorkspaceContext)
     const { data, transformedData } = useBlockData(sourceBlock)
     const x = tidyResolveHeader(data, sourceBlock?.getFieldValue("x"), "number")
-    const y = tidyResolveHeader(data, sourceBlock?.getFieldValue("y"), "number")
+    const ys = resolveColumns(data, sourceBlock, ysLength, {
+        prefix: "y",
+        dataType: "number",
+    })
+
     const size = tidyResolveHeader(
         data,
         sourceBlock?.getFieldValue("size"),
         "number"
     )
 
-    if (!x || !y) return null
+    if (!x || !ys?.length) return null
 
     const sliceOptions = {
         sliceSample: SCATTER_MAX_ITEMS,
     }
+
+    const y = ys.length > 1 ? { repeat: "repeat" } : ys[0]
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let spec: any = {
         mark: { type: "point", filled: true, tooltip: true },
@@ -37,12 +48,13 @@ function ScatterPlotWidget(props: { linearRegression?: boolean }) {
             },
             y: {
                 field: y,
-                title: humanify(y),
                 type: "quantitative",
                 scale: { zero: false },
             },
         },
     }
+    if (ys.length === 1) spec.encoding.y.title = humanify(ys[0])
+
     if (size)
         spec.encoding.size = {
             field: size,
@@ -50,7 +62,12 @@ function ScatterPlotWidget(props: { linearRegression?: boolean }) {
             scale: { zero: false },
         }
 
-    if (linearRegression) {
+    if (ys.length > 1) {
+        spec = {
+            repeat: ys,
+            spec,
+        }
+    } else if (linearRegression) {
         const { slope, intercept } = (transformedData?.[0] || {}) as any
         spec = {
             title:
@@ -86,17 +103,25 @@ function ScatterPlotWidget(props: { linearRegression?: boolean }) {
     }
     spec.data = { name: "values" }
 
-    return <VegaLiteWidget spec={spec} slice={sliceOptions} />
+    return (
+        <VegaLiteWidget
+            renderer={ys.length > 1 ? "canvas" : undefined}
+            spec={spec}
+            slice={sliceOptions}
+        />
+    )
 }
 
 export interface ScatterPlotFieldProps {
     linearRegression?: boolean
+    ysLength?: number
 }
 
 export default class ScatterPlotField extends ReactInlineField {
     static KEY = "ds_field_scatter_plot"
     EDITABLE = false
     linearRegression: boolean
+    ysLength: number
 
     static fromJson(options: ReactFieldJSON) {
         return new ScatterPlotField(options)
@@ -106,9 +131,15 @@ export default class ScatterPlotField extends ReactInlineField {
     constructor(options?: ScatterPlotFieldProps) {
         super(options)
         this.linearRegression = !!options?.linearRegression
+        this.ysLength = options?.ysLength ?? 1
     }
 
     renderInlineField() {
-        return <ScatterPlotWidget linearRegression={this.linearRegression} />
+        return (
+            <ScatterPlotWidget
+                linearRegression={this.linearRegression}
+                ysLength={this.ysLength}
+            />
+        )
     }
 }
