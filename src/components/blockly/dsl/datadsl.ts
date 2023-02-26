@@ -236,7 +236,12 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 const iv = parseInt(rhs)
                 const fv = parseFloat(rhs)
                 const nv = isNaN(iv) ? fv : iv
-                const v = type === "number" ? nv : rhs
+                const v =
+                    type === "number"
+                        ? nv
+                        : type === "boolean"
+                        ? Boolean(rhs)
+                        : rhs
                 return postTransformData(<DataReplaceNullyRequest>{
                     type: "replace_nully",
                     data,

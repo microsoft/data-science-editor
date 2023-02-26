@@ -26,4 +26,4 @@ export const TRACE = "trace"
 export const TIMEOUT = "timeout"
 export const TIMEOUT_DISCONNECT = "timeoutDisconnect"
 
-export type DataType = "string" | "number"
+export type DataType = "string" | "number" | "boolean"
