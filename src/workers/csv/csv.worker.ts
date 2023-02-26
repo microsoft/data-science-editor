@@ -105,8 +105,23 @@ const handlers: { [index: string]: (msg: CsvRequest) => Promise<object> } = {
                 dynamicTyping: true,
                 skipEmptyLines: true,
                 comments: "#",
-                transformHeader: (h: string) => h.trim().toLocaleLowerCase(),
-                complete: (r: CsvFile) => resolve({ file: r }),
+                transformHeader: (h: string) =>
+                    h
+                        .trim()
+                        .replace(/[.]/g, "")
+                        .replace(/(-|_)/g, " ")
+                        .toLocaleLowerCase(),
+                complete: (r: CsvFile) => {
+                    // convert booleans to 0,1
+                    if (r.data)
+                        r.data.forEach(row =>
+                            Object.keys(row).forEach(k => {
+                                const v = row[k]
+                                if (typeof v === "boolean") row[k] = v ? 1 : 0
+                            })
+                        )
+                    resolve({ file: r })
+                },
             })
         })
     },

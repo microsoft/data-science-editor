@@ -14,20 +14,16 @@ import type {
     DataSliceOptions,
     DataSliceRequest,
 } from "../../../workers/data/dist/node_modules/data.worker"
+import { DataType } from "../../dom/constants"
 import postTransformData from "../dsl/workers/data.proxy"
 import { setBlockDataWarning } from "../WorkspaceContext"
 
 /* eslint-disable @typescript-eslint/ban-types */
-export function tidyHeaders(
-    data: object[],
-    type?: "string" | "number" | "boolean"
-) {
+export function tidyHeaders(data: object[], type?: DataType) {
     const row = data?.[0] || {}
     let headers = Object.keys(row)
     if (type) headers = headers.filter(header => type === typeof row[header])
-    const types: ("string" | "number" | "boolean")[] = headers.map(
-        header => typeof row[header]
-    ) as any
+    const types: DataType[] = headers.map(header => typeof row[header]) as any
     return { headers, types }
 }
 
@@ -53,7 +49,7 @@ export function tidyFindLastValue(data: object[], column: string) {
 export function tidyResolveHeader(
     data: object[],
     name: string,
-    type?: "string" | "number" | "boolean"
+    type?: DataType
 ) {
     if (!data || !name) return undefined
 
@@ -73,7 +69,7 @@ export function tidyResolveFieldColumn(
     b: Block,
     fieldName: string,
     options?: {
-        type?: "string" | "number" | "boolean"
+        type?: DataType
         required?: boolean
     }
 ) {
@@ -98,7 +94,7 @@ export function tidyResolveFieldColumns(
     data: object[],
     b: Block,
     fieldName: string,
-    type?: "string" | "number" | "boolean"
+    type?: DataType
 ): string[] {
     const name = b.getFieldValue(fieldName)
     if (!name) return tidyHeaders(data, type)?.headers

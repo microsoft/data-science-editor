@@ -1,6 +1,7 @@
 import Blockly, { Block, Workspace } from "blockly"
 import { BlockWithServices } from "./WorkspaceContext"
 import { JSONSchema4 } from "json-schema"
+import { DataType } from "../dom/constants"
 
 export const NEW_PROJET_XML = '<xml xmlns="http://www.w3.org/1999/xhtml"></xml>'
 
@@ -58,7 +59,7 @@ export interface ColorInputDefinition extends InputDefinition {
 }
 
 export interface DataColumnInputDefinition extends InputDefinition {
-    dataType?: "string" | "number" | "boolean"
+    dataType?: DataType
     parentData?: boolean | number
 }
 
@@ -108,9 +109,6 @@ export const STRING_TYPE = "String"
 export const BOOLEAN_TYPE = "Boolean"
 export const NUMBER_TYPE = "Number"
 export const DATA_TABLE_TYPE = "DataTable"
-
-export const PRIMITIVE_TYPES = [STRING_TYPE, BOOLEAN_TYPE, NUMBER_TYPE]
-export const BUILTIN_TYPES = ["", ...PRIMITIVE_TYPES]
 
 export const CODE_STATEMENT_TYPE = "Code"
 export const DATA_SCIENCE_STATEMENT_TYPE = "DataScienceStatement"

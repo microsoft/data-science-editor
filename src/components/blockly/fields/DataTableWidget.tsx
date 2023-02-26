@@ -131,10 +131,6 @@ export default function DataTableWidget(props: {
     const renderCell = (v: any) =>
         v === undefined || v === null
             ? ""
-            : typeof v === "boolean"
-            ? v
-                ? "true"
-                : "false"
             : typeof v === "number"
             ? roundWithPrecision(v, 3)
             : v + ""
@@ -211,7 +207,7 @@ export default function DataTableWidget(props: {
                                     </tr>
                                 )}
                                 {table.map((r, i) => (
-                                    <tr key={r.id || i}>
+                                    <tr key={i}>
                                         {columns.map(c => (
                                             <td key={c}>{renderCell(r[c])}</td>
                                         ))}

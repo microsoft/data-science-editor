@@ -1,3 +1,4 @@
+import { DataType } from "../../dom/constants"
 import { tidyHeaders } from "../fields/tidy"
 import { BlockDataSet } from "../toolbox"
 
@@ -53,7 +54,7 @@ export function resolveFieldColumn(
     b: BlockJSON,
     fieldName: string,
     options?: {
-        type?: "string" | "number" | "boolean"
+        type?: DataType
         required?: boolean
     }
 ): { column: string; warning?: string } {
@@ -71,7 +72,7 @@ export function resolveFieldColumn(
 export function resolveHeader(
     data: BlockDataSet,
     name: string,
-    type?: "string" | "number" | "boolean"
+    type?: DataType
 ) {
     if (!data || !name) return undefined
 
