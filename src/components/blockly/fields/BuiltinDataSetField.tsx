@@ -12,6 +12,7 @@ export const builtinDatasets = {
     Penguins: withPrefix("/datasets/penguins.csv"),
     Iris: withPrefix("/datasets/iris.csv"),
     Cars: withPrefix("/datasets/mtcars.csv"),
+    Pokemons: withPrefix("/datasets/pokemon.csv"),
 }
 
 export default class BuiltinDataSetField

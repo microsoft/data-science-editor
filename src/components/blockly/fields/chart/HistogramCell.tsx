@@ -37,9 +37,16 @@ export default function HistogramCell(props: {
                 style={{ width: "120px", fontSize: "0.7em", border: "none" }}
             >
                 {vis.map((props: any, i) => (
-                    <tr style={{ border: "none" }} key={i}>
+                    <tr
+                        style={{
+                            border: "none",
+                            color: props.name ? "" : "red",
+                            fontWeight: props.name ? undefined : "bold",
+                        }}
+                        key={i}
+                    >
                         <td style={{ padding: 0, border: "none" }}>
-                            {props.name}
+                            {props.name || "[missing]"}
                         </td>
                         <td
                             style={{

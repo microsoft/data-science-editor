@@ -129,7 +129,7 @@ export default function DataTableWidget(props: {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const renderCell = (v: any) =>
-        v === undefined
+        v === undefined || v === null
             ? ""
             : typeof v === "boolean"
             ? v
