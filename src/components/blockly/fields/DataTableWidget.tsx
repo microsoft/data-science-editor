@@ -70,8 +70,11 @@ const Root = styled("div")((props: StylesProps) => ({
         },
         "& td": {
             borderColor: "#ccc",
-            borderRightStyle: "solid 1px",
+            borderRight: "solid #ccc 1px",
             fontVariantNumeric: "tabular-nums",
+        },
+        "& td.number": {
+            textAlign: "right",
         },
     },
 }))
@@ -211,9 +214,11 @@ export default function DataTableWidget(props: {
                                     </tr>
                                 )}
                                 {table.map((r, i) => (
-                                    <tr key={r.id || i}>
+                                    <tr key={i}>
                                         {columns.map(c => (
-                                            <td key={c}>{renderCell(r[c])}</td>
+                                            <td key={c} className={typeof r[c]}>
+                                                {renderCell(r[c])}
+                                            </td>
                                         ))}
                                     </tr>
                                 ))}

@@ -32,49 +32,52 @@ export default function HistogramCell(props: {
             (prev, curr) => prev + Math.ceil((curr.count / n) * 100),
             0
         )
+        console.log({ raw, counts })
         return (
             <table
                 style={{ width: "120px", fontSize: "0.7em", border: "none" }}
             >
-                {vis.map((props: any, i) => (
-                    <tr
-                        style={{
-                            border: "none",
-                            color: props.name ? "" : "red",
-                            fontWeight: props.name ? undefined : "bold",
-                        }}
-                        key={i}
-                    >
-                        <td style={{ padding: 0, border: "none" }}>
-                            {props.name || "[missing]"}
-                        </td>
-                        <td
+                <tbody>
+                    {vis.map((props: any, i) => (
+                        <tr
                             style={{
-                                padding: 0,
                                 border: "none",
-                                textAlign: "right",
+                                color: props.name ? "" : "red",
+                                fontWeight: props.name ? undefined : "bold",
                             }}
+                            key={i}
                         >
-                            {Math.ceil((props.count / n) * 100) + "%"}
-                        </td>
-                    </tr>
-                ))}
-                {nvis < n && (
-                    <tr>
-                        <td style={{ padding: 0, border: "none" }}>
-                            Others ({n - nvis})
-                        </td>
-                        <td
-                            style={{
-                                padding: 0,
-                                border: "none",
-                                textAlign: "right",
-                            }}
-                        >
-                            {Math.floor(100 - nvisp) + "%"}
-                        </td>
-                    </tr>
-                )}
+                            <td style={{ padding: 0, border: "none" }}>
+                                {props.name || "[missing]"}
+                            </td>
+                            <td
+                                style={{
+                                    padding: 0,
+                                    border: "none",
+                                    textAlign: "right",
+                                }}
+                            >
+                                {Math.ceil((props.count / n) * 100) + "%"}
+                            </td>
+                        </tr>
+                    ))}
+                    {nvis < n && (
+                        <tr>
+                            <td style={{ padding: 0, border: "none" }}>
+                                Others ({n - nvis})
+                            </td>
+                            <td
+                                style={{
+                                    padding: 0,
+                                    border: "none",
+                                    textAlign: "right",
+                                }}
+                            >
+                                {Math.floor(100 - nvisp) + "%"}
+                            </td>
+                        </tr>
+                    )}
+                </tbody>
             </table>
         )
     }

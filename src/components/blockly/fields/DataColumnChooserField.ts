@@ -3,16 +3,17 @@ import { ReactFieldJSON } from "./ReactField"
 import { tidyHeaders, tidyResolveFieldColumn } from "./tidy"
 import { Block, FieldDropdown } from "blockly"
 import { humanify, unique } from "../../dom/utils"
+import { DataType } from "../../dom/constants"
 
 export interface DataColumnChooseOptions extends ReactFieldJSON {
-    dataType?: "number" | "string"
+    dataType?: DataType
     parentData?: boolean | number
 }
 
 export interface DataColumnChooseDeclareOptions {
     prefix?: string
     start?: number
-    dataType?: "string" | "boolean" | "number"
+    dataType?: DataType
 }
 
 export function declareColumns(
