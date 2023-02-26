@@ -55,6 +55,14 @@ export interface CsvFileResponse extends CsvMessage {
     file: CsvFile
 }
 
+function transformHeader(h: string) {
+    return h
+        .trim()
+        .replace(/[.]/g, "")
+        .replace(/(-|_)/g, " ")
+        .toLocaleLowerCase()
+}
+
 const cachedCSVs: { [index: string]: CsvFile } = {}
 function downloadCSV(url: string): Promise<CsvFile> {
     const cached = cachedCSVs[url]
@@ -67,7 +75,7 @@ function downloadCSV(url: string): Promise<CsvFile> {
             dynamicTyping: true,
             skipEmptyLines: true,
             comments: "#",
-            transformHeader: (h: string) => h.trim().toLocaleLowerCase(),
+            transformHeader,
             complete: (r: CsvFile) => resolve(r),
         })
     }).then(r => {
@@ -118,12 +126,7 @@ const handlers: { [index: string]: (msg: CsvRequest) => Promise<object> } = {
                 dynamicTyping: true,
                 skipEmptyLines: true,
                 comments: "#",
-                transformHeader: (h: string) =>
-                    h
-                        .trim()
-                        .replace(/[.]/g, "")
-                        .replace(/(-|_)/g, " ")
-                        .toLocaleLowerCase(),
+                transformHeader,
                 complete: (r: CsvFile) => {
                     convertBooleansToNumbers(r)
                     resolve({ file: r })
