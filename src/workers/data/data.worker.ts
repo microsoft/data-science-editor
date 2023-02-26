@@ -26,6 +26,7 @@ import {
     roll,
     replaceNully,
     rename,
+    distinct,
 } from "@tidyjs/tidy"
 import { bin } from "d3-array"
 import { sampleCorrelation, linearRegression } from "simple-statistics"
@@ -63,6 +64,10 @@ export interface DataSelectRequest extends DataRequest {
 
 export interface DataDropRequest extends DataRequest {
     type: "drop"
+    columns: string[]
+}
+export interface DataDistinctRequest extends DataRequest {
+    type: "distinct"
     columns: string[]
 }
 
@@ -192,6 +197,15 @@ const handlers: { [index: string]: (props: any) => object[] } = {
         const { columns, data } = props
         if (!columns?.length) return data
         else return tidy(data, select(columns.map(column => `-${column}`)))
+    },
+    distinct: (props: DataDistinctRequest) => {
+        const { columns, data } = props
+        const res = tidy(
+            data,
+            distinct(columns?.length ? (columns as any) : null)
+        )
+        console.log({ columns, data, res })
+        return res
     },
     filter_string: (props: DataFilterStringRequest) => {
         const { column, logic, rhs, data } = props

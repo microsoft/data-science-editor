@@ -34,6 +34,7 @@ import type {
     DataLinearRegressionRequest,
     DataReplaceNullyRequest,
     DataRenameRequest,
+    DataDistinctRequest,
 } from "../../../workers/data/dist/node_modules/data.worker"
 import palette from "./palette"
 import {
@@ -49,6 +50,7 @@ import ScatterPlotField from "../fields/chart/ScatterPlotField"
 const DATA_ARRANGE_BLOCK = "data_arrange"
 const DATA_SELECT_BLOCK = "data_select"
 const DATA_DROP_BLOCK = "data_drop"
+const DATA_DROP_DUPLICATES_BLOCK = "data_drop_duplicates"
 const DATA_RENAME_COLUMN_BLOCK = "data_rename_column_block"
 const DATA_FILTER_COLUMNS_BLOCK = "data_filter_columns"
 const DATA_FILTER_STRING_BLOCK = "data_filter_string"
@@ -121,6 +123,26 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 if (!columns?.length) return Promise.resolve(data)
                 return postTransformData(<DataDropRequest>{
                     type: "drop",
+                    columns,
+                    data,
+                })
+            },
+        },
+        {
+            kind: "block",
+            type: DATA_DROP_DUPLICATES_BLOCK,
+            message0: "filter duplicates in %1 %2 %3 %4",
+            tooltip:
+                "Removes rows with identical column values in the dataset.",
+            colour: cleaningColour,
+            args0: [...declareColumns(4, { start: 1 })],
+            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            dataPreviewField: true,
+            transformData: (b: Block, data: object[]) => {
+                const columns = resolveColumns(data, b, 4, { start: 1 })
+                return postTransformData(<DataDistinctRequest>{
+                    type: "distinct",
                     columns,
                     data,
                 })
@@ -795,6 +817,10 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 <BlockReference>{
                     kind: "block",
                     type: DATA_DROP_BLOCK,
+                },
+                <BlockReference>{
+                    kind: "block",
+                    type: DATA_DROP_DUPLICATES_BLOCK,
                 },
                 <BlockReference>{
                     kind: "block",
