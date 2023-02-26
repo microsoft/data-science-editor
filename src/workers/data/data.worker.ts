@@ -25,6 +25,8 @@ import {
     mean,
     roll,
     replaceNully,
+    rename,
+    distinct,
 } from "@tidyjs/tidy"
 import { bin } from "d3-array"
 import { sampleCorrelation, linearRegression } from "simple-statistics"
@@ -64,6 +66,10 @@ export interface DataDropRequest extends DataRequest {
     type: "drop"
     columns: string[]
 }
+export interface DataDistinctRequest extends DataRequest {
+    type: "distinct"
+    columns: string[]
+}
 
 export interface DataFilterColumnsRequest extends DataRequest {
     type: "filter_columns"
@@ -76,6 +82,11 @@ export interface DataFilterStringRequest extends DataRequest {
     column: string
     logic: string
     rhs: string
+}
+
+export interface DataRenameRequest extends DataRequest {
+    type: "rename"
+    names: Record<string, string>
 }
 
 export interface DataMutateColumnsRequest extends DataRequest {
@@ -186,6 +197,15 @@ const handlers: { [index: string]: (props: any) => object[] } = {
         const { columns, data } = props
         if (!columns?.length) return data
         else return tidy(data, select(columns.map(column => `-${column}`)))
+    },
+    distinct: (props: DataDistinctRequest) => {
+        const { columns, data } = props
+        const res = tidy(
+            data,
+            distinct(columns?.length ? (columns as any) : null)
+        )
+        console.log({ columns, data, res })
+        return res
     },
     filter_string: (props: DataFilterStringRequest) => {
         const { column, logic, rhs, data } = props
@@ -424,6 +444,11 @@ const handlers: { [index: string]: (props: any) => object[] } = {
     replace_nully: (props: DataReplaceNullyRequest) => {
         const { data, replacements } = props
         const res = tidy(data, replaceNully(replacements))
+        return res
+    },
+    rename: (props: DataRenameRequest) => {
+        const { data, names } = props
+        const res = tidy(data, rename(names))
         return res
     },
     slice: (props: DataSliceRequest) => {

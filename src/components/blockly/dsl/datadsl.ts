@@ -33,6 +33,8 @@ import type {
     DataCorrelationRequest,
     DataLinearRegressionRequest,
     DataReplaceNullyRequest,
+    DataRenameRequest,
+    DataDistinctRequest,
 } from "../../../workers/data/dist/node_modules/data.worker"
 import palette from "./palette"
 import {
@@ -48,6 +50,8 @@ import ScatterPlotField from "../fields/chart/ScatterPlotField"
 const DATA_ARRANGE_BLOCK = "data_arrange"
 const DATA_SELECT_BLOCK = "data_select"
 const DATA_DROP_BLOCK = "data_drop"
+const DATA_DROP_DUPLICATES_BLOCK = "data_drop_duplicates"
+const DATA_RENAME_COLUMN_BLOCK = "data_rename_column_block"
 const DATA_FILTER_COLUMNS_BLOCK = "data_filter_columns"
 const DATA_FILTER_STRING_BLOCK = "data_filter_string"
 const DATA_MUTATE_COLUMNS_BLOCK = "data_mutate_columns"
@@ -61,7 +65,8 @@ const DATA_BIN_BLOCK = "data_bin"
 const DATA_CORRELATION_BLOCK = "data_correlation"
 const DATA_LINEAR_REGRESSION_BLOCK = "data_linear_regression"
 
-const [, operatorsColour, computeColour, statisticsColour] = palette()
+const [, operatorsColour, computeColour, statisticsColour, , cleaningColour] =
+    palette()
 const dataDsl: BlockDomainSpecificLanguage = {
     id: "dataScience",
     createBlocks: () => [
@@ -108,7 +113,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             type: DATA_DROP_BLOCK,
             message0: "drop %1 %2 %3 %4",
             tooltip: "Removes the selected columns from the dataset",
-            colour: operatorsColour,
+            colour: cleaningColour,
             args0: [...declareColumns(4, { start: 1 })],
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
@@ -119,6 +124,56 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 return postTransformData(<DataDropRequest>{
                     type: "drop",
                     columns,
+                    data,
+                })
+            },
+        },
+        {
+            kind: "block",
+            type: DATA_DROP_DUPLICATES_BLOCK,
+            message0: "filter duplicates in %1 %2 %3 %4",
+            tooltip:
+                "Removes rows with identical column values in the dataset.",
+            colour: cleaningColour,
+            args0: [...declareColumns(4, { start: 1 })],
+            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            dataPreviewField: true,
+            transformData: (b: Block, data: object[]) => {
+                const columns = resolveColumns(data, b, 4, { start: 1 })
+                return postTransformData(<DataDistinctRequest>{
+                    type: "distinct",
+                    columns,
+                    data,
+                })
+            },
+        },
+        {
+            kind: "block",
+            type: DATA_RENAME_COLUMN_BLOCK,
+            message0: "rename %1 to %2",
+            tooltip: "Rename a columne",
+            colour: cleaningColour,
+            args0: [
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "column",
+                },
+                <TextInputDefinition>{
+                    type: "field_input",
+                    name: "name",
+                },
+            ],
+            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            dataPreviewField: true,
+            transformData: (b: Block, data: object[]) => {
+                const column = tidyResolveFieldColumn(data, b, "column")
+                const name = b.getFieldValue("name")
+                if (!column || !name) return Promise.resolve(data)
+                return postTransformData(<DataRenameRequest>{
+                    type: "rename",
+                    names: { [column]: name },
                     data,
                 })
             },
@@ -148,7 +203,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             type: DATA_REPLACE_NULLY_BLOCK,
             message0: "replace missing %1 with %2 of type %3",
             tooltip: "Fills missing data cells with the given value.",
-            colour: operatorsColour,
+            colour: cleaningColour,
             args0: [
                 {
                     type: DataColumnChooserField.KEY,
@@ -177,13 +232,13 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 const column = tidyResolveFieldColumn(data, b, "column")
                 const rhs = b.getFieldValue("rhs")
                 if (!column) return Promise.resolve(data)
-                const type = b.getFieldValue("type") || tidyResolveHeaderType(data, rhs)
+                const type =
+                    b.getFieldValue("type") || tidyResolveHeaderType(data, rhs)
                 const iv = parseInt(rhs)
                 const fv = parseFloat(rhs)
                 const nv = isNaN(iv) ? fv : iv
                 const bv = rhs === "true" || rhs === "yes" || !!rhs
-                const v =
-                    type === "number" ? nv : type === "boolean" ? bv : rhs
+                const v = type === "number" ? nv : type === "boolean" ? bv : rhs
                 return postTransformData(<DataReplaceNullyRequest>{
                     type: "replace_nully",
                     data,
@@ -692,10 +747,6 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 },
                 <BlockReference>{
                     kind: "block",
-                    type: DATA_DROP_BLOCK,
-                },
-                <BlockReference>{
-                    kind: "block",
                     type: DATA_FILTER_COLUMNS_BLOCK,
                 },
                 <BlockReference>{
@@ -705,10 +756,6 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 <BlockReference>{
                     kind: "block",
                     type: DATA_SLICE_BLOCK,
-                },
-                <BlockReference>{
-                    kind: "block",
-                    type: DATA_REPLACE_NULLY_BLOCK,
                 },
             ],
         },
@@ -755,6 +802,29 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 <BlockReference>{
                     kind: "block",
                     type: DATA_LINEAR_REGRESSION_BLOCK,
+                },
+            ],
+        },
+        <CategoryDefinition>{
+            kind: "category",
+            name: "Cleanup",
+            colour: cleaningColour,
+            contents: [
+                <BlockReference>{
+                    kind: "block",
+                    type: DATA_REPLACE_NULLY_BLOCK,
+                },
+                <BlockReference>{
+                    kind: "block",
+                    type: DATA_DROP_BLOCK,
+                },
+                <BlockReference>{
+                    kind: "block",
+                    type: DATA_DROP_DUPLICATES_BLOCK,
+                },
+                <BlockReference>{
+                    kind: "block",
+                    type: DATA_RENAME_COLUMN_BLOCK,
                 },
             ],
         },
