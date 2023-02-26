@@ -221,6 +221,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     options: [
                         ["number", "number"],
                         ["string", "string"],
+                        ["boolean (yes/no, true/fales, 1/0)", "boolean"],
                     ],
                 },
             ],
