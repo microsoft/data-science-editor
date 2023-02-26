@@ -71,9 +71,22 @@ function downloadCSV(url: string): Promise<CsvFile> {
             complete: (r: CsvFile) => resolve(r),
         })
     }).then(r => {
+        convertBooleansToNumbers(r)
         cachedCSVs[url] = r
         return r
     })
+}
+
+function convertBooleansToNumbers(r: CsvFile) {
+    // convert booleans to 0,1
+    if (r?.data) {
+        r.data.forEach(row =>
+            Object.keys(row).forEach(k => {
+                const v = row[k]
+                if (typeof v === "boolean") row[k] = v ? 1 : 0
+            })
+        )
+    }
 }
 
 const handlers: { [index: string]: (msg: CsvRequest) => Promise<object> } = {
@@ -112,14 +125,7 @@ const handlers: { [index: string]: (msg: CsvRequest) => Promise<object> } = {
                         .replace(/(-|_)/g, " ")
                         .toLocaleLowerCase(),
                 complete: (r: CsvFile) => {
-                    // convert booleans to 0,1
-                    if (r.data)
-                        r.data.forEach(row =>
-                            Object.keys(row).forEach(k => {
-                                const v = row[k]
-                                if (typeof v === "boolean") row[k] = v ? 1 : 0
-                            })
-                        )
+                    convertBooleansToNumbers(r)
                     resolve({ file: r })
                 },
             })
