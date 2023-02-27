@@ -100,7 +100,7 @@ const visualizeDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: BARCHART_BLOCK,
             tooltip: "Renders the block data in a bar chart",
-            message0: "bar chart of index %1 value %2 group %3 %4 %5 %6",
+            message0: "bar chart of index %1 y %2 group %3 %4 %5 %6",
             args0: [
                 <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
