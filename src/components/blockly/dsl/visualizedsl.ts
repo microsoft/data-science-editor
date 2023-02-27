@@ -170,17 +170,11 @@ const visualizeDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: PIECHART_BLOCK,
             tooltip: "Renders the block data in a bar chart",
-            message0: "pie chart %1 by %2 %3 %4 %5",
+            message0: "pie chart of %1 %2 %3 %4",
             args0: [
                 <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
                     name: "value",
-                    dataType: "number",
-                },
-                <DataColumnInputDefinition>{
-                    type: DataColumnChooserField.KEY,
-                    name: "color",
-                    dataType: "string",
                 },
                 <JSONSettingsInputDefinition>{
                     type: JSONSettingsField.KEY,

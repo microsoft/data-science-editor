@@ -8,17 +8,14 @@ import VegaLiteWidget from "./VegaLiteWidget"
 import { tidyResolveHeader } from "../tidy"
 import { PIE_MAX_ITEMS } from "../../toolbox"
 
-function PieWidget() {
+function PieChartWidget() {
     const { sourceBlock } = useContext(WorkspaceContext)
     const { data } = useBlockData(sourceBlock)
-    const color = sourceBlock?.getFieldValue("color")
-    const value = tidyResolveHeader(
-        data,
-        sourceBlock?.getFieldValue("value"),
-        "number"
-    )
+    const value = tidyResolveHeader(data, sourceBlock?.getFieldValue("value"))
+    const color = value
+    const aggregate = "count"
 
-    if (!value || !color) return null
+    if (!value) return null
 
     const sliceOptions = {
         sliceMax: PIE_MAX_ITEMS,
@@ -29,7 +26,7 @@ function PieWidget() {
             theta: {
                 field: value,
                 type: "quantitative",
-                aggregate: "sum",
+                aggregate,
                 stack: "normalize",
             },
             color: { field: color, type: "nominal" },
@@ -53,6 +50,6 @@ export default class PieChartField extends ReactInlineField {
     }
 
     renderInlineField() {
-        return <PieWidget />
+        return <PieChartWidget />
     }
 }
