@@ -23,7 +23,29 @@ export default function HistogramCell(props: {
 
     if (!field) return null
 
-    if (type !== "number") {
+    if (type === "boolean") {
+        const spec: VisualizationSpec = {
+            view: null,
+            mark: {
+                type: "arc",
+                tooltip: true,
+            },
+            encoding: {
+                theta: { field, aggregate: "count", stack: "normalize" },
+                color: { field },
+            },
+            data: { name: "values" },
+        }
+        return (
+            <VegaLiteWidget
+                charHeight={76}
+                chartWidth={140}
+                hideChrome={true}
+                spec={spec}
+                transformed={transformed}
+            />
+        )
+    } else if (type === "number") {
         const n = raw.length
         const counts = summarizeCounts(raw, column, 3)
         const vis = counts.slice(0, 2)
@@ -80,50 +102,50 @@ export default function HistogramCell(props: {
                 </tbody>
             </table>
         )
-    }
-
-    const spec: VisualizationSpec = {
-        view: null,
-        mark: {
-            type: "area",
-            interpolate: "step",
-            cornerRadius: BAR_CORNER_RADIUS,
-            tooltip: true,
-        },
-        encoding: {
-            x: {
-                bin: { maxbins: 20 },
-                field,
-                axis: {
-                    domain: false,
-                    ticks: false,
-                    labelBound: true,
-                    title: null,
-                    grid: false,
-                },
+    } else {
+        const spec: VisualizationSpec = {
+            view: null,
+            mark: {
+                type: "area",
+                interpolate: "step",
+                cornerRadius: BAR_CORNER_RADIUS,
+                tooltip: true,
             },
-            y: {
-                aggregate: "count",
-                axis: {
-                    title: null,
-                    ticks: null,
-                    domain: null,
-                    labelBound: true,
-                    grid: false,
+            encoding: {
+                x: {
+                    bin: { maxbins: 20 },
+                    field,
+                    axis: {
+                        domain: false,
+                        ticks: false,
+                        labelBound: true,
+                        title: null,
+                        grid: false,
+                    },
                 },
+                y: {
+                    aggregate: "count",
+                    axis: {
+                        title: null,
+                        ticks: null,
+                        domain: null,
+                        labelBound: true,
+                        grid: false,
+                    },
+                },
+                color: { legend: null },
             },
-            color: { legend: null },
-        },
-        data: { name: "values" },
-    }
+            data: { name: "values" },
+        }
 
-    return (
-        <VegaLiteWidget
-            charHeight={76}
-            chartWidth={140}
-            hideChrome={true}
-            spec={spec}
-            transformed={transformed}
-        />
-    )
+        return (
+            <VegaLiteWidget
+                charHeight={76}
+                chartWidth={140}
+                hideChrome={true}
+                spec={spec}
+                transformed={transformed}
+            />
+        )
+    }
 }
