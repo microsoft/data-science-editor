@@ -86,16 +86,13 @@ const statsDsl: BlockDomainSpecificLanguage = {
                     name: "x",
                     dataType: "number",
                 },
-                {
-                    type: DataColumnChooserField.KEY,
-                    name: "y",
-                    dataType: "number",
-                },
+                ...declareColumns(1, { prefix: "y", dataType: "number" }),
                 {
                     type: DataPreviewField.KEY,
                     name: "preview",
                     compare: false,
                     summary: false,
+                    transformed: true,
                 },
                 <DummyInputDefinition>{
                     type: "input_dummy",
@@ -116,7 +113,7 @@ const statsDsl: BlockDomainSpecificLanguage = {
                 const column1 = tidyResolveFieldColumn(data, b, "x", {
                     type: "number",
                 })
-                const column2 = tidyResolveFieldColumn(data, b, "y", {
+                const column2 = tidyResolveFieldColumn(data, b, "y1", {
                     type: "number",
                 })
                 if (!column1 || !column2) return Promise.resolve([])
