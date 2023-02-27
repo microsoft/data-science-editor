@@ -92,6 +92,7 @@ export default function DataTableWidget(props: {
     empty?: ReactNode
     maxItems?: number
     selectColumns?: boolean
+    hideSummary?: boolean
 }): JSX.Element {
     const {
         label,
@@ -101,6 +102,7 @@ export default function DataTableWidget(props: {
         empty,
         maxItems,
         selectColumns,
+        hideSummary,
     } = props
     const { sourceBlock } = useContext(WorkspaceContext)
     const { data, transformedData } = useBlockData<{ id?: string } & unknown>(
@@ -111,7 +113,7 @@ export default function DataTableWidget(props: {
     if (!raw?.length)
         return empty ? <span className={classes.empty}>{empty}</span> : null
 
-    const histogram = raw.length > 3
+    const histogram = !hideSummary && raw.length > 3
     const selectedColumns = selectColumns
         ? resolveColumns(data, sourceBlock, 6, { start: 0 })
         : []
