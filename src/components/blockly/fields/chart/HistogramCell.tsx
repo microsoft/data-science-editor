@@ -48,7 +48,7 @@ export default function HistogramCell(props: {
     } else if (type === "string") {
         const n = raw.length
         const counts = summarizeCounts(raw, column, 3)
-        const vis = counts.slice(0, 2)
+        const vis = counts.slice(0, 4)
         const nvis = vis.reduce((prev, curr) => prev + curr.count, 0)
         const nvisp = vis.reduce(
             (prev, curr) => prev + Math.ceil((curr.count / n) * 100),
@@ -56,7 +56,12 @@ export default function HistogramCell(props: {
         )
         return (
             <table
-                style={{ width: "120px", fontSize: "0.7em", border: "none" }}
+                style={{
+                    width: "120px",
+                    fontSize: "0.7em",
+                    border: "none",
+                    margin: "0.25rem",
+                }}
             >
                 <tbody>
                     {vis.map((props: any, i) => (
