@@ -11,6 +11,7 @@ import {
     identityTransformData,
     InputDefinition,
     OptionsInputDefinition,
+    SeparatorDefinition,
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
 import DataColumnChooserField, {
@@ -22,10 +23,12 @@ import { visualizeColour } from "./palette"
 import JSONSettingsField, {
     JSONSettingsInputDefinition,
 } from "../fields/JSONSettingsField"
+import PieChartField from "../fields/chart/PieChartField"
 
 const CHART_SHOW_TABLE_BLOCK = "chart_show_table"
 const SCATTERPLOT_BLOCK = "chart_scatterplot"
 const BARCHART_BLOCK = "chart_bar"
+const PIECHART_BLOCK = "chart_pie"
 
 const colour = visualizeColour
 const visualizeDsl: BlockDomainSpecificLanguage = {
@@ -163,6 +166,42 @@ const visualizeDsl: BlockDomainSpecificLanguage = {
             dataPreviewField: false,
             transformData: identityTransformData,
         },
+        <BlockDefinition>{
+            kind: "block",
+            type: PIECHART_BLOCK,
+            tooltip: "Renders the block data in a bar chart",
+            message0: "pie chart %1 by %2 %3 %4 %5",
+            args0: [
+                <DataColumnInputDefinition>{
+                    type: DataColumnChooserField.KEY,
+                    name: "value",
+                    dataType: "number",
+                },
+                <DataColumnInputDefinition>{
+                    type: DataColumnChooserField.KEY,
+                    name: "color",
+                    dataType: "string",
+                },
+                <JSONSettingsInputDefinition>{
+                    type: JSONSettingsField.KEY,
+                    name: "settings",
+                    schema: charMapSettingsSchema,
+                },
+                <DummyInputDefinition>{
+                    type: "input_dummy",
+                },
+                {
+                    type: PieChartField.KEY,
+                    name: "plot",
+                },
+            ],
+            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            colour,
+            inputsInline: false,
+            dataPreviewField: false,
+            transformData: identityTransformData,
+        },
     ],
 
     createCategory: () => [
@@ -172,6 +211,8 @@ const visualizeDsl: BlockDomainSpecificLanguage = {
             contents: [
                 <BlockReference>{ kind: "block", type: SCATTERPLOT_BLOCK },
                 <BlockReference>{ kind: "block", type: BARCHART_BLOCK },
+                <BlockReference>{ kind: "block", type: PIECHART_BLOCK },
+                <SeparatorDefinition>{ kind: "sep" },
                 <BlockReference>{ kind: "block", type: CHART_SHOW_TABLE_BLOCK },
             ],
             colour,

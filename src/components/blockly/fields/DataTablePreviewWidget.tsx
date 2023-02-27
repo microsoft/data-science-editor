@@ -5,8 +5,12 @@ import { Grid } from "@mui/material"
 import useBlockData from "../useBlockData"
 import WorkspaceContext from "../WorkspaceContext"
 
-export default function DataTablePreviewWidget(props: { compare?: boolean }) {
-    const { compare } = props
+export default function DataTablePreviewWidget(props: {
+    compare?: boolean
+    hideSummary?: boolean
+    transformed?: boolean
+}) {
+    const { compare, hideSummary, transformed } = props
     const { sourceBlock } = useContext(WorkspaceContext)
     const { data } = useBlockData<{ id?: string } & unknown>(sourceBlock)
 
@@ -15,9 +19,10 @@ export default function DataTablePreviewWidget(props: { compare?: boolean }) {
             <DataTableWidget
                 tableHeight={295}
                 empty={"no data"}
-                transformed={false}
+                transformed={!!transformed}
                 tableWidth={TABLE_WIDTH * 2}
                 maxItems={TABLE_PREVIEW_MAX_ITEMS}
+                hideSummary={hideSummary}
             />
         )
     else if (!data?.length)
@@ -29,6 +34,7 @@ export default function DataTablePreviewWidget(props: { compare?: boolean }) {
                 empty={"no data"}
                 transformed={true}
                 maxItems={TABLE_PREVIEW_MAX_ITEMS}
+                hideSummary={hideSummary}
             />
         )
     else
@@ -42,6 +48,7 @@ export default function DataTablePreviewWidget(props: { compare?: boolean }) {
                         empty={"no data"}
                         transformed={false}
                         maxItems={TABLE_PREVIEW_MAX_ITEMS}
+                        hideSummary={hideSummary}
                     />
                 </Grid>
                 <Grid item xs={6}>
@@ -51,6 +58,7 @@ export default function DataTablePreviewWidget(props: { compare?: boolean }) {
                         empty={"no data"}
                         transformed={true}
                         maxItems={TABLE_PREVIEW_MAX_ITEMS}
+                        hideSummary={hideSummary}
                     />
                 </Grid>
             </Grid>

@@ -120,6 +120,7 @@ export const CHART_WIDTH = 468
 export const CHART_HEIGHT = 240
 export const CHART_SVG_MAX_ITEMS = 256
 export const BAR_MAX_ITEMS = 1 << 10
+export const PIE_MAX_ITEMS = 32
 export const SCATTER_MAX_ITEMS = 1 << 13
 export const LINE_MAX_ITEMS = 1 << 10
 export const BAR_CORNER_RADIUS = 2

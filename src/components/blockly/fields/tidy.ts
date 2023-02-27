@@ -79,13 +79,13 @@ export function tidyResolveFieldColumn(
     if (!column) {
         if (required && !name) setBlockDataWarning(b, `missing column name`)
         else if (name) setBlockDataWarning(b, `'${name}' not found`)
-        console.debug("data column not found", {
+        /*console.debug("data column not found", {
             fieldName,
             name,
             type,
             required,
             data,
-        })
+        })*/
     }
     return column
 }

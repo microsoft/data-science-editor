@@ -1,8 +1,13 @@
-import { BlockServices, BlockWithServices } from "./WorkspaceContext"
+import {
+    BlockServices,
+    BlockWithServices,
+    TRANSFORMED_DATA_CHANGE,
+} from "./WorkspaceContext"
 import { Block } from "blockly"
 import { useCallback, useEffect } from "react"
 import useChangeThrottled from "../dom/useChangeThrottled"
 import useDragDebounce from "./useDragDebounce"
+import useEventRaised from "../dom/useEventRaised"
 
 /**
  * Hook that retreives data associated to a block; triggers re-render when data is updated.
@@ -14,17 +19,15 @@ export default function useBlockData<T extends object>(
     throttleTime?: number
 ) {
     const services = (block as unknown as BlockWithServices)?.blockServices
-    // data on the current node
-    const { data, transformedData } = useChangeThrottled<
-        BlockServices,
-        { data: T[]; transformedData: T[] }
-    >(
+    const data = useChangeThrottled<BlockServices, T[]>(
         services,
-        _ => ({
-            data: _?.data as T[],
-            transformedData: _?.transformedData as T[],
-        }),
+        _ => _?.data as T[],
         throttleTime
+    )
+    const transformedData = useEventRaised<BlockServices, T[]>(
+        TRANSFORMED_DATA_CHANGE,
+        services,
+        _ => _?.transformedData as T[]
     )
     const setData = useCallback(
         (value: T[]) => {

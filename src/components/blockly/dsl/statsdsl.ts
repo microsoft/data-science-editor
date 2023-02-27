@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { Block } from "blockly"
-import DataColumnChooserField from "../fields/DataColumnChooserField"
+import DataColumnChooserField, {
+    declareColumns,
+    resolveColumns,
+} from "../fields/DataColumnChooserField"
 import {
     BlockDefinition,
     BlockReference,
@@ -16,10 +19,10 @@ import type {
     DataLinearRegressionRequest,
 } from "../../../workers/data/dist/node_modules/data.worker"
 import { statisticsColour } from "./palette"
-import { tidyResolveFieldColumn } from "../fields/tidy"
-import DataTableField from "../fields/DataTableField"
+import { tidyHeaders, tidyResolveFieldColumn } from "../fields/tidy"
 import DataPreviewField from "../fields/DataPreviewField"
 import ScatterPlotField from "../fields/chart/ScatterPlotField"
+import CorrelationHeatMapField from "../fields/chart/CorrelationHeapMapField"
 
 const DATA_CORRELATION_BLOCK = "data_correlation"
 const DATA_LINEAR_REGRESSION_BLOCK = "data_linear_regression"
@@ -30,13 +33,9 @@ const statsDsl: BlockDomainSpecificLanguage = {
         <BlockDefinition>{
             kind: "block",
             type: DATA_CORRELATION_BLOCK,
-            message0: "correlation of %1 %2 %3 %4 %5",
+            message0: "correlation of %1 %2 %3 %4 %5 %6 %7 %8 %9 %10",
             args0: [
-                <DataColumnInputDefinition>{
-                    type: DataColumnChooserField.KEY,
-                    name: "x",
-                    dataType: "number",
-                },
+                ...declareColumns(6, { start: 1, dataType: "number" }),
                 {
                     type: DataColumnChooserField.KEY,
                     name: "y",
@@ -45,16 +44,16 @@ const statsDsl: BlockDomainSpecificLanguage = {
                 {
                     type: DataPreviewField.KEY,
                     name: "preview",
-                    compare: true,
+                    compare: false,
+                    transformed: true,
+                    summary: false,
                 },
                 <DummyInputDefinition>{
                     type: "input_dummy",
                 },
                 {
-                    type: DataTableField.KEY,
-                    name: "table",
-                    transformed: true,
-                    small: true,
+                    type: CorrelationHeatMapField.KEY,
+                    name: "plot",
                 },
             ],
             inputsInline: false,
@@ -62,19 +61,17 @@ const statsDsl: BlockDomainSpecificLanguage = {
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             colour: statisticsColour,
             dataPreviewField: false,
-            passthroughData: true,
             transformData: async (b: Block, data: object[]) => {
-                const column1 = tidyResolveFieldColumn(data, b, "x", {
-                    type: "number",
+                const selectedColumns = resolveColumns(data, b, 6, {
+                    start: 1,
+                    dataType: "number",
                 })
-                const column2 = tidyResolveFieldColumn(data, b, "y", {
-                    type: "number",
-                })
-                if (!column1 || !column2) return Promise.resolve([])
+                const allColumns = tidyHeaders(data, "number").headers
+                const columns =
+                    selectedColumns.length > 1 ? selectedColumns : allColumns
                 return postTransformData(<DataCorrelationRequest>{
                     type: "correlation",
-                    column1,
-                    column2,
+                    columns,
                     data,
                 })
             },
@@ -89,15 +86,13 @@ const statsDsl: BlockDomainSpecificLanguage = {
                     name: "x",
                     dataType: "number",
                 },
-                {
-                    type: DataColumnChooserField.KEY,
-                    name: "y",
-                    dataType: "number",
-                },
+                ...declareColumns(1, { prefix: "y", dataType: "number" }),
                 {
                     type: DataPreviewField.KEY,
                     name: "preview",
-                    compare: true,
+                    compare: false,
+                    summary: false,
+                    transformed: true,
                 },
                 <DummyInputDefinition>{
                     type: "input_dummy",
@@ -118,7 +113,7 @@ const statsDsl: BlockDomainSpecificLanguage = {
                 const column1 = tidyResolveFieldColumn(data, b, "x", {
                     type: "number",
                 })
-                const column2 = tidyResolveFieldColumn(data, b, "y", {
+                const column2 = tidyResolveFieldColumn(data, b, "y1", {
                     type: "number",
                 })
                 if (!column1 || !column2) return Promise.resolve([])

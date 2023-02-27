@@ -137,8 +137,7 @@ export interface DataBinRequest extends DataRequest {
 
 export interface DataCorrelationRequest extends DataRequest {
     type: "correlation"
-    column1: string
-    column2: string
+    columns: string[]
 }
 
 export interface DataLinearRegressionRequest extends DataRequest {
@@ -422,14 +421,29 @@ const handlers: { [index: string]: (props: any) => object[] } = {
         return binned.map(b => ({ count: b.length, x0: b.x0, x1: b.x1 }))
     },
     correlation: (props: DataCorrelationRequest) => {
-        const { data, column1, column2 } = props
-        if (!column1 || !column2) return data
-
-        const x = data.map(obj => obj[column1])
-        const y = data.map(obj => obj[column2])
-        return [{ correlation: sampleCorrelation(x, y).toFixed(3) }]
+        const { data, columns } = props
+        columns.sort()
+        const res = columns
+            .map((row, r) => ({ row, r, drow: data.map(obj => obj[row]) }))
+            .map(({ row, r, drow }) =>
+                columns.map((column, c) =>
+                    r <= c
+                        ? {
+                              row,
+                              column,
+                              correlation: sampleCorrelation(
+                                  drow,
+                                  data.map(obj => obj[column])
+                              ),
+                          }
+                        : undefined
+                )
+            )
+            .flat()
+            .filter(o => !!o)
+        return res
     },
-    linear_regression: (props: DataCorrelationRequest) => {
+    linear_regression: (props: DataLinearRegressionRequest) => {
         const { data, column1, column2 } = props
         if (!column1 || !column2) return data
 

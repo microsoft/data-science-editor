@@ -9,6 +9,7 @@ export interface DataPreviewOptions extends ReactFieldJSON {
     small?: boolean
     full?: boolean
     selectColumns?: boolean
+    summary?: boolean
 }
 
 const MAX_ITEMS = 256
@@ -20,6 +21,7 @@ export default class DataTableField extends ReactInlineField {
     small: boolean
     selectColumns: boolean
     full: boolean
+    summary: boolean
 
     static fromJson(options: DataPreviewOptions) {
         return new DataTableField(options)
@@ -32,6 +34,7 @@ export default class DataTableField extends ReactInlineField {
         this.small = !!options?.small
         this.selectColumns = !!options?.selectColumns
         this.full = !!options?.full
+        this.summary = options?.summary !== false
     }
 
     protected createContainer(): HTMLDivElement {
@@ -55,6 +58,7 @@ export default class DataTableField extends ReactInlineField {
                 tableWidth={tableWidth}
                 transformed={this.transformed}
                 selectColumns={this.selectColumns}
+                hideSummary={!this.summary}
             />
         )
     }

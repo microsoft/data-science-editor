@@ -13,12 +13,14 @@ import BoxPlotField from "./chart/BoxPlotField"
 import HeatMapPlotField from "./chart/HeatMapField"
 import VegaChartField from "./chart/VegaChartField"
 import ScatterPlotMatrixField from "./chart/ScatterPlotMatrixField"
+import CorrelationHeapMapField from "./chart/CorrelationHeapMapField"
 
 import FileSaveField from "./FileSaveField"
 import FileOpenField from "./FileOpenField"
 
 import JSONSettingsField from "./JSONSettingsField"
 import IFrameDataChooserField from "./IFrameDataChooserField"
+import PieChartField from "./chart/PieChartField"
 
 let reactFieldShadows: BlockDefinition[]
 export function registerFields() {
@@ -46,9 +48,11 @@ export function registerFields() {
         ScatterPlotField,
         LinePlotField,
         BarChartField,
+        PieChartField,
         HistogramField,
         BoxPlotField,
         HeatMapPlotField,
+        CorrelationHeapMapField,
         ScatterPlotMatrixField,
         VegaChartField,
 
