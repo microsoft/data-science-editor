@@ -50,8 +50,6 @@ function BarWidget() {
     if (stackValue === "xOffset" && group) {
         spec.encoding.xOffset = { field: group }
     }
-    console.log({ spec })
-
     return <VegaLiteWidget spec={spec} slice={sliceOptions} />
 }
 

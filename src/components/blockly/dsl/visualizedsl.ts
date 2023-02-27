@@ -35,9 +35,9 @@ const visualizeDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: CHART_SHOW_TABLE_BLOCK,
             tooltip: "Displays the block data as a table",
-            message0: "show table %1 %2 %3 %4 %5 %6",
+            message0: "show table %1 %2 %3 %4 %5 %6 %7 %8",
             args0: [
-                ...declareColumns(4, { start: 0 }),
+                ...declareColumns(6, { start: 0 }),
                 <DummyInputDefinition>{
                     type: "input_dummy",
                 },
@@ -45,6 +45,7 @@ const visualizeDsl: BlockDomainSpecificLanguage = {
                     type: DataTableField.KEY,
                     name: "table",
                     selectColumns: true,
+                    full: true,
                 },
             ],
             previousStatement: DATA_SCIENCE_STATEMENT_TYPE,

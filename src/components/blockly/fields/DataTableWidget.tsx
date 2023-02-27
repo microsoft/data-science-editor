@@ -113,7 +113,7 @@ export default function DataTableWidget(props: {
 
     const histogram = raw.length > 3
     const selectedColumns = selectColumns
-        ? resolveColumns(data, sourceBlock, 4, { start: 0 })
+        ? resolveColumns(data, sourceBlock, 6, { start: 0 })
         : []
     const columns = selectedColumns.length
         ? selectedColumns

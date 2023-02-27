@@ -45,7 +45,7 @@ export default function HistogramCell(props: {
                 transformed={transformed}
             />
         )
-    } else if (type === "number") {
+    } else if (type === "string") {
         const n = raw.length
         const counts = summarizeCounts(raw, column, 3)
         const vis = counts.slice(0, 2)
@@ -54,7 +54,6 @@ export default function HistogramCell(props: {
             (prev, curr) => prev + Math.ceil((curr.count / n) * 100),
             0
         )
-        console.log({ raw, counts })
         return (
             <table
                 style={{ width: "120px", fontSize: "0.7em", border: "none" }}

@@ -204,7 +204,6 @@ const handlers: { [index: string]: (props: any) => object[] } = {
             data,
             distinct(columns?.length ? (columns as any) : null)
         )
-        console.log({ columns, data, res })
         return res
     },
     filter_string: (props: DataFilterStringRequest) => {
