@@ -19,13 +19,10 @@ import type {
     DataLinearRegressionRequest,
 } from "../../../workers/data/dist/node_modules/data.worker"
 import { statisticsColour } from "./palette"
-import {
-    tidyHeaders,
-    tidyResolveFieldColumn,
-} from "../fields/tidy"
-import DataTableField from "../fields/DataTableField"
+import { tidyHeaders, tidyResolveFieldColumn } from "../fields/tidy"
 import DataPreviewField from "../fields/DataPreviewField"
 import ScatterPlotField from "../fields/chart/ScatterPlotField"
+import CorrelationHeatMapField from "../fields/chart/CorrelationHeapMapField"
 
 const DATA_CORRELATION_BLOCK = "data_correlation"
 const DATA_LINEAR_REGRESSION_BLOCK = "data_linear_regression"
@@ -38,20 +35,19 @@ const statsDsl: BlockDomainSpecificLanguage = {
             type: DATA_CORRELATION_BLOCK,
             message0: "correlation of %1 %2 %3 %4 %5 %6 %7",
             args0: [
-                ...declareColumns(4, { start: 1 }),
+                ...declareColumns(4, { start: 1, dataType: "number" }),
                 {
                     type: DataColumnChooserField.KEY,
                     name: "y",
                     dataType: "number",
                 },
+
                 <DummyInputDefinition>{
                     type: "input_dummy",
                 },
                 {
-                    type: DataTableField.KEY,
-                    name: "table",
-                    summary: false,
-                    transformed: true,
+                    type: CorrelationHeatMapField.KEY,
+                    name: "plot",
                 },
             ],
             inputsInline: false,
@@ -60,13 +56,17 @@ const statsDsl: BlockDomainSpecificLanguage = {
             colour: statisticsColour,
             dataPreviewField: false,
             transformData: async (b: Block, data: object[]) => {
-                const selectedColumns = resolveColumns(data, b, 4, { start: 1 })
+                const selectedColumns = resolveColumns(data, b, 4, {
+                    start: 1,
+                    dataType: "number",
+                })
                 const allColumns = tidyHeaders(data, "number").headers
                 const columns =
                     selectedColumns.length > 1 ? selectedColumns : allColumns
                 return postTransformData(<DataCorrelationRequest>{
                     type: "correlation",
                     columns,
+                    data,
                 })
             },
         },

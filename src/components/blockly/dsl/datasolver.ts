@@ -56,7 +56,6 @@ export function registerDataSolver(block: BlockWithServices) {
             // check if pass through
             const def = resolveBlockDefinition(block.type)
             if (def?.passthroughData) newData = services.data
-
             if (nextServices) nextServices.data = newData
         } catch (e) {
             console.debug(e)

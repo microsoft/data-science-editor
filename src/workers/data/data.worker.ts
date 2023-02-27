@@ -422,21 +422,25 @@ const handlers: { [index: string]: (props: any) => object[] } = {
     },
     correlation: (props: DataCorrelationRequest) => {
         const { data, columns } = props
-
+        columns.sort()
         const res = columns
-            .map(row => ({ row, drow: data.map(obj => obj[row]) }))
-            .map(({ row, drow }) => {
-                const o = {
-                    column: row,
-                }
-                columns.map(column => {
-                    o[column] = sampleCorrelation(
-                        drow,
-                        data.map(obj => obj[column])
-                    ).toFixed(3)
-                })
-                return o
-            })
+            .map((row, r) => ({ row, r, drow: data.map(obj => obj[row]) }))
+            .map(({ row, r, drow }) =>
+                columns.map((column, c) =>
+                    r <= c
+                        ? {
+                              row,
+                              column,
+                              correlation: sampleCorrelation(
+                                  drow,
+                                  data.map(obj => obj[column])
+                              ),
+                          }
+                        : undefined
+                )
+            )
+            .flat()
+            .filter(o => !!o)
         return res
     },
     linear_regression: (props: DataLinearRegressionRequest) => {
