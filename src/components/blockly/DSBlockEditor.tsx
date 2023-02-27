@@ -19,6 +19,8 @@ import dataVarDsl from "./dsl/datavardsl"
 import useChange from "../dom/useChange"
 import { UIFlags } from "../uiflags"
 import SplashDialog from "../ui/SplashDialog"
+import visualizeDsl from "./dsl/visualizedsl"
+import statsDsl from "./dsl/statsdsl"
 
 const DS_EDITOR_ID = "ds"
 const DS_SOURCE_STORAGE_KEY = "editor"
@@ -55,6 +57,8 @@ export default function DSBlockEditor() {
     // read url search flags
     const dataSet = useLocationSearchParamBoolean("dataset", true)
     const dataVar = useLocationSearchParamBoolean("datavar", true)
+    const visualize = useLocationSearchParamBoolean("visualize", true)
+    const statistics = useLocationSearchParamBoolean("statistics", true)
     const chart = useLocationSearchParamBoolean("chart", true)
     const host = UIFlags.hosted
     const targetOrigin = useLocationSearchParamString("targetorigin") || "*"
@@ -63,6 +67,8 @@ export default function DSBlockEditor() {
         return [
             dataSet && dataSetDsl,
             dataDsl,
+            visualize && visualizeDsl,
+            statistics && statsDsl,
             dataVar && dataVarDsl,
             chart && chartDsl,
             fieldsDsl,

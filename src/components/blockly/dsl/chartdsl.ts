@@ -1,4 +1,3 @@
-import ScatterPlotField from "../fields/chart/ScatterPlotField"
 import {
     BlockDefinition,
     BlockReference,
@@ -11,7 +10,6 @@ import {
     DATA_SCIENCE_STATEMENT_TYPE,
     DummyInputDefinition,
     identityTransformData,
-    InputDefinition,
     LabelDefinition,
     OptionsInputDefinition,
     SeparatorDefinition,
@@ -22,15 +20,13 @@ import DataColumnChooserField, {
     declareColumns,
 } from "../fields/DataColumnChooserField"
 import LinePlotField from "../fields/chart/LinePlotField"
-import BarChartField from "../fields/chart/BarField"
 import HistogramField from "../fields/chart/HistogramField"
-import DataTableField from "../fields/DataTableField"
-import { paletteColorByIndex } from "./palette"
+import { chartColour } from "./palette"
 import BoxPlotField from "../fields/chart/BoxPlotField"
 import VegaChartField from "../fields/chart/VegaChartField"
 import type { VisualizationSpec } from "react-vega"
 import type { Mark } from "vega-lite/build/src/mark"
-import { tidyHeaders, tidyResolveFieldColumn } from "../fields/tidy"
+import { tidyResolveFieldColumn } from "../fields/tidy"
 import { Block } from "blockly"
 import JSONSettingsField, {
     JSONSettingsInputDefinition,
@@ -39,14 +35,11 @@ import HeatMapPlotField from "../fields/chart/HeatMapField"
 import { resolveBlockServices } from "../WorkspaceContext"
 import ScatterPlotMatrixField from "../fields/chart/ScatterPlotMatrixField"
 
-const SCATTERPLOT_BLOCK = "chart_scatterplot"
 const LINEPLOT_BLOCK = "chart_lineplot"
 const HEATMAP_BLOCK = "chart_heatmap"
-const BARCHART_BLOCK = "chart_bar"
 const SCATTERPLOTMATRIX_BLOCK = "chart_scatterplot_matrix"
 const HISTOGRAM_BLOCK = "chart_histogram"
 const BOX_PLOT_BLOCK = "chart_box_plot"
-const CHART_SHOW_TABLE_BLOCK = "chart_show_table"
 
 const VEGA_LAYER_BLOCK = "vega_layer"
 const VEGA_ENCODING_BLOCK = "vega_encoding"
@@ -95,111 +88,10 @@ const vegaAggregates = [
     "sum",
 ].map(s => [s, s])
 
-const colour = paletteColorByIndex(4)
+const colour = chartColour
 const chartDsl: BlockDomainSpecificLanguage = {
     id: "chart",
     createBlocks: () => [
-        <BlockDefinition>{
-            kind: "block",
-            type: CHART_SHOW_TABLE_BLOCK,
-            tooltip: "Displays the block data as a table",
-            message0: "show table %1 %2 %3 %4 %5 %6",
-            args0: [
-                ...declareColumns(4, { start: 0 }),
-                <DummyInputDefinition>{
-                    type: "input_dummy",
-                },
-                {
-                    type: DataTableField.KEY,
-                    name: "table",
-                    selectColumns: true,
-                },
-            ],
-            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            colour,
-            inputsInline: false,
-            dataPreviewField: false,
-            transformData: identityTransformData,
-        },
-        <BlockDefinition>{
-            kind: "block",
-            type: SCATTERPLOT_BLOCK,
-            tooltip: "Renders the block data in a scatter plot",
-            message0:
-                "scatterplot of x %1 y %2 %3 %4 size %5 group %6 %7 %8 %9",
-            args0: <InputDefinition[]>[
-                <DataColumnInputDefinition>{
-                    type: DataColumnChooserField.KEY,
-                    name: "x",
-                    dataType: "number",
-                },
-                ...declareColumns(3, { prefix: "y", dataType: "number" }),
-                <DataColumnInputDefinition>{
-                    type: DataColumnChooserField.KEY,
-                    name: "size",
-                    dataType: "number",
-                },
-                <DataColumnInputDefinition>{
-                    type: DataColumnChooserField.KEY,
-                    name: "group",
-                },
-                <JSONSettingsInputDefinition>{
-                    type: JSONSettingsField.KEY,
-                    name: "settings",
-                    schema: char2DSettingsSchema,
-                },
-                <DummyInputDefinition>{
-                    type: "input_dummy",
-                },
-                {
-                    type: ScatterPlotField.KEY,
-                    name: "plot",
-                    ysLength: 3,
-                },
-            ],
-            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            colour,
-            inputsInline: false,
-            dataPreviewField: false,
-            transformData: identityTransformData,
-        },
-        <BlockDefinition>{
-            kind: "block",
-            type: BARCHART_BLOCK,
-            tooltip: "Renders the block data in a bar chart",
-            message0: "bar chart of index %1 value %2 %3 %4 %5",
-            args0: [
-                <DataColumnInputDefinition>{
-                    type: DataColumnChooserField.KEY,
-                    name: "index",
-                },
-                <DataColumnInputDefinition>{
-                    type: DataColumnChooserField.KEY,
-                    name: "value",
-                    dataType: "number",
-                },
-                <JSONSettingsInputDefinition>{
-                    type: JSONSettingsField.KEY,
-                    name: "settings",
-                    schema: charMapSettingsSchema,
-                },
-                <DummyInputDefinition>{
-                    type: "input_dummy",
-                },
-                {
-                    type: BarChartField.KEY,
-                    name: "plot",
-                },
-            ],
-            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            colour,
-            inputsInline: false,
-            dataPreviewField: false,
-            transformData: identityTransformData,
-        },
         <BlockDefinition>{
             kind: "block",
             type: LINEPLOT_BLOCK,
@@ -618,8 +510,6 @@ const chartDsl: BlockDomainSpecificLanguage = {
             kind: "category",
             name: "Charts",
             contents: [
-                <BlockReference>{ kind: "block", type: SCATTERPLOT_BLOCK },
-                <BlockReference>{ kind: "block", type: BARCHART_BLOCK },
                 <BlockReference>{ kind: "block", type: HISTOGRAM_BLOCK },
                 <BlockReference>{ kind: "block", type: LINEPLOT_BLOCK },
                 <BlockReference>{ kind: "block", type: BOX_PLOT_BLOCK },
@@ -628,7 +518,6 @@ const chartDsl: BlockDomainSpecificLanguage = {
                     kind: "block",
                     type: SCATTERPLOTMATRIX_BLOCK,
                 },
-                <BlockReference>{ kind: "block", type: CHART_SHOW_TABLE_BLOCK },
                 <SeparatorDefinition>{
                     kind: "sep",
                 },
