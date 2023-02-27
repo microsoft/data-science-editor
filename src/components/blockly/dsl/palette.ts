@@ -7,7 +7,7 @@ const _palette = [
     "#f748a5",
     "#359b73",
     "#d55e00",
-    "#e69f00",    
+    "#e69f00",
 ]
 
 export default function palette() {
@@ -18,3 +18,13 @@ export function paletteColorByIndex(i: number) {
     while (i < 0) i += _palette.length
     return _palette[i % _palette.length]
 }
+
+export const [
+    ,
+    operatorsColour,
+    computeColour,
+    statisticsColour,
+    visualizeColour,
+    cleaningColour,
+] = palette()
+export const chartColour = visualizeColour

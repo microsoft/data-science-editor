@@ -13,7 +13,6 @@ import {
     OptionsInputDefinition,
     TextInputDefinition,
     DataColumnInputDefinition,
-    DummyInputDefinition,
     calcOptions,
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
@@ -30,22 +29,17 @@ import type {
     DataMutateNumberRequest,
     DataCountRequest,
     DataBinRequest,
-    DataCorrelationRequest,
-    DataLinearRegressionRequest,
     DataReplaceNullyRequest,
     DataRenameRequest,
     DataDistinctRequest,
 } from "../../../workers/data/dist/node_modules/data.worker"
-import palette from "./palette"
+import { operatorsColour, computeColour, cleaningColour } from "./palette"
 import {
     tidyResolveFieldColumn,
     tidyResolveFieldColumns,
     tidyResolveHeaderType,
     tidySlice,
 } from "../fields/tidy"
-import DataTableField from "../fields/DataTableField"
-import DataPreviewField from "../fields/DataPreviewField"
-import ScatterPlotField from "../fields/chart/ScatterPlotField"
 
 const DATA_ARRANGE_BLOCK = "data_arrange"
 const DATA_SELECT_BLOCK = "data_select"
@@ -62,11 +56,7 @@ const DATA_SUMMARIZE_BLOCK = "data_summarize"
 const DATA_SUMMARIZE_BY_GROUP_BLOCK = "data_summarize_by_group"
 const DATA_COUNT_BLOCK = "data_count"
 const DATA_BIN_BLOCK = "data_bin"
-const DATA_CORRELATION_BLOCK = "data_correlation"
-const DATA_LINEAR_REGRESSION_BLOCK = "data_linear_regression"
 
-const [, operatorsColour, computeColour, statisticsColour, , cleaningColour] =
-    palette()
 const dataDsl: BlockDomainSpecificLanguage = {
     id: "dataScience",
     createBlocks: () => [
@@ -631,111 +621,31 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 })
             },
         },
-        <BlockDefinition>{
-            kind: "block",
-            type: DATA_CORRELATION_BLOCK,
-            message0: "correlation of %1 %2 %3 %4 %5",
-            args0: [
-                <DataColumnInputDefinition>{
-                    type: DataColumnChooserField.KEY,
-                    name: "x",
-                    dataType: "number",
-                },
-                {
-                    type: DataColumnChooserField.KEY,
-                    name: "y",
-                    dataType: "number",
-                },
-                {
-                    type: DataPreviewField.KEY,
-                    name: "preview",
-                    compare: true,
-                },
-                <DummyInputDefinition>{
-                    type: "input_dummy",
-                },
-                {
-                    type: DataTableField.KEY,
-                    name: "table",
-                    transformed: true,
-                    small: true,
-                },
-            ],
-            inputsInline: false,
-            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            colour: statisticsColour,
-            dataPreviewField: false,
-            passthroughData: true,
-            transformData: async (b: Block, data: object[]) => {
-                const column1 = tidyResolveFieldColumn(data, b, "x", {
-                    type: "number",
-                })
-                const column2 = tidyResolveFieldColumn(data, b, "y", {
-                    type: "number",
-                })
-                if (!column1 || !column2) return Promise.resolve([])
-                return postTransformData(<DataCorrelationRequest>{
-                    type: "correlation",
-                    column1,
-                    column2,
-                    data,
-                })
-            },
-        },
-        <BlockDefinition>{
-            kind: "block",
-            type: DATA_LINEAR_REGRESSION_BLOCK,
-            message0: "linear regression of x %1 y %2 %3 %4 %5",
-            args0: [
-                <DataColumnInputDefinition>{
-                    type: DataColumnChooserField.KEY,
-                    name: "x",
-                    dataType: "number",
-                },
-                {
-                    type: DataColumnChooserField.KEY,
-                    name: "y",
-                    dataType: "number",
-                },
-                {
-                    type: DataPreviewField.KEY,
-                    name: "preview",
-                    compare: true,
-                },
-                <DummyInputDefinition>{
-                    type: "input_dummy",
-                },
-                {
-                    type: ScatterPlotField.KEY,
-                    name: "plot",
-                    linearRegression: true,
-                },
-            ],
-            inputsInline: false,
-            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            colour: statisticsColour,
-            dataPreviewField: false,
-            passthroughData: true,
-            transformData: async (b: Block, data: object[]) => {
-                const column1 = tidyResolveFieldColumn(data, b, "x", {
-                    type: "number",
-                })
-                const column2 = tidyResolveFieldColumn(data, b, "y", {
-                    type: "number",
-                })
-                if (!column1 || !column2) return Promise.resolve([])
-                return postTransformData(<DataLinearRegressionRequest>{
-                    type: "linear_regression",
-                    column1,
-                    column2,
-                    data,
-                })
-            },
-        },
     ],
     createCategory: () => [
+        <CategoryDefinition>{
+            kind: "category",
+            name: "Cleanup",
+            colour: cleaningColour,
+            contents: [
+                <BlockReference>{
+                    kind: "block",
+                    type: DATA_REPLACE_NULLY_BLOCK,
+                },
+                <BlockReference>{
+                    kind: "block",
+                    type: DATA_DROP_BLOCK,
+                },
+                <BlockReference>{
+                    kind: "block",
+                    type: DATA_DROP_DUPLICATES_BLOCK,
+                },
+                <BlockReference>{
+                    kind: "block",
+                    type: DATA_RENAME_COLUMN_BLOCK,
+                },
+            ],
+        },
         <CategoryDefinition>{
             kind: "category",
             name: "Organize",
@@ -791,44 +701,6 @@ const dataDsl: BlockDomainSpecificLanguage = {
                 <BlockReference>{
                     kind: "block",
                     type: DATA_BIN_BLOCK,
-                },
-            ],
-        },
-        <CategoryDefinition>{
-            kind: "category",
-            name: "Statistics",
-            colour: statisticsColour,
-            contents: [
-                <BlockReference>{
-                    kind: "block",
-                    type: DATA_CORRELATION_BLOCK,
-                },
-                <BlockReference>{
-                    kind: "block",
-                    type: DATA_LINEAR_REGRESSION_BLOCK,
-                },
-            ],
-        },
-        <CategoryDefinition>{
-            kind: "category",
-            name: "Cleanup",
-            colour: cleaningColour,
-            contents: [
-                <BlockReference>{
-                    kind: "block",
-                    type: DATA_REPLACE_NULLY_BLOCK,
-                },
-                <BlockReference>{
-                    kind: "block",
-                    type: DATA_DROP_BLOCK,
-                },
-                <BlockReference>{
-                    kind: "block",
-                    type: DATA_DROP_DUPLICATES_BLOCK,
-                },
-                <BlockReference>{
-                    kind: "block",
-                    type: DATA_RENAME_COLUMN_BLOCK,
                 },
             ],
         },
