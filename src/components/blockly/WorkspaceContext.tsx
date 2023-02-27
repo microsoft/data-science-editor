@@ -53,6 +53,7 @@ export interface FieldWithServices {
     notifyServicesChanged?: () => void
 }
 
+export const TRANSFORMED_DATA_CHANGE = "transformedDataChange"
 export const DATA_WARNING_KEY = "data"
 export class BlockServices extends JDEventSource {
     private _data: object[]
@@ -75,8 +76,7 @@ export class BlockServices extends JDEventSource {
     set transformedData(value: object[]) {
         if (this._transformedData !== value) {
             this._transformedData = value
-            // don't update immediately transformed data or it
-            // generates an update loop
+            this.emit(TRANSFORMED_DATA_CHANGE)
         }
     }
 
@@ -165,8 +165,8 @@ export default WorkspaceContext
 
 /**
  * A blockly context for each field
- * @param props 
- * @returns 
+ * @param props
+ * @returns
  */
 export function WorkspaceProvider(props: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

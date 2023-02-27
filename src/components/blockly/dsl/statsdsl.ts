@@ -33,15 +33,21 @@ const statsDsl: BlockDomainSpecificLanguage = {
         <BlockDefinition>{
             kind: "block",
             type: DATA_CORRELATION_BLOCK,
-            message0: "correlation of %1 %2 %3 %4 %5 %6 %7",
+            message0: "correlation of %1 %2 %3 %4 %5 %6 %7 %8 %9 %10",
             args0: [
-                ...declareColumns(4, { start: 1, dataType: "number" }),
+                ...declareColumns(6, { start: 1, dataType: "number" }),
                 {
                     type: DataColumnChooserField.KEY,
                     name: "y",
                     dataType: "number",
                 },
-
+                {
+                    type: DataPreviewField.KEY,
+                    name: "preview",
+                    compare: false,
+                    transformed: true,
+                    summary: false,
+                },
                 <DummyInputDefinition>{
                     type: "input_dummy",
                 },
@@ -56,7 +62,7 @@ const statsDsl: BlockDomainSpecificLanguage = {
             colour: statisticsColour,
             dataPreviewField: false,
             transformData: async (b: Block, data: object[]) => {
-                const selectedColumns = resolveColumns(data, b, 4, {
+                const selectedColumns = resolveColumns(data, b, 6, {
                     start: 1,
                     dataType: "number",
                 })
@@ -88,7 +94,8 @@ const statsDsl: BlockDomainSpecificLanguage = {
                 {
                     type: DataPreviewField.KEY,
                     name: "preview",
-                    compare: true,
+                    compare: false,
+                    summary: false,
                 },
                 <DummyInputDefinition>{
                     type: "input_dummy",

@@ -10,12 +10,16 @@ const DataTablePreviewWidget = lazy(() => import("./DataTablePreviewWidget"))
 
 export interface DataPreviewOptions extends ReactFieldJSON {
     compare?: boolean
+    summary?: boolean
+    transformed?: boolean
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default class DataPreviewField extends ReactField<ReactFieldJSON> {
     static KEY = "ds_field_data_preview"
     compare: boolean
+    summary: boolean
+    transformed: boolean
 
     static fromJson(options: DataPreviewOptions) {
         return new DataPreviewField(options?.value, undefined, options)
@@ -26,6 +30,8 @@ export default class DataPreviewField extends ReactField<ReactFieldJSON> {
     constructor(value: string, validator?: any, options?: DataPreviewOptions) {
         super(value, validator, options)
         this.compare = !!options?.compare
+        this.summary = !!options?.summary
+        this.transformed = !!options?.transformed
     }
 
     protected initCustomView(): SVGElement {
@@ -41,7 +47,11 @@ export default class DataPreviewField extends ReactField<ReactFieldJSON> {
     renderField(): ReactNode {
         return (
             <Suspense>
-                <DataTablePreviewWidget compare={this.compare} />
+                <DataTablePreviewWidget
+                    compare={this.compare}
+                    hideSummary={!this.summary}
+                    transformed={this.transformed}
+                />
             </Suspense>
         )
     }
@@ -67,6 +77,8 @@ export function addDataPreviewField(block: BlockDefinition): BlockDefinition {
             type: DataPreviewField.KEY,
             name: "preview",
             compare: !identity,
+            summary: true,
+            transformed: false,
         } as DataPreviewInputDefinition)
     }
     return block
