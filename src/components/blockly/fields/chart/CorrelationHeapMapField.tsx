@@ -7,6 +7,9 @@ import VegaLiteWidget from "./VegaLiteWidget"
 function CorrelationHeatMapWidget() {
     const spec: VisualizationSpec = {
         mark: { type: "rect", tooltip: true },
+        config: {
+            axis: { grid: true, tickBand: "extent" },
+        },
         encoding: {
             x: {
                 field: "row",
