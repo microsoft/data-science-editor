@@ -10,6 +10,7 @@ import {
     DummyInputDefinition,
     identityTransformData,
     InputDefinition,
+    OptionsInputDefinition,
 } from "../toolbox"
 import BlockDomainSpecificLanguage from "./dsl"
 import DataColumnChooserField, {
@@ -100,11 +101,27 @@ const visualizeDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: BARCHART_BLOCK,
             tooltip: "Renders the block data in a bar chart",
-            message0: "bar chart of index %1 y %2 group %3 %4 %5 %6",
+            message0: "bar chart of index %1 y %2 of %3 group %4 %5 %6 %7 %8",
             args0: [
                 <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
                     name: "index",
+                },
+                <OptionsInputDefinition>{
+                    type: "field_dropdown",
+                    name: "yAggregate",
+                    options: [
+                        "value",
+                        "mean",
+                        "median",
+                        "variance",
+                        "stdev",
+                        "min",
+                        "max",
+                        "count",
+                        "distinct",
+                        "sum",
+                    ].map(s => [s, s]),
                 },
                 <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
@@ -114,6 +131,16 @@ const visualizeDsl: BlockDomainSpecificLanguage = {
                 <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
                     name: "group",
+                },
+                <OptionsInputDefinition>{
+                    type: "field_dropdown",
+                    name: "stack",
+                    options: [
+                        ["stacked", "stack"],
+                        ["overlaped", "unstack"],
+                        ["normalize", "normalize"],
+                        ["grouped", "xOffset"],
+                    ],
                 },
                 <JSONSettingsInputDefinition>{
                     type: JSONSettingsField.KEY,
