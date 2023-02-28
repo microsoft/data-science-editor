@@ -128,7 +128,7 @@ export function useScreenshotContextMenu() {
             for (const node of toolboxConfiguration.contents)
                 await visitNode(node)
         } finally {
-            await writeMardown(dir, md, `blocks`)
+            await writeMardown(dir, md, `index`)
         }
 
         async function visitNode(node: ContentDefinition) {
@@ -156,18 +156,12 @@ export function useScreenshotContextMenu() {
             const { message0, tooltip, args0 = [] } = def || {}
             const name = message0.replace(/%(\d+)/g, (_, digit) => {
                 const arg = args0[parseInt(digit) - 1]
-                return arg?.name || "..."
+                const name = arg?.name || "..."
+                return name === "preview" ? "" : name
             })
 
             await renderBlock(dir, block)
-            md.push(
-                `### ${name}`,
-                "",
-                tooltip,
-                "",
-                `![Snapshot of the ${name} block](/images/blocks/${type}.png)`,
-                ""
-            )
+            md.push(`![${name}](./${type}.png)`, "", tooltip, "")
         }
     }
 
