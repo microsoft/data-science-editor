@@ -143,59 +143,68 @@ const dataSetDsl: BlockDomainSpecificLanguage = {
             },
         },
     ],
-    createCategory: () => [
-        <CategoryDefinition>{
-            kind: "category",
-            name: "Data sets",
-            colour: datasetColour,
-            contents: [
-                <BlockReference>{
-                    kind: "block",
-                    type: DATA_DATASET_BUILTIN_BLOCK,
-                },
-                <BlockReference>{
-                    kind: "block",
-                    type: DATA_LOAD_URL_BLOCK,
-                },
-                <SeparatorDefinition>{
-                    kind: "sep",
-                },
-                <LabelDefinition>{
-                    kind: "label",
-                    text: "Files",
-                },
-                <BlockReference>{
-                    kind: "block",
-                    type: DATA_LOAD_FILE_BLOCK,
-                },
-                <BlockReference>{
-                    kind: "block",
-                    type: DATA_SAVE_FILE_BLOCK,
-                },
-                <ButtonDefinition>{
-                    kind: "button",
-                    text: "Import dataset from file",
-                    callbackKey: DATA_ADD_DATASET_CALLBACK,
-                    callback: async (workspace: Workspace) => {
-                        const services = resolveWorkspaceServices(workspace)
-                        const directory = services?.workingDirectory
-                        if (!directory)
-                            alert(
-                                "You need to open a directory to import a dataset."
-                            )
-                        else {
-                            const imported = await importCSVFilesIntoWorkspace(
-                                directory.handle
-                            )
-                            if (imported > 0) {
-                                await directory.sync()
-                                alert("Datasets imported!")
-                            }
-                        }
+    createCategory: ({ directory }) => {
+        const files = directory
+            ? [
+                  <SeparatorDefinition>{
+                      kind: "sep",
+                  },
+                  <LabelDefinition>{
+                      kind: "label",
+                      text: "Files",
+                  },
+                  <BlockReference>{
+                      kind: "block",
+                      type: DATA_LOAD_FILE_BLOCK,
+                  },
+                  <BlockReference>{
+                      kind: "block",
+                      type: DATA_SAVE_FILE_BLOCK,
+                  },
+                  <ButtonDefinition>{
+                      kind: "button",
+                      text: "Import dataset from file",
+                      callbackKey: DATA_ADD_DATASET_CALLBACK,
+                      callback: async (workspace: Workspace) => {
+                          const services = resolveWorkspaceServices(workspace)
+                          const directory = services?.workingDirectory
+                          if (!directory)
+                              alert(
+                                  "You need to open a directory to import a dataset."
+                              )
+                          else {
+                              const imported =
+                                  await importCSVFilesIntoWorkspace(
+                                      directory.handle
+                                  )
+                              if (imported > 0) {
+                                  await directory.sync()
+                                  alert("Datasets imported!")
+                              }
+                          }
+                      },
+                  },
+              ]
+            : []
+        const cat = [
+            <CategoryDefinition>{
+                kind: "category",
+                name: "Data sets",
+                colour: datasetColour,
+                contents: [
+                    <BlockReference>{
+                        kind: "block",
+                        type: DATA_DATASET_BUILTIN_BLOCK,
                     },
-                },
-            ],
-        },
-    ],
+                    <BlockReference>{
+                        kind: "block",
+                        type: DATA_LOAD_URL_BLOCK,
+                    },
+                    ...files,
+                ],
+            },
+        ]
+        return cat
+    },
 }
 export default dataSetDsl

@@ -14,6 +14,7 @@ export interface CreateBlocksOptions {
 export interface CreateCategoryOptions {
     theme: Theme
     source: WorkspaceJSON
+    directory?: boolean
 }
 
 export default interface BlockDomainSpecificLanguage {

@@ -97,7 +97,8 @@ function patchCategoryJSONtoXML(cat: CategoryDefinition): CategoryDefinition {
 
 export default function useToolbox(
     dsls: BlockDomainSpecificLanguage[],
-    source: WorkspaceJSON
+    source: WorkspaceJSON,
+    directory: boolean
 ): ToolboxConfiguration {
     const theme = useTheme()
 
@@ -114,6 +115,7 @@ export default function useToolbox(
                 dsl?.createCategory?.({
                     theme,
                     source,
+                    directory,
                 })
             )
         )
@@ -132,7 +134,7 @@ export default function useToolbox(
             kind: "categoryToolbox",
             contents,
         }
-    }, [blocks, theme, dsls, source])
+    }, [blocks, theme, dsls, source, directory])
 
     return toolboxConfiguration
 }

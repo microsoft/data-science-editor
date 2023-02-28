@@ -142,7 +142,7 @@ export function BlockProvider(props: {
         Xml.domToWorkspace(dom, workspace)
     }
 
-    const toolboxConfiguration = useToolbox(dsls, workspaceJSON)
+    const toolboxConfiguration = useToolbox(dsls, workspaceJSON, !!workspaceDirectory)
     const initializeBlockServices = (block: BlockWithServices) => {
         if (!block || block?.blockServices?.initialized) return
 
