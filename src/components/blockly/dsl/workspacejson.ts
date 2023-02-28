@@ -88,5 +88,5 @@ export interface WorkspaceJSON {
 export interface WorkspaceFile {
     editor: string
     xml: string
-    json: WorkspaceJSON
+    json?: WorkspaceJSON
 }

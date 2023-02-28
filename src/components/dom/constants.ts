@@ -1,3 +1,4 @@
+export const DS_EDITOR_ID = "ds"
 export const MAX_SERVICES_LENGTH = 59
 
 export const NEW_LISTENER = "newListener"
