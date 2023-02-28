@@ -156,7 +156,7 @@ export function useScreenshotContextMenu() {
             xml: `<xml xmlns="http://www.w3.org/1999/xhtml">${blockxml}</xml>`,
         })
         // wait render done
-        await delay(1000)
+        await delay(100)
         // render screenshot
         const png = await workspaceToPng(workspace)
         // save to file
