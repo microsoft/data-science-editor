@@ -56,6 +56,14 @@ async function loadBlocks(
                 jacdacDefinition: block,
                 init: function () {
                     this.jsonInit(block)
+                    this.setTooltip(() => {
+                        const b = this as Blockly.Block
+                        const tooltip = block.tooltip
+                        const comment = b.getCommentText()
+                        return [comment, tooltip]
+                            .filter(s => !!s)
+                            .join("\n-----\n")
+                    })
                 },
             })
     )
