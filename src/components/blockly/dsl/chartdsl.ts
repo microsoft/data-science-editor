@@ -20,7 +20,6 @@ import DataColumnChooserField, {
     declareColumns,
 } from "../fields/DataColumnChooserField"
 import LinePlotField from "../fields/chart/LinePlotField"
-import HistogramField from "../fields/chart/HistogramField"
 import { chartColour } from "./palette"
 import BoxPlotField from "../fields/chart/BoxPlotField"
 import VegaChartField from "../fields/chart/VegaChartField"
@@ -38,7 +37,6 @@ import ScatterPlotMatrixField from "../fields/chart/ScatterPlotMatrixField"
 const LINEPLOT_BLOCK = "chart_lineplot"
 const HEATMAP_BLOCK = "chart_heatmap"
 const SCATTERPLOTMATRIX_BLOCK = "chart_scatterplot_matrix"
-const HISTOGRAM_BLOCK = "chart_histogram"
 const BOX_PLOT_BLOCK = "chart_box_plot"
 
 const VEGA_LAYER_BLOCK = "vega_layer"
@@ -182,42 +180,7 @@ const chartDsl: BlockDomainSpecificLanguage = {
             dataPreviewField: false,
             transformData: identityTransformData,
         },
-        <BlockDefinition>{
-            kind: "block",
-            type: HISTOGRAM_BLOCK,
-            tooltip: "Renders the block data as a histogram",
-            message0: "histogram of %1 group %2 %3 %4 %5",
-            args0: [
-                {
-                    type: DataColumnChooserField.KEY,
-                    name: "index",
-                    dataType: "number",
-                },
-                {
-                    type: DataColumnChooserField.KEY,
-                    name: "group",
-                    dataType: "string",
-                },
-                <JSONSettingsInputDefinition>{
-                    type: JSONSettingsField.KEY,
-                    name: "settings",
-                    schema: chartSettingsSchema,
-                },
-                <DummyInputDefinition>{
-                    type: "input_dummy",
-                },
-                {
-                    type: HistogramField.KEY,
-                    name: "plot",
-                },
-            ],
-            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            colour,
-            inputsInline: false,
-            dataPreviewField: false,
-            transformData: identityTransformData,
-        },
+
         {
             kind: "block",
             type: BOX_PLOT_BLOCK,
@@ -510,7 +473,6 @@ const chartDsl: BlockDomainSpecificLanguage = {
             kind: "category",
             name: "Charts",
             contents: [
-                <BlockReference>{ kind: "block", type: HISTOGRAM_BLOCK },
                 <BlockReference>{ kind: "block", type: LINEPLOT_BLOCK },
                 <BlockReference>{ kind: "block", type: BOX_PLOT_BLOCK },
                 <BlockReference>{ kind: "block", type: HEATMAP_BLOCK },

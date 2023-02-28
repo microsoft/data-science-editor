@@ -5,6 +5,7 @@ import {
     CategoryDefinition,
     char2DSettingsSchema,
     charMapSettingsSchema,
+    chartSettingsSchema,
     DataColumnInputDefinition,
     DATA_SCIENCE_STATEMENT_TYPE,
     DummyInputDefinition,
@@ -24,11 +25,13 @@ import JSONSettingsField, {
     JSONSettingsInputDefinition,
 } from "../fields/JSONSettingsField"
 import PieChartField from "../fields/chart/PieChartField"
+import HistogramField from "../fields/chart/HistogramField"
 
 const CHART_SHOW_TABLE_BLOCK = "chart_show_table"
 const SCATTERPLOT_BLOCK = "chart_scatterplot"
 const BARCHART_BLOCK = "chart_bar"
 const PIECHART_BLOCK = "chart_pie"
+const HISTOGRAM_BLOCK = "chart_histogram"
 
 const colour = visualizeColour
 const visualizeDsl: BlockDomainSpecificLanguage = {
@@ -196,6 +199,42 @@ const visualizeDsl: BlockDomainSpecificLanguage = {
             dataPreviewField: false,
             transformData: identityTransformData,
         },
+        <BlockDefinition>{
+            kind: "block",
+            type: HISTOGRAM_BLOCK,
+            tooltip: "Renders the block data as a histogram",
+            message0: "histogram of %1 group %2 %3 %4 %5",
+            args0: [
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "index",
+                    dataType: "number",
+                },
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "group",
+                    dataType: "string",
+                },
+                <JSONSettingsInputDefinition>{
+                    type: JSONSettingsField.KEY,
+                    name: "settings",
+                    schema: chartSettingsSchema,
+                },
+                <DummyInputDefinition>{
+                    type: "input_dummy",
+                },
+                {
+                    type: HistogramField.KEY,
+                    name: "plot",
+                },
+            ],
+            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            colour,
+            inputsInline: false,
+            dataPreviewField: false,
+            transformData: identityTransformData,
+        },
     ],
 
     createCategory: () => [
@@ -206,6 +245,7 @@ const visualizeDsl: BlockDomainSpecificLanguage = {
                 <BlockReference>{ kind: "block", type: SCATTERPLOT_BLOCK },
                 <BlockReference>{ kind: "block", type: BARCHART_BLOCK },
                 <BlockReference>{ kind: "block", type: PIECHART_BLOCK },
+                <BlockReference>{ kind: "block", type: HISTOGRAM_BLOCK },
                 <SeparatorDefinition>{ kind: "sep" },
                 <BlockReference>{ kind: "block", type: CHART_SHOW_TABLE_BLOCK },
             ],
