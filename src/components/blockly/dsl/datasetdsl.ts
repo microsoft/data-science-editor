@@ -18,14 +18,16 @@ import {
     setBlockDataWarning,
 } from "../WorkspaceContext"
 import FileSaveField from "../fields/FileSaveField"
-import { downloadCSV, saveCSV } from "./workers/csv.proxy"
+import { downloadCSV, parseCSV, saveCSV } from "./workers/csv.proxy"
 import FileOpenField from "../fields/FileOpenField"
 import palette from "./palette"
 import { importCSVFilesIntoWorkspace } from "../../fs/fs"
+import DataPreviewField from "../fields/DataPreviewField"
 
 const DATA_DATASET_BUILTIN_BLOCK = "data_dataset_builtin"
 const DATA_ADD_DATASET_CALLBACK = "data_add_dataset_variable"
 const DATA_LOAD_URL_BLOCK = "data_load_url"
+const DATA_LOAD_TEXT_BLOCK = "data_load_text"
 const DATA_LOAD_FILE_BLOCK = "data_load_file"
 const DATA_SAVE_FILE_BLOCK = "data_save_file"
 
@@ -69,10 +71,15 @@ const dataSetDsl: BlockDomainSpecificLanguage = {
         {
             kind: "block",
             type: DATA_LOAD_URL_BLOCK,
-            message0: "load dataset from url %1",
+            message0: "load dataset from url %1 %2",
             tooltip:
-                "Loads a CSV data from an external internal URL. If the URL is a Google Sheet, it will automatically be converted to CSV.",
+                "Loads a CSV dataset from an external internal URL. If the URL is a Google Sheet, it will automatically be converted to CSV.",
             args0: [
+                {
+                    type: DataPreviewField.KEY,
+                    name: "preview",
+                    compare: false,
+                },
                 <TextInputDefinition>{
                     type: "field_input",
                     name: "url",
@@ -82,7 +89,7 @@ const dataSetDsl: BlockDomainSpecificLanguage = {
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             colour: datasetColour,
             inputsInline: false,
-            dataPreviewField: true,
+            dataPreviewField: false,
             transformData: async block => {
                 const url = block.getFieldValue("url") as string
                 if (!url) return []
@@ -97,6 +104,25 @@ const dataSetDsl: BlockDomainSpecificLanguage = {
                         patched,
                     })
                 }
+                return data
+            },
+        },
+        {
+            kind: "block",
+            type: DATA_LOAD_TEXT_BLOCK,
+            message0: "load dataset from comment",
+            tooltip: "Open the block context menu, click 'Add Comment', paste CSV data.",
+            args0: [],
+            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            colour: datasetColour,
+            inputsInline: false,
+            dataPreviewField: true,
+            transformData: async block => {
+                const text = block.getCommentText()
+                if (!text) return []
+                const { data, errors } = await parseCSV(text)
+                if (errors?.length)
+                    setBlockDataWarning(block, errors[0].message)
                 return data
             },
         },
@@ -199,6 +225,10 @@ const dataSetDsl: BlockDomainSpecificLanguage = {
                     <BlockReference>{
                         kind: "block",
                         type: DATA_LOAD_URL_BLOCK,
+                    },
+                    <BlockReference>{
+                        kind: "block",
+                        type: DATA_LOAD_TEXT_BLOCK,
                     },
                     ...files,
                 ],

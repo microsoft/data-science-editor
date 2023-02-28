@@ -37,6 +37,13 @@ export interface TextInputDefinition extends InputDefinition {
     spellcheck?: boolean
 }
 
+export interface MultilineTextInputDefinition extends InputDefinition {
+    type: "field_multilinetext"
+    text?: string
+    spellcheck?: boolean
+    maxLines?: number
+}
+
 export interface BooleanInputDefinition extends InputDefinition {
     type: "field_checkbox"
     checked: boolean

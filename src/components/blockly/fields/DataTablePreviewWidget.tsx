@@ -16,26 +16,30 @@ export default function DataTablePreviewWidget(props: {
 
     if (!compare)
         return (
-            <DataTableWidget
-                tableHeight={295}
-                empty={"no data"}
-                transformed={!!transformed}
-                tableWidth={TABLE_WIDTH * 2}
-                maxItems={TABLE_PREVIEW_MAX_ITEMS}
-                hideSummary={hideSummary}
-            />
+            <div style={{ background: "#fff" }}>
+                <DataTableWidget
+                    tableHeight={295}
+                    empty={"no data"}
+                    transformed={!!transformed}
+                    tableWidth={TABLE_WIDTH * 2}
+                    maxItems={TABLE_PREVIEW_MAX_ITEMS}
+                    hideSummary={hideSummary}
+                />
+            </div>
         )
     else if (!data?.length)
         return (
-            <DataTableWidget
-                label="after"
-                tableHeight={295}
-                tableWidth={TABLE_WIDTH * 2}
-                empty={"no data"}
-                transformed={true}
-                maxItems={TABLE_PREVIEW_MAX_ITEMS}
-                hideSummary={hideSummary}
-            />
+            <div style={{ background: "#fff" }}>
+                <DataTableWidget
+                    label="after"
+                    tableHeight={295}
+                    tableWidth={TABLE_WIDTH * 2}
+                    empty={"no data"}
+                    transformed={true}
+                    maxItems={TABLE_PREVIEW_MAX_ITEMS}
+                    hideSummary={hideSummary}
+                />
+            </div>
         )
     else
         return (
