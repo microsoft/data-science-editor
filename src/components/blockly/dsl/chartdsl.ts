@@ -4,7 +4,6 @@ import {
     BooleanInputDefinition,
     CategoryDefinition,
     char2DSettingsSchema,
-    charMapSettingsSchema,
     chartSettingsSchema,
     DataColumnInputDefinition,
     DATA_SCIENCE_STATEMENT_TYPE,
@@ -21,7 +20,6 @@ import DataColumnChooserField, {
 } from "../fields/DataColumnChooserField"
 import LinePlotField from "../fields/chart/LinePlotField"
 import { chartColour } from "./palette"
-import BoxPlotField from "../fields/chart/BoxPlotField"
 import VegaChartField from "../fields/chart/VegaChartField"
 import type { VisualizationSpec } from "react-vega"
 import type { Mark } from "vega-lite/build/src/mark"
@@ -37,7 +35,6 @@ import ScatterPlotMatrixField from "../fields/chart/ScatterPlotMatrixField"
 const LINEPLOT_BLOCK = "chart_lineplot"
 const HEATMAP_BLOCK = "chart_heatmap"
 const SCATTERPLOTMATRIX_BLOCK = "chart_scatterplot_matrix"
-const BOX_PLOT_BLOCK = "chart_box_plot"
 
 const VEGA_LAYER_BLOCK = "vega_layer"
 const VEGA_ENCODING_BLOCK = "vega_encoding"
@@ -170,45 +167,6 @@ const chartDsl: BlockDomainSpecificLanguage = {
                 },
                 {
                     type: HeatMapPlotField.KEY,
-                    name: "plot",
-                },
-            ],
-            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
-            colour,
-            inputsInline: false,
-            dataPreviewField: false,
-            transformData: identityTransformData,
-        },
-
-        {
-            kind: "block",
-            type: BOX_PLOT_BLOCK,
-            message0: "boxplot of index %1 value %2 group %3 %4 %5 %6",
-            args0: [
-                {
-                    type: DataColumnChooserField.KEY,
-                    name: "index",
-                },
-                {
-                    type: DataColumnChooserField.KEY,
-                    name: "value",
-                    dataType: "number",
-                },
-                {
-                    type: DataColumnChooserField.KEY,
-                    name: "group",
-                },
-                <JSONSettingsInputDefinition>{
-                    type: JSONSettingsField.KEY,
-                    name: "settings",
-                    schema: charMapSettingsSchema,
-                },
-                <DummyInputDefinition>{
-                    type: "input_dummy",
-                },
-                {
-                    type: BoxPlotField.KEY,
                     name: "plot",
                 },
             ],
@@ -474,7 +432,6 @@ const chartDsl: BlockDomainSpecificLanguage = {
             name: "Charts",
             contents: [
                 <BlockReference>{ kind: "block", type: LINEPLOT_BLOCK },
-                <BlockReference>{ kind: "block", type: BOX_PLOT_BLOCK },
                 <BlockReference>{ kind: "block", type: HEATMAP_BLOCK },
                 <BlockReference>{
                     kind: "block",

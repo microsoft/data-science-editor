@@ -26,12 +26,14 @@ import JSONSettingsField, {
 } from "../fields/JSONSettingsField"
 import PieChartField from "../fields/chart/PieChartField"
 import HistogramField from "../fields/chart/HistogramField"
+import BoxPlotField from "../fields/chart/BoxPlotField"
 
 const CHART_SHOW_TABLE_BLOCK = "chart_show_table"
 const SCATTERPLOT_BLOCK = "chart_scatterplot"
 const BARCHART_BLOCK = "chart_bar"
 const PIECHART_BLOCK = "chart_pie"
 const HISTOGRAM_BLOCK = "chart_histogram"
+const BOX_PLOT_BLOCK = "chart_box_plot"
 
 const colour = visualizeColour
 const visualizeDsl: BlockDomainSpecificLanguage = {
@@ -235,6 +237,40 @@ const visualizeDsl: BlockDomainSpecificLanguage = {
             dataPreviewField: false,
             transformData: identityTransformData,
         },
+        {
+            kind: "block",
+            type: BOX_PLOT_BLOCK,
+            message0: "boxplot of %1 value %2 %3 %4 %5",
+            args0: [
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "index",
+                },
+                {
+                    type: DataColumnChooserField.KEY,
+                    name: "value",
+                    dataType: "number",
+                },
+                <JSONSettingsInputDefinition>{
+                    type: JSONSettingsField.KEY,
+                    name: "settings",
+                    schema: charMapSettingsSchema,
+                },
+                <DummyInputDefinition>{
+                    type: "input_dummy",
+                },
+                {
+                    type: BoxPlotField.KEY,
+                    name: "plot",
+                },
+            ],
+            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            colour,
+            inputsInline: false,
+            dataPreviewField: false,
+            transformData: identityTransformData,
+        },
     ],
 
     createCategory: () => [
@@ -246,6 +282,7 @@ const visualizeDsl: BlockDomainSpecificLanguage = {
                 <BlockReference>{ kind: "block", type: BARCHART_BLOCK },
                 <BlockReference>{ kind: "block", type: PIECHART_BLOCK },
                 <BlockReference>{ kind: "block", type: HISTOGRAM_BLOCK },
+                <BlockReference>{ kind: "block", type: BOX_PLOT_BLOCK },
                 <SeparatorDefinition>{ kind: "sep" },
                 <BlockReference>{ kind: "block", type: CHART_SHOW_TABLE_BLOCK },
             ],

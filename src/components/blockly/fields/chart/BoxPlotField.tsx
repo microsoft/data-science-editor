@@ -27,8 +27,13 @@ function BoxPlotWidget() {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any,
         encoding: {
-            x: { field: index, type: "nominal", scale: { zero: false } },
-            y: { field: value, type: "quantitative", scale: { zero: false } },
+            y: { field: index, type: "nominal", scale: { zero: false } },
+            x: { field: value, type: "quantitative", scale: { zero: false } },
+            color: { field: index, type: "nominal", legend: null },
+            tooltip: {
+                field: value,
+                type: "quantitative",
+            },
         },
         data: { name: "values" },
     }
