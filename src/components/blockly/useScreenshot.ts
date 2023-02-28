@@ -123,23 +123,12 @@ export function useScreenshotContextMenu() {
         const dir = await window.showDirectoryPicker({ mode: "readwrite" })
         if (!dir) return
 
-        const md = ["# Blocks"]
+        const md = ["# Blocks", ""]
         try {
             for (const node of toolboxConfiguration.contents)
                 await visitNode(node)
         } finally {
-            await writeMardown()
-        }
-
-        async function writeMardown() {
-            const file = await dir.getFileHandle(`reference.md`, {
-                create: true,
-            })
-            const writable = await file.createWritable({
-                keepExistingData: false,
-            })
-            await writable.write(md.filter(l => l !== undefined).join("\n"))
-            await writable.close()
+            await writeMardown(dir, md, `blocks`)
         }
 
         async function visitNode(node: ContentDefinition) {
@@ -164,11 +153,15 @@ export function useScreenshotContextMenu() {
             const def = (Blocks[type] as any)?.definition as BlockDefinition
             if (!def) return
 
-            const { message0, tooltip } = def || {}
-            const name = message0
+            const { message0, tooltip, args0 = [] } = def || {}
+            const name = message0.replace(/%(\d+)/g, (_, digit) => {
+                const arg = args0[parseInt(digit) - 1]
+                return arg?.name || "..."
+            })
+
             await renderBlock(dir, block)
             md.push(
-                `### ${name} {#${type}}`,
+                `### ${name}`,
                 "",
                 tooltip,
                 "",
@@ -226,5 +219,22 @@ export function useScreenshotContextMenu() {
         } catch (e) {
             console.error(`error image ${name}`, e)
         }
+    }
+
+    async function writeMardown(
+        dir: FileSystemDirectoryHandle,
+        lines: string[],
+        name: string
+    ) {
+        const fn = `${name}.md`
+        const file = await dir.getFileHandle(`${name}.md`, {
+            create: true,
+        })
+        const writable = await file.createWritable({
+            keepExistingData: false,
+        })
+        await writable.write(lines.filter(l => l !== undefined).join("\n"))
+        await writable.close()
+        console.debug(`generated ${fn}`)
     }
 }
