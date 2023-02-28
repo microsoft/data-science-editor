@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Sitemap: https://microsoft.github.io/data-science-editor/sitemap/sitemap-index.xml
+Host: https://microsoft.github.io
