@@ -4,7 +4,12 @@ import { DS_EDITOR_ID } from "../dom/constants"
 import { delay } from "../dom/utils"
 import { UIFlags } from "../uiflags"
 import BlockContext from "./BlockContext"
-import { BlockDefinition, BlockReference, CategoryDefinition } from "./toolbox"
+import {
+    BlockDefinition,
+    BlockReference,
+    CategoryDefinition,
+    ContentDefinition,
+} from "./toolbox"
 
 function svgToPng(data: string, width: number, height: number) {
     return new Promise<string>((resolve, reject) => {
@@ -118,18 +123,58 @@ export function useScreenshotContextMenu() {
         const dir = await window.showDirectoryPicker({ mode: "readwrite" })
         if (!dir) return
 
-        const todo = toolboxConfiguration.contents.slice(0)
-        while (todo) {
-            const node = todo.pop()
+        const md = ["# Blocks"]
+        try {
+            for (const node of toolboxConfiguration.contents)
+                await visitNode(node)
+        } finally {
+            await writeMardown()
+        }
+
+        async function writeMardown() {
+            const file = await dir.getFileHandle(`reference.md`, {
+                create: true,
+            })
+            const writable = await file.createWritable({
+                keepExistingData: false,
+            })
+            await writable.write(md.filter(l => l !== undefined).join("\n"))
+            await writable.close()
+        }
+
+        async function visitNode(node: ContentDefinition) {
             switch (node.kind) {
                 case "category":
-                    todo.push(...(node as CategoryDefinition).contents)
+                    await visitCategory(node as CategoryDefinition)
                     break
-                case "block": {
-                    await renderBlock(dir, node as BlockReference)
+                case "block":
+                    await visitBlock(node as BlockReference)
                     break
-                }
             }
+        }
+
+        async function visitCategory(cat: CategoryDefinition) {
+            md.push(`## ${cat.name}`, "")
+            if (cat.contents)
+                for (const child of cat.contents) await visitNode(child)
+        }
+
+        async function visitBlock(block: BlockReference) {
+            const { type } = block
+            const def = (Blocks[type] as any)?.definition as BlockDefinition
+            if (!def) return
+
+            const { message0, tooltip } = def || {}
+            const name = message0
+            await renderBlock(dir, block)
+            md.push(
+                `### ${name} {#${type}}`,
+                "",
+                tooltip,
+                "",
+                `![Snapshot of the ${name} block](/images/blocks/${type}.png)`,
+                ""
+            )
         }
     }
 
