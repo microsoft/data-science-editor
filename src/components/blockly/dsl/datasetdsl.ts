@@ -215,7 +215,7 @@ const dataSetDsl: BlockDomainSpecificLanguage = {
         const cat = [
             <CategoryDefinition>{
                 kind: "category",
-                name: "Data sets",
+                name: "Datasets",
                 colour: datasetColour,
                 contents: [
                     <BlockReference>{
