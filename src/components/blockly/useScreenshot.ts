@@ -168,14 +168,18 @@ export function useScreenshotContextMenu() {
         png: string,
         name: string
     ) {
-        const blob = await (await fetch(png)).blob()
-        const fn = `${name}.png`
-        const file = await dir.getFileHandle(fn, { create: true })
-        const writable = await file.createWritable({
-            keepExistingData: false,
-        })
-        await writable.write(blob)
-        await writable.close()
-        console.debug(`written ${fn}`)
+        try {
+            const blob = await (await fetch(png)).blob()
+            const fn = `${name}.png`
+            const file = await dir.getFileHandle(fn, { create: true })
+            const writable = await file.createWritable({
+                keepExistingData: false,
+            })
+            await writable.write(blob)
+            await writable.close()
+            console.debug(`generated ${fn}`)
+        } catch (e) {
+            console.error(`error image ${name}`, e)
+        }
     }
 }
