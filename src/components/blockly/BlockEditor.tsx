@@ -13,6 +13,7 @@ import { useBlockMinimap } from "./BlockMinimap"
 import BrowserCompatibilityAlert from "../ui/BrowserCompatibilityAlert"
 import { UIFlags } from "../uiflags"
 import useSnackbar from "../hooks/useSnackbar"
+import { useScreenshotContextMenu } from "./useScreenshot"
 
 const PREFIX = "BlockEditor"
 
@@ -124,6 +125,7 @@ function SuspendedBlockEditor(props: { className?: string }) {
     }, [workspace, blocklyRef.current])
 
     useBlockMinimap(workspace, palette)
+    useScreenshotContextMenu()
     return (
         <Root>
             <BrowserCompatibilityAlert

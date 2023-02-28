@@ -66,7 +66,7 @@ const BlockContext = createContext<BlockProps>({
     setWarnings: () => {},
     setWorkspace: () => {},
     setWorkspaceXml: () => {},
-    loadWorkspaceFile: file => {},
+    loadWorkspaceFile: () => {},
 })
 BlockContext.displayName = "Block"
 
@@ -76,8 +76,8 @@ export default BlockContext
 
 /**
  * A context to host a blockly editor
- * @param props 
- * @returns 
+ * @param props
+ * @returns
  */
 // eslint-disable-next-line react/prop-types
 export function BlockProvider(props: {
@@ -142,7 +142,11 @@ export function BlockProvider(props: {
         Xml.domToWorkspace(dom, workspace)
     }
 
-    const toolboxConfiguration = useToolbox(dsls, workspaceJSON, !!workspaceDirectory)
+    const toolboxConfiguration = useToolbox(
+        dsls,
+        workspaceJSON,
+        !!workspaceDirectory
+    )
     const initializeBlockServices = (block: BlockWithServices) => {
         if (!block || block?.blockServices?.initialized) return
 
@@ -309,11 +313,14 @@ export function BlockProvider(props: {
             if (type === "dsl") {
                 switch (action) {
                     case "load":
-                        console.debug(`dsl load`, data)
-                        try {
-                            loadWorkspaceFile(data as DslWorkspaceFileMessage)
-                        } catch (e) {
-                            console.error(e)
+                        {
+                            const ldata = data as DslWorkspaceFileMessage
+                            console.debug(`dsl load`, ldata)
+                            try {
+                                loadWorkspaceFile(ldata)
+                            } catch (e) {
+                                console.error(e)
+                            }
                         }
                         break
                     case "options": {
