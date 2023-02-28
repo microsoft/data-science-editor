@@ -69,6 +69,15 @@ export default function DataEditorAppBar() {
                     >
                         About
                     </Link>
+                    <Link
+                        className={classes.menuButton}
+                        aria-label="List of blocks"
+                        title="List of blocks"
+                        color="inherit"
+                        to="/blocks/"
+                    >
+                        Blocks
+                    </Link>
                     <FileSystemButton />
                     <DarkModeButton />
                 </Toolbar>

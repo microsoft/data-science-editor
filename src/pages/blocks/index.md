@@ -66,15 +66,11 @@ Adds a new column with the result of the computation.
 
 ![summarize column calculate calc ](./data_summarize.png)
 
-
 ![group column by by calculate calc ](./data_summarize_by_group.png)
-
 
 ![count distinct column ](./data_count.png)
 
-
 ![bin by column ](./data_bin.png)
-
 
 ## Visualize
 
@@ -96,7 +92,6 @@ Renders the block data as a histogram
 
 ![boxplot of index value value settings ... plot](./chart_box_plot.png)
 
-
 ![show table column0 column1 column2 column3 column4 column5 ... table](./chart_show_table.png)
 
 Displays the block data as a table
@@ -105,17 +100,13 @@ Displays the block data as a table
 
 ![correlation of column1 column2 column3 column4 column5 column6 y  ... plot](./data_correlation.png)
 
-
 ![linear regression of x x y y1  ... plot](./data_linear_regression.png)
-
 
 ## Data variables
 
 ![dataset variable data ](./data_dataset_read.png)
 
-
 ![store in dataset variable data ](./data_dataset_write.png)
-
 
 ## Charts
 
@@ -133,24 +124,16 @@ Renders pairwize scatter plots
 
 ![chart mark settings ... fields ... chart](./vega_layer.png)
 
-
 ![encoding channel field field ... fields](./vega_encoding.png)
-
 
 ![type type](./vega_encoding_type.png)
 
-
 ![sort order](./vega_encoding_sort.png)
-
 
 ![sort by aggregate of field order](./vega_encoding_sort_field.png)
 
-
 ![aggregate aggregate](./vega_encoding_aggregate.png)
-
 
 ![time unit timeunit](./vega_encoding_time_unit.png)
 
-
 ![bin enabled](./vega_encoding_bin.png)
-

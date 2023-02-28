@@ -1,4 +1,3 @@
-const maxImageWidth = 800
 const siteUrl = "https://microsoft.github.io"
 const pathPrefix = "/data-science-editor"
 
@@ -53,16 +52,6 @@ module.exports = {
                         }
                     },
                     "gatsby-remark-external-links",
-                    {
-                        resolve: `gatsby-remark-images`,
-                        options: {
-                            // It's important to specify the maxWidth (in pixels) of
-                            // the content container as this plugin uses this as the
-                            // base for generating different widths of each image.
-                            maxWidth: maxImageWidth,
-                            linkImagesToOriginal: false,
-                        },
-                    },
                     "gatsby-remark-static-images",
                     "gatsby-remark-copy-linked-files",
                 ].filter(plugin => !!plugin),

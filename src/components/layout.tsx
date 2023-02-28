@@ -159,7 +159,9 @@ function LayoutWithContext(props: LayoutProps) {
     const InnerMainSection = () => element
     const MainSection = () => (
         <>
-            <main className={classes.mainContent}>
+            <main
+                className={clsx(classes.mainContent, path.replace(/\//g, ""))}
+            >
                 {!hideMainMenu && <div className={classes.drawerHeader} />}
                 {container ? (
                     <Container>

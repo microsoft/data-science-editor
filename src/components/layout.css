@@ -734,3 +734,11 @@ div.blocklyTooltipDiv {
     font-size: 1rem;
     padding: 0.5rem;
 }
+
+.LayoutMainContent.blocks img {
+    height: 3rem;
+}
+
+.LayoutMainContent.blocks img[src*="chart_"] {
+    height: 4rem;
+}
