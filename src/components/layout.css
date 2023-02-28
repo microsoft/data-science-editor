@@ -726,3 +726,11 @@ img.pixelated {
 form.vega-bindings {
     display: none !important;
 }
+
+div.blocklyTooltipDiv {
+    color: black;
+    background: #eee;
+    opacity: 1;
+    font-size: 1rem;
+    padding: 0.5rem;
+}
