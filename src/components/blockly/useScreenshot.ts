@@ -1,7 +1,15 @@
-import { WorkspaceSvg, ContextMenuRegistry } from "blockly"
+import { WorkspaceSvg, ContextMenuRegistry, Blocks } from "blockly"
 import { useContext, useEffect } from "react"
+import { DS_EDITOR_ID } from "../dom/constants"
+import { delay } from "../dom/utils"
 import { UIFlags } from "../uiflags"
 import BlockContext from "./BlockContext"
+import {
+    BlockDefinition,
+    BlockReference,
+    CategoryDefinition,
+    ContentDefinition,
+} from "./toolbox"
 
 function svgToPng(data: string, width: number, height: number) {
     return new Promise<string>((resolve, reject) => {
@@ -9,7 +17,7 @@ function svgToPng(data: string, width: number, height: number) {
         const context = canvas.getContext("2d")
         const img = new Image()
 
-        const pixelDensity = 10
+        const pixelDensity = 4
         canvas.width = width * pixelDensity
         canvas.height = height * pixelDensity
         img.onload = function () {
@@ -93,36 +101,134 @@ export async function workspaceToPng(workspace: WorkspaceSvg, customCss = "") {
     return datauri
 }
 
-export async function downloadWorkspaceScreenshot(
-    workspace: WorkspaceSvg,
-    name: string
-) {
-    const datauri = await workspaceToPng(workspace)
-    const a = document.createElement("a")
-    a.download = `${name}.png`
-    a.target = "_self"
-    a.href = datauri
-    document.body.appendChild(a)
-    a.click()
-    a.parentNode.removeChild(a)
-}
-
 export function useScreenshotContextMenu() {
-    const { workspace } = useContext(BlockContext)
+    const { workspace, loadWorkspaceFile, toolboxConfiguration } =
+        useContext(BlockContext)
     const id = "dse_screenshot"
 
     useEffect(() => {
         if (!UIFlags.screenshot) return
         ContextMenuRegistry.registry.register({
-            callback: () => {
-                downloadWorkspaceScreenshot(workspace, "datablocks")
-            },
+            callback: generateDocumentationScreenshots,
             preconditionFn: () => "enabled",
             scopeType: ContextMenuRegistry.ScopeType.WORKSPACE,
-            displayText: "Snapshot to Image",
+            displayText: "Generate documentation screenshots",
             weight: 1000,
             id,
         })
         return () => ContextMenuRegistry.registry.unregister(id)
     }, [workspace])
+
+    async function generateDocumentationScreenshots() {
+        const dir = await window.showDirectoryPicker({ mode: "readwrite" })
+        if (!dir) return
+
+        const md = ["# Blocks", ""]
+        try {
+            for (const node of toolboxConfiguration.contents)
+                await visitNode(node)
+        } finally {
+            await writeMardown(dir, md, `index`)
+        }
+
+        async function visitNode(node: ContentDefinition) {
+            switch (node.kind) {
+                case "category":
+                    await visitCategory(node as CategoryDefinition)
+                    break
+                case "block":
+                    await visitBlock(node as BlockReference)
+                    break
+            }
+        }
+
+        async function visitCategory(cat: CategoryDefinition) {
+            md.push(`## ${cat.name}`, "")
+            if (cat.contents)
+                for (const child of cat.contents) await visitNode(child)
+        }
+
+        async function visitBlock(block: BlockReference) {
+            const { type } = block
+            const def = (Blocks[type] as any)?.definition as BlockDefinition
+            if (!def) return
+
+            const { message0, tooltip, args0 = [] } = def || {}
+            const name = message0.replace(/%(\d+)/g, (_, digit) => {
+                const arg = args0[parseInt(digit) - 1]
+                const name = arg?.name || "..."
+                return name === "preview" ? "" : name
+            })
+
+            await renderBlock(dir, block)
+            md.push(`![${name}](./${type}.png)`, "", tooltip, "")
+        }
+    }
+
+    async function renderBlock(
+        dir: FileSystemDirectoryHandle,
+        block: BlockReference
+    ) {
+        const { type } = block
+        const def = (Blocks[type] as any).definition as BlockDefinition
+        const blockxml =
+            def?.blockxml ||
+            `<block type="${type}">${Object.keys(def?.values || [])
+                .map(name => {
+                    const { type } = def.values[name]
+                    const shadow = type !== "variables_get"
+                    return `<value name="${name}"><${
+                        shadow ? "shadow" : "field"
+                    } type="${type}" /></value>`
+                })
+                .join("\n")}</block>`
+        // load payload
+        loadWorkspaceFile({
+            editor: DS_EDITOR_ID,
+            xml: `<xml xmlns="http://www.w3.org/1999/xhtml">${blockxml}</xml>`,
+        })
+        // wait render done
+        await delay(100)
+        // render screenshot
+        const png = await workspaceToPng(workspace)
+        // save to file
+        await writeImage(dir, png, type)
+    }
+
+    async function writeImage(
+        dir: FileSystemDirectoryHandle,
+        png: string,
+        name: string
+    ) {
+        try {
+            const blob = await (await fetch(png)).blob()
+            const fn = `${name}.png`
+            const file = await dir.getFileHandle(fn, { create: true })
+            const writable = await file.createWritable({
+                keepExistingData: false,
+            })
+            await writable.write(blob)
+            await writable.close()
+            console.debug(`generated ${fn}`)
+        } catch (e) {
+            console.error(`error image ${name}`, e)
+        }
+    }
+
+    async function writeMardown(
+        dir: FileSystemDirectoryHandle,
+        lines: string[],
+        name: string
+    ) {
+        const fn = `${name}.md`
+        const file = await dir.getFileHandle(`${name}.md`, {
+            create: true,
+        })
+        const writable = await file.createWritable({
+            keepExistingData: false,
+        })
+        await writable.write(lines.filter(l => l !== undefined).join("\n"))
+        await writable.close()
+        console.debug(`generated ${fn}`)
+    }
 }

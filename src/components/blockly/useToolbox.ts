@@ -53,7 +53,7 @@ async function loadBlocks(
     blocks.forEach(
         block =>
             (Blockly.Blocks[block.type] = {
-                jacdacDefinition: block,
+                definition: block,
                 init: function () {
                     this.jsonInit(block)
                     this.setTooltip(() => {

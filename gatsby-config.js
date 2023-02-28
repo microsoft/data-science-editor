@@ -46,7 +46,12 @@ module.exports = {
                     remarkPlugins: [require(`remark-gfm`)],
                 },
                 gatsbyRemarkPlugins: [
-                    "gatsby-remark-autolink-headers",
+                    {
+                        resolve: `gatsby-remark-autolink-headers`,
+                        options: {
+                            enableCustomId: true
+                        }
+                    },
                     "gatsby-remark-external-links",
                     {
                         resolve: `gatsby-remark-images`,

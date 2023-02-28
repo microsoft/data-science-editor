@@ -27,7 +27,7 @@ yarn develop
 
 #### Updating dependencies
 
-Use [npm-check-updates](https://www.npmjs.com/package/npm-check-updates) to upgrade all dependencies expect blockly*, tfjs, mdx.
+Use [npm-check-updates](https://www.npmjs.com/package/npm-check-updates) to upgrade all dependencies expect blockly\*, tfjs, mdx.
 
 ### VS Code
 
@@ -53,6 +53,13 @@ yarn develop
 ```
 http://localhost:8000?dbg=1
 ```
+
+### Generate block docs
+
+-   add `?screenshot=1`
+-   right click in empty editor and select generate screenshots
+-   select `/src/pages/blocks` folder
+-   commit
 
 ## Microsoft Open Source Code of Conduct
 

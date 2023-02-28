@@ -21,8 +21,8 @@ import { UIFlags } from "../uiflags"
 import SplashDialog from "../ui/SplashDialog"
 import visualizeDsl from "./dsl/visualizedsl"
 import statsDsl from "./dsl/statsdsl"
+import { DS_EDITOR_ID } from "../dom/constants"
 
-const DS_EDITOR_ID = "ds"
 const DS_SOURCE_STORAGE_KEY = "editor"
 const DS_NEW_FILE_CONTENT = JSON.stringify({
     editor: DS_EDITOR_ID,
