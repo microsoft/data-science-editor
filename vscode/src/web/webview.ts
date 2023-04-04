@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { bindApi } from "./api";
 
 class WebViewSerializer implements vscode.WebviewPanelSerializer {
     constructor(readonly deserialize: (view: vscode.WebviewPanel) => void) {}
@@ -134,6 +135,9 @@ export class WebView {
             this,
             this.context.subscriptions
         );
+        if (this.panel) {
+            await bindApi(this.panel);
+        }
         await this.updateDeveloperToolsPanelUrl();
     }
 
