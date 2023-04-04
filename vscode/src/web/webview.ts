@@ -90,7 +90,7 @@ export class WebView {
         </style>
         </head>
         <body>
-        <iframe src="${fullWebServerUri}?embed=1&storage=0&footer=0&browsercheck=0&${darkMode}=1" />
+        <iframe src="${fullWebServerUri}?embed=1&storage=0&footer=0&browsercheck=0&${darkMode}=1&hidesplash=1" />
         </body>
         </html>                
                         `;
