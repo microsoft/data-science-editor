@@ -12,7 +12,7 @@ export const blocks = [
         args0: [
             {
                 type: "ds_field_iframe_data_chooser",
-                name: "file name",
+                name: "file",
                 dataId: "table",
             },
         ],
@@ -39,9 +39,9 @@ export const transforms: Record<
     // don't rename these identifiers, they are used in the serialized blocky and will break existing files
     // eslint-disable-next-line @typescript-eslint/naming-convention
     vscode_import_csv: async b => {
-        const fileName = b.inputs[0].fields["file name"].value;
+        const fileName = b.inputs[0].fields["file"].value;
         if (!fileName) {
-            console.debug(`table.load no table selected`);
+            console.debug(`no file selected`);
             return { dataset: [] };
         }
 
