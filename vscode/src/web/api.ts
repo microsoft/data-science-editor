@@ -15,7 +15,7 @@ interface DataScienceEditorPostPayload {
 export async function bindApi(view: vscode.WebviewPanel) {
     function post(payload: DataScienceEditorPostPayload) {
         console.debug(`data blocks send`, payload);
-        view.webview.postMessage(payload);
+        view.webview.postMessage({ ...payload, from: "vscode" });
     }
 
     async function postFiles(currentDslId: string) {
@@ -83,20 +83,19 @@ export async function bindApi(view: vscode.WebviewPanel) {
         };
 
         view.webview.onDidReceiveMessage(
-            (
-                msg: MessageEvent<{
-                    // TODO: replace these types with the actual types
-                    type: string;
-                    dslid: string;
-                    action: string;
-                    workspace: string;
-                    editor: string;
-                    xml: string;
-                    json: string;
-                }>
-            ) => {
-                const { data } = msg;
-                if (data.type !== "dsl") return;
+            (data: {
+                // TODO: replace these types with the actual types
+                type: string;
+                dslid: string;
+                action: string;
+                workspace: string;
+                editor: string;
+                xml: string;
+                json: string;
+            }) => {
+                if (data.type !== "dsl") {
+                    return;
+                }
                 const { dslid, action } = data;
                 console.debug(action, data);
                 switch (action) {

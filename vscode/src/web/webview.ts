@@ -89,9 +89,24 @@ export class WebView {
             border: none;
         }
         </style>
+        <script nonce="${nonce}">
+        document.addEventListener("DOMContentLoaded", () => {
+            console.log("data science proxy loaded...")
+            const vscode = acquireVsCodeApi();
+            const editor = document.getElementById("editor");
+            window.addEventListener("message", event => {
+                console.log({ event })
+                // message may come from vscode
+                if (event.data.from === "vscode")
+                    editor.contentWindow.postMessage(event.data, "*");
+                else
+                    vscode.postMessage(event.data);
+            });            
+        });
+        </script>
         </head>
         <body>
-        <iframe src="${fullWebServerUri}?embed=1&storage=0&footer=0&browsercheck=0&${darkMode}=1&hidesplash=1" />
+        <iframe id="editor" src="${fullWebServerUri}?embed=1&storage=0&footer=0&browsercheck=0&${darkMode}=1&hidesplash=1" />
         </body>
         </html>                
                         `;
@@ -99,7 +114,9 @@ export class WebView {
 
     private async updateDeveloperToolsPanelUrl() {
         const panel = this.panel;
-        if (!panel) return;
+        if (!panel) {
+            return;
+        }
         panel.webview.html = await this.generateSimulatorsHtml();
     }
 
