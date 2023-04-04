@@ -18,21 +18,6 @@
 				"${workspaceFolder}/dist/web/**/*.js"
 			],
 			"preLaunchTask": "npm: watch-web"
-		},
-		{
-			"name": "Extension Tests",
-			"type": "extensionHost",
-			"debugWebWorkerHost": true,
-			"request": "launch",
-			"args": [
-				"--extensionDevelopmentPath=${workspaceFolder}",
-				"--extensionDevelopmentKind=web",
-				"--extensionTestsPath=${workspaceFolder}/dist/web/test/suite/index"
-			],
-			"outFiles": [
-				"${workspaceFolder}/dist/web/**/*.js"
-			],
-			"preLaunchTask": "npm: watch-web"
 		}
 	]
 }
