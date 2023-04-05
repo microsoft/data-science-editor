@@ -27,9 +27,10 @@ import {
     replaceNully,
     rename,
     distinct,
-} from "@tidyjs/tidy"
-import { bin } from "d3-array"
-import { sampleCorrelation, linearRegression } from "simple-statistics"
+    fill,
+} from "@tidyjs/tidy";
+import { bin } from "d3-array";
+import { sampleCorrelation, linearRegression } from "simple-statistics";
 
 export type DataSummarizer =
     | "mean"
@@ -38,137 +39,141 @@ export type DataSummarizer =
     | "max"
     | "sum"
     | "deviation"
-    | "variance"
+    | "variance";
 
 export interface DataMessage {
-    worker: "data"
-    id?: string
-    data: object[]
-    previousData?: object[]
+    worker: "data";
+    id?: string;
+    data: object[];
+    previousData?: object[];
 }
 
 export interface DataRequest extends DataMessage {
-    type?: string
+    type?: string;
 }
 
 export interface DataArrangeRequest extends DataRequest {
-    type: "arrange"
-    column: string
-    descending: boolean
+    type: "arrange";
+    column: string;
+    descending: boolean;
 }
 
 export interface DataSelectRequest extends DataRequest {
-    type: "select"
-    columns: string[]
+    type: "select";
+    columns: string[];
 }
 
 export interface DataDropRequest extends DataRequest {
-    type: "drop"
-    columns: string[]
+    type: "drop";
+    columns: string[];
 }
 export interface DataDistinctRequest extends DataRequest {
-    type: "distinct"
-    columns: string[]
+    type: "distinct";
+    columns: string[];
 }
 
 export interface DataFilterColumnsRequest extends DataRequest {
-    type: "filter_columns"
-    columns: string[]
-    logic: string
+    type: "filter_columns";
+    columns: string[];
+    logic: string;
 }
 
 export interface DataFilterStringRequest extends DataRequest {
-    type: "filter_string"
-    column: string
-    logic: string
-    rhs: string
+    type: "filter_string";
+    column: string;
+    logic: string;
+    rhs: string;
 }
 
 export interface DataRenameRequest extends DataRequest {
-    type: "rename"
-    names: Record<string, string>
+    type: "rename";
+    names: Record<string, string>;
 }
 
 export interface DataMutateColumnsRequest extends DataRequest {
-    type: "mutate_columns"
-    newcolumn: string
-    lhs: string
-    rhs: string
-    logic: string
+    type: "mutate_columns";
+    newcolumn: string;
+    lhs: string;
+    rhs: string;
+    logic: string;
 }
 
 export interface DataMutateNumberRequest extends DataRequest {
-    type: "mutate_number"
-    newcolumn: string
-    lhs: string
-    rhs: number
-    logic: string
+    type: "mutate_number";
+    newcolumn: string;
+    lhs: string;
+    rhs: number;
+    logic: string;
 }
 
 export interface DataSummarizeRequest extends DataRequest {
-    type: "summarize"
-    columns: string[]
-    calc: DataSummarizer
+    type: "summarize";
+    columns: string[];
+    calc: DataSummarizer;
 }
 
 export interface DataSummarizeByGroupRequest extends DataRequest {
-    type: "summarize_by_group"
-    column: string
-    by: string
-    calc: DataSummarizer
+    type: "summarize_by_group";
+    column: string;
+    by: string;
+    calc: DataSummarizer;
 }
 
 export interface DataCountRequest extends DataRequest {
-    type: "count"
-    column: string
+    type: "count";
+    column: string;
 }
 
 export interface DataRecordWindowRequest extends DataRequest {
-    type: "record_window"
-    horizon: number
-    data: { time?: number }[]
-    previousData?: { time?: number }[]
+    type: "record_window";
+    horizon: number;
+    data: { time?: number }[];
+    previousData?: { time?: number }[];
 }
 
 export interface DataBinRequest extends DataRequest {
-    type: "bin"
-    column: string
+    type: "bin";
+    column: string;
 }
 
 export interface DataCorrelationRequest extends DataRequest {
-    type: "correlation"
-    columns: string[]
+    type: "correlation";
+    columns: string[];
 }
 
 export interface DataLinearRegressionRequest extends DataRequest {
-    type: "linear_regression"
-    column1: string
-    column2: string
+    type: "linear_regression";
+    column1: string;
+    column2: string;
 }
 export interface DataReplaceNullyRequest extends DataRequest {
-    type: "replace_nully"
-    replacements: Record<string, string | number | boolean>
+    type: "replace_nully";
+    replacements: Record<string, string | number | boolean>;
+}
+export interface DataFillNullyRequest extends DataRequest {
+    type: "fill_nully";
+    replacements: Record<string, "down" | "up">;
 }
 export interface DataSliceOptions {
-    sliceHead?: number
-    sliceTail?: number
-    sliceSample?: number
+    sliceHead?: number;
+    sliceTail?: number;
+    sliceSample?: number;
 
-    sliceMax?: number
-    sliceMin?: number
-    sliceColumn?: string
+    sliceMax?: number;
+    sliceMin?: number;
+    sliceColumn?: string;
 }
 
 export interface DataSliceRequest extends DataRequest, DataSliceOptions {
-    type: "slice"
+    type: "slice";
 }
 
 export interface DataRollingSummaryRequest extends DataRequest {
-    type: "rolling_summary"
-    horizon: number
-    column: string
-    newcolumn: string
-    calc: DataSummarizer
+    type: "rolling_summary";
+    horizon: number;
+    column: string;
+    newcolumn: string;
+    calc: DataSummarizer;
 }
 
 const summarizers = {
@@ -179,250 +184,250 @@ const summarizers = {
     sum,
     deviation,
     variance,
-}
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handlers: { [index: string]: (props: any) => object[] } = {
     arrange: (props: DataArrangeRequest) => {
-        const { column, descending, data } = props
-        return tidy(data, arrange(descending ? desc(column) : column))
+        const { column, descending, data } = props;
+        return tidy(data, arrange(descending ? desc(column) : column));
     },
     select: (props: DataSelectRequest) => {
-        const { columns, data } = props
-        if (!columns?.length) return data
-        else return tidy(data, select(columns.map(column => `${column}`)))
+        const { columns, data } = props;
+        if (!columns?.length) return data;
+        else return tidy(data, select(columns.map(column => `${column}`)));
     },
     drop: (props: DataDropRequest) => {
-        const { columns, data } = props
-        if (!columns?.length) return data
-        else return tidy(data, select(columns.map(column => `-${column}`)))
+        const { columns, data } = props;
+        if (!columns?.length) return data;
+        else return tidy(data, select(columns.map(column => `-${column}`)));
     },
     distinct: (props: DataDistinctRequest) => {
-        const { columns, data } = props
+        const { columns, data } = props;
         const res = tidy(
             data,
             distinct(columns?.length ? (columns as any) : null)
-        )
-        return res
+        );
+        return res;
     },
     filter_string: (props: DataFilterStringRequest) => {
-        const { column, logic, rhs, data } = props
-        if (!column || rhs === undefined) return data
+        const { column, logic, rhs, data } = props;
+        if (!column || rhs === undefined) return data;
 
         switch (logic) {
             case "gt":
                 return tidy(
                     data,
                     filter(d => d[column] > rhs)
-                )
+                );
             case "lt":
                 return tidy(
                     data,
                     filter(d => d[column] < rhs)
-                )
+                );
             case "ge":
                 return tidy(
                     data,
                     filter(d => d[column] >= rhs)
-                )
+                );
             case "le":
                 return tidy(
                     data,
                     filter(d => d[column] <= rhs)
-                )
+                );
             case "eq":
                 return tidy(
                     data,
                     filter(d => d[column] == rhs)
-                )
+                );
             case "ne":
                 return tidy(
                     data,
                     filter(d => d[column] != rhs)
-                )
+                );
             default:
-                return data
+                return data;
         }
     },
     filter_columns: (props: DataFilterColumnsRequest) => {
-        const { columns, logic, data } = props
-        const [left, right] = columns
-        if (!left || !right) return data
+        const { columns, logic, data } = props;
+        const [left, right] = columns;
+        if (!left || !right) return data;
 
         switch (logic) {
             case "gt":
                 return tidy(
                     data,
                     filter(d => d[columns[0]] > d[columns[1]])
-                )
+                );
             case "lt":
                 return tidy(
                     data,
                     filter(d => d[columns[0]] < d[columns[1]])
-                )
+                );
             case "ge":
                 return tidy(
                     data,
                     filter(d => d[columns[0]] >= d[columns[1]])
-                )
+                );
             case "le":
                 return tidy(
                     data,
                     filter(d => d[columns[0]] <= d[columns[1]])
-                )
+                );
             case "eq":
                 return tidy(
                     data,
                     filter(d => d[columns[0]] === d[columns[1]])
-                )
+                );
             case "ne":
                 return tidy(
                     data,
                     filter(d => d[columns[0]] !== d[columns[1]])
-                )
+                );
             default:
-                return data
+                return data;
         }
     },
     mutate_columns: (props: DataMutateColumnsRequest) => {
-        const { newcolumn, lhs, rhs, logic, data } = props
-        if (!newcolumn || !lhs || !rhs || !logic) return data
+        const { newcolumn, lhs, rhs, logic, data } = props;
+        if (!newcolumn || !lhs || !rhs || !logic) return data;
 
-        const calc = {}
+        const calc = {};
         switch (logic) {
             case "plus":
-                calc[newcolumn] = d => d[lhs] + d[rhs]
-                return tidy(data, mutate(calc))
+                calc[newcolumn] = d => d[lhs] + d[rhs];
+                return tidy(data, mutate(calc));
             case "minus":
-                calc[newcolumn] = d => d[lhs] - d[rhs]
-                return tidy(data, mutate(calc))
+                calc[newcolumn] = d => d[lhs] - d[rhs];
+                return tidy(data, mutate(calc));
             case "mult":
-                calc[newcolumn] = d => d[lhs] * d[rhs]
-                return tidy(data, mutate(calc))
+                calc[newcolumn] = d => d[lhs] * d[rhs];
+                return tidy(data, mutate(calc));
             case "div":
-                calc[newcolumn] = d => d[lhs] / d[rhs]
-                return tidy(data, mutate(calc))
+                calc[newcolumn] = d => d[lhs] / d[rhs];
+                return tidy(data, mutate(calc));
             case "gt":
-                calc[newcolumn] = d => d[lhs] > d[rhs]
-                return tidy(data, mutate(calc))
+                calc[newcolumn] = d => d[lhs] > d[rhs];
+                return tidy(data, mutate(calc));
             case "lt":
-                calc[newcolumn] = d => d[lhs] < d[rhs]
-                return tidy(data, mutate(calc))
+                calc[newcolumn] = d => d[lhs] < d[rhs];
+                return tidy(data, mutate(calc));
             case "ge":
-                calc[newcolumn] = d => d[lhs] >= d[rhs]
-                return tidy(data, mutate(calc))
+                calc[newcolumn] = d => d[lhs] >= d[rhs];
+                return tidy(data, mutate(calc));
             case "le":
-                calc[newcolumn] = d => d[lhs] <= d[rhs]
-                return tidy(data, mutate(calc))
+                calc[newcolumn] = d => d[lhs] <= d[rhs];
+                return tidy(data, mutate(calc));
             case "eq":
-                calc[newcolumn] = d => d[lhs] == d[rhs]
-                return tidy(data, mutate(calc))
+                calc[newcolumn] = d => d[lhs] == d[rhs];
+                return tidy(data, mutate(calc));
             case "ne":
-                calc[newcolumn] = d => d[lhs] != d[rhs]
-                return tidy(data, mutate(calc))
+                calc[newcolumn] = d => d[lhs] != d[rhs];
+                return tidy(data, mutate(calc));
             default:
-                return data
+                return data;
         }
     },
     mutate_number: (props: DataMutateNumberRequest) => {
-        const { newcolumn, lhs, rhs, logic, data } = props
+        const { newcolumn, lhs, rhs, logic, data } = props;
         if (newcolumn === undefined || !lhs || rhs === undefined || !logic)
-            return data
+            return data;
 
-        const calc = {}
+        const calc = {};
         switch (logic) {
             case "plus":
-                calc[newcolumn] = d => d[lhs] + rhs
-                return tidy(data, mutate(calc))
+                calc[newcolumn] = d => d[lhs] + rhs;
+                return tidy(data, mutate(calc));
             case "minus":
-                calc[newcolumn] = d => d[lhs] - rhs
-                return tidy(data, mutate(calc))
+                calc[newcolumn] = d => d[lhs] - rhs;
+                return tidy(data, mutate(calc));
             case "mult":
-                calc[newcolumn] = d => d[lhs] * rhs
-                return tidy(data, mutate(calc))
+                calc[newcolumn] = d => d[lhs] * rhs;
+                return tidy(data, mutate(calc));
             case "div":
-                calc[newcolumn] = d => d[lhs] / rhs
-                return tidy(data, mutate(calc))
+                calc[newcolumn] = d => d[lhs] / rhs;
+                return tidy(data, mutate(calc));
             case "gt":
-                calc[newcolumn] = d => d[lhs] > rhs
-                return tidy(data, mutate(calc))
+                calc[newcolumn] = d => d[lhs] > rhs;
+                return tidy(data, mutate(calc));
             case "lt":
-                calc[newcolumn] = d => d[lhs] < rhs
-                return tidy(data, mutate(calc))
+                calc[newcolumn] = d => d[lhs] < rhs;
+                return tidy(data, mutate(calc));
             case "ge":
-                calc[newcolumn] = d => d[lhs] >= rhs
-                return tidy(data, mutate(calc))
+                calc[newcolumn] = d => d[lhs] >= rhs;
+                return tidy(data, mutate(calc));
             case "le":
-                calc[newcolumn] = d => d[lhs] <= rhs
-                return tidy(data, mutate(calc))
+                calc[newcolumn] = d => d[lhs] <= rhs;
+                return tidy(data, mutate(calc));
             case "eq":
-                calc[newcolumn] = d => d[lhs] == rhs
-                return tidy(data, mutate(calc))
+                calc[newcolumn] = d => d[lhs] == rhs;
+                return tidy(data, mutate(calc));
             case "ne":
-                calc[newcolumn] = d => d[lhs] != rhs
-                return tidy(data, mutate(calc))
+                calc[newcolumn] = d => d[lhs] != rhs;
+                return tidy(data, mutate(calc));
             default:
-                return data
+                return data;
         }
     },
     summarize: (props: DataSummarizeRequest) => {
-        const { columns, calc, data } = props
-        if (!columns?.length || !calc) return data
+        const { columns, calc, data } = props;
+        if (!columns?.length || !calc) return data;
 
-        const summarizer = summarizers[calc]
-        if (!summarizer) return data
+        const summarizer = summarizers[calc];
+        if (!summarizer) return data;
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const items: SummarizeSpec<Object> = {}
-        columns.forEach(column => (items[column] = summarizer(column as any)))
-        return tidy(data, summarize(items))
+        const items: SummarizeSpec<Object> = {};
+        columns.forEach(column => (items[column] = summarizer(column as any)));
+        return tidy(data, summarize(items));
     },
     summarize_by_group: (props: DataSummarizeByGroupRequest) => {
-        const { column, by, calc, data } = props
-        if (!column || !by || !calc) return data
+        const { column, by, calc, data } = props;
+        if (!column || !by || !calc) return data;
 
-        const summarizer = summarizers[calc]
-        if (!summarizer) return data
+        const summarizer = summarizers[calc];
+        if (!summarizer) return data;
 
-        const items: SummarizeSpec<Object> = {}
-        items[column] = summarizer(column as any)
+        const items: SummarizeSpec<Object> = {};
+        items[column] = summarizer(column as any);
         const res = tidy(
             data,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             groupBy(by as any, [summarize(items)])
-        )
-        console.debug(`summarize by group`, { res })
-        return res
+        );
+        console.debug(`summarize by group`, { res });
+        return res;
     },
     count: (props: DataCountRequest) => {
-        const { column, data } = props
-        if (!column) return data
+        const { column, data } = props;
+        if (!column) return data;
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return tidy(data, count(column as any, { name: "count" }))
+        return tidy(data, count(column as any, { name: "count" }));
     },
     record_window: (props: DataRecordWindowRequest) => {
-        const { data, previousData, horizon } = props
-        if (!data?.length) return data
-        const now = data[data.length - 1].time
-        const previousNow = previousData?.[previousData?.length - 1]?.time
+        const { data, previousData, horizon } = props;
+        if (!data?.length) return data;
+        const now = data[data.length - 1].time;
+        const previousNow = previousData?.[previousData?.length - 1]?.time;
         if (now === undefined || previousNow === undefined)
-            return data.filter(r => now - r.time < horizon)
+            return data.filter(r => now - r.time < horizon);
         return [
             ...previousData.filter(r => now - r.time < horizon),
             ...data.filter(r => now - r.time < horizon && r.time > previousNow),
-        ]
+        ];
     },
     bin: (props: DataBinRequest) => {
-        const { data, column } = props
-        const binner = bin().value(d => d[column])
-        const binned: (object[] & { x0: number; x1: number })[] = binner(data)
+        const { data, column } = props;
+        const binner = bin().value(d => d[column]);
+        const binned: (object[] & { x0: number; x1: number })[] = binner(data);
         // convert back to objects
-        return binned.map(b => ({ count: b.length, x0: b.x0, x1: b.x1 }))
+        return binned.map(b => ({ count: b.length, x0: b.x0, x1: b.x1 }));
     },
     correlation: (props: DataCorrelationRequest) => {
-        const { data, columns } = props
-        columns.sort()
+        const { data, columns } = props;
+        columns.sort();
         const res = columns
             .map((row, r) => ({ row, r, drow: data.map(obj => obj[row]) }))
             .map(({ row, r, drow }) =>
@@ -440,33 +445,46 @@ const handlers: { [index: string]: (props: any) => object[] } = {
                 )
             )
             .flat()
-            .filter(o => !!o)
-        return res
+            .filter(o => !!o);
+        return res;
     },
     linear_regression: (props: DataLinearRegressionRequest) => {
-        const { data, column1, column2 } = props
-        if (!column1 || !column2) return data
+        const { data, column1, column2 } = props;
+        if (!column1 || !column2) return data;
 
-        const x = data.map(obj => obj[column1])
-        const y = data.map(obj => obj[column2])
-        const linregmb = linearRegression([x, y])
+        const x = data.map(obj => obj[column1]);
+        const y = data.map(obj => obj[column2]);
+        const linregmb = linearRegression([x, y]);
         return [
             { slope: linregmb.m.toFixed(3), intercept: linregmb.b.toFixed(3) },
-        ]
+        ];
     },
     replace_nully: (props: DataReplaceNullyRequest) => {
-        const { data, replacements } = props
-        const res = tidy(data, replaceNully(replacements))
-        return res
+        const { data, replacements } = props;
+        const res = tidy(data, replaceNully(replacements));
+        return res;
+    },
+    fill_nully: (props: DataFillNullyRequest) => {
+        const { data, replacements } = props;
+        let res = data.slice(0);
+        const downs = Object.keys(replacements).filter(
+            column => replacements[column] === "down"
+        );
+        const ups = Object.keys(replacements).filter(
+            column => replacements[column] === "up"
+        );
+        if (downs.length) res = tidy(data, fill(downs));
+        if (ups.length) res = tidy(res.reverse(), fill(downs)).reverse();
+        return res;
     },
     rename: (props: DataRenameRequest) => {
-        const { data, names } = props
-        const res = tidy(data, rename(names))
-        return res
+        const { data, names } = props;
+        const res = tidy(data, rename(names));
+        return res;
     },
     slice: (props: DataSliceRequest) => {
-        const { data } = props
-        let index = 0
+        const { data } = props;
+        let index = 0;
         const tidied: object[] = data
             ? (tidy(
                   data,
@@ -483,13 +501,13 @@ const handlers: { [index: string]: (props: any) => object[] } = {
                       : undefined,
                   mutate({ index: () => index++ })
               ) as object[])
-            : []
-        return tidied
+            : [];
+        return tidied;
     },
     rolling_summary: (props: DataRollingSummaryRequest) => {
-        const { data, horizon, column, newcolumn, calc } = props
-        const summarizer = summarizers[calc]
-        if (!calc) return null
+        const { data, horizon, column, newcolumn, calc } = props;
+        const summarizer = summarizers[calc];
+        if (!calc) return null;
 
         const res = tidy(
             data,
@@ -498,41 +516,41 @@ const handlers: { [index: string]: (props: any) => object[] } = {
                     partial: true,
                 }),
             })
-        )
+        );
         // deviation/variance always generate undefined
-        if (calc === "deviation" || calc === "variance") res.shift()
-        return res
+        if (calc === "deviation" || calc === "variance") res.shift();
+        return res;
     },
-}
+};
 
 function transformData(message: DataRequest): object[] {
     try {
-        const handler = handlers[message.type]
-        return handler?.(message)
+        const handler = handlers[message.type];
+        return handler?.(message);
     } catch (e) {
-        console.debug(e)
-        return undefined
+        console.debug(e);
+        return undefined;
     }
 }
 
 async function handleMessage(event: MessageEvent) {
-    const message: DataRequest = event.data
+    const message: DataRequest = event.data;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id, worker, data, previousData, ...rest } = message
-    if (worker !== "data") return
+    const { id, worker, data, previousData, ...rest } = message;
+    if (worker !== "data") return;
 
     try {
-        const newData = await transformData(message)
-        const resp = { id, worker, ...rest, data: newData }
-        self.postMessage(resp)
+        const newData = await transformData(message);
+        const resp = { id, worker, ...rest, data: newData };
+        self.postMessage(resp);
     } catch (e) {
         self.postMessage({
             id,
             worker,
             error: e + "",
-        })
+        });
     }
 }
 
-self.addEventListener("message", handleMessage)
-console.debug(`data: worker registered`)
+self.addEventListener("message", handleMessage);
+console.debug(`data: worker registered`);

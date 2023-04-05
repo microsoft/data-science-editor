@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { Block } from "blockly"
+import { Block } from "blockly";
 import DataColumnChooserField, {
     declareColumns,
     resolveColumns,
-} from "../fields/DataColumnChooserField"
+} from "../fields/DataColumnChooserField";
 import {
     BlockDefinition,
     BlockReference,
@@ -14,9 +14,9 @@ import {
     TextInputDefinition,
     DataColumnInputDefinition,
     calcOptions,
-} from "../toolbox"
-import BlockDomainSpecificLanguage from "./dsl"
-import postTransformData from "./workers/data.proxy"
+} from "../toolbox";
+import BlockDomainSpecificLanguage from "./dsl";
+import postTransformData from "./workers/data.proxy";
 import type {
     DataSelectRequest,
     DataDropRequest,
@@ -32,30 +32,33 @@ import type {
     DataReplaceNullyRequest,
     DataRenameRequest,
     DataDistinctRequest,
-} from "../../../workers/data/dist/node_modules/data.worker"
-import { operatorsColour, computeColour, cleaningColour } from "./palette"
+    DataFillNullyRequest,
+} from "../../../workers/data/dist/node_modules/data.worker";
+import { operatorsColour, computeColour, cleaningColour } from "./palette";
 import {
+    tidyHeaders,
     tidyResolveFieldColumn,
     tidyResolveFieldColumns,
     tidyResolveHeaderType,
     tidySlice,
-} from "../fields/tidy"
+} from "../fields/tidy";
 
-const DATA_ARRANGE_BLOCK = "data_arrange"
-const DATA_SELECT_BLOCK = "data_select"
-const DATA_DROP_BLOCK = "data_drop"
-const DATA_DROP_DUPLICATES_BLOCK = "data_drop_duplicates"
-const DATA_RENAME_COLUMN_BLOCK = "data_rename_column_block"
-const DATA_FILTER_COLUMNS_BLOCK = "data_filter_columns"
-const DATA_FILTER_STRING_BLOCK = "data_filter_string"
-const DATA_MUTATE_COLUMNS_BLOCK = "data_mutate_columns"
-const DATA_MUTATE_NUMBER_BLOCK = "data_mutate_number"
-const DATA_REPLACE_NULLY_BLOCK = "data_replace_nully"
-const DATA_SLICE_BLOCK = "data_slice"
-const DATA_SUMMARIZE_BLOCK = "data_summarize"
-const DATA_SUMMARIZE_BY_GROUP_BLOCK = "data_summarize_by_group"
-const DATA_COUNT_BLOCK = "data_count"
-const DATA_BIN_BLOCK = "data_bin"
+const DATA_ARRANGE_BLOCK = "data_arrange";
+const DATA_SELECT_BLOCK = "data_select";
+const DATA_DROP_BLOCK = "data_drop";
+const DATA_DROP_DUPLICATES_BLOCK = "data_drop_duplicates";
+const DATA_RENAME_COLUMN_BLOCK = "data_rename_column_block";
+const DATA_FILTER_COLUMNS_BLOCK = "data_filter_columns";
+const DATA_FILTER_STRING_BLOCK = "data_filter_string";
+const DATA_MUTATE_COLUMNS_BLOCK = "data_mutate_columns";
+const DATA_MUTATE_NUMBER_BLOCK = "data_mutate_number";
+const DATA_REPLACE_NULLY_BLOCK = "data_replace_nully";
+const DATA_FILL_NULLY_BLOCK = "data_fill_nully";
+const DATA_SLICE_BLOCK = "data_slice";
+const DATA_SUMMARIZE_BLOCK = "data_summarize";
+const DATA_SUMMARIZE_BY_GROUP_BLOCK = "data_summarize_by_group";
+const DATA_COUNT_BLOCK = "data_count";
+const DATA_BIN_BLOCK = "data_bin";
 
 const dataDsl: BlockDomainSpecificLanguage = {
     id: "dataScience",
@@ -86,16 +89,16 @@ const dataDsl: BlockDomainSpecificLanguage = {
             dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             transformData: (b: Block, data: any[]) => {
-                const column = tidyResolveFieldColumn(data, b, "column")
-                const order = b.getFieldValue("order")
-                const descending = order === "descending"
-                if (!column) return Promise.resolve(data)
+                const column = tidyResolveFieldColumn(data, b, "column");
+                const order = b.getFieldValue("order");
+                const descending = order === "descending";
+                if (!column) return Promise.resolve(data);
                 return postTransformData(<DataArrangeRequest>{
                     type: "arrange",
                     column,
                     descending,
                     data,
-                })
+                });
             },
         },
         {
@@ -109,13 +112,13 @@ const dataDsl: BlockDomainSpecificLanguage = {
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             dataPreviewField: true,
             transformData: (b: Block, data: object[]) => {
-                const columns = resolveColumns(data, b, 4, { start: 1 })
-                if (!columns?.length) return Promise.resolve(data)
+                const columns = resolveColumns(data, b, 4, { start: 1 });
+                if (!columns?.length) return Promise.resolve(data);
                 return postTransformData(<DataDropRequest>{
                     type: "drop",
                     columns,
                     data,
-                })
+                });
             },
         },
         {
@@ -130,12 +133,12 @@ const dataDsl: BlockDomainSpecificLanguage = {
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             dataPreviewField: true,
             transformData: (b: Block, data: object[]) => {
-                const columns = resolveColumns(data, b, 4, { start: 1 })
+                const columns = resolveColumns(data, b, 4, { start: 1 });
                 return postTransformData(<DataDistinctRequest>{
                     type: "distinct",
                     columns,
                     data,
-                })
+                });
             },
         },
         {
@@ -158,14 +161,14 @@ const dataDsl: BlockDomainSpecificLanguage = {
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             dataPreviewField: true,
             transformData: (b: Block, data: object[]) => {
-                const column = tidyResolveFieldColumn(data, b, "column")
-                const name = b.getFieldValue("name")
-                if (!column || !name) return Promise.resolve(data)
+                const column = tidyResolveFieldColumn(data, b, "column");
+                const name = b.getFieldValue("name");
+                if (!column || !name) return Promise.resolve(data);
                 return postTransformData(<DataRenameRequest>{
                     type: "rename",
                     names: { [column]: name },
                     data,
-                })
+                });
             },
         },
         {
@@ -179,13 +182,52 @@ const dataDsl: BlockDomainSpecificLanguage = {
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             dataPreviewField: true,
             transformData: (b: Block, data: object[]) => {
-                const columns = resolveColumns(data, b, 4, { start: 1 })
-                if (!columns?.length) return Promise.resolve(data)
+                const columns = resolveColumns(data, b, 4, { start: 1 });
+                if (!columns?.length) return Promise.resolve(data);
                 return postTransformData(<DataSelectRequest>{
                     type: "select",
                     columns,
                     data,
-                })
+                });
+            },
+        },
+        {
+            kind: "block",
+            type: DATA_FILL_NULLY_BLOCK,
+            message0: "fill missing %1 %2 %3 %4 with %5",
+            tooltip: "Fills missing data cells with the last or next value",
+            colour: cleaningColour,
+            args0: [
+                ...declareColumns(4, { start: 1 }),
+                <OptionsInputDefinition>{
+                    type: "field_dropdown",
+                    name: "direction",
+                    options: [
+                        ["last value", "down"],
+                        ["next value", "up"],
+                    ],
+                },
+            ],
+            previousStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
+            dataPreviewField: true,
+            transformData: (b: Block, data: object[]) => {
+                const columns = resolveColumns(data, b, 4, { start: 1 });
+                const direction = b.getFieldValue("direction");
+                const replacements = {};
+                if (columns.length)
+                    columns.forEach(column => {
+                        replacements[column] = direction;
+                    });
+                else {
+                    const { headers } = tidyHeaders(data);
+                    headers.forEach(h => (replacements[h] = direction));
+                }
+                return postTransformData(<DataFillNullyRequest>{
+                    type: "fill_nully",
+                    data,
+                    replacements,
+                });
             },
         },
         {
@@ -219,27 +261,27 @@ const dataDsl: BlockDomainSpecificLanguage = {
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             dataPreviewField: true,
             transformData: (b: Block, data: object[]) => {
-                const column = tidyResolveFieldColumn(data, b, "column")
-                const rhs = b.getFieldValue("rhs")
-                if (!column) return Promise.resolve(data)
+                const column = tidyResolveFieldColumn(data, b, "column");
+                const rhs = b.getFieldValue("rhs");
+                if (!column) return Promise.resolve(data);
                 const type =
-                    b.getFieldValue("type") || tidyResolveHeaderType(data, rhs)
-                const iv = parseInt(rhs)
-                const fv = parseFloat(rhs)
-                const nv = isNaN(iv) ? fv : iv
+                    b.getFieldValue("type") || tidyResolveHeaderType(data, rhs);
+                const iv = parseInt(rhs);
+                const fv = parseFloat(rhs);
+                const nv = isNaN(iv) ? fv : iv;
                 const v =
                     type === "number"
                         ? nv
                         : type === "boolean"
                         ? Boolean(rhs)
-                        : rhs
+                        : rhs;
                 return postTransformData(<DataReplaceNullyRequest>{
                     type: "replace_nully",
                     data,
                     replacements: {
                         [column]: v,
                     },
-                })
+                });
             },
         },
         {
@@ -274,15 +316,15 @@ const dataDsl: BlockDomainSpecificLanguage = {
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             dataPreviewField: true,
             transformData: (b: Block, data: object[]) => {
-                const columns = resolveColumns(data, b, 2, { start: 1 })
-                const logic = b.getFieldValue("logic")
-                if (columns.length !== 2) return Promise.resolve(data)
+                const columns = resolveColumns(data, b, 2, { start: 1 });
+                const logic = b.getFieldValue("logic");
+                if (columns.length !== 2) return Promise.resolve(data);
                 return postTransformData(<DataFilterColumnsRequest>{
                     type: "filter_columns",
                     columns,
                     logic,
                     data,
-                })
+                });
             },
         },
         {
@@ -319,17 +361,17 @@ const dataDsl: BlockDomainSpecificLanguage = {
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             dataPreviewField: true,
             transformData: (b: Block, data: object[]) => {
-                const column = tidyResolveFieldColumn(data, b, "column")
-                const logic = b.getFieldValue("logic")
-                const rhs = b.getFieldValue("rhs")
-                if (!column) return Promise.resolve(data)
+                const column = tidyResolveFieldColumn(data, b, "column");
+                const logic = b.getFieldValue("logic");
+                const rhs = b.getFieldValue("rhs");
+                if (!column) return Promise.resolve(data);
                 return postTransformData(<DataFilterStringRequest>{
                     type: "filter_string",
                     column,
                     logic,
                     rhs,
                     data,
-                })
+                });
             },
         },
         {
@@ -375,15 +417,15 @@ const dataDsl: BlockDomainSpecificLanguage = {
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             dataPreviewField: true,
             transformData: (b: Block, data: object[]) => {
-                const newcolumn = b.getFieldValue("newcolumn")
+                const newcolumn = b.getFieldValue("newcolumn");
                 const lhs = tidyResolveFieldColumn(data, b, "lhs", {
                     type: "number",
-                })
+                });
                 const rhs = tidyResolveFieldColumn(data, b, "rhs", {
                     type: "number",
-                })
-                const logic = b.getFieldValue("logic")
-                if (!newcolumn || !lhs || !rhs) return Promise.resolve(data)
+                });
+                const logic = b.getFieldValue("logic");
+                if (!newcolumn || !lhs || !rhs) return Promise.resolve(data);
                 return postTransformData(<DataMutateColumnsRequest>{
                     type: "mutate_columns",
                     newcolumn,
@@ -391,7 +433,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     rhs,
                     logic,
                     data,
-                })
+                });
             },
         },
         {
@@ -437,13 +479,13 @@ const dataDsl: BlockDomainSpecificLanguage = {
             dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             transformData: (b: Block, data: object[]) => {
-                const newcolumn = b.getFieldValue("newcolumn")
+                const newcolumn = b.getFieldValue("newcolumn");
                 const lhs = tidyResolveFieldColumn(data, b, "lhs", {
                     type: "number",
-                })
-                const rhs = b.getFieldValue("rhs")
-                const logic = b.getFieldValue("logic")
-                if (!newcolumn || !lhs) return Promise.resolve(data)
+                });
+                const rhs = b.getFieldValue("rhs");
+                const logic = b.getFieldValue("logic");
+                if (!newcolumn || !lhs) return Promise.resolve(data);
                 return postTransformData(<DataMutateNumberRequest>{
                     type: "mutate_number",
                     newcolumn,
@@ -451,7 +493,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     rhs,
                     logic,
                     data,
-                })
+                });
             },
         },
         {
@@ -481,14 +523,14 @@ const dataDsl: BlockDomainSpecificLanguage = {
                     b,
                     "column",
                     "number"
-                )
-                const calc = b.getFieldValue("calc")
+                );
+                const calc = b.getFieldValue("calc");
                 return postTransformData(<DataSummarizeRequest>{
                     type: "summarize",
                     columns,
                     calc,
                     data,
-                })
+                });
             },
         },
         {
@@ -516,17 +558,17 @@ const dataDsl: BlockDomainSpecificLanguage = {
             dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             transformData: (b: Block, data: any[]) => {
-                const column = tidyResolveFieldColumn(data, b, "column")
-                const by = tidyResolveFieldColumn(data, b, "by")
-                const calc = b.getFieldValue("calc")
-                if (!by) return Promise.resolve([])
+                const column = tidyResolveFieldColumn(data, b, "column");
+                const by = tidyResolveFieldColumn(data, b, "by");
+                const calc = b.getFieldValue("calc");
+                if (!by) return Promise.resolve([]);
                 return postTransformData(<DataSummarizeByGroupRequest>{
                     type: "summarize_by_group",
                     column,
                     by,
                     calc,
                     data,
-                })
+                });
             },
         },
         {
@@ -559,13 +601,13 @@ const dataDsl: BlockDomainSpecificLanguage = {
             dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             transformData: (b: Block, data: any[]) => {
-                const count = b.getFieldValue("count")
-                const operator = b.getFieldValue("operator")
+                const count = b.getFieldValue("count");
+                const operator = b.getFieldValue("operator");
                 return tidySlice(data, {
                     sliceHead: operator === "head" ? count : undefined,
                     sliceTail: operator === "tail" ? count : undefined,
                     sliceSample: operator === "sample" ? count : undefined,
-                })
+                });
             },
         },
         {
@@ -584,13 +626,13 @@ const dataDsl: BlockDomainSpecificLanguage = {
             dataPreviewField: true,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             transformData: (b: Block, data: any[]) => {
-                const column = tidyResolveFieldColumn(data, b, "column")
-                if (!column) return Promise.resolve([])
+                const column = tidyResolveFieldColumn(data, b, "column");
+                if (!column) return Promise.resolve([]);
                 return postTransformData(<DataCountRequest>{
                     type: "count",
                     column,
                     data,
-                })
+                });
             },
         },
         <BlockDefinition>{
@@ -612,13 +654,13 @@ const dataDsl: BlockDomainSpecificLanguage = {
             transformData: async (b: Block, data: object[]) => {
                 const column = tidyResolveFieldColumn(data, b, "column", {
                     type: "number",
-                })
-                if (!column) return Promise.resolve([])
+                });
+                if (!column) return Promise.resolve([]);
                 return postTransformData(<DataBinRequest>{
                     type: "bin",
                     column,
                     data,
-                })
+                });
             },
         },
     ],
@@ -628,6 +670,10 @@ const dataDsl: BlockDomainSpecificLanguage = {
             name: "Cleanup",
             colour: cleaningColour,
             contents: [
+                <BlockReference>{
+                    kind: "block",
+                    type: DATA_FILL_NULLY_BLOCK,
+                },
                 <BlockReference>{
                     kind: "block",
                     type: DATA_REPLACE_NULLY_BLOCK,
@@ -705,5 +751,5 @@ const dataDsl: BlockDomainSpecificLanguage = {
             ],
         },
     ],
-}
-export default dataDsl
+};
+export default dataDsl;
