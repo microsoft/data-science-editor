@@ -7,3 +7,4 @@ src/workers/dist
 yarn-error.log
 .parcel-cache
 .vs
+vscode/dist
