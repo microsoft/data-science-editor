@@ -51,7 +51,7 @@ export const transforms: Record<
                 vscode.Uri.file(fileName)
             );
             const csv = new TextDecoder().decode(buf);
-            const { data, errors } = parse<any[]>(csv);
+            const { data, errors } = parse<any[]>(csv, { header: true, dynamicTyping: true });
             return { dataset: data, warning: errors[0]?.message };
         } catch {}
         const dataset: any = [];
