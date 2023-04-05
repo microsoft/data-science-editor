@@ -6,7 +6,7 @@ interface DataScienceEditorPostPayload {
     type?: "dsl";
     action?: string;
     dslid?: string;
-    options?: { table: [string, string][] };
+    options?: { files: [string, string][] };
     editor?: string;
     xml?: string;
     json?: object;
@@ -19,12 +19,12 @@ export async function bindApi(view: vscode.WebviewPanel) {
     }
 
     async function postFiles(currentDslId: string) {
-        const files = await vscode.workspace.findFiles(
+        const fileUris = await vscode.workspace.findFiles(
             "**/*.csv",
             "node_modules/*",
             100
         );
-        const table: [string, string][] = files.map(file => [
+        const files: [string, string][] = fileUris.map(file => [
             Utils.basename(file),
             file.path,
         ]);
@@ -34,7 +34,7 @@ export async function bindApi(view: vscode.WebviewPanel) {
             dslid: currentDslId,
             action: "options",
             options: {
-                table,
+                files,
             },
         });
     }
@@ -67,12 +67,15 @@ export async function bindApi(view: vscode.WebviewPanel) {
             | undefined;
 
         const tryLoading = async () => {
-            if (!pendingLoad || !currentDslId) return;
+            if (!currentDslId) return
+
+            await postFiles(currentDslId);
+
+            if (!pendingLoad) return;
 
             const { editor, xml, json } = pendingLoad;
             console.debug(`settings.sending`, { editor, xml, json });
             pendingLoad = undefined;
-            await postFiles(currentDslId);
             post({
                 type: "dsl",
                 action: "load",

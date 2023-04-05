@@ -95,12 +95,13 @@ export class WebView {
             const vscode = acquireVsCodeApi();
             const editor = document.getElementById("editor");
             window.addEventListener("message", event => {
-                console.log({ event })
-                // message may come from vscode
-                if (event.data.from === "vscode")
-                    editor.contentWindow.postMessage(event.data, "*");
-                else
-                    vscode.postMessage(event.data);
+                const { data } = event;
+                if (data.from === "vscode") {
+                    editor.contentWindow.postMessage(data, "*");
+                }
+                else {
+                    vscode.postMessage(data);
+                }
             });            
         });
         </script>
