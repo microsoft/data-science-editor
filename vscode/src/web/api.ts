@@ -58,35 +58,41 @@ export async function bindApi(view: vscode.WebviewPanel) {
         post({ ...rest, ...(result || {}) });
     }
 
+    let currentFile: vscode.Uri | undefined;
+    const loadFile = async (newFile: vscode.Uri) => {
+        if (!currentFile) return;
+
+        console.debug(`loading ${currentFile}`);
+        let content:
+            | { xml?: string; json?: object; editor?: string }
+            | undefined;
+        try {
+            const buf = await vscode.workspace.fs.readFile(newFile);
+            const text = new TextDecoder().decode(buf);
+            content = JSON.parse(text);
+        } catch (e) {
+            content = {};
+        }
+        currentFile = newFile;
+        post({
+            type: "dsl",
+            action: "load",
+            ...content,
+        });
+    };
+
     const init = () => {
         // editor identifier sent by the embedded block editor
         let currentDslId: string | undefined;
-        let loaded = false;
-        let pendingLoad:
-            | { editor: string; xml: string; json: object }
-            | undefined;
 
         const tryLoading = async () => {
-            if (!currentDslId) return
-
+            if (!currentDslId) return;
+            await loadFile(currentFile!);
             await postFiles(currentDslId);
-
-            if (!pendingLoad) return;
-
-            const { editor, xml, json } = pendingLoad;
-            console.debug(`settings.sending`, { editor, xml, json });
-            pendingLoad = undefined;
-            post({
-                type: "dsl",
-                action: "load",
-                editor,
-                xml,
-                json,
-            });
         };
 
         view.webview.onDidReceiveMessage(
-            (data: {
+            async (data: {
                 // TODO: replace these types with the actual types
                 type: string;
                 dslid: string;
@@ -105,11 +111,18 @@ export async function bindApi(view: vscode.WebviewPanel) {
                     case "mount": {
                         currentDslId = dslid;
                         console.debug(`dslid: ${dslid}`);
-                        tryLoading();
+                        currentFile = vscode.workspace.workspaceFolders?.[0]
+                            ? Utils.joinPath(
+                                  vscode.workspace.workspaceFolders[0].uri,
+                                  "data.dse.json"
+                              )
+                            : undefined;
+                        await tryLoading();
                         break;
                     }
                     case "unmount": {
                         currentDslId = undefined;
+                        currentFile = undefined;
                         break;
                     }
                     case "blocks": {
@@ -126,24 +139,17 @@ export async function bindApi(view: vscode.WebviewPanel) {
                         break;
                     }
                     case "save": {
-                        // don't save until we've reloaded our content from excel
-                        if (!loaded) {
-                            console.debug(`save.ignore: not loaded yet`);
-                            break;
-                        }
-
+                        if (!currentFile) return;
                         const { editor, xml, json } = data;
                         const file = {
                             editor,
                             xml,
                             json,
                         };
-
-                        // TODO0
-                        //saveSetting(
-                        //     SettingsKey.EditorSaveData,
-                        //     JSON.stringify(file)
-                        // );
+                        await vscode.workspace.fs.writeFile(
+                            currentFile,
+                            new TextEncoder().encode(JSON.stringify(file))
+                        );
                         break;
                     }
                     case "change": {
