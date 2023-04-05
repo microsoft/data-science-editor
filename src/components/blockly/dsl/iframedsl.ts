@@ -67,7 +67,10 @@ class IFrameDomainSpecificLanguage implements BlockDomainSpecificLanguage {
 
     private _workspace: Workspace
 
-    constructor(readonly id: string, readonly targetOrigin: string) {
+    constructor(
+        readonly id: string,
+        readonly postMessage: (payload: any) => void
+    ) {
         this.handleMessage = this.handleMessage.bind(this)
     }
 
@@ -80,7 +83,7 @@ class IFrameDomainSpecificLanguage implements BlockDomainSpecificLanguage {
             action,
             ...(extras || {}),
         } as DslMessage
-        window.parent.postMessage(payload, this.targetOrigin)
+        this.postMessage(payload)
         return payload
     }
 
@@ -211,5 +214,26 @@ export function createIFrameDSL(
     id: string,
     targetOrigin = "*"
 ): BlockDomainSpecificLanguage {
-    return inIFrame() && new IFrameDomainSpecificLanguage(id, targetOrigin)
+    return (
+        inIFrame() &&
+        new IFrameDomainSpecificLanguage(id, payload =>
+            window.parent.postMessage(payload, targetOrigin)
+        )
+    )
+}
+
+/**
+ * Creates an vscode DSL if applicable
+ * @param targetOrigin
+ * @returns
+ */
+export function createVSCodeDSL(id: string): BlockDomainSpecificLanguage {
+    const acquireVsCodeApi: any = (window as any).acquireVsCodeApi
+    if (typeof acquireVsCodeApi === "function") {
+        const vscode = acquireVsCodeApi()
+        return new IFrameDomainSpecificLanguage(id, payload =>
+            vscode.postMessage(payload)
+        )
+    }
+    return undefined
 }

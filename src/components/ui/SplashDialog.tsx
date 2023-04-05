@@ -6,15 +6,20 @@ import {
     DialogTitle,
 } from "@mui/material"
 import React, { useState } from "react"
+import { useLocationSearchParamBoolean } from "../hooks/useLocationSearchParam"
 
 let _firstShow = true
 export default function SplashDialog() {
+    const hide = useLocationSearchParamBoolean("hidesplash", false)
     const [open, setOpen] = useState(_firstShow)
 
     const handleClose = () => {
         _firstShow = false
         setOpen(false)
     }
+
+    if (hide) return null
+
     return (
         <Dialog open={open} onAbort={handleClose}>
             <DialogTitle>Data Science Editor</DialogTitle>

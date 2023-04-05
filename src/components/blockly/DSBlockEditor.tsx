@@ -9,7 +9,7 @@ import chartDsl from "./dsl/chartdsl"
 import fieldsDsl from "./dsl/fieldsdsl"
 import { WORKSPACE_FILENAME } from "./toolbox"
 import useFileSystem from "../fs/FileSystemContext"
-import { createIFrameDSL } from "./dsl/iframedsl"
+import { createIFrameDSL, createVSCodeDSL } from "./dsl/iframedsl"
 import {
     useLocationSearchParamBoolean,
     useLocationSearchParamString,
@@ -74,6 +74,8 @@ export default function DSBlockEditor() {
             fieldsDsl,
             // host is used to comms with excel
             host && createIFrameDSL("host", targetOrigin),
+            // vscode
+            host && createVSCodeDSL("vscode"),
         ].filter(dsl => !!dsl)
     }, [])
 
