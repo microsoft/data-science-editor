@@ -107,7 +107,7 @@ export class WebView {
         </script>
         </head>
         <body>
-        <iframe id="editor" src="${fullWebServerUri}?embed=1&storage=0&footer=0&browsercheck=0&${darkMode}=1&hidesplash=1" />
+        <iframe id="editor" src="${fullWebServerUri}?embed=1&storage=0&footer=0&browsercheck=0&${darkMode}=1&hidesplash=1&dataset=0" />
         </body>
         </html>                
                         `;
