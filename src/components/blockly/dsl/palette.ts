@@ -2,29 +2,30 @@
 // and https://mkweb.bcgsc.ca/colorblind/palettes.mhtml#page-container
 
 const _palette = [
-    "#2271b2",
-    "#3db7e9",
-    "#f748a5",
-    "#359b73",
-    "#d55e00",
-    "#e69f00",
-]
+    "#506d87",
+    "#6ba4bd",
+    "#d170a1",
+    "#62726c",
+    "#ab672e",
+    "#b99031",
+    "#17bc14",
+];
 
 export default function palette() {
-    return _palette.slice(0)
+    return _palette.slice(0);
 }
 
 export function paletteColorByIndex(i: number) {
-    while (i < 0) i += _palette.length
-    return _palette[i % _palette.length]
+    while (i < 0) i += _palette.length;
+    return _palette[i % _palette.length];
 }
 
 export const [
-    ,
+    datasetColour,
     operatorsColour,
     computeColour,
     statisticsColour,
     visualizeColour,
     cleaningColour,
-] = palette()
-export const chartColour = visualizeColour
+] = palette();
+export const chartColour = visualizeColour;
