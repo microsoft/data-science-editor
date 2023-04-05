@@ -75,12 +75,6 @@ function SuspendedBlockEditor(props: { className?: string }) {
                 renderer: "thrasos",
                 theme,
                 oneBasedIndex: false,
-                grid: {
-                    spacing: 24,
-                    length: 3,
-                    color: palette.background.default,
-                    snap: true,
-                },
                 move: {
                     scrollbars: true,
                 },
