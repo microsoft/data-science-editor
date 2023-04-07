@@ -22,7 +22,7 @@ jobs:
       - run: yarn builddocsts
       - run: yarn install --frozen-lockfile
         working-directory: ./vscode
-      - run: yarn package-web
+      - run: yarn package
         working-directory: ./vscode
       - run: yarn distdocs
         env:

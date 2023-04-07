@@ -33,6 +33,7 @@
         "compile-web": "webpack",
         "watch-web": "webpack --watch",
         "package-web": "webpack --mode production --devtool hidden-source-map",
+        "package": "vsce package",
         "lint": "eslint src --ext ts",
         "run-in-browser": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ."
     },
@@ -44,15 +45,16 @@
         "@typescript-eslint/eslint-plugin": "^5.56.0",
         "@typescript-eslint/parser": "^5.56.0",
         "@vscode/test-web": "^0.0.36",
+        "@vscode/vsce": "^2.18.0",
         "assert": "^2.0.0",
         "eslint": "^8.36.0",
         "papaparse": "^5.4.1",
         "process": "^0.11.10",
         "ts-loader": "^9.4.2",
         "typescript": "^4.9.5",
+        "vscode-uri": "^3.0.7",
         "webpack": "^5.76.3",
-        "webpack-cli": "^5.0.1",
-        "vscode-uri": "^3.0.7"
+        "webpack-cli": "^5.0.1"
     },
     "dependencies": {}
 }
