@@ -1,6 +1,6 @@
-# data-science-editor
+# Data Science Editor
 
-This is the README for your extension "data-science-editor". After writing up a brief description, we recommend including the following sections.
+https://user-images.githubusercontent.com/4175913/219923079-062bb9f1-c015-469e-b144-81aaca3eb493.mp4
 
 ## Features
 

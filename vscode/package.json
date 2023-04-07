@@ -10,6 +10,10 @@
     "categories": [
         "Other"
     ],
+    "repository": {
+        "url": "https://github.com/microsoft/data-science-editor",
+        "directory": "vscode"
+    },
     "activationEvents": [],
     "browser": "./dist/web/extension.js",
     "contributes": {
@@ -33,7 +37,7 @@
         "compile-web": "webpack",
         "watch-web": "webpack --watch",
         "package-web": "webpack --mode production --devtool hidden-source-map",
-        "package": "vsce package",
+        "package": "vsce package --yarn --out ../static/vscode/data-science-editor.vsix",
         "lint": "eslint src --ext ts",
         "run-in-browser": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ."
     },
