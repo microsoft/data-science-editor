@@ -84,11 +84,13 @@ export async function bindApi(view: vscode.WebviewPanel) {
     const init = () => {
         // editor identifier sent by the embedded block editor
         let currentDslId: string | undefined;
+        let loaded = false
 
         const tryLoading = async () => {
             if (!currentDslId) return;
             await loadFile(currentFile!);
             await postFiles(currentDslId);
+            loaded = true
         };
 
         view.webview.onDidReceiveMessage(
@@ -123,6 +125,7 @@ export async function bindApi(view: vscode.WebviewPanel) {
                     case "unmount": {
                         currentDslId = undefined;
                         currentFile = undefined;
+                        loaded = false
                         break;
                     }
                     case "blocks": {
@@ -139,7 +142,7 @@ export async function bindApi(view: vscode.WebviewPanel) {
                         break;
                     }
                     case "save": {
-                        if (!currentFile) return;
+                        if (!currentFile || !loaded) return;
                         const { editor, xml, json } = data;
                         const file = {
                             editor,
