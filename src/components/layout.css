@@ -735,6 +735,10 @@ div.blocklyTooltipDiv {
     padding: 0.5rem;
 }
 
+.blocklyMainBackground {
+    stroke: transparent !important
+}
+
 .LayoutMainContent.blocks img {
     height: 3rem;
 }
