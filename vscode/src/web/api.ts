@@ -84,13 +84,13 @@ export async function bindApi(view: vscode.WebviewPanel) {
     const init = () => {
         // editor identifier sent by the embedded block editor
         let currentDslId: string | undefined;
-        let loaded = false
+        let loaded = false;
 
         const tryLoading = async () => {
             if (!currentDslId) return;
             await loadFile(currentFile!);
             await postFiles(currentDslId);
-            loaded = true
+            loaded = true;
         };
 
         view.webview.onDidReceiveMessage(
@@ -116,7 +116,7 @@ export async function bindApi(view: vscode.WebviewPanel) {
                         currentFile = vscode.workspace.workspaceFolders?.[0]
                             ? Utils.joinPath(
                                   vscode.workspace.workspaceFolders[0].uri,
-                                  "data.dse.json"
+                                  "data.dsjson"
                               )
                             : undefined;
                         await tryLoading();
@@ -125,7 +125,7 @@ export async function bindApi(view: vscode.WebviewPanel) {
                     case "unmount": {
                         currentDslId = undefined;
                         currentFile = undefined;
-                        loaded = false
+                        loaded = false;
                         break;
                     }
                     case "blocks": {
@@ -151,7 +151,9 @@ export async function bindApi(view: vscode.WebviewPanel) {
                         };
                         await vscode.workspace.fs.writeFile(
                             currentFile,
-                            new TextEncoder().encode(JSON.stringify(file))
+                            new TextEncoder().encode(
+                                JSON.stringify(file, null, 2)
+                            )
                         );
                         break;
                     }
