@@ -1,51 +1,58 @@
 {
-  "name": "data-science-editor",
-  "displayName": "Data Science Editor",
-  "description": "Explore data through a block based data editor",
-  "version": "0.0.1",
-  "license": "MIT",
-  "engines": {
-    "vscode": "^1.77.0"
-  },
-  "categories": [
-    "Other"
-  ],
-  "activationEvents": [],
-  "browser": "./dist/web/extension.js",
-  "contributes": {
-    "commands": [
-      {
-        "command": "extensions.datascienceeditor.open",
-        "title": "Open Data Science Editor"
-      }
-    ]
-  },
-  "scripts": {
-    "vscode:prepublish": "yarn run package-web",
-    "compile-web": "webpack",
-    "watch-web": "webpack --watch",
-    "package-web": "webpack --mode production --devtool hidden-source-map",
-    "lint": "eslint src --ext ts",
-    "run-in-browser": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ."
-  },
-  "devDependencies": {
-    "@types/mocha": "^10.0.1",
-    "@types/papaparse": "^5.3.7",
-    "@types/vscode": "^1.77.0",
-    "@types/webpack-env": "^1.18.0",
-    "@typescript-eslint/eslint-plugin": "^5.56.0",
-    "@typescript-eslint/parser": "^5.56.0",
-    "@vscode/test-web": "^0.0.36",
-    "assert": "^2.0.0",
-    "eslint": "^8.36.0",
-    "papaparse": "^5.4.1",
-    "process": "^0.11.10",
-    "ts-loader": "^9.4.2",
-    "typescript": "^4.9.5",
-    "webpack": "^5.76.3",
-    "webpack-cli": "^5.0.1",
-    "vscode-uri": "^3.0.7"
-  },
-  "dependencies": {
-  }
+    "name": "data-science-editor",
+    "displayName": "Data Science Editor",
+    "description": "Explore data through a block based data editor",
+    "version": "0.0.1",
+    "license": "MIT",
+    "engines": {
+        "vscode": "^1.77.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [],
+    "browser": "./dist/web/extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "extensions.datascienceeditor.open",
+                "title": "Open Data Science Editor"
+            }
+        ],
+        "menus": {
+            "commandPalette": [
+                {
+                    "command": "extensions.datascienceeditor.open",
+                    "when": "workbenchState != 'empty'"
+                }
+            ]
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "yarn run package-web",
+        "compile-web": "webpack",
+        "watch-web": "webpack --watch",
+        "package-web": "webpack --mode production --devtool hidden-source-map",
+        "lint": "eslint src --ext ts",
+        "run-in-browser": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ."
+    },
+    "devDependencies": {
+        "@types/mocha": "^10.0.1",
+        "@types/papaparse": "^5.3.7",
+        "@types/vscode": "^1.77.0",
+        "@types/webpack-env": "^1.18.0",
+        "@typescript-eslint/eslint-plugin": "^5.56.0",
+        "@typescript-eslint/parser": "^5.56.0",
+        "@vscode/test-web": "^0.0.36",
+        "assert": "^2.0.0",
+        "eslint": "^8.36.0",
+        "papaparse": "^5.4.1",
+        "process": "^0.11.10",
+        "ts-loader": "^9.4.2",
+        "typescript": "^4.9.5",
+        "webpack": "^5.76.3",
+        "webpack-cli": "^5.0.1",
+        "vscode-uri": "^3.0.7"
+    },
+    "dependencies": {}
 }
