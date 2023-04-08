@@ -49,7 +49,12 @@ export default function SplashDialog() {
                 </>
             </DialogContent>
             <DialogActions>
-                <Button variant="contained" to="/about">
+                <Button
+                    sx={{ mr: 1 }}
+                    variant="outlined"
+                    color="primary"
+                    to="/about"
+                >
                     About
                 </Button>
                 <Button
