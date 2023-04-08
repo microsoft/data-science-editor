@@ -44,7 +44,6 @@ const visualizeDsl: BlockDomainSpecificLanguage = {
             type: CHART_SHOW_TABLE_BLOCK,
             tooltip: "Displays the block data as a table",
             message0: "show table %1 %2 %3 %4 %5 %6 %7 %8",
-            description: "Displays the dataset as a table with a summary header",
             args0: [
                 ...declareColumns(6, { start: 0 }),
                 <DummyInputDefinition>{
@@ -70,7 +69,6 @@ const visualizeDsl: BlockDomainSpecificLanguage = {
             tooltip: "Renders the block data in a scatter plot",
             message0:
                 "scatterplot of x %1 y %2 %3 %4 size %5 group %6 %7 %8 %9",
-            description: "Renders the dataset in a scatter plot with optional grouping and size",
             args0: <InputDefinition[]>[
                 <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,

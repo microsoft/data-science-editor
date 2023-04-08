@@ -34,7 +34,7 @@ const statsDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_CORRELATION_BLOCK,
             message0: "correlation of %1 %2 %3 %4 %5 %6 %7 %8 %9 %10",
-            description: "Displays a correlation matrix/heatmap.",
+            tooltip: "Displays a correlation matrix/heatmap.",
             args0: [
                 ...declareColumns(6, { start: 1, dataType: "number" }),
                 {
@@ -81,7 +81,7 @@ const statsDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_LINEAR_REGRESSION_BLOCK,
             message0: "linear regression of x %1 y %2 %3 %4 %5",
-            description:
+            tooltip:
                 "Displays a linear regression scatter plot and regression line.",
             args0: [
                 <DataColumnInputDefinition>{
