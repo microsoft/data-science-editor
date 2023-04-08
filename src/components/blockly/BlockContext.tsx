@@ -140,7 +140,7 @@ export function BlockProvider(props: {
         // try loading xml into a dummy blockly workspace
         const dom = Xml.textToDom(xml || DEFAULT_XML);
         // all good, load in workspace
-        workspace.clear();
+        workspace?.clear();
         Xml.domToWorkspace(dom, workspace);
     };
 

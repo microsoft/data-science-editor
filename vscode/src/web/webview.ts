@@ -104,7 +104,7 @@ export class WebView {
                         editor.contentWindow.postMessage({
                             type: "dsl",
                             action: "style",
-                            style: document.firstElementChild.getAttributeValue("style")
+                            style: document.firstElementChild.getAttribute("style")
                         }, "*")
                     }
                     vscode.postMessage(data);
