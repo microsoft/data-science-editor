@@ -57,7 +57,7 @@ const dataSetDsl: BlockDomainSpecificLanguage = {
             type: DATA_LOAD_URL_BLOCK,
             message0: "load dataset from url %1 %2",
             tooltip:
-                "Loads a CSV dataset from an external internal URL. If the URL is a Google Sheet, it will automatically be converted to CSV.",
+                "Loads a CSV/TSV/JSON dataset from an external internal URL. If the URL is a Google Sheet, it will automatically be converted to CSV.",
             args0: [
                 {
                     type: DataPreviewField.KEY,
