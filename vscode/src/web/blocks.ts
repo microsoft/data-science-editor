@@ -34,6 +34,14 @@ export const category = [
     },
 ];
 
+function transformHeader(h: string) {
+    return h
+        .trim()
+        .replace(/[.]/g, "")
+        .replace(/(-|_)/g, " ")
+        .toLocaleLowerCase();
+}
+
 export const transforms: Record<
     string,
     (b: any, dataset: any) => Promise<{ warning?: string; dataset: any }>
@@ -46,6 +54,7 @@ export const transforms: Record<
             console.debug(`no file selected`);
             return { dataset: [] };
         }
+        let error: string | undefined;
         try {
             const buf = await vscode.workspace.fs.readFile(
                 vscode.Uri.file(fileName)
@@ -54,11 +63,20 @@ export const transforms: Record<
             const { data, errors } = parse<any[]>(csv, {
                 header: true,
                 dynamicTyping: true,
+                skipEmptyLines: true,
+                comments: "#",
+                transformHeader,
             });
-            return { dataset: data, warning: errors[0]?.message };
-        } catch {}
+            return {
+                dataset: data,
+                warning: errors?.map(err => err.message)?.join(", "),
+            };
+        } catch (e: any) {
+            error = e.message;
+        }
         const dataset: any = [];
-        if (!dataset) return { warning: "file not found", dataset: [] };
+        if (!dataset)
+            return { warning: error || "file not found", dataset: [] };
         return { dataset };
     },
 };

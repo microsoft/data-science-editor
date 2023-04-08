@@ -20,7 +20,7 @@ export async function bindApi(view: vscode.WebviewPanel) {
 
     async function postFiles(currentDslId: string) {
         const fileUris = await vscode.workspace.findFiles(
-            "**/*.csv",
+            "**/*.{csv,tsv}",
             "node_modules/*",
             100
         );
