@@ -1,31 +1,32 @@
-import React, { useContext, useEffect, useRef, useMemo } from "react"
-import { styled, useTheme } from "@mui/material/styles"
-import { useBlocklyWorkspace } from "react-blockly"
-import { WorkspaceSvg } from "blockly"
-import Theme from "@blockly/theme-modern"
-import DarkTheme from "@blockly/theme-dark"
-import BlocklyModalDialogs from "./BlocklyModalDialogs"
-import DarkModeContext from "../shell/DarkModeContext"
-import clsx from "clsx"
-import { withPrefix } from "gatsby"
-import BlockContext from "./BlockContext"
-import { useBlockMinimap } from "./BlockMinimap"
-import BrowserCompatibilityAlert from "../ui/BrowserCompatibilityAlert"
-import { UIFlags } from "../uiflags"
-import useSnackbar from "../hooks/useSnackbar"
-import { useScreenshotContextMenu } from "./useScreenshot"
+import React, { useContext, useEffect, useRef, useMemo } from "react";
+import { styled, useTheme } from "@mui/material/styles";
+import { useBlocklyWorkspace } from "react-blockly";
+import { WorkspaceSvg } from "blockly";
+import Theme from "@blockly/theme-modern";
+import DarkTheme from "@blockly/theme-dark";
+import BlocklyModalDialogs from "./BlocklyModalDialogs";
+import DarkModeContext from "../shell/DarkModeContext";
+import clsx from "clsx";
+import { withPrefix } from "gatsby";
+import BlockContext from "./BlockContext";
+import { useBlockMinimap } from "./BlockMinimap";
+import BrowserCompatibilityAlert from "../ui/BrowserCompatibilityAlert";
+import { UIFlags } from "../uiflags";
+import useSnackbar from "../hooks/useSnackbar";
+import { useScreenshotContextMenu } from "./useScreenshot";
 
-const PREFIX = "BlockEditor"
+const PREFIX = "BlockEditor";
 
 const classes = {
     editor: `${PREFIX}editor`,
-}
+};
 
 const Root = styled("div")(({ theme }) => ({
     [`& .${classes.editor}`]: {
         height: `calc(100vh - ${UIFlags.hosted ? 0 : 4.5}rem)`,
         "& .blocklyTreeLabel": {
             fontFamily: theme.typography.fontFamily,
+            fontSize: "13px",
         },
         "& .blocklyText": {
             fontWeight: `normal !important`,
@@ -44,23 +45,23 @@ const Root = styled("div")(({ theme }) => ({
             fill: "transparent !important",
         },
     },
-}))
+}));
 
 function SuspendedBlockEditor(props: { className?: string }) {
-    const { className } = props
+    const { className } = props;
     const {
         toolboxConfiguration,
         workspaceXml,
         setWorkspace,
         setWorkspaceXml,
-    } = useContext(BlockContext)
+    } = useContext(BlockContext);
 
-    const { darkMode } = useContext(DarkModeContext)
-    const { setError } = useSnackbar()
-    const { palette } = useTheme()
-    const theme = darkMode === "dark" ? DarkTheme : Theme
+    const { darkMode } = useContext(DarkModeContext);
+    const { setError } = useSnackbar();
+    const { palette } = useTheme();
+    const theme = darkMode === "dark" ? DarkTheme : Theme;
 
-    const blocklyRef = useRef(null)
+    const blocklyRef = useRef(null);
     const configuration = useMemo(
         () => ({
             ref: blocklyRef,
@@ -91,35 +92,35 @@ function SuspendedBlockEditor(props: { className?: string }) {
             },
             initialXml: workspaceXml,
             onImportXmlError: () => {
-                console.error(`error loading blocks`)
-                setError("Error loading blocks...")
+                console.error(`error loading blocks`);
+                setError("Error loading blocks...");
             },
             // TODO: fix typing
         }),
         [toolboxConfiguration]
-    )
+    );
     const { workspace, xml } = useBlocklyWorkspace(configuration as any) as {
-        workspace: WorkspaceSvg
-        xml: string
-    }
+        workspace: WorkspaceSvg;
+        xml: string;
+    };
 
     // store ref
-    useEffect(() => setWorkspace(workspace), [workspace])
+    useEffect(() => setWorkspace(workspace), [workspace]);
     useEffect(() => {
-        setWorkspaceXml(xml)
-    }, [xml])
+        setWorkspaceXml(xml);
+    }, [xml]);
 
     // resize blockly
     useEffect(() => {
         if (typeof ResizeObserver !== "undefined") {
-            const observer = new ResizeObserver(() => workspace?.resize())
-            observer.observe(blocklyRef.current)
-            return () => observer.disconnect()
+            const observer = new ResizeObserver(() => workspace?.resize());
+            observer.observe(blocklyRef.current);
+            return () => observer.disconnect();
         }
-    }, [workspace, blocklyRef.current])
+    }, [workspace, blocklyRef.current]);
 
-    useBlockMinimap(workspace, palette)
-    useScreenshotContextMenu()
+    useBlockMinimap(workspace, palette);
+    useScreenshotContextMenu();
     return (
         <Root>
             <BrowserCompatibilityAlert
@@ -133,15 +134,15 @@ function SuspendedBlockEditor(props: { className?: string }) {
             <div className={clsx(classes.editor, className)} ref={blocklyRef} />
             <BlocklyModalDialogs />
         </Root>
-    )
+    );
 }
 
 /**
  * A delay loaded block editor
  */
 export default function BlockEditor(props: { className?: string }) {
-    const { toolboxConfiguration } = useContext(BlockContext)
+    const { toolboxConfiguration } = useContext(BlockContext);
 
-    if (!toolboxConfiguration) return null
-    return <SuspendedBlockEditor {...props} />
+    if (!toolboxConfiguration) return null;
+    return <SuspendedBlockEditor {...props} />;
 }

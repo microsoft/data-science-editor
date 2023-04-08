@@ -30,6 +30,13 @@ export interface DslMessage {
         | "load"
         | "save"
         | "options"
+        | "style"
+}
+
+export interface DslStyleMessage extends DslMessage {
+    action: "style"
+    style: string
+    elementId: string
 }
 
 export interface DslBlocksResponse extends DslMessage {
