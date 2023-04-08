@@ -239,19 +239,3 @@ export function createIFrameDSL(
         )
     );
 }
-
-/**
- * Creates an vscode DSL if applicable
- * @param targetOrigin
- * @returns
- */
-export function createVSCodeDSL(id: string): BlockDomainSpecificLanguage {
-    const acquireVsCodeApi: any = (window as any).acquireVsCodeApi;
-    if (typeof acquireVsCodeApi === "function") {
-        const vscode = acquireVsCodeApi();
-        return new IFrameDomainSpecificLanguage(id, payload =>
-            vscode.postMessage(payload)
-        );
-    }
-    return undefined;
-}
