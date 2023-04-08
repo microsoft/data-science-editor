@@ -1,12 +1,13 @@
 {
     "name": "data-science-editor",
     "displayName": "Data Science Editor",
-    "description": "Explore data through a block based data editor",
+    "description": "Explore data through a block based data editor.",
     "version": "0.0.1",
     "license": "MIT",
     "engines": {
         "vscode": "^1.77.0"
     },
+    "publisher": "Microsoft Corporation",
     "categories": [
         "Data Science",
         "Other",
@@ -15,7 +16,8 @@
     "keywords": [
         "data exploration",
         "data visualization",
-        "dataviz"
+        "dataviz",
+        "CSV"
     ],
     "repository": {
         "url": "https://github.com/microsoft/data-science-editor",
