@@ -1,24 +1,24 @@
 import {
-    Button,
     Dialog,
     DialogActions,
     DialogContent,
     DialogTitle,
-} from "@mui/material"
-import React, { useState } from "react"
-import { useLocationSearchParamBoolean } from "../hooks/useLocationSearchParam"
+} from "@mui/material";
+import React, { useState } from "react";
+import { useLocationSearchParamBoolean } from "../hooks/useLocationSearchParam";
+import { Button } from "gatsby-theme-material-ui";
 
-let _firstShow = true
+let _firstShow = true;
 export default function SplashDialog() {
-    const hide = useLocationSearchParamBoolean("hidesplash", false)
-    const [open, setOpen] = useState(_firstShow)
+    const hide = useLocationSearchParamBoolean("hidesplash", false);
+    const [open, setOpen] = useState(_firstShow);
 
     const handleClose = () => {
-        _firstShow = false
-        setOpen(false)
-    }
+        _firstShow = false;
+        setOpen(false);
+    };
 
-    if (hide) return null
+    if (hide) return null;
 
     return (
         <Dialog open={open} onAbort={handleClose}>
@@ -49,6 +49,9 @@ export default function SplashDialog() {
                 </>
             </DialogContent>
             <DialogActions>
+                <Button variant="contained" to="/about">
+                    About
+                </Button>
                 <Button
                     variant="contained"
                     color="primary"
@@ -58,5 +61,5 @@ export default function SplashDialog() {
                 </Button>
             </DialogActions>
         </Dialog>
-    )
+    );
 }
