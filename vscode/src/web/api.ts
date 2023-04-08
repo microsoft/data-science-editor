@@ -20,14 +20,14 @@ export async function bindApi(view: vscode.WebviewPanel) {
 
     async function postFiles(currentDslId: string) {
         const fileUris = await vscode.workspace.findFiles(
-            "**/*.{csv,tsv,json,jsonc}",
+            "**/*.{csv,tsv}",
             "node_modules/*",
             100
         );
-        const files: [string, string][] = fileUris.map(file => [
-            Utils.basename(file),
-            file.path,
-        ]);
+        const ignored = ["package.json", "tsconfig.json", "tasks.json"];
+        const files: [string, string][] = fileUris
+            .filter(f => ignored.indexOf(Utils.basename(f)) < 0)
+            .map(file => [Utils.basename(file), file.path]);
 
         post({
             type: "dsl",

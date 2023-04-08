@@ -9,6 +9,7 @@ export const blocks = [
         kind: "block",
         type: "vscode_import_csv",
         message0: "workspace csv file %1",
+        tooltip: "Loads data from a CSV/TSV file in the workspace",
         colour,
         args0: [
             {
