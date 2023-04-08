@@ -1,0 +1,49 @@
+```pseudo
+
+# Loads a builtin dataset
+dataset %1 %2
+# Loads a CSV dataset from an external internal URL. If the URL is a Google Sheet, it will automatically be converted to CSV.
+load dataset from url %1 %2
+# Open the block context menu, click 'Add Comment', paste CSV data.
+load dataset from comment %1
+# Fills missing data cells with the last or next value
+fill missing %1 %2 %3 %4 with %5 %6
+# Fills missing data cells with the given value.
+replace missing %1 with %2 of type %3 %4
+# Removes the selected columns from the dataset
+drop %1 %2 %3 %4 %5
+# Removes rows with identical column values in the dataset.
+filter duplicates in %1 %2 %3 %4 %5
+# Rename a columne
+rename %1 to %2 %3
+# Sorts the dataset based on the selected column and order.
+sort %1 %2 %3
+# Keeps the selected columns and drops the others
+select %1 %2 %3 %4 %5
+# Selects the rows for which the condition evaluates true
+filter %1 %2 %3 %4
+# Selects the rows for which the condition evaluates true
+filter %1 %2 %3 %4
+# Select N rows from the sample, from the head, tail or a random sample.
+take %1 rows from %2 %3
+# Adds a new column with the result of the computation.
+compute column %1 as %2 %3 %4 %5
+# Adds a new column with the result of the computation.
+compute column %1 as %2 %3 %4 %5
+# Renders the block data in a scatter plot
+scatterplot of x %1 y %2 %3 %4 size %5 group %6 %7 %8 %9
+# Renders the block data in a bar chart
+bar chart of index %1 y %2 of %3 group %4 %5 %6 %7 %8
+# Renders the block data in a bar chart
+pie chart of %1 %2 %3 %4
+# Renders the block data as a histogram
+histogram of %1 group %2 %3 %4 %5
+# Displays the block data as a table
+show table %1 %2 %3 %4 %5 %6 %7 %8
+# Renders the block data in a line chart
+line chart of x %1 y %2 %3 %4 group %5 %6 %7 %8
+# Renders the block data in a 2D heatmap
+heatmap of x %1 y %2 color %3 %4 %5 %6
+# Renders pairwize scatter plots
+scatterplot matrix %1 %2 %3 %4 group %5 %6 %7
+```
