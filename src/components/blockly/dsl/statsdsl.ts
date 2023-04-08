@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { Block } from "blockly"
+import { Block } from "blockly";
 import DataColumnChooserField, {
     declareColumns,
     resolveColumns,
-} from "../fields/DataColumnChooserField"
+} from "../fields/DataColumnChooserField";
 import {
     BlockDefinition,
     BlockReference,
@@ -11,21 +11,21 @@ import {
     DATA_SCIENCE_STATEMENT_TYPE,
     DataColumnInputDefinition,
     DummyInputDefinition,
-} from "../toolbox"
-import BlockDomainSpecificLanguage from "./dsl"
-import postTransformData from "./workers/data.proxy"
+} from "../toolbox";
+import BlockDomainSpecificLanguage from "./dsl";
+import postTransformData from "./workers/data.proxy";
 import type {
     DataCorrelationRequest,
     DataLinearRegressionRequest,
-} from "../../../workers/data/dist/node_modules/data.worker"
-import { statisticsColour } from "./palette"
-import { tidyHeaders, tidyResolveFieldColumn } from "../fields/tidy"
-import DataPreviewField from "../fields/DataPreviewField"
-import ScatterPlotField from "../fields/chart/ScatterPlotField"
-import CorrelationHeatMapField from "../fields/chart/CorrelationHeapMapField"
+} from "../../../workers/data/dist/node_modules/data.worker";
+import { statisticsColour } from "./palette";
+import { tidyHeaders, tidyResolveFieldColumn } from "../fields/tidy";
+import DataPreviewField from "../fields/DataPreviewField";
+import ScatterPlotField from "../fields/chart/ScatterPlotField";
+import CorrelationHeatMapField from "../fields/chart/CorrelationHeapMapField";
 
-const DATA_CORRELATION_BLOCK = "data_correlation"
-const DATA_LINEAR_REGRESSION_BLOCK = "data_linear_regression"
+const DATA_CORRELATION_BLOCK = "data_correlation";
+const DATA_LINEAR_REGRESSION_BLOCK = "data_linear_regression";
 
 const statsDsl: BlockDomainSpecificLanguage = {
     id: "stats",
@@ -34,6 +34,7 @@ const statsDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_CORRELATION_BLOCK,
             message0: "correlation of %1 %2 %3 %4 %5 %6 %7 %8 %9 %10",
+            description: "Displays a correlation matrix/heatmap.",
             args0: [
                 ...declareColumns(6, { start: 1, dataType: "number" }),
                 {
@@ -65,21 +66,23 @@ const statsDsl: BlockDomainSpecificLanguage = {
                 const selectedColumns = resolveColumns(data, b, 6, {
                     start: 1,
                     dataType: "number",
-                })
-                const allColumns = tidyHeaders(data, "number").headers
+                });
+                const allColumns = tidyHeaders(data, "number").headers;
                 const columns =
-                    selectedColumns.length > 1 ? selectedColumns : allColumns
+                    selectedColumns.length > 1 ? selectedColumns : allColumns;
                 return postTransformData(<DataCorrelationRequest>{
                     type: "correlation",
                     columns,
                     data,
-                })
+                });
             },
         },
         <BlockDefinition>{
             kind: "block",
             type: DATA_LINEAR_REGRESSION_BLOCK,
             message0: "linear regression of x %1 y %2 %3 %4 %5",
+            description:
+                "Displays a linear regression scatter plot and regression line.",
             args0: [
                 <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
@@ -112,17 +115,17 @@ const statsDsl: BlockDomainSpecificLanguage = {
             transformData: async (b: Block, data: object[]) => {
                 const column1 = tidyResolveFieldColumn(data, b, "x", {
                     type: "number",
-                })
+                });
                 const column2 = tidyResolveFieldColumn(data, b, "y1", {
                     type: "number",
-                })
-                if (!column1 || !column2) return Promise.resolve([])
+                });
+                if (!column1 || !column2) return Promise.resolve([]);
                 return postTransformData(<DataLinearRegressionRequest>{
                     type: "linear_regression",
                     column1,
                     column2,
                     data,
-                })
+                });
             },
         },
     ],
@@ -143,5 +146,5 @@ const statsDsl: BlockDomainSpecificLanguage = {
             ],
         },
     ],
-}
-export default statsDsl
+};
+export default statsDsl;

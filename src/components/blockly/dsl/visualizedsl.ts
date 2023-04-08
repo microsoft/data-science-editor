@@ -1,4 +1,4 @@
-import ScatterPlotField from "../fields/chart/ScatterPlotField"
+import ScatterPlotField from "../fields/chart/ScatterPlotField";
 import {
     BlockDefinition,
     BlockReference,
@@ -13,29 +13,29 @@ import {
     InputDefinition,
     OptionsInputDefinition,
     SeparatorDefinition,
-} from "../toolbox"
-import BlockDomainSpecificLanguage from "./dsl"
+} from "../toolbox";
+import BlockDomainSpecificLanguage from "./dsl";
 import DataColumnChooserField, {
     declareColumns,
-} from "../fields/DataColumnChooserField"
-import BarChartField from "../fields/chart/BarField"
-import DataTableField from "../fields/DataTableField"
-import { visualizeColour } from "./palette"
+} from "../fields/DataColumnChooserField";
+import BarChartField from "../fields/chart/BarField";
+import DataTableField from "../fields/DataTableField";
+import { visualizeColour } from "./palette";
 import JSONSettingsField, {
     JSONSettingsInputDefinition,
-} from "../fields/JSONSettingsField"
-import PieChartField from "../fields/chart/PieChartField"
-import HistogramField from "../fields/chart/HistogramField"
-import BoxPlotField from "../fields/chart/BoxPlotField"
+} from "../fields/JSONSettingsField";
+import PieChartField from "../fields/chart/PieChartField";
+import HistogramField from "../fields/chart/HistogramField";
+import BoxPlotField from "../fields/chart/BoxPlotField";
 
-const CHART_SHOW_TABLE_BLOCK = "chart_show_table"
-const SCATTERPLOT_BLOCK = "chart_scatterplot"
-const BARCHART_BLOCK = "chart_bar"
-const PIECHART_BLOCK = "chart_pie"
-const HISTOGRAM_BLOCK = "chart_histogram"
-const BOX_PLOT_BLOCK = "chart_box_plot"
+const CHART_SHOW_TABLE_BLOCK = "chart_show_table";
+const SCATTERPLOT_BLOCK = "chart_scatterplot";
+const BARCHART_BLOCK = "chart_bar";
+const PIECHART_BLOCK = "chart_pie";
+const HISTOGRAM_BLOCK = "chart_histogram";
+const BOX_PLOT_BLOCK = "chart_box_plot";
 
-const colour = visualizeColour
+const colour = visualizeColour;
 const visualizeDsl: BlockDomainSpecificLanguage = {
     id: "visualize",
     createBlocks: () => [
@@ -44,6 +44,7 @@ const visualizeDsl: BlockDomainSpecificLanguage = {
             type: CHART_SHOW_TABLE_BLOCK,
             tooltip: "Displays the block data as a table",
             message0: "show table %1 %2 %3 %4 %5 %6 %7 %8",
+            description: "Displays the dataset as a table with a summary header",
             args0: [
                 ...declareColumns(6, { start: 0 }),
                 <DummyInputDefinition>{
@@ -69,6 +70,7 @@ const visualizeDsl: BlockDomainSpecificLanguage = {
             tooltip: "Renders the block data in a scatter plot",
             message0:
                 "scatterplot of x %1 y %2 %3 %4 size %5 group %6 %7 %8 %9",
+            description: "Renders the dataset in a scatter plot with optional grouping and size",
             args0: <InputDefinition[]>[
                 <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
@@ -289,6 +291,6 @@ const visualizeDsl: BlockDomainSpecificLanguage = {
             colour,
         },
     ],
-}
+};
 
-export default visualizeDsl
+export default visualizeDsl;

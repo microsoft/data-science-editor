@@ -537,6 +537,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_SUMMARIZE_BY_GROUP_BLOCK,
             message0: "group %1 by %2 calculate %3",
+            description: "Summarize a column by a group and an operator",
             colour: computeColour,
             args0: [
                 {
@@ -614,6 +615,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_COUNT_BLOCK,
             message0: "count distinct %1",
+            description: "count distinct values in a column",
             colour: computeColour,
             args0: [
                 {
@@ -639,6 +641,7 @@ const dataDsl: BlockDomainSpecificLanguage = {
             kind: "block",
             type: DATA_BIN_BLOCK,
             message0: "bin by %1",
+            description: "Bin a column into a number of bins",
             args0: [
                 <DataColumnInputDefinition>{
                     type: DataColumnChooserField.KEY,
