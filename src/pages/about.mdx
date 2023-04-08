@@ -82,12 +82,17 @@ It is possible to load and save projects from files.
 
 The data editor will save projects as an entire folder, which allows to save the block code and additional data files. Copy those folders to share them with others.
 
-### Importing CSV datasets
+### Importing CSV/TSV/JSON datasets
 
-You can load CSV file hosted on internet using `load dataset from url`. The data must be CSV formated with header names.
+You can load data file hosted on internet using `load dataset from url`. The data must be CSV/TSV formated with header names
+or a JSON array of objects.
 
-It is possible to import CSV files using `load dataset from file` (Chrome/Edge only).
+It is possible to import files using `load dataset from file` (Chrome/Edge only).
 Imported datasets are stored as files in the project folder. This allows to share a project and all of its additional data. If you modify the files outside the data editor, refresh the page to reload your changes.
+
+### Import "comment" datasets
+
+To avoid needing a file the `load dataset from comment` lets you copy/paste the data in the block comment.
 
 #### Size limitations
 

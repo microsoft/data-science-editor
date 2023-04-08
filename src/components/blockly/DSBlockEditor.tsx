@@ -1,37 +1,37 @@
-import { Grid, NoSsr } from "@mui/material"
-import React, { useMemo } from "react"
-import { BlockProvider } from "./BlockContext"
-import BlockEditor from "./BlockEditor"
-import FileTabs from "../fs/FileTabs"
-import { WorkspaceFile } from "./dsl/workspacejson"
-import dataDsl from "./dsl/datadsl"
-import chartDsl from "./dsl/chartdsl"
-import fieldsDsl from "./dsl/fieldsdsl"
-import { WORKSPACE_FILENAME } from "./toolbox"
-import useFileSystem from "../fs/FileSystemContext"
-import { createIFrameDSL, createVSCodeDSL } from "./dsl/iframedsl"
+import { Grid, NoSsr } from "@mui/material";
+import React, { useMemo } from "react";
+import { BlockProvider } from "./BlockContext";
+import BlockEditor from "./BlockEditor";
+import FileTabs from "../fs/FileTabs";
+import { WorkspaceFile } from "./dsl/workspacejson";
+import dataDsl from "./dsl/datadsl";
+import chartDsl from "./dsl/chartdsl";
+import fieldsDsl from "./dsl/fieldsdsl";
+import { WORKSPACE_FILENAME } from "./toolbox";
+import useFileSystem from "../fs/FileSystemContext";
+import { createIFrameDSL } from "./dsl/iframedsl";
 import {
     useLocationSearchParamBoolean,
     useLocationSearchParamString,
-} from "../hooks/useLocationSearchParam"
-import dataSetDsl from "./dsl/datasetdsl"
-import dataVarDsl from "./dsl/datavardsl"
-import useChange from "../dom/useChange"
-import { UIFlags } from "../uiflags"
-import SplashDialog from "../ui/SplashDialog"
-import visualizeDsl from "./dsl/visualizedsl"
-import statsDsl from "./dsl/statsdsl"
-import { DS_EDITOR_ID } from "../dom/constants"
+} from "../hooks/useLocationSearchParam";
+import dataSetDsl from "./dsl/datasetdsl";
+import dataVarDsl from "./dsl/datavardsl";
+import useChange from "../dom/useChange";
+import { UIFlags } from "../uiflags";
+import SplashDialog from "../ui/SplashDialog";
+import visualizeDsl from "./dsl/visualizedsl";
+import statsDsl from "./dsl/statsdsl";
+import { DS_EDITOR_ID } from "../dom/constants";
 
-const DS_SOURCE_STORAGE_KEY = "editor"
+const DS_SOURCE_STORAGE_KEY = "editor";
 const DS_NEW_FILE_CONTENT = JSON.stringify({
     editor: DS_EDITOR_ID,
     xml: "",
-} as WorkspaceFile)
+} as WorkspaceFile);
 
 function DSEditorWithContext() {
-    const { fileSystem } = useFileSystem()
-    const root = useChange(fileSystem, _ => _?.root)
+    const { fileSystem } = useFileSystem();
+    const root = useChange(fileSystem, _ => _?.root);
 
     return (
         <Grid container direction="column" spacing={1}>
@@ -47,7 +47,7 @@ function DSEditorWithContext() {
                 <BlockEditor className={root ? "fs" : ""} />
             </Grid>
         </Grid>
-    )
+    );
 }
 
 /**
@@ -55,13 +55,13 @@ function DSEditorWithContext() {
  */
 export default function DSBlockEditor() {
     // read url search flags
-    const dataSet = useLocationSearchParamBoolean("dataset", true)
-    const dataVar = useLocationSearchParamBoolean("datavar", true)
-    const visualize = useLocationSearchParamBoolean("visualize", true)
-    const statistics = useLocationSearchParamBoolean("statistics", true)
-    const chart = useLocationSearchParamBoolean("chart", true)
-    const host = UIFlags.hosted
-    const targetOrigin = useLocationSearchParamString("targetorigin") || "*"
+    const dataSet = useLocationSearchParamBoolean("dataset", true);
+    const dataVar = useLocationSearchParamBoolean("datavar", true);
+    const visualize = useLocationSearchParamBoolean("visualize", true);
+    const statistics = useLocationSearchParamBoolean("statistics", true);
+    const chart = useLocationSearchParamBoolean("chart", true);
+    const host = UIFlags.hosted;
+    const targetOrigin = useLocationSearchParamString("targetorigin") || "*";
 
     const dsls = useMemo(() => {
         return [
@@ -74,10 +74,8 @@ export default function DSBlockEditor() {
             fieldsDsl,
             // host is used to comms with excel
             host && createIFrameDSL("host", targetOrigin),
-            // vscode
-            host && createVSCodeDSL("vscode"),
-        ].filter(dsl => !!dsl)
-    }, [])
+        ].filter(dsl => !!dsl);
+    }, []);
 
     return (
         <NoSsr>
@@ -90,5 +88,5 @@ export default function DSBlockEditor() {
                 <SplashDialog />
             </BlockProvider>
         </NoSsr>
-    )
+    );
 }
