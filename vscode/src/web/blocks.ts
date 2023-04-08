@@ -1,5 +1,4 @@
 import * as vscode from "vscode";
-import { parse } from "papaparse";
 /* eslint-disable curly */
 const colour = "#107C41";
 
@@ -44,7 +43,10 @@ function transformHeader(h: string) {
 
 export const transforms: Record<
     string,
-    (b: any, dataset: any) => Promise<{ warning?: string; dataset: any }>
+    (
+        b: any,
+        dataset: any
+    ) => Promise<{ warning?: string; dataset?: any; datasetSource?: string }>
 > = {
     // don't rename these identifiers, they are used in the serialized blocky and will break existing files
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -59,17 +61,9 @@ export const transforms: Record<
             const buf = await vscode.workspace.fs.readFile(
                 vscode.Uri.file(fileName)
             );
-            const csv = new TextDecoder().decode(buf);
-            const { data, errors } = parse<any[]>(csv, {
-                header: true,
-                dynamicTyping: true,
-                skipEmptyLines: true,
-                comments: "#",
-                transformHeader,
-            });
+            const datasetSource = new TextDecoder().decode(buf);
             return {
-                dataset: data,
-                warning: errors?.map(err => err.message)?.join(", "),
+                datasetSource,
             };
         } catch (e: any) {
             error = e.message;

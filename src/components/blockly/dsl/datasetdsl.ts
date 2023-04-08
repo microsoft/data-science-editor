@@ -31,22 +31,6 @@ const DATA_LOAD_TEXT_BLOCK = "data_load_text";
 const DATA_LOAD_FILE_BLOCK = "data_load_file";
 const DATA_SAVE_FILE_BLOCK = "data_save_file";
 
-// https://support.code.org/hc/en-us/articles/5257673491469-Submit-Datasets-for-Data-Science-
-// spec: https://www.datascience4everyone.org/_files/ugd/d2c47c_db9901e7a3b04350b561457bea71b48e.pdf
-
-function googleSheetUrl(id: string, sheet = "Sheet1") {
-    let url = `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv`;
-    if (sheet) url += `&sheet=${sheet}`;
-    return url;
-}
-function patchCsvUrl(url: string) {
-    const good =
-        /https:\/\/docs.google.com\/spreadsheets\/d\/(?<id>[^/]+)\//i.exec(url);
-    if (good) return googleSheetUrl(good.groups.id);
-
-    return url;
-}
-
 const [datasetColour] = palette();
 const dataSetDsl: BlockDomainSpecificLanguage = {
     id: "dataSets",
@@ -94,35 +78,15 @@ const dataSetDsl: BlockDomainSpecificLanguage = {
                 const url = block.getFieldValue("url") as string;
                 if (!url) return [];
 
-                const patched = patchCsvUrl(url);
-                if (/\.json$/i.test(patched)) {
-                    try {
-                        const resp = await fetch(url);
-                        const data = await resp.json();
-                        if (
-                            data &&
-                            Array.isArray(data) &&
-                            typeof data[0] === "object"
-                        )
-                            return data;
-                        return [];
-                    } catch (e) {
-                        setBlockDataWarning(block, e.message);
-                        console.debug(e);
-                        return [];
-                    }
-                } else {
-                    const { data, errors } = await downloadCSV(patched);
-                    if (errors?.length) {
-                        setBlockDataWarning(block, errors[0].message);
-                        console.debug(`csv download error`, {
-                            errors,
-                            url,
-                            patched,
-                        });
-                    }
-                    return data;
+                const { data, errors } = await downloadCSV(url);
+                if (errors?.length) {
+                    setBlockDataWarning(block, errors[0].message);
+                    console.debug(`csv download error`, {
+                        errors,
+                        url,
+                    });
                 }
+                return data;
             },
         },
         {
