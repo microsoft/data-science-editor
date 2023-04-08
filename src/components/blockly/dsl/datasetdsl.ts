@@ -63,6 +63,8 @@ const dataSetDsl: BlockDomainSpecificLanguage = {
                     type: DataPreviewField.KEY,
                     name: "preview",
                     compare: false,
+                    transformed: true,
+                    summary: true,
                 },
                 <TextInputDefinition>{
                     type: "field_input",
