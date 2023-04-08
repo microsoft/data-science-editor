@@ -100,6 +100,13 @@ export class WebView {
                     editor.contentWindow.postMessage(data, "*");
                 }
                 else {
+                    if (data.type === "dsl" && data.action === "mount") {
+                        editor.contentWindow.postMessage({
+                            type: "dsl",
+                            action: "style",
+                            style: document.firstElementChild.getAttributeValue("style")
+                        }, "*")
+                    }
                     vscode.postMessage(data);
                 }
             });            

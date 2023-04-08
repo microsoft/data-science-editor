@@ -315,7 +315,8 @@ export function BlockProvider(props: {
             if (type === "dsl") {
                 switch (action) {
                     case "style": {
-                        const { style, elementId } = data as DslStyleMessage;
+                        const { style, dslid } = data as DslStyleMessage;
+                        const elementId = `style-${dslid}`;
                         let el = document.getElementById(
                             elementId
                         ) as HTMLStyleElement;

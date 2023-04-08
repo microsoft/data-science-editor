@@ -36,7 +36,6 @@ export interface DslMessage {
 export interface DslStyleMessage extends DslMessage {
     action: "style"
     style: string
-    elementId: string
 }
 
 export interface DslBlocksResponse extends DslMessage {
