@@ -137,6 +137,7 @@ export const TABLE_HEIGHT = 480
 export const SMALL_TABLE_HEIGHT = 136
 export const FULL_TABLE_WIDTH = 800
 export const TABLE_PREVIEW_MAX_ITEMS = 256
+export const TABLE_PREVIEW_HEIGHT = 480
 
 export const JSON_WARNINGS_CATEGORY = "json"
 

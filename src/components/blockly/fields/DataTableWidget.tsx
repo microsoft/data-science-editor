@@ -153,7 +153,7 @@ export default function DataTableWidget(props: {
         <Root
             tableHeight={tableHeight}
             tableWidth={tableWidth}
-            sx={{ height: `${tableHeight}px - 0.25rem)` }}
+            sx={{ height: `calc(${tableHeight}px - 0.25rem)` }}
         >
             <PointerBoundary className={classes.root}>
                 <Grid container direction="column" spacing={1}>

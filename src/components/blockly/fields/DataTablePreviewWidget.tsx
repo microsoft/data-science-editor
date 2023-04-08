@@ -1,24 +1,27 @@
-import React, { useContext } from "react"
-import DataTableWidget from "./DataTableWidget"
-import { TABLE_PREVIEW_MAX_ITEMS, TABLE_WIDTH } from "../toolbox"
-import { Grid } from "@mui/material"
-import useBlockData from "../useBlockData"
-import WorkspaceContext from "../WorkspaceContext"
+import React, { useContext } from "react";
+import DataTableWidget from "./DataTableWidget";
+import {
+    TABLE_PREVIEW_HEIGHT,
+    TABLE_PREVIEW_MAX_ITEMS,
+    TABLE_WIDTH,
+} from "../toolbox";
+import { Grid } from "@mui/material";
+import useBlockData from "../useBlockData";
+import WorkspaceContext from "../WorkspaceContext";
 
 export default function DataTablePreviewWidget(props: {
-    compare?: boolean
-    hideSummary?: boolean
-    transformed?: boolean
+    compare?: boolean;
+    hideSummary?: boolean;
+    transformed?: boolean;
 }) {
-    const { compare, hideSummary, transformed } = props
-    const { sourceBlock } = useContext(WorkspaceContext)
-    const { data } = useBlockData<{ id?: string } & unknown>(sourceBlock)
-
+    const { compare, hideSummary, transformed } = props;
+    const { sourceBlock } = useContext(WorkspaceContext);
+    const { data } = useBlockData<{ id?: string } & unknown>(sourceBlock);
     if (!compare)
         return (
             <div style={{ background: "#fff" }}>
                 <DataTableWidget
-                    tableHeight={295}
+                    tableHeight={TABLE_PREVIEW_HEIGHT}
                     empty={"no data"}
                     transformed={!!transformed}
                     tableWidth={TABLE_WIDTH * 2}
@@ -26,13 +29,13 @@ export default function DataTablePreviewWidget(props: {
                     hideSummary={hideSummary}
                 />
             </div>
-        )
+        );
     else if (!data?.length)
         return (
             <div style={{ background: "#fff" }}>
                 <DataTableWidget
                     label="after"
-                    tableHeight={295}
+                    tableHeight={TABLE_PREVIEW_HEIGHT}
                     tableWidth={TABLE_WIDTH * 2}
                     empty={"no data"}
                     transformed={true}
@@ -40,14 +43,14 @@ export default function DataTablePreviewWidget(props: {
                     hideSummary={hideSummary}
                 />
             </div>
-        )
+        );
     else
         return (
             <Grid container spacing={1} style={{ background: "#fff" }}>
                 <Grid item xs={6}>
                     <DataTableWidget
                         label="before"
-                        tableHeight={295}
+                        tableHeight={TABLE_PREVIEW_HEIGHT}
                         tableWidth={TABLE_WIDTH}
                         empty={"no data"}
                         transformed={false}
@@ -58,7 +61,7 @@ export default function DataTablePreviewWidget(props: {
                 <Grid item xs={6}>
                     <DataTableWidget
                         label="after"
-                        tableHeight={295}
+                        tableHeight={TABLE_PREVIEW_HEIGHT}
                         empty={"no data"}
                         transformed={true}
                         maxItems={TABLE_PREVIEW_MAX_ITEMS}
@@ -66,5 +69,5 @@ export default function DataTablePreviewWidget(props: {
                     />
                 </Grid>
             </Grid>
-        )
+        );
 }

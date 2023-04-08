@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { Workspace, alert } from "blockly"
-import BuiltinDataSetField from "../fields/BuiltinDataSetField"
+import { Workspace, alert } from "blockly";
+import BuiltinDataSetField from "../fields/BuiltinDataSetField";
 import {
     BlockDefinition,
     BlockReference,
@@ -11,43 +11,43 @@ import {
     LabelDefinition,
     SeparatorDefinition,
     TextInputDefinition,
-} from "../toolbox"
-import BlockDomainSpecificLanguage from "./dsl"
+} from "../toolbox";
+import BlockDomainSpecificLanguage from "./dsl";
 import {
     resolveWorkspaceServices,
     setBlockDataWarning,
-} from "../WorkspaceContext"
-import FileSaveField from "../fields/FileSaveField"
-import { downloadCSV, parseCSV, saveCSV } from "./workers/csv.proxy"
-import FileOpenField from "../fields/FileOpenField"
-import palette from "./palette"
-import { importCSVFilesIntoWorkspace } from "../../fs/fs"
-import DataPreviewField from "../fields/DataPreviewField"
+} from "../WorkspaceContext";
+import FileSaveField from "../fields/FileSaveField";
+import { downloadCSV, parseCSV, saveCSV } from "./workers/csv.proxy";
+import FileOpenField from "../fields/FileOpenField";
+import palette from "./palette";
+import { importCSVFilesIntoWorkspace } from "../../fs/fs";
+import DataPreviewField from "../fields/DataPreviewField";
 
-const DATA_DATASET_BUILTIN_BLOCK = "data_dataset_builtin"
-const DATA_ADD_DATASET_CALLBACK = "data_add_dataset_variable"
-const DATA_LOAD_URL_BLOCK = "data_load_url"
-const DATA_LOAD_TEXT_BLOCK = "data_load_text"
-const DATA_LOAD_FILE_BLOCK = "data_load_file"
-const DATA_SAVE_FILE_BLOCK = "data_save_file"
+const DATA_DATASET_BUILTIN_BLOCK = "data_dataset_builtin";
+const DATA_ADD_DATASET_CALLBACK = "data_add_dataset_variable";
+const DATA_LOAD_URL_BLOCK = "data_load_url";
+const DATA_LOAD_TEXT_BLOCK = "data_load_text";
+const DATA_LOAD_FILE_BLOCK = "data_load_file";
+const DATA_SAVE_FILE_BLOCK = "data_save_file";
 
 // https://support.code.org/hc/en-us/articles/5257673491469-Submit-Datasets-for-Data-Science-
 // spec: https://www.datascience4everyone.org/_files/ugd/d2c47c_db9901e7a3b04350b561457bea71b48e.pdf
 
 function googleSheetUrl(id: string, sheet = "Sheet1") {
-    let url = `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv`
-    if (sheet) url += `&sheet=${sheet}`
-    return url
+    let url = `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv`;
+    if (sheet) url += `&sheet=${sheet}`;
+    return url;
 }
 function patchCsvUrl(url: string) {
     const good =
-        /https:\/\/docs.google.com\/spreadsheets\/d\/(?<id>[^/]+)\//i.exec(url)
-    if (good) return googleSheetUrl(good.groups.id)
+        /https:\/\/docs.google.com\/spreadsheets\/d\/(?<id>[^/]+)\//i.exec(url);
+    if (good) return googleSheetUrl(good.groups.id);
 
-    return url
+    return url;
 }
 
-const [datasetColour] = palette()
+const [datasetColour] = palette();
 const dataSetDsl: BlockDomainSpecificLanguage = {
     id: "dataSets",
     createBlocks: () => [
@@ -91,39 +91,58 @@ const dataSetDsl: BlockDomainSpecificLanguage = {
             inputsInline: false,
             dataPreviewField: false,
             transformData: async block => {
-                const url = block.getFieldValue("url") as string
-                if (!url) return []
+                const url = block.getFieldValue("url") as string;
+                if (!url) return [];
 
-                const patched = patchCsvUrl(url)
-                const { data, errors } = await downloadCSV(patched)
-                if (errors?.length) {
-                    setBlockDataWarning(block, errors[0].message)
-                    console.debug(`csv download error`, {
-                        errors,
-                        url,
-                        patched,
-                    })
+                const patched = patchCsvUrl(url);
+                if (/\.json$/i.test(patched)) {
+                    try {
+                        const resp = await fetch(url);
+                        const data = await resp.json();
+                        if (
+                            data &&
+                            Array.isArray(data) &&
+                            typeof data[0] === "object"
+                        )
+                            return data;
+                        return [];
+                    } catch (e) {
+                        setBlockDataWarning(block, e.message);
+                        console.debug(e);
+                        return [];
+                    }
+                } else {
+                    const { data, errors } = await downloadCSV(patched);
+                    if (errors?.length) {
+                        setBlockDataWarning(block, errors[0].message);
+                        console.debug(`csv download error`, {
+                            errors,
+                            url,
+                            patched,
+                        });
+                    }
+                    return data;
                 }
-                return data
             },
         },
         {
             kind: "block",
             type: DATA_LOAD_TEXT_BLOCK,
             message0: "load dataset from comment",
-            tooltip: "Open the block context menu, click 'Add Comment', paste CSV data.",
+            tooltip:
+                "Open the block context menu, click 'Add Comment', paste CSV data.",
             args0: [],
             nextStatement: DATA_SCIENCE_STATEMENT_TYPE,
             colour: datasetColour,
             inputsInline: false,
             dataPreviewField: true,
             transformData: async block => {
-                const text = block.getCommentText()
-                if (!text) return []
-                const { data, errors } = await parseCSV(text)
+                const text = block.getCommentText();
+                if (!text) return [];
+                const { data, errors } = await parseCSV(text);
                 if (errors?.length)
-                    setBlockDataWarning(block, errors[0].message)
-                return data
+                    setBlockDataWarning(block, errors[0].message);
+                return data;
             },
         },
         {
@@ -162,10 +181,10 @@ const dataSetDsl: BlockDomainSpecificLanguage = {
             inputsInline: false,
             dataPreviewField: "after",
             transformData: async (block, data) => {
-                const file = block.getField("file") as FileSaveField
+                const file = block.getField("file") as FileSaveField;
                 if (file?.fileHandle && data)
-                    await saveCSV(file.fileHandle, data)
-                return data
+                    await saveCSV(file.fileHandle, data);
+                return data;
             },
         },
     ],
@@ -192,26 +211,26 @@ const dataSetDsl: BlockDomainSpecificLanguage = {
                       text: "Import dataset from file",
                       callbackKey: DATA_ADD_DATASET_CALLBACK,
                       callback: async (workspace: Workspace) => {
-                          const services = resolveWorkspaceServices(workspace)
-                          const directory = services?.workingDirectory
+                          const services = resolveWorkspaceServices(workspace);
+                          const directory = services?.workingDirectory;
                           if (!directory)
                               alert(
                                   "You need to open a directory to import a dataset."
-                              )
+                              );
                           else {
                               const imported =
                                   await importCSVFilesIntoWorkspace(
                                       directory.handle
-                                  )
+                                  );
                               if (imported > 0) {
-                                  await directory.sync()
-                                  alert("Datasets imported!")
+                                  await directory.sync();
+                                  alert("Datasets imported!");
                               }
                           }
                       },
                   },
               ]
-            : []
+            : [];
         const cat = [
             <CategoryDefinition>{
                 kind: "category",
@@ -233,8 +252,8 @@ const dataSetDsl: BlockDomainSpecificLanguage = {
                     ...files,
                 ],
             },
-        ]
-        return cat
+        ];
+        return cat;
     },
-}
-export default dataSetDsl
+};
+export default dataSetDsl;

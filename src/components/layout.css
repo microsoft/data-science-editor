@@ -736,7 +736,11 @@ div.blocklyTooltipDiv {
 }
 
 .blocklyMainBackground {
-    stroke: transparent !important
+    stroke: transparent !important;
+}
+
+.blocklyDropDownContent {
+    max-height: 480px !important;
 }
 
 .LayoutMainContent.blocks img {
