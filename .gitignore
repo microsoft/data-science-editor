@@ -9,3 +9,4 @@ yarn-error.log
 .vs
 vscode/dist
 static/vscode/*.vsix
+__queuestorage__
