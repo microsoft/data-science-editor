@@ -46,7 +46,7 @@
     "gatsby-plugin-meta-redirect": "^1.1.1",
     "gatsby-plugin-offline": "^5.24.0",
     "gatsby-plugin-robots-txt": "^1.7.1",
-    "gatsby-plugin-sharp": "^4.24.0",
+    "gatsby-plugin-sharp": "^4.25.1",
     "gatsby-plugin-sitemap": "^5.24.0",
     "gatsby-plugin-webpack-bundle-analyser-v2": "^1.1.27",
     "gatsby-prismjs-dracula": "^0.1.15",
